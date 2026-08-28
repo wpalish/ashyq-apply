@@ -7,9 +7,9 @@ from app.adapters.extraction import (
     ClaimBuilder,
     extract_costs,
     html_title,
-    html_to_text,
     is_official_domain,
     pdf_to_text,
+    readable_text,
 )
 from app.adapters.fetching import Fetcher
 from app.domain.enums import ClaimType, CostCategory, SourceSpecificity
@@ -50,7 +50,7 @@ class WebCostAdapter:
             out.retry_urls.append(candidate.costs_url)
             return breakdown, out
 
-        text = pdf_to_text(res.content) if res.is_pdf else html_to_text(res.text)
+        text = pdf_to_text(res.content) if res.is_pdf else readable_text(res.text)
         year = _detect_year(text) or self.academic_year
         builder = ClaimBuilder(
             source_url=candidate.costs_url,

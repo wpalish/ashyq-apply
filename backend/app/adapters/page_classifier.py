@@ -52,7 +52,11 @@ ACCEPTS: dict[str, frozenset[PageType]] = {
     "intake": frozenset({PageType.PROGRAM_DETAIL, PageType.INTAKE_SPECIFIC_PROGRAM}),
     "costs": frozenset({PageType.COSTS, PageType.PROGRAM_DETAIL, PageType.INTAKE_SPECIFIC_PROGRAM}),
     "scholarship_award": frozenset({PageType.SCHOLARSHIP_AWARD}),
-    "scholarship_links": frozenset({PageType.SCHOLARSHIP_INDEX, PageType.SCHOLARSHIP_AWARD}),
+    # A fees page often lists the awards alongside the costs; following its
+    # links is safe because each target must classify as an award itself.
+    "scholarship_links": frozenset({
+        PageType.SCHOLARSHIP_INDEX, PageType.SCHOLARSHIP_AWARD, PageType.COSTS,
+    }),
     "documents": frozenset({
         PageType.DOCUMENTS,
         PageType.PROGRAM_DETAIL,
@@ -101,10 +105,12 @@ _PLURAL_PROGRAM_HEADING = re.compile(
     re.IGNORECASE,
 )
 _PLURAL_FUNDING_HEADING = re.compile(
-    r"^\s*((our|all|available|list of|overview of)\s+)?"
+    r"^\s*((our|all|available|list of|overview of|other|external)\s+)?"
     r"(scholarships|funding|financial aid|grants|bursaries|awards|fellowships|stipends"
     r"|prizes and awards|practical matters)"
-    r"(\s+(and|&)\s+(funding|fees|grants|tuition fees?))?\s*$",
+    # A plural category followed by a scope phrase is still a listing:
+    # "Scholarships from other providers", "Grants for international students".
+    r"(\s+(and|&|from|for|at|by|in|of|to)\s+.{0,60})?\s*$",
     re.IGNORECASE,
 )
 _ADMISSIONS = re.compile(
@@ -133,9 +139,13 @@ _IRRELEVANT = re.compile(
     r"|cookie|sitemap|nobel prize|erc grant|research (?:prize|award)s?)\b",
     re.IGNORECASE,
 )
+#: Plurals matter: `\btuition fee\b` does not match "tuition fees", which is how
+#: a fees page ended up classified as general admissions.
 _COSTS = re.compile(
-    r"\b(tuition fee|cost of attendance|fees and (?:funding|costs)|tuition and fees"
-    r"|study costs|living costs|statement of fees)\b",
+    r"\b(tuition fees?|registration fees?|enrolment fees?|enrollment fees?"
+    r"|cost of attendance|costs? of study|fees? and (?:funding|costs?)"
+    r"|tuition and fees?|study costs?|living costs?|statement of fees?"
+    r"|fees? overview|what it costs)\b",
     re.IGNORECASE,
 )
 _DOCUMENTS = re.compile(
@@ -167,12 +177,52 @@ _PATH_HINTS: tuple[tuple[re.Pattern[str], PageType], ...] = (
 )
 
 
+#: Wrappers that hold the page's own content rather than the site's furniture.
+_MAIN_SELECTORS = ("main", "[role=main]", "#main-content", "#main", "#content", "article")
+#: Site chrome. Present on every page, so counting its links made an award page
+#: look like an index and an admissions page look like a catalogue.
+_CHROME_TAGS = ("nav", "header", "footer", "aside")
+_CHROME_HINT = re.compile(
+    r"nav|menu|breadcrumb|header|footer|sidebar|skip|cookie|banner|social|share|toolbar",
+    re.IGNORECASE,
+)
+
+
+def main_content(soup: BeautifulSoup) -> BeautifulSoup:
+    """The page's own content, with the site's navigation removed.
+
+    Every page on a university site carries the same global menu. Reading the
+    first <h1> or counting links across the whole document therefore measured
+    the site, not the page: a single award page linked to six other awards from
+    its menu and was classified as an index.
+    """
+    working = BeautifulSoup(str(soup), "lxml")
+    for tag in working(["script", "style", "noscript", "svg", "iframe", "form"]):
+        tag.decompose()
+
+    for selector in _MAIN_SELECTORS:
+        found = working.select_one(selector)
+        if found is not None and len(found.get_text(strip=True)) > 200:
+            for tag in found(_CHROME_TAGS):
+                tag.decompose()
+            return found
+
+    for tag in working(_CHROME_TAGS):
+        tag.decompose()
+    for tag in working.find_all(attrs={"class": _CHROME_HINT}):
+        tag.decompose()
+    for tag in working.find_all(attrs={"id": _CHROME_HINT}):
+        tag.decompose()
+    return working
+
+
 def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassification:
     """Classify a fetched page. Never raises; unknown is a valid answer."""
-    soup = BeautifulSoup(html, "lxml") if html else None
-    title = _title(soup) if soup else ""
+    full = BeautifulSoup(html, "lxml") if html else None
+    soup = main_content(full) if full is not None else None
+    title = _title(full) if full is not None else ""
     headings = _headings(soup) if soup else []
-    identity = _identity(soup, title)
+    identity = _identity(soup, title)  # from the content region, not the menu
     body = text or (_text(soup) if soup else "")
     head = " ".join([title, *headings])
     low_head = head.lower()
@@ -198,6 +248,13 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
         if link_text / max(len(body), 1) > 0.75:
             signals.append("page is mostly link text")
             return PageClassification(PageType.NAVIGATION, 0.6, signals, title)
+
+    # --- cost pages --------------------------------------------------------
+    if _COSTS.search(identity) or _COSTS.search(title.lower()):
+        return PageClassification(
+            PageType.COSTS, 0.8, ["cost vocabulary in the page heading"], title,
+            academic_year=_academic_year(body),
+        )
 
     # --- funding family ---------------------------------------------------
     if _SCHOLARSHIP_WORD.search(low_head) or "scholarship" in path or "financial-aid" in path:
@@ -236,13 +293,6 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
             PageType.UNKNOWN, 0.3,
             [f"funding page with {len(present)} substantive signals and no clear award name"],
             title,
-        )
-
-    # --- cost pages --------------------------------------------------------
-    if _COSTS.search(low_head) or _COSTS.search(low_body[:1500]):
-        return PageClassification(
-            PageType.COSTS, 0.75, ["cost vocabulary"], title,
-            academic_year=_academic_year(body),
         )
 
     if _DOCUMENTS.search(low_head):
@@ -302,6 +352,13 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
         return PageClassification(
             PageType.GENERAL_ADMISSIONS, 0.7, ["admissions phrasing"], title
         )
+    cost_mentions = len(_COSTS.findall(low_body))
+    if cost_mentions >= 2:
+        return PageClassification(
+            PageType.COSTS, 0.6, [f"{cost_mentions} cost phrases in the body"], title,
+            academic_year=_academic_year(body),
+        )
+
     if _CREDENTIAL.search(low_body[:2000]):
         return PageClassification(
             PageType.COUNTRY_CREDENTIAL_REQUIREMENTS, 0.55, ["credential vocabulary"], title

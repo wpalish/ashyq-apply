@@ -24,6 +24,10 @@ from app.domain.enums import ClaimType
 
 SHAPES = Path(__file__).parent / "fixtures" / "live_shapes"
 
+#: Claims from the most recent _find_awards call, so excerpt provenance can be
+#: asserted without threading a return value through every caller.
+_last_award_claims: list = []
+
 
 def shape(name: str) -> str:
     return (SHAPES / name).read_text()
@@ -172,6 +176,37 @@ class TestExcerptsAreRealQuotes:
             excerpt = self._normalise(claim.original_text_excerpt)
             assert excerpt in page_text, (
                 f"{claim.claim_type} carries an excerpt that is not on the page: "
+                f"{claim.original_text_excerpt!r}"
+            )
+
+    @pytest.mark.asyncio
+    @pytest.mark.parametrize("fixture", [
+        "scholarship_award_msc_only.html",
+        "scholarship_award_no_deadline.html",
+    ])
+    async def test_award_claims_quote_the_award_page(
+        self, settings, tmp_path, monkeypatch, fixture
+    ):
+        """The same guarantee for the scholarship adapter.
+
+        "Award page: <title>" and "the page describes the award for master
+        only" were both sentences the extractor wrote, shown as evidence.
+        """
+        html = shape(fixture)
+        awards = await _find_awards(
+            monkeypatch, settings, tmp_path,
+            pages={"https://uni.edu/scholarships/x": html},
+            index_html='<a href="https://uni.edu/scholarships/x">Award Scholarship</a>',
+        )
+        assert awards
+        page_text = self._normalise(html_to_text(html))
+        from app.adapters.fetching import Fetcher as _F  # noqa: F401  (import kept local)
+
+        for claim in _last_award_claims:
+            if not claim.original_text_excerpt:
+                continue
+            assert self._normalise(claim.original_text_excerpt) in page_text, (
+                f"{claim.claim_type} excerpt is not on the page: "
                 f"{claim.original_text_excerpt!r}"
             )
 
@@ -372,7 +407,11 @@ async def _find_awards(
                               domain="uni.edu", scholarships_url=index_url)
         program = CandidateProgram(name="BSc Computer Science", field="computer science",
                                    degree=degree, url="https://uni.edu/bsc/cs")
-        awards, _ = await WebScholarshipAdapter(fetcher, "2026/27").find(candidate, program, None)
+        awards, result = await WebScholarshipAdapter(fetcher, "2026/27").find(
+            candidate, program, None
+        )
+        _last_award_claims.clear()
+        _last_award_claims.extend(result.claims)
         return awards
 
 
@@ -773,3 +812,197 @@ class TestCrashRecovery:
         finally:
             session.close()
             engine.dispose()
+
+
+# ---------------------------------------------------------------------------
+# Site chrome must not be read as page content
+# ---------------------------------------------------------------------------
+
+
+class TestSiteChromeIsIgnored:
+    """Every page on a university site carries the same global menu.
+
+    Counting its links classified a single award page as an index (six award
+    links, all from the menu) and an admissions page as a catalogue (twelve
+    programme links, all from the menu). Observed on tudelft.nl and rug.nl.
+    """
+
+    NAV = """
+      <header><a href="/">Home</a></header>
+      <nav class="main-menu">
+        <a href="/en/education/programmes/bachelors/cs">Computer Science</a>
+        <a href="/en/education/programmes/bachelors/ae">Aerospace Engineering</a>
+        <a href="/en/education/programmes/masters/cs">MSc Computer Science</a>
+        <a href="/en/education/programmes/bachelors/ap">Applied Physics</a>
+        <a href="/en/education/programmes/masters/ae">MSc Aerospace</a>
+        <a href="/en/education/programmes/bachelors/me">Mechanical Engineering</a>
+        <a href="/scholarships/van-effen">van Effen Scholarship</a>
+        <a href="/scholarships/holland">Holland Scholarship</a>
+        <a href="/scholarships/faq">Scholarship FAQ</a>
+        <a href="/scholarships/other">Scholarships from other providers</a>
+      </nav>
+    """
+    FOOTER = '<footer><a href="/scholarships">Scholarships</a><a href="/privacy">Privacy</a></footer>'
+
+    def _page(self, title: str, body: str) -> str:
+        return (
+            f"<!doctype html><html><head><title>{title}</title></head><body>"
+            f"{self.NAV}<main>{body}</main>{self.FOOTER}</body></html>"
+        )
+
+    def test_an_award_page_wrapped_in_a_menu_is_still_an_award(self):
+        html = self._page(
+            "Justus & Louise van Effen Excellence Scholarship",
+            "<h1>Justus &amp; Louise van Effen Excellence Scholarship</h1>"
+            "<p>The scholarship covers tuition and housing for students enrolling in an "
+            "MSc programme.</p><h2>Who can apply</h2><p>You are eligible if you are enrolling "
+            "in a two-year MSc programme.</p><h2>How to apply</h2>"
+            "<p>Candidates are nominated by the faculty.</p>",
+        )
+        page = classify_page(url="https://uni.edu/scholarships/van-effen", html=html)
+        assert page.page_type is PageType.SCHOLARSHIP_AWARD
+        assert page.subject and "van Effen" in page.subject
+
+    def test_an_admissions_page_wrapped_in_a_menu_is_not_a_catalogue(self):
+        html = self._page(
+            "Check admission requirements",
+            "<h1>Check admission requirements</h1>"
+            "<p>These pages explain the admission requirements for applicants holding a Dutch "
+            "secondary school diploma.</p>",
+        )
+        page = classify_page(url="https://uni.edu/admission/check", html=html)
+        assert page.page_type is not PageType.PROGRAM_CATALOG
+
+    def test_the_page_identity_comes_from_the_content_not_the_menu(self):
+        html = self._page(
+            "Faculty Merit Award",
+            "<h1>Faculty Merit Award</h1><p>The award is worth EUR 5,000 per year. "
+            "Open to admitted students. No separate application is required.</p>",
+        )
+        page = classify_page(url="https://uni.edu/scholarships/merit", html=html)
+        assert page.subject == "Faculty Merit Award"
+
+    def test_main_content_drops_navigation_and_keeps_the_page(self):
+        from bs4 import BeautifulSoup
+
+        from app.adapters.page_classifier import main_content
+
+        html = self._page("X", "<h1>Real heading</h1><p>" + "Real content. " * 30 + "</p>")
+        content = main_content(BeautifulSoup(html, "lxml"))
+        text = content.get_text(" ", strip=True)
+        assert "Real heading" in text
+        assert "Aerospace Engineering" not in text
+        assert "Privacy" not in text
+
+
+class TestCostVocabulary:
+    """`\\btuition fee\\b` does not match "tuition fees"; a fees page was
+    therefore classified as general admissions and its costs never read."""
+
+    @pytest.mark.parametrize("heading", [
+        "Application, registration and tuition fees",
+        "Tuition fee",
+        "Cost of attendance",
+        "Tuition fees and funding",
+        "Living costs",
+    ])
+    def test_cost_headings_are_recognised_in_singular_and_plural(self, heading):
+        html = f"<!doctype html><html><head><title>{heading}</title></head><body><main>" \
+               f"<h1>{heading}</h1><p>Details of what studying here costs.</p></main></body></html>"
+        page = classify_page(url="https://uni.edu/fees", html=html)
+        assert page.page_type is PageType.COSTS
+
+
+# ---------------------------------------------------------------------------
+# Degree applicability on the shapes real award pages actually use
+# ---------------------------------------------------------------------------
+
+
+class TestDegreeApplicabilityOnRealShapes:
+    """Both cases below were found by the live canary against tudelft.nl.
+
+    Text is paraphrased from the real pages; the sentence *structure* is what
+    the extractor has to cope with.
+    """
+
+    #: Mirrors the real page's structure: an eligibility sentence stating the
+    #: level, then a separate "not eligible if" list. The exclusion sits 75
+    #: characters after "not eligible", past the window the first
+    #: implementation used, and its clause ends in a colon.
+    EXCLUSION_PAGE = (
+        "Justus & Louise van Effen Excellence Scholarships. The foundation supports "
+        "excellent international MSc students. You are eligible if you are an "
+        "international applicant applying for a 2-year regular MSc programme. "
+        "You are not eligible for the Justus & Louise van Effen Excellence Scholarships "
+        "if: You are a university bachelor's student, even if you have obtained your "
+        "bachelor's degree at a Dutch university."
+    )
+
+    #: No exclusion at all; the level is settled by a positive statement about a
+    #: *different* level, and the applicant's own bachelor's appears only as a
+    #: prior qualification.
+    OTHER_LEVEL_PAGE = (
+        "Innovation Programme Scholarship. Up to five scholarships are provided annually "
+        "to students who have completed undergraduate studies in Greece, and hold either "
+        "a Greek passport or Greek residence. The scholarships are available to students "
+        "entering the academic year 2026 for one of the following specific Master of "
+        "Science Programmes: MSc Environmental Engineering; MSc Geomatics. Applicants "
+        "must submit an Undergraduate Degree Transcript with GPA."
+    )
+
+    def test_an_exclusion_far_from_its_negation_is_still_found(self):
+        from app.adapters.applicability import assess_degree_applicability
+
+        verdict = assess_degree_applicability(self.EXCLUSION_PAGE, "bachelor")
+        assert verdict.verdict == "no"
+        assert "bachelor" in verdict.evidence.lower()
+
+    def test_the_same_page_applies_to_a_master_applicant(self):
+        from app.adapters.applicability import assess_degree_applicability
+
+        assert assess_degree_applicability(self.EXCLUSION_PAGE, "master").verdict == "yes"
+
+    def test_a_degree_held_is_not_the_degree_awarded(self):
+        """"obtained your bachelor's degree" must not read as "for bachelors"."""
+        from app.adapters.applicability import assess_degree_applicability
+
+        assert assess_degree_applicability(self.EXCLUSION_PAGE, "bachelor").verdict != "yes"
+
+    def test_a_positive_mention_inside_an_exclusion_clause_does_not_count(self):
+        """A level named only inside "you are not eligible if" is not included."""
+        from app.adapters.applicability import assess_degree_applicability
+
+        collapsed = (
+            "Excellence Scholarship. You are not eligible if: you are a bachelor's "
+            "student, even if you are applying for an MSc programme."
+        )
+        assert assess_degree_applicability(collapsed, "master").verdict != "yes"
+
+    def test_a_positive_statement_about_another_level_excludes_this_one(self):
+        from app.adapters.applicability import assess_degree_applicability
+
+        verdict = assess_degree_applicability(self.OTHER_LEVEL_PAGE, "bachelor")
+        assert verdict.verdict == "no"
+        assert "master" in verdict.reason.lower()
+
+    def test_that_page_applies_to_a_master_applicant(self):
+        from app.adapters.applicability import assess_degree_applicability
+
+        assert assess_degree_applicability(self.OTHER_LEVEL_PAGE, "master").verdict == "yes"
+
+    def test_a_prior_undergraduate_requirement_is_not_an_award_level(self):
+        from app.adapters.applicability import assess_degree_applicability
+
+        verdict = assess_degree_applicability(self.OTHER_LEVEL_PAGE, "bachelor")
+        assert verdict.verdict != "yes", (
+            "'completed undergraduate studies' is an entry requirement, not the award's level"
+        )
+
+    def test_a_page_naming_no_level_stays_unknown(self):
+        from app.adapters.applicability import assess_degree_applicability
+
+        neutral = (
+            "Faculty Merit Award. The award is worth EUR 5,000 per year and is open to "
+            "admitted students in the Faculty of Science. No separate application is required."
+        )
+        assert assess_degree_applicability(neutral, "bachelor").verdict == "unknown"

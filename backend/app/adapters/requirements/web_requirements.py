@@ -23,9 +23,9 @@ from app.adapters.extraction import (
     extract_requirements,
     for_matching,
     html_title,
-    html_to_text,
     is_official_domain,
     pdf_to_text,
+    readable_text,
 )
 from app.adapters.fetching import Fetcher
 from app.adapters.matching import program_matches
@@ -87,7 +87,7 @@ class WebRequirementsAdapter:
                     out.retry_urls.append(target.url)
                 continue
 
-            text = pdf_to_text(res.content) if res.is_pdf else html_to_text(res.text)
+            text = pdf_to_text(res.content) if res.is_pdf else readable_text(res.text)
             if not text.strip():
                 out.pages_failed += 1
                 out.errors.append(

@@ -38,6 +38,20 @@ def html_to_text(html: str) -> str:
     return _BLANKS.sub("\n\n", text).strip()
 
 
+def readable_text(html: str) -> str:
+    """Page text with the site's navigation removed.
+
+    Extractors and excerpts must work from the page's own content. Reading the
+    whole document made evidence quotes read "Activate high contrast To main
+    content Students & Education Programmes...", and put every degree word in
+    the global menu into the page's apparent vocabulary.
+    """
+    from app.adapters.page_classifier import main_content
+
+    soup = BeautifulSoup(html, "lxml")
+    return html_to_text(str(main_content(soup)))
+
+
 def html_title(html: str) -> str:
     soup = BeautifulSoup(html, "lxml")
     if soup.title and soup.title.string:

@@ -22,11 +22,11 @@ from app.adapters.base import AdapterResult, Candidate, CandidateProgram
 from app.adapters.extraction import (
     ClaimBuilder,
     html_title,
-    html_to_text,
     is_official_domain,
     parse_date_string,
     parse_money,
     parse_timezone,
+    readable_text,
 )
 from app.adapters.fetching import Fetcher
 from app.adapters.page_classifier import PageType, classify_page
@@ -150,7 +150,7 @@ class WebScholarshipAdapter:
         html: str, accessed_at: datetime, classification, index: int,
     ) -> tuple[Scholarship, list]:
         soup = BeautifulSoup(html, "lxml")
-        text = html_to_text(html)
+        text = readable_text(html)
         low = text.lower()
         title = html_title(html)
         name = classification.subject or (
@@ -177,7 +177,14 @@ class WebScholarshipAdapter:
             return _plain_add(*args, **kwargs)
 
         builder.add = add  # type: ignore[method-assign]
-        builder.add(ClaimType.SCHOLARSHIP_EXISTS, name, f"Award page: {title}", confidence=0.95)
+        # The excerpt must be text from the page. "Award page: <title>" was a
+        # sentence we wrote, shown in the evidence panel as though quoted.
+        builder.add(
+            ClaimType.SCHOLARSHIP_EXISTS, name,
+            _first_sentence_with(text, name) or name,
+            confidence=0.95,
+            notes=f"page classified as {classification.page_type.value}",
+        )
 
         sch = Scholarship(
             id=f"{candidate.name}::{name}"[:200],
@@ -216,15 +223,16 @@ class WebScholarshipAdapter:
                         notes="Award size is not published; it cannot be entered into the gap arithmetic.")
 
         # --- coverage table (the only route to FULL_RIDE_CONFIRMED) -----
-        sch.coverage = _coverage_from_tables(soup)
+        sch.coverage, coverage_quote = _coverage_from_tables(soup)
         if sch.coverage:
             builder.add(
                 ClaimType.SCHOLARSHIP_COVERAGE,
                 {c.category.value: c.covered for c in sch.coverage},
-                "Coverage table: "
-                + "; ".join(f"{c.category.value}={c.covered}" for c in sch.coverage),
+                # The table's own text, not a summary of it.
+                coverage_quote,
                 confidence=0.9,
                 section="What the award covers",
+                notes="; ".join(f"{c.category.value}={c.covered}" for c in sch.coverage),
             )
             for c in sch.coverage:
                 c.claim_ids.append(url)
@@ -263,11 +271,12 @@ class WebScholarshipAdapter:
         sch.degree_applicability_reason = applicability.reason
         sch.applies_to_degrees = list(applicability.mentioned_degrees)
         if applicability.verdict != "unknown":
+            # Only real page text goes in the excerpt; the rationale is a note.
             builder.add(
                 ClaimType.SCHOLARSHIP_PROGRAM_RESTRICTION,
                 {"degree": str(program.degree), "applies": applicability.verdict},
-                applicability.evidence or applicability.reason,
-                confidence=0.85,
+                applicability.evidence,
+                confidence=0.85 if applicability.evidence else 0.6,
                 notes=applicability.reason,
             )
 
@@ -430,11 +439,18 @@ def _award_links(html: str, base: str) -> list[str]:
     return out[:12]
 
 
-def _coverage_from_tables(soup: BeautifulSoup) -> list[CoverageBreakdown]:
-    """Read a two-column 'cost / status' table into structured coverage."""
+def _coverage_from_tables(soup: BeautifulSoup) -> tuple[list[CoverageBreakdown], str]:
+    """Read a two-column 'cost / status' table into structured coverage.
+
+    Returns the coverage and the table's own text, so the claim can quote what
+    it read rather than a summary of it.
+    """
     out: list[CoverageBreakdown] = []
     seen: set[CostCategory] = set()
+    quoted = ""
     for table in soup.find_all("table"):
+        if not quoted:
+            quoted = " ".join(table.get_text(" ", strip=True).split())[:400]
         for row in table.find_all("tr"):
             cells = [c.get_text(strip=True).lower() for c in row.find_all(["td", "th"])]
             if len(cells) != 2:
@@ -447,7 +463,7 @@ def _coverage_from_tables(soup: BeautifulSoup) -> list[CoverageBreakdown]:
                 continue
             seen.add(category)
             out.append(CoverageBreakdown(category=category, covered=state))
-    return out
+    return out, quoted
 
 
 def _infer_type(name: str, low_text: str) -> ScholarshipType:
@@ -456,6 +472,20 @@ def _infer_type(name: str, low_text: str) -> ScholarshipType:
         if hint in hay:
             return kind
     return ScholarshipType.UNKNOWN
+
+
+def _first_sentence_with(text: str, needle: str) -> str:
+    """A verbatim sentence from the page containing `needle`, or empty."""
+    if not needle:
+        return ""
+    flat = " ".join(text.split())
+    index = flat.lower().find(needle.lower())
+    if index < 0:
+        return ""
+    start = max(0, flat.rfind(".", 0, index) + 1)
+    end = flat.find(".", index + len(needle))
+    end = len(flat) if end < 0 else end + 1
+    return flat[start:end].strip()[:400]
 
 
 def _line_with(text: str, needle: str) -> str:
