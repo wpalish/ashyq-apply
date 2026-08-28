@@ -180,6 +180,86 @@ proves the machinery and a tool that researches an arbitrary university.
 
 ---
 
+---
+
+## Loop 8 — Production hardening: P0 (live truth correctness)
+
+The previous report closed with a critique that scored *factual reliability* at
+9/10. A live run then showed six false-positive claims. The score was wrong
+because it was taken against a corpus written from the same assumptions as the
+code.
+
+**Baseline first.** `pip-audit` had never been run: 36 advisories across 4
+packages, 20 of them in `pypdf`, which sits directly in the PDF parsing path.
+Upgraded; `requirements.txt` now carries floors annotated with advisory ids.
+
+**Ten false positives, each with a regression test before the fix.**
+
+| # | The system claimed | Root cause | Fix |
+|---|---|---|---|
+| FP-1 | A programme existed, from a general admissions page | No page classification at all — HTTP 200 was treated as confirmation | `page_classifier.py` (14 classes) + `matching.py`; PROGRAM_EXISTS needs a programme page whose subject and degree match |
+| FP-2 | Every intake was open | Inferred from the absence of "applications are closed" | Positive claims need positive evidence, scoped to the cycle asked about |
+| FP-3 | Evidence quoted sentences the extractor wrote | Excerpts were built, not quoted | Every excerpt is verbatim; asserted on both adapters |
+| FP-4 | Index, FAQ and navigation pages were scholarships | Every anchor was followed and every page trusted | Only `SCHOLARSHIP_AWARD` pages produce awards |
+| FP-5 | Any mention of "international students" meant eligible | Substring test | Affirmative clause required |
+| FP-6 | An MSc award was offered to a bachelor applicant | Degree was never checked | `applicability.py` + `degree_applicability` |
+| FP-7 | No deadline meant available | One field answering several questions | Seven separate states, all defaulting to unknown |
+| FP-8 | `candidate_limit` was accepted | It was never read | Persisted on the run, applied, capped, reused on retry |
+| FP-9 | A Playwright tier "existed" | Constructed every run, invoked never | Escalation moved inside `Fetcher`; tiers recorded and asserted |
+| FP-10 | A reload kept the demo profile in the draft | Restore populated `savedProfile` only | Draft hydrated from the payload; demo loads only on explicit confirmation |
+
+**Then the canary found five more that the fixtures could not.**
+
+| # | Defect | Why fixtures missed it |
+|---|---|---|
+| C-1 | Site chrome read as content: the global menu made an award page look like an index and an admissions page like a catalogue; the first `<h1>` came from the header | Hand-written fixtures have no site chrome |
+| C-2 | "…who has obtained their bachelor's degree" read as "this award is for bachelors" | Nobody writes that sentence in a fixture |
+| C-3 | An award's level settled by a positive statement about a *different* level ("for one of the following Master of Science Programmes") | Fixtures state exclusions explicitly |
+| C-4 | "Scholarships from other providers" treated as an award | Fixture headings are either clean names or bare categories |
+| C-5 | `\btuition fee\b` does not match "tuition fees" | The fixture used the singular |
+
+Two further defects surfaced while fixing these: `classify()` ignored
+applicant-level eligibility, so an EEA-only award was classified as funding for
+a Kazakhstani applicant; and the frontend/backend contract parser was truncated
+by a semicolon inside a doc comment, silently shortening the vocabulary it
+checked.
+
+**Two test expectations were corrected**, both with reasons recorded in the test
+file: an EEA-only award is a citizenship restriction, not a blanket exclusion of
+international students; and a one-activity profile is not what "substantive
+activity record" means.
+
+**Result.** 301 backend tests (from 240), 47 frontend unit (from 39), 48 E2E
+(from 42). Coverage 89%. Live canary against Groningen and TU Delft: two claims,
+both true, both quoting real page text, zero false positives — recorded
+claim-by-claim in `docs/CANARY_AUDIT.md`.
+
+**What this loop did not do.** P1 through P12 are untouched: no PostgreSQL, no
+migrations, no durable queue, no authentication, no multi-tenancy, no
+containers, no CI. `RELEASE_CHECKLIST.md` tracks all thirty gates; 17 pass.
+
+### Critique, re-scored after the canary
+
+The previous scores were taken against the product's own fixtures. These are
+taken against a live run.
+
+| Dimension | Was | Now | Why it moved |
+|---|---:|---:|---|
+| Factual reliability | 9 | **8** | Zero false positives on two live institutions, proven claim by claim — but three institutions are unaudited, so 9 would be unearned |
+| Source provenance | 9 | **9** | Excerpts are now verbatim everywhere, and page class is recorded per source |
+| Admissions correctness | 8 | **7** | More correct and much less complete: live runs now mostly answer "unknown" |
+| Scholarship classification | 9 | **9** | Degree applicability and decomposed availability close the two worst gaps |
+| Privacy | 9 | **8** | The PII guard aborted an entire run on a CMS node id; now scoped and non-fatal, but it was shipped untested against real URLs |
+| Scraper resilience | 7 | **8** | Chrome stripping, correct URL joining, same-domain restriction, non-fatal refusals |
+| UX | 8 | **7** | The reload bug destroyed real data; the form still covers a subset of the schema |
+| Maintainability | 8 | **7** | `runner.py` is 780 lines and `page_classifier.py` 420; both want splitting |
+| Test coverage | 9 | **9** | 396 tests, 89% coverage, and the new tests encode real defects rather than happy paths |
+| Accessibility | 8 | **7** | Unchanged in substance, but no axe run means the score was never earned |
+| **Production readiness** | — | **2** | No auth, no durable jobs, no PostgreSQL, no containers, no CI |
+
+**Weakest link is no longer live discovery — it is that this is not production
+software.** Correctness work is ahead of the platform work by a wide margin.
+
 ## Known remaining limitations
 
 1. Live discovery reaches landing pages more reliably than requirement pages, so

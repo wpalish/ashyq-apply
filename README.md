@@ -1,7 +1,16 @@
-# UniMatch
+# ASHYQ Apply
+
+*Internal package, database and module names remain `unimatch`; renaming them
+now would be churn without benefit. The product name is ASHYQ Apply.*
 
 University and scholarship shortlisting for international applicants, where every
 material value on screen traces back to the page it was read from.
+
+> **Status: NOT READY for production.** This is a working local prototype whose
+> live-mode claims are now trustworthy, but it has no authentication, no
+> multi-tenancy, no durable job system and no deployment story. See
+> [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md) for the honest position and
+> [`RELEASE_CHECKLIST.md`](RELEASE_CHECKLIST.md) for what is left.
 
 The product answers one question — *which universities can I get into, and which
 of those will actually pay for it?* — and it answers it with a source, an
@@ -20,6 +29,11 @@ against a bundled corpus, with no API keys and no network access.
 ```bash
 cd backend && ./setup.sh && ./run.sh
 ```
+
+There are no migrations yet: the schema is created with `create_all()`, which
+cannot add a column to an existing table. Startup fails fast and names any
+missing columns; for a local database the fix is to delete
+`backend/data/unimatch.db` and start again.
 
 **Frontend**
 
@@ -114,7 +128,7 @@ backend/
 │   ├── export/          CSV / JSON / XLSX, provenance included
 │   ├── models/          SQLAlchemy (SQLite now, PostgreSQL-ready)
 │   └── corpus/          The bundled synthetic demo corpus + its generator
-└── tests/               240 tests
+└── tests/               301 tests
 frontend/
 ├── src/
 │   ├── screens/         The nine workflow screens
@@ -155,10 +169,18 @@ profile_validation → candidate_discovery → program_verification
     → document_collection → completed
 ```
 
-State lives in the database, not in a running task, so a run survives a restart
-and a failed stage can be retried on its own. Document collection runs *after*
-the user decides, because it is the expensive stage and only the shortlist
-needs it.
+State lives in the database, not in a running task. A worker holds a lease on
+the run and refreshes it as it makes progress; a lease that stops being
+refreshed is how a crashed worker becomes visible. On startup, runs whose lease
+expired are moved to `retryable_failed` rather than being left claiming to
+run, and the API reports such a run as `stale` so the UI stops polling it.
+
+**This is not yet full crash recovery.** A recovered run must currently be
+retried by the user; it does not resume itself from its last completed stage.
+The durable queue that would make that possible is P1 and is not built.
+
+Document collection runs *after* the user decides, because it is the expensive
+stage and only the shortlist needs it.
 
 ---
 
@@ -183,9 +205,13 @@ rehearses the real extraction path rather than returning canned objects.
 
 1. Structured data where a site publishes it.
 2. Plain HTTP for static pages.
-3. **Playwright** for JavaScript-rendered pages — escalated to only when a plain
-   fetch returns a page with no extractable content, and gated by robots.txt
-   exactly as plain HTTP is.
+3. **Playwright** for JavaScript-rendered pages. Escalation lives inside
+   `Fetcher`, so every adapter goes through it; the tier that produced each
+   page is recorded, and per-run tier counts are on the run. It fires only when
+   a plain fetch returns a page with under 400 characters of extractable text,
+   and it is gated by robots.txt exactly as plain HTTP is. Two tests assert
+   that it is genuinely invoked and that it is *not* invoked for a page that
+   already has content.
 4. **PDF parsing** for handbooks and fee schedules.
 5. Otherwise `NOT_FOUND` / `NEEDS_OFFICIAL_CLARIFICATION`, never a guess.
 
@@ -230,9 +256,13 @@ homepage rather than a search engine — a search query would carry applicant
 context off the machine.
 
 Live mode is slower, and it finds less. That is honest: it reports what it could
-read and marks the rest as not found. It has been exercised against real
-university sites during development; see `LOOP_REPORT.md` for what it found and
-what it could not.
+read and marks the rest as not found.
+
+A **live truth audit** against `rug.nl` and `tudelft.nl` is recorded in
+[`docs/CANARY_AUDIT.md`](docs/CANARY_AUDIT.md): every claim the system made,
+checked by hand against the page it came from. It currently shows **zero
+false-positive material claims** for those two institutions. Aalto, Vienna and
+Warsaw have not yet been audited.
 
 ---
 
@@ -243,8 +273,8 @@ what it could not.
 cd backend
 ./setup.sh                                    # venv + dependencies + corpus + browser
 ./run.sh                                      # API on :8099
-./.venv/bin/python -m pytest                  # 240 tests
-./.venv/bin/python -m pytest --cov=app        # with coverage (88%)
+./.venv/bin/python -m pytest                  # 301 tests
+./.venv/bin/python -m pytest --cov=app        # with coverage (89%)
 ./.venv/bin/python -m ruff check app tests    # lint
 ./.venv/bin/python -m mypy app                # type check
 ./.venv/bin/python seed_demo.py --approve     # run the whole pipeline on the CLI
@@ -255,8 +285,8 @@ npm run dev            # Vite on :5173, proxies /api to :8099
 npm run build          # production build
 npm run typecheck      # tsc --noEmit
 npm run lint           # eslint
-npm test               # 39 Vitest unit tests
-npm run e2e            # 42 Playwright tests, desktop + mobile (starts both servers itself)
+npm test               # 47 Vitest unit tests
+npm run e2e            # 48 Playwright tests, desktop + mobile (starts both servers itself)
 npm run e2e:report     # open the last Playwright report
 ```
 
@@ -268,14 +298,15 @@ Or from the repository root: `make setup`, `make dev`, `make test`, `make check`
 
 | Check | Result |
 |---|---|
-| Backend tests | 240 passed |
-| Backend coverage | 88% (`app/`) |
+| Backend tests | 301 passed |
+| Backend coverage | 89% (`app/`) |
 | Backend lint (ruff) | clean |
-| Backend types (mypy) | clean, 60 files |
-| Frontend unit tests | 39 passed |
+| Python dependency audit (pip-audit) | clean (36 advisories found and fixed at baseline) |
+| Backend types (mypy) | clean, 63 files |
+| Frontend unit tests | 47 passed |
 | Frontend typecheck | clean |
 | Frontend lint (eslint) | clean |
-| E2E (Playwright) | 42 passed — desktop 1440×900 and Pixel 7 |
+| E2E (Playwright) | 48 passed — desktop 1440×900 and Pixel 7 |
 | Console errors during the full journey | 0 |
 | Horizontal overflow at 320/768/1024/1440 | none |
 | Production bundle | 68.9 kB JS gzipped, 5.1 kB CSS |
@@ -299,7 +330,7 @@ Copy `.env.example` to `backend/.env`. No secrets are required to run anything.
 | `UNIMATCH_CANDIDATE_LIMIT` | `40` | Candidates to discover |
 | `UNIMATCH_VERIFY_LIMIT` | `20` | Candidates to verify in depth |
 | `UNIMATCH_TARGET_CURRENCY` | `USD` | Currency for cost comparison |
-| `UNIMATCH_DATABASE_URL` | SQLite file | Swap for a PostgreSQL URL to migrate |
+| `UNIMATCH_DATABASE_URL` | SQLite file | SQLite only so far. The model layer avoids SQLite-only types, but **PostgreSQL has never been run against this schema** and there are no migrations. |
 
 ---
 
@@ -307,7 +338,9 @@ Copy `.env.example` to `backend/.env`. No secrets are required to run anything.
 
 These are real, and the UI states them rather than hiding them.
 
-1. **No outcome prediction.** UniMatch reports published criteria. Selection is
+0. **Not production software.** No authentication, no multi-tenancy, no durable
+   job queue, no PostgreSQL, no containers, no CI. Single user, local machine.
+1. **No outcome prediction.** ASHYQ Apply reports published criteria. Selection is
    competitive and depends on factors no public page states.
 2. **Extraction is rule-based and conservative.** It finds what its patterns
    match and reports nothing where they do not. On live pages it will miss
@@ -322,9 +355,10 @@ These are real, and the UI states them rather than hiding them.
 6. **Cost pages behind a fee calculator** yield no figures. TU Delft's tuition
    page is a real example: the page is readable, the numbers are not on it, and
    the result is an honest "no cost figures could be extracted".
-7. **The job queue is in-process.** It is fine for one applicant on one machine;
-   the interface (`submit`/`status`/`cancel`) is the one Celery or RQ would
-   expose, so replacing it touches `pipeline/queue.py` only.
+7. **The job queue is in-process.** A crashed worker's run is detected and
+   marked `retryable_failed`, but it does not resume itself. Fine for one
+   applicant on one machine; the interface (`submit`/`status`/`cancel`) is the
+   one Celery or RQ would expose, so replacing it touches `pipeline/queue.py`.
 8. **Demo data is synthetic**, as described above.
 9. **No portal automation.** Nothing is uploaded, submitted, signed or paid for.
 
@@ -347,6 +381,9 @@ These are real, and the UI states them rather than hiding them.
 
 ## Documents
 
+- [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md) — the honest baseline, including what is missing
+- [`docs/CANARY_AUDIT.md`](docs/CANARY_AUDIT.md) — live truth audit, claim by claim
+- [`RELEASE_CHECKLIST.md`](RELEASE_CHECKLIST.md) — the gates, and which are open
 - [`ASSUMPTIONS.md`](ASSUMPTIONS.md) — every decision taken without asking, and why
 - [`LOOP_REPORT.md`](LOOP_REPORT.md) — each build/test/critique cycle, the defects found and how they were fixed
 - [`docs/screenshots/`](docs/screenshots/) — every main state, desktop and mobile
