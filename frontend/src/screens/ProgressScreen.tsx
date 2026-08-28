@@ -1,0 +1,140 @@
+/**
+ * Screen 03 — Research progress.
+ *
+ * There is never an unexplained spinner here: each stage names what it is
+ * doing, how far it has got, and every page it failed to read.
+ */
+
+import { Chip, Loading, Notice, Panel, Stat } from '@/components/primitives';
+import { dateTime } from '@/lib/format';
+import { useStore } from '@/lib/store';
+
+const STAGE_LABELS: Record<string, string> = {
+  profile_validation: 'Checking your profile',
+  candidate_discovery: 'Finding candidate universities',
+  program_verification: 'Reading official programme pages',
+  funding_discovery: 'Reading official scholarship pages',
+  assessment: 'Comparing your profile against what was published',
+  awaiting_user_decision: 'Waiting for your decisions',
+  document_collection: 'Collecting documents for approved programmes',
+  completed: 'Finished',
+};
+
+export function ProgressScreen({ onDone }: { onDone: () => void }) {
+  const { run, cancelRun, retryRun, results } = useStore();
+
+  if (!run) {
+    return (
+      <Panel title="No research is running">
+        <p className="muted small">Start a run from the preferences screen.</p>
+      </Panel>
+    );
+  }
+
+  const finished = ['awaiting_user_decision', 'completed'].includes(run.stage);
+  const failed = run.stage === 'failed';
+  const cancelled = run.stage === 'cancelled';
+
+  return (
+    <>
+      <div className="screen__head">
+        <p className="screen__eyebrow">Step 03</p>
+        <h1 className="screen__title">
+          {failed ? 'Research failed' : cancelled ? 'Research cancelled' : finished ? 'Research complete' : 'Researching'}
+        </h1>
+        <p className="screen__lede">{STAGE_LABELS[run.stage] ?? run.stage.replace(/_/g, ' ')}</p>
+      </div>
+
+      <div className="stack stack--loose">
+        <div className="stack stack--tight">
+          <div className="meter" role="progressbar" aria-valuenow={Math.round(run.progress * 100)}
+               aria-valuemin={0} aria-valuemax={100} aria-label="Research progress">
+            <div className="meter__fill" style={{ width: `${Math.max(3, run.progress * 100)}%` }} />
+          </div>
+          <div className="row" style={{ justifyContent: 'space-between' }}>
+            <span className="xs muted">{Math.round(run.progress * 100)}% of stages complete</span>
+            <span className="xs faint">
+              started {dateTime(run.started_at)}
+              {run.finished_at && ` · finished ${dateTime(run.finished_at)}`}
+            </span>
+          </div>
+        </div>
+
+        <div className="statband">
+          <Stat value={run.candidates_found} label="Candidates found" />
+          <Stat value={run.programs_verified} label="Programmes checked" />
+          <Stat value={run.pages_checked} label="Official pages read" />
+          <Stat value={run.pages_failed} label="Pages unreadable" />
+          <Stat value={run.claims_recorded} label="Claims recorded" />
+          <Stat value={results.length} label="Results ready" />
+        </div>
+
+        <Panel title="Stages">
+          <div className="stage-list" data-testid="stage-list">
+            {run.stages.map((s) => (
+              <div key={s.stage} className={`stage stage--${s.status}`}>
+                <span className="stage__dot" aria-hidden="true" />
+                <div>
+                  <div className="stage__name">{STAGE_LABELS[s.stage] ?? s.stage.replace(/_/g, ' ')}</div>
+                  {s.detail && <div className="stage__detail">{s.detail}</div>}
+                  {s.error && <div className="stage__detail" style={{ color: 'var(--risk)' }}>{s.error}</div>}
+                </div>
+                <div className="row row--tight">
+                  {s.items_total > 0 && (
+                    <span className="num xs faint">{s.items_done}/{s.items_total}</span>
+                  )}
+                  <Chip tone={s.status === 'done' ? 'ok' : s.status === 'failed' ? 'risk' : s.status === 'running' ? 'accent' : 'neutral'}>
+                    {s.status}
+                  </Chip>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Panel>
+
+        {run.errors.length > 0 && (
+          <Panel
+            title={`Pages that could not be read (${run.errors.length})`}
+            hint="Listed rather than hidden. Anything here is reported as not found in the results, never guessed."
+          >
+            <div className="stack stack--tight" style={{ maxHeight: '18rem', overflowY: 'auto' }}>
+              {run.errors.slice(0, 60).map((e, i) => (
+                <div key={i} className="xs mono muted" style={{ overflowWrap: 'anywhere' }}>{e}</div>
+              ))}
+            </div>
+          </Panel>
+        )}
+
+        {run.retry_urls.length > 0 && (
+          <Notice kind="warn">
+            <div>
+              <strong>{run.retry_urls.length} pages are queued for a re-check.</strong> They failed
+              transiently (timeout, rate limit, or a server error) rather than being missing.
+            </div>
+          </Notice>
+        )}
+
+        <div className="row">
+          {run.job_running && (
+            <>
+              <Loading label="Working…" />
+              <button className="btn btn--danger" onClick={cancelRun} data-testid="cancel-run">
+                Cancel run
+              </button>
+            </>
+          )}
+          {(failed || cancelled) && (
+            <button className="btn btn--primary" onClick={retryRun} data-testid="retry-run">
+              Retry from the failed stage
+            </button>
+          )}
+          {finished && results.length > 0 && (
+            <button className="btn btn--primary" onClick={onDone} data-testid="to-shortlist">
+              View {results.length} results →
+            </button>
+          )}
+        </div>
+      </div>
+    </>
+  );
+}

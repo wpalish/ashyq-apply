@@ -1,0 +1,65 @@
+# ---------------------------------------------------------------------------
+# Applicant data must never enter version control. These rules come first so
+# they cannot be accidentally overridden by a later negation.
+# ---------------------------------------------------------------------------
+backend/data/*
+!backend/data/.gitkeep
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+**/exports/
+**/httpcache/
+**/applicant-cases/
+*.applicant.json
+
+# Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+service-account*.json
+.secrets/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+*.egg-info/
+build/
+
+# Node
+node_modules/
+dist/
+.vite/
+*.tsbuildinfo
+npm-debug.log*
+yarn-error.log*
+
+# Test artefacts
+playwright-report/
+test-results/
+blob-report/
+.playwright/
+
+# Tooling output
+sbom*.json
+*-audit.json
+.DS_Store
+.idea/
+.vscode/
+*.swp

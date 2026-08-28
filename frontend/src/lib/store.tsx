@@ -1,0 +1,279 @@
+/**
+ * Application state.
+ *
+ * One context holding the profile draft, the active run and the results.
+ * Deliberately hand-rolled: the app has a single linear workflow and one
+ * server, so a store library would add a dependency without removing any code.
+ */
+
+import {
+  createContext, useCallback, useContext, useEffect, useMemo, useRef, useState,
+  type ReactNode,
+} from 'react';
+import { ApiError, api } from '@/api/client';
+import { DEFAULT_PROFILE } from '@/lib/defaultProfile';
+import type {
+  Capabilities, ProfileValidationReport, ProgramResult, RunView, ShortlistSummary,
+  StoredProfile, UserDecision,
+} from '@/types';
+
+const POLL_MS = 1200;
+const RUN_KEY = 'unimatch.activeRun';
+const PROFILE_KEY = 'unimatch.activeProfile';
+
+/** localStorage can throw in private windows; a missing value is never fatal. */
+function readLocal(key: string): string | null {
+  try {
+    return window.localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+function writeLocal(key: string, value: string | null): void {
+  try {
+    if (value === null) window.localStorage.removeItem(key);
+    else window.localStorage.setItem(key, value);
+  } catch {
+    /* storage unavailable — state still lives in memory for this session */
+  }
+}
+
+export interface Store {
+  capabilities: Capabilities | null;
+  profileDraft: Record<string, unknown>;
+  setProfileDraft: (updater: (d: Record<string, unknown>) => Record<string, unknown>) => void;
+  savedProfile: StoredProfile | null;
+  validation: ProfileValidationReport | null;
+  run: RunView | null;
+  results: ProgramResult[];
+  summary: ShortlistSummary | null;
+  loading: boolean;
+  error: string | null;
+  saveProfile: () => Promise<void>;
+  startRun: (demoMode: boolean) => Promise<void>;
+  cancelRun: () => Promise<void>;
+  retryRun: () => Promise<void>;
+  collectDocuments: () => Promise<void>;
+  decide: (resultId: string, decision: UserDecision, reason: string, notes: string) => Promise<void>;
+  refreshResults: () => Promise<void>;
+  deleteEverything: () => Promise<void>;
+  clearError: () => void;
+}
+
+const StoreContext = createContext<Store | null>(null);
+
+export function StoreProvider({ children }: { children: ReactNode }) {
+  const [capabilities, setCapabilities] = useState<Capabilities | null>(null);
+  const [profileDraft, setDraft] = useState<Record<string, unknown>>(
+    () => structuredClone(DEFAULT_PROFILE) as Record<string, unknown>,
+  );
+  const [savedProfile, setSavedProfile] = useState<StoredProfile | null>(null);
+  const [validation, setValidation] = useState<ProfileValidationReport | null>(null);
+  const [run, setRun] = useState<RunView | null>(null);
+  const [results, setResults] = useState<ProgramResult[]>([]);
+  const [summary, setSummary] = useState<ShortlistSummary | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const pollRef = useRef<number | null>(null);
+
+  const fail = useCallback((e: unknown) => {
+    setError(e instanceof ApiError ? e.message : String(e));
+  }, []);
+
+  useEffect(() => {
+    api.capabilities().then(setCapabilities).catch(fail);
+  }, [fail]);
+
+  // Validation follows the draft, debounced so typing does not flood the API.
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      api.validateProfile(profileDraft).then(setValidation).catch(() => setValidation(null));
+    }, 400);
+    return () => window.clearTimeout(timer);
+  }, [profileDraft]);
+
+  const refreshResults = useCallback(async () => {
+    if (!run) return;
+    try {
+      const [rows, sum] = await Promise.all([api.results(run.id), api.summary(run.id)]);
+      setResults(rows);
+      setSummary(sum);
+    } catch (e) {
+      fail(e);
+    }
+  }, [run, fail]);
+
+  // Restore an in-flight run after a reload rather than losing it.
+  useEffect(() => {
+    const stored = readLocal(RUN_KEY);
+    if (!stored) return;
+    api.getRun(stored).then(setRun).catch(() => writeLocal(RUN_KEY, null));
+    const profileId = readLocal(PROFILE_KEY);
+    if (profileId) {
+      api.listProfiles()
+        .then((all) => setSavedProfile(all.find((p) => p.id === profileId) ?? null))
+        .catch(() => undefined);
+    }
+  }, []);
+
+  // Poll only while work is actually happening.
+  useEffect(() => {
+    const active =
+      run &&
+      (run.job_running ||
+        ['queued', 'profile_validation', 'candidate_discovery', 'program_verification',
+         'funding_discovery', 'assessment', 'document_collection'].includes(run.stage));
+    if (!active) {
+      if (pollRef.current) window.clearInterval(pollRef.current);
+      pollRef.current = null;
+      return;
+    }
+    pollRef.current = window.setInterval(async () => {
+      try {
+        const next = await api.getRun(run.id);
+        setRun(next);
+        if (next.results_count !== results.length) {
+          const [rows, sum] = await Promise.all([api.results(next.id), api.summary(next.id)]);
+          setResults(rows);
+          setSummary(sum);
+        }
+      } catch (e) {
+        fail(e);
+      }
+    }, POLL_MS);
+    return () => {
+      if (pollRef.current) window.clearInterval(pollRef.current);
+    };
+  }, [run, results.length, fail]);
+
+  // Pull the final results once the pipeline settles.
+  useEffect(() => {
+    if (run && ['awaiting_user_decision', 'completed'].includes(run.stage) && !run.job_running) {
+      refreshResults();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [run?.stage, run?.job_running]);
+
+  const setProfileDraft = useCallback(
+    (updater: (d: Record<string, unknown>) => Record<string, unknown>) => setDraft((d) => updater(d)),
+    [],
+  );
+
+  const saveProfile = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const saved = savedProfile
+        ? await api.updateProfile(savedProfile.id, profileDraft)
+        : await api.createProfile(profileDraft);
+      setSavedProfile(saved);
+      writeLocal(PROFILE_KEY, saved.id);
+    } catch (e) {
+      fail(e);
+      throw e;
+    } finally {
+      setLoading(false);
+    }
+  }, [profileDraft, savedProfile, fail]);
+
+  const startRun = useCallback(async (demoMode: boolean) => {
+    setLoading(true);
+    setError(null);
+    try {
+      let profile = savedProfile;
+      if (!profile) {
+        profile = await api.createProfile(profileDraft);
+        setSavedProfile(profile);
+        writeLocal(PROFILE_KEY, profile.id);
+      } else {
+        await api.updateProfile(profile.id, profileDraft);
+      }
+      const started = await api.startRun(profile.id, demoMode);
+      setRun(started);
+      setResults([]);
+      setSummary(null);
+      writeLocal(RUN_KEY, started.id);
+    } catch (e) {
+      fail(e);
+    } finally {
+      setLoading(false);
+    }
+  }, [profileDraft, savedProfile, fail]);
+
+  const cancelRun = useCallback(async () => {
+    if (!run) return;
+    try {
+      setRun(await api.cancelRun(run.id));
+    } catch (e) {
+      fail(e);
+    }
+  }, [run, fail]);
+
+  const retryRun = useCallback(async () => {
+    if (!run) return;
+    try {
+      setRun(await api.retryRun(run.id));
+      setResults([]);
+    } catch (e) {
+      fail(e);
+    }
+  }, [run, fail]);
+
+  const collectDocuments = useCallback(async () => {
+    if (!run) return;
+    setError(null);
+    try {
+      setRun(await api.collectDocuments(run.id));
+    } catch (e) {
+      fail(e);
+    }
+  }, [run, fail]);
+
+  const decide = useCallback(
+    async (resultId: string, decision: UserDecision, reason: string, notes: string) => {
+      if (!run) return;
+      try {
+        const updated = await api.decide(run.id, resultId, decision, reason, notes);
+        setResults((rows) => rows.map((r) => (r.id === resultId ? updated : r)));
+        setSummary(await api.summary(run.id));
+      } catch (e) {
+        fail(e);
+      }
+    },
+    [run, fail],
+  );
+
+  const deleteEverything = useCallback(async () => {
+    if (!savedProfile) return;
+    try {
+      await api.deleteProfile(savedProfile.id);
+      setSavedProfile(null);
+      setRun(null);
+      setResults([]);
+      setSummary(null);
+      writeLocal(RUN_KEY, null);
+      writeLocal(PROFILE_KEY, null);
+    } catch (e) {
+      fail(e);
+    }
+  }, [savedProfile, fail]);
+
+  const value = useMemo<Store>(
+    () => ({
+      capabilities, profileDraft, setProfileDraft, savedProfile, validation, run, results,
+      summary, loading, error, saveProfile, startRun, cancelRun, retryRun, collectDocuments,
+      decide, refreshResults, deleteEverything, clearError: () => setError(null),
+    }),
+    [capabilities, profileDraft, setProfileDraft, savedProfile, validation, run, results, summary,
+     loading, error, saveProfile, startRun, cancelRun, retryRun, collectDocuments, decide,
+     refreshResults, deleteEverything],
+  );
+
+  return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
+}
+
+export function useStore(): Store {
+  const ctx = useContext(StoreContext);
+  if (!ctx) throw new Error('useStore must be used inside <StoreProvider>');
+  return ctx;
+}

@@ -1,0 +1,15 @@
+line-length = 100
+target-version = "py312"
+
+[lint]
+select = ["E", "F", "W", "I", "B", "UP", "C4", "SIM", "RUF"]
+ignore = [
+  "E501",   # line length is enforced by the formatter, not the linter
+  "B008",   # FastAPI's Depends() in defaults is the documented idiom
+  "RUF001", # typographic quotes and dashes are intentional in user-facing copy
+  "RUF002",
+  "RUF003",
+]
+
+[lint.per-file-ignores]
+"tests/*" = ["B011"]

@@ -1,0 +1,266 @@
+"""API contract: the routes the frontend depends on, plus privacy operations."""
+
+from __future__ import annotations
+
+import csv
+import io
+import json
+import re
+import time
+
+import pytest
+from fastapi.testclient import TestClient
+
+from app.corpus.demo_profile import DEMO_PROFILE
+
+
+@pytest.fixture
+def client(tmp_path, monkeypatch, corpus_dir):
+    """A client backed by a throwaway database and the bundled corpus."""
+    from app.config import Settings, get_settings
+
+    settings = Settings(
+        demo_mode=True,
+        database_url=f"sqlite:///{tmp_path / 'api.db'}",
+        cache_dir=tmp_path / "cache",
+        export_dir=tmp_path / "exports",
+        corpus_dir=corpus_dir,
+        fetch_delay_seconds=0.0,
+        enable_browser_tier=False,
+    )
+    settings.ensure_dirs()
+    get_settings.cache_clear()
+    monkeypatch.setattr("app.config.get_settings", lambda: settings)
+
+    import app.db as db_module
+
+    engine = db_module.create_engine(
+        settings.database_url, connect_args={"check_same_thread": False}
+    )
+    monkeypatch.setattr(db_module, "engine", engine)
+    monkeypatch.setattr(
+        db_module, "SessionLocal", db_module.sessionmaker(bind=engine, future=True)
+    )
+
+    from app.main import app
+
+    with TestClient(app) as c:
+        yield c
+    get_settings.cache_clear()
+
+
+@pytest.fixture
+def finished_run(client):
+    profile = client.post("/api/profiles", json=DEMO_PROFILE.model_dump(mode="json")).json()
+    run = client.post("/api/runs", json={"profile_id": profile["id"], "demo_mode": True}).json()
+    for _ in range(400):
+        state = client.get(f"/api/runs/{run['id']}").json()
+        if state["stage"] in ("awaiting_user_decision", "failed", "cancelled"):
+            break
+        time.sleep(0.1)
+    assert state["stage"] == "awaiting_user_decision", state.get("errors")
+    return profile, state
+
+
+class TestMeta:
+    def test_health_reports_the_mode_it_is_running_in(self, client):
+        body = client.get("/api/health").json()
+        assert body["status"] == "ok"
+        assert body["demo_mode"] is True
+
+    def test_capabilities_state_the_guarantees_and_the_limits(self, client):
+        body = client.get("/api/capabilities").json()
+        assert any("robots.txt" in g for g in body["guarantees"])
+        assert any("never" in g and "outbound URL" in g for g in body["guarantees"])
+        assert any("cannot predict" in limit for limit in body["limits"])
+
+    def test_the_vocabulary_endpoint_exposes_every_controlled_list(self, client):
+        vocab = client.get("/api/vocabulary").json()
+        assert "FULL_RIDE_CONFIRMED" in vocab["funding_classification"]
+        assert "NEEDS_OFFICIAL_CLARIFICATION" in vocab["eligibility"]
+
+
+class TestProfiles:
+    def test_a_profile_round_trips(self, client):
+        created = client.post("/api/profiles", json=DEMO_PROFILE.model_dump(mode="json"))
+        assert created.status_code == 201
+        fetched = client.get(f"/api/profiles/{created.json()['id']}")
+        assert fetched.json()["context"]["citizenship"] == "Kazakhstan"
+
+    def test_validation_explains_the_consequence_of_each_gap(self, client):
+        payload = DEMO_PROFILE.model_dump(mode="json")
+        payload["academics"]["ielts"]["overall"] = None
+        report = client.post("/api/profiles/validate", json=payload).json()
+        english = next(g for g in report["gaps"] if "ielts" in g["field_path"])
+        assert "hard requirement" in english["impact"]
+
+    def test_a_missing_field_of_study_blocks_research(self, client):
+        payload = DEMO_PROFILE.model_dump(mode="json")
+        payload["context"]["intended_fields"] = []
+        report = client.post("/api/profiles/validate", json=payload).json()
+        assert report["can_proceed"] is False
+        assert report["blocking_count"] == 1
+
+    def test_an_invalid_ielts_band_is_rejected(self, client):
+        payload = DEMO_PROFILE.model_dump(mode="json")
+        payload["academics"]["ielts"]["overall"] = 6.2
+        assert client.post("/api/profiles", json=payload).status_code == 422
+
+    def test_a_grade_conversion_is_offered_with_its_caveat_never_applied(self, client):
+        body = client.get("/api/profiles/conversions/methods?scale_label=KZ 5-point").json()
+        assert body["methods"]
+        assert "not a credential evaluation" in body["methods"][0]["source"]
+        assert "never applied automatically" in body["note"].replace("is ever", "is never")
+
+
+class TestResearchAndResults:
+    def test_a_run_produces_results_with_evidence(self, client, finished_run):
+        _, run = finished_run
+        assert run["results_count"] >= 15
+        assert run["claims_recorded"] > 50
+
+        results = client.get(f"/api/runs/{run['id']}/results").json()
+        assert all(r["claims"] for r in results if r["source_urls"])
+
+    def test_the_summary_flags_demo_data(self, client, finished_run):
+        _, run = finished_run
+        summary = client.get(f"/api/runs/{run['id']}/summary").json()
+        assert summary["demo_data"] is True
+        assert summary["with_conflicts"] >= 1
+
+    def test_results_can_be_filtered(self, client, finished_run):
+        _, run = finished_run
+        met = client.get(f"/api/runs/{run['id']}/results?eligibility=MET").json()
+        assert met and all(r["eligibility"] == "MET" for r in met)
+
+    def test_open_questions_are_exposed_for_the_user_to_chase(self, client, finished_run):
+        _, run = finished_run
+        questions = client.get(f"/api/runs/{run['id']}/questions").json()
+        assert questions
+        assert any(q["topic"] == "source conflict" for q in questions)
+
+    def test_a_decision_is_recorded_with_its_reason(self, client, finished_run):
+        _, run = finished_run
+        result = client.get(f"/api/runs/{run['id']}/results").json()[0]
+        updated = client.post(
+            f"/api/runs/{run['id']}/results/{result['id']}/decision",
+            json={"decision": "approved", "reason": "best funded", "notes": "ask about housing"},
+        ).json()
+        assert updated["user_decision"] == "approved"
+        assert updated["user_decision_reason"] == "best funded"
+
+    def test_a_rejected_row_is_kept_not_deleted(self, client, finished_run):
+        _, run = finished_run
+        result = client.get(f"/api/runs/{run['id']}/results").json()[0]
+        client.post(
+            f"/api/runs/{run['id']}/results/{result['id']}/decision",
+            json={"decision": "rejected", "reason": "too expensive", "notes": ""},
+        )
+        rejected = client.get(f"/api/runs/{run['id']}/results?decision=rejected").json()
+        assert len(rejected) == 1
+        assert rejected[0]["user_decision_reason"] == "too expensive"
+
+    def test_documents_cannot_be_collected_before_anything_is_approved(self, client, finished_run):
+        _, run = finished_run
+        response = client.post(f"/api/runs/{run['id']}/collect-documents")
+        assert response.status_code == 400
+        assert "Approve at least one" in response.json()["detail"]
+
+    def test_documents_are_collected_for_approved_rows(self, client, finished_run):
+        _, run = finished_run
+        result = client.get(f"/api/runs/{run['id']}/results").json()[0]
+        client.post(f"/api/runs/{run['id']}/results/{result['id']}/decision",
+                    json={"decision": "approved", "reason": "", "notes": ""})
+        assert client.post(f"/api/runs/{run['id']}/collect-documents").status_code == 202
+
+        for _ in range(300):
+            state = client.get(f"/api/runs/{run['id']}").json()
+            if state["stage"] == "completed":
+                break
+            time.sleep(0.1)
+        assert state["stage"] == "completed"
+
+        updated = client.get(f"/api/runs/{run['id']}/results/{result['id']}").json()
+        assert updated["checklist"] is not None
+        assert updated["checklist"]["ordered_steps"]
+
+
+class TestExports:
+    def test_csv_carries_the_disclaimer_sources_and_data_origin(self, client, finished_run):
+        _, run = finished_run
+        response = client.get(f"/api/runs/{run['id']}/export.csv")
+        assert response.status_code == 200
+        text = response.text
+        assert "promises admission or an award" in text.splitlines()[0]
+
+        rows = list(csv.DictReader(io.StringIO("\n".join(text.splitlines()[1:]))))
+        assert rows
+        assert all(r["Data origin"] for r in rows)
+        assert any("DEMO FIXTURE" in r["Data origin"] for r in rows)
+        assert all(r["Last verified date"] for r in rows)
+
+    def test_csv_never_shows_an_unknown_as_a_blank(self, client, finished_run):
+        _, run = finished_run
+        text = client.get(f"/api/runs/{run['id']}/export.csv").text
+        rows = list(csv.DictReader(io.StringIO("\n".join(text.splitlines()[1:]))))
+        unknowns = [r for r in rows if r["Funding classification"] == "UNKNOWN"]
+        assert unknowns
+        for row in unknowns:
+            assert row["Estimated funding gap"].startswith("not computable")
+            assert row["Scholarship name"] in ("none found",) or row["Scholarship name"]
+
+    def test_json_export_includes_every_claim(self, client, finished_run):
+        _, run = finished_run
+        body = json.loads(client.get(f"/api/runs/{run['id']}/export.json").text)
+        assert "disclaimer" in body
+        assert body["count"] == len(body["results"])
+        assert any(r["claims"] for r in body["results"])
+
+    def test_xlsx_has_shortlist_evidence_and_questions_sheets(self, client, finished_run):
+        from openpyxl import load_workbook
+
+        _, run = finished_run
+        content = client.get(f"/api/runs/{run['id']}/export.xlsx").content
+        workbook = load_workbook(io.BytesIO(content))
+        assert workbook.sheetnames == ["Shortlist", "Evidence", "Open questions"]
+        assert workbook["Evidence"].max_row > 20
+        assert "promises admission or an award" in str(workbook["Shortlist"]["A1"].value)
+
+    def test_an_unsupported_format_is_rejected(self, client, finished_run):
+        _, run = finished_run
+        assert client.get(f"/api/runs/{run['id']}/export.pdf").status_code == 400
+
+
+class TestPrivacy:
+    def test_deleting_a_profile_removes_every_run_and_result(self, client, finished_run):
+        profile, run = finished_run
+        assert client.delete(f"/api/profiles/{profile['id']}").status_code == 204
+        assert client.get(f"/api/profiles/{profile['id']}").status_code == 404
+        assert client.get("/api/runs").json() == []
+
+    def test_a_profile_can_be_exported_in_full(self, client, finished_run):
+        profile, _ = finished_run
+        body = client.get(f"/api/profiles/{profile['id']}/export").json()
+        assert body["profile"]["context"]["citizenship"] == "Kazakhstan"
+        assert body["runs"]
+
+    def test_the_audit_log_records_actions_without_applicant_data(self, client, finished_run):
+        events = client.get("/api/audit").json()
+        assert events
+        assert "run_started" in {e["action"] for e in events}
+
+        serialised = json.dumps(events)
+        for phrase in ("Kazakhstan", "Demo Applicant", "IELTS", "TOEFL"):
+            assert phrase not in serialised, f"audit log leaked {phrase!r}"
+
+        # Bounded match: an unanchored "4.8" would hit the fractional seconds of
+        # a timestamp and turn this into a test of the clock.
+        assert not re.search(r"\b4\.8\b", serialised), "audit log leaked a GPA"
+
+        # Detail payloads must hold counts and flags only, never free text
+        # copied out of the profile.
+        for event in events:
+            for value in event["detail"].values():
+                assert isinstance(value, int | float | bool) or (
+                    isinstance(value, str) and len(value) < 60
+                ), f"audit detail carries an unexpected payload: {value!r}"
