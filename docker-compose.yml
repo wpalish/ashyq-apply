@@ -1,0 +1,130 @@
+# ASHYQ Apply — production-like stack.
+#
+#   docker compose up --build
+#   open http://localhost:8080
+#
+# Four services and one one-shot migration job. The API and the worker share an
+# image but not a role: the API only enqueues, the worker only consumes, and
+# neither starts until the migration has finished.
+
+name: ashyq-apply
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ashyq
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me-in-production}
+      POSTGRES_DB: ashyq_apply
+      # Deterministic collation, so index ordering does not depend on the host.
+      POSTGRES_INITDB_ARGS: "--locale=C --encoding=UTF8"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ashyq -d ashyq_apply"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    # Not published: only the app needs it. Add a port mapping to inspect it.
+    expose:
+      - "5432"
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 1g
+
+  # Runs once, to completion, before the API or the worker start. Migrating
+  # from inside a service would race in a rolling deploy.
+  migrate:
+    build:
+      context: ./backend
+    command: ["python", "-m", "alembic", "upgrade", "head"]
+    environment: &backend-env
+      UNIMATCH_ENVIRONMENT: production
+      UNIMATCH_DATABASE_URL: postgresql+psycopg://ashyq:${POSTGRES_PASSWORD:-change-me-in-production}@postgres:5432/ashyq_apply
+      UNIMATCH_AUTO_MIGRATE: "false"
+      UNIMATCH_DEMO_MODE: ${UNIMATCH_DEMO_MODE:-true}
+      UNIMATCH_RESPECT_ROBOTS: "true"
+      UNIMATCH_FETCH_CONTACT: ${UNIMATCH_FETCH_CONTACT:-}
+      UNIMATCH_CORS_ORIGINS: ${UNIMATCH_CORS_ORIGINS:-http://localhost:8080}
+      UNIMATCH_LOG_LEVEL: ${UNIMATCH_LOG_LEVEL:-INFO}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
+  api:
+    build:
+      context: ./backend
+    environment: *backend-env
+    ports:
+      - "${API_PORT:-8099}:8099"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+
+  worker:
+    build:
+      context: ./backend
+    command: ["python", "-m", "app.jobs.worker"]
+    environment:
+      <<: *backend-env
+      UNIMATCH_WORKER_CONCURRENCY: ${UNIMATCH_WORKER_CONCURRENCY:-2}
+      UNIMATCH_JOB_LEASE_SECONDS: ${UNIMATCH_JOB_LEASE_SECONDS:-120}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+    # Scale freely: workers coordinate through the database, so two never claim
+    # the same job.  docker compose up --scale worker=3
+    security_opt:
+      - no-new-privileges:true
+    # The HTTP cache is the only thing a worker writes outside the database.
+    volumes:
+      - worker-cache:/app/data
+    deploy:
+      resources:
+        limits:
+          memory: 1g
+    stop_grace_period: 60s   # let an in-flight job finish rather than orphan it
+
+  web:
+    build:
+      context: ./frontend
+    ports:
+      - "${WEB_PORT:-8080}:8080"
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/cache/nginx
+      - /var/run
+    security_opt:
+      - no-new-privileges:true
+    deploy:
+      resources:
+        limits:
+          memory: 128m
+
+volumes:
+  postgres-data:
+  worker-cache:

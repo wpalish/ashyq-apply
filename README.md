@@ -30,10 +30,15 @@ against a bundled corpus, with no API keys and no network access.
 cd backend && ./setup.sh && ./run.sh
 ```
 
-There are no migrations yet: the schema is created with `create_all()`, which
-cannot add a column to an existing table. Startup fails fast and names any
-missing columns; for a local database the fix is to delete
-`backend/data/unimatch.db` and start again.
+`run.sh` migrates the database, then starts the API. Add `--with-worker` to
+start a queue worker alongside for local use:
+
+```bash
+cd backend && ./run.sh --with-worker
+```
+
+In production the two are separate processes — the API only enqueues work and a
+worker consumes it — which is what `docker-compose.yml` runs.
 
 **Frontend**
 
@@ -123,12 +128,13 @@ backend/
 │   │   ├── cost/            Fee pages, HTML and PDF
 │   │   ├── documents/       Document checklists
 │   │   └── government/      Post-study work rules
-│   ├── pipeline/        State machine, resumable per stage, with a job queue
+│   ├── jobs/            Durable queue (store.py) and the worker process
+│   ├── pipeline/        State machine, resumable per stage
 │   ├── api/             FastAPI routes
 │   ├── export/          CSV / JSON / XLSX, provenance included
 │   ├── models/          SQLAlchemy (SQLite now, PostgreSQL-ready)
 │   └── corpus/          The bundled synthetic demo corpus + its generator
-└── tests/               301 tests
+└── tests/               349 tests
 frontend/
 ├── src/
 │   ├── screens/         The nine workflow screens
@@ -169,15 +175,18 @@ profile_validation → candidate_discovery → program_verification
     → document_collection → completed
 ```
 
-State lives in the database, not in a running task. A worker holds a lease on
-the run and refreshes it as it makes progress; a lease that stops being
-refreshed is how a crashed worker becomes visible. On startup, runs whose lease
-expired are moved to `retryable_failed` rather than being left claiming to
-run, and the API reports such a run as `stale` so the UI stops polling it.
+State lives in the database, not in a running task, and so do the jobs. A
+worker claims a job with `SELECT … FOR UPDATE SKIP LOCKED`, holds a lease on it
+and refreshes that lease as it works. A lease that stops being refreshed is how
+a crashed worker becomes visible: another worker's reaper returns the job to
+the queue, and a job that exhausts its attempts goes to `dead` rather than
+looping.
 
-**This is not yet full crash recovery.** A recovered run must currently be
-retried by the user; it does not resume itself from its last completed stage.
-The durable queue that would make that possible is P1 and is not built.
+**A crashed run resumes.** Stages already marked complete are not repeated, and
+persisting a result updates the row a previous attempt wrote rather than
+colliding with it. `scripts/crash_test.py` proves this by SIGKILLing a real
+worker after twelve results exist and requiring a second worker to finish
+without duplicating anything.
 
 Document collection runs *after* the user decides, because it is the expensive
 stage and only the shortlist needs it.
@@ -272,8 +281,13 @@ Warsaw have not yet been audited.
 # Backend
 cd backend
 ./setup.sh                                    # venv + dependencies + corpus + browser
-./run.sh                                      # API on :8099
-./.venv/bin/python -m pytest                  # 301 tests
+./run.sh                                      # migrate, then API on :8099
+./run.sh --with-worker                        # ... and a queue worker alongside
+./worker.sh                                   # a worker on its own (run several)
+python scripts/pg.py --print-uri              # a local PostgreSQL, no install needed
+python scripts/pg.py .venv/bin/pytest         # run the suite against PostgreSQL
+python scripts/pg.py .venv/bin/python scripts/crash_test.py   # SIGKILL recovery proof
+./.venv/bin/python -m pytest                  # 349 tests
 ./.venv/bin/python -m pytest --cov=app        # with coverage (89%)
 ./.venv/bin/python -m ruff check app tests    # lint
 ./.venv/bin/python -m mypy app                # type check
@@ -298,11 +312,11 @@ Or from the repository root: `make setup`, `make dev`, `make test`, `make check`
 
 | Check | Result |
 |---|---|
-| Backend tests | 301 passed |
-| Backend coverage | 89% (`app/`) |
+| Backend tests | 349 passed (SQLite **and** PostgreSQL 16.2) |
+| Backend coverage | 89% (`app/`); jobs/store 91%, jobs/worker 83%, pipeline/runner 91% |
 | Backend lint (ruff) | clean |
 | Python dependency audit (pip-audit) | clean (36 advisories found and fixed at baseline) |
-| Backend types (mypy) | clean, 63 files |
+| Backend types (mypy) | clean, 67 files |
 | Frontend unit tests | 47 passed |
 | Frontend typecheck | clean |
 | Frontend lint (eslint) | clean |
@@ -310,6 +324,10 @@ Or from the repository root: `make setup`, `make dev`, `make test`, `make check`
 | Console errors during the full journey | 0 |
 | Horizontal overflow at 320/768/1024/1440 | none |
 | Production bundle | 68.9 kB JS gzipped, 5.1 kB CSS |
+
+| Crash recovery | verified: real SIGKILL, job recovered, 0 duplicate results |
+| Migrations | verified: fresh, downgrade, re-upgrade, re-apply, both backends |
+| Container stack | **written, never run** — Docker is not installed here |
 
 Screenshots of every main state are in [`docs/screenshots/`](docs/screenshots/)
 (desktop) and `docs/screenshots/mobile/`.
@@ -330,7 +348,10 @@ Copy `.env.example` to `backend/.env`. No secrets are required to run anything.
 | `UNIMATCH_CANDIDATE_LIMIT` | `40` | Candidates to discover |
 | `UNIMATCH_VERIFY_LIMIT` | `20` | Candidates to verify in depth |
 | `UNIMATCH_TARGET_CURRENCY` | `USD` | Currency for cost comparison |
-| `UNIMATCH_DATABASE_URL` | SQLite file | SQLite only so far. The model layer avoids SQLite-only types, but **PostgreSQL has never been run against this schema** and there are no migrations. |
+| `UNIMATCH_DATABASE_URL` | SQLite file | PostgreSQL in production. The full test suite runs against PostgreSQL 16.2 as well as SQLite. |
+| `UNIMATCH_AUTO_MIGRATE` | `false` | Migrating is a deliberate step; two processes migrating together race |
+| `UNIMATCH_WORKER_CONCURRENCY` | `2` | Jobs a worker runs at once |
+| `UNIMATCH_JOB_LEASE_SECONDS` | `120` | How long a claimed job is held before it can be reaped |
 
 ---
 
@@ -338,8 +359,9 @@ Copy `.env.example` to `backend/.env`. No secrets are required to run anything.
 
 These are real, and the UI states them rather than hiding them.
 
-0. **Not production software.** No authentication, no multi-tenancy, no durable
-   job queue, no PostgreSQL, no containers, no CI. Single user, local machine.
+0. **Not production software.** No authentication and no multi-tenancy: anyone
+   who can reach the API can read and delete every profile. The containers have
+   never been run. There is no CI. Single user, local machine.
 1. **No outcome prediction.** ASHYQ Apply reports published criteria. Selection is
    competitive and depends on factors no public page states.
 2. **Extraction is rule-based and conservative.** It finds what its patterns
@@ -355,10 +377,11 @@ These are real, and the UI states them rather than hiding them.
 6. **Cost pages behind a fee calculator** yield no figures. TU Delft's tuition
    page is a real example: the page is readable, the numbers are not on it, and
    the result is an honest "no cost figures could be extracted".
-7. **The job queue is in-process.** A crashed worker's run is detected and
-   marked `retryable_failed`, but it does not resume itself. Fine for one
-   applicant on one machine; the interface (`submit`/`status`/`cancel`) is the
-   one Celery or RQ would expose, so replacing it touches `pipeline/queue.py`.
+7. **The queue is PostgreSQL-backed, not Redis.** A deliberate choice, recorded
+   in [ADR 0001](docs/adr/0001-durable-job-queue.md): no broker could be
+   installed here without your password, and one transaction covering both the
+   job and its output is a real advantage for minutes-long jobs. Very high job
+   rates would eventually want a broker; the interface is ready for one.
 8. **Demo data is synthetic**, as described above.
 9. **No portal automation.** Nothing is uploaded, submitted, signed or paid for.
 

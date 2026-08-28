@@ -67,15 +67,17 @@ system made that an official source does not support.
 
 ## Architecture gaps for production
 
+Updated after P1.
+
 | Area | Current | Required |
 |---|---|---|
-| Database | SQLite, `create_all()` | PostgreSQL with Alembic migrations |
-| Jobs | In-process asyncio queue | Durable broker, leases, crash recovery |
-| Auth | None | OIDC, roles, tenant isolation |
-| Multi-tenancy | Single implicit user | Organizations, cases, counselor assignment |
+| Database | **PostgreSQL + Alembic ✅** — suite passes on PostgreSQL 16.2 and SQLite | — |
+| Jobs | **Durable PostgreSQL queue ✅** — leases, reaping, backoff, dead-letter, idempotency; crash recovery proven with a real SIGKILL | A broker if job rates ever justify one |
+| Auth | **None** | OIDC, roles, tenant isolation |
+| Multi-tenancy | **Single implicit user** | Organizations, cases, counselor assignment |
 | Security headers | CORS only | CSP, HSTS, SSRF defence, rate limiting |
 | Discovery | 5 hand-listed institutions | Provider architecture with sitemap discovery |
-| Deployment | Two local processes | Containers, compose, observability |
+| Deployment | Containers and compose **written but never run** | Run them; observability |
 | CI | None | Full gates on every commit |
 
 ## Documentation accuracy
@@ -89,5 +91,14 @@ corrected as each is actually proven:
 
 ## Verdict
 
-**NOT READY.** Ten known live false positives, no durable job system, no
-authentication, no tenant isolation, no deployment story.
+**NOT READY.**
+
+Closed since this was written: all ten live false positives (plus five more the
+live canary found), the durable job system, PostgreSQL with real migrations,
+and crash recovery.
+
+Still open: **no authentication and no tenant isolation** — anyone who can
+reach the API can read and delete every profile. The container stack has never
+been run. There is no CI. The profile form covers a subset of the schema.
+
+See `RELEASE_CHECKLIST.md` for all thirty gates.

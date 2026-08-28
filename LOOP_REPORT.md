@@ -260,6 +260,51 @@ taken against a live run.
 **Weakest link is no longer live discovery — it is that this is not production
 software.** Correctness work is ahead of the platform work by a wide margin.
 
+---
+
+## Loop 9 — P1: durable jobs, PostgreSQL and migrations
+
+**Built.** A job queue in PostgreSQL (`SELECT … FOR UPDATE SKIP LOCKED`), a
+worker process separate from the API, Alembic migrations, and a crash test that
+kills a real process.
+
+**Two decisions recorded as ADRs.** Redis could not be installed here without
+the user's password, so the queue is PostgreSQL-backed — which for
+minutes-long jobs is arguably better, because the job's state and the data it
+produces commit together. PostgreSQL 16.2 is provisioned in-process by
+`pgserver`, so "runs on PostgreSQL" is asserted by the test suite rather than
+claimed in a README.
+
+**Defects found, each with a regression test**
+
+| # | Defect | Root cause | Fix |
+|---|---|---|---|
+| 9.1 | **A retry after a crash failed on the unique dedupe index.** The first attempt had written twelve results; the retry re-derived them and collided | The pipeline restarted from the beginning and inserted blindly | Stages resume from the last completed one; persisting a result updates the existing row and replaces its evidence |
+| 9.2 | **A cancelled run marked its job `succeeded`** | `run_to_decision` swallowed `RunCancelled`, so the worker saw a clean return | It re-raises; a cancelled job is `cancelled`, which is not `dead` (attempts exhausted) and not `succeeded` |
+| 9.3 | **Intermittent 500 on the run endpoint** while a worker was writing | SQLite returns naive datetimes; comparing one to an aware `now()` raises `TypeError` | `ensure_utc()` at every comparison against a stored timestamp |
+| 9.4 | **The API hung on startup**, never becoming ready | The API and `run.sh` both ran migrations, deadlocking SQLite | Migrating on startup is off by default: once, deliberately, before anything starts |
+| 9.5 | SQLite's second writer failed instead of waiting | No `busy_timeout` | Set. PostgreSQL does not need it |
+| 9.6 | **The UI stopped polling the moment work was requested** | A queued job is not "running", and the stage does not move until a worker claims it | Poll while a job is queued *or* running |
+| 9.7 | The worker died on startup in the E2E stack | It refuses a database it does not match, and it started before the migration | It waits and retries — in a rolling deploy the order is not guaranteed |
+
+Two of these — 9.1 and 9.2 — were found only because the crash test kills a
+*real* process at a point where results already exist. An earlier version of
+the test killed the worker before any results were written, and passed.
+
+**Evidence.** `scripts/crash_test.py`: worker SIGKILLed during
+`funding_discovery` with 12 results written; a second worker reaps the expired
+lease, re-attempts (2/3), reaches `awaiting_user_decision`, 12 results, 12
+unique, **0 duplicates**. Stable over three consecutive runs.
+
+**Result.** 349 backend tests (from 301), passing on SQLite *and* PostgreSQL
+16.2. Coverage 89%. 26 queue tests run only on PostgreSQL, because `SKIP
+LOCKED`, the unique constraint and the cascades are PostgreSQL's — testing them
+on SQLite would test something else.
+
+**What this loop did not do.** Auth, multi-tenancy, security headers, SSRF
+defence, the full profile UI, discovery providers, CI. The container stack is
+written and parses but has **never been run**: Docker is not installed here.
+
 ## Known remaining limitations
 
 1. Live discovery reaches landing pages more reliably than requirement pages, so
