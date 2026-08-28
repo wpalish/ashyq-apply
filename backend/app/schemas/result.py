@@ -31,6 +31,9 @@ class Base(BaseModel):
 #: Whether an award covers a cost category. "unknown" is a first-class answer.
 Coverage = Literal["yes", "no", "partial", "unknown"]
 
+#: A three-valued answer. There is no default to "yes" anywhere in this product.
+Tristate = Literal["yes", "no", "unknown"]
+
 
 class RankingEntry(Base):
     source: str
@@ -69,9 +72,20 @@ class Scholarship(Base):
     amount: Money | None = None
     amount_is_percentage_of_tuition: float | None = None
     coverage: list[CoverageBreakdown] = Field(default_factory=list)
-    international_eligible: Literal["yes", "no", "unknown"] = "unknown"
+    # --- eligibility, one question per field --------------------------
+    # These were previously collapsed, which let "an award exists" stand in for
+    # "this applicant can apply for it in this cycle". Each is now answered
+    # from its own evidence and defaults to unknown.
+    international_eligible: Tristate = "unknown"
     citizenship_restrictions: list[str] = Field(default_factory=list)
+    residency_restrictions: list[str] = Field(default_factory=list)
     program_restrictions: list[str] = Field(default_factory=list)
+    degree_applicability: Tristate = Field(
+        default="unknown",
+        description="Whether the award applies to the applicant's degree level",
+    )
+    degree_applicability_reason: str = ""
+    applies_to_degrees: list[str] = Field(default_factory=list)
     application_mode: ApplicationMode = ApplicationMode.UNKNOWN
     requires_extra_essays: bool | None = None
     deadline: date | None = None
@@ -81,9 +95,26 @@ class Scholarship(Base):
     duration_years: float | None = None
     renewal_requirements: list[str] = Field(default_factory=list)
     min_test_scores: dict[str, float] = Field(default_factory=dict)
-    stackable: Literal["yes", "no", "unknown"] = "unknown"
+    stackable: Tristate = "unknown"
     published_count: int | None = Field(default=None, description="Only set when officially published")
-    available_this_intake: Literal["yes", "no", "unknown"] = "unknown"
+
+    # --- availability, decomposed -------------------------------------
+    #: An award page exists and names this award.
+    opportunity_exists: bool = False
+    #: The award is currently offered (not withdrawn or discontinued).
+    currently_available: Tristate = "unknown"
+    #: This applicant meets every published restriction that could be checked.
+    applicant_eligible: Tristate = "unknown"
+    #: Applications are open right now.
+    application_window_open: Tristate = "unknown"
+    #: A deadline was found at all.
+    deadline_known: bool = False
+    #: A known deadline that is in the past.
+    deadline_passed: bool = False
+    #: The award is published for the intake being researched.
+    award_current_for_intake: Tristate = "unknown"
+    #: Roll-up, derived from the fields above. Never set directly.
+    available_this_intake: Tristate = "unknown"
     eligibility_checks: list[RequirementCheck] = Field(default_factory=list)
     source_urls: list[str] = Field(default_factory=list)
     claim_ids: list[str] = Field(default_factory=list)

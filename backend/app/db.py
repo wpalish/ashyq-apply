@@ -39,17 +39,52 @@ if _is_sqlite:
 SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False, future=True)
 
 
+class SchemaOutOfDate(RuntimeError):
+    """The database predates the current models."""
+
+
 def init_db() -> None:
-    """Create the schema and stamp its version."""
+    """Create the schema and stamp its version.
+
+    ``create_all`` creates missing *tables*; it never alters an existing one.
+    A database created before a column was added therefore stays broken until
+    it is migrated, and the failure surfaces as a 500 on an unrelated request.
+    Until Alembic lands this check turns that into an explicit startup error
+    naming the missing columns and how to recover.
+    """
     import app.models  # noqa: F401  (registers every mapper)
 
     Base.metadata.create_all(engine)
+    _assert_schema_matches_models()
     from app.models.meta import CURRENT_SCHEMA_VERSION, SchemaVersion
 
     with session_scope() as s:
         row = s.query(SchemaVersion).first()
         if row is None:
             s.add(SchemaVersion(version=CURRENT_SCHEMA_VERSION))
+
+
+def _assert_schema_matches_models() -> None:
+    from sqlalchemy import inspect as sa_inspect
+
+    inspector = sa_inspect(engine)
+    missing: list[str] = []
+    for table_name, table in Base.metadata.tables.items():
+        if not inspector.has_table(table_name):
+            continue
+        present = {c["name"] for c in inspector.get_columns(table_name)}
+        for column in table.columns:
+            if column.name not in present:
+                missing.append(f"{table_name}.{column.name}")
+
+    if missing:
+        raise SchemaOutOfDate(
+            "The database is missing columns the models define: "
+            + ", ".join(sorted(missing))
+            + ". create_all() cannot add columns to an existing table. "
+            "Run the migrations, or for a local development database delete "
+            "backend/data/unimatch.db and start again."
+        )
 
 
 @contextmanager

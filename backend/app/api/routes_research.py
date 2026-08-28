@@ -13,7 +13,7 @@ from app.db import get_session
 from app.domain.enums import PipelineStage, UserDecision
 from app.models import ApplicantProfileRow, AuditEvent, ProgramResultRow, ResearchRun
 from app.pipeline.queue import queue
-from app.pipeline.state import RunState
+from app.pipeline.state import RunState, is_lease_expired
 
 router = APIRouter(prefix="/api/runs", tags=["research"])
 
@@ -23,7 +23,14 @@ class StartRunIn(BaseModel):
     demo_mode: bool | None = Field(
         default=None, description="Defaults to the server setting; live mode fetches real sites."
     )
-    candidate_limit: int | None = Field(default=None, ge=1, le=200)
+    candidate_limit: int | None = Field(
+        default=None, ge=1, le=200,
+        description="How many candidates to discover. Persisted on the run and reused on retry.",
+    )
+    verify_limit: int | None = Field(
+        default=None, ge=1, le=200,
+        description="How many candidates to verify in depth. Capped at candidate_limit.",
+    )
 
 
 class StageView(BaseModel):
@@ -49,6 +56,9 @@ class RunView(BaseModel):
     pages_checked: int
     pages_failed: int
     claims_recorded: int
+    candidate_limit: int
+    verify_limit: int
+    fetch_tiers: dict
     results_count: int
     decided_count: int
     stages: list[StageView]
@@ -60,11 +70,21 @@ class RunView(BaseModel):
     finished_at: str | None
     job_running: bool
     job_error: str = ""
+    #: True when the run claims to be working but its worker has gone silent.
+    stale: bool = False
+    worker_id: str | None = None
+    heartbeat_at: str | None = None
+    recovery_count: int = 0
+
+
+def settings_default(name: str) -> int:
+    return int(getattr(get_settings(), name))
 
 
 def _view(session: Session, run: ResearchRun) -> RunView:
     state = RunState.load(run.stage_state)
     handle = queue.get(run.id)
+    stale = is_lease_expired(run.stage, run.heartbeat_at)
     results = session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run.id)
     return RunView(
         id=run.id,
@@ -78,6 +98,9 @@ def _view(session: Session, run: ResearchRun) -> RunView:
         pages_checked=run.pages_checked,
         pages_failed=run.pages_failed,
         claims_recorded=run.claims_recorded,
+        candidate_limit=run.candidate_limit or settings_default("candidate_limit"),
+        verify_limit=run.verify_limit or settings_default("verify_limit"),
+        fetch_tiers=dict(run.fetch_tiers or {}),
         results_count=results.count(),
         decided_count=results.filter(ProgramResultRow.user_decision != UserDecision.UNDECIDED.value).count(),
         stages=[
@@ -91,8 +114,13 @@ def _view(session: Session, run: ResearchRun) -> RunView:
         created_at=run.created_at.isoformat(),
         started_at=run.started_at.isoformat() if run.started_at else None,
         finished_at=run.finished_at.isoformat() if run.finished_at else None,
-        job_running=bool(handle and not handle.done),
+        # A run whose lease expired is not running, whatever its stage says.
+        job_running=bool(handle and not handle.done) and not stale,
         job_error=handle.error if handle else "",
+        stale=stale,
+        worker_id=run.worker_id,
+        heartbeat_at=run.heartbeat_at.isoformat() if run.heartbeat_at else None,
+        recovery_count=run.recovery_count or 0,
     )
 
 
@@ -107,6 +135,8 @@ def start_run(payload: StartRunIn, session: Session = Depends(get_session)) -> R
         profile_id=payload.profile_id,
         stage=PipelineStage.QUEUED.value,
         demo_mode=settings.demo_mode if payload.demo_mode is None else payload.demo_mode,
+        candidate_limit=payload.candidate_limit,
+        verify_limit=payload.verify_limit,
         stage_state=RunState.load(None).dump(),
     )
     session.add(run)

@@ -34,6 +34,10 @@ class ResearchRun(TimestampedBase):
     )
     stage: Mapped[str] = mapped_column(String(40), default="queued", index=True)
     demo_mode: Mapped[bool] = mapped_column(Boolean, default=True)
+    #: Per-run research scope. Persisted so a retry or a restart uses the scope
+    #: the user asked for, not whatever the server default happens to be.
+    candidate_limit: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    verify_limit: Mapped[int | None] = mapped_column(Integer, nullable=True)
     cancelled: Mapped[bool] = mapped_column(Boolean, default=False)
 
     candidates_found: Mapped[int] = mapped_column(Integer, default=0)
@@ -45,12 +49,24 @@ class ResearchRun(TimestampedBase):
     #: Per-stage {status, started_at, finished_at, error} so a failed stage can
     #: be retried without redoing the whole run.
     stage_state: Mapped[dict] = mapped_column(JSON, default=dict)
+    #: How many pages each fetch tier produced. Proves the browser tier is
+    #: actually doing work rather than merely being constructed.
+    fetch_tiers: Mapped[dict] = mapped_column(JSON, default=dict)
     errors: Mapped[list] = mapped_column(JSON, default=list)
     retry_urls: Mapped[list] = mapped_column(JSON, default=list)
     settings_snapshot: Mapped[dict] = mapped_column(JSON, default=dict)
 
     started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+    # --- lease, so a dead worker cannot leave a run "running" forever -----
+    #: Which worker holds this run. Cleared when the run reaches a terminal state.
+    worker_id: Mapped[str | None] = mapped_column(String(64), nullable=True, index=True)
+    #: Refreshed as the run makes progress. A lease that stops being refreshed
+    #: is how a crashed worker becomes visible.
+    heartbeat_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    #: How many times this run has been recovered after a worker died.
+    recovery_count: Mapped[int] = mapped_column(Integer, default=0)
 
     profile: Mapped[ApplicantProfileRow] = relationship(back_populates="runs")
     results: Mapped[list[ProgramResultRow]] = relationship(

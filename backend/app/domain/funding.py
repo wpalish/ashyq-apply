@@ -84,6 +84,30 @@ def classify(
     """Decide the funding classification from the coverage table alone."""
     marketing = detect_marketing_language(page_text or scholarship.name)
 
+    # Exclusions come first, in order of how directly they answer "can this
+    # applicant apply at all".
+    if scholarship.applicant_eligible == "no":
+        reason = scholarship.degree_applicability_reason or (
+            "Published conditions exclude this applicant."
+        )
+        if scholarship.degree_applicability == "no":
+            reason = f"Not applicable to this applicant's degree level: {reason}"
+        elif scholarship.citizenship_restrictions:
+            reason = (
+                "The award is restricted to "
+                f"{', '.join(scholarship.citizenship_restrictions)}, which does not include "
+                "this applicant."
+            )
+        return ClassificationResult(FundingClassification.NOT_ELIGIBLE, reason, bool(marketing))
+
+    if scholarship.degree_applicability == "no":
+        return ClassificationResult(
+            FundingClassification.NOT_ELIGIBLE,
+            "Not applicable to this applicant's degree level: "
+            + (scholarship.degree_applicability_reason or "the page excludes this level."),
+            bool(marketing),
+        )
+
     if scholarship.international_eligible == "no":
         return ClassificationResult(
             FundingClassification.NOT_ELIGIBLE,

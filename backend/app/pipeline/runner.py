@@ -8,6 +8,8 @@ than from the beginning.
 from __future__ import annotations
 
 import logging
+import os
+import socket
 from datetime import UTC, date, datetime
 
 from sqlalchemy.orm import Session
@@ -39,10 +41,10 @@ from app.domain.funding import classify, funding_fit_for
 from app.domain.scoring import admissions_fit_for, score_result
 from app.domain.validation import validate_profile
 from app.models import AuditEvent, ClaimRow, ConflictRow, ProgramResultRow, ResearchRun, new_id
-from app.pipeline.state import RunState
+from app.pipeline.state import IN_PROGRESS_STAGES, RunState
 from app.schemas.claim import ClaimOut, UnresolvedQuestion
 from app.schemas.profile import ApplicantProfileIn
-from app.schemas.result import ProgramResult
+from app.schemas.result import ProgramResult, Tristate
 
 log = logging.getLogger("unimatch.pipeline")
 
@@ -61,6 +63,13 @@ class ResearchRunner:
         self.settings = settings
         self.state = RunState.load(run.stage_state)
         self.demo = run.demo_mode
+        # A per-run override wins over the server default, and verification is
+        # never asked to cover more candidates than discovery produced.
+        self.worker_id = f"{socket.gethostname()}:{os.getpid()}"
+        self.candidate_limit = run.candidate_limit or settings.candidate_limit
+        self.verify_limit = min(
+            run.verify_limit or settings.verify_limit, self.candidate_limit
+        )
         self.intake = f"{profile.context.intake_term} {profile.context.intake_year}"
         self._candidates: list[Candidate] = []
 
@@ -85,7 +94,21 @@ class ResearchRunner:
         )
 
     def _save(self) -> None:
+        """Persist progress and refresh the lease.
+
+        The heartbeat rides on the same commit as the progress it describes, so
+        a worker that dies cannot leave a fresh heartbeat behind stale state.
+        """
         self.run.stage_state = self.state.dump()
+        self.run.heartbeat_at = datetime.now(UTC)
+        # The lease follows the stage, not the order of assignments in the
+        # caller: a run that is waiting on the user or finished holds no lease,
+        # so it can never be mistaken for one whose worker died.
+        try:
+            in_progress = PipelineStage(self.run.stage) in IN_PROGRESS_STAGES
+        except ValueError:
+            in_progress = False
+        self.run.worker_id = self.worker_id if in_progress else None
         self.session.add(self.run)
         self.session.commit()
 
@@ -101,14 +124,17 @@ class ResearchRunner:
         self.run.started_at = self.run.started_at or datetime.now(UTC)
         self.run.settings_snapshot = {
             "demo_mode": self.demo,
-            "candidate_limit": self.settings.candidate_limit,
-            "verify_limit": self.settings.verify_limit,
+            "candidate_limit": self.candidate_limit,
+            "verify_limit": self.verify_limit,
+            "candidate_limit_source": "run" if self.run.candidate_limit else "server default",
             "academic_year": self.settings.academic_year,
             "target_currency": self.settings.target_currency,
             "respect_robots": self.settings.respect_robots,
         }
         fetcher = self._make_fetcher()
         browser = BrowserFetcher(fetcher, enabled=self.settings.enable_browser_tier and not self.demo)
+        if browser.enabled:
+            fetcher.attach_renderer(browser)
         try:
             async with fetcher:
                 await self._stage_validate()
@@ -116,6 +142,7 @@ class ResearchRunner:
                 await self._stage_verify(fetcher)
                 await self._stage_funding(fetcher)
                 await self._stage_assess(fetcher)
+            self.run.fetch_tiers = dict(fetcher.tier_counts)
             self._transition(PipelineStage.AWAITING_USER_DECISION)
             self._save()
         except RunCancelled:
@@ -167,7 +194,10 @@ class ResearchRunner:
         adapter = (
             FixtureDiscoveryAdapter(fetcher) if self.demo else LiveDiscoveryAdapter(fetcher)
         )
-        self._candidates = await adapter.discover(self.profile, self.settings.candidate_limit)
+        self._candidates = await adapter.discover(self.profile, self.candidate_limit)
+        # An adapter that over-delivers must not silently widen the run.
+        if len(self._candidates) > self.candidate_limit:
+            self._candidates = self._candidates[: self.candidate_limit]
         self.run.candidates_found = len(self._candidates)
         st.items_total = len(self._candidates)
         st.items_done = len(self._candidates)
@@ -184,7 +214,7 @@ class ResearchRunner:
     async def _stage_verify(self, fetcher: Fetcher) -> None:
         self._check_cancelled()
         st = self.state[PipelineStage.PROGRAM_VERIFICATION]
-        targets = list(self._candidates)[: self.settings.verify_limit]
+        targets = list(self._candidates)[: self.verify_limit]
         st.start(len(targets), "Reading official programme pages")
         self._transition(PipelineStage.PROGRAM_VERIFICATION)
         self._save()
@@ -352,6 +382,10 @@ class ResearchRunner:
             tuition_money = result.costs.items.get(CostCategory.TUITION)
             for s in scholarships:
                 s.eligibility_checks = _scholarship_eligibility(s, self.profile)
+                # The checks are the evidence; this field is the verdict they
+                # imply. Classification reads the verdict, so an award the
+                # applicant cannot hold can never be classified as funding.
+                s.applicant_eligible = _applicant_eligible(s)
                 page_text = " ".join(
                     c.original_text_excerpt for c in claims if s.name[:30] in c.original_text_excerpt
                 ) or s.name
@@ -487,7 +521,7 @@ class ResearchRunner:
             by_name = {c.name: c for c in self._candidates}
             if not by_name:
                 disc = FixtureDiscoveryAdapter(fetcher) if self.demo else LiveDiscoveryAdapter(fetcher)
-                self._candidates = await disc.discover(self.profile, self.settings.candidate_limit)
+                self._candidates = await disc.discover(self.profile, self.candidate_limit)
                 by_name = {c.name: c for c in self._candidates}
 
             for i, row in enumerate(rows):
@@ -681,6 +715,22 @@ def _scholarship_eligibility(s, profile: ApplicantProfileIn):
                        f"Published minimum {minimum}; applicant {got}.")
             )
     return checks
+
+
+def _applicant_eligible(scholarship) -> Tristate:
+    """Roll a scholarship's eligibility checks into one three-valued verdict."""
+    statuses = {c.status for c in scholarship.eligibility_checks}
+    if scholarship.degree_applicability == "no" or scholarship.international_eligible == "no":
+        return "no"
+    if EligibilityStatus.NOT_APPLICABLE in statuses or EligibilityStatus.GAP in statuses:
+        return "no"
+    if not statuses or EligibilityStatus.PENDING in statuses:
+        return "unknown"
+    if scholarship.degree_applicability == "unknown":
+        return "unknown"
+    if statuses <= {EligibilityStatus.MET}:
+        return "yes"
+    return "unknown"
 
 
 def _explanation_component(text: str):

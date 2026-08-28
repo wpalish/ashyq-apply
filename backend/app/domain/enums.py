@@ -274,6 +274,9 @@ class PipelineStage(StrEnum):
     DOCUMENT_COLLECTION = "document_collection"
     COMPLETED = "completed"
     FAILED = "failed"
+    #: The worker holding this run stopped without finishing. Distinct from
+    #: FAILED, which means the work itself failed.
+    RETRYABLE_FAILED = "retryable_failed"
     CANCELLED = "cancelled"
 
 

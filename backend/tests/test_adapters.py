@@ -285,14 +285,47 @@ class TestAdaptersAgainstTheCorpus:
 
     @pytest.mark.asyncio
     async def test_a_citizenship_restriction_is_read_off_the_page(self, settings, corpus_dir):
+        """A citizenship restriction is recorded as a restriction.
+
+        It is deliberately *not* recorded as "not open to international
+        students": an EEA citizen studying in Belgium is an international
+        applicant and would qualify. Whether this particular applicant is
+        excluded is decided later, against their own citizenship.
+        """
         candidate = Candidate(name="KU Leuven", country="Belgium", city="Leuven",
                               scholarships_url="fixture://ku-leuven/scholarships.html")
         program = CandidateProgram(name="BSc Informatics", field="cs", degree="bachelor")
         async with Fetcher(settings.cache_dir, offline=True, corpus_dir=corpus_dir) as f:
             awards, _ = await WebScholarshipAdapter(f, "2026/27").find(candidate, program, None)
         flemish = next(a for a in awards if "Flemish" in a.name)
-        assert flemish.international_eligible == "no"
         assert "European Economic Area" in flemish.citizenship_restrictions
+        assert flemish.international_eligible == "unknown", (
+            "an EEA-only award does not exclude international applicants as a class"
+        )
+
+    @pytest.mark.asyncio
+    async def test_the_restriction_excludes_this_applicant_at_assessment_time(
+        self, settings, corpus_dir, profile
+    ):
+        """The applicant-level verdict is where the exclusion lands."""
+        from app.domain.funding import classify
+        from app.pipeline.runner import _applicant_eligible, _scholarship_eligibility
+
+        candidate = Candidate(name="KU Leuven", country="Belgium", city="Leuven",
+                              scholarships_url="fixture://ku-leuven/scholarships.html")
+        program = CandidateProgram(name="BSc Informatics", field="cs", degree="bachelor")
+        async with Fetcher(settings.cache_dir, offline=True, corpus_dir=corpus_dir) as f:
+            awards, _ = await WebScholarshipAdapter(f, "2026/27").find(candidate, program, None)
+
+        flemish = next(a for a in awards if "Flemish" in a.name)
+        flemish.eligibility_checks = _scholarship_eligibility(flemish, profile)
+        flemish.applicant_eligible = _applicant_eligible(flemish)
+
+        assert profile.context.citizenship == "Kazakhstan"
+        assert flemish.applicant_eligible == "no"
+        verdict = classify(flemish)
+        assert verdict.classification.value == "NOT_ELIGIBLE"
+        assert "European Economic Area" in verdict.reason
 
 
 class TestAwardLinkFollowing:

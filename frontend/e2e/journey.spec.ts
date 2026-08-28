@@ -24,7 +24,7 @@ test.afterAll(async () => {
 test('profile screen states the cost of every gap', async () => {
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'Who is applying' })).toBeVisible();
-  await expect(page.getByText('Demo data')).toBeVisible();
+  await expect(page.locator('.topbar').getByText('Demo data')).toBeVisible();
   await page.screenshot({ path: shot('01-profile.png'), fullPage: true });
 
   // Removing the English scores must produce a gap that explains the consequence.

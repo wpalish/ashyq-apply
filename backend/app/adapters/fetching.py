@@ -46,6 +46,11 @@ class PIILeakError(RuntimeError):
     """Raised when applicant data would be placed in an outbound request."""
 
 
+#: Below this many characters of extractable text, a "successful" HTML fetch is
+#: an empty shell worth escalating to a browser.
+MIN_USEFUL_TEXT = 400
+
+
 @dataclass
 class FetchResult:
     url: str
@@ -58,6 +63,9 @@ class FetchResult:
     from_cache: bool = False
     error: str = ""
     final_url: str = ""
+    #: Which tier produced this content. Recorded on every SourcePage so a run
+    #: can prove the browser tier is doing work rather than merely existing.
+    fetch_tier: str = "http"
 
     @property
     def ok(self) -> bool:
@@ -243,7 +251,38 @@ class Fetcher:
         self._last_request: dict[str, float] = {}
         self._client: httpx.AsyncClient | None = None
         self.corpus_dir = corpus_dir
+        #: Set by attach_renderer(). Escalation happens inside get(), so every
+        #: adapter benefits without knowing the tier exists.
+        self._renderer: object | None = None
         self.stats: dict[str, int] = {o.value: 0 for o in FetchOutcome}
+        self.tier_counts: dict[str, int] = {"fixture": 0, "http": 0, "browser": 0, "pdf": 0}
+
+    def attach_renderer(self, renderer: object) -> None:
+        """Give the fetcher a browser to escalate to.
+
+        Escalation lives here rather than in each adapter because the previous
+        arrangement - a helper the adapters were supposed to call - meant the
+        browser tier was constructed on every run and never invoked once.
+        """
+        self._renderer = renderer
+
+    async def _maybe_render(self, result: FetchResult) -> FetchResult:
+        """Escalate to the browser when a 200 came back with no usable text."""
+        if self._renderer is None or not result.ok or result.is_pdf:
+            return result
+        from app.adapters.extraction import html_to_text
+
+        if len(html_to_text(result.text)) >= MIN_USEFUL_TEXT:
+            return result
+
+        rendered = await self._renderer.render(result.url)  # type: ignore[attr-defined]
+        if rendered.ok and len(html_to_text(rendered.text)) > len(html_to_text(result.text)):
+            rendered.fetch_tier = "browser"
+            self.tier_counts["browser"] += 1
+            log.info("escalated %s to the browser tier", result.url[:120])
+            self.cache.put(rendered)
+            return rendered
+        return result
 
     async def __aenter__(self) -> Fetcher:
         self._client = httpx.AsyncClient(
@@ -329,12 +368,17 @@ class Fetcher:
             )
 
         if url.startswith("fixture://"):
-            return self._fetch_fixture(url)
+            result = self._fetch_fixture(url)
+            self.tier_counts["fixture" if result.ok else "http"] += 1
+            return result
 
         if use_cache:
             cached = self.cache.get(url)
             if cached is not None:
                 self.stats[FetchOutcome.CACHED.value] += 1
+                self.tier_counts[cached.fetch_tier] = (
+                    self.tier_counts.get(cached.fetch_tier, 0) + 1
+                )
                 return cached
 
         if self.offline:
@@ -401,7 +445,8 @@ class Fetcher:
                         )
                         self.cache.put(result)
                         self.stats[FetchOutcome.OK.value] += 1
-                        return result
+                        self.tier_counts["pdf" if result.is_pdf else "http"] += 1
+                        return await self._maybe_render(result)
                 # Exponential backoff: 2s, 4s.
                 await asyncio.sleep(2 ** attempt)
 

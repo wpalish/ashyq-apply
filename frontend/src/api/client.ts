@@ -66,6 +66,7 @@ export const api = {
   audit: () => request<Record<string, unknown>[]>('/api/audit?limit=100'),
 
   listProfiles: () => request<StoredProfile[]>('/api/profiles'),
+  getProfile: (id: string) => request<StoredProfile>(`/api/profiles/${id}`),
   createProfile: (payload: unknown) =>
     request<StoredProfile>('/api/profiles', { method: 'POST', body: JSON.stringify(payload) }),
   updateProfile: (id: string, payload: unknown) =>

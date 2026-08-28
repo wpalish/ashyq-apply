@@ -22,9 +22,6 @@ from app.domain.enums import FetchOutcome
 log = logging.getLogger("unimatch.browser")
 
 RENDER_TIMEOUT_MS = 20_000
-#: Below this, a "successful" HTML fetch is treated as an empty shell worth
-#: escalating to the browser.
-MIN_USEFUL_TEXT = 400
 
 
 class BrowserUnavailable(RuntimeError):
@@ -112,23 +109,6 @@ class BrowserFetcher:
         )
 
 
-async def fetch_with_escalation(
-    fetcher: Fetcher, browser: BrowserFetcher | None, url: str
-) -> tuple[FetchResult, bool]:
-    """Plain HTTP first; escalate to a browser only if the page came back empty.
-
-    Returns the result and whether the browser tier was used, so callers can
-    record which tier produced a claim.
-    """
-    from app.adapters.extraction import html_to_text
-
-    result = await fetcher.get(url)
-    if not result.ok or result.is_pdf or browser is None:
-        return result, False
-    if len(html_to_text(result.text)) >= MIN_USEFUL_TEXT:
-        return result, False
-
-    rendered = await browser.render(url)
-    if rendered.ok and len(html_to_text(rendered.text)) > len(html_to_text(result.text)):
-        return rendered, True
-    return result, False
+# Escalation lives in Fetcher.attach_renderer / Fetcher._maybe_render so that
+# every adapter goes through it. A separate helper that adapters had to
+# remember to call is exactly how this tier ended up never being invoked.

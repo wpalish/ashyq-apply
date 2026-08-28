@@ -56,6 +56,9 @@ class AdapterResult:
     pages_checked: int = 0
     pages_failed: int = 0
     retry_urls: list[str] = field(default_factory=list)
+    #: (url, page_type) for every page read, so a run can show *why* a page
+    #: produced nothing rather than only that it did.
+    page_types: list[tuple[str, str]] = field(default_factory=list)
 
 
 @runtime_checkable

@@ -14,6 +14,10 @@ from urllib.parse import urljoin, urlparse
 
 from bs4 import BeautifulSoup
 
+from app.adapters.applicability import (
+    assess_degree_applicability,
+    assess_international_eligibility,
+)
 from app.adapters.base import AdapterResult, Candidate, CandidateProgram
 from app.adapters.extraction import (
     ClaimBuilder,
@@ -25,6 +29,7 @@ from app.adapters.extraction import (
     parse_timezone,
 )
 from app.adapters.fetching import Fetcher
+from app.adapters.page_classifier import PageType, classify_page
 from app.domain.enums import (
     ApplicationMode,
     ClaimType,
@@ -120,8 +125,21 @@ class WebScholarshipAdapter:
                 out.errors.append(f"{url}: {page.outcome.value} — {page.error}")
                 out.retry_urls.append(url)
                 continue
+
+            classification = classify_page(url=url, html=page.text)
+            out.page_types.append((url, classification.page_type.value))
+            if classification.page_type is not PageType.SCHOLARSHIP_AWARD:
+                # An index, an FAQ or a navigation page is not an award. This is
+                # what turned "Scholarships", "Practical matters" and "Prizes
+                # and awards" into three separate scholarships.
+                out.errors.append(
+                    f"{url}: classified as {classification.page_type.value}, not an award page; "
+                    "no scholarship recorded."
+                )
+                continue
+
             sch, claims = self._parse_award(
-                candidate, program, url, page.text, page.fetched_at, index=i
+                candidate, program, url, page.text, page.fetched_at, classification, index=i
             )
             scholarships.append(sch)
             out.claims.extend(claims)
@@ -129,13 +147,15 @@ class WebScholarshipAdapter:
 
     def _parse_award(
         self, candidate: Candidate, program: CandidateProgram, url: str,
-        html: str, accessed_at: datetime, index: int,
+        html: str, accessed_at: datetime, classification, index: int,
     ) -> tuple[Scholarship, list]:
         soup = BeautifulSoup(html, "lxml")
         text = html_to_text(html)
         low = text.lower()
         title = html_title(html)
-        name = (soup.find("h1").get_text(strip=True) if soup.find("h1") else title).split(" - ")[0]
+        name = classification.subject or (
+            soup.find("h1").get_text(strip=True) if soup.find("h1") else title
+        ).split(" - ")[0]
 
         # Every claim from this page is about this one award; the subject key
         # keeps a second award at the same university from looking like a
@@ -210,20 +230,46 @@ class WebScholarshipAdapter:
                 c.claim_ids.append(url)
 
         # --- eligibility -------------------------------------------------
+        # This award page exists and names an award; that alone is the only
+        # thing "opportunity_exists" asserts.
+        sch.opportunity_exists = True
+
         cit = re.search(r"open only to citizens of ([^.]+)\.", text, re.IGNORECASE)
         if cit:
-            sch.citizenship_restrictions = [p.strip() for p in re.split(r",| and ", cit.group(1)) if p.strip()]
-            sch.international_eligible = "no"
+            sch.citizenship_restrictions = [
+                p.strip() for p in re.split(r",| and ", cit.group(1)) if p.strip()
+            ]
             builder.add(ClaimType.SCHOLARSHIP_CITIZENSHIP_RESTRICTION, sch.citizenship_restrictions,
                         _excerpt(text, cit.start()), confidence=0.9)
-        elif "not open to international students" in low:
-            sch.international_eligible = "no"
-            builder.add(ClaimType.SCHOLARSHIP_INTERNATIONAL_ELIGIBLE, False,
-                        _line_with(text, "not open to international"))
-        elif "international students of any nationality are eligible" in low or "international students" in low:
-            sch.international_eligible = "yes"
-            builder.add(ClaimType.SCHOLARSHIP_INTERNATIONAL_ELIGIBLE, True,
-                        _line_with(text, "international students"))
+
+        # A restriction list is not itself an answer about international
+        # eligibility - the applicant may hold one of the listed citizenships.
+        international = assess_international_eligibility(text)
+        sch.international_eligible = international.verdict
+        if international.verdict != "unknown":
+            builder.add(
+                ClaimType.SCHOLARSHIP_INTERNATIONAL_ELIGIBLE,
+                international.verdict == "yes",
+                international.evidence,
+                confidence=0.85,
+                notes=international.reason,
+            )
+        elif sch.citizenship_restrictions:
+            sch.international_eligible = "unknown"
+
+        # --- degree applicability -----------------------------------------
+        applicability = assess_degree_applicability(text, str(program.degree))
+        sch.degree_applicability = applicability.verdict
+        sch.degree_applicability_reason = applicability.reason
+        sch.applies_to_degrees = list(applicability.mentioned_degrees)
+        if applicability.verdict != "unknown":
+            builder.add(
+                ClaimType.SCHOLARSHIP_PROGRAM_RESTRICTION,
+                {"degree": str(program.degree), "applies": applicability.verdict},
+                applicability.evidence or applicability.reason,
+                confidence=0.85,
+                notes=applicability.reason,
+            )
 
         # --- application mode ------------------------------------------
         if "nominated by the department" in low or "direct applications are not accepted" in low:
@@ -288,9 +334,41 @@ class WebScholarshipAdapter:
             builder.add(ClaimType.SCHOLARSHIP_MIN_TEST_SCORE,
                         {score.group(1): float(score.group(2))}, _excerpt(text, score.start()))
 
-        sch.available_this_intake = "yes" if sch.deadline is None or sch.deadline.year >= 2026 else "unknown"
+        self._derive_availability(sch)
         sch.claim_ids = [c.source_url for c in builder.claims]
         return sch, builder.claims
+
+    @staticmethod
+    def _derive_availability(sch: Scholarship) -> None:
+        """Roll the separate states up, conservatively.
+
+        A missing deadline used to read as "available". It now reads as
+        unknown, because not finding a date is not the same as there being no
+        date.
+        """
+        from datetime import date as _date
+
+        sch.deadline_known = sch.deadline is not None
+        sch.deadline_passed = bool(sch.deadline and sch.deadline < _date.today())
+
+        if sch.deadline_known:
+            sch.application_window_open = "no" if sch.deadline_passed else "yes"
+        else:
+            sch.application_window_open = "unknown"
+
+        if sch.degree_applicability == "no" or sch.international_eligible == "no":
+            sch.applicant_eligible = "no"
+        elif sch.degree_applicability == "yes" and sch.international_eligible == "yes":
+            sch.applicant_eligible = "yes"
+        else:
+            sch.applicant_eligible = "unknown"
+
+        if sch.applicant_eligible == "no" or sch.application_window_open == "no":
+            sch.available_this_intake = "no"
+        elif sch.applicant_eligible == "yes" and sch.application_window_open == "yes":
+            sch.available_this_intake = "yes"
+        else:
+            sch.available_this_intake = "unknown"
 
 
 #: A link worth following from a funding index page.

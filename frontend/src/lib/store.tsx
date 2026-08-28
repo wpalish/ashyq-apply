@@ -43,6 +43,10 @@ export interface Store {
   profileDraft: Record<string, unknown>;
   setProfileDraft: (updater: (d: Record<string, unknown>) => Record<string, unknown>) => void;
   savedProfile: StoredProfile | null;
+  /** True once a stored profile has been loaded back into the draft. */
+  restored: boolean;
+  loadDemoProfile: () => void;
+  clearProfile: () => void;
   validation: ProfileValidationReport | null;
   run: RunView | null;
   results: ProgramResult[];
@@ -62,6 +66,46 @@ export interface Store {
 
 const StoreContext = createContext<Store | null>(null);
 
+/**
+ * A stored profile back into an editable draft.
+ *
+ * The server wraps the profile with id/created_at/updated_at; those are not
+ * part of the editable document and the API rejects them on write.
+ */
+const SERVER_ONLY_FIELDS = ['id', 'created_at', 'updated_at'] as const;
+
+export function toDraft(stored: StoredProfile): Record<string, unknown> {
+  const draft: Record<string, unknown> = { ...stored };
+  for (const key of SERVER_ONLY_FIELDS) delete draft[key];
+  return draft;
+}
+
+/** An empty profile: the shape of DEFAULT_PROFILE with nothing filled in. */
+export function blankProfile(): Record<string, unknown> {
+  const base = structuredClone(DEFAULT_PROFILE) as Record<string, unknown>;
+  const context = base.context as Record<string, unknown>;
+  return {
+    ...base,
+    display_name: "New applicant",
+    context: { ...context, intended_fields: [], graduation_date: null },
+    academics: {
+      ...(base.academics as Record<string, unknown>),
+      gpa: null,
+      class_rank: null,
+      class_size: null,
+      sat: { total: null, math: null, reading_writing: null,
+             dates: { taken_on: null, planned_retake_on: null },
+             status: "applicant_confirmed" },
+      ielts: { overall: null, listening: null, reading: null, writing: null, speaking: null,
+               test_type: "academic", dates: { taken_on: null, planned_retake_on: null },
+               status: "applicant_confirmed" },
+      planned_retakes: [],
+    },
+    activities: [],
+    achievements: [],
+  };
+}
+
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [capabilities, setCapabilities] = useState<Capabilities | null>(null);
   const [profileDraft, setDraft] = useState<Record<string, unknown>>(
@@ -74,6 +118,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [summary, setSummary] = useState<ShortlistSummary | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [restored, setRestored] = useState(false);
   const pollRef = useRef<number | null>(null);
 
   const fail = useCallback((e: unknown) => {
@@ -103,16 +148,30 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     }
   }, [run, fail]);
 
-  // Restore an in-flight run after a reload rather than losing it.
+  // Restore the saved profile and any in-flight run after a reload.
+  //
+  // The draft must be hydrated from the stored payload, not left as the
+  // synthetic default. Leaving it meant the next save wrote demo data over the
+  // applicant's real profile - silent data loss, and the worst defect found in
+  // this build.
   useEffect(() => {
-    const stored = readLocal(RUN_KEY);
-    if (!stored) return;
-    api.getRun(stored).then(setRun).catch(() => writeLocal(RUN_KEY, null));
     const profileId = readLocal(PROFILE_KEY);
     if (profileId) {
-      api.listProfiles()
-        .then((all) => setSavedProfile(all.find((p) => p.id === profileId) ?? null))
-        .catch(() => undefined);
+      api.getProfile(profileId)
+        .then((stored) => {
+          setSavedProfile(stored);
+          setDraft(toDraft(stored));
+          setRestored(true);
+        })
+        .catch(() => {
+          // The profile is gone; forget the pointer rather than keep a stale one.
+          writeLocal(PROFILE_KEY, null);
+          writeLocal(RUN_KEY, null);
+        });
+    }
+    const storedRun = readLocal(RUN_KEY);
+    if (storedRun) {
+      api.getRun(storedRun).then(setRun).catch(() => writeLocal(RUN_KEY, null));
     }
   }, []);
 
@@ -258,15 +317,24 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     }
   }, [savedProfile, fail]);
 
+  const loadDemoProfile = useCallback(() => {
+    setDraft(structuredClone(DEFAULT_PROFILE) as Record<string, unknown>);
+  }, []);
+
+  const clearProfile = useCallback(() => {
+    setDraft(blankProfile());
+  }, []);
+
   const value = useMemo<Store>(
     () => ({
-      capabilities, profileDraft, setProfileDraft, savedProfile, validation, run, results,
+      capabilities, profileDraft, setProfileDraft, savedProfile, restored,
+      loadDemoProfile, clearProfile, validation, run, results,
       summary, loading, error, saveProfile, startRun, cancelRun, retryRun, collectDocuments,
       decide, refreshResults, deleteEverything, clearError: () => setError(null),
     }),
-    [capabilities, profileDraft, setProfileDraft, savedProfile, validation, run, results, summary,
-     loading, error, saveProfile, startRun, cancelRun, retryRun, collectDocuments, decide,
-     refreshResults, deleteEverything],
+    [capabilities, profileDraft, setProfileDraft, savedProfile, restored, loadDemoProfile,
+     clearProfile, validation, run, results, summary, loading, error, saveProfile, startRun,
+     cancelRun, retryRun, collectDocuments, decide, refreshResults, deleteEverything],
   );
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;

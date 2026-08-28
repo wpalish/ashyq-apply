@@ -15,6 +15,7 @@ from datetime import UTC, datetime
 
 from app.config import get_settings
 from app.db import session_scope
+from app.domain.enums import PipelineStage
 from app.models import ApplicantProfileRow, AuditEvent, ResearchRun
 from app.pipeline.runner import ResearchRunner
 from app.schemas.profile import ApplicantProfileIn
@@ -138,6 +139,46 @@ class JobQueue:
         awaitable = [t for t in pending if isinstance(t, asyncio.Task)]
         if awaitable:
             await asyncio.gather(*awaitable, return_exceptions=True)
+
+
+def reconcile_orphaned_runs(lease_seconds: int | None = None) -> list[str]:
+    """Find runs whose worker died and mark them recoverable.
+
+    Called at startup. Without it a crashed worker leaves a run claiming to be
+    running forever, and the UI polls it indefinitely.
+    """
+    from app.pipeline.state import LEASE_SECONDS, is_lease_expired
+
+    recovered: list[str] = []
+    with session_scope() as session:
+        candidates = (
+            session.query(ResearchRun)
+            .filter(ResearchRun.finished_at.is_(None))
+            .all()
+        )
+        for run in candidates:
+            if not is_lease_expired(
+                run.stage, run.heartbeat_at,
+                lease_seconds=lease_seconds or LEASE_SECONDS,
+            ):
+                continue
+            run.stage = PipelineStage.RETRYABLE_FAILED.value
+            run.worker_id = None
+            run.recovery_count = (run.recovery_count or 0) + 1
+            run.errors = [
+                *(run.errors or []),
+                "The worker running this stage stopped without finishing. The run was "
+                "recovered at startup and can be retried from the last completed stage.",
+            ]
+            session.add(run)
+            session.add(AuditEvent(
+                actor="system", action="run_recovered", entity_type="run",
+                entity_id=run.id, detail={"recovery_count": run.recovery_count},
+            ))
+            recovered.append(run.id)
+    if recovered:
+        log.warning("recovered %d orphaned run(s): %s", len(recovered), ", ".join(recovered))
+    return recovered
 
 
 queue = JobQueue()

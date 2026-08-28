@@ -11,6 +11,21 @@ from datetime import UTC, datetime
 
 from app.domain.enums import STAGE_ORDER, PipelineStage
 
+#: A run in one of these stages should have a live worker behind it.
+IN_PROGRESS_STAGES = {
+    PipelineStage.QUEUED,
+    PipelineStage.PROFILE_VALIDATION,
+    PipelineStage.CANDIDATE_DISCOVERY,
+    PipelineStage.PROGRAM_VERIFICATION,
+    PipelineStage.FUNDING_DISCOVERY,
+    PipelineStage.ASSESSMENT,
+    PipelineStage.DOCUMENT_COLLECTION,
+}
+
+#: How long a worker may go silent before its run is treated as abandoned.
+#: Long enough to cover a slow page fetch with its retries and backoff.
+LEASE_SECONDS = 120
+
 #: Stages that may be re-run on their own after a failure.
 RETRYABLE = {
     PipelineStage.CANDIDATE_DISCOVERY,
@@ -73,6 +88,29 @@ class RunState:
         tracked = [s for s in STAGE_ORDER if s not in (PipelineStage.QUEUED, PipelineStage.COMPLETED)]
         done = sum(1 for s in tracked if self[s].status in ("done", "skipped"))
         return round(done / len(tracked), 3) if tracked else 0.0
+
+
+def is_lease_expired(
+    stage: str, heartbeat_at: datetime | None, *, now: datetime | None = None,
+    lease_seconds: int = LEASE_SECONDS,
+) -> bool:
+    """Whether a run claims to be working but nothing is behind it.
+
+    A run that never started has no heartbeat and is not abandoned; it is
+    waiting to be picked up. Only a run that beat and then stopped is.
+    """
+    try:
+        current = PipelineStage(stage)
+    except ValueError:
+        return False
+    if current not in IN_PROGRESS_STAGES:
+        return False
+    if heartbeat_at is None:
+        return False
+    if heartbeat_at.tzinfo is None:
+        heartbeat_at = heartbeat_at.replace(tzinfo=UTC)
+    reference = now or datetime.now(UTC)
+    return (reference - heartbeat_at).total_seconds() > lease_seconds
 
 
 def can_transition(current: PipelineStage, target: PipelineStage) -> bool:

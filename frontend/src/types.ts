@@ -34,7 +34,10 @@ export type UserDecision = 'undecided' | 'approved' | 'maybe' | 'rejected';
 export type PipelineStage =
   | 'queued' | 'profile_validation' | 'candidate_discovery' | 'program_verification'
   | 'funding_discovery' | 'assessment' | 'awaiting_user_decision'
-  | 'document_collection' | 'completed' | 'failed' | 'cancelled';
+  | 'document_collection' | 'completed' | 'failed'
+  /** The worker holding the run stopped without finishing; the work itself did not fail. */
+  | 'retryable_failed'
+  | 'cancelled';
 
 export type CostCategory =
   | 'tuition' | 'mandatory_fees' | 'housing' | 'meals' | 'health_insurance'
@@ -323,6 +326,14 @@ export interface RunView {
   finished_at: string | null;
   job_running: boolean;
   job_error: string;
+  candidate_limit: number;
+  verify_limit: number;
+  fetch_tiers: Record<string, number>;
+  /** The run claims to be working but its worker has gone silent. */
+  stale: boolean;
+  worker_id: string | null;
+  heartbeat_at: string | null;
+  recovery_count: number;
 }
 
 export interface ProfileGap {

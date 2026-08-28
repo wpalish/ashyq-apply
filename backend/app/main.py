@@ -13,7 +13,7 @@ from app.adapters.fetching import PIILeakError
 from app.api import routes_meta, routes_profile, routes_research, routes_results
 from app.config import get_settings
 from app.db import init_db
-from app.pipeline.queue import queue
+from app.pipeline.queue import queue, reconcile_orphaned_runs
 
 settings = get_settings()
 logging.basicConfig(
@@ -29,6 +29,9 @@ async def lifespan(_: FastAPI):
 
     init_db()
     queue.bind_loop(asyncio.get_running_loop())
+    recovered = reconcile_orphaned_runs()
+    if recovered:
+        log.warning("startup reconciliation recovered %d run(s)", len(recovered))
     log.info("UniMatch started (demo_mode=%s, robots=%s)", settings.demo_mode, settings.respect_robots)
     yield
     await queue.shutdown()

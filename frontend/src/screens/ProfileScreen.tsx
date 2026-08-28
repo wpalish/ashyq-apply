@@ -20,8 +20,12 @@ const SEVERITY_LABEL: Record<string, string> = {
 };
 
 export function ProfileScreen({ onNext }: { onNext: () => void }) {
-  const { profileDraft, setProfileDraft, validation, saveProfile, loading } = useStore();
+  const {
+    profileDraft, setProfileDraft, validation, saveProfile, loading,
+    savedProfile, restored, loadDemoProfile, clearProfile,
+  } = useStore();
   const [saved, setSaved] = useState(false);
+  const [confirmingReplace, setConfirmingReplace] = useState<'demo' | 'clear' | null>(null);
   const [methods, setMethods] = useState<
     { key: string; description: string; source: string; caveat: string; to_scale: string }[]
   >([]);
@@ -69,6 +73,64 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
       </div>
 
       <div className="stack stack--loose">
+        {restored && savedProfile && (
+          <Notice kind="info">
+            <div>
+              Loaded <strong>{String(profileDraft.display_name)}</strong> from your saved profile.
+              Edits here update that profile.
+            </div>
+          </Notice>
+        )}
+
+        <Panel
+          title="Start from"
+          hint="Demo data is never loaded on your behalf. Choose it explicitly, and it is clearly labelled everywhere it appears."
+        >
+          <div className="row">
+            <button
+              className="btn btn--sm"
+              data-testid="clear-profile"
+              onClick={() => (savedProfile ? setConfirmingReplace('clear') : clearProfile())}
+            >
+              Blank profile
+            </button>
+            <button
+              className="btn btn--sm"
+              data-testid="load-demo-profile"
+              onClick={() => (savedProfile ? setConfirmingReplace('demo') : loadDemoProfile())}
+            >
+              Load synthetic demo
+            </button>
+            {String(profileDraft.display_name).includes('synthetic') && (
+              <Chip tone="demo">synthetic demo data</Chip>
+            )}
+          </div>
+          {confirmingReplace && (
+            <Notice kind="warn">
+              <div style={{ flex: 1 }}>
+                <strong>Replace the profile you have saved?</strong> The saved copy is not deleted,
+                but your unsaved edits are lost.
+                <div className="row" style={{ marginTop: 'var(--space-3)' }}>
+                  <button
+                    className="btn btn--sm btn--danger"
+                    data-testid="confirm-replace"
+                    onClick={() => {
+                      if (confirmingReplace === 'demo') loadDemoProfile();
+                      else clearProfile();
+                      setConfirmingReplace(null);
+                    }}
+                  >
+                    Replace
+                  </button>
+                  <button className="btn btn--sm" onClick={() => setConfirmingReplace(null)}>
+                    Keep editing
+                  </button>
+                </div>
+              </div>
+            </Notice>
+          )}
+        </Panel>
+
         <Panel title="Application context" hint="What you are applying for, and from where.">
           <div className="grid-2">
             <Field label="Level" htmlFor="level">

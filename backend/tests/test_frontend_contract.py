@@ -35,8 +35,19 @@ CONTRACT: dict[str, type] = {
 }
 
 
+#: Comments are stripped before matching. A `;` inside a doc comment on a union
+#: member would otherwise terminate the match early and silently shorten the
+#: parsed vocabulary.
+_TS_BLOCK_COMMENT = re.compile(r"/\*.*?\*/", re.DOTALL)
+_TS_LINE_COMMENT = re.compile(r"//[^\n]*")
+
+
+def strip_comments(source: str) -> str:
+    return _TS_LINE_COMMENT.sub("", _TS_BLOCK_COMMENT.sub("", source))
+
+
 def parse_union(source: str, alias: str) -> set[str]:
-    match = re.search(rf"export type {alias} =(.*?);", source, re.DOTALL)
+    match = re.search(rf"export type {alias} =(.*?);", strip_comments(source), re.DOTALL)
     if not match:
         raise AssertionError(f"types.ts does not declare `{alias}`")
     return set(re.findall(r"'([^']+)'", match.group(1)))
@@ -51,6 +62,17 @@ def types_source() -> str:
 @pytest.mark.parametrize("alias,enum_cls", CONTRACT.items())
 def test_the_typescript_union_matches_the_backend_enum(alias, enum_cls, types_source):
     assert parse_union(types_source, alias) == {member.value for member in enum_cls}
+
+
+def test_the_union_parser_is_not_fooled_by_comments():
+    """Guards the guard: a `;` in a doc comment used to truncate the parse."""
+    sample = (
+        "export type X =\n"
+        "  | 'a'\n"
+        "  /** something; with a semicolon */\n"
+        "  | 'b';\n"
+    )
+    assert parse_union(sample, "X") == {"a", "b"}
 
 
 def test_every_status_the_ui_colours_is_a_real_backend_value(types_source):
