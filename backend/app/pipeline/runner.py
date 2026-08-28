@@ -56,7 +56,10 @@ class RunCancelled(RuntimeError):
 class ResearchRunner:
     """Executes the pipeline for one run."""
 
-    def __init__(self, session: Session, run: ResearchRun, profile: ApplicantProfileIn, settings: Settings) -> None:
+    def __init__(
+        self, session: Session, run: ResearchRun, profile: ApplicantProfileIn,
+        settings: Settings, *, job_id: str | None = None,
+    ) -> None:
         self.session = session
         self.run = run
         self.profile = profile
@@ -66,6 +69,11 @@ class ResearchRunner:
         # A per-run override wins over the server default, and verification is
         # never asked to cover more candidates than discovery produced.
         self.worker_id = f"{socket.gethostname()}:{os.getpid()}"
+        #: When run by a worker, cancellation is observed through the job as
+        #: well as the run, so either route stops the work.
+        self.job_id = job_id
+        #: Stages skipped because a previous attempt finished them.
+        self.resumed_stages: list[str] = []
         self.candidate_limit = run.candidate_limit or settings.candidate_limit
         self.verify_limit = min(
             run.verify_limit or settings.verify_limit, self.candidate_limit
@@ -113,9 +121,15 @@ class ResearchRunner:
         self.session.commit()
 
     def _check_cancelled(self) -> None:
+        """Observed between units of work so cancellation lands cleanly."""
         self.session.refresh(self.run)
         if self.run.cancelled:
             raise RunCancelled("Run was cancelled by the user.")
+        if self.job_id is not None:
+            from app.jobs.store import JobStore
+
+            if JobStore(self.session).is_cancel_requested(self.job_id):
+                raise RunCancelled("Job was cancelled by the user.")
 
     # --- entry point ------------------------------------------------------
 
@@ -137,11 +151,16 @@ class ResearchRunner:
             fetcher.attach_renderer(browser)
         try:
             async with fetcher:
-                await self._stage_validate()
+                # Stages already marked done are not repeated. A retry after a
+                # crash resumes from the boundary rather than redoing work and
+                # colliding with the rows the first attempt already wrote.
+                await self._maybe(PipelineStage.PROFILE_VALIDATION, self._stage_validate)
+                # Discovery is cheap and its output is held in memory, so it is
+                # re-run whenever candidates are needed downstream.
                 await self._stage_discover(fetcher)
-                await self._stage_verify(fetcher)
-                await self._stage_funding(fetcher)
-                await self._stage_assess(fetcher)
+                await self._maybe(PipelineStage.PROGRAM_VERIFICATION, self._stage_verify, fetcher)
+                await self._maybe(PipelineStage.FUNDING_DISCOVERY, self._stage_funding, fetcher)
+                await self._maybe(PipelineStage.ASSESSMENT, self._stage_assess, fetcher)
             self.run.fetch_tiers = dict(fetcher.tier_counts)
             self._transition(PipelineStage.AWAITING_USER_DECISION)
             self._save()
@@ -150,6 +169,8 @@ class ResearchRunner:
             self.run.finished_at = datetime.now(UTC)
             self._audit("run_cancelled", "run", self.run.id)
             self._save()
+            # Re-raise: swallowing this let the worker mark the job succeeded.
+            raise
         except Exception as exc:  # keep the run inspectable rather than losing it
             log.exception("run %s failed", self.run.id)
             self.run.stage = PipelineStage.FAILED.value
@@ -160,6 +181,14 @@ class ResearchRunner:
             raise
         finally:
             await browser.close()
+
+    async def _maybe(self, stage: PipelineStage, step, *args) -> None:
+        """Run a stage unless a previous attempt already completed it."""
+        if self.state[stage].status == "done":
+            log.info("run %s: skipping %s, already completed", self.run.id[:8], stage.value)
+            self.resumed_stages.append(stage.value)
+            return
+        await step(*args)
 
     def _transition(self, stage: PipelineStage) -> None:
         self.run.stage = stage.value
@@ -563,14 +592,36 @@ class ResearchRunner:
         )
 
     def _persist_result(self, result: ProgramResult, claims, conflicts) -> None:
+        """Write a result, or refresh the one a previous attempt wrote.
+
+        A retry after a crash re-derives results the first attempt already
+        stored. Inserting blindly violates the (run_id, dedupe_key) unique
+        index and fails the retry, so an existing row is updated in place and
+        its evidence replaced rather than appended to.
+        """
+        dedupe_key = dedupe.program_key(
+            result.university, result.program, result.degree, result.intake, result.country
+        )
+        existing = (
+            self.session.query(ProgramResultRow)
+            .filter(
+                ProgramResultRow.run_id == self.run.id,
+                ProgramResultRow.dedupe_key == dedupe_key,
+            )
+            .one_or_none()
+        )
+        if existing is not None:
+            result.id = existing.id
+            self._replace_evidence(existing.id)
+            self._update_result(existing, result, extra_claims=claims, conflicts=conflicts)
+            return
+
         # The row's primary key is authoritative; the result document adopts it
         # so every claim, conflict and checklist points at the same identifier.
         row = ProgramResultRow(
             id=new_id(),
             run_id=self.run.id,
-            dedupe_key=dedupe.program_key(
-                result.university, result.program, result.degree, result.intake, result.country
-            ),
+            dedupe_key=dedupe_key,
             university=result.university,
             university_key=result.university_id,
             country=result.country,
@@ -603,6 +654,19 @@ class ResearchRunner:
             self._store_claims(row.id, extra_claims)
         if conflicts:
             self._store_conflicts(row.id, conflicts)
+
+    def _replace_evidence(self, result_id: str) -> None:
+        """Drop the evidence a previous attempt stored for this result.
+
+        Re-running a stage re-reads the same pages, so keeping both copies
+        would inflate the claim count and show the user duplicate evidence.
+        """
+        self.session.query(ClaimRow).filter(ClaimRow.result_id == result_id).delete(
+            synchronize_session=False
+        )
+        self.session.query(ConflictRow).filter(ConflictRow.result_id == result_id).delete(
+            synchronize_session=False
+        )
 
     def _store_claims(self, result_id: str, claims) -> None:
         for c in claims:

@@ -10,6 +10,7 @@ from dataclasses import asdict, dataclass, field
 from datetime import UTC, datetime
 
 from app.domain.enums import STAGE_ORDER, PipelineStage
+from app.models.base import ensure_utc
 
 #: A run in one of these stages should have a live worker behind it.
 IN_PROGRESS_STAGES = {
@@ -105,10 +106,9 @@ def is_lease_expired(
         return False
     if current not in IN_PROGRESS_STAGES:
         return False
+    heartbeat_at = ensure_utc(heartbeat_at)
     if heartbeat_at is None:
         return False
-    if heartbeat_at.tzinfo is None:
-        heartbeat_at = heartbeat_at.replace(tzinfo=UTC)
     reference = now or datetime.now(UTC)
     return (reference - heartbeat_at).total_seconds() > lease_seconds
 

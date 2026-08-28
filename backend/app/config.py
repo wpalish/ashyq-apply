@@ -15,6 +15,13 @@ class Settings(BaseSettings):
 
     #: Demo mode uses the bundled synthetic corpus and never touches the network.
     demo_mode: bool = True
+    #: Environment. Production refuses several unsafe defaults outright.
+    environment: str = "development"
+    #: Applying migrations on startup is off by default. Two processes starting
+    #: together would otherwise both try to migrate — which on SQLite deadlocks
+    #: and on PostgreSQL races. Migrating is a deliberate step: `run.sh` and the
+    #: compose stack do it once, before anything else starts.
+    auto_migrate: bool = False
     database_url: str = f"sqlite:///{BACKEND_ROOT / 'data' / 'unimatch.db'}"
     cache_dir: Path = BACKEND_ROOT / "data" / "httpcache"
     export_dir: Path = BACKEND_ROOT / "data" / "exports"
@@ -34,8 +41,21 @@ class Settings(BaseSettings):
     academic_year: str = "2026/27"
     target_currency: str = "USD"
 
+    #: Worker
+    worker_concurrency: int = 2
+    worker_poll_seconds: float = 1.0
+    job_lease_seconds: int = 120
+
     cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
     log_level: str = "INFO"
+
+    @property
+    def is_production(self) -> bool:
+        return self.environment.lower() in ("production", "prod")
+
+    @property
+    def is_postgres(self) -> bool:
+        return self.database_url.startswith(("postgresql", "postgres"))
 
     @property
     def cors_origin_list(self) -> list[str]:

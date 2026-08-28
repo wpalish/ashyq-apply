@@ -13,7 +13,7 @@ from app.adapters.fetching import PIILeakError
 from app.api import routes_meta, routes_profile, routes_research, routes_results
 from app.config import get_settings
 from app.db import init_db
-from app.pipeline.queue import queue, reconcile_orphaned_runs
+from app.jobs.worker import reconcile_startup
 
 settings = get_settings()
 logging.basicConfig(
@@ -25,20 +25,26 @@ log = logging.getLogger("unimatch")
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    import asyncio
+    """Prepare the database and reconcile anything a crash left behind.
 
+    The API does not run jobs. It enqueues them and reports on them; a separate
+    worker process consumes the queue, so restarting the API cannot lose work
+    and deploying the two is independent.
+    """
     init_db()
-    queue.bind_loop(asyncio.get_running_loop())
-    recovered = reconcile_orphaned_runs()
-    if recovered:
-        log.warning("startup reconciliation recovered %d run(s)", len(recovered))
-    log.info("UniMatch started (demo_mode=%s, robots=%s)", settings.demo_mode, settings.respect_robots)
+    summary = reconcile_startup()
+    if any(summary.values()):
+        log.warning("startup reconciliation: %s", summary)
+    log.info(
+        "ASHYQ Apply API started (env=%s, demo_mode=%s, robots=%s, db=%s)",
+        settings.environment, settings.demo_mode, settings.respect_robots,
+        "postgresql" if settings.is_postgres else "sqlite",
+    )
     yield
-    await queue.shutdown()
 
 
 app = FastAPI(
-    title="UniMatch",
+    title="ASHYQ Apply",
     version="0.1.0",
     summary="University and scholarship matching for international applicants, with a source for every claim.",
     description=(
@@ -76,7 +82,7 @@ async def value_error_handler(_: Request, exc: ValueError) -> JSONResponse:
 @app.get("/", include_in_schema=False)
 def root() -> dict:
     return {
-        "name": "UniMatch",
+        "name": "ASHYQ Apply",
         "docs": "/docs",
         "health": "/api/health",
         "note": "Published criteria only. This service never promises admission or funding.",

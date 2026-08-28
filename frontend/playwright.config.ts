@@ -25,7 +25,8 @@ export default defineConfig({
   // suite fails with a wall of ECONNREFUSED instead of a clear cause.
   webServer: [
     {
-      command: '../backend/run.sh',
+      // The API only enqueues; a worker is needed to consume the queue.
+      command: '../backend/run.sh --with-worker',
       url: `http://127.0.0.1:${API_PORT}/api/health`,
       reuseExistingServer: true,
       timeout: 60_000,

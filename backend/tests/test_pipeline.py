@@ -18,7 +18,7 @@ from app.domain.enums import (
     UserDecision,
 )
 from app.models import ApplicantProfileRow, Base, ClaimRow, ProgramResultRow, ResearchRun
-from app.pipeline.runner import ResearchRunner
+from app.pipeline.runner import ResearchRunner, RunCancelled
 from app.pipeline.state import RunState
 from app.schemas.result import ProgramResult
 
@@ -251,5 +251,9 @@ class TestCancellation:
         session.commit()
 
         runner = ResearchRunner(session, run, profile, settings)
-        await runner.run_to_decision()
+        # The cancellation propagates: swallowing it let the caller mark the
+        # job succeeded for a run that never finished.
+        with pytest.raises(RunCancelled):
+            await runner.run_to_decision()
         assert run.stage == PipelineStage.CANCELLED.value
+        assert run.finished_at is not None

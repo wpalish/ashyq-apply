@@ -7,6 +7,9 @@ touches the network or the developer's working database.
 from __future__ import annotations
 
 import asyncio
+import shutil
+import tempfile
+import uuid
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -27,6 +30,68 @@ from app.schemas.profile import (
 )
 
 CORPUS = Path(__file__).resolve().parent.parent / "app" / "corpus" / "pages"
+
+
+@pytest.fixture(scope="session")
+def postgres_url() -> str:
+    """A real PostgreSQL for the session.
+
+    Provisioned in-process by `pgserver`, so nothing has to be installed. The
+    schema work, the queue's SKIP LOCKED claim and the cascade constraints are
+    all PostgreSQL-specific and are asserted against the real thing rather than
+    against SQLite standing in for it.
+    """
+    pgserver = pytest.importorskip(
+        "pgserver", reason="pgserver provides the local PostgreSQL used by these tests"
+    )
+    directory = Path(tempfile.mkdtemp(prefix="unimatch-pg-"))
+    server = pgserver.get_server(str(directory))
+    try:
+        yield server.get_uri().replace("postgresql://", "postgresql+psycopg://")
+    finally:
+        server.cleanup()
+        shutil.rmtree(directory, ignore_errors=True)
+
+
+@pytest.fixture
+def pg_engine(postgres_url: str):
+    """A migrated PostgreSQL database, isolated per test."""
+    import sqlalchemy as sa
+
+    from app.db import migrate_to_head
+
+    name = f"t{uuid.uuid4().hex[:12]}"
+    admin = sa.create_engine(postgres_url, isolation_level="AUTOCOMMIT")
+    with admin.connect() as connection:
+        connection.execute(sa.text(f'CREATE DATABASE "{name}"'))
+    admin.dispose()
+
+    url = _swap_database(postgres_url, name)
+    migrate_to_head(url)
+    engine = sa.create_engine(url)
+    try:
+        yield engine
+    finally:
+        engine.dispose()
+
+
+def _swap_database(url: str, name: str) -> str:
+    """Point a libpq URL at a different database, keeping its query string."""
+    from urllib.parse import urlsplit, urlunsplit
+
+    parts = urlsplit(url)
+    return urlunsplit((parts.scheme, parts.netloc, f"/{name}", parts.query, parts.fragment))
+
+
+@pytest.fixture
+def pg_session(pg_engine):
+    from sqlalchemy.orm import sessionmaker
+
+    session = sessionmaker(bind=pg_engine, future=True)()
+    try:
+        yield session
+    finally:
+        session.close()
 
 
 @pytest.fixture(scope="session")

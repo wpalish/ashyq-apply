@@ -10,6 +10,7 @@ confirmation. Every assertion below encodes that trade.
 
 from __future__ import annotations
 
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
@@ -590,44 +591,63 @@ class _StubClient:
 
 
 class TestSchemaDrift:
-    """create_all() cannot add a column to an existing table.
+    """A database the code does not match must fail at startup, not at request time.
 
     This surfaced as `table research_runs has no column named candidate_limit`
-    on an unrelated request. It must be a startup error naming the problem.
+    on an unrelated request. The check is now against the Alembic revision,
+    which catches every kind of drift rather than only missing columns.
     """
 
-    def test_a_stale_schema_is_reported_at_startup(self, tmp_path, monkeypatch):
-        import sqlite3
-
+    def test_a_database_that_was_never_migrated_is_reported(self, tmp_path, monkeypatch):
         from sqlalchemy import create_engine
 
         import app.db as db_module
-        from app.models import Base
 
-        path = tmp_path / "stale.db"
-        engine = create_engine(f"sqlite:///{path}", connect_args={"check_same_thread": False})
-        Base.metadata.create_all(engine)
-        sqlite3.connect(path).execute(
-            "ALTER TABLE research_runs DROP COLUMN candidate_limit"
-        )
-
+        engine = create_engine(f"sqlite:///{tmp_path / 'empty.db'}",
+                               connect_args={"check_same_thread": False})
         monkeypatch.setattr(db_module, "engine", engine)
         with pytest.raises(db_module.SchemaOutOfDate) as exc:
-            db_module._assert_schema_matches_models()
-        assert "research_runs.candidate_limit" in str(exc.value)
-        assert "cannot add columns" in str(exc.value)
+            db_module.assert_at_head()
+        assert "never been migrated" in str(exc.value)
+        assert "alembic upgrade head" in str(exc.value)
 
-    def test_a_current_schema_passes(self, tmp_path, monkeypatch):
+    def test_a_database_behind_head_names_both_revisions(self, tmp_path, monkeypatch):
+        from sqlalchemy import create_engine, text
+
+        import app.db as db_module
+
+        url = f"sqlite:///{tmp_path / 'behind.db'}"
+        db_module.migrate_to_head(url)
+        engine = create_engine(url, connect_args={"check_same_thread": False})
+        with engine.begin() as connection:
+            connection.execute(text("UPDATE alembic_version SET version_num = 'oldrev'"))
+        monkeypatch.setattr(db_module, "engine", engine)
+
+        with pytest.raises(db_module.SchemaOutOfDate) as exc:
+            db_module.assert_at_head()
+        assert "oldrev" in str(exc.value)
+        assert db_module.head_revision() in str(exc.value)
+
+    def test_a_migrated_database_passes(self, tmp_path, monkeypatch):
         from sqlalchemy import create_engine
 
         import app.db as db_module
-        from app.models import Base
 
-        engine = create_engine(f"sqlite:///{tmp_path / 'fresh.db'}",
-                               connect_args={"check_same_thread": False})
-        Base.metadata.create_all(engine)
+        url = f"sqlite:///{tmp_path / 'fresh.db'}"
+        db_module.migrate_to_head(url)
+        engine = create_engine(url, connect_args={"check_same_thread": False})
         monkeypatch.setattr(db_module, "engine", engine)
-        db_module._assert_schema_matches_models()
+        db_module.assert_at_head()
+
+    def test_create_all_is_not_used_as_a_migration_mechanism(self):
+        """It creates missing tables and silently ignores changed columns."""
+        import inspect
+
+        import app.db as db_module
+
+        source = inspect.getsource(db_module.init_db)
+        assert "create_all" not in source
+        assert "migrate_to_head" in source
 
 
 # ---------------------------------------------------------------------------
@@ -644,10 +664,10 @@ class TestCrashRecovery:
         from sqlalchemy import create_engine
         from sqlalchemy.orm import sessionmaker
 
-        from app.models import Base
+        from app.db import migrate_to_head
 
+        migrate_to_head(settings.database_url)
         engine = create_engine(settings.database_url, connect_args={"check_same_thread": False})
-        Base.metadata.create_all(engine)
         return engine, sessionmaker(bind=engine)()
 
     def test_a_fresh_heartbeat_is_not_treated_as_abandoned(self):
@@ -707,13 +727,11 @@ class TestCrashRecovery:
             session.close()
             engine.dispose()
 
-    def test_startup_reconciliation_recovers_an_abandoned_run(self, settings, profile, monkeypatch):
-        """Simulates a worker killed mid-stage: heartbeat stops, stage stays."""
-        from datetime import UTC, datetime, timedelta
-
+    def test_startup_reconciliation_recovers_a_stranded_run(self, settings, profile, monkeypatch):
+        """A run mid-pipeline with no queued or running job is stranded."""
         import app.db as db_module
+        from app.jobs.worker import reconcile_startup
         from app.models import ApplicantProfileRow, ResearchRun
-        from app.pipeline.queue import reconcile_orphaned_runs
 
         engine, session = self._session(settings)
         from sqlalchemy.orm import sessionmaker
@@ -724,35 +742,32 @@ class TestCrashRecovery:
             row = ApplicantProfileRow(display_name="t", payload=profile.model_dump(mode="json"))
             session.add(row)
             session.flush()
-            run = ResearchRun(
-                profile_id=row.id, stage="funding_discovery", demo_mode=True,
-                worker_id="host:9999", stage_state={},
-                heartbeat_at=datetime.now(UTC) - timedelta(seconds=600),
-                started_at=datetime.now(UTC) - timedelta(seconds=900),
-            )
+            run = ResearchRun(profile_id=row.id, stage="funding_discovery", demo_mode=True,
+                              worker_id="host:9999", stage_state={})
             session.add(run)
             session.commit()
             run_id = run.id
 
-            recovered = reconcile_orphaned_runs()
-            assert run_id in recovered
+            summary = reconcile_startup()
+            assert summary["runs_recovered"] == 1
 
             session.expire_all()
             refreshed = session.get(ResearchRun, run_id)
             assert refreshed.stage == "retryable_failed"
             assert refreshed.worker_id is None
             assert refreshed.recovery_count == 1
-            assert any("stopped without finishing" in e for e in refreshed.errors)
+            assert any("recovered at startup" in e for e in refreshed.errors)
         finally:
             session.close()
             engine.dispose()
 
-    def test_reconciliation_leaves_a_healthy_run_alone(self, settings, profile, monkeypatch):
-        from datetime import UTC, datetime, timedelta
-
+    def test_reconciliation_leaves_a_run_with_a_live_job_alone(
+        self, settings, profile, monkeypatch
+    ):
         import app.db as db_module
+        from app.jobs.store import JobStore
+        from app.jobs.worker import reconcile_startup
         from app.models import ApplicantProfileRow, ResearchRun
-        from app.pipeline.queue import reconcile_orphaned_runs
 
         engine, session = self._session(settings)
         from sqlalchemy.orm import sessionmaker
@@ -763,20 +778,16 @@ class TestCrashRecovery:
             row = ApplicantProfileRow(display_name="t", payload=profile.model_dump(mode="json"))
             session.add(row)
             session.flush()
-            live = ResearchRun(
-                profile_id=row.id, stage="funding_discovery", demo_mode=True,
-                worker_id="host:1", stage_state={},
-                heartbeat_at=datetime.now(UTC) - timedelta(seconds=3),
-            )
-            done = ResearchRun(
-                profile_id=row.id, stage="completed", demo_mode=True, stage_state={},
-                heartbeat_at=datetime.now(UTC) - timedelta(days=5),
-                finished_at=datetime.now(UTC) - timedelta(days=5),
-            )
+            live = ResearchRun(profile_id=row.id, stage="funding_discovery", demo_mode=True,
+                               stage_state={})
+            done = ResearchRun(profile_id=row.id, stage="completed", demo_mode=True,
+                               stage_state={}, finished_at=datetime.now(UTC))
             session.add_all([live, done])
+            session.flush()
+            JobStore(session).enqueue("research", run_id=live.id)
             session.commit()
 
-            assert reconcile_orphaned_runs() == []
+            assert reconcile_startup()["runs_recovered"] == 0
             session.expire_all()
             assert session.get(ResearchRun, live.id).stage == "funding_discovery"
             assert session.get(ResearchRun, done.id).stage == "completed"

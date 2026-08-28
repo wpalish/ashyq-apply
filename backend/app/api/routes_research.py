@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from datetime import UTC, datetime
 from typing import Literal
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -11,8 +12,16 @@ from sqlalchemy.orm import Session
 from app.config import get_settings
 from app.db import get_session
 from app.domain.enums import PipelineStage, UserDecision
-from app.models import ApplicantProfileRow, AuditEvent, ProgramResultRow, ResearchRun
-from app.pipeline.queue import queue
+from app.jobs.store import JobStore
+from app.models import (
+    ApplicantProfileRow,
+    AuditEvent,
+    Job,
+    JobStatus,
+    ProgramResultRow,
+    ResearchRun,
+)
+from app.models.base import ensure_utc
 from app.pipeline.state import RunState, is_lease_expired
 
 router = APIRouter(prefix="/api/runs", tags=["research"])
@@ -70,6 +79,9 @@ class RunView(BaseModel):
     finished_at: str | None
     job_running: bool
     job_error: str = ""
+    job_id: str | None = None
+    job_status: str | None = None
+    job_attempts: int = 0
     #: True when the run claims to be working but its worker has gone silent.
     stale: bool = False
     worker_id: str | None = None
@@ -83,8 +95,21 @@ def settings_default(name: str) -> int:
 
 def _view(session: Session, run: ResearchRun) -> RunView:
     state = RunState.load(run.stage_state)
-    handle = queue.get(run.id)
-    stale = is_lease_expired(run.stage, run.heartbeat_at)
+    job = (
+        session.query(Job)
+        .filter(Job.run_id == run.id)
+        .order_by(Job.created_at.desc())
+        .first()
+    )
+    # "Running" is a property of the job, not of the stage the run stopped at.
+    job_running = job is not None and job.status == JobStatus.RUNNING.value
+    lease_expiry = ensure_utc(job.lease_expires_at) if job else None
+    stale = is_lease_expired(run.stage, run.heartbeat_at) or (
+        job is not None
+        and job.status == JobStatus.RUNNING.value
+        and lease_expiry is not None
+        and lease_expiry < datetime.now(UTC)
+    )
     results = session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run.id)
     return RunView(
         id=run.id,
@@ -115,8 +140,11 @@ def _view(session: Session, run: ResearchRun) -> RunView:
         started_at=run.started_at.isoformat() if run.started_at else None,
         finished_at=run.finished_at.isoformat() if run.finished_at else None,
         # A run whose lease expired is not running, whatever its stage says.
-        job_running=bool(handle and not handle.done) and not stale,
-        job_error=handle.error if handle else "",
+        job_running=job_running and not stale,
+        job_error=(job.last_error if job else ""),
+        job_id=job.id if job else None,
+        job_status=job.status if job else None,
+        job_attempts=job.attempts if job else 0,
         stale=stale,
         worker_id=run.worker_id,
         heartbeat_at=run.heartbeat_at.isoformat() if run.heartbeat_at else None,
@@ -143,9 +171,13 @@ def start_run(payload: StartRunIn, session: Session = Depends(get_session)) -> R
     session.flush()
     session.add(AuditEvent(actor="user", action="run_started", entity_type="run",
                            entity_id=run.id, detail={"demo_mode": run.demo_mode}))
+    # Idempotent by run: a retried request or a double click cannot start the
+    # same research twice.
+    JobStore(session).enqueue(
+        "research", run_id=run.id, idempotency_key=f"research:{run.id}", priority=0,
+    )
     session.commit()
     session.refresh(run)
-    queue.submit(run.id, "research")
     return _view(session, run)
 
 
@@ -167,10 +199,22 @@ def get_run(run_id: str, session: Session = Depends(get_session)) -> RunView:
 
 @router.post("/{run_id}/cancel", response_model=RunView)
 def cancel_run(run_id: str, session: Session = Depends(get_session)) -> RunView:
-    if not queue.cancel(run_id):
-        raise HTTPException(404, "Run not found")
-    session.expire_all()
+    """Ask the run to stop.
+
+    The flag is the real signal: the worker observes it between units of work
+    so cancellation lands at a consistent point instead of tearing a stage.
+    """
     run = session.get(ResearchRun, run_id)
+    if run is None:
+        raise HTTPException(404, "Run not found")
+    run.cancelled = True
+    store = JobStore(session)
+    for job in store.for_run(run_id):
+        store.cancel(job.id)
+    session.add(AuditEvent(actor="user", action="run_cancel_requested",
+                           entity_type="run", entity_id=run_id, detail={}))
+    session.commit()
+    session.refresh(run)
     return _view(session, run)
 
 
@@ -189,8 +233,8 @@ def retry_run(
     run = session.get(ResearchRun, run_id)
     if run is None:
         raise HTTPException(404, "Run not found")
-    handle = queue.get(run_id)
-    if handle and not handle.done:
+    store = JobStore(session)
+    if any(j.status == JobStatus.RUNNING.value for j in store.for_run(run_id)):
         raise HTTPException(409, "This run is still executing; cancel it before retrying.")
 
     session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run_id).delete()
@@ -210,9 +254,13 @@ def retry_run(
     run.stage_state = state.dump()
     session.add(AuditEvent(actor="user", action="run_retried", entity_type="run",
                            entity_id=run_id, detail={"from_stage": stage or "start"}))
+    # A new attempt gets a new idempotency key so it is not deduplicated
+    # against the attempt the user is explicitly retrying.
+    attempt = len(store.for_run(run_id)) + 1
+    store.enqueue("research", run_id=run_id,
+                  idempotency_key=f"research:{run_id}:retry{attempt}")
     session.commit()
     session.refresh(run)
-    queue.submit(run_id, "research")
     return _view(session, run)
 
 
@@ -239,7 +287,10 @@ def collect_documents(run_id: str, session: Session = Depends(get_session)) -> R
     run.cancelled = False
     session.add(AuditEvent(actor="user", action="documents_requested", entity_type="run",
                            entity_id=run_id, detail={"approved": approved}))
+    JobStore(session).enqueue(
+        "documents", run_id=run_id,
+        idempotency_key=f"documents:{run_id}:{approved}", priority=5,
+    )
     session.commit()
     session.refresh(run)
-    queue.submit(run_id, "documents")
     return _view(session, run)

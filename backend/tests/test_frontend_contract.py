@@ -105,3 +105,34 @@ def test_the_vocabulary_endpoint_covers_every_contracted_type():
         values = {m.value for m in enum_cls}
         assert any(set(v) == values for v in exposed.values()), \
             f"{enum_cls.__name__} is not exposed by /api/vocabulary"
+
+
+def test_the_job_status_union_matches_the_backend(types_source):
+    """The UI branches on job status; a renamed one must not slip through."""
+    from app.models import JobStatus
+
+    assert parse_union(types_source, "JobStatus") == {m.value for m in JobStatus}
+
+
+def test_the_scholarship_interface_carries_every_decomposed_state(types_source):
+    """The UI must be able to show *why* an award is unavailable, not just that.
+
+    These fields exist because one flag was answering several questions at
+    once; a missing one here means the UI cannot distinguish them either.
+    """
+    block = re.search(r"export interface Scholarship \{(.*?)\n\}", types_source, re.DOTALL)
+    assert block, "types.ts does not declare `Scholarship`"
+    declared = set(re.findall(r"^\s*(\w+)[?]?:", block.group(1), re.M))
+
+    from app.schemas.result import Scholarship
+
+    required = {
+        "opportunity_exists", "currently_available", "applicant_eligible",
+        "application_window_open", "deadline_known", "deadline_passed",
+        "award_current_for_intake", "degree_applicability", "available_this_intake",
+    }
+    assert required <= declared, f"types.ts is missing {sorted(required - declared)}"
+    assert declared <= set(Scholarship.model_fields), (
+        f"types.ts declares fields the backend does not have: "
+        f"{sorted(declared - set(Scholarship.model_fields))}"
+    )

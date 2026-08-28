@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
+import asyncio
 import csv
 import io
 import json
 import re
-import time
 
 import pytest
 from fastapi.testclient import TestClient
@@ -41,6 +41,9 @@ def client(tmp_path, monkeypatch, corpus_dir):
     monkeypatch.setattr(
         db_module, "SessionLocal", db_module.sessionmaker(bind=engine, future=True)
     )
+    # The schema is owned by Alembic now, so the test database is migrated the
+    # same way production is rather than conjured with create_all().
+    db_module.migrate_to_head(settings.database_url)
 
     from app.main import app
 
@@ -49,15 +52,35 @@ def client(tmp_path, monkeypatch, corpus_dir):
     get_settings.cache_clear()
 
 
+async def drain_queue(limit: int = 10) -> int:
+    """Run queued jobs to completion, as the worker process would.
+
+    The API only enqueues now; a separate worker consumes. Tests drive that
+    worker directly instead of pretending the API still does the work.
+    """
+    from app.jobs.worker import Worker
+
+    worker = Worker()
+    executed = 0
+    for _ in range(limit):
+        job_id = worker.claim_one()
+        if job_id is None:
+            break
+        await worker.execute(job_id)
+        executed += 1
+    return executed
+
+
 @pytest.fixture
 def finished_run(client):
     profile = client.post("/api/profiles", json=DEMO_PROFILE.model_dump(mode="json")).json()
-    run = client.post("/api/runs", json={"profile_id": profile["id"], "demo_mode": True}).json()
-    for _ in range(400):
-        state = client.get(f"/api/runs/{run['id']}").json()
-        if state["stage"] in ("awaiting_user_decision", "failed", "cancelled"):
-            break
-        time.sleep(0.1)
+    queued = client.post(
+        "/api/runs", json={"profile_id": profile["id"], "demo_mode": True}
+    ).json()
+    assert queued["stage"] == "queued"
+    assert asyncio.run(drain_queue()) == 1, "the API must have enqueued exactly one job"
+
+    state = client.get(f"/api/runs/{queued['id']}").json()
     assert state["stage"] == "awaiting_user_decision", state.get("errors")
     return profile, state
 
@@ -172,12 +195,9 @@ class TestResearchAndResults:
         client.post(f"/api/runs/{run['id']}/results/{result['id']}/decision",
                     json={"decision": "approved", "reason": "", "notes": ""})
         assert client.post(f"/api/runs/{run['id']}/collect-documents").status_code == 202
+        assert asyncio.run(drain_queue()) == 1
 
-        for _ in range(300):
-            state = client.get(f"/api/runs/{run['id']}").json()
-            if state["stage"] == "completed":
-                break
-            time.sleep(0.1)
+        state = client.get(f"/api/runs/{run['id']}").json()
         assert state["stage"] == "completed"
 
         updated = client.get(f"/api/runs/{run['id']}/results/{result['id']}").json()

@@ -18,7 +18,11 @@ export function ApprovedScreen({ onCollect }: { onCollect: () => void }) {
   const maybe = group('maybe');
   const rejected = group('rejected');
   const shortlisted = approved.length + maybe.length;
-  const collecting = run?.stage === 'document_collection' && run.job_running;
+  // A queued job counts as collecting: the worker has not claimed it yet, but
+  // the request has been made and the button must not invite a second one.
+  const collecting =
+    run?.job_status === 'queued' || run?.job_status === 'running' ||
+    (run?.stage === 'document_collection' && run.job_running);
 
   if (results.length === 0) return <Empty title="No results yet">Run the research first.</Empty>;
 

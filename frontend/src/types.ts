@@ -31,6 +31,14 @@ export type SourceSpecificity =
 
 export type UserDecision = 'undecided' | 'approved' | 'maybe' | 'rejected';
 
+export type JobStatus =
+  | 'queued' | 'running' | 'succeeded'
+  /** Failed but retryable: it will be picked up again after its backoff. */
+  | 'failed'
+  /** Attempts exhausted. Needs a human decision; never retried automatically. */
+  | 'dead'
+  | 'cancelled';
+
 export type PipelineStage =
   | 'queued' | 'profile_validation' | 'candidate_discovery' | 'program_verification'
   | 'funding_discovery' | 'assessment' | 'awaiting_user_decision'
@@ -54,6 +62,9 @@ export type DocumentOwner = 'applicant' | 'school' | 'recommender' | 'third_part
 export type DegreeLevel = 'foundation' | 'bachelor' | 'master' | 'phd';
 
 export type Coverage = 'yes' | 'no' | 'partial' | 'unknown';
+
+/** A three-valued answer. Nothing in this product defaults to "yes". */
+export type Tristate = 'yes' | 'no' | 'unknown';
 
 export interface Money {
   amount: number;
@@ -99,9 +110,15 @@ export interface Scholarship {
   amount: Money | null;
   amount_is_percentage_of_tuition: number | null;
   coverage: CoverageBreakdown[];
-  international_eligible: 'yes' | 'no' | 'unknown';
+  // Eligibility, one question per field. These were previously collapsed,
+  // which let "an award exists" stand in for "this applicant can apply".
+  international_eligible: Tristate;
   citizenship_restrictions: string[];
+  residency_restrictions: string[];
   program_restrictions: string[];
+  degree_applicability: Tristate;
+  degree_applicability_reason: string;
+  applies_to_degrees: string[];
   application_mode: ApplicationMode;
   requires_extra_essays: boolean | null;
   deadline: string | null;
@@ -111,9 +128,19 @@ export interface Scholarship {
   duration_years: number | null;
   renewal_requirements: string[];
   min_test_scores: Record<string, number>;
-  stackable: 'yes' | 'no' | 'unknown';
+  stackable: Tristate;
   published_count: number | null;
-  available_this_intake: 'yes' | 'no' | 'unknown';
+
+  // Availability, decomposed. A missing deadline is not availability.
+  opportunity_exists: boolean;
+  currently_available: Tristate;
+  applicant_eligible: Tristate;
+  application_window_open: Tristate;
+  deadline_known: boolean;
+  deadline_passed: boolean;
+  award_current_for_intake: Tristate;
+  /** Derived from the fields above; never set directly. */
+  available_this_intake: Tristate;
   eligibility_checks: RequirementCheck[];
   source_urls: string[];
   claim_ids: string[];
@@ -326,6 +353,11 @@ export interface RunView {
   finished_at: string | null;
   job_running: boolean;
   job_error: string;
+  /** The durable job backing this run, if one exists. */
+  job_id: string | null;
+  /** queued | running | succeeded | failed | dead | cancelled */
+  job_status: JobStatus | null;
+  job_attempts: number;
   candidate_limit: number;
   verify_limit: number;
   fetch_tiers: Record<string, number>;

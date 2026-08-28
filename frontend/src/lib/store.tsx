@@ -175,11 +175,19 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  // Poll only while work is actually happening.
+  // Poll while work is outstanding.
+  //
+  // A job that has been enqueued but not yet claimed is not "running", and the
+  // run's stage does not move until a worker picks it up. Polling only on
+  // `job_running` therefore stopped the moment work was requested — the UI sat
+  // on a stale view while the worker was about to start.
   useEffect(() => {
+    const jobOutstanding =
+      run?.job_status === 'queued' || run?.job_status === 'running';
     const active =
       run &&
       (run.job_running ||
+        jobOutstanding ||
         ['queued', 'profile_validation', 'candidate_discovery', 'program_verification',
          'funding_discovery', 'assessment', 'document_collection'].includes(run.stage));
     if (!active) {
