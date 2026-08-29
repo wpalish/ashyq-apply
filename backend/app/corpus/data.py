@@ -292,7 +292,11 @@ UNIVERSITIES: list[dict[str, Any]] = [
                 "ielts_overall": 6.5,
                 "ielts_sub": 6.0,
                 "toefl": 79,
-                "deadline": "15 January 2026",
+                # An early Fall 2027 deadline that has passed. It used to be 15 January
+                # 2026, which for the demo applicant is the *previous* admission
+                # cycle — a different case, covered by
+                # tests/test_deadline_intake_scope.py.
+                "deadline": "1 June 2026",
                 "deadline_tz": "AEDT",
             }
         ],

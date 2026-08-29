@@ -1,173 +1,153 @@
-# Live discovery (P1.8) — what it finds, and what it does not
+# Live discovery — what it finds, and what it does not
 
-**Branch:** `claude/live-discovery` (from `0fecc95`)
-**Access date for every live figure below:** 2026-08-28
-**Scope:** discovery only. Nothing in auth, tenancy, routing, jobs, migrations,
-fetching, the browser tier or the frontend was touched.
+**Branch:** `claude/production-completion` (from `ea7948c`)
+**Access date for every live figure:** 2026-08-29
+**Applicant used:** a Kazakhstani school-leaver applying for a computer science
+bachelor's for Fall 2027, needing nearly full funding. Synthetic; no real
+applicant data is ever used against live sites.
 
-## What changed
+## Headline
 
-Discovery used to walk a university's global navigation from the homepage.
-The live canary shows what that was worth: across ten official university
-domains it reached **0 programme pages** and **12 of 30** category pages
-(admissions / costs / scholarships).
+| | Before this cycle | After |
+|---|---|---|
+| Programme pages confirmed | **1/10** | **4/10** |
+| Category pages (admissions / costs / scholarships) | 26/30 | **27/30** |
+| Scholarship pages | 8/10 | **9/10** |
+| Material claims | 15 | **27** |
+| Zero-tolerance false positives | 0 | **0** |
 
-Discovery is now **sitemap-first**, in three tiers:
-
-1. **Manual seeds** from the registry, where a human has verified which page is
-   the catalogue, the admissions page, the fee page. A seed says *where to
-   look*. It is never itself evidence: the page is fetched and classified like
-   any other, and a seed that turns out to be a landing page yields nothing.
-2. **Sitemaps** — robots.txt `Sitemap:` directives, then the conventional
-   locations, following sitemap indexes and gzipped sitemaps, confined to the
-   institution's own registrable domain.
-3. **Navigation**, only when the first two did not reach a programme page,
-   starting from the catalogue rather than the global menu.
-
-A fourth step then **reads** every programme candidate and keeps only the ones
-the existing page classifier calls a programme. URL shape alone cannot tell a
-degree from an open day.
+Three independent runs, all on 2026-08-29, produced **4, 4 and 4**. Median 4,
+worst 4. The acceptance bar this cycle aimed at was a median of 8 and a worst
+of 7. **It is not met**, and that is the reason the release verdict is NOT
+READY rather than "ready with limitations".
 
 ## Reproducing
 
 ```bash
 cd backend
-./.venv/bin/python -m pytest tests/test_live_discovery.py -q     # offline, deterministic
-./.venv/bin/python scripts/canary_discovery.py --check-seeds      # are the seeds still live?
-./.venv/bin/python scripts/canary_discovery.py --out ../artifacts # the full live canary
+./.venv/bin/python -m pytest tests/test_live_discovery.py tests/test_page_classifier_real_pages.py -q
+./.venv/bin/python scripts/canary_discovery.py --check-seeds
+./.venv/bin/python scripts/canary_discovery.py --out ../artifacts
+./.venv/bin/python scripts/canary_discovery.py \
+  --registry app/adapters/discovery/holdout_registry.json --out ../artifacts/holdout
 ```
 
 The canary drives the real `ResearchRunner` against a throwaway SQLite database
-in a temporary directory. It never touches `backend/data/`.
+in a temporary directory. It never touches `backend/data/`. A run takes about
+twenty minutes, most of it browser rendering.
 
-## The ten sites, 2026-08-28
+## The ten canary sites, 2026-08-29
 
-| Institution | Country | Access | Programme page | Scholarship page | Pages ok/fail | Claims | Completeness | False positives |
+| Institution | Country | Access | Programme | Scholarship | pages ok/fail | Claims | Completeness | False positives |
 |---|---|---|---|---|---|---|---|---|
-| University of Groningen | Netherlands | REACHED | no | yes | 9/0 | 0 | 0% | 0 |
-| Delft University of Technology | Netherlands | REACHED | no | yes | 14/0 | 5 | 33% | 0 |
-| Aalto University | Finland | PARTIALLY_BLOCKED | no | yes | 26/1 | 0 | 0% | 0 |
-| University of Vienna | Austria | REACHED | no | no | 5/4 | 0 | 0% | 0 |
+| University of Groningen | Netherlands | REACHED | no | yes | 15/0 | 0 | 0% | 0 |
+| Delft University of Technology | Netherlands | REACHED | **yes** | yes | 26/0 | 9 | 33% | 0 |
+| Aalto University | Finland | PARTIALLY_BLOCKED | no | yes | 35/1 | 0 | 0% | 0 |
+| University of Vienna | Austria | REACHED | **yes** | yes | 29/4 | 1 | 0% | 0 |
 | University of Warsaw | Poland | REACHED | no | yes | 8/1 | 0 | 0% | 0 |
-| University of British Columbia | Canada | REACHED | no | yes | 21/4 | 0 | 0% | 0 |
-| University of Toronto | Canada | REACHED | no | yes | 12/5 | 5 | 0% | 0 |
+| University of British Columbia | Canada | REACHED | **yes** | yes | 21/4 | 1 | 0% | 0 |
+| University of Toronto | Canada | REACHED | no | yes | 12/5 | 8 | 0% | 0 |
 | The University of Hong Kong | Hong Kong | REACHED | no | yes | 12/5 | 0 | 0% | 0 |
-| Nanyang Technological University | Singapore | REACHED | **yes** | yes | 40/3 | 5 | 17% | 0 |
+| Nanyang Technological University | Singapore | REACHED | **yes** | yes | 40/3 | 8 | 33% | 0 |
 | KAIST | South Korea | REACHED | no | no | 4/3 | 0 | 0% | 0 |
 
-**Access.** Nine of ten were reachable. Aalto is recorded `PARTIALLY_BLOCKED`:
-its robots.txt disallows `/en/node/*`, one candidate fell under that rule, and
-the request was refused and logged. Nothing retried it under another agent,
-ignored the directive, or substituted a cached copy. Toronto returns HTTP 403
-for `www.utoronto.ca/robots.txt` and for every sitemap path; discovery recorded
-that and worked from `future.utoronto.ca`, which serves normally.
+**Access.** Aalto is `PARTIALLY_BLOCKED`: its robots.txt disallows `/en/node/*`,
+one candidate fell under that rule, and the request was refused and logged.
+Nothing retried it under another agent, ignored the directive, or substituted a
+cached copy. Toronto returns 403 for `www.utoronto.ca/robots.txt` and every
+sitemap path; that is recorded, and discovery works from `future.utoronto.ca`,
+which serves normally.
 
-**Before and after**, same ten institutions, discovery in isolation:
+### Every programme page the run accepted
 
-| | category pages | programme URLs |
+All twelve were opened by hand. Every one is a real programme page, and the
+applicant's own subject is present at all four institutions.
+
+| Institution | Programme the classifier named |
+|---|---|
+| TU Delft | Bachelor of Computer Science and Engineering |
+| TU Delft | BSc Molecular Science and Technology |
+| TU Delft | BSc Life Science and Technology |
+| Vienna | Computer Science (bachelor's programme) |
+| Vienna | Sport and Human Movement Science (Bachelor) |
+| Vienna | Mathematical Foundations of Data Science |
+| UBC | Computer Science (BSc), Vancouver |
+| UBC | Computer Science (BA), Vancouver |
+| UBC | Computer Science (BSc), Okanagan |
+| NTU | Bachelor of Computing (Hons) in Computer Science |
+| NTU | Bachelor of Science in Mathematical and Computer Sciences |
+| NTU | Bachelor of Computing in Computer Science with a second major |
+
+Precision on accepted programme pages is 12/12. The problem is recall, not
+truthfulness.
+
+## Why the other six fail, one at a time
+
+Averaging these into "60% failure" would hide that two of them are not
+discovery defects at all.
+
+| Institution | Why | Is it a defect? |
 |---|---|---|
-| base `0fecc95` (`live-institution-registry`) | 12/30 | 0 |
-| this branch (`live-sitemap-discovery`) | **26/30** | **3** |
+| **Groningen** | The bachelor catalogue serves 103 links and not one programme; the list is built client-side, and the rendered copy does not add programmes either. | **Yes** — unreached. |
+| **Aalto** | The only computing link on the study-options page is the *Department* of Computer Science, which is a department, not a programme. Its programme finder is a separate application. | **Yes** — unreached. |
+| **Warsaw** | The English catalogue links onward to `irk.uw.edu.pl`, a separate admissions system on the same registrable domain. Rendering added one link and no programmes. | **Yes** — unreached. |
+| **HKU** | Its programme index renders 35 links; the ones under `/programmes/` are collaborative schemes rather than the single-subject degrees. | **Yes** — unreached. |
+| **Toronto** | `future.utoronto.ca/data-computer-science` is a *subject-area hub* spanning three campuses, which links out to programmes. The classifier calls it `unknown` and declines it. | **No** — the page genuinely is not a programme. An earlier version of this report called it "a genuine programme page"; that was wrong. |
+| **KAIST** | No English undergraduate programme catalogue exists at any entry point tried. Programmes live on departmental sites such as `cs.kaist.ac.kr`, which are on the same registrable domain but are not linked from any catalogue discovery reaches. | **No** — nothing to find at the level we look. Seeding a departmental page would tie the registry to one subject. |
 
-The three programme URLs are all NTU's, and all three are correct:
-`bachelor-of-computing-in-computer-science`,
-`bachelor-of-science-in-mathematical-and-computer-sciences`, and
-`bachelor-of-computing-in-computer-science-with-second-major-in-business`.
-For a computer science applicant that is the right answer.
+So four of ten are real recall defects and two are honest `NOT_FOUND`.
 
-## What the canary found
+## What changed this cycle
 
-Every defect below was invisible to the offline suite and is now covered by a
-deterministic regression test.
+Each was found by reading what a real page contains, and each is pinned by a
+deterministic test over saved real HTML.
 
 | # | Defect | Where it showed |
 |---|---|---|
-| 1 | The 20,000-URL sitemap bound was applied *before* relevance filtering, so rug.nl filled the budget with news articles from one research institute and the walk stopped before any programme. Relevance is now decided per URL as it is read. | Groningen, Aalto, Warsaw |
-| 2 | The navigation fallback ran only when *nothing at all* was found, so a single seeded admissions page suppressed it and the run ended with no programme. It now depends on the programme page specifically. | six of ten |
-| 3 | `utm_source=x` survived canonicalisation — the tracking filter matched `key=value` pairs against a key-only pattern — so one page was discovered under two URLs. | all |
-| 4 | Catalogue URL patterns required a bare `/programmes/` segment. Universities write `degree-programmes` and `degrees-programs`, so the walk stopped on the intermediate page. | Vienna, Warsaw, UBC |
-| 5 | A programme page found only by the catalogue's **link text** was unreachable by any URL rule. Toronto's lead is `/data-computer-science` behind the text "Data & Computer Science". | Toronto |
-| 6 | Events and newsletters sitting *inside* programme paths were returned as programme pages: `bachelor-open-day`, `onlinebachelorweek`, `student-for-a-day`, `campus-tour`, `webklassen`, and two Aalto student newsletters. | Groningen, Aalto |
-| 7 | A scholarship page was returned as the applicant's programme page — "undergraduate" in the path outscored "scholarships" beside it. | NTU |
-| 8 | A research group's "BSc and MSc projects" page was returned as a programme. A degree marker in a slug says nothing about whether the page is a degree. | Groningen |
-| 9 | The subject bonus was too weak to separate structurally identical programme URLs, so a computer science applicant was answered with aerospace engineering, applied mathematics and applied physics. | Delft |
-| 10 | Six of 31 manual seeds no longer resolved. A dead seed is worse than no seed: it spends the fetch budget and contributes nothing. All are replaced and verified; `--check-seeds` now reports 0 of 33 broken. | Aalto, Vienna, UBC, HKU, NTU |
-
-Defects 6–9 were caught by reading the canary's own output, not by its
-automated checks. That is the point of a manual audit: the automated column
-said "programme page found: yes" for seven institutions, and only one of those
-seven was actually a programme page.
-
-### A finding about the canary itself
-
-The first live run reported **14 false positives**, all of the form "claim
-without excerpt". Every one was wrong: the canary looked for a payload key
-named `excerpt` when the field is `original_text_excerpt`. The claims had their
-excerpts all along. A checker that reports defects it cannot substantiate is
-worse than no checker, so it is recorded here rather than quietly fixed.
+| 1 | A programme page that links to its own sub-pages counted as a catalogue. Delft's BSc Aerospace Engineering carries eighteen hrefs containing "/bachelors/" — "About the programme", "After your studies", fifteen student stories — every one under its own URL. Counting them made the programme page a catalogue of eighteen. | Delft, and any site with a section menu |
+| 2 | Discovery stopped at the first programme it confirmed. Delft's sitemap yields aerospace, mathematics and physics, so the catalogue listing computer science was never walked. | Delft |
+| 3 | Catalogue entries filled three slots in the order they appeared, so Vienna returned "African Studies" — first alphabetically. | Vienna |
+| 4 | A catalogue whose programme list is built client-side was never re-read through the browser. UBC serves 127 links and no programmes; rendered, 308. | UBC, Warsaw, HKU |
+| 5 | `_CATALOG` was matched against every heading joined into one string, so its `.*` bridged unrelated headings and invented a catalogue match. | Toronto |
+| 6 | The catalogue branch reported "plural catalogue heading" whatever rule fired, including on pages headed "BSc Aerospace Engineering". | all |
+| 7 | "Bachelors" passed as a programme name, so Delft's catalogue could name itself as a programme. | Delft |
+| 8 | "MSc and BSc projects" — a research group's project list — passed as a programme on two degree words. | Groningen |
+| 9 | "Recruitment" was read as staff hiring, so HKU's "Undergraduate Recruitment Scheme" was discarded as irrelevant. | HKU |
+| 10 | The hand-built public-suffix table was necessarily incomplete; an institution under an unlisted suffix was treated as a foreign domain and its own pages skipped. Replaced with the Public Suffix List, bundled offline. | any |
 
 ## Zero-tolerance categories
 
 The canary checks four things it will not accept, and reports **0** of each
-across all ten institutions:
+across all ten institutions in all three runs:
 
-- a **full-ride** classification with no claim behind it, with no quoted
-  excerpt, or with international eligibility not confirmed
+- a **full-ride** classification with no claim behind it, without a quoted
+  excerpt, or with international eligibility unconfirmed
 - a **degree applicability** verdict with no stated reason
 - a **deadline** taken from a page too general to carry it, or without an excerpt
 - an **admission requirement** decided without a claim behind it
 
 Plus a blanket check that every claim has a URL, a verbatim excerpt and a
-timestamp. All 15 claims from the run pass.
+timestamp. All 27 claims pass.
 
-Nothing here bypasses robots.txt, a login, a CAPTCHA, a rate limit or a
-paywall, and no page is fetched off the institution's own registrable domain.
+Nothing bypasses robots.txt, a login, a CAPTCHA, a rate limit or a paywall, and
+no page off the institution's own registrable domain is fetched.
 
 ## Honest limitations
 
-**Discovery reaches an individual programme page on one site in ten.** Category
-pages are reliable (26/30); programme pages are not. Where the recall goes:
-
-1. **The page classifier reads a real programme page as a catalogue when the
-   page carries a programme-list sidebar.** Delft's `bsc-aerospace-engineering`
-   and Toronto's `data-computer-science` are genuine programme pages, rejected
-   because the classifier counts 18 and 1 programme links respectively and
-   reports `program_catalog`. This is the single largest source of lost recall.
-   The fix belongs in `app/adapters/page_classifier.py` — stripping the
-   navigation sidebar the way `main_content()` already strips site chrome —
-   **and that file is outside this branch's permitted scope, so it was not
-   touched.** It is the highest-value next change.
-2. **Three sites keep their programme list behind a catalogue chain the walk
-   does not finish**: Vienna nests it three levels deep, Warsaw and UBC put it
-   behind an intermediate page. Raising the walk budget from 5 pages to 8 was
-   measured against all ten sites: it gained nothing and cost every site extra
-   requests, so it was reverted rather than kept.
-3. **KAIST publishes no English undergraduate programme catalogue** at any
-   entry point tried. Its programme pages live on departmental subdomains
-   (`cs.kaist.ac.kr`), which are on the same registrable domain but are not
-   linked from any catalogue discovery reaches. Seeding a departmental page
-   would tie the registry to one subject, so nothing was seeded.
-4. **Results vary between runs.** Sites time out, WAFs return 403, and a page
-   that resolved an hour ago 404s. Across eight canary runs the confirmed
-   programme count ranged 1–3. The table above is one run, not a guarantee.
-5. **Verification completeness is 0–33%.** Discovery finding a page is
-   necessary, not sufficient; extraction and classification are what turn a
-   page into claims, and they are outside this branch.
-6. **The registry is ten institutions.** Nothing here establishes how discovery
-   behaves on a site unlike these ten.
-7. **`registrable_domain` uses a hand-built suffix list**, not the public
-   suffix list. Adding `tldextract` would mean editing `requirements.txt`,
-   which is outside scope. The list covers the academic suffixes in the
-   registry; an institution under an uncovered multi-part suffix would be
-   treated as a different domain and its own pages skipped.
-8. **The canary rebinds `LiveDiscoveryAdapter` in `app.pipeline.runner`** to
-   capture discovery traces, because the runner does not expose its adapter and
-   `runner.py` is out of scope. Behaviour is inherited unchanged, but it is a
-   test-harness seam, not a supported API.
-
-## Integration verification
-
-The isolated discovery branch originally left unrelated baseline type and lint
-findings untouched. They are resolved in the integrated product branch. The
-combined suite passes `ruff` and `mypy` across `app`, `tests` and the canary
-script, followed by all 547 backend tests on both SQLite and PostgreSQL.
+1. **Programme recall is 4/10, against a bar of 8/10.** Four of the six misses
+   are real defects and are described above by name.
+2. **Verification completeness is 0–33%.** Finding a page is necessary, not
+   sufficient. Cost extraction in particular reads nothing from Delft's or
+   Groningen's fee tables — see the note in `docs/CANARY_AUDIT.md`, which this
+   cycle corrected: the figures are in the served HTML and were being
+   *misread*, not hidden behind JavaScript.
+3. **A run takes about twenty minutes**, most of it browser rendering. That is
+   acceptable for a background job and would not be for an interactive one.
+4. **Ten institutions is not the world.** Nothing here establishes behaviour on
+   a site unlike these ten; that is what the holdout set exists to probe.
+5. **The canary rebinds `LiveDiscoveryAdapter`** in `app.pipeline.runner` to
+   capture discovery traces, because the runner does not expose its adapter.
+   Behaviour is inherited unchanged, but it is a harness seam, not an API.
+6. **Results depend on sites staying still.** Six of thirty-one registry seeds
+   had already moved when this cycle started; `--check-seeds` now reports that
+   in one command, and all thirty-three currently resolve.

@@ -251,14 +251,15 @@ def false_positives(result: ProgramResult, claims: list[dict]) -> list[dict]:
     # 4. Admission requirements. A satisfied/failed verdict has to name the
     #    page it came from, and that page has to be about admission.
     for check in result.requirement_checks:
-        if check.status.value in ("unknown", "needs_clarification"):
+        if check.status.value in ("UNKNOWN", "NEEDS_OFFICIAL_CLARIFICATION"):
             continue
-        supporting = by_type.get(check.requirement.claim_type, []) if hasattr(
-            check.requirement, "claim_type") else []
-        if not supporting and not getattr(check.requirement, "source_url", ""):
+        # A RequirementCheck records its evidence in `claim_ids`. An earlier
+        # version of this checker looked for `check.requirement.claim_type`,
+        # but `requirement` is the human-readable label, so every sourced
+        # verdict was reported as unsourced.
+        if not check.claim_ids:
             flag("requirement_verdict_without_source",
-                 f"{check.requirement.label if hasattr(check.requirement, 'label') else check}"
-                 f" decided {check.status.value} with no claim behind it")
+                 f"{check.requirement!r} decided {check.status.value} with no claim behind it")
 
     # 5. Any claim at all that lacks the provenance the product promises.
     for claim in claims:
