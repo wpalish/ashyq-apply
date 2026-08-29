@@ -536,6 +536,7 @@ class LiveDiscoveryAdapter:
         checked = 0
         seen: set[str] = set(queued)
         expansions = 0
+        rendered_here = 0
         while queued:
             if len(confirmed) >= MAX_PAGES_PER_CATEGORY:
                 break
@@ -567,6 +568,35 @@ class LiveDiscoveryAdapter:
                 fresh = self._programmes_listed_on(
                     result.text, result.final_url or url, domain, fields, degree, trace
                 )
+                # The walk renders a catalogue whose served HTML shows no
+                # programme for the subject, because that is the difference
+                # between "it is not there" and "we did not look".
+                # Confirmation reaches catalogues by a different route and was
+                # not doing it. Toronto builds its programme list client-side:
+                # served, the page lists one programme on another campus;
+                # rendered, it lists the five it actually offers.
+                # Not "found nothing" but "found nothing they asked for": the
+                # walk uses the same test, because a catalogue listing one
+                # unrelated programme has told us as little as an empty one.
+                # Toronto's served HTML lists information security on another
+                # campus; computer science appears only once the page runs.
+                shows_subject = catalogue_shows_subject(
+                    [(u, "") for u in fresh], fields, degree
+                )
+                if not shows_subject and rendered_here < MAX_RENDERED_CATALOGUES:
+                    rendered_here += 1
+                    grown = await self.fetcher.render(url)
+                    if grown.ok:
+                        fresh = self._programmes_listed_on(
+                            grown.text, grown.final_url or url, domain,
+                            fields, degree, trace,
+                        )
+                        trace.rendered.append((url, 0, len(fresh)))
+                    else:
+                        trace.errors.append(
+                            f"catalogue {url} listed no programme and could not "
+                            f"be rendered ({grown.outcome.value})"
+                        )
                 added = [u for u in fresh if u not in seen]
                 seen.update(added)
                 # Best-first again, so the applicant's subject leads.

@@ -1628,3 +1628,95 @@ class TestOneUnreadablePageDoesNotEndTheRun:
         assert any("computing-science" in u for u in urls), (
             f"the catalogue's programme was not reached; found {urls}"
         )
+
+
+class TestACatalogueBuiltInTheBrowserIsStillRead:
+    """Toronto builds its programme list client-side.
+
+    `future.utoronto.ca/data-computer-science` reads as a catalogue and is
+    followed, but its served HTML lists exactly one programme — on another
+    campus, and not the applicant's subject. The five that matter, computer
+    science among them, appear only once the page runs.
+
+    The navigation walk already reads a catalogue through the browser when its
+    served HTML shows no programme for the subject, for the stated reason that
+    it is "the difference between 'it is not there' and 'we did not look'".
+    Confirmation, which reaches this page by a different route, did not.
+    """
+
+    @staticmethod
+    def registry_file(tmp_path, entry: dict):
+        import json
+
+        path = tmp_path / "registry.json"
+        path.write_text(json.dumps([entry]))
+        return path
+
+    @pytest.mark.asyncio
+    async def test_the_programme_is_found_after_rendering(
+        self, tmp_path, profile_bachelor
+    ):
+        from app.adapters.fetching import FetchOutcome, FetchResult
+
+        hub = "https://uni.edu/data-computer-science"
+        served = (
+            "<html><head><title>Data &amp; Computer Science</title></head><body><main>"
+            "<h1>Data &amp; Computer Science</h1>"
+            "<h2>Explore Programs in data &amp; computer science</h2>"
+            "<a href='/program/information-security'>Information Security</a>"
+            "</main></body></html>"
+        )
+        rendered_html = served.replace(
+            "</main>",
+            "<a href='/program/computer-science'>Computer Science</a></main>",
+        )
+        # The hub is reached the way Toronto's is: as a programme lead taken
+        # from another page's link text, never as a catalogue in its own
+        # right. Only confirmation sees it, and confirmation did not render.
+        index = "https://uni.edu/undergraduate-programs"
+        entry = {
+            "name": "U", "country": "Canada", "city": "T",
+            "homepage": "https://uni.edu/",
+            "seeds": {"program_catalog": index},
+        }
+        site = StubSite({
+            "https://uni.edu/robots.txt": "User-agent: *\n",
+            index: (
+                "<html><head><title>Programs</title></head><body><main>"
+                "<h1>Undergraduate programs</h1>"
+                "<a href='/data-computer-science'>Data &amp; Computer Science</a>"
+                "</main></body></html>"
+            ),
+            hub: served,
+            # A real programme, but not the one the applicant asked for.
+            # The page therefore lists *something*, which is what stopped the
+            # first version of this escalation from firing.
+            "https://uni.edu/program/information-security": program_html(
+                "BSc Information Security"
+            ),
+            "https://uni.edu/program/computer-science": program_html(
+                "BSc Computer Science"
+            ),
+        })
+
+        class OnlyRenderingShowsThem:
+            async def render(self, url: str) -> FetchResult:
+                if url.rstrip("/") == hub.rstrip("/"):
+                    return FetchResult(
+                        url=url, final_url=url, status_code=200,
+                        outcome=FetchOutcome.OK, text=rendered_html,
+                    )
+                return FetchResult(
+                    url=url, outcome=FetchOutcome.UNPARSEABLE, error="not stubbed",
+                )
+
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            fetcher.attach_renderer(OnlyRenderingShowsThem())
+            adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, entry))
+            candidate = (await adapter.discover(profile_bachelor))[0]
+
+        urls = [p.url for p in candidate.programs]
+        assert any("program/computer-science" in u for u in urls), (
+            f"the client-side programme list was never read; found {urls}"
+        )
