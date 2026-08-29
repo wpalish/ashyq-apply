@@ -274,13 +274,27 @@ def matches_field(url: str, fields: list[str]) -> int:
     return bonus
 
 
-def degree_level_named(url: str) -> str | None:
-    """The degree level a URL names in its path, if it names one at all."""
+def degree_levels_named(url: str) -> set[str]:
+    """Every degree level a URL names in its path.
+
+    A set, not the first match: Europe is full of combined programmes, and
+    Aalto's computer engineering page is at
+    `.../computer-engineering-bachelor-of-science-and-master-of-science`.
+    Returning whichever level came first in the table rejected it as the wrong
+    level for whichever applicant was asking.
+    """
     path = (urlparse(url).path or "").lower()
-    for level, slugs in _DEGREE_SLUGS.items():
-        if any(re.search(rf"(^|[/-]){re.escape(slug)}([/-]|$)", path) for slug in slugs):
-            return level
-    return None
+    return {
+        level
+        for level, slugs in _DEGREE_SLUGS.items()
+        if any(re.search(rf"(^|[/-]){re.escape(slug)}([/-]|$)", path) for slug in slugs)
+    }
+
+
+def degree_level_named(url: str) -> str | None:
+    """One level a URL names, for scoring. Prefers none over an arbitrary pick."""
+    named = degree_levels_named(url)
+    return next(iter(named)) if len(named) == 1 else None
 
 
 #: Last path segments that make a page an index of programmes rather than one
@@ -337,18 +351,20 @@ def matches_field_text(label: str, fields: list[str]) -> bool:
 
 def matches_degree(url: str, degree: str) -> int:
     """Positive when the URL names the right level, negative when it names another."""
-    named = degree_level_named(url)
-    if named is None:
+    named = degree_levels_named(url)
+    if not named:
         return 0
-    return 4 if named == str(degree) else -6
+    return 4 if str(degree) in named else -6
 
 
 def names_other_degree_level(url: str, degree: str) -> bool:
-    """Whether a URL names a level the applicant did not ask for.
+    """Whether a URL names *only* levels the applicant did not ask for.
 
     Treated as an outright rejection rather than a score penalty. An MSc page
     is not a weak bachelor lead, it is the wrong page, and a subject-name bonus
     ("computer", "science") must not be able to outweigh the level.
+
+    A URL naming both levels names the applicant's, so it is not rejected.
     """
-    named = degree_level_named(url)
-    return named is not None and named != str(degree)
+    named = degree_levels_named(url)
+    return bool(named) and str(degree) not in named

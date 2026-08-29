@@ -35,6 +35,7 @@ from app.adapters.discovery.live_discovery import (
     looks_like_catalogue,
     matches_degree,
     matches_field,
+    names_other_degree_level,
     parse_sitemap,
     parse_sitemap_directives,
     registrable_domain,
@@ -1335,3 +1336,94 @@ class TestProgrammeContainersBeyondTheObviousWords:
     def test_the_container_does_not_launder_a_non_programme(self, url):
         """Being under the folder is not enough; the existing rules still run."""
         assert categorise_url(url)[0] != PageCategory.PROGRAM_PAGE, url
+
+
+class TestAProgrammeNamingTwoLevels:
+    """Combined bachelor-and-master programmes, which Europe is full of.
+
+    Aalto's computer engineering page is at
+    `.../computer-engineering-bachelor-of-science-and-master-of-science-technology`.
+    Asking which level a URL names returned the first one found, so the page was
+    rejected as naming "another" level — for a bachelor applicant, on a URL that
+    says bachelor.
+    """
+
+    @pytest.mark.parametrize("url", [
+        "https://uni.edu/study-options/computer-engineering-bachelor-of-science-and-master-of-science",
+        "https://uni.edu/programmes/bachelor-and-master-of-science-in-computing",
+        "https://uni.edu/en/study-options/economics-bachelor-and-master-of-science",
+    ])
+    def test_a_combined_programme_is_not_the_wrong_level(self, url):
+        assert not names_other_degree_level(url, "bachelor"), url
+
+    @pytest.mark.parametrize("url", [
+        "https://uni.edu/study-options/computer-engineering-bachelor-of-science-and-master-of-science",
+        "https://uni.edu/programmes/bachelor-and-master-of-science-in-computing",
+    ])
+    def test_it_is_not_the_wrong_level_for_a_master_applicant_either(self, url):
+        assert not names_other_degree_level(url, "master"), url
+
+    @pytest.mark.parametrize("url", [
+        "https://uni.edu/programmes/masters/computer-science",
+        "https://uni.edu/en/programmes/masters-programme-in-information-networks",
+        "https://uni.edu/programmes/phd/computer-science",
+    ])
+    def test_a_single_wrong_level_is_still_rejected(self, url):
+        """The guard that keeps an MSc page away from a bachelor applicant."""
+        assert names_other_degree_level(url, "bachelor"), url
+
+    def test_a_url_naming_no_level_is_not_rejected(self):
+        assert not names_other_degree_level("https://uni.edu/programmes/computer-science", "bachelor")
+
+
+class TestSitemapTruncationIsReported:
+    """A truncated sitemap must say so.
+
+    Aalto's index was cut off after 12 documents — 55,000 of its 58,000 URLs —
+    and the document holding its programme pages was never opened. Nothing in
+    the trace said the walk had stopped early, so the run read as "there are no
+    programmes here" rather than "we did not look at all of it".
+    """
+
+    @staticmethod
+    def registry_file(tmp_path, entry: dict):
+        import json
+
+        path = tmp_path / "registry.json"
+        path.write_text(json.dumps([entry]))
+        return path
+
+    @pytest.mark.asyncio
+    async def test_hitting_the_document_bound_is_recorded(self, tmp_path, profile_bachelor):
+        children = [f"https://uni.edu/s-{i}.xml" for i in range(MAX_SITEMAP_DOCUMENTS + 6)]
+        pages = {
+            "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/index.xml\n",
+            "https://uni.edu/index.xml": sitemap_index_xml(*children),
+        }
+        for i, child in enumerate(children):
+            pages[child] = sitemap_xml(f"https://uni.edu/page-{i}")
+        site = StubSite(pages)
+        entry = {"name": "U", "country": "NL", "city": "X", "homepage": "https://uni.edu/"}
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, entry))
+            await adapter.discover(profile_bachelor)
+
+        trace = adapter.traces[0]
+        assert len(trace.sitemaps_read) <= MAX_SITEMAP_DOCUMENTS
+        assert any("sitemap documents" in e and "not read" in e for e in trace.errors), (
+            f"the walk stopped early and said nothing: {trace.errors}"
+        )
+
+    @pytest.mark.asyncio
+    async def test_a_sitemap_that_fits_reports_no_truncation(self, tmp_path, profile_bachelor):
+        site = StubSite({
+            "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
+            "https://uni.edu/s.xml": sitemap_xml("https://uni.edu/tuition-fees"),
+        })
+        entry = {"name": "U", "country": "NL", "city": "X", "homepage": "https://uni.edu/"}
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, entry))
+            await adapter.discover(profile_bachelor)
+        assert not any("sitemap documents" in e for e in adapter.traces[0].errors)

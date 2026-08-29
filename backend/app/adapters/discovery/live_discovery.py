@@ -56,6 +56,7 @@ from app.adapters.discovery.url_signals import (  # noqa: F401
     canonical_url,
     categorise_url,
     degree_level_named,
+    degree_levels_named,
     looks_like_catalogue,
     matches_degree,
     matches_field,
@@ -76,7 +77,11 @@ REGISTRY_PATH = Path(__file__).parent / "institution_registry.json"
 
 # --- bounds ---------------------------------------------------------------
 #: Sitemap documents read per institution, including nested index children.
-MAX_SITEMAP_DOCUMENTS = 12
+#: A sitemap index declares a finite list, and reading one costs a single fetch,
+#: so this is generous: at 12 Aalto's index was cut off after 55,000 of its
+#: 58,000 URLs and the document holding its programme pages was never opened.
+#: The real limit on work is MAX_SITEMAP_URLS below.
+MAX_SITEMAP_DOCUMENTS = 40
 #: URLs read from all sitemaps combined. Scanning is cheap — the documents are
 #: already fetched — so this is generous.
 MAX_SITEMAP_URLS = 200_000
@@ -269,7 +274,16 @@ class SitemapReader:
         pages: list[str] = []
         seen_pages: set[str] = set()
 
-        while queue and len(trace.sitemaps_read) < MAX_SITEMAP_DOCUMENTS:
+        while queue:
+            if len(trace.sitemaps_read) >= MAX_SITEMAP_DOCUMENTS:
+                # Never silently. A truncated sitemap means part of the site was
+                # not looked at, and a run that does not say so reads as a run
+                # that found nothing there.
+                trace.errors.append(
+                    f"stopped after {MAX_SITEMAP_DOCUMENTS} sitemap documents with "
+                    f"{len(queue)} still queued; part of the site was not read"
+                )
+                break
             url, depth = queue.pop(0)
             url = canonical_url(url)
             if url in seen_documents or depth > MAX_SITEMAP_DEPTH:
