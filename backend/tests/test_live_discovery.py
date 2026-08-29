@@ -497,8 +497,14 @@ class TestAdapter:
         # A Candidate carries URLs and attributes only — no claims, no verdicts.
         assert not hasattr(candidate, "claims")
         assert candidate.programs == [], "a seed must not fabricate a programme"
-        # And the seeded page was never even fetched by discovery.
-        assert "https://uni.edu/verified/admission" not in site.requested
+        # Discovery may *read* a seeded page — that is how an admissions hub's
+        # links to fees and funding are found — but reading it must not promote
+        # it. The seed named an admissions page and it stayed one: it did not
+        # become a programme, and it did not become a costs or funding page
+        # either, because nothing on it said so.
+        assert candidate.admissions_url == "https://uni.edu/verified/admission"
+        assert candidate.costs_url is None
+        assert candidate.scholarships_url is None
 
     @pytest.mark.asyncio
     async def test_an_off_domain_manual_seed_is_rejected(self, tmp_path, profile_bachelor):
@@ -1427,3 +1433,77 @@ class TestSitemapTruncationIsReported:
             adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, entry))
             await adapter.discover(profile_bachelor)
         assert not any("sitemap documents" in e for e in adapter.traces[0].errors)
+
+
+ADMISSIONS_HTML = (
+    "<html><head><title>Admissions</title></head><body><main>"
+    "<h1>International undergraduate admissions</h1>"
+    "<a href='/intl/support/cost-of-attendance'>Cost of Attendance</a>"
+    "<a href='/intl/support/scholarships'>Scholarships</a>"
+    "</main></body></html>"
+)
+
+
+class TestTheWalkUsesTheAdmissionsPageItAlreadyFound:
+    """KAIST publishes no programme catalogue, so the walk fell straight
+    through to the homepage.
+
+    Its international admissions page links to the cost of attendance, the
+    scholarship, and the list of documents to submit — three categories the
+    run reported as not found, one hop from a page discovery had already
+    selected and fetched. The walk knew about catalogues and the homepage and
+    nothing in between.
+
+    An admissions hub is where universities gather fees, funding and paperwork.
+    It is worth walking for the same reason a catalogue is.
+    """
+
+    @staticmethod
+    def registry_file(tmp_path, entry: dict):
+        import json
+
+        path = tmp_path / "registry.json"
+        path.write_text(json.dumps([entry]))
+        return path
+
+    @pytest.mark.asyncio
+    async def test_costs_and_funding_are_found_through_the_admissions_page(
+        self, tmp_path, profile_bachelor
+    ):
+        entry = {
+            "name": "K", "country": "South Korea", "city": "Daejeon",
+            "homepage": "https://uni.edu/",
+            "seeds": {"admissions": "https://uni.edu/intl/"},
+        }
+        site = StubSite({
+            "https://uni.edu/robots.txt": "User-agent: *\n",
+            "https://uni.edu/": (
+                "<html><head><title>K</title></head><body><main>"
+                "<h1>K</h1><a href='/news'>News</a></main></body></html>"
+            ),
+            # Registered under both forms: discovery canonicalises away the
+            # trailing slash, and the stub matches on the exact string.
+            "https://uni.edu/intl/": ADMISSIONS_HTML,
+            "https://uni.edu/intl": ADMISSIONS_HTML,
+            "https://uni.edu/intl/support/cost-of-attendance": (
+                "<html><head><title>Cost of Attendance</title></head><body><main>"
+                "<h1>Cost of attendance</h1><p>Tuition per year is 8,000,000 KRW.</p>"
+                "</main></body></html>"
+            ),
+            "https://uni.edu/intl/support/scholarships": (
+                "<html><head><title>Scholarships</title></head><body><main>"
+                "<h1>Scholarships</h1><p>The K Scholarship covers tuition.</p>"
+                "</main></body></html>"
+            ),
+        })
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, entry))
+            candidate = (await adapter.discover(profile_bachelor))[0]
+
+        assert candidate.costs_url and "cost-of-attendance" in candidate.costs_url, (
+            f"the admissions page was never walked; costs_url={candidate.costs_url}"
+        )
+        assert candidate.scholarships_url and "scholarships" in candidate.scholarships_url, (
+            f"funding was not found; scholarships_url={candidate.scholarships_url}"
+        )

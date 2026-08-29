@@ -642,7 +642,15 @@ class LiveDiscoveryAdapter:
         # rather than a queue entry. Putting it in the queue let HKU's two
         # Chinese copies of the same catalogue consume the budget before the
         # walk reached the programme list.
+        # Catalogues first, then the admissions hub. A university with no
+        # catalogue — KAIST publishes none — fell straight through to the
+        # homepage, while its international admissions page, already selected
+        # and fetched, linked to the cost of attendance, the scholarship and
+        # the documents to submit. An admissions hub is where fees, funding and
+        # paperwork are gathered; it is worth walking for the reason a
+        # catalogue is.
         queue = list(selected[PageCategory.PROGRAM_CATALOG][:2])
+        queue += [u for u in selected[PageCategory.ADMISSIONS][:2] if u not in queue]
         walked: set[str] = set()
         homepage_tried = False
         rendered_catalogues = 0
