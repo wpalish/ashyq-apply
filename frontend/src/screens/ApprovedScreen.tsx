@@ -41,9 +41,9 @@ export function ApprovedScreen({ onCollect }: { onCollect: () => void }) {
         <Panel>
           <div className="row" style={{ justifyContent: 'space-between' }}>
             <div className="row">
-              <Chip tone="ok">{approved.length} approved</Chip>
-              <Chip tone="warn">{maybe.length} maybe</Chip>
-              <Chip tone="risk">{rejected.length} rejected</Chip>
+              <Chip tone="ok">{approved.length} applying</Chip>
+              <Chip tone="warn">{maybe.length} deciding later</Chip>
+              <Chip tone="risk">{rejected.length} ruled out</Chip>
               <Chip>{results.length - shortlisted - rejected.length} undecided</Chip>
             </div>
             <button
@@ -60,14 +60,14 @@ export function ApprovedScreen({ onCollect }: { onCollect: () => void }) {
           </div>
           {shortlisted === 0 && (
             <Notice kind="info">
-              <div>Approve or mark “maybe” on at least one programme in the shortlist first.</div>
+              <div>Mark at least one programme as “Apply” or “Decide later” in the shortlist first.</div>
             </Notice>
           )}
         </Panel>
 
         {[
-          { label: 'Approved', rows: approved, tone: 'ok' as const },
-          { label: 'Maybe', rows: maybe, tone: 'warn' as const },
+          { label: 'Applying to', rows: approved, tone: 'ok' as const },
+          { label: 'Deciding later', rows: maybe, tone: 'warn' as const },
         ].map(({ label, rows, tone }) =>
           rows.length > 0 ? (
             <Panel key={label} title={`${label} (${rows.length})`}>
@@ -80,7 +80,7 @@ export function ApprovedScreen({ onCollect }: { onCollect: () => void }) {
 
         {rejected.length > 0 && (
           <Panel
-            title={`Rejected (${rejected.length})`}
+            title={`Ruled out (${rejected.length})`}
             hint="Kept on purpose. These are not proposed again unless something material changes."
           >
             <div className="stack stack--tight">

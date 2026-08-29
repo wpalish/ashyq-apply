@@ -31,7 +31,7 @@ const SCREENS: { id: ScreenId; num: string; label: string; group: string }[] = [
   { id: 'shortlist', num: '04', label: 'University shortlist', group: 'Research' },
   { id: 'funding', num: '05', label: 'Funding comparison', group: 'Research' },
   { id: 'sources', num: '06', label: 'Sources & conflicts', group: 'Research' },
-  { id: 'approved', num: '07', label: 'Approved universities', group: 'Decide' },
+  { id: 'approved', num: '07', label: 'Your decisions', group: 'Decide' },
   { id: 'documents', num: '08', label: 'Documents & deadlines', group: 'Decide' },
   { id: 'export', num: '09', label: 'Export & data deletion', group: 'Decide' },
 ];

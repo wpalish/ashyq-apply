@@ -75,6 +75,17 @@ export interface Money {
   range_low: number | null;
   range_high: number | null;
   source_url?: string | null;
+  /**
+   * Present only when the amount was restated from another currency. The
+   * backend sends the whole basis — original amount, rate, the day the rate
+   * was observed and where it came from — so a converted figure can be told
+   * apart from one the university published, and checked.
+   */
+  original_amount?: number;
+  original_currency?: string;
+  rate?: number;
+  rate_date?: string;
+  rate_source?: string;
 }
 
 export interface RankingEntry {

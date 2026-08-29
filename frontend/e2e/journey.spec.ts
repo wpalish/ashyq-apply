@@ -176,7 +176,7 @@ test('approve, collect documents, and export', async () => {
   await expect(rows.nth(0).locator('.decision-btn--approve')).toHaveAttribute('aria-pressed', 'true');
 
   await page.getByTestId('nav-approved').click();
-  await expect(page.getByText('2 approved')).toBeVisible();
+  await expect(page.getByText('2 applying')).toBeVisible();
   await page.screenshot({ path: shot('10-approved.png'), fullPage: true });
 
   await page.getByTestId('collect-documents').click();

@@ -20,6 +20,23 @@ export type Tone = 'ok' | 'info' | 'warn' | 'risk' | 'neutral' | 'demo' | 'accen
 export const NOT_PUBLISHED = 'not published';
 export const NOT_FOUND = 'not found';
 
+/**
+ * How a converted amount came to be, or null when the amount is as published.
+ *
+ * A student comparing a Dutch fee with a Canadian one sees both in their own
+ * currency, and nothing else on screen distinguishes a figure a university
+ * stated from one this product calculated. The rate, the day it was observed
+ * and its source are all sent with the value, so all three are shown.
+ */
+export function conversionNote(value: Money | null | undefined): string | null {
+  if (!value?.original_currency || value.original_amount == null) return null;
+  const original = `${Math.round(value.original_amount).toLocaleString('en-US')} ${value.original_currency}`;
+  const rate = value.rate != null ? ` at ${value.rate} ${value.original_currency}/${value.currency}` : '';
+  const on = value.rate_date ? ` observed on ${value.rate_date}` : '';
+  const from = value.rate_source ? ` — ${value.rate_source}` : '';
+  return `Converted from ${original}${rate}${on}${from}`;
+}
+
 export function money(value: Money | null | undefined): string {
   if (!value) return NOT_FOUND;
   const base = `${Math.round(value.amount).toLocaleString('en-US')} ${value.currency}`;
@@ -29,7 +46,8 @@ export function money(value: Money | null | undefined): string {
       : '';
   const year = value.academic_year ? ` · ${value.academic_year}` : '';
   const est = value.is_estimate ? ' est.' : '';
-  return `${base}${range}${est}${year}`;
+  const conv = conversionNote(value) ? ' converted' : '';
+  return `${base}${range}${est}${conv}${year}`;
 }
 
 export function date(iso: string | null | undefined): string {
