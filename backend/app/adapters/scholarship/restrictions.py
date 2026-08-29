@@ -1,0 +1,248 @@
+"""Who may hold an award, and how many are given.
+
+Two claims live here, and the product's rules keep them apart:
+
+* **the award's restriction** — what the page says about nationality,
+  residency or programme;
+* **this applicant's eligibility** — whether their citizenship and residence
+  satisfy that restriction.
+
+An award existing says nothing about the second. `docs/CANARY_AUDIT.md`
+recorded the cost of merging them: the CLIP award goes to students who "hold
+either a Greek passport or Greek residence", nothing read it, and a Kazakhstani
+applicant was shown an award they cannot hold.
+
+Silence is never permission. A page that says nothing about nationality leaves
+eligibility `unknown`, not `yes`.
+"""
+
+from __future__ import annotations
+
+import re
+from dataclasses import dataclass, field
+
+#: Demonym -> country. Only entries where the adjective is unambiguous enough
+#: to carry a restriction. A country named without restricting language around
+#: it is not a rule, so this table is only consulted inside a match.
+_DEMONYMS: dict[str, str] = {
+    "greek": "Greece", "dutch": "Netherlands", "german": "Germany",
+    "french": "France", "belgian": "Belgium", "austrian": "Austria",
+    "polish": "Poland", "finnish": "Finland", "swedish": "Sweden",
+    "norwegian": "Norway", "danish": "Denmark", "irish": "Ireland",
+    "italian": "Italy", "spanish": "Spain", "portuguese": "Portugal",
+    "turkish": "Turkey", "indian": "India", "chinese": "China",
+    "japanese": "Japan", "korean": "South Korea", "singaporean": "Singapore",
+    "canadian": "Canada", "australian": "Australia",
+    "brazilian": "Brazil", "mexican": "Mexico", "kazakh": "Kazakhstan",
+    "kazakhstani": "Kazakhstan", "russian": "Russia", "ukrainian": "Ukraine",
+    "british": "United Kingdom", "swiss": "Switzerland", "czech": "Czechia",
+    "hungarian": "Hungary", "romanian": "Romania", "bulgarian": "Bulgaria",
+    "nigerian": "Nigeria", "kenyan": "Kenya", "egyptian": "Egypt",
+    "vietnamese": "Vietnam", "indonesian": "Indonesia", "malaysian": "Malaysia",
+    "thai": "Thailand", "pakistani": "Pakistan", "bangladeshi": "Bangladesh",
+}
+#: Country names that may appear directly ("citizens of Kazakhstan").
+_COUNTRIES: dict[str, str] = {v.lower(): v for v in _DEMONYMS.values()} | {
+    "hong kong": "Hong Kong", "new zealand": "New Zealand",
+    "south africa": "South Africa", "united states": "United States",
+    "the netherlands": "Netherlands", "united kingdom": "United Kingdom",
+}
+
+#: Groups that are restrictions but not single countries.
+#: Published names, because a restriction list is shown to the applicant and
+#: checked against their citizenship as written.
+_BLOCS = {
+    "european economic area": "European Economic Area",
+    "eea": "European Economic Area",
+    "european union": "European Union", "eu": "European Union",
+    "nordic": "Nordic countries",
+    "schengen": "Schengen area", "commonwealth": "Commonwealth",
+}
+
+#: Sentences that impose a nationality or residency condition. Each needs
+#: restricting language, not merely a country word: "Greek mythology is taught
+#: in the first year" names a nationality and restricts nothing.
+_RESTRICTION_SENTENCE = re.compile(
+    r"[^.]*\b("
+    r"hold(?:ing|s)?\s+(?:either\s+)?an?\s+\w+\s+(?:passport|residence|residency|citizenship)"
+    r"|(?:open|available|restricted|limited|offered)\s+(?:only\s+)?to\b[^.]{0,120}"
+    r"|must\s+(?:be|hold|have)\b[^.]{0,120}"
+    r"|reserved\s+for\b[^.]{0,120}"
+    r"|citizens?\s+of\b[^.]{0,80}"
+    r"|nationals?\s+of\b[^.]{0,80}"
+    r"|\w+\s+(?:nationals?|citizens?)\b"
+    r"|with\s+\w+\s+citizenship"
+    r")[^.]*\.",
+    re.IGNORECASE,
+)
+#: Words proving the sentence is about who may hold the award.
+_STATUS_WORD = re.compile(
+    r"\b(passports?|residence|residency|residents?|citizens?|citizenship"
+    r"|nationals?|nationality|eligible|eligibility|apply|applicants?)\b",
+    re.IGNORECASE,
+)
+_RESIDENCE_WORD = re.compile(r"\b(residence|residency|resident|domicile)\b", re.IGNORECASE)
+_CITIZEN_WORD = re.compile(
+    r"\b(passports?|citizens?|citizenship|nationals?|nationality)\b", re.IGNORECASE
+)
+#: Phrasings that widen rather than restrict.
+_NOT_A_RESTRICTION = re.compile(
+    r"\b(all over the world|any nationality|all nationalities|from over \d+ countries"
+    r"|regardless of nationality|worldwide|international students are welcome)\b",
+    re.IGNORECASE,
+)
+
+_NUMBER_WORDS = {
+    "one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7,
+    "eight": 8, "nine": 9, "ten": 10, "eleven": 11, "twelve": 12, "fifteen": 15,
+    "twenty": 20, "thirty": 30, "fifty": 50, "hundred": 100,
+}
+#: A published count names a number. "A number of scholarships" does not.
+_COUNT = re.compile(
+    r"(?:up to|maximum of|number of scholarships?|we award|awards?|offers?)?\s*"
+    r"\b(\d{1,4}|" + "|".join(_NUMBER_WORDS) + r")\b"
+    r"[^.]{0,40}?\b(scholarships?|awards?|grants?|places?|bursaries)\b"
+    r"|\b(scholarships?|awards?|grants?|bursaries)\b[^.]{0,24}?\b(\d{1,4})\b",
+    re.IGNORECASE,
+)
+
+
+@dataclass(frozen=True)
+class Restrictions:
+    """What the page says about who may hold the award."""
+
+    citizenships: list[str] = field(default_factory=list)
+    residencies: list[str] = field(default_factory=list)
+    blocs: list[str] = field(default_factory=list)
+    #: The sentence the restriction was read from, verbatim.
+    evidence: str = ""
+    #: True when the page offers alternatives ("a passport *or* residence").
+    alternatives: bool = False
+
+    @property
+    def any(self) -> bool:
+        return bool(self.citizenships or self.residencies or self.blocs)
+
+
+@dataclass(frozen=True)
+class EligibilityVerdict:
+    eligible: str  # "yes" | "no" | "unknown"
+    reason: str
+    evidence: str = ""
+
+
+@dataclass(frozen=True)
+class PublishedCount:
+    value: int
+    evidence: str
+
+
+def _countries_in(sentence: str) -> list[str]:
+    low = sentence.lower()
+    found: list[str] = []
+    for name, country in _COUNTRIES.items():
+        if re.search(rf"\b{re.escape(name)}\b", low) and country not in found:
+            found.append(country)
+    for demonym, country in _DEMONYMS.items():
+        if re.search(rf"\b{re.escape(demonym)}\b", low) and country not in found:
+            found.append(country)
+    return found
+
+
+def extract_restrictions(text: str) -> Restrictions:
+    """Nationality and residency conditions stated on an award page."""
+    citizenships: list[str] = []
+    residencies: list[str] = []
+    blocs: list[str] = []
+    evidence = ""
+    alternatives = False
+
+    for match in _RESTRICTION_SENTENCE.finditer(text or ""):
+        sentence = " ".join(match.group(0).split())
+        if _NOT_A_RESTRICTION.search(sentence) or not _STATUS_WORD.search(sentence):
+            continue
+        countries = _countries_in(sentence)
+        found_blocs = [
+            label for key, label in _BLOCS.items()
+            if re.search(rf"\b{re.escape(key)}\b", sentence, re.IGNORECASE)
+        ]
+        if not countries and not found_blocs:
+            continue
+
+        # Which kind of condition is it? A sentence can state both, as CLIP's
+        # "a Greek passport or Greek residence" does.
+        if _CITIZEN_WORD.search(sentence):
+            citizenships += [c for c in countries if c not in citizenships]
+        if _RESIDENCE_WORD.search(sentence):
+            residencies += [c for c in countries if c not in residencies]
+        blocs += [b for b in found_blocs if b not in blocs]
+        if not evidence:
+            evidence = sentence
+        if re.search(r"\beither\b|\bor\b", sentence, re.IGNORECASE):
+            alternatives = True
+
+    return Restrictions(citizenships, residencies, blocs, evidence, alternatives)
+
+
+def assess_applicant_eligibility(
+    restrictions: Restrictions, *, citizenship: str, residence: str,
+) -> EligibilityVerdict:
+    """Whether this applicant satisfies the award's stated conditions.
+
+    Three answers, and `unknown` is the default. An award silent on nationality
+    has not said this applicant may hold it, and an applicant who has not told
+    us their citizenship cannot be measured against one that has.
+    """
+    if not restrictions.any:
+        return EligibilityVerdict(
+            "unknown", "The page states no nationality or residency condition.",
+        )
+    if not citizenship and not residence:
+        return EligibilityVerdict(
+            "unknown",
+            "The award restricts by nationality or residency, and the applicant's "
+            "citizenship and residence are not recorded.",
+            restrictions.evidence,
+        )
+
+    matches_citizenship = citizenship and citizenship in restrictions.citizenships
+    matches_residence = residence and residence in restrictions.residencies
+    if matches_citizenship or matches_residence:
+        satisfied = "citizenship" if matches_citizenship else "residence"
+        return EligibilityVerdict(
+            "yes", f"The applicant's {satisfied} is among those the award names.",
+            restrictions.evidence,
+        )
+
+    named = ", ".join(sorted(set(
+        restrictions.citizenships + restrictions.residencies + restrictions.blocs
+    )))
+    return EligibilityVerdict(
+        "no",
+        f"The award is restricted to {named}; the applicant holds "
+        f"{citizenship or 'an unrecorded citizenship'} and resides in "
+        f"{residence or 'an unrecorded country'}.",
+        restrictions.evidence,
+    )
+
+
+def extract_published_count(text: str) -> PublishedCount | None:
+    """The number of awards, only when the page states one.
+
+    "A number of scholarships are available" publishes no number, and reading
+    one out of it would be an invented fact.
+    """
+    for match in _COUNT.finditer(text or ""):
+        sentence = " ".join(match.group(0).split())
+        raw = next(
+            (g for g in match.groups()
+             if g and (g.isdigit() or g.lower() in _NUMBER_WORDS)),
+            None,
+        )
+        if raw is None:
+            continue
+        value = int(raw) if raw.isdigit() else _NUMBER_WORDS[raw.lower()]
+        if value <= 0 or value > 10_000:
+            continue
+        return PublishedCount(value, sentence)
+    return None

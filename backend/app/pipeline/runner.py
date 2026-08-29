@@ -786,21 +786,43 @@ def _scholarship_eligibility(s, profile: ApplicantProfileIn):
     """Check the applicant against an award's own published restrictions."""
     checks = []
     citizenship = profile.context.citizenship
-    if s.citizenship_restrictions:
-        allowed = " ".join(s.citizenship_restrictions).lower()
-        ok = citizenship.lower() in allowed
+    residence = profile.context.country_of_residence
+    if s.citizenship_restrictions or s.residency_restrictions:
+        # Nationality and residency are separate routes into the same award,
+        # and an award naming both accepts either. TU Delft's CLIP award goes
+        # to students who "hold either a Greek passport or Greek residence": an
+        # applicant with Greek residence qualifies on residence alone, so
+        # checking citizenship by itself would wrongly exclude them.
+        by_citizenship = bool(
+            s.citizenship_restrictions
+            and citizenship
+            and citizenship.lower() in " ".join(s.citizenship_restrictions).lower()
+        )
+        by_residence = bool(
+            s.residency_restrictions
+            and residence
+            and residence.lower() in " ".join(s.residency_restrictions).lower()
+        )
+        ok = by_citizenship or by_residence
+        named = ", ".join(sorted(
+            {*s.citizenship_restrictions, *s.residency_restrictions}
+        ))
+        if ok:
+            route = "citizenship" if by_citizenship else "country of residence"
+            explanation = f"The applicant's {route} falls within the published restriction."
+        else:
+            explanation = (
+                f"The award is restricted to {named}. An applicant holding "
+                f"{citizenship or 'an unrecorded'} citizenship and residing in "
+                f"{residence or 'an unrecorded country'} is not eligible."
+            )
         checks.append(
             _check(
-                "Scholarship citizenship eligibility",
-                s.citizenship_restrictions,
-                citizenship,
+                "Scholarship citizenship or residency eligibility",
+                [*s.citizenship_restrictions, *s.residency_restrictions],
+                f"{citizenship} / {residence}",
                 EligibilityStatus.MET if ok else EligibilityStatus.NOT_APPLICABLE,
-                (
-                    f"The award is restricted to {', '.join(s.citizenship_restrictions)}. "
-                    f"An applicant holding {citizenship} citizenship is not eligible."
-                    if not ok
-                    else f"{citizenship} citizenship falls within the published restriction."
-                ),
+                explanation,
             )
         )
     elif s.international_eligible == "no":
