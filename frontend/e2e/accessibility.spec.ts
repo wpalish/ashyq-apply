@@ -9,11 +9,15 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 import { newSession, openShortlist, runDemoResearch, shot } from './helpers';
 
+// The full set the product claims to support. 375 and 1920 were the two ends
+// nobody checked: the narrowest phone in common use and the widest desktop.
 const BREAKPOINTS = [
   { name: '320', width: 320, height: 720 },
+  { name: '375', width: 375, height: 800 },
   { name: '768', width: 768, height: 1024 },
   { name: '1024', width: 1024, height: 768 },
   { name: '1440', width: 1440, height: 900 },
+  { name: '1920', width: 1920, height: 1080 },
 ];
 
 test.describe.configure({ mode: 'serial' });

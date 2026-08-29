@@ -231,6 +231,19 @@ button { font: inherit; color: inherit; }
 .btn--sm { padding: 0.25rem 0.6rem; font-size: var(--text-xs); }
 .btn--danger { border-color: var(--risk-border); color: var(--risk); }
 .btn--danger:hover:not(:disabled) { background: var(--risk-soft); }
+/* An inline control that reads as part of the sentence around it, for jumping
+   to a section rather than performing an action. */
+.btn--link {
+  background: transparent;
+  border-color: transparent;
+  padding: 0;
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font: inherit;
+}
+.btn--link:hover:not(:disabled) { color: var(--accent-hover); box-shadow: none; }
+.btn--link:active:not(:disabled) { transform: none; }
 
 .chip {
   display: inline-flex;

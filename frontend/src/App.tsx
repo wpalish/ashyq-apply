@@ -106,7 +106,7 @@ export default function App() {
     <div className="app">
       <aside className="sidebar">
         <div className="brand">
-          <span className="brand__mark">UniMatch</span>
+          <span className="brand__mark">ASHYQ Apply</span>
           <span className="brand__tag">
             Evidence-backed university &amp; scholarship shortlisting
           </span>
@@ -151,7 +151,7 @@ export default function App() {
             </select>
           </div>
           <p className="xs faint" style={{ margin: 0 }}>
-            Published criteria only. UniMatch never predicts admission or funding outcomes.
+            Published criteria only. ASHYQ Apply never predicts admission or funding outcomes.
           </p>
         </div>
       </aside>

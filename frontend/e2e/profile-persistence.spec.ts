@@ -64,3 +64,23 @@ test('replacing a saved profile asks first', async ({ page }) => {
   await page.getByRole('button', { name: 'Keep editing' }).click();
   await expect(page.getByLabel('Citizenship')).toHaveValue('Georgia');
 });
+
+test('the gap summary sits above the form and jumps to the detail', async ({ page }) => {
+  // The panel explaining what each blank costs is six screens down, past
+  // eighty fields. A student needs to know which blanks matter *before*
+  // deciding what to fill in, so a summary leads the form.
+  await page.goto('/');
+  await page.getByTestId('load-demo-profile').click();
+
+  const summary = page.getByTestId('jump-to-gaps');
+  await expect(summary).toBeVisible();
+
+  const summaryTop = await summary.evaluate((el) => el.getBoundingClientRect().top + window.scrollY);
+  const detailTop = await page
+    .getByTestId('gap-list')
+    .evaluate((el) => el.getBoundingClientRect().top + window.scrollY);
+  expect(summaryTop, 'the summary must come before the detail').toBeLessThan(detailTop);
+
+  await summary.click();
+  await expect(page.getByTestId('gap-list')).toBeInViewport();
+});

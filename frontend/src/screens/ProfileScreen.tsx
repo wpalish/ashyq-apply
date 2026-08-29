@@ -75,6 +75,8 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
     setProfileDraft((draft) => setIn(draft, path, current.filter((_, itemIndex) => itemIndex !== index)));
   };
 
+  const worstGap = validation?.gaps[0];
+
   return (
     <>
       <div className="screen__head">
@@ -87,6 +89,42 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
       </div>
 
       <div className="stack stack--loose">
+        {/* The full gap panel is six screens down, after eighty fields. A
+            student reads which blanks matter *after* deciding what to fill in,
+            which is the wrong way round, so the count and the worst one are
+            surfaced here with a jump to the detail. */}
+        {worstGap && validation && (
+          <Notice kind={validation.gaps.some((g) => g.severity === 'blocking') ? 'warn' : 'info'}>
+            <div>
+              <strong>
+                {validation.gaps.length} {validation.gaps.length === 1 ? 'blank affects' : 'blanks affect'} your results.
+              </strong>{' '}
+              Most consequential: <em>{worstGap.field_path}</em> —{' '}
+              {(SEVERITY_LABEL[worstGap.severity] ?? worstGap.severity).toLowerCase()}.{' '}
+              <button
+                type="button"
+                className="btn btn--link"
+                data-testid="jump-to-gaps"
+                onClick={() => {
+                  // Deliberately not smooth. Both scrollIntoView({behavior:
+                  // 'smooth'}) and scrollTo({behavior:'smooth'}) are silently
+                  // no-ops in some embedded browsers, which leaves the control
+                  // doing nothing at all; an instant jump always works and is
+                  // what a reduced-motion reader wants regardless.
+                  const target = document.querySelector('[data-testid="gap-list"]');
+                  if (!target) return;
+                  window.scrollTo({
+                    top: target.getBoundingClientRect().top + window.scrollY - 80,
+                    behavior: 'auto',
+                  });
+                }}
+              >
+                See what each one costs
+              </button>
+            </div>
+          </Notice>
+        )}
+
         {restored && savedProfile && (
           <Notice kind="info">
             <div>
@@ -209,7 +247,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
 
         <Panel
           title="Grades"
-          hint="Enter the grade exactly as it appears on your transcript. UniMatch does not convert it silently."
+          hint="Enter the grade exactly as it appears on your transcript. ASHYQ Apply does not convert it silently."
         >
           <div className="grid-2">
             <Field label="GPA / average" htmlFor="gpa">

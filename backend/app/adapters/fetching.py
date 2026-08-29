@@ -37,8 +37,11 @@ from app.domain.enums import FetchOutcome
 
 log = logging.getLogger("unimatch.fetch")
 
+#: How this crawler introduces itself. The project URL has to resolve: a site
+#: operator who wants to ask what we are doing, or to have us stop, follows it.
+#: It pointed at github.com/unimatch/unimatch, which returns 404.
 USER_AGENT = (
-    "UniMatchResearchBot/0.1 (+https://github.com/unimatch/unimatch; "
+    "AshyqApplyResearchBot/0.1 (+https://github.com/wpalish/ashyq-apply; "
     "university admissions research for a single applicant; contact: set FETCH_CONTACT)"
 )
 DEFAULT_TIMEOUT = 20.0
