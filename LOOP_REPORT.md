@@ -171,7 +171,7 @@ Scored after loop 7, against what the product claims about itself.
 | Privacy | **9** | PII guard on every request, audit log asserted clean of applicant data, ORM-level deletion, no sensitive field modelled anywhere. Point withheld for having no encryption at rest. |
 | Scraper resilience | **7** | Politeness is thorough and one bad link can no longer end a run. But live discovery works from a curated registry and finds landing pages more often than requirement pages — the honest weak spot. |
 | UX | **8** | Three judgements kept visually separate, refusals explained in place, no unexplained spinner, keyboard-reachable, both themes. Dense by design; a first-time user has a lot to take in. |
-| Maintainability | **8** | Domain logic is pure and I/O lives behind adapters. `runner.py` at 732 lines is the one file that has grown past comfortable. *(Corrected 2026-08-29: it reached 967, and assessment and persistence have since been split out, leaving 708.)* |
+| Maintainability | **8** | Domain logic is pure and I/O lives behind adapters. `runner.py` at 732 lines is the one file that has grown past comfortable. *(Corrected 2026-08-29: it reached 967, and assessment and persistence have since been split out, leaving 712.)* |
 | Test coverage | **9** | 233 backend + 39 unit + 42 E2E; 87% backend coverage; a contract test pins the frontend vocabularies to the backend enums. |
 | Accessibility | **8** | Labelled table, named control groups, live progress, `aria-expanded`, focus rings, reduced-motion, no overflow at any breakpoint. No screen-reader pass with a real AT, and no automated axe run. *(Corrected 2026-08-29: axe WCAG A/AA now runs on every reachable screen in both the desktop and mobile projects; the manual AT pass is still outstanding.)* |
 
@@ -338,7 +338,7 @@ stops being evidence.
 |---|---|
 | "no authentication, no multi-tenancy, no containers, no CI" | All four exist. Opaque server sessions with scrypt, organizations and applicant cases, a five-service compose stack, and CI covering frontend, backend on SQLite and PostgreSQL, and security. |
 | "no automated axe run" | axe WCAG 2.0/2.1 A and AA runs on every reachable workflow screen, in the desktop and mobile projects both. |
-| "`runner.py` at 732 lines" | It grew to 967. Assessment and persistence are now separate modules and it is 708. |
+| "`runner.py` at 732 lines" | It grew to 967. Assessment and persistence are now separate modules and it is 712. |
 | "queue is in-process" | A durable PostgreSQL queue with leases, heartbeats, reaping, backoff and dead-lettering; recovery from a real SIGKILL is proven by `scripts/crash_test.py`. |
 | "the container image has never been built" | CI builds it. It has still never been *run* — see the gate below, which stays BLOCKED. |
 
@@ -389,7 +389,7 @@ maps. Tenant isolation was verified and found correct — but the probe list
 covered thirteen of seventeen id-bearing routes, and now derives from the
 application's own schema.
 
-**Architecture.** `runner.py` 967 → 708, with `assessment.py` and
+**Architecture.** `runner.py` 967 → 712, with `assessment.py` and
 `persistence.py` extracted. Behaviour-preserving: same tests, and the crash
 test still recovers with no duplicates.
 

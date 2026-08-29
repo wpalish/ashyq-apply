@@ -65,8 +65,13 @@ measured against the wrong thing:
 
 - **PASS:** 28 (of 30 original) + 5 added
 - **PARTIAL:** 0
-- **FAIL:** 1
-- **BLOCKED:** 1
+- **FAIL:** 1 — gate 28, programme discovery recall
+- **BLOCKED:** 2 — gate 22 (no container runtime on this machine) and gate 29,
+  which waits on the other two
+
+The count said one BLOCKED while two were listed. Gate 29 cannot be anything
+else while 22 and 28 are open, and a summary that disagrees with its own table
+is the kind of thing a reader stops checking.
 
 ## Order of work remaining
 
@@ -74,7 +79,9 @@ measured against the wrong thing:
 2. ~~**P2** — auth, organizations, cases, tenant isolation~~ **done**
 3. ~~**P3** — SSRF suite, headers, rate limiting, threat model~~ **done**
 4. ~~**P4** — full onboarding forms~~ **done**
-5. **P5–P6** — improve programme-page classifier recall and deepen funding/document extraction
+5. **P5–P6** — programme-page classifier recall and funding/document extraction.
+   Substantially advanced: see `docs/LIVE_DISCOVERY_REPORT.md` for the measured
+   result and the reason each remaining miss fails.
 6. **P7** — run the container stack and verify a deployment (gate 22)
 7. ~~**P8** — canary audit across ten institutions~~ **done**
 

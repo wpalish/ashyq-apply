@@ -37,7 +37,7 @@ result it produced. A gate is PASS only when its command was executed here.
 | Backup / restore | `scripts/pg.py … scripts/backup_drill.py` | **PASS** — 12 tables restored with identical row counts, 109,038-byte dump, scratch database |
 | Registry seeds | `scripts/canary_discovery.py --check-seeds` | **PASS** — 0 of 33 no longer resolve |
 | Live canary ×3 | `scripts/canary_discovery.py --out …` | **FAIL against its bar** — 4, 4, 4 programme pages of ten (bar: median 8, worst 7). 27/30 category pages, which meets its bar. **0 false positives in every run** |
-| Holdout canary | `scripts/canary_discovery.py --registry …/holdout_registry.json` | **FAIL against its bar** — 1 of 6 (bar: 4 of 5). 0 false positives |
+| Holdout canary | `scripts/canary_discovery.py --registry …/holdout_registry.json` | **FAIL against its bar** — 1 of 6 (bar: 4 of 6; the set has six members and the denominator is fixed at six). 0 false positives |
 | SSRF | ad-hoc probe of 14 loopback / private / metadata forms | **PASS** — all refused, while `curl` reached the same loopback service, proving the target was up |
 | Tenant isolation | `pytest tests/test_tenant_isolation_exhaustive.py` | **PASS** — all 17 id-bearing routes refuse another tenant with 404; the probe set derives from the app's OpenAPI schema |
 | Secrets | tracked files, full git history, `.env*`, built bundle | **PASS** — none found |
@@ -56,7 +56,9 @@ result it produced. A gate is PASS only when its command was executed here.
 | Programme pages (live) | 1/10 | **4/10** |
 | Category pages (live) | 26/30 | **27/30** |
 | Live false positives | 0 | **0** |
-| `runner.py` | 967 lines | **708** |
+| `runner.py` | 967 lines | **712** |
+| `page_classifier.py` | 469 lines | **806** — grew with the recall work |
+| `live_discovery.py` | 914 lines | **1116** — grew with the recall work |
 
 Coverage moved down by 0.09 points while 219 tests were added, because the new
 code — the FX provider's error paths, the browser-render branch — includes
