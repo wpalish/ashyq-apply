@@ -8,6 +8,9 @@
 
 import type {
   Capabilities,
+  ApplicantCase,
+  AuthPrincipal,
+  AuthStatus,
   ClaimOut,
   Conflict,
   ProfileValidationReport,
@@ -30,6 +33,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   try {
     response = await fetch(path, {
       ...init,
+      credentials: 'include',
       headers: { 'Content-Type': 'application/json', ...(init?.headers ?? {}) },
     });
   } catch {
@@ -60,6 +64,15 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 export const api = {
+  authStatus: () => request<AuthStatus>('/api/auth/status'),
+  register: (payload: { email: string; password: string; display_name: string; organization_name: string }) =>
+    request<AuthPrincipal>('/api/auth/register', { method: 'POST', body: JSON.stringify(payload) }),
+  login: (email: string, password: string) =>
+    request<AuthPrincipal>('/api/auth/login', {
+      method: 'POST', body: JSON.stringify({ email, password }),
+    }),
+  logout: () => request<void>('/api/auth/logout', { method: 'POST' }),
+  cases: () => request<ApplicantCase[]>('/api/cases'),
   health: () => request<{ status: string; demo_mode: boolean; schema_version: number }>('/api/health'),
   capabilities: () => request<Capabilities>('/api/capabilities'),
   vocabulary: () => request<Record<string, string[]>>('/api/vocabulary'),

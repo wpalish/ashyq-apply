@@ -10,6 +10,7 @@ import asyncio
 import shutil
 import tempfile
 import uuid
+from collections.abc import Iterator
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -33,7 +34,7 @@ CORPUS = Path(__file__).resolve().parent.parent / "app" / "corpus" / "pages"
 
 
 @pytest.fixture(scope="session")
-def postgres_url() -> str:
+def postgres_url() -> Iterator[str]:
     """A real PostgreSQL for the session.
 
     Provisioned in-process by `pgserver`, so nothing has to be installed. The

@@ -1,0 +1,172 @@
+"""Account and organization session endpoints."""
+
+from __future__ import annotations
+
+import re
+
+from fastapi import APIRouter, Depends, HTTPException, Request, Response
+from pydantic import BaseModel, Field
+from sqlalchemy.orm import Session
+
+from app.config import get_settings
+from app.db import get_session
+from app.models import AuthSession, Organization, OrganizationMembership, User
+from app.security import (
+    Principal,
+    clear_session_cookie,
+    create_session,
+    get_optional_principal,
+    get_principal,
+    hash_password,
+    normalize_email,
+    token_hash,
+    verify_password,
+)
+
+router = APIRouter(prefix="/api/auth", tags=["auth"])
+
+
+class RegisterIn(BaseModel):
+    email: str = Field(max_length=320)
+    password: str = Field(min_length=12, max_length=128)
+    display_name: str = Field(min_length=1, max_length=120)
+    organization_name: str = Field(min_length=1, max_length=120)
+
+
+class LoginIn(BaseModel):
+    email: str = Field(max_length=320)
+    password: str = Field(min_length=1, max_length=128)
+
+
+class PrincipalView(BaseModel):
+    user_id: str
+    email: str
+    display_name: str
+    organization_id: str
+    organization_name: str
+    role: str
+    local_development: bool
+
+
+def _slug(value: str) -> str:
+    base = re.sub(r"[^a-z0-9]+", "-", value.casefold()).strip("-")[:50] or "workspace"
+    from app.models.base import new_id
+
+    return f"{base}-{new_id()[:8]}"
+
+
+def _view(session: Session, principal: Principal) -> PrincipalView:
+    org = session.get(Organization, principal.organization_id)
+    return PrincipalView(**vars(principal), organization_name=org.name if org else "Workspace")
+
+
+@router.get("/status")
+def auth_status(
+    principal: Principal | None = Depends(get_optional_principal),
+    session: Session = Depends(get_session),
+) -> dict:
+    settings = get_settings()
+    return {
+        "enabled": settings.auth_enabled,
+        "registration_enabled": settings.auth_registration_enabled,
+        "authenticated": principal is not None,
+        "principal": _view(session, principal).model_dump() if principal else None,
+    }
+
+
+@router.post("/register", response_model=PrincipalView, status_code=201)
+def register(
+    payload: RegisterIn,
+    response: Response,
+    session: Session = Depends(get_session),
+) -> PrincipalView:
+    settings = get_settings()
+    if not settings.auth_enabled or not settings.auth_registration_enabled:
+        raise HTTPException(403, "Registration is disabled.")
+    email = normalize_email(payload.email)
+    if session.query(User.id).filter(User.email == email).first():
+        raise HTTPException(409, "An account with this email already exists.")
+    user = User(
+        email=email,
+        display_name=payload.display_name.strip(),
+        password_hash=hash_password(payload.password),
+    )
+    org = Organization(
+        name=payload.organization_name.strip(), slug=_slug(payload.organization_name)
+    )
+    session.add_all([user, org])
+    session.flush()
+    session.add(OrganizationMembership(user_id=user.id, organization_id=org.id, role="owner"))
+    session.commit()
+    create_session(session, user, org.id, response)
+    return PrincipalView(
+        user_id=user.id,
+        email=user.email,
+        display_name=user.display_name,
+        organization_id=org.id,
+        organization_name=org.name,
+        role="owner",
+        local_development=False,
+    )
+
+
+@router.post("/login", response_model=PrincipalView)
+def login(
+    payload: LoginIn,
+    response: Response,
+    session: Session = Depends(get_session),
+) -> PrincipalView:
+    if not get_settings().auth_enabled:
+        raise HTTPException(403, "Authentication is disabled in local development mode.")
+    email = normalize_email(payload.email)
+    user = session.query(User).filter(User.email == email).first()
+    if (
+        user is None
+        or not user.is_active
+        or not verify_password(payload.password, user.password_hash)
+    ):
+        raise HTTPException(401, "Invalid email or password.")
+    membership = (
+        session.query(OrganizationMembership)
+        .filter(OrganizationMembership.user_id == user.id)
+        .order_by(OrganizationMembership.created_at)
+        .first()
+    )
+    if membership is None:
+        raise HTTPException(403, "This account has no active workspace.")
+    create_session(session, user, membership.organization_id, response)
+    principal = Principal(
+        user_id=user.id,
+        organization_id=membership.organization_id,
+        email=user.email,
+        display_name=user.display_name,
+        role=membership.role,
+    )
+    return _view(session, principal)
+
+
+@router.post("/logout", status_code=204)
+def logout(
+    request: Request,
+    response: Response,
+    session: Session = Depends(get_session),
+) -> Response:
+    raw = request.cookies.get(get_settings().session_cookie_name)
+    if raw:
+        auth_session = (
+            session.query(AuthSession).filter(AuthSession.token_hash == token_hash(raw)).first()
+        )
+        if auth_session:
+            session.delete(auth_session)
+            session.commit()
+    clear_session_cookie(response)
+    response.status_code = 204
+    return response
+
+
+@router.get("/me", response_model=PrincipalView)
+def me(
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> PrincipalView:
+    return _view(session, principal)

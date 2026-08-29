@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from sqlalchemy import JSON, String
+from sqlalchemy import JSON, ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import TimestampedBase
@@ -22,6 +22,12 @@ if TYPE_CHECKING:
 class ApplicantProfileRow(TimestampedBase):
     __tablename__ = "applicant_profiles"
 
+    #: An applicant profile is the product's case boundary.  Every API query
+    #: scopes through this organization id; knowing a UUID is never authority.
+    organization_id: Mapped[str] = mapped_column(
+        String(32), ForeignKey("organizations.id", ondelete="CASCADE"), index=True,
+        default="00000000000000000000000000000001",
+    )
     display_name: Mapped[str] = mapped_column(String(80), default="Applicant")
     payload: Mapped[dict] = mapped_column(JSON, nullable=False)
 

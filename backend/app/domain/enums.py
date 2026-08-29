@@ -32,10 +32,10 @@ class CurriculumType(StrEnum):
 class FieldStatus(StrEnum):
     """How much we trust one value in the applicant's own profile."""
 
-    VERIFIED = "verified"                      # backed by an uploaded/official artefact
+    VERIFIED = "verified"  # backed by an uploaded/official artefact
     APPLICANT_CONFIRMED = "applicant_confirmed"  # user asserted it explicitly
     DOCUMENT_SUPPORTED = "document_supported"  # user attached supporting evidence
-    UNVERIFIED = "unverified"                  # inferred or defaulted
+    UNVERIFIED = "unverified"  # inferred or defaulted
     MISSING = "missing"
     CONFLICTING = "conflicting"
 
@@ -59,14 +59,14 @@ class SourceSpecificity(StrEnum):
     official page beats an aggregator. Conflict resolution uses this order.
     """
 
-    PROGRAM_INTAKE = "program_intake"            # 1 - the exact programme, this cycle
-    PROGRAM = "program"                          # 2 - the programme, cycle unstated
+    PROGRAM_INTAKE = "program_intake"  # 1 - the exact programme, this cycle
+    PROGRAM = "program"  # 2 - the programme, cycle unstated
     UNIVERSITY_ADMISSIONS = "university_admissions"  # 3
-    APPLICATION_PORTAL = "application_portal"    # 4
+    APPLICATION_PORTAL = "application_portal"  # 4
     SCHOLARSHIP_ADMINISTRATOR = "scholarship_administrator"  # 5
-    GOVERNMENT = "government"                    # 6
-    ADMISSIONS_OFFICE_REPLY = "admissions_office_reply"      # 7 - written reply
-    AGGREGATOR = "aggregator"                    # 8 - discovery only, never proof
+    GOVERNMENT = "government"  # 6
+    ADMISSIONS_OFFICE_REPLY = "admissions_office_reply"  # 7 - written reply
+    AGGREGATOR = "aggregator"  # 8 - discovery only, never proof
     UNKNOWN = "unknown"
 
 
@@ -237,9 +237,9 @@ class ScholarshipType(StrEnum):
 
 
 class ApplicationMode(StrEnum):
-    AUTOMATIC = "automatic"        # considered on the admission application
-    SEPARATE = "separate"          # a distinct scholarship application
-    NOMINATION = "nomination"      # by invitation / departmental nomination
+    AUTOMATIC = "automatic"  # considered on the admission application
+    SEPARATE = "separate"  # a distinct scholarship application
+    NOMINATION = "nomination"  # by invitation / departmental nomination
     UNKNOWN = "unknown"
 
 
@@ -254,7 +254,7 @@ class DocumentOwner(StrEnum):
     APPLICANT = "applicant"
     SCHOOL = "school"
     RECOMMENDER = "recommender"
-    THIRD_PARTY = "third_party"   # e.g. WES, IELTS test centre
+    THIRD_PARTY = "third_party"  # e.g. WES, IELTS test centre
 
 
 class DocumentPurpose(StrEnum):
@@ -303,3 +303,7 @@ class FetchOutcome(StrEnum):
     TIMEOUT = "timeout"
     NETWORK_UNAVAILABLE = "network_unavailable"
     UNPARSEABLE = "unparseable"
+    #: Refused by the network policy before any connection was made.
+    BLOCKED = "blocked"
+    #: The body was larger than we will read.
+    TOO_LARGE = "too_large"

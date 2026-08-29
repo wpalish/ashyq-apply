@@ -183,7 +183,13 @@ export function SourcesScreen() {
         )}
 
         <Panel title={`Every source consulted (${allSources.length})`} sunken>
-          <div className="stack stack--tight" style={{ maxHeight: '22rem', overflowY: 'auto' }}>
+          <div
+            className="stack stack--tight"
+            style={{ maxHeight: '22rem', overflowY: 'auto' }}
+            tabIndex={0}
+            role="region"
+            aria-label="All consulted sources"
+          >
             {allSources.map(([url, count]) => (
               <div key={url} className="row row--tight">
                 <Chip mono>{count}×</Chip>

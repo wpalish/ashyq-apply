@@ -21,7 +21,7 @@ from app.adapters.fetching import Fetcher
 from app.adapters.page_classifier import PageType, classify_page
 from app.adapters.requirements.web_requirements import WebRequirementsAdapter
 from app.adapters.scholarship.web_scholarships import WebScholarshipAdapter
-from app.domain.enums import ClaimType
+from app.domain.enums import ClaimType, DegreeLevel
 
 SHAPES = Path(__file__).parent / "fixtures" / "live_shapes"
 
@@ -393,13 +393,13 @@ async def _verify_against(
         candidate = Candidate(name="Test University", country="Netherlands", city="Delft",
                               domain="uni.edu")
         program = CandidateProgram(name=program_name, field="computer science",
-                                   degree="bachelor", url=url)
+                                   degree=DegreeLevel.BACHELOR, url=url)
         return await WebRequirementsAdapter(fetcher, "2026/27").verify(candidate, program, intake)
 
 
 async def _find_awards(
     monkeypatch, settings, tmp_path, *, pages: dict[str, str], index_html: str,
-    degree: str = "bachelor",
+    degree: DegreeLevel = DegreeLevel.BACHELOR,
 ):
     index_url = "https://uni.edu/scholarships"
     async with Fetcher(tmp_path / "cache", offline=True) as fetcher:
@@ -572,13 +572,32 @@ class _StubClient:
     def __init__(self, pages: dict[str, str]) -> None:
         self.pages = pages
 
-    async def get(self, url: str, **_kwargs):
+    def build_request(self, method: str, url: str, **_kwargs):
         from types import SimpleNamespace
 
+        return SimpleNamespace(method=method, url=url)
+
+    async def send(self, request, *, stream: bool = False):
+        from types import SimpleNamespace
+
+        url = request.url
         html = self.pages[url]
+        content = html.encode()
+
+        async def aiter_bytes():
+            yield content
+
+        async def aclose() -> None:
+            return None
+
         return SimpleNamespace(
-            status_code=200, content=html.encode(), text=html, encoding="utf-8",
-            headers={"content-type": "text/html; charset=utf-8"}, url=url,
+            status_code=200,
+            encoding="utf-8",
+            headers={"content-type": "text/html; charset=utf-8"},
+            url=url,
+            is_redirect=False,
+            aiter_bytes=aiter_bytes,
+            aclose=aclose,
         )
 
     async def aclose(self) -> None:

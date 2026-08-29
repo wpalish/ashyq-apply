@@ -8,10 +8,12 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Response
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
+from app.api.tenancy import owned_run
 from app.db import get_session
 from app.export import tabular
-from app.models import AuditEvent, ClaimRow, ConflictRow, ProgramResultRow, ResearchRun
+from app.models import AuditEvent, ClaimRow, ConflictRow, ProgramResultRow
 from app.schemas.result import DecisionIn, ProgramResult
+from app.security import Principal, get_principal
 
 router = APIRouter(prefix="/api/runs/{run_id}", tags=["results"])
 
@@ -46,15 +48,28 @@ def list_results(
     eligibility: str | None = None,
     funding: str | None = None,
     country: str | None = None,
+    principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
 ) -> list[ProgramResult]:
-    rows = _results(session, run_id, decision=decision, eligibility=eligibility,
-                    funding=funding, country=country)
+    owned_run(session, run_id, principal)
+    rows = _results(
+        session,
+        run_id,
+        decision=decision,
+        eligibility=eligibility,
+        funding=funding,
+        country=country,
+    )
     return [ProgramResult.model_validate(r.payload) for r in rows]
 
 
 @router.get("/summary", response_model=ShortlistSummary)
-def summary(run_id: str, session: Session = Depends(get_session)) -> ShortlistSummary:
+def summary(
+    run_id: str,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> ShortlistSummary:
+    owned_run(session, run_id, principal)
     rows = _results(session, run_id)
     results = [ProgramResult.model_validate(r.payload) for r in rows]
 
@@ -71,14 +86,19 @@ def summary(run_id: str, session: Session = Depends(get_session)) -> ShortlistSu
         by_decision=tally("user_decision"),
         with_conflicts=sum(1 for r in results if r.conflicts),
         with_open_questions=sum(1 for r in results if r.unresolved),
-        demo_data=any(
-            u.startswith("fixture://") for r in results for u in r.source_urls
-        ),
+        demo_data=any(u.startswith("fixture://") for r in results for u in r.source_urls),
     )
 
 
 @router.get("/results/{result_id}", response_model=ProgramResult)
-def get_result(run_id: str, result_id: str, session: Session = Depends(get_session)) -> ProgramResult:
+def get_result(
+    run_id: str,
+    result_id: str,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> ProgramResult:
+    owned_run(session, run_id, principal)
+    owned_run(session, run_id, principal)
     row = session.get(ProgramResultRow, result_id)
     if row is None or row.run_id != run_id:
         raise HTTPException(404, "Result not found")
@@ -87,7 +107,11 @@ def get_result(run_id: str, result_id: str, session: Session = Depends(get_sessi
 
 @router.post("/results/{result_id}/decision", response_model=ProgramResult)
 def set_decision(
-    run_id: str, result_id: str, decision: DecisionIn, session: Session = Depends(get_session)
+    run_id: str,
+    result_id: str,
+    decision: DecisionIn,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
 ) -> ProgramResult:
     """Record Approve / Reject / Maybe.
 
@@ -111,8 +135,14 @@ def set_decision(
     row.payload = result.model_dump(mode="json")
 
     session.add(
-        AuditEvent(actor="user", action="decision_recorded", entity_type="result",
-                   entity_id=result_id, detail={"decision": decision.decision.value})
+        AuditEvent(
+            organization_id=principal.organization_id,
+            actor=f"user:{principal.user_id[:8]}",
+            action="decision_recorded",
+            entity_type="result",
+            entity_id=result_id,
+            detail={"decision": decision.decision.value},
+        )
     )
     session.commit()
     return result
@@ -123,8 +153,10 @@ def list_claims(
     run_id: str,
     result_id: str | None = None,
     status: str | None = None,
+    principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
 ) -> list[dict]:
+    owned_run(session, run_id, principal)
     q = session.query(ClaimRow).filter(ClaimRow.run_id == run_id)
     if result_id:
         q = q.filter(ClaimRow.result_id == result_id)
@@ -137,27 +169,49 @@ def list_claims(
 
 
 @router.get("/conflicts")
-def list_conflicts(run_id: str, session: Session = Depends(get_session)) -> list[dict]:
+def list_conflicts(
+    run_id: str,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> list[dict]:
+    owned_run(session, run_id, principal)
     rows = session.query(ConflictRow).filter(ConflictRow.run_id == run_id).all()
     return [{"id": c.id, "result_id": c.result_id, **c.payload} for c in rows]
 
 
 @router.get("/questions")
-def open_questions(run_id: str, session: Session = Depends(get_session)) -> list[dict]:
+def open_questions(
+    run_id: str,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> list[dict]:
     """Everything the pipeline could not settle from official sources."""
+    owned_run(session, run_id, principal)
     out: list[dict] = []
     for row in _results(session, run_id):
         result = ProgramResult.model_validate(row.payload)
         for q in result.unresolved:
-            out.append({"result_id": row.id, "university": result.university,
-                        "program": result.program, **q.model_dump(mode="json")})
+            out.append(
+                {
+                    "result_id": row.id,
+                    "university": result.university,
+                    "program": result.program,
+                    **q.model_dump(mode="json"),
+                }
+            )
         for c in result.conflicts:
-            out.append({
-                "result_id": row.id, "university": result.university, "program": result.program,
-                "topic": "source conflict", "question": c.question_for_admissions,
-                "why_it_matters": f"Official sources disagree on {c.subject}: {c.values}",
-                "blocking": True, "conflict": c.model_dump(mode="json"),
-            })
+            out.append(
+                {
+                    "result_id": row.id,
+                    "university": result.university,
+                    "program": result.program,
+                    "topic": "source conflict",
+                    "question": c.question_for_admissions,
+                    "why_it_matters": f"Official sources disagree on {c.subject}: {c.values}",
+                    "blocking": True,
+                    "conflict": c.model_dump(mode="json"),
+                }
+            )
     return out
 
 
@@ -166,25 +220,30 @@ def export(
     run_id: str,
     fmt: str,
     decision: str | None = Query(default=None, description="Filter, e.g. 'approved'"),
+    principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
 ) -> Response:
-    run = session.get(ResearchRun, run_id)
-    if run is None:
-        raise HTTPException(404, "Run not found")
+    run = owned_run(session, run_id, principal)
     rows = _results(session, run_id, decision=decision)
     results = [ProgramResult.model_validate(r.payload) for r in rows]
-    meta = {"run_id": run_id, "demo_mode": run.demo_mode, "stage": run.stage,
-            "filter": {"decision": decision}}
+    meta = {
+        "run_id": run_id,
+        "demo_mode": run.demo_mode,
+        "stage": run.stage,
+        "filter": {"decision": decision},
+    }
     stem = f"unimatch-{run_id[:8]}{'-' + decision if decision else ''}"
 
     if fmt == "csv":
         return Response(
-            tabular.to_csv(results), media_type="text/csv; charset=utf-8",
+            tabular.to_csv(results),
+            media_type="text/csv; charset=utf-8",
             headers={"Content-Disposition": f'attachment; filename="{stem}.csv"'},
         )
     if fmt == "json":
         return Response(
-            tabular.to_json(results, meta), media_type="application/json",
+            tabular.to_json(results, meta),
+            media_type="application/json",
             headers={"Content-Disposition": f'attachment; filename="{stem}.json"'},
         )
     if fmt == "xlsx":

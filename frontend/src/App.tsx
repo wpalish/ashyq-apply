@@ -18,6 +18,7 @@ import { DocumentsScreen } from '@/screens/DocumentsScreen';
 import { SourcesScreen } from '@/screens/SourcesScreen';
 import { ExportScreen } from '@/screens/ExportScreen';
 import { Chip } from '@/components/primitives';
+import { api } from '@/api/client';
 
 export type ScreenId =
   | 'profile' | 'preferences' | 'progress' | 'shortlist' | 'funding'
@@ -44,7 +45,10 @@ const THEME_KEY = 'unimatch.theme';
 type Theme = 'system' | 'light' | 'dark';
 
 export default function App() {
-  const { run, results, summary, error, clearError, capabilities } = useStore();
+  const {
+    run, results, summary, error, clearError, capabilities,
+    cases, savedProfile, switchCase, newCase,
+  } = useStore();
   const [screen, setScreen] = useState<ScreenId>('profile');
   const [theme, setTheme] = useState<Theme>(() => {
     try {
@@ -166,12 +170,36 @@ export default function App() {
             </>
           )}
           <div className="topbar__spacer" />
+          <label className="row row--tight xs muted" htmlFor="case-switcher">
+            Applicant
+            <select
+              id="case-switcher"
+              value={savedProfile?.id ?? ''}
+              onChange={(event) => {
+                if (event.target.value) void switchCase(event.target.value);
+                else newCase();
+              }}
+            >
+              <option value="">New applicant</option>
+              {cases.map((item) => (
+                <option key={item.id} value={item.profile_id}>
+                  {item.display_name} · {item.run_count} run{item.run_count === 1 ? '' : 's'}
+                </option>
+              ))}
+            </select>
+          </label>
+          <button className="btn btn--sm" type="button" onClick={() => {
+            newCase(); setScreen('profile');
+          }}>New case</button>
           {summary && (
             <span className="xs muted">
               {plural(summary.total, 'programme')} · {plural(summary.with_conflicts, 'conflict')} ·{' '}
               {plural(summary.with_open_questions, 'open question')}
             </span>
           )}
+          <button className="btn btn--sm btn--ghost" type="button" onClick={async () => {
+            await api.logout(); window.location.reload();
+          }}>Sign out</button>
         </header>
 
         {error && (

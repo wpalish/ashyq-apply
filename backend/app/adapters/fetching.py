@@ -27,6 +27,12 @@ from urllib.parse import urlparse
 
 import httpx
 
+from app.adapters.network_policy import (
+    MAX_REDIRECTS,
+    BlockedRequest,
+    ResolvedTarget,
+    check_url,
+)
 from app.domain.enums import FetchOutcome
 
 log = logging.getLogger("unimatch.fetch")
@@ -40,6 +46,39 @@ DEFAULT_DELAY_SECONDS = 1.5
 MAX_PER_HOST_CONCURRENCY = 2
 MAX_ATTEMPTS = 3
 MAX_BYTES = 5_000_000
+MAX_ROBOTS_BYTES = 512_000
+#: Content types worth parsing. Anything else is refused before it is read, so
+#: a link to a large binary cannot be pulled through the size limit byte by byte.
+ALLOWED_CONTENT_TYPES = (
+    "text/html",
+    "application/xhtml+xml",
+    "text/plain",
+    "application/pdf",
+    "text/xml",
+    "application/xml",
+    "application/json",
+)
+
+
+def _pinned_request(
+    client: httpx.AsyncClient,
+    target: ResolvedTarget,
+    *,
+    timeout: float | None = None,
+) -> httpx.Request:
+    """Connect to the validated IP while preserving virtual-host TLS and HTTP."""
+    pinned_url = httpx.URL(target.url).copy_with(host=target.pinned_address)
+    host = f"[{target.host}]" if ":" in target.host else target.host
+    default_port = 443 if target.scheme == "https" else 80
+    if target.port != default_port:
+        host = f"{host}:{target.port}"
+    return client.build_request(
+        "GET",
+        pinned_url,
+        headers={"Host": host},
+        timeout=timeout,
+        extensions={"sni_hostname": target.host},
+    )
 
 
 class PIILeakError(RuntimeError):
@@ -169,16 +208,42 @@ class RobotsPolicy:
         except (AttributeError, TypeError, ValueError):
             return None
 
-    async def _load(self, host: str, client: httpx.AsyncClient) -> urllib.robotparser.RobotFileParser | None:
+    async def _load(
+        self, host: str, client: httpx.AsyncClient
+    ) -> urllib.robotparser.RobotFileParser | None:
+        robots_url = f"{host}/robots.txt"
         try:
-            resp = await client.get(f"{host}/robots.txt", timeout=10.0)
+            # robots.txt is fetched from a host the crawler was pointed at, so
+            # it is exactly as attacker-influenced as any other URL.
+            target = check_url(robots_url)
+        except BlockedRequest as exc:
+            log.warning("refusing robots.txt for %s: %s", host, exc)
+            return None
+        try:
+            request = _pinned_request(client, target, timeout=10.0)
+            resp = await client.send(request, stream=True)
         except (httpx.HTTPError, OSError) as exc:
             log.info("robots.txt unavailable for %s (%s)", host, exc.__class__.__name__)
             return None
-        if resp.status_code >= 400:
-            return None
+        try:
+            if resp.status_code < 200 or resp.status_code >= 300:
+                return None
+            declared = resp.headers.get("content-length")
+            if declared and declared.isdigit() and int(declared) > MAX_ROBOTS_BYTES:
+                log.info("robots.txt for %s exceeds the size limit", host)
+                return None
+            chunks: list[bytes] = []
+            total = 0
+            async for chunk in resp.aiter_bytes():
+                total += len(chunk)
+                if total > MAX_ROBOTS_BYTES:
+                    log.info("robots.txt for %s exceeded the streaming size limit", host)
+                    return None
+                chunks.append(chunk)
+        finally:
+            await resp.aclose()
         parser = urllib.robotparser.RobotFileParser()
-        parser.parse(resp.text.splitlines())
+        parser.parse(b"".join(chunks).decode("utf-8", errors="replace").splitlines())
         return parser
 
 
@@ -186,7 +251,10 @@ class RobotsPolicy:
 
 _PII_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
     ("email address", re.compile(r"[\w.+-]+@[\w-]+\.[\w.]+")),
-    ("credential-like parameter", re.compile(r"(?i)\b(password|passwd|otp|token|secret|api[_-]?key)=")),
+    (
+        "credential-like parameter",
+        re.compile(r"(?i)\b(password|passwd|otp|token|secret|api[_-]?key)="),
+    ),
 )
 
 #: A long digit run is only suspicious in a query string. Content management
@@ -246,7 +314,9 @@ class Fetcher:
         self.delay = delay_seconds
         self.offline = offline
         self.timeout = timeout
-        self.user_agent = USER_AGENT.replace("set FETCH_CONTACT", contact) if contact else USER_AGENT
+        self.user_agent = (
+            USER_AGENT.replace("set FETCH_CONTACT", contact) if contact else USER_AGENT
+        )
         self._host_locks: dict[str, asyncio.Semaphore] = {}
         self._last_request: dict[str, float] = {}
         self._client: httpx.AsyncClient | None = None
@@ -265,6 +335,116 @@ class Fetcher:
         browser tier was constructed on every run and never invoked once.
         """
         self._renderer = renderer
+
+    async def _request_with_redirects(self, url: str) -> FetchResult:
+        """Follow redirects by hand, re-validating every hop.
+
+        Each Location is put through the same policy as the original URL, so a
+        public page cannot bounce the crawler onto a private address.
+        """
+        if self._client is None:
+            raise RuntimeError("Fetcher must be used as an async context manager")
+        current = url
+        for _hop in range(MAX_REDIRECTS + 1):
+            target = check_url(current)
+            # ``get()`` buffers the entire body before returning, which would
+            # make the byte cap below cosmetic (and lets an endless response
+            # exhaust memory). Keep the response streaming from the socket.
+            request = (
+                _pinned_request(self._client, target)
+                if isinstance(self._client, httpx.AsyncClient)
+                else self._client.build_request("GET", current)
+            )
+            response = await self._client.send(request, stream=True)
+
+            if response.is_redirect:
+                location = response.headers.get("location")
+                if not location:
+                    return FetchResult(
+                        url=url,
+                        outcome=FetchOutcome.HTTP_ERROR,
+                        status_code=response.status_code,
+                        error="redirect without a Location header",
+                        final_url=current,
+                    )
+                current = str(httpx.URL(current).join(location))
+                continue
+
+            return await self._read_response(url, current, response)
+
+        return FetchResult(
+            url=url,
+            outcome=FetchOutcome.HTTP_ERROR,
+            final_url=current,
+            error=f"more than {MAX_REDIRECTS} redirects",
+        )
+
+    async def _read_response(self, url: str, final_url: str, response) -> FetchResult:
+        """Read a response, refusing what is too large or not worth parsing."""
+        if response.status_code >= 400:
+            await response.aclose()
+            return FetchResult(
+                url=url,
+                outcome=FetchOutcome.HTTP_ERROR,
+                status_code=response.status_code,
+                error=f"HTTP {response.status_code}",
+                final_url=final_url,
+            )
+
+        content_type = response.headers.get("content-type", "")
+        base_type = content_type.split(";")[0].strip().lower()
+        if base_type and not any(base_type == allowed for allowed in ALLOWED_CONTENT_TYPES):
+            await response.aclose()
+            return FetchResult(
+                url=url,
+                outcome=FetchOutcome.UNPARSEABLE,
+                status_code=response.status_code,
+                content_type=content_type,
+                final_url=final_url,
+                error=f"content type {base_type!r} is not something we parse",
+            )
+
+        # A declared length over the cap is refused without reading anything.
+        declared = response.headers.get("content-length")
+        if declared and declared.isdigit() and int(declared) > MAX_BYTES:
+            await response.aclose()
+            return FetchResult(
+                url=url,
+                outcome=FetchOutcome.TOO_LARGE,
+                status_code=response.status_code,
+                content_type=content_type,
+                final_url=final_url,
+                error=f"declared {int(declared):,} bytes, over the {MAX_BYTES:,} limit",
+            )
+
+        # And an undeclared one is cut off as it arrives, not after.
+        chunks: list[bytes] = []
+        total = 0
+        async for chunk in response.aiter_bytes():
+            total += len(chunk)
+            if total > MAX_BYTES:
+                await response.aclose()
+                return FetchResult(
+                    url=url,
+                    outcome=FetchOutcome.TOO_LARGE,
+                    status_code=response.status_code,
+                    content_type=content_type,
+                    final_url=final_url,
+                    error=f"body exceeded the {MAX_BYTES:,} byte limit while streaming",
+                )
+            chunks.append(chunk)
+        await response.aclose()
+
+        content = b"".join(chunks)
+        return FetchResult(
+            url=url,
+            outcome=FetchOutcome.OK,
+            status_code=response.status_code,
+            content=content,
+            text=content.decode(response.encoding or "utf-8", errors="replace"),
+            content_type=content_type,
+            final_url=final_url,
+        )
 
     async def _maybe_render(self, result: FetchResult) -> FetchResult:
         """Escalate to the browser when a 200 came back with no usable text."""
@@ -287,8 +467,15 @@ class Fetcher:
     async def __aenter__(self) -> Fetcher:
         self._client = httpx.AsyncClient(
             headers={"User-Agent": self.user_agent, "Accept-Language": "en"},
-            follow_redirects=True,
+            # Redirects are followed by hand so every hop is re-validated. With
+            # httpx following them, a public URL could redirect straight to a
+            # private address and the policy would never see it.
+            follow_redirects=False,
             timeout=self.timeout,
+            max_redirects=0,
+            # Requests are keyed by pinned IP. Avoid reusing one TLS
+            # connection for two virtual hosts that share that address.
+            limits=httpx.Limits(max_keepalive_connections=0),
         )
         return self
 
@@ -321,14 +508,18 @@ class Fetcher:
         if self.corpus_dir is None:
             return FetchResult(
                 url=url,
-                outcome=FetchOutcome.NOT_FOUND if hasattr(FetchOutcome, "NOT_FOUND") else FetchOutcome.HTTP_ERROR,
+                outcome=FetchOutcome.NOT_FOUND
+                if hasattr(FetchOutcome, "NOT_FOUND")
+                else FetchOutcome.HTTP_ERROR,
                 error="No corpus directory is configured for fixture:// URLs.",
             )
         rel = url[len("fixture://") :].lstrip("/")
         path = (self.corpus_dir / rel).resolve()
         # Refuse to escape the corpus directory.
         if not str(path).startswith(str(self.corpus_dir.resolve())):
-            return FetchResult(url=url, outcome=FetchOutcome.HTTP_ERROR, error="path traversal refused")
+            return FetchResult(
+                url=url, outcome=FetchOutcome.HTTP_ERROR, error="path traversal refused"
+            )
         if not path.is_file():
             self.stats[FetchOutcome.HTTP_ERROR.value] += 1
             return FetchResult(
@@ -361,10 +552,7 @@ class Fetcher:
             return FetchResult(
                 url=url,
                 outcome=FetchOutcome.REFUSED_PRIVACY,
-                error=(
-                    f"Refused: the URL contains what looks like a {leak}. "
-                    "It was not fetched."
-                ),
+                error=(f"Refused: the URL contains what looks like a {leak}. It was not fetched."),
             )
 
         if url.startswith("fixture://"):
@@ -376,9 +564,7 @@ class Fetcher:
             cached = self.cache.get(url)
             if cached is not None:
                 self.stats[FetchOutcome.CACHED.value] += 1
-                self.tier_counts[cached.fetch_tier] = (
-                    self.tier_counts.get(cached.fetch_tier, 0) + 1
-                )
+                self.tier_counts[cached.fetch_tier] = self.tier_counts.get(cached.fetch_tier, 0) + 1
                 return cached
 
         if self.offline:
@@ -392,7 +578,14 @@ class Fetcher:
         if self._client is None:
             raise RuntimeError("Fetcher must be used as an async context manager")
 
-        host = urlparse(url).netloc
+        try:
+            target = check_url(url)
+        except BlockedRequest as exc:
+            log.warning("blocked by network policy: %s", exc)
+            self.stats[FetchOutcome.BLOCKED.value] += 1
+            return FetchResult(url=url, outcome=FetchOutcome.BLOCKED, error=str(exc))
+
+        host = target.host
         async with self._semaphore(host):
             allowed, reason = await self.robots.allowed(url, self._client)
             if not allowed:
@@ -403,7 +596,11 @@ class Fetcher:
             for attempt in range(1, MAX_ATTEMPTS + 1):
                 await self._space_requests(host, url)
                 try:
-                    resp = await self._client.get(url)
+                    result = await self._request_with_redirects(url)
+                except BlockedRequest as exc:
+                    log.warning("blocked mid-redirect: %s", exc)
+                    self.stats[FetchOutcome.BLOCKED.value] += 1
+                    return FetchResult(url=url, outcome=FetchOutcome.BLOCKED, error=str(exc))
                 except httpx.TimeoutException as exc:
                     if attempt == MAX_ATTEMPTS:
                         self.stats[FetchOutcome.TIMEOUT.value] += 1
@@ -415,40 +612,20 @@ class Fetcher:
                             url=url, outcome=FetchOutcome.NETWORK_UNAVAILABLE, error=str(exc)
                         )
                 else:
-                    if resp.status_code == 429 or 500 <= resp.status_code < 600:
-                        if attempt == MAX_ATTEMPTS:
-                            self.stats[FetchOutcome.HTTP_ERROR.value] += 1
-                            return FetchResult(
-                                url=url,
-                                outcome=FetchOutcome.HTTP_ERROR,
-                                status_code=resp.status_code,
-                                error=f"HTTP {resp.status_code} after {MAX_ATTEMPTS} attempts",
-                            )
-                    elif resp.status_code >= 400:
-                        self.stats[FetchOutcome.HTTP_ERROR.value] += 1
-                        return FetchResult(
-                            url=url,
-                            outcome=FetchOutcome.HTTP_ERROR,
-                            status_code=resp.status_code,
-                            error=f"HTTP {resp.status_code}",
-                        )
-                    else:
-                        content = resp.content[:MAX_BYTES]
-                        result = FetchResult(
-                            url=url,
-                            outcome=FetchOutcome.OK,
-                            status_code=resp.status_code,
-                            content=content,
-                            text=content.decode(resp.encoding or "utf-8", errors="replace"),
-                            content_type=resp.headers.get("content-type", ""),
-                            final_url=str(resp.url),
-                        )
+                    if result.outcome is FetchOutcome.OK:
                         self.cache.put(result)
                         self.stats[FetchOutcome.OK.value] += 1
                         self.tier_counts["pdf" if result.is_pdf else "http"] += 1
                         return await self._maybe_render(result)
+                    # Retry only what is worth retrying.
+                    retryable = result.status_code == 429 or (
+                        result.status_code is not None and 500 <= result.status_code < 600
+                    )
+                    if not retryable or attempt == MAX_ATTEMPTS:
+                        self.stats[result.outcome.value] += 1
+                        return result
                 # Exponential backoff: 2s, 4s.
-                await asyncio.sleep(2 ** attempt)
+                await asyncio.sleep(2**attempt)
 
         self.stats[FetchOutcome.HTTP_ERROR.value] += 1
         return FetchResult(url=url, outcome=FetchOutcome.HTTP_ERROR, error="exhausted attempts")

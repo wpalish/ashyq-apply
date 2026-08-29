@@ -23,6 +23,7 @@ FROM python:3.12-slim-bookworm AS runtime
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PATH="/opt/venv/bin:$PATH" \
+    PLAYWRIGHT_BROWSERS_PATH="/ms-playwright" \
     UNIMATCH_ENVIRONMENT=production \
     UNIMATCH_AUTO_MIGRATE=false
 
@@ -34,6 +35,10 @@ RUN apt-get update \
  && useradd --system --uid 10001 --gid ashyq --home /app --shell /usr/sbin/nologin ashyq
 
 COPY --from=builder /opt/venv /opt/venv
+# Live research escalates JavaScript-only pages to Chromium. Installing it in
+# the image makes that tier real in containers instead of silently unavailable.
+RUN playwright install --with-deps chromium \
+ && chmod -R a+rX /ms-playwright
 WORKDIR /app
 COPY --chown=ashyq:ashyq . .
 

@@ -5,6 +5,7 @@ from __future__ import annotations
 from fastapi import APIRouter, Depends, HTTPException, Response
 from sqlalchemy.orm import Session
 
+from app.api.tenancy import owned_profile
 from app.db import get_session
 from app.domain.grades import METHODS, available_methods, propose_conversion
 from app.domain.validation import validate_profile
@@ -15,6 +16,7 @@ from app.schemas.profile import (
     GradeValue,
     ProfileValidationReport,
 )
+from app.security import Principal, get_principal
 
 router = APIRouter(prefix="/api/profiles", tags=["profile"])
 
@@ -29,59 +31,97 @@ def _to_out(row: ApplicantProfileRow) -> ApplicantProfile:
 
 
 @router.post("", response_model=ApplicantProfile, status_code=201)
-def create_profile(profile: ApplicantProfileIn, session: Session = Depends(get_session)) -> ApplicantProfile:
+def create_profile(
+    profile: ApplicantProfileIn,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> ApplicantProfile:
     row = ApplicantProfileRow(
-        display_name=profile.display_name, payload=profile.model_dump(mode="json")
+        organization_id=principal.organization_id,
+        display_name=profile.display_name,
+        payload=profile.model_dump(mode="json"),
     )
     session.add(row)
     session.flush()
-    session.add(AuditEvent(actor="user", action="profile_created", entity_type="profile",
-                           entity_id=row.id, detail={}))
+    session.add(
+        AuditEvent(
+            organization_id=principal.organization_id,
+            actor=f"user:{principal.user_id[:8]}",
+            action="profile_created",
+            entity_type="profile",
+            entity_id=row.id,
+            detail={},
+        )
+    )
     session.commit()
     return _to_out(row)
 
 
 @router.get("", response_model=list[ApplicantProfile])
-def list_profiles(session: Session = Depends(get_session)) -> list[ApplicantProfile]:
-    rows = session.query(ApplicantProfileRow).order_by(ApplicantProfileRow.created_at.desc()).all()
+def list_profiles(
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> list[ApplicantProfile]:
+    rows = (
+        session.query(ApplicantProfileRow)
+        .filter(ApplicantProfileRow.organization_id == principal.organization_id)
+        .order_by(ApplicantProfileRow.created_at.desc())
+        .all()
+    )
     return [_to_out(r) for r in rows]
 
 
 @router.get("/{profile_id}", response_model=ApplicantProfile)
-def get_profile(profile_id: str, session: Session = Depends(get_session)) -> ApplicantProfile:
-    row = session.get(ApplicantProfileRow, profile_id)
-    if row is None:
-        raise HTTPException(404, "Profile not found")
+def get_profile(
+    profile_id: str,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> ApplicantProfile:
+    row = owned_profile(session, profile_id, principal)
     return _to_out(row)
 
 
 @router.put("/{profile_id}", response_model=ApplicantProfile)
 def update_profile(
-    profile_id: str, profile: ApplicantProfileIn, session: Session = Depends(get_session)
+    profile_id: str,
+    profile: ApplicantProfileIn,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
 ) -> ApplicantProfile:
-    row = session.get(ApplicantProfileRow, profile_id)
-    if row is None:
-        raise HTTPException(404, "Profile not found")
+    row = owned_profile(session, profile_id, principal)
     row.payload = profile.model_dump(mode="json")
     row.display_name = profile.display_name
-    session.add(AuditEvent(actor="user", action="profile_updated", entity_type="profile",
-                           entity_id=row.id, detail={}))
+    session.add(
+        AuditEvent(
+            organization_id=principal.organization_id,
+            actor=f"user:{principal.user_id[:8]}",
+            action="profile_updated",
+            entity_type="profile",
+            entity_id=row.id,
+            detail={},
+        )
+    )
     session.commit()
     session.refresh(row)
     return _to_out(row)
 
 
 @router.post("/validate", response_model=ProfileValidationReport)
-def validate(profile: ApplicantProfileIn) -> ProfileValidationReport:
+def validate(
+    profile: ApplicantProfileIn,
+    _principal: Principal = Depends(get_principal),
+) -> ProfileValidationReport:
     """Validate without saving, so the onboarding form can preview the impact."""
     return validate_profile(profile)
 
 
 @router.get("/{profile_id}/validation", response_model=ProfileValidationReport)
-def validation_report(profile_id: str, session: Session = Depends(get_session)) -> ProfileValidationReport:
-    row = session.get(ApplicantProfileRow, profile_id)
-    if row is None:
-        raise HTTPException(404, "Profile not found")
+def validation_report(
+    profile_id: str,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> ProfileValidationReport:
+    row = owned_profile(session, profile_id, principal)
     return validate_profile(ApplicantProfileIn.model_validate(row.payload))
 
 
@@ -91,8 +131,14 @@ def conversion_methods(scale_label: str = "") -> dict:
     methods = available_methods(scale_label) if scale_label else list(METHODS.values())
     return {
         "methods": [
-            {"key": m.key, "from_scale": m.from_scale, "to_scale": m.to_scale,
-             "description": m.description, "source": m.source, "caveat": m.caveat}
+            {
+                "key": m.key,
+                "from_scale": m.from_scale,
+                "to_scale": m.to_scale,
+                "description": m.description,
+                "source": m.source,
+                "caveat": m.caveat,
+            }
             for m in methods
         ],
         "note": (
@@ -111,18 +157,25 @@ def preview_conversion(grade: GradeValue, method_key: str) -> GradeValue:
 
 
 @router.get("/{profile_id}/export")
-def export_profile(profile_id: str, session: Session = Depends(get_session)) -> dict:
+def export_profile(
+    profile_id: str,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> dict:
     """Everything held about this applicant, in one document."""
-    row = session.get(ApplicantProfileRow, profile_id)
-    if row is None:
-        raise HTTPException(404, "Profile not found")
+    row = owned_profile(session, profile_id, principal)
     runs = session.query(ResearchRun).filter(ResearchRun.profile_id == profile_id).all()
     return {
         "profile": row.payload,
         "created_at": row.created_at.isoformat(),
         "runs": [
-            {"id": r.id, "stage": r.stage, "demo_mode": r.demo_mode,
-             "created_at": r.created_at.isoformat(), "results": len(r.results)}
+            {
+                "id": r.id,
+                "stage": r.stage,
+                "demo_mode": r.demo_mode,
+                "created_at": r.created_at.isoformat(),
+                "results": len(r.results),
+            }
             for r in runs
         ],
         "note": "This is the complete record held for this applicant.",
@@ -130,16 +183,26 @@ def export_profile(profile_id: str, session: Session = Depends(get_session)) -> 
 
 
 @router.delete("/{profile_id}", status_code=204)
-def delete_profile(profile_id: str, session: Session = Depends(get_session)) -> Response:
+def delete_profile(
+    profile_id: str,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> Response:
     """Erase the applicant and every run, result and claim belonging to them."""
-    row = session.get(ApplicantProfileRow, profile_id)
-    if row is None:
-        raise HTTPException(404, "Profile not found")
-    run_ids = [r.id for r in session.query(ResearchRun).filter(ResearchRun.profile_id == profile_id)]
+    row = owned_profile(session, profile_id, principal)
+    run_ids = [
+        r.id for r in session.query(ResearchRun).filter(ResearchRun.profile_id == profile_id)
+    ]
     session.delete(row)
     session.add(
-        AuditEvent(actor="user", action="profile_deleted", entity_type="profile",
-                   entity_id=profile_id, detail={"runs_removed": len(run_ids)})
+        AuditEvent(
+            organization_id=principal.organization_id,
+            actor=f"user:{principal.user_id[:8]}",
+            action="profile_deleted",
+            entity_type="profile",
+            entity_id=profile_id,
+            detail={"runs_removed": len(run_ids)},
+        )
     )
     session.commit()
     return Response(status_code=204)

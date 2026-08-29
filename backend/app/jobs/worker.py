@@ -47,7 +47,9 @@ class Worker:
             self.stopping.set()
 
     async def run_forever(self) -> None:
-        log.info("worker %s starting (concurrency %d)", self.worker_id, self.settings.worker_concurrency)
+        log.info(
+            "worker %s starting (concurrency %d)", self.worker_id, self.settings.worker_concurrency
+        )
         self.reap()
         semaphore = asyncio.Semaphore(self.settings.worker_concurrency)
         running: set[asyncio.Task] = set()
@@ -72,7 +74,12 @@ class Worker:
         if running:
             log.info("waiting for %d job(s) to finish", len(running))
             await asyncio.gather(*running, return_exceptions=True)
-        log.info("worker %s stopped (%d done, %d failed)", self.worker_id, self.jobs_done, self.jobs_failed)
+        log.info(
+            "worker %s stopped (%d done, %d failed)",
+            self.worker_id,
+            self.jobs_done,
+            self.jobs_failed,
+        )
 
     async def _run_and_release(self, job_id: str, semaphore: asyncio.Semaphore) -> None:
         try:
@@ -158,10 +165,16 @@ class Worker:
         # The job's completion and the work it produced commit together, so a
         # crash can never mark a job done with its results missing.
         store.complete(job.id)
-        session.add(AuditEvent(
-            actor="worker", action="job_completed", entity_type="job", entity_id=job.id,
-            detail={"kind": job.kind, "stage": run.stage},
-        ))
+        session.add(
+            AuditEvent(
+                organization_id=profile_row.organization_id,
+                actor="worker",
+                action="job_completed",
+                entity_type="job",
+                entity_id=job.id,
+                detail={"kind": job.kind, "stage": run.stage},
+            )
+        )
 
 
 #: A worker that starts before migrations finish should wait, not die: in a
@@ -206,20 +219,28 @@ def reconcile_startup() -> dict[str, int]:
 
         stranded = 0
         live_run_ids = {
-            job.run_id for job in session.query(Job).filter(
+            job.run_id
+            for job in session.query(Job).filter(
                 Job.status.in_([JobStatus.QUEUED.value, JobStatus.RUNNING.value])
-            ) if job.run_id
+            )
+            if job.run_id
         }
-        in_progress = session.query(ResearchRun).filter(
-            ResearchRun.finished_at.is_(None),
-            ResearchRun.stage.notin_([
-                PipelineStage.AWAITING_USER_DECISION.value,
-                PipelineStage.COMPLETED.value,
-                PipelineStage.CANCELLED.value,
-                PipelineStage.RETRYABLE_FAILED.value,
-                PipelineStage.FAILED.value,
-            ]),
-        ).all()
+        in_progress = (
+            session.query(ResearchRun)
+            .filter(
+                ResearchRun.finished_at.is_(None),
+                ResearchRun.stage.notin_(
+                    [
+                        PipelineStage.AWAITING_USER_DECISION.value,
+                        PipelineStage.COMPLETED.value,
+                        PipelineStage.CANCELLED.value,
+                        PipelineStage.RETRYABLE_FAILED.value,
+                        PipelineStage.FAILED.value,
+                    ]
+                ),
+            )
+            .all()
+        )
         for run in in_progress:
             if run.id in live_run_ids:
                 continue
@@ -232,10 +253,16 @@ def reconcile_startup() -> dict[str, int]:
                 "can be retried from the last completed stage.",
             ]
             session.add(run)
-            session.add(AuditEvent(
-                actor="system", action="run_recovered", entity_type="run", entity_id=run.id,
-                detail={"recovery_count": run.recovery_count},
-            ))
+            session.add(
+                AuditEvent(
+                    organization_id=run.profile.organization_id,
+                    actor="system",
+                    action="run_recovered",
+                    entity_type="run",
+                    entity_id=run.id,
+                    detail={"recovery_count": run.recovery_count},
+                )
+            )
             stranded += 1
 
         return {"jobs_reaped": len(reaped), "runs_recovered": stranded}

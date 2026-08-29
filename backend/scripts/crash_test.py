@@ -127,13 +127,13 @@ def main() -> int:
     print(f"worker B pid {recovery.pid} started after the lease expired")
 
     deadline = time.monotonic() + 120
-    final_job = final_run = None
+    final_job = None
     while time.monotonic() < deadline:
         with session_scope() as session:
             job = session.get(Job, job_id)
             run = session.get(ResearchRun, run_id)
             if job.status in ("succeeded", "dead", "cancelled"):
-                final_job, final_run = job.status, run.stage
+                final_job = job.status
                 break
         time.sleep(0.3)
 

@@ -1,11 +1,11 @@
 /**
  * Accessibility and responsive behaviour.
  *
- * No axe dependency: these assert the specific properties this UI must hold -
- * keyboard reachability, a labelled table, live progress, and no horizontal
- * page scroll at any breakpoint (wide content scrolls inside its own box).
+ * Axe catches broad WCAG regressions while the focused assertions below cover
+ * workflow-specific semantics and responsive behaviour.
  */
 
+import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 import { newSession, openShortlist, runDemoResearch, shot } from './helpers';
 
@@ -50,14 +50,18 @@ test('the page never scrolls horizontally at any breakpoint', async () => {
   }
 });
 
-test('the shortlist table itself scrolls inside its container', async () => {
+test('the mobile shortlist becomes cards without an inner horizontal scroller', async () => {
   await openShortlist(page);
   await page.setViewportSize({ width: 375, height: 800 });
 
-  const scrollable = await page.locator('.table-wrap').evaluate(
-    (el) => getComputedStyle(el).overflowX,
+  const layout = await page.locator('.table-wrap').evaluate(
+    (el) => ({
+      overflow: getComputedStyle(el).overflowX,
+      overflowPixels: el.scrollWidth - el.clientWidth,
+    }),
   );
-  expect(scrollable).toBe('auto');
+  expect(layout.overflow).toBe('visible');
+  expect(layout.overflowPixels).toBeLessThanOrEqual(1);
 });
 
 test('the whole workflow is reachable by keyboard', async () => {
@@ -92,6 +96,21 @@ test('the results table is labelled and its controls are named', async () => {
   await expect(expandable).toHaveAttribute('aria-expanded', 'false');
   await expandable.click();
   await expect(expandable).toHaveAttribute('aria-expanded', 'true');
+});
+
+test('every reachable workflow screen has no serious axe violations', async () => {
+  const screens = ['profile', 'preferences', 'progress', 'shortlist', 'funding', 'sources', 'approved', 'export'];
+
+  for (const screen of screens) {
+    await page.getByTestId(`nav-${screen}`).click();
+    const report = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+      .analyze();
+    const serious = report.violations.filter(
+      (violation) => violation.impact === 'serious' || violation.impact === 'critical',
+    );
+    expect(serious, `${screen}: ${serious.map((v) => `${v.id} (${v.nodes.length})`).join(', ')}`).toEqual([]);
+  }
 });
 
 test('both themes render with a painted background and readable text', async () => {

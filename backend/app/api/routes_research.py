@@ -9,6 +9,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
+from app.api.tenancy import owned_profile, owned_run
 from app.config import get_settings
 from app.db import get_session
 from app.domain.enums import PipelineStage, UserDecision
@@ -23,6 +24,7 @@ from app.models import (
 )
 from app.models.base import ensure_utc
 from app.pipeline.state import RunState, is_lease_expired
+from app.security import Principal, get_principal
 
 router = APIRouter(prefix="/api/runs", tags=["research"])
 
@@ -33,11 +35,15 @@ class StartRunIn(BaseModel):
         default=None, description="Defaults to the server setting; live mode fetches real sites."
     )
     candidate_limit: int | None = Field(
-        default=None, ge=1, le=200,
+        default=None,
+        ge=1,
+        le=200,
         description="How many candidates to discover. Persisted on the run and reused on retry.",
     )
     verify_limit: int | None = Field(
-        default=None, ge=1, le=200,
+        default=None,
+        ge=1,
+        le=200,
         description="How many candidates to verify in depth. Capped at candidate_limit.",
     )
 
@@ -95,12 +101,7 @@ def settings_default(name: str) -> int:
 
 def _view(session: Session, run: ResearchRun) -> RunView:
     state = RunState.load(run.stage_state)
-    job = (
-        session.query(Job)
-        .filter(Job.run_id == run.id)
-        .order_by(Job.created_at.desc())
-        .first()
-    )
+    job = session.query(Job).filter(Job.run_id == run.id).order_by(Job.created_at.desc()).first()
     # "Running" is a property of the job, not of the stage the run stopped at.
     job_running = job is not None and job.status == JobStatus.RUNNING.value
     lease_expiry = ensure_utc(job.lease_expires_at) if job else None
@@ -127,7 +128,9 @@ def _view(session: Session, run: ResearchRun) -> RunView:
         verify_limit=run.verify_limit or settings_default("verify_limit"),
         fetch_tiers=dict(run.fetch_tiers or {}),
         results_count=results.count(),
-        decided_count=results.filter(ProgramResultRow.user_decision != UserDecision.UNDECIDED.value).count(),
+        decided_count=results.filter(
+            ProgramResultRow.user_decision != UserDecision.UNDECIDED.value
+        ).count(),
         stages=[
             StageView(stage=name, **{k: v for k, v in vars(st).items() if k != "stage"})
             for name, st in state.stages.items()
@@ -153,11 +156,13 @@ def _view(session: Session, run: ResearchRun) -> RunView:
 
 
 @router.post("", response_model=RunView, status_code=202)
-def start_run(payload: StartRunIn, session: Session = Depends(get_session)) -> RunView:
+def start_run(
+    payload: StartRunIn,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> RunView:
     settings = get_settings()
-    profile = session.get(ApplicantProfileRow, payload.profile_id)
-    if profile is None:
-        raise HTTPException(404, "Profile not found")
+    owned_profile(session, payload.profile_id, principal)
 
     run = ResearchRun(
         profile_id=payload.profile_id,
@@ -169,12 +174,23 @@ def start_run(payload: StartRunIn, session: Session = Depends(get_session)) -> R
     )
     session.add(run)
     session.flush()
-    session.add(AuditEvent(actor="user", action="run_started", entity_type="run",
-                           entity_id=run.id, detail={"demo_mode": run.demo_mode}))
+    session.add(
+        AuditEvent(
+            organization_id=principal.organization_id,
+            actor=f"user:{principal.user_id[:8]}",
+            action="run_started",
+            entity_type="run",
+            entity_id=run.id,
+            detail={"demo_mode": run.demo_mode},
+        )
+    )
     # Idempotent by run: a retried request or a double click cannot start the
     # same research twice.
     JobStore(session).enqueue(
-        "research", run_id=run.id, idempotency_key=f"research:{run.id}", priority=0,
+        "research",
+        run_id=run.id,
+        idempotency_key=f"research:{run.id}",
+        priority=0,
     )
     session.commit()
     session.refresh(run)
@@ -182,37 +198,58 @@ def start_run(payload: StartRunIn, session: Session = Depends(get_session)) -> R
 
 
 @router.get("", response_model=list[RunView])
-def list_runs(profile_id: str | None = None, session: Session = Depends(get_session)) -> list[RunView]:
-    q = session.query(ResearchRun).order_by(ResearchRun.created_at.desc())
+def list_runs(
+    profile_id: str | None = None,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> list[RunView]:
+    q = (
+        session.query(ResearchRun)
+        .join(ApplicantProfileRow, ResearchRun.profile_id == ApplicantProfileRow.id)
+        .filter(ApplicantProfileRow.organization_id == principal.organization_id)
+        .order_by(ResearchRun.created_at.desc())
+    )
     if profile_id:
         q = q.filter(ResearchRun.profile_id == profile_id)
     return [_view(session, r) for r in q.limit(50).all()]
 
 
 @router.get("/{run_id}", response_model=RunView)
-def get_run(run_id: str, session: Session = Depends(get_session)) -> RunView:
-    run = session.get(ResearchRun, run_id)
-    if run is None:
-        raise HTTPException(404, "Run not found")
+def get_run(
+    run_id: str,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> RunView:
+    run = owned_run(session, run_id, principal)
     return _view(session, run)
 
 
 @router.post("/{run_id}/cancel", response_model=RunView)
-def cancel_run(run_id: str, session: Session = Depends(get_session)) -> RunView:
+def cancel_run(
+    run_id: str,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> RunView:
     """Ask the run to stop.
 
     The flag is the real signal: the worker observes it between units of work
     so cancellation lands at a consistent point instead of tearing a stage.
     """
-    run = session.get(ResearchRun, run_id)
-    if run is None:
-        raise HTTPException(404, "Run not found")
+    run = owned_run(session, run_id, principal)
     run.cancelled = True
     store = JobStore(session)
     for job in store.for_run(run_id):
         store.cancel(job.id)
-    session.add(AuditEvent(actor="user", action="run_cancel_requested",
-                           entity_type="run", entity_id=run_id, detail={}))
+    session.add(
+        AuditEvent(
+            organization_id=principal.organization_id,
+            actor=f"user:{principal.user_id[:8]}",
+            action="run_cancel_requested",
+            entity_type="run",
+            entity_id=run_id,
+            detail={},
+        )
+    )
     session.commit()
     session.refresh(run)
     return _view(session, run)
@@ -221,7 +258,9 @@ def cancel_run(run_id: str, session: Session = Depends(get_session)) -> RunView:
 @router.post("/{run_id}/retry", response_model=RunView)
 def retry_run(
     run_id: str,
-    stage: Literal["candidate_discovery", "program_verification", "funding_discovery", "assessment"] | None = None,
+    stage: Literal["candidate_discovery", "program_verification", "funding_discovery", "assessment"]
+    | None = None,
+    principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
 ) -> RunView:
     """Re-run a failed run.
@@ -230,9 +269,7 @@ def retry_run(
     restarts from discovery. Existing results are cleared first so a retry
     cannot silently double up rows.
     """
-    run = session.get(ResearchRun, run_id)
-    if run is None:
-        raise HTTPException(404, "Run not found")
+    run = owned_run(session, run_id, principal)
     store = JobStore(session)
     if any(j.status == JobStatus.RUNNING.value for j in store.for_run(run_id)):
         raise HTTPException(409, "This run is still executing; cancel it before retrying.")
@@ -252,24 +289,33 @@ def retry_run(
             st.status = "pending"
             st.error = ""
     run.stage_state = state.dump()
-    session.add(AuditEvent(actor="user", action="run_retried", entity_type="run",
-                           entity_id=run_id, detail={"from_stage": stage or "start"}))
+    session.add(
+        AuditEvent(
+            organization_id=principal.organization_id,
+            actor=f"user:{principal.user_id[:8]}",
+            action="run_retried",
+            entity_type="run",
+            entity_id=run_id,
+            detail={"from_stage": stage or "start"},
+        )
+    )
     # A new attempt gets a new idempotency key so it is not deduplicated
     # against the attempt the user is explicitly retrying.
     attempt = len(store.for_run(run_id)) + 1
-    store.enqueue("research", run_id=run_id,
-                  idempotency_key=f"research:{run_id}:retry{attempt}")
+    store.enqueue("research", run_id=run_id, idempotency_key=f"research:{run_id}:retry{attempt}")
     session.commit()
     session.refresh(run)
     return _view(session, run)
 
 
 @router.post("/{run_id}/collect-documents", response_model=RunView, status_code=202)
-def collect_documents(run_id: str, session: Session = Depends(get_session)) -> RunView:
+def collect_documents(
+    run_id: str,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> RunView:
     """Deep document collection, for approved and maybe rows only."""
-    run = session.get(ResearchRun, run_id)
-    if run is None:
-        raise HTTPException(404, "Run not found")
+    run = owned_run(session, run_id, principal)
     approved = (
         session.query(ProgramResultRow)
         .filter(
@@ -282,14 +328,25 @@ def collect_documents(run_id: str, session: Session = Depends(get_session)) -> R
     )
     if approved == 0:
         raise HTTPException(
-            400, "Approve at least one programme first — documents are only collected for shortlisted rows."
+            400,
+            "Approve at least one programme first — documents are only collected for shortlisted rows.",
         )
     run.cancelled = False
-    session.add(AuditEvent(actor="user", action="documents_requested", entity_type="run",
-                           entity_id=run_id, detail={"approved": approved}))
+    session.add(
+        AuditEvent(
+            organization_id=principal.organization_id,
+            actor=f"user:{principal.user_id[:8]}",
+            action="documents_requested",
+            entity_type="run",
+            entity_id=run_id,
+            detail={"approved": approved},
+        )
+    )
     JobStore(session).enqueue(
-        "documents", run_id=run_id,
-        idempotency_key=f"documents:{run_id}:{approved}", priority=5,
+        "documents",
+        run_id=run_id,
+        idempotency_key=f"documents:{run_id}:{approved}",
+        priority=5,
     )
     session.commit()
     session.refresh(run)

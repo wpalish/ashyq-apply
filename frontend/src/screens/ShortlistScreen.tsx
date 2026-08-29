@@ -137,7 +137,7 @@ export function ShortlistScreen() {
                 <th scope="col">Funding</th>
                 <th scope="col">Remaining&nbsp;/&nbsp;year</th>
                 <th scope="col">Deadline</th>
-                <th scope="col">Score</th>
+                <th scope="col">Preference match</th>
                 <th scope="col">Decision</th>
               </tr>
             </thead>
@@ -153,7 +153,7 @@ export function ShortlistScreen() {
                       className={`${open ? 'is-expanded' : ''} ${r.user_decision === 'rejected' ? 'is-rejected' : ''}`}
                       data-testid={`row-${r.id}`}
                     >
-                      <td>
+                      <td data-label="University & programme">
                         <div className="uni-cell">
                           <button
                             className="uni-cell__name"
@@ -170,31 +170,31 @@ export function ShortlistScreen() {
                           </span>
                         </div>
                       </td>
-                      <td><StatusChip status={r.eligibility} tone={eligibilityTone[r.eligibility]} /></td>
-                      <td><StatusChip status={r.admissions_fit} tone={admissionsFitTone[r.admissions_fit]} /></td>
-                      <td>
+                      <td data-label="Eligibility"><StatusChip status={r.eligibility} tone={eligibilityTone[r.eligibility]} /></td>
+                      <td data-label="Admissions fit"><StatusChip status={r.admissions_fit} tone={admissionsFitTone[r.admissions_fit]} /></td>
+                      <td data-label="Funding">
                         <StatusChip
                           status={r.best_funding_classification}
                           tone={fundingClassTone[r.best_funding_classification]}
                         />
                       </td>
-                      <td className="num">
+                      <td className="num" data-label="Remaining / year">
                         {gap?.computable && gap.gap ? (
                           money(gap.gap)
                         ) : (
                           <span className="xs muted" title={gap?.reason}>not computable</span>
                         )}
                       </td>
-                      <td className="num">
+                      <td className="num" data-label="Deadline">
                         {r.admission_deadline ? date(r.admission_deadline) : <span className="xs muted">not found</span>}
                         {r.deadline_passed && <div><Chip tone="risk">passed</Chip></div>}
                       </td>
-                      <td className="num">
+                      <td className="num" data-label="Preference match">
                         {r.preference_score
-                          ? `${scorePercent(r.preference_score.total, r.preference_score.max_possible)}%`
+                          ? `${(scorePercent(r.preference_score.total, r.preference_score.max_possible) / 10).toFixed(1)} / 10`
                           : '—'}
                       </td>
-                      <td>
+                      <td data-label="Decision">
                         <div className="decision-group" role="group" aria-label={`Decision for ${r.university}`}>
                           <button
                             className="decision-btn decision-btn--approve"

@@ -20,6 +20,15 @@ const STAGE_LABELS: Record<string, string> = {
   completed: 'Finished',
 };
 
+function errorCategory(message: string): string {
+  const value = message.toLowerCase();
+  if (/timeout|429|rate limit|temporar|network|server error/.test(value)) return 'Temporary fetch issue';
+  if (/no known|no .*url|not found|missing page/.test(value)) return 'Official page not located';
+  if (/not applicable|degree|intake|citizenship/.test(value)) return 'Page not applicable to this applicant';
+  if (/robots|blocked|refused/.test(value)) return 'Site policy prevented reading';
+  return 'Page could not be interpreted';
+}
+
 export function ProgressScreen({ onDone }: { onDone: () => void }) {
   const { run, cancelRun, retryRun, results } = useStore();
 
@@ -34,6 +43,11 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
   const finished = ['awaiting_user_decision', 'completed'].includes(run.stage);
   const failed = run.stage === 'failed';
   const cancelled = run.stage === 'cancelled';
+  const groupedErrors = run.errors.reduce<Record<string, string[]>>((groups, message) => {
+    const category = errorCategory(message);
+    (groups[category] ??= []).push(message);
+    return groups;
+  }, {});
 
   return (
     <>
@@ -69,6 +83,13 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
           <Stat value={results.length} label="Results ready" />
         </div>
 
+        {finished && (
+          <p className="small muted">
+            Pages that could not be read: <strong>{run.pages_failed}</strong>. Any facts depending
+            on them remain unknown and are never guessed.
+          </p>
+        )}
+
         <Panel title="Stages">
           <div className="stage-list" data-testid="stage-list">
             {run.stages.map((s) => (
@@ -93,13 +114,24 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
         </Panel>
 
         {run.errors.length > 0 && (
-          <Panel
-            title={`Pages that could not be read (${run.errors.length})`}
-            hint="Listed rather than hidden. Anything here is reported as not found in the results, never guessed."
-          >
-            <div className="stack stack--tight" style={{ maxHeight: '18rem', overflowY: 'auto' }}>
-              {run.errors.slice(0, 60).map((e, i) => (
-                <div key={i} className="xs mono muted" style={{ overflowWrap: 'anywhere' }}>{e}</div>
+          <Panel title="Research limitations"
+            hint={`${run.errors.length} diagnostics are grouped by what they mean. They never become guessed values.`}>
+            <div className="stack stack--tight">
+              {Object.entries(groupedErrors).map(([category, messages]) => (
+                <details key={category}>
+                  <summary className="small"><strong>{category}</strong> · {messages.length}</summary>
+                  <div
+                    className="stack stack--tight"
+                    style={{ maxHeight: '12rem', overflowY: 'auto', marginTop: 'var(--space-2)' }}
+                    tabIndex={0}
+                    role="region"
+                    aria-label={`${category} diagnostics`}
+                  >
+                    {messages.slice(0, 30).map((message, index) => (
+                      <div key={index} className="xs mono muted" style={{ overflowWrap: 'anywhere' }}>{message}</div>
+                    ))}
+                  </div>
+                </details>
               ))}
             </div>
           </Panel>

@@ -26,6 +26,9 @@ class Settings(BaseSettings):
     cache_dir: Path = BACKEND_ROOT / "data" / "httpcache"
     export_dir: Path = BACKEND_ROOT / "data" / "exports"
     corpus_dir: Path = BACKEND_ROOT / "app" / "corpus" / "pages"
+    #: Optional built frontend. Set by the single-image deployment; local Vite
+    #: development leaves it unset.
+    frontend_dir: Path | None = None
 
     #: Politeness. Lower these only with a good reason.
     fetch_delay_seconds: float = 1.5
@@ -49,6 +52,17 @@ class Settings(BaseSettings):
     cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
     log_level: str = "INFO"
 
+    #: Authentication is deliberately opt-in for the zero-friction local demo,
+    #: and mandatory in a production environment.  Sessions are opaque,
+    #: server-side records; no applicant data is placed in a browser token.
+    auth_enabled: bool = False
+    auth_registration_enabled: bool = True
+    session_cookie_name: str = "unimatch_session"
+    session_ttl_hours: int = 24 * 7
+    cookie_secure: bool = False
+    auth_rate_limit_per_minute: int = 10
+    run_rate_limit_per_minute: int = 20
+
     @property
     def is_production(self) -> bool:
         return self.environment.lower() in ("production", "prod")
@@ -62,8 +76,38 @@ class Settings(BaseSettings):
         return [o.strip() for o in self.cors_origins.split(",") if o.strip()]
 
     def ensure_dirs(self) -> None:
-        for d in (self.cache_dir, self.export_dir, Path(self.database_url.replace("sqlite:///", "")).parent):
+        directories = [self.cache_dir, self.export_dir]
+        if self.database_url.startswith("sqlite:///"):
+            directories.append(Path(self.database_url.removeprefix("sqlite:///")).parent)
+        for d in directories:
             d.mkdir(parents=True, exist_ok=True)
+
+    def validate_runtime(self) -> None:
+        """Reject configurations that would expose applicant data unsafely."""
+        if self.is_production and not self.auth_enabled:
+            raise RuntimeError(
+                "UNIMATCH_AUTH_ENABLED must be true in production; refusing to expose "
+                "applicant profiles without authentication."
+            )
+        if self.is_production and not self.cookie_secure:
+            raise RuntimeError(
+                "UNIMATCH_COOKIE_SECURE must be true in production; refusing to send a session "
+                "cookie over a connection the browser may treat as insecure."
+            )
+        if self.is_production and not self.is_postgres:
+            raise RuntimeError(
+                "Production requires PostgreSQL for durable multi-process jobs and tenant data."
+            )
+        if self.is_production and (
+            not self.cors_origin_list
+            or "*" in self.cors_origin_list
+            or any(not origin.startswith("https://") for origin in self.cors_origin_list)
+        ):
+            raise RuntimeError(
+                "Production CORS origins must be an explicit, non-empty list of HTTPS origins."
+            )
+        if self.session_ttl_hours < 1 or self.session_ttl_hours > 24 * 30:
+            raise RuntimeError("UNIMATCH_SESSION_TTL_HOURS must be between 1 and 720.")
 
 
 @lru_cache

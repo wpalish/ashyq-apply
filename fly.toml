@@ -1,0 +1,44 @@
+# Replace `app` only if this globally unique name is unavailable.
+app = "ashyq-apply-alisher"
+primary_region = "waw"
+
+[build]
+  dockerfile = "Dockerfile.fly"
+
+[deploy]
+  release_command = "python -m alembic upgrade head"
+
+[env]
+  UNIMATCH_ENVIRONMENT = "production"
+  UNIMATCH_AUTH_ENABLED = "true"
+  UNIMATCH_AUTH_REGISTRATION_ENABLED = "true"
+  UNIMATCH_COOKIE_SECURE = "true"
+  UNIMATCH_AUTO_MIGRATE = "false"
+  UNIMATCH_DEMO_MODE = "true"
+  UNIMATCH_RESPECT_ROBOTS = "true"
+  UNIMATCH_CORS_ORIGINS = "https://ashyq-apply-alisher.fly.dev"
+  UNIMATCH_WORKER_CONCURRENCY = "2"
+
+[processes]
+  app = "python -m uvicorn app.main:app --host 0.0.0.0 --port 8099"
+  worker = "python -m app.jobs.worker"
+
+[http_service]
+  internal_port = 8099
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ["app"]
+
+  [[http_service.checks]]
+    interval = "15s"
+    timeout = "5s"
+    grace_period = "30s"
+    method = "GET"
+    path = "/api/health"
+
+[[vm]]
+  memory = "1gb"
+  cpu_kind = "shared"
+  cpus = 1

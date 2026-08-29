@@ -26,6 +26,7 @@ const WEIGHT_LABELS: Record<string, string> = {
 export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
   const { profileDraft, setProfileDraft, startRun, loading, capabilities, validation } = useStore();
   const [demoMode, setDemoMode] = useState(true);
+  const [showAdvancedWeights, setShowAdvancedWeights] = useState(false);
 
   const bind = (path: Path, cast: 'string' | 'number' | 'float' = 'string') => ({
     value: String(get(profileDraft, path) ?? ''),
@@ -90,10 +91,33 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
                 {['any', 'top_50', 'top_100', 'top_300', 'top_500'].map((v) => <option key={v} value={v}>{v.replace('_', ' ')}</option>)}
               </select>
             </Field>
+            <Field label="University size" htmlFor="university-size">
+              <select id="university-size" {...bind(['preferences', 'university_size'])}>
+                {['any', 'small', 'medium', 'large'].map((v) => <option key={v}>{v}</option>)}
+              </select>
+            </Field>
+            <Field label="Campus type" htmlFor="campus-type">
+              <select id="campus-type" {...bind(['preferences', 'campus_type'])}>
+                {['any', 'campus', 'urban', 'suburban'].map((v) => <option key={v}>{v}</option>)}
+              </select>
+            </Field>
+            <Field label="Research interests" htmlFor="research-interests" hint="Comma-separated.">
+              <input id="research-interests" {...bindList(['preferences', 'research_interests'])} />
+            </Field>
+            {(['safety_priority', 'diversity_priority', 'housing_guarantee_priority'] as const).map((key) => (
+              <Field key={key} label={key.replaceAll('_', ' ')} htmlFor={key}>
+                <select id={key} {...bind(['preferences', key])}>
+                  {['low', 'medium', 'high'].map((v) => <option key={v}>{v}</option>)}
+                </select>
+              </Field>
+            ))}
           </div>
           <div className="row" style={{ marginTop: 'var(--space-4)' }}>
             <label className="row row--tight small">
               <input type="checkbox" {...bindBool(['preferences', 'values_internships'])} /> Internships matter
+            </label>
+            <label className="row row--tight small">
+              <input type="checkbox" {...bindBool(['preferences', 'values_coop'])} /> Co-op programmes matter
             </label>
             <label className="row row--tight small">
               <input type="checkbox" {...bindBool(['preferences', 'needs_post_study_work'])} /> Need post-study work rights
@@ -122,6 +146,9 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
             <Field label="Largest annual shortfall you could absorb" htmlFor="gap">
               <input id="gap" type="number" {...bind(['funding', 'max_acceptable_gap'], 'float')} />
             </Field>
+            <Field label="Maximum family contribution" htmlFor="family-contribution">
+              <input id="family-contribution" type="number" {...bind(['funding', 'max_family_contribution'], 'float')} />
+            </Field>
             <Field label="How decisive is funding?" htmlFor="crit">
               <select id="crit" {...bind(['funding', 'funding_criticality'])}>
                 <option value="nice_to_have">Nice to have</option>
@@ -135,10 +162,25 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
               <input type="checkbox" {...bindBool(['funding', 'requires_full_ride'])} /> Only a full ride works
             </label>
             <label className="row row--tight small">
+              <input type="checkbox" {...bindBool(['funding', 'accepts_full_tuition'])} /> Full tuition is acceptable
+            </label>
+            <label className="row row--tight small">
+              <input type="checkbox" {...bindBool(['funding', 'accepts_partial'])} /> Partial funding is acceptable
+            </label>
+            <label className="row row--tight small">
               <input type="checkbox" {...bindBool(['funding', 'must_cover_housing'])} /> Housing must be covered
             </label>
             <label className="row row--tight small">
               <input type="checkbox" {...bindBool(['funding', 'must_cover_meals'])} /> Meals must be covered
+            </label>
+            <label className="row row--tight small">
+              <input type="checkbox" {...bindBool(['funding', 'must_cover_health_insurance'])} /> Health insurance must be covered
+            </label>
+            <label className="row row--tight small">
+              <input type="checkbox" {...bindBool(['funding', 'must_cover_books'])} /> Books must be covered
+            </label>
+            <label className="row row--tight small">
+              <input type="checkbox" {...bindBool(['funding', 'must_cover_travel'])} /> Travel must be covered
             </label>
             <label className="row row--tight small">
               <input type="checkbox" {...bindBool(['funding', 'willing_to_submit_need_documents'])} /> Willing to file financial-need documents
@@ -147,22 +189,41 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
         </Panel>
 
         <Panel
-          title="Scoring weights"
-          hint="The score is a weighted sum of these, shown component by component on every row. It is not a probability of admission."
+          title="How should options be ordered?"
+          hint="Choose a starting point. Advanced weights are available when you need fine control; this remains a preference match, never an admission probability."
         >
-          <div className="grid-2">
-            {Object.entries(WEIGHT_LABELS).map(([key, label]) => (
-              <Field key={key} label={`${label} — ${(weights[key] ?? 0).toFixed(1)}`} htmlFor={`w-${key}`}>
-                <input
-                  id={`w-${key}`} type="range" min={0} max={3} step={0.1}
-                  value={weights[key] ?? 0}
-                  onChange={(e) =>
-                    setProfileDraft((d) => setIn(d, ['weights', key], Number.parseFloat(e.target.value)))
-                  }
-                />
-              </Field>
+          <p className="small muted">
+            The score only compares your stated preferences. It is not a probability of admission.
+          </p>
+          <div className="row">
+            {([
+              ['Funding first', { funding_fit: 2.5, academic_fit: 1.2, program_quality: 0.6 }],
+              ['Balanced', { funding_fit: 1.5, academic_fit: 1.0, program_quality: 0.8 }],
+              ['Academic fit first', { funding_fit: 1.0, academic_fit: 2.3, program_quality: 1.4 }],
+            ] as const).map(([label, preset]) => (
+              <button key={label} className="btn btn--sm" type="button" onClick={() =>
+                setProfileDraft((draft) => setIn(draft, ['weights'], { ...weights, ...preset }))
+              }>{label}</button>
             ))}
+            <button className="btn btn--sm btn--ghost" type="button" onClick={() => setShowAdvancedWeights((value) => !value)}>
+              {showAdvancedWeights ? 'Hide advanced weights' : 'Advanced weights'}
+            </button>
           </div>
+          {showAdvancedWeights && (
+            <div className="grid-2" style={{ marginTop: 'var(--space-4)' }}>
+              {Object.entries(WEIGHT_LABELS).map(([key, label]) => (
+                <Field key={key} label={`${label} — ${(weights[key] ?? 0).toFixed(1)}`} htmlFor={`w-${key}`}>
+                  <input
+                    id={`w-${key}`} type="range" min={0} max={3} step={0.1}
+                    value={weights[key] ?? 0}
+                    onChange={(e) =>
+                      setProfileDraft((d) => setIn(d, ['weights', key], Number.parseFloat(e.target.value)))
+                    }
+                  />
+                </Field>
+              ))}
+            </div>
+          )}
         </Panel>
 
         <Panel title="Run the research">

@@ -10,6 +10,7 @@ from app.db import get_session
 from app.domain import enums
 from app.domain.currency import RATE_DATE, RATE_SOURCE, supported_currencies
 from app.models import CURRENT_SCHEMA_VERSION, AuditEvent
+from app.security import Principal, get_principal
 
 router = APIRouter(prefix="/api", tags=["meta"])
 
@@ -86,13 +87,28 @@ def vocabulary() -> dict:
 
 
 @router.get("/audit")
-def audit_log(limit: int = 200, session: Session = Depends(get_session)) -> list[dict]:
+def audit_log(
+    limit: int = 200,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> list[dict]:
     """Append-only trail. Holds ids and actions only — never applicant data."""
     rows = (
-        session.query(AuditEvent).order_by(AuditEvent.created_at.desc()).limit(min(limit, 1000)).all()
+        session.query(AuditEvent)
+        .filter(AuditEvent.organization_id == principal.organization_id)
+        .order_by(AuditEvent.created_at.desc())
+        .limit(min(limit, 1000))
+        .all()
     )
     return [
-        {"id": r.id, "at": r.created_at.isoformat(), "actor": r.actor, "action": r.action,
-         "entity_type": r.entity_type, "entity_id": r.entity_id, "detail": r.detail}
+        {
+            "id": r.id,
+            "at": r.created_at.isoformat(),
+            "actor": r.actor,
+            "action": r.action,
+            "entity_type": r.entity_type,
+            "entity_id": r.entity_id,
+            "detail": r.detail,
+        }
         for r in rows
     ]

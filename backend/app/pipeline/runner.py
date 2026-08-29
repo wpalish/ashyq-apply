@@ -57,8 +57,13 @@ class ResearchRunner:
     """Executes the pipeline for one run."""
 
     def __init__(
-        self, session: Session, run: ResearchRun, profile: ApplicantProfileIn,
-        settings: Settings, *, job_id: str | None = None,
+        self,
+        session: Session,
+        run: ResearchRun,
+        profile: ApplicantProfileIn,
+        settings: Settings,
+        *,
+        job_id: str | None = None,
     ) -> None:
         self.session = session
         self.run = run
@@ -75,9 +80,7 @@ class ResearchRunner:
         #: Stages skipped because a previous attempt finished them.
         self.resumed_stages: list[str] = []
         self.candidate_limit = run.candidate_limit or settings.candidate_limit
-        self.verify_limit = min(
-            run.verify_limit or settings.verify_limit, self.candidate_limit
-        )
+        self.verify_limit = min(run.verify_limit or settings.verify_limit, self.candidate_limit)
         self.intake = f"{profile.context.intake_term} {profile.context.intake_year}"
         self._candidates: list[Candidate] = []
 
@@ -97,8 +100,14 @@ class ResearchRunner:
 
     def _audit(self, action: str, entity_type: str, entity_id: str, **detail) -> None:
         self.session.add(
-            AuditEvent(actor="system", action=action, entity_type=entity_type,
-                       entity_id=entity_id, detail=detail)
+            AuditEvent(
+                organization_id=self.run.profile.organization_id,
+                actor="system",
+                action=action,
+                entity_type=entity_type,
+                entity_id=entity_id,
+                detail=detail,
+            )
         )
 
     def _save(self) -> None:
@@ -146,7 +155,9 @@ class ResearchRunner:
             "respect_robots": self.settings.respect_robots,
         }
         fetcher = self._make_fetcher()
-        browser = BrowserFetcher(fetcher, enabled=self.settings.enable_browser_tier and not self.demo)
+        browser = BrowserFetcher(
+            fetcher, enabled=self.settings.enable_browser_tier and not self.demo
+        )
         if browser.enabled:
             fetcher.attach_renderer(browser)
         try:
@@ -162,7 +173,11 @@ class ResearchRunner:
                 await self._maybe(PipelineStage.FUNDING_DISCOVERY, self._stage_funding, fetcher)
                 await self._maybe(PipelineStage.ASSESSMENT, self._stage_assess, fetcher)
             self.run.fetch_tiers = dict(fetcher.tier_counts)
+            waiting = self.state[PipelineStage.AWAITING_USER_DECISION]
+            waiting.start(detail="Shortlist ready; waiting for the applicant's decisions.")
+            waiting.finish("Shortlist ready; waiting for the applicant's decisions.")
             self._transition(PipelineStage.AWAITING_USER_DECISION)
+            self.run.finished_at = datetime.now(UTC)
             self._save()
         except RunCancelled:
             self.run.stage = PipelineStage.CANCELLED.value
@@ -220,9 +235,7 @@ class ResearchRunner:
         self._transition(PipelineStage.CANDIDATE_DISCOVERY)
         self._save()
 
-        adapter = (
-            FixtureDiscoveryAdapter(fetcher) if self.demo else LiveDiscoveryAdapter(fetcher)
-        )
+        adapter = FixtureDiscoveryAdapter(fetcher) if self.demo else LiveDiscoveryAdapter(fetcher)
         self._candidates = await adapter.discover(self.profile, self.candidate_limit)
         # An adapter that over-delivers must not silently widen the run.
         if len(self._candidates) > self.candidate_limit:
@@ -234,8 +247,13 @@ class ResearchRunner:
             f"{len(self._candidates)} candidates from {adapter.name}; "
             f"{sum(1 for c in self._candidates if c.verifiable)} have an official page to verify."
         )
-        self._audit("candidates_discovered", "run", self.run.id,
-                    count=len(self._candidates), adapter=adapter.name)
+        self._audit(
+            "candidates_discovered",
+            "run",
+            self.run.id,
+            count=len(self._candidates),
+            adapter=adapter.name,
+        )
         self._save()
 
     # --- stage 3: programme verification -----------------------------------
@@ -262,14 +280,18 @@ class ResearchRunner:
             programs = cand.programs or [
                 CandidateProgram(
                     name=f"{self.profile.context.intended_fields[0] if self.profile.context.intended_fields else 'Programme'} "
-                         f"({self.profile.context.level.value})",
-                    field=self.profile.context.intended_fields[0] if self.profile.context.intended_fields else "",
+                    f"({self.profile.context.level.value})",
+                    field=self.profile.context.intended_fields[0]
+                    if self.profile.context.intended_fields
+                    else "",
                     degree=self.profile.context.level,
                     url=None,
                 )
             ]
             for prog in programs[:2]:
-                key = dedupe.program_key(cand.name, prog.name, prog.degree, self.intake, cand.country)
+                key = dedupe.program_key(
+                    cand.name, prog.name, prog.degree, self.intake, cand.country
+                )
                 if key in seen_keys:
                     continue
                 seen_keys.add(key)
@@ -286,9 +308,16 @@ class ResearchRunner:
                     degree=prog.degree,
                     intake=self.intake,
                     rankings=cand.rankings,
-                    climate_fit=_fit_label(cand.attributes.get("climate"), self.profile.preferences.climate),
-                    city_fit=_fit_label(cand.attributes.get("city_size"), self.profile.preferences.city_size),
-                    workload_fit=_fit_label(cand.attributes.get("workload"), self.profile.preferences.acceptable_workload),
+                    climate_fit=_fit_label(
+                        cand.attributes.get("climate"), self.profile.preferences.climate
+                    ),
+                    city_fit=_fit_label(
+                        cand.attributes.get("city_size"), self.profile.preferences.city_size
+                    ),
+                    workload_fit=_fit_label(
+                        cand.attributes.get("workload"),
+                        self.profile.preferences.acceptable_workload,
+                    ),
                     career_notes="",
                 )
 
@@ -385,7 +414,9 @@ class ResearchRunner:
                 st.items_done = i + 1
                 continue
 
-            prog = CandidateProgram(name=result.program, field="", degree=result.degree, url=result.program_url)
+            prog = CandidateProgram(
+                name=result.program, field="", degree=result.degree, url=result.program_url
+            )
             scholarships, ar = await adapter.find(cand, prog, self.profile)
             errors.extend(ar.errors)
             self.run.pages_checked += ar.pages_checked
@@ -393,7 +424,9 @@ class ResearchRunner:
 
             claims, demotion_qs = enforce_source_hierarchy(ar.claims)
             claims = [
-                c.model_copy(update={"status": apply_freshness(c.status, c.claim_type, c.accessed_at)})
+                c.model_copy(
+                    update={"status": apply_freshness(c.status, c.claim_type, c.accessed_at)}
+                )
                 for c in claims
             ]
             conflicts, claims = find_conflicts(claims, context=f"funding for {result.program}")
@@ -415,9 +448,14 @@ class ResearchRunner:
                 # imply. Classification reads the verdict, so an award the
                 # applicant cannot hold can never be classified as funding.
                 s.applicant_eligible = _applicant_eligible(s)
-                page_text = " ".join(
-                    c.original_text_excerpt for c in claims if s.name[:30] in c.original_text_excerpt
-                ) or s.name
+                page_text = (
+                    " ".join(
+                        c.original_text_excerpt
+                        for c in claims
+                        if s.name[:30] in c.original_text_excerpt
+                    )
+                    or s.name
+                )
                 verdict = classify(
                     s,
                     total_cost_amount=total.amount if total else None,
@@ -426,12 +464,19 @@ class ResearchRunner:
                 )
                 s.classification = verdict.classification
                 s.classification_reason = verdict.reason
-                if verdict.marketing_language_detected and verdict.classification.value != "FULL_RIDE_CONFIRMED":
+                if (
+                    verdict.marketing_language_detected
+                    and verdict.classification.value != "FULL_RIDE_CONFIRMED"
+                ):
                     s.classification_reason += (
                         " The page uses promotional wording such as 'full ride'; the classification "
                         "here follows the published coverage table instead."
                     )
-                if any(c.status.value == "NOT_ELIGIBLE" for c in s.eligibility_checks if hasattr(c.status, "value")):
+                if any(
+                    c.status.value == "NOT_ELIGIBLE"
+                    for c in s.eligibility_checks
+                    if hasattr(c.status, "value")
+                ):
                     pass
 
             result.scholarships = scholarships
@@ -515,9 +560,7 @@ class ResearchRunner:
 
             result.admissions_fit, fit_reason = admissions_fit_for(result, self.profile)
             result.preference_score = score_result(result, self.profile)
-            result.preference_score.components.append(
-                _explanation_component(fit_reason)
-            )
+            result.preference_score.components.append(_explanation_component(fit_reason))
             result.verification_completeness = _completeness(claims)
             result.career_notes = result.career_notes or ""
 
@@ -526,7 +569,9 @@ class ResearchRunner:
             if i % 5 == 0:
                 self._save()
 
-        st.finish(f"{len(rows)} programmes assessed on eligibility, admissions fit and funding fit.")
+        st.finish(
+            f"{len(rows)} programmes assessed on eligibility, admissions fit and funding fit."
+        )
         self._audit("assessment_complete", "run", self.run.id, results=len(rows))
         self._save()
 
@@ -536,7 +581,8 @@ class ResearchRunner:
         """Deep document collection for approved (and maybe) rows only."""
         st = self.state[PipelineStage.DOCUMENT_COLLECTION]
         rows = [
-            r for r in self._rows()
+            r
+            for r in self._rows()
             if r.user_decision in (UserDecision.APPROVED.value, UserDecision.MAYBE.value)
         ]
         st.start(len(rows), "Collecting documents and deadlines for approved programmes")
@@ -549,7 +595,9 @@ class ResearchRunner:
             adapter = WebDocumentsAdapter(fetcher, self.settings.academic_year)
             by_name = {c.name: c for c in self._candidates}
             if not by_name:
-                disc = FixtureDiscoveryAdapter(fetcher) if self.demo else LiveDiscoveryAdapter(fetcher)
+                disc = (
+                    FixtureDiscoveryAdapter(fetcher) if self.demo else LiveDiscoveryAdapter(fetcher)
+                )
                 self._candidates = await disc.discover(self.profile, self.candidate_limit)
                 by_name = {c.name: c for c in self._candidates}
 
@@ -576,6 +624,9 @@ class ResearchRunner:
                 self._save()
 
         st.finish(f"Checklists built for {built} approved programmes.")
+        completed = self.state[PipelineStage.COMPLETED]
+        completed.start(detail="Research and document collection complete.")
+        completed.finish("Research and document collection complete.")
         self._transition(PipelineStage.COMPLETED)
         self.run.finished_at = datetime.now(UTC)
         self._save()
@@ -640,8 +691,9 @@ class ResearchRunner:
         self._store_claims(row.id, claims)
         self._store_conflicts(row.id, conflicts)
 
-    def _update_result(self, row: ProgramResultRow, result: ProgramResult,
-                       extra_claims=None, conflicts=None) -> None:
+    def _update_result(
+        self, row: ProgramResultRow, result: ProgramResult, extra_claims=None, conflicts=None
+    ) -> None:
         result.id = row.id
         row.payload = result.model_dump(mode="json")
         row.eligibility = result.eligibility.value
@@ -687,8 +739,10 @@ class ResearchRunner:
         for c in conflicts:
             self.session.add(
                 ConflictRow(
-                    run_id=self.run.id, result_id=result_id,
-                    claim_type=c.claim_type.value, unresolved=c.unresolved,
+                    run_id=self.run.id,
+                    result_id=result_id,
+                    claim_type=c.claim_type.value,
+                    unresolved=c.unresolved,
                     payload=c.model_dump(mode="json"),
                 )
             )
@@ -719,8 +773,12 @@ def _check(requirement, published, applicant, status, explanation, hard=False):
     from app.schemas.result import RequirementCheck
 
     return RequirementCheck(
-        requirement=requirement, published_value=published, applicant_value=applicant,
-        status=status, is_hard_filter=hard, explanation=explanation,
+        requirement=requirement,
+        published_value=published,
+        applicant_value=applicant,
+        status=status,
+        is_hard_filter=hard,
+        explanation=explanation,
     )
 
 
@@ -748,7 +806,9 @@ def _scholarship_eligibility(s, profile: ApplicantProfileIn):
     elif s.international_eligible == "no":
         checks.append(
             _check(
-                "Scholarship international eligibility", False, citizenship,
+                "Scholarship international eligibility",
+                False,
+                citizenship,
                 EligibilityStatus.NOT_APPLICABLE,
                 "The award is officially closed to international students.",
             )
@@ -756,27 +816,39 @@ def _scholarship_eligibility(s, profile: ApplicantProfileIn):
     elif s.international_eligible == "yes":
         checks.append(
             _check(
-                "Scholarship international eligibility", True, citizenship,
+                "Scholarship international eligibility",
+                True,
+                citizenship,
                 EligibilityStatus.MET,
                 "The award is officially open to international students of any nationality.",
             )
         )
 
     for test, minimum in (s.min_test_scores or {}).items():
-        got = {"ielts": profile.academics.ielts.overall,
-               "toefl": profile.academics.toefl.total,
-               "sat": profile.academics.sat.total}.get(test)
+        got = {
+            "ielts": profile.academics.ielts.overall,
+            "toefl": profile.academics.toefl.total,
+            "sat": profile.academics.sat.total,
+        }.get(test)
         if got is None:
             checks.append(
-                _check(f"Scholarship {test.upper()} minimum", minimum, None,
-                       EligibilityStatus.PENDING,
-                       f"The award requires {test.upper()} {minimum}; no score is in the profile.")
+                _check(
+                    f"Scholarship {test.upper()} minimum",
+                    minimum,
+                    None,
+                    EligibilityStatus.PENDING,
+                    f"The award requires {test.upper()} {minimum}; no score is in the profile.",
+                )
             )
         else:
             checks.append(
-                _check(f"Scholarship {test.upper()} minimum", minimum, got,
-                       EligibilityStatus.MET if got >= minimum else EligibilityStatus.GAP,
-                       f"Published minimum {minimum}; applicant {got}.")
+                _check(
+                    f"Scholarship {test.upper()} minimum",
+                    minimum,
+                    got,
+                    EligibilityStatus.MET if got >= minimum else EligibilityStatus.GAP,
+                    f"Published minimum {minimum}; applicant {got}.",
+                )
             )
     return checks
 
@@ -801,8 +873,12 @@ def _explanation_component(text: str):
     from app.schemas.result import ScoreComponent
 
     return ScoreComponent(
-        name="Admissions fit rationale", raw=0.0, weight=0.0, weighted=0.0,
-        explanation=text, data_present=True,
+        name="Admissions fit rationale",
+        raw=0.0,
+        weight=0.0,
+        weighted=0.0,
+        explanation=text,
+        data_present=True,
     )
 
 

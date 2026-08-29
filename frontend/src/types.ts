@@ -410,3 +410,30 @@ export interface StoredProfile {
   display_name: string;
   [key: string]: unknown;
 }
+
+export interface AuthPrincipal {
+  user_id: string;
+  email: string;
+  display_name: string;
+  organization_id: string;
+  organization_name: string;
+  role: string;
+  local_development: boolean;
+}
+
+export interface AuthStatus {
+  enabled: boolean;
+  registration_enabled: boolean;
+  authenticated: boolean;
+  principal: AuthPrincipal | null;
+}
+
+export interface ApplicantCase {
+  id: string;
+  profile_id: string;
+  display_name: string;
+  status: string;
+  run_count: number;
+  created_at: string;
+  updated_at: string;
+}

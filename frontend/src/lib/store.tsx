@@ -13,8 +13,8 @@ import {
 import { ApiError, api } from '@/api/client';
 import { DEFAULT_PROFILE } from '@/lib/defaultProfile';
 import type {
-  Capabilities, ProfileValidationReport, ProgramResult, RunView, ShortlistSummary,
-  StoredProfile, UserDecision,
+  ApplicantCase, Capabilities, ProfileValidationReport, ProgramResult, RunView,
+  ShortlistSummary, StoredProfile, UserDecision,
 } from '@/types';
 
 const POLL_MS = 1200;
@@ -43,6 +43,9 @@ export interface Store {
   profileDraft: Record<string, unknown>;
   setProfileDraft: (updater: (d: Record<string, unknown>) => Record<string, unknown>) => void;
   savedProfile: StoredProfile | null;
+  cases: ApplicantCase[];
+  switchCase: (profileId: string) => Promise<void>;
+  newCase: () => void;
   /** True once a stored profile has been loaded back into the draft. */
   restored: boolean;
   loadDemoProfile: () => void;
@@ -87,7 +90,16 @@ export function blankProfile(): Record<string, unknown> {
   return {
     ...base,
     display_name: "New applicant",
-    context: { ...context, intended_fields: [], graduation_date: null },
+    context: {
+      ...context,
+      intended_fields: [],
+      citizenship: '',
+      country_of_residence: '',
+      education_country: '',
+      education_system: '',
+      graduation_date: null,
+      second_citizenship: null,
+    },
     academics: {
       ...(base.academics as Record<string, unknown>),
       gpa: null,
@@ -112,6 +124,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     () => structuredClone(DEFAULT_PROFILE) as Record<string, unknown>,
   );
   const [savedProfile, setSavedProfile] = useState<StoredProfile | null>(null);
+  const [cases, setCases] = useState<ApplicantCase[]>([]);
   const [validation, setValidation] = useState<ProfileValidationReport | null>(null);
   const [run, setRun] = useState<RunView | null>(null);
   const [results, setResults] = useState<ProgramResult[]>([]);
@@ -127,6 +140,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     api.capabilities().then(setCapabilities).catch(fail);
+    api.cases().then(setCases).catch(fail);
   }, [fail]);
 
   // Validation follows the draft, debounced so typing does not flood the API.
@@ -234,6 +248,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         ? await api.updateProfile(savedProfile.id, profileDraft)
         : await api.createProfile(profileDraft);
       setSavedProfile(saved);
+      setCases(await api.cases());
       writeLocal(PROFILE_KEY, saved.id);
     } catch (e) {
       fail(e);
@@ -243,6 +258,43 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     }
   }, [profileDraft, savedProfile, fail]);
 
+  const switchCase = useCallback(async (profileId: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const [stored, allRuns] = await Promise.all([api.getProfile(profileId), api.listRuns()]);
+      const latest = allRuns.find((item) => item.profile_id === profileId) ?? null;
+      setSavedProfile(stored);
+      setDraft(toDraft(stored));
+      setRun(latest);
+      writeLocal(PROFILE_KEY, profileId);
+      writeLocal(RUN_KEY, latest?.id ?? null);
+      if (latest) {
+        const [rows, sum] = await Promise.all([api.results(latest.id), api.summary(latest.id)]);
+        setResults(rows);
+        setSummary(sum);
+      } else {
+        setResults([]);
+        setSummary(null);
+      }
+    } catch (e) {
+      fail(e);
+    } finally {
+      setLoading(false);
+    }
+  }, [fail]);
+
+  const newCase = useCallback(() => {
+    setSavedProfile(null);
+    setDraft(blankProfile());
+    setRun(null);
+    setResults([]);
+    setSummary(null);
+    setValidation(null);
+    writeLocal(PROFILE_KEY, null);
+    writeLocal(RUN_KEY, null);
+  }, []);
+
   const startRun = useCallback(async (demoMode: boolean) => {
     setLoading(true);
     setError(null);
@@ -251,6 +303,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       if (!profile) {
         profile = await api.createProfile(profileDraft);
         setSavedProfile(profile);
+        setCases(await api.cases());
         writeLocal(PROFILE_KEY, profile.id);
       } else {
         await api.updateProfile(profile.id, profileDraft);
@@ -320,6 +373,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       setSummary(null);
       writeLocal(RUN_KEY, null);
       writeLocal(PROFILE_KEY, null);
+      setCases(await api.cases());
     } catch (e) {
       fail(e);
     }
@@ -335,12 +389,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<Store>(
     () => ({
-      capabilities, profileDraft, setProfileDraft, savedProfile, restored,
+      capabilities, profileDraft, setProfileDraft, savedProfile, cases, switchCase, newCase, restored,
       loadDemoProfile, clearProfile, validation, run, results,
       summary, loading, error, saveProfile, startRun, cancelRun, retryRun, collectDocuments,
       decide, refreshResults, deleteEverything, clearError: () => setError(null),
     }),
-    [capabilities, profileDraft, setProfileDraft, savedProfile, restored, loadDemoProfile,
+    [capabilities, profileDraft, setProfileDraft, savedProfile, cases, switchCase, newCase,
+     restored, loadDemoProfile,
      clearProfile, validation, run, results, summary, loading, error, saveProfile, startRun,
      cancelRun, retryRun, collectDocuments, decide, refreshResults, deleteEverything],
   );

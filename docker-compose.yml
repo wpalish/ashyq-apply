@@ -42,7 +42,10 @@ services:
       context: ./backend
     command: ["python", "-m", "alembic", "upgrade", "head"]
     environment: &backend-env
-      UNIMATCH_ENVIRONMENT: production
+      # The local stack is production-shaped but served over plain localhost
+      # HTTP, so it is explicitly staging. A real deployment uses production,
+      # HTTPS-only CORS and Secure cookies (validated at startup).
+      UNIMATCH_ENVIRONMENT: staging
       UNIMATCH_DATABASE_URL: postgresql+psycopg://ashyq:${POSTGRES_PASSWORD:-change-me-in-production}@postgres:5432/ashyq_apply
       UNIMATCH_AUTO_MIGRATE: "false"
       UNIMATCH_DEMO_MODE: ${UNIMATCH_DEMO_MODE:-true}
@@ -50,6 +53,10 @@ services:
       UNIMATCH_FETCH_CONTACT: ${UNIMATCH_FETCH_CONTACT:-}
       UNIMATCH_CORS_ORIGINS: ${UNIMATCH_CORS_ORIGINS:-http://localhost:8080}
       UNIMATCH_LOG_LEVEL: ${UNIMATCH_LOG_LEVEL:-INFO}
+      UNIMATCH_AUTH_ENABLED: "true"
+      UNIMATCH_AUTH_REGISTRATION_ENABLED: ${UNIMATCH_AUTH_REGISTRATION_ENABLED:-true}
+      # localhost uses HTTP; external deployments must set this true behind TLS.
+      UNIMATCH_COOKIE_SECURE: ${UNIMATCH_COOKIE_SECURE:-false}
     depends_on:
       postgres:
         condition: service_healthy

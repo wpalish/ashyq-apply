@@ -153,8 +153,14 @@ class AuditEvent(TimestampedBase):
     """
 
     __tablename__ = "audit_events"
-    __table_args__ = (Index("ix_audit_entity", "entity_type", "entity_id"),)
+    __table_args__ = (
+        Index("ix_audit_entity", "entity_type", "entity_id"),
+        Index("ix_audit_organization_created", "organization_id", "created_at"),
+    )
 
+    organization_id: Mapped[str] = mapped_column(
+        String(32), ForeignKey("organizations.id", ondelete="CASCADE"), index=True
+    )
     actor: Mapped[str] = mapped_column(String(20), default="system")
     action: Mapped[str] = mapped_column(String(60), index=True)
     entity_type: Mapped[str] = mapped_column(String(40))

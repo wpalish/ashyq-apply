@@ -86,13 +86,25 @@ class RunState:
         return self.stages.setdefault(stage.value, StageState())
 
     def progress(self) -> float:
-        tracked = [s for s in STAGE_ORDER if s not in (PipelineStage.QUEUED, PipelineStage.COMPLETED)]
+        # This endpoint reports *research* progress. Waiting for the applicant
+        # and the optional post-approval document collection are later workflow
+        # phases, so a finished shortlist must read 100%, not 71% or 86%.
+        tracked = [
+            PipelineStage.PROFILE_VALIDATION,
+            PipelineStage.CANDIDATE_DISCOVERY,
+            PipelineStage.PROGRAM_VERIFICATION,
+            PipelineStage.FUNDING_DISCOVERY,
+            PipelineStage.ASSESSMENT,
+        ]
         done = sum(1 for s in tracked if self[s].status in ("done", "skipped"))
         return round(done / len(tracked), 3) if tracked else 0.0
 
 
 def is_lease_expired(
-    stage: str, heartbeat_at: datetime | None, *, now: datetime | None = None,
+    stage: str,
+    heartbeat_at: datetime | None,
+    *,
+    now: datetime | None = None,
     lease_seconds: int = LEASE_SECONDS,
 ) -> bool:
     """Whether a run claims to be working but nothing is behind it.

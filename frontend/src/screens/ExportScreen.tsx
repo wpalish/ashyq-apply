@@ -94,6 +94,8 @@ export function ExportScreen() {
           {exported && (
             <pre
               className="xs mono"
+              tabIndex={0}
+              aria-label="Stored profile data"
               style={{
                 marginTop: 'var(--space-4)', maxHeight: '20rem', overflow: 'auto',
                 background: 'var(--surface-sunken)', padding: 'var(--space-3)',
