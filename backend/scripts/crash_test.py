@@ -123,6 +123,21 @@ def main() -> int:
 
     # --- 3. a new worker must notice and recover ---------------------------
     time.sleep(LEASE_SECONDS + 1)
+
+    # The kill races the run: worker A can finish between the moment we decide
+    # to kill it and the moment the signal lands. When that happens there is
+    # nothing to recover and the job legitimately ends on attempt 1, which is
+    # not a recovery failure and must not be reported as one. Attempts are
+    # incremented on claim, so a genuinely recovered job always reaches 2.
+    with session_scope() as session:
+        job = session.get(Job, job_id)
+        if job.status in ("succeeded", "completed"):
+            print()
+            print("  INCONCLUSIVE: the kill landed after worker A had already "
+                  "finished the job, so there was nothing to recover.")
+            print("  This is a race in this script, not a product failure. Re-run it.")
+            return 2
+
     recovery = start_worker()
     print(f"worker B pid {recovery.pid} started after the lease expired")
 
@@ -166,7 +181,10 @@ def main() -> int:
         if job.status != "succeeded":
             problems.append(f"job ended {job.status}, expected succeeded")
         if job.attempts < 2:
-            problems.append("the job was not re-attempted after the crash")
+            problems.append(
+                "the job was not re-attempted after the crash: attempts stayed at "
+                f"{job.attempts}, and a claim always increments it"
+            )
         if run.stage not in ("awaiting_user_decision", "completed"):
             problems.append(f"run ended at {run.stage}, not a decision point")
         if len(keys) != len(set(keys)):
