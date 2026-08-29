@@ -4,9 +4,14 @@ Every row below is a command that was run on `claude/production-completion`,
 with the result it produced. A gate is PASS only when its command was executed
 here and its output read. Rows that were not run say so.
 
-Measured at `0af7daa`. The live-discovery rows are three consecutive runs of
-the ten-institution canary plus one run of the frozen six-institution holdout,
-all at that same commit, with no backend change between them.
+Measured at `1527e2d`, except the live-discovery rows, which were measured at
+`0af7daa` — the last commit before the series started. Nothing affecting
+discovery changed between the two; the only later change is how the canary
+*reports* a failed institution.
+
+The live-discovery rows are three consecutive runs of the ten-institution
+canary plus one run of the frozen six-institution holdout, all at that one
+commit, with no code change between them.
 
 ## Environment
 
@@ -24,9 +29,9 @@ all at that same commit, with no backend change between them.
 |---|---|---|
 | Lint (backend) | `.venv/bin/python -m ruff check .` | **PASS** — All checks passed |
 | Types (backend) | `.venv/bin/python -m mypy app` | **PASS** — no issues in 78 source files |
-| Backend, SQLite | `.venv/bin/python -m pytest` | **PASS** — 971 passed |
+| Backend, SQLite | `.venv/bin/python -m pytest` | **PASS** — 977 passed |
 | Backend coverage | `pytest --cov=app --cov-fail-under=80` | **PASS** — 90.65%, 6083 statements, 569 missed |
-| Backend, PostgreSQL | `scripts/pg.py .venv/bin/python -m pytest` | **PASS** — 971 passed |
+| Backend, PostgreSQL | `scripts/pg.py .venv/bin/python -m pytest` | **PASS** — 977 passed |
 | Frontend types | `npx tsc --noEmit` | **PASS** — clean |
 | Frontend lint | `npx eslint src e2e` | **PASS** — clean |
 | Frontend unit | `npx vitest run` | **PASS** — 56 passed, 6 files |
@@ -86,7 +91,7 @@ as per-programme pages.
 
 ## What changed in this session
 
-31 commits on top of `2ebcbc6`. The three P1 defects named at the start were
+33 commits on top of `2ebcbc6`. The three P1 defects named at the start were
 fixed first, before any discovery or extraction work:
 
 | Defect | Commit | Evidence it is fixed |
@@ -101,7 +106,7 @@ fixed first, before any discovery or extraction work:
 |---|---|
 | Backend | 78 Python files, 15,536 lines |
 | Frontend | 27 TypeScript files, 5,051 lines |
-| Tests | 971 backend, 56 frontend unit, 52 E2E |
+| Tests | 977 backend, 56 frontend unit, 52 E2E |
 | Page fixtures | 22 real pages, saved as served |
 | `runner.py` | 712 lines |
 | `page_classifier.py` | 957 lines |
