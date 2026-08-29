@@ -11,7 +11,7 @@ from app.domain import enums
 from app.domain.currency import (
     MAX_RATE_AGE_DAYS,
     FxUnavailable,
-    current_provider,
+    provider_for,
     supported_currencies,
 )
 from app.models import CURRENT_SCHEMA_VERSION, AuditEvent
@@ -20,20 +20,48 @@ from app.security import Principal, get_principal
 router = APIRouter(prefix="/api", tags=["meta"])
 
 
-def _currency_meta() -> dict:
-    """What rates this instance is actually using, not what it could use."""
+def _currency_limit(settings) -> str:
+    """One sentence about this instance's rates, true for this instance."""
+    meta = _currency_meta(settings)
+    if not meta["available"]:
+        return (
+            f"No exchange rate is available ({meta.get('reason', 'unknown reason')}); "
+            "amounts stay in their source currency and funding gaps are not computed."
+        )
+    if not meta.get("authoritative", False):
+        return (
+            f"Currency rates are a bundled snapshot dated {meta['rate_date']}, not a "
+            "live feed, and every converted amount is labelled an estimate."
+        )
+    return (
+        f"Currency rates come from {meta['provider']}, observed {meta['rate_date']}. "
+        f"A rate older than {meta['max_age_days']} days, or a currency the provider "
+        "does not publish, is refused rather than guessed."
+    )
+
+
+def _currency_meta(settings) -> dict:
+    """What rates a run on *this* instance would use.
+
+    Built from the configuration, not from process state: there is no global
+    provider any more, and reporting a default would describe an instance
+    nobody is running. When the provider cannot be reached, `supported` is
+    empty — advertising the bundled table's currencies as available live
+    conversions is exactly the silent fallback this product refuses.
+    """
+    provider = provider_for(settings.fx_provider, demo=settings.demo_mode)
     try:
-        snap = current_provider().snapshot()
+        snap = provider.snapshot()
     except FxUnavailable as exc:
         return {
-            "supported": supported_currencies(),
-            "provider": getattr(current_provider(), "provider_id", "unknown"),
+            "supported": [],
+            "provider": getattr(provider, "provider_id", "unknown"),
             "available": False,
             "reason": str(exc),
             "max_age_days": MAX_RATE_AGE_DAYS,
         }
     return {
-        "supported": sorted(snap.rates),
+        "supported": supported_currencies(provider),
         "provider": snap.provider_id,
         "available": True,
         "rate_date": snap.observed_on.isoformat(),
@@ -76,7 +104,7 @@ def capabilities() -> dict:
             {"name": "web-government", "role": "post-study work rules", "live": True},
         ],
         "fetch_tiers": ["structured data", "plain HTTP", "Playwright render", "PDF parsing"],
-        "currency": _currency_meta(),
+        "currency": _currency_meta(s),
         "guarantees": [
             "robots.txt is honoured before every fetch, including the browser tier",
             "applicant data is never placed in an outbound URL",
@@ -87,7 +115,10 @@ def capabilities() -> dict:
         "limits": [
             "The product reports published criteria only. It cannot predict an admission or an award.",
             "Grade conversions are approximations and are never applied without the user accepting one.",
-            "Currency rates are a dated static snapshot, not a live feed.",
+            # Stated from the configured provider. It read "a dated static
+            # snapshot, not a live feed" unconditionally, which was untrue on
+            # any instance configured for live rates.
+            _currency_limit(s),
         ],
     }
 

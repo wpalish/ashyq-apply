@@ -189,21 +189,55 @@ class EcbFxProvider:
         raise FxUnavailable(f"the ECB rate feed could not be reached ({last})")
 
 
-_provider: FxProvider = StaticFxProvider()
+#: The provider used when a caller does not name one. It is a *default*, never
+#: a switch: nothing reassigns it at runtime. An earlier version let
+#: `ResearchRunner` point a module-level global at whichever provider its own
+#: run wanted, so with two jobs in flight — the worker runs two by default —
+#: one run silently re-pointed the other's conversions at a different source.
+#: A funding gap has to be computed against one snapshot, and that snapshot has
+#: to be the one its own run recorded.
+_DEFAULT_PROVIDER: FxProvider = StaticFxProvider()
 
 
-def set_provider(provider: FxProvider) -> None:
-    """Choose where rates come from. Demo and tests use the static provider."""
-    global _provider
-    _provider = provider
+def default_provider() -> FxProvider:
+    """The fallback for callers outside a run, such as the vocabulary endpoint."""
+    return _DEFAULT_PROVIDER
 
 
-def current_provider() -> FxProvider:
-    return _provider
+def provider_for(settings_value: str, *, demo: bool) -> FxProvider:
+    """The provider one run should use, built fresh for that run.
+
+    Demo mode is deterministic and offline, so it always uses the bundled
+    table whatever the configuration says.
+    """
+    if demo or settings_value == "static":
+        return StaticFxProvider()
+    return EcbFxProvider()
 
 
-def _usable_snapshot() -> FxSnapshot:
-    snap = _provider.snapshot()
+def compute_provider_signature(provider: FxProvider) -> dict[str, object]:
+    """What a run records about the rates it used, for its evidence trail."""
+    try:
+        snap = provider.snapshot()
+    except FxUnavailable as exc:
+        return {
+            "provider": getattr(provider, "provider_id", "unknown"),
+            "available": False,
+            "reason": str(exc),
+        }
+    return {
+        "provider": snap.provider_id,
+        "available": True,
+        "source_url": snap.source_url,
+        "observed_on": snap.observed_on.isoformat(),
+        "fetched_at": snap.fetched_at.isoformat(),
+        "authoritative": snap.authoritative,
+        "age_days": snap.age_days,
+    }
+
+
+def _usable_snapshot(provider: FxProvider | None = None) -> FxSnapshot:
+    snap = (provider or _DEFAULT_PROVIDER).snapshot()
     if snap.authoritative and snap.age_days > MAX_RATE_AGE_DAYS:
         raise FxUnavailable(
             f"the newest rate available is stale: observed on {snap.observed_on} "
@@ -213,18 +247,28 @@ def _usable_snapshot() -> FxSnapshot:
     return snap
 
 
-def supported_currencies() -> list[str]:
+def supported_currencies(provider: FxProvider | None = None) -> list[str]:
+    """Currencies this provider can actually convert, right now.
+
+    On failure this returned the bundled table's currencies, which advertised
+    live conversions that were not available. An unavailable provider supports
+    nothing.
+    """
     try:
-        return sorted(_provider.snapshot().rates)
+        return sorted((provider or _DEFAULT_PROVIDER).snapshot().rates)
     except FxUnavailable:
-        return sorted(_PER_USD)
+        return []
 
 
-def rate(from_currency: str, to_currency: str) -> float:
-    return _usable_snapshot().factor(from_currency, to_currency)
+def rate(
+    from_currency: str, to_currency: str, *, provider: FxProvider | None = None
+) -> float:
+    return _usable_snapshot(provider).factor(from_currency, to_currency)
 
 
-def convert(money: Money, to_currency: str) -> ConvertedMoney | Money:
+def convert(
+    money: Money, to_currency: str, *, provider: FxProvider | None = None
+) -> ConvertedMoney | Money:
     """Convert, preserving the original amount, the rate and the rate's date.
 
     Returns the input untouched when the currency already matches, so callers
@@ -233,7 +277,7 @@ def convert(money: Money, to_currency: str) -> ConvertedMoney | Money:
     dst = to_currency.upper()
     if money.currency.upper() == dst:
         return money
-    snap = _usable_snapshot()
+    snap = _usable_snapshot(provider)
     r = snap.factor(money.currency, dst)
     return ConvertedMoney(
         amount=round(money.amount * r, 2),

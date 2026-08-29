@@ -28,8 +28,7 @@ from app.config import Settings
 from app.domain import dedupe
 from app.domain.conflicts import enforce_source_hierarchy, find_conflicts
 from app.domain.costs import compute_funding_gap, total_cost
-from app.domain.currency import EcbFxProvider, StaticFxProvider
-from app.domain.currency import set_provider as set_fx_provider
+from app.domain.currency import compute_provider_signature, provider_for
 from app.domain.eligibility import evaluate_program
 from app.domain.enums import (
     ClaimType,
@@ -99,6 +98,10 @@ class ResearchRunner:
         self._candidates: list[Candidate] = []
         #: Result and evidence writes, kept idempotent for retries.
         self.store = ResultStore(session, run)
+        #: This run's exchange-rate source. Built here and passed down
+        #: explicitly: assigning it to a module global let one run change
+        #: another's rates, and the worker runs two jobs at a time.
+        self.fx = provider_for(settings.fx_provider, demo=self.demo)
 
     # --- infrastructure -------------------------------------------------
 
@@ -170,13 +173,10 @@ class ResearchRunner:
             "target_currency": self.settings.target_currency,
             "respect_robots": self.settings.respect_robots,
             "fx_provider": self.settings.fx_provider,
+            # The snapshot this run actually used, so a funding gap can be
+            # audited against the rates it was computed from.
+            "fx": compute_provider_signature(self.fx),
         }
-        # Demo mode is deterministic and offline, so it always uses the bundled
-        # table; a live run uses whatever the configuration selects.
-        set_fx_provider(
-            StaticFxProvider() if self.demo or self.settings.fx_provider == "static"
-            else EcbFxProvider()
-        )
         fetcher = self._make_fetcher()
         browser = BrowserFetcher(
             fetcher, enabled=self.settings.enable_browser_tier and not self.demo
@@ -463,7 +463,9 @@ class ResearchRunner:
                 ),
             )
 
-            total = total_cost(result.costs, self.settings.target_currency)
+            total = total_cost(
+                result.costs, self.settings.target_currency, provider=self.fx
+            )
             tuition_money = result.costs.items.get(CostCategory.TUITION)
             for s in scholarships:
                 s.eligibility_checks = _scholarship_eligibility(s, self.profile)
@@ -576,7 +578,8 @@ class ResearchRunner:
             result.funding_fit = fit
             result.best_funding_classification = best
             result.funding_gap = compute_funding_gap(
-                result.costs, result.scholarships, self.settings.target_currency
+                result.costs, result.scholarships, self.settings.target_currency,
+                provider=self.fx,
             )
             if reason:
                 result.funding_gap.warnings.append(reason)

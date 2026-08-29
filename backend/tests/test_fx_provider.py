@@ -24,15 +24,10 @@ from app.domain.currency import (
     StaticFxProvider,
     convert,
     rate,
-    set_provider,
 )
 from app.schemas.money import Money
 
-
-@pytest.fixture(autouse=True)
-def _restore_default_provider():
-    yield
-    set_provider(StaticFxProvider())
+# There is no global provider to restore: every call names the one it wants.
 
 
 def snapshot(observed: date, rates: dict[str, float]) -> FxSnapshot:
@@ -55,16 +50,16 @@ class StubProvider:
 
 class TestProvenance:
     def test_a_conversion_carries_its_rate_source_and_date(self):
-        set_provider(StubProvider(snapshot(date(2026, 8, 28), {"EUR": 0.90})))
-        out = convert(Money(amount=1000, currency="EUR"), "USD")
+        provider = StubProvider(snapshot(date(2026, 8, 28), {"EUR": 0.90}))
+        out = convert(Money(amount=1000, currency="EUR"), "USD", provider=provider)
         assert out.original_amount == 1000
         assert out.original_currency == "EUR"
         assert out.rate_date == date(2026, 8, 28)
         assert "example.invalid" in out.rate_source
 
     def test_the_source_amount_is_always_preserved(self):
-        set_provider(StubProvider(snapshot(date(2026, 8, 28), {"EUR": 0.90})))
-        out = convert(Money(amount=1234.56, currency="EUR"), "USD")
+        provider = StubProvider(snapshot(date(2026, 8, 28), {"EUR": 0.90}))
+        out = convert(Money(amount=1234.56, currency="EUR"), "USD", provider=provider)
         assert out.original_amount == 1234.56
         assert out.original_currency == "EUR"
 
@@ -75,39 +70,39 @@ class TestProvenance:
 
 class TestNoSilentFallback:
     def test_an_unavailable_provider_raises_rather_than_guessing(self):
-        set_provider(StubProvider(None, "the rate service could not be reached"))
+        provider = StubProvider(None, "the rate service could not be reached")
         with pytest.raises(FxUnavailable) as exc:
-            convert(Money(amount=1000, currency="EUR"), "USD")
+            convert(Money(amount=1000, currency="EUR"), "USD", provider=provider)
         assert "could not be reached" in str(exc.value)
 
     def test_a_stale_snapshot_is_refused(self):
         old = date.today() - timedelta(days=MAX_RATE_AGE_DAYS + 1)
-        set_provider(StubProvider(snapshot(old, {"EUR": 0.90})))
+        provider = StubProvider(snapshot(old, {"EUR": 0.90}))
         with pytest.raises(FxUnavailable) as exc:
-            convert(Money(amount=1000, currency="EUR"), "USD")
+            convert(Money(amount=1000, currency="EUR"), "USD", provider=provider)
         assert "stale" in str(exc.value).lower()
         assert str(old) in str(exc.value), "the refusal must say how old the rate is"
 
     def test_a_fresh_snapshot_is_accepted(self):
         fresh = date.today() - timedelta(days=1)
-        set_provider(StubProvider(snapshot(fresh, {"EUR": 0.90})))
-        assert convert(Money(amount=1000, currency="EUR"), "USD").rate_date == fresh
+        provider = StubProvider(snapshot(fresh, {"EUR": 0.90}))
+        assert convert(Money(amount=1000, currency="EUR"), "USD", provider=provider).rate_date == fresh
 
     def test_a_currency_the_provider_does_not_publish_is_refused(self):
         """The ECB publishes no rate for the Kazakhstani tenge. Refusing is the
         honest answer; inventing one would corrupt a funding gap."""
-        set_provider(StubProvider(snapshot(date.today(), {"EUR": 0.90})))
+        provider = StubProvider(snapshot(date.today(), {"EUR": 0.90}))
         with pytest.raises(FxUnavailable) as exc:
-            convert(Money(amount=1000, currency="KZT"), "USD")
+            convert(Money(amount=1000, currency="KZT"), "USD", provider=provider)
         assert "KZT" in str(exc.value)
 
 
 class TestCaching:
     def test_the_provider_is_asked_once_per_conversion_batch(self):
         stub = StubProvider(snapshot(date.today(), {"EUR": 0.90, "GBP": 0.78}))
-        set_provider(stub)
-        convert(Money(amount=1, currency="EUR"), "USD")
-        convert(Money(amount=1, currency="GBP"), "USD")
+        provider = stub
+        convert(Money(amount=1, currency="EUR"), "USD", provider=provider)
+        convert(Money(amount=1, currency="GBP"), "USD", provider=provider)
         assert stub.calls <= 2, "each conversion re-fetched the rate table"
 
 
@@ -115,8 +110,8 @@ class TestStaticProvider:
     """The deterministic provider tests and demo mode run on."""
 
     def test_it_is_deterministic(self):
-        set_provider(StaticFxProvider())
-        assert rate("EUR", "USD") == rate("EUR", "USD")
+        provider = StaticFxProvider()
+        assert rate("EUR", "USD", provider=provider) == rate("EUR", "USD", provider=provider)
 
     def test_it_reports_its_own_date_and_source(self):
         provider = StaticFxProvider()
@@ -131,8 +126,8 @@ class TestStaticProvider:
             raise AssertionError("the static provider must not use the network")
 
         monkeypatch.setattr(httpx, "Client", explode)
-        set_provider(StaticFxProvider())
-        assert rate("EUR", "USD") > 0
+        provider = StaticFxProvider()
+        assert rate("EUR", "USD", provider=provider) > 0
 
 
 class TestEcbProviderParsing:
@@ -203,9 +198,9 @@ class TestGapIsNotComputedWithoutARate:
     def test_an_unreachable_provider_does_not_raise_out_of_the_gap_calculation(self):
         from app.domain.costs import compute_funding_gap
 
-        set_provider(StubProvider(None, "the rate feed could not be reached"))
+        provider = StubProvider(None, "the rate feed could not be reached")
         costs, award = self.breakdown_and_award()
-        gap = compute_funding_gap(costs, [award], target_currency="USD")
+        gap = compute_funding_gap(costs, [award], target_currency="USD", provider=provider)
         assert gap is None or gap.computable is False, (
             "an unreachable rate feed must yield 'not computable', never a number"
         )
@@ -216,7 +211,7 @@ class TestGapIsNotComputedWithoutARate:
         from app.domain.costs import compute_funding_gap
 
         old = date.today() - timedelta(days=MAX_RATE_AGE_DAYS + 5)
-        set_provider(StubProvider(snapshot(old, {"EUR": 0.90})))
+        provider = StubProvider(snapshot(old, {"EUR": 0.90}))
         costs, award = self.breakdown_and_award()
-        gap = compute_funding_gap(costs, [award], target_currency="USD")
+        gap = compute_funding_gap(costs, [award], target_currency="USD", provider=provider)
         assert gap is None or gap.computable is False
