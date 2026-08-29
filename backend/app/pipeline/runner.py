@@ -42,11 +42,23 @@ from app.domain.freshness import age_days, apply_freshness, is_stale
 from app.domain.funding import classify, funding_fit_for
 from app.domain.scoring import admissions_fit_for, score_result
 from app.domain.validation import validate_profile
-from app.models import AuditEvent, ClaimRow, ConflictRow, ProgramResultRow, ResearchRun, new_id
+from app.models import AuditEvent, ProgramResultRow, ResearchRun, new_id
+from app.pipeline.assessment import (
+    CORE_QUESTIONS,
+    _applicant_eligible,
+    _check,
+    _explanation_component,
+    _fit_label,
+    _scholarship_eligibility,
+)
+
+# Re-exported: the pure assessment helpers moved to `assessment.py`, and
+# callers (including tests) still reach them through the runner.
+from app.pipeline.persistence import ResultStore
 from app.pipeline.state import IN_PROGRESS_STAGES, RunState
 from app.schemas.claim import ClaimOut, UnresolvedQuestion
 from app.schemas.profile import ApplicantProfileIn
-from app.schemas.result import ProgramResult, Tristate
+from app.schemas.result import ProgramResult
 
 log = logging.getLogger("unimatch.pipeline")
 
@@ -85,6 +97,8 @@ class ResearchRunner:
         self.verify_limit = min(run.verify_limit or settings.verify_limit, self.candidate_limit)
         self.intake = f"{profile.context.intake_term} {profile.context.intake_year}"
         self._candidates: list[Candidate] = []
+        #: Result and evidence writes, kept idempotent for retries.
+        self.store = ResultStore(session, run)
 
     # --- infrastructure -------------------------------------------------
 
@@ -504,7 +518,7 @@ class ResearchRunner:
                     )
                 )
 
-            self._update_result(row, result, extra_claims=claims, conflicts=conflicts)
+            self.store.update_result(row, result, extra_claims=claims, conflicts=conflicts)
             self.run.claims_recorded += len(claims)
             st.items_done = i + 1
             if i % 4 == 0:
@@ -573,7 +587,7 @@ class ResearchRunner:
             result.verification_completeness = _completeness(claims)
             result.career_notes = result.career_notes or ""
 
-            self._update_result(row, result)
+            self.store.update_result(row, result)
             st.items_done = i + 1
             if i % 5 == 0:
                 self._save()
@@ -626,7 +640,7 @@ class ResearchRunner:
                 self.run.pages_failed += ar.pages_failed
                 result.checklist = checklist
                 row.checklist = checklist.model_dump(mode="json")
-                self._update_result(row, result)
+                self.store.update_result(row, result)
                 self._audit("checklist_built", "result", row.id, documents=len(ar.claims))
                 built += 1
                 st.items_done = i + 1
@@ -643,121 +657,16 @@ class ResearchRunner:
 
     # --- persistence helpers ---------------------------------------------
 
+    # --- persistence, delegated ------------------------------------------
+    # The SQL and the idempotency rules live in `ResultStore`; the stages call
+    # through these so their own code reads as pipeline logic rather than as
+    # database work.
+
     def _rows(self) -> list[ProgramResultRow]:
-        return (
-            self.session.query(ProgramResultRow)
-            .filter(ProgramResultRow.run_id == self.run.id)
-            .order_by(ProgramResultRow.id)
-            .all()
-        )
+        return self.store.rows()
 
     def _persist_result(self, result: ProgramResult, claims, conflicts) -> None:
-        """Write a result, or refresh the one a previous attempt wrote.
-
-        A retry after a crash re-derives results the first attempt already
-        stored. Inserting blindly violates the (run_id, dedupe_key) unique
-        index and fails the retry, so an existing row is updated in place and
-        its evidence replaced rather than appended to.
-        """
-        dedupe_key = dedupe.program_key(
-            result.university, result.program, result.degree, result.intake, result.country
-        )
-        existing = (
-            self.session.query(ProgramResultRow)
-            .filter(
-                ProgramResultRow.run_id == self.run.id,
-                ProgramResultRow.dedupe_key == dedupe_key,
-            )
-            .one_or_none()
-        )
-        if existing is not None:
-            result.id = existing.id
-            self._replace_evidence(existing.id)
-            self._update_result(existing, result, extra_claims=claims, conflicts=conflicts)
-            return
-
-        # The row's primary key is authoritative; the result document adopts it
-        # so every claim, conflict and checklist points at the same identifier.
-        row = ProgramResultRow(
-            id=new_id(),
-            run_id=self.run.id,
-            dedupe_key=dedupe_key,
-            university=result.university,
-            university_key=result.university_id,
-            country=result.country,
-            program=result.program,
-            eligibility=result.eligibility.value,
-            admissions_fit=result.admissions_fit.value,
-            funding_fit=result.funding_fit.value,
-            funding_classification=result.best_funding_classification.value,
-            score_total=0.0,
-            payload=result.model_dump(mode="json"),
-        )
-        result.id = row.id
-        row.payload = result.model_dump(mode="json")
-        self.session.add(row)
-        self.session.flush()
-        self._store_claims(row.id, claims)
-        self._store_conflicts(row.id, conflicts)
-
-    def _update_result(
-        self, row: ProgramResultRow, result: ProgramResult, extra_claims=None, conflicts=None
-    ) -> None:
-        result.id = row.id
-        row.payload = result.model_dump(mode="json")
-        row.eligibility = result.eligibility.value
-        row.admissions_fit = result.admissions_fit.value
-        row.funding_fit = result.funding_fit.value
-        row.funding_classification = result.best_funding_classification.value
-        row.score_total = result.preference_score.total if result.preference_score else 0.0
-        self.session.add(row)
-        if extra_claims:
-            self._store_claims(row.id, extra_claims)
-        if conflicts:
-            self._store_conflicts(row.id, conflicts)
-
-    def _replace_evidence(self, result_id: str) -> None:
-        """Drop the evidence a previous attempt stored for this result.
-
-        Re-running a stage re-reads the same pages, so keeping both copies
-        would inflate the claim count and show the user duplicate evidence.
-        """
-        self.session.query(ClaimRow).filter(ClaimRow.result_id == result_id).delete(
-            synchronize_session=False
-        )
-        self.session.query(ConflictRow).filter(ConflictRow.result_id == result_id).delete(
-            synchronize_session=False
-        )
-
-    def _store_claims(self, result_id: str, claims) -> None:
-        for c in claims:
-            self.session.add(
-                ClaimRow(
-                    run_id=self.run.id,
-                    result_id=result_id,
-                    claim_type=c.claim_type.value,
-                    status=c.status.value,
-                    source_url=c.source_url,
-                    source_specificity=c.source_specificity.value,
-                    accessed_at=c.accessed_at,
-                    payload=c.model_dump(mode="json"),
-                )
-            )
-
-    def _store_conflicts(self, result_id: str, conflicts) -> None:
-        for c in conflicts:
-            self.session.add(
-                ConflictRow(
-                    run_id=self.run.id,
-                    result_id=result_id,
-                    claim_type=c.claim_type.value,
-                    unresolved=c.unresolved,
-                    payload=c.model_dump(mode="json"),
-                )
-            )
-
-
-# --- small helpers ------------------------------------------------------
+        self.store.persist_result(result, claims, conflicts)
 
 
 def _to_out(claim, claim_id: str) -> ClaimOut:
@@ -778,154 +687,6 @@ def _from_out(out: ClaimOut):
     return Claim(**data)
 
 
-def _check(requirement, published, applicant, status, explanation, hard=False):
-    from app.schemas.result import RequirementCheck
-
-    return RequirementCheck(
-        requirement=requirement,
-        published_value=published,
-        applicant_value=applicant,
-        status=status,
-        is_hard_filter=hard,
-        explanation=explanation,
-    )
-
-
-def _scholarship_eligibility(s, profile: ApplicantProfileIn):
-    """Check the applicant against an award's own published restrictions."""
-    checks = []
-    citizenship = profile.context.citizenship
-    residence = profile.context.country_of_residence
-    if s.citizenship_restrictions or s.residency_restrictions:
-        # Nationality and residency are separate routes into the same award,
-        # and an award naming both accepts either. TU Delft's CLIP award goes
-        # to students who "hold either a Greek passport or Greek residence": an
-        # applicant with Greek residence qualifies on residence alone, so
-        # checking citizenship by itself would wrongly exclude them.
-        by_citizenship = bool(
-            s.citizenship_restrictions
-            and citizenship
-            and citizenship.lower() in " ".join(s.citizenship_restrictions).lower()
-        )
-        by_residence = bool(
-            s.residency_restrictions
-            and residence
-            and residence.lower() in " ".join(s.residency_restrictions).lower()
-        )
-        ok = by_citizenship or by_residence
-        named = ", ".join(sorted(
-            {*s.citizenship_restrictions, *s.residency_restrictions}
-        ))
-        if ok:
-            route = "citizenship" if by_citizenship else "country of residence"
-            explanation = f"The applicant's {route} falls within the published restriction."
-        else:
-            explanation = (
-                f"The award is restricted to {named}. An applicant holding "
-                f"{citizenship or 'an unrecorded'} citizenship and residing in "
-                f"{residence or 'an unrecorded country'} is not eligible."
-            )
-        checks.append(
-            _check(
-                "Scholarship citizenship or residency eligibility",
-                [*s.citizenship_restrictions, *s.residency_restrictions],
-                f"{citizenship} / {residence}",
-                EligibilityStatus.MET if ok else EligibilityStatus.NOT_APPLICABLE,
-                explanation,
-            )
-        )
-    elif s.international_eligible == "no":
-        checks.append(
-            _check(
-                "Scholarship international eligibility",
-                False,
-                citizenship,
-                EligibilityStatus.NOT_APPLICABLE,
-                "The award is officially closed to international students.",
-            )
-        )
-    elif s.international_eligible == "yes":
-        checks.append(
-            _check(
-                "Scholarship international eligibility",
-                True,
-                citizenship,
-                EligibilityStatus.MET,
-                "The award is officially open to international students of any nationality.",
-            )
-        )
-
-    for test, minimum in (s.min_test_scores or {}).items():
-        got = {
-            "ielts": profile.academics.ielts.overall,
-            "toefl": profile.academics.toefl.total,
-            "sat": profile.academics.sat.total,
-        }.get(test)
-        if got is None:
-            checks.append(
-                _check(
-                    f"Scholarship {test.upper()} minimum",
-                    minimum,
-                    None,
-                    EligibilityStatus.PENDING,
-                    f"The award requires {test.upper()} {minimum}; no score is in the profile.",
-                )
-            )
-        else:
-            checks.append(
-                _check(
-                    f"Scholarship {test.upper()} minimum",
-                    minimum,
-                    got,
-                    EligibilityStatus.MET if got >= minimum else EligibilityStatus.GAP,
-                    f"Published minimum {minimum}; applicant {got}.",
-                )
-            )
-    return checks
-
-
-def _applicant_eligible(scholarship) -> Tristate:
-    """Roll a scholarship's eligibility checks into one three-valued verdict."""
-    statuses = {c.status for c in scholarship.eligibility_checks}
-    if scholarship.degree_applicability == "no" or scholarship.international_eligible == "no":
-        return "no"
-    if EligibilityStatus.NOT_APPLICABLE in statuses or EligibilityStatus.GAP in statuses:
-        return "no"
-    if not statuses or EligibilityStatus.PENDING in statuses:
-        return "unknown"
-    if scholarship.degree_applicability == "unknown":
-        return "unknown"
-    if statuses <= {EligibilityStatus.MET}:
-        return "yes"
-    return "unknown"
-
-
-def _explanation_component(text: str):
-    from app.schemas.result import ScoreComponent
-
-    return ScoreComponent(
-        name="Admissions fit rationale",
-        raw=0.0,
-        weight=0.0,
-        weighted=0.0,
-        explanation=text,
-        data_present=True,
-    )
-
-
-#: The questions a user actually needs answered before applying. Completeness is
-#: measured against these, not against whatever happened to be extracted -
-#: otherwise a page yielding one verified fact and nothing else reads as 100%.
-CORE_QUESTIONS: tuple[tuple[ClaimType, ...], ...] = (
-    (ClaimType.IELTS_MIN_OVERALL, ClaimType.TOEFL_MIN_TOTAL, ClaimType.DUOLINGO_MIN),
-    (ClaimType.MIN_GPA,),
-    (ClaimType.ADMISSION_DEADLINE,),
-    (ClaimType.TUITION, ClaimType.TOTAL_COST_OF_ATTENDANCE),
-    (ClaimType.SCHOLARSHIP_EXISTS,),
-    (ClaimType.SCHOLARSHIP_INTERNATIONAL_ELIGIBLE, ClaimType.SCHOLARSHIP_CITIZENSHIP_RESTRICTION),
-)
-
-
 def _completeness(claims) -> float:
     """Share of the core questions answered by a current, official claim."""
     from app.domain.enums import ClaimStatus
@@ -937,25 +698,6 @@ def _completeness(claims) -> float:
     }
     answered = sum(1 for group in CORE_QUESTIONS if verified & set(group))
     return round(answered / len(CORE_QUESTIONS), 3)
-
-
-def _fit_label(actual: str | None, preferred: str) -> str:
-    if not actual or actual == "unknown":
-        return "unknown"
-    if preferred in ("any", ""):
-        return "acceptable"
-    if actual == preferred:
-        return "strong"
-    ladders = {
-        "city": ["small", "medium", "large", "metropolis"],
-        "climate": ["cold", "temperate", "mediterranean", "warm"],
-        "workload": ["moderate", "demanding", "very_demanding"],
-    }
-    for ladder in ladders.values():
-        if actual in ladder and preferred in ladder:
-            gap = abs(ladder.index(actual) - ladder.index(preferred))
-            return {0: "strong", 1: "good", 2: "acceptable"}.get(gap, "weak")
-    return "acceptable"
 
 
 def _as_date(v):
