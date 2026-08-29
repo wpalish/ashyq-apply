@@ -44,7 +44,7 @@ from app.adapters.base import Candidate, CandidateProgram
 
 # Re-exported so the adapter, the canary and the tests keep one import site.
 # The rules themselves live in `url_signals`, which touches nothing.
-from app.adapters.discovery.url_signals import (  # noqa: F401
+from app.adapters.discovery.url_signals import (
     _CATALOGUE_PATH,
     _FUNDING_SEGMENT,
     _INDEX_SEGMENT,
@@ -65,11 +65,31 @@ from app.adapters.discovery.url_signals import (  # noqa: F401
     registrable_domain,
     same_institution,
     score_url,
+    url_problem,
 )
 from app.adapters.fetching import Fetcher
 from app.adapters.page_classifier import PageType, classify_page
 from app.schemas.profile import ApplicantProfileIn
 from app.schemas.result import RankingEntry
+
+#: Names that lived here before URL judgement moved to `url_signals`, kept
+#: importable from this module for the callers and tests that still use them.
+#: Listed explicitly rather than left as bare imports: a blanket `ruff --fix`
+#: deleted them once as unused, and the suite stopped collecting rather than
+#: failing a test, which is a much worse way to find out.
+__all__ = [
+    "_CATALOGUE_PATH",
+    "_FUNDING_SEGMENT",
+    "_INDEX_SEGMENT",
+    "_NOT_A_PAGE_ABOUT_STUDYING",
+    "_NOT_A_PROGRAMME_PATH",
+    "_TRACKING_PARAM",
+    "LiveDiscoveryAdapter",
+    "degree_level_named",
+    "degree_levels_named",
+    "registrable_domain",
+    "score_url",
+]
 
 log = logging.getLogger("unimatch.discovery")
 
@@ -890,13 +910,18 @@ def _harvest_links(html: str, base: str, domain: str) -> list[tuple[str, str]]:
     out: list[tuple[str, str]] = []
     seen: set[str] = set()
     for anchor in soup.find_all("a", href=True)[:MAX_LINKS_SCANNED]:
-        url = urljoin(base, anchor["href"]).split("#")[0]
-        if urlparse(url).scheme not in ("http", "https"):
+        try:
+            url = urljoin(base, anchor["href"]).split("#")[0]
+        except ValueError:
+            # `urljoin` itself raises on some malformed hrefs. One bad link on
+            # a page must cost that link and nothing else.
+            continue
+        if url_problem(url) is not None:
             continue
         if not same_institution(url, domain):
             continue
         canonical = canonical_url(url)
-        if canonical in seen:
+        if not canonical or canonical in seen:
             continue
         seen.add(canonical)
         label = re.sub(r"\s+", " ", anchor.get_text(" ", strip=True))[:160]

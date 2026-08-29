@@ -159,18 +159,29 @@ def registrable_domain(host_or_url: str) -> str:
     if not value:
         return ""
     if "/" in value or ":" in value:
-        value = urlparse(value if "//" in value else f"//{value}").hostname or ""
+        try:
+            value = urlparse(value if "//" in value else f"//{value}").hostname or ""
+        except ValueError:
+            # "https://[bad::ipv6/x" raises here rather than at the parse.
+            return ""
         if not value:
             return ""
+    if _CONTROL_CHARACTERS.search(value):
+        return ""
     return _PSL.privatesuffix(value) or value
 
 
 def same_institution(url: str, domain: str) -> bool:
-    """Whether a URL belongs to the institution that owns ``domain``."""
-    try:
-        host = urlparse(url).hostname or ""
-    except ValueError:
+    """Whether a URL belongs to the institution that owns ``domain``.
+
+    This is the check that keeps a fetch on the university's own site, so it
+    answers False for anything it cannot read rather than guessing. A URL with
+    no parseable host has no domain to compare, and treating "unparseable" as
+    "probably fine" is how a crawler ends up somewhere it was never allowed.
+    """
+    if url_problem(url) is not None:
         return False
+    host = urlparse(url).hostname or ""
     return bool(host) and registrable_domain(host) == registrable_domain(domain)
 
 
@@ -185,6 +196,77 @@ _TRACKING_PARAM = re.compile(
 )
 
 
+
+#: Longer than any real university URL, and long enough that a generated or
+#: hostile one is obvious. Bounded because these strings are canonicalised,
+#: compared, stored in traces and read by people.
+MAX_URL_LENGTH = 2048
+
+#: Only these are fetched. `javascript:`, `data:` and `file:` appear in real
+#: pages and none of them is a page on a university's website.
+FETCHABLE_SCHEMES = frozenset({"http", "https"})
+
+#: A host may not contain them, and `urlsplit` does not reject them: a NUL
+#: became a space and `exa\x00mple.edu` was accepted as `exa mple.edu`, a host
+#: that does not exist. Control characters in a host are also how request
+#: smuggling starts, so they are refused rather than cleaned.
+_CONTROL_CHARACTERS = re.compile(r"[\x00-\x20\x7f]")
+
+
+def url_problem(url: str) -> str | None:
+    """Why this URL cannot be used, or None if it can.
+
+    One boundary for every way a string off a web page can fail to be a URL.
+    `urlparse` is deceptive here: it accepts almost anything and defers the
+    failure to `parts.port` and `parts.hostname`, which are properties that
+    raise `ValueError` when read. Guarding the parse alone — which is what the
+    code did — guards nothing:
+
+        canonical_url("https://example.edu:bad/x")
+        ValueError: Port could not be cast to integer value as 'bad'
+
+    One `<a href>` like that on one page was enough to end the research for
+    every institution left in the run.
+
+    The reason is short and never quotes the URL back: traces are stored and
+    read by people, and a 9,000-character string from someone else's page is
+    neither useful nor safe to repeat.
+    """
+    if not url or not url.strip():
+        return "empty"
+    raw = url.strip()
+    if len(raw) > MAX_URL_LENGTH:
+        return f"longer than {MAX_URL_LENGTH} characters"
+    if _CONTROL_CHARACTERS.search(raw):
+        return "contains a control character"
+
+    try:
+        parts = urlparse(raw)
+    except ValueError:
+        return "not parseable as a URL"
+
+    if parts.scheme.lower() not in FETCHABLE_SCHEMES:
+        return f"scheme {parts.scheme.lower()[:20]!r} is not fetchable"
+
+    # Reading these is where the deferred failures surface.
+    try:
+        host = parts.hostname
+        port = parts.port
+    except ValueError:
+        return "host or port is malformed"
+
+    if not host:
+        return "no host"
+    if port is not None and not (0 < port <= 65535):
+        return "port out of range"
+    return None
+
+
+def is_usable(url: str) -> bool:
+    """Whether this URL is worth doing anything with at all."""
+    return url_problem(url) is None
+
+
 def canonical_url(url: str) -> str:
     """A stable form, so the same page is not discovered twice.
 
@@ -192,19 +274,19 @@ def canonical_url(url: str) -> str:
     default port and a trailing slash. Query parameters that select content are
     kept — dropping them would merge genuinely different pages.
     """
-    try:
-        parts = urlparse(url.strip())
-    except ValueError:
-        return url.strip()
-    if not parts.scheme or not parts.netloc:
-        return url.strip()
+    if url_problem(url) is not None:
+        # Nothing usable to canonicalise. Returning the input unchanged would
+        # hand a caller a string that looks like a URL and is not one.
+        return ""
 
+    parts = urlparse(url.strip())
     host = (parts.hostname or "").lower()
-    if parts.port and not (
-        (parts.scheme == "http" and parts.port == 80)
-        or (parts.scheme == "https" and parts.port == 443)
+    port = parts.port
+    if port and not (
+        (parts.scheme == "http" and port == 80)
+        or (parts.scheme == "https" and port == 443)
     ):
-        host = f"{host}:{parts.port}"
+        host = f"{host}:{port}"
 
     path = re.sub(r"/{2,}", "/", parts.path) or "/"
     if len(path) > 1:
@@ -236,7 +318,14 @@ _FUNDING_SEGMENT = re.compile(
 
 
 def score_url(url: str, category: str) -> int:
-    """How strongly a URL looks like it belongs to a category. 0 means no."""
+    """How strongly a URL looks like it belongs to a category. 0 means no.
+
+    A URL that cannot be used scores nothing, whatever its path spells. There
+    is no point ranking a link that will never be fetched, and scoring it would
+    let it displace a real candidate from a bounded shortlist.
+    """
+    if url_problem(url) is not None:
+        return 0
     path = (urlparse(url).path or "").lower()
     # Exclusions first: "/library/search" ends in an index word and is still a
     # library. Recognising the index shape before ruling the page out entirely

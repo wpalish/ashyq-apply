@@ -14,13 +14,13 @@ from app.domain.currency import (
     provider_for,
     supported_currencies,
 )
-from app.models import CURRENT_SCHEMA_VERSION, AuditEvent
-from app.security import Principal, get_principal
 from app.jobs.versioning import (
     BUILD_VERSION,
     PAYLOAD_SCHEMA_VERSION,
     SUPPORTED_PAYLOAD_SCHEMA_VERSIONS,
 )
+from app.models import CURRENT_SCHEMA_VERSION, AuditEvent
+from app.security import Principal, get_principal
 
 router = APIRouter(prefix="/api", tags=["meta"])
 

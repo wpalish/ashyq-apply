@@ -35,13 +35,12 @@ class TestTheVersionContract:
         """This build could not read the payload, so it cannot judge which
         parts of it are safe to repeat into a log."""
         reason = incompatibility(99)
-        text = repr(reason)
         assert "payload" not in {k for k in reason if k.endswith("payload")}
         assert reason["job_payload_schema_version"] == 99
         assert "resolution" in reason
         # No free text that could have come from applicant data.
         assert all(
-            isinstance(v, (int, str, list)) for v in reason.values()
+            isinstance(v, int | str | list) for v in reason.values()
         ), reason
 
     def test_the_reason_names_a_way_out(self):
