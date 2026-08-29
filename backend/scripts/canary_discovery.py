@@ -276,6 +276,26 @@ def false_positives(result: ProgramResult, claims: list[dict]) -> list[dict]:
 # --- the run --------------------------------------------------------------
 
 
+
+def access_state(*, checked: int, blocked: int, failed_discovery: bool) -> str:
+    """How the run got on with one institution.
+
+    FAILED outranks everything, including pages that were read before the
+    failure. A holdout run died on Uppsala after forty pages and the four
+    institutions behind it in the queue were reported NOT_ATTEMPTED — which
+    reads as a finding about those universities, when it was a finding about
+    one malformed page on Uppsala's site. "We did not look" and "we looked and
+    it broke" are different things and the report has to be able to say both.
+    """
+    if failed_discovery:
+        return "FAILED"
+    if blocked and checked == blocked:
+        return "BLOCKED"
+    if blocked:
+        return "PARTIALLY_BLOCKED"
+    return "REACHED" if checked else "NOT_ATTEMPTED"
+
+
 async def run_canary(only: str | None, verbose: bool, registry_path: Path | None = None) -> dict:
     registry_path = registry_path or REGISTRY_PATH
     registry = json.loads(registry_path.read_text())
@@ -380,10 +400,18 @@ async def run_canary(only: str | None, verbose: bool, registry_path: Path | None
             "institution": name,
             "country": entry["country"],
             "domain": domain,
-            "access": (
-                "BLOCKED" if blocked and checked == blocked
-                else "PARTIALLY_BLOCKED" if blocked
-                else "REACHED" if checked else "NOT_ATTEMPTED"
+            "access": access_state(
+                checked=checked,
+                blocked=blocked,
+                # `discover` contains a per-institution failure and records it
+                # on the trace, so the report can tell a broken attempt from
+                # one that never happened.
+                failed_discovery=bool(
+                    trace
+                    and any(
+                        e.startswith("discovery failed:") for e in (trace.errors or [])
+                    )
+                ),
             ),
             "robots_disallowed_requests": blocked,
             "pages_checked": checked,
@@ -422,6 +450,9 @@ async def run_canary(only: str | None, verbose: bool, registry_path: Path | None
             "institutions": len(rows),
             "reached": sum(1 for r in rows if r["access"] == "REACHED"),
             "blocked": sum(1 for r in rows if r["access"].endswith("BLOCKED")),
+            # Counted and printed separately: a failure that is folded into
+            # "not reached" is a failure nobody investigates.
+            "failed": sum(1 for r in rows if r["access"] == "FAILED"),
             "program_pages_found": sum(1 for r in rows if r["program_page_found"]),
             "scholarship_pages_found": sum(1 for r in rows if r["scholarship_page_found"]),
             "claims": sum(r["claims"] for r in rows),
@@ -499,7 +530,10 @@ async def main() -> int:
     totals = report["totals"]
     print(f"reached {totals['reached']}/{totals['institutions']}, "
           f"blocked {totals['blocked']}, "
-          f"programme pages {totals['program_pages_found']}, "
+          # Only shown when it happened, and never folded into "not reached":
+          # a failure nobody sees is a failure nobody investigates.
+          + (f"FAILED {totals['failed']}, " if totals["failed"] else "")
+          + f"programme pages {totals['program_pages_found']}, "
           f"scholarship pages {totals['scholarship_pages_found']}, "
           f"claims {totals['claims']}, "
           f"false positives {totals['false_positives']}")
