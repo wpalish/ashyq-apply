@@ -183,7 +183,8 @@ _DOCUMENTS = re.compile(
 _PROGRAMME_DETAIL_SECTION = re.compile(
     r"\b(curriculum|programme structure|program structure|course structure"
     r"|what you will learn|what to expect from the|study programme|studieprogramma"
-    r"|entry requirements|admission requirements|after (?:your |the )?stud(?:y|ies)"
+    r"|entry requirements|admission requirements|academic requirements"
+    r"|after (?:your |the )?stud(?:y|ies)"
     r"|career prospects|degree awarded|credits?|ects|duration of (?:the )?programme)\b",
     re.IGNORECASE,
 )
