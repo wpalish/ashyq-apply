@@ -102,6 +102,16 @@ services:
     # the same job.  docker compose up --scale worker=3
     security_opt:
       - no-new-privileges:true
+    # A worker does not listen on a port, so this cannot be an HTTP check. It
+    # asks the worker whether it has been round its loop recently. Without it a
+    # worker that is alive but stuck looked perfectly healthy while jobs queued
+    # behind it: `restart: unless-stopped` only notices a process that exits.
+    healthcheck:
+      test: ["CMD", "python", "-m", "app.jobs.worker", "--healthcheck"]
+      interval: 15s
+      timeout: 5s
+      start_period: 30s
+      retries: 3
     # The HTTP cache is the only thing a worker writes outside the database.
     volumes:
       - worker-cache:/app/data

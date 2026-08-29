@@ -15,6 +15,8 @@ import contextlib
 import logging
 import signal
 import sys
+import time
+from pathlib import Path
 
 from app.config import Settings, get_settings
 from app.db import session_scope
@@ -64,7 +66,12 @@ class Worker:
         semaphore = asyncio.Semaphore(self.settings.worker_concurrency)
         running: set[asyncio.Task] = set()
 
+        alive_at = liveness_path(self.settings)
         while not self.stopping.is_set():
+            # Every pass, busy or idle. An idle worker has no job to heartbeat
+            # against, so the queue cannot tell a waiting worker from a wedged
+            # one; this can.
+            touch_liveness(alive_at)
             await semaphore.acquire()
             job_id = self.claim_one()
             if job_id is None:
@@ -300,7 +307,57 @@ def reconcile_startup() -> dict[str, int]:
         }
 
 
+#: How long a worker may go without completing a poll before it is considered
+#: wedged. Generous relative to the poll interval: a worker running a long job
+#: still comes back round the loop between units of work, and a healthcheck
+#: that restarts a busy worker is worse than no healthcheck at all.
+LIVENESS_STALE_SECONDS = 120
+
+
+def liveness_path(settings: Settings | None = None) -> Path:
+    """Where the worker records that it is still going round its loop."""
+    settings = settings or get_settings()
+    # Beside the HTTP cache, which is the volume a worker already writes to and
+    # the one compose mounts for it. A separate directory would need mounting
+    # too, and a healthcheck reading a path nobody mounted is a healthcheck
+    # that always fails.
+    return Path(settings.cache_dir).parent / "worker-alive"
+
+
+def touch_liveness(path: Path) -> None:
+    """Record that the worker completed a pass.
+
+    Never raises. This is diagnostics, and failing to write it must not be the
+    reason a worker stops doing work — the queue is durable, this file is not.
+    """
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(str(int(time.time())))
+    except OSError:
+        log.debug("could not record worker liveness at %s", path, exc_info=True)
+
+
+def is_alive(path: Path) -> bool:
+    """Whether a worker has been round its loop recently enough.
+
+    False for a file that does not exist: a worker that has not started yet is
+    not healthy, and a healthcheck that passes on absence reports a stack ready
+    before it is.
+    """
+    try:
+        age = time.time() - path.stat().st_mtime
+    except OSError:
+        return False
+    return age <= LIVENESS_STALE_SECONDS
+
+
 def main() -> int:  # pragma: no cover - process entry point
+    # `--healthcheck` answers "is the worker still going round its loop" and
+    # exits. Run by the container healthcheck, which cannot ask over HTTP
+    # because a worker does not listen on a port.
+    if "--healthcheck" in sys.argv[1:]:
+        return 0 if is_alive(liveness_path()) else 1
+
     settings = get_settings()
     logging.basicConfig(
         level=getattr(logging, settings.log_level.upper(), logging.INFO),
