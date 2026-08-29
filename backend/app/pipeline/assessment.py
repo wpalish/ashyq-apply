@@ -232,13 +232,65 @@ def _explanation_component(text: str):
 #: The questions a user actually needs answered before applying. Completeness is
 #: measured against these, not against whatever happened to be extracted -
 #: otherwise a page yielding one verified fact and nothing else reads as 100%.
-CORE_QUESTIONS: tuple[tuple[ClaimType, ...], ...] = (
-    (ClaimType.IELTS_MIN_OVERALL, ClaimType.TOEFL_MIN_TOTAL, ClaimType.DUOLINGO_MIN),
-    (ClaimType.MIN_GPA,),
-    (ClaimType.ADMISSION_DEADLINE,),
-    (ClaimType.TUITION, ClaimType.TOTAL_COST_OF_ATTENDANCE),
-    (ClaimType.SCHOLARSHIP_EXISTS,),
-    (ClaimType.SCHOLARSHIP_INTERNATIONAL_ELIGIBLE, ClaimType.SCHOLARSHIP_CITIZENSHIP_RESTRICTION),
+#: The questions an applicant has to answer before they can act on a
+#: shortlist row. Fixed deliberately, and fixed *before* any work to improve
+#: the numbers, so "completeness went up" cannot mean "the denominator went
+#: down". Each entry is one question; alternatives inside an entry are
+#: different ways the same question can be answered — a page giving IELTS or
+#: TOEFL has answered "what English score do I need".
+#:
+#: The list is the decision-grade set: everything here changes whether an
+#: applicant applies, what it costs them, or what they must produce.
+DECISION_QUESTIONS: tuple[tuple[str, tuple[ClaimType, ...]], ...] = (
+    # --- can I apply at all -------------------------------------------
+    ("the programme exists", (ClaimType.PROGRAM_EXISTS,)),
+    ("the intake is open", (ClaimType.INTAKE_OPEN,)),
+    ("the application deadline", (ClaimType.ADMISSION_DEADLINE,)),
+    # --- will they take me --------------------------------------------
+    ("the minimum grade", (ClaimType.MIN_GPA,)),
+    ("required school subjects", (ClaimType.REQUIRED_SUBJECTS,)),
+    ("the English requirement", (
+        ClaimType.IELTS_MIN_OVERALL, ClaimType.TOEFL_MIN_TOTAL, ClaimType.DUOLINGO_MIN,
+    )),
+    ("per-section English minimums", (ClaimType.IELTS_MIN_SUBSCORE,)),
+    ("the admissions test policy", (ClaimType.SAT_POLICY, ClaimType.SAT_MIN_TOTAL)),
+    ("portfolio, interview or entrance exam", (
+        ClaimType.PORTFOLIO_REQUIRED, ClaimType.INTERVIEW_REQUIRED,
+        ClaimType.ENTRANCE_EXAM_REQUIRED,
+    )),
+    ("whether my diploma is recognised", (
+        ClaimType.CREDENTIAL_EVALUATION_REQUIRED, ClaimType.COUNTRY_SPECIFIC_REQUIREMENT,
+    )),
+    # --- what will it cost --------------------------------------------
+    ("tuition", (ClaimType.TUITION, ClaimType.TOTAL_COST_OF_ATTENDANCE)),
+    ("mandatory fees", (ClaimType.MANDATORY_FEES, ClaimType.TOTAL_COST_OF_ATTENDANCE)),
+    ("housing", (ClaimType.HOUSING_COST, ClaimType.TOTAL_COST_OF_ATTENDANCE)),
+    ("meals", (ClaimType.MEALS_COST, ClaimType.TOTAL_COST_OF_ATTENDANCE)),
+    ("health insurance", (
+        ClaimType.HEALTH_INSURANCE_COST, ClaimType.TOTAL_COST_OF_ATTENDANCE,
+    )),
+    ("the application fee", (ClaimType.APPLICATION_FEE, ClaimType.FEE_WAIVER_AVAILABLE)),
+    # --- can it be paid for -------------------------------------------
+    ("an award exists", (ClaimType.SCHOLARSHIP_EXISTS,)),
+    ("what the award is worth", (ClaimType.SCHOLARSHIP_AMOUNT,)),
+    ("what the award covers", (ClaimType.SCHOLARSHIP_COVERAGE,)),
+    ("whether I may hold it", (
+        ClaimType.SCHOLARSHIP_INTERNATIONAL_ELIGIBLE,
+        ClaimType.SCHOLARSHIP_CITIZENSHIP_RESTRICTION,
+    )),
+    ("whether it applies to my degree", (ClaimType.SCHOLARSHIP_PROGRAM_RESTRICTION,)),
+    ("how to apply for it", (ClaimType.SCHOLARSHIP_APPLICATION_MODE,)),
+    ("its own deadline", (ClaimType.SCHOLARSHIP_DEADLINE,)),
+    ("whether it renews", (
+        ClaimType.SCHOLARSHIP_RENEWABLE, ClaimType.SCHOLARSHIP_DURATION_YEARS,
+    )),
+    # --- what must I produce ------------------------------------------
+    ("the documents I must submit", (ClaimType.REQUIRED_DOCUMENT,)),
+)
+
+#: Kept as the flat form the completeness calculation walks.
+CORE_QUESTIONS: tuple[tuple[ClaimType, ...], ...] = tuple(
+    types for _label, types in DECISION_QUESTIONS
 )
 
 

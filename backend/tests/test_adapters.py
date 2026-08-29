@@ -412,7 +412,30 @@ class TestVerificationCompleteness:
         claims = [make_claim("scholarship_international_eligible", True)]
         assert _completeness(claims) < 0.25
 
-    def test_answering_every_core_question_reads_as_complete(self):
+    def test_answering_every_decision_question_reads_as_complete(self):
+        """Built from the question list itself, so it cannot drift from it.
+
+        The metric used to ask six questions, and six claims read as fully
+        verified — which told an applicant the row was checked when nothing was
+        known about cost beyond tuition, about who may hold the award, or about
+        what they must produce. It now asks twenty-five.
+        """
+        from app.pipeline.assessment import DECISION_QUESTIONS
+        from app.pipeline.runner import _completeness
+        from tests.conftest import make_claim
+
+        claims = [
+            make_claim(types[0].value, "answered")
+            for _label, types in DECISION_QUESTIONS
+        ]
+        assert _completeness(claims) == 1.0
+
+    def test_the_old_six_answers_no_longer_read_as_complete(self):
+        """The widening, stated as a number.
+
+        These six were the whole metric. They are a quarter of it now, and the
+        rest are questions an applicant genuinely has to have answered.
+        """
         from app.pipeline.runner import _completeness
         from tests.conftest import make_claim
 
@@ -424,7 +447,8 @@ class TestVerificationCompleteness:
             make_claim("scholarship_exists", "Talent Grant"),
             make_claim("scholarship_international_eligible", True),
         ]
-        assert _completeness(claims) == 1.0
+        score = _completeness(claims)
+        assert 0.2 < score < 0.3, score
 
     def test_nothing_verified_reads_as_nothing(self):
         from app.pipeline.runner import _completeness
