@@ -43,6 +43,11 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
   const finished = ['awaiting_user_decision', 'completed'].includes(run.stage);
   const failed = run.stage === 'failed';
   const cancelled = run.stage === 'cancelled';
+  // No worker currently running can read this job's payload. Nothing has been
+  // lost and nobody needs to do anything to the research itself: it resumes on
+  // its own once a worker that understands the payload starts. Saying
+  // "failed" here would be false, and a bare spinner would be worse.
+  const waitingForACapableWorker = run.job_status === 'blocked_incompatible';
   const groupedErrors = run.errors.reduce<Record<string, string[]>>((groups, message) => {
     const category = errorCategory(message);
     (groups[category] ??= []).push(message);
@@ -54,9 +59,23 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
       <div className="screen__head">
         <p className="screen__eyebrow">Step 03</p>
         <h1 className="screen__title">
-          {failed ? 'Research failed' : cancelled ? 'Research cancelled' : finished ? 'Research complete' : 'Researching'}
+          {failed ? 'Research failed'
+            : cancelled ? 'Research cancelled'
+            : finished ? 'Research complete'
+            : waitingForACapableWorker ? 'Research paused'
+            : 'Researching'}
         </h1>
         <p className="screen__lede">{STAGE_LABELS[run.stage] ?? run.stage.replace(/_/g, ' ')}</p>
+        {waitingForACapableWorker && (
+          <Notice kind="warn">
+            <div data-testid="paused-incompatible">
+              This research is paused because the service is part-way through an
+              update. Nothing you entered has been lost and nothing has been
+              charged against your attempts — it continues on its own once the
+              update finishes. If it is still paused in an hour, contact support.
+            </div>
+          </Notice>
+        )}
       </div>
 
       <div className="stack stack--loose">

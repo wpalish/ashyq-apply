@@ -13,9 +13,11 @@ nothing else. See docs/adr/0001-durable-job-queue.md.
 
 from __future__ import annotations
 
+import json
 import logging
 import os
 import socket
+from collections.abc import Iterable
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 
@@ -23,6 +25,7 @@ from sqlalchemy import select, text, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
+from app.jobs.versioning import BUILD_VERSION, PAYLOAD_SCHEMA_VERSION, incompatibility
 from app.models import TERMINAL_STATUSES, Job, JobStatus
 from app.models.base import ensure_utc, new_id
 
@@ -88,6 +91,8 @@ class JobStore:
                 return EnqueueResult(existing.id, False, "an identical job already exists")
 
         job = Job(
+            payload_schema_version=PAYLOAD_SCHEMA_VERSION,
+            producer_version=BUILD_VERSION,
             id=new_id(),
             kind=kind,
             queue=queue,
@@ -185,6 +190,53 @@ class JobStore:
                 lease_expires_at=None, worker_id=None, last_error="",
             )
         )
+
+    def park_incompatible(self, job_id: str, payload_schema_version: int) -> str:
+        """Set a job aside because this build cannot read its payload.
+
+        Deliberately not `fail()`. Failing spends an attempt, and three
+        attempts against a payload the worker will never understand ends in
+        `dead`, which means a person has to intervene. That is exactly what
+        happened to three real `documents` jobs, and from the applicant's side
+        their research simply stopped.
+
+        Refusing work is not an attempt at it, so `attempts` is untouched and
+        the job waits for a worker that can do it.
+        """
+        job = self.session.get(Job, job_id)
+        if job is None:
+            return JobStatus.DEAD.value
+        job.status = JobStatus.BLOCKED_INCOMPATIBLE.value
+        job.lease_expires_at = None
+        job.worker_id = None
+        job.finished_at = None
+        job.last_error = json.dumps(incompatibility(payload_schema_version))[:4000]
+        self.session.add(job)
+        self.session.flush()
+        return job.status
+
+    def release_incompatible(self, supported: Iterable[int]) -> int:
+        """Re-queue parked jobs this build *can* read. Returns how many.
+
+        Called at worker startup, so finishing a rollout is what unblocks the
+        queue — no operator action, no lost work. Only touches parked jobs: a
+        `dead` job still needs a human decision and must not be silently
+        revived by a deployment.
+        """
+        parked = list(
+            self.session.scalars(
+                select(Job).where(Job.status == JobStatus.BLOCKED_INCOMPATIBLE.value)
+            )
+        )
+        releasable = [j for j in parked if j.payload_schema_version in set(supported)]
+        now = datetime.now(UTC)
+        for job in releasable:
+            job.status = JobStatus.QUEUED.value
+            job.available_at = now
+            job.last_error = ""
+            self.session.add(job)
+        self.session.flush()
+        return len(releasable)
 
     def fail(self, job_id: str, error: str, *, retry: bool = True) -> str:
         """Record a failure. Returns the resulting status.

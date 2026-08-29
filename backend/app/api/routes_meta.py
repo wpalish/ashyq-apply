@@ -16,6 +16,11 @@ from app.domain.currency import (
 )
 from app.models import CURRENT_SCHEMA_VERSION, AuditEvent
 from app.security import Principal, get_principal
+from app.jobs.versioning import (
+    BUILD_VERSION,
+    PAYLOAD_SCHEMA_VERSION,
+    SUPPORTED_PAYLOAD_SCHEMA_VERSIONS,
+)
 
 router = APIRouter(prefix="/api", tags=["meta"])
 
@@ -83,6 +88,12 @@ def health() -> dict:
         "schema_version": CURRENT_SCHEMA_VERSION,
         "respect_robots": s.respect_robots,
         "browser_tier": s.enable_browser_tier,
+        # Deployment metadata. During a rolling deployment two builds are
+        # alive; when the queue stalls, the first question is which pair
+        # disagreed, and this answers it without reading anyone's data.
+        "build": BUILD_VERSION,
+        "payload_schema_version": PAYLOAD_SCHEMA_VERSION,
+        "supported_payload_schema_versions": sorted(SUPPORTED_PAYLOAD_SCHEMA_VERSIONS),
     }
 
 

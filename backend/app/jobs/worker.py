@@ -20,6 +20,12 @@ from app.config import Settings, get_settings
 from app.db import session_scope
 from app.domain.enums import PipelineStage
 from app.jobs.store import JobStore, worker_identity
+from app.jobs.versioning import (
+    BUILD_VERSION,
+    SUPPORTED_PAYLOAD_SCHEMA_VERSIONS,
+    incompatibility,
+    supports,
+)
 from app.models import ApplicantProfileRow, AuditEvent, Job, JobStatus, ResearchRun
 from app.pipeline.runner import ResearchRunner, RunCancelled
 from app.schemas.profile import ApplicantProfileIn
@@ -48,7 +54,11 @@ class Worker:
 
     async def run_forever(self) -> None:
         log.info(
-            "worker %s starting (concurrency %d)", self.worker_id, self.settings.worker_concurrency
+            "worker %s starting (build %s, payload schemas %s, concurrency %d)",
+            self.worker_id,
+            BUILD_VERSION,
+            sorted(SUPPORTED_PAYLOAD_SCHEMA_VERSIONS),
+            self.settings.worker_concurrency,
         )
         self.reap()
         semaphore = asyncio.Semaphore(self.settings.worker_concurrency)
@@ -110,6 +120,20 @@ class Worker:
                 store = JobStore(session, lease_seconds=self.settings.job_lease_seconds)
                 job = store.get(job_id)
                 if job is None:
+                    return
+                if not supports(job.payload_schema_version):
+                    # Refuse, do not attempt. Attempting a payload this build
+                    # cannot read spends the job's three attempts and ends in
+                    # `dead`, which needs a person; parking ends when a capable
+                    # worker starts.
+                    detail = incompatibility(job.payload_schema_version)
+                    log.warning(
+                        "job %s parked: payload schema v%s, this build runs %s",
+                        job.id[:8],
+                        job.payload_schema_version,
+                        detail["worker_supports"],
+                    )
+                    store.park_incompatible(job.id, job.payload_schema_version)
                     return
                 log.info("running job %s (%s) attempt %d", job.id[:8], job.kind, job.attempts)
                 await self._dispatch(session, store, job)
@@ -216,6 +240,10 @@ def reconcile_startup() -> dict[str, int]:
     with session_scope() as session:
         store = JobStore(session, lease_seconds=settings.job_lease_seconds)
         reaped = store.reap_expired()
+        # A deployment finishing is what unblocks the queue: this worker
+        # releases anything an earlier one parked because it could not read
+        # the payload version. No operator action, no lost work.
+        released = store.release_incompatible(SUPPORTED_PAYLOAD_SCHEMA_VERSIONS)
 
         stranded = 0
         live_run_ids = {
@@ -265,7 +293,11 @@ def reconcile_startup() -> dict[str, int]:
             )
             stranded += 1
 
-        return {"jobs_reaped": len(reaped), "runs_recovered": stranded}
+        return {
+            "jobs_reaped": len(reaped),
+            "runs_recovered": stranded,
+            "jobs_released": released,
+        }
 
 
 def main() -> int:  # pragma: no cover - process entry point

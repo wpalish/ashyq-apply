@@ -37,7 +37,14 @@ export type JobStatus =
   | 'failed'
   /** Attempts exhausted. Needs a human decision; never retried automatically. */
   | 'dead'
-  | 'cancelled';
+  | 'cancelled'
+  /**
+   * No worker running right now can read this job's payload, so none of them
+   * has attempted it. The work is intact and resumes by itself once a worker
+   * that understands the payload starts — distinct from `dead`, which is not
+   * going to move without a person.
+   */
+  | 'blocked_incompatible';
 
 export type PipelineStage =
   | 'queued' | 'profile_validation' | 'candidate_discovery' | 'program_verification'
