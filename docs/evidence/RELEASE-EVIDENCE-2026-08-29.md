@@ -91,7 +91,7 @@ as per-programme pages.
 
 ## What changed in this session
 
-45 commits on top of `2ebcbc6`. The three P1 defects named at the start were
+44 commits on top of `2ebcbc6`, as of the artifact's snapshot at `916f4b1`. Commits after it change this document and nothing else. The three P1 defects named at the start were
 fixed first, before any discovery or extraction work:
 
 | Defect | Commit | Evidence it is fixed |
