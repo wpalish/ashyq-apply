@@ -108,3 +108,57 @@ class TestTheExtractorUsesIt:
         item = DocumentItem(name="X", purpose=DocumentPurpose.ADMISSION,
                             owner=DocumentOwner.APPLICANT)
         assert item.requirement_level == "unknown"
+
+
+class TestStoredResultsKeepLoading:
+    """Results are stored as JSON and re-validated on read.
+
+    Every row written before `requirement_level` existed carries `required:
+    true` and nothing else, and the model forbids extra keys — so replacing the
+    field without accepting the old one would have made existing shortlists
+    unreadable.
+    """
+
+    @staticmethod
+    def legacy(required: bool) -> dict:
+        return {
+            "name": "Transcript of records",
+            "purpose": "admission",
+            "owner": "applicant",
+            "required": required,
+        }
+
+    def test_a_row_written_before_the_change_still_loads(self):
+        from app.schemas.result import DocumentItem
+
+        assert DocumentItem.model_validate(self.legacy(True)).requirement_level == "required"
+
+    def test_a_legacy_false_becomes_conditional_not_unknown(self):
+        """Something wrote that `false` deliberately; it is not an absence."""
+        from app.schemas.result import DocumentItem
+
+        assert DocumentItem.model_validate(self.legacy(False)).requirement_level == "conditional"
+
+    def test_a_fresh_payload_round_trips(self):
+        """`required` is emitted as a computed field, so it comes back in."""
+        from app.domain.enums import DocumentOwner, DocumentPurpose
+        from app.schemas.result import DocumentItem
+
+        original = DocumentItem(
+            name="Portfolio", purpose=DocumentPurpose.ADMISSION,
+            owner=DocumentOwner.APPLICANT, requirement_level="conditional",
+        )
+        payload = original.model_dump(mode="json")
+        assert payload["required"] is False, "the API must still expose a yes/no"
+        assert DocumentItem.model_validate(payload).requirement_level == "conditional"
+
+    def test_the_api_payload_carries_both(self):
+        from app.domain.enums import DocumentOwner, DocumentPurpose
+        from app.schemas.result import DocumentItem
+
+        payload = DocumentItem(
+            name="X", purpose=DocumentPurpose.ADMISSION,
+            owner=DocumentOwner.APPLICANT, requirement_level="required",
+        ).model_dump(mode="json")
+        assert payload["required"] is True
+        assert payload["requirement_level"] == "required"

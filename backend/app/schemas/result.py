@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import date, datetime
 from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, computed_field, model_validator
 
 from app.domain.enums import (
     AdmissionsFit,
@@ -198,9 +198,38 @@ class DocumentItem(Base):
     source_url: str | None = None
     claim_ids: list[str] = Field(default_factory=list)
 
+    @model_validator(mode="before")
+    @classmethod
+    def _accept_the_legacy_boolean(cls, data: Any) -> Any:
+        """Read a payload written before `requirement_level` existed.
+
+        Results are stored as JSON and re-validated on read, and every row
+        written before this change carries `required: true` and no
+        `requirement_level`. The model forbids extra keys, so without this a
+        stored result would fail to load. `required` is also emitted as a
+        computed field, so a fresh payload round-trips through here too.
+
+        A legacy `true` becomes "required" — that is what the old field
+        asserted. A legacy `false` becomes "conditional" rather than "unknown",
+        because something wrote it deliberately.
+        """
+        if not isinstance(data, dict) or "required" not in data:
+            return data
+        data = dict(data)
+        legacy = data.pop("required")
+        data.setdefault(
+            "requirement_level", "required" if legacy else "conditional"
+        )
+        return data
+
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def required(self) -> bool:
         """Kept for callers that ask a yes/no question.
+
+        A `computed_field`, not a bare property: a plain property is not
+        serialised, so making it one would have removed `required` from the
+        API payload rather than preserving it.
 
         Only a stated requirement answers yes. Conditional and unknown both
         answer no, because neither is the page saying the applicant must
