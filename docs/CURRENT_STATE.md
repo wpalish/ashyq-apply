@@ -1,7 +1,13 @@
-# Current state — baseline before production hardening
+# Baseline snapshot — taken before production hardening
 
-Recorded at the start of the `production-hardening` branch. This is a factual
-snapshot, not a claim of readiness. The product is **NOT READY** for production.
+> **This file is a dated snapshot, not the current state.** It records what was
+> true when the `production-hardening` branch started, and it is kept because
+> the before/after is the evidence that the work happened. Several rows below
+> were true then and are false now; each is marked. For what is true today see
+> `RELEASE_CHECKLIST.md`, and for discovery specifically
+> `docs/LIVE_DISCOVERY_REPORT.md`.
+>
+> The verdict has not changed: the product is **NOT READY** for production.
 
 ## What exists
 
@@ -73,21 +79,24 @@ Updated after P1.
 |---|---|---|
 | Database | **PostgreSQL + Alembic ✅** — suite passes on PostgreSQL 16.2 and SQLite | — |
 | Jobs | **Durable PostgreSQL queue ✅** — leases, reaping, backoff, dead-letter, idempotency; crash recovery proven with a real SIGKILL | A broker if job rates ever justify one |
-| Auth | **None** | OIDC, roles, tenant isolation |
-| Multi-tenancy | **Single implicit user** | Organizations, cases, counselor assignment |
-| Security headers | CORS only | CSP, HSTS, SSRF defence, rate limiting |
-| Discovery | 5 hand-listed institutions | Provider architecture with sitemap discovery |
-| Deployment | Containers and compose **written but never run** | Run them; observability |
-| CI | None | Full gates on every commit |
+| Auth | ~~**None**~~ → **done**: opaque server sessions, scrypt, organizations | — |
+| Multi-tenancy | ~~**Single implicit user**~~ → **done**: organizations and applicant cases; every id-bearing route refuses another tenant with 404 | — |
+| Security headers | ~~CORS only~~ → **done**: CSP, HSTS, SSRF defence, rate limiting | — |
+| Discovery | ~~5 hand-listed institutions~~ → **sitemap-first** across ten, with a frozen six-country holdout set. Programme-page recall remains the open product problem | Recall; see the live report |
+| Deployment | Containers and compose written; CI now has a runtime smoke job. **Still never run** — no container runtime on this machine | Run the job; observability |
+| CI | ~~None~~ → **done**: frontend, backend on SQLite and PostgreSQL, security and containers | — |
 
 ## Documentation accuracy
 
 `README.md` currently overstates three things. They are marked here and will be
 corrected as each is actually proven:
 
-- *"a run survives a restart"* — no crash-recovery test exists.
-- *"PostgreSQL-ready"* — never run against PostgreSQL.
-- *"Playwright for JavaScript-rendered pages"* — the tier is never invoked.
+- ~~*"a run survives a restart"*~~ — `scripts/crash_test.py` now SIGKILLs a
+  real worker and proves recovery without duplicates.
+- ~~*"PostgreSQL-ready"*~~ — the whole suite runs on PostgreSQL 16.2.
+- ~~*"Playwright for JavaScript-rendered pages"*~~ — the tier is invoked, both
+  automatically when a page carries no text and on request when a catalogue's
+  programme list is built client-side.
 
 ## Verdict
 
@@ -97,8 +106,12 @@ Closed since this was written: all ten live false positives (plus five more the
 live canary found), the durable job system, PostgreSQL with real migrations,
 and crash recovery.
 
-Still open: **no authentication and no tenant isolation** — anyone who can
-reach the API can read and delete every profile. The container stack has never
-been run. There is no CI. The profile form covers a subset of the schema.
+Still open **as of this snapshot** — since closed except where noted: no
+authentication and no tenant isolation (closed); the container stack has never
+been run (**still true**: no container runtime is installed here); there is no
+CI (closed); the profile form covers a subset of the schema (closed).
+
+The open problem this snapshot did not know about is programme-page recall in
+live discovery, which is measured in `docs/LIVE_DISCOVERY_REPORT.md`.
 
 See `RELEASE_CHECKLIST.md` for all thirty gates.

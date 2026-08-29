@@ -202,10 +202,15 @@ _SAT_MIN = re.compile(r"SAT[^.\n]{0,60}?(?:minimum|at least|score of)[^.\n]{0,20
 _SUPERSCORE = re.compile(r"(superscor\w+)", re.IGNORECASE)
 #: A currency marker must sit directly beside the number. Bare digits are never
 #: read as money, which keeps years and scores out of the cost table.
+#: A currency marker and a number, with the number's separators left intact so
+#: `_amount_from` can decide what they mean. The previous pattern accepted only
+#: a comma or a space as a group separator and treated a dot as decimals, so
+#: "€ 17.310" — how the Netherlands, Germany, Austria, Poland and Denmark all
+#: write seventeen thousand — was read as €17.31.
 _MONEY = re.compile(
     r"(?:(US\$|USD|EUR|€|GBP|£|CAD|AUD|CHF|SEK|NOK|DKK|SGD|JPY|\$)\s*)"
-    r"([\d]{1,3}(?:[,\s]\d{3})+|\d{2,7})(?:\.(\d{2}))?"
-    r"|([\d]{1,3}(?:[,\s]\d{3})+|\d{2,7})\s*(EUR|USD|GBP|CHF|SEK|NOK|DKK|AUD|CAD|SGD|JPY)",
+    r"(\d[\d.,\s]*\d|\d)"
+    r"|(\d[\d.,\s]*\d|\d)\s*(EUR|USD|GBP|CHF|SEK|NOK|DKK|AUD|CAD|SGD|JPY)\b",
     re.IGNORECASE,
 )
 _PERCENT_TUITION = re.compile(r"(\d{1,3})\s*%\s*(?:of\s+)?(?:the\s+)?tuition", re.IGNORECASE)
@@ -235,6 +240,47 @@ _MONTHS = {m: i for i, m in enumerate(
     ["january","february","march","april","may","june","july","august","september","october","november","december"], 1)}
 
 
+def _amount_from(raw: str) -> float | None:
+    """Read a number whose separators may follow either convention.
+
+    "17.310" is seventeen thousand in Amsterdam and seventeen-point-three-one
+    in Boston, and a fees page gives no other clue, so the decision is made
+    from where the separators sit:
+
+    * both a dot and a comma present — whichever comes last is the decimal
+      separator, and the other groups thousands. Covers "17.310,00" and
+      "17,310.50".
+    * one kind of separator, appearing more than once — thousands. "1.234.567".
+    * one separator followed by exactly three digits — thousands. "€ 1.500" is
+      fifteen hundred; money is written in whole units far more often than in
+      thousandths. This one is a judgement call, and it is the reason this
+      function exists rather than a call to ``float()``.
+    * anything else — a decimal separator. "17.31", "5,5".
+    """
+    raw = re.sub(r"\s", "", raw).strip(".,")
+    if not raw or not re.fullmatch(r"[\d.,]+", raw):
+        return None
+
+    last_dot, last_comma = raw.rfind("."), raw.rfind(",")
+    if last_dot >= 0 and last_comma >= 0:
+        decimal_at = max(last_dot, last_comma)
+        grouping = "," if decimal_at == last_dot else "."
+        cleaned = raw.replace(grouping, "")
+        cleaned = cleaned[: cleaned.rfind(raw[decimal_at])] + "." + cleaned[cleaned.rfind(raw[decimal_at]) + 1 :]
+    else:
+        separator = "." if last_dot >= 0 else ("," if last_comma >= 0 else "")
+        if not separator:
+            cleaned = raw
+        elif raw.count(separator) > 1 or len(raw) - raw.rfind(separator) - 1 == 3:
+            cleaned = raw.replace(separator, "")
+        else:
+            cleaned = raw.replace(separator, ".")
+    try:
+        return float(cleaned)
+    except ValueError:
+        return None
+
+
 def parse_money(text: str) -> tuple[float, str] | None:
     m = _MONEY.search(text)
     if not m:
@@ -242,12 +288,12 @@ def parse_money(text: str) -> tuple[float, str] | None:
     if m.group(2):
         raw, cur = m.group(2), (m.group(1) or "").lower()
     else:
-        raw, cur = m.group(4), (m.group(5) or "").lower()
+        raw, cur = m.group(3), (m.group(4) or "").lower()
     if not raw:
         return None
-    amount = float(re.sub(r"[,\s]", "", raw))
-    if m.group(3):
-        amount += float(m.group(3)) / 100
+    amount = _amount_from(raw)
+    if amount is None:
+        return None
     return amount, _CURRENCY_SYMBOLS.get(cur, "USD")
 
 
@@ -409,6 +455,20 @@ def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
     return found
 
 
+#: Text following a label, up to the end of the sentence. A dot is a sentence
+#: end only when a digit does not follow it: "[^.]" alone cut "€ 15.000" down
+#: to "€ 15", so a European-formatted fee was truncated before it could even be
+#: parsed.
+_SENTENCE_WINDOW = r"(?:[^.\n]|\.(?=\d)){0,120}"
+
+#: A figure qualified by a unit is a rate, not a total. Only "per year" and
+#: "per annum" describe the annual cost these claim types mean.
+_PER_UNIT_RATE = re.compile(
+    r"\bper\s+(ec|ects|credit|credits|course|module|module|month|week|day|term|semester|point)s?\b",
+    re.IGNORECASE,
+)
+
+
 def extract_costs(text: str, builder: ClaimBuilder) -> list[Claim]:
     """Pull cost figures out of a fees page."""
     found: list[Claim] = []
@@ -423,11 +483,23 @@ def extract_costs(text: str, builder: ClaimBuilder) -> list[Claim]:
         (ClaimType.TOTAL_COST_OF_ATTENDANCE, r"(?:total cost of attendance|estimated total cost|total estimated cost)"),
     )
     for ctype, label in patterns:
-        m = re.search(rf"{label}[^.\n]{{0,120}}", text, re.IGNORECASE)
+        # Scanning every occurrence of the label was tried and reverted. On TU
+        # Delft's fee table it associated the statutory tuition rate with
+        # "housing" purely because the two sat within 120 characters of each
+        # other in the flattened text, and produced excerpts that proved
+        # nothing. Proximity in a table is not evidence of association, and a
+        # claim whose excerpt does not prove its value is invalid here.
+        m = re.search(rf"{label}{_SENTENCE_WINDOW}", text, re.IGNORECASE)
         if not m:
             continue
-        parsed = parse_money(m.group(0))
+        window = m.group(0)
+        parsed = parse_money(window)
         if parsed is None:
+            continue
+        if _PER_UNIT_RATE.search(window):
+            # "€ 43,35 per EC" is a price per credit, not the annual fee.
+            # Reporting it as tuition understates a year by two orders of
+            # magnitude, which is worse than reporting nothing.
             continue
         amount, currency = parsed
         found.append(
