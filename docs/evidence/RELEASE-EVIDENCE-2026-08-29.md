@@ -4,8 +4,8 @@ Every row below is a command that was run on `claude/production-completion`,
 with the result it produced. A gate is PASS only when its command was executed
 here and its output read. Rows that were not run say so.
 
-Measured at `1527e2d`, except the live-discovery rows, which were measured at
-`0af7daa` — the last commit before the series started. Nothing affecting
+Measured at `916f4b1`, except the live-discovery rows, which were measured at
+`b819c18` — the last commit before the series started. Nothing affecting
 discovery changed between the two; the only later change is how the canary
 *reports* a failed institution.
 
@@ -91,7 +91,7 @@ as per-programme pages.
 
 ## What changed in this session
 
-42 commits on top of `2ebcbc6`. The three P1 defects named at the start were
+45 commits on top of `2ebcbc6`. The three P1 defects named at the start were
 fixed first, before any discovery or extraction work:
 
 | Defect | Commit | Evidence it is fixed |

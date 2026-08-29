@@ -1,7 +1,7 @@
 {
   "base_commit": "2ebcbc6",
   "branch": "claude/production-completion",
-  "commits_since_base": 42,
+  "commits_since_base": 44,
   "counts": {
     "backend_tests": 1422,
     "frontend_tests": null
@@ -19,13 +19,13 @@
     },
     "backend_tests_postgres": {
       "command": "/Users/wpalish/projects/unimatch/backend/.venv/bin/python /Users/wpalish/projects/unimatch/backend/scripts/pg.py /Users/wpalish/projects/unimatch/backend/.venv/bin/python -m pytest",
-      "detail": "1422 passed, 1 warning in 36.09s",
+      "detail": "1422 passed, 1 warning in 35.87s",
       "exit_code": 0,
       "result": "pass"
     },
     "backend_tests_sqlite": {
       "command": "/Users/wpalish/projects/unimatch/backend/.venv/bin/python -m pytest",
-      "detail": "1422 passed, 1 warning in 35.98s",
+      "detail": "1422 passed, 1 warning in 35.62s",
       "exit_code": 0,
       "result": "pass"
     },
@@ -49,7 +49,7 @@
     },
     "frontend_build": {
       "command": "npm run build",
-      "detail": "\u2713 built in 328ms",
+      "detail": "\u2713 built in 317ms",
       "exit_code": 0,
       "result": "pass"
     },
@@ -61,7 +61,7 @@
     },
     "frontend_tests": {
       "command": "npx vitest run",
-      "detail": "   Duration  730ms (transform 178ms, setup 423ms, collect 404ms, tests 190ms, environment 2.05s, prepare 465ms)",
+      "detail": "   Duration  664ms (transform 127ms, setup 240ms, collect 320ms, tests 198ms, environment 1.83s, prepare 429ms)",
       "exit_code": 0,
       "result": "pass"
     },
@@ -84,8 +84,8 @@
       "result": "pass"
     }
   },
-  "generated_at": "2026-08-29T20:27:21+00:00",
-  "head": "c98ceb6e046fd112c96b941255829ee503b410e7",
+  "generated_at": "2026-08-29T20:35:08+00:00",
+  "head": "916f4b10a50869d6db6d687c5d1143b25fb7afc3",
   "live_discovery": {
     "holdout": {
       "false_positives": 0,
@@ -132,5 +132,5 @@
     ]
   },
   "verdict": "NOT READY",
-  "working_tree_clean": false
+  "working_tree_clean": true
 }
