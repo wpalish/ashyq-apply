@@ -79,3 +79,17 @@ jobs:
       - run: npm audit --prefix frontend --audit-level=high
       - run: POSTGRES_PASSWORD=ci-only-not-a-secret docker compose config --quiet
       - run: POSTGRES_PASSWORD=ci-only-not-a-secret docker compose build
+
+  # Building an image proves it compiles, not that the stack runs. This job
+  # starts the whole thing and exercises health, the one-shot migration, a real
+  # run picked up by the worker, worker-kill recovery, API restart, tenant
+  # isolation, security headers and a backup/restore drill.
+  container-runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Production-shaped runtime smoke test
+        run: ./scripts/compose_smoke.sh
+      - if: failure()
+        run: docker compose -p ashyq-smoke-$$ logs --no-color --tail 200 || true
