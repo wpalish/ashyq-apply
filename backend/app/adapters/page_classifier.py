@@ -647,6 +647,20 @@ _NOT_A_PROGRAMME_NOUN = re.compile(
 )
 
 
+#: A heading that describes an offering rather than naming a degree. A
+#: programme is named by a noun phrase; "Aalto offers five study options in
+#: Science and Technology at Bachelor's level" is a sentence about an offering,
+#: and accepting it as a programme is a subject hub read as a degree.
+_HEADING_IS_A_SENTENCE = re.compile(
+    r"\b(offers?|offering|provides?|includes?|features?|choose|select|explore"
+    r"|discover|find|browse|available|welcome|introduc\w+)\b"
+    r"|\b(one|two|three|four|five|six|seven|eight|nine|ten|\d+)\s+"
+    r"(study\s+)?(options?|programmes?|programs?|degrees?|courses?|choices?)\b"
+    r"|\ba range of\b",
+    re.IGNORECASE,
+)
+
+
 def _names_a_subject(identity: str) -> bool:
     """Whether a heading names a subject at all, level words removed.
 
@@ -667,6 +681,8 @@ def _names_a_subject(identity: str) -> bool:
     if _NOT_A_PROGRAMME_NOUN.search(name):
         return False
     if _SECTION_LABEL_HEADING.match(name):
+        return False
+    if _HEADING_IS_A_SENTENCE.search(name):
         return False
     without_level = _LEVEL_WORDS_ONLY.sub(" ", name)
     return len(re.sub(r"[^a-z]+", "", without_level.lower())) >= 4
@@ -692,6 +708,10 @@ def _program_name(identity: str) -> str | None:
         return None
     # "MSc and BSc projects" carries two degree words and names no programme.
     if _NOT_A_PROGRAMME_NOUN.search(name):
+        return None
+    # Nor does a sentence: "We offer three bachelor's programmes in engineering"
+    # carries a degree word and describes an offering.
+    if _HEADING_IS_A_SENTENCE.search(name):
         return None
     return name
 

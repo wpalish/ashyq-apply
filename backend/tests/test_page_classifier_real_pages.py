@@ -52,6 +52,8 @@ SOURCE_URL = {
     "rug-bachelors-index": "https://www.rug.nl/bachelors",
     "aalto-computer-engineering":
         "https://www.aalto.fi/en/study-options/computer-engineering-bachelor-of-science-and-master-of-science-technology",
+    "aalto-five-options":
+        "https://www.aalto.fi/en/study-options/aalto-offers-five-study-options-in-science-and-technology-at-bachelors-level",
 }
 
 PROGRAMME_TYPES = {PageType.PROGRAM_DETAIL, PageType.INTAKE_SPECIFIC_PROGRAM}
@@ -393,3 +395,69 @@ class TestAProgrammePageThatMentionsFunding:
         )
         assert classify_page(url="https://uni.edu/scholarships", html=html).page_type \
             not in PROGRAMME_TYPES
+
+
+class TestAHeadingThatIsASentenceIsNotAProgrammeName:
+    """A hub page whose heading describes an offering, not a degree.
+
+    Aalto heads one page "Aalto offers five study options in Science and
+    Technology at Bachelor's level". It names a subject area, states a level,
+    and carries programme-shaped sections, so relaxing the rule about where the
+    degree may appear let it through as a programme — a subject hub accepted as
+    a degree, which is exactly what this classifier exists to prevent.
+
+    A programme is named by a noun phrase. "Aalto offers five study options" is
+    a sentence about an offering.
+    """
+
+    def test_the_hub_is_not_a_programme(self):
+        result = classify("aalto-five-options")
+        assert result.page_type not in PROGRAMME_TYPES, result.signals
+
+    def test_the_real_programme_beside_it_still_is(self):
+        assert classify("aalto-computer-engineering").page_type in PROGRAMME_TYPES
+
+    @pytest.mark.parametrize("heading", [
+        "Aalto offers five study options in Science and Technology",
+        "We offer three bachelor's programmes in engineering",
+        "The university provides two degree options",
+        "Choose from six bachelor's programmes",
+        "Our faculty offers a range of undergraduate degrees",
+    ])
+    def test_a_sentence_about_an_offering_is_not_a_name(self, heading):
+        html = page(f"<main><h1>{heading}</h1>{PROGRAMME_BODY}</main>", title=heading)
+        assert classify_page(url="https://uni.edu/study-options/x", html=html).page_type \
+            not in PROGRAMME_TYPES
+
+    @pytest.mark.parametrize("heading", [
+        "BSc Computer Science",
+        "Computer Engineering, Bachelor of Science and Master of Science",
+        "Bachelor of Science in Mathematical and Computer Sciences",
+        "Computer Science (bachelor's programme)",
+    ])
+    def test_a_noun_phrase_naming_a_programme_still_is(self, heading):
+        html = page(f"<main><h1>{heading}</h1>{PROGRAMME_BODY}</main>", title=heading)
+        assert classify_page(url="https://uni.edu/programmes/x", html=html).page_type \
+            in PROGRAMME_TYPES
+
+    def test_a_bare_subject_heading_needs_the_level_stated_nearby(self):
+        """"Computing Science" with the level only in the prose is not enough.
+
+        Groningen's real page carries "Bachelor's degree programmes" in its
+        browser title, which is what makes it identifiable. A page that never
+        states the level in its heading or title is left alone — the guard from
+        `test_a_subject_heading_with_no_degree_anywhere_is_not_a_programme`.
+        """
+        without = page(
+            f"<main><h1>Computing Science</h1>{PROGRAMME_BODY}</main>",
+            title="Computing Science",
+        )
+        assert classify_page(url="https://uni.edu/programmes/x", html=without).page_type \
+            not in PROGRAMME_TYPES
+
+        with_level = page(
+            f"<main><h1>Computing Science</h1>{PROGRAMME_BODY}</main>",
+            title="Computing Science | Bachelor's degree programmes | University",
+        )
+        assert classify_page(url="https://uni.edu/programmes/x", html=with_level).page_type \
+            in PROGRAMME_TYPES
