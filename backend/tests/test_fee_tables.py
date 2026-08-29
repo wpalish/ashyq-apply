@@ -54,3 +54,16 @@ def test_the_excerpt_proves_the_association() -> None:
 def test_the_academic_year_comes_from_the_row() -> None:
     years = {c.academic_year for c in _claims() if c.claim_type is ClaimType.TUITION}
     assert years == {"2026/27"}
+
+
+def test_a_programme_page_that_carries_its_own_fee_table_is_read() -> None:
+    """Groningen states tuition on the programme page itself, not on a separate
+    fees page. Wiring table reading only into the cost adapter would have left
+    the figures unread on exactly the page a student is looking at."""
+    from app.adapters.requirements.web_requirements import claims_from_fee_tables
+
+    html = (PAGES / "rug-computing-science.html").read_text()
+    builder = ClaimBuilder(source_url=RUG, official_domain=True)
+    claims = claims_from_fee_tables(html, builder)
+    amounts = sorted(c.normalized_value["amount"] for c in claims)
+    assert amounts == [2694.0, 19800.0]

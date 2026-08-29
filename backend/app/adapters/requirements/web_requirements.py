@@ -20,6 +20,7 @@ from app.adapters.base import AdapterResult, Candidate, CandidateProgram
 from app.adapters.extraction import (
     ClaimBuilder,
     excerpt_around,
+    extract_cost_tables,
     extract_requirements,
     for_matching,
     html_title,
@@ -128,6 +129,12 @@ class WebRequirementsAdapter:
             self._claim_intake_state(page, text, intake, builder, out)
             self._claim_english_test_types(text, builder)
             self._claim_fees(text, builder)
+            if not res.is_pdf:
+                # Some universities put the fee table on the programme page
+                # rather than a separate fees page. Groningen is one, and its
+                # EU/EEA and non-EU/EEA rates are the difference between
+                # €2,694 and €19,800 for the same year.
+                claims_from_fee_tables(res.text, builder)
 
             out.claims.extend(builder.claims)
 
@@ -286,3 +293,14 @@ def _line_containing(text: str, needle: str) -> str:
         if needle in line.lower():
             return line.strip()[:300]
     return ""
+
+
+def claims_from_fee_tables(html: str, builder) -> list:
+    """Tuition rows from any fee table the programme page carries itself.
+
+    A separate name rather than a bare call so the programme-page path can be
+    tested directly: this is where Groningen's fees live, and wiring tables
+    only into the cost adapter would have left them unread on the very page a
+    student is reading.
+    """
+    return extract_cost_tables(html, builder)
