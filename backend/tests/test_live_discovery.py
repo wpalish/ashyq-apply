@@ -1583,3 +1583,48 @@ class TestOneUnreadablePageDoesNotEndTheRun:
         assert "not enough values to unpack" in broke.notes, (
             "the failure must be reported on the candidate, not swallowed"
         )
+
+    @pytest.mark.asyncio
+    async def test_a_catalogue_keeps_the_walk_budget_to_itself(
+        self, tmp_path, profile_bachelor
+    ):
+        """The admissions hub is a fallback for having no catalogue, not a
+        competitor to one.
+
+        Queueing both spent one fixed budget on two things: Uppsala stopped
+        reaching the programmes its catalogue lists, and the holdout dropped
+        from three programme pages to two.
+        """
+        entry = {
+            "name": "U", "country": "Sweden", "city": "X",
+            "homepage": "https://uni.edu/",
+            "seeds": {
+                "program_catalog": "https://uni.edu/bachelors",
+                "admissions": "https://uni.edu/admissions",
+            },
+        }
+        site = StubSite({
+            "https://uni.edu/robots.txt": "User-agent: *\n",
+            "https://uni.edu/bachelors": (
+                "<html><head><title>Bachelors</title></head><body><main>"
+                "<h1>Bachelor's degree programmes</h1>"
+                "<a href='/bachelors/computing-science'>Computing Science</a>"
+                "</main></body></html>"
+            ),
+            "https://uni.edu/bachelors/computing-science": program_html(
+                "BSc Computing Science"
+            ),
+            "https://uni.edu/admissions": (
+                "<html><head><title>Admissions</title></head><body><main>"
+                "<h1>Admissions</h1><a href='/fees'>Tuition fees</a></main></body></html>"
+            ),
+        })
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, [entry]))
+            candidate = (await adapter.discover(profile_bachelor))[0]
+
+        urls = [p.url for p in candidate.programs]
+        assert any("computing-science" in u for u in urls), (
+            f"the catalogue's programme was not reached; found {urls}"
+        )

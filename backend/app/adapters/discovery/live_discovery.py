@@ -667,7 +667,14 @@ class LiveDiscoveryAdapter:
         # paperwork are gathered; it is worth walking for the reason a
         # catalogue is.
         queue = list(selected[PageCategory.PROGRAM_CATALOG][:2])
-        queue += [u for u in selected[PageCategory.ADMISSIONS][:2] if u not in queue]
+        if not queue:
+            # Only when there is no catalogue at all. Queueing the admissions
+            # hub alongside catalogues spent the same fixed budget on it and
+            # displaced the catalogue walk: Uppsala stopped reaching the
+            # programmes it had been finding, and Vienna stopped reaching a
+            # funding page. A university with a catalogue is already being
+            # read the best way there is.
+            queue = list(selected[PageCategory.ADMISSIONS][:2])
         walked: set[str] = set()
         homepage_tried = False
         rendered_catalogues = 0
