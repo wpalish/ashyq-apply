@@ -93,6 +93,11 @@
   border: 1px solid var(--rule-strong);
   background: var(--surface);
   padding: 0.18rem 0.5rem;
+  /* "Decide later" and "Rule out" are two words each and were wrapping onto
+     two lines in every row, which turned a dense table into a ragged one.
+     The labels are worth their width — "Yes/Maybe/No" said nothing — so the
+     buttons keep their line and the column takes the space it needs. */
+  white-space: nowrap;
   font-size: var(--text-xs);
   font-weight: 600;
   cursor: pointer;
