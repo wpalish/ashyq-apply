@@ -139,3 +139,57 @@ class TestACredentialBesideTheSubject:
         assert result.page_type not in {
             PageType.PROGRAM_DETAIL, PageType.INTAKE_SPECIFIC_PROGRAM,
         }, result.signals
+
+
+class TestAFieldAndALevelIsACategory:
+    """Cape Town heads every faculty's degree list "<Field>: <level>".
+
+    "Science: undergraduate" was read as a single programme called "Science:
+    undergraduate" at bachelor level. It is the Faculty of Science's list of
+    undergraduate degrees. Presenting it to an applicant as their programme is
+    the false positive this product is not allowed to make, and it was one
+    hop from a page discovery already reads.
+
+    Nothing else caught it. The heading has no plural listing word, so the
+    category guard did not fire; the page's own links are handbook PDFs, so
+    the link-count guard saw none; and it carries "Admission requirements" and
+    "Curriculum", so it looked like a programme by section count.
+
+    A field followed by a bare level names a group of programmes. A single
+    programme names its award instead — "BSc Computer Science", "Bachelor's
+    Programme in Game Design" — which is why the rule keys on the trailing
+    part being *only* level words.
+    """
+
+    def test_the_faculty_list_is_not_a_programme(self) -> None:
+        result = classify_page(
+            url="https://uct.ac.za/students/study-uct-degrees-diplomas-science/"
+                "science-undergraduate",
+            html=(PAGES / "uct-science-undergraduate.html").read_text(),
+        )
+        assert result.page_type not in {
+            PageType.PROGRAM_DETAIL, PageType.INTAKE_SPECIFIC_PROGRAM,
+        }, result.signals
+
+    @pytest.mark.parametrize("heading", [
+        "Science: undergraduate",
+        "Humanities: postgraduate",
+        "Law: undergraduate",
+        "Engineering — graduate",
+    ])
+    def test_a_field_and_a_bare_level_reads_as_a_category(self, heading: str) -> None:
+        from app.adapters.page_classifier import _field_and_level_only
+
+        assert _field_and_level_only(heading), heading
+
+    @pytest.mark.parametrize("heading", [
+        "Computer Science: Bachelor of Science",
+        "BSc Computer Science",
+        "Bachelor's Programme in Game Design and Programming",
+        "Computing Science",
+        "Data Science: Bachelor of Science and Master of Science",
+    ])
+    def test_a_named_award_is_not_caught_by_it(self, heading: str) -> None:
+        from app.adapters.page_classifier import _field_and_level_only
+
+        assert not _field_and_level_only(heading), heading

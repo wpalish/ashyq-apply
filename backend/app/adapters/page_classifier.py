@@ -410,7 +410,9 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
     year = _academic_year(body)
 
     program_links = _program_link_count(soup, url) if soup else 0
-    plural_heading = bool(_PLURAL_PROGRAM_HEADING.match(identity))
+    plural_heading = bool(_PLURAL_PROGRAM_HEADING.match(identity)) or _field_and_level_only(
+        identity
+    )
 
     # The subject may be in the heading and the degree somewhere else. Look for
     # the level in the title and the subheadings too, but only for a page whose
@@ -630,6 +632,33 @@ def _credential_beside(body: str, identity: str) -> str | None:
                 return level
         index = low_body.find(low_identity, index + 1)
     return None
+
+
+#: A level word standing on its own, with nothing naming an award beside it.
+_BARE_LEVEL_ONLY = re.compile(
+    r"^\s*(under|post)?graduate\s*(studies|study|programmes?|programs?|degrees?)?\s*$"
+    r"|^\s*(bachelor'?s?|master'?s?|doctoral|doctorate|phd)\s*"
+    r"(studies|study|programmes?|programs?|degrees?|level)?\s*$",
+    re.IGNORECASE,
+)
+
+
+def _field_and_level_only(heading: str) -> bool:
+    """Whether a heading names a field and then just a level.
+
+    Cape Town heads every faculty's degree list this way — "Science:
+    undergraduate", "Humanities: postgraduate" — and each is a list of
+    programmes, not one of them. A single programme names what it awards
+    instead: "BSc Computer Science", "Computer Science: Bachelor of Science".
+    So the test is that the part after the separator is *only* a level, with
+    nothing else in it.
+    """
+    parts = re.split(r"\s*[:\u2013\u2014]\s*|\s+[-]\s+", heading, maxsplit=1)
+    if len(parts) != 2:
+        return False
+    field, tail = parts
+    return bool(field.strip()) and bool(_BARE_LEVEL_ONLY.match(tail))
+
 
 
 def _headings(soup: BeautifulSoup) -> list[str]:
