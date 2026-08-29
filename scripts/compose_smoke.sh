@@ -28,10 +28,14 @@ ok()    { printf '  ok   %s\n' "$1"; }
 bad()   { printf '  FAIL %s\n' "$1"; FAILED=1; }
 check() { if [ "$1" = "$2" ]; then ok "$3"; else bad "$3 (expected $2, got $1)"; fi; }
 
+DUMP="/tmp/${PROJECT}.sql"
+
 cleanup() {
   step "tearing down (only what this run created)"
   "${COMPOSE[@]}" down --volumes --remove-orphans >/dev/null 2>&1 || true
-  rm -f "$JAR_A" "$JAR_B"
+  # Cookie jars and the SQL dump go in the trap, not at the end of the happy
+  # path: an early exit would otherwise leave the dump behind.
+  rm -f "$JAR_A" "$JAR_B" "$DUMP"
 }
 trap cleanup EXIT
 
@@ -71,22 +75,116 @@ else
   RUN_ID="$(curl -fsS -b "$JAR_A" -X POST "$API/api/runs" -H 'content-type: application/json' \
     -d "{\"profile_id\":\"$PROFILE_ID\",\"demo_mode\":true}" | grep -o '"id":"[^"]*"' | head -1 | cut -d'"' -f4)"
   ok "run $RUN_ID enqueued"
+
+  # --- a reference run, so the interrupted one can be compared to it -------
+  step "a clean run, for comparison"
   for _ in $(seq 1 90); do
     STAGE="$(curl -fsS -b "$JAR_A" "$API/api/runs/$RUN_ID" | grep -o '"stage":"[^"]*"' | cut -d'"' -f4)"
     [ "$STAGE" = "awaiting_user_decision" ] && break
     [ "$STAGE" = "failed" ] && break
     sleep 2
   done
-  check "$STAGE" "awaiting_user_decision" "the worker picked up and finished the run"
-  RESULTS_BEFORE="$(curl -fsS -b "$JAR_A" "$API/api/runs/$RUN_ID/results" | grep -o '"id":"' | wc -l | tr -d ' ')"
-  ok "$RESULTS_BEFORE results, sources and documents available"
+  check "$STAGE" "awaiting_user_decision" "the worker picked up and finished a clean run"
+  CLEAN_RESULTS="$(curl -fsS -b "$JAR_A" "$API/api/runs/$RUN_ID/results" | grep -o '"id":"' | wc -l | tr -d ' ')"
+  ok "clean run produced $CLEAN_RESULTS results"
 
-  step "kill the worker and let a new one take over"
-  "${COMPOSE[@]}" kill -s SIGKILL worker >/dev/null
-  "${COMPOSE[@]}" up -d worker >/dev/null
-  sleep 10
-  RESULTS_AFTER="$(curl -fsS -b "$JAR_A" "$API/api/runs/$RUN_ID/results" | grep -o '"id":"' | wc -l | tr -d ' ')"
-  check "$RESULTS_AFTER" "$RESULTS_BEFORE" "no duplicate results after worker recovery"
+  # --- now interrupt a run *while it is working* --------------------------
+  # The previous version killed the worker after the run had already reached
+  # awaiting_user_decision, so there was nothing in flight and nothing to
+  # recover. It proved only that a finished run stays finished.
+  step "kill the worker mid-run and let a new one take over"
+  CRASH_RUN="$(curl -fsS -b "$JAR_A" -X POST "$API/api/runs" -H 'content-type: application/json' \
+    -d "{\"profile_id\":\"$PROFILE_ID\",\"demo_mode\":true}" | grep -o '"id":"[^"]*"' | head -1 | cut -d'"' -f4)"
+  ok "run $CRASH_RUN enqueued for the crash test"
+
+  MID_STAGE=""
+  MID_RESULTS=0
+  for _ in $(seq 1 120); do
+    MID_STAGE="$(curl -fsS -b "$JAR_A" "$API/api/runs/$CRASH_RUN" | grep -o '"stage":"[^"]*"' | cut -d'"' -f4)"
+    MID_RESULTS="$(curl -fsS -b "$JAR_A" "$API/api/runs/$CRASH_RUN/results" | grep -o '"id":"' | wc -l | tr -d ' ')"
+    case "$MID_STAGE" in
+      program_verification|funding_discovery|assessment)
+        [ "${MID_RESULTS:-0}" -ge 1 ] && break ;;
+      awaiting_user_decision|failed|cancelled) break ;;
+    esac
+    sleep 1
+  done
+
+  case "$MID_STAGE" in
+    program_verification|funding_discovery|assessment)
+      ok "caught the run in $MID_STAGE with $MID_RESULTS results already written"
+
+      # SIGKILL, not stop: a graceful handler would let the worker finish and
+      # the lease would be released cleanly, which is a different test.
+      "${COMPOSE[@]}" kill -s SIGKILL worker >/dev/null
+      ok "worker SIGKILLed"
+
+      JOB_STATE="$("${COMPOSE[@]}" exec -T api python -c "
+from app.db import SessionLocal
+from app.models import Job
+with SessionLocal() as s:
+    j = s.query(Job).filter(Job.run_id == '$CRASH_RUN').first()
+    print(f'{j.status}|{j.attempts}' if j else 'missing|0')
+" 2>/dev/null | tr -d '\r')"
+      ATTEMPTS_BEFORE="${JOB_STATE##*|}"
+      check "${JOB_STATE%%|*}" "running" "the job is still claimed by the dead worker"
+
+      step "wait for the lease to expire, then start a new worker"
+      sleep 35
+      "${COMPOSE[@]}" up -d worker >/dev/null
+
+      FINAL_STAGE=""
+      for _ in $(seq 1 120); do
+        FINAL_STAGE="$(curl -fsS -b "$JAR_A" "$API/api/runs/$CRASH_RUN" | grep -o '"stage":"[^"]*"' | cut -d'"' -f4)"
+        case "$FINAL_STAGE" in awaiting_user_decision|failed|cancelled) break ;; esac
+        sleep 2
+      done
+      check "$FINAL_STAGE" "awaiting_user_decision" "the run continued to a decision point"
+
+      AFTER="$("${COMPOSE[@]}" exec -T api python -c "
+from app.db import SessionLocal
+from app.models import Job, ProgramResultRow
+with SessionLocal() as s:
+    j = s.query(Job).filter(Job.run_id == '$CRASH_RUN').first()
+    rows = s.query(ProgramResultRow).filter(ProgramResultRow.run_id == '$CRASH_RUN').all()
+    keys = [r.dedupe_key for r in rows]
+    print(f'{j.status}|{j.attempts}|{j.worker_id}|{len(rows)}|{len(set(keys))}')
+" 2>/dev/null | tr -d '\r')"
+      IFS='|' read -r F_STATUS F_ATTEMPTS F_WORKER F_ROWS F_UNIQUE <<<"$AFTER"
+      check "$F_STATUS" "succeeded" "the job reached succeeded, not stuck or dead"
+      check "$F_UNIQUE" "$F_ROWS" "no duplicate results after recovery"
+      check "$F_ROWS" "$CLEAN_RESULTS" "the interrupted run produced what a clean run does"
+      check "$F_WORKER" "None" "the lease was released"
+      if [ "${F_ATTEMPTS:-0}" -gt "${ATTEMPTS_BEFORE:-0}" ]; then
+        ok "attempts rose from $ATTEMPTS_BEFORE to $F_ATTEMPTS: the job was re-claimed"
+      else
+        bad "attempts stayed at $F_ATTEMPTS; a claim always increments it"
+      fi
+      ;;
+    *)
+      bad "never caught the run in flight (stage=$MID_STAGE, results=$MID_RESULTS); \
+in-flight crash recovery was NOT exercised"
+      ;;
+  esac
+
+  step "a cancelled run must not report success"
+  CANCEL_RUN="$(curl -fsS -b "$JAR_A" -X POST "$API/api/runs" -H 'content-type: application/json' \
+    -d "{\"profile_id\":\"$PROFILE_ID\",\"demo_mode\":true}" | grep -o '"id":"[^"]*"' | head -1 | cut -d'"' -f4)"
+  sleep 2
+  curl -fsS -b "$JAR_A" -X POST "$API/api/runs/$CANCEL_RUN/cancel" >/dev/null || true
+  sleep 8
+  CANCEL_JOB="$("${COMPOSE[@]}" exec -T api python -c "
+from app.db import SessionLocal
+from app.models import Job
+with SessionLocal() as s:
+    j = s.query(Job).filter(Job.run_id == '$CANCEL_RUN').first()
+    print(j.status if j else 'missing')
+" 2>/dev/null | tr -d '\r')"
+  if [ "$CANCEL_JOB" = "succeeded" ]; then
+    bad "a cancelled run reported its job as succeeded"
+  else
+    ok "cancelled run's job is $CANCEL_JOB, not succeeded"
+  fi
 
   step "restart the API and confirm the session and data survive"
   "${COMPOSE[@]}" restart api >/dev/null
@@ -112,13 +210,30 @@ else
 fi
 
 step "backup and restore drill"
-"${COMPOSE[@]}" exec -T postgres pg_dump -U ashyq ashyq_apply > /tmp/"$PROJECT".sql
-if [ -s /tmp/"$PROJECT".sql ]; then ok "dump taken ($(wc -c < /tmp/"$PROJECT".sql) bytes)"; else bad "dump is empty"; fi
+"${COMPOSE[@]}" exec -T postgres pg_dump -U ashyq ashyq_apply > "$DUMP"
+if [ -s "$DUMP" ]; then ok "dump taken ($(wc -c < "$DUMP") bytes)"; else bad "dump is empty"; fi
 "${COMPOSE[@]}" exec -T postgres psql -U ashyq -d postgres -c 'CREATE DATABASE restore_check;' >/dev/null
-"${COMPOSE[@]}" exec -T postgres psql -U ashyq -d restore_check < /tmp/"$PROJECT".sql >/dev/null 2>&1
-RESTORED="$("${COMPOSE[@]}" exec -T postgres psql -U ashyq -d restore_check -tAc 'select count(*) from research_runs;' | tr -d ' \r')"
-if [ "${RESTORED:-0}" -ge 1 ]; then ok "restored database contains $RESTORED run(s)"; else bad "restore produced no rows"; fi
-rm -f /tmp/"$PROJECT".sql
+"${COMPOSE[@]}" exec -T postgres psql -U ashyq -d restore_check < "$DUMP" >/dev/null 2>&1
+
+# Row counts for every table, not just one: a restore that brings back the runs
+# and loses their claims is a restore that lost the evidence.
+TABLES="research_runs program_results claims conflicts jobs applicant_profiles users organizations"
+for table in $TABLES; do
+  SRC="$("${COMPOSE[@]}" exec -T postgres psql -U ashyq -d ashyq_apply -tAc \
+    "select count(*) from $table;" 2>/dev/null | tr -d ' \r')"
+  DST="$("${COMPOSE[@]}" exec -T postgres psql -U ashyq -d restore_check -tAc \
+    "select count(*) from $table;" 2>/dev/null | tr -d ' \r')"
+  check "${DST:-missing}" "${SRC:-missing}" "restored $table row count ($SRC)"
+done
+
+# And one payload, so "the rows are there" is not the whole claim.
+SRC_PAYLOAD="$("${COMPOSE[@]}" exec -T postgres psql -U ashyq -d ashyq_apply -tAc \
+  "select md5(string_agg(dedupe_key, ',' order by dedupe_key)) from program_results;" \
+  2>/dev/null | tr -d ' \r')"
+DST_PAYLOAD="$("${COMPOSE[@]}" exec -T postgres psql -U ashyq -d restore_check -tAc \
+  "select md5(string_agg(dedupe_key, ',' order by dedupe_key)) from program_results;" \
+  2>/dev/null | tr -d ' \r')"
+check "${DST_PAYLOAD:-missing}" "${SRC_PAYLOAD:-missing}" "restored result keys are identical"
 
 step "result"
 if [ "$FAILED" = "0" ]; then echo "  PASS: the production-shaped stack works"; else echo "  FAIL: see the lines above"; fi
