@@ -211,3 +211,64 @@ def test_production_refuses_other_unsafe_defaults(overrides, message):
     }
     with pytest.raises(RuntimeError, match=message):
         Settings(**values).validate_runtime()
+
+
+class TestProductionOnlyHeaders:
+    """HSTS is set only in production over HTTPS, and nothing tested that.
+
+    Sending `Strict-Transport-Security` over plain HTTP in development would be
+    wrong, so its absence there is correct — which means the header that
+    actually matters had no cover at all.
+
+    `_secure` is exercised directly rather than through a booted production
+    app: production configuration refuses to start without PostgreSQL, which is
+    its own correct fail-closed guard and not the subject here.
+    """
+
+    @staticmethod
+    def headers_for(**overrides):
+        from fastapi import Response
+
+        import app.main as main_module
+        from app.config import Settings
+
+        base = {
+            "environment": "production",
+            "cookie_secure": True,
+            "demo_mode": False,
+            "auth_enabled": True,
+            "database_url": "postgresql+psycopg://u:p@db:5432/x",
+        }
+        base.update(overrides)
+        original = main_module.settings
+        main_module.settings = Settings(**base)
+        try:
+            return dict(main_module._secure(Response()).headers)
+        finally:
+            main_module.settings = original
+
+    def test_hsts_is_sent_in_production_over_https(self):
+        value = self.headers_for().get("strict-transport-security")
+        assert value, "no HSTS header in production"
+        assert "max-age=" in value
+        assert int(value.split("max-age=")[1].split(";")[0]) >= 31536000
+        assert "includeSubDomains" in value
+
+    def test_hsts_is_not_sent_in_development(self):
+        """Announcing HTTPS-only over plain localhost HTTP would be wrong."""
+        assert "strict-transport-security" not in self.headers_for(
+            environment="development", cookie_secure=False,
+            database_url="sqlite:///./x.sqlite3",
+        )
+
+    def test_hsts_is_not_sent_when_cookies_are_not_secure(self):
+        """Announcing HTTPS-only while issuing insecure cookies is incoherent."""
+        assert "strict-transport-security" not in self.headers_for(cookie_secure=False)
+
+    def test_the_other_headers_are_present_in_production_too(self):
+        headers = self.headers_for()
+        assert headers["x-content-type-options"] == "nosniff"
+        assert headers["x-frame-options"] == "DENY"
+        assert "content-security-policy" in headers
+        assert "referrer-policy" in headers
+        assert headers["cross-origin-opener-policy"] == "same-origin"
