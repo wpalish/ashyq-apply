@@ -8,11 +8,42 @@ from sqlalchemy.orm import Session
 from app.config import get_settings
 from app.db import get_session
 from app.domain import enums
-from app.domain.currency import RATE_DATE, RATE_SOURCE, supported_currencies
+from app.domain.currency import (
+    MAX_RATE_AGE_DAYS,
+    FxUnavailable,
+    current_provider,
+    supported_currencies,
+)
 from app.models import CURRENT_SCHEMA_VERSION, AuditEvent
 from app.security import Principal, get_principal
 
 router = APIRouter(prefix="/api", tags=["meta"])
+
+
+def _currency_meta() -> dict:
+    """What rates this instance is actually using, not what it could use."""
+    try:
+        snap = current_provider().snapshot()
+    except FxUnavailable as exc:
+        return {
+            "supported": supported_currencies(),
+            "provider": getattr(current_provider(), "provider_id", "unknown"),
+            "available": False,
+            "reason": str(exc),
+            "max_age_days": MAX_RATE_AGE_DAYS,
+        }
+    return {
+        "supported": sorted(snap.rates),
+        "provider": snap.provider_id,
+        "available": True,
+        "rate_date": snap.observed_on.isoformat(),
+        "rate_source": snap.source_url,
+        "age_days": snap.age_days,
+        "max_age_days": MAX_RATE_AGE_DAYS,
+        # False means a dated bundled table, and every conversion made from it
+        # is labelled an estimate.
+        "authoritative": snap.authoritative,
+    }
 
 
 @router.get("/health")
@@ -45,11 +76,7 @@ def capabilities() -> dict:
             {"name": "web-government", "role": "post-study work rules", "live": True},
         ],
         "fetch_tiers": ["structured data", "plain HTTP", "Playwright render", "PDF parsing"],
-        "currency": {
-            "supported": supported_currencies(),
-            "rate_date": RATE_DATE.isoformat(),
-            "rate_source": RATE_SOURCE,
-        },
+        "currency": _currency_meta(),
         "guarantees": [
             "robots.txt is honoured before every fetch, including the browser tier",
             "applicant data is never placed in an outbound URL",

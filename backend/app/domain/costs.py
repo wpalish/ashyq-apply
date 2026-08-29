@@ -8,7 +8,7 @@ reports that it will not compute, and says why.
 
 from __future__ import annotations
 
-from app.domain.currency import UnsupportedCurrency, convert
+from app.domain.currency import FxUnavailable, convert
 from app.domain.enums import CostCategory, FundingClassification
 from app.schemas.money import Money
 from app.schemas.result import CostBreakdown, FundingGap, Scholarship
@@ -34,7 +34,7 @@ def total_cost(breakdown: CostBreakdown, target_currency: str = "USD") -> Money 
         # against a USD award.
         try:
             converted = convert(breakdown.total, target_currency)
-        except UnsupportedCurrency:
+        except FxUnavailable:
             return None
         return Money(
             amount=converted.amount,
@@ -59,7 +59,7 @@ def total_cost(breakdown: CostBreakdown, target_currency: str = "USD") -> Money 
     for money in breakdown.items.values():
         try:
             conv = convert(money, target_currency)
-        except UnsupportedCurrency:
+        except FxUnavailable:
             return None
         total += conv.amount
         low += conv.range_low if conv.range_low is not None else conv.amount
@@ -81,7 +81,7 @@ def _award_amount(s: Scholarship, tuition: Money | None, target_currency: str) -
     if s.amount is not None:
         try:
             conv = convert(s.amount, target_currency)
-        except UnsupportedCurrency:
+        except FxUnavailable:
             return None
         return Money(
             amount=conv.amount,
@@ -92,7 +92,7 @@ def _award_amount(s: Scholarship, tuition: Money | None, target_currency: str) -
     if s.amount_is_percentage_of_tuition is not None and tuition is not None:
         try:
             conv_t = convert(tuition, target_currency)
-        except UnsupportedCurrency:
+        except FxUnavailable:
             return None
         return Money(
             amount=round(conv_t.amount * s.amount_is_percentage_of_tuition / 100.0, 2),

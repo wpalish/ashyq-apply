@@ -398,7 +398,19 @@ export interface Capabilities {
   data_origin: string;
   adapters: { name: string; role: string; live: boolean }[];
   fetch_tiers: string[];
-  currency: { supported: string[]; rate_date: string; rate_source: string };
+  currency: {
+    supported: string[];
+    provider: string;
+    /** False when no trustworthy rate is available; nothing is converted. */
+    available: boolean;
+    reason?: string;
+    rate_date?: string;
+    rate_source?: string;
+    age_days?: number;
+    max_age_days: number;
+    /** False for the bundled dated snapshot; conversions are then estimates. */
+    authoritative?: boolean;
+  };
   guarantees: string[];
   limits: string[];
 }

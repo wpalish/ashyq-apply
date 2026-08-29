@@ -28,6 +28,8 @@ from app.config import Settings
 from app.domain import dedupe
 from app.domain.conflicts import enforce_source_hierarchy, find_conflicts
 from app.domain.costs import compute_funding_gap, total_cost
+from app.domain.currency import EcbFxProvider, StaticFxProvider
+from app.domain.currency import set_provider as set_fx_provider
 from app.domain.eligibility import evaluate_program
 from app.domain.enums import (
     ClaimType,
@@ -153,7 +155,14 @@ class ResearchRunner:
             "academic_year": self.settings.academic_year,
             "target_currency": self.settings.target_currency,
             "respect_robots": self.settings.respect_robots,
+            "fx_provider": self.settings.fx_provider,
         }
+        # Demo mode is deterministic and offline, so it always uses the bundled
+        # table; a live run uses whatever the configuration selects.
+        set_fx_provider(
+            StaticFxProvider() if self.demo or self.settings.fx_provider == "static"
+            else EcbFxProvider()
+        )
         fetcher = self._make_fetcher()
         browser = BrowserFetcher(
             fetcher, enabled=self.settings.enable_browser_tier and not self.demo

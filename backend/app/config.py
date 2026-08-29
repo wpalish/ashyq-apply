@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from functools import lru_cache
 from pathlib import Path
+from typing import Literal
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -39,6 +40,12 @@ class Settings(BaseSettings):
     fetch_contact: str = ""
 
     enable_browser_tier: bool = True
+    #: Where exchange rates come from. "ecb" is the European Central Bank's
+    #: free daily reference feed; "static" is the dated table bundled with the
+    #: app, which is deterministic and marks every conversion an estimate.
+    #: There is no silent fallback between them — if the chosen provider has no
+    #: usable rate, amounts stay in their source currency.
+    fx_provider: Literal["ecb", "static"] = "ecb"
     candidate_limit: int = 40
     verify_limit: int = 20
     academic_year: str = "2026/27"
