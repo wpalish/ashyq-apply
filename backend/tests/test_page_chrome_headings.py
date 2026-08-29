@@ -1,0 +1,73 @@
+"""Site chrome is not the page.
+
+Every page on a university site carries the same header, menu and footer. Those
+regions contain headings, and until they were excluded they crowded out the
+page's own: on Toronto's programme pages the first six headings were "Main
+Menu", "Breadcrumbs" and four items from the site header, so the checks that
+read the leading headings saw navigation and nothing else.
+
+Worse, the header on that site reads "Find the program that's right for you" —
+catalogue phrasing, present identically on a catalogue and on a single
+programme page. Chrome cannot distinguish the two, so it must not be consulted.
+"""
+from pathlib import Path
+
+import pytest
+
+from app.adapters.page_classifier import (
+    PageType,
+    _degree_level,
+    _headings,
+    classify_page,
+)
+
+PAGES = Path(__file__).parent / "fixtures" / "pages"
+
+
+def _soup(name: str):
+    from bs4 import BeautifulSoup
+
+    return BeautifulSoup((PAGES / name).read_text(), "lxml")
+
+
+def test_headings_skip_navigation_and_keep_the_pages_own() -> None:
+    heads = _headings(_soup("uoft-computer-science.html"))
+    assert "Main Menu" not in heads
+    assert "Breadcrumbs" not in heads
+    assert heads[0] == "Computer Science"
+
+
+def test_chrome_catalogue_phrasing_does_not_make_a_programme_page_a_catalogue() -> None:
+    """The site header says "Find the program that's right for you" on *every*
+    page. Reading it as a signal turned each programme page into a catalogue."""
+    heads = _headings(_soup("uoft-computer-science.html"))
+    assert not any("right for you" in h.lower() for h in heads)
+
+
+def test_a_hub_that_lists_programmes_in_its_own_content_is_a_catalogue() -> None:
+    html = (PAGES / "uoft-data-cs-hub.html").read_text()
+    result = classify_page(
+        url="https://future.utoronto.ca/data-computer-science", html=html
+    )
+    assert result.page_type is PageType.PROGRAM_CATALOG
+    assert any("explore programs" in s.lower() for s in result.signals), result.signals
+
+
+def test_the_hub_is_never_read_as_a_single_programme() -> None:
+    """It names a field, not a programme. Accepting it would be a false
+    positive of exactly the kind the zero-tolerance rule forbids."""
+    html = (PAGES / "uoft-data-cs-hub.html").read_text()
+    result = classify_page(
+        url="https://future.utoronto.ca/data-computer-science", html=html
+    )
+    assert result.page_type is not PageType.PROGRAM_DETAIL
+
+
+@pytest.mark.parametrize(
+    "text",
+    ["HBSc Major, Minor, Specialist", "Honours Bachelor of Arts", "HBA"],
+)
+def test_canadian_honours_credentials_name_the_bachelor_level(text: str) -> None:
+    """HBSc and HBA are how Ontario universities write their undergraduate
+    degrees. Without them a page that states its level reads as stating none."""
+    assert _degree_level(text) == "bachelor"

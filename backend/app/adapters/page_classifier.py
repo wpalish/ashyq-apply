@@ -89,12 +89,22 @@ class PageClassification:
 _DEGREE_WORDS: tuple[tuple[str, str], ...] = (
     (r"\bph\.?d\b|\bdoctoral\b|\bdoctorate\b", "phd"),
     (r"\bmaster'?s?\b|\bm\.?sc\b|\bm\.?a\b\.?|\bmphil\b|\bllm\b|\bmba\b", "master"),
-    (r"\bbachelor'?s?\b|\bb\.?sc\b|\bb\.?a\b\.?|\bbeng\b|\bllb\b|\bundergraduate\b", "bachelor"),
+    # HBSc and HBA are how Ontario universities write an honours bachelor's
+    # degree. A page stating only "HBSc" was read as stating no level at all.
+    (
+        r"\bbachelor'?s?\b|\bb\.?sc\b|\bb\.?a\b\.?|\bbeng\b|\bllb\b|\bundergraduate\b"
+        r"|\bhb\.?sc\b|\bhba\b|\bhonours bachelor\b",
+        "bachelor",
+    ),
     (r"\bfoundation year\b|\bpre-?bachelor\b", "foundation"),
 )
+# "explore" and "discover" lead a listing as often as "browse" does, and
+# _PLURAL_PROGRAM_HEADING already treated them that way. The two vocabularies
+# disagreeing meant "Explore Programs in data & computer science" — a heading
+# over a list of five programmes — carried no catalogue signal at all.
 _CATALOG = re.compile(
     r"\b(programmes?|programs?|courses?|degrees?|studies)\b.*\b(overview|list|all|browse|find|search|a-?z)\b"
-    r"|\b(all|our|browse|find|search)\b.*\b(programmes?|programs?|courses?|degrees?)\b",
+    r"|\b(all|our|browse|find|search|explore|discover)\b.*\b(programmes?|programs?|courses?|degrees?)\b",
     re.IGNORECASE,
 )
 #: A heading that is a plural category is a listing, never one programme or one
@@ -538,8 +548,29 @@ def _title(soup: BeautifulSoup) -> str:
     return " ".join(h1.get_text(" ", strip=True).split())[:200] if h1 else ""
 
 
+#: Regions every page on a site repeats. Their headings describe the site, not
+#: the page, and they come first in document order — so before they were
+#: excluded they consumed the leading-heading windows below and the checks that
+#: read them saw only navigation. They are also actively misleading: a header
+#: that reads "Find the program that's right for you" is catalogue phrasing
+#: present verbatim on a catalogue and on a single programme page alike.
+_CHROME_REGIONS = ("nav", "header", "footer", "aside")
+
+
+def _in_chrome(tag) -> bool:
+    return any(parent.name in _CHROME_REGIONS for parent in tag.parents)
+
+
 def _headings(soup: BeautifulSoup) -> list[str]:
-    return [" ".join(h.get_text(" ", strip=True).split()) for h in soup.find_all(["h1", "h2"])][:12]
+    """The page's own headings, in order, with site chrome left out.
+
+    Falls back to every heading when excluding chrome would leave nothing: some
+    pages wrap all their content in <header>, and no headings at all is worse
+    than headings that need care.
+    """
+    found = soup.find_all(["h1", "h2"])
+    own = [h for h in found if not _in_chrome(h)]
+    return [" ".join(h.get_text(" ", strip=True).split()) for h in (own or found)][:12]
 
 
 def _text(soup: BeautifulSoup) -> str:
