@@ -112,9 +112,23 @@ _NOT_A_PAGE_ABOUT_STUDYING = re.compile(
 
 #: URLs that are never worth fetching, whatever else they score.
 _URL_EXCLUSIONS = re.compile(
-    r"/(news|nieuws|actueel|press|blog|events?|agenda|calendar|vacature|vacanc"
-    r"|jobs?|careers?|alumni|donate|shop|library|contact|privacy|cookie|search"
-    r"|login|signin|account|basket|cart|rss|feed|tag|author|archive)(/|$)"
+    # A segment that *is* one of these words. "articles" is here because Cape
+    # Town files its news under /articles, and one of those articles —
+    # "…exciting-joint-degree-programmes" — was selected as a programme
+    # catalogue on the strength of its slug.
+    r"/(news|nieuws|actueel|press|blog|articles?|stories|events?|agenda|calendar"
+    r"|vacature|vacanc|jobs?|careers?|alumni|donate|shop|library|contact|privacy"
+    r"|cookie|login|signin|account|basket|cart|rss|feed|tag|author|archive)(/|$)"
+    # Search endpoints, whoever provides them: /search, /google-search,
+    # /site-search. UCT's is the middle one, which the bare word missed.
+    # "programme-search" and "course-search" are the opposite thing — a
+    # finder *for* programmes, and a legitimate catalogue — so they are
+    # excluded from the exclusion.
+    r"|/(?!(?:programmes?|programs?|courses?|degrees?|study|studies)-)"
+    r"([a-z0-9]+-)?search(/|$|\?)"
+    # A date-stamped segment is a publication, whatever folder holds it. No
+    # programme page is named after the day it was written.
+    r"|/\d{4}-\d{2}-\d{2}[-/]"
     r"|\.(jpg|jpeg|png|gif|svg|webp|css|js|zip|mp4|mp3|docx?|xlsx?|pptx?)$",
     re.IGNORECASE,
 )

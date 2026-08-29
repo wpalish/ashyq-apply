@@ -1720,3 +1720,50 @@ class TestACatalogueBuiltInTheBrowserIsStillRead:
         assert any("program/computer-science" in u for u in urls), (
             f"the client-side programme list was never read; found {urls}"
         )
+
+
+class TestNewsAndSearchAreNeverCatalogues:
+    """Cape Town read fifty-six pages and confirmed no programme.
+
+    Its three programme-catalogue candidates were a news article
+    ("2025-03-04-sciences-po-visit-uct-strengthening-ties-exciting-joint-degree-
+    programmes" — a catalogue by slug alone), an A-Z list, and the site's
+    Google search endpoint. The candidate budget then went on Mastercard
+    Foundation Scholars Program articles.
+
+    The exclusion list already refuses /news, /press and /blog, and /search.
+    UCT files its news under /articles and its search under /google-search, so
+    neither matched. A dated slug is a news marker whatever folder it sits in:
+    a programme page is not stamped with the day it was published.
+    """
+
+    @pytest.mark.parametrize("url", [
+        "https://uct.ac.za/international/articles/2025-03-04-sciences-po-visit-uct-"
+        "strengthening-ties-exciting-joint-degree-programmes",
+        "https://uct.ac.za/mastercardfdn/articles/2022-08-02-tributes-life-changing-"
+        "mastercard-foundation-scholars-program",
+        "https://uct.ac.za/google-search",
+        "https://uni.edu/site-search?q=bachelor+programmes",
+        "https://uni.edu/newsroom/2026-01-02-new-bachelor-programmes-announced",
+    ])
+    def test_they_score_nothing(self, url):
+        from app.adapters.discovery.url_signals import categorise_url
+
+        category, score = categorise_url(url)
+        assert (category, score) == (None, 0), f"{url} scored {category} {score}"
+
+    @pytest.mark.parametrize("url", [
+        "https://www.rug.nl/bachelors/computing-science",
+        "https://www.rug.nl/bachelors/alphabet",
+        "https://future.utoronto.ca/program/computer-science",
+        "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering",
+        # A finder *for* programmes is a catalogue, not a site search. The
+        # first version of the search rule refused it along with the rest.
+        "https://uni.edu/study/programme-search",
+        "https://uni.edu/course-search",
+    ])
+    def test_real_programme_urls_are_untouched(self, url):
+        from app.adapters.discovery.url_signals import categorise_url
+
+        category, score = categorise_url(url)
+        assert category is not None and score > 0, f"{url} lost its score"
