@@ -1297,3 +1297,41 @@ class TestARejectedCatalogueFeedsBackItsLinks:
         assert len(levels) <= MAX_PROGRAM_CANDIDATES_CHECKED * 3, (
             f"followed {len(levels)} catalogue hops"
         )
+
+
+class TestProgrammeContainersBeyondTheObviousWords:
+    """Universities do not agree on what to call the folder programmes live in.
+
+    Aalto publishes every programme under `/en/study-options/<slug>` and the
+    index at `/en/study-options`. Neither scored anything, so its only
+    bachelor's computing programme was invisible to discovery even though the
+    sitemap lists it and the classifier reads it correctly.
+    """
+
+    @pytest.mark.parametrize("url", [
+        "https://uni.edu/en/study-options/computer-engineering-bachelor-of-science",
+        "https://uni.edu/en/study-programmes/bsc-computer-science",
+        "https://uni.edu/study-opportunities/computer-science",
+        "https://uni.edu/en/degree-programmes/computer-science-bachelor",
+        "https://uni.edu/en/education/programmes/bachelors/computer-science",
+    ])
+    def test_a_programme_under_any_of_them_is_a_programme(self, url):
+        assert categorise_url(url)[0] == PageCategory.PROGRAM_PAGE, url
+
+    @pytest.mark.parametrize("url", [
+        "https://uni.edu/en/study-options",
+        "https://uni.edu/en/study-programmes",
+        "https://uni.edu/study-opportunities",
+    ])
+    def test_the_container_itself_is_a_catalogue(self, url):
+        assert categorise_url(url)[0] == PageCategory.PROGRAM_CATALOG, url
+        assert looks_like_catalogue(url), url
+
+    @pytest.mark.parametrize("url", [
+        "https://uni.edu/en/study-options/tuition-fees-and-scholarships",
+        "https://uni.edu/en/study-options/open-day",
+        "https://uni.edu/en/study-options/how-to-apply",
+    ])
+    def test_the_container_does_not_launder_a_non_programme(self, url):
+        """Being under the folder is not enough; the existing rules still run."""
+        assert categorise_url(url)[0] != PageCategory.PROGRAM_PAGE, url

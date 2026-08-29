@@ -53,6 +53,10 @@ _URL_SIGNALS: dict[str, tuple[tuple[str, int], ...]] = {
         # expecting a bare "/programmes/" segment ever matched.
         (r"/[a-z0-9]+-(programmes?|programs?|degrees?|courses?)/[a-z][a-z0-9-]{3,}", 4),
         (r"/study/[a-z-]{4,}", 3),
+        # Universities do not agree on what to call the folder programmes
+        # live in. Aalto publishes every one under "/study-options/", and
+        # neither the folder nor its contents scored anything.
+        (r"/study-(options?|programmes?|programs?|opportunities|choices?)/[a-z][a-z0-9-]{3,}", 4),
         (r"/(opleidingen|studiengang|koulutus|kierunki)/[a-z-]{4,}", 3),
     ),
     PageCategory.PROGRAM_CATALOG: (
@@ -66,6 +70,7 @@ _URL_SIGNALS: dict[str, tuple[tuple[str, int], ...]] = {
         (r"/(bachelors?|masters?|undergraduate|postgraduate)/?$", 5),
         (r"/(study|studies|education)/(programmes?|programs?|degrees?)/?$", 4),
         (r"/(course|programme|program)[-_]?(search|finder|list|catalog(ue)?)", 4),
+        (r"/study-(options?|programmes?|programs?|opportunities|choices?)/?$", 5),
     ),
     PageCategory.ADMISSIONS: (
         (r"/(admission|admissions|apply|application)", 4),
@@ -295,7 +300,12 @@ _INDEX_SEGMENT = re.compile(
 #: admissions page than as a catalogue — so whether a page is worth walking for
 #: programmes is asked separately from which category it best fits.
 _CATALOGUE_PATH = re.compile(
-    r"/[a-z0-9-]*(programmes?|programs?|degrees?|courses?|studies)/?$", re.IGNORECASE
+    r"/[a-z0-9-]*(programmes?|programs?|degrees?|courses?|studies)/?$"
+    # The folder a site keeps its programmes in is a listing page. Written
+    # separately from the suffix rule above because "study-options" ends in a
+    # word that is not itself a listing word.
+    r"|/study-(options?|programmes?|programs?|opportunities|choices?)/?$",
+    re.IGNORECASE,
 )
 
 
