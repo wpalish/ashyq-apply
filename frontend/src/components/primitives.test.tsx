@@ -14,9 +14,16 @@ import { STATUS_MEANING, fundingClassTone } from '@/lib/format';
 describe('StatusChip', () => {
   it('shows the shortened label but keeps the full meaning available', () => {
     render(<StatusChip status="FULL_RIDE_CONFIRMED" tone={fundingClassTone.FULL_RIDE_CONFIRMED} />);
-    const chip = screen.getByText('Full ride');
+    // "Core costs covered", not "Full ride": the award covers the four core
+    // categories, and a university that also publishes insurance, books or
+    // travel leaves a real amount to pay. The old label claimed more than the
+    // award did, which is the half a student remembers.
+    const chip = screen.getByText('Core costs covered');
     expect(chip).toBeInTheDocument();
     expect(chip).toHaveAttribute('title', STATUS_MEANING.FULL_RIDE_CONFIRMED);
+    // The meaning must say what is *not* covered, not only what is.
+    expect(STATUS_MEANING.FULL_RIDE_CONFIRMED).toMatch(/still yours to pay/);
+    expect(STATUS_MEANING.FULL_RIDE_CONFIRMED).toMatch(/not the same as being awarded/);
   });
 
   it('falls back to the humanised name for a status with no short label', () => {

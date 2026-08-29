@@ -81,6 +81,10 @@ test('marketing language does not turn full tuition into a full ride', async () 
   await expect(asu).toBeVisible();
   // The corpus page for this award literally says "a full ride to an ASU degree".
   await expect(asu).toContainText('Full tuition');
+  // Asserted against the label FULL_RIDE_CONFIRMED actually carries. Checking
+  // for the words "Full ride" would now pass whatever the classifier did,
+  // because no label uses that phrase any more.
+  await expect(asu).not.toContainText('Core costs covered');
   await expect(asu).not.toContainText('Full ride');
   // The tooltip still carries the full meaning behind the shortened chip.
   await expect(asu.getByTitle(/Tuition is covered/)).toBeVisible();

@@ -540,6 +540,43 @@ _TUITION_CONTEXT = re.compile(
 _ACADEMIC_YEAR_CELL = re.compile(r"\b(20\d{2})\s*[-/–]\s*(20\d{2}|\d{2})\b")
 
 
+#: A first column that names *what the cost is* rather than *who pays it*.
+#: This is what separates Aalto's cost-of-attendance table (Item | Amount)
+#: from Groningen's fee table (Nationality | Year | Fee).
+_ITEM_HEADER = re.compile(
+    r"\b(item|items|cost|costs|expense|expenses|category|categories|description"
+    r"|type of cost|fee type)\b",
+    re.IGNORECASE,
+)
+
+#: A row that sums the rows above it. Recording it as a cost double-counts;
+#: recording it as tuition made a full-tuition award appear to cover the whole
+#: cost of attending, and the applicant was told they owed nothing.
+_TOTAL_ROW = re.compile(
+    r"\b(total|subtotal|sum|altogether|overall|estimated total|grand total)\b",
+    re.IGNORECASE,
+)
+
+#: Row labels mapped to the cost they name. Ordered: the first match wins, so
+#: "tuition fee" is tuition before "fee" can make it a mandatory fee.
+_ROW_LABEL_TO_CLAIM: tuple[tuple[re.Pattern[str], ClaimType], ...] = (
+    (re.compile(r"\btuition|programme fee|program fee|course fee\b", re.I), ClaimType.TUITION),
+    (re.compile(r"\bhousing|accommodation|residence|lodging|rent\b", re.I), ClaimType.HOUSING_COST),
+    (re.compile(r"\bmeal|board|food|catering\b", re.I), ClaimType.MEALS_COST),
+    (re.compile(r"\b(health|medical)\s+insurance|\binsurance\b", re.I), ClaimType.HEALTH_INSURANCE_COST),
+    (re.compile(r"\bbooks|study materials|supplies|literature\b", re.I), ClaimType.BOOKS_COST),
+    (re.compile(r"\bfees?\b", re.I), ClaimType.MANDATORY_FEES),
+)
+
+
+def _claim_for_row_label(label: str) -> ClaimType | None:
+    """Which cost a cost-of-attendance row names, if it names one."""
+    for pattern, claim_type in _ROW_LABEL_TO_CLAIM:
+        if pattern.search(label):
+            return claim_type
+    return None
+
+
 def _cell_text(cell) -> str:
     return " ".join(cell.get_text(" ", strip=True).split())
 
@@ -593,6 +630,15 @@ def extract_cost_tables(html: str, builder: ClaimBuilder) -> list[Claim]:
         audience_col = next(
             (i for i, h in enumerate(header_cells) if _AUDIENCE_HEADER.search(h)), None
         )
+        # Which shape is this? A first column headed "Nationality" segments one
+        # fee by who pays it; a first column headed "Item" lists different
+        # costs. Reading the second as the first made every row a tuition rate
+        # and the total row won, so tuition became the whole cost of attending
+        # and a full-tuition award appeared to leave nothing to pay.
+        item_col = next(
+            (i for i, h in enumerate(header_cells) if _ITEM_HEADER.search(h)), None
+        )
+        rows_are_categories = audience_col is None and item_col is not None
         year_col = next(
             (i for i, h in enumerate(header_cells) if _YEAR_HEADER.search(h)), None
         )
@@ -619,11 +665,27 @@ def extract_cost_tables(html: str, builder: ClaimBuilder) -> list[Claim]:
                 continue
             amount, currency = parsed
 
-            audience = (
-                cells[audience_col]
-                if audience_col is not None and audience_col < len(cells)
-                else cells[0]
-            )
+            label = cells[0]
+            if item_col is not None and item_col < len(cells):
+                label = cells[item_col]
+            if rows_are_categories:
+                claim_type = (
+                    ClaimType.TOTAL_COST_OF_ATTENDANCE
+                    if _TOTAL_ROW.search(label)
+                    else _claim_for_row_label(label)
+                )
+                if claim_type is None:
+                    # A row naming a cost this product has no category for.
+                    # Skipped rather than filed under a category it is not.
+                    continue
+                audience = None
+            else:
+                claim_type = ClaimType.TUITION
+                audience = (
+                    cells[audience_col]
+                    if audience_col is not None and audience_col < len(cells)
+                    else cells[0]
+                )
             year = None
             if year_col is not None and year_col < len(cells):
                 m = _ACADEMIC_YEAR_CELL.search(cells[year_col])
@@ -632,7 +694,7 @@ def extract_cost_tables(html: str, builder: ClaimBuilder) -> list[Claim]:
 
             found.append(
                 builder.add(
-                    ClaimType.TUITION,
+                    claim_type,
                     {"amount": amount, "currency": currency},
                     row_text,
                     section="Fees and costs",

@@ -13,6 +13,7 @@ import { ResultDetail } from '@/components/ResultDetail';
 import { Chip, Empty, Field, Notice, Panel, StatusChip } from '@/components/primitives';
 import {
   admissionsFitTone, conversionNote, date, eligibilityTone, fundingClassTone, money,
+  uncoveredCategories,
   scorePercent,
 } from '@/lib/format';
 import { useStore } from '@/lib/store';
@@ -146,6 +147,10 @@ export function ShortlistScreen() {
               {rows.map((r) => {
                 const open = expanded === r.id;
                 const gap = r.funding_gap;
+                const uncovered = uncoveredCategories(
+                  r.scholarships.flatMap((sc) => sc.coverage),
+                  r.costs.items,
+                );
                 return (
                   // The Fragment carries the key: a row and its detail drawer are
                   // two siblings produced by one iteration.
@@ -178,6 +183,17 @@ export function ShortlistScreen() {
                           status={r.best_funding_classification}
                           tone={fundingClassTone[r.best_funding_classification]}
                         />
+                        {/* "Full ride" beside a non-zero remaining cost reads
+                            as a contradiction, and a student is likelier to
+                            believe the half that says they owe nothing. Both
+                            are true: the award covers the core categories and
+                            the university publishes others. Naming them here
+                            is what joins the two columns. */}
+                        {uncovered.length > 0 && (
+                          <div className="xs muted" style={{ marginTop: 2 }}>
+                            not covered: {uncovered.join(', ').replace(/_/g, ' ')}
+                          </div>
+                        )}
                       </td>
                       <td className="num" data-label="Remaining / year">
                         {gap?.computable && gap.gap ? (

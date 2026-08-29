@@ -67,3 +67,78 @@ def test_a_programme_page_that_carries_its_own_fee_table_is_read() -> None:
     claims = claims_from_fee_tables(html, builder)
     amounts = sorted(c.normalized_value["amount"] for c in claims)
     assert amounts == [2694.0, 19800.0]
+
+
+class TestACostOfAttendanceTableIsNotAFeeTable:
+    """Two tables, two shapes, and reading one as the other is dangerous.
+
+    Groningen's fee table segments *one* fee by audience:
+
+        Nationality | Year      | Fee      | Programme form
+        EU/EEA      | 2026-2027 | € 2694   | full-time
+        non-EU/EEA  | 2026-2027 | € 19800  | full-time
+
+    Aalto's cost-of-attendance table lists *different costs*:
+
+        Item                      | Amount per year
+        Tuition fee (non-domestic)| EUR 15,000
+        Mandatory university fees | EUR 110
+        Housing / accommodation   | EUR 7,800
+        Meal plan                 | EUR 3,000
+        Estimated total cost      | EUR 25,910
+
+    Reading the second as the first made every row a tuition rate, and the
+    last row won: tuition became 25,910 — the whole cost of attending. A
+    full-tuition award then appeared to cover everything, and the shortlist
+    told the applicant they had **0 remaining per year** when €10,910 of
+    housing, meals and fees was still theirs to pay.
+
+    That is the worst failure this product has: not a missing number, a
+    confident wrong one, in the direction that costs the student money.
+    """
+
+    def _claims(self):
+        html = (PAGES / "aalto-cost-of-attendance.html").read_text()
+        return extract_cost_tables(
+            html, ClaimBuilder(source_url="fixture://aalto/costs.html", official_domain=True)
+        )
+
+    def test_tuition_is_the_tuition_row_not_the_total(self):
+        tuition = [c for c in self._claims() if c.claim_type is ClaimType.TUITION]
+        assert [c.normalized_value["amount"] for c in tuition] == [15000.0], (
+            "every row was read as a tuition rate, and the total won"
+        )
+
+    def test_each_row_becomes_its_own_cost_category(self):
+        by_type = {
+            c.claim_type: c.normalized_value["amount"] for c in self._claims()
+        }
+        assert by_type[ClaimType.TUITION] == 15000.0
+        assert by_type[ClaimType.MANDATORY_FEES] == 110.0
+        assert by_type[ClaimType.HOUSING_COST] == 7800.0
+        assert by_type[ClaimType.MEALS_COST] == 3000.0
+
+    def test_a_total_row_is_not_a_cost_category(self):
+        """A total is the sum of the rows above it. Recording it as one of
+        them double-counts, and recording it as tuition is how the gap
+        collapsed to zero."""
+        totals = [
+            c for c in self._claims()
+            if c.claim_type is ClaimType.TOTAL_COST_OF_ATTENDANCE
+        ]
+        assert [c.normalized_value["amount"] for c in totals] == [25910.0]
+        for claim in self._claims():
+            if claim.claim_type is not ClaimType.TOTAL_COST_OF_ATTENDANCE:
+                assert claim.normalized_value["amount"] != 25910.0
+
+    def test_the_audience_shaped_table_still_works(self):
+        """The case the extractor was written for must not regress."""
+        html = (PAGES / "rug-computing-science.html").read_text()
+        claims = extract_cost_tables(html, ClaimBuilder(source_url=RUG, official_domain=True))
+        by_audience = {
+            c.subject_key: c.normalized_value["amount"]
+            for c in claims
+            if c.claim_type is ClaimType.TUITION
+        }
+        assert by_audience["EU/EEA"] == 2694.0
+        assert by_audience["non-EU/EEA"] == 19800.0

@@ -9,6 +9,7 @@
 import type {
   AdmissionsFit,
   ClaimStatus,
+  CoverageBreakdown,
   EligibilityStatus,
   FundingClassification,
   FundingFit,
@@ -35,6 +36,33 @@ export function conversionNote(value: Money | null | undefined): string | null {
   const on = value.rate_date ? ` observed on ${value.rate_date}` : '';
   const from = value.rate_source ? ` — ${value.rate_source}` : '';
   return `Converted from ${original}${rate}${on}${from}`;
+}
+
+/**
+ * Cost categories the university publishes that this award does not cover.
+ *
+ * A student was shown "Full ride" and, in the next column, a non-zero
+ * remaining cost per year. Both were true — the award covers tuition, fees,
+ * housing and meals, and the university also publishes insurance, books and
+ * travel — but side by side with nothing joining them they read as a
+ * contradiction, and the one a student is likelier to believe is the one that
+ * says they have nothing left to pay.
+ *
+ * Anything not explicitly covered counts as uncovered, including `unknown`:
+ * silence is not permission here any more than it is anywhere else in this
+ * product. A category the university publishes no cost for is not listed —
+ * there is nothing unpaid, and naming it would manufacture a worry.
+ */
+export function uncoveredCategories(
+  coverage: CoverageBreakdown[],
+  publishedCosts: Partial<Record<string, Money | null>>,
+): string[] {
+  const covered = new Set(
+    coverage.filter((c) => c.covered === 'yes').map((c) => String(c.category)),
+  );
+  return Object.entries(publishedCosts)
+    .filter(([category, amount]) => amount && !covered.has(category))
+    .map(([category]) => category);
 }
 
 export function money(value: Money | null | undefined): string {
@@ -123,7 +151,12 @@ export const claimStatusTone: Record<ClaimStatus, Tone> = {
 export const STATUS_LABEL: Record<string, string> = {
   NEEDS_OFFICIAL_CLARIFICATION: 'Unverified',
   INSUFFICIENT_DATA: 'No data',
-  FULL_RIDE_CONFIRMED: 'Full ride',
+  // Not "Full ride" unqualified. The award covers the four core
+  // categories; a university that also publishes insurance, books or
+  // travel leaves a real amount to pay, and the shortlist shows it in the
+  // next column. A label that claims more than the award covers is the
+  // half a student remembers.
+  FULL_RIDE_CONFIRMED: 'Core costs covered',
   NEED_BASED_POSSIBLE: 'Need-based',
   CONFIRMED_OPPORTUNITY: 'Confirmed',
   COMPETITIVE_OPPORTUNITY: 'Competitive',
@@ -146,7 +179,11 @@ export const STATUS_MEANING: Record<string, string> = {
   PLAUSIBLE_FIT: 'Formal requirements are met. The outcome depends on competitive selection.',
   AMBITIOUS: 'The profile sits at or below the published range.',
   INSUFFICIENT_DATA: 'Not enough verified data to compare the profile against.',
-  FULL_RIDE_CONFIRMED: 'An official source confirms tuition, mandatory fees, housing and meals (or a living stipend) are covered.',
+  FULL_RIDE_CONFIRMED:
+    'An official source confirms tuition, mandatory fees, housing and meals '
+    + '(or a living stipend) are covered. Anything else the university '
+    + 'publishes — insurance, books, travel — is still yours to pay, and is '
+    + 'in the remaining cost. Being eligible is not the same as being awarded.',
   FULL_TUITION: 'Tuition is covered. Living costs are not fully covered.',
   LARGE_GRANT: 'A substantial award, but a meaningful part of the cost remains.',
   PARTIAL: 'Covers a limited share of the total cost.',
