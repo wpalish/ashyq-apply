@@ -8,7 +8,7 @@
 
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { Chip, Notice, SourceLink, StatusChip } from './primitives';
+import { Chip, Notice, Panel, SourceLink, StatusChip } from './primitives';
 import { STATUS_MEANING, fundingClassTone } from '@/lib/format';
 
 describe('StatusChip', () => {
@@ -60,5 +60,33 @@ describe('Notice', () => {
   it('is announced as a note to assistive technology', () => {
     render(<Notice kind="warn">Careful</Notice>);
     expect(screen.getByRole('note')).toHaveTextContent('Careful');
+  });
+});
+
+describe('a collapsible Panel', () => {
+  /**
+   * The applicant form is ten panels and about forty fields. Most of them —
+   * subject grades, curriculum results, activities, achievements — are lists
+   * that are empty for a first-time applicant, and showing them all open makes
+   * the required fields hard to find. They fold, and say what they hold.
+   */
+  it('folds away when it has nothing in it', () => {
+    render(<Panel title="Achievements" collapsible summary="none added">{'x'}</Panel>);
+    const disclosure = screen.getByRole('group');
+    expect(disclosure).not.toHaveAttribute('open');
+    expect(screen.getByText(/none added/)).toBeInTheDocument();
+  });
+
+  it('starts open when it already holds something', () => {
+    render(
+      <Panel title="Achievements" collapsible defaultOpen summary="2 added">{'x'}</Panel>,
+    );
+    expect(screen.getByRole('group')).toHaveAttribute('open');
+  });
+
+  it('is still a plain section when it is not collapsible', () => {
+    render(<Panel title="Grades">{'x'}</Panel>);
+    expect(screen.queryByRole('group')).not.toBeInTheDocument();
+    expect(screen.getByText('Grades')).toBeInTheDocument();
   });
 });

@@ -386,7 +386,11 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
           </div>
         </Panel>
 
-        <Panel title="Subject grades" hint="Keep the original transcript scale for every subject.">
+        <Panel title="Subject grades" hint="Keep the original transcript scale for every subject."
+          collapsible
+          defaultOpen={subjectGrades.length > 0}
+          summary={subjectGrades.length ? `${subjectGrades.length} subjects` : "none yet"}
+        >
           <div className="stack stack--tight">
             {subjectGrades.map((_, index) => (
               <div className="panel panel--sunken" key={`subject-${index}`}>
@@ -405,7 +409,11 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
           </div>
         </Panel>
 
-        <Panel title="AP, IB and A-Level results" hint="Add achieved and predicted curriculum results exactly as reported.">
+        <Panel title="AP, IB and A-Level results" hint="Add achieved and predicted curriculum results exactly as reported."
+          collapsible
+          defaultOpen={curriculumResults.length > 0}
+          summary={curriculumResults.length ? `${curriculumResults.length} results` : "none yet"}
+        >
           <div className="stack stack--tight">
             {curriculumResults.map((item, index) => (
               <div className="grid-3 panel panel--sunken" key={`curriculum-${index}`}>
@@ -427,7 +435,11 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
           </div>
         </Panel>
 
-        <Panel title="Extracurricular activities" hint="Depth, responsibility and measurable impact matter more than a long list.">
+        <Panel title="Extracurricular activities" hint="Depth, responsibility and measurable impact matter more than a long list."
+          collapsible
+          defaultOpen={activities.length > 0}
+          summary={activities.length ? `${activities.length} activities` : "none yet"}
+        >
           <div className="stack stack--tight">
             {activities.map((_, index) => (
               <div className="panel panel--sunken" key={`activity-${index}`}>
@@ -462,7 +474,11 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
           </div>
         </Panel>
 
-        <Panel title="Achievements" hint="Include level, placement and how recipients were selected.">
+        <Panel title="Achievements" hint="Include level, placement and how recipients were selected."
+          collapsible
+          defaultOpen={achievements.length > 0}
+          summary={achievements.length ? `${achievements.length} achievements` : "none yet"}
+        >
           <div className="stack stack--tight">
             {achievements.map((_, index) => (
               <div className="grid-3 panel panel--sunken" key={`achievement-${index}`}>
