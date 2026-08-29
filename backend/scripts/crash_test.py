@@ -18,6 +18,26 @@ import sys
 import tempfile
 import time
 from pathlib import Path
+from typing import TypeVar
+
+from sqlalchemy.orm import Session
+
+T = TypeVar("T")
+
+
+def must_get(session: Session, model: type[T], pk: str, what: str) -> T:
+    """Fetch a row that has to exist, or say plainly that it does not.
+
+    Every call site here reads an attribute off the result. Without this, a
+    missing row raised `AttributeError: 'NoneType' object has no attribute
+    'status'` — from a harness whose whole purpose is to detect a job or run
+    disappearing after a crash. The failure mode the tool exists to catch was
+    the one it reported worst.
+    """
+    row = session.get(model, pk)
+    if row is None:
+        raise AssertionError(f"{what} {pk} is not in the database")
+    return row
 
 BACKEND = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(BACKEND))
@@ -99,7 +119,7 @@ def main() -> int:
     deadline = time.monotonic() + 90
     while time.monotonic() < deadline:
         with session_scope() as session:
-            stage = session.get(ResearchRun, run_id).stage
+            stage = must_get(session, ResearchRun, run_id, "run").stage
             written = session.query(ProgramResultRow).filter(
                 ProgramResultRow.run_id == run_id
             ).count()
@@ -123,8 +143,8 @@ def main() -> int:
     print(f"worker A SIGKILLed during {reached}, with {written} results already written")
 
     with session_scope() as session:
-        job = session.get(Job, job_id)
-        run = session.get(ResearchRun, run_id)
+        job = must_get(session, Job, job_id, "job")
+        run = must_get(session, ResearchRun, run_id, "run")
         results_before = session.query(ProgramResultRow).filter(
             ProgramResultRow.run_id == run_id
         ).count()
@@ -141,7 +161,7 @@ def main() -> int:
     # not a recovery failure and must not be reported as one. Attempts are
     # incremented on claim, so a genuinely recovered job always reaches 2.
     with session_scope() as session:
-        job = session.get(Job, job_id)
+        job = must_get(session, Job, job_id, "job")
         if job.status in ("succeeded", "completed"):
             print()
             print("  INCONCLUSIVE: the kill landed after worker A had already "
@@ -156,8 +176,8 @@ def main() -> int:
     final_job = None
     while time.monotonic() < deadline:
         with session_scope() as session:
-            job = session.get(Job, job_id)
-            run = session.get(ResearchRun, run_id)
+            job = must_get(session, Job, job_id, "job")
+            run = must_get(session, ResearchRun, run_id, "run")
             if job.status in ("succeeded", "dead", "cancelled"):
                 final_job = job.status
                 break
@@ -177,8 +197,8 @@ def main() -> int:
 
     # --- 4. what does the world look like now? ------------------------------
     with session_scope() as session:
-        job = session.get(Job, job_id)
-        run = session.get(ResearchRun, run_id)
+        job = must_get(session, Job, job_id, "job")
+        run = must_get(session, ResearchRun, run_id, "run")
         rows = session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run_id).all()
         keys = [r.dedupe_key for r in rows]
 
