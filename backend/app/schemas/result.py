@@ -175,7 +175,11 @@ class DocumentItem(Base):
     name: str
     purpose: DocumentPurpose
     owner: DocumentOwner
-    required: bool = True
+    #: What the page actually said about this document. It defaulted to
+    #: `required=True`, and the extractor never set it, so a line reading
+    #: "a portfolio, if applicable" told the applicant they must produce one.
+    #: An unknown is not a yes here any more than anywhere else.
+    requirement_level: Literal["required", "conditional", "unknown"] = "unknown"
     format_notes: str = ""
     max_pages: int | None = None
     max_file_size_mb: float | None = None
@@ -193,6 +197,16 @@ class DocumentItem(Base):
     lead_time_days: int | None = None
     source_url: str | None = None
     claim_ids: list[str] = Field(default_factory=list)
+
+    @property
+    def required(self) -> bool:
+        """Kept for callers that ask a yes/no question.
+
+        Only a stated requirement answers yes. Conditional and unknown both
+        answer no, because neither is the page saying the applicant must
+        produce this.
+        """
+        return self.requirement_level == "required"
 
 
 class DocumentChecklist(Base):

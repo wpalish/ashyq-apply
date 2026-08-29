@@ -237,7 +237,9 @@ export interface DocumentItem {
   name: string;
   purpose: 'admission' | 'scholarship' | 'both';
   owner: DocumentOwner;
-  required: boolean;
+  /** What the page said. "unknown" is not "required" — a bare list item does
+   *  not tell the applicant they must produce the document. */
+  requirement_level: 'required' | 'conditional' | 'unknown';
   format_notes: string;
   max_pages: number | null;
   max_file_size_mb: number | null;

@@ -183,7 +183,20 @@ function ChecklistFor({
                   <label key={key} className={`doc ${done[key] ? 'doc--done' : ''}`}>
                     <input type="checkbox" checked={Boolean(done[key])} onChange={() => toggle(key)} />
                     <div>
-                      <div className="doc__name">{d.name}</div>
+                      <div className="doc__name">
+                        {d.name}{' '}
+                        {/* A page listing "a portfolio, if applicable" is not
+                            telling the applicant to produce one, and a bare
+                            list item is not telling them anything. Showing the
+                            three apart is the difference between a checklist
+                            and a demand. */}
+                        {d.requirement_level === 'conditional' && (
+                          <Chip tone="warn">only if it applies to you</Chip>
+                        )}
+                        {d.requirement_level === 'unknown' && (
+                          <Chip tone="neutral">the page does not say if this is required</Chip>
+                        )}
+                      </div>
                       <div className="doc__meta">
                         {[
                           d.purpose === 'scholarship' ? 'for a scholarship' : 'for admission',
