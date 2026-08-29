@@ -1,0 +1,11 @@
+# Pages saved exactly as a university served them.
+#
+# These are evidence, not source. Their whitespace is the site's own, and
+# rewriting it to satisfy a whitespace check would make the fixture a slightly
+# different document from the one the classifier was measured against — which
+# is the one property a regression fixture has to keep.
+#
+# Narrow on purpose: only the saved pages, and only the whitespace check. Every
+# other file in the repository is still checked, and `git diff --check` reports
+# nothing outside this directory.
+backend/tests/fixtures/pages/*.html -whitespace linguist-vendored
