@@ -12,7 +12,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "e2e": "playwright test",
-    "e2e:report": "playwright show-report"
+    "e2e:report": "playwright show-report",
+    "screenshots": "ASHYQ_SHOT_DIR=../docs/screenshots playwright test"
   },
   "dependencies": {
     "react": "^18.3.1",

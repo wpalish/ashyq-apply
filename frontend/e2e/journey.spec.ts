@@ -7,7 +7,7 @@
  */
 
 import { expect, test, type Page } from '@playwright/test';
-import { expandRow, newSession, openShortlist, rowFor, shot, waitForResults } from './helpers';
+import { docShot, expandRow, newSession, openShortlist, rowFor, waitForResults } from './helpers';
 
 test.describe.configure({ mode: 'serial' });
 
@@ -25,7 +25,7 @@ test('profile screen states the cost of every gap', async () => {
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'Who is applying' })).toBeVisible();
   await expect(page.locator('.topbar').getByText('Demo data')).toBeVisible();
-  await page.screenshot({ path: shot('01-profile.png'), fullPage: true });
+  await docShot(page, '01-profile.png');
 
   // Removing the English scores must produce a gap that explains the consequence.
   await page.getByTestId('ielts-overall').fill('');
@@ -44,7 +44,7 @@ test('preferences screen exposes the scoring weights and warns about live mode',
   await page.getByTestId('demo-toggle').uncheck();
   await expect(page.getByText('Live mode fetches real university websites')).toBeVisible();
   await page.getByTestId('demo-toggle').check();
-  await page.screenshot({ path: shot('02-preferences.png'), fullPage: true });
+  await docShot(page, '02-preferences.png');
 });
 
 test('research runs to completion and reports what it could not read', async () => {
@@ -52,13 +52,13 @@ test('research runs to completion and reports what it could not read', async () 
   await page.getByTestId('start-research').click();
 
   await expect(page.getByTestId('stage-list')).toBeVisible();
-  await page.screenshot({ path: shot('03-progress-running.png'), fullPage: true });
+  await docShot(page, '03-progress-running.png');
 
   await waitForResults(page);
   await expect(page.getByText('Research complete')).toBeVisible();
   // Unreadable pages are surfaced, not swallowed.
   await expect(page.getByText(/Pages that could not be read/)).toBeVisible();
-  await page.screenshot({ path: shot('04-progress-complete.png'), fullPage: true });
+  await docShot(page, '04-progress-complete.png');
 });
 
 test('the shortlist separates eligibility, fit and funding', async () => {
@@ -71,7 +71,7 @@ test('the shortlist separates eligibility, fit and funding', async () => {
 
   await expect(page.locator('tbody tr')).not.toHaveCount(0);
   await expect(page.getByText('Demo data.', { exact: false }).first()).toBeVisible();
-  await page.screenshot({ path: shot('05-shortlist.png'), fullPage: true });
+  await docShot(page, '05-shortlist.png');
 });
 
 test('marketing language does not turn full tuition into a full ride', async () => {
@@ -103,7 +103,7 @@ test('a citizenship-restricted award is shown as not eligible', async () => {
   const flemish = page.locator('.panel').filter({ hasText: 'Flemish Community Tuition Grant' }).first();
   await expect(flemish).toContainText('Not eligible');
   await expect(flemish).toContainText('European Economic Area');
-  await page.screenshot({ path: shot('06-university-detail-funding.png'), fullPage: true });
+  await docShot(page, '06-university-detail-funding.png');
 });
 
 test('an incomparable zero is refused rather than shown as nothing to pay', async () => {
@@ -130,7 +130,7 @@ test('a per-section IELTS minimum is enforced independently of the overall band'
   const barrier = page.locator('.notice--risk').filter({ hasText: 'Confirmed requirement not met' });
   await expect(barrier).toBeVisible();
   await expect(barrier).toContainText('IELTS writing');
-  await page.screenshot({ path: shot('07-university-detail-requirements.png'), fullPage: true });
+  await docShot(page, '07-university-detail-requirements.png');
 });
 
 test('missing scholarship data reads as unknown, not as no funding', async () => {
@@ -154,7 +154,7 @@ test('conflicting official sources are shown with a drafted question', async () 
 
   await page.getByText('Draft question for the admissions office').first().click();
   await expect(page.getByText('Dear Admissions Office,')).toBeVisible();
-  await page.screenshot({ path: shot('09-sources-conflicts.png'), fullPage: true });
+  await docShot(page, '09-sources-conflicts.png');
 });
 
 test('funding comparison hatches what it cannot compare', async () => {
@@ -163,7 +163,7 @@ test('funding comparison hatches what it cannot compare', async () => {
 
   await expect(page.getByRole('heading', { name: 'What you would actually pay' })).toBeVisible();
   await expect(page.locator('.fund-bar__unknown').first()).toBeVisible();
-  await page.screenshot({ path: shot('08-funding-comparison.png'), fullPage: true });
+  await docShot(page, '08-funding-comparison.png');
 });
 
 test('approve, collect documents, and export', async () => {
@@ -177,7 +177,7 @@ test('approve, collect documents, and export', async () => {
 
   await page.getByTestId('nav-approved').click();
   await expect(page.getByText('2 applying')).toBeVisible();
-  await page.screenshot({ path: shot('10-approved.png'), fullPage: true });
+  await docShot(page, '10-approved.png');
 
   await page.getByTestId('collect-documents').click();
   await expect(page.getByRole('heading', { name: 'What to prepare, and when' })).toBeVisible({
@@ -186,7 +186,7 @@ test('approve, collect documents, and export', async () => {
   await expect(page.locator('.doc').first()).toBeVisible({ timeout: 30_000 });
   // Lead-time ordering puts the referee first, because that is what sinks applications.
   await expect(page.locator('.doc').first()).toContainText(/reference|transcript|diploma|statement/i);
-  await page.screenshot({ path: shot('11-documents.png'), fullPage: true });
+  await docShot(page, '11-documents.png');
 
   await page.getByTestId('nav-export').click();
   await expect(page.getByRole('heading', { name: 'Take it with you, or erase it' })).toBeVisible();
@@ -194,7 +194,7 @@ test('approve, collect documents, and export', async () => {
   await page.getByTestId('export-csv').click();
   const file = await download;
   expect(file.suggestedFilename()).toMatch(/\.csv$/);
-  await page.screenshot({ path: shot('12-export.png'), fullPage: true });
+  await docShot(page, '12-export.png');
 });
 
 test('rejection is remembered with the row kept', async () => {

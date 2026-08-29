@@ -7,7 +7,7 @@
 
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
-import { newSession, openShortlist, runDemoResearch, shot } from './helpers';
+import { docShot, newSession, openShortlist, runDemoResearch } from './helpers';
 
 // The full set the product claims to support. 375 and 1920 were the two ends
 // nobody checked: the narrowest phone in common use and the widest desktop.
@@ -50,7 +50,7 @@ test('the page never scrolls horizontally at any breakpoint', async () => {
       () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
     );
     expect(overflow, `horizontal overflow at ${bp.name}px`).toBeLessThanOrEqual(1);
-    await page.screenshot({ path: shot(`responsive-${bp.name}.png`), fullPage: false });
+    await docShot(page, `responsive-${bp.name}.png`, { fullPage: false });
   }
 });
 
@@ -137,7 +137,7 @@ test('both themes render with a painted background and readable text', async () 
     });
     expect(bg, `${theme} body must paint its own background`).not.toBe('rgba(0, 0, 0, 0)');
     expect(fg).not.toBe(bg);
-    await page.screenshot({ path: shot(`theme-${theme}.png`), fullPage: false });
+    await docShot(page, `theme-${theme}.png`, { fullPage: false });
   }
 });
 

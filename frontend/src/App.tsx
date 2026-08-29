@@ -163,7 +163,7 @@ export default function App() {
           </Chip>
           {run && (
             <>
-              <Chip tone="neutral" mono>run {run.id.slice(0, 8)}</Chip>
+              <Chip tone="neutral" mono volatile="run id">run {run.id.slice(0, 8)}</Chip>
               <Chip tone={run.stage === 'failed' ? 'risk' : 'neutral'}>
                 {run.stage.replace(/_/g, ' ')}
               </Chip>
