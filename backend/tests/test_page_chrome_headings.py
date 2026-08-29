@@ -71,3 +71,32 @@ def test_canadian_honours_credentials_name_the_bachelor_level(text: str) -> None
     """HBSc and HBA are how Ontario universities write their undergraduate
     degrees. Without them a page that states its level reads as stating none."""
     assert _degree_level(text) == "bachelor"
+
+
+def test_a_plural_category_with_qualifiers_is_still_a_listing() -> None:
+    """Warsaw heads its catalogue "Degree Programmes: 1st, 2nd and long cycle
+    studies (Bachelor and Master)".
+
+    The plural guard only fired when the listing word ended the heading, so
+    everything after the colon hid it: the page was accepted as one programme
+    at master's level with 0.85 confidence. A student would have been shown a
+    catalogue as a specific programme — the false positive this product treats
+    as unacceptable.
+    """
+    html = (PAGES / "warsaw-degree-programmes.html").read_text()
+    result = classify_page(
+        url="https://en.uw.edu.pl/education/degree-programmes-1st-2nd-and-long-cycle-studies/",
+        html=html,
+    )
+    assert result.page_type is not PageType.PROGRAM_DETAIL
+    assert result.page_type is not PageType.INTAKE_SPECIFIC_PROGRAM
+
+
+def test_a_programme_page_is_not_caught_by_the_category_rule() -> None:
+    """The rule keys on a plural listing word leading the heading. A real
+    programme page names a subject and must be untouched by it."""
+    result = classify_page(
+        url="https://www.rug.nl/bachelors/computing-science/",
+        html=(PAGES / "rug-computing-science.html").read_text(),
+    )
+    assert result.page_type in {PageType.PROGRAM_DETAIL, PageType.INTAKE_SPECIFIC_PROGRAM}

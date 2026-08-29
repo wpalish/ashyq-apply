@@ -117,7 +117,14 @@ _PLURAL_PROGRAM_HEADING = re.compile(
     # head a listing, and requiring the two words to be adjacent missed them —
     # so those pages fell through to UNKNOWN and their entries were never read.
     r"((degree|study|taught|research|academic|full-?time|part-?time)\s+)?"
-    r"(programmes?|programs?|courses?|degrees?|studies)\s*$",
+    # The listing word may end the heading, or be followed by qualifiers.
+    # Warsaw heads its catalogue "Degree Programmes: 1st, 2nd and long cycle
+    # studies (Bachelor and Master)"; requiring the word to come last read
+    # that as one programme at master's level. What follows a colon, dash,
+    # comma or bracket qualifies the category — it does not turn a category
+    # into a programme. A subject would follow directly, as in "Programmes in
+    # Computer Science", which stays a listing for the same reason.
+    r"(programmes?|programs?|courses?|degrees?|studies)\s*($|[:\u2013\u2014,(-])",
     re.IGNORECASE,
 )
 _PLURAL_FUNDING_HEADING = re.compile(
