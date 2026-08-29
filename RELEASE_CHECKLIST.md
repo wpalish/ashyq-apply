@@ -4,8 +4,13 @@ Thirty gates. A release may be declared only when every one is green. Status is
 recorded honestly: `PASS` means verified by a command whose output is shown in
 the release report, not "implemented".
 
-**Current verdict: NOT READY, NOT DEPLOYED.** Two gates are open and one is
-new. Verified on 2026-08-29 on `claude/production-completion`.
+**Current verdict: NOT READY, NOT DEPLOYED.** Two gates are open, both named
+below. Verified on 2026-08-29 on `claude/production-completion` at `0af7daa`.
+
+The two open gates are **28 (holdout recall, 3/6 against a bar of 4)** and
+**22 (the container stack, never executed because no container runtime exists
+on this machine)**. Every other gate passes, including the main live canary,
+which this cycle moved from 4/10 to a measured 8, 8, 8 across three runs.
 
 Two gates changed status *downwards* this cycle, both because they were being
 measured against the wrong thing:
@@ -47,7 +52,7 @@ measured against the wrong thing:
 | 25 | No TODO / FIXME in a production path | **PASS** | `grep -rn "TODO\|FIXME" backend/app frontend/src` → none |
 | 26 | No disabled or skipped tests without written justification | **PASS** | No skips, no xfails |
 | 27 | Demo data unmistakably synthetic | **PASS** | Fixture banner, `fixture://` scheme, UI badge, export column. Loads only on an explicit confirmed action |
-| 28 | Independent live truth audit, and programme discovery meets its bar | **FAIL** | Three independent runs on 2026-08-29: **4, 4, 4** programme pages of ten, against a bar of median 8 and worst 7. Category pages **27/30**, which does meet its bar. Zero zero-tolerance false positives in every run, and all twelve accepted programme pages were opened by hand and are real. Four of the six misses are genuine recall defects, two are honest NOT_FOUND; each is named in `docs/LIVE_DISCOVERY_REPORT.md`. **This is the gate that keeps the release closed.** |
+| 28 | Independent live truth audit, and programme discovery meets its bar | **FAIL** | Main canary **passes**: three independent runs at `0af7daa` gave **8, 8, 8** programme pages of ten — median 8 against a bar of 8, worst 8 against a bar of 7. Category pages **28/30** against 27, scholarship pages **10/10** against 9, and **zero** zero-tolerance false positives in every run. All twenty accepted programme pages were opened by hand and every one is a named, specific bachelor's programme. The **holdout fails**: 3 of 6 against a bar of 4, with its registry unedited and no seed added. Monterrey is disallowed by `robots.txt`; Tokyo serves no sitemap; Cape Town publishes programme detail in faculty handbook PDFs. **The holdout is the gate that keeps the release closed.** |
 | 29 | Local release commit/tag after all gates pass | **BLOCKED** | Gates open |
 | 30 | Nothing pushed externally without permission | **PASS** | External publication occurs only after the user's explicit GitHub upload request |
 

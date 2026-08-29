@@ -8,18 +8,24 @@ applicant data is ever used against live sites.
 
 ## Headline
 
-| | Before this cycle | After |
-|---|---|---|
-| Programme pages confirmed | **1/10** | **4/10** |
-| Category pages (admissions / costs / scholarships) | 26/30 | **27/30** |
-| Scholarship pages | 8/10 | **9/10** |
-| Material claims | 15 | **27** |
-| Zero-tolerance false positives | 0 | **0** |
+Measured at `0af7daa`.
 
-Three independent runs, all on 2026-08-29, produced **4, 4 and 4**. Median 4,
-worst 4. The acceptance bar this cycle aimed at was a median of 8 and a worst
-of 7. **It is not met**, and that is the reason the release verdict is NOT
-READY rather than "ready with limitations".
+| | Session start | Now | Bar |
+|---|---|---|---|
+| Programme pages confirmed | 7/10 | **8/10** | ≥ 8 median, ≥ 7 worst |
+| Category pages (admissions / costs / scholarships) | 27/30 | **28/30** | ≥ 27 |
+| Scholarship pages | 9/10 | **10/10** | ≥ 9 |
+| Material claims | 30 | **51** | — |
+| Zero-tolerance false positives | 0 | **0** | 0 |
+| Holdout programme pages | 3/6 | **3/6** | ≥ 4 |
+
+Three independent runs, all on 2026-08-29 at the same commit, produced **8, 8
+and 8** — median 8, worst 8. Every main-canary bar is met, including the
+programme-recall bar this report previously failed.
+
+The **holdout is not met**: 3 of 6, against a bar of 4. That is the one live
+gate still open, and it is the reason the release verdict remains NOT READY.
+The holdout registry was not edited and no seed was added to it.
 
 ## Reproducing
 
@@ -134,13 +140,18 @@ no page off the institution's own registrable domain is fetched.
 
 ## Honest limitations
 
-1. **Programme recall is 4/10, against a bar of 8/10.** Four of the six misses
-   are real defects and are described above by name.
-2. **Verification completeness is 0–33%.** Finding a page is necessary, not
-   sufficient. Cost extraction in particular reads nothing from Delft's or
-   Groningen's fee tables — see the note in `docs/CANARY_AUDIT.md`, which this
-   cycle corrected: the figures are in the served HTML and were being
-   *misread*, not hidden behind JavaScript.
+1. **Holdout recall is 3/6, against a bar of 4/6.** Monterrey is disallowed by
+   `robots.txt`, which is permanent and correct. Tokyo serves no sitemap and
+   only seven pages were reachable. Cape Town publishes its undergraduate
+   detail in faculty handbook PDFs and on faculty subdomains rather than as
+   per-programme pages. None of the three has a fix that would not be fitting
+   to one site.
+2. **Verification completeness averages 5.6% across the ten**, against 25
+   decision-grade questions. Finding a page is necessary and nowhere near
+   sufficient. Fee tables are now read — Groningen's €2,694 and €19,800 rows,
+   each tied to who pays it — which is most of the rise from 30 claims to 51,
+   but the great majority of the twenty-five questions are still unanswered on
+   most institutions. **This is the largest remaining gap in the product.**
 3. **A run takes about twenty minutes**, most of it browser rendering. That is
    acceptable for a background job and would not be for an interactive one.
 4. **Ten institutions is not the world.** Nothing here establishes behaviour on
