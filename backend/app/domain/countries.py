@@ -119,7 +119,6 @@ _ALIASES: dict[str, str] = {
     "ivory coast": "CI", "cote divoire": "CI", "republic of cote divoire": "CI",
     "cape verde": "CV", "republic of cabo verde": "CV",
     "macedonia": "MK", "fyrom": "MK",
-    "holland": "NL",
     "bahamas": "BS", "gambia": "GM",
     "st kitts and nevis": "KN", "st lucia": "LC",
     "st vincent and the grenadines": "VC",

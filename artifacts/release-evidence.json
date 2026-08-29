@@ -1,0 +1,136 @@
+{
+  "base_commit": "2ebcbc6",
+  "branch": "claude/production-completion",
+  "commits_since_base": 42,
+  "counts": {
+    "backend_tests": 1422,
+    "frontend_tests": null
+  },
+  "environment": {
+    "platform": "darwin",
+    "python": "3.12.13"
+  },
+  "gates": {
+    "backend_lint": {
+      "command": "/Users/wpalish/projects/unimatch/backend/.venv/bin/python -m ruff check .",
+      "detail": "All checks passed!",
+      "exit_code": 0,
+      "result": "pass"
+    },
+    "backend_tests_postgres": {
+      "command": "/Users/wpalish/projects/unimatch/backend/.venv/bin/python /Users/wpalish/projects/unimatch/backend/scripts/pg.py /Users/wpalish/projects/unimatch/backend/.venv/bin/python -m pytest",
+      "detail": "1422 passed, 1 warning in 36.09s",
+      "exit_code": 0,
+      "result": "pass"
+    },
+    "backend_tests_sqlite": {
+      "command": "/Users/wpalish/projects/unimatch/backend/.venv/bin/python -m pytest",
+      "detail": "1422 passed, 1 warning in 35.98s",
+      "exit_code": 0,
+      "result": "pass"
+    },
+    "backend_types": {
+      "command": "/Users/wpalish/projects/unimatch/backend/.venv/bin/python -m mypy app tests scripts",
+      "detail": "Success: no issues found in 124 source files",
+      "exit_code": 0,
+      "result": "pass"
+    },
+    "container_runtime": {
+      "command": "./scripts/compose_smoke.sh",
+      "detail": "no container runtime on this machine: docker, podman, colima, nerdctl, finch and lima are all absent",
+      "exit_code": null,
+      "result": "not_run"
+    },
+    "crash_recovery": {
+      "command": "/Users/wpalish/projects/unimatch/backend/.venv/bin/python /Users/wpalish/projects/unimatch/backend/scripts/crash_test.py",
+      "detail": "INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> b312b741919d, Stamp every durable job with the payload contract it was written against.",
+      "exit_code": 0,
+      "result": "pass"
+    },
+    "frontend_build": {
+      "command": "npm run build",
+      "detail": "\u2713 built in 328ms",
+      "exit_code": 0,
+      "result": "pass"
+    },
+    "frontend_lint": {
+      "command": "npm run lint",
+      "detail": "> eslint src e2e --ext .ts,.tsx",
+      "exit_code": 0,
+      "result": "pass"
+    },
+    "frontend_tests": {
+      "command": "npx vitest run",
+      "detail": "   Duration  730ms (transform 178ms, setup 423ms, collect 404ms, tests 190ms, environment 2.05s, prepare 465ms)",
+      "exit_code": 0,
+      "result": "pass"
+    },
+    "frontend_types": {
+      "command": "npm run typecheck",
+      "detail": "> tsc --noEmit",
+      "exit_code": 0,
+      "result": "pass"
+    },
+    "node_dependencies": {
+      "command": "npm audit",
+      "detail": "found 0 vulnerabilities",
+      "exit_code": 0,
+      "result": "pass"
+    },
+    "python_dependencies": {
+      "command": "/Users/wpalish/projects/unimatch/backend/.venv/bin/python -m pip_audit",
+      "detail": "No known vulnerabilities found",
+      "exit_code": 0,
+      "result": "pass"
+    }
+  },
+  "generated_at": "2026-08-29T20:27:21+00:00",
+  "head": "c98ceb6e046fd112c96b941255829ee503b410e7",
+  "live_discovery": {
+    "holdout": {
+      "false_positives": 0,
+      "institutions": 6,
+      "programme_pages": 3
+    },
+    "measured_at_commit": "b819c18",
+    "median_programme_pages": 8,
+    "runs": [
+      {
+        "claims": 51,
+        "false_positives": 0,
+        "file": "/private/tmp/claude-501/-Users-wpalish/552fc5eb-550a-4cd7-a9a3-37f65739ac08/scratchpad/final14/run1/canary-2026-08-29.json",
+        "institutions": 10,
+        "mean_completeness": 0.056,
+        "programme_pages": 8,
+        "scholarship_pages": 10
+      },
+      {
+        "claims": 51,
+        "false_positives": 0,
+        "file": "/private/tmp/claude-501/-Users-wpalish/552fc5eb-550a-4cd7-a9a3-37f65739ac08/scratchpad/final14/run2/canary-2026-08-29.json",
+        "institutions": 10,
+        "mean_completeness": 0.056,
+        "programme_pages": 8,
+        "scholarship_pages": 10
+      },
+      {
+        "claims": 51,
+        "false_positives": 0,
+        "file": "/private/tmp/claude-501/-Users-wpalish/552fc5eb-550a-4cd7-a9a3-37f65739ac08/scratchpad/final14/run3/canary-2026-08-29.json",
+        "institutions": 10,
+        "mean_completeness": 0.056,
+        "programme_pages": 8,
+        "scholarship_pages": 10
+      }
+    ],
+    "worst_programme_pages": 8
+  },
+  "open_gates": {
+    "failing": [],
+    "not_run": [
+      "container_runtime"
+    ]
+  },
+  "verdict": "NOT READY",
+  "working_tree_clean": false
+}
