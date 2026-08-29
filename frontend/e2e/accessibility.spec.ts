@@ -91,10 +91,17 @@ test('the results table is labelled and its controls are named', async () => {
   await openShortlist(page);
 
   await expect(page.locator('table caption')).toContainText('Shortlisted university programmes');
-  // Every decision control belongs to a named group, so a screen reader says
-  // which university a "Yes" applies to.
+  // Every decision control belongs to a named group, and each button names
+  // the programme and university it acts on, so a screen reader announces
+  // "Apply to <programme> at <university>" rather than "Yes".
   const group = page.getByRole('group').first();
-  await expect(group).toHaveAttribute('aria-label', /Decision for /);
+  await expect(group).toHaveAttribute('aria-label', /What to do about .+ at .+/);
+  await expect(group.locator('.decision-btn--approve')).toHaveAttribute(
+    'aria-label', /^Apply to .+ at .+/,
+  );
+  await expect(group.locator('.decision-btn--reject')).toHaveAttribute(
+    'aria-label', /^Rule out .+ at .+/,
+  );
 
   const expandable = page.locator('button[aria-expanded]').first();
   await expect(expandable).toHaveAttribute('aria-expanded', 'false');

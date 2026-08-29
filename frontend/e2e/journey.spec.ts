@@ -207,7 +207,7 @@ test('rejection is remembered with the row kept', async () => {
   await expect(first).toHaveClass(/is-rejected/);
 
   await page.getByTestId('nav-approved').click();
-  await expect(page.getByText('Rejected (1)')).toBeVisible();
+  await expect(page.getByText('Ruled out (1)')).toBeVisible();
   await expect(page.getByText(name)).toBeVisible();
   await expect(page.getByText(/not proposed again unless something material changes/)).toBeVisible();
 });
