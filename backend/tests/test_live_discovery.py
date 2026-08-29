@@ -21,6 +21,7 @@ import pytest
 
 from app.adapters.discovery.live_discovery import (
     MAX_PAGES_PER_CATEGORY,
+    MAX_PROGRAM_CANDIDATES_CHECKED,
     MAX_SITEMAP_DOCUMENTS,
     REGISTRY_PATH,
     LiveDiscoveryAdapter,
@@ -720,9 +721,12 @@ class TestAdapter:
         assert candidate.scholarships_url is None, "an off-domain link must not be followed"
 
     @pytest.mark.asyncio
-    async def test_navigation_is_not_used_when_a_programme_page_was_found(
+    async def test_navigation_is_not_used_when_the_subject_was_found(
         self, tmp_path, profile_bachelor
     ):
+        """Discovery stops widening once the applicant's own subject is
+        confirmed — and "confirmed" means the page was read, so the stub has to
+        serve it."""
         entry = {"name": "U", "country": "Netherlands", "city": "X", "homepage": "https://uni.edu/"}
         site = StubSite({
             "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
@@ -730,6 +734,8 @@ class TestAdapter:
                 "https://uni.edu/en/education/programmes/bachelors/computer-science",
                 "https://uni.edu/tuition-fees",
             ),
+            "https://uni.edu/en/education/programmes/bachelors/computer-science":
+                program_html(),
         })
         async with Fetcher(tmp_path / "c", offline=True) as fetcher:
             site.install(fetcher)
@@ -738,6 +744,105 @@ class TestAdapter:
 
         assert not adapter.traces[0].used_navigation_fallback
         assert "https://uni.edu/" not in site.requested
+
+    @pytest.mark.asyncio
+    async def test_unrelated_programmes_do_not_stop_the_search(
+        self, tmp_path, profile_bachelor
+    ):
+        """The TU Delft defect.
+
+        Delft's sitemap yields aerospace engineering, applied mathematics and
+        applied physics. All three are genuine bachelor programme pages, so
+        discovery declared success and never walked the catalogue that lists
+        the computer science degree the applicant actually asked for. Finding
+        three programmes nobody asked about is not a reason to stop looking.
+        """
+        entry = {
+            "name": "U", "country": "Netherlands", "city": "X",
+            "homepage": "https://uni.edu/",
+            "seeds": {"program_catalog": "https://uni.edu/en/education/programmes/bachelors"},
+        }
+        site = StubSite({
+            "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
+            "https://uni.edu/s.xml": sitemap_xml(
+                "https://uni.edu/en/programmes/bachelors/bsc-aerospace-engineering",
+                "https://uni.edu/en/programmes/bachelors/bsc-applied-mathematics",
+            ),
+            "https://uni.edu/en/programmes/bachelors/bsc-aerospace-engineering":
+                program_html("BSc Aerospace Engineering"),
+            "https://uni.edu/en/programmes/bachelors/bsc-applied-mathematics":
+                program_html("BSc Applied Mathematics"),
+            "https://uni.edu/en/education/programmes/bachelors": (
+                "<html><head><title>Bachelors</title></head><body><main>"
+                "<h1>Bachelors</h1>"
+                "<a href='/en/programmes/bachelors/bsc-computer-science'>Computer Science</a>"
+                "</main></body></html>"
+            ),
+            "https://uni.edu/en/programmes/bachelors/bsc-computer-science":
+                program_html("BSc Computer Science"),
+        })
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, entry))
+            candidate = (await adapter.discover(profile_bachelor))[0]
+
+        urls = [p.url for p in candidate.programs]
+        assert any("computer-science" in u for u in urls), (
+            f"the applicant's own subject was never reached; found {urls}"
+        )
+        assert adapter.traces[0].used_navigation_fallback
+
+    @pytest.mark.asyncio
+    async def test_a_profile_naming_no_subject_does_not_walk_the_catalogue(
+        self, tmp_path, profile_bachelor
+    ):
+        """Widening is driven by an unmet subject. With no subject stated, any
+        programme satisfies it and the crawler stops."""
+        profile_bachelor.context.intended_fields = []
+        entry = {"name": "U", "country": "Netherlands", "city": "X", "homepage": "https://uni.edu/"}
+        site = StubSite({
+            "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
+            "https://uni.edu/s.xml": sitemap_xml(
+                "https://uni.edu/en/programmes/bachelors/bsc-aerospace-engineering",
+            ),
+            "https://uni.edu/en/programmes/bachelors/bsc-aerospace-engineering":
+                program_html("BSc Aerospace Engineering"),
+        })
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, entry))
+            candidate = (await adapter.discover(profile_bachelor))[0]
+
+        assert candidate.programs
+        assert not adapter.traces[0].used_navigation_fallback
+
+    @pytest.mark.asyncio
+    async def test_the_number_of_pages_read_to_confirm_is_bounded(
+        self, tmp_path, profile_bachelor
+    ):
+        """A site with many plausible candidates must not become a crawl."""
+        many = [f"https://uni.edu/en/programmes/bachelors/bsc-subject-{i}" for i in range(40)]
+        pages = {
+            "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
+            "https://uni.edu/s.xml": sitemap_xml(*many),
+        }
+        for url in many:  # every one reads as a catalogue, so none is confirmed
+            pages[url] = "<html><head><title>Bachelors</title></head><body><main>" \
+                         "<h1>Bachelors</h1><p>Our programmes.</p></main></body></html>"
+        site = StubSite(pages)
+        entry = {"name": "U", "country": "Netherlands", "city": "X", "homepage": "https://uni.edu/"}
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, entry))
+            candidate = (await adapter.discover(profile_bachelor))[0]
+
+        assert candidate.programs == []
+        read = [u for u in site.requested if "bsc-subject-" in u]
+        assert len(read) <= MAX_PROGRAM_CANDIDATES_CHECKED * 2, (
+            f"read {len(read)} candidate pages; the budget is per confirmation pass"
+        )
+        assert any("left unchecked rather than guessed at" in e
+                   for e in adapter.traces[0].errors)
 
     @pytest.mark.asyncio
     async def test_navigation_runs_when_only_a_catalogue_was_found(

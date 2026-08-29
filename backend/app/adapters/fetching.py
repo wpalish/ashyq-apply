@@ -446,6 +446,30 @@ class Fetcher:
             final_url=final_url,
         )
 
+    async def render(self, url: str) -> FetchResult:
+        """Read a page through the browser tier because the caller asked.
+
+        Automatic escalation fires only when a page came back with no usable
+        text at all. That misses the commoner case: a page with plenty of text
+        whose *one interesting part* is built client-side. A university
+        catalogue is exactly that — UBC's programme list served 127 links and
+        not one of them a programme.
+
+        The same gates apply as to plain HTTP: robots.txt, the network policy
+        and the PII guard all run inside the renderer.
+        """
+        if self._renderer is None:
+            return FetchResult(
+                url=url, outcome=FetchOutcome.UNPARSEABLE,
+                error="No browser tier is attached to this fetcher.",
+            )
+        rendered: FetchResult = await self._renderer.render(url)  # type: ignore[attr-defined]
+        if rendered.ok:
+            rendered.fetch_tier = "browser"
+            self.tier_counts["browser"] += 1
+            self.cache.put(rendered)
+        return rendered
+
     async def _maybe_render(self, result: FetchResult) -> FetchResult:
         """Escalate to the browser when a 200 came back with no usable text."""
         if self._renderer is None or not result.ok or result.is_pdf:
