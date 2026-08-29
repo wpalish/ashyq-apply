@@ -418,15 +418,34 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
     # has: that keeps a faculty or department page, which names a subject and
     # nothing else, from being promoted.
     detail_sections = len(set(_PROGRAMME_DETAIL_SECTION.findall(f"{head} {body[:6000]}")))
-    if subject is None and _names_a_subject(identity) and detail_sections >= 2:
+    if subject is None and _names_a_subject(identity):
         level_elsewhere = _degree_level(f"{title} {' '.join(headings[:6])}")
-        if level_elsewhere:
+        if level_elsewhere and detail_sections >= 2:
             subject = identity
             degree = degree or level_elsewhere
             signals.append(
                 f"the heading names a subject and the page states the {level_elsewhere} "
                 f"level elsewhere, with {detail_sections} programme sections"
             )
+        else:
+            # A second way to satisfy the same guard. Its reason is that "a
+            # faculty or department page names a subject and nothing else" —
+            # so a page that states a degree credential *beside* its subject
+            # has said the something else. Toronto heads a page "Computer
+            # Science" and states HBSc a line below it, with the admission
+            # requirements underneath; a department page names its field and
+            # never awards anything. Two independent signals either way, not
+            # a lower bar: the credential must sit next to the subject, and
+            # the page must still carry a programme section.
+            beside = _credential_beside(body, identity)
+            if beside and detail_sections >= 1:
+                subject = identity
+                degree = degree or beside
+                signals.append(
+                    f"the heading names a subject and the page states the {beside} "
+                    f"credential beside it, with {detail_sections} programme section"
+                    f"{'s' if detail_sections != 1 else ''}"
+                )
     # `_CATALOG` is matched against each heading on its own. Run against the
     # headings joined into one string its `.*` bridged unrelated headings:
     # "…our three campuses" and a later "explore programs" combined into a
@@ -567,6 +586,50 @@ _CHROME_REGIONS = ("nav", "header", "footer", "aside")
 
 def _in_chrome(tag) -> bool:
     return any(parent.name in _CHROME_REGIONS for parent in tag.parents)
+
+
+#: How far after the subject a credential still counts as being "beside" it.
+#: Toronto puts roughly sixty characters between "Computer Science" and the
+#: "HBSc" it awards for it. Wide enough for that, narrow enough that a level
+#: mentioned in an unrelated later paragraph does not qualify.
+_CREDENTIAL_DISTANCE = 160
+
+
+#: An award the institution confers, written the way a programme page writes
+#: it. Deliberately *not* the level words: "this three-year bachelor's degree
+#: programme is taught in English" is prose describing a level, and the
+#: existing guard is explicit that prose is not enough. "HBSc" beside a subject
+#: is the page naming what it awards, which is a different and stronger claim,
+#: and it is the one a faculty or department page never makes.
+_AWARDED_CREDENTIAL: tuple[tuple[str, str], ...] = (
+    (r"\bph\.?d\b", "phd"),
+    (r"\bm\.?sc\b|\bm\.?a\b\.?|\bmeng\b|\bllm\b|\bmba\b|\bmphil\b", "master"),
+    (r"\bhb\.?sc\b|\bhba\b|\bb\.?sc\b|\bb\.?a\b\.?|\bbeng\b|\bllb\b", "bachelor"),
+)
+
+
+def _credential_beside(body: str, identity: str) -> str | None:
+    """The credential the page awards for its own subject, if it names one.
+
+    Deliberately not "anywhere on the page": a faculty page's navigation names
+    every level the faculty offers, and reading that as the page's own
+    credential is exactly the promotion this guard prevents.
+    """
+    if not identity or not body:
+        return None
+    low_body, low_identity = body.lower(), identity.lower()
+    # Every occurrence, not just the first: the first mention of the subject on
+    # a page is usually its breadcrumb or menu entry, and the credential is
+    # stated where the content proper begins.
+    index = low_body.find(low_identity)
+    while index >= 0:
+        start = index + len(identity)
+        window = body[start:start + _CREDENTIAL_DISTANCE].lower()
+        for pattern, level in _AWARDED_CREDENTIAL:
+            if re.search(pattern, window):
+                return level
+        index = low_body.find(low_identity, index + 1)
+    return None
 
 
 def _headings(soup: BeautifulSoup) -> list[str]:
