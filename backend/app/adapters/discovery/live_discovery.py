@@ -374,7 +374,24 @@ class LiveDiscoveryAdapter:
         self.traces = []
         out: list[Candidate] = []
         for entry in entries:
-            candidate, trace = await self._discover_one(entry, profile)
+            # One institution must not be able to end the research for the
+            # rest. A holdout run died on the second of six and reported the
+            # remaining four as NOT_ATTEMPTED, which reads as a finding about
+            # those universities when it was a finding about one page on
+            # another site.
+            try:
+                candidate, trace = await self._discover_one(entry, profile)
+            except Exception as exc:  # reported below, never silent
+                trace = DiscoveryTrace(institution=entry["name"], domain=domain_of(entry))
+                trace.errors.append(f"discovery failed: {type(exc).__name__}: {exc}")
+                candidate = Candidate(
+                    name=entry["name"],
+                    country=entry["country"],
+                    city=entry.get("city", ""),
+                    domain=domain_of(entry),
+                    discovery_source="registry",
+                    notes=f"Discovery failed for this institution: {exc}",
+                )
             self.traces.append(trace)
             out.append(candidate)
         return out
@@ -816,8 +833,23 @@ def _program_name_from_url(url: str, fields: list[str], degree: object) -> str:
     return " ".join(words).replace(".html", "").strip().title()
 
 
+def domain_of(entry: dict) -> str:
+    return urlparse(entry.get("homepage", "")).netloc
+
+
 def _harvest_links(html: str, base: str, domain: str) -> list[tuple[str, str]]:
-    soup = BeautifulSoup(html, "lxml")
+    """Every same-institution link on a page.
+
+    Parsing is guarded because pages on the public web are not always
+    well-formed: one page in a holdout run carried markup that made lxml raise
+    `ValueError` from inside its own namespace handling, and the exception rose
+    all the way out of the run. A page that cannot be parsed is a page with no
+    links — that is a fact about the page, not a reason to stop researching.
+    """
+    try:
+        soup = BeautifulSoup(html, "lxml")
+    except Exception:  # any parser failure means "no links here"
+        return []
     out: list[tuple[str, str]] = []
     seen: set[str] = set()
     for anchor in soup.find_all("a", href=True)[:MAX_LINKS_SCANNED]:

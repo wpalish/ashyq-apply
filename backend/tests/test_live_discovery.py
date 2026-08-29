@@ -1507,3 +1507,79 @@ class TestTheWalkUsesTheAdmissionsPageItAlreadyFound:
         assert candidate.scholarships_url and "scholarships" in candidate.scholarships_url, (
             f"funding was not found; scholarships_url={candidate.scholarships_url}"
         )
+
+
+class TestOneUnreadablePageDoesNotEndTheRun:
+    """A holdout run died on Uppsala and never attempted the four
+    institutions after it.
+
+    The cause was a page whose markup lxml could not parse: BeautifulSoup
+    raised `ValueError: not enough values to unpack` from inside its own tree
+    builder, the exception travelled up through `_harvest_links` and
+    `discover`, and the whole run failed. Four universities were reported
+    NOT_ATTEMPTED for a reason that had nothing to do with them.
+
+    Reading arbitrary pages off the public web means meeting malformed ones.
+    A page that cannot be parsed is a page with no links, not the end of the
+    research.
+    """
+
+    @staticmethod
+    def registry_file(tmp_path, entries: list):
+        import json
+
+        path = tmp_path / "registry.json"
+        path.write_text(json.dumps(entries))
+        return path
+
+    def test_a_page_that_cannot_be_parsed_yields_no_links(self, monkeypatch):
+        """The real failure came from inside lxml's namespace handling, which
+        cannot be provoked reliably from a string here. What matters is the
+        contract: when the parser raises, harvesting returns nothing rather
+        than propagating."""
+        from app.adapters.discovery import live_discovery
+
+        def refuse(*_args, **_kwargs):
+            raise ValueError("not enough values to unpack (expected 2, got 1)")
+
+        monkeypatch.setattr(live_discovery, "BeautifulSoup", refuse)
+        assert live_discovery._harvest_links(
+            "<html><a href='/x'>x</a></html>", "https://uni.edu/", "uni.edu"
+        ) == []
+
+    @pytest.mark.asyncio
+    async def test_a_failing_institution_does_not_stop_the_next_one(
+        self, tmp_path, profile_bachelor, monkeypatch
+    ):
+        entries = [
+            {"name": "Breaks", "country": "Sweden", "city": "A",
+             "homepage": "https://breaks.edu/", "seeds": {}},
+            {"name": "Fine", "country": "Ireland", "city": "B",
+             "homepage": "https://fine.edu/", "seeds": {}},
+        ]
+        site = StubSite({
+            "https://breaks.edu/robots.txt": "User-agent: *\n",
+            "https://fine.edu/robots.txt": "User-agent: *\n",
+        })
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, entries))
+
+            original = adapter._discover_one
+
+            async def explode(entry, profile):
+                if entry["name"] == "Breaks":
+                    raise ValueError("not enough values to unpack (expected 2, got 1)")
+                return await original(entry, profile)
+
+            monkeypatch.setattr(adapter, "_discover_one", explode)
+            candidates = await adapter.discover(profile_bachelor)
+
+        names = [c.name for c in candidates]
+        assert "Fine" in names, (
+            f"one institution's failure stopped the rest; got {names}"
+        )
+        broke = next(c for c in candidates if c.name == "Breaks")
+        assert "not enough values to unpack" in broke.notes, (
+            "the failure must be reported on the candidate, not swallowed"
+        )
