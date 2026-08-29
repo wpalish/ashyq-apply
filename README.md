@@ -135,7 +135,7 @@ backend/
 │   ├── export/          CSV / JSON / XLSX, provenance included
 │   ├── models/          SQLAlchemy + Alembic (PostgreSQL production, SQLite local)
 │   └── corpus/          The bundled synthetic demo corpus + its generator
-└── tests/               547 tests
+└── tests/               768 tests
 frontend/
 ├── src/
 │   ├── screens/         The nine workflow screens
@@ -289,7 +289,7 @@ cd backend
 python scripts/pg.py --print-uri              # a local PostgreSQL, no install needed
 python scripts/pg.py .venv/bin/pytest         # run the suite against PostgreSQL
 python scripts/pg.py .venv/bin/python scripts/crash_test.py   # SIGKILL recovery proof
-./.venv/bin/python -m pytest                  # 547 tests
+./.venv/bin/python -m pytest                  # 768 tests
 ./.venv/bin/python -m pytest --cov=app        # with coverage (89%)
 ./.venv/bin/python -m ruff check app tests    # lint
 ./.venv/bin/python -m mypy app                # type check
@@ -314,19 +314,19 @@ Or from the repository root: `make setup`, `make dev`, `make test`, `make check`
 
 | Check | Result |
 |---|---|
-| Backend tests | 547 passed (SQLite **and** PostgreSQL 16.2) |
-| Backend coverage | 89% (`app/`); jobs/store 91%, jobs/worker 83%, pipeline/runner 91% |
+| Backend tests | 768 passed (SQLite **and** PostgreSQL 16.2) |
+| Backend coverage | 90% (`app/`) |
 | Backend lint (ruff) | clean |
 | Python dependency audit (pip-audit) | clean (36 advisories found and fixed at baseline) |
-| Backend types (mypy) | clean, 92 files |
+| Backend types (mypy) | clean, 76 source files |
 | Frontend unit tests | 47 passed |
 | Frontend typecheck | clean |
 | Frontend lint (eslint) | clean |
-| E2E (Playwright) | 50 passed — desktop 1440×900 and Pixel 7 |
+| E2E (Playwright) | 52 passed — desktop 1440×900 and Pixel 7 |
 | Accessibility | axe WCAG A/AA: no serious or critical violations on reachable screens |
 | Console errors during the full journey | 0 |
-| Horizontal overflow at 320/768/1024/1440 | none |
-| Production bundle | 74.0 kB JS gzipped, 5.3 kB CSS |
+| Horizontal overflow at 320/375/768/1024/1440/1920 | none |
+| Production bundle | 74.5 kB JS gzipped, 5.3 kB CSS |
 
 | Crash recovery | verified: real SIGKILL, job recovered, 0 duplicate results |
 | Migrations | verified: fresh, downgrade, re-upgrade, re-apply, both backends |
@@ -375,17 +375,31 @@ These are real, and the UI states them rather than hiding them.
 2. **Extraction is rule-based and conservative.** It finds what its patterns
    match and reports nothing where they do not. On live pages it will miss
    values that a human would find — those show as *not found*, never as a guess.
-3. **Currency rates are a dated static snapshot** (`app/domain/currency.py`),
-   not a live feed. The rate and its date travel with every converted figure.
+3. **Currency rates come from the European Central Bank's daily reference
+   feed**, with the date they describe and their source travelling with every
+   converted figure. There is no silent fallback: a rate older than ten days,
+   or a currency the ECB does not publish — the tenge among them — is refused,
+   the amount stays in its source currency, and the funding gap is reported as
+   not computable. The bundled dated table is still there for tests and demo
+   mode, and every conversion made from it is labelled an estimate.
 4. **Grade conversions are approximations** and are never applied unless the
    user accepts one. US applications generally require a NACES credential
    evaluation, which this tool does not replace.
-5. **Live discovery is deliberately conservative.** It uses a curated registry,
-   official seeds and sitemaps rather than sending applicant context to a search
-   engine. The canary confirms programme pages on only 1 of 10 institutions.
-6. **Cost pages behind a fee calculator** yield no figures. TU Delft's tuition
-   page is a real example: the page is readable, the numbers are not on it, and
-   the result is an honest "no cost figures could be extracted".
+5. **Live discovery confirms a programme page at 4 institutions in 10.** This
+   is the product's largest open problem and the reason it is not ready. It
+   uses a curated registry, official seeds and sitemaps rather than sending
+   applicant context to a search engine. Three independent runs on 2026-08-29
+   gave 4, 4 and 4; category pages reach 27 of 30. Every accepted programme
+   page was opened by hand and is real — the gap is recall, not truthfulness.
+   `docs/LIVE_DISCOVERY_REPORT.md` names the reason for each of the six
+   misses; four are defects and two are honest NOT_FOUND.
+6. **Cost figures in a dense fee table are not extracted.** TU Delft's tuition
+   page is a real example — and the earlier claim that its numbers sit behind a
+   JavaScript calculator was wrong: they are in the served HTML, and were being
+   misread. `€ 17.310` parsed as `17.31` until this cycle. Associating a figure
+   in a fee table with the right label still needs more than proximity, so the
+   result is an honest "no cost figures could be extracted" rather than a
+   number attached to the wrong row.
 7. **The queue is PostgreSQL-backed, not Redis.** A deliberate choice, recorded
    in [ADR 0001](docs/adr/0001-durable-job-queue.md): no broker could be
    installed here without your password, and one transaction covering both the
