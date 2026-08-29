@@ -21,6 +21,8 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 
+from app.domain.countries import bloc_phrases
+
 #: Demonym -> country. Only entries where the adjective is unambiguous enough
 #: to carry a restriction. A country named without restricting language around
 #: it is not a rule, so this table is only consulted inside a match.
@@ -49,15 +51,18 @@ _COUNTRIES: dict[str, str] = {v.lower(): v for v in _DEMONYMS.values()} | {
 }
 
 #: Groups that are restrictions but not single countries.
-#: Published names, because a restriction list is shown to the applicant and
-#: checked against their citizenship as written.
-_BLOCS = {
-    "european economic area": "European Economic Area",
-    "eea": "European Economic Area",
-    "european union": "European Union", "eu": "European Union",
-    "nordic": "Nordic countries",
-    "schengen": "Schengen area", "commonwealth": "Commonwealth",
-}
+#:
+#: Taken from `app/domain/countries.py` rather than listed again here. This was
+#: a separate six-entry table, and the two drifted: "citizens of EFTA
+#: countries" and "nationals of ASEAN member states" matched nothing, so awards
+#: restricted to four and ten countries were presented as unrestricted. A
+#: student loses an application to that, not a place.
+#:
+#: Longest phrase first, so "european economic area" is matched before "eea"
+#: and "eu" cannot claim a sentence that says "eu/eea".
+_BLOCS = dict(
+    sorted(bloc_phrases().items(), key=lambda kv: -len(kv[0]))
+)
 
 #: Sentences that impose a nationality or residency condition. Each needs
 #: restricting language, not merely a country word: "Greek mythology is taught

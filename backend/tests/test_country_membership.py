@@ -16,6 +16,7 @@ import pytest
 
 from app.domain.countries import (
     BLOCS,
+    COUNTRY_NAMES,
     canonical_country,
     country_satisfies,
     describe_restriction,
@@ -67,10 +68,14 @@ class TestMembership:
 
     @pytest.mark.parametrize("bloc", sorted(BLOCS))
     def test_every_bloc_has_members_and_they_are_all_real_countries(self, bloc):
-        members = BLOCS[bloc]
+        # `.members` since a bloc became a record carrying its source and the
+        # date it was checked; the assertion itself is unchanged, and now also
+        # requires each code to be a country this module can name.
+        members = BLOCS[bloc].members
         assert members, f"{bloc} has no members"
         for code in members:
             assert len(code) == 2 and code.isupper(), f"{bloc}: {code!r} is not a code"
+            assert code in COUNTRY_NAMES, f"{bloc}: {code!r} is not a known country"
 
     def test_a_country_against_a_country_is_a_direct_comparison(self):
         assert country_satisfies("Germany", "Germany") is True

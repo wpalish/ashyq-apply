@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import re
 import unicodedata
+from dataclasses import dataclass
 
 #: When the membership lists below were last reviewed against the official
 #: sources. Anything decided from them is only as current as this date.
@@ -52,7 +53,28 @@ COUNTRY_NAMES: dict[str, str] = {
     "JO": "Jordan", "LB": "Lebanon", "NP": "Nepal", "RS": "Serbia",
     "AL": "Albania", "MK": "North Macedonia", "BA": "Bosnia and Herzegovina",
     "ME": "Montenegro", "XK": "Kosovo",
+    # The rest of the Commonwealth. Absent before, which meant a Rwandan or
+    # Mozambican applicant was not recognised as being from anywhere, and 41 of
+    # the 56 member states could not be confirmed as members at all.
+    "AG": "Antigua and Barbuda", "BS": "The Bahamas", "BB": "Barbados",
+    "BZ": "Belize", "BW": "Botswana", "CM": "Cameroon", "DM": "Dominica",
+    "SZ": "Eswatini", "FJ": "Fiji", "GA": "Gabon", "GM": "The Gambia",
+    "GD": "Grenada", "GY": "Guyana", "JM": "Jamaica", "KI": "Kiribati",
+    "LS": "Lesotho", "MW": "Malawi", "MV": "Maldives", "MU": "Mauritius",
+    "MZ": "Mozambique", "NA": "Namibia", "NR": "Nauru",
+    "PG": "Papua New Guinea", "RW": "Rwanda", "KN": "Saint Kitts and Nevis",
+    "LC": "Saint Lucia", "VC": "Saint Vincent and the Grenadines",
+    "WS": "Samoa", "SC": "Seychelles", "SL": "Sierra Leone",
+    "SB": "Solomon Islands", "TG": "Togo", "TO": "Tonga",
+    "TT": "Trinidad and Tobago", "TV": "Tuvalu", "UG": "Uganda",
+    "VU": "Vanuatu", "ZM": "Zambia",
+    # Common origins for international applicants that were also missing.
+    "CV": "Cabo Verde", "CI": "Côte d\u2019Ivoire", "SN": "Senegal",
+    "ET": "Ethiopia", "ZW": "Zimbabwe", "TN": "Tunisia", "DZ": "Algeria",
+    "TM": "Turkmenistan", "TJ": "Tajikistan", "MN": "Mongolia", "BT": "Bhutan",
+    "CY_": "",
 }
+COUNTRY_NAMES.pop("CY_", None)
 
 #: Other ways a page or an applicant writes a country: official long forms,
 #: historical names, demonyms and common abbreviations.
@@ -86,36 +108,129 @@ _ALIASES: dict[str, str] = {
     "canadian": "CA", "australian": "AU", "new zealander": "NZ",
     "south african": "ZA", "egyptian": "EG", "ukrainian": "UA",
     "viet nam": "VN", "uae": "AE", "emirati": "AE",
+    # Official long forms and former names. A page that writes the long form
+    # and an applicant who writes the short one must reach the same country.
+    "united kingdom of great britain and northern ireland": "GB",
+    "brunei darussalam": "BN",
+    # Renamed states. Both names are in circulation — an applicant's own
+    # documents may carry the older one long after the country changed it.
+    "swaziland": "SZ", "kingdom of eswatini": "SZ",
+    "burma": "MM", "republic of the union of myanmar": "MM",
+    "ivory coast": "CI", "cote divoire": "CI", "republic of cote divoire": "CI",
+    "cape verde": "CV", "republic of cabo verde": "CV",
+    "macedonia": "MK", "fyrom": "MK",
+    "holland": "NL",
+    "bahamas": "BS", "gambia": "GM",
+    "st kitts and nevis": "KN", "st lucia": "LC",
+    "st vincent and the grenadines": "VC",
+    "papua new guinean": "PG", "trinidadian": "TT",
+    "tanzanian": "TZ", "ugandan": "UG", "zambian": "ZM", "rwandan": "RW",
+    "mozambican": "MZ", "namibian": "NA", "botswanan": "BW", "malawian": "MW",
+    "maltese": "MT", "cypriot": "CY", "bruneian": "BN", "jamaican": "JM",
+    "mauritian": "MU", "fijian": "FJ", "samoan": "WS", "tongan": "TO",
 }
 
-#: Groups an award may restrict itself to, as of MEMBERSHIP_AS_OF.
-BLOCS: dict[str, frozenset[str]] = {
+@dataclass(frozen=True)
+class Bloc:
+    """A group an award may restrict itself to.
+
+    `complete` is the field that matters. A list known to hold every member can
+    answer "no, that country is not in it". A list that is merely a good start
+    cannot, and must say it does not know — otherwise a gap in the data becomes
+    a confident refusal of a real applicant.
+
+    That is not hypothetical: the Commonwealth held 15 of its 56 members, and
+    Cyprus, Malta and Brunei were told they did not qualify for Commonwealth
+    awards. Every list below is complete as of `as_of`, and `source` is where
+    to check it.
+    """
+
+    name: str
+    members: frozenset[str]
+    source: str
+    as_of: str
+    complete: bool = True
+
+    def __contains__(self, code: str) -> bool:
+        return code in self.members
+
+
+#: Groups an award may restrict itself to. Each carries the official source its
+#: membership was taken from, so a reader can check it rather than trust it.
+BLOCS: dict[str, Bloc] = {
     # The 27 member states. The United Kingdom is deliberately absent.
-    "European Union": frozenset({
-        "AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR",
-        "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK",
-        "SI", "ES", "SE",
-    }),
-    # The EU plus Iceland, Liechtenstein and Norway. Switzerland is *not* in it.
-    "European Economic Area": frozenset({
-        "AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR",
-        "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK",
-        "SI", "ES", "SE", "IS", "LI", "NO",
-    }),
-    "EFTA": frozenset({"IS", "LI", "NO", "CH"}),
-    # Ireland is in the EU but not in Schengen; Switzerland, Norway and Iceland
-    # are in Schengen without being in the EU.
-    "Schengen area": frozenset({
-        "AT", "BE", "BG", "HR", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU",
-        "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI", "ES",
-        "SE", "IS", "LI", "NO", "CH",
-    }),
-    "Nordic countries": frozenset({"DK", "FI", "IS", "NO", "SE"}),
-    "Commonwealth": frozenset({
-        "GB", "CA", "AU", "NZ", "ZA", "IN", "PK", "BD", "LK", "NG", "KE",
-        "GH", "TZ", "SG", "MY",
-    }),
-    "ASEAN": frozenset({"BN", "KH", "ID", "LA", "MY", "MM", "PH", "SG", "TH", "VN"}),
+    "European Union": Bloc(
+        name="European Union",
+        members=frozenset({
+            "AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE",
+            "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT",
+            "RO", "SK", "SI", "ES", "SE",
+        }),
+        source="https://european-union.europa.eu/principles-countries-history/eu-countries_en",
+        as_of=MEMBERSHIP_AS_OF,
+    ),
+    # The EU plus Iceland, Liechtenstein and Norway. Switzerland is *not* in it:
+    # it is in EFTA and in Schengen, and awards routinely conflate the three.
+    "European Economic Area": Bloc(
+        name="European Economic Area",
+        members=frozenset({
+            "AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE",
+            "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT",
+            "RO", "SK", "SI", "ES", "SE", "IS", "LI", "NO",
+        }),
+        source="https://www.efta.int/eea",
+        as_of=MEMBERSHIP_AS_OF,
+    ),
+    "EFTA": Bloc(
+        name="EFTA",
+        members=frozenset({"IS", "LI", "NO", "CH"}),
+        source="https://www.efta.int/about-efta/the-efta-states",
+        as_of=MEMBERSHIP_AS_OF,
+    ),
+    # Ireland and Cyprus are in the EU and not in Schengen; Switzerland, Norway
+    # and Iceland are in Schengen without being in the EU. Bulgaria and Romania
+    # completed accession in 2025.
+    "Schengen area": Bloc(
+        name="Schengen area",
+        members=frozenset({
+            "AT", "BE", "BG", "HR", "CZ", "DK", "EE", "FI", "FR", "DE", "GR",
+            "HU", "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK",
+            "SI", "ES", "SE", "IS", "LI", "NO", "CH",
+        }),
+        source="https://home-affairs.ec.europa.eu/policies/schengen-borders-and-visa/schengen-area_en",
+        as_of=MEMBERSHIP_AS_OF,
+    ),
+    "Nordic countries": Bloc(
+        name="Nordic countries",
+        members=frozenset({"DK", "FI", "IS", "NO", "SE"}),
+        source="https://www.norden.org/en/information/countries-and-regions",
+        as_of=MEMBERSHIP_AS_OF,
+    ),
+    # All 56 member states. Membership is not a colonial-history list: Rwanda,
+    # Mozambique, Gabon and Togo joined without one, and Cyprus and Malta are
+    # members while being in the EU. Guessing from history is how the previous
+    # 15-name list came to exist.
+    "Commonwealth": Bloc(
+        name="Commonwealth",
+        members=frozenset({
+            "AG", "AU", "BS", "BD", "BB", "BZ", "BW", "BN", "CM", "CA", "CY",
+            "DM", "SZ", "FJ", "GA", "GM", "GH", "GD", "GY", "IN", "JM", "KE",
+            "KI", "LS", "MW", "MY", "MV", "MT", "MU", "MZ", "NA", "NR", "NZ",
+            "NG", "PK", "PG", "RW", "KN", "LC", "VC", "WS", "SC", "SL", "SG",
+            "SB", "ZA", "LK", "TZ", "TG", "TO", "TT", "TV", "UG", "GB", "VU",
+            "ZM",
+        }),
+        source="https://thecommonwealth.org/our-member-countries",
+        as_of=MEMBERSHIP_AS_OF,
+    ),
+    "ASEAN": Bloc(
+        name="ASEAN",
+        members=frozenset({
+            "BN", "KH", "ID", "LA", "MY", "MM", "PH", "SG", "TH", "VN",
+        }),
+        source="https://asean.org/member-states/",
+        as_of=MEMBERSHIP_AS_OF,
+    ),
 }
 
 #: What a page may call each group. Kept apart from country aliases so that
@@ -179,6 +294,18 @@ _BLOC_ALIASES_NORMALISED.update({_normalise(k): v for k, v in _BLOC_ALIASES.item
 _BLOC_ALIASES_NORMALISED.update({_normalise(k): k for k in BLOCS})
 
 
+def bloc_phrases() -> dict[str, str]:
+    """Every phrase that names a group, mapped to the group's canonical name.
+
+    Exported so nothing else has to keep its own list. The scholarship
+    extractor did, with six entries against this module's many, and a page
+    restricting an award to "citizens of EFTA countries" produced no
+    restriction at all — which tells a student an award is open when it is
+    restricted to four countries.
+    """
+    return dict(_BLOC_ALIASES_NORMALISED)
+
+
 def canonical_country(value: str | None) -> str | None:
     """The ISO alpha-2 code for a country name, code, alias or demonym.
 
@@ -219,7 +346,14 @@ def country_satisfies(applicant: str | None, restriction: str | None) -> bool | 
 
     bloc = canonical_bloc(restriction)
     if bloc is not None:
-        return code in BLOCS[bloc]
+        group = BLOCS[bloc]
+        if code in group:
+            return True
+        # Only a list known to hold every member may deny one. An incomplete
+        # list answering False turns a gap in our data into a refusal of a real
+        # applicant — which is exactly what happened to Cyprus, Malta and
+        # Brunei against a Commonwealth list holding 15 of 56 names.
+        return False if group.complete else None
 
     if _normalise(restriction or "") in AMBIGUOUS_GROUPS:
         return None
@@ -234,9 +368,10 @@ def describe_restriction(restriction: str) -> str:
     """A sentence a reader can check, for the evidence panel."""
     bloc = canonical_bloc(restriction)
     if bloc is not None:
-        members = BLOCS[bloc]
+        group = BLOCS[bloc]
         return (
-            f"{bloc} ({len(members)} member states as of {MEMBERSHIP_AS_OF})"
+            f"{group.name} ({len(group.members)} member states as of "
+            f"{group.as_of}, per {group.source})"
         )
     code = canonical_country(restriction)
     if code is not None:
