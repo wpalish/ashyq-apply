@@ -15,6 +15,7 @@ import os
 import signal
 import subprocess
 import sys
+import tempfile
 import time
 from pathlib import Path
 
@@ -51,6 +52,16 @@ def start_worker() -> subprocess.Popen:
 def main() -> int:
     os.environ["UNIMATCH_JOB_LEASE_SECONDS"] = str(LEASE_SECONDS)
     os.environ["UNIMATCH_AUTO_MIGRATE"] = "false"
+    # A throwaway database. This wrote into the project's working database,
+    # which is the one the dev server and the E2E suite use: eight runs of this
+    # script left eight "crash-test" applicants and their results behind, and a
+    # test harness must not leave anything in the data a person is using.
+    # Honoured if the caller set one explicitly, so CI can point it at
+    # PostgreSQL.
+    if not os.environ.get("UNIMATCH_DATABASE_URL"):
+        scratch = Path(tempfile.mkdtemp(prefix="crash-test-"))
+        os.environ["UNIMATCH_DATABASE_URL"] = f"sqlite:///{scratch / 'crash.sqlite3'}"
+        print(f"using a throwaway database at {scratch}")
 
     from app.corpus.demo_profile import DEMO_PROFILE
     from app.db import migrate_to_head, session_scope
