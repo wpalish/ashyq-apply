@@ -12,6 +12,7 @@ from __future__ import annotations
 import csv
 import io
 import json
+import re
 from datetime import UTC, datetime
 from typing import Any
 
@@ -153,13 +154,48 @@ def _best_scholarship(result: ProgramResult):
     return min(result.scholarships, key=lambda s: order.index(s.classification.value))
 
 
+#: Characters that make a spreadsheet read a cell as a formula rather than as
+#: text. Tab and carriage return are here because Excel strips leading
+#: whitespace before deciding, so "\t=1+1" is still a formula.
+_FORMULA_LEADERS = ("=", "+", "-", "@", "\t", "\r")
+#: A plain negative number is not a formula, and mangling one would corrupt a
+#: funding gap with the very defence meant to protect it.
+_PLAIN_NUMBER = re.compile(r"^-\d+(?:[.,]\d+)*$")
+
+
+def neutralise_formula(value: str) -> str:
+    """Stop a cell being executed, without changing what it says.
+
+    Every string in an export came off a university web page, which is
+    untrusted input. A scholarship named `=HYPERLINK("http://attacker","Click")`
+    executes when the file is opened. Prefixing an apostrophe is the
+    spreadsheet convention for "treat the rest as text": Excel, LibreOffice and
+    Numbers all honour it, and it is not shown to the reader.
+    """
+    if not isinstance(value, str) or not value:
+        return value
+    if _PLAIN_NUMBER.match(value.strip()):
+        return value
+    if value.startswith(_FORMULA_LEADERS):
+        return "'" + value
+    return value
+
+
+def _safe_row(result: ProgramResult) -> dict[str, Any]:
+    """One exported row with every cell neutralised."""
+    return {
+        key: neutralise_formula(value) if isinstance(value, str) else value
+        for key, value in _row(result).items()
+    }
+
+
 def to_csv(results: list[ProgramResult]) -> str:
     buf = io.StringIO()
     writer = csv.writer(buf, quoting=csv.QUOTE_MINIMAL, lineterminator="\n")
     writer.writerow([f"# {DISCLAIMER}"])
     writer.writerow([label for _, label in COLUMNS])
     for r in results:
-        row = _row(r)
+        row = _safe_row(r)
         writer.writerow([row[key] for key, _ in COLUMNS])
     return buf.getvalue()
 
@@ -209,7 +245,7 @@ def to_xlsx(results: list[ProgramResult], meta: dict | None = None) -> bytes:
         "NOT_ELIGIBLE": "F8CBAD", "UNKNOWN": "EDEDED",
     }
     for r in results:
-        row = _row(r)
+        row = _safe_row(r)
         ws.append([row[key] for key, _ in COLUMNS])
         idx = ws.max_row
         fill = status_fills.get(row["funding_classification"])

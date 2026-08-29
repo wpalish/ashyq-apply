@@ -132,10 +132,19 @@ _SCHOLARSHIP_WORD = re.compile(
     r"scholarship|bursar|grant|fellowship|financial aid|stipend|funding|beurs|stipendium",
     re.IGNORECASE,
 )
+#: "Recruitment" means students as often as staff on a university site — HKU
+#: publishes its joint admission route as the "Undergraduate Recruitment
+#: Scheme". Only hiring context makes it irrelevant.
+_STAFF_RECRUITMENT = re.compile(
+    r"\b(staff|academic|faculty|employee|personnel)\s+recruitment\b"
+    r"|\brecruitment\b[^.]{0,40}\b(vacanc\w*|career\w*|jobs?|posts?|hiring)\b"
+    r"|\b(vacanc\w*|career\w*|jobs?|hiring)\b[^.]{0,40}\brecruitment\b",
+    re.IGNORECASE,
+)
 _FAQ = re.compile(r"\bf\.?a\.?q\.?\b|frequently asked question", re.IGNORECASE)
 _NEWS = re.compile(r"\b(news|press release|announcement|blog|article)\b", re.IGNORECASE)
 _IRRELEVANT = re.compile(
-    r"\b(vacanc|job openings?|careers? (?:at|portal|site)|recruitment|staff directory"
+    r"\b(vacanc|job openings?|careers? (?:at|portal|site)|staff directory"
     r"|alumni|donate|shop|library catalogue|contact us|privacy (?:policy|statement)"
     r"|cookie|sitemap|nobel prize|erc grant|research (?:prize|award)s?)\b",
     re.IGNORECASE,
@@ -277,8 +286,12 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
             return PageClassification(page_type, 0.85, [f"url matches {pattern.pattern}"], title)
 
     # --- clearly not about studying here --------------------------------
-    if _IRRELEVANT.search(low_head):
-        return PageClassification(PageType.IRRELEVANT, 0.8, ["title is off-topic"], title)
+    off_topic = _IRRELEVANT.search(low_head) or _STAFF_RECRUITMENT.search(low_head)
+    if off_topic is not None:
+        return PageClassification(
+            PageType.IRRELEVANT, 0.8,
+            [f"the heading is off-topic: {off_topic.group(0)!r}"], title,
+        )
 
     if _NEWS.search(low_head):
         return PageClassification(PageType.NEWS, 0.75, ["news markers in the title"], title)

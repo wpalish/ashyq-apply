@@ -277,3 +277,33 @@ class TestAdversarialStructures:
         )
         result = classify_page(url="https://uni.edu/programmes/cs", html=html)
         assert result.page_type in PROGRAMME_TYPES
+
+
+class TestRecruitmentIsNotAlwaysHiring:
+    """In a university's own words, "recruitment" means students as often as staff.
+
+    HKU publishes its joint admission route as the "HKU-Cambridge Undergraduate
+    Recruitment Scheme". The irrelevance rule read the word as staff hiring and
+    threw the page away.
+    """
+
+    @pytest.mark.parametrize("title", [
+        "HKU-Cambridge Undergraduate Recruitment Scheme (Engineering)",
+        "Student recruitment and admissions",
+        "Undergraduate recruitment",
+    ])
+    def test_student_recruitment_is_not_discarded(self, title):
+        html = page(f"<main><h1>{title}</h1>{PROGRAMME_BODY}</main>", title=title)
+        assert classify_page(url="https://uni.edu/programmes/x", html=html).page_type \
+            is not PageType.IRRELEVANT
+
+    @pytest.mark.parametrize("title", [
+        "Staff recruitment",
+        "Recruitment and careers at the university",
+        "Academic recruitment - vacancies",
+    ])
+    def test_staff_recruitment_is_still_discarded(self, title):
+        html = page(f"<main><h1>{title}</h1><p>Apply for a post with us.</p></main>",
+                    title=title)
+        assert classify_page(url="https://uni.edu/about/x", html=html).page_type \
+            is PageType.IRRELEVANT

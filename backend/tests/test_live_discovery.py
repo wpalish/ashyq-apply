@@ -16,6 +16,7 @@ from __future__ import annotations
 import gzip
 import json
 from datetime import UTC, datetime
+from typing import ClassVar
 
 import pytest
 
@@ -28,6 +29,7 @@ from app.adapters.discovery.live_discovery import (
     PageCategory,
     SitemapReader,
     canonical_url,
+    catalogue_shows_subject,
     categorise_url,
     decode_sitemap,
     looks_like_catalogue,
@@ -1086,3 +1088,40 @@ def _trace():
     from app.adapters.discovery.live_discovery import DiscoveryTrace
 
     return DiscoveryTrace(institution="test", domain="uni.edu")
+
+
+class TestRenderDecision:
+    """When is a catalogue worth re-reading through the browser?
+
+    The question is whether the applicant's subject is reachable from what was
+    served — not whether the page carries programme links at all. Groningen's
+    bachelor catalogue carries fourteen programme-shaped links and not one of
+    them is a programme, let alone a computing one, so a rule that only counted
+    them never escalated and never found the subject.
+    """
+
+    FIELDS: ClassVar[list[str]] = ["computer science"]
+
+    def test_a_catalogue_naming_the_subject_needs_no_render(self):
+        links = [("https://uni.edu/programmes/bsc-computer-science", "Computer Science")]
+        assert catalogue_shows_subject(links, self.FIELDS, "bachelor")
+
+    def test_a_catalogue_with_links_but_not_the_subject_is_rendered(self):
+        links = [
+            ("https://uni.edu/education/bachelor/brochures", "Brochures"),
+            ("https://uni.edu/education/bachelor/open-days", "Open days"),
+            ("https://uni.edu/programmes/bsc-history", "History"),
+        ]
+        assert not catalogue_shows_subject(links, self.FIELDS, "bachelor")
+
+    def test_the_subject_in_link_text_alone_is_enough(self):
+        links = [("https://uni.edu/x/12345", "Computer Science and Engineering")]
+        assert catalogue_shows_subject(links, self.FIELDS, "bachelor")
+
+    def test_the_subject_at_the_wrong_level_does_not_count(self):
+        links = [("https://uni.edu/programmes/masters/computer-science", "Computer Science")]
+        assert not catalogue_shows_subject(links, self.FIELDS, "bachelor")
+
+    def test_with_no_subject_stated_any_programme_link_suffices(self):
+        links = [("https://uni.edu/en/programmes/bachelors/history", "History")]
+        assert catalogue_shows_subject(links, [], "bachelor")

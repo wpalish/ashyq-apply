@@ -404,3 +404,40 @@ def _allow_example(url: str, **_kwargs):
     from app.adapters.network_policy import check_url as real
 
     return real(url, resolver=resolver_returning("93.184.216.34"))
+
+
+class TestMalformedHostsFromUntrustedPages:
+    """A link on a crawled page must never take the run down.
+
+    `http://0177.0.0.1/` is a classic obfuscated-loopback probe. On a resolver
+    that reads the octal it becomes 127.0.0.1 and the policy blocks it; on one
+    that does not, it resolves to a public address, is allowed, and then the
+    HTTP client rejects the literal as an invalid IPv4 address. That exception
+    escaped `Fetcher.get` and crashed the caller.
+    """
+
+    @pytest.mark.parametrize("url", [
+        "http://0177.0.0.1/",
+        "http://0x7f.0x0.0x0.0x1/",
+        "http://00000177.0.0.1/",
+        "http://999.999.999.999/",
+        "http://[not-an-ipv6]/",
+        "http://exam ple.edu/",
+    ])
+    @pytest.mark.asyncio
+    async def test_a_malformed_host_is_reported_not_raised(self, tmp_path, url):
+        async with Fetcher(tmp_path / "c", respect_robots=False) as fetcher:
+            result = await fetcher.get(url)
+        assert not result.ok
+        assert result.error
+
+    @pytest.mark.parametrize("url", [
+        "http://0177.0.0.1/",
+        "http://00000177.0.0.1/",
+        "http://0x7f.0x0.0x0.0x1/",
+    ])
+    def test_an_octal_or_hex_encoded_host_is_refused_outright(self, url):
+        """Defence that does not depend on how this machine's resolver reads
+        a leading zero. No legitimate hostname is written that way."""
+        with pytest.raises(BlockedRequest):
+            check_url(url)

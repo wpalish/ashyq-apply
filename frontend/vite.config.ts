@@ -16,7 +16,14 @@ export default defineConfig({
     // to configure in the client.
     proxy: { '/api': { target: 'http://127.0.0.1:8099', changeOrigin: true } },
   },
-  build: { outDir: 'dist', sourcemap: true },
+  build: {
+    outDir: 'dist',
+    // Source maps reconstruct the original source, comments included, for
+    // anyone who loads the site. Useful locally, not something to publish, so
+    // a production build omits them unless VITE_SOURCEMAP is set explicitly
+    // for a debugging deploy.
+    sourcemap: process.env.VITE_SOURCEMAP === 'true' || process.env.NODE_ENV !== 'production',
+  },
   test: {
     environment: 'jsdom',
     globals: true,

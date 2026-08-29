@@ -878,11 +878,7 @@ class LiveDiscoveryAdapter:
             if (
                 from_catalogue
                 and rendered_catalogues < MAX_RENDERED_CATALOGUES
-                and not any(
-                    categorise_url(u)[0] == PageCategory.PROGRAM_PAGE
-                    or matches_field_text(label, fields)
-                    for u, label in links
-                )
+                and not catalogue_shows_subject(links, fields, degree)
             ):
                 rendered_catalogues += 1
                 rendered = await self.fetcher.render(start)
@@ -959,6 +955,27 @@ class LiveDiscoveryAdapter:
                     and canonical not in selected[category]
                 ):
                     selected[category].append(canonical)
+
+
+def catalogue_shows_subject(
+    links: list[tuple[str, str]], fields: list[str], degree: str,
+) -> bool:
+    """Whether a catalogue's links already reach the applicant's subject.
+
+    Asked before deciding to re-read the page through the browser. The first
+    version asked only whether the page carried *any* programme-shaped link,
+    which is a different and much weaker question: Groningen's bachelor
+    catalogue carries fourteen, none of them a programme and none of them
+    computing, so the render never fired and the subject was never found.
+    """
+    if not fields:
+        return any(categorise_url(u)[0] == PageCategory.PROGRAM_PAGE for u, _ in links)
+    for url, label in links:
+        if names_other_degree_level(url, degree):
+            continue
+        if matches_field_text(label, fields) or matches_field(url, fields):
+            return True
+    return False
 
 
 def _satisfies_field(urls: list[str], fields: list[str]) -> bool:

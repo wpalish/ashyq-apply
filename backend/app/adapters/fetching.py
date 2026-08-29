@@ -270,7 +270,14 @@ def find_pii(url: str, extra: str = "") -> str | None:
     for label, pattern in _PII_PATTERNS:
         if pattern.search(haystack):
             return label
-    query = urlparse(url).query
+    try:
+        query = urlparse(url).query
+    except ValueError:
+        # This guard is the first thing to touch a URL harvested from a page,
+        # and urlparse itself raises on some malformed hosts ("[not-an-ipv6]").
+        # The patterns above already ran against the whole string, so there is
+        # nothing more to inspect; the network policy refuses it a moment later.
+        return None
     if query and _QUERY_DIGITS.search(query):
         return "long digit sequence in a query parameter (passport/ID/card)"
     if extra and _QUERY_DIGITS.search(extra):
@@ -608,6 +615,17 @@ class Fetcher:
             log.warning("blocked by network policy: %s", exc)
             self.stats[FetchOutcome.BLOCKED.value] += 1
             return FetchResult(url=url, outcome=FetchOutcome.BLOCKED, error=str(exc))
+        except (ValueError, httpx.InvalidURL) as exc:
+            # The policy may pass a host the HTTP client will not accept —
+            # "0177.0.0.1" resolves fine on some machines and is an invalid
+            # IPv4 literal to httpx. One malformed link on a crawled page must
+            # not end the run.
+            log.info("unusable URL %s: %s", url[:120], exc)
+            self.stats[FetchOutcome.BLOCKED.value] += 1
+            return FetchResult(
+                url=url, outcome=FetchOutcome.BLOCKED,
+                error=f"The URL could not be used: {exc}",
+            )
 
         host = target.host
         async with self._semaphore(host):
