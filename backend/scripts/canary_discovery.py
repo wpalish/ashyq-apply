@@ -175,9 +175,12 @@ class TracingAdapter(LiveDiscoveryAdapter):
     """
 
     instances: ClassVar[list[LiveDiscoveryAdapter]] = []
+    #: Set by the canary so a run can target the frozen holdout set instead of
+    #: the shipped registry, without either file knowing about the other.
+    registry_override: ClassVar[Path | None] = None
 
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
+    def __init__(self, fetcher, registry_path=None) -> None:
+        super().__init__(fetcher, registry_path or TracingAdapter.registry_override)
         TracingAdapter.instances.append(self)
 
 
@@ -272,8 +275,9 @@ def false_positives(result: ProgramResult, claims: list[dict]) -> list[dict]:
 # --- the run --------------------------------------------------------------
 
 
-async def run_canary(only: str | None, verbose: bool) -> dict:
-    registry = json.loads(REGISTRY_PATH.read_text())
+async def run_canary(only: str | None, verbose: bool, registry_path: Path | None = None) -> dict:
+    registry_path = registry_path or REGISTRY_PATH
+    registry = json.loads(registry_path.read_text())
     if only:
         registry = [e for e in registry if only in e["homepage"]]
         if not registry:
@@ -308,6 +312,7 @@ async def run_canary(only: str | None, verbose: bool) -> dict:
 
     started = datetime.now(UTC)
     TracingAdapter.instances.clear()
+    TracingAdapter.registry_override = registry_path
     # The canary deliberately swaps the adapter constructor so it can retain
     # discovery traces. The replacement subclasses the production adapter and
     # exists only for this short-lived process.
@@ -435,7 +440,7 @@ def markdown_table(report: dict) -> str:
     return head + "\n".join(lines)
 
 
-async def check_seeds() -> int:
+async def check_seeds(registry_path: Path | None = None) -> int:
     """Fetch every manual seed and report the ones that no longer resolve.
 
     A seed whose URL has moved is worse than no seed: it consumes the fetch
@@ -443,7 +448,7 @@ async def check_seeds() -> int:
     across four institutions, so this is a standing check rather than a
     one-time cleanup.
     """
-    entries = json.loads(REGISTRY_PATH.read_text())
+    entries = json.loads((registry_path or REGISTRY_PATH).read_text())
     workdir = Path(tempfile.mkdtemp(prefix="seed-check-"))
     broken: list[tuple[str, str, str, str]] = []
     total = 0
@@ -467,15 +472,17 @@ async def main() -> int:
     parser.add_argument("--out", type=Path, help="directory for the JSON and Markdown output")
     parser.add_argument("--only", help="substring of one institution's homepage")
     parser.add_argument("--verbose", action="store_true")
+    parser.add_argument("--registry", type=Path,
+                        help="an alternative institution registry, e.g. the frozen holdout set")
     parser.add_argument("--check-seeds", action="store_true",
                         help="only verify that the registry's manual seeds still resolve")
     args = parser.parse_args()
 
     if args.check_seeds:
-        return await check_seeds()
+        return await check_seeds(args.registry)
 
     print("Live canary — real network, real sites, robots.txt respected.", flush=True)
-    report = await run_canary(args.only, args.verbose)
+    report = await run_canary(args.only, args.verbose, args.registry)
 
     print()
     print(markdown_table(report))

@@ -14,10 +14,11 @@ not add up it returns UNKNOWN, and UNKNOWN is accepted by nothing.
 
 from __future__ import annotations
 
+import json
 import re
 from dataclasses import dataclass, field
 from enum import StrEnum
-from urllib.parse import urlparse
+from urllib.parse import urljoin, urlparse
 
 from bs4 import BeautifulSoup
 
@@ -177,6 +178,46 @@ _PATH_HINTS: tuple[tuple[re.Pattern[str], PageType], ...] = (
 )
 
 
+#: schema.org types that say, in the site's own markup, what this page is.
+#: Only trusted from the document's JSON-LD, never from arbitrary page text.
+_LD_PROGRAM_TYPES = frozenset({"educationaloccupationalprogram", "course"})
+_LD_CATALOG_TYPES = frozenset({"collectionpage", "itemlist", "searchresultspage"})
+
+
+def structured_page_types(soup: BeautifulSoup | None) -> set[str]:
+    """Lower-cased schema.org @type values declared in the page's JSON-LD.
+
+    Read from the whole document, because JSON-LD normally sits in <head>.
+    Malformed JSON is ignored rather than raising: this is a signal, not a
+    contract, and a broken blob must not cost us the page.
+    """
+    if soup is None:
+        return set()
+    found: set[str] = set()
+
+    def collect(node: object) -> None:
+        if isinstance(node, list):
+            for item in node:
+                collect(item)
+            return
+        if not isinstance(node, dict):
+            return
+        raw = node.get("@type")
+        for value in raw if isinstance(raw, list) else [raw]:
+            if isinstance(value, str):
+                found.add(value.strip().lower())
+        for key in ("@graph", "mainEntity", "hasPart", "about"):
+            if key in node:
+                collect(node[key])
+
+    for script in soup.find_all("script", attrs={"type": "application/ld+json"}):
+        try:
+            collect(json.loads(script.string or ""))
+        except (ValueError, TypeError):
+            continue
+    return found
+
+
 #: Wrappers that hold the page's own content rather than the site's furniture.
 _MAIN_SELECTORS = ("main", "[role=main]", "#main-content", "#main", "#content", "article")
 #: Site chrome. Present on every page, so counting its links made an award page
@@ -299,13 +340,6 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
         return PageClassification(PageType.DOCUMENTS, 0.7, ["document checklist heading"], title)
 
     # --- programme family --------------------------------------------------
-    program_links = _program_link_count(soup) if soup else 0
-    if _PLURAL_PROGRAM_HEADING.match(identity) or _CATALOG.search(low_head) or program_links >= 5:
-        return PageClassification(
-            PageType.PROGRAM_CATALOG, 0.75,
-            [f"{program_links} programme links", "plural catalogue heading"], title,
-        )
-
     # A programme page is identified before the admissions rules run: a real
     # programme page has an "entry requirements" section, and matching that
     # first classified BSc Computer Science and Engineering as a general
@@ -314,6 +348,52 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
     degree = _degree_level(f"{identity} {body[:2500]}")
     language = _language(body)
     year = _academic_year(body)
+
+    program_links = _program_link_count(soup, url) if soup else 0
+    plural_heading = bool(_PLURAL_PROGRAM_HEADING.match(identity))
+    # `_CATALOG` is matched against each heading on its own. Run against the
+    # headings joined into one string its `.*` bridged unrelated headings:
+    # "…our three campuses" and a later "explore programs" combined into a
+    # catalogue match on a page whose headings say no such thing.
+    catalog_heading = next(
+        (h for h in [title, *headings] if _CATALOG.search(h.lower())), None
+    )
+    ld_types = structured_page_types(full)
+    ld_program = sorted(ld_types & _LD_PROGRAM_TYPES)
+    ld_catalog = sorted(ld_types & _LD_CATALOG_TYPES)
+
+    # The site's own structured data outranks our guesses about its markup.
+    if ld_program and subject and not plural_heading:
+        signals.append(f"schema.org {', '.join(ld_program)}")
+        return _programme_result(
+            [*signals, f"single programme {subject!r}"], title, subject,
+            degree or "unknown", language, year, confidence=0.9,
+        )
+
+    catalogue_reasons = [
+        r for r in (
+            "plural catalogue heading" if plural_heading else "",
+            f"catalogue phrasing in heading {catalog_heading!r}" if catalog_heading else "",
+            f"links to {program_links} other programmes" if program_links >= 5 else "",
+            f"schema.org {', '.join(ld_catalog)}" if ld_catalog else "",
+        ) if r
+    ]
+    # A page listing this many distinct other programmes is a listing by
+    # construction: no single programme needs to link to a dozen siblings. This
+    # outranks a programme-shaped heading, so a catalogue titled after one of
+    # its entries cannot present itself as that programme.
+    if program_links >= MANY_PROGRAMME_LINKS:
+        return PageClassification(
+            PageType.PROGRAM_CATALOG, 0.8,
+            [f"links to {program_links} distinct other programmes"], title,
+        )
+
+    # A page that names one programme is that programme, even when it links to
+    # others; only a page with no single identity is decided by its links.
+    if catalogue_reasons and not (subject and degree and not plural_heading):
+        return PageClassification(
+            PageType.PROGRAM_CATALOG, 0.75, catalogue_reasons, title,
+        )
 
     if not subject:
         if _CREDENTIAL.search(low_head) and _ADMISSIONS.search(low_head):
@@ -328,19 +408,11 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
             )
 
     if subject and degree:
-        signals.append(f"single programme {subject!r} at {degree} level")
-        if language:
-            signals.append(f"language of instruction: {language}")
-        if year:
-            signals.append(f"academic year {year}")
-            return PageClassification(
-                PageType.INTAKE_SPECIFIC_PROGRAM, 0.85, signals, title,
-                subject=subject, degree_level=degree,
-                language_of_instruction=language, academic_year=year,
-            )
-        return PageClassification(
-            PageType.PROGRAM_DETAIL, 0.75, signals, title,
-            subject=subject, degree_level=degree, language_of_instruction=language,
+        if program_links:
+            signals.append(f"links to {program_links} other programmes, but names only one")
+        return _programme_result(
+            [*signals, f"single programme {subject!r} at {degree} level"],
+            title, subject, degree, language, year,
         )
 
     if _CREDENTIAL.search(low_head) and _ADMISSIONS.search(low_head):
@@ -368,6 +440,27 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
 
 
 # --- helpers ---------------------------------------------------------------
+
+
+def _programme_result(
+    signals: list[str], title: str, subject: str, degree: str,
+    language: str | None, year: str | None, confidence: float = 0.75,
+) -> PageClassification:
+    """One programme page, intake-specific when it names an academic year."""
+    signals = [s for s in signals if s.strip()]
+    if language:
+        signals.append(f"language of instruction: {language}")
+    if year:
+        return PageClassification(
+            PageType.INTAKE_SPECIFIC_PROGRAM, max(confidence, 0.85),
+            [*signals, f"academic year {year}"], title,
+            subject=subject, degree_level=degree,
+            language_of_instruction=language, academic_year=year,
+        )
+    return PageClassification(
+        PageType.PROGRAM_DETAIL, confidence, signals, title,
+        subject=subject, degree_level=degree, language_of_instruction=language,
+    )
 
 
 def _title(soup: BeautifulSoup) -> str:
@@ -419,6 +512,27 @@ def _identity(soup: BeautifulSoup | None, title: str) -> str:
     return title.split("|")[0].strip()
 
 
+#: Words that name a level rather than a subject, stripped when testing
+#: whether a heading names an actual programme.
+_LEVEL_WORDS_ONLY = re.compile(
+    r"\b(bachelor'?s?|master'?s?|undergraduate|postgraduate|graduate|doctoral|doctorate"
+    r"|phd|dphil|bsc|msc|ba|ma|beng|meng|llb|llm|mba|foundation|programmes?|programs?"
+    r"|degrees?|courses?|studies|hons|honours)\b",
+    re.IGNORECASE,
+)
+
+
+#: Nouns that make a heading something other than a programme, however many
+#: degree words it carries. A research group's "MSc and BSc projects" page is
+#: not a degree.
+_NOT_A_PROGRAMME_NOUN = re.compile(
+    r"\b(projects?|theses|thesis|vacanc(y|ies)|internships?|placements?|tours?"
+    r"|open day|openday|newsletters?|webinars?|events?|stories|experiences?"
+    r"|supervisors?|staff|contact|week|fair|webklas\w*|prospectus)\b",
+    re.IGNORECASE,
+)
+
+
 def _program_name(identity: str) -> str | None:
     """The programme a page is about, if it is about exactly one."""
     name = identity
@@ -428,8 +542,17 @@ def _program_name(identity: str) -> str | None:
         return None
     if not _degree_level(name):
         return None
+    # A bare level is not a programme. TU Delft's bachelor catalogue is headed
+    # "Bachelors", which carries a degree word and nothing else; without this
+    # the catalogue would name itself as a programme called "Bachelors".
+    without_level = _LEVEL_WORDS_ONLY.sub(" ", name)
+    if len(re.sub(r"[^a-z]+", "", without_level.lower())) < 4:
+        return None
     # A heading that is a question or an instruction is not a programme name.
     if name.endswith("?") or re.match(r"^(check|how|what|apply|find|browse|search)\b", name, re.I):
+        return None
+    # "MSc and BSc projects" carries two degree words and names no programme.
+    if _NOT_A_PROGRAMME_NOUN.search(name):
         return None
     return name
 
@@ -460,10 +583,82 @@ def _award_link_count(soup: BeautifulSoup | None) -> int:
     )
 
 
-def _program_link_count(soup: BeautifulSoup | None) -> int:
+#: Distinct other-programme links above which a page is a listing whatever its
+#: heading says. Measured against real pages: TU Delft's bachelor catalogue
+#: links to 14, while its individual programme pages link to 0-8.
+MANY_PROGRAMME_LINKS = 12
+
+_PROGRAM_HREF = re.compile(
+    r"/(bsc|msc|ba|ma|bachelor|master|programme|program|course)s?/", re.IGNORECASE
+)
+
+
+def _path_key(url: str) -> str:
+    """A comparable path: lower-cased, no trailing slash, no query or fragment."""
+    try:
+        path = urlparse(url).path.lower().rstrip("/")
+    except ValueError:
+        return ""
+    return re.sub(r"/{2,}", "/", path)
+
+
+#: Link wording that names a section of the current page rather than another
+#: programme. TU Delft's BSc Aerospace Engineering page carries eighteen hrefs
+#: containing "/bachelors/" — "About the programme", "After your studies",
+#: "From application to enrolment", "FAQ's" and fifteen student stories.
+#: Counting those classified the programme page as a catalogue of eighteen.
+_SECTION_LINK_TEXT = re.compile(
+    r"^(about|after|before|during|from|why|how|what|contact|apply|application"
+    r"|admission|enrol|entry|faq|frequently|curriculum|programme structure"
+    r"|career|student|studies|testimonial|experience|stor(y|ies)|meet|more"
+    r"|read|view|see|all|back|next|previous|home|download|watch|listen)\b"
+    r"|^\W*$",
+    re.IGNORECASE,
+)
+#: Path segments that mark a sub-page of one programme, not another programme.
+_SECTION_PATH = re.compile(
+    r"/(student-experiences?|student-stories|testimonials?|faq|frequently-asked"
+    r"|about-the-programme|after-your-studies|from-application-to-enrol"
+    r"|selection-procedure|open-day|why-)",
+    re.IGNORECASE,
+)
+
+
+def _program_link_count(soup: BeautifulSoup | None, page_url: str = "") -> int:
+    """How many *other* programmes this page links to.
+
+    What separates a programme page from a catalogue is not how many
+    programme-shaped hrefs it carries — both carry many — but what the links
+    say. A catalogue's links name subjects ("Applied Mathematics", "Civil
+    Engineering"); a programme's links name its own sections ("About the
+    programme", "After your studies") and its student stories.
+
+    Descendant-ness deliberately does *not* disqualify a link: a catalogue at
+    `/programmes/bachelors` lists `/programmes/bachelors/<subject>`, so
+    excluding its own subtree would blind us to exactly the pages that make it
+    a catalogue.
+
+    Off-site links are excluded — a share button pointing at a `/sharer/` path
+    is not a programme. Targets are deduplicated.
+    """
     if soup is None:
         return 0
-    return sum(
-        1 for a in soup.find_all("a", href=True)
-        if re.search(r"/(bsc|msc|ba|ma|bachelor|master|programme|program|course)s?/", a.get("href", ""), re.I)
-    )
+    own_host = urlparse(page_url).netloc.lower() if page_url else ""
+    own = _path_key(page_url)
+    targets: set[str] = set()
+    for anchor in soup.find_all("a", href=True):
+        href = anchor.get("href", "")
+        if not _PROGRAM_HREF.search(href):
+            continue
+        absolute = urljoin(page_url, href) if page_url else href
+        if own_host and (urlparse(absolute).netloc.lower() or own_host) != own_host:
+            continue
+        target = _path_key(absolute)
+        if not target or target == own:
+            continue
+        if _SECTION_PATH.search(target):
+            continue
+        if _SECTION_LINK_TEXT.search(" ".join(anchor.get_text(" ").split())):
+            continue
+        targets.add(target)
+    return len(targets)
