@@ -6,9 +6,10 @@ now would be churn without benefit. The product name is ASHYQ Apply.*
 University and scholarship shortlisting for international applicants, where every
 material value on screen traces back to the page it was read from.
 
-> **Status: NOT READY for production.** This is a working local prototype whose
-> live-mode claims are now trustworthy, but it has no authentication, no
-> multi-tenancy, no durable job system and no deployment story. See
+> **Status: release candidate, not publicly deployed.** Authentication, tenant
+> isolation, durable PostgreSQL jobs, CI, backups and production images exist
+> and are tested. The remaining release blockers are a real container/deploy
+> run and low live programme-page recall (1 of 10 canary institutions). See
 > [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md) for the honest position and
 > [`RELEASE_CHECKLIST.md`](RELEASE_CHECKLIST.md) for what is left.
 
@@ -132,9 +133,9 @@ backend/
 │   ├── pipeline/        State machine, resumable per stage
 │   ├── api/             FastAPI routes
 │   ├── export/          CSV / JSON / XLSX, provenance included
-│   ├── models/          SQLAlchemy (SQLite now, PostgreSQL-ready)
+│   ├── models/          SQLAlchemy + Alembic (PostgreSQL production, SQLite local)
 │   └── corpus/          The bundled synthetic demo corpus + its generator
-└── tests/               349 tests
+└── tests/               547 tests
 frontend/
 ├── src/
 │   ├── screens/         The nine workflow screens
@@ -142,7 +143,7 @@ frontend/
 │   ├── lib/             Store, formatting, immutable helpers
 │   ├── api/             Typed client
 │   └── styles/          Design tokens + component styles
-└── e2e/                 42 Playwright tests (desktop + mobile)
+└── e2e/                 50 Playwright tests (desktop + mobile, including axe)
 ```
 
 ### The claim is the unit of truth
@@ -267,11 +268,12 @@ context off the machine.
 Live mode is slower, and it finds less. That is honest: it reports what it could
 read and marks the rest as not found.
 
-A **live truth audit** against `rug.nl` and `tudelft.nl` is recorded in
-[`docs/CANARY_AUDIT.md`](docs/CANARY_AUDIT.md): every claim the system made,
-checked by hand against the page it came from. It currently shows **zero
-false-positive material claims** for those two institutions. Aalto, Vienna and
-Warsaw have not yet been audited.
+A **live truth audit** against ten official university domains is recorded in
+[`docs/LIVE_DISCOVERY_REPORT.md`](docs/LIVE_DISCOVERY_REPORT.md). Sitemap-first
+discovery reaches 26 of 30 admissions/cost/scholarship categories and produces
+zero audited material false positives, but confirms an individual programme
+page on only one institution in ten. That limitation is visible here because
+finding a category page is not the same as building a useful shortlist.
 
 ---
 
@@ -287,7 +289,7 @@ cd backend
 python scripts/pg.py --print-uri              # a local PostgreSQL, no install needed
 python scripts/pg.py .venv/bin/pytest         # run the suite against PostgreSQL
 python scripts/pg.py .venv/bin/python scripts/crash_test.py   # SIGKILL recovery proof
-./.venv/bin/python -m pytest                  # 349 tests
+./.venv/bin/python -m pytest                  # 547 tests
 ./.venv/bin/python -m pytest --cov=app        # with coverage (89%)
 ./.venv/bin/python -m ruff check app tests    # lint
 ./.venv/bin/python -m mypy app                # type check
@@ -300,7 +302,7 @@ npm run build          # production build
 npm run typecheck      # tsc --noEmit
 npm run lint           # eslint
 npm test               # 47 Vitest unit tests
-npm run e2e            # 48 Playwright tests, desktop + mobile (starts both servers itself)
+npm run e2e            # 50 Playwright tests, desktop + mobile (starts both servers itself)
 npm run e2e:report     # open the last Playwright report
 ```
 
@@ -312,18 +314,19 @@ Or from the repository root: `make setup`, `make dev`, `make test`, `make check`
 
 | Check | Result |
 |---|---|
-| Backend tests | 349 passed (SQLite **and** PostgreSQL 16.2) |
+| Backend tests | 547 passed (SQLite **and** PostgreSQL 16.2) |
 | Backend coverage | 89% (`app/`); jobs/store 91%, jobs/worker 83%, pipeline/runner 91% |
 | Backend lint (ruff) | clean |
 | Python dependency audit (pip-audit) | clean (36 advisories found and fixed at baseline) |
-| Backend types (mypy) | clean, 67 files |
+| Backend types (mypy) | clean, 92 files |
 | Frontend unit tests | 47 passed |
 | Frontend typecheck | clean |
 | Frontend lint (eslint) | clean |
-| E2E (Playwright) | 48 passed — desktop 1440×900 and Pixel 7 |
+| E2E (Playwright) | 50 passed — desktop 1440×900 and Pixel 7 |
+| Accessibility | axe WCAG A/AA: no serious or critical violations on reachable screens |
 | Console errors during the full journey | 0 |
 | Horizontal overflow at 320/768/1024/1440 | none |
-| Production bundle | 68.9 kB JS gzipped, 5.1 kB CSS |
+| Production bundle | 74.0 kB JS gzipped, 5.3 kB CSS |
 
 | Crash recovery | verified: real SIGKILL, job recovered, 0 duplicate results |
 | Migrations | verified: fresh, downgrade, re-upgrade, re-apply, both backends |
@@ -352,6 +355,10 @@ Copy `.env.example` to `backend/.env`. No secrets are required to run anything.
 | `UNIMATCH_AUTO_MIGRATE` | `false` | Migrating is a deliberate step; two processes migrating together race |
 | `UNIMATCH_WORKER_CONCURRENCY` | `2` | Jobs a worker runs at once |
 | `UNIMATCH_JOB_LEASE_SECONDS` | `120` | How long a claimed job is held before it can be reaped |
+| `UNIMATCH_AUTH_ENABLED` | `false` locally | Required in production; enables opaque server sessions |
+| `UNIMATCH_AUTH_REGISTRATION_ENABLED` | `true` | Keep false for an invite-only public deployment |
+| `UNIMATCH_COOKIE_SECURE` | `false` locally | Required in production behind HTTPS |
+| `UNIMATCH_CORS_ORIGINS` | local Vite origins | Explicit HTTPS origins are required in production |
 
 ---
 
@@ -359,9 +366,10 @@ Copy `.env.example` to `backend/.env`. No secrets are required to run anything.
 
 These are real, and the UI states them rather than hiding them.
 
-0. **Not production software.** No authentication and no multi-tenancy: anyone
-   who can reach the API can read and delete every profile. The containers have
-   never been run. There is no CI. Single user, local machine.
+0. **Not deployed production software.** Auth, organization isolation, CI and
+   deployment definitions are implemented and tested, but the container stack
+   has not been run on this Mac and no public deployment has had an operational
+   security review.
 1. **No outcome prediction.** ASHYQ Apply reports published criteria. Selection is
    competitive and depends on factors no public page states.
 2. **Extraction is rule-based and conservative.** It finds what its patterns
@@ -372,8 +380,9 @@ These are real, and the UI states them rather than hiding them.
 4. **Grade conversions are approximations** and are never applied unless the
    user accepts one. US applications generally require a NACES credential
    evaluation, which this tool does not replace.
-5. **Live discovery works from a curated registry**, not a search engine. Adding
-   institutions means editing the registry.
+5. **Live discovery is deliberately conservative.** It uses a curated registry,
+   official seeds and sitemaps rather than sending applicant context to a search
+   engine. The canary confirms programme pages on only 1 of 10 institutions.
 6. **Cost pages behind a fee calculator** yield no figures. TU Delft's tuition
    page is a real example: the page is readable, the numbers are not on it, and
    the result is an honest "no cost figures could be extracted".
@@ -396,8 +405,8 @@ These are real, and the UI states them rather than hiding them.
   could be lost on a connection.
 - The audit log records ids and action names only. A test asserts that no name,
   citizenship, test name or GPA appears in it.
-- No passwords, one-time codes, payment details, passport numbers or medical
-  data are modelled anywhere, so no code path can persist one.
+- Passwords are stored only as salted `scrypt` hashes. One-time codes, payment
+  details, passport scans and medical data are not modelled.
 - `backend/data/` is gitignored in full.
 
 ---
@@ -406,6 +415,9 @@ These are real, and the UI states them rather than hiding them.
 
 - [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md) — the honest baseline, including what is missing
 - [`docs/CANARY_AUDIT.md`](docs/CANARY_AUDIT.md) — live truth audit, claim by claim
+- [`docs/LIVE_DISCOVERY_REPORT.md`](docs/LIVE_DISCOVERY_REPORT.md) — sitemap discovery canary across ten institutions
+- [`SECURITY.md`](SECURITY.md) — threat model, privacy controls and residual risks
+- [`docs/BACKUP_RESTORE.md`](docs/BACKUP_RESTORE.md) — backup policy and verified restore drill
 - [`RELEASE_CHECKLIST.md`](RELEASE_CHECKLIST.md) — the gates, and which are open
 - [`ASSUMPTIONS.md`](ASSUMPTIONS.md) — every decision taken without asking, and why
 - [`LOOP_REPORT.md`](LOOP_REPORT.md) — each build/test/critique cycle, the defects found and how they were fixed

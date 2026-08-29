@@ -308,7 +308,10 @@ async def run_canary(only: str | None, verbose: bool) -> dict:
 
     started = datetime.now(UTC)
     TracingAdapter.instances.clear()
-    runner_module.LiveDiscoveryAdapter = TracingAdapter
+    # The canary deliberately swaps the adapter constructor so it can retain
+    # discovery traces. The replacement subclasses the production adapter and
+    # exists only for this short-lived process.
+    runner_module.LiveDiscoveryAdapter = TracingAdapter  # type: ignore[misc]
     runner = CanaryRunner(session, run, profile, settings)
     error = ""
     try:

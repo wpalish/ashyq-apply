@@ -165,10 +165,9 @@ pages are reliable (26/30); programme pages are not. Where the recall goes:
    `runner.py` is out of scope. Behaviour is inherited unchanged, but it is a
    test-harness seam, not a supported API.
 
-## Pre-existing, untouched
+## Integration verification
 
-`mypy app tests` reports 3 errors that predate this branch, in
-`tests/conftest.py:36` and `tests/test_live_regressions.py:396,410`. Both files
-are outside the permitted scope, so they were left alone. `mypy app` is clean.
-`ruff check app tests` is clean; `scripts/` is outside the project's documented
-lint scope and `scripts/crash_test.py` carries one pre-existing F841.
+The isolated discovery branch originally left unrelated baseline type and lint
+findings untouched. They are resolved in the integrated product branch. The
+combined suite passes `ruff` and `mypy` across `app`, `tests` and the canary
+script, followed by all 547 backend tests on both SQLite and PostgreSQL.
