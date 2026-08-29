@@ -5,6 +5,7 @@ from __future__ import annotations
 from app.adapters.base import AdapterResult, Candidate
 from app.adapters.extraction import (
     ClaimBuilder,
+    extract_cost_tables,
     extract_costs,
     html_title,
     is_official_domain,
@@ -64,7 +65,12 @@ class WebCostAdapter:
             ),
             accessed_at=res.fetched_at,
         )
+        # Tables first: a fee table states rates by audience and year, which
+        # flattened text cannot express and `extract_costs` will not guess at.
+        # Only HTML has tables — a PDF fee schedule goes through the text path.
         claims = extract_costs(text, builder)
+        if not res.is_pdf:
+            claims = claims + extract_cost_tables(res.text, builder)
         out.claims.extend(claims)
 
         breakdown.academic_year = year

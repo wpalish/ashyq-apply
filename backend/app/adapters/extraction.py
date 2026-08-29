@@ -143,7 +143,14 @@ class ClaimBuilder:
         status: ClaimStatus | None = None,
         notes: str = "",
         subject_key: str | None = None,
+        academic_year: str | None = None,
     ) -> Claim:
+        """Record one claim.
+
+        `academic_year` overrides the builder's when the evidence states its
+        own — a fee table row naming 2026-2027 is more specific than whatever
+        year the page as a whole is about.
+        """
         # Only an official page can produce a "current" claim; anything else
         # stays unverified until a human or a better source confirms it.
         default_status = (
@@ -169,7 +176,7 @@ class ClaimBuilder:
             status=status or default_status,
             notes=notes,
             subject_key=subject_key,
-            **self.meta,  # type: ignore[arg-type]
+            **{**self.meta, **({"academic_year": academic_year} if academic_year else {})},  # type: ignore[arg-type]
         )
         self.claims.append(claim)
         return claim
@@ -510,4 +517,127 @@ def extract_costs(text: str, builder: ClaimBuilder) -> list[Claim]:
                 section="Fees and costs",
             )
         )
+    return found
+
+
+#: Column headers that say who a fee row applies to. A fee table almost always
+#: segments by this, and the segment is the difference between €2,694 and
+#: €19,800 for the same programme in the same year.
+_AUDIENCE_HEADER = re.compile(
+    r"\b(nationality|residency|student type|type of student|fee status|who|category|applicant)\b",
+    re.IGNORECASE,
+)
+_MONEY_HEADER = re.compile(
+    r"\b(fee|fees|tuition|cost|costs|amount|price|charge)\b", re.IGNORECASE
+)
+_YEAR_HEADER = re.compile(r"\b(year|academic year|intake|period)\b", re.IGNORECASE)
+#: What the table as a whole is about, read from its caption or the heading
+#: above it. Without this a table of, say, library fines would be read as
+#: tuition purely because it has a money column.
+_TUITION_CONTEXT = re.compile(
+    r"\b(tuition|programme fee|program fee|course fee|study cost)", re.IGNORECASE
+)
+_ACADEMIC_YEAR_CELL = re.compile(r"\b(20\d{2})\s*[-/–]\s*(20\d{2}|\d{2})\b")
+
+
+def _cell_text(cell) -> str:
+    return " ".join(cell.get_text(" ", strip=True).split())
+
+
+def _table_context(table) -> str:
+    """What the table is about: its caption, plus the nearest heading above."""
+    parts: list[str] = []
+    caption = table.find("caption")
+    if caption:
+        parts.append(_cell_text(caption))
+    node = table
+    for _ in range(6):
+        node = node.find_previous(["h1", "h2", "h3", "h4", "caption", "p"])
+        if node is None:
+            break
+        text = _cell_text(node)
+        if text:
+            parts.append(text)
+        if node.name in ("h1", "h2", "h3", "h4"):
+            break
+    return " ".join(parts)
+
+
+def extract_cost_tables(html: str, builder: ClaimBuilder) -> list[Claim]:
+    """Read fee tables, where a row is genuine evidence of association.
+
+    `extract_costs` works on flattened text and deliberately refuses to pair a
+    label with a figure that merely sits near it — on a fee table that
+    proximity is an accident of layout. A table row is not an accident: the
+    row is what ties an amount to the people who pay it, so the row can be
+    read, and the row is what the excerpt shows.
+
+    Each row becomes its own claim, keyed by audience, so the EU/EEA and
+    non-EU/EEA rates coexist instead of contradicting each other.
+    """
+    soup = BeautifulSoup(html, "lxml")
+    found: list[Claim] = []
+    for table in soup.find_all("table"):
+        context = _table_context(table)
+        rows = table.find_all("tr")
+        if not rows:
+            continue
+
+        header_cells = [_cell_text(c) for c in rows[0].find_all(["th", "td"])]
+        headers = " ".join(header_cells)
+        # The table must say it is about tuition somewhere: its own headers,
+        # its caption, or the heading it sits under.
+        if not _TUITION_CONTEXT.search(f"{context} {headers}"):
+            continue
+
+        audience_col = next(
+            (i for i, h in enumerate(header_cells) if _AUDIENCE_HEADER.search(h)), None
+        )
+        year_col = next(
+            (i for i, h in enumerate(header_cells) if _YEAR_HEADER.search(h)), None
+        )
+        money_col = next(
+            (i for i, h in enumerate(header_cells) if _MONEY_HEADER.search(h)), None
+        )
+
+        for row in rows[1:]:
+            cells = [_cell_text(c) for c in row.find_all(["th", "td"])]
+            if not cells:
+                continue
+            row_text = " ".join(cells)
+            if _PER_UNIT_RATE.search(row_text):
+                # A per-credit rate is not an annual fee.
+                continue
+
+            candidates = (
+                [cells[money_col]] if money_col is not None and money_col < len(cells) else cells
+            )
+            parsed = next(
+                (p for p in (parse_money(c) for c in candidates) if p is not None), None
+            )
+            if parsed is None:
+                continue
+            amount, currency = parsed
+
+            audience = (
+                cells[audience_col]
+                if audience_col is not None and audience_col < len(cells)
+                else cells[0]
+            )
+            year = None
+            if year_col is not None and year_col < len(cells):
+                m = _ACADEMIC_YEAR_CELL.search(cells[year_col])
+                if m:
+                    year = f"{m.group(1)}/{m.group(2)[-2:]}"
+
+            found.append(
+                builder.add(
+                    ClaimType.TUITION,
+                    {"amount": amount, "currency": currency},
+                    row_text,
+                    section="Fees and costs",
+                    subject_key=audience or None,
+                    academic_year=year,
+                )
+            )
     return found
