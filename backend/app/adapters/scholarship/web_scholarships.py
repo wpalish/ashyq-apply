@@ -253,6 +253,14 @@ class WebScholarshipAdapter:
         restrictions = extract_restrictions(text)
         sch.citizenship_restrictions = [*restrictions.citizenships, *restrictions.blocs]
         sch.residency_restrictions = list(restrictions.residencies)
+        # Whether the page joins the two with 'or' decides eligibility, and
+        # it used to be extracted and then dropped, so assessment assumed
+        # 'or' for every award.
+        sch.restriction_logic = "any" if restrictions.alternatives else (
+            "all" if restrictions.citizenships and restrictions.residencies
+            else "any"
+        )
+        sch.restriction_evidence = dict(restrictions.evidence_by_restriction)
         if restrictions.any:
             builder.add(
                 ClaimType.SCHOLARSHIP_CITIZENSHIP_RESTRICTION,

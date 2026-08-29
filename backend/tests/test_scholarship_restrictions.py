@@ -145,13 +145,22 @@ class TestAssessmentHonoursResidency:
     """
 
     @staticmethod
-    def award(citizenships: list[str], residencies: list[str]):
+    def award(citizenships: list[str], residencies: list[str], logic: str = "any"):
+        """`logic` mirrors what the page said.
+
+        It used to be absent, and the assessment assumed "either route will
+        do" for every award — which turns "citizens of X resident in Y" into an
+        OR and admits an applicant who meets half of it. The CLIP page really
+        does say "either a Greek passport or Greek residence", and the
+        extractor derives "any" from it, so that is what these pass.
+        """
         from app.schemas.result import Scholarship
 
         return Scholarship(
             id="a1", name="Test Award",
             citizenship_restrictions=citizenships,
             residency_restrictions=residencies,
+            restriction_logic=logic,
         )
 
     def test_residence_alone_can_satisfy_the_award(self, profile):

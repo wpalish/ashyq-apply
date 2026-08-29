@@ -79,6 +79,15 @@ class Scholarship(Base):
     international_eligible: Tristate = "unknown"
     citizenship_restrictions: list[str] = Field(default_factory=list)
     residency_restrictions: list[str] = Field(default_factory=list)
+    #: How the page joins nationality and residency. "any" is CLIP's "either a
+    #: Greek passport or Greek residence"; "all" is "citizens of X resident in
+    #: Y". It was extracted and then dropped on the floor, so the assessment
+    #: assumed "any" for every award — which turns an AND condition into an OR
+    #: and lets an applicant through on half a requirement.
+    restriction_logic: Literal["any", "all", "unknown"] = "unknown"
+    #: restriction text -> the sentence it was read from, so each rule carries
+    #: its own proof rather than sharing the first quote found on the page.
+    restriction_evidence: dict[str, str] = Field(default_factory=dict)
     program_restrictions: list[str] = Field(default_factory=list)
     degree_applicability: Tristate = Field(
         default="unknown",

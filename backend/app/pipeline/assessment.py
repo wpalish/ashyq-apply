@@ -11,9 +11,10 @@ funding fit — are computed here and never collapsed into one number.
 
 from __future__ import annotations
 
+from app.domain.countries import country_satisfies, describe_restriction
 from app.domain.enums import ClaimType, EligibilityStatus
 from app.schemas.profile import ApplicantProfileIn
-from app.schemas.result import Tristate
+from app.schemas.result import RequirementCheck, Tristate
 
 
 def _check(requirement, published, applicant, status, explanation, hard=False):
@@ -29,49 +30,126 @@ def _check(requirement, published, applicant, status, explanation, hard=False):
     )
 
 
+def _country_checks(s, citizenship: str, residence: str) -> list:
+    """Whether the applicant's country satisfies the award's own conditions.
+
+    Each restriction is resolved by membership, not by asking whether one
+    string appears inside another — `"Germany" in "European Union"` is False,
+    which is how a German citizen came to be refused an EU-only award.
+
+    Three answers per route, and unknown is a real one: an unrecognised country
+    or a group with no agreed membership ("students from Europe") is a question
+    for the admissions office, not a refusal.
+    """
+    checks: list[RequirementCheck] = []
+    citizenship_verdict = _route_verdict(citizenship, s.citizenship_restrictions)
+    residence_verdict = _route_verdict(residence, s.residency_restrictions)
+    routes = [v for v in (citizenship_verdict, residence_verdict) if v is not _NO_ROUTE]
+
+    if not routes:
+        return checks
+
+    # How the page joins the two. "unknown" is not silently read as "either":
+    # doing that turns an AND condition into an OR and admits an applicant who
+    # meets half of it.
+    logic = getattr(s, "restriction_logic", "unknown")
+    if len(routes) < 2:
+        satisfied = routes[0]
+    elif logic == "all":
+        satisfied = _combine_all(routes)
+    elif logic == "any":
+        satisfied = _combine_any(routes)
+    else:
+        satisfied = None
+
+    named = ", ".join(
+        describe_restriction(r)
+        for r in dict.fromkeys([*s.citizenship_restrictions, *s.residency_restrictions])
+    )
+    if satisfied is True:
+        status = EligibilityStatus.MET
+        explanation = (
+            f"The applicant's country satisfies the published restriction: {named}."
+        )
+    elif satisfied is False:
+        status = EligibilityStatus.NOT_APPLICABLE
+        explanation = (
+            f"The award is restricted to {named}. An applicant holding "
+            f"{citizenship or 'an unrecorded'} citizenship and residing in "
+            f"{residence or 'an unrecorded country'} is not eligible."
+        )
+    else:
+        status = EligibilityStatus.NEEDS_OFFICIAL_CLARIFICATION
+        explanation = (
+            f"The award is restricted to {named}, and whether this applicant "
+            "satisfies it could not be decided from the page: "
+            + _why_unknown(citizenship, residence, s, logic, len(routes))
+            + " This is a question for the admissions office, not a refusal."
+        )
+
+    checks.append(
+        _check(
+            "Scholarship citizenship or residency eligibility",
+            [*s.citizenship_restrictions, *s.residency_restrictions],
+            f"{citizenship or 'unrecorded'} / {residence or 'unrecorded'}",
+            status,
+            explanation,
+        )
+    )
+    return checks
+
+
+#: A route the award does not restrict at all, as opposed to one it restricts
+#: and the applicant fails.
+_NO_ROUTE = object()
+
+
+def _route_verdict(country: str, restrictions: list[str]):
+    """True / False / None for one route, or `_NO_ROUTE` if unrestricted."""
+    if not restrictions:
+        return _NO_ROUTE
+    verdicts = [country_satisfies(country, r) for r in restrictions]
+    if any(v is True for v in verdicts):
+        return True
+    if any(v is None for v in verdicts):
+        return None  # something on the list could not be resolved
+    return False
+
+
+def _combine_any(routes) -> bool | None:
+    if any(v is True for v in routes):
+        return True
+    if any(v is None for v in routes):
+        return None
+    return False
+
+
+def _combine_all(routes) -> bool | None:
+    if any(v is False for v in routes):
+        return False
+    if any(v is None for v in routes):
+        return None
+    return True
+
+
+def _why_unknown(citizenship, residence, s, logic, route_count) -> str:
+    if not citizenship and not residence:
+        return "the applicant's citizenship and country of residence are not recorded."
+    if route_count > 1 and logic == "unknown":
+        return (
+            "the page names both a nationality and a residency condition without "
+            "saying whether either alone is enough."
+        )
+    return "the restriction names a group whose membership is not resolved here."
+
+
 def _scholarship_eligibility(s, profile: ApplicantProfileIn):
     """Check the applicant against an award's own published restrictions."""
     checks = []
     citizenship = profile.context.citizenship
     residence = profile.context.country_of_residence
     if s.citizenship_restrictions or s.residency_restrictions:
-        # Nationality and residency are separate routes into the same award,
-        # and an award naming both accepts either. TU Delft's CLIP award goes
-        # to students who "hold either a Greek passport or Greek residence": an
-        # applicant with Greek residence qualifies on residence alone, so
-        # checking citizenship by itself would wrongly exclude them.
-        by_citizenship = bool(
-            s.citizenship_restrictions
-            and citizenship
-            and citizenship.lower() in " ".join(s.citizenship_restrictions).lower()
-        )
-        by_residence = bool(
-            s.residency_restrictions
-            and residence
-            and residence.lower() in " ".join(s.residency_restrictions).lower()
-        )
-        ok = by_citizenship or by_residence
-        named = ", ".join(sorted(
-            {*s.citizenship_restrictions, *s.residency_restrictions}
-        ))
-        if ok:
-            route = "citizenship" if by_citizenship else "country of residence"
-            explanation = f"The applicant's {route} falls within the published restriction."
-        else:
-            explanation = (
-                f"The award is restricted to {named}. An applicant holding "
-                f"{citizenship or 'an unrecorded'} citizenship and residing in "
-                f"{residence or 'an unrecorded country'} is not eligible."
-            )
-        checks.append(
-            _check(
-                "Scholarship citizenship or residency eligibility",
-                [*s.citizenship_restrictions, *s.residency_restrictions],
-                f"{citizenship} / {residence}",
-                EligibilityStatus.MET if ok else EligibilityStatus.NOT_APPLICABLE,
-                explanation,
-            )
-        )
+        checks.extend(_country_checks(s, citizenship, residence))
     elif s.international_eligible == "no":
         checks.append(
             _check(

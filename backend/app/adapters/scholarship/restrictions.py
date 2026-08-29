@@ -116,6 +116,9 @@ class Restrictions:
     blocs: list[str] = field(default_factory=list)
     #: The sentence the restriction was read from, verbatim.
     evidence: str = ""
+    #: restriction -> the sentence it came from. A page can state two rules in
+    #: two sentences, and attaching the first quote to both proves neither.
+    evidence_by_restriction: dict[str, str] = field(default_factory=dict)
     #: True when the page offers alternatives ("a passport *or* residence").
     alternatives: bool = False
 
@@ -156,6 +159,7 @@ def extract_restrictions(text: str) -> Restrictions:
     blocs: list[str] = []
     evidence = ""
     alternatives = False
+    by_restriction: dict[str, str] = {}
 
     for match in _RESTRICTION_SENTENCE.finditer(text or ""):
         sentence = " ".join(match.group(0).split())
@@ -176,12 +180,21 @@ def extract_restrictions(text: str) -> Restrictions:
         if _RESIDENCE_WORD.search(sentence):
             residencies += [c for c in countries if c not in residencies]
         blocs += [b for b in found_blocs if b not in blocs]
+        for label in [*countries, *found_blocs]:
+            by_restriction.setdefault(label, sentence)
         if not evidence:
             evidence = sentence
         if re.search(r"\beither\b|\bor\b", sentence, re.IGNORECASE):
             alternatives = True
 
-    return Restrictions(citizenships, residencies, blocs, evidence, alternatives)
+    return Restrictions(
+        citizenships=citizenships,
+        residencies=residencies,
+        blocs=blocs,
+        evidence=evidence,
+        evidence_by_restriction=by_restriction,
+        alternatives=alternatives,
+    )
 
 
 def assess_applicant_eligibility(
