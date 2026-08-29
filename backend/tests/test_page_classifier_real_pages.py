@@ -47,6 +47,11 @@ SOURCE_URL = {
     "clip-scholarship":
         "https://www.tudelft.nl/en/delft-university-fund/we-support/"
         "support-innovative-education/clip-scholarship",
+    "rug-computing-science": "https://www.rug.nl/bachelors/computing-science/",
+    "rug-bachelors-alphabet": "https://www.rug.nl/bachelors/alphabet",
+    "rug-bachelors-index": "https://www.rug.nl/bachelors",
+    "aalto-computer-engineering":
+        "https://www.aalto.fi/en/study-options/computer-engineering-bachelor-of-science-and-master-of-science-technology",
 }
 
 PROGRAMME_TYPES = {PageType.PROGRAM_DETAIL, PageType.INTAKE_SPECIFIC_PROGRAM}
@@ -307,3 +312,84 @@ class TestRecruitmentIsNotAlwaysHiring:
                     title=title)
         assert classify_page(url="https://uni.edu/about/x", html=html).page_type \
             is PageType.IRRELEVANT
+
+
+class TestTheDegreeIsNotAlwaysInTheHeading:
+    """A programme page whose H1 names only the subject.
+
+    Groningen heads its computing science page "Computing Science". The degree
+    is in the browser title ("Bachelor's degree programmes"), in the first
+    subheading ("What to expect from the Bachelor's programme Computing
+    Science") and in the breadcrumb — everywhere except the H1. Requiring a
+    degree word *in the H1* rejected it as a programme, and the site's A-Z menu
+    of 43 other programmes then made it look like a catalogue.
+
+    This is how a large share of university sites are built, not a quirk.
+    """
+
+    def test_the_groningen_page_is_a_programme(self):
+        result = classify("rug-computing-science")
+        assert result.page_type in PROGRAMME_TYPES, result.signals
+        assert "Computing Science" in (result.subject or "")
+
+    def test_it_reports_the_degree_it_found(self):
+        assert classify("rug-computing-science").degree_level == "bachelor"
+
+    def test_the_signals_say_where_the_degree_came_from(self):
+        joined = " ".join(classify("rug-computing-science").signals).lower()
+        assert "degree" in joined or "bachelor" in joined
+
+    def test_the_index_it_sits_under_is_still_a_catalogue(self):
+        """The fix must not turn the listing into a programme."""
+        assert classify("rug-bachelors-index").page_type is PageType.PROGRAM_CATALOG
+
+    def test_the_a_to_z_listing_is_still_a_catalogue(self):
+        assert classify("rug-bachelors-alphabet").page_type is PageType.PROGRAM_CATALOG
+
+    def test_a_subject_heading_with_no_degree_anywhere_is_not_a_programme(self):
+        """The degree has to be somewhere on the page, not assumed."""
+        html = page(
+            "<main><h1>Computing Science</h1>"
+            "<p>Our research groups work on distributed systems and machine "
+            "learning. Contact the department for details.</p></main>",
+            title="Computing Science | Faculty of Science",
+        )
+        assert classify_page(url="https://uni.edu/faculty/computing", html=html).page_type \
+            not in PROGRAMME_TYPES
+
+
+class TestAProgrammePageThatMentionsFunding:
+    """A programme page is not a scholarship index because it links to one.
+
+    Aalto's computer engineering page carries a "Tuition fees and scholarships"
+    section, like most European programme pages aimed at international
+    applicants. The funding branch ran before the programme branch and claimed
+    it, so the one bachelor's computing programme Aalto publishes was read as a
+    list of awards and never offered to the applicant.
+    """
+
+    def test_the_aalto_page_is_a_programme(self):
+        result = classify("aalto-computer-engineering")
+        assert result.page_type in PROGRAMME_TYPES, result.signals
+
+    def test_it_names_the_programme(self):
+        assert classify("aalto-computer-engineering").subject
+
+    def test_a_real_scholarship_index_is_still_an_index(self):
+        assert classify("delft-scholarship-index").page_type is PageType.SCHOLARSHIP_INDEX
+
+    def test_a_real_award_page_is_still_an_award(self):
+        for stem in ("delft-vaneffen", "clip-scholarship"):
+            assert classify(stem).page_type is PageType.SCHOLARSHIP_AWARD
+
+    def test_a_funding_page_naming_no_programme_is_still_funding(self):
+        html = page(
+            "<main><h1>Scholarships and grants</h1>"
+            "<p>We offer a number of scholarships. Eligibility criteria and the "
+            "application deadline are listed for each award below.</p>"
+            "<a href='/scholarships/one'>Excellence Scholarship</a>"
+            "<a href='/scholarships/two'>Merit Grant</a></main>",
+            title="Scholarships and grants",
+        )
+        assert classify_page(url="https://uni.edu/scholarships", html=html).page_type \
+            not in PROGRAMME_TYPES

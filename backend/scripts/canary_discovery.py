@@ -283,6 +283,14 @@ async def run_canary(only: str | None, verbose: bool, registry_path: Path | None
         registry = [e for e in registry if only in e["homepage"]]
         if not registry:
             raise SystemExit(f"no institution in the registry matches {only!r}")
+        # Narrow what the *adapter* reads, not just what the report prints.
+        # Filtering only the report left the runner discovering the whole
+        # registry against a candidate limit of one, so `--only` measured
+        # whichever institution happened to come first and reported the
+        # requested one as NOT_ATTEMPTED.
+        narrowed = Path(tempfile.mkdtemp(prefix="canary-only-")) / "registry.json"
+        narrowed.write_text(json.dumps(registry))
+        registry_path = narrowed
 
     profile = canary_profile()
     workdir = Path(tempfile.mkdtemp(prefix="canary-"))

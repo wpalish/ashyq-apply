@@ -81,6 +81,10 @@ SUBJECT_IN_LINK_TEXT_BONUS = 12
 #: slow and heavy, so it is spent only where a static read demonstrably
 #: failed to show any programme at all.
 MAX_RENDERED_CATALOGUES = 2
+#: How many times a candidate that turns out to be a catalogue may hand back
+#: the programmes it lists. Bounds a chain of indexes that never ends in a
+#: programme.
+MAX_CATALOGUE_EXPANSIONS = 4
 #: Pages walked during the navigation fallback. Universities routinely nest
 #: "Degree programmes" -> "Bachelor programmes" -> a programme, so one hop is
 #: not enough; an unbounded walk would be a crawl.
@@ -298,6 +302,9 @@ _FUNDING_SEGMENT = re.compile(
 def score_url(url: str, category: str) -> int:
     """How strongly a URL looks like it belongs to a category. 0 means no."""
     path = (urlparse(url).path or "").lower()
+    # Exclusions first: "/library/search" ends in an index word and is still a
+    # library. Recognising the index shape before ruling the page out entirely
+    # turned every site search into a programme catalogue.
     if _URL_EXCLUSIONS.search(path) or _NOT_A_PAGE_ABOUT_STUDYING.search(path):
         return 0
     if category in (PageCategory.PROGRAM_PAGE, PageCategory.PROGRAM_CATALOG) and (
@@ -308,6 +315,12 @@ def score_url(url: str, category: str) -> int:
         # and rug.nl offered a research group's "BSc and MSc projects" page.
         # Neither is a programme, whatever else the path says.
         return 0
+    if _INDEX_SEGMENT.search(path):
+        # "/bachelors/alphabet" has a programme's shape and is a listing. It
+        # is scored as the catalogue it is, so the walk follows it rather
+        # than dropping it: Groningen's computing science degree is
+        # reachable only through that A-Z page.
+        return 5 if category == PageCategory.PROGRAM_CATALOG else 0
     return sum(weight for pattern, weight in _URL_SIGNALS[category] if re.search(pattern, path))
 
 
@@ -348,6 +361,18 @@ def degree_level_named(url: str) -> str | None:
     return None
 
 
+#: Last path segments that make a page an index of programmes rather than one
+#: of them. Universities publish an A-Z, a by-subject view and an
+#: English-taught view of the same catalogue, and Groningen's computing science
+#: degree is reachable only through the first of those. None of these words is
+#: a subject, so a real programme slug cannot be caught by them.
+_INDEX_SEGMENT = re.compile(
+    r"/(alphabet|a-?z|by-?subject|by-?faculty|by-?field|by-?language|by-?level"
+    r"|in-?english|all|list|listing|index|overview|finder|search|browse"
+    r"|[a-z-]*-(finder|search|overview|list|index)|full-?list)/?$",
+    re.IGNORECASE,
+)
+
 #: A path segment that ends with a listing word. UBC's catalogue lives at
 #: ``/applying-ubc/how-to-apply/degrees-programs/``, which scores higher as an
 #: admissions page than as a catalogue — so whether a page is worth walking for
@@ -362,7 +387,7 @@ def looks_like_catalogue(url: str) -> bool:
     path = urlparse(url).path or ""
     if _URL_EXCLUSIONS.search(path):
         return False
-    return bool(_CATALOGUE_PATH.search(path))
+    return bool(_CATALOGUE_PATH.search(path) or _INDEX_SEGMENT.search(path))
 
 
 def matches_field_text(label: str, fields: list[str]) -> bool:
@@ -727,7 +752,9 @@ class LiveDiscoveryAdapter:
         #    Finding three programmes the applicant did not ask about is not a
         #    reason to stop looking for the one they did.
         fields = list(profile.context.intended_fields)
-        await self._confirm_programs(selected, ranked, trace)
+        await self._confirm_programs(
+            selected, ranked, trace, profile=profile, domain=domain
+        )
 
         if not _satisfies_field(selected[PageCategory.PROGRAM_PAGE], fields):
             trace.used_navigation_fallback = True
@@ -735,7 +762,10 @@ class LiveDiscoveryAdapter:
             await self._navigation_fallback(entry, domain, selected, trace, profile, ranked)
             if set(selected[PageCategory.PROGRAM_PAGE]) != before:
                 # The walk proposed new candidates; they are guesses until read.
-                await self._confirm_programs(selected, ranked, trace, keep=before)
+                await self._confirm_programs(
+                    selected, ranked, trace, keep=before, profile=profile,
+                    domain=domain,
+                )
 
         trace.selected = {k: list(v) for k, v in selected.items() if v}
         self._apply(candidate, selected, profile, trace)
@@ -747,13 +777,25 @@ class LiveDiscoveryAdapter:
         ranked: dict[str, list[tuple[int, str]]],
         trace: DiscoveryTrace,
         keep: set[str] | None = None,
+        profile: ApplicantProfileIn | None = None,
+        domain: str = "",
     ) -> None:
         """Keep only candidates a read of the page confirms is a programme.
 
         Candidates are read in relevance order, so the applicant's own subject
         is checked before an unrelated programme spends the budget. ``keep``
         holds pages confirmed on an earlier pass, which are not re-fetched.
+
+        A candidate that turns out to be a catalogue hands back the programmes
+        it lists. Groningen's bachelor listing links to faculty and subject
+        sub-indexes, and reading each one, rejecting it, and discarding the
+        page spent the whole budget on indexes while the computing science
+        degree sat one link inside them. The page is already fetched and
+        classified; harvesting it costs nothing more.
         """
+        fields = list(profile.context.intended_fields) if profile else []
+        degree = str(profile.context.level) if profile else ""
+
         already = set(keep or ())
         queued = [u for u in selected[PageCategory.PROGRAM_PAGE] if u not in already]
         # Next-best candidates, so rejecting one does not mean finding nothing.
@@ -764,7 +806,9 @@ class LiveDiscoveryAdapter:
 
         confirmed: list[str] = list(already)
         checked = 0
-        for url in queued:
+        seen: set[str] = set(queued)
+        expansions = 0
+        while queued:
             if len(confirmed) >= MAX_PAGES_PER_CATEGORY:
                 break
             if checked >= MAX_PROGRAM_CANDIDATES_CHECKED:
@@ -773,6 +817,7 @@ class LiveDiscoveryAdapter:
                     "others were left unchecked rather than guessed at"
                 )
                 break
+            url = queued.pop(0)
             checked += 1
             result = await self.fetcher.get(url)
             if not result.ok:
@@ -782,13 +827,57 @@ class LiveDiscoveryAdapter:
             if page.page_type in (PageType.PROGRAM_DETAIL, PageType.INTAKE_SPECIFIC_PROGRAM):
                 confirmed.append(url)
                 trace.confirmed_programs.append((url, page.subject or "", page.page_type.value))
-            else:
-                trace.reject(url, f"reads as {page.page_type.value}, not a programme page")
+                continue
+
+            trace.reject(url, f"reads as {page.page_type.value}, not a programme page")
+            if (
+                page.page_type is PageType.PROGRAM_CATALOG
+                and expansions < MAX_CATALOGUE_EXPANSIONS
+                and domain
+            ):
+                expansions += 1
+                fresh = self._programmes_listed_on(
+                    result.text, result.final_url or url, domain, fields, degree, trace
+                )
+                added = [u for u in fresh if u not in seen]
+                seen.update(added)
+                # Best-first again, so the applicant's subject leads.
+                queued = sorted(
+                    [*queued, *added], key=lambda u: -trace.relevance.get(u, 0)
+                )
+                if added:
+                    trace.errors.append(
+                        f"{url} reads as a catalogue; followed {len(added)} "
+                        "programme links it lists"
+                    )
 
         if confirmed or selected[PageCategory.PROGRAM_PAGE]:
             # Only replace the list when something was actually checked; an
             # unreachable site keeps its leads rather than losing them silently.
             selected[PageCategory.PROGRAM_PAGE] = confirmed
+
+    def _programmes_listed_on(
+        self, html: str, base: str, domain: str,
+        fields: list[str], degree: str, trace: DiscoveryTrace,
+    ) -> list[str]:
+        """Programme links a catalogue page lists, scored for this applicant."""
+        found: list[str] = []
+        for url, label in _harvest_links(html, base, domain):
+            canonical = canonical_url(url)
+            category, score = categorise_url(canonical)
+            if category != PageCategory.PROGRAM_PAGE:
+                continue
+            if names_other_degree_level(canonical, degree):
+                continue
+            score += matches_field(canonical, fields) + matches_degree(canonical, degree)
+            if matches_field_text(label, fields):
+                score += SUBJECT_IN_LINK_TEXT_BONUS
+                trace.kept_by_link_text.append((canonical, label[:80]))
+            if score <= 0:
+                continue
+            trace.relevance[canonical] = max(trace.relevance.get(canonical, 0), score)
+            found.append(canonical)
+        return found
 
     def _apply(
         self, candidate: Candidate, selected: dict[str, list[str]],

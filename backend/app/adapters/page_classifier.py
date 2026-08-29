@@ -100,8 +100,13 @@ _CATALOG = re.compile(
 #: A heading that is a plural category is a listing, never one programme or one
 #: award. "Bachelor's programmes" is a catalogue; "BSc Computer Science" is not.
 _PLURAL_PROGRAM_HEADING = re.compile(
-    r"^\s*((our|all|browse|find|search|list of|overview of)\s+)?"
+    r"^\s*((our|all|available|browse|find|search|list of|overview of|explore)\s+)?"
     r"((bachelor'?s?|master'?s?|undergraduate|postgraduate|graduate|phd|doctoral)\s+)?"
+    # One qualifier between the level and the listing word. "Bachelor's degree
+    # programmes" and "All study programmes" are how a great many universities
+    # head a listing, and requiring the two words to be adjacent missed them —
+    # so those pages fell through to UNKNOWN and their entries were never read.
+    r"((degree|study|taught|research|academic|full-?time|part-?time)\s+)?"
     r"(programmes?|programs?|courses?|degrees?|studies)\s*$",
     re.IGNORECASE,
 )
@@ -163,6 +168,16 @@ _DOCUMENTS = re.compile(
     r"|what to submit|upload(?:ing)? documents)\b",
     re.IGNORECASE,
 )
+#: Sections a programme page has and a listing does not. A catalogue links to
+#: curricula; a programme page contains one.
+_PROGRAMME_DETAIL_SECTION = re.compile(
+    r"\b(curriculum|programme structure|program structure|course structure"
+    r"|what you will learn|what to expect from the|study programme|studieprogramma"
+    r"|entry requirements|admission requirements|after (?:your |the )?stud(?:y|ies)"
+    r"|career prospects|degree awarded|credits?|ects|duration of (?:the )?programme)\b",
+    re.IGNORECASE,
+)
+
 #: A page has to say something substantive about an award to be an award page.
 _AWARD_SIGNALS: tuple[tuple[str, re.Pattern[str]], ...] = (
     ("amount", re.compile(r"\b(amount|value|worth|covers?|waiver|per year|per month|% of tuition)\b", re.I)),
@@ -311,7 +326,17 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
         )
 
     # --- funding family ---------------------------------------------------
-    if _SCHOLARSHIP_WORD.search(low_head) or "scholarship" in path or "financial-aid" in path:
+    # A programme page aimed at international applicants almost always carries
+    # a "Tuition fees and scholarships" section. Claiming every page whose
+    # headings mention funding read Aalto's only bachelor's computing programme
+    # as a list of awards, so a page that names one programme in its own
+    # heading is left to the programme branch below.
+    names_one_programme = bool(_program_name(identity)) and not _PLURAL_FUNDING_HEADING.match(
+        identity
+    )
+    if not names_one_programme and (
+        _SCHOLARSHIP_WORD.search(low_head) or "scholarship" in path or "financial-aid" in path
+    ):
         if _FAQ.search(low_head):
             return PageClassification(PageType.SCHOLARSHIP_FAQ, 0.9, ["FAQ markers"], title)
 
@@ -358,12 +383,32 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
     # first classified BSc Computer Science and Engineering as a general
     # admissions page.
     subject = _program_name(identity)
-    degree = _degree_level(f"{identity} {body[:2500]}")
+    # Nearest-first. The body of a programme page carries the site's menu of
+    # other programmes, so scanning it as one blob returned whichever level
+    # appeared earliest: Groningen's bachelor page read as a master's because
+    # "master" appears in its navigation before "bachelor" appears in its text.
+    degree = _degree_nearest(identity, title, headings, body)
     language = _language(body)
     year = _academic_year(body)
 
     program_links = _program_link_count(soup, url) if soup else 0
     plural_heading = bool(_PLURAL_PROGRAM_HEADING.match(identity))
+
+    # The subject may be in the heading and the degree somewhere else. Look for
+    # the level in the title and the subheadings too, but only for a page whose
+    # heading names a subject and which carries the sections a programme page
+    # has: that keeps a faculty or department page, which names a subject and
+    # nothing else, from being promoted.
+    detail_sections = len(set(_PROGRAMME_DETAIL_SECTION.findall(f"{head} {body[:6000]}")))
+    if subject is None and _names_a_subject(identity) and detail_sections >= 2:
+        level_elsewhere = _degree_level(f"{title} {' '.join(headings[:6])}")
+        if level_elsewhere:
+            subject = identity
+            degree = degree or level_elsewhere
+            signals.append(
+                f"the heading names a subject and the page states the {level_elsewhere} "
+                f"level elsewhere, with {detail_sections} programme sections"
+            )
     # `_CATALOG` is matched against each heading on its own. Run against the
     # headings joined into one string its `.*` bridged unrelated headings:
     # "…our three campuses" and a later "explore programs" combined into a
@@ -395,7 +440,17 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
     # construction: no single programme needs to link to a dozen siblings. This
     # outranks a programme-shaped heading, so a catalogue titled after one of
     # its entries cannot present itself as that programme.
-    if program_links >= MANY_PROGRAMME_LINKS:
+    #
+    # One exception, and it is narrow: a page that names one programme *and*
+    # carries that programme's own curriculum sections is that programme, even
+    # under a site-wide A-Z menu. Groningen renders 43 other programmes into
+    # every programme page's navigation. A catalogue does not carry a
+    # curriculum — it links to them — so the sections are what separate the
+    # two, not the link count.
+    own_programme_page = bool(
+        subject and not plural_heading and detail_sections >= MIN_DETAIL_SECTIONS
+    )
+    if program_links >= MANY_PROGRAMME_LINKS and not own_programme_page:
         return PageClassification(
             PageType.PROGRAM_CATALOG, 0.8,
             [f"links to {program_links} distinct other programmes"], title,
@@ -493,6 +548,22 @@ def _text(soup: BeautifulSoup) -> str:
     return html_to_text(str(soup))
 
 
+def _degree_nearest(
+    identity: str, title: str, headings: list[str], body: str
+) -> str | None:
+    """The degree level, taken from the most specific place that states it.
+
+    The page's own heading is the most reliable, then its browser title, then
+    its subheadings, and only then the body — which on a university site is
+    full of links to programmes at other levels.
+    """
+    for source in (identity, title, " ".join(headings[:6]), body[:2500]):
+        level = _degree_level(source)
+        if level:
+            return level
+    return None
+
+
 def _degree_level(text: str) -> str | None:
     low = text.lower()
     for pattern, level in _DEGREE_WORDS:
@@ -516,13 +587,43 @@ def _academic_year(text: str) -> str | None:
     return f"{m.group(1)}/{end[-2:]}"
 
 
+#: Headings that label a section of the site rather than name this page. Aalto
+#: heads every programme page "Study options" and puts the programme's name in
+#: the browser title and the first content heading; taking the h1 literally
+#: gave every one of its programmes the same identity.
+_SECTION_LABEL_HEADING = re.compile(
+    r"^\s*(study options?|study|studies|education|programmes?|programs?|admissions?"
+    r"|apply|application|home|menu|search|overview|courses?|degrees?"
+    r"|for (?:prospective )?students?|international students?)\s*$",
+    re.IGNORECASE,
+)
+
+
 def _identity(soup: BeautifulSoup | None, title: str) -> str:
-    """What the page says it is about: its h1, else the title before the site suffix."""
-    if soup is not None:
-        h1 = soup.find("h1")
-        if h1:
-            return " ".join(h1.get_text(" ", strip=True).split())
-    return title.split("|")[0].strip()
+    """What the page says it is about.
+
+    Its h1, unless that is a section label — then the browser title before the
+    site suffix, and failing that the first content heading that says
+    something. A page whose only identity is "Study options" is telling us
+    where it sits, not what it is.
+    """
+    from_title = title.split("|")[0].strip()
+    if soup is None:
+        return from_title
+
+    h1 = soup.find("h1")
+    heading = " ".join(h1.get_text(" ", strip=True).split()) if h1 else ""
+    if heading and not _SECTION_LABEL_HEADING.match(heading):
+        return heading
+
+    if from_title and not _SECTION_LABEL_HEADING.match(from_title):
+        return from_title
+
+    for other in soup.find_all(["h1", "h2"])[:4]:
+        text = " ".join(other.get_text(" ", strip=True).split())
+        if text and not _SECTION_LABEL_HEADING.match(text):
+            return text
+    return heading or from_title
 
 
 #: Words that name a level rather than a subject, stripped when testing
@@ -544,6 +645,31 @@ _NOT_A_PROGRAMME_NOUN = re.compile(
     r"|supervisors?|staff|contact|week|fair|webklas\w*|prospectus)\b",
     re.IGNORECASE,
 )
+
+
+def _names_a_subject(identity: str) -> bool:
+    """Whether a heading names a subject at all, level words removed.
+
+    Split out of `_program_name` because the subject and the degree can be
+    stated in different places: Groningen heads its computing science page
+    "Computing Science" and puts "Bachelor's programme" in the title and the
+    first subheading. Requiring both in the H1 rejected a real programme page.
+    """
+    name = (identity or "").strip()
+    if not name or len(name) > 120:
+        return False
+    if _PLURAL_PROGRAM_HEADING.match(name):
+        return False
+    if name.endswith("?") or re.match(
+        r"^(check|how|what|apply|find|browse|search)\b", name, re.I
+    ):
+        return False
+    if _NOT_A_PROGRAMME_NOUN.search(name):
+        return False
+    if _SECTION_LABEL_HEADING.match(name):
+        return False
+    without_level = _LEVEL_WORDS_ONLY.sub(" ", name)
+    return len(re.sub(r"[^a-z]+", "", without_level.lower())) >= 4
 
 
 def _program_name(identity: str) -> str | None:
@@ -600,6 +726,9 @@ def _award_link_count(soup: BeautifulSoup | None) -> int:
 #: heading says. Measured against real pages: TU Delft's bachelor catalogue
 #: links to 14, while its individual programme pages link to 0-8.
 MANY_PROGRAMME_LINKS = 12
+#: Programme-detail sections a page must carry before its own identity is
+#: allowed to outweigh a site-wide menu of other programmes.
+MIN_DETAIL_SECTIONS = 3
 
 _PROGRAM_HREF = re.compile(
     r"/(bsc|msc|ba|ma|bachelor|master|programme|program|course)s?/", re.IGNORECASE
