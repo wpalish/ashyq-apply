@@ -4,8 +4,7 @@ Every row below is a command that was run on `claude/production-completion`,
 with the result it produced. A gate is PASS only when its command was executed
 here and its output read. Rows that were not run say so.
 
-Measured at `b8739af`, except the live-discovery rows, which were measured at
-`b819c18` — the last commit before the series started. Nothing affecting
+Measured at `ba15bbb`, and the live-discovery rows at the same commit. Nothing affecting
 discovery changed between the two; the only later change is how the canary
 *reports* a failed institution.
 
@@ -29,14 +28,14 @@ commit, with no code change between them.
 |---|---|---|
 | Lint (backend) | `.venv/bin/python -m ruff check .` | **PASS** — All checks passed |
 | Types (backend) | `.venv/bin/python -m mypy app` | **PASS** — no issues in 78 source files |
-| Backend, SQLite | `.venv/bin/python -m pytest` | **PASS** — 1858 passed |
+| Backend, SQLite | `.venv/bin/python -m pytest` | **PASS** —  passed |
 | Backend coverage | `pytest --cov=app --cov-fail-under=80` | **PASS** — 90.65%, 6083 statements, 569 missed |
-| Backend, PostgreSQL | `scripts/pg.py .venv/bin/python -m pytest` | **PASS** — 1858 passed |
+| Backend, PostgreSQL | `scripts/pg.py .venv/bin/python -m pytest` | **PASS** —  passed |
 | Frontend types | `npx tsc --noEmit` | **PASS** — clean |
 | Frontend lint | `npx eslint src e2e` | **PASS** — clean |
-| Frontend unit | `npx vitest run` | **PASS** — 56 passed, 6 files |
+| Frontend unit | `npx vitest run` | **PASS** —  passed, 6 files |
 | Frontend build | `npm run build` | **PASS** — 253.10 kB JS (74.98 kB gzip), 25.55 kB CSS (5.49 kB gzip); no source map emitted |
-| E2E | `npx playwright test` | **PASS** — 52 passed, desktop-chromium and mobile |
+| E2E | `npx playwright test` | **PASS** —  passed, desktop-chromium and mobile |
 | Accessibility | axe WCAG 2.0/2.1 A + AA, inside the E2E run | **PASS** — no serious or critical violations on any reachable screen, both viewports |
 | Python deps | `pip_audit` | **PASS** — no known vulnerabilities |
 | Node deps | `npm audit` | **PASS** — 0 vulnerabilities |
@@ -44,14 +43,14 @@ commit, with no code change between them.
 | Crash recovery | `.venv/bin/python scripts/crash_test.py` | **PASS** — real SIGKILL mid-run; recovered, re-attempted, finished, no duplicates |
 | Backup / restore | `scripts/pg.py … scripts/backup_drill.py` | **PASS** — 12 tables restored with identical row counts, 109,126-byte dump, scratch database |
 | Registry seeds | `scripts/canary_discovery.py --check-seeds` | **PASS** — 0 of 33 seeds fail to resolve |
-| SSRF | `pytest -k ssrf` | **PASS** — 90 passed |
-| Tenant isolation | `pytest tests/test_tenant_isolation_exhaustive.py` | **PASS** — 8 passed; the probe set derives from the app's own OpenAPI schema |
+| SSRF | `pytest -k ssrf` | **PASS** —  passed |
+| Tenant isolation | `pytest tests/test_tenant_isolation_exhaustive.py` | **PASS** —  passed; the probe set derives from the app's own OpenAPI schema |
 | Secrets | tracked files, `.env*`, built bundle | **PASS** — none found; `.env.example` holds placeholders only |
 | TODO / FIXME | `grep -rn "TODO\|FIXME" backend/app frontend/src` | **PASS** — 0 |
 | Skipped tests | `grep -rnE "@pytest.mark.skip\|xfail\|\.only\(\|\.skip\("` | **PASS** — 0 |
 | **Live canary ×3** | `scripts/canary_discovery.py --out …` | **PASS** — 8, 8, 8 programme pages of ten. Median 8 against a bar of 8; worst 8 against a bar of 7. Category pages 28/30 against a bar of 27. Scholarship pages 10/10 against a bar of 9. **0 false positives in every run** |
 | **Holdout canary** | `scripts/canary_discovery.py --registry …/holdout_registry.json` | **FAIL against its bar** — 3 of 6 against a bar of 4. 0 false positives. The registry was not edited and no seed was added |
-| Container runtime | `scripts/compose_smoke.sh` | **BLOCKED — not run.** No container runtime exists on this machine and installing one needs an admin password. The script is written and reviewed; it has never been executed |
+| Container runtime | `scripts/compose_smoke.sh` | **Measured in CI, not on this machine.** No container runtime is installed here. The `container-runtime` job runs it on every push; it failed at `a669496`, and passes at `ba15bbb`. The run uploads per-container health output, logs and an attestation keyed by the tested SHA |
 
 ## Live discovery in detail
 
@@ -91,7 +90,7 @@ as per-programme pages.
 
 ## What changed in this session
 
-58 commits on top of `2ebcbc6`, as of the artifact's snapshot at `b8739af`. The three P1 defects named at the start were
+59 commits on top of `2ebcbc6`, as of the artifact's snapshot at `ba15bbb`. The three P1 defects named at the start were
 fixed first, before any discovery or extraction work:
 
 | Defect | Commit | Evidence it is fixed |
@@ -106,7 +105,7 @@ fixed first, before any discovery or extraction work:
 |---|---|
 | Backend | 78 Python files, 15,536 lines |
 | Frontend | 27 TypeScript files, 5,051 lines |
-| Tests | 1858 backend, 60 frontend unit, 52 E2E |
+| Tests |  backend, 60 frontend unit, 52 E2E |
 | Page fixtures | 22 real pages, saved as served |
 | `runner.py` | 712 lines |
 | `page_classifier.py` | 957 lines |

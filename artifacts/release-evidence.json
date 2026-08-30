@@ -1,7 +1,7 @@
 {
   "base_commit": "2ebcbc6",
   "branch": "claude/production-completion",
-  "commits_since_base": 58,
+  "commits_since_base": 59,
   "counts": {
     "backend_tests": 1858,
     "frontend_tests": 60
@@ -20,16 +20,16 @@
     },
     "backend_tests_postgres": {
       "command": "/Users/wpalish/projects/unimatch/backend/.venv/bin/python /Users/wpalish/projects/unimatch/backend/scripts/pg.py /Users/wpalish/projects/unimatch/backend/.venv/bin/python -m pytest",
-      "detail": "1858 passed, 1 warning in 41.19s",
+      "detail": "1858 passed, 1 skipped, 1 warning in 40.88s",
       "exit_code": 0,
-      "output_tail": "........................................................................ [ 34%]\n........................................................................ [ 38%]\n........................................................................ [ 42%]\n........................................................................ [ 46%]\n........................................................................ [ 50%]\n........................................................................ [ 54%]\n........................................................................ [ 58%]\n........................................................................ [ 62%]\n........................................................................ [ 65%]\n........................................................................ [ 69%]\n........................................................................ [ 73%]\n........................................................................ [ 77%]\n........................................................................ [ 81%]\n........................................................................ [ 85%]\n........................................................................ [ 89%]\n........................................................................ [ 93%]\n........................................................................ [ 96%]\n..........................................................               [100%]\n=============================== warnings summary ===============================\n.venv/lib/python3.12/site-packages/fastapi/testclient.py:1\n  /Users/wpalish/projects/unimatch/backend/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.\n    from starlette.testclient import TestClient as TestClient  # noqa\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n1858 passed, 1 warning in 41.19s",
+      "output_tail": "........................................................................ [ 34%]\n........................................................................ [ 38%]\n........................................................................ [ 42%]\n........................................................................ [ 46%]\n........................................................................ [ 50%]\n........................................................................ [ 54%]\n........................................................................ [ 58%]\n........................................................................ [ 61%]\n........................................................................ [ 65%]\n........................................................................ [ 69%]\n........................................................................ [ 73%]\n........................................................................ [ 77%]\n........................................................................ [ 81%]\n........................................................................ [ 85%]\n........................................................................ [ 89%]\n........................................................................ [ 92%]\n........................................................................ [ 96%]\n...........................................................              [100%]\n=============================== warnings summary ===============================\n.venv/lib/python3.12/site-packages/fastapi/testclient.py:1\n  /Users/wpalish/projects/unimatch/backend/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.\n    from starlette.testclient import TestClient as TestClient  # noqa\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n1858 passed, 1 skipped, 1 warning in 40.88s",
       "result": "pass"
     },
     "backend_tests_sqlite": {
       "command": "/Users/wpalish/projects/unimatch/backend/.venv/bin/python -m pytest",
-      "detail": "1858 passed, 1 warning in 40.98s",
+      "detail": "1858 passed, 1 skipped, 1 warning in 40.55s",
       "exit_code": 0,
-      "output_tail": "........................................................................ [ 34%]\n........................................................................ [ 38%]\n........................................................................ [ 42%]\n........................................................................ [ 46%]\n........................................................................ [ 50%]\n........................................................................ [ 54%]\n........................................................................ [ 58%]\n........................................................................ [ 62%]\n........................................................................ [ 65%]\n........................................................................ [ 69%]\n........................................................................ [ 73%]\n........................................................................ [ 77%]\n........................................................................ [ 81%]\n........................................................................ [ 85%]\n........................................................................ [ 89%]\n........................................................................ [ 93%]\n........................................................................ [ 96%]\n..........................................................               [100%]\n=============================== warnings summary ===============================\n.venv/lib/python3.12/site-packages/fastapi/testclient.py:1\n  /Users/wpalish/projects/unimatch/backend/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.\n    from starlette.testclient import TestClient as TestClient  # noqa\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n1858 passed, 1 warning in 40.98s",
+      "output_tail": "........................................................................ [ 34%]\n........................................................................ [ 38%]\n........................................................................ [ 42%]\n........................................................................ [ 46%]\n........................................................................ [ 50%]\n........................................................................ [ 54%]\n........................................................................ [ 58%]\n........................................................................ [ 61%]\n........................................................................ [ 65%]\n........................................................................ [ 69%]\n........................................................................ [ 73%]\n........................................................................ [ 77%]\n........................................................................ [ 81%]\n........................................................................ [ 85%]\n........................................................................ [ 89%]\n........................................................................ [ 92%]\n........................................................................ [ 96%]\n...........................................................              [100%]\n=============================== warnings summary ===============================\n.venv/lib/python3.12/site-packages/fastapi/testclient.py:1\n  /Users/wpalish/projects/unimatch/backend/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.\n    from starlette.testclient import TestClient as TestClient  # noqa\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n1858 passed, 1 skipped, 1 warning in 40.55s",
       "result": "pass"
     },
     "backend_types": {
@@ -40,23 +40,25 @@
       "result": "pass"
     },
     "container_runtime": {
+      "attested_sha": "ba15bbbcc24765643ff27ba20614e258ae5d05e3",
       "command": "./scripts/compose_smoke.sh",
-      "detail": "no container runtime found on this machine (looked for docker, podman, nerdctl, finch); this gate is measured by the container-runtime CI job",
-      "exit_code": null,
-      "result": "not_run"
+      "detail": "measured by CI: https://github.com/wpalish/ashyq-apply/actions/runs/33286698625/job/99191009003",
+      "exit_code": 0,
+      "measured_by": "github-actions",
+      "result": "pass"
     },
     "crash_recovery": {
       "command": "/Users/wpalish/projects/unimatch/backend/.venv/bin/python /Users/wpalish/projects/unimatch/backend/scripts/crash_test.py",
       "detail": "INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> b312b741919d, Stamp every durable job with the payload contract it was written against.",
       "exit_code": 0,
-      "output_tail": "using a throwaway database at /var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/crash-test-v_nfiau2\ndatabase migrated  lease=5s\nenqueued job e39429c0 for run d4df1e56\nworker A pid 64081 started\nworker A SIGKILLed during funding_discovery, with 12 results already written\n  immediately after: job=running worker=iMac-Aliser.local:64081 run=funding_discovery results=12\nworker B pid 64085 started after the lease expired\n\n  job    : succeeded  attempts=2/3  worker=None\n  run    : awaiting_user_decision  recovery_count=0\n  results: 12  unique=12  duplicates=0\n  claims : 99\n\n  PASS: recovered after SIGKILL, re-attempted, finished, no duplicates\nINFO  [alembic.runtime.migration] Context impl SQLiteImpl.\nINFO  [alembic.runtime.migration] Will assume non-transactional DDL.\nINFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.\nINFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases\nINFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> b312b741919d, Stamp every durable job with the payload contract it was written against.",
+      "output_tail": "using a throwaway database at /var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/crash-test-m2ye4tfb\ndatabase migrated  lease=5s\nenqueued job da4ce530 for run f005fc26\nworker A pid 72807 started\nworker A SIGKILLed during funding_discovery, with 12 results already written\n  immediately after: job=running worker=iMac-Aliser.local:72807 run=funding_discovery results=12\nworker B pid 72811 started after the lease expired\n\n  job    : succeeded  attempts=2/3  worker=None\n  run    : awaiting_user_decision  recovery_count=0\n  results: 12  unique=12  duplicates=0\n  claims : 120\n\n  PASS: recovered after SIGKILL, re-attempted, finished, no duplicates\nINFO  [alembic.runtime.migration] Context impl SQLiteImpl.\nINFO  [alembic.runtime.migration] Will assume non-transactional DDL.\nINFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.\nINFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases\nINFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> b312b741919d, Stamp every durable job with the payload contract it was written against.",
       "result": "pass"
     },
     "frontend_build": {
       "command": "npm run build",
-      "detail": "\u2713 built in 322ms",
+      "detail": "\u2713 built in 326ms",
       "exit_code": 0,
-      "output_tail": "> unimatch-frontend@0.1.0 build\n> tsc -b && vite build\n\nvite v6.4.3 building for production...\ntransforming...\n\u2713 45 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                   0.95 kB \u2502 gzip:  0.51 kB\ndist/assets/index-KDnhGUA9.css   25.55 kB \u2502 gzip:  5.49 kB\ndist/assets/index-C9Fdvl7P.js   254.24 kB \u2502 gzip: 75.44 kB\n\u2713 built in 322ms",
+      "output_tail": "> unimatch-frontend@0.1.0 build\n> tsc -b && vite build\n\nvite v6.4.3 building for production...\ntransforming...\n\u2713 45 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                   0.95 kB \u2502 gzip:  0.51 kB\ndist/assets/index-KDnhGUA9.css   25.55 kB \u2502 gzip:  5.49 kB\ndist/assets/index-C9Fdvl7P.js   254.24 kB \u2502 gzip: 75.44 kB\n\u2713 built in 326ms",
       "result": "pass"
     },
     "frontend_lint": {
@@ -68,9 +70,9 @@
     },
     "frontend_tests": {
       "command": "npx vitest run",
-      "detail": "   Duration  758ms (transform 154ms, setup 480ms, collect 388ms, tests 201ms, environment 2.15s, prepare 452ms)",
+      "detail": "   Duration  671ms (transform 161ms, setup 307ms, collect 401ms, tests 204ms, environment 1.77s, prepare 393ms)",
       "exit_code": 0,
-      "output_tail": "RUN  v3.2.7 /Users/wpalish/projects/unimatch/frontend\n\n \u2713 src/lib/funding-coverage.test.ts (4 tests) 2ms\n \u2713 src/lib/immutable.test.ts (11 tests) 5ms\n \u2713 src/lib/money-conversion.test.ts (3 tests) 17ms\n \u2713 src/lib/format.test.ts (21 tests) 24ms\n \u2713 src/screens/documents-unknown.test.tsx (3 tests) 2ms\n \u2713 src/components/primitives.test.tsx (10 tests) 53ms\n \u2713 src/lib/store.test.tsx (8 tests) 99ms\n\n Test Files  7 passed (7)\n      Tests  60 passed (60)\n   Start at  06:51:51\n   Duration  758ms (transform 154ms, setup 480ms, collect 388ms, tests 201ms, environment 2.15s, prepare 452ms)",
+      "output_tail": "RUN  v3.2.7 /Users/wpalish/projects/unimatch/frontend\n\n \u2713 src/lib/funding-coverage.test.ts (4 tests) 4ms\n \u2713 src/lib/immutable.test.ts (11 tests) 3ms\n \u2713 src/lib/money-conversion.test.ts (3 tests) 17ms\n \u2713 src/lib/format.test.ts (21 tests) 21ms\n \u2713 src/screens/documents-unknown.test.tsx (3 tests) 1ms\n \u2713 src/components/primitives.test.tsx (10 tests) 61ms\n \u2713 src/lib/store.test.tsx (8 tests) 97ms\n\n Test Files  7 passed (7)\n      Tests  60 passed (60)\n   Start at  07:58:18\n   Duration  671ms (transform 161ms, setup 307ms, collect 401ms, tests 204ms, environment 1.77s, prepare 393ms)",
       "result": "pass"
     },
     "frontend_types": {
@@ -95,21 +97,21 @@
       "result": "pass"
     }
   },
-  "generated_at": "2026-08-30T01:51:53+00:00",
-  "head": "b8739af9bf87789bcdc3df7acc359158659167aa",
+  "generated_at": "2026-08-30T02:58:20+00:00",
+  "head": "ba15bbbcc24765643ff27ba20614e258ae5d05e3",
   "live_discovery": {
     "holdout": {
       "false_positives": 0,
       "institutions": 6,
       "programme_pages": 3
     },
-    "measured_at_commit": "b819c18",
+    "measured_at_commit": "ba15bbb",
     "median_programme_pages": 8,
     "runs": [
       {
         "claims": 51,
         "false_positives": 0,
-        "file": "canary-2026-08-29.json",
+        "file": "canary-2026-08-30.json",
         "institutions": 10,
         "mean_completeness": 0.056,
         "programme_pages": 8,
@@ -118,7 +120,7 @@
       {
         "claims": 51,
         "false_positives": 0,
-        "file": "canary-2026-08-29.json",
+        "file": "canary-2026-08-30.json",
         "institutions": 10,
         "mean_completeness": 0.056,
         "programme_pages": 8,
@@ -127,7 +129,7 @@
       {
         "claims": 51,
         "false_positives": 0,
-        "file": "canary-2026-08-29.json",
+        "file": "canary-2026-08-30.json",
         "institutions": 10,
         "mean_completeness": 0.056,
         "programme_pages": 8,
@@ -138,8 +140,10 @@
   },
   "open_gates": {
     "failing": [],
-    "not_run": [
-      "container_runtime"
+    "not_run": [],
+    "product_thresholds": [
+      "holdout programme pages 3/6 against a bar of 4",
+      "decision-grade extraction completeness 5.6% against a bar of 70%"
     ]
   },
   "verdict": "NOT READY",

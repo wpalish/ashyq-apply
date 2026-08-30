@@ -47,6 +47,13 @@ ROOT = BACKEND.parent
 ARTIFACT = ROOT / "artifacts" / "release-evidence.json"
 BASE_COMMIT = "2ebcbc6"
 
+#: Product thresholds, stated here rather than in prose so the verdict is
+#: computed against them. Set before the results were seen; changing one after
+#: reading a number is how a bar stops meaning anything.
+HOLDOUT_PROGRAMME_PAGES_BAR = 4
+MEDIAN_PROGRAMME_PAGES_BAR = 8
+EXTRACTION_COMPLETENESS_BAR = 0.70
+
 
 def run(command: list[str], cwd: Path = BACKEND, timeout: int = 1800) -> dict[str, Any]:
     """Run a gate and record what it actually did."""
@@ -180,6 +187,17 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--canary", type=Path, help="directory holding canary run output")
     parser.add_argument("--out", type=Path, default=ARTIFACT)
+    parser.add_argument(
+        "--container-attestation",
+        type=Path,
+        help=(
+            "JSON recording what CI observed for the container gate. This "
+            "machine has no container runtime, so the gate cannot be measured "
+            "here; the attestation carries the SHA that was tested, the run "
+            "URL and the conclusion, and is only honoured when its SHA matches "
+            "the commit this artifact describes."
+        ),
+    )
     args = parser.parse_args()
 
     py = str(BACKEND / ".venv" / "bin" / "python")
@@ -208,6 +226,23 @@ def main() -> int:
     # runtime exists, and otherwise records that it could not, naming what it
     # looked for.
     gates["container_runtime"] = container_gate()
+    if args.container_attestation and args.container_attestation.exists():
+        attested = json.loads(args.container_attestation.read_text())
+        head = git("rev-parse", "HEAD")
+        if attested.get("sha") == head:
+            gates["container_runtime"] = {
+                "command": attested.get("command", "./scripts/compose_smoke.sh"),
+                "exit_code": 0 if attested.get("result") == "success" else 1,
+                "result": "pass" if attested.get("result") == "success" else "fail",
+                "detail": f"measured by CI: {attested.get('run_url', 'unknown run')}",
+                "attested_sha": attested["sha"],
+                "measured_by": "github-actions",
+            }
+        else:
+            gates["container_runtime"]["detail"] += (
+                f"; an attestation was supplied for {str(attested.get('sha'))[:7]}, "
+                f"which is not this commit ({head[:7]})"
+            )
 
     artifact: dict[str, Any] = {
         "generated_at": datetime.now(UTC).isoformat(timespec="seconds"),
@@ -232,10 +267,49 @@ def main() -> int:
 
     failing = sorted(k for k, v in gates.items() if v["result"] == "fail")
     not_run = sorted(k for k, v in gates.items() if v["result"] == "not_run")
-    artifact["open_gates"] = {"failing": failing, "not_run": not_run}
-    # A verdict computed from the gates, so it cannot drift from them. READY is
-    # not something a document gets to assert on its own.
-    artifact["verdict"] = "READY" if not failing and not not_run else "NOT READY"
+
+    # Product thresholds, which no amount of green technical gates substitutes
+    # for. A release that builds, tests and deploys perfectly and cannot answer
+    # an applicant's questions is not ready; it is only shippable.
+    product: list[str] = []
+    live = artifact.get("live_discovery")
+    if live:
+        holdout = live.get("holdout") or {}
+        found, total = holdout.get("programme_pages"), holdout.get("institutions")
+        if found is not None and found < HOLDOUT_PROGRAMME_PAGES_BAR:
+            product.append(
+                f"holdout programme pages {found}/{total} against a bar of "
+                f"{HOLDOUT_PROGRAMME_PAGES_BAR}"
+            )
+        median = live.get("median_programme_pages")
+        if median is not None and median < MEDIAN_PROGRAMME_PAGES_BAR:
+            product.append(
+                f"median programme pages {median} against a bar of "
+                f"{MEDIAN_PROGRAMME_PAGES_BAR}"
+            )
+        completeness = [r["mean_completeness"] for r in live.get("runs", [])]
+        if completeness:
+            mean = sum(completeness) / len(completeness)
+            if mean < EXTRACTION_COMPLETENESS_BAR:
+                product.append(
+                    f"decision-grade extraction completeness {mean:.1%} against "
+                    f"a bar of {EXTRACTION_COMPLETENESS_BAR:.0%}"
+                )
+        if any(r["false_positives"] for r in live.get("runs", [])):
+            product.append("a zero-tolerance false positive was recorded")
+    else:
+        product.append("no live discovery measurement was supplied")
+
+    artifact["open_gates"] = {
+        "failing": failing,
+        "not_run": not_run,
+        "product_thresholds": product,
+    }
+    # Computed, never asserted. READY is not something a document gets to
+    # claim on its own, and technical gates alone do not earn it.
+    artifact["verdict"] = (
+        "READY" if not failing and not not_run and not product else "NOT READY"
+    )
 
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(artifact, indent=2, sort_keys=True) + "\n")
@@ -245,6 +319,8 @@ def main() -> int:
         print(f"  failing: {', '.join(failing)}")
     if not_run:
         print(f"  not run: {', '.join(not_run)}")
+    for item in product:
+        print(f"  product: {item}")
     return 0
 
 

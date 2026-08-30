@@ -7,10 +7,13 @@ the release report, not "implemented".
 **Current verdict: NOT READY, NOT DEPLOYED.** Two gates are open, both named
 below. Verified on 2026-08-29 on `claude/production-completion` at `0af7daa`.
 
-The two open gates are **28 (holdout recall, 3/6 against a bar of 4)** and
-**22 (the container stack, never executed because no container runtime exists
-on this machine)**. Every other gate passes, including the main live canary,
-which this cycle moved from 4/10 to a measured 8, 8, 8 across three runs.
+Gate **22 (the container stack) now passes** — measured by CI at `ba15bbb`,
+having genuinely failed first at `a669496`.
+
+The open gate is **28: holdout recall, 3/6 against a bar of 4**. The main live
+canary meets every bar it has (median 8, worst 8, category 28/30, scholarship
+10/10, zero false positives), and the product thresholds for decision-grade
+extraction — 5.6% mean completeness against 25 questions — are not met either.
 
 Two gates changed status *downwards* this cycle, both because they were being
 measured against the wrong thing:
@@ -46,7 +49,7 @@ measured against the wrong thing:
 | 19 | Approve / reject / maybe and document collection work | **PASS** | Covered by E2E |
 | 20 | CSV / JSON / XLSX exports carry provenance and data origin | **PASS** | 38 columns incl. source links, last-verified, data origin |
 | 21 | Accessibility audit passed | **PASS** | axe WCAG A/AA scans every reachable workflow screen on desktop and mobile; no horizontal overflow at 320, 375, 768, 1024, 1440 or 1920. A manual screen-reader pass with a real assistive technology has still not been done |
-| 22 | Docker Compose brings up a production-like stack | **BLOCKED** | The stack is written and CI now has a `container-runtime` job running `scripts/compose_smoke.sh`, which starts it and checks health, the one-shot migration, a real run picked up by the worker, worker-kill recovery with no duplicate results, API restart, tenant isolation, security headers and a pg_dump restore. **It has never been executed:** `docker`, `podman`, `colima`, `nerdctl` and `lima` are all absent from this machine and installing one needs an admin password. Building an image is not running a stack, and this stays BLOCKED until the job has actually run |
+| 22 | Docker Compose brings up a production-like stack | **PASS** | Measured by the `container-runtime` CI job, not by reading the config. It **failed** first, at `a669496`: the API had `read_only: true` with only `/tmp` writable while `get_settings()` created `/app/data/httpcache` at import, so the container never became healthy. Fixed, and green at `ba15bbb` — health, the one-shot migration, a real run picked up by the worker, worker-kill recovery with no duplicates, two worker replicas each answering for itself, API restart, tenant isolation, security headers and a restore drill comparing all 12 tables. Every run uploads per-container health output, service logs and an attestation keyed by the tested SHA |
 | 23 | Backup / restore and crash recovery verified | **PASS** | Real SIGKILL recovery plus a PostgreSQL `pg_dump`/`pg_restore` scratch-database drill: 12 tables and a synthetic probe restored identically |
 | 24 | Documentation matches actual behaviour | **PASS** | `CURRENT_STATE.md` retitled as the dated snapshot it is, with each superseded row marked; `LOOP_REPORT.md` carries a corrections table for its stale present-tense claims; `CANARY_AUDIT.md`'s "fee figures are behind JavaScript" corrected — they are in the served HTML and were being misread; `LIVE_DISCOVERY_REPORT.md` rewritten against three measured runs |
 | 25 | No TODO / FIXME in a production path | **PASS** | `grep -rn "TODO\|FIXME" backend/app frontend/src` → none |

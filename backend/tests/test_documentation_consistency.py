@@ -52,8 +52,22 @@ class TestTheArtifactIsInternallyHonest:
         """READY is computed, not asserted. A document cannot talk its way
         past a failing or unrun gate if the verdict is derived from them."""
         open_gates = artifact["open_gates"]
-        expected = "READY" if not open_gates["failing"] and not open_gates["not_run"] else "NOT READY"
+        expected = (
+            "READY"
+            if not open_gates["failing"]
+            and not open_gates["not_run"]
+            and not open_gates.get("product_thresholds")
+            else "NOT READY"
+        )
         assert artifact["verdict"] == expected
+
+    def test_product_thresholds_can_hold_the_verdict_on_their_own(self, artifact: dict):
+        """Green technical gates do not earn READY. A release that builds,
+        tests and deploys perfectly and cannot answer an applicant's questions
+        is not ready; it is shippable, which is a different word."""
+        open_gates = artifact["open_gates"]
+        if open_gates.get("product_thresholds"):
+            assert artifact["verdict"] == "NOT READY"
 
     def test_a_gate_that_did_not_run_is_not_a_pass(self, artifact: dict):
         for name, gate in artifact["gates"].items():
@@ -123,10 +137,21 @@ class TestTheDocumentsAgreeWithTheArtifact:
     def test_the_container_gate_is_never_described_as_passing(
         self, artifact: dict, documents: dict[Path, str]
     ):
-        """The one gate that has never run on this machine. A document calling
-        it PASS would be describing something that has not happened."""
-        if artifact["gates"]["container_runtime"]["result"] == "pass":
-            pytest.skip("the container gate has actually run")
+        """A document may call this gate PASS only when something observed it.
+
+        It cannot be measured on this machine — there is no container runtime —
+        so the artifact carries CI's attestation instead, and that is only
+        honoured when its SHA matches the commit the artifact describes. A
+        document asserting PASS without one would be describing something
+        nobody watched.
+        """
+        gate = artifact["gates"]["container_runtime"]
+        if gate["result"] == "pass":
+            assert gate.get("attested_sha") == artifact["head"], (
+                "the container gate is recorded as passing without an "
+                "attestation for this commit"
+            )
+            pytest.skip("the container gate passed, attested for this commit")
         for path, text in documents.items():
             for line in text.splitlines():
                 if "compose_smoke" in line or "container-runtime" in line.lower():
