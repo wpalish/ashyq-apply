@@ -9,53 +9,107 @@
       "institution": "University of Groningen",
       "domain": "rug.nl",
       "discipline": "computer science",
-      "programme": "",
-      "programme_url": "",
+      "programme": "BSc Computing Science",
+      "programme_url": "https://www.rug.nl/bachelors/computing-science",
       "answers": [
         {
           "question": "the programme exists",
-          "verdict": "not_checked",
-          "claims": []
+          "verdict": "answered",
+          "claims": [
+            {
+              "type": "program_exists",
+              "value": "Computing Science",
+              "source_url": "https://www.rug.nl/bachelors/computing-science",
+              "excerpt": "Degree: BSc in Computing Science. Course type: Bachelor. Duration: 36 months (180 EC). Language of instruction: English. Start: September.",
+              "accessed_at": "2026-08-30",
+              "specificity": "program",
+              "status": "VERIFIED_CURRENT"
+            }
+          ]
         },
         {
           "question": "the intake is open",
-          "verdict": "not_checked",
-          "claims": []
+          "verdict": "absent",
+          "claims": [],
+          "note": "The page publishes application deadlines for the September 2027 start but never states whether the cycle is currently open to applications. A deadline in the future is not the same statement, and inferring one from the other is how a closed intake gets reported as open."
         },
         {
           "question": "the application deadline",
-          "verdict": "not_checked",
-          "claims": []
+          "verdict": "answered",
+          "claims": [
+            {
+              "type": "admission_deadline",
+              "value": "2027-05-01",
+              "source_url": "https://www.rug.nl/bachelors/computing-science",
+              "excerpt": "Application deadlines. non-EU/EEA students: 01 May 2027, start course 01 September 2027.",
+              "accessed_at": "2026-08-30",
+              "specificity": "program_intake",
+              "status": "VERIFIED_CURRENT"
+            }
+          ]
         },
         {
           "question": "the minimum grade",
-          "verdict": "not_checked",
-          "claims": []
+          "verdict": "absent",
+          "claims": [],
+          "note": "No numeric minimum is published for holders of a non-Dutch diploma. The page lists admissible Dutch diploma profiles and otherwise refers the decision to the Admissions Board, which is a process rather than a threshold."
         },
         {
           "question": "required school subjects",
-          "verdict": "not_checked",
-          "claims": []
+          "verdict": "answered",
+          "claims": [
+            {
+              "type": "required_subjects",
+              "value": "Mathematics",
+              "source_url": "https://www.rug.nl/bachelors/computing-science",
+              "excerpt": "Sufficient background knowledge in Mathematics is required. The Admissions Board will determine whether your background knowledge in this subject is sufficient to start the Bachelor's programme.",
+              "accessed_at": "2026-08-30",
+              "specificity": "program",
+              "status": "VERIFIED_CURRENT"
+            }
+          ]
         },
         {
           "question": "the English requirement",
-          "verdict": "not_checked",
-          "claims": []
+          "verdict": "answered",
+          "claims": [
+            {
+              "type": "ielts_min_overall",
+              "value": "6.5",
+              "source_url": "https://www.rug.nl/fse/education/admission-application/apply-bsc/language",
+              "excerpt": "Minimum requirements for English-taught Bachelor's programmes: IELTS 6.5 / CEFR B2-C1. IELTS (Academic): 6.5 overall.",
+              "accessed_at": "2026-08-30",
+              "specificity": "university_admissions",
+              "status": "VERIFIED_CURRENT"
+            }
+          ]
         },
         {
           "question": "per-section English minimums",
-          "verdict": "not_checked",
-          "claims": []
+          "verdict": "answered",
+          "claims": [
+            {
+              "type": "ielts_min_subscore",
+              "value": "6.5",
+              "source_url": "https://www.rug.nl/fse/education/admission-application/apply-bsc/language",
+              "excerpt": "IELTS (Academic): Reading 6.5, Listening 6.5, Speaking 6.5, Writing 6.5, overall 6.5.",
+              "accessed_at": "2026-08-30",
+              "specificity": "university_admissions",
+              "status": "VERIFIED_CURRENT"
+            }
+          ]
         },
         {
           "question": "the admissions test policy",
-          "verdict": "not_checked",
-          "claims": []
+          "verdict": "absent",
+          "claims": [],
+          "note": "Neither the programme page nor the faculty admission pages mention SAT, ACT or any equivalent admissions test. Dutch bachelor's admission does not use one, and the institution says nothing about it either way."
         },
         {
           "question": "portfolio, interview or entrance exam",
-          "verdict": "not_checked",
-          "claims": []
+          "verdict": "absent",
+          "claims": [],
+          "note": "Nothing on the programme or faculty admission pages requires a portfolio, an interview or an entrance exam, and the application in Studielink is explicitly the option without the 'Numerus fixus programme' label. The site does not state the negative in so many words, which is why this is recorded as absent rather than as an answered 'not required'."
         },
         {
           "question": "whether my diploma is recognised",
@@ -64,8 +118,27 @@
         },
         {
           "question": "tuition",
-          "verdict": "not_checked",
-          "claims": []
+          "verdict": "answered",
+          "claims": [
+            {
+              "type": "tuition",
+              "value": "EUR 2694",
+              "source_url": "https://www.rug.nl/bachelors/computing-science",
+              "excerpt": "Tuition fees. Year 2026-2027, Fee EUR 2694, Programme form full-time (statutory fee, EU/EEA students).",
+              "accessed_at": "2026-08-30",
+              "specificity": "program_intake",
+              "status": "VERIFIED_CURRENT"
+            },
+            {
+              "type": "tuition",
+              "value": "EUR 19800",
+              "source_url": "https://www.rug.nl/bachelors/computing-science",
+              "excerpt": "Tuition fees. Year 2026-2027, Fee EUR 19800, Programme form full-time (institutional fee, non-EU/EEA students).",
+              "accessed_at": "2026-08-30",
+              "specificity": "program_intake",
+              "status": "VERIFIED_CURRENT"
+            }
+          ]
         },
         {
           "question": "mandatory fees",

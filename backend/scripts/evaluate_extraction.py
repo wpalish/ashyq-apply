@@ -33,6 +33,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import re
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -48,7 +49,7 @@ from app.adapters.requirements.web_requirements import (  # noqa: E402
     WebRequirementsAdapter,
 )
 from app.config import get_settings  # noqa: E402
-from app.domain.enums import ClaimType, DegreeLevel  # noqa: E402
+from app.domain.enums import ClaimStatus, ClaimType, DegreeLevel  # noqa: E402
 from app.eval.gold import ABSENT, ANSWERED, GoldProgramme, load_gold  # noqa: E402
 from app.pipeline.assessment import DECISION_QUESTIONS  # noqa: E402
 
@@ -86,19 +87,54 @@ class Tally:
         return 2 * p * r / (p + r)
 
 
-def normalise(value: str) -> str:
-    """Enough normalisation to compare two renderings of one answer.
+#: Tokens too short to carry meaning on their own. Requiring them to match
+#: would fail a gold value of "BSc in Computing Science" against a produced
+#: "Computing Science" over the word "in".
+_MIN_TOKEN = 3
+_TOKEN = re.compile(r"[a-z0-9]+(?:\.[0-9]+)?")
 
-    Deliberately shallow. A gold value of "6.5" and an extracted "6.5 overall"
-    are the same answer; "6.5" and "7.0" are not, and no amount of normalising
-    should be able to turn one into the other.
+
+def leaves(value: Any) -> str:
+    """Flatten a produced value to the text it contains.
+
+    Claims carry whatever shape the extractor found useful — a float for an
+    IELTS band, a dict for a fee, a list for required subjects. Gold truth is
+    written the way the page states it, and must stay that way: a benchmark
+    written in the extractor's own data structures measures agreement with the
+    implementation rather than with the institution.
     """
-    return " ".join(value.lower().replace(",", "").split())
+    if isinstance(value, dict):
+        return " ".join(leaves(v) for v in value.values())
+    if isinstance(value, list | tuple | set):
+        return " ".join(leaves(v) for v in value)
+    return str(value)
 
 
-def values_agree(gold: str, produced: str) -> bool:
-    a, b = normalise(gold), normalise(produced)
-    return a == b or a in b or b in a
+def tokens(text: str) -> set[str]:
+    out: set[str] = set()
+    for token in _TOKEN.findall(text.lower()):
+        try:
+            number = float(token)
+        except ValueError:
+            if len(token) >= _MIN_TOKEN:
+                out.add(token)
+        else:
+            # 2694, 2694.0 and 2,694 are one number; 05 and 5 are one month.
+            out.add(f"{number:g}")
+    return out
+
+
+def values_agree(gold: str, produced: Any) -> bool:
+    """Whether a produced value says what the page said.
+
+    The rule is containment, not equality: every meaningful token of the gold
+    value has to appear in the produced one. That lets a fee recorded as
+    "EUR 2694" match a claim carrying `{'amount': 2694.0, 'currency': 'EUR'}`,
+    while "6.5" still fails against 7.0 — which is the comparison that has to
+    stay sharp, because a wrong English requirement is a rejected application.
+    """
+    wanted = tokens(gold)
+    return bool(wanted) and wanted <= tokens(leaves(produced))
 
 
 async def claims_for(programme: GoldProgramme, intake: str) -> list[Any]:
@@ -142,7 +178,7 @@ async def claims_for(programme: GoldProgramme, intake: str) -> list[Any]:
 def score(programme: GoldProgramme, claims: list[Any], tallies: dict[str, Tally]) -> None:
     by_type: dict[ClaimType, list[Any]] = {}
     for claim in claims:
-        by_type.setdefault(claim.type, []).append(claim)
+        by_type.setdefault(claim.claim_type, []).append(claim)
 
     for answer in programme.checked():
         tally = tallies.setdefault(answer.question, Tally())
@@ -156,7 +192,7 @@ def score(programme: GoldProgramme, claims: list[Any], tallies: dict[str, Tally]
                 continue
             gold_values = [c.value for c in answer.claims]
             if any(
-                values_agree(str(g), str(getattr(p, "value", "")))
+                values_agree(str(g), p.normalized_value)
                 for g in gold_values
                 for p in produced
             ):
@@ -166,17 +202,32 @@ def score(programme: GoldProgramme, claims: list[Any], tallies: dict[str, Tally]
                 tally.false_positive += 1
                 tally.misses.append(
                     f"{programme.id}: expected {gold_values[0]!r}, produced "
-                    f"{getattr(produced[0], 'value', None)!r}"
+                    f"{produced[0].normalized_value!r}"
                 )
         elif answer.verdict == ABSENT:
             if produced:
                 tally.false_positive += 1
                 tally.misses.append(
-                    f"{programme.id}: produced {getattr(produced[0], 'value', None)!r} "
+                    f"{programme.id}: produced {produced[0].normalized_value!r} "
                     "for a question the page does not answer"
                 )
             else:
                 tally.true_negative += 1
+
+
+#: `_completeness` in the pipeline counts a question as answered only when a
+#: claim for it is VERIFIED_CURRENT or POSSIBLY_STALE. A claim that comes back
+#: UNVERIFIED raises the claim count and moves completeness not at all — which
+#: would make "51 claims, 5.6% complete" consistent, and is worth being able to
+#: see rather than infer.
+COUNTS_TOWARD_COMPLETENESS = (ClaimStatus.VERIFIED_CURRENT, ClaimStatus.POSSIBLY_STALE)
+
+
+def status_breakdown(claims: list[Any]) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for claim in claims:
+        counts[claim.status.value] = counts.get(claim.status.value, 0) + 1
+    return dict(sorted(counts.items()))
 
 
 def report(tallies: dict[str, Tally], coverage: dict[str, int]) -> dict[str, Any]:
@@ -255,13 +306,22 @@ async def main() -> int:
         if p.checked() and (not args.only or args.only in p.id)
     ]
     tallies: dict[str, Tally] = {}
+    statuses: dict[str, int] = {}
     for programme in targets:
         print(f"\n{programme.id}  {programme.programme}")
         claims = await claims_for(programme, args.intake)
-        print(f"  {len(claims)} claim(s) produced")
+        counting = sum(1 for c in claims if c.status in COUNTS_TOWARD_COMPLETENESS)
+        breakdown = status_breakdown(claims)
+        for status, n in breakdown.items():
+            statuses[status] = statuses.get(status, 0) + n
+        print(
+            f"  {len(claims)} claim(s) produced, {counting} of which count "
+            f"toward completeness  {breakdown}"
+        )
         score(programme, claims, tallies)
 
     result = report(tallies, coverage)
+    result["claim_status_totals"] = dict(sorted(statuses.items()))
     print()
     print(f"{'question':<42} {'audit':>5} {'prec':>6} {'rec':>6} {'F1':>6}")
     for row in result["questions"]:
@@ -272,6 +332,7 @@ async def main() -> int:
             f"{row['question'][:42]:<42} {row['audited']:>5} "
             f"{fmt(row['precision'])} {fmt(row['recall'])} {fmt(row['f1'])}"
         )
+    print(f"\nclaim statuses across every programme: {result['claim_status_totals']}")
     overall = result["overall"]
     print(
         f"\noverall  tp={overall['true_positive']} fn={overall['false_negative']} "
