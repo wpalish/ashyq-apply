@@ -21,6 +21,7 @@ from app.adapters.extraction import (
     ClaimBuilder,
     excerpt_around,
     extract_cost_tables,
+    extract_requirement_tables,
     extract_requirements,
     for_matching,
     html_title,
@@ -135,6 +136,13 @@ class WebRequirementsAdapter:
                 # EU/EEA and non-EU/EEA rates are the difference between
                 # €2,694 and €19,800 for the same year.
                 claims_from_fee_tables(res.text, builder)
+                # And the English requirement is a table at least as often as
+                # it is a sentence. Flattened, Groningen's row reads "IELTS
+                # (Academic) 6.5 6.5 6.5 6.5 6.5" and the header that says
+                # which 6.5 is the overall band is gone, so nothing was read
+                # from the page at all.
+                if page.accepts("requirements"):
+                    claims_from_requirement_tables(res.text, builder)
 
             out.claims.extend(builder.claims)
 
@@ -304,3 +312,13 @@ def claims_from_fee_tables(html: str, builder) -> list:
     student is reading.
     """
     return extract_cost_tables(html, builder)
+
+
+def claims_from_requirement_tables(html: str, builder) -> list:
+    """English-requirement rows from a table the page carries itself.
+
+    Named separately for the same reason as the fee tables: this path is where
+    a real institution's language requirement actually lives, and it deserves a
+    test that does not have to go through a whole verify() to reach it.
+    """
+    return extract_requirement_tables(html, builder)
