@@ -8,3 +8,8 @@ respx==0.22.0
 playwright==1.60.0
 pip-audit>=2.7.3
 pgserver==0.1.4
+# The container contract test reads docker-compose.yml. It was available
+# only transitively, which works locally and fails on a clean CI install.
+PyYAML==6.0.3
+# Stubs, so `mypy app tests scripts` can check the container contract test.
+types-PyYAML==6.0.12.20250915

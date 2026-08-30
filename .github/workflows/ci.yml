@@ -1,8 +1,19 @@
 name: release-gates
 
 on:
+  # `push:` and `pull_request:` together ran the whole matrix twice for every
+  # commit on a branch with an open PR — two identical runs, double the
+  # minutes, and two links to reconcile when reading results.
   push:
+    branches: [main]
   pull_request:
+  workflow_dispatch:
+
+# A new commit supersedes the run before it. Nothing is learned from finishing
+# a run against code that has already been replaced.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -28,9 +39,9 @@ jobs:
       - run: .venv/bin/pip install -r requirements-dev.txt
       - if: matrix.database == 'sqlite'
         run: |
-          .venv/bin/ruff check app tests
-          .venv/bin/mypy app tests
-          UNIMATCH_DATABASE_URL=sqlite:////tmp/unimatch-ci.db .venv/bin/pytest --cov=app --cov-fail-under=80
+          .venv/bin/ruff check .
+          .venv/bin/mypy app tests scripts
+          UNIMATCH_DATABASE_URL=sqlite:////tmp/unimatch-ci.db .venv/bin/pytest --cov=app --cov-fail-under=90
       - if: matrix.database == 'postgresql'
         run: .venv/bin/python scripts/pg.py .venv/bin/pytest
 
@@ -91,5 +102,15 @@ jobs:
       - uses: actions/checkout@v4
       - name: Production-shaped runtime smoke test
         run: ./scripts/compose_smoke.sh
-      - if: failure()
-        run: docker compose -p ashyq-smoke-$$ logs --no-color --tail 200 || true
+      # Always, not just on failure: a passing run's health log is what proves
+      # the gate actually exercised the stack. The script collects these before
+      # it tears the stack down — the previous step ran afterwards, against a
+      # project name built from a different shell's $$, and found nothing.
+      - name: Upload runtime diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: container-runtime-diagnostics-${{ github.sha }}
+          path: /tmp/ashyq-smoke-artifacts/
+          if-no-files-found: warn
+          retention-days: 14

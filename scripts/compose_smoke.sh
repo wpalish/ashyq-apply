@@ -13,7 +13,17 @@
 # with Docker locally; it is NOT a substitute for having run it.
 set -euo pipefail
 
-PROJECT="ashyq-smoke-$$"
+# Stable within a run, unique across runs. It used to be `ashyq-smoke-$$`,
+# which meant the GitHub step that ran after this script — a separate shell,
+# with a different $$ — looked up a project that never existed and collected no
+# logs. The first real container failure produced no diagnostics at all
+# because of it.
+PROJECT="${SMOKE_PROJECT:-ashyq-smoke-${GITHUB_RUN_ID:-local}}"
+
+# Diagnostics are written here and survive teardown, so a failure can be read
+# after the stack is gone. Known path so a workflow can upload it without
+# guessing.
+ARTIFACTS="${SMOKE_ARTIFACTS:-/tmp/ashyq-smoke-artifacts}"
 export POSTGRES_PASSWORD="smoke-$(head -c 18 /dev/urandom | base64 | tr -dc 'a-zA-Z0-9')"
 export API_PORT="${API_PORT:-18099}"
 export WEB_PORT="${WEB_PORT:-18080}"
@@ -30,11 +40,46 @@ check() { if [ "$1" = "$2" ]; then ok "$3"; else bad "$3 (expected $2, got $1)";
 
 DUMP="/tmp/${PROJECT}.sql"
 
+# Everything worth reading after the fact, captured *before* the stack is
+# removed. Collected in the trap rather than in a later workflow step, because
+# a later step runs after teardown and there is nothing left to ask.
+collect_diagnostics() {
+  step "collecting diagnostics into $ARTIFACTS"
+  mkdir -p "$ARTIFACTS"
+  {
+    echo "project: $PROJECT"
+    echo "exit status so far: FAILED=$FAILED"
+    date -u +"collected: %Y-%m-%dT%H:%M:%SZ"
+  } > "$ARTIFACTS/summary.txt" 2>&1 || true
+
+  "${COMPOSE[@]}" ps --all > "$ARTIFACTS/compose-ps.txt" 2>&1 || true
+  "${COMPOSE[@]}" config > "$ARTIFACTS/compose-config.yml" 2>&1 || true
+
+  # Health state is the thing the first failure turned on: "container is
+  # unhealthy" with no record of *why*.
+  for container in $("${COMPOSE[@]}" ps --all -q 2>/dev/null); do
+    name="$(docker inspect --format '{{.Name}}' "$container" 2>/dev/null | tr -d '/')"
+    docker inspect "$container" > "$ARTIFACTS/inspect-${name:-$container}.json" 2>&1 || true
+    docker inspect --format \
+      '{{if .State.Health}}{{range .State.Health.Log}}--- exit {{.ExitCode}}{{"\n"}}{{.Output}}{{end}}{{else}}no healthcheck{{end}}' \
+      "$container" > "$ARTIFACTS/health-${name:-$container}.txt" 2>&1 || true
+  done
+
+  for service in postgres migrate api worker web; do
+    "${COMPOSE[@]}" logs --no-color --timestamps "$service" \
+      > "$ARTIFACTS/logs-$service.txt" 2>&1 || true
+  done
+  ls -la "$ARTIFACTS" || true
+}
+
 cleanup() {
+  collect_diagnostics
   step "tearing down (only what this run created)"
   "${COMPOSE[@]}" down --volumes --remove-orphans >/dev/null 2>&1 || true
-  # Cookie jars and the SQL dump go in the trap, not at the end of the happy
-  # path: an early exit would otherwise leave the dump behind.
+  # Cookie jars go in the trap, not at the end of the happy path: an early exit
+  # would otherwise leave them behind. The dump is copied into the artifacts
+  # directory first — it is evidence of what the restore drill compared.
+  cp "$DUMP" "$ARTIFACTS/pg_dump.sql" 2>/dev/null || true
   rm -f "$JAR_A" "$JAR_B" "$DUMP"
 }
 trap cleanup EXIT
@@ -215,9 +260,21 @@ if [ -s "$DUMP" ]; then ok "dump taken ($(wc -c < "$DUMP") bytes)"; else bad "du
 "${COMPOSE[@]}" exec -T postgres psql -U ashyq -d postgres -c 'CREATE DATABASE restore_check;' >/dev/null
 "${COMPOSE[@]}" exec -T postgres psql -U ashyq -d restore_check < "$DUMP" >/dev/null 2>&1
 
-# Row counts for every table, not just one: a restore that brings back the runs
-# and loses their claims is a restore that lost the evidence.
-TABLES="research_runs program_results claims conflicts jobs applicant_profiles users organizations"
+# Every table the database actually has, discovered rather than listed. The
+# hardcoded list held 8 of 12 and claimed to be "every table": audit_events,
+# auth_sessions, organization_memberships and schema_version were never
+# compared, so a restore could lose the audit trail and every session and this
+# drill would still report success. Discovering them also means a table added
+# later is covered without anyone remembering to add it here.
+TABLES="$("${COMPOSE[@]}" exec -T postgres psql -U ashyq -d ashyq_apply -tAc \
+  "select tablename from pg_tables where schemaname = 'public' order by tablename;" \
+  2>/dev/null | tr -d '\r' | tr '\n' ' ')"
+TABLE_COUNT="$(echo $TABLES | wc -w | tr -d ' ')"
+if [ "$TABLE_COUNT" -lt 12 ]; then
+  bad "expected at least 12 public tables, found $TABLE_COUNT: $TABLES"
+else
+  ok "comparing all $TABLE_COUNT public tables"
+fi
 for table in $TABLES; do
   SRC="$("${COMPOSE[@]}" exec -T postgres psql -U ashyq -d ashyq_apply -tAc \
     "select count(*) from $table;" 2>/dev/null | tr -d ' \r')"
