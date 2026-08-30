@@ -352,13 +352,23 @@
       "institution": "Delft University of Technology",
       "domain": "tudelft.nl",
       "discipline": "computer science",
-      "programme": "",
-      "programme_url": "",
+      "programme": "BSc Computer Science and Engineering",
+      "programme_url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
       "answers": [
         {
           "question": "the programme exists",
-          "verdict": "not_checked",
-          "claims": []
+          "verdict": "answered",
+          "claims": [
+            {
+              "type": "program_exists",
+              "value": "Computer Science and Engineering",
+              "source_url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+              "excerpt": "Bachelor of Computer Science and Engineering. Language: English track: English. Form: Full time - on campus. Start: September.",
+              "accessed_at": "2026-08-30",
+              "specificity": "program",
+              "status": "VERIFIED_CURRENT"
+            }
+          ]
         },
         {
           "question": "the intake is open",
@@ -367,8 +377,18 @@
         },
         {
           "question": "the application deadline",
-          "verdict": "not_checked",
-          "claims": []
+          "verdict": "answered",
+          "claims": [
+            {
+              "type": "admission_deadline",
+              "value": "January 15",
+              "source_url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+              "excerpt": "Important dates. Numerus fixus: January 15th. The programme is capped at 590 places, so this is the date applications close.",
+              "accessed_at": "2026-08-30",
+              "specificity": "program",
+              "status": "VERIFIED_CURRENT"
+            }
+          ]
         },
         {
           "question": "the minimum grade",
@@ -377,13 +397,24 @@
         },
         {
           "question": "required school subjects",
-          "verdict": "not_checked",
-          "claims": []
+          "verdict": "answered",
+          "claims": [
+            {
+              "type": "required_subjects",
+              "value": "Math B",
+              "source_url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+              "excerpt": "Overview. Required subjects: Math B. Numerus fixus: Yes (590). Start: September.",
+              "accessed_at": "2026-08-30",
+              "specificity": "program",
+              "status": "VERIFIED_CURRENT"
+            }
+          ]
         },
         {
           "question": "the English requirement",
-          "verdict": "not_checked",
-          "claims": []
+          "verdict": "absent",
+          "claims": [],
+          "note": "The programme page states the track is English-taught but publishes no test or score. Delft's language requirements live on the central admission pages, which have not been audited yet."
         },
         {
           "question": "per-section English minimums",
@@ -407,8 +438,9 @@
         },
         {
           "question": "tuition",
-          "verdict": "not_checked",
-          "claims": []
+          "verdict": "absent",
+          "claims": [],
+          "note": "No fee on the programme page; Delft publishes them under education/study-programme-orientation/practical-matters, not audited yet."
         },
         {
           "question": "mandatory fees",

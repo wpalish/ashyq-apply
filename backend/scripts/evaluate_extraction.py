@@ -93,6 +93,22 @@ class Tally:
 _MIN_TOKEN = 3
 _TOKEN = re.compile(r"[a-z0-9]+(?:\.[0-9]+)?")
 
+#: Month names become their number, so a deadline a page states as
+#: "January 15th" matches a claim carrying `2027-01-15`. Without this the
+#: benchmark marks a correct extraction wrong whenever the page writes the
+#: month in words, which is most of the time — and a benchmark that misjudges
+#: a right answer sends the work in the wrong direction.
+_MONTHS = {
+    m: str(i)
+    for i, m in enumerate(
+        (
+            "january february march april may june july august september "
+            "october november december"
+        ).split(),
+        start=1,
+    )
+}
+
 
 def leaves(value: Any) -> str:
     """Flatten a produced value to the text it contains.
@@ -113,6 +129,9 @@ def leaves(value: Any) -> str:
 def tokens(text: str) -> set[str]:
     out: set[str] = set()
     for token in _TOKEN.findall(text.lower()):
+        if token in _MONTHS:
+            out.add(f"{float(_MONTHS[token]):g}")
+            continue
         try:
             number = float(token)
         except ValueError:
