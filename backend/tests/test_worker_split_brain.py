@@ -355,6 +355,58 @@ class TestTheBeatsSurviveABlockingJob:
         )
 
 
+class TestTheRunnerStopsAtItsOwnCheckpoint:
+    """The half of "losing the lease stops the work" that a stub cannot reach.
+
+    Every other test in this file replaces `_dispatch`, so none of them
+    exercises the checkpoint inside the pipeline — and the checkpoint is what
+    stops *blocking* work, which is the only kind the pipeline actually does.
+    Deleting those four lines left the whole suite green, which is a fair
+    definition of untested.
+    """
+
+    def test_a_lost_lease_raises_at_the_cancellation_checkpoint(self, settings, profile):
+        import threading
+
+        from app.pipeline.runner import LeaseLost, ResearchRunner
+
+        lease_lost = threading.Event()
+        runner = ResearchRunner.__new__(ResearchRunner)
+        runner.lease_lost = lease_lost
+        runner.job_id = "job-1234"
+
+        # Not yet lost: the checkpoint must fall through to its other checks,
+        # which need a session. Reaching them proves it did not stop here.
+        with pytest.raises(AttributeError):
+            runner._check_cancelled()
+
+        lease_lost.set()
+        with pytest.raises(LeaseLost, match="job-1234"):
+            runner._check_cancelled()
+
+    def test_ownership_is_checked_before_the_database_is_touched(
+        self, settings, profile
+    ):
+        """A job that is no longer ours must not even read through the session
+        it holds: every row it would touch belongs to another worker's run."""
+        import threading
+
+        from app.pipeline.runner import LeaseLost, ResearchRunner
+
+        class ExplodingSession:
+            def refresh(self, _row):
+                raise AssertionError("the database was touched after the lease was lost")
+
+        runner = ResearchRunner.__new__(ResearchRunner)
+        runner.lease_lost = threading.Event()
+        runner.lease_lost.set()
+        runner.job_id = "job-1234"
+        runner.session = ExplodingSession()
+
+        with pytest.raises(LeaseLost):
+            runner._check_cancelled()
+
+
 class TestStoppingDoesNotTakeMoreWork:
     def test_a_stop_while_every_slot_is_busy_claims_nothing_more(
         self, bound_db, settings, profile, monkeypatch
