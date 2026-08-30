@@ -99,6 +99,31 @@ class Worker:
         )
         liveness.start()
 
+        try:
+            await self._consume(semaphore, running)
+        finally:
+            # The liveness beat is stopped *after* the drain, and on every path
+            # out of the loop rather than only the normal one. An exception in
+            # `reap()` or `claim_one()` — both of which touch the database —
+            # used to skip the drain and leave the thread running, so a dead
+            # worker went on writing a file that says it is alive.
+            if running:
+                log.info("waiting for %d job(s) to finish", len(running))
+                await asyncio.gather(*running, return_exceptions=True)
+            stop_liveness.set()
+            await asyncio.to_thread(liveness.join, BEAT_JOIN_SECONDS)
+        log.info(
+            "worker %s stopped (%d done, %d failed)",
+            self.worker_id,
+            self.jobs_done,
+            self.jobs_failed,
+        )
+
+    async def _consume(
+        self, semaphore: asyncio.Semaphore, running: set[asyncio.Task]
+    ) -> None:
+        """The claim loop, so that stopping it is a `finally` rather than a
+        sequence of statements every exit path has to remember to reach."""
         while not self.stopping.is_set():
             await semaphore.acquire()
             if self.stopping.is_set():
@@ -125,22 +150,6 @@ class Worker:
             running.add(task)
             task.add_done_callback(running.discard)
 
-        # The liveness beat is stopped *after* the drain, not before it. A
-        # drain can take as long as the longest job; stopping the beat first
-        # made the worker report unhealthy for exactly that window, and an
-        # orchestrator that kills an unhealthy container kills the drain.
-        if running:
-            log.info("waiting for %d job(s) to finish", len(running))
-            await asyncio.gather(*running, return_exceptions=True)
-
-        stop_liveness.set()
-        liveness.join(timeout=BEAT_JOIN_SECONDS)
-        log.info(
-            "worker %s stopped (%d done, %d failed)",
-            self.worker_id,
-            self.jobs_done,
-            self.jobs_failed,
-        )
 
     async def _run_and_release(self, job_id: str, semaphore: asyncio.Semaphore) -> None:
         try:
@@ -171,12 +180,21 @@ class Worker:
         token it could still have written to it, which is two writers on one
         job.
         """
-        with session_scope() as session:
-            claimed = JobStore(session).get(job_id)
-            if claimed is None:
-                return
-            lease_token = claimed.lease_token or ""
-            payload_version = claimed.payload_schema_version
+        try:
+            with session_scope() as session:
+                claimed = JobStore(session).get(job_id)
+                if claimed is None:
+                    return
+                lease_token = claimed.lease_token or ""
+                payload_version = claimed.payload_schema_version
+        except Exception:
+            # The job is already RUNNING with an attempt spent — `claim_one`
+            # saw to that — so an exception escaping here left it stranded with
+            # nothing in the log to say why, until the reaper eventually took
+            # it back. Every one of these lines used to sit inside the `try`
+            # that the refactor moved them out of.
+            log.exception("could not read job %s; leaving it to the reaper", job_id[:8])
+            return
 
         # The version check comes before the token check, and deliberately.
         # Parking is not a lease-holding write — it is the same refusal
@@ -238,10 +256,13 @@ class Worker:
             log.warning("job %s abandoned: the lease was lost", job_id[:8])
         finally:
             beat_finished.set()
-            # The thread is parked in `Event.wait`, which returns as soon as
-            # this is set, so the join is immediate in practice. The timeout is
-            # there so a wedged heartbeat cannot wedge the worker too.
-            beat.join(timeout=BEAT_JOIN_SECONDS)
+            # Joined off the event loop. The thread is usually parked in
+            # `Event.wait` and returns at once, but part of every cycle is
+            # spent inside `session_scope()`, and a blocking `join` on the loop
+            # thread would freeze every other concurrency slot for as long as
+            # that database call takes. The timeout is a backstop so a wedged
+            # heartbeat cannot wedge the worker with it.
+            await asyncio.to_thread(beat.join, BEAT_JOIN_SECONDS)
 
     async def _run_owned(
         self,
@@ -345,15 +366,20 @@ class Worker:
         interval = max(1.0, lease_seconds / HEARTBEAT_DIVISOR)
         last_held = time.monotonic()
 
-        while not finished.wait(interval):
-            try:
-                with session_scope() as session:
-                    held: bool | None = JobStore(
-                        session, lease_seconds=lease_seconds
-                    ).heartbeat(job_id, lease_token=lease_token)
-            except Exception:
-                log.exception("could not extend the lease on job %s", job_id[:8])
-                held = None
+        while True:
+            # Wake by the deadline even if that is sooner than the interval.
+            # Sleeping a whole interval and only then looking at the clock let
+            # the deadline pass unnoticed by up to one interval.
+            remaining = lease_seconds - (time.monotonic() - last_held)
+            if finished.wait(min(interval, max(0.1, remaining))):
+                return
+            if time.monotonic() - last_held >= lease_seconds:
+                log.warning(
+                    "the lease on job %s lapsed without being extended", job_id[:8]
+                )
+                held: bool | None = False
+            else:
+                held = self._try_heartbeat(job_id, lease_token, last_held, lease_seconds)
 
             if held:
                 last_held = time.monotonic()
@@ -384,6 +410,48 @@ class Worker:
             with contextlib.suppress(RuntimeError):
                 loop.call_soon_threadsafe(self._cancel_if_running, work, job_id)
             return
+
+    def _try_heartbeat(
+        self, job_id: str, lease_token: str, last_held: float, lease_seconds: int
+    ) -> bool | None:
+        """One heartbeat, bounded by the time left on the lease.
+
+        A database that refuses answers immediately; a *partitioned* one does
+        not — the socket hangs until the driver gives up, which can be far
+        longer than a heartbeat interval. The loop only looked at the clock
+        after the call returned, so a hanging call let the work run past the
+        lease it could no longer prove it held, which is the window another
+        worker reclaims the job in.
+
+        The attempt therefore runs on its own thread and is waited for only as
+        long as the lease has left. A call that has not answered by then has
+        already failed to do the one thing it was for. The thread is a daemon
+        and is left to unwind on its own; blocking on it here would reintroduce
+        exactly the hang this exists to bound.
+        """
+        answer: list[bool] = []
+
+        def attempt() -> None:
+            try:
+                with session_scope() as session:
+                    answer.append(
+                        JobStore(session, lease_seconds=lease_seconds).heartbeat(
+                            job_id, lease_token=lease_token
+                        )
+                    )
+            except Exception:
+                log.exception("could not extend the lease on job %s", job_id[:8])
+
+        thread = threading.Thread(
+            target=attempt, name=f"beat-{job_id[:8]}", daemon=True
+        )
+        thread.start()
+        thread.join(timeout=max(0.1, lease_seconds - (time.monotonic() - last_held)))
+        if not answer:
+            # Either it raised, or it is still hanging. Both are "unknown", and
+            # the caller decides what unknown costs.
+            return None
+        return answer[0]
 
     @staticmethod
     def _cancel_if_running(work: asyncio.Task, job_id: str) -> None:
@@ -426,7 +494,17 @@ class Worker:
 
         # The job's completion and the work it produced commit together, so a
         # crash can never mark a job done with its results missing.
-        store.complete(job.id, lease_token=lease_token)
+        #
+        # And the refusal is honoured. `complete()` returns a bool precisely so
+        # a worker that has lost its lease learns that its write did not land;
+        # dropping the value meant this went on to record a `job_completed`
+        # audit event and count the job in `jobs_done` — two workers, one job,
+        # both reporting success.
+        if not store.complete(job.id, lease_token=lease_token):
+            raise LeaseLost(
+                f"job {job.id} was completed by another worker; this one no "
+                "longer holds the lease"
+            )
         session.add(
             AuditEvent(
                 organization_id=profile_row.organization_id,

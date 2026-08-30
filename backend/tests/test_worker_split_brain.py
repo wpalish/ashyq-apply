@@ -407,6 +407,51 @@ class TestTheRunnerStopsAtItsOwnCheckpoint:
             runner._check_cancelled()
 
 
+class TestTheDeadlineIsEnforcedByTheClockNotByTheDatabase:
+    """A partitioned database does not refuse — it hangs.
+
+    The beat loop slept an interval, called the database, and only then looked
+    at the clock. A refusal is instant so that read as correct; a *hang* is not,
+    and the driver can take far longer than an interval to give up. So the work
+    went on running past the lease it could no longer prove it held, which is
+    precisely the window another worker reclaims the job in.
+
+    A heartbeat that has not answered by the deadline has already failed to do
+    the one thing it was for, so the answer is not waited for beyond it.
+    """
+
+    def test_a_hanging_heartbeat_does_not_extend_the_work_past_the_lease(
+        self, bound_db, settings, profile, monkeypatch
+    ):
+        job_id = seed_job(bound_db, profile)
+        worker = Worker(settings)
+        worker.claim_one()
+        dispatch = Dispatch()
+        monkeypatch.setattr(Worker, "_dispatch", dispatch)
+
+        def hangs(self, job_id, *, lease_token):
+            # Longer than the whole lease: the partition case, not the refusal.
+            time.sleep(LEASE_SECONDS * 4)
+            return True
+
+        monkeypatch.setattr(JobStore, "heartbeat", hangs)
+
+        async def scenario() -> float:
+            loop = asyncio.get_running_loop()
+            task = asyncio.create_task(worker.execute(job_id))
+            await asyncio.wait_for(dispatch.started.wait(), timeout=5)
+            began = loop.time()
+            await asyncio.wait_for(task, timeout=UNSTOPPED_DISPATCH_SECONDS - 5)
+            return loop.time() - began
+
+        elapsed = asyncio.run(scenario())
+        assert elapsed <= LEASE_SECONDS + 1.5, (
+            f"the work ran {elapsed:.1f}s on a {LEASE_SECONDS}s lease while the "
+            "heartbeat hung; another worker can hold this job by now"
+        )
+        assert dispatch.cancelled is True
+
+
 class TestStoppingDoesNotTakeMoreWork:
     def test_a_stop_while_every_slot_is_busy_claims_nothing_more(
         self, bound_db, settings, profile, monkeypatch

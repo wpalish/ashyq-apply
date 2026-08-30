@@ -233,6 +233,23 @@ class ResearchRunner:
             self._save()
             # Re-raise: swallowing this let the worker mark the job succeeded.
             raise
+        except LeaseLost:
+            # Nothing. Not a stage, not an error, not an audit event, not a
+            # save.
+            #
+            # This run belongs to the worker that reclaimed the job, and that
+            # worker is running it now. `LeaseLost` is a RuntimeError, so it
+            # used to fall into the handler below and commit `stage = FAILED`,
+            # a `run_failed` audit event and an error string — over the top of
+            # another worker's live progress. The applicant was told their
+            # research had failed while it was still going, which is a worse
+            # outcome than the split-brain write this exception exists to
+            # prevent.
+            log.warning(
+                "run %s: stopping without writing; the lease on this job was lost",
+                self.run.id[:8],
+            )
+            raise
         except Exception as exc:  # keep the run inspectable rather than losing it
             log.exception("run %s failed", self.run.id)
             self.run.stage = PipelineStage.FAILED.value
@@ -566,6 +583,14 @@ class ResearchRunner:
 
         today = date.today()
         for i, row in enumerate(rows):
+            # Ownership, inside the loop, like every other stage.
+            #
+            # Verification, funding discovery and document collection all check
+            # here; assessment checked once before the loop and then wrote
+            # every row without looking again. It is also the one stage with no
+            # `await` in its body, so nothing else could interrupt it either: a
+            # lease lost during assessment was not observed at all.
+            self._check_cancelled()
             result = ProgramResult.model_validate(row.payload)
             claims = [_from_out(c) for c in result.claims]
 
