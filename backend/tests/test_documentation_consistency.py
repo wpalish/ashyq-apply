@@ -142,11 +142,6 @@ class TestTheDocumentsAgreeWithTheArtifact:
         self, artifact: dict, documents: dict[Path, str]
     ):
         actual = artifact["counts"]["backend_tests"]
-        assert actual is not None, (
-            "the artifact records no backend test count. That means the run "
-            "that produced it did not pass, and a release document quoting a "
-            "count would be quoting nothing."
-        )
         # Only rows running the *whole* backend suite. Two earlier versions
         # were too loose and both failures were the test's fault, not the
         # document's: the first matched any "**PASS** — N passed" and read the
@@ -160,6 +155,25 @@ class TestTheDocumentsAgreeWithTheArtifact:
         )
         for path, text in documents.items():
             for stated in row.findall(text):
+                # A missing count is not a failure of *this* suite.
+                #
+                # It used to be asserted directly — "the artifact records no
+                # count, so the run that produced it did not pass" — which made
+                # this test's own outcome depend on a previous run's. Once the
+                # count was ever missing it could never come back: the test
+                # failed, so the suite failed, so the next artifact recorded no
+                # count either. A check that can only pass if it has already
+                # passed is not evidence of anything.
+                #
+                # The property actually worth enforcing survives without the
+                # circularity, and is the stronger half: a document may not
+                # state a number the artifact cannot support. That is what
+                # caught the README carrying 768 tests long after it was false.
+                assert actual is not None, (
+                    f"{path.name} states {stated} backend tests while the "
+                    "artifact records no count at all — the run that produced "
+                    "it did not pass, so the document is quoting nothing"
+                )
                 assert int(stated) == actual, (
                     f"{path.name} says {stated} backend tests, the run counted {actual}"
                 )
@@ -282,15 +296,19 @@ class TestNoDocumentHasBlanksOrStaleState:
     #: The discriminator is the missing *number*, not the words. A blanket
     #: `—\s+passed` also matched ordinary prose — "a project list — passed as a
     #: programme on two degree words" — which is a sentence, not a gate.
-    GATE_VERDICT = re.compile(r"\*\*(?:PASS|FAIL|BLOCKED)\*\*(?P<evidence>[^|\n]*)")
+    #: The defect is a *count* that went missing, and the shape it leaves is
+    #: "passed" sitting immediately after the dash with nothing before it:
+    #: `**PASS** —  passed`. Anything else between the dash and the word is a
+    #: tool saying something in English — `**PASS** — All checks passed!` is
+    #: ruff, and it has no count to lose.
+    GATE_VERDICT_WITHOUT_COUNT = re.compile(
+        r"\*\*(?:PASS|FAIL|BLOCKED)\*\*\s*—\s*passed\b"
+    )
 
     @classmethod
     def _verdict_without_a_count(cls, line: str) -> str | None:
-        for match in cls.GATE_VERDICT.finditer(line):
-            evidence = match.group("evidence")
-            if "passed" in evidence and not re.search(r"\d", evidence):
-                return evidence
-        return None
+        match = cls.GATE_VERDICT_WITHOUT_COUNT.search(line)
+        return match.group(0) if match else None
 
     #: Markers of unfinished work, in the shapes an actual one takes: followed
     #: by a colon or a dash, or opening a list item.

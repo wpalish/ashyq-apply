@@ -44,6 +44,47 @@ for `ba15bbb` came to be built from merge commit `6a95c5bd`.
 ## Gates
 
 <!-- generated:gates:begin -->
+
+| Gate | Command | Exit | Result |
+|---|---|---|---|
+| Lint (backend) | `/Users/wpalish/projects/unimatch/backend/.venv/bin/python -m ruff check .` | 0 | **PASS** — All checks passed! |
+| Backend tests, PostgreSQL | `/Users/wpalish/projects/unimatch/backend/.venv/bin/python /Users/wpalish/projects/unimatch/backend/scripts/pg.py /Users/wpalish/projects/unimatch/backend/.venv/bin/python -m pytest` | 1 | **FAIL** — 5 failed, 1943 passed in 208.02s (0:03:28) |
+| Backend tests, SQLite | `/Users/wpalish/projects/unimatch/backend/.venv/bin/python -m pytest` | 1 | **FAIL** — 6 failed, 1942 passed in 216.90s (0:03:36) |
+| Types (backend) | `/Users/wpalish/projects/unimatch/backend/.venv/bin/python -m mypy app tests scripts` | 0 | **PASS** — Success: no issues found in 144 source files |
+| Container runtime | `./scripts/compose_smoke.sh` | — | **NOT RUN** — no container runtime found on this machine (looked for docker, podman, nerdctl, finch); this gate is measured by the container-runtime CI job |
+| Crash recovery | `/Users/wpalish/projects/unimatch/backend/.venv/bin/python /Users/wpalish/projects/unimatch/backend/scripts/crash_test.py` | 0 | **PASS** — INFO  [alembic.runtime.migration] Running upgrade b312b741919d -> 65ee4933e633, Give every claim a token, so only its holder can write. |
+| Frontend build | `npm run build` | 0 | **PASS** — ✓ built in 1.53s |
+| Frontend lint | `npm run lint` | 0 | **PASS** — > eslint src e2e --ext .ts,.tsx |
+| Frontend unit tests | `npx vitest run` | 0 | **PASS** —    Duration  3.49s (transform 619ms, setup 1.80s, collect 1.77s, tests 1.10s, environment 9.53s, prepare 2.28s) |
+| Frontend types | `npm run typecheck` | 0 | **PASS** — > tsc --noEmit |
+| Node dependencies | `npm audit` | 0 | **PASS** — found 0 vulnerabilities |
+| Python dependencies | `/Users/wpalish/projects/unimatch/backend/.venv/bin/python -m pip_audit` | 0 | **PASS** — No known vulnerabilities found |
+
+| Measured | Value |
+|---|---|
+| Backend tests | None |
+| Frontend unit tests | 60 |
+| Commit described | `9706531` |
+| Commits since `2ebcbc6` | 78 |
+| Verdict | **NOT READY** |
+
+| Live discovery | Value | Bar |
+|---|---|---|
+| Programme pages per run | 8, 8, 8 | — |
+| Median programme pages | 8 | ≥ 8 |
+| Worst programme pages | 8 | ≥ 7 |
+| Holdout programme pages | 3/6 | ≥ 4 |
+| Zero-tolerance false positives | 0 | 0 |
+| Mean decision-grade completeness | 9.2% | ≥ 70% |
+| Measured at | `c58a0f5bb1472820f40a5475cc74c3b1fd8d3c9a` | — |
+
+**Open:**
+- failing gate: backend_tests_postgres
+- failing gate: backend_tests_sqlite
+- gate not run: container_runtime
+- product threshold: holdout programme pages 3/6 against a bar of 4
+- product threshold: decision-grade extraction completeness 9.2% against a bar of 70%
+
 <!-- generated:gates:end -->
 
 ## Accepted programme pages

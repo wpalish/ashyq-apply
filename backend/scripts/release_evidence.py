@@ -56,6 +56,18 @@ MEDIAN_PROGRAMME_PAGES_BAR = 8
 EXTRACTION_COMPLETENESS_BAR = 0.70
 
 
+def portable_command(command: list[str]) -> str:
+    """The command, without this machine's paths in it.
+
+    `.venv/bin/python` was recorded as `/Users/<someone>/projects/...`, which
+    tells a reader nothing they can run and names the machine into the bargain.
+    Tokens that point inside the repository are recorded relative to it.
+    """
+    return " ".join(
+        portable_path(Path(token)) if "/" in token else token for token in command
+    )
+
+
 def run(command: list[str], cwd: Path = BACKEND, timeout: int = 1800) -> dict[str, Any]:
     """Run a gate and record what it actually did."""
     try:
@@ -64,7 +76,7 @@ def run(command: list[str], cwd: Path = BACKEND, timeout: int = 1800) -> dict[st
         )
     except (OSError, subprocess.TimeoutExpired) as exc:
         return {
-            "command": " ".join(command),
+            "command": portable_command(command),
             "exit_code": None,
             "result": "not_run",
             "detail": f"{type(exc).__name__}: {exc}"[:200],
@@ -72,7 +84,7 @@ def run(command: list[str], cwd: Path = BACKEND, timeout: int = 1800) -> dict[st
     combined = (proc.stdout + proc.stderr).strip()
     tail = combined.splitlines()[-25:]
     return {
-        "command": " ".join(command),
+        "command": portable_command(command),
         "exit_code": proc.returncode,
         "result": "pass" if proc.returncode == 0 else "fail",
         # The last line alone lost the numbers: vitest prints a duration after
@@ -131,6 +143,15 @@ GENERATED_OUTPUTS = (
 )
 
 
+#: Porcelain's status field is two columns and then a space. Slicing at a fixed
+#: offset was wrong, because `git()` strips the whole output and that eats the
+#: leading space of the *first* line only: " M path" arrived as "M path", so
+#: the slice removed the path's first character and the artifact recorded
+#: "rtifacts/release-evidence.json" — a filename that does not exist, in the
+#: field whose entire job is to say precisely which files differed.
+_PORCELAIN_STATUS = re.compile(r"^\s*[A-Z?!]{1,2}\s+")
+
+
 def working_tree_state() -> dict[str, Any]:
     """What differed from HEAD while the gates above were being measured.
 
@@ -141,7 +162,9 @@ def working_tree_state() -> dict[str, Any]:
     """
     porcelain = git("status", "--porcelain")
     paths = sorted(
-        line[3:].strip().strip('"') for line in porcelain.splitlines() if line.strip()
+        _PORCELAIN_STATUS.sub("", line).strip().strip('"')
+        for line in porcelain.splitlines()
+        if line.strip()
     )
     generated = [p for p in paths if p.startswith(GENERATED_OUTPUTS)]
     other = [p for p in paths if p not in generated]
