@@ -321,6 +321,25 @@ else
   bad "session cookie is not HttpOnly"
 fi
 
+step "two workers, each answering for itself"
+# `--scale worker=3` gives every replica the same `worker-cache` volume. The
+# liveness file used to live there, so any single healthy worker kept all of
+# them reporting healthy — including wedged ones. It is container-local now,
+# and this checks that each replica answers about itself.
+"${COMPOSE[@]}" up -d --scale worker=2 worker >/dev/null 2>&1 || true
+sleep 20
+WORKER_IDS="$("${COMPOSE[@]}" ps -q worker 2>/dev/null)"
+WORKER_N="$(echo "$WORKER_IDS" | grep -c . || echo 0)"
+check "$WORKER_N" "2" "two worker replicas are running"
+SCALED_OK=0
+for wid in $WORKER_IDS; do
+  if docker exec "$wid" python -m app.jobs.worker --healthcheck >/dev/null 2>&1; then
+    SCALED_OK=$((SCALED_OK + 1))
+  fi
+done
+check "$SCALED_OK" "$WORKER_N" "every worker replica reports its own liveness"
+"${COMPOSE[@]}" up -d --scale worker=1 worker >/dev/null 2>&1 || true
+
 step "backup and restore drill"
 "${COMPOSE[@]}" exec -T postgres pg_dump -U ashyq ashyq_apply > "$DUMP"
 if [ -s "$DUMP" ]; then ok "dump taken ($(wc -c < "$DUMP") bytes)"; else bad "dump is empty"; fi

@@ -108,6 +108,12 @@ services:
     # the same job.  docker compose up --scale worker=3
     security_opt:
       - no-new-privileges:true
+    # Container-local, and per replica. The liveness file lives here rather
+    # than on `worker-cache`, which every scaled worker shares: one shared file
+    # meant a single healthy worker kept its wedged neighbours reporting
+    # healthy too.
+    tmpfs:
+      - /tmp
     # A worker does not listen on a port, so this cannot be an HTTP check. It
     # asks the worker whether it has been round its loop recently. Without it a
     # worker that is alive but stuck looked perfectly healthy while jobs queued

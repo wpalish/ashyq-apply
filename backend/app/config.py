@@ -92,7 +92,11 @@ class Settings(BaseSettings):
     #: real container run.
     CONTAINER_WRITABLE_PATHS: ClassVar[dict[str, tuple[str, ...]]] = {
         "api": (),
-        "worker": ("/app/data",),
+        # `/app/data` is the HTTP cache, on a volume so it survives restarts.
+        # `/tmp` holds the liveness file, and is container-local on purpose:
+        # scaled workers share the volume, and one shared liveness file let a
+        # healthy worker vouch for its wedged neighbours.
+        "worker": ("/app/data", "/tmp"),
     }
 
     @classmethod

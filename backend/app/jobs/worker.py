@@ -13,6 +13,7 @@ from __future__ import annotations
 import asyncio
 import contextlib
 import logging
+import os
 import signal
 import sys
 import time
@@ -66,12 +67,18 @@ class Worker:
         semaphore = asyncio.Semaphore(self.settings.worker_concurrency)
         running: set[asyncio.Task] = set()
 
+        # A task of its own, not a call at the top of the loop.
+        #
+        # It was called just before `await semaphore.acquire()`, so with every
+        # slot busy the loop blocked there and never touched again: after 120
+        # seconds a worker doing exactly the work it exists to do reported
+        # unhealthy and was restarted mid-job. A heartbeat that stops while the
+        # worker is busiest measures the wrong thing.
         alive_at = liveness_path(self.settings)
+        touch_liveness(alive_at)
+        heartbeat = asyncio.create_task(self._liveness_beat(alive_at))
+
         while not self.stopping.is_set():
-            # Every pass, busy or idle. An idle worker has no job to heartbeat
-            # against, so the queue cannot tell a waiting worker from a wedged
-            # one; this can.
-            touch_liveness(alive_at)
             await semaphore.acquire()
             job_id = self.claim_one()
             if job_id is None:
@@ -87,6 +94,10 @@ class Worker:
             task = asyncio.create_task(self._run_and_release(job_id, semaphore))
             running.add(task)
             task.add_done_callback(running.discard)
+
+        heartbeat.cancel()
+        with contextlib.suppress(asyncio.CancelledError):
+            await heartbeat
 
         if running:
             log.info("waiting for %d job(s) to finish", len(running))
@@ -157,6 +168,20 @@ class Worker:
             log.info("job %s -> %s", job_id[:8], status)
         finally:
             heartbeat.cancel()
+
+    async def _liveness_beat(self, path: Path) -> None:
+        """Report that this worker's event loop is still turning.
+
+        Independent of the polling loop and of the job semaphore, so "busy" and
+        "wedged" stop looking the same. A wedged event loop cannot run this
+        either, which is exactly what should make it stale.
+        """
+        try:
+            while True:
+                await asyncio.sleep(LIVENESS_INTERVAL_SECONDS)
+                touch_liveness(path)
+        except asyncio.CancelledError:
+            return
 
     async def _beat(self, job_id: str) -> None:
         interval = max(1.0, self.settings.job_lease_seconds / HEARTBEAT_DIVISOR)
@@ -330,14 +355,28 @@ def reconcile_startup() -> dict[str, int]:
 LIVENESS_STALE_SECONDS = 120
 
 
+#: How often the heartbeat writes, comfortably inside LIVENESS_STALE_SECONDS so
+#: an ordinary scheduling delay never looks like a wedge.
+LIVENESS_INTERVAL_SECONDS = 10.0
+
+
 def liveness_path(settings: Settings | None = None) -> Path:
-    """Where the worker records that it is still going round its loop."""
-    settings = settings or get_settings()
-    # Beside the HTTP cache, which is the volume a worker already writes to and
-    # the one compose mounts for it. A separate directory would need mounting
-    # too, and a healthcheck reading a path nobody mounted is a healthcheck
-    # that always fails.
-    return Path(settings.cache_dir).parent / "worker-alive"
+    """Where this worker records that it is still going round its loop.
+
+    Deliberately container-local, not on the shared volume.
+
+    It lived beside the HTTP cache, which is `worker-cache:/app/data` — the
+    same volume for every replica. `docker compose up --scale worker=3` gave
+    three workers one `worker-alive` file, so any single healthy worker kept
+    all three reporting healthy, including two that were wedged. A healthcheck
+    that cannot fail for the container it is checking is worse than none: it
+    provides the reassurance without the check.
+
+    `/tmp` is per-container by construction and is already a tmpfs in the
+    compose stack, so nothing needs mounting for this to work.
+    """
+    del settings  # deliberately not derived from a shared, mounted path
+    return Path(os.environ.get("ASHYQ_LIVENESS_PATH", "/tmp/ashyq-worker-alive"))
 
 
 def touch_liveness(path: Path) -> None:
