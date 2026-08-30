@@ -1432,13 +1432,23 @@
       "institution": "University of British Columbia",
       "domain": "ubc.ca",
       "discipline": "computer science",
-      "programme": "",
-      "programme_url": "",
+      "programme": "BSc Computer Science (Vancouver)",
+      "programme_url": "https://you.ubc.ca/programs/computer-science-vancouver-bsc",
       "answers": [
         {
           "question": "the programme exists",
-          "verdict": "not_checked",
-          "claims": []
+          "verdict": "answered",
+          "claims": [
+            {
+              "type": "program_exists",
+              "value": "Computer Science",
+              "source_url": "https://you.ubc.ca/programs/computer-science-vancouver-bsc",
+              "excerpt": "Vancouver \u2014 Computer Science (BSc). Learn how to use and improve computers while you explore topics such as databases and operating systems, software engineering, security, web development, and numerical methodology.",
+              "accessed_at": "2026-08-30",
+              "specificity": "program",
+              "status": "VERIFIED_CURRENT"
+            }
+          ]
         },
         {
           "question": "the intake is open",
@@ -1457,13 +1467,24 @@
         },
         {
           "question": "required school subjects",
-          "verdict": "not_checked",
-          "claims": []
+          "verdict": "answered",
+          "claims": [
+            {
+              "type": "required_subjects",
+              "value": "Mathematics",
+              "source_url": "https://you.ubc.ca/programs/computer-science-vancouver-bsc",
+              "excerpt": "Degree-specific requirements: Science. IB Math Analysis and Approaches SL or HL, or IB Math Applications and Interpretations HL. One of IB Biology, IB Chemistry, or IB Physics. Grade 11 or equivalent Chemistry, and Grade 11 or equivalent Physics.",
+              "accessed_at": "2026-08-30",
+              "specificity": "program",
+              "status": "VERIFIED_CURRENT"
+            }
+          ]
         },
         {
           "question": "the English requirement",
-          "verdict": "not_checked",
-          "claims": []
+          "verdict": "absent",
+          "claims": [],
+          "note": "The programme page states that English-language competency must be demonstrated and links to the English Language Admission Standard, without publishing a score on the page itself. Recorded against this page; the linked standard has not been audited yet."
         },
         {
           "question": "per-section English minimums",
@@ -1702,13 +1723,23 @@
       "institution": "University of Toronto",
       "domain": "utoronto.ca",
       "discipline": "computer science",
-      "programme": "",
-      "programme_url": "",
+      "programme": "HBSc Computer Science",
+      "programme_url": "https://future.utoronto.ca/program/computer-science",
       "answers": [
         {
           "question": "the programme exists",
-          "verdict": "not_checked",
-          "claims": []
+          "verdict": "answered",
+          "claims": [
+            {
+              "type": "program_exists",
+              "value": "Computer Science",
+              "source_url": "https://future.utoronto.ca/program/computer-science",
+              "excerpt": "Computer Science. Degree HBSc. Options: Major, Minor, Specialist. Work-integrated learning option available.",
+              "accessed_at": "2026-08-30",
+              "specificity": "program",
+              "status": "VERIFIED_CURRENT"
+            }
+          ]
         },
         {
           "question": "the intake is open",
@@ -1727,13 +1758,24 @@
         },
         {
           "question": "required school subjects",
-          "verdict": "not_checked",
-          "claims": []
+          "verdict": "answered",
+          "claims": [
+            {
+              "type": "required_subjects",
+              "value": "English",
+              "source_url": "https://future.utoronto.ca/program/computer-science",
+              "excerpt": "Ontario Requirements: Ontario Secondary School Diploma (OSSD) with six subjects at the 4U/M level, including English. English ENG4U / EAE4U; Advanced Functions MHF4U; Calculus & Vectors MCV4U.",
+              "accessed_at": "2026-08-30",
+              "specificity": "program",
+              "status": "VERIFIED_CURRENT"
+            }
+          ]
         },
         {
           "question": "the English requirement",
-          "verdict": "not_checked",
-          "claims": []
+          "verdict": "absent",
+          "claims": [],
+          "note": "The page carries no English-language test requirement. It opens on \"Viewing: Ontario Requirements\" and the other school systems sit behind a \"Change School System\" control that the fetched HTML does not resolve, so an international applicant's requirements are not in the document at all. Recorded as absent from this page, and worth noting as a product finding: the requirements this applicant needs are the ones the crawler cannot see."
         },
         {
           "question": "per-section English minimums",
@@ -1757,8 +1799,9 @@
         },
         {
           "question": "tuition",
-          "verdict": "not_checked",
-          "claims": []
+          "verdict": "absent",
+          "claims": [],
+          "note": "No fee appears on the programme page; Toronto publishes fees on future.utoronto.ca/finances/fees, which has not been audited yet."
         },
         {
           "question": "mandatory fees",
