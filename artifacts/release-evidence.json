@@ -1,9 +1,9 @@
 {
   "base_commit": "2ebcbc6",
   "branch": "claude/production-completion",
-  "commits_since_base": 78,
+  "commits_since_base": 79,
   "counts": {
-    "backend_tests": null,
+    "backend_tests": 1948,
     "frontend_tests": 60
   },
   "environment": {
@@ -12,28 +12,28 @@
   },
   "gates": {
     "backend_lint": {
-      "command": "/Users/wpalish/projects/unimatch/backend/.venv/bin/python -m ruff check .",
+      "command": "python -m ruff check .",
       "detail": "All checks passed!",
       "exit_code": 0,
       "output_tail": "All checks passed!",
       "result": "pass"
     },
     "backend_tests_postgres": {
-      "command": "/Users/wpalish/projects/unimatch/backend/.venv/bin/python /Users/wpalish/projects/unimatch/backend/scripts/pg.py /Users/wpalish/projects/unimatch/backend/.venv/bin/python -m pytest",
-      "detail": "5 failed, 1943 passed in 208.02s (0:03:28)",
-      "exit_code": 1,
-      "output_tail": "E       AssertionError: the artifact carries no live discovery measurement; release verification cannot pass on unmeasured recall\nE       assert (None)\n\ntests/test_documentation_consistency.py:223: AssertionError\n_ TestTheLiveNumbersAgree.test_a_zero_tolerance_false_positive_is_never_reported_as_acceptable _\n\nself = <tests.test_documentation_consistency.TestTheLiveNumbersAgree object at 0x10bcf7470>\nartifact = {'base_commit': '2ebcbc6', 'branch': 'claude/production-completion', 'commits_since_base': 63, 'counts': {'backend_tests': None, 'frontend_tests': 60}, ...}\n\n    def test_a_zero_tolerance_false_positive_is_never_reported_as_acceptable(\n        self, artifact: dict\n    ):\n        live = artifact.get(\"live_discovery\")\n>       assert live, \"the artifact carries no live discovery measurement\"\nE       AssertionError: the artifact carries no live discovery measurement\nE       assert None\n\ntests/test_documentation_consistency.py:250: AssertionError\n=========================== short test summary info ============================\nFAILED tests/test_documentation_consistency.py::TestTheArtifactIsInternallyHonest::test_the_gates_were_measured_against_a_committed_tree\nFAILED tests/test_documentation_consistency.py::TestTheDocumentsAgreeWithTheArtifact::test_the_backend_test_count_matches\nFAILED tests/test_documentation_consistency.py::TestTheDocumentsAgreeWithTheArtifact::test_the_container_gate_is_never_described_as_passing\nFAILED tests/test_documentation_consistency.py::TestTheLiveNumbersAgree::test_the_documents_do_not_contradict_the_measured_recall\nFAILED tests/test_documentation_consistency.py::TestTheLiveNumbersAgree::test_a_zero_tolerance_false_positive_is_never_reported_as_acceptable\n5 failed, 1943 passed in 208.02s (0:03:28)",
-      "result": "fail"
+      "command": "python backend/scripts/pg.py python -m pytest",
+      "detail": "1948 passed in 189.96s (0:03:09)",
+      "exit_code": 0,
+      "output_tail": "........................................................................ [ 18%]\n........................................................................ [ 22%]\n........................................................................ [ 25%]\n........................................................................ [ 29%]\n........................................................................ [ 33%]\n........................................................................ [ 36%]\n........................................................................ [ 40%]\n........................................................................ [ 44%]\n........................................................................ [ 48%]\n........................................................................ [ 51%]\n........................................................................ [ 55%]\n........................................................................ [ 59%]\n........................................................................ [ 62%]\n........................................................................ [ 66%]\n........................................................................ [ 70%]\n........................................................................ [ 73%]\n........................................................................ [ 77%]\n........................................................................ [ 81%]\n........................................................................ [ 85%]\n........................................................................ [ 88%]\n........................................................................ [ 92%]\n........................................................................ [ 96%]\n........................................................................ [ 99%]\n....                                                                     [100%]\n1948 passed in 189.96s (0:03:09)",
+      "result": "pass"
     },
     "backend_tests_sqlite": {
-      "command": "/Users/wpalish/projects/unimatch/backend/.venv/bin/python -m pytest",
-      "detail": "6 failed, 1942 passed in 216.90s (0:03:36)",
-      "exit_code": 1,
-      "output_tail": "            r\"(?:verified|measured|as of|currently|at HEAD)[^.\\n|]{0,40}`([0-9a-f]{7,40})`\",\n            re.IGNORECASE,\n        )\n        for path, text in documents.items():\n            for stated in present_tense.findall(text):\n>               assert artifact[\"head\"].startswith(stated) or stated.startswith(head), (\n                    f\"{path.name} describes the current state at {stated}, \"\n                    f\"but HEAD is {head}\"\n                )\nE               AssertionError: RELEASE_CHECKLIST.md describes the current state at ba15bbb, but HEAD is 5679fb3\nE               assert (False or False)\nE                +  where False = <built-in method startswith of str object at 0x113472bb0>('ba15bbb')\nE                +    where <built-in method startswith of str object at 0x113472bb0> = '5679fb30f87ce20a515571c3f9c0322a47e0e786'.startswith\nE                +  and   False = <built-in method startswith of str object at 0x1137bc2a0>('5679fb3')\nE                +    where <built-in method startswith of str object at 0x1137bc2a0> = 'ba15bbb'.startswith\n\ntests/test_documentation_consistency.py:344: AssertionError\n=========================== short test summary info ============================\nFAILED tests/test_documentation_consistency.py::TestTheArtifactIsInternallyHonest::test_the_gates_were_measured_against_a_committed_tree\nFAILED tests/test_documentation_consistency.py::TestTheDocumentsAgreeWithTheArtifact::test_the_backend_test_count_matches\nFAILED tests/test_documentation_consistency.py::TestTheDocumentsAgreeWithTheArtifact::test_the_container_gate_is_never_described_as_passing\nFAILED tests/test_documentation_consistency.py::TestTheLiveNumbersAgree::test_the_documents_do_not_contradict_the_measured_recall\nFAILED tests/test_documentation_consistency.py::TestTheLiveNumbersAgree::test_a_zero_tolerance_false_positive_is_never_reported_as_acceptable\nFAILED tests/test_documentation_consistency.py::TestNoDocumentHasBlanksOrStaleState::test_no_current_document_quotes_a_stale_commit\n6 failed, 1942 passed in 216.90s (0:03:36)",
-      "result": "fail"
+      "command": "python -m pytest",
+      "detail": "1948 passed in 193.48s (0:03:13)",
+      "exit_code": 0,
+      "output_tail": "........................................................................ [ 18%]\n........................................................................ [ 22%]\n........................................................................ [ 25%]\n........................................................................ [ 29%]\n........................................................................ [ 33%]\n........................................................................ [ 36%]\n........................................................................ [ 40%]\n........................................................................ [ 44%]\n........................................................................ [ 48%]\n........................................................................ [ 51%]\n........................................................................ [ 55%]\n........................................................................ [ 59%]\n........................................................................ [ 62%]\n........................................................................ [ 66%]\n........................................................................ [ 70%]\n........................................................................ [ 73%]\n........................................................................ [ 77%]\n........................................................................ [ 81%]\n........................................................................ [ 85%]\n........................................................................ [ 88%]\n........................................................................ [ 92%]\n........................................................................ [ 96%]\n........................................................................ [ 99%]\n....                                                                     [100%]\n1948 passed in 193.48s (0:03:13)",
+      "result": "pass"
     },
     "backend_types": {
-      "command": "/Users/wpalish/projects/unimatch/backend/.venv/bin/python -m mypy app tests scripts",
+      "command": "python -m mypy app tests scripts",
       "detail": "Success: no issues found in 144 source files",
       "exit_code": 0,
       "output_tail": "tests/test_run_supervisor.py:193: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]\ntests/test_ssrf.py:243: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]\ntests/test_worker_split_brain.py:334: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]\ntests/test_live_regressions.py:515: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]\ntests/test_live_regressions.py:542: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]\ntests/test_job_payload_versioning.py:162: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]\nSuccess: no issues found in 144 source files",
@@ -46,17 +46,17 @@
       "result": "not_run"
     },
     "crash_recovery": {
-      "command": "/Users/wpalish/projects/unimatch/backend/.venv/bin/python /Users/wpalish/projects/unimatch/backend/scripts/crash_test.py",
+      "command": "python backend/scripts/crash_test.py",
       "detail": "INFO  [alembic.runtime.migration] Running upgrade b312b741919d -> 65ee4933e633, Give every claim a token, so only its holder can write.",
       "exit_code": 0,
-      "output_tail": "using a throwaway database at /var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/crash-test-t8ntx_x4\ndatabase migrated  lease=5s\nenqueued job f6d63b27 for run 4be00bdc\nworker A pid 15604 started\nworker A SIGKILLed during funding_discovery, with 12 results already written\n  immediately after: job=running worker=iMac-Aliser.local:15604 run=funding_discovery results=12\nworker B pid 15617 started after the lease expired\n\n  job    : succeeded  attempts=2/3  worker=None\n  run    : awaiting_user_decision  recovery_count=0\n  results: 12  unique=12  duplicates=0\n  claims : 109\n\n  PASS: recovered after SIGKILL, re-attempted, finished, no duplicates\nINFO  [alembic.runtime.migration] Context impl SQLiteImpl.\nINFO  [alembic.runtime.migration] Will assume non-transactional DDL.\nINFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.\nINFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases\nINFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> b312b741919d, Stamp every durable job with the payload contract it was written against.\nINFO  [alembic.runtime.migration] Running upgrade b312b741919d -> 65ee4933e633, Give every claim a token, so only its holder can write.",
+      "output_tail": "using a throwaway database at /var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/crash-test-uag6mb6s\ndatabase migrated  lease=5s\nenqueued job ffc524e3 for run 04b36445\nworker A pid 18780 started\nworker A SIGKILLed during funding_discovery, with 12 results already written\n  immediately after: job=running worker=iMac-Aliser.local:18780 run=funding_discovery results=12\nworker B pid 18788 started after the lease expired\n\n  job    : succeeded  attempts=2/3  worker=None\n  run    : awaiting_user_decision  recovery_count=0\n  results: 12  unique=12  duplicates=0\n  claims : 97\n\n  PASS: recovered after SIGKILL, re-attempted, finished, no duplicates\nINFO  [alembic.runtime.migration] Context impl SQLiteImpl.\nINFO  [alembic.runtime.migration] Will assume non-transactional DDL.\nINFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.\nINFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases\nINFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> b312b741919d, Stamp every durable job with the payload contract it was written against.\nINFO  [alembic.runtime.migration] Running upgrade b312b741919d -> 65ee4933e633, Give every claim a token, so only its holder can write.",
       "result": "pass"
     },
     "frontend_build": {
       "command": "npm run build",
-      "detail": "\u2713 built in 1.53s",
+      "detail": "\u2713 built in 1.45s",
       "exit_code": 0,
-      "output_tail": "> unimatch-frontend@0.1.0 build\n> tsc -b && vite build\n\nvite v6.4.3 building for production...\ntransforming...\n\u2713 45 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                   0.95 kB \u2502 gzip:  0.51 kB\ndist/assets/index-KDnhGUA9.css   25.55 kB \u2502 gzip:  5.49 kB\ndist/assets/index-C9Fdvl7P.js   254.24 kB \u2502 gzip: 75.44 kB\n\u2713 built in 1.53s",
+      "output_tail": "> unimatch-frontend@0.1.0 build\n> tsc -b && vite build\n\nvite v6.4.3 building for production...\ntransforming...\n\u2713 45 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                   0.95 kB \u2502 gzip:  0.51 kB\ndist/assets/index-KDnhGUA9.css   25.55 kB \u2502 gzip:  5.49 kB\ndist/assets/index-C9Fdvl7P.js   254.24 kB \u2502 gzip: 75.44 kB\n\u2713 built in 1.45s",
       "result": "pass"
     },
     "frontend_lint": {
@@ -68,9 +68,9 @@
     },
     "frontend_tests": {
       "command": "npx vitest run",
-      "detail": "   Duration  3.49s (transform 619ms, setup 1.80s, collect 1.77s, tests 1.10s, environment 9.53s, prepare 2.28s)",
+      "detail": "   Duration  3.44s (transform 681ms, setup 1.98s, collect 1.69s, tests 1.02s, environment 9.55s, prepare 2.67s)",
       "exit_code": 0,
-      "output_tail": "RUN  v3.2.7 /Users/wpalish/projects/unimatch/frontend\n\n \u2713 src/lib/funding-coverage.test.ts (4 tests) 7ms\n \u2713 src/lib/money-conversion.test.ts (3 tests) 124ms\n \u2713 src/lib/immutable.test.ts (11 tests) 69ms\n \u2713 src/lib/format.test.ts (21 tests) 139ms\n \u2713 src/screens/documents-unknown.test.tsx (3 tests) 9ms\n \u2713 src/lib/store.test.tsx (8 tests) 327ms\n \u2713 src/components/primitives.test.tsx (10 tests) 428ms\n\n Test Files  7 passed (7)\n      Tests  60 passed (60)\n   Start at  16:17:08\n   Duration  3.49s (transform 619ms, setup 1.80s, collect 1.77s, tests 1.10s, environment 9.53s, prepare 2.28s)",
+      "output_tail": "RUN  v3.2.7 /Users/wpalish/projects/unimatch/frontend\n\n \u2713 src/lib/funding-coverage.test.ts (4 tests) 21ms\n \u2713 src/lib/immutable.test.ts (11 tests) 16ms\n \u2713 src/lib/money-conversion.test.ts (3 tests) 129ms\n \u2713 src/lib/format.test.ts (21 tests) 144ms\n \u2713 src/screens/documents-unknown.test.tsx (3 tests) 7ms\n \u2713 src/lib/store.test.tsx (8 tests) 334ms\n \u2713 src/components/primitives.test.tsx (10 tests) 368ms\n\n Test Files  7 passed (7)\n      Tests  60 passed (60)\n   Start at  16:37:36\n   Duration  3.44s (transform 681ms, setup 1.98s, collect 1.69s, tests 1.02s, environment 9.55s, prepare 2.67s)",
       "result": "pass"
     },
     "frontend_types": {
@@ -88,15 +88,15 @@
       "result": "pass"
     },
     "python_dependencies": {
-      "command": "/Users/wpalish/projects/unimatch/backend/.venv/bin/python -m pip_audit",
+      "command": "python -m pip_audit",
       "detail": "No known vulnerabilities found",
       "exit_code": 0,
       "output_tail": "No known vulnerabilities found",
       "result": "pass"
     }
   },
-  "generated_at": "2026-08-30T11:17:21+00:00",
-  "head": "9706531d73691defd38f6ccf8e94024987a1d65b",
+  "generated_at": "2026-08-30T11:37:49+00:00",
+  "head": "51ec87b0fd2a70431d964117a8c22d1a40489f53",
   "live_discovery": {
     "distinct_run_files": 3,
     "holdout": {
@@ -144,10 +144,7 @@
     "worst_programme_pages": 8
   },
   "open_gates": {
-    "failing": [
-      "backend_tests_postgres",
-      "backend_tests_sqlite"
-    ],
+    "failing": [],
     "not_run": [
       "container_runtime"
     ],
@@ -159,10 +156,11 @@
   "verdict": "NOT READY",
   "working_tree": {
     "clean": false,
-    "clean_ignoring_generated_outputs": false,
-    "generated_outputs_modified": [],
-    "uncommitted_paths": [
-      "rtifacts/release-evidence.json"
-    ]
+    "clean_ignoring_generated_outputs": true,
+    "generated_outputs_modified": [
+      "artifacts/release-evidence.json",
+      "docs/evidence/RELEASE-EVIDENCE-2026-08-29.md"
+    ],
+    "uncommitted_paths": []
   }
 }

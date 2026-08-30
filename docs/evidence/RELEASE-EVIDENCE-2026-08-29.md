@@ -47,25 +47,25 @@ for `ba15bbb` came to be built from merge commit `6a95c5bd`.
 
 | Gate | Command | Exit | Result |
 |---|---|---|---|
-| Lint (backend) | `/Users/wpalish/projects/unimatch/backend/.venv/bin/python -m ruff check .` | 0 | **PASS** — All checks passed! |
-| Backend tests, PostgreSQL | `/Users/wpalish/projects/unimatch/backend/.venv/bin/python /Users/wpalish/projects/unimatch/backend/scripts/pg.py /Users/wpalish/projects/unimatch/backend/.venv/bin/python -m pytest` | 1 | **FAIL** — 5 failed, 1943 passed in 208.02s (0:03:28) |
-| Backend tests, SQLite | `/Users/wpalish/projects/unimatch/backend/.venv/bin/python -m pytest` | 1 | **FAIL** — 6 failed, 1942 passed in 216.90s (0:03:36) |
-| Types (backend) | `/Users/wpalish/projects/unimatch/backend/.venv/bin/python -m mypy app tests scripts` | 0 | **PASS** — Success: no issues found in 144 source files |
+| Lint (backend) | `python -m ruff check .` | 0 | **PASS** — All checks passed! |
+| Backend tests, PostgreSQL | `python backend/scripts/pg.py python -m pytest` | 0 | **PASS** — 1948 passed in 189.96s (0:03:09) |
+| Backend tests, SQLite | `python -m pytest` | 0 | **PASS** — 1948 passed in 193.48s (0:03:13) |
+| Types (backend) | `python -m mypy app tests scripts` | 0 | **PASS** — Success: no issues found in 144 source files |
 | Container runtime | `./scripts/compose_smoke.sh` | — | **NOT RUN** — no container runtime found on this machine (looked for docker, podman, nerdctl, finch); this gate is measured by the container-runtime CI job |
-| Crash recovery | `/Users/wpalish/projects/unimatch/backend/.venv/bin/python /Users/wpalish/projects/unimatch/backend/scripts/crash_test.py` | 0 | **PASS** — INFO  [alembic.runtime.migration] Running upgrade b312b741919d -> 65ee4933e633, Give every claim a token, so only its holder can write. |
-| Frontend build | `npm run build` | 0 | **PASS** — ✓ built in 1.53s |
+| Crash recovery | `python backend/scripts/crash_test.py` | 0 | **PASS** — INFO  [alembic.runtime.migration] Running upgrade b312b741919d -> 65ee4933e633, Give every claim a token, so only its holder can write. |
+| Frontend build | `npm run build` | 0 | **PASS** — ✓ built in 1.45s |
 | Frontend lint | `npm run lint` | 0 | **PASS** — > eslint src e2e --ext .ts,.tsx |
-| Frontend unit tests | `npx vitest run` | 0 | **PASS** —    Duration  3.49s (transform 619ms, setup 1.80s, collect 1.77s, tests 1.10s, environment 9.53s, prepare 2.28s) |
+| Frontend unit tests | `npx vitest run` | 0 | **PASS** —    Duration  3.44s (transform 681ms, setup 1.98s, collect 1.69s, tests 1.02s, environment 9.55s, prepare 2.67s) |
 | Frontend types | `npm run typecheck` | 0 | **PASS** — > tsc --noEmit |
 | Node dependencies | `npm audit` | 0 | **PASS** — found 0 vulnerabilities |
-| Python dependencies | `/Users/wpalish/projects/unimatch/backend/.venv/bin/python -m pip_audit` | 0 | **PASS** — No known vulnerabilities found |
+| Python dependencies | `python -m pip_audit` | 0 | **PASS** — No known vulnerabilities found |
 
 | Measured | Value |
 |---|---|
-| Backend tests | None |
+| Backend tests | 1948 |
 | Frontend unit tests | 60 |
-| Commit described | `9706531` |
-| Commits since `2ebcbc6` | 78 |
+| Commit described | `51ec87b` |
+| Commits since `2ebcbc6` | 79 |
 | Verdict | **NOT READY** |
 
 | Live discovery | Value | Bar |
@@ -79,8 +79,6 @@ for `ba15bbb` came to be built from merge commit `6a95c5bd`.
 | Measured at | `c58a0f5bb1472820f40a5475cc74c3b1fd8d3c9a` | — |
 
 **Open:**
-- failing gate: backend_tests_postgres
-- failing gate: backend_tests_sqlite
 - gate not run: container_runtime
 - product threshold: holdout programme pages 3/6 against a bar of 4
 - product threshold: decision-grade extraction completeness 9.2% against a bar of 70%
