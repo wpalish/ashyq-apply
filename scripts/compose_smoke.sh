@@ -45,6 +45,18 @@ annotate() {
 }
 
 PHASE="starting"
+# JSON is parsed, not grepped.
+#
+# `grep -o '"stage":"[^"]*"'` matched the run's own stage *and* the stage of
+# every entry in its `stages[]` list, so the comparison was against eight lines
+# of text and could never equal one value. The run had completed correctly; the
+# assertion was wrong, and it burned three minutes of polling before saying so.
+#
+# python3 is on every GitHub runner, and this all runs on the runner rather
+# than inside a container.
+json_field() { python3 -c 'import json,sys; d=json.load(sys.stdin); print(d'"$1"')' 2>/dev/null || true; }
+json_len()   { python3 -c 'import json,sys; d=json.load(sys.stdin); print(len(d'"$1"'))' 2>/dev/null || echo 0; }
+
 step()  { PHASE="$1"; printf '\n=== %s\n' "$1"; }
 ok()    { printf '  ok   %s\n' "$1"; }
 bad()   {
@@ -132,7 +144,18 @@ done
 check "$(curl -s -o /dev/null -w '%{http_code}' "$API/api/health")" "200" "API is healthy"
 
 step "the one-shot migration ran to completion"
-MIGRATE_EXIT="$("${COMPOSE[@]}" ps -a --format json migrate | tr ',' '\n' | grep -o '"ExitCode":[0-9-]*' | head -1 | cut -d: -f2 || echo "?")"
+# `docker compose ps --format json` emits an array on some versions and one
+# object per line on others. Both are handled rather than assumed.
+MIGRATE_EXIT="$("${COMPOSE[@]}" ps -a --format json migrate | python3 -c '
+import json, sys
+raw = sys.stdin.read().strip()
+try:
+    data = json.loads(raw)
+except json.JSONDecodeError:
+    data = [json.loads(line) for line in raw.splitlines() if line.strip()]
+rows = data if isinstance(data, list) else [data]
+print(rows[0].get("ExitCode", "?") if rows else "?")
+' 2>/dev/null || echo "?")"
 check "${MIGRATE_EXIT:-?}" "0" "migration job exited cleanly"
 
 step "register, create a case, run demo research"
@@ -145,25 +168,25 @@ PROFILE_JSON="$("${COMPOSE[@]}" exec -T api python -c \
   'from app.corpus.demo_profile import DEMO_PROFILE; import json; print(json.dumps(DEMO_PROFILE.model_dump(mode="json")))')"
 PROFILE_ID="$(printf '%s' "$PROFILE_JSON" \
   | curl -fsS -b "$JAR_A" "$API/api/profiles" -X POST -H 'content-type: application/json' --data-binary @- \
-  | grep -o '"id":"[^"]*"' | head -1 | cut -d'"' -f4 || true)"
+  | json_field '["id"]' || true)"
 if [ -z "${PROFILE_ID:-}" ]; then
   bad "could not create an applicant case (see the API log)"
 else
   ok "applicant case $PROFILE_ID"
   RUN_ID="$(curl -fsS -b "$JAR_A" -X POST "$API/api/runs" -H 'content-type: application/json' \
-    -d "{\"profile_id\":\"$PROFILE_ID\",\"demo_mode\":true}" | grep -o '"id":"[^"]*"' | head -1 | cut -d'"' -f4)"
+    -d "{\"profile_id\":\"$PROFILE_ID\",\"demo_mode\":true}" | json_field '["id"]')"
   ok "run $RUN_ID enqueued"
 
   # --- a reference run, so the interrupted one can be compared to it -------
   step "a clean run, for comparison"
   for _ in $(seq 1 90); do
-    STAGE="$(curl -fsS -b "$JAR_A" "$API/api/runs/$RUN_ID" | grep -o '"stage":"[^"]*"' | cut -d'"' -f4)"
+    STAGE="$(curl -fsS -b "$JAR_A" "$API/api/runs/$RUN_ID" | json_field '["stage"]')"
     [ "$STAGE" = "awaiting_user_decision" ] && break
     [ "$STAGE" = "failed" ] && break
     sleep 2
   done
   check "$STAGE" "awaiting_user_decision" "the worker picked up and finished a clean run"
-  CLEAN_RESULTS="$(curl -fsS -b "$JAR_A" "$API/api/runs/$RUN_ID/results" | grep -o '"id":"' | wc -l | tr -d ' ')"
+  CLEAN_RESULTS="$(curl -fsS -b "$JAR_A" "$API/api/runs/$RUN_ID/results" | json_len '["results"] if isinstance(d, dict) else d')"
   ok "clean run produced $CLEAN_RESULTS results"
 
   # --- now interrupt a run *while it is working* --------------------------
@@ -172,14 +195,14 @@ else
   # recover. It proved only that a finished run stays finished.
   step "kill the worker mid-run and let a new one take over"
   CRASH_RUN="$(curl -fsS -b "$JAR_A" -X POST "$API/api/runs" -H 'content-type: application/json' \
-    -d "{\"profile_id\":\"$PROFILE_ID\",\"demo_mode\":true}" | grep -o '"id":"[^"]*"' | head -1 | cut -d'"' -f4)"
+    -d "{\"profile_id\":\"$PROFILE_ID\",\"demo_mode\":true}" | json_field '["id"]')"
   ok "run $CRASH_RUN enqueued for the crash test"
 
   MID_STAGE=""
   MID_RESULTS=0
   for _ in $(seq 1 120); do
-    MID_STAGE="$(curl -fsS -b "$JAR_A" "$API/api/runs/$CRASH_RUN" | grep -o '"stage":"[^"]*"' | cut -d'"' -f4)"
-    MID_RESULTS="$(curl -fsS -b "$JAR_A" "$API/api/runs/$CRASH_RUN/results" | grep -o '"id":"' | wc -l | tr -d ' ')"
+    MID_STAGE="$(curl -fsS -b "$JAR_A" "$API/api/runs/$CRASH_RUN" | json_field '["stage"]')"
+    MID_RESULTS="$(curl -fsS -b "$JAR_A" "$API/api/runs/$CRASH_RUN/results" | json_len '["results"] if isinstance(d, dict) else d')"
     case "$MID_STAGE" in
       program_verification|funding_discovery|assessment)
         [ "${MID_RESULTS:-0}" -ge 1 ] && break ;;
@@ -213,7 +236,7 @@ with SessionLocal() as s:
 
       FINAL_STAGE=""
       for _ in $(seq 1 120); do
-        FINAL_STAGE="$(curl -fsS -b "$JAR_A" "$API/api/runs/$CRASH_RUN" | grep -o '"stage":"[^"]*"' | cut -d'"' -f4)"
+        FINAL_STAGE="$(curl -fsS -b "$JAR_A" "$API/api/runs/$CRASH_RUN" | json_field '["stage"]')"
         case "$FINAL_STAGE" in awaiting_user_decision|failed|cancelled) break ;; esac
         sleep 2
       done
@@ -247,7 +270,7 @@ in-flight crash recovery was NOT exercised"
 
   step "a cancelled run must not report success"
   CANCEL_RUN="$(curl -fsS -b "$JAR_A" -X POST "$API/api/runs" -H 'content-type: application/json' \
-    -d "{\"profile_id\":\"$PROFILE_ID\",\"demo_mode\":true}" | grep -o '"id":"[^"]*"' | head -1 | cut -d'"' -f4)"
+    -d "{\"profile_id\":\"$PROFILE_ID\",\"demo_mode\":true}" | json_field '["id"]')"
   sleep 2
   curl -fsS -b "$JAR_A" -X POST "$API/api/runs/$CANCEL_RUN/cancel" >/dev/null || true
   sleep 8
