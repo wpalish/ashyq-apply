@@ -297,7 +297,7 @@ def test_nothing_survives_a_failed_run(tmp_path):
     testing someone else's server in the first place."""
     port = _free_port()
     proc = _start(tmp_path, port)
-    workers = _await(lambda: _worker_children(proc.pid), START_TIMEOUT, "the worker")
+    _await(lambda: _worker_children(proc.pid), START_TIMEOUT, "the worker")
     proc.send_signal(signal.SIGKILL)
     proc.wait(timeout=10)
     # Simulating the harness's own worst case: the supervisor is gone without
