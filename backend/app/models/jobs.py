@@ -76,6 +76,19 @@ class Job(TimestampedBase):
     heartbeat_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     worker_id: Mapped[str | None] = mapped_column(String(80), nullable=True)
 
+    #: Which *run* of this job the current holder is on. Regenerated at every
+    #: claim, and required by heartbeat, complete, fail and cancel.
+    #:
+    #: Without it those operations matched on job id and RUNNING status alone,
+    #: so a worker that stalled long enough for its lease to expire could wake
+    #: after another had reclaimed the job and extend that worker's lease, mark
+    #: its job succeeded, or fail work it had already finished. Two writers on
+    #: one job is the corruption a durable queue exists to prevent.
+    #:
+    #: Deliberately random rather than a PID or a timestamp: a PID is reused and
+    #: a clock can go backwards, and neither can fence.
+    lease_token: Mapped[str | None] = mapped_column(String(64), nullable=True)
+
     #: Set by cancel(); the running worker observes it between units of work so
     #: cancellation lands at a consistent point instead of tearing a stage.
     cancel_requested: Mapped[bool] = mapped_column(default=False, nullable=False)

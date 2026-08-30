@@ -10,6 +10,7 @@ from __future__ import annotations
 import logging
 import os
 import socket
+import threading
 from datetime import UTC, date, datetime
 
 from sqlalchemy.orm import Session
@@ -66,6 +67,17 @@ class RunCancelled(RuntimeError):
     pass
 
 
+class LeaseLost(RuntimeError):
+    """This run's job now belongs to another worker; stop without writing.
+
+    Deliberately not `RunCancelled`. Cancellation is a person's decision and
+    ends the run; losing a lease means another worker is already running this
+    same run, and the only correct response is for this one to stop touching
+    it. Writing *anything* — including a failure — would be one of two workers
+    deciding the outcome of a job it no longer holds.
+    """
+
+
 class ResearchRunner:
     """Executes the pipeline for one run."""
 
@@ -77,6 +89,7 @@ class ResearchRunner:
         settings: Settings,
         *,
         job_id: str | None = None,
+        lease_lost: threading.Event | None = None,
     ) -> None:
         self.session = session
         self.run = run
@@ -90,6 +103,10 @@ class ResearchRunner:
         #: When run by a worker, cancellation is observed through the job as
         #: well as the run, so either route stops the work.
         self.job_id = job_id
+        #: Set by the worker's heartbeat thread when the job's lease can no
+        #: longer be held. Checked at the same points as cancellation, because
+        #: those are the points where stopping leaves consistent state.
+        self.lease_lost = lease_lost
         #: Stages skipped because a previous attempt finished them.
         self.resumed_stages: list[str] = []
         self.candidate_limit = run.candidate_limit or settings.candidate_limit
@@ -149,7 +166,14 @@ class ResearchRunner:
         self.session.commit()
 
     def _check_cancelled(self) -> None:
-        """Observed between units of work so cancellation lands cleanly."""
+        """Observed between units of work so a stop lands cleanly."""
+        # Ownership first, and before touching the database: if this job is no
+        # longer ours, every read and write below belongs to another worker's
+        # run of it.
+        if self.lease_lost is not None and self.lease_lost.is_set():
+            raise LeaseLost(
+                f"the lease on job {self.job_id} was lost; another worker holds it"
+            )
         self.session.refresh(self.run)
         if self.run.cancelled:
             raise RunCancelled("Run was cancelled by the user.")

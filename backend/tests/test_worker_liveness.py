@@ -11,11 +11,8 @@ from the queue. The worker records its own instead.
 """
 from __future__ import annotations
 
-import contextlib
 import time
 from pathlib import Path
-
-import pytest
 
 from app.jobs.worker import LIVENESS_STALE_SECONDS, is_alive, touch_liveness
 
@@ -72,45 +69,62 @@ class TestABusyWorkerIsStillAlive:
     the helper rather than the loop.
     """
 
-    @pytest.mark.asyncio
-    async def test_liveness_stays_fresh_while_every_slot_is_busy(self, tmp_path, monkeypatch):
-        import asyncio
+    def test_liveness_stays_fresh_while_the_event_loop_is_blocked(
+        self, tmp_path, monkeypatch
+    ):
+        """The second version of this failure, and the reason it is a thread.
+
+        Moving the touch off the polling loop into an `asyncio.Task` fixed the
+        semaphore case and left the larger one: the pipeline is synchronous
+        work behind an `async def`, so it holds the event loop for the whole
+        job. A task cannot run while that is happening — instrumenting a real
+        54-second run showed the beat task starting and never waking from its
+        first sleep. So the file still went untouched for exactly as long as
+        the worker was busy.
+
+        A thread is not on the event loop, and this test blocks the loop with
+        `time.sleep` to say so. A wedged *process* still cannot run the thread,
+        so the signal keeps its meaning.
+        """
+        import threading
+        import time
 
         from app.config import Settings
         from app.jobs.worker import Worker
 
         settings = Settings(
             worker_concurrency=1,
-            worker_poll_seconds=0.05,
             cache_dir=tmp_path / "cache",
             export_dir=tmp_path / "exports",
             database_url="postgresql://user@host/db",
         )
         worker = Worker(settings)
         path = tmp_path / "worker-alive"
-        monkeypatch.setattr("app.jobs.worker.liveness_path", lambda *_a, **_k: path)
-        # A heartbeat that is quick enough to observe in a test.
         monkeypatch.setattr("app.jobs.worker.LIVENESS_INTERVAL_SECONDS", 0.05)
 
-        beat = asyncio.create_task(worker._liveness_beat(path))
+        finished = threading.Event()
+        beat = threading.Thread(
+            target=worker._hold_liveness, args=(path, finished), daemon=True
+        )
+        beat.start()
         try:
-            await asyncio.sleep(0.3)
+            time.sleep(0.2)
             first = path.stat().st_mtime
-            # Whatever the loop is doing, the heartbeat is not waiting on it.
-            await asyncio.sleep(0.3)
+            # The event loop would be blocked here in a real job. Nothing about
+            # this thread depends on it.
+            time.sleep(0.3)
             assert path.stat().st_mtime > first, (
                 "the heartbeat stopped while the worker was busy"
             )
         finally:
-            beat.cancel()
-            with contextlib.suppress(asyncio.CancelledError):
-                await beat
+            finished.set()
+            beat.join(timeout=5)
 
-    @pytest.mark.asyncio
-    async def test_the_heartbeat_stops_when_cancelled(self, tmp_path, monkeypatch):
-        """A task left running past shutdown keeps a stopped worker looking
+    def test_the_heartbeat_stops_when_the_worker_does(self, tmp_path, monkeypatch):
+        """A beat left running past shutdown keeps a stopped worker looking
         alive, which is the same lie in the other direction."""
-        import asyncio
+        import threading
+        import time
 
         from app.config import Settings
         from app.jobs.worker import Worker
@@ -124,13 +138,18 @@ class TestABusyWorkerIsStillAlive:
                 database_url="postgresql://user@host/db",
             )
         )
-        beat = asyncio.create_task(worker._liveness_beat(path))
-        await asyncio.sleep(0.15)
-        beat.cancel()
-        with contextlib.suppress(asyncio.CancelledError):
-            await beat
+        finished = threading.Event()
+        beat = threading.Thread(
+            target=worker._hold_liveness, args=(path, finished), daemon=True
+        )
+        beat.start()
+        time.sleep(0.15)
+        finished.set()
+        beat.join(timeout=5)
+        assert beat.is_alive() is False, "the beat thread outlived its worker"
+
         stopped_at = path.stat().st_mtime
-        await asyncio.sleep(0.2)
+        time.sleep(0.2)
         assert path.stat().st_mtime == stopped_at, "the heartbeat outlived its worker"
 
 

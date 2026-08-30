@@ -16,6 +16,7 @@ from __future__ import annotations
 import json
 import logging
 import os
+import secrets
 import socket
 from collections.abc import Iterable
 from dataclasses import dataclass
@@ -151,7 +152,18 @@ class JobStore:
         # something a deployment resolves. The applicant is told "nothing has
         # been charged against your attempts", and this is what makes that
         # true.
-        supported = sorted(supported_versions or SUPPORTED_PAYLOAD_SCHEMA_VERSIONS)
+        # `is None` rather than a falsy check. An empty set is a caller saying
+        # "this build supports nothing" — a worker mid-rollout, or a test
+        # proving refusal. `or` read that as "unspecified" and substituted the
+        # default, so the one input that must claim nothing claimed everything
+        # this build supports. An empty `IN ()` is also not valid SQL, so the
+        # bug hid behind the fallback that caused it.
+        if supported_versions is None:
+            supported = sorted(SUPPORTED_PAYLOAD_SCHEMA_VERSIONS)
+        else:
+            supported = sorted(set(supported_versions))
+            if not supported:
+                return None
         placeholders = ", ".join(f":v{i}" for i in range(len(supported)))
         candidate_id = self.session.execute(
             text(
@@ -181,6 +193,10 @@ class JobStore:
             .values(
                 status=JobStatus.RUNNING.value,
                 worker_id=worker,
+                # A fresh token per claim. Every subsequent write to this job
+                # must present it, so a worker that stalled past its lease
+                # cannot act on a run that is no longer its own.
+                lease_token=secrets.token_hex(16),
                 attempts=Job.attempts + 1,
                 started_at=now,
                 heartbeat_at=now,
@@ -196,27 +212,56 @@ class JobStore:
         self.session.flush()
         return self.session.get(Job, claimed)
 
-    def heartbeat(self, job_id: str) -> bool:
-        """Extend the lease. False if the job is no longer ours to extend."""
+    def heartbeat(self, job_id: str, *, lease_token: str) -> bool:
+        """Extend the lease. False when the job is no longer ours to extend.
+
+        That sentence used to be untrue of the query beneath it: it matched job
+        id and RUNNING status alone, so a stalled worker could extend a lease
+        another worker now held. The token is what makes it true.
+
+        An empty token matches nothing, deliberately: treating it as a wildcard
+        would restore the original bug in a shape nobody would notice.
+        """
+        if not lease_token:
+            return False
         now = datetime.now(UTC)
         updated = self.session.execute(
             update(Job)
-            .where(Job.id == job_id, Job.status == JobStatus.RUNNING.value)
+            .where(
+                Job.id == job_id,
+                Job.status == JobStatus.RUNNING.value,
+                Job.lease_token == lease_token,
+            )
             .values(heartbeat_at=now, lease_expires_at=now + timedelta(seconds=self.lease_seconds))
             .returning(Job.id)
         ).scalar()
         return updated is not None
 
-    def complete(self, job_id: str) -> None:
+    def complete(self, job_id: str, *, lease_token: str) -> bool:
+        """Mark the job done. False when this holder no longer owns it.
+
+        Returns a result rather than nothing: a worker that has lost its lease
+        needs to know that its completion did not land, and silently doing
+        nothing is how it would carry on believing otherwise.
+        """
+        if not lease_token:
+            return False
         now = datetime.now(UTC)
-        self.session.execute(
+        updated = self.session.execute(
             update(Job)
-            .where(Job.id == job_id)
+            .where(
+                Job.id == job_id,
+                Job.status == JobStatus.RUNNING.value,
+                Job.lease_token == lease_token,
+            )
             .values(
                 status=JobStatus.SUCCEEDED.value, finished_at=now,
                 lease_expires_at=None, worker_id=None, last_error="",
+                lease_token=None,
             )
-        )
+            .returning(Job.id)
+        ).scalar()
+        return updated is not None
 
     def park_incompatible(self, job_id: str, payload_schema_version: int) -> str:
         """Set a job aside because this build cannot read its payload.
@@ -291,15 +336,29 @@ class JobStore:
         self.session.flush()
         return len(releasable)
 
-    def fail(self, job_id: str, error: str, *, retry: bool = True) -> str:
-        """Record a failure. Returns the resulting status.
+    def fail(
+        self,
+        job_id: str,
+        error: str,
+        *,
+        retry: bool = True,
+        lease_token: str | None = None,
+    ) -> str | None:
+        """Record a failure. Returns the resulting status, or None if refused.
 
         A job that has used its attempts goes to ``dead`` rather than looping:
         an automatic retry that can never succeed is just a slower outage.
+
+        `lease_token` is optional for callers that hold no lease — the reaper,
+        a payload refusal — and required in effect for a worker: presenting the
+        wrong one returns None and writes nothing, so a stalled worker cannot
+        fail work another has already finished, nor spend its attempts.
         """
         job = self.session.get(Job, job_id)
         if job is None:
             return JobStatus.DEAD.value
+        if lease_token is not None and job.lease_token != lease_token:
+            return None
         now = datetime.now(UTC)
         exhausted = job.attempts >= job.max_attempts
 
@@ -313,23 +372,40 @@ class JobStore:
 
         job.lease_expires_at = None
         job.worker_id = None
+        job.lease_token = None
         job.last_error = error[:4000]
         self.session.add(job)
         self.session.flush()
         return job.status
 
-    def mark_cancelled(self, job_id: str, reason: str = "cancelled by the user") -> None:
-        """Terminal status for work a person stopped deliberately."""
+    def mark_cancelled(
+        self,
+        job_id: str,
+        reason: str = "cancelled by the user",
+        *,
+        lease_token: str | None = None,
+    ) -> bool:
+        """Terminal status for work a person stopped deliberately.
+
+        `lease_token` is optional because a person cancelling from the API holds
+        no lease. When a *worker* calls it, it must present its token: a stalled
+        worker cancelling a run another worker is midway through is the same
+        split-brain write as any other.
+        """
         job = self.session.get(Job, job_id)
         if job is None:
-            return
+            return False
+        if lease_token is not None and job.lease_token != lease_token:
+            return False
         job.status = JobStatus.CANCELLED.value
         job.finished_at = datetime.now(UTC)
         job.lease_expires_at = None
         job.worker_id = None
         job.last_error = reason[:4000]
+        job.lease_token = None
         self.session.add(job)
         self.session.flush()
+        return True
 
     def cancel(self, job_id: str) -> bool:
         """Request cancellation.
@@ -387,6 +463,10 @@ class JobStore:
                 job.available_at = now + backoff_for(job.attempts)
             job.worker_id = None
             job.lease_expires_at = None
+            # Reaping revokes ownership. Leaving the token in place would let
+            # the worker that stopped beating wake up and still match, which is
+            # the whole thing the token exists to prevent.
+            job.lease_token = None
             job.last_error = note
             self.session.add(job)
             reaped.append(job.id)
