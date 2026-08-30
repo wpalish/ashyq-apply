@@ -183,6 +183,13 @@ a crashed worker becomes visible: another worker's reaper returns the job to
 the queue, and a job that exhausts its attempts goes to `dead` rather than
 looping.
 
+Each claim carries a random token, and every write to the job presents it, so a
+worker that stalled past its lease cannot write to a job another worker has
+since taken — see [ADR 0004](docs/adr/0004-lease-fencing.md). The refresh runs
+on a thread rather than on the event loop, because the pipeline holds the loop
+for the length of a job; as a task it never ran at all while a job was running,
+which made the lease decorative for exactly the long jobs it was for.
+
 **A crashed run resumes.** Stages already marked complete are not repeated, and
 persisting a result updates the row a previous attempt wrote rather than
 colliding with it. `scripts/crash_test.py` proves this by SIGKILLing a real

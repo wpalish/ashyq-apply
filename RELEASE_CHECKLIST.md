@@ -33,7 +33,7 @@ measured against the wrong thing:
 | 3 | ruff, mypy, TypeScript, ESLint, production build clean | **PASS** | all clean; build 74.5 kB JS gzip, 5.3 kB CSS |
 | 4 | PostgreSQL migrations work on fresh and upgraded databases | **PASS** | Alembic. Verified fresh, downgrade to base, re-upgrade, re-apply as a no-op, on PostgreSQL 16.2 and SQLite. `create_all()` removed from the production path; startup refuses a mismatched revision |
 | 5 | Worker survives a crash restart | **PASS** | `scripts/crash_test.py` SIGKILLs a real worker after 12 results are written; a second worker recovers the job and finishes with no duplicates. Stable over 3 runs. **PostgreSQL-backed queue, not Redis — see ADR 0001** |
-| 6 | No run stuck `running` with no worker | **PASS** | Worker lease + heartbeat; `retryable_failed`; startup reconciliation; API reports `stale`. 7 tests |
+| 6 | No run stuck `running` with no worker | **PASS** | Worker lease + token-fenced heartbeat on a thread ([ADR 0004](docs/adr/0004-lease-fencing.md)); `retryable_failed`; startup reconciliation; API reports `stale`. Store-level fencing on PostgreSQL, worker-level enforcement with the event loop blocked, and `scripts/split_brain_test.py`, which SIGSTOPs a real worker past its lease and gives it every chance to interfere |
 | 7 | `candidate_limit` works | **PASS** | Persisted on the run, applied, capped against `verify_limit`, reused on retry. 3 tests |
 | 8 | Playwright escalation actually invoked and recorded | **PASS** | Escalation inside `Fetcher`; per-page tier and per-run tier counts. 3 tests |
 | 9 | Known live false positives no longer reproducible | **PASS** | 10 documented FPs, ~60 regression tests. Three independent live canary runs on 2026-08-29: zero zero-tolerance false positives in each |
