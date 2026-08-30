@@ -131,6 +131,16 @@ cleanup() {
   cp "$DUMP" "$ARTIFACTS/pg_dump.sql" 2>/dev/null || true
   rm -f "$JAR_A" "$JAR_B" "$DUMP"
 }
+# `set -e` kills the script on any unguarded failure, and until now that
+# surfaced as a bare "Process completed with exit code 22" — curl's code for an
+# HTTP error, with no indication of which request. The line and the command are
+# worth more than the number.
+on_error() {
+  local code=$? line=$1
+  annotate "smoke died in $PHASE" "line $line exited $code: ${BASH_COMMAND:-unknown}"
+  printf '\n  FAIL script died at line %s (exit %s): %s\n' "$line" "$code" "${BASH_COMMAND:-unknown}" >&2
+}
+trap 'on_error $LINENO' ERR
 trap cleanup EXIT
 
 step "config and build"
@@ -283,6 +293,11 @@ in-flight crash recovery was NOT exercised"
   CANCEL_RUN="$(curl -fsS -b "$JAR_A" -X POST "$API/api/runs" -H 'content-type: application/json' \
     -d "{\"profile_id\":\"$PROFILE_ID\",\"demo_mode\":true}" | json_field '["id"]')"
   sleep 2
+  # What the run was doing when the cancel was sent. A demo run finishes in
+  # seconds, so it is often already complete by now — and cancelling something
+  # already finished is a no-op, not a bug. Asserting without checking made
+  # this a coin toss that blamed the product for the test's timing.
+  STAGE_AT_CANCEL="$(curl -fsS -b "$JAR_A" "$API/api/runs/$CANCEL_RUN" | json_field '["stage"]')"
   curl -fsS -b "$JAR_A" -X POST "$API/api/runs/$CANCEL_RUN/cancel" >/dev/null || true
   sleep 8
   CANCEL_JOB="$("${COMPOSE[@]}" exec -T api python -c "
@@ -292,11 +307,20 @@ with SessionLocal() as s:
     j = s.query(Job).filter(Job.run_id == '$CANCEL_RUN').first()
     print(j.status if j else 'missing')
 " 2>/dev/null | tr -d '\r')"
-  if [ "$CANCEL_JOB" = "succeeded" ]; then
-    bad "a cancelled run reported its job as succeeded"
-  else
-    ok "cancelled run's job is $CANCEL_JOB, not succeeded"
-  fi
+  case "$STAGE_AT_CANCEL" in
+    awaiting_user_decision|completed|failed|cancelled)
+      # Nothing was in flight to cancel. Reported rather than passed silently:
+      # a check that cannot fail should not look like one that passed.
+      ok "run had already reached $STAGE_AT_CANCEL; cancellation not exercised"
+      ;;
+    *)
+      if [ "$CANCEL_JOB" = "succeeded" ]; then
+        bad "a run cancelled during $STAGE_AT_CANCEL reported its job as succeeded"
+      else
+        ok "run cancelled during $STAGE_AT_CANCEL; its job is $CANCEL_JOB, not succeeded"
+      fi
+      ;;
+  esac
 
   step "restart the API and confirm the session and data survive"
   "${COMPOSE[@]}" restart api >/dev/null
@@ -304,8 +328,10 @@ with SessionLocal() as s:
   check "$(curl -s -o /dev/null -w '%{http_code}' -b "$JAR_A" "$API/api/runs/$RUN_ID")" "200" "run still readable after restart"
 
   step "tenant isolation with a second user"
-  curl -fsS -c "$JAR_B" -X POST "$API/api/auth/register" -H 'content-type: application/json' \
-    -d '{"email":"smoke-b@example.test","password":"correct horse battery smoke b","display_name":"Smoke B","organization_name":"Smoke B Org"}' >/dev/null
+  if ! curl -fsS -c "$JAR_B" -X POST "$API/api/auth/register" -H 'content-type: application/json' \
+    -d '{"email":"smoke-b@example.test","password":"correct horse battery smoke b","display_name":"Smoke B","organization_name":"Smoke B Org"}' >/dev/null; then
+    bad "could not register a second tenant; isolation was not exercised"
+  fi
   check "$(curl -s -o /dev/null -w '%{http_code}' -b "$JAR_B" "$API/api/runs/$RUN_ID")" "404" "tenant B cannot read tenant A's run"
   check "$(curl -s -o /dev/null -w '%{http_code}' -b "$JAR_B" "$API/api/profiles/$PROFILE_ID")" "404" "tenant B cannot read tenant A's case"
 fi
@@ -315,7 +341,9 @@ HEADERS="$(curl -fsSI "$API/api/health")"
 for header in "x-content-type-options" "x-frame-options" "referrer-policy"; do
   if grep -qi "^$header:" <<<"$HEADERS"; then ok "$header present"; else bad "$header missing"; fi
 done
-if grep -qi "httponly" <<<"$(curl -fsSI -X POST "$API/api/auth/logout" -b "$JAR_A")"; then
+# `|| true`: logout may answer 4xx if the session has already gone, and that
+# is not the thing under test here.
+if grep -qi "httponly" <<<"$(curl -sSI -X POST "$API/api/auth/logout" -b "$JAR_A" || true)"; then
   ok "session cookie is HttpOnly"
 else
   bad "session cookie is not HttpOnly"
