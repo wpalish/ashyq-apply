@@ -142,18 +142,44 @@ no page off the institution's own registrable domain is fetched.
 
 ## Honest limitations
 
-1. **Holdout recall is 3/6, against a bar of 4/6.** Monterrey is disallowed by
-   `robots.txt`, which is permanent and correct. Tokyo serves no sitemap and
-   only seven pages were reachable. Cape Town publishes its undergraduate
-   detail in faculty handbook PDFs and on faculty subdomains rather than as
-   per-programme pages. None of the three has a fix that would not be fitting
-   to one site.
-2. **Verification completeness averages 5.6% across the ten**, against 25
-   decision-grade questions. Finding a page is necessary and nowhere near
-   sufficient. Fee tables are now read — Groningen's €2,694 and €19,800 rows,
-   each tied to who pays it — which is most of the rise from 30 claims to 51,
-   but the great majority of the twenty-five questions are still unanswered on
-   most institutions. **This is the largest remaining gap in the product.**
+1. **Holdout recall is 3/6, against a bar of 4/6**, unchanged by this cycle.
+   Monterrey is disallowed by `robots.txt`, which is permanent and correct.
+   Tokyo serves no sitemap and only seven pages were reachable. Cape Town
+   publishes its undergraduate detail in faculty handbook PDFs and on faculty
+   subdomains rather than as per-programme pages.
+
+   One of the three now has a general fix in view rather than a site-specific
+   one. `classify_page` is handed `result.text` for every page, so a PDF
+   arrives as decoded binary and is parsed as HTML: `pdf_to_text` exists and the
+   requirements adapter already uses it, but the classifier never sees a PDF as
+   a PDF, so a handbook can never be recognised as a programme page. That is a
+   defect in one call, not a rule about Cape Town — but it is **not** fixed in
+   this cycle, and the holdout number therefore stands at 3/6.
+2. **Verification completeness averages 9.2% across the ten**, against 25
+   decision-grade questions, up from 5.6%. Finding a page is necessary and
+   nowhere near sufficient. **This is still the largest remaining gap in the
+   product**, and it is now measured rather than guessed at.
+
+   The rise came from correcting what counts as the institution speaking, not
+   from finding anything new: the claim count did not move at all, 51 before
+   and 51 after. `is_official_domain` compared strings, so a page on
+   `future.utoronto.ca` did not match a registry domain of `www.utoronto.ca`
+   and every claim found there was stamped UNVERIFIED and discarded. Toronto
+   read *nine claims at 0.00 completeness*. The four institutions that came off
+   zero — Toronto to 0.20, Hong Kong to 0.08, Vienna and British Columbia to
+   0.04 — are exactly the four that publish on a subdomain other than `www`.
+
+   What the remaining gap is made of is no longer a guess either. A frozen gold
+   set (`backend/app/corpus/gold/`) records, per programme, what each
+   institution actually publishes for each of the twenty-five questions, read
+   by hand off their own pages. Against four audited programmes the extractor
+   scores **precision 1.00 and recall 0.46**: it has never once claimed
+   something a page does not say, and it misses about half of what they do say.
+   The misses group: required school subjects is missed on all four, and the
+   English requirement is now *readable* — requirement tables are parsed since
+   this cycle, and Groningen's faculty page yields five claims where it yielded
+   none — but sits on a page the pipeline does not fetch. Coverage is 18 of 500
+   question slots and the evaluator reports it on every run.
 3. **A run takes about twenty minutes**, most of it browser rendering. That is
    acceptable for a background job and would not be for an interactive one.
 4. **Ten institutions is not the world.** Nothing here establishes behaviour on

@@ -336,6 +336,8 @@ What is stable enough to state in prose:
 | E2E (Playwright), desktop 1440×900 and Pixel 7 | the generated gate table |
 | Accessibility | axe WCAG A/AA on every reachable screen, inside the E2E run |
 | Crash recovery | real SIGKILL, job recovered, no duplicate results |
+| Split-brain | a real worker SIGSTOPped past its lease, the job taken by another, then resumed |
+| Extraction accuracy | precision and recall per decision question, against a frozen hand-audited gold set |
 | Migrations | fresh, downgrade, re-upgrade, re-apply, on SQLite and PostgreSQL |
 | Container stack | run by the `container-runtime` CI job on every push, not on a developer machine |
 | Live discovery | three canary runs plus a frozen holdout, in the generated table |
@@ -343,6 +345,26 @@ What is stable enough to state in prose:
 **The product is NOT READY**, and the reason is not technical: decision-grade
 extraction completeness and holdout recall are both below their bars. The
 verdict in the artifact is computed from those thresholds, not asserted.
+
+How far below, and why, is now measured rather than estimated.
+[`backend/app/corpus/gold/`](backend/app/corpus/gold/) holds a frozen gold set —
+for each programme, what the institution actually publishes for each of the
+twenty-five decision questions, read by hand off their own pages with the URL,
+the excerpt and the date it was read. Each question gets one of three verdicts:
+`answered`, `absent` (checked, and the institution does not publish it) and
+`not_checked`, which is counted in neither numerator nor denominator and
+reported as coverage. A benchmark that hides its own gaps produces a number that
+looks like a measurement.
+
+```bash
+./.venv/bin/python scripts/evaluate_extraction.py --canary-run ../artifacts/canary/run1
+```
+
+It reports precision, recall and F1 per question, and separates *missed* from
+*unreachable*: for every answer the pipeline does not produce, it fetches the
+page the gold claim cites and asks whether the extractor could read it there.
+"The English requirement is missed" and "the English requirement is on a page we
+never fetch" need completely different work.
 
 Screenshots of every main state are in [`docs/screenshots/`](docs/screenshots/)
 (desktop) and `docs/screenshots/mobile/`.

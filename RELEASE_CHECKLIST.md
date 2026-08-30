@@ -7,20 +7,32 @@ the release report, not "implemented".
 **Current verdict: NOT READY, NOT DEPLOYED.** Two gates are open, both named
 below. The measured values are in `artifacts/release-evidence.json`; this file states status and reasoning, and must not restate numbers that live there.
 
-Gate **22 (the container stack) now passes** — measured by CI at `ba15bbb`,
-having genuinely failed first at `a669496`.
+Gate **22 (the container stack) now passes** — measured by CI, at the commit
+named in the artifact, having genuinely failed first at `a669496`.
 
 The open gate is **28: holdout recall, 3/6 against a bar of 4**. The main live
-canary meets every bar it has (median 8, worst 8, category 28/30, scholarship
-10/10, zero false positives), and the product thresholds for decision-grade
-extraction — 5.6% mean completeness against 25 questions — are not met either.
+canary meets every bar it has (median and worst programme pages, category and
+scholarship pages, zero zero-tolerance false positives), and the product
+threshold for decision-grade extraction is not met either. Completeness rose
+this cycle and is still far below its bar; the measured values are in the
+artifact.
+
+Extraction now has a **denominator**. `backend/app/corpus/gold/` holds a frozen
+gold set: what each institution actually publishes for each of the twenty-five
+decision questions, read by hand off their own pages, with the URL, the excerpt
+and the date it was read. `scripts/evaluate_extraction.py` scores the extractor
+against it per question. Against the programmes audited so far it is precise and
+half-deaf — it has never claimed something a page does not say, and it misses
+about half of what they do. Coverage is reported on every run and is small; the
+selection is frozen by digest so it cannot be curated toward a result.
 
 Two gates changed status *downwards* this cycle, both because they were being
 measured against the wrong thing:
 
 * **Gate 28** was PASS on "zero false positives". Zero false positives is a
   precision result and says nothing about recall. The main canary now meets its
-  recall bar; the frozen holdout does not, and that is what keeps 28 open.
+  recall bar; the frozen holdout does not, and that is what keeps 28 open. The
+  holdout was re-measured this cycle and is unchanged at 3/6.
 * **Gate 22** was BLOCKED on "Docker is not installed", which is still true of
   this machine and no longer true of the gate: the `container-runtime` CI job
   runs the smoke test on every push. It failed there first, for a real reason,
@@ -55,7 +67,7 @@ measured against the wrong thing:
 | 25 | No TODO / FIXME in a production path | **PASS** | `grep -rn "TODO\|FIXME" backend/app frontend/src` → none |
 | 26 | No disabled or skipped tests without written justification | **PASS** | No skips, no xfails |
 | 27 | Demo data unmistakably synthetic | **PASS** | Fixture banner, `fixture://` scheme, UI badge, export column. Loads only on an explicit confirmed action |
-| 28 | Independent live truth audit, and programme discovery meets its bar | **FAIL** | Main canary **passes**: three independent runs at the commit named in the artifact gave **8, 8, 8** programme pages of ten — median 8 against a bar of 8, worst 8 against a bar of 7. Category pages **28/30** against 27, scholarship pages **10/10** against 9, and **zero** zero-tolerance false positives in every run. All twenty accepted programme pages were opened by hand and every one is a named, specific bachelor's programme. The **holdout fails**: 3 of 6 against a bar of 4, with its registry unedited and no seed added. Monterrey is disallowed by `robots.txt`; Tokyo serves no sitemap; Cape Town publishes programme detail in faculty handbook PDFs. **The holdout is the gate that keeps the release closed.** |
+| 28 | Independent live truth audit, and programme discovery meets its bar | **FAIL** | Main canary **passes** on every bar it has; the measured values, and the sha256 of each run's raw output, are in the artifact. Three runs are three separate executions, kept in `artifacts/canary/` with their digests — the previous artifact recorded only basenames, so three runs and one file counted three times were indistinguishable in the record. All twenty accepted programme pages were opened by hand and every one is a named, specific bachelor's programme. The **holdout fails**: 3 of 6 against a bar of 4, re-measured this cycle and unchanged, with its registry unedited and no seed added. Monterrey is disallowed by `robots.txt`; Tokyo serves no sitemap; Cape Town publishes programme detail in faculty handbook PDFs, and the classifier is handed those PDFs as decoded binary to parse as HTML — a general defect in one call, not fixed here. **The holdout is the gate that keeps the release closed.** |
 | 29 | Local release commit/tag after all gates pass | **BLOCKED** | Gates open |
 | 30 | Nothing pushed externally without permission | **PASS** | External publication occurs only after the user's explicit GitHub upload request |
 
