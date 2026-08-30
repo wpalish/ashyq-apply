@@ -255,8 +255,25 @@ class TestNoDocumentHasBlanksOrStaleState:
     BLANKS = (
         re.compile(r"\*\*PASS\*\* —\s*passed"),
         re.compile(r"\|\s*Tests\s*\|\s*backend"),
-        re.compile(r"—\s+passed\b"),
     )
+
+    #: A gate row is a verdict and the evidence for it: `**PASS** — 1859 passed`.
+    #: A `sed` with an empty variable wrote `**PASS** —  passed` into six rows
+    #: of the evidence document, and the count that should have been there was
+    #: simply gone.
+    #:
+    #: The discriminator is the missing *number*, not the words. A blanket
+    #: `—\s+passed` also matched ordinary prose — "a project list — passed as a
+    #: programme on two degree words" — which is a sentence, not a gate.
+    GATE_VERDICT = re.compile(r"\*\*(?:PASS|FAIL|BLOCKED)\*\*(?P<evidence>[^|\n]*)")
+
+    @classmethod
+    def _verdict_without_a_count(cls, line: str) -> str | None:
+        for match in cls.GATE_VERDICT.finditer(line):
+            evidence = match.group("evidence")
+            if "passed" in evidence and not re.search(r"\d", evidence):
+                return evidence
+        return None
 
     #: Markers of unfinished work, in the shapes an actual one takes: followed
     #: by a colon or a dash, or opening a list item.
@@ -287,6 +304,10 @@ class TestNoDocumentHasBlanksOrStaleState:
                         f"{path.name} has a placeholder where a measured value "
                         f"belongs: {raw.strip()[:120]}"
                     )
+                assert self._verdict_without_a_count(stripped) is None, (
+                    f"{path.name} states a gate verdict with no count behind "
+                    f"it: {raw.strip()[:120]}"
+                )
                 assert not self.UNFINISHED.search(self._without_code(raw)), (
                     f"{path.name} records unfinished work: {raw.strip()[:120]}"
                 )
