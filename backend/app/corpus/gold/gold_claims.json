@@ -1,0 +1,2856 @@
+{
+  "version": 1,
+  "frozen_at": "2026-08-30",
+  "frozen_at_commit": "5679fb30f87ce20a515571c3f9c0322a47e0e786",
+  "selection_rule": "For each of the ten institutions in the canary registry, the two English-taught bachelor's programmes nearest to (1) computer science and (2) mechanical or electrical engineering. Where an institution teaches no English-taught bachelor's in a discipline, that is recorded as such and the slot stays empty rather than being filled with an easier programme.",
+  "programmes": [
+    {
+      "id": "rug-cs",
+      "institution": "University of Groningen",
+      "domain": "rug.nl",
+      "discipline": "computer science",
+      "programme": "BSc Computing Science",
+      "programme_url": "https://www.rug.nl/bachelors/computing-science",
+      "answers": [
+        {
+          "question": "the programme exists",
+          "verdict": "answered",
+          "claims": [
+            {
+              "type": "program_exists",
+              "value": "Computing Science",
+              "source_url": "https://www.rug.nl/bachelors/computing-science",
+              "excerpt": "Degree: BSc in Computing Science. Course type: Bachelor. Duration: 36 months (180 EC). Language of instruction: English. Start: September.",
+              "accessed_at": "2026-08-30",
+              "specificity": "program",
+              "status": "VERIFIED_CURRENT"
+            }
+          ]
+        },
+        {
+          "question": "the intake is open",
+          "verdict": "absent",
+          "claims": [],
+          "note": "The page publishes application deadlines for the September 2027 start but never states whether the cycle is currently open to applications. A deadline in the future is not the same statement, and inferring one from the other is how a closed intake gets reported as open."
+        },
+        {
+          "question": "the application deadline",
+          "verdict": "answered",
+          "claims": [
+            {
+              "type": "admission_deadline",
+              "value": "2027-05-01",
+              "source_url": "https://www.rug.nl/bachelors/computing-science",
+              "excerpt": "Application deadlines. non-EU/EEA students: 01 May 2027, start course 01 September 2027.",
+              "accessed_at": "2026-08-30",
+              "specificity": "program_intake",
+              "status": "VERIFIED_CURRENT"
+            }
+          ]
+        },
+        {
+          "question": "the minimum grade",
+          "verdict": "absent",
+          "claims": [],
+          "note": "No numeric minimum is published for holders of a non-Dutch diploma. The page lists admissible Dutch diploma profiles and otherwise refers the decision to the Admissions Board, which is a process rather than a threshold."
+        },
+        {
+          "question": "required school subjects",
+          "verdict": "answered",
+          "claims": [
+            {
+              "type": "required_subjects",
+              "value": "Mathematics",
+              "source_url": "https://www.rug.nl/bachelors/computing-science",
+              "excerpt": "Sufficient background knowledge in Mathematics is required. The Admissions Board will determine whether your background knowledge in this subject is sufficient to start the Bachelor's programme.",
+              "accessed_at": "2026-08-30",
+              "specificity": "program",
+              "status": "VERIFIED_CURRENT"
+            }
+          ]
+        },
+        {
+          "question": "the English requirement",
+          "verdict": "answered",
+          "claims": [
+            {
+              "type": "ielts_min_overall",
+              "value": "6.5",
+              "source_url": "https://www.rug.nl/fse/education/admission-application/apply-bsc/language",
+              "excerpt": "Minimum requirements for English-taught Bachelor's programmes: IELTS 6.5 / CEFR B2-C1. IELTS (Academic): 6.5 overall.",
+              "accessed_at": "2026-08-30",
+              "specificity": "university_admissions",
+              "status": "VERIFIED_CURRENT"
+            }
+          ]
+        },
+        {
+          "question": "per-section English minimums",
+          "verdict": "answered",
+          "claims": [
+            {
+              "type": "ielts_min_subscore",
+              "value": "6.5",
+              "source_url": "https://www.rug.nl/fse/education/admission-application/apply-bsc/language",
+              "excerpt": "IELTS (Academic): Reading 6.5, Listening 6.5, Speaking 6.5, Writing 6.5, overall 6.5.",
+              "accessed_at": "2026-08-30",
+              "specificity": "university_admissions",
+              "status": "VERIFIED_CURRENT"
+            }
+          ]
+        },
+        {
+          "question": "the admissions test policy",
+          "verdict": "absent",
+          "claims": [],
+          "note": "Neither the programme page nor the faculty admission pages mention SAT, ACT or any equivalent admissions test. Dutch bachelor's admission does not use one, and the institution says nothing about it either way."
+        },
+        {
+          "question": "portfolio, interview or entrance exam",
+          "verdict": "absent",
+          "claims": [],
+          "note": "Nothing on the programme or faculty admission pages requires a portfolio, an interview or an entrance exam, and the application in Studielink is explicitly the option without the 'Numerus fixus programme' label. The site does not state the negative in so many words, which is why this is recorded as absent rather than as an answered 'not required'."
+        },
+        {
+          "question": "whether my diploma is recognised",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "tuition",
+          "verdict": "answered",
+          "claims": [
+            {
+              "type": "tuition",
+              "value": "EUR 2694",
+              "source_url": "https://www.rug.nl/bachelors/computing-science",
+              "excerpt": "Tuition fees. Year 2026-2027, Fee EUR 2694, Programme form full-time (statutory fee, EU/EEA students).",
+              "accessed_at": "2026-08-30",
+              "specificity": "program_intake",
+              "status": "VERIFIED_CURRENT"
+            },
+            {
+              "type": "tuition",
+              "value": "EUR 19800",
+              "source_url": "https://www.rug.nl/bachelors/computing-science",
+              "excerpt": "Tuition fees. Year 2026-2027, Fee EUR 19800, Programme form full-time (institutional fee, non-EU/EEA students).",
+              "accessed_at": "2026-08-30",
+              "specificity": "program_intake",
+              "status": "VERIFIED_CURRENT"
+            }
+          ]
+        },
+        {
+          "question": "mandatory fees",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "housing",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "meals",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "health insurance",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the application fee",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "an award exists",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "what the award is worth",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "what the award covers",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether I may hold it",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether it applies to my degree",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "how to apply for it",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "its own deadline",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether it renews",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the documents I must submit",
+          "verdict": "not_checked",
+          "claims": []
+        }
+      ]
+    },
+    {
+      "id": "rug-eng",
+      "institution": "University of Groningen",
+      "domain": "rug.nl",
+      "discipline": "mechanical or electrical engineering",
+      "programme": "",
+      "programme_url": "",
+      "answers": [
+        {
+          "question": "the programme exists",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the intake is open",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the application deadline",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the minimum grade",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "required school subjects",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the English requirement",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "per-section English minimums",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the admissions test policy",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "portfolio, interview or entrance exam",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether my diploma is recognised",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "tuition",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "mandatory fees",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "housing",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "meals",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "health insurance",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the application fee",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "an award exists",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "what the award is worth",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "what the award covers",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether I may hold it",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether it applies to my degree",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "how to apply for it",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "its own deadline",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether it renews",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the documents I must submit",
+          "verdict": "not_checked",
+          "claims": []
+        }
+      ]
+    },
+    {
+      "id": "tudelft-cs",
+      "institution": "Delft University of Technology",
+      "domain": "tudelft.nl",
+      "discipline": "computer science",
+      "programme": "BSc Computer Science and Engineering",
+      "programme_url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+      "answers": [
+        {
+          "question": "the programme exists",
+          "verdict": "answered",
+          "claims": [
+            {
+              "type": "program_exists",
+              "value": "Computer Science and Engineering",
+              "source_url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+              "excerpt": "Bachelor of Computer Science and Engineering. Language: English track: English. Form: Full time - on campus. Start: September.",
+              "accessed_at": "2026-08-30",
+              "specificity": "program",
+              "status": "VERIFIED_CURRENT"
+            }
+          ]
+        },
+        {
+          "question": "the intake is open",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the application deadline",
+          "verdict": "answered",
+          "claims": [
+            {
+              "type": "admission_deadline",
+              "value": "January 15",
+              "source_url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+              "excerpt": "Important dates. Numerus fixus: January 15th. The programme is capped at 590 places, so this is the date applications close.",
+              "accessed_at": "2026-08-30",
+              "specificity": "program",
+              "status": "VERIFIED_CURRENT"
+            }
+          ]
+        },
+        {
+          "question": "the minimum grade",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "required school subjects",
+          "verdict": "answered",
+          "claims": [
+            {
+              "type": "required_subjects",
+              "value": "Math B",
+              "source_url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+              "excerpt": "Overview. Required subjects: Math B. Numerus fixus: Yes (590). Start: September.",
+              "accessed_at": "2026-08-30",
+              "specificity": "program",
+              "status": "VERIFIED_CURRENT"
+            }
+          ]
+        },
+        {
+          "question": "the English requirement",
+          "verdict": "not_checked",
+          "claims": [],
+          "note": ""
+        },
+        {
+          "question": "per-section English minimums",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the admissions test policy",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "portfolio, interview or entrance exam",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether my diploma is recognised",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "tuition",
+          "verdict": "not_checked",
+          "claims": [],
+          "note": ""
+        },
+        {
+          "question": "mandatory fees",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "housing",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "meals",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "health insurance",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the application fee",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "an award exists",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "what the award is worth",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "what the award covers",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether I may hold it",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether it applies to my degree",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "how to apply for it",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "its own deadline",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether it renews",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the documents I must submit",
+          "verdict": "not_checked",
+          "claims": []
+        }
+      ]
+    },
+    {
+      "id": "tudelft-eng",
+      "institution": "Delft University of Technology",
+      "domain": "tudelft.nl",
+      "discipline": "mechanical or electrical engineering",
+      "programme": "",
+      "programme_url": "",
+      "answers": [
+        {
+          "question": "the programme exists",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the intake is open",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the application deadline",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the minimum grade",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "required school subjects",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the English requirement",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "per-section English minimums",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the admissions test policy",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "portfolio, interview or entrance exam",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether my diploma is recognised",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "tuition",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "mandatory fees",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "housing",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "meals",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "health insurance",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the application fee",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "an award exists",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "what the award is worth",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "what the award covers",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether I may hold it",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether it applies to my degree",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "how to apply for it",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "its own deadline",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether it renews",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the documents I must submit",
+          "verdict": "not_checked",
+          "claims": []
+        }
+      ]
+    },
+    {
+      "id": "aalto-cs",
+      "institution": "Aalto University",
+      "domain": "aalto.fi",
+      "discipline": "computer science",
+      "programme": "",
+      "programme_url": "",
+      "answers": [
+        {
+          "question": "the programme exists",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the intake is open",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the application deadline",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the minimum grade",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "required school subjects",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the English requirement",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "per-section English minimums",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the admissions test policy",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "portfolio, interview or entrance exam",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether my diploma is recognised",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "tuition",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "mandatory fees",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "housing",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "meals",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "health insurance",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the application fee",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "an award exists",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "what the award is worth",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "what the award covers",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether I may hold it",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether it applies to my degree",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "how to apply for it",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "its own deadline",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether it renews",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the documents I must submit",
+          "verdict": "not_checked",
+          "claims": []
+        }
+      ]
+    },
+    {
+      "id": "aalto-eng",
+      "institution": "Aalto University",
+      "domain": "aalto.fi",
+      "discipline": "mechanical or electrical engineering",
+      "programme": "",
+      "programme_url": "",
+      "answers": [
+        {
+          "question": "the programme exists",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the intake is open",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the application deadline",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the minimum grade",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "required school subjects",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the English requirement",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "per-section English minimums",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the admissions test policy",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "portfolio, interview or entrance exam",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether my diploma is recognised",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "tuition",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "mandatory fees",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "housing",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "meals",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "health insurance",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the application fee",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "an award exists",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "what the award is worth",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "what the award covers",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether I may hold it",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether it applies to my degree",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "how to apply for it",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "its own deadline",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether it renews",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the documents I must submit",
+          "verdict": "not_checked",
+          "claims": []
+        }
+      ]
+    },
+    {
+      "id": "univie-cs",
+      "institution": "University of Vienna",
+      "domain": "univie.ac.at",
+      "discipline": "computer science",
+      "programme": "",
+      "programme_url": "",
+      "answers": [
+        {
+          "question": "the programme exists",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the intake is open",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the application deadline",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the minimum grade",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "required school subjects",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the English requirement",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "per-section English minimums",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the admissions test policy",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "portfolio, interview or entrance exam",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether my diploma is recognised",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "tuition",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "mandatory fees",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "housing",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "meals",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "health insurance",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the application fee",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "an award exists",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "what the award is worth",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "what the award covers",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether I may hold it",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether it applies to my degree",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "how to apply for it",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "its own deadline",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether it renews",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the documents I must submit",
+          "verdict": "not_checked",
+          "claims": []
+        }
+      ]
+    },
+    {
+      "id": "univie-eng",
+      "institution": "University of Vienna",
+      "domain": "univie.ac.at",
+      "discipline": "mechanical or electrical engineering",
+      "programme": "",
+      "programme_url": "",
+      "answers": [
+        {
+          "question": "the programme exists",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the intake is open",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the application deadline",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the minimum grade",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "required school subjects",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the English requirement",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "per-section English minimums",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the admissions test policy",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "portfolio, interview or entrance exam",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether my diploma is recognised",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "tuition",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "mandatory fees",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "housing",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "meals",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "health insurance",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the application fee",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "an award exists",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "what the award is worth",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "what the award covers",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether I may hold it",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether it applies to my degree",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "how to apply for it",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "its own deadline",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether it renews",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the documents I must submit",
+          "verdict": "not_checked",
+          "claims": []
+        }
+      ]
+    },
+    {
+      "id": "uw-cs",
+      "institution": "University of Warsaw",
+      "domain": "uw.edu.pl",
+      "discipline": "computer science",
+      "programme": "",
+      "programme_url": "",
+      "answers": [
+        {
+          "question": "the programme exists",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the intake is open",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the application deadline",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the minimum grade",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "required school subjects",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the English requirement",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "per-section English minimums",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the admissions test policy",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "portfolio, interview or entrance exam",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether my diploma is recognised",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "tuition",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "mandatory fees",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "housing",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "meals",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "health insurance",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the application fee",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "an award exists",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "what the award is worth",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "what the award covers",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether I may hold it",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether it applies to my degree",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "how to apply for it",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "its own deadline",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether it renews",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the documents I must submit",
+          "verdict": "not_checked",
+          "claims": []
+        }
+      ]
+    },
+    {
+      "id": "uw-eng",
+      "institution": "University of Warsaw",
+      "domain": "uw.edu.pl",
+      "discipline": "mechanical or electrical engineering",
+      "programme": "",
+      "programme_url": "",
+      "answers": [
+        {
+          "question": "the programme exists",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the intake is open",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the application deadline",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the minimum grade",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "required school subjects",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the English requirement",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "per-section English minimums",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the admissions test policy",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "portfolio, interview or entrance exam",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether my diploma is recognised",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "tuition",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "mandatory fees",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "housing",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "meals",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "health insurance",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the application fee",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "an award exists",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "what the award is worth",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "what the award covers",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether I may hold it",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether it applies to my degree",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "how to apply for it",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "its own deadline",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether it renews",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the documents I must submit",
+          "verdict": "not_checked",
+          "claims": []
+        }
+      ]
+    },
+    {
+      "id": "ubc-cs",
+      "institution": "University of British Columbia",
+      "domain": "ubc.ca",
+      "discipline": "computer science",
+      "programme": "BSc Computer Science (Vancouver)",
+      "programme_url": "https://you.ubc.ca/programs/computer-science-vancouver-bsc",
+      "answers": [
+        {
+          "question": "the programme exists",
+          "verdict": "answered",
+          "claims": [
+            {
+              "type": "program_exists",
+              "value": "Computer Science",
+              "source_url": "https://you.ubc.ca/programs/computer-science-vancouver-bsc",
+              "excerpt": "Vancouver \u2014 Computer Science (BSc). Learn how to use and improve computers while you explore topics such as databases and operating systems, software engineering, security, web development, and numerical methodology.",
+              "accessed_at": "2026-08-30",
+              "specificity": "program",
+              "status": "VERIFIED_CURRENT"
+            }
+          ]
+        },
+        {
+          "question": "the intake is open",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the application deadline",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the minimum grade",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "required school subjects",
+          "verdict": "answered",
+          "claims": [
+            {
+              "type": "required_subjects",
+              "value": "Mathematics",
+              "source_url": "https://you.ubc.ca/programs/computer-science-vancouver-bsc",
+              "excerpt": "Degree-specific requirements: Science. IB Math Analysis and Approaches SL or HL, or IB Math Applications and Interpretations HL. One of IB Biology, IB Chemistry, or IB Physics. Grade 11 or equivalent Chemistry, and Grade 11 or equivalent Physics.",
+              "accessed_at": "2026-08-30",
+              "specificity": "program",
+              "status": "VERIFIED_CURRENT"
+            }
+          ]
+        },
+        {
+          "question": "the English requirement",
+          "verdict": "not_checked",
+          "claims": [],
+          "note": ""
+        },
+        {
+          "question": "per-section English minimums",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the admissions test policy",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "portfolio, interview or entrance exam",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether my diploma is recognised",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "tuition",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "mandatory fees",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "housing",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "meals",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "health insurance",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the application fee",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "an award exists",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "what the award is worth",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "what the award covers",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether I may hold it",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether it applies to my degree",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "how to apply for it",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "its own deadline",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether it renews",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the documents I must submit",
+          "verdict": "not_checked",
+          "claims": []
+        }
+      ]
+    },
+    {
+      "id": "ubc-eng",
+      "institution": "University of British Columbia",
+      "domain": "ubc.ca",
+      "discipline": "mechanical or electrical engineering",
+      "programme": "",
+      "programme_url": "",
+      "answers": [
+        {
+          "question": "the programme exists",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the intake is open",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the application deadline",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the minimum grade",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "required school subjects",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the English requirement",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "per-section English minimums",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the admissions test policy",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "portfolio, interview or entrance exam",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether my diploma is recognised",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "tuition",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "mandatory fees",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "housing",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "meals",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "health insurance",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the application fee",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "an award exists",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "what the award is worth",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "what the award covers",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether I may hold it",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether it applies to my degree",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "how to apply for it",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "its own deadline",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether it renews",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the documents I must submit",
+          "verdict": "not_checked",
+          "claims": []
+        }
+      ]
+    },
+    {
+      "id": "utoronto-cs",
+      "institution": "University of Toronto",
+      "domain": "utoronto.ca",
+      "discipline": "computer science",
+      "programme": "HBSc Computer Science",
+      "programme_url": "https://future.utoronto.ca/program/computer-science",
+      "answers": [
+        {
+          "question": "the programme exists",
+          "verdict": "answered",
+          "claims": [
+            {
+              "type": "program_exists",
+              "value": "Computer Science",
+              "source_url": "https://future.utoronto.ca/program/computer-science",
+              "excerpt": "Computer Science. Degree HBSc. Options: Major, Minor, Specialist. Work-integrated learning option available.",
+              "accessed_at": "2026-08-30",
+              "specificity": "program",
+              "status": "VERIFIED_CURRENT"
+            }
+          ]
+        },
+        {
+          "question": "the intake is open",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the application deadline",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the minimum grade",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "required school subjects",
+          "verdict": "answered",
+          "claims": [
+            {
+              "type": "required_subjects",
+              "value": "English",
+              "source_url": "https://future.utoronto.ca/program/computer-science",
+              "excerpt": "Ontario Requirements: Ontario Secondary School Diploma (OSSD) with six subjects at the 4U/M level, including English. English ENG4U / EAE4U; Advanced Functions MHF4U; Calculus & Vectors MCV4U.",
+              "accessed_at": "2026-08-30",
+              "specificity": "program",
+              "status": "VERIFIED_CURRENT"
+            }
+          ]
+        },
+        {
+          "question": "the English requirement",
+          "verdict": "absent",
+          "claims": [],
+          "note": "The page carries no English-language test requirement. It opens on \"Viewing: Ontario Requirements\" and the other school systems sit behind a \"Change School System\" control that the fetched HTML does not resolve, so an international applicant's requirements are not in the document at all. Recorded as absent from this page, and worth noting as a product finding: the requirements this applicant needs are the ones the crawler cannot see."
+        },
+        {
+          "question": "per-section English minimums",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the admissions test policy",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "portfolio, interview or entrance exam",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether my diploma is recognised",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "tuition",
+          "verdict": "not_checked",
+          "claims": [],
+          "note": ""
+        },
+        {
+          "question": "mandatory fees",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "housing",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "meals",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "health insurance",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the application fee",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "an award exists",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "what the award is worth",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "what the award covers",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether I may hold it",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether it applies to my degree",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "how to apply for it",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "its own deadline",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether it renews",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the documents I must submit",
+          "verdict": "not_checked",
+          "claims": []
+        }
+      ]
+    },
+    {
+      "id": "utoronto-eng",
+      "institution": "University of Toronto",
+      "domain": "utoronto.ca",
+      "discipline": "mechanical or electrical engineering",
+      "programme": "",
+      "programme_url": "",
+      "answers": [
+        {
+          "question": "the programme exists",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the intake is open",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the application deadline",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the minimum grade",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "required school subjects",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the English requirement",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "per-section English minimums",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the admissions test policy",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "portfolio, interview or entrance exam",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether my diploma is recognised",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "tuition",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "mandatory fees",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "housing",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "meals",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "health insurance",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the application fee",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "an award exists",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "what the award is worth",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "what the award covers",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether I may hold it",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether it applies to my degree",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "how to apply for it",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "its own deadline",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether it renews",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the documents I must submit",
+          "verdict": "not_checked",
+          "claims": []
+        }
+      ]
+    },
+    {
+      "id": "hku-cs",
+      "institution": "The University of Hong Kong",
+      "domain": "hku.hk",
+      "discipline": "computer science",
+      "programme": "",
+      "programme_url": "",
+      "answers": [
+        {
+          "question": "the programme exists",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the intake is open",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the application deadline",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the minimum grade",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "required school subjects",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the English requirement",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "per-section English minimums",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the admissions test policy",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "portfolio, interview or entrance exam",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether my diploma is recognised",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "tuition",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "mandatory fees",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "housing",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "meals",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "health insurance",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the application fee",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "an award exists",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "what the award is worth",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "what the award covers",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether I may hold it",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether it applies to my degree",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "how to apply for it",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "its own deadline",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether it renews",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the documents I must submit",
+          "verdict": "not_checked",
+          "claims": []
+        }
+      ]
+    },
+    {
+      "id": "hku-eng",
+      "institution": "The University of Hong Kong",
+      "domain": "hku.hk",
+      "discipline": "mechanical or electrical engineering",
+      "programme": "",
+      "programme_url": "",
+      "answers": [
+        {
+          "question": "the programme exists",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the intake is open",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the application deadline",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the minimum grade",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "required school subjects",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the English requirement",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "per-section English minimums",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the admissions test policy",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "portfolio, interview or entrance exam",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether my diploma is recognised",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "tuition",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "mandatory fees",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "housing",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "meals",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "health insurance",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the application fee",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "an award exists",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "what the award is worth",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "what the award covers",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether I may hold it",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether it applies to my degree",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "how to apply for it",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "its own deadline",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether it renews",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the documents I must submit",
+          "verdict": "not_checked",
+          "claims": []
+        }
+      ]
+    },
+    {
+      "id": "ntu-cs",
+      "institution": "Nanyang Technological University",
+      "domain": "ntu.edu.sg",
+      "discipline": "computer science",
+      "programme": "",
+      "programme_url": "",
+      "answers": [
+        {
+          "question": "the programme exists",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the intake is open",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the application deadline",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the minimum grade",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "required school subjects",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the English requirement",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "per-section English minimums",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the admissions test policy",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "portfolio, interview or entrance exam",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether my diploma is recognised",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "tuition",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "mandatory fees",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "housing",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "meals",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "health insurance",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the application fee",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "an award exists",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "what the award is worth",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "what the award covers",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether I may hold it",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether it applies to my degree",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "how to apply for it",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "its own deadline",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether it renews",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the documents I must submit",
+          "verdict": "not_checked",
+          "claims": []
+        }
+      ]
+    },
+    {
+      "id": "ntu-eng",
+      "institution": "Nanyang Technological University",
+      "domain": "ntu.edu.sg",
+      "discipline": "mechanical or electrical engineering",
+      "programme": "",
+      "programme_url": "",
+      "answers": [
+        {
+          "question": "the programme exists",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the intake is open",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the application deadline",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the minimum grade",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "required school subjects",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the English requirement",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "per-section English minimums",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the admissions test policy",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "portfolio, interview or entrance exam",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether my diploma is recognised",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "tuition",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "mandatory fees",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "housing",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "meals",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "health insurance",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the application fee",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "an award exists",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "what the award is worth",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "what the award covers",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether I may hold it",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether it applies to my degree",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "how to apply for it",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "its own deadline",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether it renews",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the documents I must submit",
+          "verdict": "not_checked",
+          "claims": []
+        }
+      ]
+    },
+    {
+      "id": "kaist-cs",
+      "institution": "KAIST",
+      "domain": "kaist.ac.kr",
+      "discipline": "computer science",
+      "programme": "",
+      "programme_url": "",
+      "answers": [
+        {
+          "question": "the programme exists",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the intake is open",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the application deadline",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the minimum grade",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "required school subjects",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the English requirement",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "per-section English minimums",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the admissions test policy",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "portfolio, interview or entrance exam",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether my diploma is recognised",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "tuition",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "mandatory fees",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "housing",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "meals",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "health insurance",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the application fee",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "an award exists",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "what the award is worth",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "what the award covers",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether I may hold it",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether it applies to my degree",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "how to apply for it",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "its own deadline",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether it renews",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the documents I must submit",
+          "verdict": "not_checked",
+          "claims": []
+        }
+      ]
+    },
+    {
+      "id": "kaist-eng",
+      "institution": "KAIST",
+      "domain": "kaist.ac.kr",
+      "discipline": "mechanical or electrical engineering",
+      "programme": "",
+      "programme_url": "",
+      "answers": [
+        {
+          "question": "the programme exists",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the intake is open",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the application deadline",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the minimum grade",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "required school subjects",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the English requirement",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "per-section English minimums",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the admissions test policy",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "portfolio, interview or entrance exam",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether my diploma is recognised",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "tuition",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "mandatory fees",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "housing",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "meals",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "health insurance",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the application fee",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "an award exists",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "what the award is worth",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "what the award covers",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether I may hold it",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether it applies to my degree",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "how to apply for it",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "its own deadline",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "whether it renews",
+          "verdict": "not_checked",
+          "claims": []
+        },
+        {
+          "question": "the documents I must submit",
+          "verdict": "not_checked",
+          "claims": []
+        }
+      ]
+    }
+  ]
+}

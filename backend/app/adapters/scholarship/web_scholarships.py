@@ -30,6 +30,10 @@ from app.adapters.extraction import (
 )
 from app.adapters.fetching import Fetcher
 from app.adapters.page_classifier import PageType, classify_page
+from app.adapters.scholarship.restrictions import (
+    extract_published_count,
+    extract_restrictions,
+)
 from app.domain.enums import (
     ApplicationMode,
     ClaimType,
@@ -242,13 +246,42 @@ class WebScholarshipAdapter:
         # thing "opportunity_exists" asserts.
         sch.opportunity_exists = True
 
-        cit = re.search(r"open only to citizens of ([^.]+)\.", text, re.IGNORECASE)
-        if cit:
-            sch.citizenship_restrictions = [
-                p.strip() for p in re.split(r",| and ", cit.group(1)) if p.strip()
-            ]
-            builder.add(ClaimType.SCHOLARSHIP_CITIZENSHIP_RESTRICTION, sch.citizenship_restrictions,
-                        _excerpt(text, cit.start()), confidence=0.9)
+        # Nationality and residency, from the page's own words. The previous
+        # rule matched only "open only to citizens of X", so the CLIP award —
+        # "hold either a Greek passport or Greek residence" — was read as
+        # unrestricted and offered to a Kazakhstani applicant.
+        restrictions = extract_restrictions(text)
+        sch.citizenship_restrictions = [*restrictions.citizenships, *restrictions.blocs]
+        sch.residency_restrictions = list(restrictions.residencies)
+        # Whether the page joins the two with 'or' decides eligibility, and
+        # it used to be extracted and then dropped, so assessment assumed
+        # 'or' for every award.
+        sch.restriction_logic = "any" if restrictions.alternatives else (
+            "all" if restrictions.citizenships and restrictions.residencies
+            else "any"
+        )
+        sch.restriction_evidence = dict(restrictions.evidence_by_restriction)
+        if restrictions.any:
+            builder.add(
+                ClaimType.SCHOLARSHIP_CITIZENSHIP_RESTRICTION,
+                {
+                    "citizenships": restrictions.citizenships,
+                    "residencies": restrictions.residencies,
+                    "blocs": restrictions.blocs,
+                    "either_qualifies": restrictions.alternatives,
+                },
+                restrictions.evidence,
+                confidence=0.9,
+                section="Who may hold the award",
+            )
+
+        count = extract_published_count(text)
+        if count is not None:
+            sch.published_count = count.value
+            builder.add(
+                ClaimType.SCHOLARSHIP_COUNT, count.value, count.evidence,
+                confidence=0.85, section="Number of awards",
+            )
 
         # A restriction list is not itself an answer about international
         # eligibility - the applicant may hold one of the listed citizenships.
@@ -262,8 +295,9 @@ class WebScholarshipAdapter:
                 confidence=0.85,
                 notes=international.reason,
             )
-        elif sch.citizenship_restrictions:
+        elif restrictions.any:
             sch.international_eligible = "unknown"
+
 
         # --- degree applicability -----------------------------------------
         applicability = assess_degree_applicability(text, str(program.degree))

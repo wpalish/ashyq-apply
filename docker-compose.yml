@@ -40,6 +40,8 @@ services:
   migrate:
     build:
       context: ./backend
+      args:
+        ASHYQ_BUILD_SHA: ${ASHYQ_BUILD_SHA:-}
     command: ["python", "-m", "alembic", "upgrade", "head"]
     environment: &backend-env
       # The local stack is production-shaped but served over plain localhost
@@ -65,6 +67,8 @@ services:
   api:
     build:
       context: ./backend
+      args:
+        ASHYQ_BUILD_SHA: ${ASHYQ_BUILD_SHA:-}
     environment: *backend-env
     ports:
       - "${API_PORT:-8099}:8099"
@@ -87,6 +91,8 @@ services:
   worker:
     build:
       context: ./backend
+      args:
+        ASHYQ_BUILD_SHA: ${ASHYQ_BUILD_SHA:-}
     command: ["python", "-m", "app.jobs.worker"]
     environment:
       <<: *backend-env
@@ -102,6 +108,22 @@ services:
     # the same job.  docker compose up --scale worker=3
     security_opt:
       - no-new-privileges:true
+    # Container-local, and per replica. The liveness file lives here rather
+    # than on `worker-cache`, which every scaled worker shares: one shared file
+    # meant a single healthy worker kept its wedged neighbours reporting
+    # healthy too.
+    tmpfs:
+      - /tmp
+    # A worker does not listen on a port, so this cannot be an HTTP check. It
+    # asks the worker whether it has been round its loop recently. Without it a
+    # worker that is alive but stuck looked perfectly healthy while jobs queued
+    # behind it: `restart: unless-stopped` only notices a process that exits.
+    healthcheck:
+      test: ["CMD", "python", "-m", "app.jobs.worker", "--healthcheck"]
+      interval: 15s
+      timeout: 5s
+      start_period: 30s
+      retries: 3
     # The HTTP cache is the only thing a worker writes outside the database.
     volumes:
       - worker-cache:/app/data

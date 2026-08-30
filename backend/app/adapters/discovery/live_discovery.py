@@ -35,16 +35,61 @@ import re
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
-from urllib.parse import urljoin, urlparse, urlunparse
+from urllib.parse import urljoin, urlparse
 from xml.etree import ElementTree
 
 from bs4 import BeautifulSoup
 
 from app.adapters.base import Candidate, CandidateProgram
+
+# Re-exported so the adapter, the canary and the tests keep one import site.
+# The rules themselves live in `url_signals`, which touches nothing.
+from app.adapters.discovery.url_signals import (
+    _CATALOGUE_PATH,
+    _FUNDING_SEGMENT,
+    _INDEX_SEGMENT,
+    _NOT_A_PAGE_ABOUT_STUDYING,
+    _NOT_A_PROGRAMME_PATH,
+    _TRACKING_PARAM,
+    _URL_EXCLUSIONS,
+    PageCategory,
+    canonical_url,
+    categorise_url,
+    degree_level_named,
+    degree_levels_named,
+    looks_like_catalogue,
+    matches_degree,
+    matches_field,
+    matches_field_text,
+    names_other_degree_level,
+    registrable_domain,
+    same_institution,
+    score_url,
+    url_problem,
+)
 from app.adapters.fetching import Fetcher
 from app.adapters.page_classifier import PageType, classify_page
 from app.schemas.profile import ApplicantProfileIn
 from app.schemas.result import RankingEntry
+
+#: Names that lived here before URL judgement moved to `url_signals`, kept
+#: importable from this module for the callers and tests that still use them.
+#: Listed explicitly rather than left as bare imports: a blanket `ruff --fix`
+#: deleted them once as unused, and the suite stopped collecting rather than
+#: failing a test, which is a much worse way to find out.
+__all__ = [
+    "_CATALOGUE_PATH",
+    "_FUNDING_SEGMENT",
+    "_INDEX_SEGMENT",
+    "_NOT_A_PAGE_ABOUT_STUDYING",
+    "_NOT_A_PROGRAMME_PATH",
+    "_TRACKING_PARAM",
+    "LiveDiscoveryAdapter",
+    "degree_level_named",
+    "degree_levels_named",
+    "registrable_domain",
+    "score_url",
+]
 
 log = logging.getLogger("unimatch.discovery")
 
@@ -52,7 +97,11 @@ REGISTRY_PATH = Path(__file__).parent / "institution_registry.json"
 
 # --- bounds ---------------------------------------------------------------
 #: Sitemap documents read per institution, including nested index children.
-MAX_SITEMAP_DOCUMENTS = 12
+#: A sitemap index declares a finite list, and reading one costs a single fetch,
+#: so this is generous: at 12 Aalto's index was cut off after 55,000 of its
+#: 58,000 URLs and the document holding its programme pages was never opened.
+#: The real limit on work is MAX_SITEMAP_URLS below.
+MAX_SITEMAP_DOCUMENTS = 40
 #: URLs read from all sitemaps combined. Scanning is cheap — the documents are
 #: already fetched — so this is generous.
 MAX_SITEMAP_URLS = 200_000
@@ -72,6 +121,18 @@ MAX_LINKS_SCANNED = 400
 #: real programme page. Costs little: the pipeline fetches these pages anyway
 #: and the fetcher caches, so a confirmed candidate is free downstream.
 MAX_PROGRAM_CANDIDATES_CHECKED = 8
+#: Extra weight for a catalogue entry whose own wording names the applicant's
+#: subject. Large on purpose: on a catalogue every entry is structurally
+#: identical, so the wording is the only thing that separates them.
+SUBJECT_IN_LINK_TEXT_BONUS = 12
+#: Catalogue pages re-read through the browser per institution. A render is
+#: slow and heavy, so it is spent only where a static read demonstrably
+#: failed to show any programme at all.
+MAX_RENDERED_CATALOGUES = 2
+#: How many times a candidate that turns out to be a catalogue may hand back
+#: the programmes it lists. Bounds a chain of indexes that never ends in a
+#: programme.
+MAX_CATALOGUE_EXPANSIONS = 4
 #: Pages walked during the navigation fallback. Universities routinely nest
 #: "Degree programmes" -> "Bachelor programmes" -> a programme, so one hop is
 #: not enough; an unbounded walk would be a crawl.
@@ -85,321 +146,7 @@ SITEMAP_FALLBACK_PATHS = (
     "/sitemap/sitemap.xml",
 )
 
-#: Multi-part public suffixes common among universities. Used to work out the
-#: registrable domain without depending on the full public suffix list: "same
-#: domain" must mean rug.nl and www.rug.nl, not ac.uk and anything under it.
-MULTIPART_SUFFIXES = frozenset({
-    "ac.uk", "ac.nz", "ac.jp", "ac.kr", "ac.at", "ac.be", "ac.il", "ac.in",
-    "ac.za", "ac.th", "ac.id", "ac.ir", "ac.cy", "ac.rs", "ac.ma",
-    "edu.au", "edu.sg", "edu.hk", "edu.cn", "edu.tw", "edu.my", "edu.pl",
-    "edu.tr", "edu.mx", "edu.br", "edu.ar", "edu.co", "edu.pe", "edu.vn",
-    "edu.ph", "edu.sa", "edu.eg", "edu.lb", "edu.jo", "edu.kw", "edu.pk",
-    "co.uk", "org.uk", "gov.uk", "com.au", "net.au", "org.au", "com.br",
-    "com.sg", "com.hk", "com.tr", "com.mx", "co.jp", "co.nz", "co.za",
-    "or.jp", "ne.jp", "go.jp", "re.kr", "or.kr", "go.kr",
-})
 
-
-class PageCategory:
-    """What a discovered URL is expected to be. Deliberately a plain namespace
-    rather than an enum: this module may not import the classifier's vocabulary,
-    and these are *expectations* about a URL, not verdicts about a page."""
-
-    PROGRAM_CATALOG = "program_catalog"
-    PROGRAM_PAGE = "program_page"
-    ADMISSIONS = "admissions"
-    COSTS = "costs"
-    SCHOLARSHIPS = "scholarships"
-    DOCUMENTS = "documents"
-
-    ALL = (PROGRAM_CATALOG, PROGRAM_PAGE, ADMISSIONS, COSTS, SCHOLARSHIPS, DOCUMENTS)
-
-
-#: Path and slug signals per category, with a weight. A URL scores against each
-#: category and is filed under its best match, if any match at all.
-_URL_SIGNALS: dict[str, tuple[tuple[str, int], ...]] = {
-    PageCategory.PROGRAM_PAGE: (
-        (r"/(bsc|msc|ba|ma|beng|meng|llb|llm)[-/]", 5),
-        (r"/(bachelors?|masters?|undergraduate)/[a-z-]{4,}", 5),
-        (r"/(programmes?|programs?|degrees?|courses?|studies)/[a-z-]{4,}", 4),
-        # The same hyphenated compounds the catalogue rule allows: Vienna
-        # publishes at /bachelordiploma-programmes/<programme>, which no rule
-        # expecting a bare "/programmes/" segment ever matched.
-        (r"/[a-z0-9]+-(programmes?|programs?|degrees?|courses?)/[a-z][a-z0-9-]{3,}", 4),
-        (r"/study/[a-z-]{4,}", 3),
-        (r"/(opleidingen|studiengang|koulutus|kierunki)/[a-z-]{4,}", 3),
-    ),
-    PageCategory.PROGRAM_CATALOG: (
-        # The segment has to *end* with the listing word, so "degree-programmes"
-        # and "degrees-programs" count while "degree-ceremony-photos" and
-        # "programme-news" do not. Universities name these pages "degree
-        # programmes" far more often than "programmes", and requiring the bare
-        # word left the walk stranded on the intermediate page at Vienna,
-        # Warsaw and UBC.
-        (r"/[a-z0-9-]*(programmes?|programs?|degrees?|courses?|studies)/?$", 5),
-        (r"/(bachelors?|masters?|undergraduate|postgraduate)/?$", 5),
-        (r"/(study|studies|education)/(programmes?|programs?|degrees?)/?$", 4),
-        (r"/(course|programme|program)[-_]?(search|finder|list|catalog(ue)?)", 4),
-    ),
-    PageCategory.ADMISSIONS: (
-        (r"/(admission|admissions|apply|application)", 4),
-        (r"/(entry|admission)[-_]requirements", 5),
-        (r"/how[-_]to[-_]apply", 5),
-        (r"/international[-_]?(students?|applicants?|admissions?)", 3),
-        (r"/(toelating|zulassung|haku|rekrutacja)", 3),
-    ),
-    PageCategory.COSTS: (
-        (r"/(tuition|fees?|cost|costs)", 4),
-        (r"/tuition[-_]?fees?", 5),
-        (r"/cost[-_]of[-_](attendance|living|study)", 5),
-        (r"/(collegegeld|studiengebuehren|lukuvuosimaksut|czesne)", 4),
-    ),
-    PageCategory.SCHOLARSHIPS: (
-        (r"/(scholarship|scholarships|bursary|bursaries|grants?)", 4),
-        (r"/(financial[-_]aid|funding|fellowships?)", 4),
-        (r"/(beurzen|stipendien|apurahat|stypendia)", 4),
-    ),
-    PageCategory.DOCUMENTS: (
-        (r"/(required[-_]documents|documents[-_]required|document[-_]checklist)", 5),
-        (r"/(supporting[-_]documents|what[-_]to[-_]submit)", 4),
-    ),
-}
-
-#: Slug fragments that make a page an event, a newsletter or an announcement
-#: whatever path it sits under. The live canary found these *inside* programme
-#: paths, where a whole-segment exclusion never sees them: rug.nl returned
-#: "bachelor-open-day", "onlinebachelorweek" and "student-for-a-day" as the
-#: applicant's three programme pages, and aalto.fi returned two newsletters.
-_NOT_A_PAGE_ABOUT_STUDYING = re.compile(
-    r"(open[-_]?day|openday|info(rmation)?[-_]?(session|day|evening)|student[-_]for[-_]a[-_]day"
-    r"|bachelor[-_]?week|master[-_]?week|onlinebachelor|onlinemaster"
-    r"|newsletter|nyhetsbrev|uutiskirje|webinar|open[-_]house|taster"
-    r"|campus[-_]?tour|university[-_]?tour|virtual[-_]?tour|webklas|proefstuderen"
-    r"|summer[-_]school|orientation|graduation|ceremony)",
-    re.IGNORECASE,
-)
-
-#: URLs that are never worth fetching, whatever else they score.
-_URL_EXCLUSIONS = re.compile(
-    r"/(news|nieuws|actueel|press|blog|events?|agenda|calendar|vacature|vacanc"
-    r"|jobs?|careers?|alumni|donate|shop|library|contact|privacy|cookie|search"
-    r"|login|signin|account|basket|cart|rss|feed|tag|author|archive)(/|$)"
-    r"|\.(jpg|jpeg|png|gif|svg|webp|css|js|zip|mp4|mp3|docx?|xlsx?|pptx?)$",
-    re.IGNORECASE,
-)
-
-#: A programme page for the wrong level is not a match for this applicant.
-_DEGREE_SLUGS: dict[str, tuple[str, ...]] = {
-    "bachelor": ("bsc", "ba", "beng", "llb", "bachelor", "bachelors", "undergraduate"),
-    "master": ("msc", "ma", "meng", "llm", "mba", "master", "masters", "graduate",
-               "postgraduate"),
-    "phd": ("phd", "doctoral", "doctorate", "dphil"),
-    "foundation": ("foundation", "pre-bachelor", "preparatory"),
-}
-
-
-def registrable_domain(host_or_url: str) -> str:
-    """The domain that owns a host, so "same site" is not a guess.
-
-    ``www.rug.nl`` and ``rug.nl`` are the same institution; ``rug.nl`` and
-    ``someoneelse.nl`` are not. Multi-part suffixes matter here: naively taking
-    the last two labels would make every ``ac.uk`` site look like one domain.
-
-    A full URL is accepted as well as a bare host. Callers hold homepages more
-    often than hostnames, and the failure mode of not accepting one is silent:
-    every comparison would answer "different institution" and discovery would
-    quietly find nothing.
-    """
-    host = (host_or_url or "").strip().lower().rstrip(".")
-    if not host:
-        return ""
-    if "/" in host or ":" in host:
-        host = urlparse(host if "//" in host else f"//{host}").hostname or ""
-        if not host:
-            return ""
-    labels = host.split(".")
-    if len(labels) <= 2:
-        return host
-    if ".".join(labels[-2:]) in MULTIPART_SUFFIXES:
-        return ".".join(labels[-3:])
-    return ".".join(labels[-2:])
-
-
-def same_institution(url: str, domain: str) -> bool:
-    """Whether a URL belongs to the institution that owns ``domain``."""
-    try:
-        host = urlparse(url).hostname or ""
-    except ValueError:
-        return False
-    return bool(host) and registrable_domain(host) == registrable_domain(domain)
-
-
-#: Query parameters that identify a referral rather than select content.
-#: Matched against the parameter name — an earlier version matched the whole
-#: "key=value" pair, so "utm_source=x" was kept and the same page was
-#: discovered twice under two URLs.
-_TRACKING_PARAM = re.compile(
-    r"^(utm_[a-z_]*|fbclid|gclid|msclkid|dclid|mc_[a-z]+|ref|referrer|source"
-    r"|igshid|_ga|yclid)$",
-    re.IGNORECASE,
-)
-
-
-def canonical_url(url: str) -> str:
-    """A stable form, so the same page is not discovered twice.
-
-    Drops the fragment and tracking parameters, lowercases the host, removes a
-    default port and a trailing slash. Query parameters that select content are
-    kept — dropping them would merge genuinely different pages.
-    """
-    try:
-        parts = urlparse(url.strip())
-    except ValueError:
-        return url.strip()
-    if not parts.scheme or not parts.netloc:
-        return url.strip()
-
-    host = (parts.hostname or "").lower()
-    if parts.port and not (
-        (parts.scheme == "http" and parts.port == 80)
-        or (parts.scheme == "https" and parts.port == 443)
-    ):
-        host = f"{host}:{parts.port}"
-
-    path = re.sub(r"/{2,}", "/", parts.path) or "/"
-    if len(path) > 1:
-        path = path.rstrip("/")
-
-    kept = [
-        pair for pair in parts.query.split("&")
-        if pair and not _TRACKING_PARAM.match(pair.split("=", 1)[0])
-    ]
-    return urlunparse((parts.scheme, host, path, "", "&".join(sorted(kept)), ""))
-
-
-#: Paths that are about research rather than about studying a programme. A
-#: research group's "BSc and MSc projects" page matched the ``/bsc|msc/`` rule
-#: and was offered as the applicant's programme; a degree marker in a slug says
-#: nothing about whether the page is a degree.
-_NOT_A_PROGRAMME_PATH = re.compile(
-    r"/(research|onderzoek|forschung|labs?|groups?|institutes?|centres?|centers?)/"
-    r"|(projects?|thesis|theses|guidelines|internships?|vacancies|supervisors?)(/|$)",
-    re.IGNORECASE,
-)
-
-#: A path segment that makes the page about money rather than about a course.
-_FUNDING_SEGMENT = re.compile(
-    r"/(scholarships?|bursary|bursaries|grants?|financial[-_]aid|funding|fellowships?"
-    r"|beurzen|stipendien|apurahat|stypendia)(/|$)",
-    re.IGNORECASE,
-)
-
-
-def score_url(url: str, category: str) -> int:
-    """How strongly a URL looks like it belongs to a category. 0 means no."""
-    path = (urlparse(url).path or "").lower()
-    if _URL_EXCLUSIONS.search(path) or _NOT_A_PAGE_ABOUT_STUDYING.search(path):
-        return 0
-    if category in (PageCategory.PROGRAM_PAGE, PageCategory.PROGRAM_CATALOG) and (
-        _FUNDING_SEGMENT.search(path) or _NOT_A_PROGRAMME_PATH.search(path)
-    ):
-        # NTU offered a scholarship page as the applicant's programme (the
-        # "undergraduate" in the path outscored the "scholarships" beside it),
-        # and rug.nl offered a research group's "BSc and MSc projects" page.
-        # Neither is a programme, whatever else the path says.
-        return 0
-    return sum(weight for pattern, weight in _URL_SIGNALS[category] if re.search(pattern, path))
-
-
-def categorise_url(url: str) -> tuple[str | None, int]:
-    """The category a URL best fits, and its score."""
-    best: tuple[str | None, int] = (None, 0)
-    for category in PageCategory.ALL:
-        score = score_url(url, category)
-        if score > best[1]:
-            best = (category, score)
-    return best
-
-
-def matches_field(url: str, fields: list[str]) -> int:
-    """Extra weight when a URL names one of the applicant's subjects.
-
-    Weighted heavily on purpose. Every bachelor programme URL on a site scores
-    the same on structure, so with a small bonus the three slots went to
-    whichever programmes sorted first — Delft answered a computer science
-    applicant with aerospace engineering, applied mathematics and applied
-    physics. Subject match has to dominate structural match.
-    """
-    path = (urlparse(url).path or "").lower()
-    bonus = 0
-    for field_name in fields:
-        for word in re.split(r"[^a-z]+", field_name.lower()):
-            if len(word) > 3 and word in path:
-                bonus += 8
-    return bonus
-
-
-def degree_level_named(url: str) -> str | None:
-    """The degree level a URL names in its path, if it names one at all."""
-    path = (urlparse(url).path or "").lower()
-    for level, slugs in _DEGREE_SLUGS.items():
-        if any(re.search(rf"(^|[/-]){re.escape(slug)}([/-]|$)", path) for slug in slugs):
-            return level
-    return None
-
-
-#: A path segment that ends with a listing word. UBC's catalogue lives at
-#: ``/applying-ubc/how-to-apply/degrees-programs/``, which scores higher as an
-#: admissions page than as a catalogue — so whether a page is worth walking for
-#: programmes is asked separately from which category it best fits.
-_CATALOGUE_PATH = re.compile(
-    r"/[a-z0-9-]*(programmes?|programs?|degrees?|courses?|studies)/?$", re.IGNORECASE
-)
-
-
-def looks_like_catalogue(url: str) -> bool:
-    """Whether a URL looks like a page that lists programmes."""
-    path = urlparse(url).path or ""
-    if _URL_EXCLUSIONS.search(path):
-        return False
-    return bool(_CATALOGUE_PATH.search(path))
-
-
-def matches_field_text(label: str, fields: list[str]) -> bool:
-    """Whether a link's own text names one of the applicant's subjects.
-
-    A catalogue page links to its programmes under the university's own names
-    for them, and those names are often nowhere in the URL: Toronto's bachelor
-    lead is ``/data-computer-science`` behind the text "Data & Computer
-    Science", which no path pattern for "programmes" would ever match.
-    """
-    words = {w for w in re.split(r"[^a-z]+", label.lower()) if len(w) > 3}
-    if not words:
-        return False
-    for field_name in fields:
-        wanted = {w for w in re.split(r"[^a-z]+", field_name.lower()) if len(w) > 3}
-        if wanted and wanted <= words:
-            return True
-    return False
-
-
-def matches_degree(url: str, degree: str) -> int:
-    """Positive when the URL names the right level, negative when it names another."""
-    named = degree_level_named(url)
-    if named is None:
-        return 0
-    return 4 if named == str(degree) else -6
-
-
-def names_other_degree_level(url: str, degree: str) -> bool:
-    """Whether a URL names a level the applicant did not ask for.
-
-    Treated as an outright rejection rather than a score penalty. An MSc page
-    is not a weak bachelor lead, it is the wrong page, and a subject-name bonus
-    ("computer", "science") must not be able to outweigh the level.
-    """
-    named = degree_level_named(url)
-    return named is not None and named != str(degree)
 
 
 @dataclass
@@ -434,6 +181,13 @@ class DiscoveryTrace:
     #: (url, link text) for leads found by a catalogue's own wording rather
     #: than by the URL, so the report can show what the wording was.
     kept_by_link_text: list[tuple[str, str]] = field(default_factory=list)
+    #: url -> relevance score, so candidates are read best-first and the report
+    #: can show why one page was preferred over another.
+    relevance: dict[str, int] = field(default_factory=dict)
+    #: (url, subject, page type) for each candidate a read of the page confirmed.
+    confirmed_programs: list[tuple[str, str, str]] = field(default_factory=list)
+    #: (url, links before rendering, links after) for each browser escalation.
+    rendered: list[tuple[str, int, int]] = field(default_factory=list)
 
     def reject(self, url: str, reason: str) -> None:
         # Bounded: a large sitemap would otherwise produce a huge trace.
@@ -455,6 +209,10 @@ class DiscoveryTrace:
             "errors": self.errors,
             "used_navigation_fallback": self.used_navigation_fallback,
             "kept_by_link_text": self.kept_by_link_text,
+            "confirmed_programs": self.confirmed_programs,
+            "rendered_catalogues": self.rendered,
+            "relevance": dict(sorted(
+                self.relevance.items(), key=lambda kv: -kv[1])[:40]),
         }
 
 
@@ -536,7 +294,16 @@ class SitemapReader:
         pages: list[str] = []
         seen_pages: set[str] = set()
 
-        while queue and len(trace.sitemaps_read) < MAX_SITEMAP_DOCUMENTS:
+        while queue:
+            if len(trace.sitemaps_read) >= MAX_SITEMAP_DOCUMENTS:
+                # Never silently. A truncated sitemap means part of the site was
+                # not looked at, and a run that does not say so reads as a run
+                # that found nothing there.
+                trace.errors.append(
+                    f"stopped after {MAX_SITEMAP_DOCUMENTS} sitemap documents with "
+                    f"{len(queue)} still queued; part of the site was not read"
+                )
+                break
             url, depth = queue.pop(0)
             url = canonical_url(url)
             if url in seen_documents or depth > MAX_SITEMAP_DEPTH:
@@ -627,7 +394,24 @@ class LiveDiscoveryAdapter:
         self.traces = []
         out: list[Candidate] = []
         for entry in entries:
-            candidate, trace = await self._discover_one(entry, profile)
+            # One institution must not be able to end the research for the
+            # rest. A holdout run died on the second of six and reported the
+            # remaining four as NOT_ATTEMPTED, which reads as a finding about
+            # those universities when it was a finding about one page on
+            # another site.
+            try:
+                candidate, trace = await self._discover_one(entry, profile)
+            except Exception as exc:  # reported below, never silent
+                trace = DiscoveryTrace(institution=entry["name"], domain=domain_of(entry))
+                trace.errors.append(f"discovery failed: {type(exc).__name__}: {exc}")
+                candidate = Candidate(
+                    name=entry["name"],
+                    country=entry["country"],
+                    city=entry.get("city", ""),
+                    domain=domain_of(entry),
+                    discovery_source="registry",
+                    notes=f"Discovery failed for this institution: {exc}",
+                )
             self.traces.append(trace)
             out.append(candidate)
         return out
@@ -689,6 +473,7 @@ class LiveDiscoveryAdapter:
                     return False
                 ranked[category].remove(weakest)
             ranked[category].append((score, url))
+            trace.relevance[url] = max(trace.relevance.get(url, 0), score)
             return True
 
         try:
@@ -704,22 +489,31 @@ class LiveDiscoveryAdapter:
                 if url not in selected[category]:
                     selected[category].append(url)
 
-        # 3. Navigation, when sitemaps and seeds did not reach a programme page.
-        #    An earlier version fell back only when *nothing at all* was found,
-        #    so a registry entry with an admissions seed suppressed the fallback
-        #    and the run finished with no programme — which the live canary
-        #    showed on six of ten sites.
-        if not selected[PageCategory.PROGRAM_PAGE]:
-            trace.used_navigation_fallback = True
-            await self._navigation_fallback(entry, domain, selected, trace, profile)
+        # 3. Confirm what we have, then widen the search only while the
+        #    applicant's own subject is still unaccounted for.
+        #
+        #    Both halves of that sentence were defects. Confirmation used to run
+        #    last, so unread guesses decided whether to search further; and the
+        #    catalogue walk was gated on finding *no* programme at all, so TU
+        #    Delft — whose sitemap yields aerospace, mathematics and physics —
+        #    never walked the catalogue that lists its computer science degree.
+        #    Finding three programmes the applicant did not ask about is not a
+        #    reason to stop looking for the one they did.
+        fields = list(profile.context.intended_fields)
+        await self._confirm_programs(
+            selected, ranked, trace, profile=profile, domain=domain
+        )
 
-        # 4. Confirm the programme candidates by reading them.
-        #    URL shape alone cannot tell a programme from an open day: live runs
-        #    offered "bachelor-open-day", "campus-tour", "webklassen" and a
-        #    student newsletter as programme pages, all sitting under the same
-        #    path as the real programmes. The classifier already knows the
-        #    difference, so discovery asks it rather than guessing harder.
-        await self._confirm_programs(selected, ranked, trace)
+        if not _satisfies_field(selected[PageCategory.PROGRAM_PAGE], fields):
+            trace.used_navigation_fallback = True
+            before = set(selected[PageCategory.PROGRAM_PAGE])
+            await self._navigation_fallback(entry, domain, selected, trace, profile, ranked)
+            if set(selected[PageCategory.PROGRAM_PAGE]) != before:
+                # The walk proposed new candidates; they are guesses until read.
+                await self._confirm_programs(
+                    selected, ranked, trace, keep=before, profile=profile,
+                    domain=domain,
+                )
 
         trace.selected = {k: list(v) for k, v in selected.items() if v}
         self._apply(candidate, selected, profile, trace)
@@ -730,18 +524,50 @@ class LiveDiscoveryAdapter:
         selected: dict[str, list[str]],
         ranked: dict[str, list[tuple[int, str]]],
         trace: DiscoveryTrace,
+        keep: set[str] | None = None,
+        profile: ApplicantProfileIn | None = None,
+        domain: str = "",
     ) -> None:
-        """Keep only candidates a read of the page confirms is a programme."""
-        queued = [*selected[PageCategory.PROGRAM_PAGE]]
+        """Keep only candidates a read of the page confirms is a programme.
+
+        Candidates are read in relevance order, so the applicant's own subject
+        is checked before an unrelated programme spends the budget. ``keep``
+        holds pages confirmed on an earlier pass, which are not re-fetched.
+
+        A candidate that turns out to be a catalogue hands back the programmes
+        it lists. Groningen's bachelor listing links to faculty and subject
+        sub-indexes, and reading each one, rejecting it, and discarding the
+        page spent the whole budget on indexes while the computing science
+        degree sat one link inside them. The page is already fetched and
+        classified; harvesting it costs nothing more.
+        """
+        fields = list(profile.context.intended_fields) if profile else []
+        degree = str(profile.context.level) if profile else ""
+
+        already = set(keep or ())
+        queued = [u for u in selected[PageCategory.PROGRAM_PAGE] if u not in already]
         # Next-best candidates, so rejecting one does not mean finding nothing.
         for _score, url in sorted(ranked[PageCategory.PROGRAM_PAGE], reverse=True):
-            if url not in queued:
+            if url not in queued and url not in already:
                 queued.append(url)
+        queued.sort(key=lambda u: -trace.relevance.get(u, 0))
 
-        confirmed: list[str] = []
-        for url in queued[:MAX_PROGRAM_CANDIDATES_CHECKED]:
+        confirmed: list[str] = list(already)
+        checked = 0
+        seen: set[str] = set(queued)
+        expansions = 0
+        rendered_here = 0
+        while queued:
             if len(confirmed) >= MAX_PAGES_PER_CATEGORY:
                 break
+            if checked >= MAX_PROGRAM_CANDIDATES_CHECKED:
+                trace.errors.append(
+                    f"stopped after reading {checked} programme candidates; "
+                    "others were left unchecked rather than guessed at"
+                )
+                break
+            url = queued.pop(0)
+            checked += 1
             result = await self.fetcher.get(url)
             if not result.ok:
                 trace.reject(url, f"could not be read ({result.outcome.value})")
@@ -749,13 +575,87 @@ class LiveDiscoveryAdapter:
             page = classify_page(url=url, html=result.text)
             if page.page_type in (PageType.PROGRAM_DETAIL, PageType.INTAKE_SPECIFIC_PROGRAM):
                 confirmed.append(url)
-            else:
-                trace.reject(url, f"reads as {page.page_type.value}, not a programme page")
+                trace.confirmed_programs.append((url, page.subject or "", page.page_type.value))
+                continue
+
+            trace.reject(url, f"reads as {page.page_type.value}, not a programme page")
+            if (
+                page.page_type is PageType.PROGRAM_CATALOG
+                and expansions < MAX_CATALOGUE_EXPANSIONS
+                and domain
+            ):
+                expansions += 1
+                fresh = self._programmes_listed_on(
+                    result.text, result.final_url or url, domain, fields, degree, trace
+                )
+                # The walk renders a catalogue whose served HTML shows no
+                # programme for the subject, because that is the difference
+                # between "it is not there" and "we did not look".
+                # Confirmation reaches catalogues by a different route and was
+                # not doing it. Toronto builds its programme list client-side:
+                # served, the page lists one programme on another campus;
+                # rendered, it lists the five it actually offers.
+                # Not "found nothing" but "found nothing they asked for": the
+                # walk uses the same test, because a catalogue listing one
+                # unrelated programme has told us as little as an empty one.
+                # Toronto's served HTML lists information security on another
+                # campus; computer science appears only once the page runs.
+                shows_subject = catalogue_shows_subject(
+                    [(u, "") for u in fresh], fields, degree
+                )
+                if not shows_subject and rendered_here < MAX_RENDERED_CATALOGUES:
+                    rendered_here += 1
+                    grown = await self.fetcher.render(url)
+                    if grown.ok:
+                        fresh = self._programmes_listed_on(
+                            grown.text, grown.final_url or url, domain,
+                            fields, degree, trace,
+                        )
+                        trace.rendered.append((url, 0, len(fresh)))
+                    else:
+                        trace.errors.append(
+                            f"catalogue {url} listed no programme and could not "
+                            f"be rendered ({grown.outcome.value})"
+                        )
+                added = [u for u in fresh if u not in seen]
+                seen.update(added)
+                # Best-first again, so the applicant's subject leads.
+                queued = sorted(
+                    [*queued, *added], key=lambda u: -trace.relevance.get(u, 0)
+                )
+                if added:
+                    trace.errors.append(
+                        f"{url} reads as a catalogue; followed {len(added)} "
+                        "programme links it lists"
+                    )
 
         if confirmed or selected[PageCategory.PROGRAM_PAGE]:
             # Only replace the list when something was actually checked; an
             # unreachable site keeps its leads rather than losing them silently.
             selected[PageCategory.PROGRAM_PAGE] = confirmed
+
+    def _programmes_listed_on(
+        self, html: str, base: str, domain: str,
+        fields: list[str], degree: str, trace: DiscoveryTrace,
+    ) -> list[str]:
+        """Programme links a catalogue page lists, scored for this applicant."""
+        found: list[str] = []
+        for url, label in _harvest_links(html, base, domain):
+            canonical = canonical_url(url)
+            category, score = categorise_url(canonical)
+            if category != PageCategory.PROGRAM_PAGE:
+                continue
+            if names_other_degree_level(canonical, degree):
+                continue
+            score += matches_field(canonical, fields) + matches_degree(canonical, degree)
+            if matches_field_text(label, fields):
+                score += SUBJECT_IN_LINK_TEXT_BONUS
+                trace.kept_by_link_text.append((canonical, label[:80]))
+            if score <= 0:
+                continue
+            trace.relevance[canonical] = max(trace.relevance.get(canonical, 0), score)
+            found.append(canonical)
+        return found
 
     def _apply(
         self, candidate: Candidate, selected: dict[str, list[str]],
@@ -794,6 +694,7 @@ class LiveDiscoveryAdapter:
     async def _navigation_fallback(
         self, entry: dict, domain: str, selected: dict[str, list[str]],
         trace: DiscoveryTrace, profile: ApplicantProfileIn,
+        ranked: dict[str, list[tuple[int, str]]] | None = None,
     ) -> None:
         """Walk the catalogue's links, then the homepage's.
 
@@ -803,16 +704,35 @@ class LiveDiscoveryAdapter:
         """
         degree = str(profile.context.level)
         fields = list(profile.context.intended_fields)
+        ranked = ranked if ranked is not None else {c: [] for c in PageCategory.ALL}
         # Catalogues first, deepest lead first; the homepage is the last resort
         # rather than a queue entry. Putting it in the queue let HKU's two
         # Chinese copies of the same catalogue consume the budget before the
         # walk reached the programme list.
+        # Catalogues first, then the admissions hub. A university with no
+        # catalogue — KAIST publishes none — fell straight through to the
+        # homepage, while its international admissions page, already selected
+        # and fetched, linked to the cost of attendance, the scholarship and
+        # the documents to submit. An admissions hub is where fees, funding and
+        # paperwork are gathered; it is worth walking for the reason a
+        # catalogue is.
         queue = list(selected[PageCategory.PROGRAM_CATALOG][:2])
+        if not queue:
+            # Only when there is no catalogue at all. Queueing the admissions
+            # hub alongside catalogues spent the same fixed budget on it and
+            # displaced the catalogue walk: Uppsala stopped reaching the
+            # programmes it had been finding, and Vienna stopped reaching a
+            # funding page. A university with a catalogue is already being
+            # read the best way there is.
+            queue = list(selected[PageCategory.ADMISSIONS][:2])
         walked: set[str] = set()
         homepage_tried = False
+        rendered_catalogues = 0
 
         while len(walked) < MAX_FALLBACK_PAGES:
-            if selected[PageCategory.PROGRAM_PAGE]:
+            # Stop once the applicant's subject is actually accounted for, not
+            # merely once some programme has been found.
+            if _satisfies_field(selected[PageCategory.PROGRAM_PAGE], fields):
                 break
             if not queue:
                 if homepage_tried:
@@ -830,9 +750,32 @@ class LiveDiscoveryAdapter:
                 )
                 continue
             from_catalogue = start in selected[PageCategory.PROGRAM_CATALOG]
-            for url, label in _harvest_links(
-                result.text, result.final_url or start, domain
+            links = _harvest_links(result.text, result.final_url or start, domain)
+
+            # A catalogue that shows no programme at all in its served HTML is
+            # building its list in the browser. UBC, Warsaw and HKU all serve a
+            # hundred-odd links and not one programme. Reading the page as a
+            # browser would is the difference between "it is not there" and "we
+            # did not look"; it is bounded, and only spent on this case.
+            if (
+                from_catalogue
+                and rendered_catalogues < MAX_RENDERED_CATALOGUES
+                and not catalogue_shows_subject(links, fields, degree)
             ):
+                rendered_catalogues += 1
+                rendered = await self.fetcher.render(start)
+                if rendered.ok:
+                    grown = _harvest_links(rendered.text, rendered.final_url or start, domain)
+                    trace.rendered.append((start, len(links), len(grown)))
+                    if len(grown) > len(links):
+                        links = grown
+                else:
+                    trace.errors.append(
+                        f"catalogue {start} showed no programmes and could not be "
+                        f"rendered ({rendered.outcome.value})"
+                    )
+
+            for url, label in links:
                 category, score = categorise_url(url)
                 if category is None:
                     # On a catalogue page, a link whose own text names the
@@ -852,8 +795,27 @@ class LiveDiscoveryAdapter:
                     if names_other_degree_level(url, degree):
                         continue
                     score += matches_field(url, fields) + matches_degree(url, degree)
+                    # A catalogue's entry that names the subject in its own
+                    # wording is the strongest lead on the page. Vienna listed
+                    # "African Studies" first and filled every slot with it,
+                    # because only the URL was consulted and every entry scored
+                    # the same.
+                    if from_catalogue and matches_field_text(label, fields):
+                        score += SUBJECT_IN_LINK_TEXT_BONUS
+                        trace.kept_by_link_text.append((url, label[:80]))
                     if score <= 0:
                         continue
+                    trace.relevance[canonical_url(url)] = max(
+                        trace.relevance.get(canonical_url(url), 0), score
+                    )
+                    if category == PageCategory.PROGRAM_PAGE:
+                        # Programme leads go to the ranked pool, not straight
+                        # into the three slots. Confirmation reads them
+                        # best-first, so a relevant page found late still beats
+                        # an irrelevant one found early.
+                        ranked[PageCategory.PROGRAM_PAGE].append(
+                            (score, canonical_url(url))
+                        )
                 canonical = canonical_url(url)
                 if (
                     looks_like_catalogue(canonical)
@@ -877,6 +839,39 @@ class LiveDiscoveryAdapter:
                     selected[category].append(canonical)
 
 
+def catalogue_shows_subject(
+    links: list[tuple[str, str]], fields: list[str], degree: str,
+) -> bool:
+    """Whether a catalogue's links already reach the applicant's subject.
+
+    Asked before deciding to re-read the page through the browser. The first
+    version asked only whether the page carried *any* programme-shaped link,
+    which is a different and much weaker question: Groningen's bachelor
+    catalogue carries fourteen, none of them a programme and none of them
+    computing, so the render never fired and the subject was never found.
+    """
+    if not fields:
+        return any(categorise_url(u)[0] == PageCategory.PROGRAM_PAGE for u, _ in links)
+    for url, label in links:
+        if names_other_degree_level(url, degree):
+            continue
+        if matches_field_text(label, fields) or matches_field(url, fields):
+            return True
+    return False
+
+
+def _satisfies_field(urls: list[str], fields: list[str]) -> bool:
+    """Whether any confirmed programme is plausibly the subject asked for.
+
+    With no stated field every programme counts, so a profile that names no
+    subject does not send the crawler round the whole catalogue.
+    """
+    wanted = [w for f in fields for w in re.split(r"[^a-z]+", f.lower()) if len(w) > 3]
+    if not wanted:
+        return bool(urls)
+    return any(all(w in url.lower() for w in wanted) for url in urls)
+
+
 def _first(urls: list[str]) -> str | None:
     return urls[0] if urls else None
 
@@ -895,18 +890,38 @@ def _program_name_from_url(url: str, fields: list[str], degree: object) -> str:
     return " ".join(words).replace(".html", "").strip().title()
 
 
+def domain_of(entry: dict) -> str:
+    return urlparse(entry.get("homepage", "")).netloc
+
+
 def _harvest_links(html: str, base: str, domain: str) -> list[tuple[str, str]]:
-    soup = BeautifulSoup(html, "lxml")
+    """Every same-institution link on a page.
+
+    Parsing is guarded because pages on the public web are not always
+    well-formed: one page in a holdout run carried markup that made lxml raise
+    `ValueError` from inside its own namespace handling, and the exception rose
+    all the way out of the run. A page that cannot be parsed is a page with no
+    links — that is a fact about the page, not a reason to stop researching.
+    """
+    try:
+        soup = BeautifulSoup(html, "lxml")
+    except Exception:  # any parser failure means "no links here"
+        return []
     out: list[tuple[str, str]] = []
     seen: set[str] = set()
     for anchor in soup.find_all("a", href=True)[:MAX_LINKS_SCANNED]:
-        url = urljoin(base, anchor["href"]).split("#")[0]
-        if urlparse(url).scheme not in ("http", "https"):
+        try:
+            url = urljoin(base, anchor["href"]).split("#")[0]
+        except ValueError:
+            # `urljoin` itself raises on some malformed hrefs. One bad link on
+            # a page must cost that link and nothing else.
+            continue
+        if url_problem(url) is not None:
             continue
         if not same_institution(url, domain):
             continue
         canonical = canonical_url(url)
-        if canonical in seen:
+        if not canonical or canonical in seen:
             continue
         seen.add(canonical)
         label = re.sub(r"\s+", " ", anchor.get_text(" ", strip=True))[:160]

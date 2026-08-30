@@ -37,8 +37,11 @@ from app.domain.enums import FetchOutcome
 
 log = logging.getLogger("unimatch.fetch")
 
+#: How this crawler introduces itself. The project URL has to resolve: a site
+#: operator who wants to ask what we are doing, or to have us stop, follows it.
+#: It pointed at github.com/unimatch/unimatch, which returns 404.
 USER_AGENT = (
-    "UniMatchResearchBot/0.1 (+https://github.com/unimatch/unimatch; "
+    "AshyqApplyResearchBot/0.1 (+https://github.com/wpalish/ashyq-apply; "
     "university admissions research for a single applicant; contact: set FETCH_CONTACT)"
 )
 DEFAULT_TIMEOUT = 20.0
@@ -270,7 +273,14 @@ def find_pii(url: str, extra: str = "") -> str | None:
     for label, pattern in _PII_PATTERNS:
         if pattern.search(haystack):
             return label
-    query = urlparse(url).query
+    try:
+        query = urlparse(url).query
+    except ValueError:
+        # This guard is the first thing to touch a URL harvested from a page,
+        # and urlparse itself raises on some malformed hosts ("[not-an-ipv6]").
+        # The patterns above already ran against the whole string, so there is
+        # nothing more to inspect; the network policy refuses it a moment later.
+        return None
     if query and _QUERY_DIGITS.search(query):
         return "long digit sequence in a query parameter (passport/ID/card)"
     if extra and _QUERY_DIGITS.search(extra):
@@ -446,6 +456,30 @@ class Fetcher:
             final_url=final_url,
         )
 
+    async def render(self, url: str) -> FetchResult:
+        """Read a page through the browser tier because the caller asked.
+
+        Automatic escalation fires only when a page came back with no usable
+        text at all. That misses the commoner case: a page with plenty of text
+        whose *one interesting part* is built client-side. A university
+        catalogue is exactly that — UBC's programme list served 127 links and
+        not one of them a programme.
+
+        The same gates apply as to plain HTTP: robots.txt, the network policy
+        and the PII guard all run inside the renderer.
+        """
+        if self._renderer is None:
+            return FetchResult(
+                url=url, outcome=FetchOutcome.UNPARSEABLE,
+                error="No browser tier is attached to this fetcher.",
+            )
+        rendered: FetchResult = await self._renderer.render(url)  # type: ignore[attr-defined]
+        if rendered.ok:
+            rendered.fetch_tier = "browser"
+            self.tier_counts["browser"] += 1
+            self.cache.put(rendered)
+        return rendered
+
     async def _maybe_render(self, result: FetchResult) -> FetchResult:
         """Escalate to the browser when a 200 came back with no usable text."""
         if self._renderer is None or not result.ok or result.is_pdf:
@@ -584,6 +618,17 @@ class Fetcher:
             log.warning("blocked by network policy: %s", exc)
             self.stats[FetchOutcome.BLOCKED.value] += 1
             return FetchResult(url=url, outcome=FetchOutcome.BLOCKED, error=str(exc))
+        except (ValueError, httpx.InvalidURL) as exc:
+            # The policy may pass a host the HTTP client will not accept —
+            # "0177.0.0.1" resolves fine on some machines and is an invalid
+            # IPv4 literal to httpx. One malformed link on a crawled page must
+            # not end the run.
+            log.info("unusable URL %s: %s", url[:120], exc)
+            self.stats[FetchOutcome.BLOCKED.value] += 1
+            return FetchResult(
+                url=url, outcome=FetchOutcome.BLOCKED,
+                error=f"The URL could not be used: {exc}",
+            )
 
         host = target.host
         async with self._semaphore(host):

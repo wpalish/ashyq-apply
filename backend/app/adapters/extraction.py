@@ -12,6 +12,8 @@ import io
 import re
 from collections.abc import Iterable
 from datetime import UTC, date, datetime
+from typing import Final
+from urllib.parse import urlparse
 
 from bs4 import BeautifulSoup
 
@@ -93,14 +95,59 @@ def excerpt_around(text: str, start: int, end: int, radius: int = EXCERPT_RADIUS
     return _WS.sub(" ", snippet)
 
 
+#: Suffixes that mean "this is some institution's site". Used only when the
+#: institution being researched is unknown, because they answer a weaker
+#: question than the one that matters.
+ACADEMIC_SUFFIXES: Final = ("edu", "ac.uk", "edu.au", "gov", "gov.uk", "ac.nz", "edu.sg")
+
+
 def is_official_domain(url: str, university_domains: Iterable[str] = ()) -> bool:
-    low = url.lower()
-    if any(d.lower() in low for d in university_domains if d):
-        return True
-    return any(
-        f".{tld}/" in low or low.rstrip("/").endswith(f".{tld}")
-        for tld in ("edu", "ac.uk", "edu.au", "gov", "gov.uk", "ac.nz", "edu.sg")
-    )
+    """Whether this URL is the institution speaking for itself.
+
+    The answer decides whether a claim is stamped VERIFIED_CURRENT or left
+    UNVERIFIED, and only the first kind counts toward completeness. It used to
+    be a substring search over the whole URL, which was wrong in both
+    directions at once.
+
+    **Too narrow.** The registry stores a homepage and the candidate's domain is
+    its netloc — `www.utoronto.ca`. Toronto publishes undergraduate admissions
+    on `future.utoronto.ca`, and `"www.utoronto.ca" in
+    "https://future.utoronto.ca/..."` is False. Every claim found there was
+    discarded: Toronto's canary row read *nine claims, 0.0 completeness*, nine
+    facts read correctly off the university's own site and thrown away by a
+    string comparison. Hong Kong (`admissions.hku.hk`) and British Columbia
+    (`you.ubc.ca`) failed identically.
+
+    **Too wide, which is the dangerous half.** `"utoronto.ca" in
+    "https://utoronto.ca.attacker.example/fees"` is True, so a lookalike host
+    anybody can register produced claims stamped as verified against the real
+    university — a deadline an applicant would act on. `notutoronto.ca` passed
+    too, and so did the domain merely appearing in a path or a query string.
+
+    The registrable domain is what "the same institution" means, and this
+    repository already computes it from the Public Suffix List so the crawler
+    can stay on the institution's own site. The claim stamp uses the same
+    notion of ownership as the fetch policy, which is the only way the two can
+    ever agree.
+    """
+    from app.adapters.discovery.url_signals import registrable_domain
+
+    known = {d for d in (registrable_domain(x) for x in university_domains if x) if d}
+    try:
+        host = (urlparse(url).hostname or "").lower()
+    except ValueError:
+        # "https://[bad::ipv6/x" raises here rather than at the parse.
+        return False
+    if not host:
+        return False
+    if known:
+        # The institution is known, so the suffix heuristic must not overrule
+        # it: a fee on `otherplace.edu` is not evidence about Toronto.
+        return registrable_domain(host) in known
+    # Nothing to compare against. "An academic domain" is the only signal
+    # there is, and dropping it would silently downgrade claims that really
+    # are official.
+    return any(host == suffix or host.endswith(f".{suffix}") for suffix in ACADEMIC_SUFFIXES)
 
 
 class ClaimBuilder:
@@ -143,7 +190,14 @@ class ClaimBuilder:
         status: ClaimStatus | None = None,
         notes: str = "",
         subject_key: str | None = None,
+        academic_year: str | None = None,
     ) -> Claim:
+        """Record one claim.
+
+        `academic_year` overrides the builder's when the evidence states its
+        own — a fee table row naming 2026-2027 is more specific than whatever
+        year the page as a whole is about.
+        """
         # Only an official page can produce a "current" claim; anything else
         # stays unverified until a human or a better source confirms it.
         default_status = (
@@ -169,7 +223,7 @@ class ClaimBuilder:
             status=status or default_status,
             notes=notes,
             subject_key=subject_key,
-            **self.meta,  # type: ignore[arg-type]
+            **{**self.meta, **({"academic_year": academic_year} if academic_year else {})},  # type: ignore[arg-type]
         )
         self.claims.append(claim)
         return claim
@@ -202,10 +256,15 @@ _SAT_MIN = re.compile(r"SAT[^.\n]{0,60}?(?:minimum|at least|score of)[^.\n]{0,20
 _SUPERSCORE = re.compile(r"(superscor\w+)", re.IGNORECASE)
 #: A currency marker must sit directly beside the number. Bare digits are never
 #: read as money, which keeps years and scores out of the cost table.
+#: A currency marker and a number, with the number's separators left intact so
+#: `_amount_from` can decide what they mean. The previous pattern accepted only
+#: a comma or a space as a group separator and treated a dot as decimals, so
+#: "€ 17.310" — how the Netherlands, Germany, Austria, Poland and Denmark all
+#: write seventeen thousand — was read as €17.31.
 _MONEY = re.compile(
     r"(?:(US\$|USD|EUR|€|GBP|£|CAD|AUD|CHF|SEK|NOK|DKK|SGD|JPY|\$)\s*)"
-    r"([\d]{1,3}(?:[,\s]\d{3})+|\d{2,7})(?:\.(\d{2}))?"
-    r"|([\d]{1,3}(?:[,\s]\d{3})+|\d{2,7})\s*(EUR|USD|GBP|CHF|SEK|NOK|DKK|AUD|CAD|SGD|JPY)",
+    r"(\d[\d.,\s]*\d|\d)"
+    r"|(\d[\d.,\s]*\d|\d)\s*(EUR|USD|GBP|CHF|SEK|NOK|DKK|AUD|CAD|SGD|JPY)\b",
     re.IGNORECASE,
 )
 _PERCENT_TUITION = re.compile(r"(\d{1,3})\s*%\s*(?:of\s+)?(?:the\s+)?tuition", re.IGNORECASE)
@@ -235,6 +294,47 @@ _MONTHS = {m: i for i, m in enumerate(
     ["january","february","march","april","may","june","july","august","september","october","november","december"], 1)}
 
 
+def _amount_from(raw: str) -> float | None:
+    """Read a number whose separators may follow either convention.
+
+    "17.310" is seventeen thousand in Amsterdam and seventeen-point-three-one
+    in Boston, and a fees page gives no other clue, so the decision is made
+    from where the separators sit:
+
+    * both a dot and a comma present — whichever comes last is the decimal
+      separator, and the other groups thousands. Covers "17.310,00" and
+      "17,310.50".
+    * one kind of separator, appearing more than once — thousands. "1.234.567".
+    * one separator followed by exactly three digits — thousands. "€ 1.500" is
+      fifteen hundred; money is written in whole units far more often than in
+      thousandths. This one is a judgement call, and it is the reason this
+      function exists rather than a call to ``float()``.
+    * anything else — a decimal separator. "17.31", "5,5".
+    """
+    raw = re.sub(r"\s", "", raw).strip(".,")
+    if not raw or not re.fullmatch(r"[\d.,]+", raw):
+        return None
+
+    last_dot, last_comma = raw.rfind("."), raw.rfind(",")
+    if last_dot >= 0 and last_comma >= 0:
+        decimal_at = max(last_dot, last_comma)
+        grouping = "," if decimal_at == last_dot else "."
+        cleaned = raw.replace(grouping, "")
+        cleaned = cleaned[: cleaned.rfind(raw[decimal_at])] + "." + cleaned[cleaned.rfind(raw[decimal_at]) + 1 :]
+    else:
+        separator = "." if last_dot >= 0 else ("," if last_comma >= 0 else "")
+        if not separator:
+            cleaned = raw
+        elif raw.count(separator) > 1 or len(raw) - raw.rfind(separator) - 1 == 3:
+            cleaned = raw.replace(separator, "")
+        else:
+            cleaned = raw.replace(separator, ".")
+    try:
+        return float(cleaned)
+    except ValueError:
+        return None
+
+
 def parse_money(text: str) -> tuple[float, str] | None:
     m = _MONEY.search(text)
     if not m:
@@ -242,12 +342,12 @@ def parse_money(text: str) -> tuple[float, str] | None:
     if m.group(2):
         raw, cur = m.group(2), (m.group(1) or "").lower()
     else:
-        raw, cur = m.group(4), (m.group(5) or "").lower()
+        raw, cur = m.group(3), (m.group(4) or "").lower()
     if not raw:
         return None
-    amount = float(re.sub(r"[,\s]", "", raw))
-    if m.group(3):
-        amount += float(m.group(3)) / 100
+    amount = _amount_from(raw)
+    if amount is None:
+        return None
     return amount, _CURRENCY_SYMBOLS.get(cur, "USD")
 
 
@@ -409,6 +509,20 @@ def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
     return found
 
 
+#: Text following a label, up to the end of the sentence. A dot is a sentence
+#: end only when a digit does not follow it: "[^.]" alone cut "€ 15.000" down
+#: to "€ 15", so a European-formatted fee was truncated before it could even be
+#: parsed.
+_SENTENCE_WINDOW = r"(?:[^.\n]|\.(?=\d)){0,120}"
+
+#: A figure qualified by a unit is a rate, not a total. Only "per year" and
+#: "per annum" describe the annual cost these claim types mean.
+_PER_UNIT_RATE = re.compile(
+    r"\bper\s+(ec|ects|credit|credits|course|module|module|month|week|day|term|semester|point)s?\b",
+    re.IGNORECASE,
+)
+
+
 def extract_costs(text: str, builder: ClaimBuilder) -> list[Claim]:
     """Pull cost figures out of a fees page."""
     found: list[Claim] = []
@@ -423,11 +537,23 @@ def extract_costs(text: str, builder: ClaimBuilder) -> list[Claim]:
         (ClaimType.TOTAL_COST_OF_ATTENDANCE, r"(?:total cost of attendance|estimated total cost|total estimated cost)"),
     )
     for ctype, label in patterns:
-        m = re.search(rf"{label}[^.\n]{{0,120}}", text, re.IGNORECASE)
+        # Scanning every occurrence of the label was tried and reverted. On TU
+        # Delft's fee table it associated the statutory tuition rate with
+        # "housing" purely because the two sat within 120 characters of each
+        # other in the flattened text, and produced excerpts that proved
+        # nothing. Proximity in a table is not evidence of association, and a
+        # claim whose excerpt does not prove its value is invalid here.
+        m = re.search(rf"{label}{_SENTENCE_WINDOW}", text, re.IGNORECASE)
         if not m:
             continue
-        parsed = parse_money(m.group(0))
+        window = m.group(0)
+        parsed = parse_money(window)
         if parsed is None:
+            continue
+        if _PER_UNIT_RATE.search(window):
+            # "€ 43,35 per EC" is a price per credit, not the annual fee.
+            # Reporting it as tuition understates a year by two orders of
+            # magnitude, which is worse than reporting nothing.
             continue
         amount, currency = parsed
         found.append(
@@ -438,4 +564,306 @@ def extract_costs(text: str, builder: ClaimBuilder) -> list[Claim]:
                 section="Fees and costs",
             )
         )
+    return found
+
+
+#: Column headers that say who a fee row applies to. A fee table almost always
+#: segments by this, and the segment is the difference between €2,694 and
+#: €19,800 for the same programme in the same year.
+_AUDIENCE_HEADER = re.compile(
+    r"\b(nationality|residency|student type|type of student|fee status|who|category|applicant)\b",
+    re.IGNORECASE,
+)
+_MONEY_HEADER = re.compile(
+    r"\b(fee|fees|tuition|cost|costs|amount|price|charge)\b", re.IGNORECASE
+)
+_YEAR_HEADER = re.compile(r"\b(year|academic year|intake|period)\b", re.IGNORECASE)
+#: What the table as a whole is about, read from its caption or the heading
+#: above it. Without this a table of, say, library fines would be read as
+#: tuition purely because it has a money column.
+_TUITION_CONTEXT = re.compile(
+    r"\b(tuition|programme fee|program fee|course fee|study cost)", re.IGNORECASE
+)
+_ACADEMIC_YEAR_CELL = re.compile(r"\b(20\d{2})\s*[-/–]\s*(20\d{2}|\d{2})\b")
+
+
+#: A first column that names *what the cost is* rather than *who pays it*.
+#: This is what separates Aalto's cost-of-attendance table (Item | Amount)
+#: from Groningen's fee table (Nationality | Year | Fee).
+_ITEM_HEADER = re.compile(
+    r"\b(item|items|cost|costs|expense|expenses|category|categories|description"
+    r"|type of cost|fee type)\b",
+    re.IGNORECASE,
+)
+
+#: A row that sums the rows above it. Recording it as a cost double-counts;
+#: recording it as tuition made a full-tuition award appear to cover the whole
+#: cost of attending, and the applicant was told they owed nothing.
+_TOTAL_ROW = re.compile(
+    r"\b(total|subtotal|sum|altogether|overall|estimated total|grand total)\b",
+    re.IGNORECASE,
+)
+
+#: Row labels mapped to the cost they name. Ordered: the first match wins, so
+#: "tuition fee" is tuition before "fee" can make it a mandatory fee.
+_ROW_LABEL_TO_CLAIM: tuple[tuple[re.Pattern[str], ClaimType], ...] = (
+    (re.compile(r"\btuition|programme fee|program fee|course fee\b", re.I), ClaimType.TUITION),
+    (re.compile(r"\bhousing|accommodation|residence|lodging|rent\b", re.I), ClaimType.HOUSING_COST),
+    (re.compile(r"\bmeal|board|food|catering\b", re.I), ClaimType.MEALS_COST),
+    (re.compile(r"\b(health|medical)\s+insurance|\binsurance\b", re.I), ClaimType.HEALTH_INSURANCE_COST),
+    (re.compile(r"\bbooks|study materials|supplies|literature\b", re.I), ClaimType.BOOKS_COST),
+    (re.compile(r"\bfees?\b", re.I), ClaimType.MANDATORY_FEES),
+)
+
+
+def _claim_for_row_label(label: str) -> ClaimType | None:
+    """Which cost a cost-of-attendance row names, if it names one."""
+    for pattern, claim_type in _ROW_LABEL_TO_CLAIM:
+        if pattern.search(label):
+            return claim_type
+    return None
+
+
+def _cell_text(cell) -> str:
+    return " ".join(cell.get_text(" ", strip=True).split())
+
+
+def _table_context(table) -> str:
+    """What the table is about: its caption, plus the nearest heading above."""
+    parts: list[str] = []
+    caption = table.find("caption")
+    if caption:
+        parts.append(_cell_text(caption))
+    node = table
+    for _ in range(6):
+        node = node.find_previous(["h1", "h2", "h3", "h4", "caption", "p"])
+        if node is None:
+            break
+        text = _cell_text(node)
+        if text:
+            parts.append(text)
+        if node.name in ("h1", "h2", "h3", "h4"):
+            break
+    return " ".join(parts)
+
+
+#: The section columns an English-test table names. Matched exactly against a
+#: header cell, because "reading" appears in plenty of prose that is not a
+#: column heading.
+_TEST_SECTIONS: Final = ("reading", "listening", "speaking", "writing")
+
+#: The overall column, however a table spells it.
+_OVERALL_HEADER = re.compile(r"\b(?:overall|total|composite)\b", re.IGNORECASE)
+
+#: What makes a table an English-requirement table rather than any other grid.
+_LANGUAGE_CONTEXT = re.compile(
+    r"english|language requirement|language proficiency|proficiency test|\bIELTS\b|\bTOEFL\b",
+    re.IGNORECASE,
+)
+
+#: The tests this reads, with the top of each test's own scale. The ceiling is
+#: not decoration: a Pearson row of 66/64/58 read as IELTS bands would be an
+#: impossible requirement stated with confidence.
+_ENGLISH_TESTS: Final = (
+    (re.compile(r"\bIELTS\b", re.IGNORECASE), ClaimType.IELTS_MIN_OVERALL,
+     ClaimType.IELTS_MIN_SUBSCORE, 9.0),
+    (re.compile(r"\bTOEFL\b", re.IGNORECASE), ClaimType.TOEFL_MIN_TOTAL, None, 120.0),
+    (re.compile(r"\bDuolingo\b", re.IGNORECASE), ClaimType.DUOLINGO_MIN, None, 160.0),
+)
+
+_ONE_NUMBER = re.compile(r"\d+(?:\.\d+)?")
+
+
+def extract_requirement_tables(html: str, builder: ClaimBuilder) -> list[Claim]:
+    """Read English-requirement tables, where a column is what gives a number meaning.
+
+    `extract_requirements` works on flattened text, where
+
+        IELTS 6.5 / CEFR B2-C1 | Overall | Reading | Listening | Speaking | Writing
+        IELTS (Academic)       |    6.5  |    6.5  |      6.5  |     6.5  |    6.5
+
+    becomes "IELTS (Academic) 6.5 6.5 6.5 6.5 6.5" and the header that says
+    which 6.5 is the overall band is gone. So it produced nothing, and the gold
+    audit of Groningen found two decision questions answered plainly on the
+    university's own page and missed entirely.
+
+    This is the argument `extract_cost_tables` already makes for fees, applied
+    to the other kind of table a university publishes: a row is a deliberate
+    statement of association, not an accident of layout, so the row can be read
+    and the row is what the excerpt shows.
+
+    **A cell it cannot read alone is refused, not resolved.** Groningen stacks
+    the new TOEFL 1-6 scale and the old 0-120 scale in one cell, so "Overall"
+    for TOEFL is both 4.5 and 90. Either answer is a guess, and a guessed
+    English requirement is a rejected application.
+    """
+    soup = BeautifulSoup(html, "lxml")
+    found: list[Claim] = []
+    for table in soup.find_all("table"):
+        rows = table.find_all("tr")
+        if not rows:
+            continue
+        headers = [_cell_text(c) for c in rows[0].find_all(["th", "td"])]
+        if not _LANGUAGE_CONTEXT.search(f"{_table_context(table)} {' '.join(headers)}"):
+            continue
+
+        overall_col = next(
+            (i for i, h in enumerate(headers) if _OVERALL_HEADER.search(h)), None
+        )
+        section_cols = {
+            i: h.strip().lower()
+            for i, h in enumerate(headers)
+            if h.strip().lower() in _TEST_SECTIONS
+        }
+        if overall_col is None and not section_cols:
+            # A table under a language heading that names no columns this can
+            # interpret. Reading it positionally would be guessing.
+            continue
+
+        for row in rows[1:]:
+            cells = [_cell_text(c) for c in row.find_all(["th", "td"])]
+            if len(cells) < 2:
+                continue
+            test = next(
+                (t for t in _ENGLISH_TESTS if t[0].search(cells[0])), None
+            )
+            if test is None:
+                continue
+            _pattern, overall_type, subscore_type, ceiling = test
+            if len(cells) != len(headers):
+                # A merged cell, usually prose spanning the score columns
+                # ("CAE or CPE Certificate with a minimum score of 180"). The
+                # columns no longer line up, so no number here has a known
+                # meaning.
+                continue
+            row_text = " ".join(c for c in cells if c)
+
+            wanted: list[tuple[int, ClaimType | None, str | None]] = []
+            if overall_col is not None:
+                wanted.append((overall_col, overall_type, None))
+            wanted.extend((i, subscore_type, name) for i, name in section_cols.items())
+
+            for index, claim_type, section in wanted:
+                if claim_type is None or index >= len(cells):
+                    continue
+                numbers = _ONE_NUMBER.findall(cells[index])
+                if len(numbers) != 1:
+                    continue
+                value = float(numbers[0])
+                if value > ceiling:
+                    continue
+                found.append(
+                    builder.add(
+                        claim_type,
+                        value,
+                        row_text,
+                        section="English language requirements",
+                        subject_key=section,
+                    )
+                )
+    return found
+
+
+def extract_cost_tables(html: str, builder: ClaimBuilder) -> list[Claim]:
+    """Read fee tables, where a row is genuine evidence of association.
+
+    `extract_costs` works on flattened text and deliberately refuses to pair a
+    label with a figure that merely sits near it — on a fee table that
+    proximity is an accident of layout. A table row is not an accident: the
+    row is what ties an amount to the people who pay it, so the row can be
+    read, and the row is what the excerpt shows.
+
+    Each row becomes its own claim, keyed by audience, so the EU/EEA and
+    non-EU/EEA rates coexist instead of contradicting each other.
+    """
+    soup = BeautifulSoup(html, "lxml")
+    found: list[Claim] = []
+    for table in soup.find_all("table"):
+        context = _table_context(table)
+        rows = table.find_all("tr")
+        if not rows:
+            continue
+
+        header_cells = [_cell_text(c) for c in rows[0].find_all(["th", "td"])]
+        headers = " ".join(header_cells)
+        # The table must say it is about tuition somewhere: its own headers,
+        # its caption, or the heading it sits under.
+        if not _TUITION_CONTEXT.search(f"{context} {headers}"):
+            continue
+
+        audience_col = next(
+            (i for i, h in enumerate(header_cells) if _AUDIENCE_HEADER.search(h)), None
+        )
+        # Which shape is this? A first column headed "Nationality" segments one
+        # fee by who pays it; a first column headed "Item" lists different
+        # costs. Reading the second as the first made every row a tuition rate
+        # and the total row won, so tuition became the whole cost of attending
+        # and a full-tuition award appeared to leave nothing to pay.
+        item_col = next(
+            (i for i, h in enumerate(header_cells) if _ITEM_HEADER.search(h)), None
+        )
+        rows_are_categories = audience_col is None and item_col is not None
+        year_col = next(
+            (i for i, h in enumerate(header_cells) if _YEAR_HEADER.search(h)), None
+        )
+        money_col = next(
+            (i for i, h in enumerate(header_cells) if _MONEY_HEADER.search(h)), None
+        )
+
+        for row in rows[1:]:
+            cells = [_cell_text(c) for c in row.find_all(["th", "td"])]
+            if not cells:
+                continue
+            row_text = " ".join(cells)
+            if _PER_UNIT_RATE.search(row_text):
+                # A per-credit rate is not an annual fee.
+                continue
+
+            candidates = (
+                [cells[money_col]] if money_col is not None and money_col < len(cells) else cells
+            )
+            parsed = next(
+                (p for p in (parse_money(c) for c in candidates) if p is not None), None
+            )
+            if parsed is None:
+                continue
+            amount, currency = parsed
+
+            label = cells[0]
+            if item_col is not None and item_col < len(cells):
+                label = cells[item_col]
+            if rows_are_categories:
+                claim_type = (
+                    ClaimType.TOTAL_COST_OF_ATTENDANCE
+                    if _TOTAL_ROW.search(label)
+                    else _claim_for_row_label(label)
+                )
+                if claim_type is None:
+                    # A row naming a cost this product has no category for.
+                    # Skipped rather than filed under a category it is not.
+                    continue
+                audience = None
+            else:
+                claim_type = ClaimType.TUITION
+                audience = (
+                    cells[audience_col]
+                    if audience_col is not None and audience_col < len(cells)
+                    else cells[0]
+                )
+            year = None
+            if year_col is not None and year_col < len(cells):
+                m = _ACADEMIC_YEAR_CELL.search(cells[year_col])
+                if m:
+                    year = f"{m.group(1)}/{m.group(2)[-2:]}"
+
+            found.append(
+                builder.add(
+                    claim_type,
+                    {"amount": amount, "currency": currency},
+                    row_text,
+                    section="Fees and costs",
+                    subject_key=audience or None,
+                    academic_year=year,
+                )
+            )
     return found

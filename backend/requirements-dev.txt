@@ -8,3 +8,13 @@ respx==0.22.0
 playwright==1.60.0
 pip-audit>=2.7.3
 pgserver==0.1.4
+# The container contract test reads docker-compose.yml. It was available
+# only transitively, which works locally and fails on a clean CI install.
+PyYAML==6.0.3
+# Stubs, so `mypy app tests scripts` can check the container contract test.
+types-PyYAML==6.0.12.20250915
+# Starlette 1.6 prefers httpx2 for its TestClient and warns when it falls
+# back to httpx. Installing it removes the warning at its cause rather than
+# filtering it. A test dependency only: the fetcher and the FX provider use
+# `import httpx`, which is unaffected — httpx2 is a separate package name.
+httpx2==2.12.0

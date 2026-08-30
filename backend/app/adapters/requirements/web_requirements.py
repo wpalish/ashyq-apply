@@ -20,6 +20,8 @@ from app.adapters.base import AdapterResult, Candidate, CandidateProgram
 from app.adapters.extraction import (
     ClaimBuilder,
     excerpt_around,
+    extract_cost_tables,
+    extract_requirement_tables,
     extract_requirements,
     for_matching,
     html_title,
@@ -128,6 +130,19 @@ class WebRequirementsAdapter:
             self._claim_intake_state(page, text, intake, builder, out)
             self._claim_english_test_types(text, builder)
             self._claim_fees(text, builder)
+            if not res.is_pdf:
+                # Some universities put the fee table on the programme page
+                # rather than a separate fees page. Groningen is one, and its
+                # EU/EEA and non-EU/EEA rates are the difference between
+                # €2,694 and €19,800 for the same year.
+                claims_from_fee_tables(res.text, builder)
+                # And the English requirement is a table at least as often as
+                # it is a sentence. Flattened, Groningen's row reads "IELTS
+                # (Academic) 6.5 6.5 6.5 6.5 6.5" and the header that says
+                # which 6.5 is the overall band is gone, so nothing was read
+                # from the page at all.
+                if page.accepts("requirements"):
+                    claims_from_requirement_tables(res.text, builder)
 
             out.claims.extend(builder.claims)
 
@@ -286,3 +301,24 @@ def _line_containing(text: str, needle: str) -> str:
         if needle in line.lower():
             return line.strip()[:300]
     return ""
+
+
+def claims_from_fee_tables(html: str, builder) -> list:
+    """Tuition rows from any fee table the programme page carries itself.
+
+    A separate name rather than a bare call so the programme-page path can be
+    tested directly: this is where Groningen's fees live, and wiring tables
+    only into the cost adapter would have left them unread on the very page a
+    student is reading.
+    """
+    return extract_cost_tables(html, builder)
+
+
+def claims_from_requirement_tables(html: str, builder) -> list:
+    """English-requirement rows from a table the page carries itself.
+
+    Named separately for the same reason as the fee tables: this path is where
+    a real institution's language requirement actually lives, and it deserves a
+    test that does not have to go through a whole verify() to reach it.
+    """
+    return extract_requirement_tables(html, builder)

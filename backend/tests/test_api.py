@@ -28,7 +28,10 @@ def client(tmp_path, monkeypatch, corpus_dir):
         fetch_delay_seconds=0.0,
         enable_browser_tier=False,
     )
-    settings.ensure_dirs()
+    # `get_settings()` no longer creates directories: it must be able to
+    # run on a read-only root filesystem. Whatever writes makes its own.
+    settings.cache_dir.mkdir(parents=True, exist_ok=True)
+    settings.export_dir.mkdir(parents=True, exist_ok=True)
     get_settings.cache_clear()
     monkeypatch.setattr("app.config.get_settings", lambda: settings)
 

@@ -171,9 +171,9 @@ Scored after loop 7, against what the product claims about itself.
 | Privacy | **9** | PII guard on every request, audit log asserted clean of applicant data, ORM-level deletion, no sensitive field modelled anywhere. Point withheld for having no encryption at rest. |
 | Scraper resilience | **7** | Politeness is thorough and one bad link can no longer end a run. But live discovery works from a curated registry and finds landing pages more often than requirement pages — the honest weak spot. |
 | UX | **8** | Three judgements kept visually separate, refusals explained in place, no unexplained spinner, keyboard-reachable, both themes. Dense by design; a first-time user has a lot to take in. |
-| Maintainability | **8** | Domain logic is pure and I/O lives behind adapters. `runner.py` at 732 lines is the one file that has grown past comfortable. |
+| Maintainability | **8** | Domain logic is pure and I/O lives behind adapters. `runner.py` at 732 lines is the one file that has grown past comfortable. *(Corrected 2026-08-29: it reached 967, and assessment and persistence have since been split out, leaving 712.)* |
 | Test coverage | **9** | 233 backend + 39 unit + 42 E2E; 87% backend coverage; a contract test pins the frontend vocabularies to the backend enums. |
-| Accessibility | **8** | Labelled table, named control groups, live progress, `aria-expanded`, focus rings, reduced-motion, no overflow at any breakpoint. No screen-reader pass with a real AT, and no automated axe run. |
+| Accessibility | **8** | Labelled table, named control groups, live progress, `aria-expanded`, focus rings, reduced-motion, no overflow at any breakpoint. No screen-reader pass with a real AT, and no automated axe run. *(Corrected 2026-08-29: axe WCAG A/AA now runs on every reachable screen in both the desktop and mobile projects; the manual AT pass is still outstanding.)* |
 
 **Weakest link:** live discovery. It is the difference between a demo that
 proves the machinery and a tool that researches an arbitrary university.
@@ -254,7 +254,7 @@ taken against a live run.
 | UX | 8 | **7** | The reload bug destroyed real data; the form still covers a subset of the schema |
 | Maintainability | 8 | **7** | `runner.py` is 780 lines and `page_classifier.py` 420; both want splitting |
 | Test coverage | 9 | **9** | 396 tests, 89% coverage, and the new tests encode real defects rather than happy paths |
-| Accessibility | 8 | **7** | Unchanged in substance, but no axe run means the score was never earned |
+| Accessibility | 8 | **7** | Unchanged in substance, but no axe run means the score was never earned *(axe has since been added)* |
 | **Production readiness** | — | **2** | No auth, no durable jobs, no PostgreSQL, no containers, no CI |
 
 **Weakest link is no longer live discovery — it is that this is not production
@@ -319,3 +319,85 @@ written and parses but has **never been run**: Docker is not installed here.
 
 None of these cause a wrong answer. Each causes a *missing* answer, reported as
 missing.
+
+
+---
+
+# Cycle 6 — 2026-08-29
+
+Branch `claude/production-completion`, from `ea7948c`. Everything below was run,
+not planned.
+
+## Corrections to earlier cycles
+
+Claims above that were true when written and are false now. They are corrected
+here rather than edited away, because a loop report whose history is rewritten
+stops being evidence.
+
+| Said earlier | True on 2026-08-29 |
+|---|---|
+| "no authentication, no multi-tenancy, no containers, no CI" | All four exist. Opaque server sessions with scrypt, organizations and applicant cases, a five-service compose stack, and CI covering frontend, backend on SQLite and PostgreSQL, and security. |
+| "no automated axe run" | axe WCAG 2.0/2.1 A and AA runs on every reachable workflow screen, in the desktop and mobile projects both. |
+| "`runner.py` at 732 lines" | It grew to 967. Assessment and persistence are now separate modules and it is 712. |
+| "queue is in-process" | A durable PostgreSQL queue with leases, heartbeats, reaping, backoff and dead-lettering; recovery from a real SIGKILL is proven by `scripts/crash_test.py`. |
+| "the container image has never been built" | CI builds it. It has still never been *run* — see the gate below, which stays BLOCKED. |
+
+## What this cycle changed
+
+**Programme discovery.** The measured problem was that live runs confirmed a
+programme page at one institution in ten. Four defects, each found by reading
+what a real page actually contains:
+
+1. A programme page that links to its own sub-pages counted as a catalogue.
+   TU Delft's BSc Aerospace Engineering carries eighteen hrefs containing
+   "/bachelors/" — "About the programme", "After your studies", fifteen student
+   stories — every one under its own URL. What separates a programme from a
+   catalogue is not how many programme-shaped links it has but what the links
+   say: a catalogue's name subjects, a programme's name its own sections.
+2. Discovery stopped at the first programme it confirmed, so Delft's sitemap
+   yielded aerospace, mathematics and physics and the catalogue holding
+   computer science was never walked. Widening is now driven by whether the
+   applicant's own subject is accounted for.
+3. Catalogue entries filled the three slots in the order they appeared, so
+   Vienna returned "African Studies" — first alphabetically. Entries are ranked
+   by whether their own wording names the applicant's subject.
+4. UBC, Warsaw and HKU build their programme lists in the browser: their served
+   HTML carries a hundred-odd links and not one programme. A catalogue that
+   shows no programme is now re-read through the existing Playwright tier,
+   bounded to two pages per institution.
+
+Result: 1/10 → 4/10 programme pages, 26/30 → see the live report for the final
+category figure, and zero false positives throughout.
+
+**Funding.** Nationality and residency restrictions are read from the wording
+sites use, closing the gap `docs/CANARY_AUDIT.md` recorded: TU Delft's CLIP
+award goes to students who "hold either a Greek passport or Greek residence",
+nothing read it, and a Kazakhstani applicant was shown an award they cannot
+hold. Award existence and applicant eligibility stay two separate claims —
+an earlier revision merged them and two existing tests caught it.
+
+**Money.** Rates were a static table dated 2026-08-01, used as though current
+and about 7% off the ECB's rate for 2026-08-28. Live ECB rates now carry an
+observation date and a source, a stale or missing rate is refused rather than
+guessed, and the bundled table is marked non-authoritative so every conversion
+from it is labelled an estimate.
+
+**Security.** Three real defects: exported cells could execute as spreadsheet
+formulas, having come from untrusted university pages; a malformed link could
+raise out of the fetcher and end a run; production builds published source
+maps. Tenant isolation was verified and found correct — but the probe list
+covered thirteen of seventeen id-bearing routes, and now derives from the
+application's own schema.
+
+**Architecture.** `runner.py` 967 → 712, with `assessment.py` and
+`persistence.py` extracted. Behaviour-preserving: same tests, and the crash
+test still recovers with no duplicates.
+
+## The weakest link now
+
+Programme-page recall, still. Four of ten is far from the eight of ten this
+cycle aimed at, and the reasons are recorded per institution in
+`docs/LIVE_DISCOVERY_REPORT.md` rather than averaged away. Two of the six
+misses are not discovery defects at all — Toronto's "Data & Computer Science"
+is a subject hub spanning three campuses, and KAIST publishes no English
+undergraduate catalogue — but four are.

@@ -93,6 +93,11 @@
   border: 1px solid var(--rule-strong);
   background: var(--surface);
   padding: 0.18rem 0.5rem;
+  /* "Decide later" and "Rule out" are two words each and were wrapping onto
+     two lines in every row, which turned a dense table into a ragged one.
+     The labels are worth their width — "Yes/Maybe/No" said nothing — so the
+     buttons keep their line and the column takes the space it needs. */
+  white-space: nowrap;
   font-size: var(--text-xs);
   font-weight: 600;
   cursor: pointer;
@@ -386,3 +391,37 @@
   .timeline__item { grid-template-columns: 1fr; gap: var(--space-1); }
   .stat { border-right: 0; border-bottom: 1px solid var(--rule); }
 }
+
+/* A foldable panel. <details> gives the behaviour and the semantics; these
+   rules only make the summary row look like the panel heading it replaces,
+   and keep the marker from colliding with the title. */
+.panel--foldable > .panel__summary {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  cursor: pointer;
+  list-style: none;
+  padding-right: var(--space-4);
+  position: relative;
+}
+.panel--foldable > .panel__summary::-webkit-details-marker { display: none; }
+.panel--foldable > .panel__summary::after {
+  content: '';
+  position: absolute;
+  right: 2px;
+  top: 0.35em;
+  width: 0.5em;
+  height: 0.5em;
+  border-right: 2px solid var(--ink-faint);
+  border-bottom: 2px solid var(--ink-faint);
+  transform: rotate(45deg);
+  transition: transform var(--duration-fast);
+}
+.panel--foldable[open] > .panel__summary::after { transform: rotate(-135deg); }
+.panel--foldable > .panel__summary:hover .panel__title { color: var(--accent); }
+.panel--foldable > .panel__summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: var(--radius);
+}
+.panel--foldable > .panel__body { margin-top: var(--space-4); }

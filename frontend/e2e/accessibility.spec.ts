@@ -7,13 +7,17 @@
 
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
-import { newSession, openShortlist, runDemoResearch, shot } from './helpers';
+import { docShot, newSession, openShortlist, runDemoResearch } from './helpers';
 
+// The full set the product claims to support. 375 and 1920 were the two ends
+// nobody checked: the narrowest phone in common use and the widest desktop.
 const BREAKPOINTS = [
   { name: '320', width: 320, height: 720 },
+  { name: '375', width: 375, height: 800 },
   { name: '768', width: 768, height: 1024 },
   { name: '1024', width: 1024, height: 768 },
   { name: '1440', width: 1440, height: 900 },
+  { name: '1920', width: 1920, height: 1080 },
 ];
 
 test.describe.configure({ mode: 'serial' });
@@ -46,7 +50,7 @@ test('the page never scrolls horizontally at any breakpoint', async () => {
       () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
     );
     expect(overflow, `horizontal overflow at ${bp.name}px`).toBeLessThanOrEqual(1);
-    await page.screenshot({ path: shot(`responsive-${bp.name}.png`), fullPage: false });
+    await docShot(page, `responsive-${bp.name}.png`, { fullPage: false });
   }
 });
 
@@ -87,10 +91,17 @@ test('the results table is labelled and its controls are named', async () => {
   await openShortlist(page);
 
   await expect(page.locator('table caption')).toContainText('Shortlisted university programmes');
-  // Every decision control belongs to a named group, so a screen reader says
-  // which university a "Yes" applies to.
+  // Every decision control belongs to a named group, and each button names
+  // the programme and university it acts on, so a screen reader announces
+  // "Apply to <programme> at <university>" rather than "Yes".
   const group = page.getByRole('group').first();
-  await expect(group).toHaveAttribute('aria-label', /Decision for /);
+  await expect(group).toHaveAttribute('aria-label', /What to do about .+ at .+/);
+  await expect(group.locator('.decision-btn--approve')).toHaveAttribute(
+    'aria-label', /^Apply to .+ at .+/,
+  );
+  await expect(group.locator('.decision-btn--reject')).toHaveAttribute(
+    'aria-label', /^Rule out .+ at .+/,
+  );
 
   const expandable = page.locator('button[aria-expanded]').first();
   await expect(expandable).toHaveAttribute('aria-expanded', 'false');
@@ -126,7 +137,7 @@ test('both themes render with a painted background and readable text', async () 
     });
     expect(bg, `${theme} body must paint its own background`).not.toBe('rgba(0, 0, 0, 0)');
     expect(fg).not.toBe(bg);
-    await page.screenshot({ path: shot(`theme-${theme}.png`), fullPage: false });
+    await docShot(page, `theme-${theme}.png`, { fullPage: false });
   }
 });
 

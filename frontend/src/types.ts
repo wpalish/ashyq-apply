@@ -37,7 +37,14 @@ export type JobStatus =
   | 'failed'
   /** Attempts exhausted. Needs a human decision; never retried automatically. */
   | 'dead'
-  | 'cancelled';
+  | 'cancelled'
+  /**
+   * No worker running right now can read this job's payload, so none of them
+   * has attempted it. The work is intact and resumes by itself once a worker
+   * that understands the payload starts — distinct from `dead`, which is not
+   * going to move without a person.
+   */
+  | 'blocked_incompatible';
 
 export type PipelineStage =
   | 'queued' | 'profile_validation' | 'candidate_discovery' | 'program_verification'
@@ -75,6 +82,17 @@ export interface Money {
   range_low: number | null;
   range_high: number | null;
   source_url?: string | null;
+  /**
+   * Present only when the amount was restated from another currency. The
+   * backend sends the whole basis — original amount, rate, the day the rate
+   * was observed and where it came from — so a converted figure can be told
+   * apart from one the university published, and checked.
+   */
+  original_amount?: number;
+  original_currency?: string;
+  rate?: number;
+  rate_date?: string;
+  rate_source?: string;
 }
 
 export interface RankingEntry {
@@ -237,7 +255,9 @@ export interface DocumentItem {
   name: string;
   purpose: 'admission' | 'scholarship' | 'both';
   owner: DocumentOwner;
-  required: boolean;
+  /** What the page said. "unknown" is not "required" — a bare list item does
+   *  not tell the applicant they must produce the document. */
+  requirement_level: 'required' | 'conditional' | 'unknown';
   format_notes: string;
   max_pages: number | null;
   max_file_size_mb: number | null;
@@ -398,7 +418,19 @@ export interface Capabilities {
   data_origin: string;
   adapters: { name: string; role: string; live: boolean }[];
   fetch_tiers: string[];
-  currency: { supported: string[]; rate_date: string; rate_source: string };
+  currency: {
+    supported: string[];
+    provider: string;
+    /** False when no trustworthy rate is available; nothing is converted. */
+    available: boolean;
+    reason?: string;
+    rate_date?: string;
+    rate_source?: string;
+    age_days?: number;
+    max_age_days: number;
+    /** False for the bundled dated snapshot; conversions are then estimates. */
+    authoritative?: boolean;
+  };
   guarantees: string[];
   limits: string[];
 }

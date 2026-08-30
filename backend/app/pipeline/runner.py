@@ -10,6 +10,7 @@ from __future__ import annotations
 import logging
 import os
 import socket
+import threading
 from datetime import UTC, date, datetime
 
 from sqlalchemy.orm import Session
@@ -28,6 +29,7 @@ from app.config import Settings
 from app.domain import dedupe
 from app.domain.conflicts import enforce_source_hierarchy, find_conflicts
 from app.domain.costs import compute_funding_gap, total_cost
+from app.domain.currency import compute_provider_signature, provider_for
 from app.domain.eligibility import evaluate_program
 from app.domain.enums import (
     ClaimType,
@@ -40,17 +42,40 @@ from app.domain.freshness import age_days, apply_freshness, is_stale
 from app.domain.funding import classify, funding_fit_for
 from app.domain.scoring import admissions_fit_for, score_result
 from app.domain.validation import validate_profile
-from app.models import AuditEvent, ClaimRow, ConflictRow, ProgramResultRow, ResearchRun, new_id
+from app.models import AuditEvent, ProgramResultRow, ResearchRun, new_id
+from app.pipeline.assessment import (
+    CORE_QUESTIONS,
+    _applicant_eligible,
+    _check,
+    _explanation_component,
+    _fit_label,
+    _scholarship_eligibility,
+)
+
+# Re-exported: the pure assessment helpers moved to `assessment.py`, and
+# callers (including tests) still reach them through the runner.
+from app.pipeline.persistence import ResultStore
 from app.pipeline.state import IN_PROGRESS_STAGES, RunState
 from app.schemas.claim import ClaimOut, UnresolvedQuestion
 from app.schemas.profile import ApplicantProfileIn
-from app.schemas.result import ProgramResult, Tristate
+from app.schemas.result import ProgramResult
 
 log = logging.getLogger("unimatch.pipeline")
 
 
 class RunCancelled(RuntimeError):
     pass
+
+
+class LeaseLost(RuntimeError):
+    """This run's job now belongs to another worker; stop without writing.
+
+    Deliberately not `RunCancelled`. Cancellation is a person's decision and
+    ends the run; losing a lease means another worker is already running this
+    same run, and the only correct response is for this one to stop touching
+    it. Writing *anything* — including a failure — would be one of two workers
+    deciding the outcome of a job it no longer holds.
+    """
 
 
 class ResearchRunner:
@@ -64,6 +89,7 @@ class ResearchRunner:
         settings: Settings,
         *,
         job_id: str | None = None,
+        lease_lost: threading.Event | None = None,
     ) -> None:
         self.session = session
         self.run = run
@@ -77,12 +103,22 @@ class ResearchRunner:
         #: When run by a worker, cancellation is observed through the job as
         #: well as the run, so either route stops the work.
         self.job_id = job_id
+        #: Set by the worker's heartbeat thread when the job's lease can no
+        #: longer be held. Checked at the same points as cancellation, because
+        #: those are the points where stopping leaves consistent state.
+        self.lease_lost = lease_lost
         #: Stages skipped because a previous attempt finished them.
         self.resumed_stages: list[str] = []
         self.candidate_limit = run.candidate_limit or settings.candidate_limit
         self.verify_limit = min(run.verify_limit or settings.verify_limit, self.candidate_limit)
         self.intake = f"{profile.context.intake_term} {profile.context.intake_year}"
         self._candidates: list[Candidate] = []
+        #: Result and evidence writes, kept idempotent for retries.
+        self.store = ResultStore(session, run)
+        #: This run's exchange-rate source. Built here and passed down
+        #: explicitly: assigning it to a module global let one run change
+        #: another's rates, and the worker runs two jobs at a time.
+        self.fx = provider_for(settings.fx_provider, demo=self.demo)
 
     # --- infrastructure -------------------------------------------------
 
@@ -130,7 +166,14 @@ class ResearchRunner:
         self.session.commit()
 
     def _check_cancelled(self) -> None:
-        """Observed between units of work so cancellation lands cleanly."""
+        """Observed between units of work so a stop lands cleanly."""
+        # Ownership first, and before touching the database: if this job is no
+        # longer ours, every read and write below belongs to another worker's
+        # run of it.
+        if self.lease_lost is not None and self.lease_lost.is_set():
+            raise LeaseLost(
+                f"the lease on job {self.job_id} was lost; another worker holds it"
+            )
         self.session.refresh(self.run)
         if self.run.cancelled:
             raise RunCancelled("Run was cancelled by the user.")
@@ -153,6 +196,10 @@ class ResearchRunner:
             "academic_year": self.settings.academic_year,
             "target_currency": self.settings.target_currency,
             "respect_robots": self.settings.respect_robots,
+            "fx_provider": self.settings.fx_provider,
+            # The snapshot this run actually used, so a funding gap can be
+            # audited against the rates it was computed from.
+            "fx": compute_provider_signature(self.fx),
         }
         fetcher = self._make_fetcher()
         browser = BrowserFetcher(
@@ -185,6 +232,23 @@ class ResearchRunner:
             self._audit("run_cancelled", "run", self.run.id)
             self._save()
             # Re-raise: swallowing this let the worker mark the job succeeded.
+            raise
+        except LeaseLost:
+            # Nothing. Not a stage, not an error, not an audit event, not a
+            # save.
+            #
+            # This run belongs to the worker that reclaimed the job, and that
+            # worker is running it now. `LeaseLost` is a RuntimeError, so it
+            # used to fall into the handler below and commit `stage = FAILED`,
+            # a `run_failed` audit event and an error string — over the top of
+            # another worker's live progress. The applicant was told their
+            # research had failed while it was still going, which is a worse
+            # outcome than the split-brain write this exception exists to
+            # prevent.
+            log.warning(
+                "run %s: stopping without writing; the lease on this job was lost",
+                self.run.id[:8],
+            )
             raise
         except Exception as exc:  # keep the run inspectable rather than losing it
             log.exception("run %s failed", self.run.id)
@@ -440,7 +504,9 @@ class ResearchRunner:
                 ),
             )
 
-            total = total_cost(result.costs, self.settings.target_currency)
+            total = total_cost(
+                result.costs, self.settings.target_currency, provider=self.fx
+            )
             tuition_money = result.costs.items.get(CostCategory.TUITION)
             for s in scholarships:
                 s.eligibility_checks = _scholarship_eligibility(s, self.profile)
@@ -495,7 +561,7 @@ class ResearchRunner:
                     )
                 )
 
-            self._update_result(row, result, extra_claims=claims, conflicts=conflicts)
+            self.store.update_result(row, result, extra_claims=claims, conflicts=conflicts)
             self.run.claims_recorded += len(claims)
             st.items_done = i + 1
             if i % 4 == 0:
@@ -517,6 +583,14 @@ class ResearchRunner:
 
         today = date.today()
         for i, row in enumerate(rows):
+            # Ownership, inside the loop, like every other stage.
+            #
+            # Verification, funding discovery and document collection all check
+            # here; assessment checked once before the loop and then wrote
+            # every row without looking again. It is also the one stage with no
+            # `await` in its body, so nothing else could interrupt it either: a
+            # lease lost during assessment was not observed at all.
+            self._check_cancelled()
             result = ProgramResult.model_validate(row.payload)
             claims = [_from_out(c) for c in result.claims]
 
@@ -553,7 +627,8 @@ class ResearchRunner:
             result.funding_fit = fit
             result.best_funding_classification = best
             result.funding_gap = compute_funding_gap(
-                result.costs, result.scholarships, self.settings.target_currency
+                result.costs, result.scholarships, self.settings.target_currency,
+                provider=self.fx,
             )
             if reason:
                 result.funding_gap.warnings.append(reason)
@@ -564,7 +639,7 @@ class ResearchRunner:
             result.verification_completeness = _completeness(claims)
             result.career_notes = result.career_notes or ""
 
-            self._update_result(row, result)
+            self.store.update_result(row, result)
             st.items_done = i + 1
             if i % 5 == 0:
                 self._save()
@@ -617,7 +692,7 @@ class ResearchRunner:
                 self.run.pages_failed += ar.pages_failed
                 result.checklist = checklist
                 row.checklist = checklist.model_dump(mode="json")
-                self._update_result(row, result)
+                self.store.update_result(row, result)
                 self._audit("checklist_built", "result", row.id, documents=len(ar.claims))
                 built += 1
                 st.items_done = i + 1
@@ -634,121 +709,16 @@ class ResearchRunner:
 
     # --- persistence helpers ---------------------------------------------
 
+    # --- persistence, delegated ------------------------------------------
+    # The SQL and the idempotency rules live in `ResultStore`; the stages call
+    # through these so their own code reads as pipeline logic rather than as
+    # database work.
+
     def _rows(self) -> list[ProgramResultRow]:
-        return (
-            self.session.query(ProgramResultRow)
-            .filter(ProgramResultRow.run_id == self.run.id)
-            .order_by(ProgramResultRow.id)
-            .all()
-        )
+        return self.store.rows()
 
     def _persist_result(self, result: ProgramResult, claims, conflicts) -> None:
-        """Write a result, or refresh the one a previous attempt wrote.
-
-        A retry after a crash re-derives results the first attempt already
-        stored. Inserting blindly violates the (run_id, dedupe_key) unique
-        index and fails the retry, so an existing row is updated in place and
-        its evidence replaced rather than appended to.
-        """
-        dedupe_key = dedupe.program_key(
-            result.university, result.program, result.degree, result.intake, result.country
-        )
-        existing = (
-            self.session.query(ProgramResultRow)
-            .filter(
-                ProgramResultRow.run_id == self.run.id,
-                ProgramResultRow.dedupe_key == dedupe_key,
-            )
-            .one_or_none()
-        )
-        if existing is not None:
-            result.id = existing.id
-            self._replace_evidence(existing.id)
-            self._update_result(existing, result, extra_claims=claims, conflicts=conflicts)
-            return
-
-        # The row's primary key is authoritative; the result document adopts it
-        # so every claim, conflict and checklist points at the same identifier.
-        row = ProgramResultRow(
-            id=new_id(),
-            run_id=self.run.id,
-            dedupe_key=dedupe_key,
-            university=result.university,
-            university_key=result.university_id,
-            country=result.country,
-            program=result.program,
-            eligibility=result.eligibility.value,
-            admissions_fit=result.admissions_fit.value,
-            funding_fit=result.funding_fit.value,
-            funding_classification=result.best_funding_classification.value,
-            score_total=0.0,
-            payload=result.model_dump(mode="json"),
-        )
-        result.id = row.id
-        row.payload = result.model_dump(mode="json")
-        self.session.add(row)
-        self.session.flush()
-        self._store_claims(row.id, claims)
-        self._store_conflicts(row.id, conflicts)
-
-    def _update_result(
-        self, row: ProgramResultRow, result: ProgramResult, extra_claims=None, conflicts=None
-    ) -> None:
-        result.id = row.id
-        row.payload = result.model_dump(mode="json")
-        row.eligibility = result.eligibility.value
-        row.admissions_fit = result.admissions_fit.value
-        row.funding_fit = result.funding_fit.value
-        row.funding_classification = result.best_funding_classification.value
-        row.score_total = result.preference_score.total if result.preference_score else 0.0
-        self.session.add(row)
-        if extra_claims:
-            self._store_claims(row.id, extra_claims)
-        if conflicts:
-            self._store_conflicts(row.id, conflicts)
-
-    def _replace_evidence(self, result_id: str) -> None:
-        """Drop the evidence a previous attempt stored for this result.
-
-        Re-running a stage re-reads the same pages, so keeping both copies
-        would inflate the claim count and show the user duplicate evidence.
-        """
-        self.session.query(ClaimRow).filter(ClaimRow.result_id == result_id).delete(
-            synchronize_session=False
-        )
-        self.session.query(ConflictRow).filter(ConflictRow.result_id == result_id).delete(
-            synchronize_session=False
-        )
-
-    def _store_claims(self, result_id: str, claims) -> None:
-        for c in claims:
-            self.session.add(
-                ClaimRow(
-                    run_id=self.run.id,
-                    result_id=result_id,
-                    claim_type=c.claim_type.value,
-                    status=c.status.value,
-                    source_url=c.source_url,
-                    source_specificity=c.source_specificity.value,
-                    accessed_at=c.accessed_at,
-                    payload=c.model_dump(mode="json"),
-                )
-            )
-
-    def _store_conflicts(self, result_id: str, conflicts) -> None:
-        for c in conflicts:
-            self.session.add(
-                ConflictRow(
-                    run_id=self.run.id,
-                    result_id=result_id,
-                    claim_type=c.claim_type.value,
-                    unresolved=c.unresolved,
-                    payload=c.model_dump(mode="json"),
-                )
-            )
-
-
-# --- small helpers ------------------------------------------------------
+        self.store.persist_result(result, claims, conflicts)
 
 
 def _to_out(claim, claim_id: str) -> ClaimOut:
@@ -769,132 +739,6 @@ def _from_out(out: ClaimOut):
     return Claim(**data)
 
 
-def _check(requirement, published, applicant, status, explanation, hard=False):
-    from app.schemas.result import RequirementCheck
-
-    return RequirementCheck(
-        requirement=requirement,
-        published_value=published,
-        applicant_value=applicant,
-        status=status,
-        is_hard_filter=hard,
-        explanation=explanation,
-    )
-
-
-def _scholarship_eligibility(s, profile: ApplicantProfileIn):
-    """Check the applicant against an award's own published restrictions."""
-    checks = []
-    citizenship = profile.context.citizenship
-    if s.citizenship_restrictions:
-        allowed = " ".join(s.citizenship_restrictions).lower()
-        ok = citizenship.lower() in allowed
-        checks.append(
-            _check(
-                "Scholarship citizenship eligibility",
-                s.citizenship_restrictions,
-                citizenship,
-                EligibilityStatus.MET if ok else EligibilityStatus.NOT_APPLICABLE,
-                (
-                    f"The award is restricted to {', '.join(s.citizenship_restrictions)}. "
-                    f"An applicant holding {citizenship} citizenship is not eligible."
-                    if not ok
-                    else f"{citizenship} citizenship falls within the published restriction."
-                ),
-            )
-        )
-    elif s.international_eligible == "no":
-        checks.append(
-            _check(
-                "Scholarship international eligibility",
-                False,
-                citizenship,
-                EligibilityStatus.NOT_APPLICABLE,
-                "The award is officially closed to international students.",
-            )
-        )
-    elif s.international_eligible == "yes":
-        checks.append(
-            _check(
-                "Scholarship international eligibility",
-                True,
-                citizenship,
-                EligibilityStatus.MET,
-                "The award is officially open to international students of any nationality.",
-            )
-        )
-
-    for test, minimum in (s.min_test_scores or {}).items():
-        got = {
-            "ielts": profile.academics.ielts.overall,
-            "toefl": profile.academics.toefl.total,
-            "sat": profile.academics.sat.total,
-        }.get(test)
-        if got is None:
-            checks.append(
-                _check(
-                    f"Scholarship {test.upper()} minimum",
-                    minimum,
-                    None,
-                    EligibilityStatus.PENDING,
-                    f"The award requires {test.upper()} {minimum}; no score is in the profile.",
-                )
-            )
-        else:
-            checks.append(
-                _check(
-                    f"Scholarship {test.upper()} minimum",
-                    minimum,
-                    got,
-                    EligibilityStatus.MET if got >= minimum else EligibilityStatus.GAP,
-                    f"Published minimum {minimum}; applicant {got}.",
-                )
-            )
-    return checks
-
-
-def _applicant_eligible(scholarship) -> Tristate:
-    """Roll a scholarship's eligibility checks into one three-valued verdict."""
-    statuses = {c.status for c in scholarship.eligibility_checks}
-    if scholarship.degree_applicability == "no" or scholarship.international_eligible == "no":
-        return "no"
-    if EligibilityStatus.NOT_APPLICABLE in statuses or EligibilityStatus.GAP in statuses:
-        return "no"
-    if not statuses or EligibilityStatus.PENDING in statuses:
-        return "unknown"
-    if scholarship.degree_applicability == "unknown":
-        return "unknown"
-    if statuses <= {EligibilityStatus.MET}:
-        return "yes"
-    return "unknown"
-
-
-def _explanation_component(text: str):
-    from app.schemas.result import ScoreComponent
-
-    return ScoreComponent(
-        name="Admissions fit rationale",
-        raw=0.0,
-        weight=0.0,
-        weighted=0.0,
-        explanation=text,
-        data_present=True,
-    )
-
-
-#: The questions a user actually needs answered before applying. Completeness is
-#: measured against these, not against whatever happened to be extracted -
-#: otherwise a page yielding one verified fact and nothing else reads as 100%.
-CORE_QUESTIONS: tuple[tuple[ClaimType, ...], ...] = (
-    (ClaimType.IELTS_MIN_OVERALL, ClaimType.TOEFL_MIN_TOTAL, ClaimType.DUOLINGO_MIN),
-    (ClaimType.MIN_GPA,),
-    (ClaimType.ADMISSION_DEADLINE,),
-    (ClaimType.TUITION, ClaimType.TOTAL_COST_OF_ATTENDANCE),
-    (ClaimType.SCHOLARSHIP_EXISTS,),
-    (ClaimType.SCHOLARSHIP_INTERNATIONAL_ELIGIBLE, ClaimType.SCHOLARSHIP_CITIZENSHIP_RESTRICTION),
-)
-
-
 def _completeness(claims) -> float:
     """Share of the core questions answered by a current, official claim."""
     from app.domain.enums import ClaimStatus
@@ -906,25 +750,6 @@ def _completeness(claims) -> float:
     }
     answered = sum(1 for group in CORE_QUESTIONS if verified & set(group))
     return round(answered / len(CORE_QUESTIONS), 3)
-
-
-def _fit_label(actual: str | None, preferred: str) -> str:
-    if not actual or actual == "unknown":
-        return "unknown"
-    if preferred in ("any", ""):
-        return "acceptable"
-    if actual == preferred:
-        return "strong"
-    ladders = {
-        "city": ["small", "medium", "large", "metropolis"],
-        "climate": ["cold", "temperate", "mediterranean", "warm"],
-        "workload": ["moderate", "demanding", "very_demanding"],
-    }
-    for ladder in ladders.values():
-        if actual in ladder and preferred in ladder:
-            gap = abs(ladder.index(actual) - ladder.index(preferred))
-            return {0: "strong", 1: "good", 2: "acceptable"}.get(gap, "weak")
-    return "acceptable"
 
 
 def _as_date(v):

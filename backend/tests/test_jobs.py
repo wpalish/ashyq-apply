@@ -140,9 +140,9 @@ class TestCompletionAndFailure:
     def test_completing_releases_the_lease(self, store, pg_session):
         enqueued = store.enqueue("research")
         pg_session.commit()
-        store.claim()
+        claimed = store.claim()
         pg_session.commit()
-        store.complete(enqueued.job_id)
+        assert store.complete(enqueued.job_id, lease_token=claimed.lease_token) is True
         pg_session.commit()
 
         job = store.get(enqueued.job_id)
@@ -150,6 +150,9 @@ class TestCompletionAndFailure:
         assert job.lease_expires_at is None
         assert job.worker_id is None
         assert job.finished_at is not None
+        # The token goes with the lease. Leaving it behind would let a late
+        # write from the finished run land on the next claim of this job.
+        assert job.lease_token is None
 
     def test_a_failure_requeues_with_backoff(self, store, pg_session):
         enqueued = store.enqueue("research")
@@ -208,7 +211,7 @@ class TestLeaseAndReaping:
         pg_session.commit()
         before = job.lease_expires_at
 
-        store.heartbeat(enqueued.job_id)
+        assert store.heartbeat(enqueued.job_id, lease_token=job.lease_token) is True
         pg_session.commit()
         pg_session.refresh(job)
         assert job.lease_expires_at >= before
@@ -216,10 +219,11 @@ class TestLeaseAndReaping:
     def test_a_heartbeat_on_a_finished_job_fails(self, store, pg_session):
         enqueued = store.enqueue("research")
         pg_session.commit()
-        store.claim()
-        store.complete(enqueued.job_id)
+        claimed = store.claim()
+        token = claimed.lease_token
+        store.complete(enqueued.job_id, lease_token=token)
         pg_session.commit()
-        assert store.heartbeat(enqueued.job_id) is False
+        assert store.heartbeat(enqueued.job_id, lease_token=token) is False
 
     def test_an_expired_lease_returns_the_job_to_the_queue(self, store, pg_session):
         """The crash case: the worker stopped beating."""
@@ -301,8 +305,8 @@ class TestCancellation:
     def test_a_finished_job_cannot_be_cancelled(self, store, pg_session):
         enqueued = store.enqueue("research")
         pg_session.commit()
-        store.claim()
-        store.complete(enqueued.job_id)
+        claimed = store.claim()
+        store.complete(enqueued.job_id, lease_token=claimed.lease_token)
         pg_session.commit()
         assert store.cancel(enqueued.job_id) is False
 

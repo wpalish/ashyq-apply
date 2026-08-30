@@ -92,15 +92,45 @@ The same run before P0:
 | MSc award offered to a bachelor applicant | yes | no |
 | Run aborted by a PII-guard false positive | yes | no |
 
-## Known recall gaps (not blockers, but recorded)
+## Known recall gaps
 
-1. Nationality restrictions in prose ("hold a Greek passport") are not extracted.
-2. Live discovery finds landing pages more reliably than programme pages, so
-   both institutions report `NEEDS_OFFICIAL_CLARIFICATION` for the programme.
-3. Fee calculators yield no figures; a Playwright escalation does not help
-   because the numbers are behind a form, not merely rendered late.
-4. Only two of the five canary institutions have been audited this cycle.
-   Aalto, Vienna and Warsaw remain outstanding.
+Updated 2026-08-29. Two were closed, one was **wrong about its own cause**, and
+one is now measured rather than estimated.
+
+1. ~~Nationality restrictions in prose ("hold a Greek passport") are not
+   extracted.~~ **Closed.** `app/adapters/scholarship/restrictions.py` reads
+   nationality and residency conditions from the wording sites use and keeps
+   them apart, because an award naming both accepts either. The published
+   number of awards is read the same way, and only when the page states one.
+2. Live discovery finds landing pages more reliably than programme pages.
+   **Still true, and now measured**: four programme pages in ten across three
+   independent runs, with the reason named per institution in
+   `docs/LIVE_DISCOVERY_REPORT.md`. Up from one in ten.
+3. ~~Fee calculators yield no figures; a Playwright escalation does not help
+   because the numbers are behind a form.~~ **This was wrong.** TU Delft's fee
+   page serves thirty-one money strings in its HTML — €17.310, €18.175,
+   €19.906 and the rest. The figures were never hidden; they were being
+   *misread*. `parse_money` treated a dot as a decimal point, so "€ 17.310"
+   became €17.31, and the sentence window `[^.\n]{0,120}` cut "€ 15.000" down
+   to "€ 15" before parsing even began. Both are fixed. Extraction from these
+   pages still yields nothing, because associating a figure in a dense fee
+   table with the right label needs more than proximity — an attempt to do it
+   by proximity reported the statutory tuition rate as the housing cost, and
+   was reverted. That is the remaining gap, and it is a table-shape problem,
+   not a JavaScript one.
+4. ~~Only two of the five canary institutions have been audited this cycle.~~
+   **Closed.** Ten institutions, three independent runs, plus a frozen
+   six-country holdout set that is not in the registry.
+
+## What the holdout set found
+
+The holdout exists to catch what tuning against ten known sites cannot. It
+earned that on its first run: Uppsala publishes "Application deadline 15
+January 2026" on its programme pages, and a Fall 2027 applicant reading it in
+August 2026 was eliminated by a hard filter — on the previous intake's
+deadline. "Has this date passed" and "is this my deadline" are different
+questions, and they come apart exactly where a page still shows last cycle's
+date. Fixed, with the window scoped to the applicant's own intake.
 
 ## Method
 

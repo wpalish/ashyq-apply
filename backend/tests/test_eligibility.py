@@ -71,7 +71,15 @@ class TestTestOptional:
 
 class TestDeadlines:
     def test_a_past_deadline_is_a_hard_filter(self, profile):
-        outcome = evaluate_program(profile, [C("admission_deadline", "2026-01-15")], today=TODAY)
+        """A deadline for *this* intake that has passed still rules it out.
+
+        The date used to be 2026-01-15. For the fixture's Fall 2027 applicant
+        that is the *previous* admission cycle, and eliminating on it was the
+        defect the holdout set found at Uppsala — see
+        `tests/test_deadline_intake_scope.py`. 1 June 2026 is an early Fall
+        2027 deadline that has genuinely gone.
+        """
+        outcome = evaluate_program(profile, [C("admission_deadline", "2026-06-01")], today=TODAY)
         assert "Admission deadline" in outcome.hard_filter_failures
 
     def test_a_future_deadline_is_met(self, profile):

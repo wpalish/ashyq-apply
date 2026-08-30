@@ -15,8 +15,29 @@ import os
 import signal
 import subprocess
 import sys
+import tempfile
 import time
 from pathlib import Path
+from typing import TypeVar
+
+from sqlalchemy.orm import Session
+
+T = TypeVar("T")
+
+
+def must_get(session: Session, model: type[T], pk: str, what: str) -> T:
+    """Fetch a row that has to exist, or say plainly that it does not.
+
+    Every call site here reads an attribute off the result. Without this, a
+    missing row raised `AttributeError: 'NoneType' object has no attribute
+    'status'` — from a harness whose whole purpose is to detect a job or run
+    disappearing after a crash. The failure mode the tool exists to catch was
+    the one it reported worst.
+    """
+    row = session.get(model, pk)
+    if row is None:
+        raise AssertionError(f"{what} {pk} is not in the database")
+    return row
 
 BACKEND = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(BACKEND))
@@ -51,6 +72,16 @@ def start_worker() -> subprocess.Popen:
 def main() -> int:
     os.environ["UNIMATCH_JOB_LEASE_SECONDS"] = str(LEASE_SECONDS)
     os.environ["UNIMATCH_AUTO_MIGRATE"] = "false"
+    # A throwaway database. This wrote into the project's working database,
+    # which is the one the dev server and the E2E suite use: eight runs of this
+    # script left eight "crash-test" applicants and their results behind, and a
+    # test harness must not leave anything in the data a person is using.
+    # Honoured if the caller set one explicitly, so CI can point it at
+    # PostgreSQL.
+    if not os.environ.get("UNIMATCH_DATABASE_URL"):
+        scratch = Path(tempfile.mkdtemp(prefix="crash-test-"))
+        os.environ["UNIMATCH_DATABASE_URL"] = f"sqlite:///{scratch / 'crash.sqlite3'}"
+        print(f"using a throwaway database at {scratch}")
 
     from app.corpus.demo_profile import DEMO_PROFILE
     from app.db import migrate_to_head, session_scope
@@ -88,7 +119,7 @@ def main() -> int:
     deadline = time.monotonic() + 90
     while time.monotonic() < deadline:
         with session_scope() as session:
-            stage = session.get(ResearchRun, run_id).stage
+            stage = must_get(session, ResearchRun, run_id, "run").stage
             written = session.query(ProgramResultRow).filter(
                 ProgramResultRow.run_id == run_id
             ).count()
@@ -112,8 +143,8 @@ def main() -> int:
     print(f"worker A SIGKILLed during {reached}, with {written} results already written")
 
     with session_scope() as session:
-        job = session.get(Job, job_id)
-        run = session.get(ResearchRun, run_id)
+        job = must_get(session, Job, job_id, "job")
+        run = must_get(session, ResearchRun, run_id, "run")
         results_before = session.query(ProgramResultRow).filter(
             ProgramResultRow.run_id == run_id
         ).count()
@@ -123,6 +154,21 @@ def main() -> int:
 
     # --- 3. a new worker must notice and recover ---------------------------
     time.sleep(LEASE_SECONDS + 1)
+
+    # The kill races the run: worker A can finish between the moment we decide
+    # to kill it and the moment the signal lands. When that happens there is
+    # nothing to recover and the job legitimately ends on attempt 1, which is
+    # not a recovery failure and must not be reported as one. Attempts are
+    # incremented on claim, so a genuinely recovered job always reaches 2.
+    with session_scope() as session:
+        job = must_get(session, Job, job_id, "job")
+        if job.status in ("succeeded", "completed"):
+            print()
+            print("  INCONCLUSIVE: the kill landed after worker A had already "
+                  "finished the job, so there was nothing to recover.")
+            print("  This is a race in this script, not a product failure. Re-run it.")
+            return 2
+
     recovery = start_worker()
     print(f"worker B pid {recovery.pid} started after the lease expired")
 
@@ -130,8 +176,8 @@ def main() -> int:
     final_job = None
     while time.monotonic() < deadline:
         with session_scope() as session:
-            job = session.get(Job, job_id)
-            run = session.get(ResearchRun, run_id)
+            job = must_get(session, Job, job_id, "job")
+            run = must_get(session, ResearchRun, run_id, "run")
             if job.status in ("succeeded", "dead", "cancelled"):
                 final_job = job.status
                 break
@@ -151,8 +197,8 @@ def main() -> int:
 
     # --- 4. what does the world look like now? ------------------------------
     with session_scope() as session:
-        job = session.get(Job, job_id)
-        run = session.get(ResearchRun, run_id)
+        job = must_get(session, Job, job_id, "job")
+        run = must_get(session, ResearchRun, run_id, "run")
         rows = session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run_id).all()
         keys = [r.dedupe_key for r in rows]
 
@@ -166,7 +212,10 @@ def main() -> int:
         if job.status != "succeeded":
             problems.append(f"job ended {job.status}, expected succeeded")
         if job.attempts < 2:
-            problems.append("the job was not re-attempted after the crash")
+            problems.append(
+                "the job was not re-attempted after the crash: attempts stayed at "
+                f"{job.attempts}, and a claim always increments it"
+            )
         if run.stage not in ("awaiting_user_decision", "completed"):
             problems.append(f"run ended at {run.stage}, not a decision point")
         if len(keys) != len(set(keys)):

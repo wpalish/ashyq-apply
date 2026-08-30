@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import ipaddress
 import logging
+import re
 import socket
 from dataclasses import dataclass
 from urllib.parse import urlparse
@@ -101,6 +102,14 @@ def is_blocked_address(address: str) -> tuple[bool, str]:
     return False, ""
 
 
+#: A dotted host whose labels are numeric with a leading zero, or hexadecimal.
+#: Both are alternative spellings of an IPv4 address that resolvers disagree
+#: about, which is exactly what makes them useful for hiding one.
+_OBFUSCATED_ADDRESS = re.compile(
+    r"^(0\d+|0x[0-9a-f]+)(\.(0\d*|0x[0-9a-f]+|\d+))*$", re.IGNORECASE
+)
+
+
 def resolve_target(url: str, *, resolver=None) -> ResolvedTarget:
     """Validate a URL and resolve it, or raise BlockedRequest.
 
@@ -108,7 +117,14 @@ def resolve_target(url: str, *, resolver=None) -> ResolvedTarget:
     name returns is checked. Validating only the first would let a name
     answering with one public and one private address through.
     """
-    parsed = urlparse(url)
+    try:
+        parsed = urlparse(url)
+        _ = parsed.hostname, parsed.port
+    except ValueError as exc:
+        # A link harvested from a page can be anything at all. "[not-an-ipv6]"
+        # makes urlparse raise, and an exception escaping here would take the
+        # whole run down over one bad href.
+        raise BlockedRequest(f"Refusing {url[:120]!r}: it is not a usable URL ({exc}).") from exc
 
     if parsed.scheme not in ALLOWED_SCHEMES:
         raise BlockedRequest(
@@ -121,6 +137,15 @@ def resolve_target(url: str, *, resolver=None) -> ResolvedTarget:
         raise BlockedRequest("Refusing URL credentials: crawler requests never authenticate.")
     if host in _BLOCKED_HOSTNAMES:
         raise BlockedRequest(f"Refusing {host!r}: it names the local host.")
+    if _OBFUSCATED_ADDRESS.match(host):
+        # 0177.0.0.1 and 0x7f.0.0.1 are loopback to a resolver that reads octal
+        # or hex, and a public address to one that does not. No legitimate
+        # hostname is written this way, so the ambiguity is refused outright
+        # rather than left to depend on the host's resolver.
+        raise BlockedRequest(
+            f"Refusing {host!r}: an octal or hexadecimal address literal is a "
+            "way of disguising a private address."
+        )
 
     port = parsed.port or (443 if parsed.scheme == "https" else 80)
     if port not in ALLOWED_PORTS:
@@ -134,7 +159,12 @@ def resolve_target(url: str, *, resolver=None) -> ResolvedTarget:
         addresses = _resolve(host, port, resolver)
 
     for address in addresses:
-        blocked, reason = is_blocked_address(address)
+        try:
+            blocked, reason = is_blocked_address(address)
+        except ValueError as exc:
+            raise BlockedRequest(
+                f"Refusing {host!r}: {address!r} is not an address we can check ({exc})."
+            ) from exc
         if blocked:
             raise BlockedRequest(f"Refusing {host!r}: it resolves to {reason}.")
 

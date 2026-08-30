@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import date, datetime
 from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, computed_field, model_validator
 
 from app.domain.enums import (
     AdmissionsFit,
@@ -79,6 +79,15 @@ class Scholarship(Base):
     international_eligible: Tristate = "unknown"
     citizenship_restrictions: list[str] = Field(default_factory=list)
     residency_restrictions: list[str] = Field(default_factory=list)
+    #: How the page joins nationality and residency. "any" is CLIP's "either a
+    #: Greek passport or Greek residence"; "all" is "citizens of X resident in
+    #: Y". It was extracted and then dropped on the floor, so the assessment
+    #: assumed "any" for every award — which turns an AND condition into an OR
+    #: and lets an applicant through on half a requirement.
+    restriction_logic: Literal["any", "all", "unknown"] = "unknown"
+    #: restriction text -> the sentence it was read from, so each rule carries
+    #: its own proof rather than sharing the first quote found on the page.
+    restriction_evidence: dict[str, str] = Field(default_factory=dict)
     program_restrictions: list[str] = Field(default_factory=list)
     degree_applicability: Tristate = Field(
         default="unknown",
@@ -175,7 +184,11 @@ class DocumentItem(Base):
     name: str
     purpose: DocumentPurpose
     owner: DocumentOwner
-    required: bool = True
+    #: What the page actually said about this document. It defaulted to
+    #: `required=True`, and the extractor never set it, so a line reading
+    #: "a portfolio, if applicable" told the applicant they must produce one.
+    #: An unknown is not a yes here any more than anywhere else.
+    requirement_level: Literal["required", "conditional", "unknown"] = "unknown"
     format_notes: str = ""
     max_pages: int | None = None
     max_file_size_mb: float | None = None
@@ -193,6 +206,45 @@ class DocumentItem(Base):
     lead_time_days: int | None = None
     source_url: str | None = None
     claim_ids: list[str] = Field(default_factory=list)
+
+    @model_validator(mode="before")
+    @classmethod
+    def _accept_the_legacy_boolean(cls, data: Any) -> Any:
+        """Read a payload written before `requirement_level` existed.
+
+        Results are stored as JSON and re-validated on read, and every row
+        written before this change carries `required: true` and no
+        `requirement_level`. The model forbids extra keys, so without this a
+        stored result would fail to load. `required` is also emitted as a
+        computed field, so a fresh payload round-trips through here too.
+
+        A legacy `true` becomes "required" — that is what the old field
+        asserted. A legacy `false` becomes "conditional" rather than "unknown",
+        because something wrote it deliberately.
+        """
+        if not isinstance(data, dict) or "required" not in data:
+            return data
+        data = dict(data)
+        legacy = data.pop("required")
+        data.setdefault(
+            "requirement_level", "required" if legacy else "conditional"
+        )
+        return data
+
+    @computed_field  # type: ignore[prop-decorator]
+    @property
+    def required(self) -> bool:
+        """Kept for callers that ask a yes/no question.
+
+        A `computed_field`, not a bare property: a plain property is not
+        serialised, so making it one would have removed `required` from the
+        API payload rather than preserving it.
+
+        Only a stated requirement answers yes. Conditional and unknown both
+        answer no, because neither is the page saying the applicant must
+        produce this.
+        """
+        return self.requirement_level == "required"
 
 
 class DocumentChecklist(Base):

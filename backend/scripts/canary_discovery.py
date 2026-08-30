@@ -175,9 +175,12 @@ class TracingAdapter(LiveDiscoveryAdapter):
     """
 
     instances: ClassVar[list[LiveDiscoveryAdapter]] = []
+    #: Set by the canary so a run can target the frozen holdout set instead of
+    #: the shipped registry, without either file knowing about the other.
+    registry_override: ClassVar[Path | None] = None
 
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
+    def __init__(self, fetcher, registry_path=None) -> None:
+        super().__init__(fetcher, registry_path or TracingAdapter.registry_override)
         TracingAdapter.instances.append(self)
 
 
@@ -248,14 +251,15 @@ def false_positives(result: ProgramResult, claims: list[dict]) -> list[dict]:
     # 4. Admission requirements. A satisfied/failed verdict has to name the
     #    page it came from, and that page has to be about admission.
     for check in result.requirement_checks:
-        if check.status.value in ("unknown", "needs_clarification"):
+        if check.status.value in ("UNKNOWN", "NEEDS_OFFICIAL_CLARIFICATION"):
             continue
-        supporting = by_type.get(check.requirement.claim_type, []) if hasattr(
-            check.requirement, "claim_type") else []
-        if not supporting and not getattr(check.requirement, "source_url", ""):
+        # A RequirementCheck records its evidence in `claim_ids`. An earlier
+        # version of this checker looked for `check.requirement.claim_type`,
+        # but `requirement` is the human-readable label, so every sourced
+        # verdict was reported as unsourced.
+        if not check.claim_ids:
             flag("requirement_verdict_without_source",
-                 f"{check.requirement.label if hasattr(check.requirement, 'label') else check}"
-                 f" decided {check.status.value} with no claim behind it")
+                 f"{check.requirement!r} decided {check.status.value} with no claim behind it")
 
     # 5. Any claim at all that lacks the provenance the product promises.
     for claim in claims:
@@ -272,12 +276,41 @@ def false_positives(result: ProgramResult, claims: list[dict]) -> list[dict]:
 # --- the run --------------------------------------------------------------
 
 
-async def run_canary(only: str | None, verbose: bool) -> dict:
-    registry = json.loads(REGISTRY_PATH.read_text())
+
+def access_state(*, checked: int, blocked: int, failed_discovery: bool) -> str:
+    """How the run got on with one institution.
+
+    FAILED outranks everything, including pages that were read before the
+    failure. A holdout run died on Uppsala after forty pages and the four
+    institutions behind it in the queue were reported NOT_ATTEMPTED — which
+    reads as a finding about those universities, when it was a finding about
+    one malformed page on Uppsala's site. "We did not look" and "we looked and
+    it broke" are different things and the report has to be able to say both.
+    """
+    if failed_discovery:
+        return "FAILED"
+    if blocked and checked == blocked:
+        return "BLOCKED"
+    if blocked:
+        return "PARTIALLY_BLOCKED"
+    return "REACHED" if checked else "NOT_ATTEMPTED"
+
+
+async def run_canary(only: str | None, verbose: bool, registry_path: Path | None = None) -> dict:
+    registry_path = registry_path or REGISTRY_PATH
+    registry = json.loads(registry_path.read_text())
     if only:
         registry = [e for e in registry if only in e["homepage"]]
         if not registry:
             raise SystemExit(f"no institution in the registry matches {only!r}")
+        # Narrow what the *adapter* reads, not just what the report prints.
+        # Filtering only the report left the runner discovering the whole
+        # registry against a candidate limit of one, so `--only` measured
+        # whichever institution happened to come first and reported the
+        # requested one as NOT_ATTEMPTED.
+        narrowed = Path(tempfile.mkdtemp(prefix="canary-only-")) / "registry.json"
+        narrowed.write_text(json.dumps(registry))
+        registry_path = narrowed
 
     profile = canary_profile()
     workdir = Path(tempfile.mkdtemp(prefix="canary-"))
@@ -308,6 +341,7 @@ async def run_canary(only: str | None, verbose: bool) -> dict:
 
     started = datetime.now(UTC)
     TracingAdapter.instances.clear()
+    TracingAdapter.registry_override = registry_path
     # The canary deliberately swaps the adapter constructor so it can retain
     # discovery traces. The replacement subclasses the production adapter and
     # exists only for this short-lived process.
@@ -366,10 +400,18 @@ async def run_canary(only: str | None, verbose: bool) -> dict:
             "institution": name,
             "country": entry["country"],
             "domain": domain,
-            "access": (
-                "BLOCKED" if blocked and checked == blocked
-                else "PARTIALLY_BLOCKED" if blocked
-                else "REACHED" if checked else "NOT_ATTEMPTED"
+            "access": access_state(
+                checked=checked,
+                blocked=blocked,
+                # `discover` contains a per-institution failure and records it
+                # on the trace, so the report can tell a broken attempt from
+                # one that never happened.
+                failed_discovery=bool(
+                    trace
+                    and any(
+                        e.startswith("discovery failed:") for e in (trace.errors or [])
+                    )
+                ),
             ),
             "robots_disallowed_requests": blocked,
             "pages_checked": checked,
@@ -408,6 +450,9 @@ async def run_canary(only: str | None, verbose: bool) -> dict:
             "institutions": len(rows),
             "reached": sum(1 for r in rows if r["access"] == "REACHED"),
             "blocked": sum(1 for r in rows if r["access"].endswith("BLOCKED")),
+            # Counted and printed separately: a failure that is folded into
+            # "not reached" is a failure nobody investigates.
+            "failed": sum(1 for r in rows if r["access"] == "FAILED"),
             "program_pages_found": sum(1 for r in rows if r["program_page_found"]),
             "scholarship_pages_found": sum(1 for r in rows if r["scholarship_page_found"]),
             "claims": sum(r["claims"] for r in rows),
@@ -435,7 +480,7 @@ def markdown_table(report: dict) -> str:
     return head + "\n".join(lines)
 
 
-async def check_seeds() -> int:
+async def check_seeds(registry_path: Path | None = None) -> int:
     """Fetch every manual seed and report the ones that no longer resolve.
 
     A seed whose URL has moved is worse than no seed: it consumes the fetch
@@ -443,7 +488,7 @@ async def check_seeds() -> int:
     across four institutions, so this is a standing check rather than a
     one-time cleanup.
     """
-    entries = json.loads(REGISTRY_PATH.read_text())
+    entries = json.loads((registry_path or REGISTRY_PATH).read_text())
     workdir = Path(tempfile.mkdtemp(prefix="seed-check-"))
     broken: list[tuple[str, str, str, str]] = []
     total = 0
@@ -467,15 +512,17 @@ async def main() -> int:
     parser.add_argument("--out", type=Path, help="directory for the JSON and Markdown output")
     parser.add_argument("--only", help="substring of one institution's homepage")
     parser.add_argument("--verbose", action="store_true")
+    parser.add_argument("--registry", type=Path,
+                        help="an alternative institution registry, e.g. the frozen holdout set")
     parser.add_argument("--check-seeds", action="store_true",
                         help="only verify that the registry's manual seeds still resolve")
     args = parser.parse_args()
 
     if args.check_seeds:
-        return await check_seeds()
+        return await check_seeds(args.registry)
 
     print("Live canary — real network, real sites, robots.txt respected.", flush=True)
-    report = await run_canary(args.only, args.verbose)
+    report = await run_canary(args.only, args.verbose, args.registry)
 
     print()
     print(markdown_table(report))
@@ -483,7 +530,10 @@ async def main() -> int:
     totals = report["totals"]
     print(f"reached {totals['reached']}/{totals['institutions']}, "
           f"blocked {totals['blocked']}, "
-          f"programme pages {totals['program_pages_found']}, "
+          # Only shown when it happened, and never folded into "not reached":
+          # a failure nobody sees is a failure nobody investigates.
+          + (f"FAILED {totals['failed']}, " if totals["failed"] else "")
+          + f"programme pages {totals['program_pages_found']}, "
           f"scholarship pages {totals['scholarship_pages_found']}, "
           f"claims {totals['claims']}, "
           f"false positives {totals['false_positives']}")

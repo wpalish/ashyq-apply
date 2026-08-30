@@ -12,6 +12,8 @@ from __future__ import annotations
 import csv
 import io
 import json
+import re
+from collections.abc import Iterable
 from datetime import UTC, datetime
 from typing import Any
 
@@ -59,7 +61,7 @@ COLUMNS: list[tuple[str, str]] = [
 ]
 
 DISCLAIMER = (
-    "UniMatch export. Eligibility, admissions fit and funding fit describe published criteria "
+    "ASHYQ Apply export. Eligibility, admissions fit and funding fit describe published criteria "
     "only. Nothing here predicts or promises admission or an award. Verify every value against "
     "the official source link before acting on it."
 )
@@ -153,13 +155,61 @@ def _best_scholarship(result: ProgramResult):
     return min(result.scholarships, key=lambda s: order.index(s.classification.value))
 
 
+#: Characters that make a spreadsheet read a cell as a formula rather than as
+#: text. Tab and carriage return are here because Excel strips leading
+#: whitespace before deciding, so "\t=1+1" is still a formula.
+_FORMULA_LEADERS = ("=", "+", "-", "@", "\t", "\r")
+#: A plain negative number is not a formula, and mangling one would corrupt a
+#: funding gap with the very defence meant to protect it.
+_PLAIN_NUMBER = re.compile(r"^-\d+(?:[.,]\d+)*$")
+
+
+def neutralise_formula(value: str) -> str:
+    """Stop a cell being executed, without changing what it says.
+
+    Every string in an export came off a university web page, which is
+    untrusted input. A scholarship named `=HYPERLINK("http://attacker","Click")`
+    executes when the file is opened. Prefixing an apostrophe is the
+    spreadsheet convention for "treat the rest as text": Excel, LibreOffice and
+    Numbers all honour it, and it is not shown to the reader.
+    """
+    if not isinstance(value, str) or not value:
+        return value
+    if _PLAIN_NUMBER.match(value.strip()):
+        return value
+    if value.startswith(_FORMULA_LEADERS):
+        return "'" + value
+    return value
+
+
+def safe_cells(values: Iterable[Any]) -> list[Any]:
+    """The single boundary every spreadsheet row passes through.
+
+    The shortlist sheet was neutralised cell by cell and the other two sheets
+    were not, which is what a per-caller guard eventually does. Every sheet now
+    appends through here, so a sheet added later is covered by construction.
+
+    Non-strings are returned untouched: a real number, date or boolean carries
+    no formula semantics and must keep its type in the workbook.
+    """
+    return [neutralise_formula(v) if isinstance(v, str) else v for v in values]
+
+
+def _safe_row(result: ProgramResult) -> dict[str, Any]:
+    """One exported row with every cell neutralised."""
+    return {
+        key: neutralise_formula(value) if isinstance(value, str) else value
+        for key, value in _row(result).items()
+    }
+
+
 def to_csv(results: list[ProgramResult]) -> str:
     buf = io.StringIO()
     writer = csv.writer(buf, quoting=csv.QUOTE_MINIMAL, lineterminator="\n")
     writer.writerow([f"# {DISCLAIMER}"])
     writer.writerow([label for _, label in COLUMNS])
     for r in results:
-        row = _row(r)
+        row = _safe_row(r)
         writer.writerow([row[key] for key, _ in COLUMNS])
     return buf.getvalue()
 
@@ -188,7 +238,7 @@ def to_xlsx(results: list[ProgramResult], meta: dict | None = None) -> bytes:
     ws = wb.active
     ws.title = "Shortlist"
 
-    ws.append([DISCLAIMER])
+    ws.append(safe_cells([DISCLAIMER]))
     ws.merge_cells(start_row=1, start_column=1, end_row=1, end_column=len(COLUMNS))
     warn = ws.cell(row=1, column=1)
     warn.font = Font(bold=True, color="7F4F00")
@@ -196,7 +246,7 @@ def to_xlsx(results: list[ProgramResult], meta: dict | None = None) -> bytes:
     warn.alignment = Alignment(wrap_text=True, vertical="center")
     ws.row_dimensions[1].height = 32
 
-    ws.append([label for _, label in COLUMNS])
+    ws.append(safe_cells([label for _, label in COLUMNS]))
     for cell in ws[2]:
         cell.font = Font(bold=True, color="FFFFFF")
         cell.fill = PatternFill("solid", fgColor="1F3A5F")
@@ -209,8 +259,8 @@ def to_xlsx(results: list[ProgramResult], meta: dict | None = None) -> bytes:
         "NOT_ELIGIBLE": "F8CBAD", "UNKNOWN": "EDEDED",
     }
     for r in results:
-        row = _row(r)
-        ws.append([row[key] for key, _ in COLUMNS])
+        row = _safe_row(r)
+        ws.append(safe_cells([row[key] for key, _ in COLUMNS]))
         idx = ws.max_row
         fill = status_fills.get(row["funding_classification"])
         if fill:
@@ -225,33 +275,39 @@ def to_xlsx(results: list[ProgramResult], meta: dict | None = None) -> bytes:
     ws.auto_filter.ref = f"A2:{get_column_letter(len(COLUMNS))}{max(2, ws.max_row)}"
 
     cs = wb.create_sheet("Evidence")
-    cs.append(["University", "Program", "Claim type", "Value", "Status", "Specificity",
-               "Accessed", "Source URL", "Excerpt"])
+    cs.append(safe_cells(["University", "Program", "Claim type", "Value", "Status",
+                          "Specificity", "Accessed", "Source URL", "Excerpt"]))
     for cell in cs[1]:
         cell.font = Font(bold=True)
     for r in results:
         for claim in r.claims:
-            cs.append([
+            cs.append(safe_cells([
                 r.university, r.program, claim.claim_type.value,
                 str(claim.normalized_value)[:200], claim.status.value,
                 claim.source_specificity.value, claim.accessed_at.isoformat(),
                 claim.source_url, claim.original_text_excerpt[:400],
-            ])
+            ]))
     for col, width in zip("ABCDEFGHI", (28, 30, 26, 30, 22, 22, 26, 52, 70), strict=False):
         cs.column_dimensions[col].width = width
     cs.freeze_panes = "A2"
 
     qs = wb.create_sheet("Open questions")
-    qs.append(["University", "Program", "Topic", "Question", "Why it matters", "Blocking"])
+    qs.append(safe_cells(
+        ["University", "Program", "Topic", "Question", "Why it matters", "Blocking"]
+    ))
     for cell in qs[1]:
         cell.font = Font(bold=True)
     for r in results:
         for conflict in r.conflicts:
-            qs.append([r.university, r.program, "source conflict", conflict.subject,
-                       f"Values seen: {conflict.values}", "yes"])
+            qs.append(safe_cells([
+                r.university, r.program, "source conflict", conflict.subject,
+                f"Values seen: {conflict.values}", "yes",
+            ]))
         for q in r.unresolved:
-            qs.append([r.university, r.program, q.topic, q.question, q.why_it_matters,
-                       "yes" if q.blocking else "no"])
+            qs.append(safe_cells([
+                r.university, r.program, q.topic, q.question, q.why_it_matters,
+                "yes" if q.blocking else "no",
+            ]))
     for col, width in zip("ABCDEF", (28, 30, 22, 56, 56, 10), strict=False):
         qs.column_dimensions[col].width = width
     qs.freeze_panes = "A2"

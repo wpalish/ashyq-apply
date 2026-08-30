@@ -75,6 +75,8 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
     setProfileDraft((draft) => setIn(draft, path, current.filter((_, itemIndex) => itemIndex !== index)));
   };
 
+  const worstGap = validation?.gaps[0];
+
   return (
     <>
       <div className="screen__head">
@@ -87,6 +89,42 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
       </div>
 
       <div className="stack stack--loose">
+        {/* The full gap panel is six screens down, after eighty fields. A
+            student reads which blanks matter *after* deciding what to fill in,
+            which is the wrong way round, so the count and the worst one are
+            surfaced here with a jump to the detail. */}
+        {worstGap && validation && (
+          <Notice kind={validation.gaps.some((g) => g.severity === 'blocking') ? 'warn' : 'info'}>
+            <div>
+              <strong>
+                {validation.gaps.length} {validation.gaps.length === 1 ? 'blank affects' : 'blanks affect'} your results.
+              </strong>{' '}
+              Most consequential: <em>{worstGap.field_path}</em> —{' '}
+              {(SEVERITY_LABEL[worstGap.severity] ?? worstGap.severity).toLowerCase()}.{' '}
+              <button
+                type="button"
+                className="btn btn--link"
+                data-testid="jump-to-gaps"
+                onClick={() => {
+                  // Deliberately not smooth. Both scrollIntoView({behavior:
+                  // 'smooth'}) and scrollTo({behavior:'smooth'}) are silently
+                  // no-ops in some embedded browsers, which leaves the control
+                  // doing nothing at all; an instant jump always works and is
+                  // what a reduced-motion reader wants regardless.
+                  const target = document.querySelector('[data-testid="gap-list"]');
+                  if (!target) return;
+                  window.scrollTo({
+                    top: target.getBoundingClientRect().top + window.scrollY - 80,
+                    behavior: 'auto',
+                  });
+                }}
+              >
+                See what each one costs
+              </button>
+            </div>
+          </Notice>
+        )}
+
         {restored && savedProfile && (
           <Notice kind="info">
             <div>
@@ -209,7 +247,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
 
         <Panel
           title="Grades"
-          hint="Enter the grade exactly as it appears on your transcript. UniMatch does not convert it silently."
+          hint="Enter the grade exactly as it appears on your transcript. ASHYQ Apply does not convert it silently."
         >
           <div className="grid-2">
             <Field label="GPA / average" htmlFor="gpa">
@@ -348,7 +386,11 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
           </div>
         </Panel>
 
-        <Panel title="Subject grades" hint="Keep the original transcript scale for every subject.">
+        <Panel title="Subject grades" hint="Keep the original transcript scale for every subject."
+          collapsible
+          defaultOpen={subjectGrades.length > 0}
+          summary={subjectGrades.length ? `${subjectGrades.length} subjects` : "none yet"}
+        >
           <div className="stack stack--tight">
             {subjectGrades.map((_, index) => (
               <div className="panel panel--sunken" key={`subject-${index}`}>
@@ -367,7 +409,11 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
           </div>
         </Panel>
 
-        <Panel title="AP, IB and A-Level results" hint="Add achieved and predicted curriculum results exactly as reported.">
+        <Panel title="AP, IB and A-Level results" hint="Add achieved and predicted curriculum results exactly as reported."
+          collapsible
+          defaultOpen={curriculumResults.length > 0}
+          summary={curriculumResults.length ? `${curriculumResults.length} results` : "none yet"}
+        >
           <div className="stack stack--tight">
             {curriculumResults.map((item, index) => (
               <div className="grid-3 panel panel--sunken" key={`curriculum-${index}`}>
@@ -389,7 +435,11 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
           </div>
         </Panel>
 
-        <Panel title="Extracurricular activities" hint="Depth, responsibility and measurable impact matter more than a long list.">
+        <Panel title="Extracurricular activities" hint="Depth, responsibility and measurable impact matter more than a long list."
+          collapsible
+          defaultOpen={activities.length > 0}
+          summary={activities.length ? `${activities.length} activities` : "none yet"}
+        >
           <div className="stack stack--tight">
             {activities.map((_, index) => (
               <div className="panel panel--sunken" key={`activity-${index}`}>
@@ -424,7 +474,11 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
           </div>
         </Panel>
 
-        <Panel title="Achievements" hint="Include level, placement and how recipients were selected.">
+        <Panel title="Achievements" hint="Include level, placement and how recipients were selected."
+          collapsible
+          defaultOpen={achievements.length > 0}
+          summary={achievements.length ? `${achievements.length} achievements` : "none yet"}
+        >
           <div className="stack stack--tight">
             {achievements.map((_, index) => (
               <div className="grid-3 panel panel--sunken" key={`achievement-${index}`}>

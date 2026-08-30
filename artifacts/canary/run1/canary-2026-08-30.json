@@ -1,0 +1,2008 @@
+{
+  "accessed_at": "2026-08-30T06:31:13.477449+00:00",
+  "duration_seconds": 613.0,
+  "run_error": "",
+  "institutions": [
+    {
+      "institution": "University of Groningen",
+      "country": "Netherlands",
+      "domain": "rug.nl",
+      "access": "REACHED",
+      "robots_disallowed_requests": 0,
+      "pages_checked": 19,
+      "pages_failed": 0,
+      "failures": [],
+      "outcomes": {
+        "ok": 18,
+        "cached": 1
+      },
+      "discovered": {
+        "program_catalog": [
+          "https://www.rug.nl/education/bachelor",
+          "https://www.rug.nl/bachelors",
+          "https://www.rug.nl/education/bachelor?lang=nl"
+        ],
+        "program_page": [
+          "https://www.rug.nl/bachelors/computing-science"
+        ],
+        "admissions": [
+          "https://www.rug.nl/education/bachelor/international-students",
+          "https://www.rug.nl/education/application-enrolment-tuition-fees",
+          "https://www.rug.nl/education/application-enrolment-tuition-fees/admission"
+        ],
+        "costs": [
+          "https://www.rug.nl/education/application-enrolment-tuition-fees"
+        ],
+        "scholarships": [
+          "https://www.rug.nl/education/scholarships"
+        ]
+      },
+      "discovery_trace": {
+        "institution": "University of Groningen",
+        "domain": "www.rug.nl",
+        "sitemaps_declared": [
+          "https://www.rug.nl/sitemaps/publicSitemapIndex.xml"
+        ],
+        "sitemaps_read": [
+          "https://www.rug.nl/sitemaps/publicSitemapIndex.xml"
+        ],
+        "sitemap_urls_seen": 2,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {
+          "program_catalog": "https://www.rug.nl/education/bachelor/",
+          "admissions": "https://www.rug.nl/education/bachelor/international-students/",
+          "costs": "https://www.rug.nl/education/application-enrolment-tuition-fees/",
+          "scholarships": "https://www.rug.nl/education/scholarships/"
+        },
+        "selected": {
+          "program_catalog": [
+            "https://www.rug.nl/education/bachelor",
+            "https://www.rug.nl/bachelors",
+            "https://www.rug.nl/education/bachelor?lang=nl"
+          ],
+          "program_page": [
+            "https://www.rug.nl/bachelors/computing-science"
+          ],
+          "admissions": [
+            "https://www.rug.nl/education/bachelor/international-students",
+            "https://www.rug.nl/education/application-enrolment-tuition-fees",
+            "https://www.rug.nl/education/application-enrolment-tuition-fees/admission"
+          ],
+          "costs": [
+            "https://www.rug.nl/education/application-enrolment-tuition-fees"
+          ],
+          "scholarships": [
+            "https://www.rug.nl/education/scholarships"
+          ]
+        },
+        "rejected_sample": [
+          [
+            "https://www.rug.nl/bachelors/natural-sciences-and-technology",
+            "reads as program_catalog, not a programme page"
+          ],
+          [
+            "https://www.rug.nl/bachelors/health-and-life-sciences",
+            "reads as program_catalog, not a programme page"
+          ],
+          [
+            "https://www.rug.nl/bachelors/faculty-of-spatial-sciences",
+            "reads as unknown, not a programme page"
+          ],
+          [
+            "https://www.rug.nl/bachelors/faculty-of-science-and-engineering",
+            "reads as program_catalog, not a programme page"
+          ],
+          [
+            "https://www.rug.nl/bachelors/faculty-of-medical-sciences",
+            "reads as unknown, not a programme page"
+          ],
+          [
+            "https://www.rug.nl/bachelors/faculty-of-behavioural-and-social-sciences",
+            "reads as program_catalog, not a programme page"
+          ],
+          [
+            "https://www.rug.nl/bachelors/behavioural-and-social-sciences",
+            "reads as navigation, not a programme page"
+          ]
+        ],
+        "rejected_total": 7,
+        "errors": [
+          "https://www.rug.nl/bachelors/natural-sciences-and-technology reads as a catalogue; followed 21 programme links it lists",
+          "https://www.rug.nl/bachelors/health-and-life-sciences reads as a catalogue; followed 5 programme links it lists",
+          "https://www.rug.nl/bachelors/faculty-of-science-and-engineering reads as a catalogue; followed 2 programme links it lists",
+          "https://www.rug.nl/bachelors/faculty-of-behavioural-and-social-sciences reads as a catalogue; followed 7 programme links it lists",
+          "stopped after reading 8 programme candidates; others were left unchecked rather than guessed at"
+        ],
+        "used_navigation_fallback": true,
+        "kept_by_link_text": [],
+        "confirmed_programs": [
+          [
+            "https://www.rug.nl/bachelors/computing-science",
+            "Computing Science",
+            "intake_specific_program"
+          ]
+        ],
+        "rendered_catalogues": [],
+        "relevance": {
+          "https://www.rug.nl/bachelors/behavioural-and-social-sciences": 17,
+          "https://www.rug.nl/bachelors/health-and-life-sciences": 17,
+          "https://www.rug.nl/bachelors/natural-sciences-and-technology": 17,
+          "https://www.rug.nl/bachelors/faculty-of-behavioural-and-social-sciences": 17,
+          "https://www.rug.nl/bachelors/faculty-of-medical-sciences": 17,
+          "https://www.rug.nl/bachelors/faculty-of-spatial-sciences": 17,
+          "https://www.rug.nl/bachelors/faculty-of-science-and-engineering": 17,
+          "https://www.rug.nl/bachelors/computing-science": 17,
+          "https://www.rug.nl/bachelors/data-science-society": 17,
+          "https://www.rug.nl/bachelors/information-science": 17,
+          "https://www.rug.nl/bachelors/liberal-arts-and-sciences": 17,
+          "https://www.rug.nl/bachelors/life-science-and-technology": 17,
+          "https://www.rug.nl/bachelors/natural-sciences-and-technology?lang=nl": 17,
+          "https://www.rug.nl/bachelors/natural-sciences-and-technology!sso": 17,
+          "https://www.rug.nl/bachelors/health-and-life-sciences?lang=nl": 17,
+          "https://www.rug.nl/bachelors/health-and-life-sciences!sso": 17,
+          "https://www.rug.nl/bachelors/faculty-of-science-and-engineering?lang=nl": 17,
+          "https://www.rug.nl/bachelors/faculty-of-science-and-engineering!sso": 17,
+          "https://www.rug.nl/bachelors/pedagogical-sciences": 17,
+          "https://www.rug.nl/bachelors/faculty-of-behavioural-and-social-sciences?lang=nl": 17,
+          "https://www.rug.nl/bachelors/faculty-of-behavioural-and-social-sciences!sso": 17,
+          "https://www.rug.nl/education/bachelor": 9,
+          "https://www.rug.nl/bachelors": 9,
+          "https://www.rug.nl/education/bachelor/brochures": 9,
+          "https://www.rug.nl/education/bachelor/international-students/study-in-the-netherlands-groningen/accommodation": 9,
+          "https://www.rug.nl/education/bachelor/nederlandse-studenten": 9,
+          "https://www.rug.nl/education/bachelor/nederlandse-studenten/studiekeuze-en-voorlichting": 9,
+          "https://www.rug.nl/education/bachelor/nederlandse-studenten/financien": 9,
+          "https://www.rug.nl/education/bachelor/nederlandse-studenten/studeren-in-groningen": 9,
+          "https://www.rug.nl/education/bachelor/nederlandse-studenten/verbreden-en-verdiepen": 9,
+          "https://www.rug.nl/education/bachelor/international-students": 9,
+          "https://www.rug.nl/education/bachelor/international-students/study-choice-and-information": 9,
+          "https://www.rug.nl/education/bachelor/international-students/financial-matters": 9,
+          "https://www.rug.nl/education/bachelor/international-students/study-in-the-netherlands-groningen": 9,
+          "https://www.rug.nl/education/bachelor/nederlandse-studenten/begeleiding-en-advies": 9,
+          "https://www.rug.nl/education/bachelor/international-students/broadening-and-expanding": 9,
+          "https://www.rug.nl/education/bachelor?lang=nl": 9,
+          "https://www.rug.nl/bachelors/by-subject": 9,
+          "https://www.rug.nl/bachelors/economics-business-and-environment": 9,
+          "https://www.rug.nl/bachelors/history-and-international-relations": 9
+        }
+      },
+      "programs": [
+        "https://www.rug.nl/bachelors/computing-science"
+      ],
+      "program_page_found": true,
+      "scholarship_page_found": true,
+      "discovery_notes": "Sitemap-first discovery found: program_catalog, program_page, admissions, costs, scholarships. Not found: documents.",
+      "claims": 4,
+      "claims_verified": 4,
+      "completeness": 0.12,
+      "eligibility": "MET",
+      "funding_fit": "UNKNOWN",
+      "scholarships_found": 0,
+      "false_positives": []
+    },
+    {
+      "institution": "Delft University of Technology",
+      "country": "Netherlands",
+      "domain": "tudelft.nl",
+      "access": "REACHED",
+      "robots_disallowed_requests": 0,
+      "pages_checked": 26,
+      "pages_failed": 0,
+      "failures": [],
+      "outcomes": {
+        "ok": 16,
+        "cached": 10
+      },
+      "discovered": {
+        "program_catalog": [
+          "https://www.tudelft.nl/en/education/programmes/bachelors",
+          "https://www.tudelft.nl/en/education/programmes",
+          "https://www.tudelft.nl/onderwijs/opleidingen/bachelors"
+        ],
+        "program_page": [
+          "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+          "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/mst/bsc-molecular-science-and-technology",
+          "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/lst/bsc-life-science-and-technology"
+        ],
+        "admissions": [
+          "https://www.tudelft.nl/en/education/admission-and-application",
+          "https://www.tudelft.nl/en/education/admission-and-application/exchange-students",
+          "https://www.tudelft.nl/onderwijs/toelating-en-aanmelding"
+        ],
+        "costs": [
+          "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/tuition-fee-finances"
+        ],
+        "scholarships": [
+          "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/scholarships"
+        ]
+      },
+      "discovery_trace": {
+        "institution": "Delft University of Technology",
+        "domain": "www.tudelft.nl",
+        "sitemaps_declared": [
+          "https://www.tudelft.nl/sitemap.xml"
+        ],
+        "sitemaps_read": [
+          "https://www.tudelft.nl/sitemap.xml"
+        ],
+        "sitemap_urls_seen": 215,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {
+          "program_catalog": "https://www.tudelft.nl/en/education/programmes/bachelors",
+          "admissions": "https://www.tudelft.nl/en/education/admission-and-application",
+          "costs": "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/tuition-fee-finances",
+          "scholarships": "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/scholarships"
+        },
+        "selected": {
+          "program_catalog": [
+            "https://www.tudelft.nl/en/education/programmes/bachelors",
+            "https://www.tudelft.nl/en/education/programmes",
+            "https://www.tudelft.nl/onderwijs/opleidingen/bachelors"
+          ],
+          "program_page": [
+            "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+            "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/mst/bsc-molecular-science-and-technology",
+            "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/lst/bsc-life-science-and-technology"
+          ],
+          "admissions": [
+            "https://www.tudelft.nl/en/education/admission-and-application",
+            "https://www.tudelft.nl/en/education/admission-and-application/exchange-students",
+            "https://www.tudelft.nl/onderwijs/toelating-en-aanmelding"
+          ],
+          "costs": [
+            "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/tuition-fee-finances"
+          ],
+          "scholarships": [
+            "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/scholarships"
+          ]
+        },
+        "rejected_sample": [
+          [
+            "https://360promotion.nl/TU-360/vr-tour-tu-new.html",
+            "off the institution's domain"
+          ]
+        ],
+        "rejected_total": 1,
+        "errors": [],
+        "used_navigation_fallback": true,
+        "kept_by_link_text": [
+          [
+            "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+            "Computer Science & Engineering - English"
+          ]
+        ],
+        "confirmed_programs": [
+          [
+            "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+            "Bachelor of Computer Science and Engineering",
+            "program_detail"
+          ],
+          [
+            "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/mst/bsc-molecular-science-and-technology",
+            "BSc Molecular Science and Technology",
+            "program_detail"
+          ],
+          [
+            "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/lst/bsc-life-science-and-technology",
+            "BSc Life Science and Technology",
+            "program_detail"
+          ]
+        ],
+        "rendered_catalogues": [],
+        "relevance": {
+          "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering": 40,
+          "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/lst/bsc-life-science-and-technology": 20,
+          "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/mst/bsc-molecular-science-and-technology": 20,
+          "https://www.tudelft.nl/en/education/programmes/bachelors/health-and-technology/bsc-health-and-technology": 18,
+          "https://www.tudelft.nl/en/education/programmes/bachelors/technische-bestuurskunde/bsc-systems-engineering-policy-analysis-and-management": 18,
+          "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/civiele-techniek/bsc-civil-engineering": 17,
+          "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/electrical-engineering/bsc-electrical-engineering": 17,
+          "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/industrieel-ontwerpen/bsc-industrial-design-engineering": 17,
+          "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/maritieme-techniek/bsc-marine-technology": 17,
+          "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/werktuigbouwkunde/bsc-mechanical-engineering": 17,
+          "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/bk/bachelor-of-architecture-urbanism-and-building-sciences": 15,
+          "https://www.tudelft.nl/en/education/programmes/bachelors/nb/bsc-nanobiology": 13,
+          "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/ae/bsc-aerospace-engineering": 12,
+          "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/technische-natuurkunde/bachelor-of-applied-physics": 12,
+          "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/klinische-technologie/bachelor-of-clinical-technology": 12,
+          "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/ect/bsc-earth-climate-and-technology": 12,
+          "https://www.tudelft.nl/en/education/programmes/bachelors": 9,
+          "https://www.tudelft.nl/en/education/programmes": 9,
+          "https://www.tudelft.nl/onderwijs/opleidingen/bachelors": 9,
+          "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/tw/bachelor-of-applied-mathematics": 7,
+          "https://www.tudelft.nl/en/education/programmes/minors": 4,
+          "https://www.tudelft.nl/en/education/programmes/post-academic-professionals": 4
+        }
+      },
+      "programs": [
+        "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+        "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/mst/bsc-molecular-science-and-technology",
+        "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/lst/bsc-life-science-and-technology"
+      ],
+      "program_page_found": true,
+      "scholarship_page_found": true,
+      "discovery_notes": "Sitemap-first discovery found: program_catalog, program_page, admissions, costs, scholarships. Not found: documents.",
+      "claims": 17,
+      "claims_verified": 17,
+      "completeness": 0.2,
+      "eligibility": "NEEDS_OFFICIAL_CLARIFICATION",
+      "funding_fit": "NOT_ELIGIBLE",
+      "scholarships_found": 2,
+      "false_positives": []
+    },
+    {
+      "institution": "Aalto University",
+      "country": "Finland",
+      "domain": "aalto.fi",
+      "access": "PARTIALLY_BLOCKED",
+      "robots_disallowed_requests": 2,
+      "pages_checked": 33,
+      "pages_failed": 2,
+      "failures": [
+        [
+          "https://www.aalto.fi/en/node/1008496",
+          "robots_disallowed: robots.txt disallows this path"
+        ],
+        [
+          "https://www.aalto.fi/en/node/1008496",
+          "robots_disallowed: robots.txt disallows this path"
+        ]
+      ],
+      "outcomes": {
+        "ok": 23,
+        "cached": 8,
+        "robots_disallowed": 2
+      },
+      "discovered": {
+        "program_catalog": [
+          "https://www.aalto.fi/en/study-options",
+          "https://www.aalto.fi/en/department-of-computer-science/courses",
+          "https://www.aalto.fi/en/aalto-science-institute-asci/visiting-scientist-programmes"
+        ],
+        "program_page": [
+          "https://www.aalto.fi/en/study-options/computer-engineering-bachelor-of-science-and-master-of-science-technology",
+          "https://www.aalto.fi/en/study-options/quantum-technology-bachelor-of-science-technology-master-of-science-technology",
+          "https://www.aalto.fi/en/study-options/international-business-bachelor-of-science-and-master-of-science-economics-and-business"
+        ],
+        "admissions": [
+          "https://www.aalto.fi/en/admission-services",
+          "https://www.aalto.fi/en/international-students/how-to-apply-for-exchange-studies",
+          "https://www.aalto.fi/en/department-of-art/how-to-apply-to-vicca"
+        ],
+        "costs": [
+          "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees",
+          "https://www.aalto.fi/en/international-students/tuition-fees-and-scholarships",
+          "https://www.aalto.fi/en/minors/costume-design-minor"
+        ],
+        "scholarships": [
+          "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees",
+          "https://www.aalto.fi/en/school-of-engineering/funding",
+          "https://www.aalto.fi/en/grants-and-awards/atlas-diesel-fund"
+        ]
+      },
+      "discovery_trace": {
+        "institution": "Aalto University",
+        "domain": "www.aalto.fi",
+        "sitemaps_declared": [
+          "https://www.aalto.fi/sitemap.xml"
+        ],
+        "sitemaps_read": [
+          "https://www.aalto.fi/sitemap.xml",
+          "https://www.aalto.fi/sitemap.xml?page=1",
+          "https://www.aalto.fi/sitemap.xml?page=2",
+          "https://www.aalto.fi/sitemap.xml?page=3",
+          "https://www.aalto.fi/sitemap.xml?page=4",
+          "https://www.aalto.fi/sitemap.xml?page=5",
+          "https://www.aalto.fi/sitemap.xml?page=6",
+          "https://www.aalto.fi/sitemap.xml?page=7",
+          "https://www.aalto.fi/sitemap.xml?page=8",
+          "https://www.aalto.fi/sitemap.xml?page=9",
+          "https://www.aalto.fi/sitemap.xml?page=10",
+          "https://www.aalto.fi/sitemap.xml?page=11",
+          "https://www.aalto.fi/sitemap.xml?page=12"
+        ],
+        "sitemap_urls_seen": 58844,
+        "sitemap_urls_kept": 216,
+        "manual_seeds": {
+          "program_catalog": "https://www.aalto.fi/en/study-options",
+          "admissions": "https://www.aalto.fi/en/admission-services",
+          "costs": "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees",
+          "scholarships": "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees"
+        },
+        "selected": {
+          "program_catalog": [
+            "https://www.aalto.fi/en/study-options",
+            "https://www.aalto.fi/en/department-of-computer-science/courses",
+            "https://www.aalto.fi/en/aalto-science-institute-asci/visiting-scientist-programmes"
+          ],
+          "program_page": [
+            "https://www.aalto.fi/en/study-options/computer-engineering-bachelor-of-science-and-master-of-science-technology",
+            "https://www.aalto.fi/en/study-options/quantum-technology-bachelor-of-science-technology-master-of-science-technology",
+            "https://www.aalto.fi/en/study-options/international-business-bachelor-of-science-and-master-of-science-economics-and-business"
+          ],
+          "admissions": [
+            "https://www.aalto.fi/en/admission-services",
+            "https://www.aalto.fi/en/international-students/how-to-apply-for-exchange-studies",
+            "https://www.aalto.fi/en/department-of-art/how-to-apply-to-vicca"
+          ],
+          "costs": [
+            "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees",
+            "https://www.aalto.fi/en/international-students/tuition-fees-and-scholarships",
+            "https://www.aalto.fi/en/minors/costume-design-minor"
+          ],
+          "scholarships": [
+            "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees",
+            "https://www.aalto.fi/en/school-of-engineering/funding",
+            "https://www.aalto.fi/en/grants-and-awards/atlas-diesel-fund"
+          ]
+        },
+        "rejected_sample": [
+          [
+            "https://www.aalto.fi/en/doctoral-education/how-to-apply-for-doctoral-studies",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.aalto.fi/en/doctoral-education/doctoral-programmes",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.aalto.fi/en/hse-support-foundation/supporting-research-teaching-and-studies",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.aalto.fi/en/campus/meng-wang",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.aalto.fi/fi/kampus/meng-wang",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.aalto.fi/en/department-of-industrial-engineering-and-management/masters-studies",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.aalto.fi/en/school-of-business/masters-programmes",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.aalto.fi/fi/school-of-business/masters-programmes",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.aalto.fi/en/department-of-computer-science/doctoral-track-combines-masters-and-doctoral-studies",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.aalto.fi/en/aalto-art-and-design-cases/media-intervention-in-the-city-ma-elective-course",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.aalto.fi/en/department-of-media/doctoral-studies",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.aalto.fi/en/department-of-applied-physics/msc-thesis-project-on-artificial-frustrated-spin-systems",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.aalto.fi/en/admission-services/apply-to-masters-programmes",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.aalto.fi/en/creative-sustainability/how-to-apply-to-creative-sustainability-masters-programme",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.aalto.fi/en/creative-sustainability/creative-sustainability-masters-programme",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.aalto.fi/en/department-of-art/international-womens-day-2021-feminist-practices-and-practitioners-from-the-ma-vicca-programme",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.aalto.fi/en/department-of-accounting-business-law/meng-guo",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.aalto.fi/en/doctoral-education/support-for-challenges-during-your-doctoral-studies",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.aalto.fi/en/admission-services/requesting-rectification-to-the-2026-student-admissions-to-masters-programmes",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.aalto.fi/en/department-of-art-and-media/doctoral-studies",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.aalto.fi/en/department-of-art-and-media/masters-programmes",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.aalto.fi/en/language-and-communication-studies/communication-and-language-studies-for-a-masters-degree",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.aalto.fi/en/programmes/continuing-studies-in-a-masters-programme-at-the-school-of-electrical-engineering",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.aalto.fi/en/new-students/international-joint-masters-programmes",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.aalto.fi/en/witlab/masters-studies",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.aalto.fi/en/creative-sustainability/creative-sustainability-masters-student-michael-buchta-shares-his-experience-in-the-programme",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.aalto.fi/en/doctoral-education/supervision-of-doctoral-studies",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.aalto.fi/en/school-of-chemical-engineering/congratulations-you-have-just-been-admitted-to-aalto-university-joint-masters-programme",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.aalto.fi/en/doctoral-education/research-ethics-for-doctoral-students-course",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.aalto.fi/en/doctoral-education/funding-your-doctoral-studies",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.aalto.fi/en/university-pathway-finland/the-pathway-programme-helped-me-to-build-a-foundation-for-my-studies",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.aalto.fi/en/doctoral-education/doctoral-page-index",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.aalto.fi/en/doctoral-education/finland-fellowship-provided-seven-months-of-funding-for-joaquin-during-his-phd-studies",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.aalto.fi/en/doctoral-education/transferring-to-study-according-to-30-ects-structure-doctoral-degree",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.aalto.fi/en/doctoral-education/doctoral-studies",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.aalto.fi/en/doctoral-education/right-to-study-doctoral-degree",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.aalto.fi/en/doctoral-education/licentiate-degree",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.aalto.fi/en/department-of-computer-science/llm-seminar",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.aalto.fi/en/school-of-business/head-of-doctoral-studies",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.aalto.fi/en/school-of-business/student-representative-of-the-doctoral-program",
+            "names a degree level other than bachelor"
+          ]
+        ],
+        "rejected_total": 200,
+        "errors": [],
+        "used_navigation_fallback": false,
+        "kept_by_link_text": [],
+        "confirmed_programs": [
+          [
+            "https://www.aalto.fi/en/study-options/computer-engineering-bachelor-of-science-and-master-of-science-technology",
+            "Computer Engineering, Bachelor of Science and Master of Science (Technology)",
+            "intake_specific_program"
+          ],
+          [
+            "https://www.aalto.fi/en/study-options/quantum-technology-bachelor-of-science-technology-master-of-science-technology",
+            "Quantum Technology, Bachelor of Science and Master of Science (Technology)",
+            "intake_specific_program"
+          ],
+          [
+            "https://www.aalto.fi/en/study-options/international-business-bachelor-of-science-and-master-of-science-economics-and-business",
+            "International Business, Bachelor of Science and Master of Science (Economics and Business Administration)",
+            "intake_specific_program"
+          ]
+        ],
+        "rendered_catalogues": [],
+        "relevance": {
+          "https://www.aalto.fi/en/study-options/computer-engineering-bachelor-of-science-and-master-of-science-technology": 24,
+          "https://www.aalto.fi/en/department-of-computer-science/courses": 21,
+          "https://www.aalto.fi/en/study-options/aalto-offers-five-study-options-in-science-and-technology-at-bachelors-level": 16,
+          "https://www.aalto.fi/en/programmes/bachelors-programme-in-science-and-technology": 16,
+          "https://www.aalto.fi/en/programmes/aalto-bachelors-programme-in-science-and-technology": 16,
+          "https://www.aalto.fi/sv/program/aalto-bachelors-programme-in-science-and-technology": 16,
+          "https://www.aalto.fi/en/study-options/international-business-bachelor-of-science-and-master-of-science-economics-and-business": 16,
+          "https://www.aalto.fi/en/study-options/digital-systems-and-design-bachelor-of-science-and-master-of-science-technology": 16,
+          "https://www.aalto.fi/en/study-options/data-science-bachelor-of-science-and-master-of-science-technology": 16,
+          "https://www.aalto.fi/en/study-options/computational-engineering-bachelor-of-science-technology-master-of-science-technology": 16,
+          "https://www.aalto.fi/en/study-options/chemical-engineering-bachelor-of-science-and-master-of-science-technology": 16,
+          "https://www.aalto.fi/en/study-options/quantum-technology-bachelor-of-science-technology-master-of-science-technology": 16,
+          "https://www.aalto.fi/en/study-options/finance-bachelor-of-science-and-master-of-science-economics-and-business-administration": 16,
+          "https://www.aalto.fi/en/aalto-science-institute-asci/visiting-scientist-programmes": 13,
+          "https://www.aalto.fi/en/aalto-science-institute-asci/aalto-science-institute-asci-internship-programme": 13,
+          "https://www.aalto.fi/en/aalto-science-institute-asci/how-to-apply-to-the-asci-internship-programme": 13,
+          "https://www.aalto.fi/en/department-of-neuroscience-and-biomedical-engineering/courses": 13,
+          "https://www.aalto.fi/en/department-of-neuroscience-and-biomedical-engineering/special-courses": 13,
+          "https://www.aalto.fi/en/aalto-science-institute-asci/how-to-apply-for-the-asci-international-summer-research-programme": 13,
+          "https://www.aalto.fi/en/aalto-science-institute-asci/aalto-science-institute-international-summer-research-programme": 13,
+          "https://www.aalto.fi/en/aalto-science-institute-asci/asci-international-summer-research-programme-project-list": 13,
+          "https://www.aalto.fi/en/department-of-art/art-education-degree-programmes-bachelors-masters-programmes": 9,
+          "https://www.aalto.fi/en/department-of-art-and-media/art-education-degree-programmes-bachelors-masters-programmes": 9,
+          "https://www.aalto.fi/en/people/doctoral-student-aino-soro-materials-stole-my-heart-during-my-undergraduate-degree": 9,
+          "https://www.aalto.fi/en/admission-services/requesting-rectification-student-admissions-to-bachelors-programmes": 9,
+          "https://www.aalto.fi/en/department-of-art-and-media/bachelors-programmes": 9,
+          "https://www.aalto.fi/en/language-and-communication-studies/communication-and-language-studies-for-a-bachelors-degree": 9,
+          "https://www.aalto.fi/en/international-students/tuition-fees-and-scholarships": 9,
+          "https://www.aalto.fi/en/department-of-art-and-media/visual-communication-design-programme-bachelors-programme": 9,
+          "https://www.aalto.fi/en/international-students/how-to-apply-for-exchange-studies": 8,
+          "https://www.aalto.fi/en/programmes/bachelors-programme-in-business": 8,
+          "https://www.aalto.fi/en/programmes/bachelors-programme-in-economics": 8,
+          "https://www.aalto.fi/sv/program/bachelors-programme-in-economics": 8,
+          "https://www.aalto.fi/en/programmes/bachelors-programme-in-international-business": 8,
+          "https://www.aalto.fi/sv/program/bachelors-program-in-international-business": 8,
+          "https://www.aalto.fi/en/programmes/bachelors-programme-in-electrical-engineering": 8,
+          "https://www.aalto.fi/en/programmes/bachelors-programme-in-chemical-engineering": 8,
+          "https://www.aalto.fi/en/programmes/bachelors-programme-in-design-and-media": 8,
+          "https://www.aalto.fi/en/programmes/bachelors-programme-in-architecture-landscape-architecture-and-interior-architecture": 8,
+          "https://www.aalto.fi/en/programmes/bachelors-programme-in-design-and-fashion": 8
+        }
+      },
+      "programs": [
+        "https://www.aalto.fi/en/study-options/computer-engineering-bachelor-of-science-and-master-of-science-technology",
+        "https://www.aalto.fi/en/study-options/quantum-technology-bachelor-of-science-technology-master-of-science-technology",
+        "https://www.aalto.fi/en/study-options/international-business-bachelor-of-science-and-master-of-science-economics-and-business"
+      ],
+      "program_page_found": true,
+      "scholarship_page_found": true,
+      "discovery_notes": "Sitemap-first discovery found: program_catalog, program_page, admissions, costs, scholarships. Not found: documents.",
+      "claims": 8,
+      "claims_verified": 2,
+      "completeness": 0.08,
+      "eligibility": "NEEDS_OFFICIAL_CLARIFICATION",
+      "funding_fit": "UNKNOWN",
+      "scholarships_found": 0,
+      "false_positives": []
+    },
+    {
+      "institution": "University of Vienna",
+      "country": "Austria",
+      "domain": "univie.ac.at",
+      "access": "REACHED",
+      "robots_disallowed_requests": 0,
+      "pages_checked": 33,
+      "pages_failed": 4,
+      "failures": [
+        [
+          "https://www.univie.ac.at/sitemap.xml",
+          "http_error: HTTP 404"
+        ],
+        [
+          "https://www.univie.ac.at/sitemap_index.xml",
+          "http_error: HTTP 404"
+        ],
+        [
+          "https://www.univie.ac.at/sitemap-index.xml",
+          "http_error: HTTP 404"
+        ],
+        [
+          "https://www.univie.ac.at/sitemap/sitemap.xml",
+          "http_error: HTTP 404"
+        ]
+      ],
+      "outcomes": {
+        "ok": 18,
+        "http_error": 4,
+        "cached": 11
+      },
+      "discovered": {
+        "program_catalog": [
+          "https://studieren.univie.ac.at/en/degree-programmes",
+          "https://studieren.univie.ac.at/en/degree-programmes/choice-of-degree",
+          "https://studieren.univie.ac.at/en/degree-programmes/bachelordiploma-programmes"
+        ],
+        "program_page": [
+          "https://studieren.univie.ac.at/en/bachelordiploma-programmes/computer-science-bachelor-with-entrance-exam-procedure",
+          "https://studieren.univie.ac.at/en/degree-programmes/bachelordiploma-programmes/sport-and-human-movement-science-bachelor-with-sporting-aptitude-admission-test",
+          "https://studieren.univie.ac.at/en/degree-programmes/bachelordiploma-programmes/mathematical-foundations-of-data-science-bachelor-with-aptitute-test"
+        ],
+        "admissions": [
+          "https://studieren.univie.ac.at/en/admission-procedure",
+          "https://studieren.univie.ac.at/en/admission/application-and-admission-periods",
+          "https://studieren.univie.ac.at/en/admission/german-language-proficiency"
+        ],
+        "costs": [
+          "https://studieren.univie.ac.at/en/tuition-fee",
+          "https://studieren.univie.ac.at/en/tuition-fee/amount-tuition-fee",
+          "https://studieren.univie.ac.at/en/tuition-fee/equal-status"
+        ],
+        "scholarships": [
+          "http://forschung.univie.ac.at/en/services/funding/early-career-researchers"
+        ]
+      },
+      "discovery_trace": {
+        "institution": "University of Vienna",
+        "domain": "www.univie.ac.at",
+        "sitemaps_declared": [],
+        "sitemaps_read": [],
+        "sitemap_urls_seen": 0,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {
+          "program_catalog": "https://studieren.univie.ac.at/en/degree-programmes/",
+          "admissions": "https://studieren.univie.ac.at/en/admission-procedure/",
+          "costs": "https://studieren.univie.ac.at/en/tuition-fee/"
+        },
+        "selected": {
+          "program_catalog": [
+            "https://studieren.univie.ac.at/en/degree-programmes",
+            "https://studieren.univie.ac.at/en/degree-programmes/choice-of-degree",
+            "https://studieren.univie.ac.at/en/degree-programmes/bachelordiploma-programmes"
+          ],
+          "program_page": [
+            "https://studieren.univie.ac.at/en/bachelordiploma-programmes/computer-science-bachelor-with-entrance-exam-procedure",
+            "https://studieren.univie.ac.at/en/degree-programmes/bachelordiploma-programmes/sport-and-human-movement-science-bachelor-with-sporting-aptitude-admission-test",
+            "https://studieren.univie.ac.at/en/degree-programmes/bachelordiploma-programmes/mathematical-foundations-of-data-science-bachelor-with-aptitute-test"
+          ],
+          "admissions": [
+            "https://studieren.univie.ac.at/en/admission-procedure",
+            "https://studieren.univie.ac.at/en/admission/application-and-admission-periods",
+            "https://studieren.univie.ac.at/en/admission/german-language-proficiency"
+          ],
+          "costs": [
+            "https://studieren.univie.ac.at/en/tuition-fee",
+            "https://studieren.univie.ac.at/en/tuition-fee/amount-tuition-fee",
+            "https://studieren.univie.ac.at/en/tuition-fee/equal-status"
+          ],
+          "scholarships": [
+            "http://forschung.univie.ac.at/en/services/funding/early-career-researchers"
+          ]
+        },
+        "rejected_sample": [],
+        "rejected_total": 0,
+        "errors": [
+          "https://www.univie.ac.at/sitemap.xml: http_error \u2014 HTTP 404",
+          "https://www.univie.ac.at/sitemap_index.xml: http_error \u2014 HTTP 404",
+          "https://www.univie.ac.at/sitemap-index.xml: http_error \u2014 HTTP 404",
+          "https://www.univie.ac.at/sitemap/sitemap.xml: http_error \u2014 HTTP 404"
+        ],
+        "used_navigation_fallback": true,
+        "kept_by_link_text": [
+          [
+            "https://studieren.univie.ac.at/en/bachelordiploma-programmes/computer-science-bachelor-with-entrance-exam-procedure",
+            "Computer Science (Bachelor - with entrance exam procedure)"
+          ]
+        ],
+        "confirmed_programs": [
+          [
+            "https://studieren.univie.ac.at/en/bachelordiploma-programmes/computer-science-bachelor-with-entrance-exam-procedure",
+            "Computer Science (bachelor's programme)",
+            "program_detail"
+          ],
+          [
+            "https://studieren.univie.ac.at/en/degree-programmes/bachelordiploma-programmes/sport-and-human-movement-science-bachelor-with-sporting-aptitude-admission-test",
+            "Sport and Human Movement Science (Bachelor)",
+            "program_detail"
+          ],
+          [
+            "https://studieren.univie.ac.at/en/degree-programmes/bachelordiploma-programmes/mathematical-foundations-of-data-science-bachelor-with-aptitute-test",
+            "Mathematical Foundations of Data Science (bachelor's programme)",
+            "intake_specific_program"
+          ]
+        ],
+        "rendered_catalogues": [
+          [
+            "https://studieren.univie.ac.at/en/degree-programmes",
+            83,
+            83
+          ],
+          [
+            "https://studieren.univie.ac.at/en/degree-programmes/choice-of-degree",
+            87,
+            87
+          ]
+        ],
+        "relevance": {
+          "https://studieren.univie.ac.at/en/bachelordiploma-programmes/computer-science-bachelor-with-entrance-exam-procedure": 36,
+          "https://studieren.univie.ac.at/en/bachelordiploma-programmes/earth-sciences-bachelor": 16,
+          "https://studieren.univie.ac.at/en/bachelordiploma-programmes/nutritional-sciences-bachelor-with-entrance-exam-procedure": 16,
+          "https://studieren.univie.ac.at/en/degree-programmes/bachelordiploma-programmes/mathematical-foundations-of-data-science-bachelor-with-aptitute-test": 16,
+          "https://studieren.univie.ac.at/en/bachelordiploma-programmes/political-science-bachelor-with-entrance-exam-procedure": 16,
+          "https://studieren.univie.ac.at/en/degree-programmes/bachelordiploma-programmes/mass-media-and-communication-science-bachelor-with-entrance-exam-procedure": 16,
+          "https://studieren.univie.ac.at/en/degree-programmes/bachelordiploma-programmes/sport-and-human-movement-science-bachelor-with-sporting-aptitude-admission-test": 16,
+          "https://doktorat.univie.ac.at/en/doctoralphd-programmes/social-sciences": 12,
+          "https://doktorat.univie.ac.at/en/doctoralphd-programmes/natural-sciences": 12,
+          "https://doktorat.univie.ac.at/en/doctoralphd-programmes/life-sciences": 12,
+          "https://doktorat.univie.ac.at/en/doctoralphd-programmes/sport-science": 12,
+          "https://studieren.univie.ac.at/en/bachelordiploma-programmes/bachelor-programmes-by-topic": 8,
+          "https://studieren.univie.ac.at/en/degree-programmes/bachelordiploma-programmes/african-studies-bachelor": 8,
+          "https://studieren.univie.ac.at/en/bachelordiploma-programmes/egyptology-bachelor": 8,
+          "https://studieren.univie.ac.at/en/bachelordiploma-programmes/ancient-history-and-studies-in-classical-antiquity-bachelor": 8,
+          "https://studieren.univie.ac.at/en/degree-programmes/bachelordiploma-programmes/astronomy-bachelor-with-osa": 8,
+          "https://studieren.univie.ac.at/en/bachelordiploma-programmes/business-administration-bachelor-with-entrance-exam-procedure": 8,
+          "https://studieren.univie.ac.at/en/bachelordiploma-programmes/education-bachelor-with-entrance-exam-procedure": 8,
+          "https://studieren.univie.ac.at/en/bachelordiploma-programmes/biology-bachelor-with-entrance-exam-procedure": 8,
+          "https://studieren.univie.ac.at/en/bachelordiploma-programmes/byzantine-studies-and-modern-greek-studies-bachelor": 8,
+          "https://studieren.univie.ac.at/en/bachelordiploma-programmes/chemistry-bachelor-with-entrance-exam-procedure": 8,
+          "https://studieren.univie.ac.at/en/degree-programmes/bachelordiploma-programmes/german-philology-bachelor-with-osa": 8,
+          "https://studieren.univie.ac.at/en/bachelordiploma-programmes/english-and-american-studies-bachelor-with-entrance-exam-procedure": 8,
+          "https://studieren.univie.ac.at/en/bachelordiploma-programmes/european-ethnology-bachelor": 8,
+          "https://studieren.univie.ac.at/en/bachelordiploma-programmes/protestant-theology-bachelor": 8,
+          "https://studieren.univie.ac.at/en/degree-programmes/bachelordiploma-programmes/geography-bachelor-with-osa": 8,
+          "https://studieren.univie.ac.at/en/degree-programmes/bachelordiploma-programmes/history-bachelor-with-osa": 8,
+          "https://studieren.univie.ac.at/en/degree-programmes/bachelordiploma-programmes/hungarian-and-finnish-studies-bachelor": 8,
+          "https://studieren.univie.ac.at/en/bachelordiploma-programmes/international-business-administration-bachelor-with-entrance-exam-procedure": 8,
+          "https://studieren.univie.ac.at/en/degree-programmes/bachelordiploma-programmes/international-legal-studies-bachelor-with-entrance-exam-procedure": 8,
+          "https://studieren.univie.ac.at/en/bachelordiploma-programmes/islamic-theology-bachelor": 8,
+          "https://studieren.univie.ac.at/en/degree-programmes/bachelordiploma-programmes/japanology-bachelor-with-osa": 8,
+          "https://studieren.univie.ac.at/en/bachelordiploma-programmes/jewish-studies-bachelor": 8,
+          "https://studieren.univie.ac.at/en/bachelordiploma-programmes/classical-archaeology-bachelor": 8,
+          "https://studieren.univie.ac.at/en/bachelordiploma-programmes/classical-philology-bachelor": 8,
+          "https://studieren.univie.ac.at/en/degree-programmes/bachelordiploma-programmes/korean-studies-bachelor-with-entrance-exam-procedure": 8,
+          "https://studieren.univie.ac.at/en/bachelordiploma-programmes/social-and-cultural-anthropology-bachelor-with-entrance-exam-procedure": 8,
+          "https://studieren.univie.ac.at/en/bachelordiploma-programmes/history-of-art-bachelor": 8,
+          "https://studieren.univie.ac.at/en/degree-programmes/bachelordiploma-programmes/mathematics-bachelor-with-osa": 8,
+          "https://studieren.univie.ac.at/en/bachelordiploma-programmes/meteorology-bachelor": 8
+        }
+      },
+      "programs": [
+        "https://studieren.univie.ac.at/en/bachelordiploma-programmes/computer-science-bachelor-with-entrance-exam-procedure",
+        "https://studieren.univie.ac.at/en/degree-programmes/bachelordiploma-programmes/sport-and-human-movement-science-bachelor-with-sporting-aptitude-admission-test",
+        "https://studieren.univie.ac.at/en/degree-programmes/bachelordiploma-programmes/mathematical-foundations-of-data-science-bachelor-with-aptitute-test"
+      ],
+      "program_page_found": true,
+      "scholarship_page_found": true,
+      "discovery_notes": "Sitemap-first discovery found: program_catalog, program_page, admissions, costs, scholarships. Not found: documents.",
+      "claims": 1,
+      "claims_verified": 1,
+      "completeness": 0.04,
+      "eligibility": "NEEDS_OFFICIAL_CLARIFICATION",
+      "funding_fit": "UNKNOWN",
+      "scholarships_found": 0,
+      "false_positives": []
+    },
+    {
+      "institution": "University of Warsaw",
+      "country": "Poland",
+      "domain": "uw.edu.pl",
+      "access": "REACHED",
+      "robots_disallowed_requests": 0,
+      "pages_checked": 9,
+      "pages_failed": 1,
+      "failures": [
+        [
+          "http://en01.uw.edu.pl/badania/granty-i-subsydia",
+          "network_unavailable: All connection attempts failed"
+        ]
+      ],
+      "outcomes": {
+        "ok": 8,
+        "network_unavailable": 1
+      },
+      "discovered": {
+        "program_catalog": [
+          "https://en.uw.edu.pl/studies/programmes",
+          "https://en.uw.edu.pl/education/language-courses",
+          "http://polonicum.uw.edu.pl/en/trimestrial-courses"
+        ],
+        "admissions": [
+          "https://en.uw.edu.pl/studies/admission",
+          "http://en01.uw.edu.pl/ksztalcenie/rekrutacja",
+          "http://en01.uw.edu.pl/ksztalcenie/rekrutacja/ii-stopien"
+        ],
+        "scholarships": [
+          "http://en01.uw.edu.pl/badania/granty-i-subsydia",
+          "http://en01.uw.edu.pl/badania/granty-i-subsydia/narodowe-centrum-nauki",
+          "http://en01.uw.edu.pl/badania/granty-i-subsydia/fundacja-na-rzecz-nauki-polskiej"
+        ]
+      },
+      "discovery_trace": {
+        "institution": "University of Warsaw",
+        "domain": "en.uw.edu.pl",
+        "sitemaps_declared": [
+          "https://en.uw.edu.pl/sitemap.xml"
+        ],
+        "sitemaps_read": [
+          "https://en.uw.edu.pl/sitemap.xml"
+        ],
+        "sitemap_urls_seen": 200,
+        "sitemap_urls_kept": 12,
+        "manual_seeds": {
+          "program_catalog": "https://en.uw.edu.pl/studies/programmes/",
+          "admissions": "https://en.uw.edu.pl/studies/admission/"
+        },
+        "selected": {
+          "program_catalog": [
+            "https://en.uw.edu.pl/studies/programmes",
+            "https://en.uw.edu.pl/education/language-courses",
+            "http://polonicum.uw.edu.pl/en/trimestrial-courses"
+          ],
+          "admissions": [
+            "https://en.uw.edu.pl/studies/admission",
+            "http://en01.uw.edu.pl/ksztalcenie/rekrutacja",
+            "http://en01.uw.edu.pl/ksztalcenie/rekrutacja/ii-stopien"
+          ],
+          "scholarships": [
+            "http://en01.uw.edu.pl/badania/granty-i-subsydia",
+            "http://en01.uw.edu.pl/badania/granty-i-subsydia/narodowe-centrum-nauki",
+            "http://en01.uw.edu.pl/badania/granty-i-subsydia/fundacja-na-rzecz-nauki-polskiej"
+          ]
+        },
+        "rejected_sample": [],
+        "rejected_total": 0,
+        "errors": [
+          "no programme page was found; only a catalogue, which cannot confirm a programme"
+        ],
+        "used_navigation_fallback": true,
+        "kept_by_link_text": [],
+        "confirmed_programs": [],
+        "rendered_catalogues": [
+          [
+            "https://en.uw.edu.pl/studies/programmes",
+            64,
+            65
+          ],
+          [
+            "https://en.uw.edu.pl/education/language-courses",
+            59,
+            59
+          ]
+        ],
+        "relevance": {
+          "https://en.uw.edu.pl/studies/programmes": 9,
+          "https://en.uw.edu.pl/education/language-courses": 5,
+          "http://polonicum.uw.edu.pl/en/trimestrial-courses": 5,
+          "http://polonicum.uw.edu.pl/en/summer-courses": 5,
+          "https://polonicum.uw.edu.pl/en/trimestrial-courses": 5,
+          "https://polonicum.uw.edu.pl/en/summer-courses": 5,
+          "http://en01.uw.edu.pl/badania/granty-i-subsydia/programy-ramowe-unii-europejskiej": 4,
+          "http://en01.uw.edu.pl/badania/granty-i-subsydia/narodowe-centrum-nauki": 4,
+          "http://en01.uw.edu.pl/badania/granty-i-subsydia": 4,
+          "http://en01.uw.edu.pl/badania/granty-i-subsydia/fundacja-na-rzecz-nauki-polskiej": 4,
+          "http://en01.uw.edu.pl/badania/granty-i-subsydia/ministerstwo-nauki-i-szkolnictwa-wyzszego": 4,
+          "http://en01.uw.edu.pl/badania/granty-i-subsydia/narodowe-centrum-badan-i-rozwoju": 4,
+          "http://en01.uw.edu.pl/badania/granty-i-subsydia/pozostale-programy-miedzynarodowe": 4,
+          "http://en01.uw.edu.pl/ksztalcenie/rekrutacja": 3,
+          "http://en01.uw.edu.pl/ksztalcenie/rekrutacja/i-stopien-i-jednolite": 3,
+          "http://en01.uw.edu.pl/ksztalcenie/rekrutacja/ii-stopien": 3,
+          "http://en01.uw.edu.pl/ksztalcenie/rekrutacja/iii-stopien": 3,
+          "http://en01.uw.edu.pl/ksztalcenie/rekrutacja/podyplomowe": 3
+        }
+      },
+      "programs": [],
+      "program_page_found": false,
+      "scholarship_page_found": true,
+      "discovery_notes": "Sitemap-first discovery found: program_catalog, admissions, scholarships. Not found: program_page, costs, documents.",
+      "claims": 0,
+      "claims_verified": 0,
+      "completeness": 0.0,
+      "eligibility": "NEEDS_OFFICIAL_CLARIFICATION",
+      "funding_fit": "UNKNOWN",
+      "scholarships_found": 0,
+      "false_positives": []
+    },
+    {
+      "institution": "University of British Columbia",
+      "country": "Canada",
+      "domain": "ubc.ca",
+      "access": "REACHED",
+      "robots_disallowed_requests": 0,
+      "pages_checked": 25,
+      "pages_failed": 4,
+      "failures": [
+        [
+          "https://www.ubc.ca/sitemap.xml",
+          "http_error: HTTP 404"
+        ],
+        [
+          "https://www.ubc.ca/sitemap_index.xml",
+          "http_error: HTTP 404"
+        ],
+        [
+          "https://www.ubc.ca/sitemap-index.xml",
+          "http_error: HTTP 404"
+        ],
+        [
+          "https://www.ubc.ca/sitemap/sitemap.xml",
+          "http_error: HTTP 404"
+        ]
+      ],
+      "outcomes": {
+        "ok": 20,
+        "http_error": 4,
+        "cached": 1
+      },
+      "discovered": {
+        "program_catalog": [
+          "https://you.ubc.ca/programs",
+          "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/development-programs",
+          "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/conditional-admission-program"
+        ],
+        "program_page": [
+          "https://you.ubc.ca/programs/computer-science-vancouver-bsc",
+          "https://you.ubc.ca/programs/computer-science-vancouver-ba",
+          "https://you.ubc.ca/programs/computer-science-okanagan-bsc"
+        ],
+        "admissions": [
+          "https://you.ubc.ca/applying-ubc",
+          "https://you.ubc.ca/apply",
+          "https://you.ubc.ca/applying-ubc/requirements"
+        ],
+        "costs": [
+          "https://you.ubc.ca/financial-planning/tuition-fees",
+          "https://you.ubc.ca/financial-planning/cost"
+        ],
+        "scholarships": [
+          "https://you.ubc.ca/financial-planning/scholarships-awards-international-students",
+          "https://you.ubc.ca/financial-planning/scholarships-awards-canadian-students",
+          "https://you.ubc.ca/financial-planning/scholarships-awards-canadian-students/beyond-tomorrow"
+        ]
+      },
+      "discovery_trace": {
+        "institution": "University of British Columbia",
+        "domain": "www.ubc.ca",
+        "sitemaps_declared": [],
+        "sitemaps_read": [],
+        "sitemap_urls_seen": 0,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {
+          "program_catalog": "https://you.ubc.ca/programs/",
+          "admissions": "https://you.ubc.ca/applying-ubc/",
+          "costs": "https://you.ubc.ca/financial-planning/tuition-fees/",
+          "scholarships": "https://you.ubc.ca/financial-planning/scholarships-awards-international-students/"
+        },
+        "selected": {
+          "program_catalog": [
+            "https://you.ubc.ca/programs",
+            "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/development-programs",
+            "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/conditional-admission-program"
+          ],
+          "program_page": [
+            "https://you.ubc.ca/programs/computer-science-vancouver-bsc",
+            "https://you.ubc.ca/programs/computer-science-vancouver-ba",
+            "https://you.ubc.ca/programs/computer-science-okanagan-bsc"
+          ],
+          "admissions": [
+            "https://you.ubc.ca/applying-ubc",
+            "https://you.ubc.ca/apply",
+            "https://you.ubc.ca/applying-ubc/requirements"
+          ],
+          "costs": [
+            "https://you.ubc.ca/financial-planning/tuition-fees",
+            "https://you.ubc.ca/financial-planning/cost"
+          ],
+          "scholarships": [
+            "https://you.ubc.ca/financial-planning/scholarships-awards-international-students",
+            "https://you.ubc.ca/financial-planning/scholarships-awards-canadian-students",
+            "https://you.ubc.ca/financial-planning/scholarships-awards-canadian-students/beyond-tomorrow"
+          ]
+        },
+        "rejected_sample": [],
+        "rejected_total": 0,
+        "errors": [
+          "https://www.ubc.ca/sitemap.xml: http_error \u2014 HTTP 404",
+          "https://www.ubc.ca/sitemap_index.xml: http_error \u2014 HTTP 404",
+          "https://www.ubc.ca/sitemap-index.xml: http_error \u2014 HTTP 404",
+          "https://www.ubc.ca/sitemap/sitemap.xml: http_error \u2014 HTTP 404"
+        ],
+        "used_navigation_fallback": true,
+        "kept_by_link_text": [
+          [
+            "https://you.ubc.ca/programs/business-computer-science",
+            "Vancouver Business and Computer Science The Business and Computer Science combin"
+          ],
+          [
+            "https://you.ubc.ca/programs/computer-science-okanagan-ba",
+            "Okanagan Computer Science (BA) Find out how Computer Science complements Arts di"
+          ],
+          [
+            "https://you.ubc.ca/programs/computer-science-vancouver-ba",
+            "Vancouver Computer Science (BA) Learn how to use and improve computers while you"
+          ],
+          [
+            "https://you.ubc.ca/programs/computer-science-okanagan-bsc",
+            "Okanagan Computer Science (BSc) Learn how to use and improve computers while you"
+          ],
+          [
+            "https://you.ubc.ca/programs/computer-science-vancouver-bsc",
+            "Vancouver Computer Science (BSc) Learn how to use and improve computers while yo"
+          ],
+          [
+            "https://you.ubc.ca/programs/integrated-computer-science",
+            "Vancouver Integrated Computer Science This 20-month second-degree program is des"
+          ]
+        ],
+        "confirmed_programs": [
+          [
+            "https://you.ubc.ca/programs/computer-science-vancouver-bsc",
+            "Computer Science (BSc)",
+            "program_detail"
+          ],
+          [
+            "https://you.ubc.ca/programs/computer-science-vancouver-ba",
+            "Computer Science (BA)",
+            "program_detail"
+          ],
+          [
+            "https://you.ubc.ca/programs/computer-science-okanagan-bsc",
+            "Computer Science (BSc)",
+            "program_detail"
+          ]
+        ],
+        "rendered_catalogues": [
+          [
+            "https://you.ubc.ca/programs",
+            127,
+            308
+          ]
+        ],
+        "relevance": {
+          "https://you.ubc.ca/programs/computer-science-okanagan-ba": 36,
+          "https://you.ubc.ca/programs/computer-science-vancouver-ba": 36,
+          "https://you.ubc.ca/programs/computer-science-okanagan-bsc": 36,
+          "https://you.ubc.ca/programs/computer-science-vancouver-bsc": 36,
+          "https://you.ubc.ca/programs/business-computer-science": 32,
+          "https://you.ubc.ca/programs/integrated-computer-science": 32,
+          "https://you.ubc.ca/programs/bioeconomy-sciences-technology": 12,
+          "https://you.ubc.ca/programs/atmospheric-science": 12,
+          "https://you.ubc.ca/programs/science-combined-major": 12,
+          "https://you.ubc.ca/programs/earth-environmental-sciences": 12,
+          "https://you.ubc.ca/programs/earth-ocean-sciences": 12,
+          "https://you.ubc.ca/programs/environmental-sciences": 12,
+          "https://you.ubc.ca/programs/forest-sciences": 12,
+          "https://you.ubc.ca/programs/freshwater-science": 12,
+          "https://you.ubc.ca/programs/general-science": 12,
+          "https://you.ubc.ca/programs/geographical-sciences": 12,
+          "https://you.ubc.ca/programs/integrated-sciences": 12,
+          "https://you.ubc.ca/programs/computer-engineering-okanagan": 12,
+          "https://you.ubc.ca/programs/computer-engineering": 12,
+          "https://you.ubc.ca/programs/data-science": 12,
+          "https://you.ubc.ca/programs/data-science-vancouver": 12,
+          "https://you.ubc.ca/programs/vantage-one-applied-science": 12,
+          "https://you.ubc.ca/programs/vantage-one-science": 12,
+          "https://you.ubc.ca/programs/cellular-anatomical-physiological-sciences": 12,
+          "https://you.ubc.ca/programs/food-nutritional-sciences": 12,
+          "https://you.ubc.ca/programs/food-science": 12,
+          "https://you.ubc.ca/programs/health-and-exercise-sciences-kinesiology": 12,
+          "https://you.ubc.ca/programs/kinesiology-multidisciplinary-science": 12,
+          "https://you.ubc.ca/programs/kinesiology-neuromechanical-physiological-sciences": 12,
+          "https://you.ubc.ca/programs/kinesiology-social-behavioural-sciences": 12,
+          "https://you.ubc.ca/programs/medical-laboratory-science": 12,
+          "https://you.ubc.ca/programs/neuroscience": 12,
+          "https://you.ubc.ca/programs/nutritional-sciences": 12,
+          "https://you.ubc.ca/programs/pharmaceutical-sciences": 12,
+          "https://you.ubc.ca/programs/speech-sciences": 12,
+          "https://you.ubc.ca/programs/political-science-okanagan": 12,
+          "https://you.ubc.ca/programs/political-science-vancouver": 12,
+          "https://you.ubc.ca/programs/mathematical-sciences-vancouver": 12,
+          "https://you.ubc.ca/programs/economics-okanagan-ba": 8,
+          "https://you.ubc.ca/programs/economics-okanagan-bsc": 8
+        }
+      },
+      "programs": [
+        "https://you.ubc.ca/programs/computer-science-vancouver-bsc",
+        "https://you.ubc.ca/programs/computer-science-vancouver-ba",
+        "https://you.ubc.ca/programs/computer-science-okanagan-bsc"
+      ],
+      "program_page_found": true,
+      "scholarship_page_found": true,
+      "discovery_notes": "Sitemap-first discovery found: program_catalog, program_page, admissions, costs, scholarships. Not found: documents.",
+      "claims": 1,
+      "claims_verified": 1,
+      "completeness": 0.04,
+      "eligibility": "NEEDS_OFFICIAL_CLARIFICATION",
+      "funding_fit": "UNKNOWN",
+      "scholarships_found": 0,
+      "false_positives": []
+    },
+    {
+      "institution": "University of Toronto",
+      "country": "Canada",
+      "domain": "utoronto.ca",
+      "access": "REACHED",
+      "robots_disallowed_requests": 0,
+      "pages_checked": 32,
+      "pages_failed": 5,
+      "failures": [
+        [
+          "https://www.utoronto.ca/robots.txt",
+          "http_error: HTTP 403"
+        ],
+        [
+          "https://www.utoronto.ca/sitemap.xml",
+          "http_error: HTTP 403"
+        ],
+        [
+          "https://www.utoronto.ca/sitemap_index.xml",
+          "http_error: HTTP 403"
+        ],
+        [
+          "https://www.utoronto.ca/sitemap-index.xml",
+          "http_error: HTTP 403"
+        ],
+        [
+          "https://www.utoronto.ca/sitemap/sitemap.xml",
+          "http_error: HTTP 403"
+        ]
+      ],
+      "outcomes": {
+        "http_error": 5,
+        "ok": 15,
+        "cached": 12
+      },
+      "discovered": {
+        "program_catalog": [
+          "https://future.utoronto.ca/undergraduate-programs",
+          "https://future.utoronto.ca/design-visual-studies",
+          "https://future.utoronto.ca/build-your-degree"
+        ],
+        "program_page": [
+          "https://future.utoronto.ca/program/computer-science",
+          "https://future.utoronto.ca/program/applied-data-science",
+          "https://future.utoronto.ca/program/data-science"
+        ],
+        "admissions": [
+          "https://future.utoronto.ca/apply",
+          "https://future.utoronto.ca/applying",
+          "https://future.utoronto.ca/how-to-apply"
+        ],
+        "costs": [
+          "https://future.utoronto.ca/finances/fees",
+          "https://future.utoronto.ca/fees"
+        ],
+        "scholarships": [
+          "https://future.utoronto.ca/finances/scholarships",
+          "https://future.utoronto.ca/scholarships",
+          "https://future.utoronto.ca/financial-aid"
+        ],
+        "documents": [
+          "https://future.utoronto.ca/required-documents"
+        ]
+      },
+      "discovery_trace": {
+        "institution": "University of Toronto",
+        "domain": "www.utoronto.ca",
+        "sitemaps_declared": [],
+        "sitemaps_read": [],
+        "sitemap_urls_seen": 0,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {
+          "program_catalog": "https://future.utoronto.ca/undergraduate-programs/",
+          "admissions": "https://future.utoronto.ca/apply/",
+          "costs": "https://future.utoronto.ca/finances/fees/",
+          "scholarships": "https://future.utoronto.ca/finances/scholarships/"
+        },
+        "selected": {
+          "program_catalog": [
+            "https://future.utoronto.ca/undergraduate-programs",
+            "https://future.utoronto.ca/design-visual-studies",
+            "https://future.utoronto.ca/build-your-degree"
+          ],
+          "program_page": [
+            "https://future.utoronto.ca/program/computer-science",
+            "https://future.utoronto.ca/program/applied-data-science",
+            "https://future.utoronto.ca/program/data-science"
+          ],
+          "admissions": [
+            "https://future.utoronto.ca/apply",
+            "https://future.utoronto.ca/applying",
+            "https://future.utoronto.ca/how-to-apply"
+          ],
+          "costs": [
+            "https://future.utoronto.ca/finances/fees",
+            "https://future.utoronto.ca/fees"
+          ],
+          "scholarships": [
+            "https://future.utoronto.ca/finances/scholarships",
+            "https://future.utoronto.ca/scholarships",
+            "https://future.utoronto.ca/financial-aid"
+          ],
+          "documents": [
+            "https://future.utoronto.ca/required-documents"
+          ]
+        },
+        "rejected_sample": [
+          [
+            "https://future.utoronto.ca/data-computer-science",
+            "reads as program_catalog, not a programme page"
+          ]
+        ],
+        "rejected_total": 1,
+        "errors": [
+          "robots.txt unavailable: http_error",
+          "https://www.utoronto.ca/sitemap.xml: http_error \u2014 HTTP 403",
+          "https://www.utoronto.ca/sitemap_index.xml: http_error \u2014 HTTP 403",
+          "https://www.utoronto.ca/sitemap-index.xml: http_error \u2014 HTTP 403",
+          "https://www.utoronto.ca/sitemap/sitemap.xml: http_error \u2014 HTTP 403",
+          "https://future.utoronto.ca/data-computer-science reads as a catalogue; followed 6 programme links it lists"
+        ],
+        "used_navigation_fallback": true,
+        "kept_by_link_text": [
+          [
+            "https://future.utoronto.ca/data-computer-science",
+            "Data & Computer Science"
+          ],
+          [
+            "https://future.utoronto.ca/data-computer-science",
+            "Data & Computer Science"
+          ],
+          [
+            "https://future.utoronto.ca/program/computer-science",
+            "Computer Science"
+          ]
+        ],
+        "confirmed_programs": [
+          [
+            "https://future.utoronto.ca/program/computer-science",
+            "Computer Science",
+            "program_detail"
+          ],
+          [
+            "https://future.utoronto.ca/program/applied-data-science",
+            "Applied Data Science",
+            "program_detail"
+          ],
+          [
+            "https://future.utoronto.ca/program/data-science",
+            "Data Science",
+            "program_detail"
+          ]
+        ],
+        "rendered_catalogues": [
+          [
+            "https://future.utoronto.ca/data-computer-science",
+            0,
+            6
+          ]
+        ],
+        "relevance": {
+          "https://future.utoronto.ca/data-computer-science": 32,
+          "https://future.utoronto.ca/program/computer-science": 32,
+          "https://future.utoronto.ca/program/applied-data-science": 12,
+          "https://future.utoronto.ca/program/data-science": 12,
+          "https://future.utoronto.ca/undergraduate-programs": 9,
+          "https://future.utoronto.ca/design-visual-studies": 5,
+          "https://future.utoronto.ca/build-your-degree": 5,
+          "https://future.utoronto.ca/high-school-enrichment-programs": 5,
+          "https://future.utoronto.ca/pathway-programs": 5,
+          "https://future.utoronto.ca/english-language-transition-programs": 5,
+          "https://future.utoronto.ca/presidents-scholars-excellence-program": 5,
+          "https://future.utoronto.ca/university-of-toronto-scholars-program": 5,
+          "https://www.utm.utoronto.ca/future-students/programs/information-security": 4,
+          "https://future.utoronto.ca/program/information-security": 4,
+          "https://future.utoronto.ca/program/technology-coding-and-society": 4
+        }
+      },
+      "programs": [
+        "https://future.utoronto.ca/program/computer-science",
+        "https://future.utoronto.ca/program/applied-data-science",
+        "https://future.utoronto.ca/program/data-science"
+      ],
+      "program_page_found": true,
+      "scholarship_page_found": true,
+      "discovery_notes": "Sitemap-first discovery found: program_catalog, program_page, admissions, costs, scholarships, documents.",
+      "claims": 9,
+      "claims_verified": 9,
+      "completeness": 0.2,
+      "eligibility": "NEEDS_OFFICIAL_CLARIFICATION",
+      "funding_fit": "UNKNOWN",
+      "scholarships_found": 2,
+      "false_positives": []
+    },
+    {
+      "institution": "The University of Hong Kong",
+      "country": "Hong Kong",
+      "domain": "hku.hk",
+      "access": "REACHED",
+      "robots_disallowed_requests": 0,
+      "pages_checked": 18,
+      "pages_failed": 5,
+      "failures": [
+        [
+          "https://www.hku.hk/robots.txt",
+          "http_error: HTTP 404"
+        ],
+        [
+          "https://www.hku.hk/sitemap.xml",
+          "http_error: HTTP 404"
+        ],
+        [
+          "https://www.hku.hk/sitemap_index.xml",
+          "http_error: HTTP 404"
+        ],
+        [
+          "https://www.hku.hk/sitemap-index.xml",
+          "http_error: HTTP 404"
+        ],
+        [
+          "https://www.hku.hk/sitemap/sitemap.xml",
+          "http_error: HTTP 404"
+        ]
+      ],
+      "outcomes": {
+        "http_error": 5,
+        "ok": 11,
+        "cached": 2
+      },
+      "discovered": {
+        "program_catalog": [
+          "https://admissions.hku.hk/programmes",
+          "https://admissions.hku.hk/zh-hant/programmes",
+          "https://admissions.hku.hk/zh-hans/programmes"
+        ],
+        "program_page": [
+          "https://admissions.hku.hk/programmes/university-collaborative-programmes/hku-cambridge-joint-recruitment-scheme-engineering-and-computer-science"
+        ],
+        "admissions": [
+          "https://admissions.hku.hk/",
+          "https://admissions.hku.hk/apply/jupas",
+          "https://admissions.hku.hk/apply/jupas/eligibility"
+        ],
+        "costs": [
+          "https://admissions.hku.hk/fees-and-scholarships/fees",
+          "https://admissions.hku.hk/fees-and-scholarships/scholarships"
+        ],
+        "scholarships": [
+          "https://admissions.hku.hk/fees-and-scholarships/scholarships"
+        ]
+      },
+      "discovery_trace": {
+        "institution": "The University of Hong Kong",
+        "domain": "www.hku.hk",
+        "sitemaps_declared": [],
+        "sitemaps_read": [],
+        "sitemap_urls_seen": 0,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {
+          "program_catalog": "https://admissions.hku.hk/programmes",
+          "admissions": "https://admissions.hku.hk/",
+          "costs": "https://admissions.hku.hk/fees-and-scholarships/fees",
+          "scholarships": "https://admissions.hku.hk/fees-and-scholarships/scholarships"
+        },
+        "selected": {
+          "program_catalog": [
+            "https://admissions.hku.hk/programmes",
+            "https://admissions.hku.hk/zh-hant/programmes",
+            "https://admissions.hku.hk/zh-hans/programmes"
+          ],
+          "program_page": [
+            "https://admissions.hku.hk/programmes/university-collaborative-programmes/hku-cambridge-joint-recruitment-scheme-engineering-and-computer-science"
+          ],
+          "admissions": [
+            "https://admissions.hku.hk/",
+            "https://admissions.hku.hk/apply/jupas",
+            "https://admissions.hku.hk/apply/jupas/eligibility"
+          ],
+          "costs": [
+            "https://admissions.hku.hk/fees-and-scholarships/fees",
+            "https://admissions.hku.hk/fees-and-scholarships/scholarships"
+          ],
+          "scholarships": [
+            "https://admissions.hku.hk/fees-and-scholarships/scholarships"
+          ]
+        },
+        "rejected_sample": [],
+        "rejected_total": 0,
+        "errors": [
+          "robots.txt unavailable: http_error",
+          "https://www.hku.hk/sitemap.xml: http_error \u2014 HTTP 404",
+          "https://www.hku.hk/sitemap_index.xml: http_error \u2014 HTTP 404",
+          "https://www.hku.hk/sitemap-index.xml: http_error \u2014 HTTP 404",
+          "https://www.hku.hk/sitemap/sitemap.xml: http_error \u2014 HTTP 404"
+        ],
+        "used_navigation_fallback": true,
+        "kept_by_link_text": [],
+        "confirmed_programs": [
+          [
+            "https://admissions.hku.hk/programmes/university-collaborative-programmes/hku-cambridge-joint-recruitment-scheme-engineering-and-computer-science",
+            "HKU-Cambridge Undergraduate Recruitment Scheme (Engineering)",
+            "intake_specific_program"
+          ]
+        ],
+        "rendered_catalogues": [
+          [
+            "https://admissions.hku.hk/programmes",
+            35,
+            35
+          ]
+        ],
+        "relevance": {
+          "https://admissions.hku.hk/programmes/university-collaborative-programmes/hku-cambridge-joint-recruitment-scheme-engineering-and-computer-science": 20,
+          "https://admissions.hku.hk/programmes/university-collaborative-programmes/hku-sciences-po-dual-degree-programme": 13,
+          "https://admissions.hku.hk/programmes/undergraduate-programmes": 9,
+          "https://admissions.hku.hk/programmes": 5,
+          "https://admissions.hku.hk/zh-hant/programmes": 5,
+          "https://admissions.hku.hk/zh-hans/programmes": 5,
+          "https://admissions.hku.hk/experience/pre-university-programme": 5,
+          "https://admissions.hku.hk/programmes/university-collaborative-programmes": 5,
+          "https://admissions.hku.hk/apply/overview": 5,
+          "https://admissions.hku.hk/apply/hong-kong-sub-degrees": 5,
+          "https://admissions.hku.hk/zh-hant/programmes/university-collaborative-programmes": 5,
+          "https://admissions.hku.hk/zh-hans/programmes/university-collaborative-programmes": 5,
+          "https://ug.fbe.hku.hk/admission/degree-programmes/hku-pku-dual-degree": 5,
+          "https://admissions.hku.hk/HKU-UCBerkeley-Dual-Degree-Programme": 5,
+          "https://admissions.hku.hk/programmes/university-collaborative-programmes/hku-university-of-british-columbia-dual-degree-programme": 5
+        }
+      },
+      "programs": [
+        "https://admissions.hku.hk/programmes/university-collaborative-programmes/hku-cambridge-joint-recruitment-scheme-engineering-and-computer-science"
+      ],
+      "program_page_found": true,
+      "scholarship_page_found": true,
+      "discovery_notes": "Sitemap-first discovery found: program_catalog, program_page, admissions, costs, scholarships. Not found: documents.",
+      "claims": 4,
+      "claims_verified": 4,
+      "completeness": 0.08,
+      "eligibility": "NEEDS_OFFICIAL_CLARIFICATION",
+      "funding_fit": "UNKNOWN",
+      "scholarships_found": 0,
+      "false_positives": []
+    },
+    {
+      "institution": "Nanyang Technological University",
+      "country": "Singapore",
+      "domain": "ntu.edu.sg",
+      "access": "REACHED",
+      "robots_disallowed_requests": 0,
+      "pages_checked": 42,
+      "pages_failed": 3,
+      "failures": [
+        [
+          "https://www.ntu.edu.sg/sitemap.xml",
+          "http_error: HTTP 404"
+        ],
+        [
+          "https://www.ntu.edu.sg/sitemap_index.xml",
+          "http_error: HTTP 404"
+        ],
+        [
+          "https://www.ntu.edu.sg/sitemap-index.xml",
+          "http_error: HTTP 404"
+        ]
+      ],
+      "outcomes": {
+        "ok": 22,
+        "http_error": 3,
+        "cached": 17
+      },
+      "discovered": {
+        "program_catalog": [
+          "https://www.ntu.edu.sg/education/degree-programmes",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-maritime-studies",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-maritime-studies-with-work-study-programme"
+        ],
+        "program_page": [
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/double-degree-in-computer-science-and-economics",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-and-computer-sciences"
+        ],
+        "admissions": [
+          "https://www.ntu.edu.sg/admissions/undergraduate",
+          "https://www.ntu.edu.sg/about-us/global/global-connect-fellowship/how-to-apply",
+          "https://www.ntu.edu.sg/admissions/graduate"
+        ],
+        "costs": [
+          "https://www.ntu.edu.sg/admissions/undergraduate/financial-matters",
+          "https://www.ntu.edu.sg/admissions/undergraduate/financial-matters/tuition-fees",
+          "https://www.ntu.edu.sg/admissions/undergraduate/financial-matters/financial-aid/tuition-fee-loans"
+        ],
+        "scholarships": [
+          "https://www.ntu.edu.sg/admissions/undergraduate/financial-matters/financial-aid/bursaries",
+          "https://www.ntu.edu.sg/admissions/undergraduate/financial-matters/financial-aid/faq/bursaries",
+          "https://www.ntu.edu.sg/admissions/undergraduate/financial-matters/financial-aid/bursaries/government-bursaries"
+        ]
+      },
+      "discovery_trace": {
+        "institution": "Nanyang Technological University",
+        "domain": "www.ntu.edu.sg",
+        "sitemaps_declared": [],
+        "sitemaps_read": [
+          "https://www.ntu.edu.sg/sitemap/sitemap.xml"
+        ],
+        "sitemap_urls_seen": 13912,
+        "sitemap_urls_kept": 214,
+        "manual_seeds": {
+          "program_catalog": "https://www.ntu.edu.sg/education/degree-programmes",
+          "admissions": "https://www.ntu.edu.sg/admissions/undergraduate",
+          "costs": "https://www.ntu.edu.sg/admissions/undergraduate/financial-matters"
+        },
+        "selected": {
+          "program_catalog": [
+            "https://www.ntu.edu.sg/education/degree-programmes",
+            "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-maritime-studies",
+            "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-maritime-studies-with-work-study-programme"
+          ],
+          "program_page": [
+            "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+            "https://www.ntu.edu.sg/education/undergraduate-programme/double-degree-in-computer-science-and-economics",
+            "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-and-computer-sciences"
+          ],
+          "admissions": [
+            "https://www.ntu.edu.sg/admissions/undergraduate",
+            "https://www.ntu.edu.sg/about-us/global/global-connect-fellowship/how-to-apply",
+            "https://www.ntu.edu.sg/admissions/graduate"
+          ],
+          "costs": [
+            "https://www.ntu.edu.sg/admissions/undergraduate/financial-matters",
+            "https://www.ntu.edu.sg/admissions/undergraduate/financial-matters/tuition-fees",
+            "https://www.ntu.edu.sg/admissions/undergraduate/financial-matters/financial-aid/tuition-fee-loans"
+          ],
+          "scholarships": [
+            "https://www.ntu.edu.sg/admissions/undergraduate/financial-matters/financial-aid/bursaries",
+            "https://www.ntu.edu.sg/admissions/undergraduate/financial-matters/financial-aid/faq/bursaries",
+            "https://www.ntu.edu.sg/admissions/undergraduate/financial-matters/financial-aid/bursaries/government-bursaries"
+          ]
+        },
+        "rejected_sample": [
+          [
+            "https://www.ntu.edu.sg/admissions/graduate/joint-graduate-programmes",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.ntu.edu.sg/about-us/facts-figures/total-graduate-output---first-degree-higher-degree",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.ntu.edu.sg/about-us/sustainability/sustainability-education/postgraduate-programmes",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.ntu.edu.sg/life-at-ntu/student-life/student-services/onestop/bond-management/graduate-studies",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.ntu.edu.sg/education/graduate-programme",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.ntu.edu.sg/admissions/graduate/programme-listing",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.ntu.edu.sg/education/graduate-programme/master-of-education-(malay-language)",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.ntu.edu.sg/education/graduate-programme/master-of-science-in-project-management",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.ntu.edu.sg/education/graduate-programme/doctor-of-philosophy-(ph.d)-and-master-of-engineering-(m.eng)-programme",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.ntu.edu.sg/education/graduate-programme/scbe-doctor-of-philosophy-(phd)-(by-research)",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.ntu.edu.sg/education/graduate-programme/master-of-science-in-engineering-management",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.ntu.edu.sg/education/graduate-programme/master-of-science-in-cybersecurity-(applied-cybersecurity",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.ntu.edu.sg/education/graduate-programme/master-of-science-in-holistic-palliative-care-(hope)",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.ntu.edu.sg/education/graduate-programme/master-of-science-in-modelling-and-simulation",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.ntu.edu.sg/education/graduate-programme/joint-master-of-science-in-green-electronics",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.ntu.edu.sg/education/graduate-programme/postgraduate-diploma-in-education-(pgde)",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.ntu.edu.sg/education/graduate-programme/master-of-science-in-enterprise-artificial-intelligence",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.ntu.edu.sg/education/graduate-programme/master-of-arts-in-translation-and-interpretation",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.ntu.edu.sg/education/graduate-programme/master-of-science-in-biobusiness-and-bioentrepreneurship-msbbb",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.ntu.edu.sg/education/graduate-programme/master-of-science-in-information-studies",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.ntu.edu.sg/education/graduate-programme/master-of-science-in-supply-chain-logistics",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.ntu.edu.sg/education/graduate-programme/graduate-diploma-in-sports-medicine-2",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.ntu.edu.sg/education/graduate-programme/master-of-science-in-aviation",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.ntu.edu.sg/education/graduate-programme/master-of-science-in-actuarial-and-risk-analytics",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.ntu.edu.sg/education/graduate-programme/master-of-science-in-chemistry-and-biological-chemistry",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.ntu.edu.sg/education/graduate-programme/master-of-media-and-communication",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.ntu.edu.sg/education/graduate-programme/master-of-science-in-analytics",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.ntu.edu.sg/education/graduate-programme/master-of-science-technopreneurship-and-innovation-programme-cn",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.ntu.edu.sg/education/graduate-programme/master-of-arts-(instructional-design-and-technology)",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.ntu.edu.sg/education/graduate-programme/doctor-of-philosophy-(phd)-in-chemistry",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.ntu.edu.sg/education/graduate-programme/master-of-science-in-power-engineering",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.ntu.edu.sg/education/graduate-programme/master-of-arts-in-humanities-education",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.ntu.edu.sg/education/graduate-programme/master-of-computing-in-applied-ai-mcaai",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.ntu.edu.sg/education/graduate-programme/master-of-science-in-environmental-sustainability-science",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.ntu.edu.sg/education/graduate-programme/master-of-science-in-master-of-science-in-cybersecurity-applied-cryptography",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.ntu.edu.sg/education/graduate-programme/master-of-science-in-maritime-studies",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.ntu.edu.sg/education/graduate-programme/master-of-arts-(research)",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.ntu.edu.sg/education/graduate-programme/master-of-education-(art)",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.ntu.edu.sg/education/graduate-programme/postgraduate-diploma-in-education-(physical-education)",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://www.ntu.edu.sg/education/graduate-programme/master-of-education-(tamil-language)",
+            "names a degree level other than bachelor"
+          ]
+        ],
+        "rejected_total": 156,
+        "errors": [
+          "https://www.ntu.edu.sg/sitemap.xml: http_error \u2014 HTTP 404",
+          "https://www.ntu.edu.sg/sitemap_index.xml: http_error \u2014 HTTP 404",
+          "https://www.ntu.edu.sg/sitemap-index.xml: http_error \u2014 HTTP 404"
+        ],
+        "used_navigation_fallback": false,
+        "kept_by_link_text": [],
+        "confirmed_programs": [
+          [
+            "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+            "Bachelor of Computing (Hons) in Computer Science",
+            "program_detail"
+          ],
+          [
+            "https://www.ntu.edu.sg/education/undergraduate-programme/double-degree-in-computer-science-and-economics",
+            "Double Degree in Computer Science and Economics",
+            "program_detail"
+          ],
+          [
+            "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-and-computer-sciences",
+            "Bachelor of Science in Mathematical and Computer Sciences",
+            "program_detail"
+          ]
+        ],
+        "rendered_catalogues": [],
+        "relevance": {
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-(hons)-in-computer-science-with-a-second-major-in-entrepreneurship": 24,
+          "https://www.ntu.edu.sg/education/undergraduate-programme/double-degree-in-computer-science-and-business": 24,
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science-with-second-major-in-business": 24,
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-(hons)-in-computer-science-with-a-second-major-in-sustainability": 24,
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science-with-second-major-in-business-(international-trading)": 24,
+          "https://www.ntu.edu.sg/education/undergraduate-programme/double-degree-in-business-(with-specialisation-in-business-analytics)-computer-engineering-computer-science": 24,
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science": 24,
+          "https://www.ntu.edu.sg/education/undergraduate-programme/double-degree-in-computer-science-and-economics": 24,
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-and-computer-sciences": 24,
+          "https://www.ntu.edu.sg/admissions/undergraduate/humanities-arts-and-social-sciences": 17,
+          "https://www.ntu.edu.sg/admissions/undergraduate/science": 17,
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-maritime-studies-with-work-study-programme": 17,
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-biological-sciences-accelerated-bachelor-programme": 17,
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-social-sciences-in-public-policy-and-global-affairs-with-a-second-major-in-media-and-journalism-studies": 17,
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-maritime-studies": 17,
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-engineering-(hons)-in-computer-engineering-with-a-second-major-in-sustainability": 16,
+          "https://www.ntu.edu.sg/education/undergraduate-programme/double-degree-in-bachelor-of-engineering-(chemical-and-biomolecular-engineering)-and-bachelor-of-social-science-(economics)": 16,
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-engineering-(hons)-in-computer-engineering-with-second-major-in-entrepreneurship": 16,
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-social-sciences-in-psychology-with-second-major-in-biological-sciences": 16,
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-sciences-with-second-major-in-sustainability": 16,
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-maritime-studies-with-second-major-in-business": 16,
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-physics-applied-physics-with-second-major-in-astrophysics": 16,
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-environmental-earth-systems-science-with-second-major-in-entrepreneurship": 16,
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-chemistry-and-biological-chemistry-with-second-major-in-data-analytics": 16,
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-biological-sciences-with-second-major-in-data-analytics": 16,
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-biological-sciences-with-second-major-in-biomedical-structural-biology": 16,
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-social-sciences-in-psychology-(honours)": 16,
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-physics-and-mathematical-sciences": 16,
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-chemistry-and-biological-chemistry": 16,
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-biological-sciences-with-second-major-in-entrepreneurship": 16,
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-applied-physics-with-second-major-in-quantum-technologies": 16,
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-biological-sciences-with-second-major-in-food-science-and-technology": 16,
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-environmental-earth-systems-science-and-public-policy-and-global-affairs": 16,
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-physics-energy-studies-and-education": 16,
+          "https://www.ntu.edu.sg/education/undergraduate-programme/double-degree-in-electrical-and-electronic-engineering-and-social-sciences-(economics)": 16,
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-social-sciences-(hons)-in-double-major---economics-and-psychology": 16,
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-engineering-science-with-double-majors-in-process-engineering-and-synthetic-chemistry": 16,
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-social-science-in-philosophy-politics-and-economics": 16,
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-applied-physics-with-second-major-in-microelectronics-engineering": 16,
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-physics-applied-physics-with-second-major-in-data-analytics": 16
+        }
+      },
+      "programs": [
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/double-degree-in-computer-science-and-economics",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-and-computer-sciences"
+      ],
+      "program_page_found": true,
+      "scholarship_page_found": true,
+      "discovery_notes": "Sitemap-first discovery found: program_catalog, program_page, admissions, costs, scholarships. Not found: documents.",
+      "claims": 7,
+      "claims_verified": 7,
+      "completeness": 0.16,
+      "eligibility": "NEEDS_OFFICIAL_CLARIFICATION",
+      "funding_fit": "UNKNOWN",
+      "scholarships_found": 2,
+      "false_positives": []
+    },
+    {
+      "institution": "KAIST",
+      "country": "South Korea",
+      "domain": "kaist.ac.kr",
+      "access": "REACHED",
+      "robots_disallowed_requests": 0,
+      "pages_checked": 12,
+      "pages_failed": 3,
+      "failures": [
+        [
+          "https://www.kaist.ac.kr/sitemap_index.xml",
+          "http_error: HTTP 404"
+        ],
+        [
+          "https://www.kaist.ac.kr/sitemap-index.xml",
+          "http_error: HTTP 404"
+        ],
+        [
+          "https://www.kaist.ac.kr/sitemap/sitemap.xml",
+          "http_error: HTTP 404"
+        ]
+      ],
+      "outcomes": {
+        "ok": 8,
+        "http_error": 3,
+        "cached": 1
+      },
+      "discovered": {
+        "program_catalog": [
+          "https://admission.kaist.ac.kr/intl-undergraduate/about/program"
+        ],
+        "admissions": [
+          "https://admission.kaist.ac.kr/intl-undergraduate",
+          "http://www.kaist.ac.kr/kr/html/admission/02.html",
+          "https://admission.kaist.ac.kr/intl-undergraduate/application"
+        ],
+        "scholarships": [
+          "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist"
+        ]
+      },
+      "discovery_trace": {
+        "institution": "KAIST",
+        "domain": "www.kaist.ac.kr",
+        "sitemaps_declared": [],
+        "sitemaps_read": [
+          "https://www.kaist.ac.kr/sitemap.xml"
+        ],
+        "sitemap_urls_seen": 11,
+        "sitemap_urls_kept": 1,
+        "manual_seeds": {
+          "admissions": "https://admission.kaist.ac.kr/intl-undergraduate/"
+        },
+        "selected": {
+          "program_catalog": [
+            "https://admission.kaist.ac.kr/intl-undergraduate/about/program"
+          ],
+          "admissions": [
+            "https://admission.kaist.ac.kr/intl-undergraduate",
+            "http://www.kaist.ac.kr/kr/html/admission/02.html",
+            "https://admission.kaist.ac.kr/intl-undergraduate/application"
+          ],
+          "scholarships": [
+            "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist"
+          ]
+        },
+        "rejected_sample": [],
+        "rejected_total": 0,
+        "errors": [
+          "https://www.kaist.ac.kr/sitemap_index.xml: http_error \u2014 HTTP 404",
+          "https://www.kaist.ac.kr/sitemap-index.xml: http_error \u2014 HTTP 404",
+          "https://www.kaist.ac.kr/sitemap/sitemap.xml: http_error \u2014 HTTP 404",
+          "no programme page was found; only a catalogue, which cannot confirm a programme"
+        ],
+        "used_navigation_fallback": true,
+        "kept_by_link_text": [],
+        "confirmed_programs": [],
+        "rendered_catalogues": [
+          [
+            "https://admission.kaist.ac.kr/intl-undergraduate/about/program",
+            175,
+            178
+          ]
+        ],
+        "relevance": {
+          "https://admission.kaist.ac.kr/intl-undergraduate/about/program": 9,
+          "http://www.kaist.ac.kr/kr/html/admission/02.html": 4
+        }
+      },
+      "programs": [],
+      "program_page_found": false,
+      "scholarship_page_found": true,
+      "discovery_notes": "Sitemap-first discovery found: program_catalog, admissions, scholarships. Not found: program_page, costs, documents.",
+      "claims": 0,
+      "claims_verified": 0,
+      "completeness": 0.0,
+      "eligibility": "NEEDS_OFFICIAL_CLARIFICATION",
+      "funding_fit": "UNKNOWN",
+      "scholarships_found": 0,
+      "false_positives": []
+    }
+  ],
+  "totals": {
+    "institutions": 10,
+    "reached": 9,
+    "blocked": 1,
+    "failed": 0,
+    "program_pages_found": 8,
+    "scholarship_pages_found": 10,
+    "claims": 51,
+    "false_positives": 0
+  }
+}

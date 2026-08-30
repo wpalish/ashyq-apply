@@ -8,13 +8,86 @@ from sqlalchemy.orm import Session
 from app.config import get_settings
 from app.db import get_session
 from app.domain import enums
-from app.domain.currency import RATE_DATE, RATE_SOURCE, supported_currencies
+from app.domain.currency import (
+    MAX_RATE_AGE_DAYS,
+    FxUnavailable,
+    provider_for,
+    supported_currencies,
+)
+from app.jobs.versioning import (
+    BUILD_VERSION,
+    PAYLOAD_SCHEMA_VERSION,
+    SUPPORTED_PAYLOAD_SCHEMA_VERSIONS,
+)
 from app.models import CURRENT_SCHEMA_VERSION, AuditEvent
 from app.security import Principal, get_principal
 
 router = APIRouter(prefix="/api", tags=["meta"])
 
 
+def _currency_limit(settings) -> str:
+    """One sentence about this instance's rates, true for this instance."""
+    meta = _currency_meta(settings)
+    if not meta["available"]:
+        return (
+            f"No exchange rate is available ({meta.get('reason', 'unknown reason')}); "
+            "amounts stay in their source currency and funding gaps are not computed."
+        )
+    if not meta.get("authoritative", False):
+        return (
+            f"Currency rates are a bundled snapshot dated {meta['rate_date']}, not a "
+            "live feed, and every converted amount is labelled an estimate."
+        )
+    return (
+        f"Currency rates come from {meta['provider']}, observed {meta['rate_date']}. "
+        f"A rate older than {meta['max_age_days']} days, or a currency the provider "
+        "does not publish, is refused rather than guessed."
+    )
+
+
+def _currency_meta(settings) -> dict:
+    """What rates a run on *this* instance would use.
+
+    Built from the configuration, not from process state: there is no global
+    provider any more, and reporting a default would describe an instance
+    nobody is running. When the provider cannot be reached, `supported` is
+    empty — advertising the bundled table's currencies as available live
+    conversions is exactly the silent fallback this product refuses.
+    """
+    provider = provider_for(settings.fx_provider, demo=settings.demo_mode)
+    try:
+        snap = provider.snapshot()
+    except FxUnavailable as exc:
+        return {
+            "supported": [],
+            "provider": getattr(provider, "provider_id", "unknown"),
+            "available": False,
+            "reason": str(exc),
+            "max_age_days": MAX_RATE_AGE_DAYS,
+        }
+    return {
+        "supported": supported_currencies(provider),
+        "provider": snap.provider_id,
+        "available": True,
+        "rate_date": snap.observed_on.isoformat(),
+        "rate_source": snap.source_url,
+        "age_days": snap.age_days,
+        "max_age_days": MAX_RATE_AGE_DAYS,
+        # False means a dated bundled table, and every conversion made from it
+        # is labelled an estimate.
+        "authoritative": snap.authoritative,
+    }
+
+
+# GET and HEAD. A health endpoint exists to be probed by other systems, and a
+# good deal of uptime monitoring sends HEAD by default — which answered 405.
+#
+# Two decorators rather than `api_route(methods=[...])`: that form emits one
+# OpenAPI operation per method, both named after the function, and FastAPI
+# warns about the duplicate operation ID — which breaks generated clients. HEAD
+# is the same response without a body, so it is registered and kept out of the
+# schema.
+@router.head("/health", include_in_schema=False)
 @router.get("/health")
 def health() -> dict:
     s = get_settings()
@@ -24,6 +97,12 @@ def health() -> dict:
         "schema_version": CURRENT_SCHEMA_VERSION,
         "respect_robots": s.respect_robots,
         "browser_tier": s.enable_browser_tier,
+        # Deployment metadata. During a rolling deployment two builds are
+        # alive; when the queue stalls, the first question is which pair
+        # disagreed, and this answers it without reading anyone's data.
+        "build": BUILD_VERSION,
+        "payload_schema_version": PAYLOAD_SCHEMA_VERSION,
+        "supported_payload_schema_versions": sorted(SUPPORTED_PAYLOAD_SCHEMA_VERSIONS),
     }
 
 
@@ -45,11 +124,7 @@ def capabilities() -> dict:
             {"name": "web-government", "role": "post-study work rules", "live": True},
         ],
         "fetch_tiers": ["structured data", "plain HTTP", "Playwright render", "PDF parsing"],
-        "currency": {
-            "supported": supported_currencies(),
-            "rate_date": RATE_DATE.isoformat(),
-            "rate_source": RATE_SOURCE,
-        },
+        "currency": _currency_meta(s),
         "guarantees": [
             "robots.txt is honoured before every fetch, including the browser tier",
             "applicant data is never placed in an outbound URL",
@@ -60,7 +135,10 @@ def capabilities() -> dict:
         "limits": [
             "The product reports published criteria only. It cannot predict an admission or an award.",
             "Grade conversions are approximations and are never applied without the user accepting one.",
-            "Currency rates are a dated static snapshot, not a live feed.",
+            # Stated from the configured provider. It read "a dated static
+            # snapshot, not a live feed" unconditionally, which was untrue on
+            # any instance configured for live rates.
+            _currency_limit(s),
         ],
     }
 

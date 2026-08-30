@@ -123,8 +123,11 @@ export function ExportScreen() {
                 </ul>
               </div>
               <p className="xs faint" style={{ marginTop: 'var(--space-3)' }}>
-                Currency figures converted using a static snapshot dated{' '}
-                {capabilities.currency.rate_date}. {capabilities.currency.rate_source}
+                {!capabilities.currency.available
+                  ? `No exchange rate is available (${capabilities.currency.reason ?? 'unknown reason'}). Amounts are shown in their original currency and funding gaps are reported as not computable.`
+                  : capabilities.currency.authoritative
+                    ? `Currency figures converted at ${capabilities.currency.provider} rates observed on ${capabilities.currency.rate_date}. ${capabilities.currency.rate_source}`
+                    : `Currency figures converted using a bundled snapshot dated ${capabilities.currency.rate_date}, which is not a live rate. Converted amounts are shown as estimates.`}
               </p>
             </div>
           </Panel>

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from functools import lru_cache
 from pathlib import Path
+from typing import ClassVar, Literal
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -39,6 +40,12 @@ class Settings(BaseSettings):
     fetch_contact: str = ""
 
     enable_browser_tier: bool = True
+    #: Where exchange rates come from. "ecb" is the European Central Bank's
+    #: free daily reference feed; "static" is the dated table bundled with the
+    #: app, which is deterministic and marks every conversion an estimate.
+    #: There is no silent fallback between them — if the chosen provider has no
+    #: usable rate, amounts stay in their source currency.
+    fx_provider: Literal["ecb", "static"] = "ecb"
     candidate_limit: int = 40
     verify_limit: int = 20
     academic_year: str = "2026/27"
@@ -75,12 +82,31 @@ class Settings(BaseSettings):
     def cors_origin_list(self) -> list[str]:
         return [o.strip() for o in self.cors_origins.split(",") if o.strip()]
 
-    def ensure_dirs(self) -> None:
-        directories = [self.cache_dir, self.export_dir]
-        if self.database_url.startswith("sqlite:///"):
-            directories.append(Path(self.database_url.removeprefix("sqlite:///")).parent)
-        for d in directories:
-            d.mkdir(parents=True, exist_ok=True)
+    #: Where each container role writes, as absolute paths inside the image.
+    #:
+    #: Declared rather than discovered so `docker-compose.yml` can be checked
+    #: against it. The API's list is empty on purpose: it streams exports from
+    #: memory and never touches the HTTP cache, which belongs to the research
+    #: pipeline running in the worker. It was creating both at import anyway,
+    #: which is what made it crash under `read_only: true` and fail the first
+    #: real container run.
+    CONTAINER_WRITABLE_PATHS: ClassVar[dict[str, tuple[str, ...]]] = {
+        "api": (),
+        # `/app/data` is the HTTP cache, on a volume so it survives restarts.
+        # `/tmp` holds the liveness file, and is container-local on purpose:
+        # scaled workers share the volume, and one shared liveness file let a
+        # healthy worker vouch for its wedged neighbours.
+        "worker": ("/app/data", "/tmp"),
+    }
+
+    @classmethod
+    def container_writable_paths(cls, role: str) -> tuple[str, ...]:
+        """Paths `role` may write to in its container.
+
+        Raises on an unknown role rather than returning nothing: a check that
+        silently passes for a typo is not a check.
+        """
+        return cls.CONTAINER_WRITABLE_PATHS[role]
 
     def validate_runtime(self) -> None:
         """Reject configurations that would expose applicant data unsafely."""
@@ -112,6 +138,15 @@ class Settings(BaseSettings):
 
 @lru_cache
 def get_settings() -> Settings:
-    s = Settings()
-    s.ensure_dirs()
-    return s
+    """Read configuration. Deliberately does not touch the disk.
+
+    This used to call `ensure_dirs()`, so importing anything that reads
+    settings created directories as a side effect — and raised `PermissionError`
+    where they could not be created. On a read-only root filesystem that is
+    every start, which is how the API container failed its healthcheck while
+    trying to create two directories it never writes to.
+
+    Whatever writes creates what it needs: `ResponseCache` makes its own root,
+    and `ensure_database_parent` makes a SQLite file's directory.
+    """
+    return Settings()

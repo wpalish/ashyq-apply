@@ -31,7 +31,7 @@ const SCREENS: { id: ScreenId; num: string; label: string; group: string }[] = [
   { id: 'shortlist', num: '04', label: 'University shortlist', group: 'Research' },
   { id: 'funding', num: '05', label: 'Funding comparison', group: 'Research' },
   { id: 'sources', num: '06', label: 'Sources & conflicts', group: 'Research' },
-  { id: 'approved', num: '07', label: 'Approved universities', group: 'Decide' },
+  { id: 'approved', num: '07', label: 'Your decisions', group: 'Decide' },
   { id: 'documents', num: '08', label: 'Documents & deadlines', group: 'Decide' },
   { id: 'export', num: '09', label: 'Export & data deletion', group: 'Decide' },
 ];
@@ -106,7 +106,7 @@ export default function App() {
     <div className="app">
       <aside className="sidebar">
         <div className="brand">
-          <span className="brand__mark">UniMatch</span>
+          <span className="brand__mark">ASHYQ Apply</span>
           <span className="brand__tag">
             Evidence-backed university &amp; scholarship shortlisting
           </span>
@@ -151,7 +151,7 @@ export default function App() {
             </select>
           </div>
           <p className="xs faint" style={{ margin: 0 }}>
-            Published criteria only. UniMatch never predicts admission or funding outcomes.
+            Published criteria only. ASHYQ Apply never predicts admission or funding outcomes.
           </p>
         </div>
       </aside>
@@ -163,7 +163,7 @@ export default function App() {
           </Chip>
           {run && (
             <>
-              <Chip tone="neutral" mono>run {run.id.slice(0, 8)}</Chip>
+              <Chip tone="neutral" mono volatile="run id">run {run.id.slice(0, 8)}</Chip>
               <Chip tone={run.stage === 'failed' ? 'risk' : 'neutral'}>
                 {run.stage.replace(/_/g, ' ')}
               </Chip>

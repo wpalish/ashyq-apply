@@ -14,10 +14,22 @@ const TONE_CLASS: Record<Tone, string> = {
 };
 
 export function Chip({
-  tone = 'neutral', children, title, mono = false,
-}: { tone?: Tone; children: ReactNode; title?: string; mono?: boolean }) {
+  tone = 'neutral', children, title, mono = false, volatile: volatileLabel,
+}: {
+  tone?: Tone; children: ReactNode; title?: string; mono?: boolean;
+  /**
+   * Marks a value that differs on every run — a run id, a timestamp. The
+   * documentation screenshots hold these still, so a rerun with no code change
+   * does not rewrite forty tracked PNGs. Nothing else reads it.
+   */
+  volatile?: string;
+}) {
   return (
-    <span className={`chip ${TONE_CLASS[tone]} ${mono ? 'chip--mono' : ''}`} title={title}>
+    <span
+      className={`chip ${TONE_CLASS[tone]} ${mono ? 'chip--mono' : ''}`}
+      title={title}
+      data-volatile={volatileLabel}
+    >
       {children}
     </span>
   );
@@ -38,9 +50,53 @@ export function StatusChip({ status, tone }: { status: string; tone: Tone }) {
   );
 }
 
+/**
+ * A panel, optionally foldable.
+ *
+ * The applicant form runs to ten panels and about forty fields, and most of
+ * them are lists — subject grades, curriculum results, activities,
+ * achievements — that a first-time applicant has nothing to put in. Open, they
+ * bury the fields that decide whether a search can run at all.
+ *
+ * Folding uses <details>, so it is keyboard-operable and announced as a
+ * disclosure without any state or ARIA of our own. A folded panel still says
+ * what it holds, so nothing is hidden without a count.
+ */
 export function Panel({
-  title, hint, children, sunken = false, actions,
-}: { title?: string; hint?: string; children: ReactNode; sunken?: boolean; actions?: ReactNode }) {
+  title, hint, hintSuffix, children, sunken = false, actions,
+  collapsible = false, defaultOpen = false, summary,
+}: {
+  title?: string; hint?: string; hintSuffix?: string; children: ReactNode;
+  sunken?: boolean; actions?: ReactNode; collapsible?: boolean;
+  defaultOpen?: boolean; summary?: string;
+}) {
+  const body = (
+    <>
+      {(hint || hintSuffix) && (
+        <p className="panel__hint" style={{ marginBottom: 'var(--space-4)' }}>
+          {hint}
+          {/* Marked separately so a documentation screenshot can hold it
+              still. A generation timestamp changes on every run, which made
+              forty tracked PNGs differ after every suite. */}
+          {hintSuffix && <> <span data-volatile="timestamp">{hintSuffix}</span></>}
+        </p>
+      )}
+      {children}
+    </>
+  );
+
+  if (collapsible) {
+    return (
+      <details className={`panel panel--foldable ${sunken ? 'panel--sunken' : ''}`} open={defaultOpen}>
+        <summary className="panel__summary">
+          <h2 className="panel__title">{title}</h2>
+          {summary && <span className="panel__count small muted">{summary}</span>}
+        </summary>
+        <div className="panel__body">{body}</div>
+      </details>
+    );
+  }
+
   return (
     <section className={`panel ${sunken ? 'panel--sunken' : ''}`}>
       {(title || actions) && (
@@ -49,8 +105,7 @@ export function Panel({
           {actions}
         </div>
       )}
-      {hint && <p className="panel__hint" style={{ marginBottom: 'var(--space-4)' }}>{hint}</p>}
-      {children}
+      {body}
     </section>
   );
 }

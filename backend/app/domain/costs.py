@@ -8,7 +8,7 @@ reports that it will not compute, and says why.
 
 from __future__ import annotations
 
-from app.domain.currency import UnsupportedCurrency, convert
+from app.domain.currency import FxProvider, FxUnavailable, convert
 from app.domain.enums import CostCategory, FundingClassification
 from app.schemas.money import Money
 from app.schemas.result import CostBreakdown, FundingGap, Scholarship
@@ -22,7 +22,10 @@ CORE_COST_CATEGORIES = (
 )
 
 
-def total_cost(breakdown: CostBreakdown, target_currency: str = "USD") -> Money | None:
+def total_cost(
+    breakdown: CostBreakdown, target_currency: str = "USD",
+    *, provider: FxProvider | None = None,
+) -> Money | None:
     """Sum a cost breakdown, refusing to mix academic years.
 
     A published ``total`` always wins over a reconstructed sum, because the
@@ -33,8 +36,8 @@ def total_cost(breakdown: CostBreakdown, target_currency: str = "USD") -> Money 
         # currency, and returning it unconverted would let a CAD total be netted
         # against a USD award.
         try:
-            converted = convert(breakdown.total, target_currency)
-        except UnsupportedCurrency:
+            converted = convert(breakdown.total, target_currency, provider=provider)
+        except FxUnavailable:
             return None
         return Money(
             amount=converted.amount,
@@ -58,8 +61,8 @@ def total_cost(breakdown: CostBreakdown, target_currency: str = "USD") -> Money 
     is_estimate = False
     for money in breakdown.items.values():
         try:
-            conv = convert(money, target_currency)
-        except UnsupportedCurrency:
+            conv = convert(money, target_currency, provider=provider)
+        except FxUnavailable:
             return None
         total += conv.amount
         low += conv.range_low if conv.range_low is not None else conv.amount
@@ -76,12 +79,15 @@ def total_cost(breakdown: CostBreakdown, target_currency: str = "USD") -> Money 
     )
 
 
-def _award_amount(s: Scholarship, tuition: Money | None, target_currency: str) -> Money | None:
+def _award_amount(
+    s: Scholarship, tuition: Money | None, target_currency: str,
+    *, provider: FxProvider | None = None,
+) -> Money | None:
     """Resolve an award to a currency amount, including percentage-of-tuition."""
     if s.amount is not None:
         try:
-            conv = convert(s.amount, target_currency)
-        except UnsupportedCurrency:
+            conv = convert(s.amount, target_currency, provider=provider)
+        except FxUnavailable:
             return None
         return Money(
             amount=conv.amount,
@@ -91,8 +97,8 @@ def _award_amount(s: Scholarship, tuition: Money | None, target_currency: str) -
         )
     if s.amount_is_percentage_of_tuition is not None and tuition is not None:
         try:
-            conv_t = convert(tuition, target_currency)
-        except UnsupportedCurrency:
+            conv_t = convert(tuition, target_currency, provider=provider)
+        except FxUnavailable:
             return None
         return Money(
             amount=round(conv_t.amount * s.amount_is_percentage_of_tuition / 100.0, 2),
@@ -107,11 +113,18 @@ def compute_funding_gap(
     costs: CostBreakdown,
     scholarships: list[Scholarship],
     target_currency: str = "USD",
+    *,
+    provider: FxProvider | None = None,
 ) -> FundingGap:
-    """estimated_funding_gap = cost of attendance − confirmed aid − stackable aid."""
+    """estimated_funding_gap = cost of attendance − confirmed aid − stackable aid.
+
+    ``provider`` is the run's own exchange-rate source. It is passed explicitly
+    rather than read from process state, so two runs in flight cannot end up
+    sharing — or swapping — the rates their gaps were computed against.
+    """
     warnings: list[str] = []
 
-    cost = total_cost(costs, target_currency)
+    cost = total_cost(costs, target_currency, provider=provider)
     if cost is None:
         years = sorted({m.academic_year for m in costs.items.values() if m.academic_year})
         if len(years) > 1:
@@ -148,7 +161,7 @@ def compute_funding_gap(
     # without the other.
     best: tuple[Money, Scholarship] | None = None
     for s in eligible:
-        amt = _award_amount(s, tuition, target_currency)
+        amt = _award_amount(s, tuition, target_currency, provider=provider)
         if amt is None:
             warnings.append(
                 f"'{s.name}': no officially published amount, excluded from the arithmetic."
@@ -184,7 +197,7 @@ def compute_funding_gap(
             )
     else:
         for s in others_offering_to_stack:
-            amt = _award_amount(s, tuition, target_currency)
+            amt = _award_amount(s, tuition, target_currency, provider=provider)
             if amt is not None:
                 stackable_total += amt.amount
 

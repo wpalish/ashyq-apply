@@ -11,7 +11,7 @@ Two asymmetries are deliberate:
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 
 from app.domain.enums import (
     SPECIFICITY_RANK,
@@ -111,6 +111,35 @@ def _check_numeric_minimum(
     )
 
 
+#: Months before an intake starts within which its application deadline can
+#: plausibly fall. Eighteen covers the early-decision routes that open more
+#: than a year ahead; anything earlier belongs to the previous cycle.
+DEADLINE_WINDOW_MONTHS = 18
+
+#: Roughly when each intake term begins, for measuring that window. Only the
+#: month matters, and only to within a month or two.
+_INTAKE_START_MONTH = {"fall": 9, "autumn": 9, "spring": 1, "summer": 6, "winter": 1}
+
+
+def _plausible_for_intake(deadline: date, profile: ApplicantProfileIn) -> bool:
+    """Whether a published deadline could belong to the applicant's intake.
+
+    A deadline is for one admission cycle. Comparing it to today answers "has
+    this date passed", which is not the same question as "is this my deadline",
+    and the two come apart exactly when a page still shows last cycle's date.
+    """
+    term = (profile.context.intake_term or "fall").lower()
+    year = profile.context.intake_year
+    if not year:
+        return True  # nothing to scope against; fall back to the date comparison
+    month = _INTAKE_START_MONTH.get(term, 9)
+    start = date(year, month, 1)
+    earliest = start - timedelta(days=DEADLINE_WINDOW_MONTHS * 31)
+    # A deadline after the intake starts is odd but not evidence of the wrong
+    # cycle; only "far too early" identifies a previous one.
+    return deadline >= earliest
+
+
 def evaluate_program(
     profile: ApplicantProfileIn,
     claims: list[Claim],
@@ -147,6 +176,30 @@ def evaluate_program(
                     published_value=deadline_claim.normalized_value,
                     status=EligibilityStatus.NEEDS_OFFICIAL_CLARIFICATION,
                     explanation="A deadline was published but could not be parsed into a date.",
+                    claim_ids=[deadline_claim.source_url],
+                )
+            )
+        elif not _plausible_for_intake(parsed, profile):
+            # A deadline from another admission cycle is published, confirmed,
+            # and not this applicant's requirement. Uppsala shows "Application
+            # deadline 15 January 2026" on programme pages; read against a Fall
+            # 2027 applicant in August 2026 the date has passed, and using it as
+            # a hard filter eliminated the programme on the previous intake's
+            # deadline.
+            intake = f"{profile.context.intake_term.title()} {profile.context.intake_year}"
+            checks.append(
+                RequirementCheck(
+                    requirement="Admission deadline",
+                    published_value=parsed.isoformat(),
+                    applicant_value=today.isoformat(),
+                    status=EligibilityStatus.NEEDS_OFFICIAL_CLARIFICATION,
+                    is_hard_filter=False,
+                    explanation=(
+                        f"The page publishes {parsed.isoformat()}, which is too early to "
+                        f"be the deadline for the {intake} intake. The deadline for that "
+                        f"intake was not found, so this is a question for the admissions "
+                        f"office rather than a reason to rule the programme out."
+                    ),
                     claim_ids=[deadline_claim.source_url],
                 )
             )

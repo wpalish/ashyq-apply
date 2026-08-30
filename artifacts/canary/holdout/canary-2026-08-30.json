@@ -1,0 +1,1144 @@
+{
+  "accessed_at": "2026-08-30T07:01:52.038437+00:00",
+  "duration_seconds": 328.0,
+  "run_error": "ValueError: not enough values to unpack (expected 2, got 1)",
+  "institutions": [
+    {
+      "institution": "Trinity College Dublin",
+      "country": "Ireland",
+      "domain": "tcd.ie",
+      "access": "REACHED",
+      "robots_disallowed_requests": 0,
+      "pages_checked": 33,
+      "pages_failed": 9,
+      "failures": [
+        [
+          "https://www.tcd.ie/sitemap.xml",
+          "http_error: HTTP 404"
+        ],
+        [
+          "https://www.tcd.ie/sitemap_index.xml",
+          "http_error: HTTP 404"
+        ],
+        [
+          "https://www.tcd.ie/sitemap-index.xml",
+          "http_error: HTTP 404"
+        ],
+        [
+          "https://www.tcd.ie/sitemap/sitemap.xml",
+          "http_error: HTTP 404"
+        ],
+        [
+          "https://www.tcd.ie/media/tcd/calendar/undergraduate-studies/foundation-and-non-foundation-scholarships.pdf",
+          "http_error: HTTP 404"
+        ],
+        [
+          "https://www.tcd.ie/calendar/undergraduate-studies/foundation-and-non-foundation-scholarships.pdf",
+          "http_error: HTTP 404"
+        ],
+        [
+          "https://www.tcd.ie/academicregistry/exams/past-papers/scholarship",
+          "http_error: HTTP 401"
+        ],
+        [
+          "https://www.tcd.ie/academicregistry/exams/assets/local/council-minutes-24-10-12.pdf",
+          "http_error: HTTP 401"
+        ]
+      ],
+      "outcomes": {
+        "ok": 20,
+        "http_error": 9,
+        "cached": 4
+      },
+      "discovered": {
+        "program_catalog": [
+          "https://www.tcd.ie/courses",
+          "https://www.tcd.ie/az",
+          "https://www.tcd.ie/slscs/department-of-clinical-speech-and-language-studies"
+        ],
+        "program_page": [
+          "https://www.tcd.ie/swsp/courses/undergraduate/bachelor-in-social-studies",
+          "https://www.tcd.ie/courses/undergraduate/fees"
+        ],
+        "admissions": [
+          "https://www.tcd.ie/courses/postgraduate/how-to-apply",
+          "https://www.tcd.ie/courses/postgraduate/how-to-apply/entry-requirements",
+          "https://www.tcd.ie/courses/postgraduate/how-to-apply/international-students"
+        ],
+        "costs": [
+          "https://www.tcd.ie/academicregistry/fees-and-payments",
+          "https://www.tcd.ie/academicregistry/fees-and-payments/what-are-my-fees"
+        ],
+        "scholarships": [
+          "https://www.tcd.ie/academicregistry/exams/scholarship"
+        ]
+      },
+      "discovery_trace": {
+        "institution": "Trinity College Dublin",
+        "domain": "www.tcd.ie",
+        "sitemaps_declared": [],
+        "sitemaps_read": [],
+        "sitemap_urls_seen": 0,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {},
+        "selected": {
+          "program_catalog": [
+            "https://www.tcd.ie/courses",
+            "https://www.tcd.ie/az",
+            "https://www.tcd.ie/slscs/department-of-clinical-speech-and-language-studies"
+          ],
+          "program_page": [
+            "https://www.tcd.ie/swsp/courses/undergraduate/bachelor-in-social-studies",
+            "https://www.tcd.ie/courses/undergraduate/fees"
+          ],
+          "admissions": [
+            "https://www.tcd.ie/courses/postgraduate/how-to-apply",
+            "https://www.tcd.ie/courses/postgraduate/how-to-apply/entry-requirements",
+            "https://www.tcd.ie/courses/postgraduate/how-to-apply/international-students"
+          ],
+          "costs": [
+            "https://www.tcd.ie/academicregistry/fees-and-payments",
+            "https://www.tcd.ie/academicregistry/fees-and-payments/what-are-my-fees"
+          ],
+          "scholarships": [
+            "https://www.tcd.ie/academicregistry/exams/scholarship"
+          ]
+        },
+        "rejected_sample": [
+          [
+            "https://www.tcd.ie/scss",
+            "reads as irrelevant, not a programme page"
+          ],
+          [
+            "https://www.tcd.ie/courses/short-courses/a-z-of-short-courses/psychology-the-science-of-behaviour-and-mind",
+            "reads as unknown, not a programme page"
+          ],
+          [
+            "https://www.tcd.ie/courses/short-courses/a-z-of-short-courses/history-of-art---arts-of-astrology-science-and-belief-from-the-thirteenth-to-seventeenth-century-",
+            "reads as unknown, not a programme page"
+          ],
+          [
+            "https://www.tcd.ie/ssp/programmes/undergraduate/bess",
+            "reads as program_catalog, not a programme page"
+          ],
+          [
+            "https://www.tcd.ie/courses/undergraduate/your-trinity-pathways",
+            "reads as unknown, not a programme page"
+          ],
+          [
+            "https://www.tcd.ie/courses/undergraduate/your-trinity-education",
+            "reads as unknown, not a programme page"
+          ]
+        ],
+        "rejected_total": 6,
+        "errors": [
+          "https://www.tcd.ie/sitemap.xml: http_error \u2014 HTTP 404",
+          "https://www.tcd.ie/sitemap_index.xml: http_error \u2014 HTTP 404",
+          "https://www.tcd.ie/sitemap-index.xml: http_error \u2014 HTTP 404",
+          "https://www.tcd.ie/sitemap/sitemap.xml: http_error \u2014 HTTP 404",
+          "https://www.tcd.ie/ssp/programmes/undergraduate/bess reads as a catalogue; followed 27 programme links it lists",
+          "stopped after reading 8 programme candidates; others were left unchecked rather than guessed at"
+        ],
+        "used_navigation_fallback": true,
+        "kept_by_link_text": [
+          [
+            "https://www.tcd.ie/scss",
+            "Computer Science and Statistics, School of"
+          ],
+          [
+            "https://www.tcd.ie/scss",
+            "Computer Science and Statistics, School of"
+          ]
+        ],
+        "confirmed_programs": [
+          [
+            "https://www.tcd.ie/swsp/courses/undergraduate/bachelor-in-social-studies",
+            "Bachelor in Social Studies, Trinity College Dublin",
+            "program_detail"
+          ],
+          [
+            "https://www.tcd.ie/courses/undergraduate/fees",
+            "Undergraduate Fees",
+            "intake_specific_program"
+          ]
+        ],
+        "rendered_catalogues": [
+          [
+            "https://www.tcd.ie/ssp/programmes/undergraduate/bess",
+            0,
+            28
+          ]
+        ],
+        "relevance": {
+          "https://www.tcd.ie/scss": 16,
+          "https://www.tcd.ie/courses/short-courses/a-z-of-short-courses/psychology-the-science-of-behaviour-and-mind": 16,
+          "https://www.tcd.ie/courses/short-courses/a-z-of-short-courses/history-of-art---arts-of-astrology-science-and-belief-from-the-thirteenth-to-seventeenth-century-": 16,
+          "https://www.tcd.ie/ssp/programmes/undergraduate/bess": 13,
+          "https://www.tcd.ie/swsp/courses/undergraduate/bachelor-in-social-studies": 13,
+          "https://www.tcd.ie/courses/undergraduate/a-z-of-ug-courses": 13,
+          "https://www.tcd.ie/courses/undergraduate/your-trinity-pathways": 13,
+          "https://www.tcd.ie/courses/undergraduate/your-trinity-education": 13,
+          "https://www.tcd.ie/courses/undergraduate/fees": 13,
+          "https://www.tcd.ie/courses/undergraduate/courses/acting": 13,
+          "https://www.tcd.ie/courses/undergraduate/courses/ancient-and-medieval-history-and-culture": 13,
+          "https://www.tcd.ie/ssp/programmes/undergraduate/bess/disciplines": 13,
+          "https://www.tcd.ie/ssp/programmes/undergraduate/bess/course-structure": 13,
+          "https://www.tcd.ie/ssp/programmes/undergraduate/bess/module-outlines": 13,
+          "https://www.tcd.ie/ssp/programmes/undergraduate/bess/careers-and-destinations": 13,
+          "https://www.tcd.ie/ssp/programmes/undergraduate/bess/current-students": 13,
+          "https://www.tcd.ie/ssp/programmes/undergraduate/bess/international": 13,
+          "https://www.tcd.ie/ssp/programmes/undergraduate/bess/international/hec-paris-double-degree-programme": 13,
+          "https://www.tcd.ie/ssp/programmes/undergraduate/bess/faq": 13,
+          "https://www.tcd.ie/ssp/programmes/undergraduate/bess/scholarships-and-awards": 13,
+          "https://www.tcd.ie/ssp/programmes/undergraduate/bess/meet-our-graduates": 13,
+          "https://www.tcd.ie/ssp/programmes/undergraduate/bess/contact-us": 13,
+          "https://www.tcd.ie/ssp/programmes/undergraduate/bess/contact-us/transcripts": 13,
+          "https://www.tcd.ie/ssp/programmes/undergraduate/bess/contact-us/transcripts/form": 13,
+          "https://www.tcd.ie/ssp/programmes/undergraduate/ppes": 13,
+          "https://www.tcd.ie/ssp/programmes/undergraduate/ppes/disciplines": 13,
+          "https://www.tcd.ie/ssp/programmes/undergraduate/ppes/course-structure": 13,
+          "https://www.tcd.ie/ssp/programmes/undergraduate/ppes/module-outlines": 13,
+          "https://www.tcd.ie/ssp/programmes/undergraduate/ppes/careers-and-destinations": 13,
+          "https://www.tcd.ie/ssp/programmes/undergraduate/ppes/current-students": 13,
+          "https://www.tcd.ie/ssp/programmes/undergraduate/ppes/international": 13,
+          "https://www.tcd.ie/ssp/programmes/undergraduate/ppes/scholarships-and-awards": 13,
+          "https://www.tcd.ie/ssp/programmes/undergraduate/ppes/meet-our-graduates": 13,
+          "https://www.tcd.ie/ssp/programmes/undergraduate/ppes/contact-us": 13,
+          "https://www.tcd.ie/ssp/programmes/undergraduate/ppes/contact-us/transcripts": 13,
+          "https://www.tcd.ie/ssp/programmes/undergraduate/ppes/contact-us/transcripts/form": 13,
+          "https://www.tcd.ie/courses/undergraduate/courses/business-economics-and-social-studies": 13,
+          "https://www.tcd.ie/study/undergraduate/scholarships-funding": 12,
+          "https://www.tcd.ie/courses/microcredentials/by-school/school-of-natural-sciences": 12,
+          "https://www.tcd.ie/courses/microcredentials/by-school/school-of-natural-sciences/climate-leadership-development---micro-credential": 12
+        }
+      },
+      "programs": [
+        "https://www.tcd.ie/swsp/courses/undergraduate/bachelor-in-social-studies",
+        "https://www.tcd.ie/courses/undergraduate/fees"
+      ],
+      "program_page_found": true,
+      "scholarship_page_found": true,
+      "discovery_notes": "Sitemap-first discovery found: program_catalog, program_page, admissions, costs, scholarships. Not found: documents.",
+      "claims": 1,
+      "claims_verified": 1,
+      "completeness": 0.0,
+      "eligibility": "NEEDS_OFFICIAL_CLARIFICATION",
+      "funding_fit": "UNKNOWN",
+      "scholarships_found": 0,
+      "false_positives": []
+    },
+    {
+      "institution": "Uppsala University",
+      "country": "Sweden",
+      "domain": "uu.se",
+      "access": "REACHED",
+      "robots_disallowed_requests": 0,
+      "pages_checked": 43,
+      "pages_failed": 3,
+      "failures": [
+        [
+          "https://www.uu.se/sitemaps/articles-1.xml",
+          "too_large: body exceeded the 5,000,000 byte limit while streaming"
+        ],
+        [
+          "https://www.uu.se/sitemaps/articles-2.xml",
+          "too_large: body exceeded the 5,000,000 byte limit while streaming"
+        ],
+        [
+          "https://www.uu.se/sitemaps/pages-static-1.xml",
+          "too_large: body exceeded the 5,000,000 byte limit while streaming"
+        ]
+      ],
+      "outcomes": {
+        "ok": 36,
+        "too_large": 3,
+        "cached": 4
+      },
+      "discovered": {
+        "program_catalog": [
+          "https://www.uu.se/en/study/course?query=1MD041",
+          "https://www.uu.se/en/study/course?query=2HK138",
+          "https://www.uu.se/en/study/course?query=5NS270"
+        ],
+        "program_page": [
+          "https://www.uu.se/en/study/programme/bachelors-programme-leadership-quality-management-improvement",
+          "https://www.uu.se/en/study/programme/bachelors-programme-holocaust-and-genocide-studies",
+          "https://www.uu.se/en/study/programme/bachelors-programme-game-design-and-programming"
+        ],
+        "admissions": [
+          "https://www.uu.se/en/students/department/education/admission-and-registration",
+          "https://www.uu.se/download/18.547e7b518eeffced3d8d3f/1713533341549/Apply%20at%20antagning.se.pdf",
+          "https://www.uu.se/download/18.18980808191c263e5fa24f01/1726045327332/Apply%20at%20antagning.se.pdf"
+        ],
+        "costs": [
+          "https://www.uu.se/download/18.45a71dce18e9df64db7118a5/1712321866729/Cost%20effective%20methods-brief.pdf",
+          "https://www.uu.se/download/18.64989fef18fa42499d61ccb/1716469732695/Costus-barbata-spiralingefara-veckans-vaxt-vecka-13-ar-2010.pdf",
+          "https://www.uu.se/en/study/fees"
+        ],
+        "scholarships": [
+          "https://www.uu.se/download/18.12b15be118c8afb69641b905/1704274890776/Scholarship%20application%20eng%20june2020.pdf",
+          "https://www.uu.se/download/18.2f1542019a0f61851227c18/1761894049897/Bursary%20Application%20Uppsala%20ISLE%20SUMMER%20SCHOOL%202026.pdf",
+          "https://www.uu.se/download/18.1d08f73c199c8d3f8462de4e/1760945136733/Bursary%20Application%20Uppsala%20ISLE%20SUMMER%20SCHOOL%202026_REV2.pdf"
+        ]
+      },
+      "discovery_trace": {
+        "institution": "Uppsala University",
+        "domain": "www.uu.se",
+        "sitemaps_declared": [
+          "https://www.uu.se/sitemaps/index.xml"
+        ],
+        "sitemaps_read": [
+          "https://www.uu.se/sitemaps/index.xml",
+          "https://www.uu.se/sitemaps/articles-3.xml",
+          "https://www.uu.se/sitemaps/files-1.xml",
+          "https://www.uu.se/sitemaps/images-1.xml",
+          "https://www.uu.se/sitemaps/images-2.xml",
+          "https://www.uu.se/sitemaps/images-3.xml",
+          "https://www.uu.se/sitemaps/pages-dynamic-1.xml",
+          "https://www.uu.se/sitemaps/pages-dynamic-2.xml",
+          "https://www.uu.se/sitemaps/pages-dynamic-3.xml",
+          "https://www.uu.se/sitemaps/pages-dynamic-4.xml",
+          "https://www.uu.se/sitemaps/pages-dynamic-5.xml",
+          "https://www.uu.se/sitemaps/pages-dynamic-6.xml",
+          "https://www.uu.se/sitemaps/pages-dynamic-7.xml",
+          "https://www.uu.se/sitemaps/pages-dynamic-8.xml",
+          "https://www.uu.se/sitemaps/pages-dynamic-9.xml",
+          "https://www.uu.se/sitemaps/pages-static-2.xml"
+        ],
+        "sitemap_urls_seen": 299603,
+        "sitemap_urls_kept": 116,
+        "manual_seeds": {},
+        "selected": {
+          "program_catalog": [
+            "https://www.uu.se/en/study/course?query=1MD041",
+            "https://www.uu.se/en/study/course?query=2HK138",
+            "https://www.uu.se/en/study/course?query=5NS270"
+          ],
+          "program_page": [
+            "https://www.uu.se/en/study/programme/bachelors-programme-leadership-quality-management-improvement",
+            "https://www.uu.se/en/study/programme/bachelors-programme-holocaust-and-genocide-studies",
+            "https://www.uu.se/en/study/programme/bachelors-programme-game-design-and-programming"
+          ],
+          "admissions": [
+            "https://www.uu.se/en/students/department/education/admission-and-registration",
+            "https://www.uu.se/download/18.547e7b518eeffced3d8d3f/1713533341549/Apply%20at%20antagning.se.pdf",
+            "https://www.uu.se/download/18.18980808191c263e5fa24f01/1726045327332/Apply%20at%20antagning.se.pdf"
+          ],
+          "costs": [
+            "https://www.uu.se/download/18.45a71dce18e9df64db7118a5/1712321866729/Cost%20effective%20methods-brief.pdf",
+            "https://www.uu.se/download/18.64989fef18fa42499d61ccb/1716469732695/Costus-barbata-spiralingefara-veckans-vaxt-vecka-13-ar-2010.pdf",
+            "https://www.uu.se/en/study/fees"
+          ],
+          "scholarships": [
+            "https://www.uu.se/download/18.12b15be118c8afb69641b905/1704274890776/Scholarship%20application%20eng%20june2020.pdf",
+            "https://www.uu.se/download/18.2f1542019a0f61851227c18/1761894049897/Bursary%20Application%20Uppsala%20ISLE%20SUMMER%20SCHOOL%202026.pdf",
+            "https://www.uu.se/download/18.1d08f73c199c8d3f8462de4e/1760945136733/Bursary%20Application%20Uppsala%20ISLE%20SUMMER%20SCHOOL%202026_REV2.pdf"
+          ]
+        },
+        "rejected_sample": [
+          [
+            "",
+            "off the institution's domain"
+          ],
+          [
+            "",
+            "off the institution's domain"
+          ],
+          [
+            "",
+            "off the institution's domain"
+          ],
+          [
+            "",
+            "off the institution's domain"
+          ],
+          [
+            "",
+            "off the institution's domain"
+          ],
+          [
+            "",
+            "off the institution's domain"
+          ],
+          [
+            "",
+            "off the institution's domain"
+          ],
+          [
+            "",
+            "off the institution's domain"
+          ],
+          [
+            "",
+            "off the institution's domain"
+          ],
+          [
+            "",
+            "off the institution's domain"
+          ],
+          [
+            "",
+            "off the institution's domain"
+          ],
+          [
+            "",
+            "off the institution's domain"
+          ],
+          [
+            "",
+            "off the institution's domain"
+          ],
+          [
+            "",
+            "off the institution's domain"
+          ],
+          [
+            "",
+            "off the institution's domain"
+          ],
+          [
+            "",
+            "off the institution's domain"
+          ],
+          [
+            "",
+            "off the institution's domain"
+          ],
+          [
+            "https://www.uu.se/en/study/syllabus?query=e2ad7fa9-b824-11f0-9f99-58c54f714151",
+            "reads as general_admissions, not a programme page"
+          ],
+          [
+            "https://www.uu.se/en/study/syllabus?query=95263dbf-a05d-11f1-b5f8-7392428d47ab",
+            "reads as unknown, not a programme page"
+          ],
+          [
+            "https://www.uu.se/en/study/syllabus?query=b4dee61a-6eec-11f1-b645-10cec8c14f9f",
+            "reads as unknown, not a programme page"
+          ],
+          [
+            "https://www.uu.se/en/study/syllabus?query=f6ddc1f8-a03e-11f0-af30-479161e74134",
+            "reads as general_admissions, not a programme page"
+          ],
+          [
+            "https://www.uu.se/en/study/syllabus?query=ef2b0d29-52aa-11f1-b7d9-787cab1c4f17",
+            "reads as general_admissions, not a programme page"
+          ],
+          [
+            "https://www.uu.se/en/study/syllabus?query=ebfbd8d5-a438-11f0-a55c-2965f29b40d5",
+            "reads as general_admissions, not a programme page"
+          ],
+          [
+            "https://www.uu.se/en/study/syllabus?query=e6394c15-0d77-11f1-bf4f-d64a1a1d4914",
+            "reads as general_admissions, not a programme page"
+          ],
+          [
+            "https://www.uu.se/en/study/syllabus?query=dec2d7e3-3fa9-11f1-a3d9-799c0ab34617",
+            "reads as unknown, not a programme page"
+          ],
+          [
+            "https://www.uu.se/en/study/programme/bachelors-programme-game-design-and-project-management",
+            "reads as general_admissions, not a programme page"
+          ]
+        ],
+        "rejected_total": 26,
+        "errors": [
+          "https://www.uu.se/sitemaps/articles-1.xml: too_large \u2014 body exceeded the 5,000,000 byte limit while streaming",
+          "https://www.uu.se/sitemaps/articles-2.xml: too_large \u2014 body exceeded the 5,000,000 byte limit while streaming",
+          "https://www.uu.se/sitemaps/pages-static-1.xml: too_large \u2014 body exceeded the 5,000,000 byte limit while streaming",
+          "stopped after reading 200,000 sitemap URLs; the sitemap is larger than we read",
+          "stopped after reading 8 programme candidates; others were left unchecked rather than guessed at"
+        ],
+        "used_navigation_fallback": true,
+        "kept_by_link_text": [],
+        "confirmed_programs": [
+          [
+            "https://www.uu.se/en/study/programme/bachelors-programme-leadership-quality-management-improvement",
+            "Bachelor's Programme in Leadership \u2013 Quality Management \u2013 Improvement",
+            "program_detail"
+          ],
+          [
+            "https://www.uu.se/en/study/programme/bachelors-programme-holocaust-and-genocide-studies",
+            "Bachelor's Programme in Holocaust and Genocide Studies",
+            "program_detail"
+          ],
+          [
+            "https://www.uu.se/en/study/programme/bachelors-programme-game-design-and-programming",
+            "Bachelor's Programme in Game Design and Programming",
+            "program_detail"
+          ]
+        ],
+        "rendered_catalogues": [
+          [
+            "https://www.uu.se/en/study/course?query=1MD041",
+            32,
+            44
+          ],
+          [
+            "https://www.uu.se/en/study/course?query=2HK138",
+            31,
+            43
+          ]
+        ],
+        "relevance": {
+          "https://www.uu.se/en/study/programme/bachelors-programme-egyptology": 11,
+          "https://www.uu.se/en/study/programme/bachelors-programme-energy-transition-sustainability-and-leadership": 11,
+          "https://www.uu.se/en/study/programme/bachelors-programme-game-design-and-graphics": 11,
+          "https://www.uu.se/en/study/programme/bachelors-programme-game-design-and-level-design": 11,
+          "https://www.uu.se/en/study/programme/bachelors-programme-game-design-and-programming": 11,
+          "https://www.uu.se/en/study/programme/bachelors-programme-game-design-and-project-management": 11,
+          "https://www.uu.se/en/study/programme/bachelors-programme-holocaust-and-genocide-studies": 11,
+          "https://www.uu.se/en/study/programme/bachelors-programme-leadership-quality-management-improvement": 11,
+          "https://www.uu.se/en/study/bachelors-studies": 9,
+          "https://www.uu.se/en/study/bachelors-studies/bachelors-programmes": 9,
+          "https://www.uu.se/en/study/bachelors-studies/living-in-sweden": 7,
+          "https://www.uu.se/en/study/bachelors-studies/admitted": 7,
+          "https://www.uu.se/en/study/bachelors-studies/meet-us/our-digital-ambassadors": 7,
+          "https://www.uu.se/en/study/course?query=1MD041": 5,
+          "https://www.uu.se/en/study/course?query=2HK138": 5,
+          "https://www.uu.se/en/study/course?query=5NS270": 5,
+          "https://www.uu.se/en/study/course?query=5NS350": 5,
+          "https://www.uu.se/en/study/course?query=5NS290": 5,
+          "https://www.uu.se/en/study/course?query=3FS075": 5,
+          "https://www.uu.se/en/study/course?query=8PE105": 5,
+          "https://www.uu.se/en/study/course?query=5KS204": 5,
+          "https://www.uu.se/en/study/course?query=5KS226": 5,
+          "https://www.uu.se/en/study/course?query=5EN043": 5,
+          "https://www.uu.se/en/study/course?query=5EN041": 5,
+          "https://www.uu.se/en/study/course?query=5NS186": 5,
+          "https://www.uu.se/en/study/course?query=2FE028": 5,
+          "https://www.uu.se/en/study/course?query=5EN114": 5,
+          "https://www.uu.se/en/study/course?query=8PE207": 5,
+          "https://www.uu.se/en/study/course?query=2SC107": 5,
+          "https://www.uu.se/en/study/course?query=2SC012": 5,
+          "https://www.uu.se/en/study/course?query=5EN165": 5,
+          "https://www.uu.se/en/study/course?query=3OG029": 5,
+          "https://www.uu.se/en/study/course?query=2FE266": 5,
+          "https://www.uu.se/en/study/course?query=2FE033": 5,
+          "https://www.uu.se/en/study/course?query=2PE048": 5,
+          "https://www.uu.se/en/study/course?query=1TG236": 5,
+          "https://www.uu.se/en/study/course?query=2FE418": 5,
+          "https://www.uu.se/en/study/course?query=2FE032": 5,
+          "https://www.uu.se/en/study/course?query=2FE409": 5,
+          "https://www.uu.se/en/study/course?query=2FE159": 5
+        }
+      },
+      "programs": [
+        "https://www.uu.se/en/study/programme/bachelors-programme-leadership-quality-management-improvement",
+        "https://www.uu.se/en/study/programme/bachelors-programme-holocaust-and-genocide-studies",
+        "https://www.uu.se/en/study/programme/bachelors-programme-game-design-and-programming"
+      ],
+      "program_page_found": true,
+      "scholarship_page_found": true,
+      "discovery_notes": "Sitemap-first discovery found: program_catalog, program_page, admissions, costs, scholarships. Not found: documents.",
+      "claims": 2,
+      "claims_verified": 2,
+      "completeness": 0.0,
+      "eligibility": "NEEDS_OFFICIAL_CLARIFICATION",
+      "funding_fit": "UNKNOWN",
+      "scholarships_found": 0,
+      "false_positives": []
+    },
+    {
+      "institution": "University of Auckland",
+      "country": "New Zealand",
+      "domain": "auckland.ac.nz",
+      "access": "REACHED",
+      "robots_disallowed_requests": 0,
+      "pages_checked": 41,
+      "pages_failed": 2,
+      "failures": [
+        [
+          "https://www.auckland.ac.nz/en/intranet/research/funding-applications.html",
+          "http_error: HTTP 401"
+        ],
+        [
+          "https://www.auckland.ac.nz/en/intranet/research/funding-applications.html",
+          "http_error: HTTP 401"
+        ]
+      ],
+      "outcomes": {
+        "ok": 23,
+        "cached": 16,
+        "http_error": 2
+      },
+      "discovered": {
+        "program_catalog": [
+          "https://www.student.guest.auckland.ac.nz/guest-class-search"
+        ],
+        "program_page": [
+          "https://www.auckland.ac.nz/en/study/study-options/undergraduate-study-options.html",
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-biomedical-science.html",
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-biomedical-science-honours-bbiomedschons.html"
+        ],
+        "admissions": [
+          "https://www.auckland.ac.nz/en/study/applications-and-admissions/apply-now.html",
+          "https://www.auckland.ac.nz/en/study/applications-and-admissions/enrolment.html",
+          "https://www.auckland.ac.nz/en/study/applications-and-admissions/entry-requirements.html"
+        ],
+        "costs": [
+          "https://www.auckland.ac.nz/en/study/fees-and-money-matters.html"
+        ],
+        "scholarships": [
+          "https://www.auckland.ac.nz/en/study/scholarships-and-awards.html",
+          "https://www.auckland.ac.nz/en/study/international-students/scholarships-loans-and-funding.html",
+          "https://www.auckland.ac.nz/en/intranet/research/funding-applications/domestic-funding/national-research-collaborations/centres-research-excellence.html"
+        ]
+      },
+      "discovery_trace": {
+        "institution": "University of Auckland",
+        "domain": "www.auckland.ac.nz",
+        "sitemaps_declared": [
+          "https://www.auckland.ac.nz/sitemap-index.xml"
+        ],
+        "sitemaps_read": [
+          "https://www.auckland.ac.nz/sitemap-index.xml"
+        ],
+        "sitemap_urls_seen": 1,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {},
+        "selected": {
+          "program_catalog": [
+            "https://www.student.guest.auckland.ac.nz/guest-class-search"
+          ],
+          "program_page": [
+            "https://www.auckland.ac.nz/en/study/study-options/undergraduate-study-options.html",
+            "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-biomedical-science.html",
+            "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-biomedical-science-honours-bbiomedschons.html"
+          ],
+          "admissions": [
+            "https://www.auckland.ac.nz/en/study/applications-and-admissions/apply-now.html",
+            "https://www.auckland.ac.nz/en/study/applications-and-admissions/enrolment.html",
+            "https://www.auckland.ac.nz/en/study/applications-and-admissions/entry-requirements.html"
+          ],
+          "costs": [
+            "https://www.auckland.ac.nz/en/study/fees-and-money-matters.html"
+          ],
+          "scholarships": [
+            "https://www.auckland.ac.nz/en/study/scholarships-and-awards.html",
+            "https://www.auckland.ac.nz/en/study/international-students/scholarships-loans-and-funding.html",
+            "https://www.auckland.ac.nz/en/intranet/research/funding-applications/domestic-funding/national-research-collaborations/centres-research-excellence.html"
+          ]
+        },
+        "rejected_sample": [
+          [
+            "https://www.auckland.ac.nz/en/study/study-options/undergraduate-study-options/university-101-for-new-students.html",
+            "reads as unknown, not a programme page"
+          ],
+          [
+            "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option.html",
+            "reads as program_catalog, not a programme page"
+          ]
+        ],
+        "rejected_total": 2,
+        "errors": [
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option.html reads as a catalogue; followed 49 programme links it lists"
+        ],
+        "used_navigation_fallback": true,
+        "kept_by_link_text": [],
+        "confirmed_programs": [
+          [
+            "https://www.auckland.ac.nz/en/study/study-options/undergraduate-study-options.html",
+            "Undergraduate study options",
+            "program_detail"
+          ],
+          [
+            "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-biomedical-science.html",
+            "Bachelor of Biomedical Science BBiomedSc",
+            "program_detail"
+          ],
+          [
+            "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-biomedical-science-honours-bbiomedschons.html",
+            "Bachelor of Biomedical Science (Honours) BBiomedSc(Hons)",
+            "program_detail"
+          ]
+        ],
+        "rendered_catalogues": [
+          [
+            "https://www.student.guest.auckland.ac.nz/guest-class-search",
+            9,
+            18
+          ]
+        ],
+        "relevance": {
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-biomedical-science.html": 19,
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-biomedical-science-honours-bbiomedschons.html": 19,
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-health-sciences-bhsc.html": 19,
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-medical-science-honours-bmedschons.html": 19,
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-science-bsc.html": 19,
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-science-honours-bschons.html": 19,
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/certificate-in-health-sciences-certhsc.html": 15,
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/doctor-of-health-sciences-dhsc.html": 15,
+          "https://www.auckland.ac.nz/en/study/study-options/undergraduate-study-options.html": 11,
+          "https://www.auckland.ac.nz/en/study/study-options/undergraduate-study-options/university-101-for-new-students.html": 11,
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-architectural-studies-bas.html": 11,
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-arts-ba.html": 11,
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-arts-honours-bahons.html": 11,
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-commerce-bcom.html": 11,
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-commerce-honours-bcomhons.html": 11,
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-communication.html": 11,
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-dance-studies-bdancest.html": 11,
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-dance-studies-honours-bdancesthons.html": 11,
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-design.html": 11,
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-early-childhood-studies.html": 11,
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-education-tesol.html": 11,
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-education-teaching-bedtchg.html": 11,
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-education-teaching-honours-bedtchghons.html": 11,
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-engineering-honours-behons.html": 11,
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-fine-arts-bfa.html": 11,
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-fine-arts-honours-bfahons.html": 11,
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-global-studies-bglobalst.html": 11,
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-laws-llb.html": 11,
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-laws-honours-llbhons.html": 11,
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-medicine-and-bachelor-of-surgery-mbchb.html": 11,
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-music-bmus.html": 11,
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-music-honours-bmus-hons.html": 11,
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-nursing-bnurs.html": 11,
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-optometry-boptom.html": 11,
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-pharmacy-bpharm.html": 11,
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-pharmacy-honours-bpharmhons.html": 11,
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-property-bprop.html": 11,
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-psychology-bpsych.html": 11,
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-social-work-honours-bswhons.html": 11,
+          "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-sport-health-and-physical-education-bsporthpe.html": 11
+        }
+      },
+      "programs": [
+        "https://www.auckland.ac.nz/en/study/study-options/undergraduate-study-options.html",
+        "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-biomedical-science.html",
+        "https://www.auckland.ac.nz/en/study/study-options/find-a-study-option/bachelor-of-biomedical-science-honours-bbiomedschons.html"
+      ],
+      "program_page_found": true,
+      "scholarship_page_found": true,
+      "discovery_notes": "Sitemap-first discovery found: program_catalog, program_page, admissions, costs, scholarships. Not found: documents.",
+      "claims": 2,
+      "claims_verified": 2,
+      "completeness": 0.0,
+      "eligibility": "NEEDS_OFFICIAL_CLARIFICATION",
+      "funding_fit": "UNKNOWN",
+      "scholarships_found": 0,
+      "false_positives": []
+    },
+    {
+      "institution": "University of Cape Town",
+      "country": "South Africa",
+      "domain": "uct.ac.za",
+      "access": "REACHED",
+      "robots_disallowed_requests": 0,
+      "pages_checked": 48,
+      "pages_failed": 0,
+      "failures": [],
+      "outcomes": {
+        "ok": 48
+      },
+      "discovered": {
+        "program_catalog": [
+          "https://uct.ac.za/az-list",
+          "https://uct.ac.za/staff/a-z-list",
+          "https://uct.ac.za/students/a-z-list"
+        ],
+        "admissions": [
+          "https://uct.ac.za/students/applications/international-applicants",
+          "https://uct.ac.za/mastercardfdn/application-form",
+          "https://uct.ac.za/students/applications/key-dates"
+        ],
+        "costs": [
+          "https://uct.ac.za/rci/costing",
+          "https://uct.ac.za/eresearch/costs",
+          "https://uct.ac.za/students/fees-funding/fees"
+        ],
+        "scholarships": [
+          "https://uct.ac.za/rci/funding",
+          "https://uct.ac.za/rci/album/funding-guide",
+          "https://uct.ac.za/kjbathe-leadership/scholarships"
+        ]
+      },
+      "discovery_trace": {
+        "institution": "University of Cape Town",
+        "domain": "www.uct.ac.za",
+        "sitemaps_declared": [
+          "https://uct.ac.za/sitemap.xml"
+        ],
+        "sitemaps_read": [
+          "https://uct.ac.za/sitemap.xml",
+          "https://uct.ac.za/sitemap.xml?page=1",
+          "https://uct.ac.za/international/sitemap.xml?page=1",
+          "https://uct.ac.za/mastercardfdn/sitemap.xml?page=1",
+          "https://uct.ac.za/research-support-hub/sitemap.xml?page=1",
+          "https://uct.ac.za/oic/sitemap.xml?page=1",
+          "https://uct.ac.za/detawu/sitemap.xml?page=1",
+          "https://uct.ac.za/eresearch/sitemap.xml?page=1",
+          "https://uct.ac.za/staff/sitemap.xml?page=1",
+          "https://uct.ac.za/students/sitemap.xml?page=1",
+          "https://uct.ac.za/casewritingcentre/sitemap.xml?page=1",
+          "https://uct.ac.za/connect-meet-collaborate/sitemap.xml?page=1",
+          "https://uct.ac.za/art-collection/sitemap.xml?page=1",
+          "https://uct.ac.za/dsa/sitemap.xml?page=1",
+          "https://uct.ac.za/rci/sitemap.xml?page=1",
+          "https://uct.ac.za/social-responsiveness/sitemap.xml?page=1",
+          "https://uct.ac.za/kjbathe-leadership/sitemap.xml?page=1",
+          "https://uct.ac.za/institutional-planning/sitemap.xml?page=1",
+          "https://uct.ac.za/postgraduate-hub/sitemap.xml?page=1",
+          "https://uct.ac.za/berthacentre/sitemap.xml?page=1",
+          "https://uct.ac.za/studyabroad/sitemap.xml?page=1",
+          "https://uct.ac.za/knowledgeco-op/sitemap.xml?page=1",
+          "https://uct.ac.za/src/sitemap.xml?page=1",
+          "https://uct.ac.za/student-systems-support/sitemap.xml?page=1",
+          "https://uct.ac.za/gsblibrary/sitemap.xml?page=1",
+          "https://uct.ac.za/sanbris/sitemap.xml?page=1",
+          "https://uct.ac.za/gsb-research/sitemap.xml?page=1",
+          "https://uct.ac.za/researcher-development-academy/sitemap.xml?page=1",
+          "https://uct.ac.za/radio/sitemap.xml?page=1",
+          "https://uct.ac.za/uct-day/sitemap.xml?page=1"
+        ],
+        "sitemap_urls_seen": 3842,
+        "sitemap_urls_kept": 157,
+        "manual_seeds": {},
+        "selected": {
+          "program_catalog": [
+            "https://uct.ac.za/az-list",
+            "https://uct.ac.za/staff/a-z-list",
+            "https://uct.ac.za/students/a-z-list"
+          ],
+          "admissions": [
+            "https://uct.ac.za/students/applications/international-applicants",
+            "https://uct.ac.za/mastercardfdn/application-form",
+            "https://uct.ac.za/students/applications/key-dates"
+          ],
+          "costs": [
+            "https://uct.ac.za/rci/costing",
+            "https://uct.ac.za/eresearch/costs",
+            "https://uct.ac.za/students/fees-funding/fees"
+          ],
+          "scholarships": [
+            "https://uct.ac.za/rci/funding",
+            "https://uct.ac.za/rci/album/funding-guide",
+            "https://uct.ac.za/kjbathe-leadership/scholarships"
+          ]
+        },
+        "rejected_sample": [
+          [
+            "https://uct.ac.za/mastercardfdn/apply-mastercard-foundation-scholars-program",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://uct.ac.za/mastercardfdn/about-program/about-mastercard-foundation",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://uct.ac.za/students/fees-funding-postgraduate-degree-funding/postgraduate-degree-funding-overview",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://uct.ac.za/students/current-students-doctoral-candidates/doctoral-candidates-overview",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://uct.ac.za/students/faculty-humanities-registration/postgraduate",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://uct.ac.za/students/prospective-students/postgraduate-studies",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://uct.ac.za/students/current-students-funding/postgraduate-degree-funding-overview",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "",
+            "off the institution's domain"
+          ],
+          [
+            "https://uct.ac.za/postgraduate-hub/unsure/joint-degrees",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://uct.ac.za/postgraduate-hub/courses/programmes",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://uct.ac.za/postgraduate-hub/courses/online-courses",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://uct.ac.za/postgraduate-hub/courses/courses-faculty",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://uct.ac.za/postgraduate-hub/courses/faculties",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://uct.ac.za/postgraduate-hub/courses",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://uct.ac.za/gsb-research/phd-programme",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://uct.ac.za/oic/programmes/curriculum",
+            "reads as unknown, not a programme page"
+          ],
+          [
+            "https://uct.ac.za/oic/programmes/cultural-change",
+            "reads as unknown, not a programme page"
+          ],
+          [
+            "https://uct.ac.za/oic/programmes/prevention-education",
+            "reads as unknown, not a programme page"
+          ],
+          [
+            "https://uct.ac.za/mastercardfdn/about-program/program-team",
+            "reads as unknown, not a programme page"
+          ],
+          [
+            "https://uct.ac.za/mastercardfdn/about-program/program-partners",
+            "reads as unknown, not a programme page"
+          ],
+          [
+            "https://uct.ac.za/international/programmes/occasional-studies-non-degree-purposes",
+            "reads as unknown, not a programme page"
+          ],
+          [
+            "https://uct.ac.za/international/programmes/join-international-community",
+            "reads as program_catalog, not a programme page"
+          ],
+          [
+            "https://uct.ac.za/international/programmes/international-researchers-affiliating-uct",
+            "reads as unknown, not a programme page"
+          ]
+        ],
+        "rejected_total": 23,
+        "errors": [
+          "https://uct.ac.za/international/programmes/join-international-community reads as a catalogue; followed 3 programme links it lists",
+          "stopped after reading 8 programme candidates; others were left unchecked rather than guessed at",
+          "no programme page was found; only a catalogue, which cannot confirm a programme"
+        ],
+        "used_navigation_fallback": true,
+        "kept_by_link_text": [],
+        "confirmed_programs": [],
+        "rendered_catalogues": [
+          [
+            "https://uct.ac.za/international/programmes/join-international-community",
+            0,
+            8
+          ]
+        ],
+        "relevance": {
+          "https://uct.ac.za/students/applications/international-applicants": 7,
+          "https://uct.ac.za/explore-uct-visit-uct/uct-visits-overview": 5,
+          "https://uct.ac.za/research-innovation/research-innovation-overview": 5,
+          "https://uct.ac.za/research-innovation-publications/publications-overview": 5,
+          "https://uct.ac.za/social-responsiveness-overview": 5,
+          "https://uct.ac.za/explore-uct-transformation/employment-equity-overview": 5,
+          "https://uct.ac.za/explore-uct-transformation/transformation-overview": 5,
+          "https://uct.ac.za/uct-bristol-professorship-and-fellowship-programme": 5,
+          "https://uct.ac.za/az-list": 5,
+          "https://uct.ac.za/international/programmes/african-partnerships-programmes": 5,
+          "https://uct.ac.za/international/uct-international-student-exchange-programme": 5,
+          "https://uct.ac.za/international/programmes-engage-innovative-dynamic-and-immersive-african-experience/standardised-programmes": 5,
+          "https://uct.ac.za/international/who-can-apply-overview": 5,
+          "https://uct.ac.za/international/programmes/join-africas-largest-and-most-dynamic-study-abroad-programmes": 5,
+          "https://uct.ac.za/international/programmes-engage-innovative-dynamic-and-immersive-african-experience/customised-programmes": 5,
+          "https://uct.ac.za/international/eligibility-overview": 5,
+          "https://uct.ac.za/international/fees-funding-us-federal-aid-entrance-exit-counselling/entrance-and-exit-counselling-overview": 5,
+          "https://uct.ac.za/mastercardfdn/scholarship-overview": 5,
+          "https://uct.ac.za/research-support-hub/integrity/research-integrity-overview": 5,
+          "https://uct.ac.za/research-support-hub/proposals-overview": 5,
+          "https://uct.ac.za/research-support-hub/era-system/era-systems-overview": 5,
+          "https://uct.ac.za/oic/sasli-programme": 5,
+          "https://uct.ac.za/eresearch/online-courses": 5,
+          "https://uct.ac.za/staff/campus-safety-overview": 5,
+          "https://uct.ac.za/staff/inclusivity-survey-overview": 5,
+          "https://uct.ac.za/staff/a-z-list": 5,
+          "https://uct.ac.za/staff/support-whistle-blowing-hotline/whistle-blowing-hotline-overview": 5,
+          "https://uct.ac.za/students/services-transport-parking-uct-shuttle/uct-shuttle-overview": 5,
+          "https://uct.ac.za/students/current-students-student-records/student-records-overview": 5,
+          "https://uct.ac.za/students/support/food-programme": 5,
+          "https://uct.ac.za/students/services-access-control/access-control-overview": 5,
+          "https://uct.ac.za/students/current-students-exams/exams-overview": 5,
+          "https://uct.ac.za/students/a-z-list": 5,
+          "https://uct.ac.za/art-collection/join-our-mailing-list": 5,
+          "https://uct.ac.za/dsa/faq/how-can-i-fund-my-studies": 5,
+          "https://uct.ac.za/dsa/food-sovereignty-programme": 5,
+          "https://uct.ac.za/rci/idea-innovation-i2i-course": 5,
+          "https://uct.ac.za/kjbathe-leadership/programme": 5,
+          "https://uct.ac.za/kjbathe-leadership/album/launch-klaus-jurgen-bathe-leadership-programme": 5,
+          "https://uct.ac.za/berthacentre/case-studies": 5
+        }
+      },
+      "programs": [],
+      "program_page_found": false,
+      "scholarship_page_found": true,
+      "discovery_notes": "Sitemap-first discovery found: program_catalog, admissions, costs, scholarships. Not found: program_page, documents.",
+      "claims": 0,
+      "claims_verified": 0,
+      "completeness": 0.0,
+      "eligibility": "NEEDS_OFFICIAL_CLARIFICATION",
+      "funding_fit": "UNKNOWN",
+      "scholarships_found": 0,
+      "false_positives": []
+    },
+    {
+      "institution": "Tecnologico de Monterrey",
+      "country": "Mexico",
+      "domain": "tec.mx",
+      "access": "BLOCKED",
+      "robots_disallowed_requests": 6,
+      "pages_checked": 6,
+      "pages_failed": 6,
+      "failures": [
+        [
+          "https://tec.mx/robots.txt",
+          "robots_disallowed: robots.txt disallows this path"
+        ],
+        [
+          "https://tec.mx/sitemap.xml",
+          "robots_disallowed: robots.txt disallows this path"
+        ],
+        [
+          "https://tec.mx/sitemap_index.xml",
+          "robots_disallowed: robots.txt disallows this path"
+        ],
+        [
+          "https://tec.mx/sitemap-index.xml",
+          "robots_disallowed: robots.txt disallows this path"
+        ],
+        [
+          "https://tec.mx/sitemap/sitemap.xml",
+          "robots_disallowed: robots.txt disallows this path"
+        ],
+        [
+          "https://tec.mx/en",
+          "robots_disallowed: robots.txt disallows this path"
+        ]
+      ],
+      "outcomes": {
+        "robots_disallowed": 6
+      },
+      "discovered": {},
+      "discovery_trace": {
+        "institution": "Tecnologico de Monterrey",
+        "domain": "tec.mx",
+        "sitemaps_declared": [],
+        "sitemaps_read": [],
+        "sitemap_urls_seen": 0,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {},
+        "selected": {},
+        "rejected_sample": [],
+        "rejected_total": 0,
+        "errors": [
+          "robots.txt unavailable: robots_disallowed",
+          "https://tec.mx/sitemap.xml: robots_disallowed \u2014 robots.txt disallows this path",
+          "https://tec.mx/sitemap_index.xml: robots_disallowed \u2014 robots.txt disallows this path",
+          "https://tec.mx/sitemap-index.xml: robots_disallowed \u2014 robots.txt disallows this path",
+          "https://tec.mx/sitemap/sitemap.xml: robots_disallowed \u2014 robots.txt disallows this path",
+          "navigation fallback: https://tec.mx/en unreachable (robots_disallowed)"
+        ],
+        "used_navigation_fallback": true,
+        "kept_by_link_text": [],
+        "confirmed_programs": [],
+        "rendered_catalogues": [],
+        "relevance": {}
+      },
+      "programs": [],
+      "program_page_found": false,
+      "scholarship_page_found": false,
+      "discovery_notes": "Sitemap-first discovery found: nothing. Not found: program_catalog, program_page, admissions, costs, scholarships, documents.",
+      "claims": 0,
+      "claims_verified": 0,
+      "completeness": 0.0,
+      "eligibility": "NEEDS_OFFICIAL_CLARIFICATION",
+      "funding_fit": "UNKNOWN",
+      "scholarships_found": 0,
+      "false_positives": []
+    },
+    {
+      "institution": "University of Tokyo",
+      "country": "Japan",
+      "domain": "u-tokyo.ac.jp",
+      "access": "REACHED",
+      "robots_disallowed_requests": 0,
+      "pages_checked": 7,
+      "pages_failed": 4,
+      "failures": [
+        [
+          "https://www.u-tokyo.ac.jp/sitemap.xml",
+          "http_error: HTTP 404"
+        ],
+        [
+          "https://www.u-tokyo.ac.jp/sitemap_index.xml",
+          "http_error: HTTP 404"
+        ],
+        [
+          "https://www.u-tokyo.ac.jp/sitemap-index.xml",
+          "http_error: HTTP 404"
+        ],
+        [
+          "https://www.u-tokyo.ac.jp/sitemap/sitemap.xml",
+          "http_error: HTTP 404"
+        ]
+      ],
+      "outcomes": {
+        "ok": 3,
+        "http_error": 4
+      },
+      "discovered": {
+        "costs": [
+          "https://www.u-tokyo.ac.jp/en/prospective-students/tuition_scholarships.html"
+        ]
+      },
+      "discovery_trace": {
+        "institution": "University of Tokyo",
+        "domain": "www.u-tokyo.ac.jp",
+        "sitemaps_declared": [],
+        "sitemaps_read": [],
+        "sitemap_urls_seen": 0,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {},
+        "selected": {
+          "costs": [
+            "https://www.u-tokyo.ac.jp/en/prospective-students/tuition_scholarships.html"
+          ]
+        },
+        "rejected_sample": [],
+        "rejected_total": 0,
+        "errors": [
+          "https://www.u-tokyo.ac.jp/sitemap.xml: http_error \u2014 HTTP 404",
+          "https://www.u-tokyo.ac.jp/sitemap_index.xml: http_error \u2014 HTTP 404",
+          "https://www.u-tokyo.ac.jp/sitemap-index.xml: http_error \u2014 HTTP 404",
+          "https://www.u-tokyo.ac.jp/sitemap/sitemap.xml: http_error \u2014 HTTP 404"
+        ],
+        "used_navigation_fallback": true,
+        "kept_by_link_text": [],
+        "confirmed_programs": [],
+        "rendered_catalogues": [],
+        "relevance": {}
+      },
+      "programs": [],
+      "program_page_found": false,
+      "scholarship_page_found": false,
+      "discovery_notes": "Sitemap-first discovery found: costs. Not found: program_catalog, program_page, admissions, scholarships, documents.",
+      "claims": 0,
+      "claims_verified": 0,
+      "completeness": 0.0,
+      "eligibility": "NEEDS_OFFICIAL_CLARIFICATION",
+      "funding_fit": "UNKNOWN",
+      "scholarships_found": 0,
+      "false_positives": []
+    }
+  ],
+  "totals": {
+    "institutions": 6,
+    "reached": 5,
+    "blocked": 1,
+    "failed": 0,
+    "program_pages_found": 3,
+    "scholarship_pages_found": 4,
+    "claims": 5,
+    "false_positives": 0
+  }
+}

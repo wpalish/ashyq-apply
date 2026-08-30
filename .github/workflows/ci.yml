@@ -1,12 +1,27 @@
 name: release-gates
 
 on:
+  # `push:` and `pull_request:` together ran the whole matrix twice for every
+  # commit on a branch with an open PR — two identical runs, double the
+  # minutes, and two links to reconcile when reading results.
   push:
+    branches: [main]
   pull_request:
+  workflow_dispatch:
+
+# A new commit supersedes the run before it. Nothing is learned from finishing
+# a run against code that has already been replaced.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
 
+# Action majors are kept current deliberately: v4/v5 run on Node 20, which the
+# runner now force-migrates to Node 24 while emitting a deprecation annotation
+# on every job. Five warnings per run is noise that hides real annotations —
+# and the annotations are the only CI output readable without repository admin.
 jobs:
   backend:
     runs-on: ubuntu-latest
@@ -18,32 +33,63 @@ jobs:
       run:
         working-directory: backend
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
           cache: pip
           cache-dependency-path: backend/requirements*.txt
       - run: python -m venv .venv
       - run: .venv/bin/pip install -r requirements-dev.txt
+      # Failures are annotated, because job logs need repository admin rights to
+      # download and a bare "Process completed with exit code 1" is not enough
+      # to act on. Annotations are readable through the public API.
       - if: matrix.database == 'sqlite'
         run: |
-          .venv/bin/ruff check app tests
-          .venv/bin/mypy app tests
-          UNIMATCH_DATABASE_URL=sqlite:////tmp/unimatch-ci.db .venv/bin/pytest --cov=app --cov-fail-under=80
+          set -o pipefail
+          .venv/bin/ruff check . 2>&1 | tee /tmp/ruff.txt || {
+            while IFS= read -r line; do echo "::error title=ruff::$line"; done < <(head -20 /tmp/ruff.txt)
+            exit 1
+          }
+          .venv/bin/mypy app tests scripts 2>&1 | tee /tmp/mypy.txt || {
+            while IFS= read -r line; do echo "::error title=mypy::$line"; done < <(grep error: /tmp/mypy.txt | head -20)
+            exit 1
+          }
+          UNIMATCH_DATABASE_URL=sqlite:////tmp/unimatch-ci.db \
+            .venv/bin/pytest --cov=app --cov-fail-under=90 -q \
+            --junitxml=/tmp/backend-junit.xml 2>&1 | tee /tmp/pytest.txt || {
+            while IFS= read -r line; do echo "::error title=pytest (sqlite)::$line"; done < <(
+              grep -E '^(FAILED|ERROR)|Coverage failure|Required test coverage' /tmp/pytest.txt | head -20
+            )
+            exit 1
+          }
+      # A skipped test is one that did not run, and in a release gate that is
+      # unmeasured rather than neutral. Grepping the source for skip decorators
+      # could not see a *runtime* `pytest.skip()` inside a passing test — which
+      # is exactly what happened, while every report said skips were zero. This
+      # reads the machine-readable report instead.
+      - if: matrix.database == 'sqlite'
+        run: .venv/bin/python scripts/check_test_report.py /tmp/backend-junit.xml
       - if: matrix.database == 'postgresql'
-        run: .venv/bin/python scripts/pg.py .venv/bin/pytest
+        run: |
+          set -o pipefail
+          .venv/bin/python scripts/pg.py .venv/bin/pytest -q 2>&1 | tee /tmp/pytest-pg.txt || {
+            while IFS= read -r line; do echo "::error title=pytest (postgresql)::$line"; done < <(
+              grep -E '^(FAILED|ERROR)' /tmp/pytest-pg.txt | head -20
+            )
+            exit 1
+          }
 
   frontend:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: '22'
           cache: npm
           cache-dependency-path: frontend/package-lock.json
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
           cache: pip
@@ -51,14 +97,21 @@ jobs:
       - run: npm ci --prefix frontend
       - run: npm run typecheck --prefix frontend
       - run: npm run lint --prefix frontend
-      - run: npm test --prefix frontend -- --run
+      - run: npm test --prefix frontend -- --run --reporter=junit --outputFile=/tmp/vitest-junit.xml
       - run: npm run build --prefix frontend
       - run: python -m venv backend/.venv
       - run: backend/.venv/bin/pip install -r backend/requirements-dev.txt
       - run: npx --prefix frontend playwright install --with-deps chromium
-      - run: npm run e2e --prefix frontend
+      - run: npm run e2e --prefix frontend -- --reporter=json --output=/tmp/pw-output
+        env:
+          PLAYWRIGHT_JSON_OUTPUT_NAME: /tmp/playwright-report.json
+      # Same rule as the backend, read from the same script: a test that did
+      # not run has measured nothing, and a release gate must say so.
+      - run: |
+          backend/.venv/bin/python backend/scripts/check_test_report.py \
+            /tmp/vitest-junit.xml /tmp/playwright-report.json
       - if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: playwright-report
           path: frontend/playwright-report
@@ -66,11 +119,11 @@ jobs:
   security-and-containers:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: '22'
       - run: python -m pip install -r backend/requirements-dev.txt
@@ -79,3 +132,113 @@ jobs:
       - run: npm audit --prefix frontend --audit-level=high
       - run: POSTGRES_PASSWORD=ci-only-not-a-secret docker compose config --quiet
       - run: POSTGRES_PASSWORD=ci-only-not-a-secret docker compose build
+
+  # Building an image proves it compiles, not that the stack runs. This job
+  # starts the whole thing and exercises health, the one-shot migration, a real
+  # run picked up by the worker, worker-kill recovery, API restart, tenant
+  # isolation, security headers and a backup/restore drill.
+  container-runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - name: Production-shaped runtime smoke test
+        id: smoke
+        run: ./scripts/compose_smoke.sh
+      # Always, not just on failure: a passing run's health log is what proves
+      # the gate actually exercised the stack. The script collects these before
+      # it tears the stack down — the previous step ran afterwards, against a
+      # project name built from a different shell's $$, and found nothing.
+      # An attestation of what this exact commit was verified to do, produced
+      # by CI rather than checked in. A JSON file in the repository can only
+      # ever describe a commit before itself; this one is keyed by the SHA that
+      # was actually tested, and nobody can edit it after the fact.
+      - name: Record what was tested, and which commit it actually was
+        if: always()
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/ashyq-smoke-artifacts
+          # On a `pull_request` event `github.sha` is a *synthetic merge
+          # commit* of the head onto the base — not the branch head. Calling it
+          # the branch SHA was wrong: an artifact named for `ba15bbb` was in
+          # fact built from merge commit 6a95c5bd. Both are recorded, named for
+          # what they are, along with the trees, so the attestation can be
+          # checked against a working copy rather than trusted.
+          # On `pull_request` the checkout is the synthetic merge commit and
+          # the branch head is not in it, so resolving the head's tree failed
+          # and the attestation carried `head_tree: unknown` — the one field a
+          # working copy can actually be compared against. Fetch the head
+          # commit first; a failure here is not fatal, the field just stays
+          # honest about not knowing.
+          git fetch --no-tags --depth=1 origin "${HEAD_SHA}" || true
+          python3 - <<'PYEOF' > /tmp/ashyq-smoke-artifacts/attestation.json
+          import json, os, subprocess, datetime
+
+          def tree_of(sha: str) -> str:
+              """The tree a commit points at. Comparable against a working copy
+              even when the commit itself exists only in the CI checkout."""
+              if not sha:
+                  return ""
+              try:
+                  return subprocess.run(
+                      ["git", "rev-parse", f"{sha}^{{tree}}"],
+                      capture_output=True, text=True, check=True,
+                  ).stdout.strip()
+              except subprocess.CalledProcessError:
+                  return "unknown"
+
+          print(json.dumps({
+              "gate": "container_runtime",
+              "command": "./scripts/compose_smoke.sh",
+              # The outcome of the smoke step itself, not the job's state part
+              # way through it: `job.status` during an always() step is
+              # ambiguous about the step that matters.
+              "result": os.environ["SMOKE_OUTCOME"],
+              "event": os.environ["EVENT"],
+              "ref": os.environ["REF"],
+              "tested_sha": os.environ["TESTED_SHA"],
+              "head_sha": os.environ["HEAD_SHA"],
+              "base_sha": os.environ["BASE_SHA"],
+              "tested_tree": tree_of(os.environ["TESTED_SHA"]),
+              "head_tree": tree_of(os.environ["HEAD_SHA"]),
+              "sha_note": (
+                  "tested_sha is the commit CI checked out. On pull_request it "
+                  "is a synthetic merge of head_sha onto base_sha and exists "
+                  "only in the CI checkout; head_tree is what to compare a "
+                  "working copy against."
+              ),
+              "run_url": os.environ["RUN_URL"],
+              "job_url": os.environ["RUN_URL"] + "/job/" + os.environ.get("JOB_ID", ""),
+              "runner": os.environ["RUNNER"],
+              # `datetime.UTC` is 3.11+; the runner's system python3 need not be.
+              "recorded_at": datetime.datetime.now(
+                  datetime.timezone.utc
+              ).isoformat(timespec="seconds"),
+          }, indent=2, sort_keys=True))
+          PYEOF
+          cat /tmp/ashyq-smoke-artifacts/attestation.json
+          # A digest over the diagnostics the attestation refers to, so a
+          # tampered bundle does not pass for the original.
+          ( cd /tmp/ashyq-smoke-artifacts && \
+            find . -type f ! -name digest.txt -print0 | sort -z | xargs -0 shasum -a 256 \
+            > digest.txt )
+          shasum -a 256 /tmp/ashyq-smoke-artifacts/attestation.json
+        env:
+          SMOKE_OUTCOME: ${{ steps.smoke.outcome }}
+          EVENT: ${{ github.event_name }}
+          REF: ${{ github.ref }}
+          TESTED_SHA: ${{ github.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || '' }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          JOB_ID: ${{ github.job }}
+          RUNNER: ${{ runner.os }}
+
+      - name: Upload runtime diagnostics
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: container-runtime-diagnostics-${{ github.sha }}
+          path: /tmp/ashyq-smoke-artifacts/
+          if-no-files-found: warn
+          retention-days: 14

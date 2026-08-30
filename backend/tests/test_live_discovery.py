@@ -16,22 +16,26 @@ from __future__ import annotations
 import gzip
 import json
 from datetime import UTC, datetime
+from typing import ClassVar
 
 import pytest
 
 from app.adapters.discovery.live_discovery import (
     MAX_PAGES_PER_CATEGORY,
+    MAX_PROGRAM_CANDIDATES_CHECKED,
     MAX_SITEMAP_DOCUMENTS,
     REGISTRY_PATH,
     LiveDiscoveryAdapter,
     PageCategory,
     SitemapReader,
     canonical_url,
+    catalogue_shows_subject,
     categorise_url,
     decode_sitemap,
     looks_like_catalogue,
     matches_degree,
     matches_field,
+    names_other_degree_level,
     parse_sitemap,
     parse_sitemap_directives,
     registrable_domain,
@@ -493,8 +497,14 @@ class TestAdapter:
         # A Candidate carries URLs and attributes only — no claims, no verdicts.
         assert not hasattr(candidate, "claims")
         assert candidate.programs == [], "a seed must not fabricate a programme"
-        # And the seeded page was never even fetched by discovery.
-        assert "https://uni.edu/verified/admission" not in site.requested
+        # Discovery may *read* a seeded page — that is how an admissions hub's
+        # links to fees and funding are found — but reading it must not promote
+        # it. The seed named an admissions page and it stayed one: it did not
+        # become a programme, and it did not become a costs or funding page
+        # either, because nothing on it said so.
+        assert candidate.admissions_url == "https://uni.edu/verified/admission"
+        assert candidate.costs_url is None
+        assert candidate.scholarships_url is None
 
     @pytest.mark.asyncio
     async def test_an_off_domain_manual_seed_is_rejected(self, tmp_path, profile_bachelor):
@@ -720,9 +730,12 @@ class TestAdapter:
         assert candidate.scholarships_url is None, "an off-domain link must not be followed"
 
     @pytest.mark.asyncio
-    async def test_navigation_is_not_used_when_a_programme_page_was_found(
+    async def test_navigation_is_not_used_when_the_subject_was_found(
         self, tmp_path, profile_bachelor
     ):
+        """Discovery stops widening once the applicant's own subject is
+        confirmed — and "confirmed" means the page was read, so the stub has to
+        serve it."""
         entry = {"name": "U", "country": "Netherlands", "city": "X", "homepage": "https://uni.edu/"}
         site = StubSite({
             "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
@@ -730,6 +743,8 @@ class TestAdapter:
                 "https://uni.edu/en/education/programmes/bachelors/computer-science",
                 "https://uni.edu/tuition-fees",
             ),
+            "https://uni.edu/en/education/programmes/bachelors/computer-science":
+                program_html(),
         })
         async with Fetcher(tmp_path / "c", offline=True) as fetcher:
             site.install(fetcher)
@@ -738,6 +753,105 @@ class TestAdapter:
 
         assert not adapter.traces[0].used_navigation_fallback
         assert "https://uni.edu/" not in site.requested
+
+    @pytest.mark.asyncio
+    async def test_unrelated_programmes_do_not_stop_the_search(
+        self, tmp_path, profile_bachelor
+    ):
+        """The TU Delft defect.
+
+        Delft's sitemap yields aerospace engineering, applied mathematics and
+        applied physics. All three are genuine bachelor programme pages, so
+        discovery declared success and never walked the catalogue that lists
+        the computer science degree the applicant actually asked for. Finding
+        three programmes nobody asked about is not a reason to stop looking.
+        """
+        entry = {
+            "name": "U", "country": "Netherlands", "city": "X",
+            "homepage": "https://uni.edu/",
+            "seeds": {"program_catalog": "https://uni.edu/en/education/programmes/bachelors"},
+        }
+        site = StubSite({
+            "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
+            "https://uni.edu/s.xml": sitemap_xml(
+                "https://uni.edu/en/programmes/bachelors/bsc-aerospace-engineering",
+                "https://uni.edu/en/programmes/bachelors/bsc-applied-mathematics",
+            ),
+            "https://uni.edu/en/programmes/bachelors/bsc-aerospace-engineering":
+                program_html("BSc Aerospace Engineering"),
+            "https://uni.edu/en/programmes/bachelors/bsc-applied-mathematics":
+                program_html("BSc Applied Mathematics"),
+            "https://uni.edu/en/education/programmes/bachelors": (
+                "<html><head><title>Bachelors</title></head><body><main>"
+                "<h1>Bachelors</h1>"
+                "<a href='/en/programmes/bachelors/bsc-computer-science'>Computer Science</a>"
+                "</main></body></html>"
+            ),
+            "https://uni.edu/en/programmes/bachelors/bsc-computer-science":
+                program_html("BSc Computer Science"),
+        })
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, entry))
+            candidate = (await adapter.discover(profile_bachelor))[0]
+
+        urls = [p.url for p in candidate.programs]
+        assert any("computer-science" in u for u in urls), (
+            f"the applicant's own subject was never reached; found {urls}"
+        )
+        assert adapter.traces[0].used_navigation_fallback
+
+    @pytest.mark.asyncio
+    async def test_a_profile_naming_no_subject_does_not_walk_the_catalogue(
+        self, tmp_path, profile_bachelor
+    ):
+        """Widening is driven by an unmet subject. With no subject stated, any
+        programme satisfies it and the crawler stops."""
+        profile_bachelor.context.intended_fields = []
+        entry = {"name": "U", "country": "Netherlands", "city": "X", "homepage": "https://uni.edu/"}
+        site = StubSite({
+            "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
+            "https://uni.edu/s.xml": sitemap_xml(
+                "https://uni.edu/en/programmes/bachelors/bsc-aerospace-engineering",
+            ),
+            "https://uni.edu/en/programmes/bachelors/bsc-aerospace-engineering":
+                program_html("BSc Aerospace Engineering"),
+        })
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, entry))
+            candidate = (await adapter.discover(profile_bachelor))[0]
+
+        assert candidate.programs
+        assert not adapter.traces[0].used_navigation_fallback
+
+    @pytest.mark.asyncio
+    async def test_the_number_of_pages_read_to_confirm_is_bounded(
+        self, tmp_path, profile_bachelor
+    ):
+        """A site with many plausible candidates must not become a crawl."""
+        many = [f"https://uni.edu/en/programmes/bachelors/bsc-subject-{i}" for i in range(40)]
+        pages = {
+            "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
+            "https://uni.edu/s.xml": sitemap_xml(*many),
+        }
+        for url in many:  # every one reads as a catalogue, so none is confirmed
+            pages[url] = "<html><head><title>Bachelors</title></head><body><main>" \
+                         "<h1>Bachelors</h1><p>Our programmes.</p></main></body></html>"
+        site = StubSite(pages)
+        entry = {"name": "U", "country": "Netherlands", "city": "X", "homepage": "https://uni.edu/"}
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, entry))
+            candidate = (await adapter.discover(profile_bachelor))[0]
+
+        assert candidate.programs == []
+        read = [u for u in site.requested if "bsc-subject-" in u]
+        assert len(read) <= MAX_PROGRAM_CANDIDATES_CHECKED * 2, (
+            f"read {len(read)} candidate pages; the budget is per confirmation pass"
+        )
+        assert any("left unchecked rather than guessed at" in e
+                   for e in adapter.traces[0].errors)
 
     @pytest.mark.asyncio
     async def test_navigation_runs_when_only_a_catalogue_was_found(
@@ -981,3 +1095,675 @@ def _trace():
     from app.adapters.discovery.live_discovery import DiscoveryTrace
 
     return DiscoveryTrace(institution="test", domain="uni.edu")
+
+
+class TestRenderDecision:
+    """When is a catalogue worth re-reading through the browser?
+
+    The question is whether the applicant's subject is reachable from what was
+    served — not whether the page carries programme links at all. Groningen's
+    bachelor catalogue carries fourteen programme-shaped links and not one of
+    them is a programme, let alone a computing one, so a rule that only counted
+    them never escalated and never found the subject.
+    """
+
+    FIELDS: ClassVar[list[str]] = ["computer science"]
+
+    def test_a_catalogue_naming_the_subject_needs_no_render(self):
+        links = [("https://uni.edu/programmes/bsc-computer-science", "Computer Science")]
+        assert catalogue_shows_subject(links, self.FIELDS, "bachelor")
+
+    def test_a_catalogue_with_links_but_not_the_subject_is_rendered(self):
+        links = [
+            ("https://uni.edu/education/bachelor/brochures", "Brochures"),
+            ("https://uni.edu/education/bachelor/open-days", "Open days"),
+            ("https://uni.edu/programmes/bsc-history", "History"),
+        ]
+        assert not catalogue_shows_subject(links, self.FIELDS, "bachelor")
+
+    def test_the_subject_in_link_text_alone_is_enough(self):
+        links = [("https://uni.edu/x/12345", "Computer Science and Engineering")]
+        assert catalogue_shows_subject(links, self.FIELDS, "bachelor")
+
+    def test_the_subject_at_the_wrong_level_does_not_count(self):
+        links = [("https://uni.edu/programmes/masters/computer-science", "Computer Science")]
+        assert not catalogue_shows_subject(links, self.FIELDS, "bachelor")
+
+    def test_with_no_subject_stated_any_programme_link_suffices(self):
+        links = [("https://uni.edu/en/programmes/bachelors/history", "History")]
+        assert catalogue_shows_subject(links, [], "bachelor")
+
+
+class TestIndexPagesAreListingsNotProgrammes:
+    """A catalogue's own sub-indexes: A-Z, by subject, in English.
+
+    Groningen's `/bachelors` links to `/bachelors/alphabet`, which lists all 69
+    programmes including computing science. The URL ends in a word no listing
+    rule recognised, so it scored as a *programme page* and was never walked as
+    the index it is — leaving the programme one hop away and unreachable.
+    """
+
+    @pytest.mark.parametrize("url", [
+        "https://uni.edu/bachelors/alphabet",
+        "https://uni.edu/bachelors/by-subject",
+        "https://uni.edu/bachelors/in-english",
+        "https://uni.edu/programmes/a-z",
+        "https://uni.edu/programmes/all",
+        "https://uni.edu/study/course-finder",
+        "https://uni.edu/study/programme-search",
+        "https://uni.edu/education/overview",
+    ])
+    def test_an_index_is_recognised_as_a_listing(self, url):
+        assert looks_like_catalogue(url), url
+
+    @pytest.mark.parametrize("url", [
+        "https://uni.edu/bachelors/alphabet",
+        "https://uni.edu/bachelors/by-subject",
+        "https://uni.edu/programmes/a-z",
+    ])
+    def test_an_index_does_not_score_as_a_programme(self, url):
+        assert categorise_url(url)[0] != PageCategory.PROGRAM_PAGE
+
+    @pytest.mark.parametrize("url", [
+        "https://uni.edu/bachelors/computing-science",
+        "https://uni.edu/en/programmes/bachelors/bsc-computer-science",
+        "https://uni.edu/bachelors/artificial-intelligence",
+    ])
+    def test_a_real_programme_slug_is_untouched(self, url):
+        """The fix must not swallow programmes whose names are ordinary words."""
+        assert categorise_url(url)[0] == PageCategory.PROGRAM_PAGE
+        assert not looks_like_catalogue(url)
+
+    @pytest.mark.asyncio
+    async def test_the_walk_follows_a_catalogue_into_its_a_to_z(
+        self, tmp_path, profile_bachelor
+    ):
+        """Two hops: catalogue -> A-Z index -> the programme."""
+        entry = {
+            "name": "U", "country": "Netherlands", "city": "X",
+            "homepage": "https://uni.edu/",
+            "seeds": {"program_catalog": "https://uni.edu/bachelors"},
+        }
+        site = StubSite({
+            "https://uni.edu/robots.txt": "User-agent: *\n",
+            "https://uni.edu/bachelors": (
+                "<html><head><title>Bachelors</title></head><body><main>"
+                "<h1>Bachelor's degree programmes</h1>"
+                "<a href='/bachelors/alphabet'>All programmes A-Z</a>"
+                "</main></body></html>"
+            ),
+            "https://uni.edu/bachelors/alphabet": (
+                "<html><head><title>A-Z</title></head><body><main>"
+                "<h1>Bachelor's degree programmes</h1>"
+                "<a href='/bachelors/computing-science'>Computing Science</a>"
+                "<a href='/bachelors/history'>History</a>"
+                "</main></body></html>"
+            ),
+            "https://uni.edu/bachelors/computing-science": program_html(
+                "BSc Computing Science"
+            ),
+        })
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, entry))
+            candidate = (await adapter.discover(profile_bachelor))[0]
+
+        urls = [p.url for p in candidate.programs]
+        assert any("computing-science" in u for u in urls), (
+            f"the A-Z index was never followed; found {urls}"
+        )
+
+    @staticmethod
+    def registry_file(tmp_path, entry: dict):
+        import json
+
+        path = tmp_path / "registry.json"
+        path.write_text(json.dumps([entry]))
+        return path
+
+
+class TestARejectedCatalogueFeedsBackItsLinks:
+    """Reading a candidate and finding a catalogue is progress, not waste.
+
+    Groningen's bachelor listing links to faculty and subject sub-indexes —
+    "Faculty of Science and Engineering", "Natural Sciences and Technology".
+    Confirmation fetched each one, correctly rejected it as a catalogue, and
+    threw the page away, spending the whole candidate budget on indexes while
+    the computing science degree sat one link inside them.
+
+    The page has already been fetched and classified. Harvesting the programmes
+    it lists costs nothing more and is what a person browsing would do.
+    """
+
+    @staticmethod
+    def registry_file(tmp_path, entry: dict):
+        import json
+
+        path = tmp_path / "registry.json"
+        path.write_text(json.dumps([entry]))
+        return path
+
+    @pytest.mark.asyncio
+    async def test_a_candidate_that_reads_as_a_catalogue_yields_its_programmes(
+        self, tmp_path, profile_bachelor
+    ):
+        entry = {"name": "U", "country": "Netherlands", "city": "X",
+                 "homepage": "https://uni.edu/"}
+        faculty_index = (
+            "<html><head><title>Faculty of Science</title></head><body><main>"
+            "<h1>Bachelor's degree programmes</h1>"
+            "<a href='/bachelors/computing-science'>Computing Science</a>"
+            "<a href='/bachelors/mathematics'>Mathematics</a>"
+            "</main></body></html>"
+        )
+        site = StubSite({
+            "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
+            "https://uni.edu/s.xml": sitemap_xml(
+                "https://uni.edu/bachelors/faculty-of-science",
+            ),
+            "https://uni.edu/bachelors/faculty-of-science": faculty_index,
+            "https://uni.edu/bachelors/computing-science": program_html(
+                "BSc Computing Science"
+            ),
+        })
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, entry))
+            candidate = (await adapter.discover(profile_bachelor))[0]
+
+        urls = [p.url for p in candidate.programs]
+        assert any("computing-science" in u for u in urls), (
+            f"the rejected catalogue's own links were never followed; found {urls}"
+        )
+
+    @pytest.mark.asyncio
+    async def test_the_feedback_is_bounded(self, tmp_path, profile_bachelor):
+        """A chain of catalogues must not become an unbounded crawl."""
+        pages = {
+            "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
+            "https://uni.edu/s.xml": sitemap_xml("https://uni.edu/bachelors/level-0"),
+        }
+        # Each level links to the next, and none ever yields a programme.
+        for i in range(12):
+            pages[f"https://uni.edu/bachelors/level-{i}"] = (
+                "<html><head><title>Programmes</title></head><body><main>"
+                "<h1>Bachelor's degree programmes</h1>"
+                f"<a href='/bachelors/level-{i + 1}'>More programmes</a>"
+                "</main></body></html>"
+            )
+        site = StubSite(pages)
+        entry = {"name": "U", "country": "Netherlands", "city": "X",
+                 "homepage": "https://uni.edu/"}
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, entry))
+            candidate = (await adapter.discover(profile_bachelor))[0]
+
+        assert candidate.programs == []
+        levels = [u for u in site.requested if "/level-" in u]
+        assert len(levels) <= MAX_PROGRAM_CANDIDATES_CHECKED * 3, (
+            f"followed {len(levels)} catalogue hops"
+        )
+
+
+class TestProgrammeContainersBeyondTheObviousWords:
+    """Universities do not agree on what to call the folder programmes live in.
+
+    Aalto publishes every programme under `/en/study-options/<slug>` and the
+    index at `/en/study-options`. Neither scored anything, so its only
+    bachelor's computing programme was invisible to discovery even though the
+    sitemap lists it and the classifier reads it correctly.
+    """
+
+    @pytest.mark.parametrize("url", [
+        "https://uni.edu/en/study-options/computer-engineering-bachelor-of-science",
+        "https://uni.edu/en/study-programmes/bsc-computer-science",
+        "https://uni.edu/study-opportunities/computer-science",
+        "https://uni.edu/en/degree-programmes/computer-science-bachelor",
+        "https://uni.edu/en/education/programmes/bachelors/computer-science",
+    ])
+    def test_a_programme_under_any_of_them_is_a_programme(self, url):
+        assert categorise_url(url)[0] == PageCategory.PROGRAM_PAGE, url
+
+    @pytest.mark.parametrize("url", [
+        "https://uni.edu/en/study-options",
+        "https://uni.edu/en/study-programmes",
+        "https://uni.edu/study-opportunities",
+    ])
+    def test_the_container_itself_is_a_catalogue(self, url):
+        assert categorise_url(url)[0] == PageCategory.PROGRAM_CATALOG, url
+        assert looks_like_catalogue(url), url
+
+    @pytest.mark.parametrize("url", [
+        "https://uni.edu/en/study-options/tuition-fees-and-scholarships",
+        "https://uni.edu/en/study-options/open-day",
+        "https://uni.edu/en/study-options/how-to-apply",
+    ])
+    def test_the_container_does_not_launder_a_non_programme(self, url):
+        """Being under the folder is not enough; the existing rules still run."""
+        assert categorise_url(url)[0] != PageCategory.PROGRAM_PAGE, url
+
+
+class TestAProgrammeNamingTwoLevels:
+    """Combined bachelor-and-master programmes, which Europe is full of.
+
+    Aalto's computer engineering page is at
+    `.../computer-engineering-bachelor-of-science-and-master-of-science-technology`.
+    Asking which level a URL names returned the first one found, so the page was
+    rejected as naming "another" level — for a bachelor applicant, on a URL that
+    says bachelor.
+    """
+
+    @pytest.mark.parametrize("url", [
+        "https://uni.edu/study-options/computer-engineering-bachelor-of-science-and-master-of-science",
+        "https://uni.edu/programmes/bachelor-and-master-of-science-in-computing",
+        "https://uni.edu/en/study-options/economics-bachelor-and-master-of-science",
+    ])
+    def test_a_combined_programme_is_not_the_wrong_level(self, url):
+        assert not names_other_degree_level(url, "bachelor"), url
+
+    @pytest.mark.parametrize("url", [
+        "https://uni.edu/study-options/computer-engineering-bachelor-of-science-and-master-of-science",
+        "https://uni.edu/programmes/bachelor-and-master-of-science-in-computing",
+    ])
+    def test_it_is_not_the_wrong_level_for_a_master_applicant_either(self, url):
+        assert not names_other_degree_level(url, "master"), url
+
+    @pytest.mark.parametrize("url", [
+        "https://uni.edu/programmes/masters/computer-science",
+        "https://uni.edu/en/programmes/masters-programme-in-information-networks",
+        "https://uni.edu/programmes/phd/computer-science",
+    ])
+    def test_a_single_wrong_level_is_still_rejected(self, url):
+        """The guard that keeps an MSc page away from a bachelor applicant."""
+        assert names_other_degree_level(url, "bachelor"), url
+
+    def test_a_url_naming_no_level_is_not_rejected(self):
+        assert not names_other_degree_level("https://uni.edu/programmes/computer-science", "bachelor")
+
+
+class TestSitemapTruncationIsReported:
+    """A truncated sitemap must say so.
+
+    Aalto's index was cut off after 12 documents — 55,000 of its 58,000 URLs —
+    and the document holding its programme pages was never opened. Nothing in
+    the trace said the walk had stopped early, so the run read as "there are no
+    programmes here" rather than "we did not look at all of it".
+    """
+
+    @staticmethod
+    def registry_file(tmp_path, entry: dict):
+        import json
+
+        path = tmp_path / "registry.json"
+        path.write_text(json.dumps([entry]))
+        return path
+
+    @pytest.mark.asyncio
+    async def test_hitting_the_document_bound_is_recorded(self, tmp_path, profile_bachelor):
+        children = [f"https://uni.edu/s-{i}.xml" for i in range(MAX_SITEMAP_DOCUMENTS + 6)]
+        pages = {
+            "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/index.xml\n",
+            "https://uni.edu/index.xml": sitemap_index_xml(*children),
+        }
+        for i, child in enumerate(children):
+            pages[child] = sitemap_xml(f"https://uni.edu/page-{i}")
+        site = StubSite(pages)
+        entry = {"name": "U", "country": "NL", "city": "X", "homepage": "https://uni.edu/"}
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, entry))
+            await adapter.discover(profile_bachelor)
+
+        trace = adapter.traces[0]
+        assert len(trace.sitemaps_read) <= MAX_SITEMAP_DOCUMENTS
+        assert any("sitemap documents" in e and "not read" in e for e in trace.errors), (
+            f"the walk stopped early and said nothing: {trace.errors}"
+        )
+
+    @pytest.mark.asyncio
+    async def test_a_sitemap_that_fits_reports_no_truncation(self, tmp_path, profile_bachelor):
+        site = StubSite({
+            "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
+            "https://uni.edu/s.xml": sitemap_xml("https://uni.edu/tuition-fees"),
+        })
+        entry = {"name": "U", "country": "NL", "city": "X", "homepage": "https://uni.edu/"}
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, entry))
+            await adapter.discover(profile_bachelor)
+        assert not any("sitemap documents" in e for e in adapter.traces[0].errors)
+
+
+ADMISSIONS_HTML = (
+    "<html><head><title>Admissions</title></head><body><main>"
+    "<h1>International undergraduate admissions</h1>"
+    "<a href='/intl/support/cost-of-attendance'>Cost of Attendance</a>"
+    "<a href='/intl/support/scholarships'>Scholarships</a>"
+    "</main></body></html>"
+)
+
+
+class TestTheWalkUsesTheAdmissionsPageItAlreadyFound:
+    """KAIST publishes no programme catalogue, so the walk fell straight
+    through to the homepage.
+
+    Its international admissions page links to the cost of attendance, the
+    scholarship, and the list of documents to submit — three categories the
+    run reported as not found, one hop from a page discovery had already
+    selected and fetched. The walk knew about catalogues and the homepage and
+    nothing in between.
+
+    An admissions hub is where universities gather fees, funding and paperwork.
+    It is worth walking for the same reason a catalogue is.
+    """
+
+    @staticmethod
+    def registry_file(tmp_path, entry: dict):
+        import json
+
+        path = tmp_path / "registry.json"
+        path.write_text(json.dumps([entry]))
+        return path
+
+    @pytest.mark.asyncio
+    async def test_costs_and_funding_are_found_through_the_admissions_page(
+        self, tmp_path, profile_bachelor
+    ):
+        entry = {
+            "name": "K", "country": "South Korea", "city": "Daejeon",
+            "homepage": "https://uni.edu/",
+            "seeds": {"admissions": "https://uni.edu/intl/"},
+        }
+        site = StubSite({
+            "https://uni.edu/robots.txt": "User-agent: *\n",
+            "https://uni.edu/": (
+                "<html><head><title>K</title></head><body><main>"
+                "<h1>K</h1><a href='/news'>News</a></main></body></html>"
+            ),
+            # Registered under both forms: discovery canonicalises away the
+            # trailing slash, and the stub matches on the exact string.
+            "https://uni.edu/intl/": ADMISSIONS_HTML,
+            "https://uni.edu/intl": ADMISSIONS_HTML,
+            "https://uni.edu/intl/support/cost-of-attendance": (
+                "<html><head><title>Cost of Attendance</title></head><body><main>"
+                "<h1>Cost of attendance</h1><p>Tuition per year is 8,000,000 KRW.</p>"
+                "</main></body></html>"
+            ),
+            "https://uni.edu/intl/support/scholarships": (
+                "<html><head><title>Scholarships</title></head><body><main>"
+                "<h1>Scholarships</h1><p>The K Scholarship covers tuition.</p>"
+                "</main></body></html>"
+            ),
+        })
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, entry))
+            candidate = (await adapter.discover(profile_bachelor))[0]
+
+        assert candidate.costs_url and "cost-of-attendance" in candidate.costs_url, (
+            f"the admissions page was never walked; costs_url={candidate.costs_url}"
+        )
+        assert candidate.scholarships_url and "scholarships" in candidate.scholarships_url, (
+            f"funding was not found; scholarships_url={candidate.scholarships_url}"
+        )
+
+
+class TestOneUnreadablePageDoesNotEndTheRun:
+    """A holdout run died on Uppsala and never attempted the four
+    institutions after it.
+
+    The cause was a page whose markup lxml could not parse: BeautifulSoup
+    raised `ValueError: not enough values to unpack` from inside its own tree
+    builder, the exception travelled up through `_harvest_links` and
+    `discover`, and the whole run failed. Four universities were reported
+    NOT_ATTEMPTED for a reason that had nothing to do with them.
+
+    Reading arbitrary pages off the public web means meeting malformed ones.
+    A page that cannot be parsed is a page with no links, not the end of the
+    research.
+    """
+
+    @staticmethod
+    def registry_file(tmp_path, entries: list):
+        import json
+
+        path = tmp_path / "registry.json"
+        path.write_text(json.dumps(entries))
+        return path
+
+    def test_a_page_that_cannot_be_parsed_yields_no_links(self, monkeypatch):
+        """The real failure came from inside lxml's namespace handling, which
+        cannot be provoked reliably from a string here. What matters is the
+        contract: when the parser raises, harvesting returns nothing rather
+        than propagating."""
+        from app.adapters.discovery import live_discovery
+
+        def refuse(*_args, **_kwargs):
+            raise ValueError("not enough values to unpack (expected 2, got 1)")
+
+        monkeypatch.setattr(live_discovery, "BeautifulSoup", refuse)
+        assert live_discovery._harvest_links(
+            "<html><a href='/x'>x</a></html>", "https://uni.edu/", "uni.edu"
+        ) == []
+
+    @pytest.mark.asyncio
+    async def test_a_failing_institution_does_not_stop_the_next_one(
+        self, tmp_path, profile_bachelor, monkeypatch
+    ):
+        entries = [
+            {"name": "Breaks", "country": "Sweden", "city": "A",
+             "homepage": "https://breaks.edu/", "seeds": {}},
+            {"name": "Fine", "country": "Ireland", "city": "B",
+             "homepage": "https://fine.edu/", "seeds": {}},
+        ]
+        site = StubSite({
+            "https://breaks.edu/robots.txt": "User-agent: *\n",
+            "https://fine.edu/robots.txt": "User-agent: *\n",
+        })
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, entries))
+
+            original = adapter._discover_one
+
+            async def explode(entry, profile):
+                if entry["name"] == "Breaks":
+                    raise ValueError("not enough values to unpack (expected 2, got 1)")
+                return await original(entry, profile)
+
+            monkeypatch.setattr(adapter, "_discover_one", explode)
+            candidates = await adapter.discover(profile_bachelor)
+
+        names = [c.name for c in candidates]
+        assert "Fine" in names, (
+            f"one institution's failure stopped the rest; got {names}"
+        )
+        broke = next(c for c in candidates if c.name == "Breaks")
+        assert "not enough values to unpack" in broke.notes, (
+            "the failure must be reported on the candidate, not swallowed"
+        )
+
+    @pytest.mark.asyncio
+    async def test_a_catalogue_keeps_the_walk_budget_to_itself(
+        self, tmp_path, profile_bachelor
+    ):
+        """The admissions hub is a fallback for having no catalogue, not a
+        competitor to one.
+
+        Queueing both spent one fixed budget on two things: Uppsala stopped
+        reaching the programmes its catalogue lists, and the holdout dropped
+        from three programme pages to two.
+        """
+        entry = {
+            "name": "U", "country": "Sweden", "city": "X",
+            "homepage": "https://uni.edu/",
+            "seeds": {
+                "program_catalog": "https://uni.edu/bachelors",
+                "admissions": "https://uni.edu/admissions",
+            },
+        }
+        site = StubSite({
+            "https://uni.edu/robots.txt": "User-agent: *\n",
+            "https://uni.edu/bachelors": (
+                "<html><head><title>Bachelors</title></head><body><main>"
+                "<h1>Bachelor's degree programmes</h1>"
+                "<a href='/bachelors/computing-science'>Computing Science</a>"
+                "</main></body></html>"
+            ),
+            "https://uni.edu/bachelors/computing-science": program_html(
+                "BSc Computing Science"
+            ),
+            "https://uni.edu/admissions": (
+                "<html><head><title>Admissions</title></head><body><main>"
+                "<h1>Admissions</h1><a href='/fees'>Tuition fees</a></main></body></html>"
+            ),
+        })
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, [entry]))
+            candidate = (await adapter.discover(profile_bachelor))[0]
+
+        urls = [p.url for p in candidate.programs]
+        assert any("computing-science" in u for u in urls), (
+            f"the catalogue's programme was not reached; found {urls}"
+        )
+
+
+class TestACatalogueBuiltInTheBrowserIsStillRead:
+    """Toronto builds its programme list client-side.
+
+    `future.utoronto.ca/data-computer-science` reads as a catalogue and is
+    followed, but its served HTML lists exactly one programme — on another
+    campus, and not the applicant's subject. The five that matter, computer
+    science among them, appear only once the page runs.
+
+    The navigation walk already reads a catalogue through the browser when its
+    served HTML shows no programme for the subject, for the stated reason that
+    it is "the difference between 'it is not there' and 'we did not look'".
+    Confirmation, which reaches this page by a different route, did not.
+    """
+
+    @staticmethod
+    def registry_file(tmp_path, entry: dict):
+        import json
+
+        path = tmp_path / "registry.json"
+        path.write_text(json.dumps([entry]))
+        return path
+
+    @pytest.mark.asyncio
+    async def test_the_programme_is_found_after_rendering(
+        self, tmp_path, profile_bachelor
+    ):
+        from app.adapters.fetching import FetchOutcome, FetchResult
+
+        hub = "https://uni.edu/data-computer-science"
+        served = (
+            "<html><head><title>Data &amp; Computer Science</title></head><body><main>"
+            "<h1>Data &amp; Computer Science</h1>"
+            "<h2>Explore Programs in data &amp; computer science</h2>"
+            "<a href='/program/information-security'>Information Security</a>"
+            "</main></body></html>"
+        )
+        rendered_html = served.replace(
+            "</main>",
+            "<a href='/program/computer-science'>Computer Science</a></main>",
+        )
+        # The hub is reached the way Toronto's is: as a programme lead taken
+        # from another page's link text, never as a catalogue in its own
+        # right. Only confirmation sees it, and confirmation did not render.
+        index = "https://uni.edu/undergraduate-programs"
+        entry = {
+            "name": "U", "country": "Canada", "city": "T",
+            "homepage": "https://uni.edu/",
+            "seeds": {"program_catalog": index},
+        }
+        site = StubSite({
+            "https://uni.edu/robots.txt": "User-agent: *\n",
+            index: (
+                "<html><head><title>Programs</title></head><body><main>"
+                "<h1>Undergraduate programs</h1>"
+                "<a href='/data-computer-science'>Data &amp; Computer Science</a>"
+                "</main></body></html>"
+            ),
+            hub: served,
+            # A real programme, but not the one the applicant asked for.
+            # The page therefore lists *something*, which is what stopped the
+            # first version of this escalation from firing.
+            "https://uni.edu/program/information-security": program_html(
+                "BSc Information Security"
+            ),
+            "https://uni.edu/program/computer-science": program_html(
+                "BSc Computer Science"
+            ),
+        })
+
+        class OnlyRenderingShowsThem:
+            async def render(self, url: str) -> FetchResult:
+                if url.rstrip("/") == hub.rstrip("/"):
+                    return FetchResult(
+                        url=url, final_url=url, status_code=200,
+                        outcome=FetchOutcome.OK, text=rendered_html,
+                    )
+                return FetchResult(
+                    url=url, outcome=FetchOutcome.UNPARSEABLE, error="not stubbed",
+                )
+
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            fetcher.attach_renderer(OnlyRenderingShowsThem())
+            adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, entry))
+            candidate = (await adapter.discover(profile_bachelor))[0]
+
+        urls = [p.url for p in candidate.programs]
+        assert any("program/computer-science" in u for u in urls), (
+            f"the client-side programme list was never read; found {urls}"
+        )
+
+
+class TestNewsAndSearchAreNeverCatalogues:
+    """Cape Town read fifty-six pages and confirmed no programme.
+
+    Its three programme-catalogue candidates were a news article
+    ("2025-03-04-sciences-po-visit-uct-strengthening-ties-exciting-joint-degree-
+    programmes" — a catalogue by slug alone), an A-Z list, and the site's
+    Google search endpoint. The candidate budget then went on Mastercard
+    Foundation Scholars Program articles.
+
+    The exclusion list already refuses /news, /press and /blog, and /search.
+    UCT files its news under /articles and its search under /google-search, so
+    neither matched. A dated slug is a news marker whatever folder it sits in:
+    a programme page is not stamped with the day it was published.
+    """
+
+    @pytest.mark.parametrize("url", [
+        "https://uct.ac.za/international/articles/2025-03-04-sciences-po-visit-uct-"
+        "strengthening-ties-exciting-joint-degree-programmes",
+        "https://uct.ac.za/mastercardfdn/articles/2022-08-02-tributes-life-changing-"
+        "mastercard-foundation-scholars-program",
+        "https://uct.ac.za/google-search",
+        "https://uni.edu/site-search?q=bachelor+programmes",
+        "https://uni.edu/newsroom/2026-01-02-new-bachelor-programmes-announced",
+    ])
+    def test_they_score_nothing(self, url):
+        from app.adapters.discovery.url_signals import categorise_url
+
+        category, score = categorise_url(url)
+        assert (category, score) == (None, 0), f"{url} scored {category} {score}"
+
+    @pytest.mark.parametrize("url", [
+        "https://www.rug.nl/bachelors/computing-science",
+        "https://www.rug.nl/bachelors/alphabet",
+        "https://future.utoronto.ca/program/computer-science",
+        "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering",
+        # A finder *for* programmes is a catalogue, not a site search. The
+        # first version of the search rule refused it along with the rest.
+        "https://uni.edu/study/programme-search",
+        "https://uni.edu/course-search",
+    ])
+    def test_real_programme_urls_are_untouched(self, url):
+        from app.adapters.discovery.url_signals import categorise_url
+
+        category, score = categorise_url(url)
+        assert category is not None and score > 0, f"{url} lost its score"

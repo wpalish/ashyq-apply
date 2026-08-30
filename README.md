@@ -135,7 +135,7 @@ backend/
 │   ├── export/          CSV / JSON / XLSX, provenance included
 │   ├── models/          SQLAlchemy + Alembic (PostgreSQL production, SQLite local)
 │   └── corpus/          The bundled synthetic demo corpus + its generator
-└── tests/               547 tests
+└── tests/               the suite (count in the release artifact)
 frontend/
 ├── src/
 │   ├── screens/         The nine workflow screens
@@ -182,6 +182,13 @@ and refreshes that lease as it works. A lease that stops being refreshed is how
 a crashed worker becomes visible: another worker's reaper returns the job to
 the queue, and a job that exhausts its attempts goes to `dead` rather than
 looping.
+
+Each claim carries a random token, and every write to the job presents it, so a
+worker that stalled past its lease cannot write to a job another worker has
+since taken — see [ADR 0004](docs/adr/0004-lease-fencing.md). The refresh runs
+on a thread rather than on the event loop, because the pipeline holds the loop
+for the length of a job; as a task it never ran at all while a job was running,
+which made the lease decorative for exactly the long jobs it was for.
 
 **A crashed run resumes.** Stages already marked complete are not repeated, and
 persisting a result updates the row a previous attempt wrote rather than
@@ -289,7 +296,7 @@ cd backend
 python scripts/pg.py --print-uri              # a local PostgreSQL, no install needed
 python scripts/pg.py .venv/bin/pytest         # run the suite against PostgreSQL
 python scripts/pg.py .venv/bin/python scripts/crash_test.py   # SIGKILL recovery proof
-./.venv/bin/python -m pytest                  # 547 tests
+./.venv/bin/python -m pytest                  # the whole suite
 ./.venv/bin/python -m pytest --cov=app        # with coverage (89%)
 ./.venv/bin/python -m ruff check app tests    # lint
 ./.venv/bin/python -m mypy app                # type check
@@ -312,25 +319,52 @@ Or from the repository root: `make setup`, `make dev`, `make test`, `make check`
 
 ## Verification
 
-| Check | Result |
-|---|---|
-| Backend tests | 547 passed (SQLite **and** PostgreSQL 16.2) |
-| Backend coverage | 89% (`app/`); jobs/store 91%, jobs/worker 83%, pipeline/runner 91% |
-| Backend lint (ruff) | clean |
-| Python dependency audit (pip-audit) | clean (36 advisories found and fixed at baseline) |
-| Backend types (mypy) | clean, 92 files |
-| Frontend unit tests | 47 passed |
-| Frontend typecheck | clean |
-| Frontend lint (eslint) | clean |
-| E2E (Playwright) | 50 passed — desktop 1440×900 and Pixel 7 |
-| Accessibility | axe WCAG A/AA: no serious or critical violations on reachable screens |
-| Console errors during the full journey | 0 |
-| Horizontal overflow at 320/768/1024/1440 | none |
-| Production bundle | 74.0 kB JS gzipped, 5.3 kB CSS |
+The measured numbers live in
+[`artifacts/release-evidence.json`](artifacts/release-evidence.json), generated
+by `backend/scripts/release_evidence.py` and rendered into
+[`docs/evidence/RELEASE-EVIDENCE-2026-08-29.md`](docs/evidence/RELEASE-EVIDENCE-2026-08-29.md).
+They are deliberately not repeated here. This section once carried a test
+count and a programme recall that had both been true months earlier and were
+false by the time anyone read them, because nothing was checking it.
 
-| Crash recovery | verified: real SIGKILL, job recovered, 0 duplicate results |
-| Migrations | verified: fresh, downgrade, re-upgrade, re-apply, both backends |
-| Container stack | **written, never run** — Docker is not installed here |
+What is stable enough to state in prose:
+
+| Check | Where |
+|---|---|
+| Backend tests, coverage, lint, types | the generated gate table |
+| Frontend unit, typecheck, lint, build | the generated gate table |
+| E2E (Playwright), desktop 1440×900 and Pixel 7 | the generated gate table |
+| Accessibility | axe WCAG A/AA on every reachable screen, inside the E2E run |
+| Crash recovery | real SIGKILL, job recovered, no duplicate results |
+| Split-brain | a real worker SIGSTOPped past its lease, the job taken by another, then resumed |
+| Extraction accuracy | precision and recall per decision question, against a frozen hand-audited gold set |
+| Migrations | fresh, downgrade, re-upgrade, re-apply, on SQLite and PostgreSQL |
+| Container stack | run by the `container-runtime` CI job on every push, not on a developer machine |
+| Live discovery | three canary runs plus a frozen holdout, in the generated table |
+
+**The product is NOT READY**, and the reason is not technical: decision-grade
+extraction completeness and holdout recall are both below their bars. The
+verdict in the artifact is computed from those thresholds, not asserted.
+
+How far below, and why, is now measured rather than estimated.
+[`backend/app/corpus/gold/`](backend/app/corpus/gold/) holds a frozen gold set —
+for each programme, what the institution actually publishes for each of the
+twenty-five decision questions, read by hand off their own pages with the URL,
+the excerpt and the date it was read. Each question gets one of three verdicts:
+`answered`, `absent` (checked, and the institution does not publish it) and
+`not_checked`, which is counted in neither numerator nor denominator and
+reported as coverage. A benchmark that hides its own gaps produces a number that
+looks like a measurement.
+
+```bash
+./.venv/bin/python scripts/evaluate_extraction.py --canary-run ../artifacts/canary/run1
+```
+
+It reports precision, recall and F1 per question, and separates *missed* from
+*unreachable*: for every answer the pipeline does not produce, it fetches the
+page the gold claim cites and asks whether the extractor could read it there.
+"The English requirement is missed" and "the English requirement is on a page we
+never fetch" need completely different work.
 
 Screenshots of every main state are in [`docs/screenshots/`](docs/screenshots/)
 (desktop) and `docs/screenshots/mobile/`.
@@ -375,17 +409,31 @@ These are real, and the UI states them rather than hiding them.
 2. **Extraction is rule-based and conservative.** It finds what its patterns
    match and reports nothing where they do not. On live pages it will miss
    values that a human would find — those show as *not found*, never as a guess.
-3. **Currency rates are a dated static snapshot** (`app/domain/currency.py`),
-   not a live feed. The rate and its date travel with every converted figure.
+3. **Currency rates come from the European Central Bank's daily reference
+   feed**, with the date they describe and their source travelling with every
+   converted figure. There is no silent fallback: a rate older than ten days,
+   or a currency the ECB does not publish — the tenge among them — is refused,
+   the amount stays in its source currency, and the funding gap is reported as
+   not computable. The bundled dated table is still there for tests and demo
+   mode, and every conversion made from it is labelled an estimate.
 4. **Grade conversions are approximations** and are never applied unless the
    user accepts one. US applications generally require a NACES credential
    evaluation, which this tool does not replace.
-5. **Live discovery is deliberately conservative.** It uses a curated registry,
-   official seeds and sitemaps rather than sending applicant context to a search
-   engine. The canary confirms programme pages on only 1 of 10 institutions.
-6. **Cost pages behind a fee calculator** yield no figures. TU Delft's tuition
-   page is a real example: the page is readable, the numbers are not on it, and
-   the result is an honest "no cost figures could be extracted".
+5. **Live discovery confirms a programme page at 4 institutions in 10.** This
+   is the product's largest open problem and the reason it is not ready. It
+   uses a curated registry, official seeds and sitemaps rather than sending
+   applicant context to a search engine. Three independent runs on 2026-08-29
+   gave 4, 4 and 4; category pages reach 27 of 30. Every accepted programme
+   page was opened by hand and is real — the gap is recall, not truthfulness.
+   `docs/LIVE_DISCOVERY_REPORT.md` names the reason for each of the six
+   misses; four are defects and two are honest NOT_FOUND.
+6. **Cost figures in a dense fee table are not extracted.** TU Delft's tuition
+   page is a real example — and the earlier claim that its numbers sit behind a
+   JavaScript calculator was wrong: they are in the served HTML, and were being
+   misread. `€ 17.310` parsed as `17.31` until this cycle. Associating a figure
+   in a fee table with the right label still needs more than proximity, so the
+   result is an honest "no cost figures could be extracted" rather than a
+   number attached to the wrong row.
 7. **The queue is PostgreSQL-backed, not Redis.** A deliberate choice, recorded
    in [ADR 0001](docs/adr/0001-durable-job-queue.md): no broker could be
    installed here without your password, and one transaction covering both the

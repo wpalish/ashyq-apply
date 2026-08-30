@@ -52,6 +52,36 @@ _SIZE = re.compile(r"max(?:imum)? (\d{1,3})\s*MB", re.IGNORECASE)
 _FORMAT = re.compile(r"\b(PDF|DOCX?|JPE?G|PNG)\b")
 
 
+#: Wording that states a document is compulsory.
+_REQUIRED_WORDING = re.compile(
+    r"\b(required|require[sd]?\s+to|must\s+(?:be\s+)?(?:submit|provide|supply|upload|include)"
+    r"|mandatory|compulsory|obligatory|you\s+must)\b",
+    re.IGNORECASE,
+)
+#: Wording that makes it depend on the applicant, or offers a choice.
+_CONDITIONAL_WORDING = re.compile(
+    r"\b(if\s+applicable|where\s+(?:relevant|applicable)|may\s+be\s+(?:requested|required)"
+    r"|optional|recommended|encouraged|not\s+required|one\s+of\b|either"
+    r"|should\s+also|applicants?\s+from|only\s+(?:if|for|when)|when\s+requested"
+    r"|as\s+(?:required|appropriate)|depending\s+on)\b",
+    re.IGNORECASE,
+)
+
+
+def requirement_level_of(line: str) -> str:
+    """What the page said about a document: required, conditional, or nothing.
+
+    A conditional reading wins over a required one, because a sentence saying
+    both ("a portfolio is required, if applicable") is describing a condition.
+    A bare list item says nothing at all, and stays unknown.
+    """
+    if _CONDITIONAL_WORDING.search(line):
+        return "conditional"
+    if _REQUIRED_WORDING.search(line):
+        return "required"
+    return "unknown"
+
+
 class WebDocumentsAdapter:
     name = "web-documents"
 

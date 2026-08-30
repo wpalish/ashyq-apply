@@ -1,0 +1,183 @@
+{
+  "base_commit": "2ebcbc6",
+  "branch": "claude/production-completion",
+  "commits_since_base": 80,
+  "counts": {
+    "backend_tests": 1948,
+    "frontend_tests": 60
+  },
+  "environment": {
+    "platform": "darwin",
+    "python": "3.12.13"
+  },
+  "gates": {
+    "backend_lint": {
+      "command": "python -m ruff check .",
+      "detail": "All checks passed!",
+      "exit_code": 0,
+      "output_tail": "All checks passed!",
+      "result": "pass"
+    },
+    "backend_tests_postgres": {
+      "command": "python backend/scripts/pg.py python -m pytest",
+      "detail": "1948 passed in 188.01s (0:03:08)",
+      "exit_code": 0,
+      "output_tail": "........................................................................ [ 18%]\n........................................................................ [ 22%]\n........................................................................ [ 25%]\n........................................................................ [ 29%]\n........................................................................ [ 33%]\n........................................................................ [ 36%]\n........................................................................ [ 40%]\n........................................................................ [ 44%]\n........................................................................ [ 48%]\n........................................................................ [ 51%]\n........................................................................ [ 55%]\n........................................................................ [ 59%]\n........................................................................ [ 62%]\n........................................................................ [ 66%]\n........................................................................ [ 70%]\n........................................................................ [ 73%]\n........................................................................ [ 77%]\n........................................................................ [ 81%]\n........................................................................ [ 85%]\n........................................................................ [ 88%]\n........................................................................ [ 92%]\n........................................................................ [ 96%]\n........................................................................ [ 99%]\n....                                                                     [100%]\n1948 passed in 188.01s (0:03:08)",
+      "result": "pass"
+    },
+    "backend_tests_sqlite": {
+      "command": "python -m pytest",
+      "detail": "1948 passed in 190.84s (0:03:10)",
+      "exit_code": 0,
+      "output_tail": "........................................................................ [ 18%]\n........................................................................ [ 22%]\n........................................................................ [ 25%]\n........................................................................ [ 29%]\n........................................................................ [ 33%]\n........................................................................ [ 36%]\n........................................................................ [ 40%]\n........................................................................ [ 44%]\n........................................................................ [ 48%]\n........................................................................ [ 51%]\n........................................................................ [ 55%]\n........................................................................ [ 59%]\n........................................................................ [ 62%]\n........................................................................ [ 66%]\n........................................................................ [ 70%]\n........................................................................ [ 73%]\n........................................................................ [ 77%]\n........................................................................ [ 81%]\n........................................................................ [ 85%]\n........................................................................ [ 88%]\n........................................................................ [ 92%]\n........................................................................ [ 96%]\n........................................................................ [ 99%]\n....                                                                     [100%]\n1948 passed in 190.84s (0:03:10)",
+      "result": "pass"
+    },
+    "backend_types": {
+      "command": "python -m mypy app tests scripts",
+      "detail": "Success: no issues found in 144 source files",
+      "exit_code": 0,
+      "output_tail": "tests/test_run_supervisor.py:193: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]\ntests/test_ssrf.py:243: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]\ntests/test_worker_split_brain.py:334: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]\ntests/test_live_regressions.py:515: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]\ntests/test_live_regressions.py:542: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]\ntests/test_job_payload_versioning.py:162: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]\nSuccess: no issues found in 144 source files",
+      "result": "pass"
+    },
+    "container_runtime": {
+      "attestation_sha256": "3828611518566d0b4ce6acbe7c8e7af61d839440d8a8ff6dabe8addfcd25d7e5",
+      "command": "./scripts/compose_smoke.sh",
+      "detail": "measured by CI: https://github.com/wpalish/ashyq-apply/actions/runs/33309439742",
+      "exit_code": 0,
+      "head_sha": "674500b22543a9d3f9f6cca1d6ef12f915eaf3bf",
+      "head_tree": "3c9e7ad569c45f847b242480078bb84e1a0e6801",
+      "measured_by": "github-actions",
+      "raw_attestation": {
+        "base_sha": "ea7948c8c7065082ef254f0693d0ba973accfd60",
+        "command": "./scripts/compose_smoke.sh",
+        "event": "pull_request",
+        "gate": "container_runtime",
+        "head_sha": "674500b22543a9d3f9f6cca1d6ef12f915eaf3bf",
+        "head_tree": "3c9e7ad569c45f847b242480078bb84e1a0e6801",
+        "job_url": "https://github.com/wpalish/ashyq-apply/actions/runs/33309439742/job/container-runtime",
+        "recorded_at": "2026-08-30T11:43:13+00:00",
+        "ref": "refs/pull/1/merge",
+        "result": "success",
+        "run_url": "https://github.com/wpalish/ashyq-apply/actions/runs/33309439742",
+        "runner": "Linux",
+        "sha_note": "tested_sha is the commit CI checked out. On pull_request it is a synthetic merge of head_sha onto base_sha and exists only in the CI checkout; head_tree is what to compare a working copy against.",
+        "tested_sha": "5f15fabd9aa050c3790d7d27d71a0a6370c6bbe0",
+        "tested_tree": "3c9e7ad569c45f847b242480078bb84e1a0e6801"
+      },
+      "result": "pass",
+      "tested_sha": "5f15fabd9aa050c3790d7d27d71a0a6370c6bbe0"
+    },
+    "crash_recovery": {
+      "command": "python backend/scripts/crash_test.py",
+      "detail": "INFO  [alembic.runtime.migration] Running upgrade b312b741919d -> 65ee4933e633, Give every claim a token, so only its holder can write.",
+      "exit_code": 0,
+      "output_tail": "using a throwaway database at /var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/crash-test-d07gva94\ndatabase migrated  lease=5s\nenqueued job 078d55b3 for run 6df7aaa0\nworker A pid 20574 started\nworker A SIGKILLed during funding_discovery, with 12 results already written\n  immediately after: job=running worker=iMac-Aliser.local:20574 run=funding_discovery results=12\nworker B pid 20582 started after the lease expired\n\n  job    : succeeded  attempts=2/3  worker=None\n  run    : awaiting_user_decision  recovery_count=0\n  results: 12  unique=12  duplicates=0\n  claims : 98\n\n  PASS: recovered after SIGKILL, re-attempted, finished, no duplicates\nINFO  [alembic.runtime.migration] Context impl SQLiteImpl.\nINFO  [alembic.runtime.migration] Will assume non-transactional DDL.\nINFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.\nINFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases\nINFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> b312b741919d, Stamp every durable job with the payload contract it was written against.\nINFO  [alembic.runtime.migration] Running upgrade b312b741919d -> 65ee4933e633, Give every claim a token, so only its holder can write.",
+      "result": "pass"
+    },
+    "frontend_build": {
+      "command": "npm run build",
+      "detail": "\u2713 built in 1.29s",
+      "exit_code": 0,
+      "output_tail": "> unimatch-frontend@0.1.0 build\n> tsc -b && vite build\n\nvite v6.4.3 building for production...\ntransforming...\n\u2713 45 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                   0.95 kB \u2502 gzip:  0.51 kB\ndist/assets/index-KDnhGUA9.css   25.55 kB \u2502 gzip:  5.49 kB\ndist/assets/index-C9Fdvl7P.js   254.24 kB \u2502 gzip: 75.44 kB\n\u2713 built in 1.29s",
+      "result": "pass"
+    },
+    "frontend_lint": {
+      "command": "npm run lint",
+      "detail": "> eslint src e2e --ext .ts,.tsx",
+      "exit_code": 0,
+      "output_tail": "> unimatch-frontend@0.1.0 lint\n> eslint src e2e --ext .ts,.tsx",
+      "result": "pass"
+    },
+    "frontend_tests": {
+      "command": "npx vitest run",
+      "detail": "   Duration  3.72s (transform 836ms, setup 1.88s, collect 1.93s, tests 1.09s, environment 10.44s, prepare 2.37s)",
+      "exit_code": 0,
+      "output_tail": "RUN  v3.2.7 /Users/wpalish/projects/unimatch/frontend\n\n \u2713 src/lib/funding-coverage.test.ts (4 tests) 9ms\n \u2713 src/lib/immutable.test.ts (11 tests) 24ms\n \u2713 src/lib/money-conversion.test.ts (3 tests) 87ms\n \u2713 src/lib/format.test.ts (21 tests) 146ms\n \u2713 src/screens/documents-unknown.test.tsx (3 tests) 7ms\n \u2713 src/lib/store.test.tsx (8 tests) 382ms\n \u2713 src/components/primitives.test.tsx (10 tests) 433ms\n\n Test Files  7 passed (7)\n      Tests  60 passed (60)\n   Start at  16:52:05\n   Duration  3.72s (transform 836ms, setup 1.88s, collect 1.93s, tests 1.09s, environment 10.44s, prepare 2.37s)",
+      "result": "pass"
+    },
+    "frontend_types": {
+      "command": "npm run typecheck",
+      "detail": "> tsc --noEmit",
+      "exit_code": 0,
+      "output_tail": "> unimatch-frontend@0.1.0 typecheck\n> tsc --noEmit",
+      "result": "pass"
+    },
+    "node_dependencies": {
+      "command": "npm audit",
+      "detail": "found 0 vulnerabilities",
+      "exit_code": 0,
+      "output_tail": "found 0 vulnerabilities",
+      "result": "pass"
+    },
+    "python_dependencies": {
+      "command": "python -m pip_audit",
+      "detail": "No known vulnerabilities found",
+      "exit_code": 0,
+      "output_tail": "No known vulnerabilities found",
+      "result": "pass"
+    }
+  },
+  "generated_at": "2026-08-30T11:52:18+00:00",
+  "head": "674500b22543a9d3f9f6cca1d6ef12f915eaf3bf",
+  "live_discovery": {
+    "distinct_run_files": 3,
+    "holdout": {
+      "false_positives": 0,
+      "file": "holdout/canary-2026-08-30.json",
+      "institutions": 6,
+      "programme_pages": 3,
+      "sha256": "6624d7f92d3f89fbaf74709cd71045146fda88afa10565b16b5687980cf71e88"
+    },
+    "measured_at_commit": "c58a0f5bb1472820f40a5475cc74c3b1fd8d3c9a",
+    "median_programme_pages": 8,
+    "runs": [
+      {
+        "claims": 51,
+        "false_positives": 0,
+        "file": "run1/canary-2026-08-30.json",
+        "institutions": 10,
+        "mean_completeness": 0.092,
+        "programme_pages": 8,
+        "scholarship_pages": 10,
+        "sha256": "0b4b4b1c0ae5e8f48f1b9ab621565fb7809e8749acfde8a46cb64c9965707147"
+      },
+      {
+        "claims": 51,
+        "false_positives": 0,
+        "file": "run2/canary-2026-08-30.json",
+        "institutions": 10,
+        "mean_completeness": 0.092,
+        "programme_pages": 8,
+        "scholarship_pages": 10,
+        "sha256": "b09524aaaaa57b2f3eddf21188cb64750a83c1a87187233696ac99e03b3a63ca"
+      },
+      {
+        "claims": 51,
+        "false_positives": 0,
+        "file": "run3/canary-2026-08-30.json",
+        "institutions": 10,
+        "mean_completeness": 0.092,
+        "programme_pages": 8,
+        "scholarship_pages": 10,
+        "sha256": "e6da7ab19dbca32e9dbd4d7a20fa864102de71b8dc10faf1b84e3f13e6917792"
+      }
+    ],
+    "runs_supplied": 3,
+    "worst_programme_pages": 8
+  },
+  "open_gates": {
+    "failing": [],
+    "not_run": [],
+    "product_thresholds": [
+      "holdout programme pages 3/6 against a bar of 4",
+      "decision-grade extraction completeness 9.2% against a bar of 70%"
+    ]
+  },
+  "verdict": "NOT READY",
+  "working_tree": {
+    "clean": true,
+    "clean_ignoring_generated_outputs": true,
+    "generated_outputs_modified": [],
+    "uncommitted_paths": []
+  }
+}

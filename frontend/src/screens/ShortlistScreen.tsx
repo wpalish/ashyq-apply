@@ -12,7 +12,9 @@ import { Fragment, useMemo, useState } from 'react';
 import { ResultDetail } from '@/components/ResultDetail';
 import { Chip, Empty, Field, Notice, Panel, StatusChip } from '@/components/primitives';
 import {
-  admissionsFitTone, date, eligibilityTone, fundingClassTone, money, scorePercent,
+  admissionsFitTone, conversionNote, date, eligibilityTone, fundingClassTone, money,
+  uncoveredCategories,
+  scorePercent,
 } from '@/lib/format';
 import { useStore } from '@/lib/store';
 import type { ProgramResult, UserDecision } from '@/types';
@@ -119,7 +121,7 @@ export function ShortlistScreen() {
             </Field>
             <label className="row row--tight small" style={{ paddingBottom: 6 }}>
               <input type="checkbox" checked={hideRejected} onChange={(e) => setHideRejected(e.target.checked)} />
-              Hide rejected
+              Hide the ones I ruled out
             </label>
           </div>
         </Panel>
@@ -138,13 +140,17 @@ export function ShortlistScreen() {
                 <th scope="col">Remaining&nbsp;/&nbsp;year</th>
                 <th scope="col">Deadline</th>
                 <th scope="col">Preference match</th>
-                <th scope="col">Decision</th>
+                <th scope="col">Your plan</th>
               </tr>
             </thead>
             <tbody>
               {rows.map((r) => {
                 const open = expanded === r.id;
                 const gap = r.funding_gap;
+                const uncovered = uncoveredCategories(
+                  r.scholarships.flatMap((sc) => sc.coverage),
+                  r.costs.items,
+                );
                 return (
                   // The Fragment carries the key: a row and its detail drawer are
                   // two siblings produced by one iteration.
@@ -177,10 +183,21 @@ export function ShortlistScreen() {
                           status={r.best_funding_classification}
                           tone={fundingClassTone[r.best_funding_classification]}
                         />
+                        {/* "Full ride" beside a non-zero remaining cost reads
+                            as a contradiction, and a student is likelier to
+                            believe the half that says they owe nothing. Both
+                            are true: the award covers the core categories and
+                            the university publishes others. Naming them here
+                            is what joins the two columns. */}
+                        {uncovered.length > 0 && (
+                          <div className="xs muted" style={{ marginTop: 2 }}>
+                            not covered: {uncovered.join(', ').replace(/_/g, ' ')}
+                          </div>
+                        )}
                       </td>
                       <td className="num" data-label="Remaining / year">
                         {gap?.computable && gap.gap ? (
-                          money(gap.gap)
+                          <span title={conversionNote(gap.gap) ?? undefined}>{money(gap.gap)}</span>
                         ) : (
                           <span className="xs muted" title={gap?.reason}>not computable</span>
                         )}
@@ -194,26 +211,33 @@ export function ShortlistScreen() {
                           ? `${(scorePercent(r.preference_score.total, r.preference_score.max_possible) / 10).toFixed(1)} / 10`
                           : '—'}
                       </td>
-                      <td data-label="Decision">
-                        <div className="decision-group" role="group" aria-label={`Decision for ${r.university}`}>
+                      <td data-label="Your plan">
+                        <div
+                          className="decision-group"
+                          role="group"
+                          aria-label={`What to do about ${r.program} at ${r.university}`}
+                        >
                           <button
                             className="decision-btn decision-btn--approve"
                             aria-pressed={r.user_decision === 'approved'}
                             onClick={() => decideRow(r, 'approved')}
                             data-testid={`approve-${r.id}`}
-                          >Yes</button>
+                            aria-label={`Apply to ${r.program} at ${r.university}`}
+                          >Apply</button>
                           <button
                             className="decision-btn decision-btn--maybe"
                             aria-pressed={r.user_decision === 'maybe'}
                             onClick={() => decideRow(r, 'maybe')}
                             data-testid={`maybe-${r.id}`}
-                          >Maybe</button>
+                            aria-label={`Decide later about ${r.program} at ${r.university}`}
+                          >Decide later</button>
                           <button
                             className="decision-btn decision-btn--reject"
                             aria-pressed={r.user_decision === 'rejected'}
                             onClick={() => decideRow(r, 'rejected')}
                             data-testid={`reject-${r.id}`}
-                          >No</button>
+                            aria-label={`Rule out ${r.program} at ${r.university}`}
+                          >Rule out</button>
                         </div>
                         <div>
                           <button

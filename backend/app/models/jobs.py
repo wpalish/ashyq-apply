@@ -33,6 +33,12 @@ class JobStatus(StrEnum):
     #: Attempts exhausted. Requires a human decision; never retried automatically.
     DEAD = "dead"
     CANCELLED = "cancelled"
+    #: This build cannot read the payload, so it refused rather than attempted.
+    #: Not a failure of the work and not terminal: a worker that does support
+    #: the payload version releases these on startup. Kept apart from DEAD
+    #: because DEAD means a person has to decide, and conflating the two is how
+    #: three real jobs were lost to an orphaned worker.
+    BLOCKED_INCOMPATIBLE = "blocked_incompatible"
 
 
 #: Statuses from which no further work happens without a new decision.
@@ -70,11 +76,33 @@ class Job(TimestampedBase):
     heartbeat_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     worker_id: Mapped[str | None] = mapped_column(String(80), nullable=True)
 
+    #: Which *run* of this job the current holder is on. Regenerated at every
+    #: claim, and required by heartbeat, complete, fail and cancel.
+    #:
+    #: Without it those operations matched on job id and RUNNING status alone,
+    #: so a worker that stalled long enough for its lease to expire could wake
+    #: after another had reclaimed the job and extend that worker's lease, mark
+    #: its job succeeded, or fail work it had already finished. Two writers on
+    #: one job is the corruption a durable queue exists to prevent.
+    #:
+    #: Deliberately random rather than a PID or a timestamp: a PID is reused and
+    #: a clock can go backwards, and neither can fence.
+    lease_token: Mapped[str | None] = mapped_column(String(64), nullable=True)
+
     #: Set by cancel(); the running worker observes it between units of work so
     #: cancellation lands at a consistent point instead of tearing a stage.
     cancel_requested: Mapped[bool] = mapped_column(default=False, nullable=False)
 
     payload: Mapped[dict] = mapped_column(JSON, default=dict, nullable=False)
+
+    #: The payload contract this job was written against. A worker runs a job
+    #: only when it supports this version; see app/jobs/versioning.py. Defaults
+    #: to 1 so rows written before this column existed decode as what they are.
+    payload_schema_version: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
+    #: Which build enqueued it. Recorded so a stalled queue can be traced to
+    #: the pair of builds that disagreed, without reading anyone's data.
+    producer_version: Mapped[str] = mapped_column(String(40), default="", nullable=False)
+
     last_error: Mapped[str] = mapped_column(Text, default="", nullable=False)
 
     started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)

@@ -21,6 +21,24 @@ const OWNER_LABEL: Record<string, string> = {
 
 const DONE_KEY = 'unimatch.docsDone';
 
+/**
+ * Whether the source said nothing about what is required, for every item.
+ *
+ * A university that publishes a document list without marking anything
+ * required gives every row the identical "the page does not say" chip. Seven
+ * copies of one sentence bury the lead times and format limits, which are the
+ * part that actually differs between rows. The fact still has to be said —
+ * silence here would read as "all of these are required" — so it is said once,
+ * above the list, instead of on every line.
+ *
+ * False for an empty list: there is nothing to say it about.
+ */
+export function allRequirementLevelsUnknown(items: DocumentItem[]): boolean {
+  return items.length > 0 && items.every((d) => d.requirement_level === 'unknown');
+}
+
+
+
 function loadDone(): Record<string, boolean> {
   try {
     return JSON.parse(window.localStorage.getItem(DONE_KEY) ?? '{}');
@@ -135,6 +153,9 @@ function ChecklistFor({
   result, done, toggle,
 }: { result: ProgramResult; done: Record<string, boolean>; toggle: (k: string) => void }) {
   const c = result.checklist!;
+  const noneStated = allRequirementLevelsUnknown([
+    ...c.admission_documents, ...c.scholarship_documents,
+  ]);
 
   // Longest lead time first, both between groups and inside them. What the
   // screen promises is "start with what depends on other people", and a
@@ -161,7 +182,8 @@ function ChecklistFor({
     <div className="stack">
       <Panel
         title={`${result.university} — ${result.program}`}
-        hint={`${completed} of ${total} items ticked off. Generated ${dateTime(c.generated_at)}.`}
+        hint={`${completed} of ${total} items ticked off.`}
+        hintSuffix={`Generated ${dateTime(c.generated_at)}.`}
         actions={
           <Chip tone={c.completeness === 'official' ? 'ok' : c.completeness === 'partial' ? 'warn' : 'risk'}>
             {c.completeness === 'official' ? 'from official pages'
@@ -173,6 +195,18 @@ function ChecklistFor({
           <div className="meter__fill" style={{ width: `${total ? (completed / total) * 100 : 0}%` }} />
         </div>
 
+        {noneStated && (
+          <div style={{ marginBottom: 'var(--space-5)' }}>
+          <Notice kind="info">
+            <div>
+              The official pages list these documents but do not say which are
+              required. Treat the list as what to prepare, not as what is
+              demanded, and confirm with the university before you rely on it.
+            </div>
+          </Notice>
+          </div>
+        )}
+
         {groups.map(([owner, items]) =>
           items.length === 0 ? null : (
             <div key={owner} className="stack stack--tight" style={{ marginBottom: 'var(--space-5)' }}>
@@ -183,7 +217,20 @@ function ChecklistFor({
                   <label key={key} className={`doc ${done[key] ? 'doc--done' : ''}`}>
                     <input type="checkbox" checked={Boolean(done[key])} onChange={() => toggle(key)} />
                     <div>
-                      <div className="doc__name">{d.name}</div>
+                      <div className="doc__name">
+                        {d.name}{' '}
+                        {/* A page listing "a portfolio, if applicable" is not
+                            telling the applicant to produce one, and a bare
+                            list item is not telling them anything. Showing the
+                            three apart is the difference between a checklist
+                            and a demand. */}
+                        {d.requirement_level === 'conditional' && (
+                          <Chip tone="warn">only if it applies to you</Chip>
+                        )}
+                        {d.requirement_level === 'unknown' && !noneStated && (
+                          <Chip tone="neutral">the page does not say if this is required</Chip>
+                        )}
+                      </div>
                       <div className="doc__meta">
                         {[
                           d.purpose === 'scholarship' ? 'for a scholarship' : 'for admission',
@@ -228,7 +275,7 @@ function ChecklistFor({
 
       <Notice kind="info">
         <div>
-          UniMatch prepares this list. It does not upload documents, submit an application, sign
+          ASHYQ Apply prepares this list. It does not upload documents, submit an application, sign
           anything on your behalf, or pay a fee. Those steps stay with you.
         </div>
       </Notice>

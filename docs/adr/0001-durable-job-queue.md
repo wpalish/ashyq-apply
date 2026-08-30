@@ -40,8 +40,10 @@ any broker provides. Moving to Redis later replaces one module.
 ## What this buys us
 
 * **Durability** — jobs survive a restart of every process.
-* **Leases** — a claimed job carries an expiry; a worker that stops beating
-  loses it.
+* **Leases** — a claimed job carries an expiry and a token; a worker that stops
+  beating loses it, and cannot write to it afterwards. Both halves of that were
+  untrue as first written — see
+  [0004 — lease fencing](0004-lease-fencing.md).
 * **Reaping** — expired leases return to the queue, or to `dead` once attempts
   are exhausted.
 * **Idempotency** — a unique key stops the same work being enqueued twice.
