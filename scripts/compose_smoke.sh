@@ -33,9 +33,25 @@ COMPOSE=(docker compose -p "$PROJECT")
 JAR_A="$(mktemp)"; JAR_B="$(mktemp)"
 FAILED=0
 
-step()  { printf '\n=== %s\n' "$1"; }
+# `::error::` lines become GitHub check annotations, which are readable
+# through the public API without repository admin rights. Job logs and
+# artifacts are not: the first two container failures reported nothing beyond
+# "Process completed with exit code 1", which is not enough to fix anything.
+# Newlines are encoded as %0A because an annotation is one line.
+annotate() {
+  if [ -n "${GITHUB_ACTIONS:-}" ]; then
+    printf '::error title=%s::%s\n' "$1" "$(printf '%s' "$2" | sed ':a;N;$!ba;s/\n/%0A/g')"
+  fi
+}
+
+PHASE="starting"
+step()  { PHASE="$1"; printf '\n=== %s\n' "$1"; }
 ok()    { printf '  ok   %s\n' "$1"; }
-bad()   { printf '  FAIL %s\n' "$1"; FAILED=1; }
+bad()   {
+  printf '  FAIL %s\n' "$1"
+  FAILED=1
+  annotate "smoke: $PHASE" "$1"
+}
 check() { if [ "$1" = "$2" ]; then ok "$3"; else bad "$3 (expected $2, got $1)"; fi; }
 
 DUMP="/tmp/${PROJECT}.sql"
@@ -53,6 +69,23 @@ collect_diagnostics() {
   } > "$ARTIFACTS/summary.txt" 2>&1 || true
 
   "${COMPOSE[@]}" ps --all > "$ARTIFACTS/compose-ps.txt" 2>&1 || true
+
+  # The one thing worth saying out loud when a container will not come up:
+  # what its healthcheck actually printed. "unhealthy" on its own is a symptom.
+  if [ "$FAILED" != "0" ]; then
+    for container in $("${COMPOSE[@]}" ps --all -q 2>/dev/null); do
+      cname="$(docker inspect --format '{{.Name}}' "$container" 2>/dev/null | tr -d '/')"
+      hlog="$(docker inspect --format \
+        '{{if .State.Health}}{{range .State.Health.Log}}{{.Output}}{{end}}{{end}}' \
+        "$container" 2>/dev/null | tail -c 900)"
+      [ -n "$hlog" ] && annotate "health: $cname" "$hlog"
+      state="$(docker inspect --format '{{.State.Status}} exit={{.State.ExitCode}}' "$container" 2>/dev/null)"
+      case "$state" in
+        running*|"") ;;
+        *) annotate "container: $cname" "$state%0A$("${COMPOSE[@]}" logs --no-color --tail 25 "${cname##*-}" 2>&1 | tail -c 900)" ;;
+      esac
+    done
+  fi
   "${COMPOSE[@]}" config > "$ARTIFACTS/compose-config.yml" 2>&1 || true
 
   # Health state is the thing the first failure turned on: "container is
