@@ -37,13 +37,36 @@ jobs:
           cache-dependency-path: backend/requirements*.txt
       - run: python -m venv .venv
       - run: .venv/bin/pip install -r requirements-dev.txt
+      # Failures are annotated, because job logs need repository admin rights to
+      # download and a bare "Process completed with exit code 1" is not enough
+      # to act on. Annotations are readable through the public API.
       - if: matrix.database == 'sqlite'
         run: |
-          .venv/bin/ruff check .
-          .venv/bin/mypy app tests scripts
-          UNIMATCH_DATABASE_URL=sqlite:////tmp/unimatch-ci.db .venv/bin/pytest --cov=app --cov-fail-under=90
+          set -o pipefail
+          .venv/bin/ruff check . 2>&1 | tee /tmp/ruff.txt || {
+            while IFS= read -r line; do echo "::error title=ruff::$line"; done < <(head -20 /tmp/ruff.txt)
+            exit 1
+          }
+          .venv/bin/mypy app tests scripts 2>&1 | tee /tmp/mypy.txt || {
+            while IFS= read -r line; do echo "::error title=mypy::$line"; done < <(grep error: /tmp/mypy.txt | head -20)
+            exit 1
+          }
+          UNIMATCH_DATABASE_URL=sqlite:////tmp/unimatch-ci.db \
+            .venv/bin/pytest --cov=app --cov-fail-under=90 -q 2>&1 | tee /tmp/pytest.txt || {
+            while IFS= read -r line; do echo "::error title=pytest (sqlite)::$line"; done < <(
+              grep -E '^(FAILED|ERROR)|Coverage failure|Required test coverage' /tmp/pytest.txt | head -20
+            )
+            exit 1
+          }
       - if: matrix.database == 'postgresql'
-        run: .venv/bin/python scripts/pg.py .venv/bin/pytest
+        run: |
+          set -o pipefail
+          .venv/bin/python scripts/pg.py .venv/bin/pytest -q 2>&1 | tee /tmp/pytest-pg.txt || {
+            while IFS= read -r line; do echo "::error title=pytest (postgresql)::$line"; done < <(
+              grep -E '^(FAILED|ERROR)' /tmp/pytest-pg.txt | head -20
+            )
+            exit 1
+          }
 
   frontend:
     runs-on: ubuntu-latest
