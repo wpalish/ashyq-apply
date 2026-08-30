@@ -33,6 +33,7 @@ from app.adapters.extraction import (  # noqa: E402
     ClaimBuilder,
     extract_cost_tables,
     extract_costs,
+    extract_requirement_tables,
     extract_requirements,
     pdf_to_text,
     readable_text,
@@ -97,7 +98,12 @@ async def main() -> int:
     claims = (
         extract_requirements(text, builder)
         + extract_costs(text, builder)
-        + (extract_cost_tables(res.text, builder) if not res.is_pdf else [])
+        + (
+            extract_cost_tables(res.text, builder)
+            + extract_requirement_tables(res.text, builder)
+            if not res.is_pdf
+            else []
+        )
     )
     print(f"\n# the current extractor produces {len(claims)} claim(s):")
     for claim in claims:

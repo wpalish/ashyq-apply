@@ -114,6 +114,31 @@ class TestEveryAuditedAnswerCanBeRechecked:
                 if answer.verdict in (ABSENT, NOT_CHECKED):
                     assert not answer.claims
 
+    #: Phrases that admit the audit is unfinished. An `absent` carrying one of
+    #: these is really a `not_checked`, and the difference is not cosmetic: the
+    #: evaluator counts a claim against an `absent` as a false positive, so a
+    #: mis-scoped absence marks correct extraction as a precision failure.
+    UNFINISHED_ADMISSIONS = ("not been audited", "not audited yet", "have not audited")
+
+    def test_absence_means_the_institution_does_not_publish_it(self, gold):
+        """`absent` is a claim about the institution, not about one page.
+
+        Three entries in the first audit said "no fee on the programme page;
+        the university publishes them elsewhere, not audited yet" and were
+        recorded as `absent`. The pipeline reads that other page, found the fee,
+        and the evaluator scored a correct extraction as a false positive —
+        precision 0.50 on tuition, entirely from the benchmark being wrong.
+        """
+        for programme in gold.programmes:
+            for answer in programme.absent():
+                lowered = answer.note.lower()
+                for admission in self.UNFINISHED_ADMISSIONS:
+                    assert admission not in lowered, (
+                        f"{programme.id}/{answer.question}: recorded as absent "
+                        f"while admitting the audit is unfinished — that is a "
+                        f"not_checked. Note: {answer.note[:120]}"
+                    )
+
     def test_absence_is_recorded_with_a_reason(self, gold):
         """`absent` is a positive finding — someone looked and it was not there.
 
