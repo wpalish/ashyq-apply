@@ -8,7 +8,9 @@ applicant data is ever used against live sites.
 
 ## Headline
 
-Measured at `0af7daa`.
+Measured at the commit named in `artifacts/release-evidence.json`, which is
+regenerated with each canary series. Accepted pages are enumerated in
+`artifacts/accepted-pages.json`; any count quoted below resolves from there.
 
 | | Session start | Now | Bar |
 |---|---|---|---|

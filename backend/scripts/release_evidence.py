@@ -33,6 +33,7 @@ because no container runtime is installed.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import shutil
@@ -165,6 +166,124 @@ def canary_summary(directory: Path) -> dict[str, Any]:
     }
 
 
+#: Fields an attestation must carry to be evidence of anything.
+REQUIRED_ATTESTATION_FIELDS = (
+    "result",
+    "tested_sha",
+    "head_sha",
+    "head_tree",
+    "run_url",
+)
+
+
+def check_run_gate(observation: dict[str, Any], *, head_sha: str) -> dict[str, Any]:
+    """Record what GitHub publicly reported for the container gate.
+
+    Weaker than the attestation and labelled so. The attestation is the bytes
+    CI wrote, carrying the trees; this is the conclusion the public API reports
+    for a commit, which is all that can be read without repository
+    credentials. It is enough to say "CI ran this and it passed at this
+    commit", and it is not enough to say what tree was tested — so it never
+    claims to.
+    """
+    required = ("head_sha", "conclusion", "run_url")
+    missing = [f for f in required if not observation.get(f)]
+    base: dict[str, Any] = {
+        "command": "./scripts/compose_smoke.sh",
+        "evidence": "github check-run conclusion (public API)",
+        "raw_observation": observation,
+    }
+    if missing:
+        return {
+            **base,
+            "exit_code": None,
+            "result": "not_run",
+            "detail": f"observation is missing required field(s): {', '.join(missing)}",
+        }
+    if observation["head_sha"] != head_sha:
+        return {
+            **base,
+            "exit_code": None,
+            "result": "not_run",
+            "detail": (
+                f"observation is for {observation['head_sha'][:7]}, "
+                f"not for {head_sha[:7]}"
+            ),
+        }
+    passed = observation["conclusion"] == "success"
+    return {
+        **base,
+        "exit_code": 0 if passed else 1,
+        "result": "pass" if passed else "fail",
+        "detail": (
+            f"CI reported {observation['conclusion']} for this commit: "
+            f"{observation['run_url']}"
+        ),
+        "head_sha": observation["head_sha"],
+        "measured_by": "github-actions",
+        "attestation_artifact": (
+            "uploaded by the container-runtime job; downloading it needs "
+            "repository credentials, so the full attestation is not embedded here"
+        ),
+    }
+
+
+def attestation_gate(
+    attestation: dict[str, Any], *, head_sha: str, head_tree: str
+) -> dict[str, Any]:
+    """Turn a CI attestation into a gate result, or refuse it.
+
+    The previous version accepted any JSON whose `sha` matched HEAD. That
+    trusted a hand-written file as though CI had produced it, and matched
+    against `github.sha` — which on a `pull_request` is a synthetic merge
+    commit, not the branch head. An artifact named for `ba15bbb` was in fact
+    built from merge commit `6a95c5bd`.
+
+    The tree is what is checked, not only the SHA. A commit id can be copied
+    into a file; the tree is what the code actually was, and `head_tree` is the
+    one identifier in the attestation that also exists outside CI's checkout.
+
+    The raw attestation is stored verbatim with a digest. This function decides
+    whether to *believe* it; it never rewrites it.
+    """
+    missing = [f for f in REQUIRED_ATTESTATION_FIELDS if not attestation.get(f)]
+    digest = hashlib.sha256(
+        json.dumps(attestation, sort_keys=True, separators=(",", ":")).encode()
+    ).hexdigest()
+    base: dict[str, Any] = {
+        "command": attestation.get("command", "./scripts/compose_smoke.sh"),
+        "raw_attestation": attestation,
+        "attestation_sha256": digest,
+    }
+
+    def refuse(reason: str) -> dict[str, Any]:
+        return {**base, "exit_code": None, "result": "not_run", "detail": reason}
+
+    if missing:
+        return refuse(f"attestation is missing required field(s): {', '.join(missing)}")
+    if attestation["head_sha"] != head_sha:
+        return refuse(
+            f"attestation is for head {attestation['head_sha'][:7]}, "
+            f"not for {head_sha[:7]}"
+        )
+    if attestation["head_tree"] != head_tree:
+        return refuse(
+            f"attestation is for tree {attestation['head_tree'][:7]}, "
+            f"but this working copy is {head_tree[:7]}"
+        )
+    passed = attestation["result"] == "success"
+    return {
+        **base,
+        "exit_code": 0 if passed else 1,
+        "result": "pass" if passed else "fail",
+        "detail": f"measured by CI: {attestation['run_url']}",
+        "tested_sha": attestation["tested_sha"],
+        "head_sha": attestation["head_sha"],
+        "head_tree": attestation["head_tree"],
+        "measured_by": "github-actions",
+    }
+
+
 def container_gate() -> dict[str, Any]:
     """Run the container smoke test if a runtime exists; say so if not."""
     runtimes = ("docker", "podman", "nerdctl", "finch")
@@ -187,6 +306,18 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--canary", type=Path, help="directory holding canary run output")
     parser.add_argument("--out", type=Path, default=ARTIFACT)
+    parser.add_argument(
+        "--container-check-run",
+        type=Path,
+        help=(
+            "JSON naming the head SHA and the conclusion GitHub published for "
+            "the container-runtime check. Weaker evidence than the full "
+            "attestation — it is the public API's verdict, not the bytes CI "
+            "wrote — and it is recorded as such, because downloading the "
+            "attestation artifact needs repository credentials this machine "
+            "does not have."
+        ),
+    )
     parser.add_argument(
         "--container-attestation",
         type=Path,
@@ -226,23 +357,17 @@ def main() -> int:
     # runtime exists, and otherwise records that it could not, naming what it
     # looked for.
     gates["container_runtime"] = container_gate()
+    if args.container_check_run and args.container_check_run.exists():
+        gates["container_runtime"] = check_run_gate(
+            json.loads(args.container_check_run.read_text()),
+            head_sha=git("rev-parse", "HEAD"),
+        )
     if args.container_attestation and args.container_attestation.exists():
-        attested = json.loads(args.container_attestation.read_text())
-        head = git("rev-parse", "HEAD")
-        if attested.get("sha") == head:
-            gates["container_runtime"] = {
-                "command": attested.get("command", "./scripts/compose_smoke.sh"),
-                "exit_code": 0 if attested.get("result") == "success" else 1,
-                "result": "pass" if attested.get("result") == "success" else "fail",
-                "detail": f"measured by CI: {attested.get('run_url', 'unknown run')}",
-                "attested_sha": attested["sha"],
-                "measured_by": "github-actions",
-            }
-        else:
-            gates["container_runtime"]["detail"] += (
-                f"; an attestation was supplied for {str(attested.get('sha'))[:7]}, "
-                f"which is not this commit ({head[:7]})"
-            )
+        gates["container_runtime"] = attestation_gate(
+            json.loads(args.container_attestation.read_text()),
+            head_sha=git("rev-parse", "HEAD"),
+            head_tree=git("rev-parse", "HEAD^{tree}"),
+        )
 
     artifact: dict[str, Any] = {
         "generated_at": datetime.now(UTC).isoformat(timespec="seconds"),

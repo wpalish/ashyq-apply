@@ -25,7 +25,11 @@ import pytest
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 ARTIFACT = ROOT / "artifacts" / "release-evidence.json"
+#: Documents that describe the *current* state and must therefore agree with
+#: the artifact. README is here because it was quoting a recall of 1/10 and 768
+#: tests long after both were false, and nothing was reading it.
 DOCUMENTS = [
+    ROOT / "README.md",
     ROOT / "RELEASE_CHECKLIST.md",
     ROOT / "docs" / "evidence" / "RELEASE-EVIDENCE-2026-08-29.md",
     ROOT / "docs" / "LIVE_DISCOVERY_REPORT.md",
@@ -34,11 +38,16 @@ DOCUMENTS = [
 
 @pytest.fixture(scope="module")
 def artifact() -> dict:
-    if not ARTIFACT.exists():
-        pytest.skip(
-            f"{ARTIFACT.relative_to(ROOT)} has not been generated; "
-            "run scripts/release_evidence.py"
-        )
+    """The release evidence. Its absence is a failure, not a skip.
+
+    Skipping here meant a repository with no evidence at all produced a green
+    release-verification suite. Missing evidence is the loudest thing this file
+    can find, and it was the quietest.
+    """
+    assert ARTIFACT.exists(), (
+        f"{ARTIFACT.relative_to(ROOT)} does not exist. Release verification "
+        "cannot pass without it; run scripts/release_evidence.py."
+    )
     return json.loads(ARTIFACT.read_text())
 
 
@@ -91,7 +100,8 @@ class TestTheDocumentsAgreeWithTheArtifact:
         self, artifact: dict, documents: dict[Path, str]
     ):
         if artifact["verdict"] == "READY":
-            pytest.skip("nothing to guard against while every gate passes")
+            # Nothing to guard against, and nothing to hide either.
+            return
         for path, text in documents.items():
             for line in text.splitlines():
                 stripped = re.sub(r"[*_`]", "", line).strip()
@@ -115,8 +125,11 @@ class TestTheDocumentsAgreeWithTheArtifact:
         self, artifact: dict, documents: dict[Path, str]
     ):
         actual = artifact["counts"]["backend_tests"]
-        if actual is None:
-            pytest.skip("the artifact records no backend test count")
+        assert actual is not None, (
+            "the artifact records no backend test count. That means the run "
+            "that produced it did not pass, and a release document quoting a "
+            "count would be quoting nothing."
+        )
         # Only rows running the *whole* backend suite. Two earlier versions
         # were too loose and both failures were the test's fault, not the
         # document's: the first matched any "**PASS** — N passed" and read the
@@ -147,11 +160,36 @@ class TestTheDocumentsAgreeWithTheArtifact:
         """
         gate = artifact["gates"]["container_runtime"]
         if gate["result"] == "pass":
-            assert gate.get("attested_sha") == artifact["head"], (
-                "the container gate is recorded as passing without an "
-                "attestation for this commit"
+            # Asserted, not skipped. This skip was the single runtime skip in
+            # the suite, and it made every report that said "skips 0" wrong.
+            # A passing gate has something to check: that an attestation for
+            # *this* commit is why it passed.
+            assert gate.get("head_sha"), (
+                "the container gate is recorded as passing with no evidence "
+                "naming the commit it passed at"
             )
-            pytest.skip("the container gate passed, attested for this commit")
+            assert gate["head_sha"] == artifact["head"], (
+                f"the container gate is recorded for head {gate['head_sha'][:7]}, "
+                f"not for {artifact['head'][:7]}"
+            )
+            # Either kind of evidence is acceptable and each says what it is.
+            # The full attestation carries CI's own bytes and the trees; the
+            # check-run conclusion is the public API's verdict, which is all
+            # that can be read without repository credentials.
+            if gate.get("raw_attestation"):
+                assert len(gate.get("attestation_sha256", "")) == 64
+                # On a pull_request the commit CI checked out is a synthetic
+                # merge, and calling it the branch SHA is what went wrong.
+                assert gate.get("tested_sha"), (
+                    "the attestation does not say what was tested"
+                )
+            else:
+                assert gate.get("raw_observation"), (
+                    "the container gate passed with neither an attestation nor "
+                    "a recorded CI observation"
+                )
+                assert gate.get("evidence"), "the kind of evidence is not stated"
+            return
         for path, text in documents.items():
             for line in text.splitlines():
                 if "compose_smoke" in line or "container-runtime" in line.lower():
@@ -165,8 +203,10 @@ class TestTheLiveNumbersAgree:
         self, artifact: dict, documents: dict[Path, str]
     ):
         live = artifact.get("live_discovery")
-        if not live or live.get("median_programme_pages") is None:
-            pytest.skip("the artifact carries no canary measurement")
+        assert live and live.get("median_programme_pages") is not None, (
+            "the artifact carries no live discovery measurement; release "
+            "verification cannot pass on unmeasured recall"
+        )
         median = live["median_programme_pages"]
         # Only statements about the median *now*. A before/after table
         # legitimately records what an earlier run produced, and the first
@@ -190,10 +230,109 @@ class TestTheLiveNumbersAgree:
         self, artifact: dict
     ):
         live = artifact.get("live_discovery")
-        if not live:
-            pytest.skip("the artifact carries no canary measurement")
+        assert live, "the artifact carries no live discovery measurement"
         for run in live["runs"]:
             assert run["false_positives"] == 0, (
                 "a run recorded a zero-tolerance false positive; no document "
                 "may describe this release as meeting its bar"
             )
+
+
+class TestNoDocumentHasBlanksOrStaleState:
+    """The checks that were missing, each for a defect that survived the ones
+    that were here.
+
+    Every earlier rule was conditional: "if the regex finds a number, it must
+    match". A blank finds no number, so `**PASS** —  passed` passed. A stale
+    SHA is not a number, so `0af7daa` passed. A README claiming recall of 1/10
+    was never read at all.
+    """
+
+    #: Placeholders that mean a measured value was meant to be here and is not.
+    #: Checked with backtick spans removed: a document explaining that
+    #: `**PASS** —  passed` once appeared is describing the defect, not
+    #: containing it.
+    BLANKS = (
+        re.compile(r"\*\*PASS\*\* —\s*passed"),
+        re.compile(r"\|\s*Tests\s*\|\s*backend"),
+        re.compile(r"—\s+passed\b"),
+    )
+
+    #: Markers of unfinished work, in the shapes an actual one takes: followed
+    #: by a colon or a dash, or opening a list item.
+    #:
+    #: A bare word match was wrong in both directions. It flagged a checklist
+    #: row quoting `grep -rn "TODO\|FIXME"`, and a gate whose title is "No
+    #: TODO / FIXME in a production path" — both of which report the *absence*
+    #: of unfinished work. Backtick spans are stripped as well.
+    UNFINISHED = re.compile(
+        r"(?:^|\s)[-*]?\s*(?:TODO|TBD|XXX|FIXME)\s*[:\-—]", re.IGNORECASE
+    )
+
+    @staticmethod
+    def _without_code(line: str) -> str:
+        r"""Backtick spans quote commands and output, so a checklist row saying
+        `grep -rn "TODO\|FIXME"` is describing a check rather than leaving one
+        undone. The prose around the code is what these rules are about."""
+        return re.sub(r"`[^`]*`", "", line)
+
+    def test_no_current_document_contains_a_blank_value(
+        self, documents: dict[Path, str]
+    ):
+        for path, text in documents.items():
+            for raw in text.splitlines():
+                stripped = self._without_code(raw)
+                for blank in self.BLANKS:
+                    assert not blank.search(stripped), (
+                        f"{path.name} has a placeholder where a measured value "
+                        f"belongs: {raw.strip()[:120]}"
+                    )
+                assert not self.UNFINISHED.search(self._without_code(raw)), (
+                    f"{path.name} records unfinished work: {raw.strip()[:120]}"
+                )
+
+    def test_no_current_document_quotes_a_stale_commit(
+        self, artifact: dict, documents: dict[Path, str]
+    ):
+        """A document may cite an older commit as history — "it failed at
+        `a669496`" — but not as the state of the branch now."""
+        head = artifact["head"][:7]
+        present_tense = re.compile(
+            r"(?:verified|measured|as of|currently|at HEAD)[^.\n|]{0,40}`([0-9a-f]{7,40})`",
+            re.IGNORECASE,
+        )
+        for path, text in documents.items():
+            for stated in present_tense.findall(text):
+                assert artifact["head"].startswith(stated) or stated.startswith(head), (
+                    f"{path.name} describes the current state at {stated}, "
+                    f"but HEAD is {head}"
+                )
+
+    def test_a_gate_is_not_both_passing_and_blocked(self, documents: dict[Path, str]):
+        """`RELEASE_CHECKLIST.md` said gate 22 was PASS in its table and
+        BLOCKED in its prose, which is not a formatting problem: a reader takes
+        whichever they happen to read."""
+        checklist = next(
+            (t for p, t in documents.items() if p.name == "RELEASE_CHECKLIST.md"), None
+        )
+        if checklist is None:
+            return
+        for line in checklist.splitlines():
+            assert not ("**PASS**" in line and "**BLOCKED**" in line), line.strip()[:120]
+
+    def test_the_test_counts_in_every_document_agree_with_the_artifact(
+        self, artifact: dict, documents: dict[Path, str]
+    ):
+        """Not only the evidence file. The README quoted 768 backend tests long
+        after there were 1859, and nothing checked it."""
+        backend = artifact["counts"]["backend_tests"]
+        stale = re.compile(r"\b(\d{3,5}) (?:backend )?tests?\b|\bpytest`? +(\d{3,5})\b")
+        for path, text in documents.items():
+            for a, b in stale.findall(text):
+                stated = int(a or b)
+                # Four-digit-plus numbers in these documents are test counts.
+                if stated < 100:
+                    continue
+                assert stated == backend, (
+                    f"{path.name} states {stated} tests; the artifact counted {backend}"
+                )

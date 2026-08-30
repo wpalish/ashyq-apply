@@ -38,8 +38,10 @@ COMPOSE = Path(__file__).resolve().parent.parent.parent / "docker-compose.yml"
 
 @pytest.fixture(scope="module")
 def compose() -> dict:
-    if not COMPOSE.exists():
-        pytest.skip("no docker-compose.yml")
+    # Not a skip. The compose file is what these tests check the code against;
+    # its absence means the container contract is unverifiable, which is a
+    # failure of release verification rather than a reason to stay quiet.
+    assert COMPOSE.exists(), f"{COMPOSE} is missing; the container contract cannot be checked"
     return yaml.safe_load(COMPOSE.read_text())
 
 

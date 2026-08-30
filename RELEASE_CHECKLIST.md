@@ -5,7 +5,7 @@ recorded honestly: `PASS` means verified by a command whose output is shown in
 the release report, not "implemented".
 
 **Current verdict: NOT READY, NOT DEPLOYED.** Two gates are open, both named
-below. Verified on 2026-08-29 on `claude/production-completion` at `0af7daa`.
+below. The measured values are in `artifacts/release-evidence.json`; this file states status and reasoning, and must not restate numbers that live there.
 
 Gate **22 (the container stack) now passes** — measured by CI at `ba15bbb`,
 having genuinely failed first at `a669496`.
@@ -19,17 +19,17 @@ Two gates changed status *downwards* this cycle, both because they were being
 measured against the wrong thing:
 
 * **Gate 28** was PASS on "zero false positives". Zero false positives is a
-  precision result and says nothing about recall; live discovery confirms a
-  programme page at four institutions in ten, against a bar of eight. It is now
-  **FAIL**, and it is the reason the product is not ready.
-* **Gate 22** said FAIL on "Docker is not installed". That is still true, and
-  the honest status is **BLOCKED** — it needs an admin install, which is a user
-  checkpoint, not an engineering task left undone.
+  precision result and says nothing about recall. The main canary now meets its
+  recall bar; the frozen holdout does not, and that is what keeps 28 open.
+* **Gate 22** was BLOCKED on "Docker is not installed", which is still true of
+  this machine and no longer true of the gate: the `container-runtime` CI job
+  runs the smoke test on every push. It failed there first, for a real reason,
+  and now passes.
 
 | # | Gate | Status | Evidence / what is missing |
 |---|---|---|---|
-| 1 | Existing tests kept or replaced by stricter ones | **PASS** | 768 + 47 + 52, from 240 + 39 + 42 originally. Every changed expectation states its product reason in the test |
-| 2 | All new unit / integration / E2E / security tests green | **PASS** | `pytest` 768 (on SQLite *and* PostgreSQL 16.2), `vitest` 47, `playwright` 52 |
+| 1 | Existing tests kept or replaced by stricter ones | **PASS** | Counts in the release artifact. Every changed expectation states its product reason in the test |
+| 2 | All new unit / integration / E2E / security tests green | **PASS** | `pytest` on SQLite *and* PostgreSQL 16.2, `vitest`, `playwright`; counts in the release artifact. A structured 0-skip gate reads the JUnit/JSON reports rather than grepping for decorators |
 | 3 | ruff, mypy, TypeScript, ESLint, production build clean | **PASS** | all clean; build 74.5 kB JS gzip, 5.3 kB CSS |
 | 4 | PostgreSQL migrations work on fresh and upgraded databases | **PASS** | Alembic. Verified fresh, downgrade to base, re-upgrade, re-apply as a no-op, on PostgreSQL 16.2 and SQLite. `create_all()` removed from the production path; startup refuses a mismatched revision |
 | 5 | Worker survives a crash restart | **PASS** | `scripts/crash_test.py` SIGKILLs a real worker after 12 results are written; a second worker recovers the job and finishes with no duplicates. Stable over 3 runs. **PostgreSQL-backed queue, not Redis — see ADR 0001** |
@@ -55,7 +55,7 @@ measured against the wrong thing:
 | 25 | No TODO / FIXME in a production path | **PASS** | `grep -rn "TODO\|FIXME" backend/app frontend/src` → none |
 | 26 | No disabled or skipped tests without written justification | **PASS** | No skips, no xfails |
 | 27 | Demo data unmistakably synthetic | **PASS** | Fixture banner, `fixture://` scheme, UI badge, export column. Loads only on an explicit confirmed action |
-| 28 | Independent live truth audit, and programme discovery meets its bar | **FAIL** | Main canary **passes**: three independent runs at `0af7daa` gave **8, 8, 8** programme pages of ten — median 8 against a bar of 8, worst 8 against a bar of 7. Category pages **28/30** against 27, scholarship pages **10/10** against 9, and **zero** zero-tolerance false positives in every run. All twenty accepted programme pages were opened by hand and every one is a named, specific bachelor's programme. The **holdout fails**: 3 of 6 against a bar of 4, with its registry unedited and no seed added. Monterrey is disallowed by `robots.txt`; Tokyo serves no sitemap; Cape Town publishes programme detail in faculty handbook PDFs. **The holdout is the gate that keeps the release closed.** |
+| 28 | Independent live truth audit, and programme discovery meets its bar | **FAIL** | Main canary **passes**: three independent runs at the commit named in the artifact gave **8, 8, 8** programme pages of ten — median 8 against a bar of 8, worst 8 against a bar of 7. Category pages **28/30** against 27, scholarship pages **10/10** against 9, and **zero** zero-tolerance false positives in every run. All twenty accepted programme pages were opened by hand and every one is a named, specific bachelor's programme. The **holdout fails**: 3 of 6 against a bar of 4, with its registry unedited and no seed added. Monterrey is disallowed by `robots.txt`; Tokyo serves no sitemap; Cape Town publishes programme detail in faculty handbook PDFs. **The holdout is the gate that keeps the release closed.** |
 | 29 | Local release commit/tag after all gates pass | **BLOCKED** | Gates open |
 | 30 | Nothing pushed externally without permission | **PASS** | External publication occurs only after the user's explicit GitHub upload request |
 
@@ -71,15 +71,14 @@ measured against the wrong thing:
 
 ## Summary
 
-- **PASS:** 28 (of 30 original) + 5 added
-- **PARTIAL:** 0
-- **FAIL:** 1 — gate 28, programme discovery recall
-- **BLOCKED:** 2 — gate 22 (no container runtime on this machine) and gate 29,
-  which waits on the other two
+- **FAIL:** 1 — gate 28, holdout recall (3 of 6 against a bar of 4)
+- **BLOCKED:** 1 — gate 29, which cannot move while 28 is open
+- **PASS:** everything else, including gate 22
 
-The count said one BLOCKED while two were listed. Gate 29 cannot be anything
-else while 22 and 28 are open, and a summary that disagrees with its own table
-is the kind of thing a reader stops checking.
+Product thresholds sit outside this table and are what actually hold the
+verdict: decision-grade extraction completeness is far below its bar. A summary
+that disagreed with its own table is what this section used to be, and it is
+the kind of thing a reader stops checking.
 
 ## Order of work remaining
 
@@ -95,7 +94,8 @@ is the kind of thing a reader stops checking.
 
 ## Needs the user
 
-* **Running the container stack** requires Docker, which is not installed and
-  cannot be installed without your password. The files are written; they have
-  never been executed.
+* **Running the container stack locally** would require Docker, which is not
+  installed here. It is not blocking: the `container-runtime` CI job runs the
+  smoke test on every push, and its diagnostics and attestation are uploaded
+  with each run.
 * **Any external deployment**, domain or billing.

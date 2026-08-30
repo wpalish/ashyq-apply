@@ -135,7 +135,7 @@ backend/
 │   ├── export/          CSV / JSON / XLSX, provenance included
 │   ├── models/          SQLAlchemy + Alembic (PostgreSQL production, SQLite local)
 │   └── corpus/          The bundled synthetic demo corpus + its generator
-└── tests/               768 tests
+└── tests/               the suite (count in the release artifact)
 frontend/
 ├── src/
 │   ├── screens/         The nine workflow screens
@@ -289,7 +289,7 @@ cd backend
 python scripts/pg.py --print-uri              # a local PostgreSQL, no install needed
 python scripts/pg.py .venv/bin/pytest         # run the suite against PostgreSQL
 python scripts/pg.py .venv/bin/python scripts/crash_test.py   # SIGKILL recovery proof
-./.venv/bin/python -m pytest                  # 768 tests
+./.venv/bin/python -m pytest                  # the whole suite
 ./.venv/bin/python -m pytest --cov=app        # with coverage (89%)
 ./.venv/bin/python -m ruff check app tests    # lint
 ./.venv/bin/python -m mypy app                # type check
@@ -312,25 +312,30 @@ Or from the repository root: `make setup`, `make dev`, `make test`, `make check`
 
 ## Verification
 
-| Check | Result |
-|---|---|
-| Backend tests | 768 passed (SQLite **and** PostgreSQL 16.2) |
-| Backend coverage | 90% (`app/`) |
-| Backend lint (ruff) | clean |
-| Python dependency audit (pip-audit) | clean (36 advisories found and fixed at baseline) |
-| Backend types (mypy) | clean, 76 source files |
-| Frontend unit tests | 47 passed |
-| Frontend typecheck | clean |
-| Frontend lint (eslint) | clean |
-| E2E (Playwright) | 52 passed — desktop 1440×900 and Pixel 7 |
-| Accessibility | axe WCAG A/AA: no serious or critical violations on reachable screens |
-| Console errors during the full journey | 0 |
-| Horizontal overflow at 320/375/768/1024/1440/1920 | none |
-| Production bundle | 74.5 kB JS gzipped, 5.3 kB CSS |
+The measured numbers live in
+[`artifacts/release-evidence.json`](artifacts/release-evidence.json), generated
+by `backend/scripts/release_evidence.py` and rendered into
+[`docs/evidence/RELEASE-EVIDENCE-2026-08-29.md`](docs/evidence/RELEASE-EVIDENCE-2026-08-29.md).
+They are deliberately not repeated here. This section once carried a test
+count and a programme recall that had both been true months earlier and were
+false by the time anyone read them, because nothing was checking it.
 
-| Crash recovery | verified: real SIGKILL, job recovered, 0 duplicate results |
-| Migrations | verified: fresh, downgrade, re-upgrade, re-apply, both backends |
-| Container stack | **written, never run** — Docker is not installed here |
+What is stable enough to state in prose:
+
+| Check | Where |
+|---|---|
+| Backend tests, coverage, lint, types | the generated gate table |
+| Frontend unit, typecheck, lint, build | the generated gate table |
+| E2E (Playwright), desktop 1440×900 and Pixel 7 | the generated gate table |
+| Accessibility | axe WCAG A/AA on every reachable screen, inside the E2E run |
+| Crash recovery | real SIGKILL, job recovered, no duplicate results |
+| Migrations | fresh, downgrade, re-upgrade, re-apply, on SQLite and PostgreSQL |
+| Container stack | run by the `container-runtime` CI job on every push, not on a developer machine |
+| Live discovery | three canary runs plus a frozen holdout, in the generated table |
+
+**The product is NOT READY**, and the reason is not technical: decision-grade
+extraction completeness and holdout recall are both below their bars. The
+verdict in the artifact is computed from those thresholds, not asserted.
 
 Screenshots of every main state are in [`docs/screenshots/`](docs/screenshots/)
 (desktop) and `docs/screenshots/mobile/`.
