@@ -1,6 +1,17 @@
 #!/usr/bin/env python
 """Produce one machine-readable record of what was actually verified.
 
+`artifacts/release-evidence.json` is a **dated historical snapshot**, and only
+that. A file checked into a repository can only ever describe a commit before
+itself — the commit that records a count is itself a commit — so it is not, and
+cannot be, proof about the HEAD it sits on. The commit it describes is written
+into it, and the consistency test compares documents against *that* commit
+rather than against whatever HEAD happens to be.
+
+The authority for a given commit is the CI attestation, produced by the
+container-runtime job and keyed by `GITHUB_SHA`, which nobody can edit after
+the fact.
+
 Three documents described this release and disagreed with each other and with
 the repository: programme recall was written as 4/10 in one place and 8/10 in
 another, claims as 27 and as 51, accepted pages as 12 and as 20, the test count
@@ -24,6 +35,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import shutil
 import subprocess
 import sys
 from datetime import UTC, datetime
@@ -49,12 +61,16 @@ def run(command: list[str], cwd: Path = BACKEND, timeout: int = 1800) -> dict[st
             "result": "not_run",
             "detail": f"{type(exc).__name__}: {exc}"[:200],
         }
-    tail = (proc.stdout + proc.stderr).strip().splitlines()
+    combined = (proc.stdout + proc.stderr).strip()
+    tail = combined.splitlines()[-25:]
     return {
         "command": " ".join(command),
         "exit_code": proc.returncode,
         "result": "pass" if proc.returncode == 0 else "fail",
+        # The last line alone lost the numbers: vitest prints a duration after
+        # its count. A bounded tail keeps them and still cannot grow unbounded.
         "detail": tail[-1][:300] if tail else "",
+        "output_tail": "\n".join(tail)[:4000],
     }
 
 
@@ -64,9 +80,35 @@ def git(*args: str) -> str:
     ).stdout.strip()
 
 
-def count_tests(detail: str) -> int | None:
-    match = re.search(r"(\d+) passed", detail)
-    return int(match.group(1)) if match else None
+def count_tests(output: str) -> int | None:
+    """How many tests passed, from whatever the tool printed.
+
+    Searches the whole captured tail rather than one line. `run()` used to keep
+    only the last, and vitest ends with "Duration 779ms (...)" — the count is
+    three lines above it — so `frontend_tests` came out `null`, which reads as
+    "not measured" when it had been measured perfectly well.
+
+    Returns None when anything failed: a partial count is worse than no count,
+    because it looks like a result.
+    """
+    if re.search(r"\d+ (failed|error)", output):
+        return None
+    matches = re.findall(r"(\d+) passed", output)
+    return int(matches[-1]) if matches else None
+
+
+def portable_path(path: Path) -> str:
+    """A reference to a file that means something on another machine.
+
+    Canary provenance was an absolute path into a per-session scratch
+    directory: real for one machine for one afternoon, and unverifiable by
+    anyone else. Inside the repository it becomes a relative path; outside, the
+    basename, which is the part that still identifies the file.
+    """
+    try:
+        return str(path.resolve().relative_to(ROOT))
+    except ValueError:
+        return path.name
 
 
 def canary_summary(directory: Path) -> dict[str, Any]:
@@ -82,7 +124,7 @@ def canary_summary(directory: Path) -> dict[str, Any]:
         rows = report if isinstance(report, list) else report.get("institutions", [])
         runs.append(
             {
-                "file": str(path.relative_to(ROOT)) if path.is_relative_to(ROOT) else str(path),
+                "file": portable_path(path),
                 "institutions": len(rows),
                 "programme_pages": sum(1 for r in rows if r.get("program_page_found")),
                 "scholarship_pages": sum(1 for r in rows if r.get("scholarship_page_found")),
@@ -116,6 +158,24 @@ def canary_summary(directory: Path) -> dict[str, Any]:
     }
 
 
+def container_gate() -> dict[str, Any]:
+    """Run the container smoke test if a runtime exists; say so if not."""
+    runtimes = ("docker", "podman", "nerdctl", "finch")
+    available = [r for r in runtimes if shutil.which(r)]
+    if not available:
+        return {
+            "command": "./scripts/compose_smoke.sh",
+            "exit_code": None,
+            "result": "not_run",
+            "detail": (
+                "no container runtime found on this machine (looked for "
+                + ", ".join(runtimes)
+                + "); this gate is measured by the container-runtime CI job"
+            ),
+        }
+    return run(["./scripts/compose_smoke.sh"], cwd=ROOT, timeout=2400)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--canary", type=Path, help="directory holding canary run output")
@@ -139,17 +199,15 @@ def main() -> int:
     gates["frontend_build"] = run(["npm", "run", "build"], cwd=ROOT / "frontend")
     gates["node_dependencies"] = run(["npm", "audit"], cwd=ROOT / "frontend")
 
-    # Never claimed, only ever recorded when it happened. No container runtime
-    # is installed on this machine, so this has never been anything else.
-    gates["container_runtime"] = {
-        "command": "./scripts/compose_smoke.sh",
-        "exit_code": None,
-        "result": "not_run",
-        "detail": (
-            "no container runtime on this machine: docker, podman, colima, "
-            "nerdctl, finch and lima are all absent"
-        ),
-    }
+    # Observed, not asserted.
+    #
+    # This was hardcoded to `not_run` with a note about no container runtime
+    # being installed. That was true when it was written and false the moment
+    # CI ran the gate — an artifact stating a result it never observed is
+    # precisely what this file exists to prevent. It runs the smoke test when a
+    # runtime exists, and otherwise records that it could not, naming what it
+    # looked for.
+    gates["container_runtime"] = container_gate()
 
     artifact: dict[str, Any] = {
         "generated_at": datetime.now(UTC).isoformat(timespec="seconds"),
@@ -164,8 +222,8 @@ def main() -> int:
         },
         "gates": gates,
         "counts": {
-            "backend_tests": count_tests(gates["backend_tests_sqlite"]["detail"]),
-            "frontend_tests": count_tests(gates["frontend_tests"]["detail"]),
+            "backend_tests": count_tests(gates["backend_tests_sqlite"]["output_tail"]),
+            "frontend_tests": count_tests(gates["frontend_tests"]["output_tail"]),
         },
     }
 

@@ -1,10 +1,10 @@
 {
   "base_commit": "2ebcbc6",
   "branch": "claude/production-completion",
-  "commits_since_base": 44,
+  "commits_since_base": 58,
   "counts": {
-    "backend_tests": 1422,
-    "frontend_tests": null
+    "backend_tests": 1858,
+    "frontend_tests": 60
   },
   "environment": {
     "platform": "darwin",
@@ -15,29 +15,33 @@
       "command": "/Users/wpalish/projects/unimatch/backend/.venv/bin/python -m ruff check .",
       "detail": "All checks passed!",
       "exit_code": 0,
+      "output_tail": "All checks passed!",
       "result": "pass"
     },
     "backend_tests_postgres": {
       "command": "/Users/wpalish/projects/unimatch/backend/.venv/bin/python /Users/wpalish/projects/unimatch/backend/scripts/pg.py /Users/wpalish/projects/unimatch/backend/.venv/bin/python -m pytest",
-      "detail": "1422 passed, 1 warning in 35.87s",
+      "detail": "1858 passed, 1 warning in 41.19s",
       "exit_code": 0,
+      "output_tail": "........................................................................ [ 34%]\n........................................................................ [ 38%]\n........................................................................ [ 42%]\n........................................................................ [ 46%]\n........................................................................ [ 50%]\n........................................................................ [ 54%]\n........................................................................ [ 58%]\n........................................................................ [ 62%]\n........................................................................ [ 65%]\n........................................................................ [ 69%]\n........................................................................ [ 73%]\n........................................................................ [ 77%]\n........................................................................ [ 81%]\n........................................................................ [ 85%]\n........................................................................ [ 89%]\n........................................................................ [ 93%]\n........................................................................ [ 96%]\n..........................................................               [100%]\n=============================== warnings summary ===============================\n.venv/lib/python3.12/site-packages/fastapi/testclient.py:1\n  /Users/wpalish/projects/unimatch/backend/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.\n    from starlette.testclient import TestClient as TestClient  # noqa\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n1858 passed, 1 warning in 41.19s",
       "result": "pass"
     },
     "backend_tests_sqlite": {
       "command": "/Users/wpalish/projects/unimatch/backend/.venv/bin/python -m pytest",
-      "detail": "1422 passed, 1 warning in 35.62s",
+      "detail": "1858 passed, 1 warning in 40.98s",
       "exit_code": 0,
+      "output_tail": "........................................................................ [ 34%]\n........................................................................ [ 38%]\n........................................................................ [ 42%]\n........................................................................ [ 46%]\n........................................................................ [ 50%]\n........................................................................ [ 54%]\n........................................................................ [ 58%]\n........................................................................ [ 62%]\n........................................................................ [ 65%]\n........................................................................ [ 69%]\n........................................................................ [ 73%]\n........................................................................ [ 77%]\n........................................................................ [ 81%]\n........................................................................ [ 85%]\n........................................................................ [ 89%]\n........................................................................ [ 93%]\n........................................................................ [ 96%]\n..........................................................               [100%]\n=============================== warnings summary ===============================\n.venv/lib/python3.12/site-packages/fastapi/testclient.py:1\n  /Users/wpalish/projects/unimatch/backend/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.\n    from starlette.testclient import TestClient as TestClient  # noqa\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n1858 passed, 1 warning in 40.98s",
       "result": "pass"
     },
     "backend_types": {
       "command": "/Users/wpalish/projects/unimatch/backend/.venv/bin/python -m mypy app tests scripts",
-      "detail": "Success: no issues found in 124 source files",
+      "detail": "Success: no issues found in 129 source files",
       "exit_code": 0,
+      "output_tail": "tests/test_run_supervisor.py:193: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]\ntests/test_ssrf.py:243: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]\ntests/test_live_regressions.py:515: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]\ntests/test_live_regressions.py:542: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]\ntests/test_job_payload_versioning.py:162: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]\nSuccess: no issues found in 129 source files",
       "result": "pass"
     },
     "container_runtime": {
       "command": "./scripts/compose_smoke.sh",
-      "detail": "no container runtime on this machine: docker, podman, colima, nerdctl, finch and lima are all absent",
+      "detail": "no container runtime found on this machine (looked for docker, podman, nerdctl, finch); this gate is measured by the container-runtime CI job",
       "exit_code": null,
       "result": "not_run"
     },
@@ -45,47 +49,54 @@
       "command": "/Users/wpalish/projects/unimatch/backend/.venv/bin/python /Users/wpalish/projects/unimatch/backend/scripts/crash_test.py",
       "detail": "INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> b312b741919d, Stamp every durable job with the payload contract it was written against.",
       "exit_code": 0,
+      "output_tail": "using a throwaway database at /var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/crash-test-v_nfiau2\ndatabase migrated  lease=5s\nenqueued job e39429c0 for run d4df1e56\nworker A pid 64081 started\nworker A SIGKILLed during funding_discovery, with 12 results already written\n  immediately after: job=running worker=iMac-Aliser.local:64081 run=funding_discovery results=12\nworker B pid 64085 started after the lease expired\n\n  job    : succeeded  attempts=2/3  worker=None\n  run    : awaiting_user_decision  recovery_count=0\n  results: 12  unique=12  duplicates=0\n  claims : 99\n\n  PASS: recovered after SIGKILL, re-attempted, finished, no duplicates\nINFO  [alembic.runtime.migration] Context impl SQLiteImpl.\nINFO  [alembic.runtime.migration] Will assume non-transactional DDL.\nINFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.\nINFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases\nINFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> b312b741919d, Stamp every durable job with the payload contract it was written against.",
       "result": "pass"
     },
     "frontend_build": {
       "command": "npm run build",
-      "detail": "\u2713 built in 317ms",
+      "detail": "\u2713 built in 322ms",
       "exit_code": 0,
+      "output_tail": "> unimatch-frontend@0.1.0 build\n> tsc -b && vite build\n\nvite v6.4.3 building for production...\ntransforming...\n\u2713 45 modules transformed.\nrendering chunks...\ncomputing gzip size...\ndist/index.html                   0.95 kB \u2502 gzip:  0.51 kB\ndist/assets/index-KDnhGUA9.css   25.55 kB \u2502 gzip:  5.49 kB\ndist/assets/index-C9Fdvl7P.js   254.24 kB \u2502 gzip: 75.44 kB\n\u2713 built in 322ms",
       "result": "pass"
     },
     "frontend_lint": {
       "command": "npm run lint",
       "detail": "> eslint src e2e --ext .ts,.tsx",
       "exit_code": 0,
+      "output_tail": "> unimatch-frontend@0.1.0 lint\n> eslint src e2e --ext .ts,.tsx",
       "result": "pass"
     },
     "frontend_tests": {
       "command": "npx vitest run",
-      "detail": "   Duration  664ms (transform 127ms, setup 240ms, collect 320ms, tests 198ms, environment 1.83s, prepare 429ms)",
+      "detail": "   Duration  758ms (transform 154ms, setup 480ms, collect 388ms, tests 201ms, environment 2.15s, prepare 452ms)",
       "exit_code": 0,
+      "output_tail": "RUN  v3.2.7 /Users/wpalish/projects/unimatch/frontend\n\n \u2713 src/lib/funding-coverage.test.ts (4 tests) 2ms\n \u2713 src/lib/immutable.test.ts (11 tests) 5ms\n \u2713 src/lib/money-conversion.test.ts (3 tests) 17ms\n \u2713 src/lib/format.test.ts (21 tests) 24ms\n \u2713 src/screens/documents-unknown.test.tsx (3 tests) 2ms\n \u2713 src/components/primitives.test.tsx (10 tests) 53ms\n \u2713 src/lib/store.test.tsx (8 tests) 99ms\n\n Test Files  7 passed (7)\n      Tests  60 passed (60)\n   Start at  06:51:51\n   Duration  758ms (transform 154ms, setup 480ms, collect 388ms, tests 201ms, environment 2.15s, prepare 452ms)",
       "result": "pass"
     },
     "frontend_types": {
       "command": "npm run typecheck",
       "detail": "> tsc --noEmit",
       "exit_code": 0,
+      "output_tail": "> unimatch-frontend@0.1.0 typecheck\n> tsc --noEmit",
       "result": "pass"
     },
     "node_dependencies": {
       "command": "npm audit",
       "detail": "found 0 vulnerabilities",
       "exit_code": 0,
+      "output_tail": "found 0 vulnerabilities",
       "result": "pass"
     },
     "python_dependencies": {
       "command": "/Users/wpalish/projects/unimatch/backend/.venv/bin/python -m pip_audit",
       "detail": "No known vulnerabilities found",
       "exit_code": 0,
+      "output_tail": "No known vulnerabilities found",
       "result": "pass"
     }
   },
-  "generated_at": "2026-08-29T20:35:08+00:00",
-  "head": "916f4b10a50869d6db6d687c5d1143b25fb7afc3",
+  "generated_at": "2026-08-30T01:51:53+00:00",
+  "head": "b8739af9bf87789bcdc3df7acc359158659167aa",
   "live_discovery": {
     "holdout": {
       "false_positives": 0,
@@ -98,7 +109,7 @@
       {
         "claims": 51,
         "false_positives": 0,
-        "file": "/private/tmp/claude-501/-Users-wpalish/552fc5eb-550a-4cd7-a9a3-37f65739ac08/scratchpad/final14/run1/canary-2026-08-29.json",
+        "file": "canary-2026-08-29.json",
         "institutions": 10,
         "mean_completeness": 0.056,
         "programme_pages": 8,
@@ -107,7 +118,7 @@
       {
         "claims": 51,
         "false_positives": 0,
-        "file": "/private/tmp/claude-501/-Users-wpalish/552fc5eb-550a-4cd7-a9a3-37f65739ac08/scratchpad/final14/run2/canary-2026-08-29.json",
+        "file": "canary-2026-08-29.json",
         "institutions": 10,
         "mean_completeness": 0.056,
         "programme_pages": 8,
@@ -116,7 +127,7 @@
       {
         "claims": 51,
         "false_positives": 0,
-        "file": "/private/tmp/claude-501/-Users-wpalish/552fc5eb-550a-4cd7-a9a3-37f65739ac08/scratchpad/final14/run3/canary-2026-08-29.json",
+        "file": "canary-2026-08-29.json",
         "institutions": 10,
         "mean_completeness": 0.056,
         "programme_pages": 8,
@@ -132,5 +143,5 @@
     ]
   },
   "verdict": "NOT READY",
-  "working_tree_clean": true
+  "working_tree_clean": false
 }

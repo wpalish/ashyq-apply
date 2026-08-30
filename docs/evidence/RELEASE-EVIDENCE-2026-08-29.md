@@ -4,7 +4,7 @@ Every row below is a command that was run on `claude/production-completion`,
 with the result it produced. A gate is PASS only when its command was executed
 here and its output read. Rows that were not run say so.
 
-Measured at `916f4b1`, except the live-discovery rows, which were measured at
+Measured at `b8739af`, except the live-discovery rows, which were measured at
 `b819c18` — the last commit before the series started. Nothing affecting
 discovery changed between the two; the only later change is how the canary
 *reports* a failed institution.
@@ -29,9 +29,9 @@ commit, with no code change between them.
 |---|---|---|
 | Lint (backend) | `.venv/bin/python -m ruff check .` | **PASS** — All checks passed |
 | Types (backend) | `.venv/bin/python -m mypy app` | **PASS** — no issues in 78 source files |
-| Backend, SQLite | `.venv/bin/python -m pytest` | **PASS** — 1422 passed |
+| Backend, SQLite | `.venv/bin/python -m pytest` | **PASS** — 1858 passed |
 | Backend coverage | `pytest --cov=app --cov-fail-under=80` | **PASS** — 90.65%, 6083 statements, 569 missed |
-| Backend, PostgreSQL | `scripts/pg.py .venv/bin/python -m pytest` | **PASS** — 1422 passed |
+| Backend, PostgreSQL | `scripts/pg.py .venv/bin/python -m pytest` | **PASS** — 1858 passed |
 | Frontend types | `npx tsc --noEmit` | **PASS** — clean |
 | Frontend lint | `npx eslint src e2e` | **PASS** — clean |
 | Frontend unit | `npx vitest run` | **PASS** — 56 passed, 6 files |
@@ -91,7 +91,7 @@ as per-programme pages.
 
 ## What changed in this session
 
-44 commits on top of `2ebcbc6`, as of the artifact's snapshot at `916f4b1`. Commits after it change this document and nothing else. The three P1 defects named at the start were
+58 commits on top of `2ebcbc6`, as of the artifact's snapshot at `b8739af`. The three P1 defects named at the start were
 fixed first, before any discovery or extraction work:
 
 | Defect | Commit | Evidence it is fixed |
@@ -106,7 +106,7 @@ fixed first, before any discovery or extraction work:
 |---|---|
 | Backend | 78 Python files, 15,536 lines |
 | Frontend | 27 TypeScript files, 5,051 lines |
-| Tests | 1422 backend, 60 frontend unit, 52 E2E |
+| Tests | 1858 backend, 60 frontend unit, 52 E2E |
 | Page fixtures | 22 real pages, saved as served |
 | `runner.py` | 712 lines |
 | `page_classifier.py` | 957 lines |

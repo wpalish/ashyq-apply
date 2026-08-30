@@ -129,6 +129,29 @@ jobs:
       # the gate actually exercised the stack. The script collects these before
       # it tears the stack down — the previous step ran afterwards, against a
       # project name built from a different shell's $$, and found nothing.
+      # An attestation of what this exact commit was verified to do, produced
+      # by CI rather than checked in. A JSON file in the repository can only
+      # ever describe a commit before itself; this one is keyed by the SHA that
+      # was actually tested, and nobody can edit it after the fact.
+      - name: Record the container-runtime result for this SHA
+        if: always()
+        run: |
+          mkdir -p /tmp/ashyq-smoke-artifacts
+          cat > /tmp/ashyq-smoke-artifacts/attestation.json <<JSON
+          {
+            "gate": "container_runtime",
+            "sha": "${{ github.sha }}",
+            "ref": "${{ github.ref }}",
+            "run_id": "${{ github.run_id }}",
+            "run_url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+            "command": "./scripts/compose_smoke.sh",
+            "result": "${{ job.status }}",
+            "runner": "${{ runner.os }}",
+            "recorded_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          }
+          JSON
+          cat /tmp/ashyq-smoke-artifacts/attestation.json
+
       - name: Upload runtime diagnostics
         if: always()
         uses: actions/upload-artifact@v4
