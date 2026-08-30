@@ -213,6 +213,42 @@ FETCHABLE_SCHEMES = frozenset({"http", "https"})
 _CONTROL_CHARACTERS = re.compile(r"[\x00-\x20\x7f]")
 
 
+#: A percent escape is exactly "%" followed by two hex digits. Anything else is
+#: not encoded text, and a fetcher asked for it either errors or — worse —
+#: normalises it into something the caller did not write.
+_BAD_PERCENT = re.compile(r"%(?![0-9A-Fa-f]{2})")
+
+#: One label of a hostname. Letters, digits and hyphens, not starting or ending
+#: with a hyphen, at most 63 characters. Underscores are not legal in a
+#: hostname however often they appear in other kinds of DNS record.
+_HOST_LABEL = re.compile(r"^[A-Za-z0-9\u0080-\uffff](?:[A-Za-z0-9\u0080-\uffff-]{0,61}[A-Za-z0-9\u0080-\uffff])?$")
+
+#: The whole name, per DNS.
+MAX_HOSTNAME_LENGTH = 253
+
+
+def _host_problem(host: str) -> str | None:
+    """Why a hostname cannot resolve, or None.
+
+    Not merely cosmetic: `exa_mple.edu`, `-bad.example.edu` and `example..edu`
+    are not hostnames, and accepting them means the fetcher goes and tries.
+    IP literals are left to `ipaddress`, which the network policy already uses.
+    """
+    if host.startswith("[") and host.endswith("]"):
+        return None  # an IPv6 literal; the network policy validates the address
+    if len(host) > MAX_HOSTNAME_LENGTH:
+        return f"hostname longer than {MAX_HOSTNAME_LENGTH} characters"
+    labels = host.split(".")
+    if any(label == "" for label in labels):
+        return "hostname has an empty label"
+    for label in labels:
+        if len(label) > 63:
+            return "hostname label longer than 63 characters"
+        if not _HOST_LABEL.match(label):
+            return "hostname label is not a valid DNS label"
+    return None
+
+
 def url_problem(url: str) -> str | None:
     """Why this URL cannot be used, or None if it can.
 
@@ -259,7 +295,16 @@ def url_problem(url: str) -> str | None:
         return "no host"
     if port is not None and not (0 < port <= 65535):
         return "port out of range"
-    return None
+    if _BAD_PERCENT.search(raw):
+        return "invalid percent-encoding"
+    # `parts.hostname` lower-cases and strips the brackets of an IPv6 literal,
+    # so the bracket check reads the netloc instead.
+    literal = parts.netloc.rsplit("@", 1)[-1]
+    if literal.startswith("["):
+        if "]" not in literal:
+            return "unterminated IPv6 literal"
+        return None
+    return _host_problem(host)
 
 
 def is_usable(url: str) -> bool:
@@ -281,6 +326,12 @@ def canonical_url(url: str) -> str:
 
     parts = urlparse(url.strip())
     host = (parts.hostname or "").lower()
+    # `parts.hostname` strips the brackets from an IPv6 literal, and without
+    # them the colons in the address read as a port: the canonical form was
+    # rejected by `url_problem` as a malformed host. They are syntax, not
+    # decoration.
+    if ":" in host and not host.startswith("["):
+        host = f"[{host}]"
     port = parts.port
     if port and not (
         (parts.scheme == "http" and port == 80)
