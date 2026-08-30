@@ -12,6 +12,8 @@ import io
 import re
 from collections.abc import Iterable
 from datetime import UTC, date, datetime
+from typing import Final
+from urllib.parse import urlparse
 
 from bs4 import BeautifulSoup
 
@@ -93,14 +95,59 @@ def excerpt_around(text: str, start: int, end: int, radius: int = EXCERPT_RADIUS
     return _WS.sub(" ", snippet)
 
 
+#: Suffixes that mean "this is some institution's site". Used only when the
+#: institution being researched is unknown, because they answer a weaker
+#: question than the one that matters.
+ACADEMIC_SUFFIXES: Final = ("edu", "ac.uk", "edu.au", "gov", "gov.uk", "ac.nz", "edu.sg")
+
+
 def is_official_domain(url: str, university_domains: Iterable[str] = ()) -> bool:
-    low = url.lower()
-    if any(d.lower() in low for d in university_domains if d):
-        return True
-    return any(
-        f".{tld}/" in low or low.rstrip("/").endswith(f".{tld}")
-        for tld in ("edu", "ac.uk", "edu.au", "gov", "gov.uk", "ac.nz", "edu.sg")
-    )
+    """Whether this URL is the institution speaking for itself.
+
+    The answer decides whether a claim is stamped VERIFIED_CURRENT or left
+    UNVERIFIED, and only the first kind counts toward completeness. It used to
+    be a substring search over the whole URL, which was wrong in both
+    directions at once.
+
+    **Too narrow.** The registry stores a homepage and the candidate's domain is
+    its netloc — `www.utoronto.ca`. Toronto publishes undergraduate admissions
+    on `future.utoronto.ca`, and `"www.utoronto.ca" in
+    "https://future.utoronto.ca/..."` is False. Every claim found there was
+    discarded: Toronto's canary row read *nine claims, 0.0 completeness*, nine
+    facts read correctly off the university's own site and thrown away by a
+    string comparison. Hong Kong (`admissions.hku.hk`) and British Columbia
+    (`you.ubc.ca`) failed identically.
+
+    **Too wide, which is the dangerous half.** `"utoronto.ca" in
+    "https://utoronto.ca.attacker.example/fees"` is True, so a lookalike host
+    anybody can register produced claims stamped as verified against the real
+    university — a deadline an applicant would act on. `notutoronto.ca` passed
+    too, and so did the domain merely appearing in a path or a query string.
+
+    The registrable domain is what "the same institution" means, and this
+    repository already computes it from the Public Suffix List so the crawler
+    can stay on the institution's own site. The claim stamp uses the same
+    notion of ownership as the fetch policy, which is the only way the two can
+    ever agree.
+    """
+    from app.adapters.discovery.url_signals import registrable_domain
+
+    known = {d for d in (registrable_domain(x) for x in university_domains if x) if d}
+    try:
+        host = (urlparse(url).hostname or "").lower()
+    except ValueError:
+        # "https://[bad::ipv6/x" raises here rather than at the parse.
+        return False
+    if not host:
+        return False
+    if known:
+        # The institution is known, so the suffix heuristic must not overrule
+        # it: a fee on `otherplace.edu` is not evidence about Toronto.
+        return registrable_domain(host) in known
+    # Nothing to compare against. "An academic domain" is the only signal
+    # there is, and dropping it would silently downgrade claims that really
+    # are official.
+    return any(host == suffix or host.endswith(f".{suffix}") for suffix in ACADEMIC_SUFFIXES)
 
 
 class ClaimBuilder:
@@ -598,6 +645,123 @@ def _table_context(table) -> str:
         if node.name in ("h1", "h2", "h3", "h4"):
             break
     return " ".join(parts)
+
+
+#: The section columns an English-test table names. Matched exactly against a
+#: header cell, because "reading" appears in plenty of prose that is not a
+#: column heading.
+_TEST_SECTIONS: Final = ("reading", "listening", "speaking", "writing")
+
+#: The overall column, however a table spells it.
+_OVERALL_HEADER = re.compile(r"\b(?:overall|total|composite)\b", re.IGNORECASE)
+
+#: What makes a table an English-requirement table rather than any other grid.
+_LANGUAGE_CONTEXT = re.compile(
+    r"english|language requirement|language proficiency|proficiency test|\bIELTS\b|\bTOEFL\b",
+    re.IGNORECASE,
+)
+
+#: The tests this reads, with the top of each test's own scale. The ceiling is
+#: not decoration: a Pearson row of 66/64/58 read as IELTS bands would be an
+#: impossible requirement stated with confidence.
+_ENGLISH_TESTS: Final = (
+    (re.compile(r"\bIELTS\b", re.IGNORECASE), ClaimType.IELTS_MIN_OVERALL,
+     ClaimType.IELTS_MIN_SUBSCORE, 9.0),
+    (re.compile(r"\bTOEFL\b", re.IGNORECASE), ClaimType.TOEFL_MIN_TOTAL, None, 120.0),
+    (re.compile(r"\bDuolingo\b", re.IGNORECASE), ClaimType.DUOLINGO_MIN, None, 160.0),
+)
+
+_ONE_NUMBER = re.compile(r"\d+(?:\.\d+)?")
+
+
+def extract_requirement_tables(html: str, builder: ClaimBuilder) -> list[Claim]:
+    """Read English-requirement tables, where a column is what gives a number meaning.
+
+    `extract_requirements` works on flattened text, where
+
+        IELTS 6.5 / CEFR B2-C1 | Overall | Reading | Listening | Speaking | Writing
+        IELTS (Academic)       |    6.5  |    6.5  |      6.5  |     6.5  |    6.5
+
+    becomes "IELTS (Academic) 6.5 6.5 6.5 6.5 6.5" and the header that says
+    which 6.5 is the overall band is gone. So it produced nothing, and the gold
+    audit of Groningen found two decision questions answered plainly on the
+    university's own page and missed entirely.
+
+    This is the argument `extract_cost_tables` already makes for fees, applied
+    to the other kind of table a university publishes: a row is a deliberate
+    statement of association, not an accident of layout, so the row can be read
+    and the row is what the excerpt shows.
+
+    **A cell it cannot read alone is refused, not resolved.** Groningen stacks
+    the new TOEFL 1-6 scale and the old 0-120 scale in one cell, so "Overall"
+    for TOEFL is both 4.5 and 90. Either answer is a guess, and a guessed
+    English requirement is a rejected application.
+    """
+    soup = BeautifulSoup(html, "lxml")
+    found: list[Claim] = []
+    for table in soup.find_all("table"):
+        rows = table.find_all("tr")
+        if not rows:
+            continue
+        headers = [_cell_text(c) for c in rows[0].find_all(["th", "td"])]
+        if not _LANGUAGE_CONTEXT.search(f"{_table_context(table)} {' '.join(headers)}"):
+            continue
+
+        overall_col = next(
+            (i for i, h in enumerate(headers) if _OVERALL_HEADER.search(h)), None
+        )
+        section_cols = {
+            i: h.strip().lower()
+            for i, h in enumerate(headers)
+            if h.strip().lower() in _TEST_SECTIONS
+        }
+        if overall_col is None and not section_cols:
+            # A table under a language heading that names no columns this can
+            # interpret. Reading it positionally would be guessing.
+            continue
+
+        for row in rows[1:]:
+            cells = [_cell_text(c) for c in row.find_all(["th", "td"])]
+            if len(cells) < 2:
+                continue
+            test = next(
+                (t for t in _ENGLISH_TESTS if t[0].search(cells[0])), None
+            )
+            if test is None:
+                continue
+            _pattern, overall_type, subscore_type, ceiling = test
+            if len(cells) != len(headers):
+                # A merged cell, usually prose spanning the score columns
+                # ("CAE or CPE Certificate with a minimum score of 180"). The
+                # columns no longer line up, so no number here has a known
+                # meaning.
+                continue
+            row_text = " ".join(c for c in cells if c)
+
+            wanted: list[tuple[int, ClaimType | None, str | None]] = []
+            if overall_col is not None:
+                wanted.append((overall_col, overall_type, None))
+            wanted.extend((i, subscore_type, name) for i, name in section_cols.items())
+
+            for index, claim_type, section in wanted:
+                if claim_type is None or index >= len(cells):
+                    continue
+                numbers = _ONE_NUMBER.findall(cells[index])
+                if len(numbers) != 1:
+                    continue
+                value = float(numbers[0])
+                if value > ceiling:
+                    continue
+                found.append(
+                    builder.add(
+                        claim_type,
+                        value,
+                        row_text,
+                        section="English language requirements",
+                        subject_key=section,
+                    )
+                )
+    return found
 
 
 def extract_cost_tables(html: str, builder: ClaimBuilder) -> list[Claim]:
