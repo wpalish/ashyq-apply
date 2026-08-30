@@ -7,13 +7,14 @@ the release report, not "implemented".
 **Current verdict: NOT READY, NOT DEPLOYED.** Two gates are open, both named
 below. The measured values are in `artifacts/release-evidence.json`; this file states status and reasoning, and must not restate numbers that live there.
 
-Gate **22 (the container stack) is NOT RUN for this commit.** It has passed in
-CI on earlier commits of this branch, having genuinely failed first at
-`a669496` for a real reason. It cannot be measured on this machine — there is no
-container runtime — and the artifact says so rather than carrying an older
-commit's result forward. It returns to PASS when CI has attested *this* head and
-the artifact records that attestation; until then the honest status is that
-nobody has watched it here.
+Gate **22 (the container stack) passes**, on CI's own evidence for this commit.
+It cannot be measured on this machine — there is no container runtime — so the
+artifact carries CI's attestation instead, and honours it only because the
+attestation names the same head *and the same tree* the artifact describes. That
+is new: `head_tree` was recorded as `unknown` on every pull-request run, because
+the merge checkout does not contain the branch head, so an attestation could
+never be tied to a working copy at all. It genuinely failed first, at `a669496`,
+for a real reason.
 
 The open gate is **28: holdout recall, 3/6 against a bar of 4**. The main live
 canary meets every bar it has (median and worst programme pages, category and
@@ -66,7 +67,7 @@ measured against the wrong thing:
 | 19 | Approve / reject / maybe and document collection work | **PASS** | Covered by E2E |
 | 20 | CSV / JSON / XLSX exports carry provenance and data origin | **PASS** | 38 columns incl. source links, last-verified, data origin |
 | 21 | Accessibility audit passed | **PASS** | axe WCAG A/AA scans every reachable workflow screen on desktop and mobile; no horizontal overflow at 320, 375, 768, 1024, 1440 or 1920. A manual screen-reader pass with a real assistive technology has still not been done |
-| 22 | Docker Compose brings up a production-like stack | **NOT RUN** | Not measurable on this machine (no container runtime), and the artifact records `not_run` rather than carrying an older commit's result forward. The `container-runtime` CI job has passed on earlier commits of this branch — it **failed** first, at `a669496`: the API had `read_only: true` with only `/tmp` writable while `get_settings()` created `/app/data/httpcache` at import, so the container never became healthy. That fix stands. This gate returns to PASS when CI has attested this head and the artifact records the attestation. |
+| 22 | Docker Compose brings up a production-like stack | **PASS** | Measured by the `container-runtime` CI job, not by reading the config, and recorded in the artifact as CI's attestation — honoured only because it names the same head *and the same tree* the artifact describes. It **failed** first, at `a669496`: the API had `read_only: true` with only `/tmp` writable while `get_settings()` created `/app/data/httpcache` at import, so the container never became healthy. Health, the one-shot migration, a real run picked up by the worker, worker-kill recovery with no duplicates, two worker replicas each answering for itself, API restart, tenant isolation, security headers, and a restore drill comparing every table found in `pg_tables`. |
 | 23 | Backup / restore and crash recovery verified | **PASS** | Real SIGKILL recovery plus a PostgreSQL `pg_dump`/`pg_restore` scratch-database drill: 12 tables and a synthetic probe restored identically |
 | 24 | Documentation matches actual behaviour | **PASS** | `CURRENT_STATE.md` retitled as the dated snapshot it is, with each superseded row marked; `LOOP_REPORT.md` carries a corrections table for its stale present-tense claims; `CANARY_AUDIT.md`'s "fee figures are behind JavaScript" corrected — they are in the served HTML and were being misread; `LIVE_DISCOVERY_REPORT.md` rewritten against three measured runs |
 | 25 | No TODO / FIXME in a production path | **PASS** | `grep -rn "TODO\|FIXME" backend/app frontend/src` → none |
@@ -90,8 +91,7 @@ measured against the wrong thing:
 
 - **FAIL:** 1 — gate 28, holdout recall (3 of 6 against a bar of 4)
 - **BLOCKED:** 1 — gate 29, which cannot move while 28 is open
-- **NOT RUN:** 1 — gate 22, the container stack, for this commit
-- **PASS:** everything else
+- **PASS:** everything else, including gate 22
 
 Product thresholds sit outside this table and are what actually hold the
 verdict: decision-grade extraction completeness is far below its bar. A summary
