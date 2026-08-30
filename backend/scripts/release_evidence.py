@@ -119,6 +119,40 @@ def portable_path(path: Path) -> str:
         return path.name
 
 
+#: What generating this record writes. A tree is "dirty" the moment the
+#: generator runs, because the artifact and the documents rendered from it are
+#: themselves tracked files — so a bare `working_tree_clean: false` said nothing
+#: and quietly cast doubt on every gate beside it.
+GENERATED_OUTPUTS = (
+    "artifacts/release-evidence.json",
+    "artifacts/accepted-pages.json",
+    "artifacts/canary",
+    "docs/evidence/RELEASE-EVIDENCE-2026-08-29.md",
+)
+
+
+def working_tree_state() -> dict[str, Any]:
+    """What differed from HEAD while the gates above were being measured.
+
+    The distinction that matters to a reader is not clean-or-not. It is whether
+    the *sources* differed: a modified artifact is this run writing its own
+    output, and a modified `app/` means the gates measured something that is
+    not in any commit.
+    """
+    porcelain = git("status", "--porcelain")
+    paths = sorted(
+        line[3:].strip().strip('"') for line in porcelain.splitlines() if line.strip()
+    )
+    generated = [p for p in paths if p.startswith(GENERATED_OUTPUTS)]
+    other = [p for p in paths if p not in generated]
+    return {
+        "clean": not paths,
+        "clean_ignoring_generated_outputs": not other,
+        "uncommitted_paths": other,
+        "generated_outputs_modified": generated,
+    }
+
+
 def canary_summary(directory: Path) -> dict[str, Any]:
     """Fold a canary run's own JSON into the record.
 
@@ -128,11 +162,22 @@ def canary_summary(directory: Path) -> dict[str, Any]:
     """
     runs: list[dict[str, Any]] = []
     for path in sorted(directory.glob("run*/canary-*.json")):
-        report = json.loads(path.read_text())
+        raw = path.read_bytes()
+        report = json.loads(raw)
         rows = report if isinstance(report, list) else report.get("institutions", [])
         runs.append(
             {
-                "file": portable_path(path),
+                # Relative to the canary directory, not the basename.
+                #
+                # `portable_path` reduced `run1/canary-2026-08-29.json` and
+                # `run2/canary-2026-08-29.json` to the same string, so three
+                # runs appeared in the artifact as three identical rows —
+                # indistinguishable from one file counted three times, which is
+                # precisely what "three independent runs" has to rule out.
+                "file": str(path.relative_to(directory)),
+                # And the bytes behind the row. Two runs that genuinely agree
+                # have different digests; a file read twice has one.
+                "sha256": hashlib.sha256(raw).hexdigest(),
                 "institutions": len(rows),
                 "programme_pages": sum(1 for r in rows if r.get("program_page_found")),
                 "scholarship_pages": sum(1 for r in rows if r.get("scholarship_page_found")),
@@ -145,9 +190,12 @@ def canary_summary(directory: Path) -> dict[str, Any]:
         )
     holdout = None
     for path in sorted(directory.glob("holdout/canary-*.json")):
-        report = json.loads(path.read_text())
+        raw = path.read_bytes()
+        report = json.loads(raw)
         rows = report if isinstance(report, list) else report.get("institutions", [])
         holdout = {
+            "file": str(path.relative_to(directory)),
+            "sha256": hashlib.sha256(raw).hexdigest(),
             "institutions": len(rows),
             "programme_pages": sum(1 for r in rows if r.get("program_page_found")),
             "false_positives": sum(len(r.get("false_positives") or []) for r in rows),
@@ -157,9 +205,15 @@ def canary_summary(directory: Path) -> dict[str, Any]:
     # the code that produced it, which is how a document came to state 4/10
     # while the repository produced 8/10.
     head_file = directory / "HEAD.txt"
+    distinct = {r["sha256"] for r in runs}
     return {
         "measured_at_commit": head_file.read_text().strip() if head_file.exists() else None,
         "runs": runs,
+        #: How many of the runs are actually different bytes. A reader
+        #: comparing this with `len(runs)` can see at once whether "three
+        #: independent runs" describes three runs.
+        "distinct_run_files": len(distinct),
+        "runs_supplied": len(runs),
         "median_programme_pages": programme[len(programme) // 2] if programme else None,
         "worst_programme_pages": programme[0] if programme else None,
         "holdout": holdout,
@@ -375,7 +429,7 @@ def main() -> int:
         "head": git("rev-parse", "HEAD"),
         "base_commit": BASE_COMMIT,
         "commits_since_base": int(git("rev-list", "--count", f"{BASE_COMMIT}..HEAD") or 0),
-        "working_tree_clean": git("status", "--porcelain") == "",
+        "working_tree": working_tree_state(),
         "environment": {
             "python": sys.version.split()[0],
             "platform": sys.platform,

@@ -57,6 +57,23 @@ def documents() -> dict[Path, str]:
 
 
 class TestTheArtifactIsInternallyHonest:
+    def test_the_gates_were_measured_against_a_committed_tree(self, artifact: dict):
+        """A gate result describes whatever was on disk when it ran.
+
+        `working_tree_clean` was a single boolean and it was always `false`,
+        because generating the artifact writes the artifact — so the field cast
+        doubt on every gate beside it and distinguished nothing. What a reader
+        needs to know is narrower: did any *source* differ from HEAD? If it
+        did, these numbers describe a tree that is in no commit and cannot be
+        reproduced from one.
+        """
+        tree = artifact["working_tree"]
+        assert tree["uncommitted_paths"] == [], (
+            "the gates were measured against uncommitted changes, so they "
+            f"describe no commit: {tree['uncommitted_paths'][:5]}"
+        )
+        assert tree["clean_ignoring_generated_outputs"] is True
+
     def test_the_verdict_follows_from_the_gates(self, artifact: dict):
         """READY is computed, not asserted. A document cannot talk its way
         past a failing or unrun gate if the verdict is derived from them."""

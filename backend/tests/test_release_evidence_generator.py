@@ -19,7 +19,12 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from scripts.release_evidence import count_tests, portable_path
+from scripts.release_evidence import (
+    GENERATED_OUTPUTS,
+    canary_summary,
+    count_tests,
+    portable_path,
+)
 
 
 class TestCountingWhatTheToolPrinted:
@@ -58,3 +63,65 @@ class TestProvenanceTravels:
         assert "/private/tmp" not in recorded
         assert "claude-501" not in recorded
         assert recorded.endswith("canary.json")
+
+
+class TestThreeRunsMustLookLikeThreeRuns:
+    """`portable_path` reduced every run to its basename.
+
+    The canary writes `run1/canary-2026-08-29.json`, `run2/…`, `run3/…` — three
+    files with one name. Recording only the basename put three identical rows
+    in the artifact, so a document saying "three independent runs at this
+    commit gave 8, 8, 8" was indistinguishable, in the evidence, from one file
+    counted three times. The claim being *true* is not the point: the artifact
+    could not support it either way.
+    """
+
+    @staticmethod
+    def _write(directory: Path, run: str, rows: list[dict]) -> None:
+        import json
+
+        (directory / run).mkdir(parents=True, exist_ok=True)
+        (directory / run / "canary-2026-08-29.json").write_text(json.dumps(rows))
+
+    def test_each_run_is_named_by_its_own_path_and_digest(self, tmp_path: Path):
+        found = {"program_page_found": True, "claims": 3, "completeness": 0.2}
+        self._write(tmp_path, "run1", [found])
+        self._write(tmp_path, "run2", [found, found])
+        self._write(tmp_path, "run3", [found, found, found])
+
+        summary = canary_summary(tmp_path)
+        files = [r["file"] for r in summary["runs"]]
+
+        assert files == [
+            "run1/canary-2026-08-29.json",
+            "run2/canary-2026-08-29.json",
+            "run3/canary-2026-08-29.json",
+        ], "the runs are not distinguishable in the record"
+        assert len({r["sha256"] for r in summary["runs"]}) == 3
+        assert all(len(r["sha256"]) == 64 for r in summary["runs"])
+        assert summary["runs_supplied"] == 3
+        assert summary["distinct_run_files"] == 3
+
+    def test_the_same_file_three_times_is_reported_as_one(self, tmp_path: Path):
+        """The failure mode this exists to expose, made explicit.
+
+        Identical bytes in three places is a legitimate thing to record — it is
+        just not three independent runs, and the artifact now says which it is
+        rather than leaving a reader to assume.
+        """
+        same = [{"program_page_found": True, "claims": 1, "completeness": 0.1}]
+        for run in ("run1", "run2", "run3"):
+            self._write(tmp_path, run, same)
+
+        summary = canary_summary(tmp_path)
+        assert summary["runs_supplied"] == 3
+        assert summary["distinct_run_files"] == 1
+
+
+class TestTheTreeStateSaysSomething:
+    def test_the_artifact_and_the_rendered_documents_count_as_generated(self):
+        """The generator writes these, so their being modified during a run is
+        the run, not a source change. Listing them separately is what lets the
+        source question be asked at all."""
+        assert "artifacts/release-evidence.json" in GENERATED_OUTPUTS
+        assert any(p.startswith("docs/evidence/") for p in GENERATED_OUTPUTS)
