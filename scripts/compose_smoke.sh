@@ -337,7 +337,11 @@ with SessionLocal() as s:
 fi
 
 step "security headers and cookie flags"
-HEADERS="$(curl -fsSI "$API/api/health")"
+# Headers from a GET, dumped with -D. This used `-I`, a HEAD request, which
+# the endpoint answered 405 — so the step died on curl's exit 22 rather than
+# checking any header. HEAD works now too, but the subject here is the headers
+# a real response carries, and that is a GET.
+HEADERS="$(curl -fsS -D - -o /dev/null "$API/api/health")"
 for header in "x-content-type-options" "x-frame-options" "referrer-policy"; do
   if grep -qi "^$header:" <<<"$HEADERS"; then ok "$header present"; else bad "$header missing"; fi
 done

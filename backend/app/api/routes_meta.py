@@ -79,6 +79,15 @@ def _currency_meta(settings) -> dict:
     }
 
 
+# GET and HEAD. A health endpoint exists to be probed by other systems, and a
+# good deal of uptime monitoring sends HEAD by default — which answered 405.
+#
+# Two decorators rather than `api_route(methods=[...])`: that form emits one
+# OpenAPI operation per method, both named after the function, and FastAPI
+# warns about the duplicate operation ID — which breaks generated clients. HEAD
+# is the same response without a body, so it is registered and kept out of the
+# schema.
+@router.head("/health", include_in_schema=False)
 @router.get("/health")
 def health() -> dict:
     s = get_settings()
