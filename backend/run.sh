@@ -51,6 +51,7 @@ stop_child() {
   [ -n "$pid" ] || return 0
   kill -0 "$pid" 2>/dev/null || { wait "$pid" 2>/dev/null || true; return 0; }
 
+  echo "run.sh: stopping $name (pid $pid)" >&2
   kill -TERM "$pid" 2>/dev/null || true
   # Ten seconds to leave politely. A worker mid-job finishes its lease
   # bookkeeping in that window; the job is durable either way.
@@ -76,8 +77,14 @@ shutdown() {
   if [ "$SHUTTING_DOWN" = "1" ]; then return; fi
   SHUTTING_DOWN=1
   trap - EXIT INT TERM
-  stop_child "$WORKER_PID" "worker"
+  # The API first, then the worker.
+  #
+  # It was the other way round, which left the API accepting requests and
+  # enqueueing jobs for up to ten seconds after the only thing that consumes
+  # them had gone. Work accepted in that window waits for the next worker.
+  # Stop taking new work, then drain what is in flight.
   stop_child "$API_PID" "api"
+  stop_child "$WORKER_PID" "worker"
   exit "$code"
 }
 
@@ -106,7 +113,9 @@ while true; do
   if ! kill -0 "$API_PID" 2>/dev/null; then
     set +e; wait "$API_PID"; api_code=$?; set -e
     # The API failing to bind is exactly when cleanup matters most, because
-    # nobody is watching.
+    # nobody is watching. An API that exits on its own is equally not a clean
+    # supervisor exit, whatever status it chose on the way out.
+    if [ "$api_code" = "0" ]; then api_code=70; fi
     shutdown "$api_code"
   fi
   if [ -n "$WORKER_PID" ] && ! kill -0 "$WORKER_PID" 2>/dev/null; then
@@ -114,6 +123,13 @@ while true; do
     echo "run.sh: worker exited with $worker_code; stopping the API too" >&2
     # A dead worker means jobs silently stop being consumed. Serving an API
     # that accepts work nothing will ever pick up is worse than being down.
+    #
+    # And this is a failure of the supervisor whatever the worker's own status
+    # was. Returning the child's code meant a worker that exited 0 on its own —
+    # losing the only consumer of the queue — was reported to the orchestrator
+    # as a clean, intentional shutdown, and nothing restarted it. Only a signal
+    # this supervisor was actually sent counts as "asked to stop".
+    if [ "$worker_code" = "0" ]; then worker_code=70; fi
     shutdown "$worker_code"
   fi
   sleep 0.2
