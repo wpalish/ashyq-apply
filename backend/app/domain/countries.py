@@ -305,6 +305,37 @@ def bloc_phrases() -> dict[str, str]:
     return dict(_BLOC_ALIASES_NORMALISED)
 
 
+def country_phrases() -> dict[str, str]:
+    """Every phrase that names a country, mapped to the country's own name.
+
+    Exported so nothing else keeps its own list. `restrictions.py` did — 48
+    names and 44 demonyms against this module's 144 countries — and the two
+    drifted: an award restricted to Rwanda, Cyprus, Malta, Brunei, Mozambique
+    or Togo read as unrestricted, which tells a student to spend an application
+    they cannot win.
+
+    Longest phrase first, so "united kingdom of great britain and northern
+    ireland" is matched before "united kingdom" and neither is claimed by a
+    shorter name inside it.
+
+    Two-letter forms are excluded, and that is not a detail. ISO alpha-2 codes
+    are ordinary English words: "to" is Tonga, "in" is India, "is" is Iceland,
+    "it" is Italy, "no" is Norway, "at" is Austria. Including them made every
+    sentence containing the word "to" — such as "open only **to** citizens of
+    Rwanda" — report an award as restricted to Tonga as well.
+
+    `canonical_country` still resolves codes, because that is an explicit
+    lookup of a value someone supplied rather than a scan of prose.
+    """
+    phrases: dict[str, str] = {}
+    for _code, name in COUNTRY_NAMES.items():
+        phrases[_normalise(name)] = name
+    for alias, code in _ALIASES.items():
+        if code in COUNTRY_NAMES and len(alias) > 2:
+            phrases.setdefault(_normalise(alias), COUNTRY_NAMES[code])
+    return dict(sorted(phrases.items(), key=lambda kv: -len(kv[0])))
+
+
 def canonical_country(value: str | None) -> str | None:
     """The ISO alpha-2 code for a country name, code, alias or demonym.
 

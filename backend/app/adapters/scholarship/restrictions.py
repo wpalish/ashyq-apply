@@ -21,34 +21,21 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 
-from app.domain.countries import bloc_phrases
+from app.domain.countries import (
+    _normalise,
+    bloc_phrases,
+    country_phrases,
+    country_satisfies,
+)
 
 #: Demonym -> country. Only entries where the adjective is unambiguous enough
 #: to carry a restriction. A country named without restricting language around
 #: it is not a rule, so this table is only consulted inside a match.
-_DEMONYMS: dict[str, str] = {
-    "greek": "Greece", "dutch": "Netherlands", "german": "Germany",
-    "french": "France", "belgian": "Belgium", "austrian": "Austria",
-    "polish": "Poland", "finnish": "Finland", "swedish": "Sweden",
-    "norwegian": "Norway", "danish": "Denmark", "irish": "Ireland",
-    "italian": "Italy", "spanish": "Spain", "portuguese": "Portugal",
-    "turkish": "Turkey", "indian": "India", "chinese": "China",
-    "japanese": "Japan", "korean": "South Korea", "singaporean": "Singapore",
-    "canadian": "Canada", "australian": "Australia",
-    "brazilian": "Brazil", "mexican": "Mexico", "kazakh": "Kazakhstan",
-    "kazakhstani": "Kazakhstan", "russian": "Russia", "ukrainian": "Ukraine",
-    "british": "United Kingdom", "swiss": "Switzerland", "czech": "Czechia",
-    "hungarian": "Hungary", "romanian": "Romania", "bulgarian": "Bulgaria",
-    "nigerian": "Nigeria", "kenyan": "Kenya", "egyptian": "Egypt",
-    "vietnamese": "Vietnam", "indonesian": "Indonesia", "malaysian": "Malaysia",
-    "thai": "Thailand", "pakistani": "Pakistan", "bangladeshi": "Bangladesh",
-}
-#: Country names that may appear directly ("citizens of Kazakhstan").
-_COUNTRIES: dict[str, str] = {v.lower(): v for v in _DEMONYMS.values()} | {
-    "hong kong": "Hong Kong", "new zealand": "New Zealand",
-    "south africa": "South Africa", "united states": "United States",
-    "the netherlands": "Netherlands", "united kingdom": "United Kingdom",
-}
+#: Country names, aliases and demonyms come from `app/domain/countries.py`.
+#: They were duplicated here — 48 names and 44 demonyms — and the two tables
+#: drifted apart. One table, or they disagree about who is eligible.
+_COUNTRY_PHRASES = country_phrases()
+
 
 #: Groups that are restrictions but not single countries.
 #:
@@ -86,7 +73,7 @@ _STATUS_WORD = re.compile(
     r"|nationals?|nationality|eligible|eligibility|apply|applicants?)\b",
     re.IGNORECASE,
 )
-_RESIDENCE_WORD = re.compile(r"\b(residence|residency|resident|domicile)\b", re.IGNORECASE)
+_RESIDENCE_WORD = re.compile(r"\b(residence|residency|residents?|domicile[ds]?)\b", re.IGNORECASE)
 _CITIZEN_WORD = re.compile(
     r"\b(passports?|citizens?|citizenship|nationals?|nationality)\b", re.IGNORECASE
 )
@@ -146,14 +133,32 @@ class PublishedCount:
 
 
 def _countries_in(sentence: str) -> list[str]:
-    low = sentence.lower()
+    """Countries a restriction sentence names, from the one country table.
+
+    This used a 48-name table and 44 demonyms kept here, beside the canonical
+    144-country model. The two drifted, and awards restricted to Rwanda,
+    Cyprus, Malta, Brunei, Mozambique or Togo read as unrestricted — which
+    tells a student to spend an application they cannot win.
+
+    Longest phrase first, so "United Kingdom of Great Britain and Northern
+    Ireland" is not claimed by "United Kingdom" inside it, and each country is
+    reported once however many of its names appear.
+    """
+    # Normalised the same way the phrase table is, or an accented name never
+    # matches its own entry: "Côte d'Ivoire" is stored as "cote divoire", and
+    # comparing it against a merely lower-cased sentence found nothing.
+    low = _normalise(sentence)
     found: list[str] = []
-    for name, country in _COUNTRIES.items():
-        if re.search(rf"\b{re.escape(name)}\b", low) and country not in found:
-            found.append(country)
-    for demonym, country in _DEMONYMS.items():
-        if re.search(rf"\b{re.escape(demonym)}\b", low) and country not in found:
-            found.append(country)
+    consumed: list[tuple[int, int]] = []
+    for phrase, country in _COUNTRY_PHRASES.items():
+        for match in re.finditer(rf"\b{re.escape(phrase)}\b", low):
+            # A longer name already covering this span wins; "United Kingdom"
+            # inside the official long form is the same country said once.
+            if any(start <= match.start() < end for start, end in consumed):
+                continue
+            consumed.append((match.start(), match.end()))
+            if country not in found:
+                found.append(country)
     return found
 
 
@@ -171,10 +176,17 @@ def extract_restrictions(text: str) -> Restrictions:
         if _NOT_A_RESTRICTION.search(sentence) or not _STATUS_WORD.search(sentence):
             continue
         countries = _countries_in(sentence)
-        found_blocs = [
-            label for key, label in _BLOCS.items()
-            if re.search(rf"\b{re.escape(key)}\b", sentence, re.IGNORECASE)
-        ]
+        # Deduplicated: several phrases resolve to one group, and
+        # "Commonwealth countries" matched both "commonwealth" and
+        # "commonwealth countries", so the award was reported as restricted to
+        # the Commonwealth twice.
+        found_blocs = list(
+            dict.fromkeys(
+                label
+                for key, label in _BLOCS.items()
+                if re.search(rf"\b{re.escape(key)}\b", sentence, re.IGNORECASE)
+            )
+        )
         if not countries and not found_blocs:
             continue
 
@@ -223,10 +235,25 @@ def assess_applicant_eligibility(
             restrictions.evidence,
         )
 
-    matches_citizenship = citizenship and citizenship in restrictions.citizenships
-    matches_residence = residence and residence in restrictions.residencies
-    if matches_citizenship or matches_residence:
-        satisfied = "citizenship" if matches_citizenship else "residence"
+    # Decided by the one eligibility engine, not by string equality.
+    #
+    # This compared the applicant's country to the restriction with `in` and
+    # never consulted bloc membership, so a Cypriot against a Commonwealth-only
+    # award came back `no` — a confident refusal of an eligible applicant, from
+    # an API that disagreed with the one the pipeline uses. It also could not
+    # see that "Deutschland" and "Germany" are one country.
+    citizenship_answers = [
+        country_satisfies(citizenship, restriction)
+        for restriction in (*restrictions.citizenships, *restrictions.blocs)
+    ] if citizenship else []
+    residence_answers = [
+        country_satisfies(residence, restriction)
+        for restriction in (*restrictions.residencies, *restrictions.blocs)
+    ] if residence else []
+    answers = citizenship_answers + residence_answers
+
+    if any(answer is True for answer in answers):
+        satisfied = "citizenship" if True in citizenship_answers else "residence"
         return EligibilityVerdict(
             "yes", f"The applicant's {satisfied} is among those the award names.",
             restrictions.evidence,
@@ -235,6 +262,17 @@ def assess_applicant_eligibility(
     named = ", ".join(sorted(set(
         restrictions.citizenships + restrictions.residencies + restrictions.blocs
     )))
+    # An unresolved question is never a refusal. If nothing said "yes" and
+    # anything said "I do not know" — an unrecognised country, a group with no
+    # settled membership — the honest answer is unknown.
+    if not answers or any(answer is None for answer in answers):
+        return EligibilityVerdict(
+            "unknown",
+            f"The award is restricted to {named}, and whether the applicant "
+            f"satisfies that could not be determined from what is recorded.",
+            restrictions.evidence,
+        )
+
     return EligibilityVerdict(
         "no",
         f"The award is restricted to {named}; the applicant holds "
