@@ -136,3 +136,54 @@ class TestTheTokenItself:
         store.claim(worker_id="A")
         assert store.heartbeat(job_id, lease_token="") is False
         assert store.complete(job_id, lease_token="") is False
+
+
+class TestReapingRevokesOwnership:
+    """The reaper clears the token, and that is load-bearing on one path.
+
+    When the reaper requeues a job it also mints nothing — the *next* claim
+    mints a new token, and that alone stops the old holder writing. But a job
+    whose attempts are exhausted is reaped straight to `dead`, and no claim ever
+    follows it. Leave the token on that row and the worker that stopped beating
+    can still present it: `mark_cancelled` matches on the token, not on the
+    status, so a stale holder could flip a dead job — one a person now has to
+    look at — to `cancelled`, which says a human chose to stop it.
+
+    Deleting the two lines that clear the token left every other test in this
+    file green, which is how this test came to exist.
+    """
+
+    def test_a_reaped_job_keeps_no_token(self, store, pg_session):
+        store.enqueue("research", payload={})
+        claimed = store.claim(worker_id="A")
+        token = claimed.lease_token
+        _expire(pg_session, claimed.id)
+        assert store.reap_expired() == [claimed.id]
+        pg_session.expire_all()
+
+        assert pg_session.get(Job, claimed.id).lease_token is None
+        assert store.heartbeat(claimed.id, lease_token=token) is False
+
+    def test_a_stale_holder_cannot_cancel_a_dead_job(self, store, pg_session):
+        """The path where no later claim exists to mint a new token."""
+        store.enqueue("research", payload={}, max_attempts=1)
+        claimed = store.claim(worker_id="A")
+        token = claimed.lease_token
+        _expire(pg_session, claimed.id)
+        store.reap_expired()
+        pg_session.expire_all()
+
+        dead = pg_session.get(Job, claimed.id)
+        assert dead.status == JobStatus.DEAD.value, "expected the reaper to bury it"
+
+        assert store.mark_cancelled(claimed.id, "stale", lease_token=token) is False
+        pg_session.expire_all()
+        after = pg_session.get(Job, claimed.id)
+        assert after.status == JobStatus.DEAD.value, (
+            "a worker that stopped beating cancelled a job a person now has to "
+            "decide about"
+        )
+        assert "stale" not in (after.last_error or ""), (
+            "the reaper's account of what happened was overwritten by the "
+            "worker that caused it"
+        )
