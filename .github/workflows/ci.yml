@@ -164,6 +164,13 @@ jobs:
           # fact built from merge commit 6a95c5bd. Both are recorded, named for
           # what they are, along with the trees, so the attestation can be
           # checked against a working copy rather than trusted.
+          # On `pull_request` the checkout is the synthetic merge commit and
+          # the branch head is not in it, so resolving the head's tree failed
+          # and the attestation carried `head_tree: unknown` — the one field a
+          # working copy can actually be compared against. Fetch the head
+          # commit first; a failure here is not fatal, the field just stays
+          # honest about not knowing.
+          git fetch --no-tags --depth=1 origin "${HEAD_SHA}" || true
           python3 - <<'PYEOF' > /tmp/ashyq-smoke-artifacts/attestation.json
           import json, os, subprocess, datetime
 
