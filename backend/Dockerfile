@@ -42,6 +42,12 @@ RUN playwright install --with-deps chromium \
 WORKDIR /app
 COPY --chown=ashyq:ashyq . .
 
+# The commit this image was built from. Reported by /api/health and recorded on
+# every job, so a stalled queue names the two builds that disagreed. Without it
+# every build reported "0.1.0" and two disagreeing builds looked identical.
+ARG ASHYQ_BUILD_SHA=""
+ENV ASHYQ_BUILD_SHA=${ASHYQ_BUILD_SHA}
+
 # Writable only where it must be.
 RUN mkdir -p /app/data && chown -R ashyq:ashyq /app/data
 

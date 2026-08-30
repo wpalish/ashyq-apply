@@ -25,7 +25,12 @@ from sqlalchemy import select, text, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from app.jobs.versioning import BUILD_VERSION, PAYLOAD_SCHEMA_VERSION, incompatibility
+from app.jobs.versioning import (
+    BUILD_VERSION,
+    PAYLOAD_SCHEMA_VERSION,
+    SUPPORTED_PAYLOAD_SCHEMA_VERSIONS,
+    incompatibility,
+)
 from app.models import TERMINAL_STATUSES, Job, JobStatus
 from app.models.base import ensure_utc, new_id
 
@@ -120,7 +125,13 @@ class JobStore:
 
     # --- consuming --------------------------------------------------------
 
-    def claim(self, *, worker_id: str | None = None, queue: str = "default") -> Job | None:
+    def claim(
+        self,
+        *,
+        worker_id: str | None = None,
+        queue: str = "default",
+        supported_versions: Iterable[int] | None = None,
+    ) -> Job | None:
         """Take the next ready job, or None.
 
         The row is locked and updated in one statement. On PostgreSQL
@@ -132,17 +143,33 @@ class JobStore:
         dialect = self.session.get_bind().dialect.name
 
         skip_locked = "FOR UPDATE SKIP LOCKED" if dialect == "postgresql" else ""
+        # Payloads this build cannot read are excluded here, before the claim.
+        #
+        # Checking after claiming was not enough: claiming is what increments
+        # `attempts`, so refusing the work still spent one of the job's three,
+        # and after three refusals it would be `dead` — needing a person for
+        # something a deployment resolves. The applicant is told "nothing has
+        # been charged against your attempts", and this is what makes that
+        # true.
+        supported = sorted(supported_versions or SUPPORTED_PAYLOAD_SCHEMA_VERSIONS)
+        placeholders = ", ".join(f":v{i}" for i in range(len(supported)))
         candidate_id = self.session.execute(
             text(
                 f"""
                 SELECT id FROM jobs
                 WHERE status = :queued AND queue = :queue AND available_at <= :now
+                  AND payload_schema_version IN ({placeholders})
                 ORDER BY priority DESC, available_at ASC
                 LIMIT 1
                 {skip_locked}
                 """
             ),
-            {"queued": JobStatus.QUEUED.value, "queue": queue, "now": now},
+            {
+                "queued": JobStatus.QUEUED.value,
+                "queue": queue,
+                "now": now,
+                **{f"v{i}": v for i, v in enumerate(supported)},
+            },
         ).scalar()
 
         if candidate_id is None:
@@ -214,6 +241,32 @@ class JobStore:
         self.session.add(job)
         self.session.flush()
         return job.status
+
+    def park_unsupported(self, supported: Iterable[int]) -> int:
+        """Mark queued work this build cannot read, without claiming it.
+
+        Visibility only. `claim()` already refuses these, so they would sit in
+        `queued` looking ordinary while nothing ever picked them up — a stall
+        with no name on it. Parking says why, and costs no attempt because
+        nothing is claimed: this is an UPDATE against `queued` rows, not a
+        worker taking the job.
+        """
+        supported_set = set(supported)
+        parked = [
+            job
+            for job in self.session.scalars(
+                select(Job).where(Job.status == JobStatus.QUEUED.value)
+            )
+            if job.payload_schema_version not in supported_set
+        ]
+        for job in parked:
+            job.status = JobStatus.BLOCKED_INCOMPATIBLE.value
+            job.last_error = json.dumps(
+                incompatibility(job.payload_schema_version)
+            )[:4000]
+            self.session.add(job)
+        self.session.flush()
+        return len(parked)
 
     def release_incompatible(self, supported: Iterable[int]) -> int:
         """Re-queue parked jobs this build *can* read. Returns how many.

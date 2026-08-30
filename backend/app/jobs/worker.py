@@ -237,6 +237,18 @@ def wait_for_schema(timeout: float = SCHEMA_WAIT_SECONDS) -> bool:
     return False
 
 
+#: Job states that mean a run is still going to be worked on. `queued` and
+#: `running` are obvious; `blocked_incompatible` belongs here because it is
+#: paused work waiting for a deployment to finish, not abandoned work. Treating
+#: it as stranded would mark the run failed and throw away something that is
+#: about to resume by itself.
+LIVE_JOB_STATUSES: frozenset[str] = frozenset({
+    JobStatus.QUEUED.value,
+    JobStatus.RUNNING.value,
+    JobStatus.BLOCKED_INCOMPATIBLE.value,
+})
+
+
 def reconcile_startup() -> dict[str, int]:
     """Put the queue and the runs back into a consistent state.
 
@@ -251,12 +263,15 @@ def reconcile_startup() -> dict[str, int]:
         # releases anything an earlier one parked because it could not read
         # the payload version. No operator action, no lost work.
         released = store.release_incompatible(SUPPORTED_PAYLOAD_SCHEMA_VERSIONS)
+        # And name anything queued that this build still cannot read, so it is
+        # visibly paused rather than silently never claimed.
+        parked = store.park_unsupported(SUPPORTED_PAYLOAD_SCHEMA_VERSIONS)
 
         stranded = 0
         live_run_ids = {
             job.run_id
             for job in session.query(Job).filter(
-                Job.status.in_([JobStatus.QUEUED.value, JobStatus.RUNNING.value])
+                Job.status.in_(LIVE_JOB_STATUSES)
             )
             if job.run_id
         }
@@ -304,6 +319,7 @@ def reconcile_startup() -> dict[str, int]:
             "jobs_reaped": len(reaped),
             "runs_recovered": stranded,
             "jobs_released": released,
+            "jobs_parked": parked,
         }
 
 

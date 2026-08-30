@@ -106,7 +106,11 @@ class TestParkingRatherThanFailing:
         released = pg_session.get(Job, job.id)
         assert released.status == JobStatus.QUEUED.value
         assert released.attempts == 0
-        assert store.claim(worker_id="w3") is not None
+        # Claiming is version-aware now, which is what stops a refusal from
+        # spending an attempt. A build that supports the payload takes it; the
+        # default supported set does not, and must not.
+        assert store.claim(worker_id="w3") is None
+        assert store.claim(worker_id="w3", supported_versions={999}) is not None
 
     def test_releasing_does_not_disturb_other_jobs(self, store, pg_session):
         keep = pg_session.get(Job, store.enqueue("research", payload={}).job_id)
@@ -215,3 +219,97 @@ class _SessionScope:
 
     def __exit__(self, *exc):
         return False
+
+
+class TestRefusingWorkNeverSpendsAnAttempt:
+    """The invariant the UI promises, tested through the path the worker uses.
+
+    `TestTheWorkerRefusesRatherThanBuries` calls `Worker.execute()` directly and
+    was green while production was broken, because `execute()` is reached
+    *after* `claim_one()` — and claiming is what increments `attempts`:
+
+        before claim: status=queued  attempts=0
+        after claim:  status=running attempts=1
+        after park:   status=blocked_incompatible attempts=1
+
+    One of three attempts, spent on refusing to do the work. ProgressScreen
+    tells the applicant "nothing has been charged against your attempts", so
+    either the invariant holds or that sentence is a lie.
+
+    These go through `claim_one()`.
+    """
+
+    def test_an_unreadable_job_is_never_claimed(self, store, pg_session):
+        job_id = store.enqueue("documents", payload={"result_id": "r1"}).job_id
+        job = pg_session.get(Job, job_id)
+        job.payload_schema_version = 999
+        pg_session.flush()
+
+        assert store.claim(worker_id="w1") is None, (
+            "a worker claimed a payload it cannot read, spending an attempt on it"
+        )
+        pg_session.expire_all()
+        assert pg_session.get(Job, job_id).attempts == 0
+
+    def test_a_readable_job_beside_it_is_still_claimed(self, store, pg_session):
+        """The filter must not stop the queue: one unreadable job may not
+        block the readable ones behind it."""
+        blocked_id = store.enqueue("documents", payload={}).job_id
+        blocked = pg_session.get(Job, blocked_id)
+        blocked.payload_schema_version = 999
+        runnable_id = store.enqueue("research", payload={}).job_id
+        pg_session.flush()
+
+        claimed = store.claim(worker_id="w1")
+        assert claimed is not None and claimed.id == runnable_id
+
+    def test_the_worker_loop_parks_it_without_spending_an_attempt(
+        self, store, pg_session
+    ):
+        """End to end through the worker's own poll, not through a helper."""
+        job_id = store.enqueue("documents", payload={"result_id": "r1"}).job_id
+        job = pg_session.get(Job, job_id)
+        job.payload_schema_version = 999
+        pg_session.commit()
+
+        parked = store.park_unsupported(SUPPORTED_PAYLOAD_SCHEMA_VERSIONS)
+        pg_session.expire_all()
+        after = pg_session.get(Job, job_id)
+        assert parked == 1
+        assert after.status == JobStatus.BLOCKED_INCOMPATIBLE.value
+        assert after.attempts == 0, "parking spent an attempt"
+
+    def test_parking_leaves_readable_queued_work_alone(self, store, pg_session):
+        keep_id = store.enqueue("research", payload={}).job_id
+        pg_session.commit()
+        assert store.park_unsupported(SUPPORTED_PAYLOAD_SCHEMA_VERSIONS) == 0
+        pg_session.expire_all()
+        assert pg_session.get(Job, keep_id).status == JobStatus.QUEUED.value
+
+    def test_a_parked_job_survives_a_full_round_trip_with_attempts_intact(
+        self, store, pg_session
+    ):
+        job_id = store.enqueue("documents", payload={"result_id": "r1"}).job_id
+        job = pg_session.get(Job, job_id)
+        job.payload_schema_version = 999
+        pg_session.commit()
+
+        store.park_unsupported(SUPPORTED_PAYLOAD_SCHEMA_VERSIONS)
+        store.release_incompatible(frozenset({999}))
+        pg_session.expire_all()
+        released = pg_session.get(Job, job_id)
+        assert released.status == JobStatus.QUEUED.value
+        assert released.attempts == 0, (
+            "the applicant's job came back with fewer attempts than it started with"
+        )
+        assert released.max_attempts == 3
+
+
+class TestParkedWorkIsPausedNotStranded:
+    def test_startup_reconciliation_treats_a_parked_job_as_live(self, store, pg_session):
+        """A run whose only job is parked is waiting for a deployment, not
+        abandoned. Counting it as stranded would mark the run failed and lose
+        work that is about to resume by itself."""
+        from app.jobs.worker import LIVE_JOB_STATUSES
+
+        assert JobStatus.BLOCKED_INCOMPATIBLE.value in LIVE_JOB_STATUSES

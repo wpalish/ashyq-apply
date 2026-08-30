@@ -28,6 +28,10 @@ export POSTGRES_PASSWORD="smoke-$(head -c 18 /dev/urandom | base64 | tr -dc 'a-z
 export API_PORT="${API_PORT:-18099}"
 export WEB_PORT="${WEB_PORT:-18080}"
 export UNIMATCH_DEMO_MODE=true
+# The image records the commit it was built from. The smoke test asserts the
+# running stack reports it, so "which build is this" is answerable from a
+# stalled queue rather than guessed at.
+export ASHYQ_BUILD_SHA="${GITHUB_SHA:-$(git rev-parse HEAD 2>/dev/null || echo unknown)}"
 API="http://127.0.0.1:${API_PORT}"
 COMPOSE=(docker compose -p "$PROJECT")
 JAR_A="$(mktemp)"; JAR_B="$(mktemp)"
@@ -142,6 +146,13 @@ for _ in $(seq 1 60); do
   sleep 2
 done
 check "$(curl -s -o /dev/null -w '%{http_code}' "$API/api/health")" "200" "API is healthy"
+
+# The running stack must be able to say which build it is. Reporting a
+# hardcoded "0.1.0" made two disagreeing builds indistinguishable in the
+# record, which is exactly when the question gets asked.
+REPORTED_BUILD="$(curl -fsS "$API/api/health" | json_field '["build"]')"
+check "$REPORTED_BUILD" "$(printf '%s' "$ASHYQ_BUILD_SHA" | cut -c1-12)" \
+  "the API reports the commit it was built from"
 
 step "the one-shot migration ran to completion"
 # `docker compose ps --format json` emits an array on some versions and one

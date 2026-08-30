@@ -40,6 +40,8 @@ services:
   migrate:
     build:
       context: ./backend
+      args:
+        ASHYQ_BUILD_SHA: ${ASHYQ_BUILD_SHA:-}
     command: ["python", "-m", "alembic", "upgrade", "head"]
     environment: &backend-env
       # The local stack is production-shaped but served over plain localhost
@@ -65,6 +67,8 @@ services:
   api:
     build:
       context: ./backend
+      args:
+        ASHYQ_BUILD_SHA: ${ASHYQ_BUILD_SHA:-}
     environment: *backend-env
     ports:
       - "${API_PORT:-8099}:8099"
@@ -87,6 +91,8 @@ services:
   worker:
     build:
       context: ./backend
+      args:
+        ASHYQ_BUILD_SHA: ${ASHYQ_BUILD_SHA:-}
     command: ["python", "-m", "app.jobs.worker"]
     environment:
       <<: *backend-env

@@ -36,11 +36,37 @@ that is ahead of the API can read everything the API produces. An API ahead of
 its workers parks jobs until the workers catch up — which is recoverable, but
 it is a stall, and a stall is worth avoiding by ordering the rollout.
 
-Draining is not required. Parking is what makes that true.
+Draining is not required *after* this mechanism exists. Parking is what makes
+that true.
+
+The first rollout is the exception, and it has to be said plainly
+-----------------------------------------------------------------
+
+A worker built before this module has no version check to run. It will happily
+claim a payload from a newer API and fail it three times, which is exactly the
+incident this exists to prevent — and nothing in the new build can stop it,
+because the decision is taken in the old one.
+
+For the deployment that introduces this mechanism, and only that one, the old
+workers must be stopped before the new API serves traffic:
+
+    1. stop every running worker (they hold no state; in-flight jobs return to
+       the queue by lease expiry, which is what the reaper is for)
+    2. deploy the new worker build
+    3. deploy the new API
+
+Every deployment after it is a normal rolling one: workers first, then the API,
+with no drain, because from then on a worker that cannot read a payload parks
+it instead of consuming it.
+
+`scripts/compose_smoke.sh` exercises the steady state. The barrier above is a
+one-time operational step and is written down here because there is nowhere in
+the code it can be enforced from.
 """
 
 from __future__ import annotations
 
+import os
 from typing import Final
 
 #: Bumped when a payload gains a field a worker must understand to run the job
@@ -59,10 +85,23 @@ PAYLOAD_SCHEMA_VERSION: Final[int] = 1
 #: with a test behind it, not a silent consequence of a bump.
 SUPPORTED_PAYLOAD_SCHEMA_VERSIONS: Final[frozenset[int]] = frozenset({1})
 
-#: Identifies the build that produced or ran a job. Recorded on every job so a
-#: stalled queue can be traced to the pair of builds that disagreed, without
-#: reading a single applicant's data.
-BUILD_VERSION: Final[str] = "0.1.0"
+#: Identifies the build that produced or ran a job, so a stalled queue can be
+#: traced to the pair of builds that disagreed — without reading a single
+#: applicant's data.
+#:
+#: `"0.1.0"` identified nothing: every build this project has ever produced
+#: reports it, so two builds that disagree look identical in the record. The
+#: image is stamped with the commit it was built from, and that is what is
+#: reported. The fallback keeps a developer's checkout working, and says
+#: plainly that it is not a released build rather than inventing a version.
+def _build_identifier() -> str:
+    sha = (os.environ.get("ASHYQ_BUILD_SHA") or "").strip()
+    if sha:
+        return sha[:12]
+    return "unversioned-local-build"
+
+
+BUILD_VERSION: Final[str] = _build_identifier()
 
 
 def supports(payload_schema_version: int) -> bool:

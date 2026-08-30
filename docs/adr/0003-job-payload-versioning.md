@@ -81,9 +81,26 @@ understand to be correct, or when an existing field changes meaning.
 everything the API produces, so the queue never stalls. An API ahead of its
 workers parks jobs until the workers catch up — recoverable, but a stall.
 
-**Draining is not required.** Parking is what makes that true, and it is why
-this is preferred to a drain: a drain has to be enforced by a human at the
-right moment, and the failure mode when they forget is the one described above.
+**Draining is not required after this mechanism exists.** Parking is what makes
+that true, and it is why this is preferred to a drain: a drain has to be
+enforced by a human at the right moment, and the failure mode when they forget
+is the one described above.
+
+**The first rollout is the exception.** A worker built before this ADR has no
+version check to run: it will claim a payload from the newer API and fail it
+three times, and nothing in the new build can prevent that, because the
+decision is taken in the old one. For that one deployment — stop the workers,
+deploy the new worker build, then deploy the API. In-flight jobs return to the
+queue by lease expiry, which is what the reaper is for. Every deployment after
+it is a normal rolling one.
+
+**Refusing costs no attempt, and that is enforced at the claim.** Checking the
+version after claiming was not enough: claiming is what increments `attempts`,
+so a refusal still spent one of three, and three refusals reached `dead` —
+needing a person for something a deployment resolves. `claim()` now filters on
+`payload_schema_version`, so an unreadable job is never picked up at all.
+Queued work no live build can read is marked `blocked_incompatible` by a sweep
+that claims nothing, purely so a stall has a name on it.
 
 ## Consequences
 
@@ -98,4 +115,10 @@ right moment, and the failure mode when they forget is the one described above.
   deployment after it, and makes the failure diagnosable rather than silent.
 - `/api/health` reports `build`, `payload_schema_version` and
   `supported_payload_schema_versions`, and the worker logs the same at startup,
-  so a stalled queue can be traced to the two builds that disagreed.
+  so a stalled queue can be traced to the two builds that disagreed. `build` is
+  the commit the image was built from, passed in as `ASHYQ_BUILD_SHA`: it was a
+  hardcoded `"0.1.0"`, which every build this project has ever produced also
+  reports, so two disagreeing builds looked identical in the record.
+- `blocked_incompatible` counts as live work during startup reconciliation. It
+  is paused, not abandoned, and treating it as stranded would mark the run
+  failed and discard work that is about to resume by itself.
