@@ -211,7 +211,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
 
         <Panel
           title="Grades"
-          hint="Enter the grade exactly as it appears on your transcript. UniMatch does not convert it silently."
+          hint="Enter the grade exactly as it appears on your transcript. ASHYQ Apply does not convert it silently."
         >
           <div className="grid-2">
             <Field label="GPA / average" htmlFor="gpa">

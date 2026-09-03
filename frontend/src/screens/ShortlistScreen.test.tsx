@@ -14,10 +14,20 @@ import type { ProgramResult } from '@/types';
 const decide = vi.fn().mockResolvedValue(undefined);
 
 vi.mock('@/lib/store', () => ({
-  useStore: () => ({ results: [row], summary: null, decide }),
+  useStore: () => ({ results: [row], summary, decide }),
 }));
 
 let row: ProgramResult;
+// The filters are built from the summary the API returns, not from the rows.
+const summary = {
+  total: 1,
+  by_eligibility: { MET: 1, NEEDS_OFFICIAL_CLARIFICATION: 2 },
+  by_funding: { FULL_RIDE_CONFIRMED: 1 },
+  by_decision: { undecided: 1 },
+  with_conflicts: 0,
+  with_open_questions: 0,
+  demo_data: true,
+};
 
 function makeRow(overrides: Partial<ProgramResult> = {}): ProgramResult {
   return {
@@ -106,5 +116,24 @@ describe('rejecting a programme', () => {
 
     await waitFor(() => expect(decide).toHaveBeenCalledWith('result-1', 'approved', '', ''));
     expect(screen.queryByTestId('reject-reason-result-1')).toBeNull();
+  });
+});
+
+describe('filter labels', () => {
+  it('offers readable statuses, not raw enum tokens', () => {
+    render(<ShortlistScreen />);
+    const eligibility = screen.getByLabelText('Eligibility');
+
+    expect(eligibility).toHaveTextContent('Met');
+    expect(eligibility).not.toHaveTextContent('NEEDS_OFFICIAL_CLARIFICATION');
+  });
+
+  it('keeps the enum as the option value, so filtering still works', () => {
+    render(<ShortlistScreen />);
+    const option = screen
+      .getByLabelText('Eligibility')
+      .querySelector('option[value="MET"]');
+    expect(option).not.toBeNull();
+    expect(option?.textContent).toContain('Met');
   });
 });

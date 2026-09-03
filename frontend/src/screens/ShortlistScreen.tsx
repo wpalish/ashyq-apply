@@ -12,7 +12,8 @@ import { Fragment, useMemo, useState } from 'react';
 import { ResultDetail } from '@/components/ResultDetail';
 import { Chip, Empty, Field, Notice, Panel, StatusChip } from '@/components/primitives';
 import {
-  admissionsFitTone, date, eligibilityTone, fundingClassTone, money, scorePercent,
+  STATUS_LABEL, admissionsFitTone, date, eligibilityTone, fundingClassTone, humanize, money,
+  scorePercent,
 } from '@/lib/format';
 import { useStore } from '@/lib/store';
 import type { ProgramResult, UserDecision } from '@/types';
@@ -114,7 +115,8 @@ export function ShortlistScreen() {
               <select id="f-elig" value={eligibility} onChange={(e) => setEligibility(e.target.value)}>
                 <option value="">Any</option>
                 {Object.entries(summary?.by_eligibility ?? {}).map(([k, v]) => (
-                  <option key={k} value={k}>{k} ({v})</option>
+                  // The value stays the enum; only the label is for humans.
+                  <option key={k} value={k}>{STATUS_LABEL[k] ?? humanize(k)} ({v})</option>
                 ))}
               </select>
             </Field>
@@ -122,7 +124,7 @@ export function ShortlistScreen() {
               <select id="f-fund" value={funding} onChange={(e) => setFunding(e.target.value)}>
                 <option value="">Any</option>
                 {Object.entries(summary?.by_funding ?? {}).map(([k, v]) => (
-                  <option key={k} value={k}>{k} ({v})</option>
+                  <option key={k} value={k}>{STATUS_LABEL[k] ?? humanize(k)} ({v})</option>
                 ))}
               </select>
             </Field>

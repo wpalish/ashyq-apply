@@ -52,7 +52,7 @@ beforeEach(() => {
 
 describe('profile restoration after a reload', () => {
   it('hydrates the editable draft from the stored profile', async () => {
-    window.localStorage.setItem('unimatch.activeProfile', REAL_PROFILE.id);
+    window.localStorage.setItem('ashyq.activeProfile', REAL_PROFILE.id);
     vi.spyOn(api, 'getProfile').mockResolvedValue(REAL_PROFILE);
 
     render(<StoreProvider><Probe /></StoreProvider>);
@@ -64,7 +64,7 @@ describe('profile restoration after a reload', () => {
   });
 
   it('never leaves the synthetic demo profile in the draft after restoring', async () => {
-    window.localStorage.setItem('unimatch.activeProfile', REAL_PROFILE.id);
+    window.localStorage.setItem('ashyq.activeProfile', REAL_PROFILE.id);
     vi.spyOn(api, 'getProfile').mockResolvedValue(REAL_PROFILE);
 
     render(<StoreProvider><Probe /></StoreProvider>);
@@ -75,21 +75,21 @@ describe('profile restoration after a reload', () => {
   });
 
   it('forgets the pointer when the stored profile is gone', async () => {
-    window.localStorage.setItem('unimatch.activeProfile', 'deleted-id');
-    window.localStorage.setItem('unimatch.activeRun', 'some-run');
+    window.localStorage.setItem('ashyq.activeProfile', 'deleted-id');
+    window.localStorage.setItem('ashyq.activeRun', 'some-run');
     vi.spyOn(api, 'getProfile').mockRejectedValue(new Error('404'));
     vi.spyOn(api, 'getRun').mockRejectedValue(new Error('404'));
 
     render(<StoreProvider><Probe /></StoreProvider>);
 
     await waitFor(() =>
-      expect(window.localStorage.getItem('unimatch.activeProfile')).toBeNull(),
+      expect(window.localStorage.getItem('ashyq.activeProfile')).toBeNull(),
     );
     expect(screen.getByTestId('saved')).toHaveTextContent('none');
   });
 
   it('restores the profile even when no run is stored', async () => {
-    window.localStorage.setItem('unimatch.activeProfile', REAL_PROFILE.id);
+    window.localStorage.setItem('ashyq.activeProfile', REAL_PROFILE.id);
     const getRun = vi.spyOn(api, 'getRun');
     vi.spyOn(api, 'getProfile').mockResolvedValue(REAL_PROFILE);
 
@@ -180,7 +180,7 @@ describe('starting research twice', () => {
     expect(getRun).toHaveBeenCalledWith(active.id);
     expect(screen.getByTestId('run')).toHaveTextContent(active.id);
     expect(screen.getByTestId('error')).toHaveTextContent('none');
-    expect(window.localStorage.getItem('unimatch.activeRun')).toBe(active.id);
+    expect(window.localStorage.getItem('ashyq.activeRun')).toBe(active.id);
   });
 
   it('sends an idempotency key so a retried request cannot start a second run', async () => {
@@ -195,5 +195,30 @@ describe('starting research twice', () => {
 
     expect(startRun).toHaveBeenCalledWith(REAL_PROFILE.id, true, expect.any(String));
     expect(startRun.mock.calls[0]?.[2]).toBeTruthy();
+  });
+});
+
+describe('renaming the storage keys', () => {
+  it('carries a session stored under the old name across, once', async () => {
+    // A rename with no migration would have signed everyone out of their own
+    // case the first time they loaded the renamed build.
+    window.localStorage.setItem('unimatch.activeProfile', REAL_PROFILE.id);
+    vi.spyOn(api, 'getProfile').mockResolvedValue(REAL_PROFILE);
+
+    render(<StoreProvider><Probe /></StoreProvider>);
+
+    await waitFor(() => expect(screen.getByTestId('saved')).toHaveTextContent(REAL_PROFILE.id));
+    expect(window.localStorage.getItem('ashyq.activeProfile')).toBe(REAL_PROFILE.id);
+    expect(window.localStorage.getItem('unimatch.activeProfile')).toBeNull();
+  });
+
+  it('prefers the new key when both exist', async () => {
+    window.localStorage.setItem('unimatch.activeProfile', 'stale-id');
+    window.localStorage.setItem('ashyq.activeProfile', REAL_PROFILE.id);
+    const getProfile = vi.spyOn(api, 'getProfile').mockResolvedValue(REAL_PROFILE);
+
+    render(<StoreProvider><Probe /></StoreProvider>);
+
+    await waitFor(() => expect(getProfile).toHaveBeenCalledWith(REAL_PROFILE.id));
   });
 });

@@ -29,7 +29,7 @@ METHODS: dict[str, ConversionMethod] = {
         from_scale="KZ 5-point",
         to_scale="US 4.0",
         description="Linear map of the passing band 3.0-5.0 onto 2.0-4.0.",
-        source="UniMatch built-in approximation (app/domain/grades.py) — not a credential evaluation",
+        source="ASHYQ Apply built-in approximation (app/domain/grades.py) — not a credential evaluation",
         caveat=(
             "Universities in the United States generally require an evaluation by a NACES member "
             "(WES, ECE, SpanTran). This figure is for shortlisting only and must not be entered "
@@ -41,7 +41,7 @@ METHODS: dict[str, ConversionMethod] = {
         from_scale="Percentage /100",
         to_scale="US 4.0",
         description="Linear map of 50-100% onto 1.0-4.0.",
-        source="UniMatch built-in approximation (app/domain/grades.py) — not a credential evaluation",
+        source="ASHYQ Apply built-in approximation (app/domain/grades.py) — not a credential evaluation",
         caveat="Institutions differ widely on percentage bands; treat as indicative only.",
     ),
     "uk_class_to_us4": ConversionMethod(
@@ -49,7 +49,7 @@ METHODS: dict[str, ConversionMethod] = {
         from_scale="UK percentage /100",
         to_scale="US 4.0",
         description="UK degree classification bands mapped to common US equivalents.",
-        source="UniMatch built-in approximation (app/domain/grades.py) — not a credential evaluation",
+        source="ASHYQ Apply built-in approximation (app/domain/grades.py) — not a credential evaluation",
         caveat="UK marking is not linear; a 70% first-class mark is not a 2.8 GPA.",
     ),
 }

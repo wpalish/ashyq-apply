@@ -19,7 +19,7 @@ const OWNER_LABEL: Record<string, string> = {
   third_party: 'A third party (translator, WES/ECE, notary)',
 };
 
-const DONE_KEY = 'unimatch.docsDone';
+const DONE_KEY = 'ashyq.docsDone';
 
 function loadDone(): Record<string, boolean> {
   try {
@@ -228,7 +228,7 @@ function ChecklistFor({
 
       <Notice kind="info">
         <div>
-          UniMatch prepares this list. It does not upload documents, submit an application, sign
+          ASHYQ Apply prepares this list. It does not upload documents, submit an application, sign
           anything on your behalf, or pay a fee. Those steps stay with you.
         </div>
       </Notice>

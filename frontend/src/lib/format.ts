@@ -20,12 +20,23 @@ export type Tone = 'ok' | 'info' | 'warn' | 'risk' | 'neutral' | 'demo' | 'accen
 export const NOT_PUBLISHED = 'not published';
 export const NOT_FOUND = 'not found';
 
+/**
+ * One locale for money and dates alike.
+ *
+ * Money was formatted en-US and dates en-GB, so the same screen showed
+ * "1,234 EUR" beside "05 Mar 2027" — two conventions, neither chosen by the
+ * reader. The browser's own locale is the honest default; en-GB is the
+ * fallback because the product's copy is British English.
+ */
+export const DISPLAY_LOCALE =
+  typeof navigator !== 'undefined' && navigator.language ? navigator.language : 'en-GB';
+
 export function money(value: Money | null | undefined): string {
   if (!value) return NOT_FOUND;
-  const base = `${Math.round(value.amount).toLocaleString('en-US')} ${value.currency}`;
+  const base = `${Math.round(value.amount).toLocaleString(DISPLAY_LOCALE)} ${value.currency}`;
   const range =
     value.range_low != null && value.range_high != null && value.range_low !== value.range_high
-      ? ` (${Math.round(value.range_low).toLocaleString('en-US')}–${Math.round(value.range_high).toLocaleString('en-US')})`
+      ? ` (${Math.round(value.range_low).toLocaleString(DISPLAY_LOCALE)}–${Math.round(value.range_high).toLocaleString(DISPLAY_LOCALE)})`
       : '';
   const year = value.academic_year ? ` · ${value.academic_year}` : '';
   const est = value.is_estimate ? ' est.' : '';
@@ -36,14 +47,14 @@ export function date(iso: string | null | undefined): string {
   if (!iso) return NOT_FOUND;
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return iso;
-  return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  return d.toLocaleDateString(DISPLAY_LOCALE, { day: '2-digit', month: 'short', year: 'numeric' });
 }
 
 export function dateTime(iso: string | null | undefined): string {
   if (!iso) return 'never';
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return iso;
-  return d.toLocaleString('en-GB', {
+  return d.toLocaleString(DISPLAY_LOCALE, {
     day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit',
   });
 }

@@ -43,7 +43,7 @@ function plural(n: number, noun: string): string {
   return `${n} ${noun}${n === 1 ? '' : 's'}`;
 }
 
-const THEME_KEY = 'unimatch.theme';
+const THEME_KEY = 'ashyq.theme';
 type Theme = 'system' | 'light' | 'dark';
 
 export default function App() {
@@ -108,7 +108,7 @@ export default function App() {
     <div className="app">
       <aside className="sidebar">
         <div className="brand">
-          <span className="brand__mark">UniMatch</span>
+          <span className="brand__mark">ASHYQ Apply</span>
           <span className="brand__tag">
             Evidence-backed university &amp; scholarship shortlisting
           </span>
@@ -153,7 +153,7 @@ export default function App() {
             </select>
           </div>
           <p className="xs faint" style={{ margin: 0 }}>
-            Published criteria only. UniMatch never predicts admission or funding outcomes.
+            Published criteria only. ASHYQ Apply never predicts admission or funding outcomes.
           </p>
         </div>
       </aside>

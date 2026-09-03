@@ -18,13 +18,28 @@ import type {
 } from '@/types';
 
 const POLL_MS = 1200;
-const RUN_KEY = 'unimatch.activeRun';
-const PROFILE_KEY = 'unimatch.activeProfile';
+const RUN_KEY = 'ashyq.activeRun';
+const PROFILE_KEY = 'ashyq.activeProfile';
+
+/**
+ * Keys were `unimatch.*` before the product was named. Renaming them without a
+ * migration would have silently signed everyone out of their own case on the
+ * next visit, so the old key is read once and rewritten under the new name.
+ */
+export function legacyKey(key: string): string {
+  return key.replace(/^ashyq\./, 'unimatch.');
+}
 
 /** localStorage can throw in private windows; a missing value is never fatal. */
 function readLocal(key: string): string | null {
   try {
-    return window.localStorage.getItem(key);
+    const current = window.localStorage.getItem(key);
+    if (current !== null) return current;
+    const legacy = window.localStorage.getItem(legacyKey(key));
+    if (legacy === null) return null;
+    window.localStorage.setItem(key, legacy);
+    window.localStorage.removeItem(legacyKey(key));
+    return legacy;
   } catch {
     return null;
   }
