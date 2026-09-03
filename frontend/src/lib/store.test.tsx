@@ -222,3 +222,88 @@ describe('renaming the storage keys', () => {
     await waitFor(() => expect(getProfile).toHaveBeenCalledWith(REAL_PROFILE.id));
   });
 });
+
+describe('unsaved edits', () => {
+  function DirtyProbe() {
+    const { profileDraft, setProfileDraft, dirty, draftRestored, discardDraft } = useStore();
+    const context = profileDraft.context as Record<string, unknown>;
+    return (
+      <div>
+        <span data-testid="dirty">{String(dirty)}</span>
+        <span data-testid="draft-restored">{String(draftRestored)}</span>
+        <span data-testid="citizenship">{String(context?.citizenship)}</span>
+        <button onClick={() => setProfileDraft((d) => ({
+          ...d, context: { ...(d.context as object), citizenship: 'Georgia' },
+        }))}>edit</button>
+        <button onClick={discardDraft}>discard</button>
+      </div>
+    );
+  }
+
+  it('knows the draft is dirty only after a real edit', async () => {
+    window.localStorage.setItem('ashyq.activeProfile', REAL_PROFILE.id);
+    vi.spyOn(api, 'getProfile').mockResolvedValue(REAL_PROFILE);
+
+    render(<StoreProvider><DirtyProbe /></StoreProvider>);
+    await waitFor(() => expect(screen.getByTestId('citizenship')).toHaveTextContent('Uzbekistan'));
+    expect(screen.getByTestId('dirty')).toHaveTextContent('false');
+
+    await act(async () => { screen.getByText('edit').click(); });
+    expect(screen.getByTestId('dirty')).toHaveTextContent('true');
+  });
+
+  it('restores an unsaved draft after a reload without touching the saved profile', async () => {
+    window.localStorage.setItem('ashyq.activeProfile', REAL_PROFILE.id);
+    window.localStorage.setItem(
+      'ashyq.unsavedDraft',
+      JSON.stringify({ ...toDraft(REAL_PROFILE), display_name: 'Half-typed name' }),
+    );
+    const update = vi.spyOn(api, 'updateProfile');
+    vi.spyOn(api, 'getProfile').mockResolvedValue(REAL_PROFILE);
+
+    render(<StoreProvider><DirtyProbe /></StoreProvider>);
+
+    await waitFor(() => expect(screen.getByTestId('draft-restored')).toHaveTextContent('true'));
+    // Nothing was written back to the server, and the saved copy is intact.
+    expect(update).not.toHaveBeenCalled();
+  });
+
+  it('discarding a restored draft returns to the saved profile', async () => {
+    window.localStorage.setItem('ashyq.activeProfile', REAL_PROFILE.id);
+    window.localStorage.setItem(
+      'ashyq.unsavedDraft',
+      JSON.stringify({
+        ...toDraft(REAL_PROFILE),
+        context: { ...(toDraft(REAL_PROFILE).context as object), citizenship: 'Georgia' },
+      }),
+    );
+    vi.spyOn(api, 'getProfile').mockResolvedValue(REAL_PROFILE);
+
+    render(<StoreProvider><DirtyProbe /></StoreProvider>);
+    await waitFor(() => expect(screen.getByTestId('citizenship')).toHaveTextContent('Georgia'));
+
+    await act(async () => { screen.getByText('discard').click(); });
+    expect(screen.getByTestId('citizenship')).toHaveTextContent('Uzbekistan');
+    expect(window.localStorage.getItem('ashyq.unsavedDraft')).toBeNull();
+  });
+
+  it('never lets a restored draft become the saved profile by itself', async () => {
+    // The FP-10 shape: demo data in the draft must not reach savedProfile.
+    window.localStorage.setItem('ashyq.activeProfile', REAL_PROFILE.id);
+    window.localStorage.setItem(
+      'ashyq.unsavedDraft',
+      JSON.stringify({ ...structuredClone(DEFAULT_PROFILE), display_name: 'Demo Applicant' }),
+    );
+    vi.spyOn(api, 'getProfile').mockResolvedValue(REAL_PROFILE);
+
+    function SavedProbe() {
+      const { savedProfile } = useStore();
+      return <span data-testid="saved-name">{savedProfile?.display_name ?? 'none'}</span>;
+    }
+    render(<StoreProvider><SavedProbe /></StoreProvider>);
+
+    await waitFor(() =>
+      expect(screen.getByTestId('saved-name')).toHaveTextContent('Aisha (real applicant)'),
+    );
+  });
+});

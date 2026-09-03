@@ -22,7 +22,7 @@ const SEVERITY_LABEL: Record<string, string> = {
 export function ProfileScreen({ onNext }: { onNext: () => void }) {
   const {
     profileDraft, setProfileDraft, validation, saveProfile, loading,
-    savedProfile, restored, loadDemoProfile, clearProfile,
+    savedProfile, restored, loadDemoProfile, clearProfile, draftRestored, discardDraft,
   } = useStore();
   const [saved, setSaved] = useState(false);
   const [confirmingReplace, setConfirmingReplace] = useState<'demo' | 'clear' | null>(null);
@@ -89,6 +89,22 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
       </div>
 
       <div className="stack stack--loose">
+        {draftRestored && (
+          <Notice kind="warn">
+            <div className="stack stack--tight" data-testid="draft-restored">
+              <div>
+                <strong>Unsaved changes restored.</strong> This browser still had edits you had
+                not saved. Your saved profile on the server is untouched until you press Save.
+              </div>
+              <div className="row">
+                <button className="btn btn--sm" onClick={discardDraft} data-testid="discard-draft">
+                  Discard these edits
+                </button>
+              </div>
+            </div>
+          </Notice>
+        )}
+
         {restored && savedProfile && (
           <Notice kind="info">
             <div>

@@ -49,9 +49,16 @@ type Theme = 'system' | 'light' | 'dark';
 export default function App() {
   const {
     run, results, summary, error, clearError, capabilities,
-    cases, savedProfile, switchCase, newCase,
+    cases, savedProfile, switchCase, newCase, dirty,
   } = useStore();
   const [screen, setScreen] = useState<ScreenId>('profile');
+  /** Ask before throwing away typing the applicant has not saved. */
+  const confirmDiscard = () =>
+    !dirty ||
+    window.confirm(
+      'You have unsaved changes to this profile. Leaving now discards them. '
+      + 'Save first, or continue and lose them?',
+    );
   const [theme, setTheme] = useState<Theme>(() => {
     try {
       return (window.localStorage.getItem(THEME_KEY) as Theme) ?? 'system';
@@ -178,6 +185,12 @@ export default function App() {
               id="case-switcher"
               value={savedProfile?.id ?? ''}
               onChange={(event) => {
+                // Switching case replaces the form. Unsaved edits are the
+                // applicant's typing, so they are never discarded silently.
+                if (!confirmDiscard()) {
+                  event.target.value = savedProfile?.id ?? '';
+                  return;
+                }
                 if (event.target.value) void switchCase(event.target.value);
                 else newCase();
               }}
@@ -191,6 +204,7 @@ export default function App() {
             </select>
           </label>
           <button className="btn btn--sm" type="button" onClick={() => {
+            if (!confirmDiscard()) return;
             newCase(); setScreen('profile');
           }}>New case</button>
           {summary && (
