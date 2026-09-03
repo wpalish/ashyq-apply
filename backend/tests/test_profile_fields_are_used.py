@@ -32,12 +32,20 @@ from tests.conftest import profile_row
 
 
 def result(**kwargs) -> ProgramResult:
-    return ProgramResult(**{
-        "id": "r", "run_id": "run", "university": "Test University", "university_id": "u",
-        "country": "Netherlands", "city": "Delft", "program": "BSc CS", "degree": "bachelor",
-        "intake": "fall 2027",
-        **kwargs,
-    })
+    return ProgramResult(
+        **{
+            "id": "r",
+            "run_id": "run",
+            "university": "Test University",
+            "university_id": "u",
+            "country": "Netherlands",
+            "city": "Delft",
+            "program": "BSc CS",
+            "degree": "bachelor",
+            "intake": "fall 2027",
+            **kwargs,
+        }
+    )
 
 
 def component(res: ProgramResult, profile, name: str):
@@ -125,7 +133,7 @@ class TestFundingPreferences:
         assert decisive > relaxed
 
     def test_a_must_cover_category_that_an_award_excludes_raises_a_question(self, profile):
-        """"Housing must be covered" against an award that says it is not."""
+        """ "Housing must be covered" against an award that says it is not."""
         from app.domain.funding import unmet_coverage_requirements
 
         profile.funding.must_cover_housing = True
@@ -242,14 +250,12 @@ class TestPreferencesThatBecomeQuestions:
     """
 
     @pytest.mark.asyncio
-    async def test_the_run_raises_the_questions_the_pages_do_not_answer(
-        self, settings, profile
-    ):
+    async def test_the_run_raises_the_questions_the_pages_do_not_answer(self, settings, profile):
         import sqlalchemy as sa
         from sqlalchemy.orm import sessionmaker
 
         from app.db import migrate_to_head
-        from app.models import ApplicantProfileRow, ProgramResultRow, ResearchRun
+        from app.models import ProgramResultRow, ResearchRun
         from app.pipeline.runner import ResearchRunner
         from app.pipeline.state import RunState
 
@@ -262,8 +268,12 @@ class TestPreferencesThatBecomeQuestions:
         session = sessionmaker(bind=engine, future=True)()
         row = profile_row(session, profile)
         run = ResearchRun(
-            profile_id=row.id, stage="queued", demo_mode=True,
-            candidate_limit=4, verify_limit=4, stage_state=RunState.load(None).dump(),
+            profile_id=row.id,
+            stage="queued",
+            demo_mode=True,
+            candidate_limit=4,
+            verify_limit=4,
+            stage_state=RunState.load(None).dump(),
         )
         session.add(run)
         session.commit()
@@ -271,11 +281,7 @@ class TestPreferencesThatBecomeQuestions:
         await ResearchRunner(session, run, profile, settings).run_to_decision()
 
         rows = session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run.id).all()
-        questions = [
-            q
-            for r in rows
-            for q in ProgramResult.model_validate(r.payload).unresolved
-        ]
+        questions = [q for r in rows for q in ProgramResult.model_validate(r.payload).unresolved]
         topics = {q.topic for q in questions}
         assert "study and work" in topics
         assert "research" in topics
@@ -292,7 +298,7 @@ class TestPreferencesThatBecomeQuestions:
         from sqlalchemy.orm import sessionmaker
 
         from app.db import migrate_to_head
-        from app.models import ApplicantProfileRow, ProgramResultRow, ResearchRun
+        from app.models import ProgramResultRow, ResearchRun
         from app.pipeline.runner import ResearchRunner
         from app.pipeline.state import RunState
 
@@ -305,8 +311,12 @@ class TestPreferencesThatBecomeQuestions:
         session = sessionmaker(bind=engine, future=True)()
         row = profile_row(session, profile)
         run = ResearchRun(
-            profile_id=row.id, stage="queued", demo_mode=True,
-            candidate_limit=4, verify_limit=4, stage_state=RunState.load(None).dump(),
+            profile_id=row.id,
+            stage="queued",
+            demo_mode=True,
+            candidate_limit=4,
+            verify_limit=4,
+            stage_state=RunState.load(None).dump(),
         )
         session.add(run)
         session.commit()
@@ -314,11 +324,7 @@ class TestPreferencesThatBecomeQuestions:
         await ResearchRunner(session, run, profile, settings).run_to_decision()
 
         rows = session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run.id).all()
-        topics = {
-            q.topic
-            for r in rows
-            for q in ProgramResult.model_validate(r.payload).unresolved
-        }
+        topics = {q.topic for r in rows for q in ProgramResult.model_validate(r.payload).unresolved}
         assert "study and work" not in topics
         assert "research" not in topics
 
@@ -332,7 +338,8 @@ class TestNeedBasedDocuments:
         from app.schemas.result import Scholarship
 
         award = Scholarship(
-            id="s", name="Need-based grant",
+            id="s",
+            name="Need-based grant",
             classification=FundingClassification.NEED_BASED_POSSIBLE,
         )
         profile.funding.willing_to_submit_need_documents = False

@@ -41,7 +41,7 @@ _CSS = (
 
 def _page(title: str, body: str) -> str:
     return (
-        f"<!doctype html>\n<html lang=\"en\"><head><meta charset=\"utf-8\">"
+        f'<!doctype html>\n<html lang="en"><head><meta charset="utf-8">'
         f"<title>{title}</title><style>{_CSS}</style>{BANNER.splitlines()[0]}</head><body>\n"
         f"{BANNER.split(chr(10), 1)[1]}\n"
         f"<nav>Home &rsaquo; Study &rsaquo; {title}</nav>\n"
@@ -53,15 +53,25 @@ def _page(title: str, body: str) -> str:
 
 def _money(pair: tuple[float, str]) -> str:
     amount, currency = pair
-    symbol = {"USD": "$", "EUR": "EUR ", "GBP": "GBP ", "CAD": "CAD ", "AUD": "AUD ",
-              "CHF": "CHF ", "SGD": "SGD ", "JPY": "JPY "}.get(currency, currency + " ")
+    symbol = {
+        "USD": "$",
+        "EUR": "EUR ",
+        "GBP": "GBP ",
+        "CAD": "CAD ",
+        "AUD": "AUD ",
+        "CHF": "CHF ",
+        "SGD": "SGD ",
+        "JPY": "JPY ",
+    }.get(currency, currency + " ")
     return f"{symbol}{amount:,.0f}"
 
 
 def _program_page(uni: dict[str, Any], prog: dict[str, Any]) -> str:
-    rows = [f"<h1>{prog['name']}</h1>",
-            f"<p>{uni['name']}, {uni['city']}, {uni['country']}. Entry for the {DEMO_INTAKE} intake.</p>",
-            "<h2>Entry requirements</h2>"]
+    rows = [
+        f"<h1>{prog['name']}</h1>",
+        f"<p>{uni['name']}, {uni['city']}, {uni['country']}. Entry for the {DEMO_INTAKE} intake.</p>",
+        "<h2>Entry requirements</h2>",
+    ]
 
     if prog.get("extra"):
         rows.append(f"<p>{prog['extra']}</p>")
@@ -78,7 +88,8 @@ def _program_page(uni: dict[str, Any], prog: dict[str, Any]) -> str:
     if prog.get("ielts_overall"):
         sub = (
             f", with no individual component below {prog['ielts_sub']}"
-            if prog.get("ielts_sub") else ""
+            if prog.get("ielts_sub")
+            else ""
         )
         rows.append(
             f"<p>Applicants must hold an IELTS Academic certificate with an overall band of "
@@ -86,7 +97,9 @@ def _program_page(uni: dict[str, Any], prog: dict[str, Any]) -> str:
             "Certificates must have been issued within the last two years.</p>"
         )
     if prog.get("toefl"):
-        rows.append(f"<p>TOEFL iBT: a minimum total score of {prog['toefl']} is accepted as an alternative.</p>")
+        rows.append(
+            f"<p>TOEFL iBT: a minimum total score of {prog['toefl']} is accepted as an alternative.</p>"
+        )
 
     if prog.get("sat_policy"):
         rows.append(f"<h3>Standardised tests</h3><p>{prog['sat_policy']}</p>")
@@ -107,7 +120,11 @@ def _program_page(uni: dict[str, Any], prog: dict[str, Any]) -> str:
             "evaluation from a NACES member (WES or ECE)."
         )
     if extras:
-        rows.append("<h3>Additional requirements</h3><ul>" + "".join(f"<li>{e}</li>" for e in extras) + "</ul>")
+        rows.append(
+            "<h3>Additional requirements</h3><ul>"
+            + "".join(f"<li>{e}</li>" for e in extras)
+            + "</ul>"
+        )
 
     if prog.get("deadline"):
         rows.append(
@@ -134,9 +151,11 @@ def _program_page(uni: dict[str, Any], prog: dict[str, Any]) -> str:
 
 def _admissions_page(uni: dict[str, Any]) -> str:
     prog = uni["programs"][0]
-    body = [f"<h1>International admissions - {uni['name']}</h1>",
-            "<p>General entry information for applicants holding a non-domestic qualification.</p>",
-            "<h2>English language</h2>"]
+    body = [
+        f"<h1>International admissions - {uni['name']}</h1>",
+        "<p>General entry information for applicants holding a non-domestic qualification.</p>",
+        "<h2>English language</h2>",
+    ]
     conflict = prog.get("conflict_admissions_ielts")
     if conflict:
         body.append(
@@ -210,12 +229,17 @@ def _scholarship_page(uni: dict[str, Any], sch: dict[str, Any]) -> str:
         body.append("<p>The value of the award is determined individually.</p>")
 
     cover_labels = {
-        "tuition": "Tuition", "mandatory_fees": "Mandatory fees", "housing": "Housing",
-        "meals": "Meal plan", "personal": "Living stipend", "travel": "Travel",
-        "health_insurance": "Health insurance", "books": "Books",
+        "tuition": "Tuition",
+        "mandatory_fees": "Mandatory fees",
+        "housing": "Housing",
+        "meals": "Meal plan",
+        "personal": "Living stipend",
+        "travel": "Travel",
+        "health_insurance": "Health insurance",
+        "books": "Books",
     }
     rows = "".join(
-        f"<tr><td>{cover_labels.get(k, k)}</td><td>{ {'yes':'Covered','no':'Not covered','partial':'Partially covered'}.get(v, v) }</td></tr>"
+        f"<tr><td>{cover_labels.get(k, k)}</td><td>{ {'yes': 'Covered', 'no': 'Not covered', 'partial': 'Partially covered'}.get(v, v) }</td></tr>"
         for k, v in sch.get("coverage", {}).items()
     )
     if rows:
@@ -252,7 +276,9 @@ def _scholarship_page(uni: dict[str, Any], sch: dict[str, Any]) -> str:
             "(maximum 500 words).</p>"
         )
     if sch.get("deadline"):
-        body.append(f"<p>The scholarship deadline is {sch['deadline']}. This is earlier than the admission deadline.</p>")
+        body.append(
+            f"<p>The scholarship deadline is {sch['deadline']}. This is earlier than the admission deadline.</p>"
+        )
 
     body.append("<h2>Duration and renewal</h2>")
     if sch.get("renewable"):
@@ -263,9 +289,11 @@ def _scholarship_page(uni: dict[str, Any], sch: dict[str, Any]) -> str:
     else:
         body.append("<p>This is a one-time award and is not renewable.</p>")
 
-    stack = {"yes": "This award may be held together with other university scholarships.",
-             "no": "This award may not be combined with other university scholarships.",
-             "unknown": ""}.get(sch.get("stackable", "unknown"), "")
+    stack = {
+        "yes": "This award may be held together with other university scholarships.",
+        "no": "This award may not be combined with other university scholarships.",
+        "unknown": "",
+    }.get(sch.get("stackable", "unknown"), "")
     if stack:
         body.append(f"<p>{stack}</p>")
     if sch.get("count"):
@@ -346,22 +374,37 @@ def build(target: Path | None = None) -> dict[str, int]:
             (d / "scholarships.html").write_text(_scholarship_index(uni), encoding="utf-8")
             written += 1
             for i, s in enumerate(uni["scholarships"]):
-                (d / f"scholarship-{i}.html").write_text(_scholarship_page(uni, s), encoding="utf-8")
+                (d / f"scholarship-{i}.html").write_text(
+                    _scholarship_page(uni, s), encoding="utf-8"
+                )
                 written += 1
 
     for e in CATALOG_ONLY:
         catalog.append(
             {
-                "name": e["name"], "country": e["country"], "city": e["city"],
-                "slug": "", "domain": "", "programs": [], "unreachable": False,
-                "city_size": "unknown", "climate": "unknown", "size": "unknown",
-                "campus": "unknown", "workload": "unknown",
+                "name": e["name"],
+                "country": e["country"],
+                "city": e["city"],
+                "slug": "",
+                "domain": "",
+                "programs": [],
+                "unreachable": False,
+                "city_size": "unknown",
+                "climate": "unknown",
+                "size": "unknown",
+                "campus": "unknown",
+                "workload": "unknown",
                 "exercises": "catalogue entry only - no official page available to verify",
             }
         )
         rankings.append(
-            {"university": e["name"], "country": e["country"],
-             "source": "QS World University Rankings", "year": 2026, "position": e["position"]}
+            {
+                "university": e["name"],
+                "country": e["country"],
+                "source": "QS World University Rankings",
+                "year": 2026,
+                "position": e["position"],
+            }
         )
 
     (root / "catalog.json").write_text(json.dumps(catalog, indent=2), encoding="utf-8")
@@ -373,7 +416,10 @@ def build(target: Path | None = None) -> dict[str, int]:
     for country, text in GOVERNMENT_PAGES.items():
         slug = country.lower().replace(" ", "-")
         (gov / f"{slug}.html").write_text(
-            _page(f"Post-study work - {country}", f"<h1>Post-study work in {country}</h1><p>{text}</p>"),
+            _page(
+                f"Post-study work - {country}",
+                f"<h1>Post-study work in {country}</h1><p>{text}</p>",
+            ),
             encoding="utf-8",
         )
         written += 1
@@ -406,9 +452,7 @@ def _write_fee_pdf(root: Path) -> None:
         return text.replace("\\", "/").replace("(", "[").replace(")", "]")
 
     stream_text = (
-        "BT /F1 11 Tf 40 780 Td 15 TL\n"
-        + "\n".join(f"({esc(ln)}) Tj T*" for ln in lines)
-        + "\nET"
+        "BT /F1 11 Tf 40 780 Td 15 TL\n" + "\n".join(f"({esc(ln)}) Tj T*" for ln in lines) + "\nET"
     )
     _emit_pdf(root / "u-groningen" / "fees.pdf", stream_text)
 
@@ -433,12 +477,12 @@ def _emit_pdf(path: Path, stream_text: str) -> None:
     out += f"xref\n0 {len(objects) + 1}\n".encode() + b"0000000000 65535 f \n"
     for off in offsets:
         out += f"{off:010d} 00000 n \n".encode()
-    out += (
-        f"trailer\n<< /Size {len(objects) + 1} /Root 1 0 R >>\nstartxref\n{xref_at}\n%%EOF\n".encode()
-    )
+    out += f"trailer\n<< /Size {len(objects) + 1} /Root 1 0 R >>\nstartxref\n{xref_at}\n%%EOF\n".encode()
     path.write_bytes(bytes(out))
 
 
 if __name__ == "__main__":
     stats = build()
-    print(f"Wrote {stats['pages']} fixture pages for {stats['universities']} universities to {PAGES_DIR}")
+    print(
+        f"Wrote {stats['pages']} fixture pages for {stats['universities']} universities to {PAGES_DIR}"
+    )

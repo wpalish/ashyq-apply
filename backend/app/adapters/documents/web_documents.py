@@ -25,24 +25,59 @@ from app.schemas.result import DocumentChecklist, DocumentItem, Scholarship
 
 #: Phrases that identify a document, and how it should be classified.
 _DOC_RULES: tuple[tuple[str, str, DocumentOwner, dict], ...] = (
-    ("diploma", "Secondary school diploma (certified copy)", DocumentOwner.SCHOOL,
-     {"needs_translation": True, "needs_notarization": True, "lead_time_days": 21}),
-    ("transcript", "Full academic transcript", DocumentOwner.SCHOOL,
-     {"needs_translation": True, "lead_time_days": 21}),
-    ("translation", "Certified English translation of non-English documents", DocumentOwner.THIRD_PARTY,
-     {"needs_translation": True, "lead_time_days": 14}),
+    (
+        "diploma",
+        "Secondary school diploma (certified copy)",
+        DocumentOwner.SCHOOL,
+        {"needs_translation": True, "needs_notarization": True, "lead_time_days": 21},
+    ),
+    (
+        "transcript",
+        "Full academic transcript",
+        DocumentOwner.SCHOOL,
+        {"needs_translation": True, "lead_time_days": 21},
+    ),
+    (
+        "translation",
+        "Certified English translation of non-English documents",
+        DocumentOwner.THIRD_PARTY,
+        {"needs_translation": True, "lead_time_days": 14},
+    ),
     ("passport", "Passport identity page (copy)", DocumentOwner.APPLICANT, {"lead_time_days": 1}),
     ("personal statement", "Personal statement", DocumentOwner.APPLICANT, {"lead_time_days": 14}),
-    ("statement of motivation", "Statement of motivation", DocumentOwner.APPLICANT, {"lead_time_days": 14}),
-    ("leadership experience", "Leadership experience essay", DocumentOwner.APPLICANT, {"lead_time_days": 10}),
+    (
+        "statement of motivation",
+        "Statement of motivation",
+        DocumentOwner.APPLICANT,
+        {"lead_time_days": 14},
+    ),
+    (
+        "leadership experience",
+        "Leadership experience essay",
+        DocumentOwner.APPLICANT,
+        {"lead_time_days": 10},
+    ),
     ("reference", "Academic reference", DocumentOwner.RECOMMENDER, {"lead_time_days": 30}),
-    ("recommendation", "Letter of recommendation", DocumentOwner.RECOMMENDER, {"lead_time_days": 30}),
+    (
+        "recommendation",
+        "Letter of recommendation",
+        DocumentOwner.RECOMMENDER,
+        {"lead_time_days": 30},
+    ),
     ("curriculum vitae", "Curriculum vitae", DocumentOwner.APPLICANT, {"lead_time_days": 5}),
     ("portfolio", "Portfolio", DocumentOwner.APPLICANT, {"lead_time_days": 30}),
-    ("credential evaluation", "Course-by-course credential evaluation (WES/ECE)", DocumentOwner.THIRD_PARTY,
-     {"needs_credential_evaluation": True, "lead_time_days": 45}),
-    ("apostille", "Apostille certification", DocumentOwner.THIRD_PARTY,
-     {"needs_apostille": True, "lead_time_days": 21}),
+    (
+        "credential evaluation",
+        "Course-by-course credential evaluation (WES/ECE)",
+        DocumentOwner.THIRD_PARTY,
+        {"needs_credential_evaluation": True, "lead_time_days": 45},
+    ),
+    (
+        "apostille",
+        "Apostille certification",
+        DocumentOwner.THIRD_PARTY,
+        {"needs_apostille": True, "lead_time_days": 21},
+    ),
     ("financial", "Proof of financial resources", DocumentOwner.APPLICANT, {"lead_time_days": 10}),
 )
 
@@ -64,7 +99,9 @@ class WebDocumentsAdapter:
     ) -> tuple[DocumentChecklist, AdapterResult]:
         out = AdapterResult()
         checklist = DocumentChecklist(
-            result_id="", university=candidate.name, program=program.name,
+            result_id="",
+            university=candidate.name,
+            program=program.name,
             generated_at=datetime.now(UTC),
         )
 
@@ -75,7 +112,9 @@ class WebDocumentsAdapter:
 
         for sch in scholarships:
             for url in sch.source_urls:
-                docs = await self._from_page(candidate, program, url, DocumentPurpose.SCHOLARSHIP, out)
+                docs = await self._from_page(
+                    candidate, program, url, DocumentPurpose.SCHOLARSHIP, out
+                )
                 for d in docs:
                     d.deadline = sch.deadline
                     d.deadline_timezone = sch.deadline_timezone
@@ -101,8 +140,12 @@ class WebDocumentsAdapter:
         everything = checklist.admission_documents + checklist.scholarship_documents
         checklist.applicant_actions = [d for d in everything if d.owner == DocumentOwner.APPLICANT]
         checklist.school_actions = [d for d in everything if d.owner == DocumentOwner.SCHOOL]
-        checklist.recommender_actions = [d for d in everything if d.owner == DocumentOwner.RECOMMENDER]
-        checklist.certification_actions = [d for d in everything if d.owner == DocumentOwner.THIRD_PARTY]
+        checklist.recommender_actions = [
+            d for d in everything if d.owner == DocumentOwner.RECOMMENDER
+        ]
+        checklist.certification_actions = [
+            d for d in everything if d.owner == DocumentOwner.THIRD_PARTY
+        ]
         checklist.ordered_steps = _order_steps(everything)
 
         if not everything:
@@ -122,8 +165,12 @@ class WebDocumentsAdapter:
         return checklist, out
 
     async def _from_page(
-        self, candidate: Candidate, program: CandidateProgram, url: str | None,
-        purpose: DocumentPurpose, out: AdapterResult,
+        self,
+        candidate: Candidate,
+        program: CandidateProgram,
+        url: str | None,
+        purpose: DocumentPurpose,
+        out: AdapterResult,
     ) -> list[DocumentItem]:
         if not url:
             return []
@@ -137,10 +184,13 @@ class WebDocumentsAdapter:
 
         text = html_to_text(res.text)
         builder = ClaimBuilder(
-            source_url=url, page_title=html_title(res.text),
+            source_url=url,
+            page_title=html_title(res.text),
             specificity=SourceSpecificity.PROGRAM_INTAKE,
-            program=program.name, academic_year=self.academic_year,
-            official_domain=url.startswith("fixture://") or is_official_domain(url, [candidate.domain]),
+            program=program.name,
+            academic_year=self.academic_year,
+            official_domain=url.startswith("fixture://")
+            or is_official_domain(url, [candidate.domain]),
             extraction_method="fixture" if url.startswith("fixture://") else "html_rule",
             accessed_at=res.fetched_at,
         )
@@ -159,22 +209,36 @@ class WebDocumentsAdapter:
                 pages = _PAGES.search(line)
                 size = _SIZE.search(line)
                 item = DocumentItem(
-                    name=name, purpose=purpose, owner=owner,
+                    name=name,
+                    purpose=purpose,
+                    owner=owner,
                     format_notes=", ".join(sorted(set(_FORMAT.findall(line)))) or "",
                     max_pages=int(pages.group(1)) if pages else None,
                     max_file_size_mb=float(size.group(1)) if size else None,
                     word_limit=int(words.group(1) or words.group(2)) if words else None,
-                    prompt_text=line.strip()[:280] if purpose == DocumentPurpose.SCHOLARSHIP else None,
-                    source_url=url, claim_ids=[url], **flags,
+                    prompt_text=line.strip()[:280]
+                    if purpose == DocumentPurpose.SCHOLARSHIP
+                    else None,
+                    source_url=url,
+                    claim_ids=[url],
+                    **flags,
                 )
                 items.append(item)
                 builder.add(ClaimType.REQUIRED_DOCUMENT, name, line.strip()[:300], confidence=0.75)
                 if item.word_limit:
-                    builder.add(ClaimType.ESSAY_PROMPT,
-                                {"document": name, "word_limit": item.word_limit},
-                                line.strip()[:300], confidence=0.8)
+                    builder.add(
+                        ClaimType.ESSAY_PROMPT,
+                        {"document": name, "word_limit": item.word_limit},
+                        line.strip()[:300],
+                        confidence=0.8,
+                    )
                 if owner == DocumentOwner.RECOMMENDER:
-                    builder.add(ClaimType.RECOMMENDATION_REQUIREMENT, name, line.strip()[:300], confidence=0.75)
+                    builder.add(
+                        ClaimType.RECOMMENDATION_REQUIREMENT,
+                        name,
+                        line.strip()[:300],
+                        confidence=0.75,
+                    )
                 break
         out.claims.extend(builder.claims)
         return items

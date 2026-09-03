@@ -126,7 +126,11 @@ def evaluate_program(
 
     # --- intake open --------------------------------------------------
     intake_claim = _first(claims, ClaimType.INTAKE_OPEN)
-    if intake_claim is not None and intake_claim.normalized_value is False and _confirmed(intake_claim):
+    if (
+        intake_claim is not None
+        and intake_claim.normalized_value is False
+        and _confirmed(intake_claim)
+    ):
         checks.append(
             RequirementCheck(
                 requirement="Intake accepting applications",
@@ -206,7 +210,9 @@ def evaluate_program(
     # --- SAT ----------------------------------------------------------
     sat_policy = _first(claims, ClaimType.SAT_POLICY)
     policy_text = str(sat_policy.normalized_value).lower() if sat_policy else ""
-    test_optional = "optional" in policy_text or "blind" in policy_text or "not required" in policy_text
+    test_optional = (
+        "optional" in policy_text or "blind" in policy_text or "not required" in policy_text
+    )
     sat_min = _first(claims, ClaimType.SAT_MIN_TOTAL)
     if sat_min is not None and not test_optional:
         checks.append(_check_numeric_minimum("SAT total", sat_min, _to_float(a.sat.total)))
@@ -216,7 +222,9 @@ def evaluate_program(
                 requirement="SAT policy",
                 published_value=sat_policy.normalized_value,
                 applicant_value=a.sat.total,
-                status=EligibilityStatus.NOT_APPLICABLE if test_optional else EligibilityStatus.PENDING,
+                status=EligibilityStatus.NOT_APPLICABLE
+                if test_optional
+                else EligibilityStatus.PENDING,
                 explanation=(
                     "The programme is test-optional, so a missing SAT score is not a barrier."
                     if test_optional
@@ -362,7 +370,11 @@ def _summarise(checks: list[RequirementCheck]) -> EligibilityOutcome:
         status,
         checks,
         [],
-        [c.requirement for c in checks if c.status in {EligibilityStatus.GAP, EligibilityStatus.PENDING}],
+        [
+            c.requirement
+            for c in checks
+            if c.status in {EligibilityStatus.GAP, EligibilityStatus.PENDING}
+        ],
     )
 
 

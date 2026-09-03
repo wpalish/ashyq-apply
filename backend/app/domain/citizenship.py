@@ -43,10 +43,34 @@ _NOISE = {
 }
 
 _EU27 = (
-    "austria", "belgium", "bulgaria", "croatia", "cyprus", "czechia", "czech republic",
-    "denmark", "estonia", "finland", "france", "germany", "greece", "hungary", "ireland",
-    "italy", "latvia", "lithuania", "luxembourg", "malta", "netherlands", "poland",
-    "portugal", "romania", "slovakia", "slovenia", "spain", "sweden",
+    "austria",
+    "belgium",
+    "bulgaria",
+    "croatia",
+    "cyprus",
+    "czechia",
+    "czech republic",
+    "denmark",
+    "estonia",
+    "finland",
+    "france",
+    "germany",
+    "greece",
+    "hungary",
+    "ireland",
+    "italy",
+    "latvia",
+    "lithuania",
+    "luxembourg",
+    "malta",
+    "netherlands",
+    "poland",
+    "portugal",
+    "romania",
+    "slovakia",
+    "slovenia",
+    "spain",
+    "sweden",
 )
 _EEA = (*_EU27, "iceland", "liechtenstein", "norway")
 _EFTA = ("iceland", "liechtenstein", "norway", "switzerland")

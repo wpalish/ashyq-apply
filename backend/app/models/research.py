@@ -84,9 +84,7 @@ class ResearchRun(TimestampedBase):
     #: When the oldest claim in this run ages out. A queued `recheck` job waits
     #: until then; before this existed, POSSIBLY_STALE claims stayed stale for
     #: ever and next_recheck_at was computed only in tests.
-    next_recheck_at: Mapped[datetime | None] = mapped_column(
-        DateTime(timezone=True), nullable=True
-    )
+    next_recheck_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     #: How many times this run has been recovered after a worker died.
     recovery_count: Mapped[int] = mapped_column(Integer, default=0)
 

@@ -82,9 +82,7 @@ def list_profiles(
         ApplicantProfileRow.organization_id == principal.organization_id
     )
     response.headers["X-Total-Count"] = str(query.count())
-    rows = (
-        query.order_by(ApplicantProfileRow.created_at.desc()).limit(limit).offset(offset).all()
-    )
+    rows = query.order_by(ApplicantProfileRow.created_at.desc()).limit(limit).offset(offset).all()
     return [_to_out(r) for r in rows]
 
 
@@ -195,9 +193,7 @@ def export_profile(
         if run_ids
         else []
     )
-    claims = (
-        session.query(ClaimRow).filter(ClaimRow.run_id.in_(run_ids)).all() if run_ids else []
-    )
+    claims = session.query(ClaimRow).filter(ClaimRow.run_id.in_(run_ids)).all() if run_ids else []
     conflicts = (
         session.query(ConflictRow).filter(ConflictRow.run_id.in_(run_ids)).all() if run_ids else []
     )

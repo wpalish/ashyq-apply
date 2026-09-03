@@ -31,7 +31,6 @@ IN_PROGRESS_STAGES = {
 DEFAULT_LEASE_SECONDS = 120
 
 
-
 @dataclass
 class StageState:
     status: str = "pending"  # pending | running | done | failed | skipped

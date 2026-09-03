@@ -41,9 +41,7 @@ class TestEnglishRequirements:
 
     def test_the_wrong_ielts_type_is_a_hard_filter(self, profile):
         profile.academics.ielts.test_type = "general_training"
-        outcome = evaluate_program(
-            profile, [C("ielts_accepted_types", ["academic"])], today=TODAY
-        )
+        outcome = evaluate_program(profile, [C("ielts_accepted_types", ["academic"])], today=TODAY)
         assert "Accepted IELTS test type" in outcome.hard_filter_failures
 
     def test_a_missing_score_is_pending_not_a_gap(self, profile):
@@ -87,18 +85,14 @@ class TestDeadlines:
 class TestGpaScales:
     def test_a_mismatched_scale_is_not_silently_converted(self, profile):
         """The applicant is on a 5-point scale; the programme publishes 4.0."""
-        outcome = evaluate_program(
-            profile, [C("min_gpa", 3.5), C("gpa_scale", 4.0)], today=TODAY
-        )
+        outcome = evaluate_program(profile, [C("min_gpa", 3.5), C("gpa_scale", 4.0)], today=TODAY)
         check = next(c for c in outcome.checks if c.requirement == "Minimum GPA")
         assert check.status is EligibilityStatus.NEEDS_OFFICIAL_CLARIFICATION
         assert "No conversion is applied" in check.explanation
         assert outcome.hard_filter_failures == []
 
     def test_a_matching_scale_is_compared_directly(self, profile):
-        outcome = evaluate_program(
-            profile, [C("min_gpa", 4.5), C("gpa_scale", 5.0)], today=TODAY
-        )
+        outcome = evaluate_program(profile, [C("min_gpa", 4.5), C("gpa_scale", 5.0)], today=TODAY)
         check = next(c for c in outcome.checks if c.requirement == "Minimum GPA")
         assert check.status is EligibilityStatus.MET
 
@@ -106,9 +100,7 @@ class TestGpaScales:
         from app.domain.grades import propose_conversion
 
         profile.academics.gpa = propose_conversion(profile.academics.gpa, "kz5_to_us4_linear")
-        outcome = evaluate_program(
-            profile, [C("min_gpa", 3.5), C("gpa_scale", 4.0)], today=TODAY
-        )
+        outcome = evaluate_program(profile, [C("min_gpa", 3.5), C("gpa_scale", 4.0)], today=TODAY)
         check = next(c for c in outcome.checks if c.requirement == "Minimum GPA")
         assert check.status is EligibilityStatus.MET
 
@@ -120,7 +112,12 @@ class TestSourceHandling:
         outcome = evaluate_program(
             profile,
             [
-                C("ielts_min_overall", 6.0, specificity="university_admissions", status="CONFLICTING"),
+                C(
+                    "ielts_min_overall",
+                    6.0,
+                    specificity="university_admissions",
+                    status="CONFLICTING",
+                ),
                 C("ielts_min_overall", 6.5, specificity="program_intake", status="CONFLICTING"),
             ],
             today=TODAY,

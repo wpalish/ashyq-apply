@@ -17,7 +17,7 @@ from sqlalchemy.orm import sessionmaker
 
 from app.jobs.store import JobStore
 from app.jobs.worker import Worker, reconcile_startup, wait_for_schema
-from app.models import ApplicantProfileRow, Job, JobStatus, ResearchRun
+from app.models import Job, JobStatus, ResearchRun
 from app.models.base import ensure_utc
 from app.pipeline.state import RunState
 from tests.conftest import profile_row
@@ -30,9 +30,7 @@ def bound_db(settings, monkeypatch):
     from app.db import migrate_to_head
 
     migrate_to_head(settings.database_url)
-    engine = sa.create_engine(
-        settings.database_url, connect_args={"check_same_thread": False}
-    )
+    engine = sa.create_engine(settings.database_url, connect_args={"check_same_thread": False})
     factory = sessionmaker(bind=engine, future=True)
     monkeypatch.setattr(db_module, "engine", engine)
     monkeypatch.setattr(db_module, "SessionLocal", factory)
@@ -48,10 +46,13 @@ def seed_run(factory, profile, **run_kwargs) -> tuple[str, str]:
     with factory() as session:
         row = profile_row(session, profile)
         run = ResearchRun(
-            profile_id=row.id, stage="queued", demo_mode=True,
+            profile_id=row.id,
+            stage="queued",
+            demo_mode=True,
             candidate_limit=run_kwargs.pop("candidate_limit", 3),
             verify_limit=run_kwargs.pop("verify_limit", 3),
-            stage_state=RunState.load(None).dump(), **run_kwargs,
+            stage_state=RunState.load(None).dump(),
+            **run_kwargs,
         )
         session.add(run)
         session.flush()
@@ -79,9 +80,7 @@ class TestClaimAndExecute:
     def test_an_empty_queue_yields_nothing(self, bound_db, settings):
         assert Worker(settings).claim_one() is None
 
-    def test_a_job_whose_run_vanished_dies_rather_than_retrying(
-        self, bound_db, settings, profile
-    ):
+    def test_a_job_whose_run_vanished_dies_rather_than_retrying(self, bound_db, settings, profile):
         """Retrying work that can never succeed is a slower outage."""
         run_id, job_id = seed_run(bound_db, profile)
         with bound_db() as session:
@@ -156,7 +155,8 @@ class TestReaping:
 
         with bound_db() as session:
             session.execute(
-                sa.update(Job).where(Job.id == job_id)
+                sa.update(Job)
+                .where(Job.id == job_id)
                 .values(lease_expires_at=datetime.now(UTC) - timedelta(seconds=1))
             )
             session.commit()
@@ -183,9 +183,7 @@ class TestReconciliation:
         """Waiting on the user is not stranded work, however long it waits."""
         with bound_db() as session:
             row = profile_row(session, profile)
-            run = ResearchRun(
-                profile_id=row.id, stage="awaiting_user_decision", stage_state={}
-            )
+            run = ResearchRun(profile_id=row.id, stage="awaiting_user_decision", stage_state={})
             session.add(run)
             session.commit()
             run_id = run.id
@@ -196,9 +194,7 @@ class TestReconciliation:
 
 
 class TestLoopAndShutdown:
-    def test_the_loop_drains_the_queue_and_stops_on_request(
-        self, bound_db, settings, profile
-    ):
+    def test_the_loop_drains_the_queue_and_stops_on_request(self, bound_db, settings, profile):
         run_id, job_id = seed_run(bound_db, profile)
         worker = Worker(settings)
 
@@ -243,9 +239,7 @@ class TestSchemaWait:
     def test_it_returns_at_once_when_the_schema_is_current(self, bound_db):
         assert wait_for_schema(timeout=5) is True
 
-    def test_it_waits_and_then_gives_up_on_an_unmigrated_database(
-        self, tmp_path, monkeypatch
-    ):
+    def test_it_waits_and_then_gives_up_on_an_unmigrated_database(self, tmp_path, monkeypatch):
         """A worker in a rolling deploy may start before the migration job."""
         import app.db as db_module
 
@@ -388,9 +382,7 @@ class TestEnqueueTransaction:
             session.add(run)
 
             monkeypatch.setattr(OrmSession, "scalar", blind_first_precheck)
-            result = JobStore(session).enqueue(
-                "documents", run_id=run_id, idempotency_key="shared"
-            )
+            result = JobStore(session).enqueue("documents", run_id=run_id, idempotency_key="shared")
             monkeypatch.undo()
 
             assert result.created is False
@@ -489,11 +481,7 @@ class TestFreshnessRecheck:
         with bound_db() as session:
             run = session.get(ResearchRun, run_id)
             assert run.next_recheck_at is not None, "the run must know when its evidence ages out"
-            recheck = (
-                session.query(Job)
-                .filter(Job.run_id == run_id, Job.kind == "recheck")
-                .one()
-            )
+            recheck = session.query(Job).filter(Job.run_id == run_id, Job.kind == "recheck").one()
             assert recheck.status == JobStatus.QUEUED.value
             # Queued for the date the evidence expires, not for now.
             assert ensure_utc(recheck.available_at) == ensure_utc(run.next_recheck_at)
@@ -527,9 +515,7 @@ class TestFreshnessRecheck:
             assert run.pages_checked == before, "nothing was stale, so nothing was re-read"
             assert run.stage == "awaiting_user_decision"
 
-    def test_a_stale_claim_is_re_read_and_decisions_survive(
-        self, bound_db, settings, profile
-    ):
+    def test_a_stale_claim_is_re_read_and_decisions_survive(self, bound_db, settings, profile):
         from app.models import ClaimRow, ProgramResultRow
 
         run_id, job_id = seed_run(bound_db, profile)
@@ -538,11 +524,7 @@ class TestFreshnessRecheck:
         asyncio.run(worker.execute(job_id))
 
         with bound_db() as session:
-            row = (
-                session.query(ProgramResultRow)
-                .filter(ProgramResultRow.run_id == run_id)
-                .first()
-            )
+            row = session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run_id).first()
             row.user_decision = "approved"
             row.user_decision_reason = "best funded"
             payload = dict(row.payload)
@@ -613,11 +595,7 @@ class TestProgressCounters:
 
         with bound_db() as session:
             run = session.get(ResearchRun, run_id)
-            rows = (
-                session.query(ProgramResultRow)
-                .filter(ProgramResultRow.run_id == run_id)
-                .count()
-            )
+            rows = session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run_id).count()
             verification = RunState.load(run.stage_state).stages["program_verification"]
             assert run.programs_verified == rows
             assert verification.items_done <= verification.items_total

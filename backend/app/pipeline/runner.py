@@ -166,7 +166,6 @@ class ResearchRunner:
             if not store.owns(self.job_id):
                 raise LeaseLost(f"job {self.job_id[:8]} is no longer held by {self.worker_id}")
 
-
     def earliest_recheck(self) -> datetime | None:
         """When this run's oldest claim ages out, or None if it has none.
 
@@ -623,15 +622,12 @@ class ResearchRunner:
                 if unmet:
                     names = ", ".join(category.value.replace("_", " ") for category in unmet)
                     s.classification_reason += (
-                        f" The profile requires {names} to be covered; this award states it is"
-                        f" not."
+                        f" The profile requires {names} to be covered; this award states it is not."
                     )
                     result.unresolved.append(
                         UnresolvedQuestion(
                             topic="funding",
-                            question=(
-                                f"Is there any support for {names} alongside {s.name}?"
-                            ),
+                            question=(f"Is there any support for {names} alongside {s.name}?"),
                             why_it_matters=(
                                 f"The profile lists {names} as costs that must be covered, and "
                                 f"this award excludes them. The gap is real money the family "
@@ -677,15 +673,14 @@ class ResearchRunner:
                     )
                 )
             for interest in prefs.research_interests[:3]:
-                if interest.lower() not in careers and interest.lower() not in (
-                    result.program or ""
-                ).lower():
+                if (
+                    interest.lower() not in careers
+                    and interest.lower() not in (result.program or "").lower()
+                ):
                     result.unresolved.append(
                         UnresolvedQuestion(
                             topic="research",
-                            question=(
-                                f"Which groups at {result.university} work on {interest}?"
-                            ),
+                            question=(f"Which groups at {result.university} work on {interest}?"),
                             why_it_matters=(
                                 f"The profile lists {interest} as a research interest. The pages "
                                 f"read do not mention it, which is not the same as it being "
@@ -839,8 +834,7 @@ class ResearchRunner:
                         result,
                         topic="documents",
                         question=(
-                            f"What documents does {result.university} require for "
-                            f"{result.program}?"
+                            f"What documents does {result.university} require for {result.program}?"
                         ),
                         why=(
                             "This approved programme could not be matched back to a discovered "
@@ -884,8 +878,6 @@ class ResearchRunner:
         self.run.finished_at = datetime.now(UTC)
         self._save()
         return built
-
-
 
     def _record_diagnostics(self, messages: list[str]) -> None:
         """File each diagnostic as a failure or an honest unknown.

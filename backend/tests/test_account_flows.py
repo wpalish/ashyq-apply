@@ -91,9 +91,12 @@ class TestPasswordChange:
         other = TestClient(client.app)
         other.post("/api/auth/login", json={"email": "changer@example.test", "password": PASSWORD})
         with SessionLocal() as session:
-            assert session.query(AuthSession).filter(
-                AuthSession.user_id == principal["user_id"]
-            ).count() == 2
+            assert (
+                session.query(AuthSession)
+                .filter(AuthSession.user_id == principal["user_id"])
+                .count()
+                == 2
+            )
 
         response = client.post(
             "/api/auth/password",
@@ -102,20 +105,29 @@ class TestPasswordChange:
         assert response.status_code == 200
 
         with SessionLocal() as session:
-            assert session.query(AuthSession).filter(
-                AuthSession.user_id == principal["user_id"]
-            ).count() == 1, "the other device must be signed out"
+            assert (
+                session.query(AuthSession)
+                .filter(AuthSession.user_id == principal["user_id"])
+                .count()
+                == 1
+            ), "the other device must be signed out"
 
         # The session that made the change still works; the old password does not.
         assert client.get("/api/auth/me").status_code == 200
         assert other.get("/api/auth/me").status_code == 401
         client.post("/api/auth/logout")
-        assert client.post(
-            "/api/auth/login", json={"email": "changer@example.test", "password": PASSWORD}
-        ).status_code == 401
-        assert client.post(
-            "/api/auth/login", json={"email": "changer@example.test", "password": NEW_PASSWORD}
-        ).status_code == 200
+        assert (
+            client.post(
+                "/api/auth/login", json={"email": "changer@example.test", "password": PASSWORD}
+            ).status_code
+            == 401
+        )
+        assert (
+            client.post(
+                "/api/auth/login", json={"email": "changer@example.test", "password": NEW_PASSWORD}
+            ).status_code
+            == 200
+        )
 
     def test_the_current_password_is_required(self, auth_client):
         client, _ = auth_client
@@ -160,9 +172,12 @@ class TestPasswordReset:
         client.post("/api/auth/logout")
         token = self._request_link(client, "replayer@example.test").split("token=")[1]
 
-        assert client.post(
-            "/api/auth/password/reset", json={"token": token, "new_password": NEW_PASSWORD}
-        ).status_code == 200
+        assert (
+            client.post(
+                "/api/auth/password/reset", json={"token": token, "new_password": NEW_PASSWORD}
+            ).status_code
+            == 200
+        )
         again = client.post(
             "/api/auth/password/reset", json={"token": token, "new_password": "yet another one"}
         )
@@ -310,7 +325,9 @@ class TestWorkspaceSwitching:
         stranger = register(client, "insider")
 
         client.post("/api/auth/logout")
-        client.post("/api/auth/login", json={"email": "outsider@example.test", "password": PASSWORD})
+        client.post(
+            "/api/auth/login", json={"email": "outsider@example.test", "password": PASSWORD}
+        )
         response = client.post(
             "/api/auth/session/organization",
             json={"organization_id": stranger["organization_id"]},
@@ -341,9 +358,7 @@ class TestAccountDeletion:
             assert session.query(ApplicantProfileRow).count() == 0
             # The record of the deletion survives the thing it describes.
             assert (
-                session.query(AuditEvent)
-                .filter(AuditEvent.action == "account_deleted")
-                .count()
+                session.query(AuditEvent).filter(AuditEvent.action == "account_deleted").count()
                 == 1
             )
 
@@ -388,18 +403,23 @@ class TestSessionHygiene:
 
         for _ in range(5):
             device = TestClient(client.app)
-            assert device.post(
-                "/api/auth/login",
-                json={"email": "manydevices@example.test", "password": PASSWORD},
-            ).status_code == 200
+            assert (
+                device.post(
+                    "/api/auth/login",
+                    json={"email": "manydevices@example.test", "password": PASSWORD},
+                ).status_code
+                == 200
+            )
 
         from app.db import SessionLocal
         from app.models import AuthSession
 
         with SessionLocal() as session:
-            live = session.query(AuthSession).filter(
-                AuthSession.user_id == principal["user_id"]
-            ).count()
+            live = (
+                session.query(AuthSession)
+                .filter(AuthSession.user_id == principal["user_id"])
+                .count()
+            )
         assert live <= 3, f"{live} sessions survived a cap of 3"
 
     def test_an_expired_session_is_cleaned_up_on_the_next_login(self, auth_client):
@@ -420,12 +440,14 @@ class TestSessionHygiene:
             session.commit()
 
         device = TestClient(client.app)
-        device.post("/api/auth/login", json={"email": "expiring@example.test", "password": PASSWORD})
+        device.post(
+            "/api/auth/login", json={"email": "expiring@example.test", "password": PASSWORD}
+        )
 
         with SessionLocal() as session:
-            rows = session.query(AuthSession).filter(
-                AuthSession.user_id == principal["user_id"]
-            ).all()
+            rows = (
+                session.query(AuthSession).filter(AuthSession.user_id == principal["user_id"]).all()
+            )
         assert len(rows) == 1, "the expired row should not linger"
 
 
@@ -439,7 +461,7 @@ class TestPasswordHashing:
 
         with SessionLocal() as session:
             stored = session.get(User, principal["user_id"]).password_hash
-        assert stored.startswith(f"scrypt${2 ** settings.password_scrypt_log2}$")
+        assert stored.startswith(f"scrypt${2**settings.password_scrypt_log2}$")
 
     def test_an_old_weaker_hash_still_verifies(self):
         """Existing accounts must not be locked out by raising the cost."""

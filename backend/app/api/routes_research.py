@@ -144,9 +144,7 @@ def _view(
         results = session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run.id)
         counts = (
             results.count(),
-            results.filter(
-                ProgramResultRow.user_decision != UserDecision.UNDECIDED.value
-            ).count(),
+            results.filter(ProgramResultRow.user_decision != UserDecision.UNDECIDED.value).count(),
         )
     return RunView(
         id=run.id,
@@ -324,10 +322,7 @@ def list_runs(
         .order_by(Job.created_at)
         .all()
     }
-    return [
-        _view(session, r, counts=counts.get(r.id, (0, 0)), job=jobs.get(r.id))
-        for r in runs
-    ]
+    return [_view(session, r, counts=counts.get(r.id, (0, 0)), job=jobs.get(r.id)) for r in runs]
 
 
 @router.get("/{run_id}", response_model=RunView)

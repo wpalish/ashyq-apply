@@ -92,6 +92,12 @@ def capabilities() -> dict:
                 else ""
             ),
         },
+        # What live mode can actually reach today. The number matters: a user
+        # switching demo mode off imagines the open web and gets a curated list
+        # of ten institutions, with programme-page recall of one in ten. Saying
+        # so here is cheaper than letting them discover it from an empty
+        # shortlist.
+        "live_coverage": live_coverage(),
         "guarantees": [
             "robots.txt is honoured before every fetch, including the browser tier",
             "applicant data is never placed in an outbound URL",
@@ -154,3 +160,33 @@ def audit_log(
         }
         for r in rows
     ]
+
+
+def live_coverage() -> dict:
+    """How far live mode reaches, read from the registry rather than asserted."""
+    import json
+    from pathlib import Path
+
+    registry = Path(__file__).resolve().parent.parent / "adapters" / "discovery"
+    path = registry / "institution_registry.json"
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):  # a missing registry is a limitation, not a crash
+        return {
+            "institutions": 0,
+            "countries": [],
+            "recall_note": "The institution registry could not be read; live mode has no seeds.",
+        }
+    entries = raw if isinstance(raw, list) else raw.get("institutions", [])
+    countries = sorted({e.get("country", "") for e in entries if e.get("country")})
+    return {
+        "institutions": len(entries),
+        "countries": countries,
+        "recall_note": (
+            f"Live mode searches {len(entries)} curated institutions in "
+            f"{len(countries)} countries, not the open web. Category pages "
+            f"(fees, scholarships, admissions) are read reliably; an individual "
+            f"programme page is reached at about one site in ten today. See "
+            f"docs/LIVE_DISCOVERY_REPORT.md."
+        ),
+    }

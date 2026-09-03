@@ -57,7 +57,9 @@ def find_conflicts(
     verified.
     """
     ids = claim_ids or {}
-    by_type: dict[tuple[ClaimType, str | None, str | None, str | None], list[Claim]] = defaultdict(list)
+    by_type: dict[tuple[ClaimType, str | None, str | None, str | None], list[Claim]] = defaultdict(
+        list
+    )
     for c in claims:
         by_type[(c.claim_type, c.program, c.intake, c.subject_key)].append(c)
 
@@ -75,8 +77,10 @@ def find_conflicts(
         pool.sort(key=lambda c: (SPECIFICITY_RANK.get(c.source_specificity, 9), -c.confidence))
         preferred = pool[0]
         label = _LABELS.get(ctype, ctype.value.replace("_", " "))
-        subject = label + (f" — {subject_key}" if subject_key else "") + (
-            f" ({program})" if program else ""
+        subject = (
+            label
+            + (f" — {subject_key}" if subject_key else "")
+            + (f" ({program})" if program else "")
         )
 
         for c in pool:
@@ -134,15 +138,16 @@ def enforce_source_hierarchy(claims: list[Claim]) -> tuple[list[Claim], list[Unr
     out: list[Claim] = []
     questions: list[UnresolvedQuestion] = []
     for c in claims:
-        if c.claim_type in DECISION_GRADE_CLAIMS and c.source_specificity in DISCOVERY_ONLY_SPECIFICITY:
+        if (
+            c.claim_type in DECISION_GRADE_CLAIMS
+            and c.source_specificity in DISCOVERY_ONLY_SPECIFICITY
+        ):
             out.append(
                 c.model_copy(
                     update={
                         "status": ClaimStatus.NEEDS_OFFICIAL_CLARIFICATION,
                         "confidence": min(c.confidence, 0.3),
-                        "notes": (
-                            (c.notes + " ") if c.notes else ""
-                        )
+                        "notes": ((c.notes + " ") if c.notes else "")
                         + "Demoted: an aggregator or unidentified source cannot support this "
                         "type of claim on its own.",
                     }

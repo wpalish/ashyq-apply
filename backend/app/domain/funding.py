@@ -210,17 +210,24 @@ def _coverage_share(
     tuition_amount: float | None,
     cov: dict[CostCategory, str],
 ) -> float | None:
-    if scholarship.amount_is_percentage_of_tuition is not None and tuition_amount and total_cost_amount:
+    if (
+        scholarship.amount_is_percentage_of_tuition is not None
+        and tuition_amount
+        and total_cost_amount
+    ):
         return min(
             1.0,
-            (scholarship.amount_is_percentage_of_tuition / 100.0 * tuition_amount) / total_cost_amount,
+            (scholarship.amount_is_percentage_of_tuition / 100.0 * tuition_amount)
+            / total_cost_amount,
         )
     if scholarship.amount and total_cost_amount:
         return min(1.0, scholarship.amount.amount / total_cost_amount)
     return None
 
 
-def funding_fit_for(scholarships: list[Scholarship]) -> tuple[FundingFit, FundingClassification, str]:
+def funding_fit_for(
+    scholarships: list[Scholarship],
+) -> tuple[FundingFit, FundingClassification, str]:
     """Roll a programme's scholarships up into one funding-fit verdict."""
     if not scholarships:
         return (

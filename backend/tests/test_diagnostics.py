@@ -35,7 +35,7 @@ class TestClassification:
         assert classify(message) is DiagnosticKind.FAILURE
 
     def test_a_failure_wins_a_tie(self):
-        """"Timed out while confirming X" is a failure, not a normal unknown."""
+        """ "Timed out while confirming X" is a failure, not a normal unknown."""
         assert classify("timed out while trying to confirm that the programme exists") is (
             DiagnosticKind.FAILURE
         )
@@ -65,7 +65,7 @@ class TestARunSeparatesThem:
         from sqlalchemy.orm import sessionmaker
 
         from app.db import migrate_to_head
-        from app.models import ApplicantProfileRow, ResearchRun
+        from app.models import ResearchRun
         from app.pipeline.runner import ResearchRunner
         from app.pipeline.state import RunState
 
@@ -75,8 +75,12 @@ class TestARunSeparatesThem:
 
         row = profile_row(session, profile)
         run = ResearchRun(
-            profile_id=row.id, stage="queued", demo_mode=True,
-            candidate_limit=8, verify_limit=8, stage_state=RunState.load(None).dump(),
+            profile_id=row.id,
+            stage="queued",
+            demo_mode=True,
+            candidate_limit=8,
+            verify_limit=8,
+            stage_state=RunState.load(None).dump(),
         )
         session.add(run)
         session.commit()

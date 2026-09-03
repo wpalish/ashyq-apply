@@ -59,9 +59,9 @@ class WebCostAdapter:
             academic_year=year,
             official_domain=candidate.costs_url.startswith("fixture://")
             or is_official_domain(candidate.costs_url, [candidate.domain]),
-            extraction_method="fixture" if candidate.costs_url.startswith("fixture://") else (
-                "pdf_rule" if res.is_pdf else "html_rule"
-            ),
+            extraction_method="fixture"
+            if candidate.costs_url.startswith("fixture://")
+            else ("pdf_rule" if res.is_pdf else "html_rule"),
             accessed_at=res.fetched_at,
         )
         claims = extract_costs(text, builder)

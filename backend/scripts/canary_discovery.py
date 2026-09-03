@@ -206,21 +206,28 @@ def false_positives(result: ProgramResult, claims: list[dict]) -> list[dict]:
         if scholarship.classification is not FundingClassification.FULL_RIDE_CONFIRMED:
             continue
         supporting = [
-            c for c in claims
+            c
+            for c in claims
             if c["claim_type"].startswith("scholarship")
             and scholarship.name.lower()[:24] in json.dumps(c["payload"]).lower()
         ]
         if not supporting:
-            flag("full_ride_without_evidence",
-                 f"{scholarship.name!r} classified FULL_RIDE_CONFIRMED with no claim behind it")
+            flag(
+                "full_ride_without_evidence",
+                f"{scholarship.name!r} classified FULL_RIDE_CONFIRMED with no claim behind it",
+            )
         elif not any(c["payload"].get("original_text_excerpt") for c in supporting):
-            flag("full_ride_without_excerpt",
-                 f"{scholarship.name!r} has claims but none quote the page",
-                 supporting[0]["source_url"])
+            flag(
+                "full_ride_without_excerpt",
+                f"{scholarship.name!r} has claims but none quote the page",
+                supporting[0]["source_url"],
+            )
         if scholarship.international_eligible != "yes":
-            flag("full_ride_without_confirmed_eligibility",
-                 f"{scholarship.name!r} is FULL_RIDE_CONFIRMED while international "
-                 f"eligibility is {scholarship.international_eligible!r}")
+            flag(
+                "full_ride_without_confirmed_eligibility",
+                f"{scholarship.name!r} is FULL_RIDE_CONFIRMED while international "
+                f"eligibility is {scholarship.international_eligible!r}",
+            )
 
     # 2. Degree applicability. "This award is for bachelors" is a claim about
     #    the award, and needs the award's own page to say so.
@@ -228,9 +235,11 @@ def false_positives(result: ProgramResult, claims: list[dict]) -> list[dict]:
         if scholarship.degree_applicability == "unknown":
             continue
         if not scholarship.degree_applicability_reason:
-            flag("degree_applicability_without_reason",
-                 f"{scholarship.name!r} states degree applicability "
-                 f"{scholarship.degree_applicability!r} with no stated reason")
+            flag(
+                "degree_applicability_without_reason",
+                f"{scholarship.name!r} states degree applicability "
+                f"{scholarship.degree_applicability!r} with no stated reason",
+            )
 
     # 3. Deadlines. A date is worthless attached to the wrong page.
     for claim_type in DEADLINE_CLAIMS:
@@ -239,9 +248,11 @@ def false_positives(result: ProgramResult, claims: list[dict]) -> list[dict]:
                 SourceSpecificity.UNIVERSITY_ADMISSIONS.value,
                 SourceSpecificity.SCHOLARSHIP_ADMINISTRATOR.value,
             }:
-                flag("deadline_from_general_page",
-                     f"{claim_type} taken from a {claim['source_specificity']} page",
-                     claim["source_url"])
+                flag(
+                    "deadline_from_general_page",
+                    f"{claim_type} taken from a {claim['source_specificity']} page",
+                    claim["source_url"],
+                )
             if not claim["payload"].get("original_text_excerpt"):
                 flag("deadline_without_excerpt", claim_type, claim["source_url"])
 
@@ -250,12 +261,17 @@ def false_positives(result: ProgramResult, claims: list[dict]) -> list[dict]:
     for check in result.requirement_checks:
         if check.status.value in ("unknown", "needs_clarification"):
             continue
-        supporting = by_type.get(check.requirement.claim_type, []) if hasattr(
-            check.requirement, "claim_type") else []
+        supporting = (
+            by_type.get(check.requirement.claim_type, [])
+            if hasattr(check.requirement, "claim_type")
+            else []
+        )
         if not supporting and not getattr(check.requirement, "source_url", ""):
-            flag("requirement_verdict_without_source",
-                 f"{check.requirement.label if hasattr(check.requirement, 'label') else check}"
-                 f" decided {check.status.value} with no claim behind it")
+            flag(
+                "requirement_verdict_without_source",
+                f"{check.requirement.label if hasattr(check.requirement, 'label') else check}"
+                f" decided {check.status.value} with no claim behind it",
+            )
 
     # 5. Any claim at all that lacks the provenance the product promises.
     for claim in claims:
@@ -299,9 +315,12 @@ async def run_canary(only: str | None, verbose: bool) -> dict:
     session.add(row)
     session.flush()
     run = ResearchRun(
-        profile_id=row.id, stage=PipelineStage.QUEUED.value, demo_mode=False,
+        profile_id=row.id,
+        stage=PipelineStage.QUEUED.value,
+        demo_mode=False,
         stage_state=RunState.load(None).dump(),
-        candidate_limit=len(registry), verify_limit=len(registry),
+        candidate_limit=len(registry),
+        verify_limit=len(registry),
     )
     session.add(run)
     session.flush()
@@ -320,6 +339,7 @@ async def run_canary(only: str | None, verbose: bool) -> dict:
         error = f"{type(exc).__name__}: {exc}"
         if verbose:
             import traceback
+
             traceback.print_exc()
     finished = datetime.now(UTC)
 
@@ -330,22 +350,22 @@ async def run_canary(only: str | None, verbose: bool) -> dict:
     }
     claims_by_result: dict[str, list[dict]] = {}
     for c in session.query(ClaimRow).filter(ClaimRow.run_id == run.id):
-        claims_by_result.setdefault(c.result_id or "", []).append({
-            "claim_type": c.claim_type, "status": c.status, "source_url": c.source_url,
-            "source_specificity": c.source_specificity,
-            "accessed_at": c.accessed_at.isoformat() if c.accessed_at else None,
-            "payload": c.payload,
-        })
+        claims_by_result.setdefault(c.result_id or "", []).append(
+            {
+                "claim_type": c.claim_type,
+                "status": c.status,
+                "source_url": c.source_url,
+                "source_specificity": c.source_specificity,
+                "accessed_at": c.accessed_at.isoformat() if c.accessed_at else None,
+                "payload": c.payload,
+            }
+        )
     result_ids = {
         r.university: r.id
         for r in session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run.id)
     }
 
-    traces = {
-        t.institution: t
-        for adapter in TracingAdapter.instances
-        for t in adapter.traces
-    }
+    traces = {t.institution: t for adapter in TracingAdapter.instances for t in adapter.traces}
 
     rows = []
     for entry in registry:
@@ -354,8 +374,11 @@ async def run_canary(only: str | None, verbose: bool) -> dict:
         outcomes = runner.audit.by_domain.get(domain, Counter())
         blocked = outcomes.get(FetchOutcome.ROBOTS_DISALLOWED.value, 0)
         checked = sum(outcomes.values())
-        failed = checked - outcomes.get(FetchOutcome.OK.value, 0) - outcomes.get(
-            FetchOutcome.CACHED.value, 0)
+        failed = (
+            checked
+            - outcomes.get(FetchOutcome.OK.value, 0)
+            - outcomes.get(FetchOutcome.CACHED.value, 0)
+        )
 
         candidate = next((c for c in runner._candidates if c.name == name), None)
         trace = traces.get(name)
@@ -367,9 +390,13 @@ async def run_canary(only: str | None, verbose: bool) -> dict:
             "country": entry["country"],
             "domain": domain,
             "access": (
-                "BLOCKED" if blocked and checked == blocked
-                else "PARTIALLY_BLOCKED" if blocked
-                else "REACHED" if checked else "NOT_ATTEMPTED"
+                "BLOCKED"
+                if blocked and checked == blocked
+                else "PARTIALLY_BLOCKED"
+                if blocked
+                else "REACHED"
+                if checked
+                else "NOT_ATTEMPTED"
             ),
             "robots_disallowed_requests": blocked,
             "pages_checked": checked,
@@ -384,9 +411,11 @@ async def run_canary(only: str | None, verbose: bool) -> dict:
             "discovery_notes": candidate.notes if candidate else "no candidate produced",
             "claims": len(claims),
             "claims_verified": sum(
-                1 for c in claims
-                if c["status"] in (ClaimStatus.VERIFIED_CURRENT.value,
-                                   ClaimStatus.POSSIBLY_STALE.value)),
+                1
+                for c in claims
+                if c["status"]
+                in (ClaimStatus.VERIFIED_CURRENT.value, ClaimStatus.POSSIBLY_STALE.value)
+            ),
             "completeness": result.verification_completeness if result else 0.0,
             "eligibility": result.eligibility.value if result else "no result",
             "funding_fit": result.funding_fit.value if result else "no result",
@@ -395,8 +424,11 @@ async def run_canary(only: str | None, verbose: bool) -> dict:
         }
         rows.append(row_out)
         if verbose:
-            print(f"  {name}: {row_out['access']}, {row_out['claims']} claims, "
-                  f"{len(row_out['false_positives'])} false positives", flush=True)
+            print(
+                f"  {name}: {row_out['access']}, {row_out['claims']} claims, "
+                f"{len(row_out['false_positives'])} false positives",
+                flush=True,
+            )
 
     session.close()
     return {
@@ -454,8 +486,10 @@ async def check_seeds() -> int:
                 result = await fetcher.get(url)
                 if not result.ok:
                     broken.append((entry["name"], category, url, result.outcome.value))
-                print(f"{'ok ' if result.ok else 'BAD'} {entry['name'][:24]:26} "
-                      f"{category:16} {url}", flush=True)
+                print(
+                    f"{'ok ' if result.ok else 'BAD'} {entry['name'][:24]:26} {category:16} {url}",
+                    flush=True,
+                )
     print(f"\n{len(broken)} of {total} seeds no longer resolve")
     for name, category, url, outcome in broken:
         print(f"  {name} / {category}: {outcome} — {url}")
@@ -467,8 +501,11 @@ async def main() -> int:
     parser.add_argument("--out", type=Path, help="directory for the JSON and Markdown output")
     parser.add_argument("--only", help="substring of one institution's homepage")
     parser.add_argument("--verbose", action="store_true")
-    parser.add_argument("--check-seeds", action="store_true",
-                        help="only verify that the registry's manual seeds still resolve")
+    parser.add_argument(
+        "--check-seeds",
+        action="store_true",
+        help="only verify that the registry's manual seeds still resolve",
+    )
     args = parser.parse_args()
 
     if args.check_seeds:
@@ -481,12 +518,14 @@ async def main() -> int:
     print(markdown_table(report))
     print()
     totals = report["totals"]
-    print(f"reached {totals['reached']}/{totals['institutions']}, "
-          f"blocked {totals['blocked']}, "
-          f"programme pages {totals['program_pages_found']}, "
-          f"scholarship pages {totals['scholarship_pages_found']}, "
-          f"claims {totals['claims']}, "
-          f"false positives {totals['false_positives']}")
+    print(
+        f"reached {totals['reached']}/{totals['institutions']}, "
+        f"blocked {totals['blocked']}, "
+        f"programme pages {totals['program_pages_found']}, "
+        f"scholarship pages {totals['scholarship_pages_found']}, "
+        f"claims {totals['claims']}, "
+        f"false positives {totals['false_positives']}"
+    )
     if report["run_error"]:
         print(f"RUN ERROR: {report['run_error']}")
 

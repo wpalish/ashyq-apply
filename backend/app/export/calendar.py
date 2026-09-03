@@ -23,12 +23,7 @@ PRODID = "-//ASHYQ Apply//Deadlines//EN"
 
 def _escape(text: str) -> str:
     """RFC 5545 text escaping: backslash, semicolon, comma, newline."""
-    return (
-        text.replace("\\", "\\\\")
-        .replace(";", "\\;")
-        .replace(",", "\\,")
-        .replace("\n", "\\n")
-    )
+    return text.replace("\\", "\\\\").replace(";", "\\;").replace(",", "\\,").replace("\n", "\\n")
 
 
 def _fold(line: str) -> str:
@@ -115,9 +110,7 @@ def to_ics(results: list[ProgramResult], *, run_id: str, now: datetime) -> str:
                     for part in (
                         f"For {result.program} at {result.university}.",
                         f"Classification: {scholarship.classification.value}.",
-                        f"Source: {scholarship.source_urls[0]}"
-                        if scholarship.source_urls
-                        else "",
+                        f"Source: {scholarship.source_urls[0]}" if scholarship.source_urls else "",
                         "Confirm on the official page before relying on this date.",
                     )
                     if part

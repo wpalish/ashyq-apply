@@ -66,7 +66,9 @@ class Job(TimestampedBase):
     #: Not claimable before this moment. Backoff is expressed by moving it.
     available_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     #: A claimed job is held until here. Past it, the reaper takes it back.
-    lease_expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    lease_expires_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
     heartbeat_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     worker_id: Mapped[str | None] = mapped_column(String(80), nullable=True)
 

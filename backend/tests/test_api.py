@@ -38,9 +38,7 @@ def client(tmp_path, monkeypatch, corpus_dir):
         settings.database_url, connect_args={"check_same_thread": False}
     )
     monkeypatch.setattr(db_module, "engine", engine)
-    monkeypatch.setattr(
-        db_module, "SessionLocal", db_module.sessionmaker(bind=engine, future=True)
-    )
+    monkeypatch.setattr(db_module, "SessionLocal", db_module.sessionmaker(bind=engine, future=True))
     # The schema is owned by Alembic now, so the test database is migrated the
     # same way production is rather than conjured with create_all().
     db_module.migrate_to_head(settings.database_url)
@@ -74,9 +72,7 @@ async def drain_queue(limit: int = 10) -> int:
 @pytest.fixture
 def finished_run(client):
     profile = client.post("/api/profiles", json=DEMO_PROFILE.model_dump(mode="json")).json()
-    queued = client.post(
-        "/api/runs", json={"profile_id": profile["id"], "demo_mode": True}
-    ).json()
+    queued = client.post("/api/runs", json={"profile_id": profile["id"], "demo_mode": True}).json()
     assert queued["stage"] == "queued"
     assert asyncio.run(drain_queue()) == 1, "the API must have enqueued exactly one job"
 
@@ -192,8 +188,10 @@ class TestResearchAndResults:
     def test_documents_are_collected_for_approved_rows(self, client, finished_run):
         _, run = finished_run
         result = client.get(f"/api/runs/{run['id']}/results").json()[0]
-        client.post(f"/api/runs/{run['id']}/results/{result['id']}/decision",
-                    json={"decision": "approved", "reason": "", "notes": ""})
+        client.post(
+            f"/api/runs/{run['id']}/results/{result['id']}/decision",
+            json={"decision": "approved", "reason": "", "notes": ""},
+        )
         assert client.post(f"/api/runs/{run['id']}/collect-documents").status_code == 202
         assert asyncio.run(drain_queue()) == 1
 
@@ -278,9 +276,7 @@ class TestDocumentIdempotency:
         assert added["checklist"] is not None
         assert added["checklist"]["ordered_steps"]
 
-    def test_collecting_twice_for_the_same_shortlist_does_no_work_twice(
-        self, client, finished_run
-    ):
+    def test_collecting_twice_for_the_same_shortlist_does_no_work_twice(self, client, finished_run):
         _, run = finished_run
         row = client.get(f"/api/runs/{run['id']}/results").json()[0]
         client.post(
@@ -495,17 +491,16 @@ class TestRunViewJobReporting:
         from app.models import Job
 
         with SessionLocal() as session:
-            assert session.query(Job).filter(
-                Job.run_id == run["id"], Job.kind == "recheck"
-            ).count() == 1, "the recheck must exist for this test to mean anything"
+            assert (
+                session.query(Job).filter(Job.run_id == run["id"], Job.kind == "recheck").count()
+                == 1
+            ), "the recheck must exist for this test to mean anything"
 
         assert state["job_status"] == "succeeded", "the research job is the one that matters"
         assert state["job_running"] is False
         assert state["next_recheck_at"] is not None
 
-    def test_documents_can_still_be_collected_after_a_recheck_is_queued(
-        self, client, finished_run
-    ):
+    def test_documents_can_still_be_collected_after_a_recheck_is_queued(self, client, finished_run):
         _, run = finished_run
         result = client.get(f"/api/runs/{run['id']}/results").json()[0]
         client.post(
@@ -563,7 +558,7 @@ class TestNotes:
 
 
 class TestFullExport:
-    """"The complete record" has to mean it.
+    """ "The complete record" has to mean it.
 
     The export carried the profile and a count of results - no results, no
     claims, no audit trail - while telling the reader it was everything they

@@ -117,7 +117,7 @@ class TestGovernmentEvidenceReachesEveryRow:
 
         from app.db import migrate_to_head
         from app.domain.enums import ClaimType
-        from app.models import ApplicantProfileRow, ClaimRow, ProgramResultRow, ResearchRun
+        from app.models import ClaimRow, ProgramResultRow, ResearchRun
         from app.pipeline.runner import ResearchRunner
         from app.pipeline.state import RunState
 
@@ -127,8 +127,12 @@ class TestGovernmentEvidenceReachesEveryRow:
 
         row = profile_row(session, profile)
         run = ResearchRun(
-            profile_id=row.id, stage="queued", demo_mode=True,
-            candidate_limit=12, verify_limit=12, stage_state=RunState.load(None).dump(),
+            profile_id=row.id,
+            stage="queued",
+            demo_mode=True,
+            candidate_limit=12,
+            verify_limit=12,
+            stage_state=RunState.load(None).dump(),
         )
         session.add(run)
         session.commit()
@@ -218,7 +222,7 @@ class TestDocumentCollectionIsNeverSilent:
 
         from app.db import migrate_to_head
         from app.domain.enums import UserDecision
-        from app.models import ApplicantProfileRow, ProgramResultRow, ResearchRun
+        from app.models import ProgramResultRow, ResearchRun
         from app.pipeline.runner import ResearchRunner
         from app.pipeline.state import RunState
         from app.schemas.result import ProgramResult
@@ -229,8 +233,12 @@ class TestDocumentCollectionIsNeverSilent:
 
         row = profile_row(session, profile)
         run = ResearchRun(
-            profile_id=row.id, stage="queued", demo_mode=True,
-            candidate_limit=4, verify_limit=4, stage_state=RunState.load(None).dump(),
+            profile_id=row.id,
+            stage="queued",
+            demo_mode=True,
+            candidate_limit=4,
+            verify_limit=4,
+            stage_state=RunState.load(None).dump(),
         )
         session.add(run)
         session.commit()
@@ -265,8 +273,9 @@ class TestDocumentCollectionIsNeverSilent:
 
         session.refresh(orphan)
         unresolved = ProgramResult.model_validate(orphan.payload).unresolved
-        assert any("document" in q.topic.lower() or "document" in q.question.lower()
-                   for q in unresolved), "the row itself must carry the open question"
+        assert any(
+            "document" in q.topic.lower() or "document" in q.question.lower() for q in unresolved
+        ), "the row itself must carry the open question"
 
         session.close()
         engine.dispose()

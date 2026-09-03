@@ -38,7 +38,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from app.domain.currency import _PER_USD, RATE_DATE
 
 ECB_DAILY = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"
-NAMESPACES = {"gesmes": "http://www.gesmes.org/xml/2002-08-01", "ecb": "http://www.ecb.int/vocabulary/2002-08-01/eurofxref"}
+NAMESPACES = {
+    "gesmes": "http://www.gesmes.org/xml/2002-08-01",
+    "ecb": "http://www.ecb.int/vocabulary/2002-08-01/eurofxref",
+}
 
 
 def fetch_ecb_rates() -> tuple[date, dict[str, float]]:
@@ -73,8 +76,10 @@ def main() -> int:
 
     missing = sorted(set(_PER_USD) - set(fresh) - {"USD"})
     print(f"bundled snapshot: {RATE_DATE}   ECB feed: {published}")
-    print(f"currencies in the bundle: {len(_PER_USD)}   present in the feed: "
-          f"{len(set(_PER_USD) & set(fresh))}")
+    print(
+        f"currencies in the bundle: {len(_PER_USD)}   present in the feed: "
+        f"{len(set(_PER_USD) & set(fresh))}"
+    )
     if missing:
         print(f"NOT in the ECB feed, keep the bundled value: {', '.join(missing)}")
 
@@ -88,7 +93,9 @@ def main() -> int:
         print(f"{code:<6} {old:>10.4f} {new:>12.4f} {drift:>+8.1f}%{flag}")
 
     if args.print_block:
-        print(f'\n#: Units of the currency per 1 USD, as of RATE_DATE.\nRATE_DATE = date({published.year}, {published.month}, {published.day})')
+        print(
+            f"\n#: Units of the currency per 1 USD, as of RATE_DATE.\nRATE_DATE = date({published.year}, {published.month}, {published.day})"
+        )
         print("_PER_USD: dict[str, float] = {")
         for code in sorted(_PER_USD):
             value = fresh.get(code, _PER_USD[code])

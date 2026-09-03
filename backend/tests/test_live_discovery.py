@@ -57,14 +57,22 @@ class StubSite:
             body = self.pages.get(url)
             if body is None:
                 return FetchResult(
-                    url=url, outcome=self.missing_outcome, status_code=404,
-                    error="not in this test's page set", final_url=url,
+                    url=url,
+                    outcome=self.missing_outcome,
+                    status_code=404,
+                    error="not in this test's page set",
+                    final_url=url,
                 )
             raw = body.encode() if isinstance(body, str) else body
             return FetchResult(
-                url=url, outcome=FetchOutcome.OK, status_code=200, content=raw,
+                url=url,
+                outcome=FetchOutcome.OK,
+                status_code=200,
+                content=raw,
                 text=raw.decode("utf-8", errors="replace"),
-                content_type="application/xml", fetched_at=datetime.now(UTC), final_url=url,
+                content_type="application/xml",
+                fetched_at=datetime.now(UTC),
+                final_url=url,
             )
 
         fetcher.get = fake_get  # type: ignore[method-assign]
@@ -119,42 +127,51 @@ def profile_bachelor(profile):
 
 
 class TestRegistrableDomain:
-    @pytest.mark.parametrize("host,expected", [
-        ("www.rug.nl", "rug.nl"),
-        ("rug.nl", "rug.nl"),
-        ("studieren.univie.ac.at", "univie.ac.at"),
-        ("admissions.hku.hk", "hku.hk"),
-        ("www.ntu.edu.sg", "ntu.edu.sg"),
-        ("admission.kaist.ac.kr", "kaist.ac.kr"),
-        ("you.ubc.ca", "ubc.ca"),
-        ("en.uw.edu.pl", "uw.edu.pl"),
-    ])
+    @pytest.mark.parametrize(
+        "host,expected",
+        [
+            ("www.rug.nl", "rug.nl"),
+            ("rug.nl", "rug.nl"),
+            ("studieren.univie.ac.at", "univie.ac.at"),
+            ("admissions.hku.hk", "hku.hk"),
+            ("www.ntu.edu.sg", "ntu.edu.sg"),
+            ("admission.kaist.ac.kr", "kaist.ac.kr"),
+            ("you.ubc.ca", "ubc.ca"),
+            ("en.uw.edu.pl", "uw.edu.pl"),
+        ],
+    )
     def test_multipart_suffixes_are_handled(self, host, expected):
         """Taking the last two labels would make every ac.uk site one domain."""
         assert registrable_domain(host) == expected
 
-    @pytest.mark.parametrize("url,domain,same", [
-        ("https://www.rug.nl/education", "www.rug.nl", True),
-        ("https://rug.nl/education", "www.rug.nl", True),
-        ("https://studieren.univie.ac.at/x", "www.univie.ac.at", True),
-        ("https://evil.example.com/rug.nl", "www.rug.nl", False),
-        ("https://www.tudelft.nl/x", "www.rug.nl", False),
-        ("https://other.ac.at/x", "www.univie.ac.at", False),
-    ])
+    @pytest.mark.parametrize(
+        "url,domain,same",
+        [
+            ("https://www.rug.nl/education", "www.rug.nl", True),
+            ("https://rug.nl/education", "www.rug.nl", True),
+            ("https://studieren.univie.ac.at/x", "www.univie.ac.at", True),
+            ("https://evil.example.com/rug.nl", "www.rug.nl", False),
+            ("https://www.tudelft.nl/x", "www.rug.nl", False),
+            ("https://other.ac.at/x", "www.univie.ac.at", False),
+        ],
+    )
     def test_off_domain_urls_are_recognised(self, url, domain, same):
         assert same_institution(url, domain) is same
 
 
 class TestCanonicalUrl:
-    @pytest.mark.parametrize("raw,expected", [
-        ("https://WWW.RUG.NL/Education/", "https://www.rug.nl/Education"),
-        ("https://www.rug.nl/education#section", "https://www.rug.nl/education"),
-        ("https://www.rug.nl/education?utm_source=x", "https://www.rug.nl/education"),
-        ("https://www.rug.nl/education?fbclid=abc", "https://www.rug.nl/education"),
-        ("https://www.rug.nl:443/education", "https://www.rug.nl/education"),
-        ("https://www.rug.nl//education//cs", "https://www.rug.nl/education/cs"),
-        ("https://www.rug.nl/", "https://www.rug.nl/"),
-    ])
+    @pytest.mark.parametrize(
+        "raw,expected",
+        [
+            ("https://WWW.RUG.NL/Education/", "https://www.rug.nl/Education"),
+            ("https://www.rug.nl/education#section", "https://www.rug.nl/education"),
+            ("https://www.rug.nl/education?utm_source=x", "https://www.rug.nl/education"),
+            ("https://www.rug.nl/education?fbclid=abc", "https://www.rug.nl/education"),
+            ("https://www.rug.nl:443/education", "https://www.rug.nl/education"),
+            ("https://www.rug.nl//education//cs", "https://www.rug.nl/education/cs"),
+            ("https://www.rug.nl/", "https://www.rug.nl/"),
+        ],
+    )
     def test_equivalent_urls_normalise_to_one_form(self, raw, expected):
         assert canonical_url(raw) == expected
 
@@ -169,77 +186,96 @@ class TestCanonicalUrl:
 
 
 class TestUrlCategorisation:
-    @pytest.mark.parametrize("url,category", [
-        ("https://uni.edu/en/education/programmes/bachelors/computer-science", PageCategory.PROGRAM_PAGE),
-        # Hyphenated compound, as Vienna publishes it.
-        ("https://uni.edu/en/bachelordiploma-programmes/computer-science-bachelor",
-         PageCategory.PROGRAM_PAGE),
-        ("https://uni.edu/bsc-computer-science", PageCategory.PROGRAM_PAGE),
-        ("https://uni.edu/en/education/programmes/bachelors", PageCategory.PROGRAM_CATALOG),
-        # Hyphenated compounds: how most universities actually name the page.
-        ("https://uni.edu/en/degree-programmes", PageCategory.PROGRAM_CATALOG),
-        ("https://uni.edu/education/degree-programmes-1st-2nd-and-long-cycle-programmes",
-         PageCategory.PROGRAM_CATALOG),
-        ("https://uni.edu/admission-and-application", PageCategory.ADMISSIONS),
-        ("https://uni.edu/entry_requirements", PageCategory.ADMISSIONS),
-        ("https://uni.edu/tuition-fees", PageCategory.COSTS),
-        ("https://uni.edu/cost-of-attendance", PageCategory.COSTS),
-        ("https://uni.edu/scholarships", PageCategory.SCHOLARSHIPS),
-        ("https://uni.edu/financial_aid", PageCategory.SCHOLARSHIPS),
-        ("https://uni.edu/required-documents", PageCategory.DOCUMENTS),
-    ])
+    @pytest.mark.parametrize(
+        "url,category",
+        [
+            (
+                "https://uni.edu/en/education/programmes/bachelors/computer-science",
+                PageCategory.PROGRAM_PAGE,
+            ),
+            # Hyphenated compound, as Vienna publishes it.
+            (
+                "https://uni.edu/en/bachelordiploma-programmes/computer-science-bachelor",
+                PageCategory.PROGRAM_PAGE,
+            ),
+            ("https://uni.edu/bsc-computer-science", PageCategory.PROGRAM_PAGE),
+            ("https://uni.edu/en/education/programmes/bachelors", PageCategory.PROGRAM_CATALOG),
+            # Hyphenated compounds: how most universities actually name the page.
+            ("https://uni.edu/en/degree-programmes", PageCategory.PROGRAM_CATALOG),
+            (
+                "https://uni.edu/education/degree-programmes-1st-2nd-and-long-cycle-programmes",
+                PageCategory.PROGRAM_CATALOG,
+            ),
+            ("https://uni.edu/admission-and-application", PageCategory.ADMISSIONS),
+            ("https://uni.edu/entry_requirements", PageCategory.ADMISSIONS),
+            ("https://uni.edu/tuition-fees", PageCategory.COSTS),
+            ("https://uni.edu/cost-of-attendance", PageCategory.COSTS),
+            ("https://uni.edu/scholarships", PageCategory.SCHOLARSHIPS),
+            ("https://uni.edu/financial_aid", PageCategory.SCHOLARSHIPS),
+            ("https://uni.edu/required-documents", PageCategory.DOCUMENTS),
+        ],
+    )
     def test_urls_are_filed_under_the_right_category(self, url, category):
         assert categorise_url(url)[0] == category
 
-    @pytest.mark.parametrize("url", [
-        "https://uni.edu/news/2026/something",
-        "https://uni.edu/events/open-day",
-        "https://uni.edu/vacancies/professor",
-        "https://uni.edu/alumni/donate",
-        "https://uni.edu/privacy",
-        "https://uni.edu/assets/style.css",
-        "https://uni.edu/brochure.pdf.zip",
-        "https://uni.edu/library/search",
-        # Near-misses for the catalogue pattern: the segment has to end with
-        # the listing word, not merely contain it.
-        "https://uni.edu/about/degree-ceremony-photos",
-        "https://uni.edu/programme-news",
-        # Events and newsletters *inside* a programme path — every one of these
-        # was returned as a programme page by a live run.
-        "https://uni.edu/education/bachelor/bachelor-open-day",
-        "https://uni.edu/education/bachelor/onlinebachelorweek",
-        "https://uni.edu/education/bachelor/student-for-a-day",
-        "https://uni.edu/education/bachelor/campus-tour",
-        "https://uni.edu/education/bachelor/online-university-tour",
-        "https://uni.edu/education/bachelor/webklassen",
-        # A research group's project page is not a degree, whatever its slug.
-        "https://uni.edu/research/zernike/a-group/bsc-msc-project-guidelines",
-        "https://uni.edu/research/institutes/group/msc-and-bsc-projects",
-        "https://uni.edu/en/programmes/elec-student-newsletters",
-        "https://uni.edu/sv/program/elec-nyhetsbrev-for-studerande",
-        "https://uni.edu/programmes/bachelors/cs-information-session",
-    ])
+    @pytest.mark.parametrize(
+        "url",
+        [
+            "https://uni.edu/news/2026/something",
+            "https://uni.edu/events/open-day",
+            "https://uni.edu/vacancies/professor",
+            "https://uni.edu/alumni/donate",
+            "https://uni.edu/privacy",
+            "https://uni.edu/assets/style.css",
+            "https://uni.edu/brochure.pdf.zip",
+            "https://uni.edu/library/search",
+            # Near-misses for the catalogue pattern: the segment has to end with
+            # the listing word, not merely contain it.
+            "https://uni.edu/about/degree-ceremony-photos",
+            "https://uni.edu/programme-news",
+            # Events and newsletters *inside* a programme path — every one of these
+            # was returned as a programme page by a live run.
+            "https://uni.edu/education/bachelor/bachelor-open-day",
+            "https://uni.edu/education/bachelor/onlinebachelorweek",
+            "https://uni.edu/education/bachelor/student-for-a-day",
+            "https://uni.edu/education/bachelor/campus-tour",
+            "https://uni.edu/education/bachelor/online-university-tour",
+            "https://uni.edu/education/bachelor/webklassen",
+            # A research group's project page is not a degree, whatever its slug.
+            "https://uni.edu/research/zernike/a-group/bsc-msc-project-guidelines",
+            "https://uni.edu/research/institutes/group/msc-and-bsc-projects",
+            "https://uni.edu/en/programmes/elec-student-newsletters",
+            "https://uni.edu/sv/program/elec-nyhetsbrev-for-studerande",
+            "https://uni.edu/programmes/bachelors/cs-information-session",
+        ],
+    )
     def test_irrelevant_urls_score_nothing(self, url):
         assert categorise_url(url)[0] is None
 
-    @pytest.mark.parametrize("url,is_catalogue", [
-        ("https://uni.edu/en/degree-programmes", True),
-        # Scores higher as admissions, but is still worth walking for programmes.
-        ("https://uni.edu/applying-ubc/how-to-apply/degrees-programs/", True),
-        ("https://uni.edu/studies/programmes", True),
-        ("https://uni.edu/about/degree-ceremony-photos", False),
-        ("https://uni.edu/programme-news", False),
-        ("https://uni.edu/news/2026/new-programme-launched", False),
-        ("https://uni.edu/en/education/programmes/bachelors/computer-science", False),
-    ])
+    @pytest.mark.parametrize(
+        "url,is_catalogue",
+        [
+            ("https://uni.edu/en/degree-programmes", True),
+            # Scores higher as admissions, but is still worth walking for programmes.
+            ("https://uni.edu/applying-ubc/how-to-apply/degrees-programs/", True),
+            ("https://uni.edu/studies/programmes", True),
+            ("https://uni.edu/about/degree-ceremony-photos", False),
+            ("https://uni.edu/programme-news", False),
+            ("https://uni.edu/news/2026/new-programme-launched", False),
+            ("https://uni.edu/en/education/programmes/bachelors/computer-science", False),
+        ],
+    )
     def test_whether_a_page_lists_programmes_is_asked_separately(self, url, is_catalogue):
         assert looks_like_catalogue(url) is is_catalogue
 
-    @pytest.mark.parametrize("url", [
-        "https://uni.edu/admissions/undergraduate/scholarships/detail/sci-award",
-        "https://uni.edu/en/education/programmes/bachelors/funding/award",
-        "https://uni.edu/study/financial-aid/undergraduate-grants",
-    ])
+    @pytest.mark.parametrize(
+        "url",
+        [
+            "https://uni.edu/admissions/undergraduate/scholarships/detail/sci-award",
+            "https://uni.edu/en/education/programmes/bachelors/funding/award",
+            "https://uni.edu/study/financial-aid/undergraduate-grants",
+        ],
+    )
     def test_a_funding_page_is_never_a_programme(self, url):
         """NTU offered a scholarship page as the applicant's programme page.
 
@@ -322,16 +358,18 @@ class TestSitemapParsing:
 class TestSitemapReader:
     @pytest.mark.asyncio
     async def test_it_follows_a_sitemap_index_into_its_children(self, tmp_path):
-        site = StubSite({
-            "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/sitemap_index.xml\n",
-            "https://uni.edu/sitemap_index.xml": sitemap_index_xml(
-                "https://uni.edu/s-programmes.xml", "https://uni.edu/s-admissions.xml"
-            ),
-            "https://uni.edu/s-programmes.xml": sitemap_xml(
-                "https://uni.edu/programmes/bachelors/computer-science"
-            ),
-            "https://uni.edu/s-admissions.xml": sitemap_xml("https://uni.edu/admission"),
-        })
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/sitemap_index.xml\n",
+                "https://uni.edu/sitemap_index.xml": sitemap_index_xml(
+                    "https://uni.edu/s-programmes.xml", "https://uni.edu/s-admissions.xml"
+                ),
+                "https://uni.edu/s-programmes.xml": sitemap_xml(
+                    "https://uni.edu/programmes/bachelors/computer-science"
+                ),
+                "https://uni.edu/s-admissions.xml": sitemap_xml("https://uni.edu/admission"),
+            }
+        )
         async with Fetcher(tmp_path / "c", offline=True) as fetcher:
             site.install(fetcher)
             trace = _trace()
@@ -363,10 +401,12 @@ class TestSitemapReader:
 
     @pytest.mark.asyncio
     async def test_a_self_referencing_index_terminates(self, tmp_path):
-        site = StubSite({
-            "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
-            "https://uni.edu/s.xml": sitemap_index_xml("https://uni.edu/s.xml"),
-        })
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
+                "https://uni.edu/s.xml": sitemap_index_xml("https://uni.edu/s.xml"),
+            }
+        )
         async with Fetcher(tmp_path / "c", offline=True) as fetcher:
             site.install(fetcher)
             await SitemapReader(fetcher).collect("https://uni.edu/", "uni.edu", _trace())
@@ -374,14 +414,16 @@ class TestSitemapReader:
 
     @pytest.mark.asyncio
     async def test_off_domain_urls_in_a_sitemap_are_dropped(self, tmp_path):
-        site = StubSite({
-            "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
-            "https://uni.edu/s.xml": sitemap_xml(
-                "https://uni.edu/programmes/bachelors/cs",
-                "https://evil.example.com/programmes/bachelors/cs",
-                "https://partner.other.edu/admission",
-            ),
-        })
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
+                "https://uni.edu/s.xml": sitemap_xml(
+                    "https://uni.edu/programmes/bachelors/cs",
+                    "https://evil.example.com/programmes/bachelors/cs",
+                    "https://partner.other.edu/admission",
+                ),
+            }
+        )
         async with Fetcher(tmp_path / "c", offline=True) as fetcher:
             site.install(fetcher)
             trace = _trace()
@@ -392,15 +434,17 @@ class TestSitemapReader:
 
     @pytest.mark.asyncio
     async def test_duplicate_and_equivalent_urls_are_deduplicated(self, tmp_path):
-        site = StubSite({
-            "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
-            "https://uni.edu/s.xml": sitemap_xml(
-                "https://uni.edu/programmes/bachelors/cs",
-                "https://uni.edu/programmes/bachelors/cs/",
-                "https://uni.edu/programmes/bachelors/cs#overview",
-                "https://UNI.edu/programmes/bachelors/cs?utm_source=x",
-            ),
-        })
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
+                "https://uni.edu/s.xml": sitemap_xml(
+                    "https://uni.edu/programmes/bachelors/cs",
+                    "https://uni.edu/programmes/bachelors/cs/",
+                    "https://uni.edu/programmes/bachelors/cs#overview",
+                    "https://UNI.edu/programmes/bachelors/cs?utm_source=x",
+                ),
+            }
+        )
         async with Fetcher(tmp_path / "c", offline=True) as fetcher:
             site.install(fetcher)
             pages = await SitemapReader(fetcher).collect("https://uni.edu/", "uni.edu", _trace())
@@ -408,10 +452,12 @@ class TestSitemapReader:
 
     @pytest.mark.asyncio
     async def test_conventional_locations_are_tried_when_robots_names_none(self, tmp_path):
-        site = StubSite({
-            "https://uni.edu/robots.txt": "User-agent: *\nDisallow:\n",
-            "https://uni.edu/sitemap.xml": sitemap_xml("https://uni.edu/admission"),
-        })
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "User-agent: *\nDisallow:\n",
+                "https://uni.edu/sitemap.xml": sitemap_xml("https://uni.edu/admission"),
+            }
+        )
         async with Fetcher(tmp_path / "c", offline=True) as fetcher:
             site.install(fetcher)
             pages = await SitemapReader(fetcher).collect("https://uni.edu/", "uni.edu", _trace())
@@ -454,7 +500,9 @@ class TestAdapter:
         self, tmp_path, profile_bachelor
     ):
         entry = {
-            "name": "Seeded University", "country": "Netherlands", "city": "X",
+            "name": "Seeded University",
+            "country": "Netherlands",
+            "city": "X",
             "homepage": "https://uni.edu/",
             "seeds": {
                 "admissions": "https://uni.edu/verified/admission",
@@ -480,7 +528,9 @@ class TestAdapter:
         verdict. Everything it produces is a URL for the classifier to judge.
         """
         entry = {
-            "name": "Seeded University", "country": "Netherlands", "city": "X",
+            "name": "Seeded University",
+            "country": "Netherlands",
+            "city": "X",
             "homepage": "https://uni.edu/",
             "seeds": {"admissions": "https://uni.edu/verified/admission"},
         }
@@ -499,7 +549,9 @@ class TestAdapter:
     @pytest.mark.asyncio
     async def test_an_off_domain_manual_seed_is_rejected(self, tmp_path, profile_bachelor):
         entry = {
-            "name": "Seeded University", "country": "Netherlands", "city": "X",
+            "name": "Seeded University",
+            "country": "Netherlands",
+            "city": "X",
             "homepage": "https://uni.edu/",
             "seeds": {"admissions": "https://evil.example.com/admission"},
         }
@@ -516,14 +568,20 @@ class TestAdapter:
     async def test_a_manual_seed_wins_over_a_discovered_page(self, tmp_path, profile_bachelor):
         """A human-verified URL is a better answer than a scored guess."""
         entry = {
-            "name": "Seeded University", "country": "Netherlands", "city": "X",
+            "name": "Seeded University",
+            "country": "Netherlands",
+            "city": "X",
             "homepage": "https://uni.edu/",
             "seeds": {"admissions": "https://uni.edu/verified/admission"},
         }
-        site = StubSite({
-            "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
-            "https://uni.edu/s.xml": sitemap_xml("https://uni.edu/discovered/admission-and-application"),
-        })
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
+                "https://uni.edu/s.xml": sitemap_xml(
+                    "https://uni.edu/discovered/admission-and-application"
+                ),
+            }
+        )
         async with Fetcher(tmp_path / "c", offline=True) as fetcher:
             site.install(fetcher)
             adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, entry))
@@ -531,25 +589,32 @@ class TestAdapter:
 
         assert candidate.admissions_url == "https://uni.edu/verified/admission"
         # The discovered one is kept as a second lead, not discarded.
-        assert "https://uni.edu/discovered/admission-and-application" in \
-            adapter.traces[0].selected[PageCategory.ADMISSIONS]
+        assert (
+            "https://uni.edu/discovered/admission-and-application"
+            in adapter.traces[0].selected[PageCategory.ADMISSIONS]
+        )
 
     @pytest.mark.asyncio
     async def test_sitemap_discovery_finds_a_programme_page(self, tmp_path, profile_bachelor):
-        entry = {"name": "Sitemapped University", "country": "Netherlands", "city": "X",
-                 "homepage": "https://uni.edu/"}
-        site = StubSite({
-            "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
-            "https://uni.edu/s.xml": sitemap_xml(
-                "https://uni.edu/news/2026/open-day",
-                "https://uni.edu/en/education/programmes/bachelors/computer-science",
-                "https://uni.edu/en/education/programmes/masters/computer-science",
-                "https://uni.edu/tuition-fees",
-                "https://uni.edu/scholarships",
-            ),
-            "https://uni.edu/en/education/programmes/bachelors/computer-science":
-                program_html(),
-        })
+        entry = {
+            "name": "Sitemapped University",
+            "country": "Netherlands",
+            "city": "X",
+            "homepage": "https://uni.edu/",
+        }
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
+                "https://uni.edu/s.xml": sitemap_xml(
+                    "https://uni.edu/news/2026/open-day",
+                    "https://uni.edu/en/education/programmes/bachelors/computer-science",
+                    "https://uni.edu/en/education/programmes/masters/computer-science",
+                    "https://uni.edu/tuition-fees",
+                    "https://uni.edu/scholarships",
+                ),
+                "https://uni.edu/en/education/programmes/bachelors/computer-science": program_html(),
+            }
+        )
         async with Fetcher(tmp_path / "c", offline=True) as fetcher:
             site.install(fetcher)
             adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, entry))
@@ -561,16 +626,16 @@ class TestAdapter:
         assert candidate.scholarships_url == "https://uni.edu/scholarships"
 
     @pytest.mark.asyncio
-    async def test_the_wrong_degree_level_is_not_offered_first(
-        self, tmp_path, profile_bachelor
-    ):
+    async def test_the_wrong_degree_level_is_not_offered_first(self, tmp_path, profile_bachelor):
         entry = {"name": "U", "country": "Netherlands", "city": "X", "homepage": "https://uni.edu/"}
-        site = StubSite({
-            "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
-            "https://uni.edu/s.xml": sitemap_xml(
-                "https://uni.edu/en/education/programmes/masters/computer-science",
-            ),
-        })
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
+                "https://uni.edu/s.xml": sitemap_xml(
+                    "https://uni.edu/en/education/programmes/masters/computer-science",
+                ),
+            }
+        )
         async with Fetcher(tmp_path / "c", offline=True) as fetcher:
             site.install(fetcher)
             adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, entry))
@@ -579,29 +644,29 @@ class TestAdapter:
         assert candidate.programs == [], "an MSc page is not a bachelor lead"
 
     @pytest.mark.asyncio
-    async def test_a_candidate_that_reads_as_an_event_is_dropped(
-        self, tmp_path, profile_bachelor
-    ):
+    async def test_a_candidate_that_reads_as_an_event_is_dropped(self, tmp_path, profile_bachelor):
         """Live runs offered open days and campus tours as programme pages.
 
         They sit under the same path as the real programmes, so no URL rule
         separates them. Reading the page does.
         """
         entry = {"name": "U", "country": "Netherlands", "city": "X", "homepage": "https://uni.edu/"}
-        site = StubSite({
-            "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
-            # A URL no rule can fault: the right path, the right subject, the
-            # right level. Only the page itself reveals it is a visit day.
-            "https://uni.edu/s.xml": sitemap_xml(
-                "https://uni.edu/education/bachelor/computer-science-meet-us",
-            ),
-            "https://uni.edu/education/bachelor/computer-science-meet-us": (
-                "<html><head><title>Meet us | Bachelors</title></head><body><main>"
-                "<h1>Meet us</h1><p>Come and visit us on campus. "
-                "Book a place on a guided tour with a student.</p>"
-                "</main></body></html>"
-            ),
-        })
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
+                # A URL no rule can fault: the right path, the right subject, the
+                # right level. Only the page itself reveals it is a visit day.
+                "https://uni.edu/s.xml": sitemap_xml(
+                    "https://uni.edu/education/bachelor/computer-science-meet-us",
+                ),
+                "https://uni.edu/education/bachelor/computer-science-meet-us": (
+                    "<html><head><title>Meet us | Bachelors</title></head><body><main>"
+                    "<h1>Meet us</h1><p>Come and visit us on campus. "
+                    "Book a place on a guided tour with a student.</p>"
+                    "</main></body></html>"
+                ),
+            }
+        )
         async with Fetcher(tmp_path / "c", offline=True) as fetcher:
             site.install(fetcher)
             adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, entry))
@@ -611,23 +676,23 @@ class TestAdapter:
         assert any("not a programme page" in reason for _u, reason in adapter.traces[0].rejected)
 
     @pytest.mark.asyncio
-    async def test_a_rejected_candidate_lets_the_next_one_through(
-        self, tmp_path, profile_bachelor
-    ):
+    async def test_a_rejected_candidate_lets_the_next_one_through(self, tmp_path, profile_bachelor):
         """Rejecting the top candidate must not mean finding nothing."""
         entry = {"name": "U", "country": "Netherlands", "city": "X", "homepage": "https://uni.edu/"}
-        site = StubSite({
-            "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
-            "https://uni.edu/s.xml": sitemap_xml(
-                "https://uni.edu/programmes/bachelors/computer-science-open-day-2027",
-                "https://uni.edu/programmes/bachelors/computer-science",
-            ),
-            "https://uni.edu/programmes/bachelors/computer-science-open-day-2027": (
-                "<html><head><title>Open Day</title></head><body><main><h1>Open Day</h1>"
-                "<p>Visit us in March.</p></main></body></html>"
-            ),
-            "https://uni.edu/programmes/bachelors/computer-science": program_html(),
-        })
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
+                "https://uni.edu/s.xml": sitemap_xml(
+                    "https://uni.edu/programmes/bachelors/computer-science-open-day-2027",
+                    "https://uni.edu/programmes/bachelors/computer-science",
+                ),
+                "https://uni.edu/programmes/bachelors/computer-science-open-day-2027": (
+                    "<html><head><title>Open Day</title></head><body><main><h1>Open Day</h1>"
+                    "<p>Visit us in March.</p></main></body></html>"
+                ),
+                "https://uni.edu/programmes/bachelors/computer-science": program_html(),
+            }
+        )
         async with Fetcher(tmp_path / "c", offline=True) as fetcher:
             site.install(fetcher)
             adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, entry))
@@ -643,13 +708,15 @@ class TestAdapter:
     ):
         """A page we could not read is not a confirmed programme."""
         entry = {"name": "U", "country": "Netherlands", "city": "X", "homepage": "https://uni.edu/"}
-        site = StubSite({
-            "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
-            "https://uni.edu/s.xml": sitemap_xml(
-                "https://uni.edu/programmes/bachelors/computer-science",
-            ),
-            # The programme URL itself is served by nothing.
-        })
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
+                "https://uni.edu/s.xml": sitemap_xml(
+                    "https://uni.edu/programmes/bachelors/computer-science",
+                ),
+                # The programme URL itself is served by nothing.
+            }
+        )
         async with Fetcher(tmp_path / "c", offline=True) as fetcher:
             site.install(fetcher)
             adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, entry))
@@ -659,15 +726,17 @@ class TestAdapter:
         assert any("could not be read" in reason for _u, reason in adapter.traces[0].rejected)
 
     @pytest.mark.asyncio
-    async def test_a_catalogue_alone_does_not_become_a_programme(
-        self, tmp_path, profile_bachelor
-    ):
+    async def test_a_catalogue_alone_does_not_become_a_programme(self, tmp_path, profile_bachelor):
         """The FP-1 rule, enforced at discovery as well as at classification."""
         entry = {"name": "U", "country": "Netherlands", "city": "X", "homepage": "https://uni.edu/"}
-        site = StubSite({
-            "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
-            "https://uni.edu/s.xml": sitemap_xml("https://uni.edu/en/education/programmes/bachelors"),
-        })
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
+                "https://uni.edu/s.xml": sitemap_xml(
+                    "https://uni.edu/en/education/programmes/bachelors"
+                ),
+            }
+        )
         async with Fetcher(tmp_path / "c", offline=True) as fetcher:
             site.install(fetcher)
             adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, entry))
@@ -677,15 +746,15 @@ class TestAdapter:
         assert any("cannot confirm a programme" in e for e in adapter.traces[0].errors)
 
     @pytest.mark.asyncio
-    async def test_the_number_of_pages_per_category_is_bounded(
-        self, tmp_path, profile_bachelor
-    ):
+    async def test_the_number_of_pages_per_category_is_bounded(self, tmp_path, profile_bachelor):
         entry = {"name": "U", "country": "Netherlands", "city": "X", "homepage": "https://uni.edu/"}
         many = [f"https://uni.edu/scholarships/award-{i}" for i in range(40)]
-        site = StubSite({
-            "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
-            "https://uni.edu/s.xml": sitemap_xml(*many),
-        })
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
+                "https://uni.edu/s.xml": sitemap_xml(*many),
+            }
+        )
         async with Fetcher(tmp_path / "c", offline=True) as fetcher:
             site.install(fetcher)
             adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, entry))
@@ -699,16 +768,18 @@ class TestAdapter:
         self, tmp_path, profile_bachelor
     ):
         entry = {"name": "U", "country": "Netherlands", "city": "X", "homepage": "https://uni.edu/"}
-        site = StubSite({
-            "https://uni.edu/robots.txt": "User-agent: *\n",
-            "https://uni.edu/": (
-                '<html><body><nav>'
-                '<a href="/en/education/programmes/bachelors/computer-science">CS</a>'
-                '<a href="/tuition-fees">Fees</a>'
-                '<a href="https://elsewhere.example.com/scholarships">Off-site</a>'
-                '</nav></body></html>'
-            ),
-        })
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "User-agent: *\n",
+                "https://uni.edu/": (
+                    "<html><body><nav>"
+                    '<a href="/en/education/programmes/bachelors/computer-science">CS</a>'
+                    '<a href="/tuition-fees">Fees</a>'
+                    '<a href="https://elsewhere.example.com/scholarships">Off-site</a>'
+                    "</nav></body></html>"
+                ),
+            }
+        )
         async with Fetcher(tmp_path / "c", offline=True) as fetcher:
             site.install(fetcher)
             adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, entry))
@@ -724,13 +795,15 @@ class TestAdapter:
         self, tmp_path, profile_bachelor
     ):
         entry = {"name": "U", "country": "Netherlands", "city": "X", "homepage": "https://uni.edu/"}
-        site = StubSite({
-            "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
-            "https://uni.edu/s.xml": sitemap_xml(
-                "https://uni.edu/en/education/programmes/bachelors/computer-science",
-                "https://uni.edu/tuition-fees",
-            ),
-        })
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
+                "https://uni.edu/s.xml": sitemap_xml(
+                    "https://uni.edu/en/education/programmes/bachelors/computer-science",
+                    "https://uni.edu/tuition-fees",
+                ),
+            }
+        )
         async with Fetcher(tmp_path / "c", offline=True) as fetcher:
             site.install(fetcher)
             adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, entry))
@@ -752,22 +825,27 @@ class TestAdapter:
         catalogue rather than the global menu.
         """
         entry = {
-            "name": "U", "country": "Netherlands", "city": "X",
+            "name": "U",
+            "country": "Netherlands",
+            "city": "X",
             "homepage": "https://uni.edu/",
             "seeds": {"admissions": "https://uni.edu/verified/admission"},
         }
-        site = StubSite({
-            "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
-            "https://uni.edu/s.xml": sitemap_xml("https://uni.edu/en/education/programmes/bachelors"),
-            "https://uni.edu/en/education/programmes/bachelors": (
-                '<html><body><main>'
-                '<a href="/en/education/programmes/bachelors/computer-science">CS</a>'
-                '<a href="/en/education/programmes/bachelors/history">History</a>'
-                '</main></body></html>'
-            ),
-            "https://uni.edu/en/education/programmes/bachelors/computer-science":
-                program_html(),
-        })
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
+                "https://uni.edu/s.xml": sitemap_xml(
+                    "https://uni.edu/en/education/programmes/bachelors"
+                ),
+                "https://uni.edu/en/education/programmes/bachelors": (
+                    "<html><body><main>"
+                    '<a href="/en/education/programmes/bachelors/computer-science">CS</a>'
+                    '<a href="/en/education/programmes/bachelors/history">History</a>'
+                    "</main></body></html>"
+                ),
+                "https://uni.edu/en/education/programmes/bachelors/computer-science": program_html(),
+            }
+        )
         async with Fetcher(tmp_path / "c", offline=True) as fetcher:
             site.install(fetcher)
             adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, entry))
@@ -780,29 +858,35 @@ class TestAdapter:
         assert "https://uni.edu/" not in site.requested
 
     @pytest.mark.asyncio
-    async def test_a_catalogue_link_is_followed_by_its_wording(
-        self, tmp_path, profile_bachelor
-    ):
+    async def test_a_catalogue_link_is_followed_by_its_wording(self, tmp_path, profile_bachelor):
         """Toronto's case: the URL says nothing, the link text says everything.
 
         ``/data-computer-science`` matches no "programmes" path pattern, but the
         catalogue links to it as "Data & Computer Science".
         """
-        entry = {"name": "U", "country": "Canada", "city": "X",
-                 "homepage": "https://uni.edu/",
-                 "seeds": {"program_catalog": "https://uni.edu/undergraduate-programs"}}
-        site = StubSite({
-            "https://uni.edu/robots.txt": "User-agent: *\n",
-            "https://uni.edu/undergraduate-programs": (
-                '<html><body><main>'
-                '<a href="/data-computer-science">Data &amp; Computer Science</a>'
-                '<a href="/rotman-commerce">Rotman Commerce</a>'
-                '<a href="/connect">Sign-up to receive more information</a>'
-                '</main></body></html>'
-            ),
-            # The catalogue links with a short label; the page names itself in full.
-            "https://uni.edu/data-computer-science": program_html("BSc Data and Computer Science"),
-        })
+        entry = {
+            "name": "U",
+            "country": "Canada",
+            "city": "X",
+            "homepage": "https://uni.edu/",
+            "seeds": {"program_catalog": "https://uni.edu/undergraduate-programs"},
+        }
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "User-agent: *\n",
+                "https://uni.edu/undergraduate-programs": (
+                    "<html><body><main>"
+                    '<a href="/data-computer-science">Data &amp; Computer Science</a>'
+                    '<a href="/rotman-commerce">Rotman Commerce</a>'
+                    '<a href="/connect">Sign-up to receive more information</a>'
+                    "</main></body></html>"
+                ),
+                # The catalogue links with a short label; the page names itself in full.
+                "https://uni.edu/data-computer-science": program_html(
+                    "BSc Data and Computer Science"
+                ),
+            }
+        )
         async with Fetcher(tmp_path / "c", offline=True) as fetcher:
             site.install(fetcher)
             adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, entry))
@@ -817,26 +901,30 @@ class TestAdapter:
         assert "https://uni.edu/connect" not in urls
 
     @pytest.mark.asyncio
-    async def test_link_text_matching_needs_the_whole_subject(
-        self, tmp_path, profile_bachelor
-    ):
-        """"Computer" alone is not "computer science".
+    async def test_link_text_matching_needs_the_whole_subject(self, tmp_path, profile_bachelor):
+        """ "Computer" alone is not "computer science".
 
         A partial match would drag in computing services, computer labs and
         every news item about a computer.
         """
-        entry = {"name": "U", "country": "Canada", "city": "X",
-                 "homepage": "https://uni.edu/",
-                 "seeds": {"program_catalog": "https://uni.edu/undergraduate-programs"}}
-        site = StubSite({
-            "https://uni.edu/robots.txt": "User-agent: *\n",
-            "https://uni.edu/undergraduate-programs": (
-                '<html><body><main>'
-                '<a href="/computer-services">Computer Services</a>'
-                '<a href="/science-outreach">Science Outreach</a>'
-                '</main></body></html>'
-            ),
-        })
+        entry = {
+            "name": "U",
+            "country": "Canada",
+            "city": "X",
+            "homepage": "https://uni.edu/",
+            "seeds": {"program_catalog": "https://uni.edu/undergraduate-programs"},
+        }
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "User-agent: *\n",
+                "https://uni.edu/undergraduate-programs": (
+                    "<html><body><main>"
+                    '<a href="/computer-services">Computer Services</a>'
+                    '<a href="/science-outreach">Science Outreach</a>'
+                    "</main></body></html>"
+                ),
+            }
+        )
         async with Fetcher(tmp_path / "c", offline=True) as fetcher:
             site.install(fetcher)
             adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, entry))
@@ -845,20 +933,20 @@ class TestAdapter:
         assert candidate.programs == []
 
     @pytest.mark.asyncio
-    async def test_link_text_matching_only_applies_on_a_catalogue(
-        self, tmp_path, profile_bachelor
-    ):
+    async def test_link_text_matching_only_applies_on_a_catalogue(self, tmp_path, profile_bachelor):
         """On the homepage the same wording is a news headline as often as a
         programme, so the rule stays where the structure justifies it."""
         entry = {"name": "U", "country": "Canada", "city": "X", "homepage": "https://uni.edu/"}
-        site = StubSite({
-            "https://uni.edu/robots.txt": "User-agent: *\n",
-            "https://uni.edu/": (
-                '<html><body><main>'
-                '<a href="/spotlight">Computer Science at U</a>'
-                '</main></body></html>'
-            ),
-        })
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "User-agent: *\n",
+                "https://uni.edu/": (
+                    "<html><body><main>"
+                    '<a href="/spotlight">Computer Science at U</a>'
+                    "</main></body></html>"
+                ),
+            }
+        )
         async with Fetcher(tmp_path / "c", offline=True) as fetcher:
             site.install(fetcher)
             adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, entry))
@@ -878,14 +966,15 @@ class TestAdapter:
         site happened to list its news.
         """
         noise = [f"https://uni.edu/research/news/2022/item-{i}" for i in range(5000)]
-        site = StubSite({
-            "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
-            "https://uni.edu/s.xml": sitemap_xml(
-                *noise, "https://uni.edu/en/education/programmes/bachelors/computer-science"
-            ),
-            "https://uni.edu/en/education/programmes/bachelors/computer-science":
-                program_html(),
-        })
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
+                "https://uni.edu/s.xml": sitemap_xml(
+                    *noise, "https://uni.edu/en/education/programmes/bachelors/computer-science"
+                ),
+                "https://uni.edu/en/education/programmes/bachelors/computer-science": program_html(),
+            }
+        )
         entry = {"name": "U", "country": "Netherlands", "city": "X", "homepage": "https://uni.edu/"}
         async with Fetcher(tmp_path / "c", offline=True) as fetcher:
             site.install(fetcher)
@@ -898,10 +987,13 @@ class TestAdapter:
         assert trace.sitemap_urls_kept == 1, "irrelevant URLs must not be retained"
 
     @pytest.mark.asyncio
-    async def test_an_unreachable_site_is_reported_not_raised(
-        self, tmp_path, profile_bachelor
-    ):
-        entry = {"name": "U", "country": "Netherlands", "city": "X", "homepage": "https://gone.edu/"}
+    async def test_an_unreachable_site_is_reported_not_raised(self, tmp_path, profile_bachelor):
+        entry = {
+            "name": "U",
+            "country": "Netherlands",
+            "city": "X",
+            "homepage": "https://gone.edu/",
+        }
         site = StubSite({}, missing_outcome=FetchOutcome.NETWORK_UNAVAILABLE)
         async with Fetcher(tmp_path / "c", offline=True) as fetcher:
             site.install(fetcher)
@@ -922,14 +1014,14 @@ class TestAdapter:
             assert await adapter.discover(profile_bachelor) == []
 
     @pytest.mark.asyncio
-    async def test_the_trace_serialises_for_the_canary_report(
-        self, tmp_path, profile_bachelor
-    ):
+    async def test_the_trace_serialises_for_the_canary_report(self, tmp_path, profile_bachelor):
         entry = {"name": "U", "country": "Netherlands", "city": "X", "homepage": "https://uni.edu/"}
-        site = StubSite({
-            "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
-            "https://uni.edu/s.xml": sitemap_xml("https://uni.edu/tuition-fees"),
-        })
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
+                "https://uni.edu/s.xml": sitemap_xml("https://uni.edu/tuition-fees"),
+            }
+        )
         async with Fetcher(tmp_path / "c", offline=True) as fetcher:
             site.install(fetcher)
             adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, entry))

@@ -35,8 +35,9 @@ def is_stale(claim_type: ClaimType, accessed_at: datetime, now: datetime | None 
     return age_days(accessed_at, now) > max_age_days(claim_type)
 
 
-def apply_freshness(status: ClaimStatus, claim_type: ClaimType, accessed_at: datetime,
-                    now: datetime | None = None) -> ClaimStatus:
+def apply_freshness(
+    status: ClaimStatus, claim_type: ClaimType, accessed_at: datetime, now: datetime | None = None
+) -> ClaimStatus:
     """Downgrade a current claim to POSSIBLY_STALE once it ages out."""
     if status == ClaimStatus.VERIFIED_CURRENT and is_stale(claim_type, accessed_at, now):
         return ClaimStatus.POSSIBLY_STALE

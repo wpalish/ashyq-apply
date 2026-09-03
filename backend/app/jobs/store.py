@@ -227,13 +227,17 @@ class JobStore:
             )
         completed = self.session.execute(
             statement.values(
-                status=JobStatus.SUCCEEDED.value, finished_at=now,
-                lease_expires_at=None, worker_id=None, last_error="",
+                status=JobStatus.SUCCEEDED.value,
+                finished_at=now,
+                lease_expires_at=None,
+                worker_id=None,
+                last_error="",
             ).returning(Job.id)
         ).scalar()
         if completed is None and self.worker_id is not None:
-            log.warning("worker %s could not complete job %s: it lost the lease",
-                        self.worker_id, job_id[:8])
+            log.warning(
+                "worker %s could not complete job %s: it lost the lease", self.worker_id, job_id[:8]
+            )
         return completed is not None
 
     def fail(self, job_id: str, error: str, *, retry: bool = True) -> str:
@@ -298,9 +302,9 @@ class JobStore:
         return True
 
     def is_cancel_requested(self, job_id: str) -> bool:
-        return bool(self.session.execute(
-            select(Job.cancel_requested).where(Job.id == job_id)
-        ).scalar())
+        return bool(
+            self.session.execute(select(Job.cancel_requested).where(Job.id == job_id)).scalar()
+        )
 
     # --- recovery ---------------------------------------------------------
 
@@ -312,13 +316,15 @@ class JobStore:
         a job that keeps killing its worker still reaches ``dead``.
         """
         now = now or datetime.now(UTC)
-        expired = list(self.session.scalars(
-            select(Job).where(
-                Job.status == JobStatus.RUNNING.value,
-                Job.lease_expires_at.is_not(None),
-                Job.lease_expires_at < now,
+        expired = list(
+            self.session.scalars(
+                select(Job).where(
+                    Job.status == JobStatus.RUNNING.value,
+                    Job.lease_expires_at.is_not(None),
+                    Job.lease_expires_at < now,
+                )
             )
-        ))
+        )
         reaped: list[str] = []
         for job in expired:
             expiry = ensure_utc(job.lease_expires_at)
@@ -349,12 +355,12 @@ class JobStore:
         return self.session.get(Job, job_id)
 
     def for_run(self, run_id: str) -> list[Job]:
-        return list(self.session.scalars(
-            select(Job).where(Job.run_id == run_id).order_by(Job.created_at.desc())
-        ))
+        return list(
+            self.session.scalars(
+                select(Job).where(Job.run_id == run_id).order_by(Job.created_at.desc())
+            )
+        )
 
     def counts(self) -> dict[str, int]:
-        rows = self.session.execute(
-            text("SELECT status, COUNT(*) FROM jobs GROUP BY status")
-        ).all()
+        rows = self.session.execute(text("SELECT status, COUNT(*) FROM jobs GROUP BY status")).all()
         return dict(rows)  # type: ignore[arg-type]

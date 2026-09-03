@@ -31,7 +31,13 @@ def score_result(result: ProgramResult, profile: ApplicantProfileIn) -> Explaina
     comps: list[ScoreComponent] = []
     missing: list[str] = []
 
-    def add(name: str, raw: float | None, weight: float, explanation: str, missing_label: str | None = None) -> None:
+    def add(
+        name: str,
+        raw: float | None,
+        weight: float,
+        explanation: str,
+        missing_label: str | None = None,
+    ) -> None:
         present = raw is not None
         if not present:
             missing.append(missing_label or name)
@@ -76,7 +82,13 @@ def score_result(result: ProgramResult, profile: ApplicantProfileIn) -> Explaina
     elif result.eligibility == EligibilityStatus.GAP:
         add("Academic fit", 0.15, w.academic_fit, "At least one published requirement is not met.")
     else:
-        add("Academic fit", None, w.academic_fit, "Requirements could not be verified officially.", "published requirements")
+        add(
+            "Academic fit",
+            None,
+            w.academic_fit,
+            "Requirements could not be verified officially.",
+            "published requirements",
+        )
 
     # --- funding fit ---------------------------------------------------
     # The form asks how decisive funding is and nothing read the answer. It
@@ -94,7 +106,13 @@ def score_result(result: ProgramResult, profile: ApplicantProfileIn) -> Explaina
         FundingFit.NOT_ELIGIBLE: 0.0,
     }.get(result.funding_fit)
     if result.funding_fit == FundingFit.UNKNOWN:
-        add("Funding fit", None, funding_weight, "No official funding information was confirmed.", "scholarship data")
+        add(
+            "Funding fit",
+            None,
+            funding_weight,
+            "No official funding information was confirmed.",
+            "scholarship data",
+        )
     else:
         add(
             "Funding fit",
@@ -108,11 +126,23 @@ def score_result(result: ProgramResult, profile: ApplicantProfileIn) -> Explaina
     gap = result.funding_gap
     weight = funding_weight * 0.5
     if gap is None or not gap.computable or gap.gap is None:
-        add("Affordability", None, weight, "Remaining annual cost could not be computed.", "cost of attendance")
+        add(
+            "Affordability",
+            None,
+            weight,
+            "Remaining annual cost could not be computed.",
+            "cost of attendance",
+        )
     else:
         ceiling, note, refusal = _comparable_ceiling(profile, gap.gap.currency)
         if refusal:
-            add("Affordability", None, weight, refusal, "exchange rate for the stated budget currency")
+            add(
+                "Affordability",
+                None,
+                weight,
+                refusal,
+                "exchange rate for the stated budget currency",
+            )
         elif ceiling is None:
             add(
                 "Affordability",
@@ -147,20 +177,43 @@ def score_result(result: ProgramResult, profile: ApplicantProfileIn) -> Explaina
     prefs = profile.preferences
     country = result.country.lower()
     if country in {c.lower() for c in prefs.excluded_countries}:
-        add("Country preference", 0.0, w.country_preference, f"{result.country} is on the excluded list.")
+        add(
+            "Country preference",
+            0.0,
+            w.country_preference,
+            f"{result.country} is on the excluded list.",
+        )
     elif not prefs.preferred_countries:
         add("Country preference", 0.5, w.country_preference, "No country preference was stated.")
     elif country in {c.lower() for c in prefs.preferred_countries}:
-        add("Country preference", 1.0, w.country_preference, f"{result.country} is a preferred country.")
+        add(
+            "Country preference",
+            1.0,
+            w.country_preference,
+            f"{result.country} is a preferred country.",
+        )
     else:
-        add("Country preference", 0.3, w.country_preference, f"{result.country} is outside the preferred list.")
+        add(
+            "Country preference",
+            0.3,
+            w.country_preference,
+            f"{result.country} is outside the preferred list.",
+        )
 
     # --- programme quality via ranking ------------------------------------
     rank = _best_rank(result)
     if rank is None:
-        add("Programme standing", None, w.program_quality, "No ranking position was found.", "ranking position")
+        add(
+            "Programme standing",
+            None,
+            w.program_quality,
+            "No ranking position was found.",
+            "ranking position",
+        )
     else:
-        target = {"top_50": 50, "top_100": 100, "top_300": 300, "top_500": 500}.get(prefs.target_ranking_band)
+        target = {"top_50": 50, "top_100": 100, "top_300": 300, "top_500": 500}.get(
+            prefs.target_ranking_band
+        )
         raw = max(0.0, 1.0 - (rank / 1000.0))
         note = f"Best ranking position found: {rank}."
         if target:
@@ -170,7 +223,13 @@ def score_result(result: ProgramResult, profile: ApplicantProfileIn) -> Explaina
 
     # --- extracurricular alignment -----------------------------------------
     if not profile.activities and not profile.achievements:
-        add("Extracurricular profile", None, w.extracurricular_alignment, "No activities or achievements recorded.", "activities")
+        add(
+            "Extracurricular profile",
+            None,
+            w.extracurricular_alignment,
+            "No activities or achievements recorded.",
+            "activities",
+        )
     else:
         add(
             "Extracurricular profile",
@@ -181,9 +240,24 @@ def score_result(result: ProgramResult, profile: ApplicantProfileIn) -> Explaina
         )
 
     # --- soft location fits --------------------------------------------------
-    add("City fit", _label_to_raw(result.city_fit), w.city_fit, f"City fit assessed as {result.city_fit}.")
-    add("Climate fit", _label_to_raw(result.climate_fit), w.climate_fit, f"Climate fit assessed as {result.climate_fit}.")
-    add("Workload fit", _label_to_raw(result.workload_fit), w.workload_fit, f"Workload fit assessed as {result.workload_fit}.")
+    add(
+        "City fit",
+        _label_to_raw(result.city_fit),
+        w.city_fit,
+        f"City fit assessed as {result.city_fit}.",
+    )
+    add(
+        "Climate fit",
+        _label_to_raw(result.climate_fit),
+        w.climate_fit,
+        f"Climate fit assessed as {result.climate_fit}.",
+    )
+    add(
+        "Workload fit",
+        _label_to_raw(result.workload_fit),
+        w.workload_fit,
+        f"Workload fit assessed as {result.workload_fit}.",
+    )
     add(
         "University size",
         _label_to_raw(result.size_fit),
@@ -203,14 +277,36 @@ def score_result(result: ProgramResult, profile: ApplicantProfileIn) -> Explaina
 
     # --- careers -------------------------------------------------------------
     if result.career_notes:
-        add("Career and internships", 0.8 if prefs.values_internships else 0.5, w.career_outcomes, result.career_notes[:200])
+        add(
+            "Career and internships",
+            0.8 if prefs.values_internships else 0.5,
+            w.career_outcomes,
+            result.career_notes[:200],
+        )
     else:
-        add("Career and internships", None, w.career_outcomes, "No official careers information was found.", "career information")
+        add(
+            "Career and internships",
+            None,
+            w.career_outcomes,
+            "No official careers information was found.",
+            "career information",
+        )
 
     if result.post_study_work:
-        add("Post-study work", 1.0 if prefs.needs_post_study_work else 0.6, w.post_study_work, result.post_study_work[:200])
+        add(
+            "Post-study work",
+            1.0 if prefs.needs_post_study_work else 0.6,
+            w.post_study_work,
+            result.post_study_work[:200],
+        )
     elif prefs.needs_post_study_work:
-        add("Post-study work", None, w.post_study_work, "Post-study work rules were not confirmed but matter to this applicant.", "post-study work rules")
+        add(
+            "Post-study work",
+            None,
+            w.post_study_work,
+            "Post-study work rules were not confirmed but matter to this applicant.",
+            "post-study work rules",
+        )
     else:
         add("Post-study work", 0.5, w.post_study_work, "Post-study work was not a stated priority.")
 
@@ -292,7 +388,13 @@ def _best_rank(result: ProgramResult) -> int | None:
 
 def _activity_strength(profile: ApplicantProfileIn) -> float:
     level_w = {"school": 0.2, "city": 0.4, "regional": 0.6, "national": 0.85, "international": 1.0}
-    role_w = {"participant": 0.3, "contributor": 0.5, "coordinator": 0.7, "leader": 0.9, "founder": 1.0}
+    role_w = {
+        "participant": 0.3,
+        "contributor": 0.5,
+        "coordinator": 0.7,
+        "leader": 0.9,
+        "founder": 1.0,
+    }
     score = 0.0
     for act in profile.activities:
         base = role_w.get(act.responsibility_level, 0.3)
@@ -305,7 +407,9 @@ def _activity_strength(profile: ApplicantProfileIn) -> float:
     return min(1.0, score / 6.0)
 
 
-def admissions_fit_for(result: ProgramResult, profile: ApplicantProfileIn) -> tuple[AdmissionsFit, str]:
+def admissions_fit_for(
+    result: ProgramResult, profile: ApplicantProfileIn
+) -> tuple[AdmissionsFit, str]:
     """A coarse, four-way judgement — never a percentage."""
     if result.eligibility == EligibilityStatus.NEEDS_OFFICIAL_CLARIFICATION:
         return (
@@ -323,7 +427,9 @@ def admissions_fit_for(result: ProgramResult, profile: ApplicantProfileIn) -> tu
     margins = [
         (c.applicant_value - c.published_value) / c.published_value
         for c in met
-        if isinstance(c.applicant_value, int | float) and isinstance(c.published_value, int | float) and c.published_value
+        if isinstance(c.applicant_value, int | float)
+        and isinstance(c.published_value, int | float)
+        and c.published_value
     ]
     if not margins:
         return (

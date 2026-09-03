@@ -230,7 +230,8 @@ class TestLeaseAndReaping:
         pg_session.commit()
 
         pg_session.execute(
-            sa.update(Job).where(Job.id == enqueued.job_id)
+            sa.update(Job)
+            .where(Job.id == enqueued.job_id)
             .values(lease_expires_at=datetime.now(UTC) - timedelta(seconds=1))
         )
         pg_session.commit()
@@ -264,7 +265,8 @@ class TestLeaseAndReaping:
             store.claim()
             pg_session.commit()
             pg_session.execute(
-                sa.update(Job).where(Job.id == enqueued.job_id)
+                sa.update(Job)
+                .where(Job.id == enqueued.job_id)
                 .values(lease_expires_at=datetime.now(UTC) - timedelta(seconds=1))
             )
             pg_session.commit()
@@ -315,21 +317,38 @@ class TestPostgresSchema:
         from app.models import ApplicantProfileRow, ClaimRow, ProgramResultRow, ResearchRun
 
         profile = ApplicantProfileRow(
-            organization_id=TEST_ORGANIZATION_ID, display_name="x", payload={})
+            organization_id=TEST_ORGANIZATION_ID, display_name="x", payload={}
+        )
         pg_session.add(profile)
         pg_session.flush()
         run = ResearchRun(profile_id=profile.id, stage="queued", stage_state={})
         pg_session.add(run)
         pg_session.flush()
-        pg_session.add(ProgramResultRow(
-            run_id=run.id, dedupe_key="k", university="U", university_key="u",
-            country="C", program="P", eligibility="MET", admissions_fit="PLAUSIBLE_FIT",
-            funding_fit="UNKNOWN", funding_classification="UNKNOWN", payload={},
-        ))
-        pg_session.add(ClaimRow(
-            run_id=run.id, claim_type="min_gpa", status="UNVERIFIED",
-            source_url="https://x.edu", source_specificity="program", payload={},
-        ))
+        pg_session.add(
+            ProgramResultRow(
+                run_id=run.id,
+                dedupe_key="k",
+                university="U",
+                university_key="u",
+                country="C",
+                program="P",
+                eligibility="MET",
+                admissions_fit="PLAUSIBLE_FIT",
+                funding_fit="UNKNOWN",
+                funding_classification="UNKNOWN",
+                payload={},
+            )
+        )
+        pg_session.add(
+            ClaimRow(
+                run_id=run.id,
+                claim_type="min_gpa",
+                status="UNVERIFIED",
+                source_url="https://x.edu",
+                source_specificity="program",
+                payload={},
+            )
+        )
         pg_session.commit()
 
         pg_session.execute(
@@ -345,7 +364,8 @@ class TestPostgresSchema:
         from app.models import ApplicantProfileRow, ProgramResultRow, ResearchRun
 
         profile = ApplicantProfileRow(
-            organization_id=TEST_ORGANIZATION_ID, display_name="x", payload={})
+            organization_id=TEST_ORGANIZATION_ID, display_name="x", payload={}
+        )
         pg_session.add(profile)
         pg_session.flush()
         run = ResearchRun(profile_id=profile.id, stage="queued", stage_state={})
@@ -354,9 +374,17 @@ class TestPostgresSchema:
 
         def row():
             return ProgramResultRow(
-                run_id=run.id, dedupe_key="same", university="U", university_key="u",
-                country="C", program="P", eligibility="MET", admissions_fit="PLAUSIBLE_FIT",
-                funding_fit="UNKNOWN", funding_classification="UNKNOWN", payload={},
+                run_id=run.id,
+                dedupe_key="same",
+                university="U",
+                university_key="u",
+                country="C",
+                program="P",
+                eligibility="MET",
+                admissions_fit="PLAUSIBLE_FIT",
+                funding_fit="UNKNOWN",
+                funding_classification="UNKNOWN",
+                payload={},
             )
 
         pg_session.add(row())
@@ -370,7 +398,9 @@ class TestPostgresSchema:
         from app.db import head_revision
 
         with pg_engine.connect() as connection:
-            current = connection.execute(sa.text("SELECT version_num FROM alembic_version")).scalar()
+            current = connection.execute(
+                sa.text("SELECT version_num FROM alembic_version")
+            ).scalar()
         assert current == head_revision()
 
 
@@ -416,7 +446,10 @@ class TestTimezoneHandling:
         session = sessionmaker(bind=engine, future=True)()
         try:
             row = ApplicantProfileRow(
-            organization_id=TEST_ORGANIZATION_ID, display_name="t", payload=profile.model_dump(mode="json"))
+                organization_id=TEST_ORGANIZATION_ID,
+                display_name="t",
+                payload=profile.model_dump(mode="json"),
+            )
             session.add(row)
             session.flush()
             run = ResearchRun(profile_id=row.id, stage="funding_discovery", stage_state={})
