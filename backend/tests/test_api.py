@@ -445,3 +445,35 @@ class TestPrivacy:
                 assert isinstance(value, int | float | bool) or (
                     isinstance(value, str) and len(value) < 60
                 ), f"audit detail carries an unexpected payload: {value!r}"
+
+
+class TestHealth:
+    """A health check that cannot fail is not a health check.
+
+    It reported the configuration only, so the probe stayed green with the
+    database down and the platform kept routing traffic to a machine that
+    could not answer one real request.
+    """
+
+    def test_a_healthy_service_reports_ok(self, client):
+        body = client.get("/api/health").json()
+        assert body["status"] == "ok"
+        assert body["database"] == "ok"
+
+    def test_an_unreachable_database_reports_degraded_with_503(self, client, monkeypatch):
+        import sqlalchemy as sa
+
+        import app.db as db_module
+
+        monkeypatch.setattr(
+            db_module, "engine", sa.create_engine("sqlite:///C:/nonexistent-dir/nope.db")
+        )
+        response = client.get("/api/health")
+
+        assert response.status_code == 503
+        body = response.json()
+        assert body["status"] == "degraded"
+        assert body["database"] == "unavailable"
+        # The configuration fields survive, so the probe still says what build
+        # it reached.
+        assert "schema_version" in body

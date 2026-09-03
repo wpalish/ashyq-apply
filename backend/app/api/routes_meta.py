@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends
+import logging
+
+from fastapi import APIRouter, Depends, Response
+from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 from app.config import get_settings
@@ -12,19 +15,42 @@ from app.domain.currency import RATE_DATE, RATE_SOURCE, supported_currencies
 from app.models import CURRENT_SCHEMA_VERSION, AuditEvent
 from app.security import Principal, get_principal
 
+log = logging.getLogger("unimatch.meta")
+
 router = APIRouter(prefix="/api", tags=["meta"])
 
 
 @router.get("/health")
-def health() -> dict:
+def health(response: Response) -> dict:
+    """Liveness that actually touches the database.
+
+    Reporting the configuration alone made every probe green while PostgreSQL
+    was down: Fly kept routing traffic to a machine that could not answer a
+    single real request. A degraded answer is a 503 so the platform's own
+    health check fails with it.
+    """
     s = get_settings()
-    return {
+    body = {
         "status": "ok",
+        "database": "ok",
         "demo_mode": s.demo_mode,
         "schema_version": CURRENT_SCHEMA_VERSION,
         "respect_robots": s.respect_robots,
         "browser_tier": s.enable_browser_tier,
     }
+    try:
+        # Resolved at call time, not import time: the engine is swapped both by
+        # the test suite and by anything that reconnects after a failure.
+        import app.db as db_module
+
+        with db_module.engine.connect() as connection:
+            connection.execute(text("SELECT 1"))
+    except Exception as exc:  # any driver error means we cannot serve
+        log.error("health check could not reach the database: %s", exc)
+        body["status"] = "degraded"
+        body["database"] = "unavailable"
+        response.status_code = 503
+    return body
 
 
 @router.get("/capabilities")
