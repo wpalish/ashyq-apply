@@ -560,3 +560,59 @@ class TestNotes:
             f"/api/runs/{'0' * 32}/results/{result['id']}/notes", json={"notes": "x"}
         )
         assert response.status_code == 404
+
+
+class TestDeadlineCalendar:
+    """Deadlines belong where they will be seen, not only in a table."""
+
+    def test_the_ics_parses_and_carries_the_confirmed_deadlines(self, client, finished_run):
+        _, run = finished_run
+        response = client.get(f"/api/runs/{run['id']}/deadlines.ics")
+        assert response.status_code == 200
+        assert response.headers["content-type"].startswith("text/calendar")
+        assert ".ics" in response.headers["content-disposition"]
+
+        body = response.text
+        assert body.startswith("BEGIN:VCALENDAR\r\n")
+        assert body.rstrip().endswith("END:VCALENDAR")
+        assert "\r\n" in body, "RFC 5545 wants CRLF; several clients reject LF-only"
+
+        events = body.count("BEGIN:VEVENT")
+        assert events == body.count("END:VEVENT")
+        assert events > 0, "the demo corpus publishes deadlines"
+
+        results = client.get(f"/api/runs/{run['id']}/results").json()
+        confirmed = sum(1 for r in results if r["admission_deadline"]) + sum(
+            1 for r in results for s in r["scholarships"] if s["deadline"]
+        )
+        assert events == confirmed, "an unknown deadline must not become an event"
+
+        for line in ("UID:", "DTSTAMP:", "DTSTART;VALUE=DATE:", "SUMMARY:"):
+            assert line in body
+
+    def test_every_event_has_a_stable_unique_id(self, client, finished_run):
+        _, run = finished_run
+        first = client.get(f"/api/runs/{run['id']}/deadlines.ics").text
+        second = client.get(f"/api/runs/{run['id']}/deadlines.ics").text
+
+        uids = [ln for ln in first.splitlines() if ln.startswith("UID:")]
+        assert len(uids) == len(set(uids)), "duplicate UIDs collapse into one event"
+        assert uids == [ln for ln in second.splitlines() if ln.startswith("UID:")], (
+            "re-importing must update the same events, not duplicate them"
+        )
+
+    def test_the_upcoming_list_marks_passed_deadlines_rather_than_hiding_them(
+        self, client, finished_run
+    ):
+        _, run = finished_run
+        rows = client.get(f"/api/runs/{run['id']}/deadlines?limit=5").json()
+        assert rows
+        assert len(rows) <= 5
+        assert all({"kind", "date", "passed", "title"} <= set(row) for row in rows)
+        # Sorted with the still-open ones first, each group by date.
+        upcoming = [r["date"] for r in rows if not r["passed"]]
+        assert upcoming == sorted(upcoming)
+
+    def test_the_calendar_is_tenant_scoped(self, client, finished_run):
+        response = client.get(f"/api/runs/{'0' * 32}/deadlines.ics")
+        assert response.status_code == 404

@@ -179,6 +179,10 @@ export const api = {
       body: JSON.stringify({ notes }),
     }),
 
+  // A deadline in a table is something to remember; in a calendar it reminds
+  // you. Only confirmed dates become events.
+  deadlinesUrl: (runId: string) => `/api/runs/${runId}/deadlines.ics`,
+
   exportUrl: (runId: string, fmt: 'csv' | 'json' | 'xlsx', decision?: string) =>
     `/api/runs/${runId}/export.${fmt}${decision ? `?decision=${decision}` : ''}`,
 };

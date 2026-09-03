@@ -12,7 +12,7 @@ from sqlalchemy.orm import Session
 from app.api.tenancy import owned_run
 from app.db import get_session
 from app.domain.enums import UserDecision
-from app.export import tabular
+from app.export import calendar, tabular
 from app.models import AuditEvent, ClaimRow, ConflictRow, ProgramResultRow
 from app.schemas.result import DecisionIn, ProgramResult
 from app.security import Principal, get_principal
@@ -264,6 +264,45 @@ def open_questions(
                 }
             )
     return out
+
+
+@router.get("/deadlines.ics")
+def deadlines_ics(
+    run_id: str,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> Response:
+    """Every confirmed deadline as a calendar file.
+
+    Only dates the pipeline actually confirmed become events: an unknown
+    deadline produces no event rather than a placeholder somebody might plan
+    around.
+    """
+    owned_run(session, run_id, principal)
+    results = [ProgramResult.model_validate(r.payload) for r in _results(session, run_id)]
+    body = calendar.to_ics(results, run_id=run_id, now=datetime.now(UTC))
+    return Response(
+        body,
+        media_type="text/calendar; charset=utf-8",
+        headers={
+            "Content-Disposition": (
+                f'attachment; filename="{_safe_filename_stem(f"ashyq-{run_id[:8]}-deadlines")}.ics"'
+            )
+        },
+    )
+
+
+@router.get("/deadlines")
+def deadlines(
+    run_id: str,
+    limit: int = Query(default=10, ge=1, le=100),
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> list[dict]:
+    """The nearest deadlines, soonest first, with passed ones marked."""
+    owned_run(session, run_id, principal)
+    results = [ProgramResult.model_validate(r.payload) for r in _results(session, run_id)]
+    return calendar.upcoming(results, today=datetime.now(UTC).date(), limit=limit)
 
 
 @router.get("/export.{fmt}")
