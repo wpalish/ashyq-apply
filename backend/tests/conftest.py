@@ -46,7 +46,15 @@ def postgres_url() -> Iterator[str]:
         "pgserver", reason="pgserver provides the local PostgreSQL used by these tests"
     )
     directory = Path(tempfile.mkdtemp(prefix="unimatch-pg-"))
-    server = pgserver.get_server(str(directory))
+    try:
+        server = pgserver.get_server(str(directory))
+    except Exception as exc:  # initdb refused: no cluster, so nothing to test against
+        # The wheel installs on Windows but its initdb.exe does not run there.
+        # That is an unavailable environment, not a failing product: skip, so a
+        # developer's local suite is honest, while CI on Linux still provisions
+        # a real PostgreSQL and asserts the SKIP LOCKED claim and the cascades.
+        shutil.rmtree(directory, ignore_errors=True)
+        pytest.skip(f"pgserver could not start a local PostgreSQL: {exc}")
     try:
         yield server.get_uri().replace("postgresql://", "postgresql+psycopg://")
     finally:
