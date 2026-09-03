@@ -202,20 +202,30 @@ def set_notes(
 @router.get("/claims")
 def list_claims(
     run_id: str,
+    response: Response,
     result_id: str | None = None,
     status: str | None = None,
+    limit: int = Query(default=500, ge=1, le=500),
+    offset: int = Query(default=0, ge=0),
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
 ) -> list[dict]:
+    """Evidence for this run, paged.
+
+    A run holds hundreds of claims and the sources screen fetched all of them
+    at once; the old cap of 2000 was silent, so a large run simply lost the
+    tail with nothing to say it had.
+    """
     owned_run(session, run_id, principal)
     q = session.query(ClaimRow).filter(ClaimRow.run_id == run_id)
     if result_id:
         q = q.filter(ClaimRow.result_id == result_id)
     if status:
         q = q.filter(ClaimRow.status == status)
+    response.headers["X-Total-Count"] = str(q.count())
     return [
         {"id": c.id, "result_id": c.result_id, **c.payload}
-        for c in q.order_by(ClaimRow.claim_type).limit(2000).all()
+        for c in q.order_by(ClaimRow.claim_type).limit(limit).offset(offset).all()
     ]
 
 

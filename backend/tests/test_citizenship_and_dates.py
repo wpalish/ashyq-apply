@@ -258,10 +258,13 @@ class TestDocumentCollectionIsNeverSilent:
 
         session.refresh(run)
         assert built == len(results) - 1
-        joined = " ".join(run.errors or [])
+        # Filed under unknowns, not failures: nothing failed to load, the row
+        # simply could not be matched, so its documents stay unconfirmed.
+        joined = " ".join(run.unknowns or [])
         assert "University of Nowhere (renamed)" in joined, (
             "an unmatched approved row must be named in the run's diagnostics"
         )
+        assert not run.errors, "nothing failed to load, so nothing belongs under failures"
 
         session.refresh(orphan)
         unresolved = ProgramResult.model_validate(orphan.payload).unresolved

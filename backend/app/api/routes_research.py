@@ -6,8 +6,9 @@ import hashlib
 from datetime import UTC, datetime
 from typing import Literal
 
-from fastapi import APIRouter, Depends, Header, HTTPException
+from fastapi import APIRouter, Depends, Header, HTTPException, Query, Response
 from pydantic import BaseModel, Field
+from sqlalchemy import case, func
 from sqlalchemy.orm import Session
 
 from app.api.tenancy import owned_profile, owned_run
@@ -105,19 +106,31 @@ def settings_default(name: str) -> int:
     return int(getattr(get_settings(), name))
 
 
-def _view(session: Session, run: ResearchRun) -> RunView:
+def _view(
+    session: Session,
+    run: ResearchRun,
+    *,
+    counts: tuple[int, int] | None = None,
+    job: Job | None = None,
+) -> RunView:
+    """One run as the API describes it.
+
+    `counts` and `job` let a list endpoint pass values it already fetched in
+    one grouped query; alone, this function fetches them itself.
+    """
     state = RunState.load(run.stage_state)
     lease_seconds = get_settings().job_lease_seconds
     # The job the user is waiting on, which is not always the newest row: a
     # recheck is queued months ahead, and reporting it as this run's job made
     # every screen believe work was in flight for ever.
     now = datetime.now(UTC)
-    job = (
-        session.query(Job)
-        .filter(Job.run_id == run.id, Job.available_at <= now)
-        .order_by(Job.created_at.desc())
-        .first()
-    )
+    if job is None:
+        job = (
+            session.query(Job)
+            .filter(Job.run_id == run.id, Job.available_at <= now)
+            .order_by(Job.created_at.desc())
+            .first()
+        )
     # "Running" is a property of the job, not of the stage the run stopped at.
     job_running = job is not None and job.status == JobStatus.RUNNING.value
     lease_expiry = ensure_utc(job.lease_expires_at) if job else None
@@ -127,7 +140,14 @@ def _view(session: Session, run: ResearchRun) -> RunView:
         and lease_expiry is not None
         and lease_expiry < datetime.now(UTC)
     )
-    results = session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run.id)
+    if counts is None:
+        results = session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run.id)
+        counts = (
+            results.count(),
+            results.filter(
+                ProgramResultRow.user_decision != UserDecision.UNDECIDED.value
+            ).count(),
+        )
     return RunView(
         id=run.id,
         profile_id=run.profile_id,
@@ -143,10 +163,8 @@ def _view(session: Session, run: ResearchRun) -> RunView:
         candidate_limit=run.candidate_limit or settings_default("candidate_limit"),
         verify_limit=run.verify_limit or settings_default("verify_limit"),
         fetch_tiers=dict(run.fetch_tiers or {}),
-        results_count=results.count(),
-        decided_count=results.filter(
-            ProgramResultRow.user_decision != UserDecision.UNDECIDED.value
-        ).count(),
+        results_count=counts[0],
+        decided_count=counts[1],
         stages=[
             StageView(stage=name, **{k: v for k, v in vars(st).items() if k != "stage"})
             for name, st in state.stages.items()
@@ -257,19 +275,59 @@ def start_run(
 
 @router.get("", response_model=list[RunView])
 def list_runs(
+    response: Response,
     profile_id: str | None = None,
+    limit: int = Query(default=50, ge=1, le=200),
+    offset: int = Query(default=0, ge=0),
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
 ) -> list[RunView]:
+    """A page of runs, newest first.
+
+    `_view` counts results and decisions per run, so building this list ran two
+    queries per row. The counts are fetched in one grouped query and handed to
+    the view instead.
+    """
     q = (
         session.query(ResearchRun)
         .join(ApplicantProfileRow, ResearchRun.profile_id == ApplicantProfileRow.id)
         .filter(ApplicantProfileRow.organization_id == principal.organization_id)
-        .order_by(ResearchRun.created_at.desc())
     )
     if profile_id:
         q = q.filter(ResearchRun.profile_id == profile_id)
-    return [_view(session, r) for r in q.limit(50).all()]
+    response.headers["X-Total-Count"] = str(q.count())
+    runs = q.order_by(ResearchRun.created_at.desc()).limit(limit).offset(offset).all()
+    if not runs:
+        return []
+
+    run_ids = [r.id for r in runs]
+    counts = {
+        run_id: (int(total), int(decided))
+        for run_id, total, decided in session.query(
+            ProgramResultRow.run_id,
+            func.count(ProgramResultRow.id),
+            func.sum(
+                case(
+                    (ProgramResultRow.user_decision != UserDecision.UNDECIDED.value, 1),
+                    else_=0,
+                )
+            ),
+        )
+        .filter(ProgramResultRow.run_id.in_(run_ids))
+        .group_by(ProgramResultRow.run_id)
+        .all()
+    }
+    jobs = {
+        job.run_id: job
+        for job in session.query(Job)
+        .filter(Job.run_id.in_(run_ids), Job.available_at <= datetime.now(UTC))
+        .order_by(Job.created_at)
+        .all()
+    }
+    return [
+        _view(session, r, counts=counts.get(r.id, (0, 0)), job=jobs.get(r.id))
+        for r in runs
+    ]
 
 
 @router.get("/{run_id}", response_model=RunView)

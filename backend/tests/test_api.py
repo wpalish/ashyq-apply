@@ -562,6 +562,50 @@ class TestNotes:
         assert response.status_code == 404
 
 
+class TestFullExport:
+    """"The complete record" has to mean it.
+
+    The export carried the profile and a count of results - no results, no
+    claims, no audit trail - while telling the reader it was everything they
+    held about them.
+    """
+
+    def test_the_export_carries_the_results_claims_and_audit_trail(self, client, finished_run):
+        profile, run = finished_run
+        result = client.get(f"/api/runs/{run['id']}/results").json()[0]
+        client.post(
+            f"/api/runs/{run['id']}/results/{result['id']}/decision",
+            json={"decision": "approved", "reason": "best funded", "notes": "call them"},
+        )
+
+        body = client.get(f"/api/profiles/{profile['id']}/export").json()
+
+        assert body["counts"]["runs"] == 1
+        assert body["counts"]["results"] == len(client.get(f"/api/runs/{run['id']}/results").json())
+        assert body["counts"]["claims"] > 50
+        assert body["counts"]["audit_events"] > 0
+
+        assert len(body["results"]) == body["counts"]["results"]
+        decided = next(r for r in body["results"] if r["id"] == result["id"])
+        assert decided["user_decision"] == "approved"
+        assert decided["user_decision_reason"] == "best funded"
+        assert decided["user_notes"] == "call them"
+        assert decided["university"], "the full result document travels, not just the decision"
+
+        assert all("source_url" in c for c in body["claims"][:5])
+        assert any(e["action"] == "decision_recorded" for e in body["audit"])
+
+    def test_the_note_matches_what_is_actually_included(self, client, finished_run):
+        profile, _ = finished_run
+        body = client.get(f"/api/profiles/{profile['id']}/export").json()
+        for word in ("profile", "result", "claim", "audit"):
+            assert word in body["note"].lower()
+
+    def test_the_export_stays_tenant_scoped(self, client, finished_run):
+        response = client.get(f"/api/profiles/{'0' * 32}/export")
+        assert response.status_code == 404
+
+
 class TestDeadlineCalendar:
     """Deadlines belong where they will be seen, not only in a table."""
 
@@ -616,3 +660,69 @@ class TestDeadlineCalendar:
     def test_the_calendar_is_tenant_scoped(self, client, finished_run):
         response = client.get(f"/api/runs/{'0' * 32}/deadlines.ics")
         assert response.status_code == 404
+
+
+class TestPagination:
+    """Lists are paged, and say how much there is."""
+
+    def test_profiles_are_paged_and_report_the_total(self, client):
+        for index in range(3):
+            payload = DEMO_PROFILE.model_dump(mode="json")
+            payload["display_name"] = f"Applicant {index}"
+            assert client.post("/api/profiles", json=payload).status_code == 201
+
+        page = client.get("/api/profiles?limit=2")
+        assert page.status_code == 200
+        assert len(page.json()) == 2
+        assert page.headers["X-Total-Count"] == "3"
+
+        rest = client.get("/api/profiles?limit=2&offset=2")
+        assert len(rest.json()) == 1
+
+    def test_cases_are_paged_too(self, client):
+        for index in range(3):
+            payload = DEMO_PROFILE.model_dump(mode="json")
+            payload["display_name"] = f"Case {index}"
+            client.post("/api/profiles", json=payload)
+
+        page = client.get("/api/cases?limit=2")
+        assert len(page.json()) == 2
+        assert page.headers["X-Total-Count"] == "3"
+
+    def test_runs_are_paged_and_filtered_by_profile(self, client, finished_run):
+        profile, _ = finished_run
+        listed = client.get(f"/api/runs?profile_id={profile['id']}&limit=10")
+        assert listed.status_code == 200
+        assert listed.headers["X-Total-Count"] == "1"
+        assert [r["profile_id"] for r in listed.json()] == [profile["id"]]
+
+    def test_listing_runs_does_not_query_once_per_run(self, client, finished_run):
+        """_view counted results and decisions per row, so a list of runs ran
+        two extra queries for every run in it."""
+        import sqlalchemy as sa
+
+        from app.db import engine
+
+        statements: list[str] = []
+
+        def record(_conn, _cursor, statement, *_args):
+            statements.append(statement)
+
+        sa.event.listen(engine, "before_cursor_execute", record)
+        try:
+            assert client.get("/api/runs?limit=50").status_code == 200
+        finally:
+            sa.event.remove(engine, "before_cursor_execute", record)
+
+        counting = [s for s in statements if "count(" in s.lower()]
+        assert len(counting) <= 3, f"expected batched counts, saw {len(counting)}: {counting[:4]}"
+
+    def test_claims_are_paged_with_a_total(self, client, finished_run):
+        _, run = finished_run
+        page = client.get(f"/api/runs/{run['id']}/claims?limit=10")
+        assert len(page.json()) == 10
+        total = int(page.headers["X-Total-Count"])
+        assert total > 10
+
+        tail = client.get(f"/api/runs/{run['id']}/claims?limit=10&offset={total - 5}")
+        assert len(tail.json()) == 5

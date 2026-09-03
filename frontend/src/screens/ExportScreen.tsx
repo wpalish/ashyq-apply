@@ -89,6 +89,28 @@ export function ExportScreen() {
             >
               Show my stored data
             </button>
+            <button
+              className="btn"
+              disabled={!savedProfile}
+              onClick={async () => {
+                if (!savedProfile) return;
+                // Fetched fresh rather than reusing what is on screen: the
+                // file people keep should be the record as it stands now.
+                const record = await api.exportProfile(savedProfile.id);
+                const blob = new Blob([JSON.stringify(record, null, 2)], {
+                  type: 'application/json',
+                });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `ashyq-${savedProfile.id.slice(0, 8)}-my-data.json`;
+                link.click();
+                URL.revokeObjectURL(url);
+              }}
+              data-testid="download-profile"
+            >
+              Download my data (.json)
+            </button>
             {savedProfile && <Chip mono>profile {savedProfile.id.slice(0, 8)}</Chip>}
           </div>
           {exported && (

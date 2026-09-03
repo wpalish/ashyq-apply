@@ -394,8 +394,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setLoading(true);
     setError(null);
     try {
-      const [stored, allRuns] = await Promise.all([api.getProfile(profileId), api.listRuns()]);
-      const latest = allRuns.find((item) => item.profile_id === profileId) ?? null;
+      const [stored, runsForCase] = await Promise.all([
+        api.getProfile(profileId),
+        api.listRuns(profileId, 1),
+      ]);
+      const latest = runsForCase[0] ?? null;
       setSavedProfile(stored);
       setDraft(toDraft(stored));
       setBaseline(JSON.stringify(toDraft(stored)));

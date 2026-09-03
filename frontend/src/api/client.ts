@@ -143,7 +143,12 @@ export const api = {
       body: JSON.stringify({ profile_id: profileId, demo_mode: demoMode }),
       headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : {},
     }),
-  listRuns: () => request<RunView[]>('/api/runs'),
+  // Filtered server-side: switchCase used to pull fifty runs across every
+  // applicant and search them in the browser for the one it wanted.
+  listRuns: (profileId?: string, limit = 50) =>
+    request<RunView[]>(
+      `/api/runs?limit=${limit}${profileId ? `&profile_id=${encodeURIComponent(profileId)}` : ''}`,
+    ),
   getRun: (id: string) => request<RunView>(`/api/runs/${id}`),
   cancelRun: (id: string) => request<RunView>(`/api/runs/${id}/cancel`, { method: 'POST' }),
   // Without a stage the server resets every stage; with one it resets that
