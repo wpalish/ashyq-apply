@@ -283,7 +283,12 @@ def main() -> int:  # pragma: no cover - process entry point
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     for sig in (signal.SIGINT, signal.SIGTERM):
-        loop.add_signal_handler(sig, worker.request_stop)
+        try:
+            loop.add_signal_handler(sig, worker.request_stop)
+        except NotImplementedError:
+            # Windows' ProactorEventLoop has no signal handlers; the plain
+            # signal module still delivers SIGINT/SIGTERM to the main thread.
+            signal.signal(sig, lambda *_: worker.request_stop())
     try:
         loop.run_until_complete(worker.run_forever())
     finally:
