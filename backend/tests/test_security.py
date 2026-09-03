@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import copy
 
 import pytest
@@ -139,6 +140,48 @@ class TestTenantIsolation:
         assert client.get("/api/cases").json() == []
         assert client.get("/api/audit").json() == []
 
+    def test_another_tenant_cannot_read_or_decide_a_result_row(self, auth_client):
+        """A result id is the last thing that leaked.
+
+        Every other route resolved the run through owned_run; the two result
+        routes took the id at face value, so an authenticated stranger could
+        approve or reject rows on someone else's shortlist.
+        """
+        from tests.test_api import drain_queue
+
+        client, _ = auth_client
+        register(client, "result-owner")
+        profile = client.post(
+            "/api/profiles", json=copy.deepcopy(DEMO_PROFILE.model_dump(mode="json"))
+        ).json()
+        run = client.post("/api/runs", json={"profile_id": profile["id"], "demo_mode": True}).json()
+        assert asyncio.run(drain_queue()) == 1
+        results = client.get(f"/api/runs/{run['id']}/results").json()
+        assert results, "the demo run must produce rows for this test to mean anything"
+        result_id = results[0]["id"]
+
+        assert client.post("/api/auth/logout").status_code == 204
+        register(client, "result-stranger")
+
+        assert client.get(f"/api/runs/{run['id']}/results/{result_id}").status_code == 404
+        decision = client.post(
+            f"/api/runs/{run['id']}/results/{result_id}/decision",
+            json={"decision": "rejected", "reason": "not mine to reject"},
+        )
+        assert decision.status_code == 404, decision.text
+
+        # And the row is untouched: the owner still sees no decision on it.
+        assert client.post("/api/auth/logout").status_code == 204
+        client.post(
+            "/api/auth/login",
+            json={
+                "email": "result-owner@example.test",
+                "password": "correct horse battery result-owner",
+            },
+        )
+        owner_view = client.get(f"/api/runs/{run['id']}/results/{result_id}").json()
+        assert owner_view["user_decision"] == "undecided"
+
 
 class TestRequestSecurity:
     def test_security_headers_are_on_success_and_error_responses(self, auth_client):
@@ -162,10 +205,13 @@ class TestRequestSecurity:
     def test_auth_rate_limit_returns_retry_after_and_security_headers(self, auth_client):
         client, settings = auth_client
         for _ in range(settings.auth_rate_limit_per_minute):
-            assert client.post(
-                "/api/auth/login",
-                json={"email": "nobody@example.test", "password": "not-the-password"},
-            ).status_code == 401
+            assert (
+                client.post(
+                    "/api/auth/login",
+                    json={"email": "nobody@example.test", "password": "not-the-password"},
+                ).status_code
+                == 401
+            )
         response = client.post(
             "/api/auth/login",
             json={"email": "nobody@example.test", "password": "not-the-password"},

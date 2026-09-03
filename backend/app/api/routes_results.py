@@ -98,7 +98,6 @@ def get_result(
     session: Session = Depends(get_session),
 ) -> ProgramResult:
     owned_run(session, run_id, principal)
-    owned_run(session, run_id, principal)
     row = session.get(ProgramResultRow, result_id)
     if row is None or row.run_id != run_id:
         raise HTTPException(404, "Result not found")
@@ -118,6 +117,9 @@ def set_decision(
     A rejected row is kept, with its reason, so the same programme is not
     proposed again on a later run unless something material changed.
     """
+    # The result id alone is not authority: resolve the run through the
+    # principal's organization first, exactly as every read route does.
+    owned_run(session, run_id, principal)
     row = session.get(ProgramResultRow, result_id)
     if row is None or row.run_id != run_id:
         raise HTTPException(404, "Result not found")
