@@ -18,6 +18,13 @@ import type {
 } from '@/types';
 
 const POLL_MS = 1200;
+//: Unsaved edits, kept apart from the saved profile on purpose. Restoring a
+//: draft must never overwrite `savedProfile`: doing exactly that is how demo
+//: data once landed on top of a real applicant's record.
+const DRAFT_KEY = 'ashyq.unsavedDraft';
+//: Backoff after consecutive polling failures, capped so a recovered backend
+//: is noticed within fifteen seconds.
+const POLL_BACKOFF_MS = [1200, 2400, 5000, 15000];
 const RUN_KEY = 'ashyq.activeRun';
 const PROFILE_KEY = 'ashyq.activeProfile';
 
@@ -60,6 +67,11 @@ export interface Store {
   savedProfile: StoredProfile | null;
   cases: ApplicantCase[];
   switchCase: (profileId: string) => Promise<void>;
+  /** True when the draft differs from the profile it was loaded from. */
+  dirty: boolean;
+  /** An unsaved draft was restored from this browser after a reload. */
+  draftRestored: boolean;
+  discardDraft: () => void;
   newCase: () => void;
   /** True once a stored profile has been loaded back into the draft. */
   restored: boolean;
@@ -149,7 +161,15 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [restored, setRestored] = useState(false);
+  const [draftRestored, setDraftRestored] = useState(false);
+  //: What the draft looked like when it was last saved or loaded. Comparing
+  //: against this is what makes "unsaved changes" a fact rather than a guess.
+  const [baseline, setBaseline] = useState<string>('');
   const pollRef = useRef<number | null>(null);
+  //: One request at a time: a slow answer used to overlap the next tick.
+  const inFlightRef = useRef(false);
+  const pollFailuresRef = useRef(0);
+  const resultsCountRef = useRef(0);
 
   const fail = useCallback((e: unknown) => {
     setError(e instanceof ApiError ? e.message : String(e));
@@ -159,6 +179,25 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     api.capabilities().then(setCapabilities).catch(fail);
     api.cases().then(setCases).catch(fail);
   }, [fail]);
+
+  const dirty = baseline !== '' && JSON.stringify(profileDraft) !== baseline;
+
+  // Autosave the unsaved draft, debounced. Stored under its own key: the
+  // saved profile is never touched by this, so restoring a draft cannot
+  // overwrite the applicant's record the way loading demo data once did.
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      if (dirty) writeLocal(DRAFT_KEY, JSON.stringify(profileDraft));
+      else writeLocal(DRAFT_KEY, null);
+    }, 600);
+    return () => window.clearTimeout(timer);
+  }, [profileDraft, dirty]);
+
+  const discardDraft = useCallback(() => {
+    writeLocal(DRAFT_KEY, null);
+    setDraftRestored(false);
+    if (savedProfile) setDraft(toDraft(savedProfile));
+  }, [savedProfile]);
 
   // Validation follows the draft, debounced so typing does not flood the API.
   useEffect(() => {
@@ -201,7 +240,23 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       api.getProfile(profileId)
         .then((stored) => {
           setSavedProfile(stored);
-          setDraft(toDraft(stored));
+          const fromServer = toDraft(stored);
+          setBaseline(JSON.stringify(fromServer));
+          // The saved profile is the baseline; an unsaved draft is layered on
+          // top of it and never written back into savedProfile. That ordering
+          // is what stops a restored draft overwriting the real record.
+          const pending = readLocal(DRAFT_KEY);
+          if (pending) {
+            try {
+              setDraft(JSON.parse(pending) as Record<string, unknown>);
+              setDraftRestored(true);
+            } catch {
+              writeLocal(DRAFT_KEY, null);
+              setDraft(fromServer);
+            }
+          } else {
+            setDraft(fromServer);
+          }
           setRestored(true);
         })
         .catch(() => {
@@ -220,39 +275,86 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   //
   // A job that has been enqueued but not yet claimed is not "running", and the
   // run's stage does not move until a worker picks it up. Polling only on
-  // `job_running` therefore stopped the moment work was requested — the UI sat
-  // on a stale view while the worker was about to start.
-  useEffect(() => {
-    const jobOutstanding =
-      run?.job_status === 'queued' || run?.job_status === 'running';
-    const active =
-      run &&
+  // `job_running` therefore stopped the moment work was requested.
+  //
+  // The loop is a chain of timeouts rather than an interval, and it depends on
+  // the run *id* and whether work is outstanding — not on the run object. The
+  // old effect listed `run` and `results.length` in its dependencies, so every
+  // tick tore the interval down and built a new one, and a slow response could
+  // overlap the next request.
+  const jobOutstanding = run?.job_status === 'queued' || run?.job_status === 'running';
+  const pollingActive = Boolean(
+    run &&
       (run.job_running ||
         jobOutstanding ||
         ['queued', 'profile_validation', 'candidate_discovery', 'program_verification',
-         'funding_discovery', 'assessment', 'document_collection'].includes(run.stage));
-    if (!active) {
-      if (pollRef.current) window.clearInterval(pollRef.current);
-      pollRef.current = null;
-      return;
-    }
-    pollRef.current = window.setInterval(async () => {
+         'funding_discovery', 'assessment', 'document_collection'].includes(run.stage)),
+  );
+  const runId = run?.id ?? null;
+
+  useEffect(() => {
+    resultsCountRef.current = results.length;
+  }, [results.length]);
+
+  useEffect(() => {
+    if (!runId || !pollingActive) return;
+    let stopped = false;
+
+    const schedule = (delay: number) => {
+      if (stopped) return;
+      pollRef.current = window.setTimeout(tick, delay);
+    };
+
+    const tick = async () => {
+      // A hidden tab is not watching. Skipping the request rather than the
+      // schedule means the loop resumes the moment it comes back.
+      if (document.hidden || inFlightRef.current) {
+        schedule(POLL_MS);
+        return;
+      }
+      inFlightRef.current = true;
       try {
-        const next = await api.getRun(run.id);
+        const next = await api.getRun(runId);
+        if (stopped) return;
+        pollFailuresRef.current = 0;
         setRun(next);
-        if (next.results_count !== results.length) {
+        const settled = ['awaiting_user_decision', 'completed', 'failed', 'cancelled']
+          .includes(next.stage);
+        if (next.results_count !== resultsCountRef.current || settled) {
           const [rows, sum] = await Promise.all([api.results(next.id), api.summary(next.id)]);
+          if (stopped) return;
           setResults(rows);
           setSummary(sum);
         }
+        schedule(POLL_MS);
       } catch (e) {
-        fail(e);
+        pollFailuresRef.current += 1;
+        // One dropped poll is not worth a banner; a run of them is. Backing
+        // off also stops a dead backend being hammered every 1.2 seconds.
+        if (pollFailuresRef.current > 3) fail(e);
+        const step = Math.min(pollFailuresRef.current - 1, POLL_BACKOFF_MS.length - 1);
+        schedule(POLL_BACKOFF_MS[step] ?? POLL_MS);
+      } finally {
+        inFlightRef.current = false;
       }
-    }, POLL_MS);
-    return () => {
-      if (pollRef.current) window.clearInterval(pollRef.current);
     };
-  }, [run, results.length, fail]);
+
+    const onVisible = () => {
+      if (document.hidden) return;
+      // Back in view: answer now rather than at the end of the current wait.
+      if (pollRef.current) window.clearTimeout(pollRef.current);
+      schedule(0);
+    };
+
+    document.addEventListener('visibilitychange', onVisible);
+    schedule(POLL_MS);
+    return () => {
+      stopped = true;
+      document.removeEventListener('visibilitychange', onVisible);
+      if (pollRef.current) window.clearTimeout(pollRef.current);
+      pollRef.current = null;
+    };
+  }, [runId, pollingActive, fail]);
 
   // Pull the final results once the pipeline settles.
   useEffect(() => {
@@ -277,6 +379,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       setSavedProfile(saved);
       setCases(await api.cases());
       writeLocal(PROFILE_KEY, saved.id);
+      setBaseline(JSON.stringify(toDraft(saved)));
+      setDraftRestored(false);
+      writeLocal(DRAFT_KEY, null);
     } catch (e) {
       fail(e);
       throw e;
@@ -293,6 +398,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       const latest = allRuns.find((item) => item.profile_id === profileId) ?? null;
       setSavedProfile(stored);
       setDraft(toDraft(stored));
+      setBaseline(JSON.stringify(toDraft(stored)));
+      setDraftRestored(false);
+      writeLocal(DRAFT_KEY, null);
       setRun(latest);
       writeLocal(PROFILE_KEY, profileId);
       writeLocal(RUN_KEY, latest?.id ?? null);
@@ -313,7 +421,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const newCase = useCallback(() => {
     setSavedProfile(null);
-    setDraft(blankProfile());
+    const blank = blankProfile();
+    setDraft(blank);
+    setBaseline(JSON.stringify(blank));
+    setDraftRestored(false);
+    writeLocal(DRAFT_KEY, null);
     setRun(null);
     setResults([]);
     setSummary(null);
@@ -445,12 +557,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const value = useMemo<Store>(
     () => ({
       capabilities, profileDraft, setProfileDraft, savedProfile, cases, switchCase, newCase, restored,
+      dirty, draftRestored, discardDraft,
       loadDemoProfile, clearProfile, validation, run, results,
       summary, loading, error, saveProfile, startRun, cancelRun, retryRun, recheckNow, collectDocuments,
       decide, saveNotes, refreshResults, deleteEverything, clearError: () => setError(null),
     }),
     [capabilities, profileDraft, setProfileDraft, savedProfile, cases, switchCase, newCase,
-     restored, loadDemoProfile,
+     restored, dirty, draftRestored, discardDraft, loadDemoProfile,
      clearProfile, validation, run, results, summary, loading, error, saveProfile, startRun,
      cancelRun, retryRun, recheckNow, collectDocuments, decide, saveNotes, refreshResults,
      deleteEverything],
