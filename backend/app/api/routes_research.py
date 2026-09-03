@@ -6,7 +6,7 @@ import hashlib
 from datetime import UTC, datetime
 from typing import Literal
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, Header, HTTPException
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
@@ -24,7 +24,7 @@ from app.models import (
     ResearchRun,
 )
 from app.models.base import ensure_utc
-from app.pipeline.state import RunState, is_lease_expired
+from app.pipeline.state import IN_PROGRESS_STAGES, RunState, is_lease_expired
 from app.security import Principal, get_principal
 
 router = APIRouter(prefix="/api/runs", tags=["research"])
@@ -159,13 +159,52 @@ def _view(session: Session, run: ResearchRun) -> RunView:
 @router.post("", response_model=RunView, status_code=202)
 def start_run(
     payload: StartRunIn,
+    idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
 ) -> RunView:
+    """Start research for one profile.
+
+    Two guards, because they answer different questions. `Idempotency-Key`
+    identifies one *click*: replaying it returns the run that click created,
+    which is what a retried request or a double submit needs. The active-run
+    check answers "is this profile already being researched?" and refuses a
+    genuinely new request with 409, naming the run to join.
+    """
     settings = get_settings()
     owned_profile(session, payload.profile_id, principal)
 
+    if idempotency_key:
+        replayed = (
+            session.query(ResearchRun)
+            .filter(
+                ResearchRun.profile_id == payload.profile_id,
+                ResearchRun.client_request_key == idempotency_key,
+            )
+            .first()
+        )
+        if replayed is not None:
+            return _view(session, replayed)
+
+    active = (
+        session.query(ResearchRun)
+        .filter(
+            ResearchRun.profile_id == payload.profile_id,
+            ResearchRun.cancelled.is_(False),
+            ResearchRun.stage.in_([s.value for s in IN_PROGRESS_STAGES]),
+        )
+        .order_by(ResearchRun.created_at.desc())
+        .first()
+    )
+    if active is not None:
+        raise HTTPException(
+            409,
+            f"Research is already running for this applicant (run {active.id}). "
+            "Wait for it to finish, or cancel it first.",
+        )
+
     run = ResearchRun(
+        client_request_key=idempotency_key,
         profile_id=payload.profile_id,
         stage=PipelineStage.QUEUED.value,
         demo_mode=settings.demo_mode if payload.demo_mode is None else payload.demo_mode,
@@ -185,8 +224,9 @@ def start_run(
             detail={"demo_mode": run.demo_mode},
         )
     )
-    # Idempotent by run: a retried request or a double click cannot start the
-    # same research twice.
+    # One job per run. The request-level guards above are what stop a second
+    # run being created in the first place; this key only keeps a retried
+    # enqueue for the same run from queueing the work twice.
     JobStore(session).enqueue(
         "research",
         run_id=run.id,

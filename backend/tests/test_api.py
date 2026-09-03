@@ -205,6 +205,44 @@ class TestResearchAndResults:
         assert updated["checklist"]["ordered_steps"]
 
 
+class TestStartingTwice:
+    """One profile, one research at a time.
+
+    idempotency_key was f"research:{run.id}" - unique per request by
+    construction, so it deduplicated nothing. Two clicks produced two runs,
+    both burning worker slots and outbound traffic.
+    """
+
+    def test_a_second_start_joins_the_run_already_in_flight(self, client):
+        profile = client.post("/api/profiles", json=DEMO_PROFILE.model_dump(mode="json")).json()
+        first = client.post("/api/runs", json={"profile_id": profile["id"], "demo_mode": True})
+        assert first.status_code == 202
+
+        second = client.post("/api/runs", json={"profile_id": profile["id"], "demo_mode": True})
+        assert second.status_code == 409, second.text
+        assert first.json()["id"] in second.json()["detail"]
+        assert len(client.get("/api/runs").json()) == 1
+
+    def test_an_idempotency_key_returns_the_same_run_rather_than_an_error(self, client):
+        profile = client.post("/api/profiles", json=DEMO_PROFILE.model_dump(mode="json")).json()
+        body = {"profile_id": profile["id"], "demo_mode": True}
+        headers = {"Idempotency-Key": "the-same-click"}
+
+        first = client.post("/api/runs", json=body, headers=headers)
+        second = client.post("/api/runs", json=body, headers=headers)
+
+        assert first.status_code == 202
+        assert second.status_code == 202, second.text
+        assert first.json()["id"] == second.json()["id"]
+        assert len(client.get("/api/runs").json()) == 1
+
+    def test_a_new_run_is_allowed_once_the_previous_one_is_finished(self, client, finished_run):
+        profile, _ = finished_run
+        again = client.post("/api/runs", json={"profile_id": profile["id"], "demo_mode": True})
+        assert again.status_code == 202
+        assert len(client.get("/api/runs").json()) == 2
+
+
 class TestDocumentIdempotency:
     """Collecting documents twice must follow the shortlist, not its size.
 

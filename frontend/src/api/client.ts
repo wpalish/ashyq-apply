@@ -96,10 +96,13 @@ export const api = {
       `/api/profiles/conversions/methods?scale_label=${encodeURIComponent(scale)}`,
     ),
 
-  startRun: (profileId: string, demoMode: boolean) =>
+  // The key makes a retried request replay its own run instead of starting a
+  // second one; the caller keeps it stable for as long as one click lasts.
+  startRun: (profileId: string, demoMode: boolean, idempotencyKey?: string) =>
     request<RunView>('/api/runs', {
       method: 'POST',
       body: JSON.stringify({ profile_id: profileId, demo_mode: demoMode }),
+      headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : {},
     }),
   listRuns: () => request<RunView[]>('/api/runs'),
   getRun: (id: string) => request<RunView>(`/api/runs/${id}`),

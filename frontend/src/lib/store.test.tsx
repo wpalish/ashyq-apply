@@ -10,8 +10,8 @@ import { act, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { StoreProvider, blankProfile, toDraft, useStore } from './store';
 import { DEFAULT_PROFILE } from './defaultProfile';
-import { api } from '@/api/client';
-import type { StoredProfile } from '@/types';
+import { ApiError, api } from '@/api/client';
+import type { RunView, StoredProfile } from '@/types';
 
 // The spread comes first: anything after it is the part that makes this
 // profile distinguishable from the synthetic demo one.
@@ -150,5 +150,50 @@ describe('explicit demo loading', () => {
 
     await act(async () => { screen.getByText('demo').click(); });
     expect(screen.getByTestId('fields')).toHaveTextContent('computer science');
+  });
+});
+
+describe('starting research twice', () => {
+  function StartProbe() {
+    const { run, startRun, error } = useStore();
+    return (
+      <div>
+        <span data-testid="run">{run?.id ?? 'none'}</span>
+        <span data-testid="error">{error ?? 'none'}</span>
+        <button onClick={() => startRun(true)}>start</button>
+      </div>
+    );
+  }
+
+  it('joins the run already in flight instead of reporting a conflict', async () => {
+    const active = { id: 'a'.repeat(32), stage: 'candidate_discovery' } as unknown as RunView;
+    vi.spyOn(api, 'createProfile').mockResolvedValue(REAL_PROFILE);
+    vi.spyOn(api, 'cases').mockResolvedValue([]);
+    vi.spyOn(api, 'startRun').mockRejectedValue(
+      new ApiError(409, `Research is already running for this applicant (run ${active.id}). `),
+    );
+    const getRun = vi.spyOn(api, 'getRun').mockResolvedValue(active);
+
+    render(<StoreProvider><StartProbe /></StoreProvider>);
+    await act(async () => { screen.getByText('start').click(); });
+
+    expect(getRun).toHaveBeenCalledWith(active.id);
+    expect(screen.getByTestId('run')).toHaveTextContent(active.id);
+    expect(screen.getByTestId('error')).toHaveTextContent('none');
+    expect(window.localStorage.getItem('unimatch.activeRun')).toBe(active.id);
+  });
+
+  it('sends an idempotency key so a retried request cannot start a second run', async () => {
+    vi.spyOn(api, 'createProfile').mockResolvedValue(REAL_PROFILE);
+    vi.spyOn(api, 'cases').mockResolvedValue([]);
+    const startRun = vi.spyOn(api, 'startRun').mockResolvedValue(
+      { id: 'run-1' } as unknown as RunView,
+    );
+
+    render(<StoreProvider><StartProbe /></StoreProvider>);
+    await act(async () => { screen.getByText('start').click(); });
+
+    expect(startRun).toHaveBeenCalledWith(REAL_PROFILE.id, true, expect.any(String));
+    expect(startRun.mock.calls[0]?.[2]).toBeTruthy();
   });
 });

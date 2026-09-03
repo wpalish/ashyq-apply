@@ -28,11 +28,21 @@ class ResearchRun(TimestampedBase):
     """One execution of the pipeline, resumable stage by stage."""
 
     __tablename__ = "research_runs"
+    __table_args__ = (
+        # A replayed click must find its run, and two clicks with the same key
+        # must never become two runs - the uniqueness is what makes the lookup
+        # in start_run a guarantee rather than a best effort.
+        Index("uq_runs_client_request_key", "profile_id", "client_request_key", unique=True),
+    )
 
     profile_id: Mapped[str] = mapped_column(
         String(32), ForeignKey("applicant_profiles.id", ondelete="CASCADE"), index=True
     )
     stage: Mapped[str] = mapped_column(String(40), default="queued", index=True)
+    #: The client's `Idempotency-Key` for the request that created this run.
+    #: Replaying that request returns this run instead of starting a second
+    #: one. Scoped per profile, so two applicants may reuse the same key.
+    client_request_key: Mapped[str | None] = mapped_column(String(120), nullable=True)
     demo_mode: Mapped[bool] = mapped_column(Boolean, default=True)
     #: Per-run research scope. Persisted so a retry or a restart uses the scope
     #: the user asked for, not whatever the server default happens to be.

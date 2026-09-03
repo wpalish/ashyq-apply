@@ -308,12 +308,29 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       } else {
         await api.updateProfile(profile.id, profileDraft);
       }
-      const started = await api.startRun(profile.id, demoMode);
+      const started = await api.startRun(profile.id, demoMode, crypto.randomUUID());
       setRun(started);
       setResults([]);
       setSummary(null);
       writeLocal(RUN_KEY, started.id);
     } catch (e) {
+      // 409 means this applicant is already being researched. Joining that run
+      // is what the user wanted; reporting an error would be pedantry.
+      const active = e instanceof ApiError && e.status === 409
+        ? /run ([0-9a-f]{32})/.exec(e.message)?.[1]
+        : undefined;
+      if (active) {
+        try {
+          setRun(await api.getRun(active));
+          setResults([]);
+          setSummary(null);
+          writeLocal(RUN_KEY, active);
+          return;
+        } catch (joinError) {
+          fail(joinError);
+          return;
+        }
+      }
       fail(e);
     } finally {
       setLoading(false);
