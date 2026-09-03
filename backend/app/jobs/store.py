@@ -56,9 +56,45 @@ class EnqueueResult:
 class JobStore:
     """Transactional job operations. The caller owns the session and commits."""
 
-    def __init__(self, session: Session, *, lease_seconds: int = DEFAULT_LEASE_SECONDS) -> None:
+    def __init__(
+        self,
+        session: Session,
+        *,
+        lease_seconds: int = DEFAULT_LEASE_SECONDS,
+        worker_id: str | None = None,
+    ) -> None:
         self.session = session
         self.lease_seconds = lease_seconds
+        #: Who this store speaks for. Set it and every terminal update is
+        #: fenced: a worker whose lease was reaped cannot mark a job finished
+        #: that another worker has already taken over. Left None, the store
+        #: speaks for the system (the API cancelling, the reaper).
+        self.worker_id = worker_id
+
+    def owns(self, job_id: str) -> bool:
+        """Whether this worker still holds a running claim on the job."""
+        job = self.session.get(Job, job_id)
+        if job is None or job.status != JobStatus.RUNNING.value:
+            return False
+        return self.worker_id is None or job.worker_id == self.worker_id
+
+    def _fenced_out(self, job_id: str) -> bool:
+        """True when this store may no longer speak for the job."""
+        if self.worker_id is None:
+            return False
+        job = self.session.get(Job, job_id)
+        if job is None:
+            return True
+        fenced = job.status != JobStatus.RUNNING.value or job.worker_id != self.worker_id
+        if fenced:
+            log.warning(
+                "worker %s no longer owns job %s (status=%s, owner=%s); refusing to update it",
+                self.worker_id,
+                job_id[:8],
+                job.status,
+                job.worker_id,
+            )
+        return fenced
 
     # --- producing -------------------------------------------------------
 
@@ -99,12 +135,16 @@ class JobStore:
             available_at=available_at or datetime.now(UTC),
             payload=payload or {},
         )
-        self.session.add(job)
         try:
-            self.session.flush()
+            # A SAVEPOINT, not the caller's transaction. Rolling the whole
+            # session back here used to discard whatever the caller had already
+            # written alongside the enqueue - in collect_documents, the audit
+            # event and run.cancelled = False, silently.
+            with self.session.begin_nested():
+                self.session.add(job)
+                self.session.flush()
         except IntegrityError:
             # Lost the race on the unique key; the winner's job is the answer.
-            self.session.rollback()
             existing = self.session.scalar(
                 select(Job).where(Job.idempotency_key == idempotency_key)
             )
@@ -167,24 +207,34 @@ class JobStore:
     def heartbeat(self, job_id: str) -> bool:
         """Extend the lease. False if the job is no longer ours to extend."""
         now = datetime.now(UTC)
+        statement = update(Job).where(Job.id == job_id, Job.status == JobStatus.RUNNING.value)
+        if self.worker_id is not None:
+            statement = statement.where(Job.worker_id == self.worker_id)
         updated = self.session.execute(
-            update(Job)
-            .where(Job.id == job_id, Job.status == JobStatus.RUNNING.value)
-            .values(heartbeat_at=now, lease_expires_at=now + timedelta(seconds=self.lease_seconds))
-            .returning(Job.id)
+            statement.values(
+                heartbeat_at=now, lease_expires_at=now + timedelta(seconds=self.lease_seconds)
+            ).returning(Job.id)
         ).scalar()
         return updated is not None
 
-    def complete(self, job_id: str) -> None:
+    def complete(self, job_id: str) -> bool:
+        """Mark the job done. False when it is no longer ours to finish."""
         now = datetime.now(UTC)
-        self.session.execute(
-            update(Job)
-            .where(Job.id == job_id)
-            .values(
+        statement = update(Job).where(Job.id == job_id)
+        if self.worker_id is not None:
+            statement = statement.where(
+                Job.status == JobStatus.RUNNING.value, Job.worker_id == self.worker_id
+            )
+        completed = self.session.execute(
+            statement.values(
                 status=JobStatus.SUCCEEDED.value, finished_at=now,
                 lease_expires_at=None, worker_id=None, last_error="",
-            )
-        )
+            ).returning(Job.id)
+        ).scalar()
+        if completed is None and self.worker_id is not None:
+            log.warning("worker %s could not complete job %s: it lost the lease",
+                        self.worker_id, job_id[:8])
+        return completed is not None
 
     def fail(self, job_id: str, error: str, *, retry: bool = True) -> str:
         """Record a failure. Returns the resulting status.
@@ -195,6 +245,9 @@ class JobStore:
         job = self.session.get(Job, job_id)
         if job is None:
             return JobStatus.DEAD.value
+        if self._fenced_out(job_id):
+            # Another worker owns it now; its outcome is theirs to record.
+            return job.status
         now = datetime.now(UTC)
         exhausted = job.attempts >= job.max_attempts
 
@@ -216,7 +269,7 @@ class JobStore:
     def mark_cancelled(self, job_id: str, reason: str = "cancelled by the user") -> None:
         """Terminal status for work a person stopped deliberately."""
         job = self.session.get(Job, job_id)
-        if job is None:
+        if job is None or self._fenced_out(job_id):
             return
         job.status = JobStatus.CANCELLED.value
         job.finished_at = datetime.now(UTC)

@@ -21,7 +21,7 @@ from app.db import session_scope
 from app.domain.enums import PipelineStage
 from app.jobs.store import JobStore, worker_identity
 from app.models import ApplicantProfileRow, AuditEvent, Job, JobStatus, ResearchRun
-from app.pipeline.runner import ResearchRunner, RunCancelled
+from app.pipeline.runner import LeaseLost, ResearchRunner, RunCancelled
 from app.schemas.profile import ApplicantProfileIn
 
 log = logging.getLogger("unimatch.worker")
@@ -107,22 +107,39 @@ class Worker:
         heartbeat = asyncio.create_task(self._beat(job_id))
         try:
             with session_scope() as session:
-                store = JobStore(session, lease_seconds=self.settings.job_lease_seconds)
+                store = JobStore(
+                    session,
+                    lease_seconds=self.settings.job_lease_seconds,
+                    worker_id=self.worker_id,
+                )
                 job = store.get(job_id)
                 if job is None:
                     return
                 log.info("running job %s (%s) attempt %d", job.id[:8], job.kind, job.attempts)
                 await self._dispatch(session, store, job)
             self.jobs_done += 1
+        except LeaseLost as exc:
+            # Someone else owns this job now. Say so and touch nothing: the
+            # store's fencing would refuse the write anyway, and the new owner
+            # is already redoing the work.
+            log.warning("job %s abandoned: %s", job_id[:8], exc)
+            with session_scope() as session:
+                JobStore(
+                    session,
+                    lease_seconds=self.settings.job_lease_seconds,
+                    worker_id=self.worker_id,
+                ).fail(job_id, f"lease lost: {exc}", retry=False)
         except RunCancelled as exc:
             with session_scope() as session:
-                JobStore(session).mark_cancelled(job_id, str(exc))
+                JobStore(session, worker_id=self.worker_id).mark_cancelled(job_id, str(exc))
             log.info("job %s cancelled", job_id[:8])
         except Exception as exc:
             self.jobs_failed += 1
             log.exception("job %s failed", job_id[:8])
             with session_scope() as session:
-                status = JobStore(session).fail(job_id, f"{type(exc).__name__}: {exc}")
+                status = JobStore(session, worker_id=self.worker_id).fail(
+                    job_id, f"{type(exc).__name__}: {exc}"
+                )
             log.info("job %s -> %s", job_id[:8], status)
         finally:
             heartbeat.cancel()
@@ -133,7 +150,14 @@ class Worker:
             while True:
                 await asyncio.sleep(interval)
                 with session_scope() as session:
-                    if not JobStore(session).heartbeat(job_id):
+                    store = JobStore(
+                        session,
+                        lease_seconds=self.settings.job_lease_seconds,
+                        worker_id=self.worker_id,
+                    )
+                    if not store.heartbeat(job_id):
+                        # The runner observes this at its next checkpoint and
+                        # stops; logging alone let a zombie keep working.
                         log.warning("lost the lease on job %s", job_id[:8])
                         return
         except asyncio.CancelledError:
@@ -152,7 +176,9 @@ class Worker:
             return
 
         profile = ApplicantProfileIn.model_validate(profile_row.payload)
-        runner = ResearchRunner(session, run, profile, self.settings, job_id=job.id)
+        runner = ResearchRunner(
+            session, run, profile, self.settings, job_id=job.id, worker_id=self.worker_id
+        )
 
         if job.kind == "documents":
             await runner.collect_documents()

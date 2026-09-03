@@ -54,6 +54,15 @@ class RunCancelled(RuntimeError):
     pass
 
 
+class LeaseLost(RuntimeError):
+    """This worker no longer owns the job it is executing.
+
+    Raised at a checkpoint rather than mid-write, so the abandoned attempt
+    stops between units of work and leaves the database to the worker that
+    took the job over.
+    """
+
+
 class ResearchRunner:
     """Executes the pipeline for one run."""
 
@@ -65,6 +74,7 @@ class ResearchRunner:
         settings: Settings,
         *,
         job_id: str | None = None,
+        worker_id: str | None = None,
     ) -> None:
         self.session = session
         self.run = run
@@ -72,14 +82,16 @@ class ResearchRunner:
         self.settings = settings
         self.state = RunState.load(run.stage_state)
         self.demo = run.demo_mode
-        # A per-run override wins over the server default, and verification is
-        # never asked to cover more candidates than discovery produced.
-        self.worker_id = f"{socket.gethostname()}:{os.getpid()}"
+        # The worker passes its own identity so the fencing check compares
+        # against the id that actually claimed the job, not a lookalike.
+        self.worker_id = worker_id or f"{socket.gethostname()}:{os.getpid()}"
         #: When run by a worker, cancellation is observed through the job as
         #: well as the run, so either route stops the work.
         self.job_id = job_id
         #: Stages skipped because a previous attempt finished them.
         self.resumed_stages: list[str] = []
+        # A per-run override wins over the server default, and verification is
+        # never asked to cover more candidates than discovery produced.
         self.candidate_limit = run.candidate_limit or settings.candidate_limit
         self.verify_limit = min(run.verify_limit or settings.verify_limit, self.candidate_limit)
         self.intake = f"{profile.context.intake_term} {profile.context.intake_year}"
@@ -138,8 +150,14 @@ class ResearchRunner:
         if self.job_id is not None:
             from app.jobs.store import JobStore
 
-            if JobStore(self.session).is_cancel_requested(self.job_id):
+            store = JobStore(self.session, worker_id=self.worker_id)
+            if store.is_cancel_requested(self.job_id):
                 raise RunCancelled("Job was cancelled by the user.")
+            # A reaped lease means another worker is already redoing this job.
+            # Continuing would double every read-modify-write counter on the
+            # run and let this attempt report an outcome it no longer owns.
+            if not store.owns(self.job_id):
+                raise LeaseLost(f"job {self.job_id[:8]} is no longer held by {self.worker_id}")
 
     # --- entry point ------------------------------------------------------
 

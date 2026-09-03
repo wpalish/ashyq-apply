@@ -264,3 +264,149 @@ class TestSchemaWait:
         )
         monkeypatch.setattr(db_module, "engine", engine)
         assert wait_for_schema(timeout=0.1) is False
+
+
+class TestLeaseFencing:
+    """A worker that lost its lease must not speak for the job any more.
+
+    The audited defect: _beat only logged when the lease was gone, and the
+    terminal updates had no owner check, so a zombie worker could mark a job
+    succeeded that another worker had already taken over - and both of them
+    added to the same read-modify-write run counters.
+    """
+
+    def test_a_worker_that_lost_the_lease_cannot_complete_the_job(
+        self, bound_db, settings, profile
+    ):
+        _, job_id = seed_run(bound_db, profile)
+        with bound_db() as session:
+            JobStore(session, worker_id="worker-a").claim(worker_id="worker-a")
+            session.commit()
+
+        # A reaper hands the job to someone else while worker-a is still busy.
+        with bound_db() as session:
+            session.execute(
+                sa.text("UPDATE jobs SET worker_id = 'worker-b' WHERE id = :i"), {"i": job_id}
+            )
+            session.commit()
+
+        with bound_db() as session:
+            store = JobStore(session, worker_id="worker-a")
+            assert store.complete(job_id) is False
+            session.commit()
+
+        with bound_db() as session:
+            job = session.get(Job, job_id)
+            assert job.status == JobStatus.RUNNING.value, "the new owner still holds it"
+            assert job.worker_id == "worker-b"
+
+    def test_a_worker_that_lost_the_lease_cannot_fail_or_cancel_the_job(
+        self, bound_db, settings, profile
+    ):
+        _, job_id = seed_run(bound_db, profile)
+        with bound_db() as session:
+            JobStore(session, worker_id="worker-a").claim(worker_id="worker-a")
+            session.execute(
+                sa.text("UPDATE jobs SET worker_id = 'worker-b' WHERE id = :i"), {"i": job_id}
+            )
+            session.commit()
+
+        with bound_db() as session:
+            store = JobStore(session, worker_id="worker-a")
+            assert store.fail(job_id, "boom") == JobStatus.RUNNING.value
+            store.mark_cancelled(job_id)
+            session.commit()
+
+        with bound_db() as session:
+            job = session.get(Job, job_id)
+            assert job.status == JobStatus.RUNNING.value
+            assert job.worker_id == "worker-b"
+            assert job.last_error == ""
+
+    def test_heartbeat_fails_once_the_job_belongs_to_someone_else(
+        self, bound_db, settings, profile
+    ):
+        _, job_id = seed_run(bound_db, profile)
+        with bound_db() as session:
+            store = JobStore(session, worker_id="worker-a")
+            store.claim(worker_id="worker-a")
+            session.commit()
+            assert store.heartbeat(job_id) is True
+
+        with bound_db() as session:
+            session.execute(
+                sa.text("UPDATE jobs SET worker_id = 'worker-b' WHERE id = :i"), {"i": job_id}
+            )
+            session.commit()
+
+        with bound_db() as session:
+            assert JobStore(session, worker_id="worker-a").heartbeat(job_id) is False
+
+    def test_a_run_stops_when_its_job_is_taken_away(self, bound_db, settings, profile):
+        """The worker must abort the work itself, not merely log the loss."""
+        run_id, job_id = seed_run(bound_db, profile)
+        worker = Worker(settings)
+        assert worker.claim_one() == job_id
+
+        with bound_db() as session:
+            session.execute(
+                sa.text("UPDATE jobs SET worker_id = 'someone-else' WHERE id = :i"), {"i": job_id}
+            )
+            session.commit()
+
+        asyncio.run(worker.execute(job_id))
+
+        with bound_db() as session:
+            job = session.get(Job, job_id)
+            run = session.get(ResearchRun, run_id)
+            # Untouched by the worker that no longer owns it.
+            assert job.worker_id == "someone-else"
+            assert job.status == JobStatus.RUNNING.value
+            assert run.stage != "awaiting_user_decision", "the abandoned run must not finish"
+
+
+class TestEnqueueTransaction:
+    def test_a_racing_enqueue_leaves_the_caller_s_own_work_alone(
+        self, bound_db, settings, profile, monkeypatch
+    ):
+        """enqueue used to rollback() the caller's whole session on a race.
+
+        In collect_documents that silently discarded run.cancelled = False and
+        the audit event written in the same transaction. Here the pre-check is
+        forced to miss, so the insert hits the unique constraint - the path a
+        second concurrent request really takes.
+        """
+        from sqlalchemy.orm import Session as OrmSession
+
+        run_id, _ = seed_run(bound_db, profile)
+        with bound_db() as session:
+            JobStore(session).enqueue("documents", run_id=run_id, idempotency_key="shared")
+            session.commit()
+
+        original_scalar = OrmSession.scalar
+        seen = {"n": 0}
+
+        def blind_first_precheck(self, statement, *args, **kwargs):
+            seen["n"] += 1
+            if seen["n"] == 1:
+                return None  # the winner committed after we looked
+            return original_scalar(self, statement, *args, **kwargs)
+
+        with bound_db() as session:
+            run = session.get(ResearchRun, run_id)
+            run.cancelled = True  # the caller's own pending change
+            session.add(run)
+
+            monkeypatch.setattr(OrmSession, "scalar", blind_first_precheck)
+            result = JobStore(session).enqueue(
+                "documents", run_id=run_id, idempotency_key="shared"
+            )
+            monkeypatch.undo()
+
+            assert result.created is False
+            assert "concurrently" in result.reason
+            session.commit()
+
+        with bound_db() as session:
+            assert session.get(ResearchRun, run_id).cancelled is True
+            assert session.query(Job).filter(Job.idempotency_key == "shared").count() == 1
