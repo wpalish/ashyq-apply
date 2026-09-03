@@ -12,7 +12,7 @@ from sqlalchemy.orm import Session
 from app.api.tenancy import owned_profile, owned_run
 from app.config import get_settings
 from app.db import get_session
-from app.domain.enums import PipelineStage, UserDecision
+from app.domain.enums import STAGE_ORDER, PipelineStage, UserDecision
 from app.jobs.store import JobStore
 from app.models import (
     ApplicantProfileRow,
@@ -263,18 +263,23 @@ def retry_run(
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
 ) -> RunView:
-    """Re-run a failed run.
+    """Re-run a run, in whole or from one stage onwards.
 
-    A stage can be named to re-enter the pipeline there; without one the run
-    restarts from discovery. Existing results are cleared first so a retry
-    cannot silently double up rows.
+    Naming a stage re-enters the pipeline there: that stage and every stage
+    after it in STAGE_ORDER are reset, and the earlier ones keep their work.
+    Without a stage every stage is reset, which is what "re-run everything"
+    has to mean — resetting only the failed ones made a retry of a *successful*
+    run skip the whole pipeline.
+
+    Results are not deleted. `_persist_result` upserts on (run_id, dedupe_key),
+    so a re-run refreshes rows in place and carries the user's decisions over;
+    deleting them first is how a retry used to end with an empty shortlist.
     """
     run = owned_run(session, run_id, principal)
     store = JobStore(session)
     if any(j.status == JobStatus.RUNNING.value for j in store.for_run(run_id)):
         raise HTTPException(409, "This run is still executing; cancel it before retrying.")
 
-    session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run_id).delete()
     run.cancelled = False
     run.stage = PipelineStage.QUEUED.value
     run.errors = []
@@ -284,8 +289,13 @@ def retry_run(
     run.claims_recorded = 0
     run.programs_verified = 0
     state = RunState.load(run.stage_state)
+    order = [s.value for s in STAGE_ORDER]
+    from_index = order.index(stage) if stage else 0
     for name, st in state.stages.items():
-        if st.status in ("failed", "running") or (stage and name == stage):
+        after_entry_point = name in order and order.index(name) >= from_index
+        # A failed or half-run stage is always reset: leaving it "running" would
+        # make the runner skip it and the run would stall in the same place.
+        if after_entry_point or st.status in ("failed", "running"):
             st.status = "pending"
             st.error = ""
     run.stage_state = state.dump()

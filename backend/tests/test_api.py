@@ -205,6 +205,78 @@ class TestResearchAndResults:
         assert updated["checklist"]["ordered_steps"]
 
 
+class TestRetry:
+    """Retry must never be a way to lose work.
+
+    The audited defect: retry deleted every result row but only reset stages
+    that had failed. A successful run has every stage `done`, the runner skips
+    all of them, and the user is left with an empty shortlist.
+    """
+
+    def test_retrying_a_finished_run_keeps_its_results_and_decisions(self, client, finished_run):
+        _, run = finished_run
+        before = client.get(f"/api/runs/{run['id']}/results").json()
+        assert len(before) == 20
+        kept = before[0]
+        client.post(
+            f"/api/runs/{run['id']}/results/{kept['id']}/decision",
+            json={"decision": "approved", "reason": "shortlisted", "notes": "call the office"},
+        )
+
+        assert client.post(f"/api/runs/{run['id']}/retry").status_code == 200
+        assert asyncio.run(drain_queue()) == 1
+
+        state = client.get(f"/api/runs/{run['id']}").json()
+        assert state["stage"] == "awaiting_user_decision", state.get("errors")
+        after = client.get(f"/api/runs/{run['id']}/results").json()
+        assert len(after) == len(before)
+
+        decided = client.get(f"/api/runs/{run['id']}/results/{kept['id']}").json()
+        assert decided["user_decision"] == "approved"
+        assert decided["user_decision_reason"] == "shortlisted"
+        assert decided["user_notes"] == "call the office"
+        assert decided["decided_at"] is not None
+
+    def test_a_full_retry_re_runs_every_stage_rather_than_skipping_them(self, client, finished_run):
+        _, run = finished_run
+        assert client.post(f"/api/runs/{run['id']}/retry").status_code == 200
+
+        state = client.get(f"/api/runs/{run['id']}").json()
+        assert {s["status"] for s in state["stages"]} == {"pending"}
+
+    def test_retrying_one_stage_resets_it_and_everything_after_it(self, client, finished_run):
+        _, run = finished_run
+        response = client.post(f"/api/runs/{run['id']}/retry?stage=funding_discovery")
+        assert response.status_code == 200
+
+        stages = {s["stage"]: s["status"] for s in response.json()["stages"]}
+        # Untouched: they ran before the named stage.
+        assert stages["profile_validation"] == "done"
+        assert stages["candidate_discovery"] == "done"
+        assert stages["program_verification"] == "done"
+        # Reset: the named stage and everything downstream of it.
+        assert stages["funding_discovery"] == "pending"
+        assert stages["assessment"] == "pending"
+
+    def test_a_stage_retry_keeps_the_evidence_the_earlier_stages_produced(
+        self, client, finished_run
+    ):
+        _, run = finished_run
+        claims_before = len(client.get(f"/api/runs/{run['id']}/claims").json())
+        assert claims_before > 0
+
+        client.post(f"/api/runs/{run['id']}/retry?stage=assessment")
+        assert asyncio.run(drain_queue()) == 1
+
+        state = client.get(f"/api/runs/{run['id']}").json()
+        assert state["stage"] == "awaiting_user_decision", state.get("errors")
+        results = client.get(f"/api/runs/{run['id']}/results").json()
+        assert len(results) == 20
+        assert all(r["preference_score"] is not None for r in results), (
+            "assessment must have scored the rows it kept, not an empty set"
+        )
+
+
 class TestExports:
     def test_csv_carries_the_disclaimer_sources_and_data_origin(self, client, finished_run):
         _, run = finished_run

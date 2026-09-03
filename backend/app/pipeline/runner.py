@@ -41,6 +41,7 @@ from app.domain.funding import classify, funding_fit_for
 from app.domain.scoring import admissions_fit_for, score_result
 from app.domain.validation import validate_profile
 from app.models import AuditEvent, ClaimRow, ConflictRow, ProgramResultRow, ResearchRun, new_id
+from app.models.base import ensure_utc
 from app.pipeline.state import IN_PROGRESS_STAGES, RunState
 from app.schemas.claim import ClaimOut, UnresolvedQuestion
 from app.schemas.profile import ApplicantProfileIn
@@ -695,6 +696,14 @@ class ResearchRunner:
         self, row: ProgramResultRow, result: ProgramResult, extra_claims=None, conflicts=None
     ) -> None:
         result.id = row.id
+        # The re-derived result knows nothing about the user: it is built from
+        # pages, not from the database. Carrying the decision over is what makes
+        # a retry safe to press — otherwise re-running a stage silently discards
+        # every approval, rejection and note the applicant recorded.
+        result.user_decision = UserDecision(row.user_decision)
+        result.user_decision_reason = row.user_decision_reason
+        result.user_notes = row.user_notes
+        result.decided_at = ensure_utc(row.decided_at)
         row.payload = result.model_dump(mode="json")
         row.eligibility = result.eligibility.value
         row.admissions_fit = result.admissions_fit.value

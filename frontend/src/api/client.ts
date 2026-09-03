@@ -104,7 +104,13 @@ export const api = {
   listRuns: () => request<RunView[]>('/api/runs'),
   getRun: (id: string) => request<RunView>(`/api/runs/${id}`),
   cancelRun: (id: string) => request<RunView>(`/api/runs/${id}/cancel`, { method: 'POST' }),
-  retryRun: (id: string) => request<RunView>(`/api/runs/${id}/retry`, { method: 'POST' }),
+  // Without a stage the server resets every stage; with one it resets that
+  // stage and everything after it. The two buttons in ProgressScreen are the
+  // two calls, so the label the user reads matches what actually happens.
+  retryRun: (id: string, stage?: string) =>
+    request<RunView>(`/api/runs/${id}/retry${stage ? `?stage=${encodeURIComponent(stage)}` : ''}`, {
+      method: 'POST',
+    }),
   collectDocuments: (id: string) =>
     request<RunView>(`/api/runs/${id}/collect-documents`, { method: 'POST' }),
 

@@ -43,6 +43,10 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
   const finished = ['awaiting_user_decision', 'completed'].includes(run.stage);
   const failed = run.stage === 'failed';
   const cancelled = run.stage === 'cancelled';
+  // Where the pipeline actually stopped. Retrying from here keeps the stages
+  // that already succeeded, which is what the old single button claimed to do
+  // while in fact restarting everything.
+  const stoppedStage = run.stages.find((s) => s.status === 'failed' || s.status === 'running')?.stage;
   const groupedErrors = run.errors.reduce<Record<string, string[]>>((groups, message) => {
     const category = errorCategory(message);
     (groups[category] ??= []).push(message);
@@ -155,9 +159,29 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
               </button>
             </>
           )}
-          {(failed || cancelled) && (
-            <button className="btn btn--primary" onClick={retryRun} data-testid="retry-run">
-              Retry from the failed stage
+          {(failed || cancelled) && stoppedStage && (
+            <button
+              className="btn btn--primary"
+              onClick={() => retryRun(stoppedStage)}
+              data-testid="retry-stage"
+            >
+              Retry from {STAGE_LABELS[stoppedStage] ?? stoppedStage.replace(/_/g, ' ')}
+            </button>
+          )}
+          {(failed || cancelled || finished) && (
+            <button
+              className="btn btn--ghost"
+              onClick={() => {
+                if (
+                  window.confirm(
+                    'Re-run every stage? Programmes are read again from their official pages, '
+                    + 'so values may change. Your approvals, rejections and notes are kept.',
+                  )
+                ) void retryRun();
+              }}
+              data-testid="retry-run"
+            >
+              Re-run everything
             </button>
           )}
           {finished && results.length > 0 && (

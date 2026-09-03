@@ -59,7 +59,7 @@ export interface Store {
   saveProfile: () => Promise<void>;
   startRun: (demoMode: boolean) => Promise<void>;
   cancelRun: () => Promise<void>;
-  retryRun: () => Promise<void>;
+  retryRun: (stage?: string) => Promise<void>;
   collectDocuments: () => Promise<void>;
   decide: (resultId: string, decision: UserDecision, reason: string, notes: string) => Promise<void>;
   refreshResults: () => Promise<void>;
@@ -329,11 +329,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     }
   }, [run, fail]);
 
-  const retryRun = useCallback(async () => {
+  const retryRun = useCallback(async (stage?: string) => {
     if (!run) return;
     try {
-      setRun(await api.retryRun(run.id));
-      setResults([]);
+      // Results are no longer wiped: the server upserts rows and keeps the
+      // user's decisions, so clearing them here would only make a healthy
+      // shortlist blink out of existence until the next poll.
+      setRun(await api.retryRun(run.id, stage));
     } catch (e) {
       fail(e);
     }
