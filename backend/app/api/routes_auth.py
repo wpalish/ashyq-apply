@@ -89,13 +89,20 @@ def register(
     settings = get_settings()
     if not settings.auth_enabled or not settings.auth_registration_enabled:
         raise HTTPException(403, "Registration is disabled.")
-    email = normalize_email(payload.email)
+    # These validators raise ValueError, and their messages are written for the
+    # person typing. Converting here, rather than through a global handler,
+    # keeps an unexpected ValueError elsewhere a 500 where it belongs.
+    try:
+        email = normalize_email(payload.email)
+        password_hash = hash_password(payload.password)
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from exc
     if session.query(User.id).filter(User.email == email).first():
         raise HTTPException(409, "An account with this email already exists.")
     user = User(
         email=email,
         display_name=payload.display_name.strip(),
-        password_hash=hash_password(payload.password),
+        password_hash=password_hash,
     )
     org = Organization(
         name=payload.organization_name.strip(), slug=_slug(payload.organization_name)
@@ -125,7 +132,10 @@ def login(
     settings = get_settings()
     if not settings.auth_enabled:
         raise HTTPException(403, "Authentication is disabled in local development mode.")
-    email = normalize_email(payload.email)
+    try:
+        email = normalize_email(payload.email)
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from exc
 
     # Per-address limiting is in the middleware, but an attacker rotating
     # addresses walks straight past it while pounding one account. The account

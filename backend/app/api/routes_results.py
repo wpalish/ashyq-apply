@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from datetime import UTC, datetime
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Response
@@ -10,6 +11,7 @@ from sqlalchemy.orm import Session
 
 from app.api.tenancy import owned_run
 from app.db import get_session
+from app.domain.enums import UserDecision
 from app.export import tabular
 from app.models import AuditEvent, ClaimRow, ConflictRow, ProgramResultRow
 from app.schemas.result import DecisionIn, ProgramResult
@@ -26,6 +28,12 @@ class ShortlistSummary(BaseModel):
     with_conflicts: int
     with_open_questions: int
     demo_data: bool
+
+
+def _safe_filename_stem(value: str) -> str:
+    """A filename stem that cannot break out of a quoted header value."""
+    cleaned = re.sub(r"[^a-z0-9-]+", "-", value.lower()).strip("-")
+    return cleaned or "ashyq-export"
 
 
 def _results(session: Session, run_id: str, **filters) -> list[ProgramResultRow]:
@@ -226,6 +234,15 @@ def export(
     session: Session = Depends(get_session),
 ) -> Response:
     run = owned_run(session, run_id, principal)
+    # The filter goes into the Content-Disposition header, so it is validated
+    # against the enum rather than trusted: `?decision=approved" ; x-injected="1`
+    # used to land inside the header verbatim.
+    if decision is not None and decision not in {d.value for d in UserDecision}:
+        raise HTTPException(
+            400,
+            f"Unknown decision filter {decision!r}. Use one of: "
+            f"{', '.join(sorted(d.value for d in UserDecision))}.",
+        )
     rows = _results(session, run_id, decision=decision)
     results = [ProgramResult.model_validate(r.payload) for r in rows]
     meta = {
@@ -234,7 +251,9 @@ def export(
         "stage": run.stage,
         "filter": {"decision": decision},
     }
-    stem = f"unimatch-{run_id[:8]}{'-' + decision if decision else ''}"
+    # Belt and braces: even a validated value is rebuilt from a safe alphabet,
+    # so no future caller can smuggle a quote or a newline into the header.
+    stem = _safe_filename_stem(f"ashyq-{run_id[:8]}{'-' + decision if decision else ''}")
 
     if fmt == "csv":
         return Response(

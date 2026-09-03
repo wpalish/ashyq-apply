@@ -194,9 +194,11 @@ async def pii_handler(_: Request, exc: PIILeakError) -> JSONResponse:
     return JSONResponse(status_code=400, content={"detail": str(exc), "code": "pii_guard"})
 
 
-@app.exception_handler(ValueError)
-async def value_error_handler(_: Request, exc: ValueError) -> JSONResponse:
-    return JSONResponse(status_code=400, content={"detail": str(exc)})
+# There is deliberately no global ValueError handler. One used to turn every
+# ValueError raised anywhere - including ordinary bugs and UnsupportedCurrency
+# from deep inside the domain - into a 400 carrying its raw text. That masked
+# real 500s as client errors and handed internal detail to the caller. Routes
+# where a ValueError is genuinely the user's mistake convert it themselves.
 
 
 if settings.frontend_dir and settings.frontend_dir.is_dir():

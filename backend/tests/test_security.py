@@ -341,3 +341,75 @@ def test_production_refuses_other_unsafe_defaults(overrides, message):
     }
     with pytest.raises(RuntimeError, match=message):
         Settings(**values).validate_runtime()
+
+
+class TestErrorsAndHeaders:
+    def test_an_internal_value_error_is_a_500_without_its_text(self, auth_client, monkeypatch):
+        """A global ValueError->400 handler masked bugs as client errors.
+
+        It also handed the caller whatever the exception happened to say, which
+        in this codebase includes internal currency and parsing detail.
+        """
+        from fastapi.testclient import TestClient
+
+        import app.api.routes_profile as routes_profile
+        import app.main as main_module
+
+        client, _ = auth_client
+        register(client, "error-paths")
+
+        def explode(*_args, **_kwargs):
+            raise ValueError("internal detail: rate table row 17 is malformed")
+
+        monkeypatch.setattr(routes_profile, "validate_profile", explode)
+        with TestClient(main_module.app, raise_server_exceptions=False) as raw:
+            raw.cookies.update(client.cookies)
+            response = raw.post(
+                "/api/profiles/validate", json=copy.deepcopy(DEMO_PROFILE.model_dump(mode="json"))
+            )
+
+        assert response.status_code == 500
+        assert "rate table row 17" not in response.text
+
+    def test_a_bad_email_is_still_a_readable_400(self, auth_client):
+        """Removing the handler must not turn a typo into a server error."""
+        client, _ = auth_client
+        response = client.post(
+            "/api/auth/register",
+            json={
+                "email": "not-an-email",
+                "password": "correct horse battery staple",
+                "display_name": "Typo",
+                "organization_name": "Typo",
+            },
+        )
+        assert response.status_code == 400
+        assert "valid email" in response.json()["detail"]
+
+    def test_the_export_filename_cannot_be_injected(self, auth_client):
+        from tests.test_api import drain_queue
+
+        client, _ = auth_client
+        register(client, "export-header")
+        profile = client.post(
+            "/api/profiles", json=copy.deepcopy(DEMO_PROFILE.model_dump(mode="json"))
+        ).json()
+        run = client.post("/api/runs", json={"profile_id": profile["id"], "demo_mode": True}).json()
+        assert asyncio.run(drain_queue()) == 1
+
+        hostile = client.get(
+            f"/api/runs/{run['id']}/export.csv",
+            params={"decision": 'approved" ; x-injected="1'},
+        )
+        assert hostile.status_code == 400
+        assert "Unknown decision filter" in hostile.json()["detail"]
+
+        crlf = client.get(
+            f"/api/runs/{run['id']}/export.csv", params={"decision": "approved\r\nX-Evil: 1"}
+        )
+        assert crlf.status_code == 400
+
+        good = client.get(f"/api/runs/{run['id']}/export.csv", params={"decision": "approved"})
+        assert good.status_code == 200
+        disposition = good.headers["content-disposition"]
+        assert disposition == 'attachment; filename="ashyq-{}-approved.csv"'.format(run["id"][:8])
