@@ -25,7 +25,7 @@ from app.adapters.government.web_government import WebGovernmentAdapter
 from app.adapters.requirements.web_requirements import WebRequirementsAdapter
 from app.adapters.scholarship.web_scholarships import WebScholarshipAdapter
 from app.config import Settings
-from app.domain import dedupe
+from app.domain import dedupe, diagnostics
 from app.domain.citizenship import CitizenshipMatch, match_citizenship
 from app.domain.conflicts import enforce_source_hierarchy, find_conflicts
 from app.domain.costs import compute_funding_gap, total_cost
@@ -481,7 +481,7 @@ class ResearchRunner:
             # stage state ride on the same commit as the heartbeat.
             self._save()
 
-        self.run.errors = list(self.run.errors or []) + errors[:200]
+        self._record_diagnostics(errors)
         self.run.retry_urls = sorted(set(list(self.run.retry_urls or []) + retry))[:200]
         st.finish(
             f"{self.run.programs_verified} programmes checked across "
@@ -619,7 +619,7 @@ class ResearchRunner:
             if i % 4 == 0:
                 self._save()
 
-        self.run.errors = list(self.run.errors or []) + errors[:200]
+        self._record_diagnostics(errors)
         st.finish(f"Funding checked for {len(rows)} programmes.")
         self._save()
 
@@ -774,7 +774,7 @@ class ResearchRunner:
                 " No checklist was built at all - the approved rows are listed in this run's "
                 "diagnostics with the reason."
             )
-        self.run.errors = list(self.run.errors or []) + errors[:200]
+        self._record_diagnostics(errors)
         st.finish(detail)
         completed = self.state[PipelineStage.COMPLETED]
         completed.start(detail="Research and document collection complete.")
@@ -784,6 +784,18 @@ class ResearchRunner:
         self._save()
         return built
 
+
+
+    def _record_diagnostics(self, messages: list[str]) -> None:
+        """File each diagnostic as a failure or an honest unknown.
+
+        A clean demo run produces about fifty lines saying a page does not
+        state something. Reported beside real fetch failures they read as
+        fifty problems, which is how a correct result comes to look broken.
+        """
+        failures, unknowns = diagnostics.split(messages)
+        self.run.errors = list(self.run.errors or []) + failures[:200]
+        self.run.unknowns = list(self.run.unknowns or []) + unknowns[:400]
 
     def _add_unresolved(
         self, row: ProgramResultRow, result: ProgramResult, *, topic: str, question: str, why: str

@@ -79,6 +79,9 @@ class RunView(BaseModel):
     decided_count: int
     stages: list[StageView]
     errors: list[str]
+    #: Diagnostics that mean "the page was read and does not say". Separate
+    #: from `errors` so the UI can stop presenting them as problems.
+    unknowns: list[str] = []
     retry_urls: list[str]
     settings: dict
     created_at: str
@@ -150,6 +153,7 @@ def _view(session: Session, run: ResearchRun) -> RunView:
             if name not in ("queued",)
         ],
         errors=list(run.errors or []),
+        unknowns=list(run.unknowns or []),
         retry_urls=list(run.retry_urls or []),
         settings=dict(run.settings_snapshot or {}),
         created_at=run.created_at.isoformat(),

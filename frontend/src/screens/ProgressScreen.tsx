@@ -56,6 +56,10 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
     (groups[category] ??= []).push(message);
     return groups;
   }, {});
+  // Older runs, made before the two were separated, carry everything in
+  // `errors`; they keep rendering under the failures panel rather than being
+  // silently reclassified.
+  const unknowns = run.unknowns ?? [];
 
   return (
     <>
@@ -165,9 +169,36 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
           </div>
         </Panel>
 
+        {unknowns.length > 0 && (
+          <Panel
+            title="What could not be confirmed"
+            hint={
+              `${unknowns.length} facts were not published on the pages that were read. `
+              + 'This is normal, and none of them was guessed — each stays unknown in the results.'
+            }
+          >
+            <details data-testid="unknowns-panel">
+              <summary className="small">
+                <strong>Unconfirmed facts</strong> · {unknowns.length}
+              </summary>
+              <div
+                className="stack stack--tight"
+                style={{ maxHeight: '12rem', overflowY: 'auto', marginTop: 'var(--space-2)' }}
+                tabIndex={0}
+                role="region"
+                aria-label="Facts that could not be confirmed"
+              >
+                {unknowns.slice(0, 60).map((message, index) => (
+                  <div key={index} className="xs mono muted" style={{ overflowWrap: 'anywhere' }}>{message}</div>
+                ))}
+              </div>
+            </details>
+          </Panel>
+        )}
+
         {run.errors.length > 0 && (
-          <Panel title="Research limitations"
-            hint={`${run.errors.length} diagnostics are grouped by what they mean. They never become guessed values.`}>
+          <Panel title="Fetch failures" data-testid="failures-panel"
+            hint={`${run.errors.length} pages could not be read at all. Anything that depended on them is unknown, never guessed.`}>
             <div className="stack stack--tight">
               {Object.entries(groupedErrors).map(([category, messages]) => (
                 <details key={category}>

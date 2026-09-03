@@ -346,6 +346,9 @@ export interface RunView {
   decided_count: number;
   stages: StageView[];
   errors: string[];
+  //: Diagnostics that mean 'the page was read and does not say'. Absent on
+  //: runs made before the two were separated.
+  unknowns?: string[];
   retry_urls: string[];
   settings: Record<string, unknown>;
   created_at: string;

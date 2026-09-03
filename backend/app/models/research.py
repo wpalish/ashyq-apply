@@ -62,7 +62,13 @@ class ResearchRun(TimestampedBase):
     #: How many pages each fetch tier produced. Proves the browser tier is
     #: actually doing work rather than merely being constructed.
     fetch_tiers: Mapped[dict] = mapped_column(JSON, default=dict)
+    #: Diagnostics that mean "a page could not be read".
     errors: Mapped[list] = mapped_column(JSON, default=list)
+    #: Diagnostics that mean "the page was read and does not say". Kept apart
+    #: because a clean run produces dozens of these and none of them is a
+    #: problem; mixing them into `errors` taught the applicant to distrust a
+    #: correct result.
+    unknowns: Mapped[list] = mapped_column(JSON, default=list)
     retry_urls: Mapped[list] = mapped_column(JSON, default=list)
     settings_snapshot: Mapped[dict] = mapped_column(JSON, default=dict)
 

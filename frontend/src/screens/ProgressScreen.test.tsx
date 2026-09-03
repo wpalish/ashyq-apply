@@ -161,3 +161,44 @@ describe('freshness', () => {
     expect(screen.getByTestId('recheck')).toHaveTextContent('no dated evidence');
   });
 });
+
+describe('diagnostics', () => {
+  it('separates unconfirmed facts from pages that could not be read', () => {
+    currentRun = makeRun({
+      stage: 'awaiting_user_decision',
+      stages: makeRun().stages.map((s) => ({ ...s, status: 'done' })),
+      unknowns: ['tum/program-0.html: no statement about the application window for fall 2027'],
+      errors: ['https://example.edu/fees: timeout after 20s'],
+    });
+    render(<ProgressScreen onDone={() => {}} />);
+
+    expect(screen.getByText('What could not be confirmed')).toBeInTheDocument();
+    expect(screen.getByText(/This is normal/)).toBeInTheDocument();
+    expect(screen.getByText('Fetch failures')).toBeInTheDocument();
+  });
+
+  it('shows no failure panel on a clean run, however many unknowns there are', () => {
+    currentRun = makeRun({
+      stage: 'awaiting_user_decision',
+      stages: makeRun().stages.map((s) => ({ ...s, status: 'done' })),
+      unknowns: Array.from({ length: 47 }, (_, i) => `page-${i}.html: does not state the deadline`),
+      errors: [],
+    });
+    render(<ProgressScreen onDone={() => {}} />);
+
+    expect(screen.getByTestId('unknowns-panel')).toHaveTextContent('47');
+    expect(screen.queryByText('Fetch failures')).toBeNull();
+  });
+
+  it('still renders an older run that predates the split', () => {
+    currentRun = makeRun({
+      stage: 'awaiting_user_decision',
+      stages: makeRun().stages.map((s) => ({ ...s, status: 'done' })),
+      errors: ['tum/program-0.html: cannot confirm that the programme exists'],
+    });
+    delete (currentRun as { unknowns?: unknown }).unknowns;
+    render(<ProgressScreen onDone={() => {}} />);
+
+    expect(screen.getByText('Fetch failures')).toBeInTheDocument();
+  });
+});
