@@ -317,8 +317,8 @@ def _scholarship_index(uni: dict[str, Any]) -> str:
 def build(target: Path | None = None) -> dict[str, int]:
     root = target or PAGES_DIR
     if root.exists():
-        for p in sorted(root.rglob("*"), reverse=True):
-            p.unlink() if p.is_file() else p.rmdir()
+        for stale in sorted(root.rglob("*"), reverse=True):
+            stale.unlink() if stale.is_file() else stale.rmdir()
     root.mkdir(parents=True, exist_ok=True)
 
     written = 0
