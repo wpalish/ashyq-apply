@@ -164,3 +164,38 @@ class TestGovernmentEvidenceReachesEveryRow:
 
         session.close()
         engine.dispose()
+
+
+class TestCurrencySnapshotAge:
+    """A static rate table is honest only while it says how old it is."""
+
+    def test_a_fresh_snapshot_carries_no_warning(self, monkeypatch):
+        from datetime import timedelta
+
+        import app.domain.currency as currency
+
+        assert currency.rates_are_stale(currency.RATE_DATE + timedelta(days=30)) is False
+
+    def test_an_old_snapshot_is_flagged(self):
+        from datetime import timedelta
+
+        import app.domain.currency as currency
+
+        assert currency.rates_are_stale(currency.RATE_DATE + timedelta(days=91)) is True
+
+    def test_capabilities_says_so_in_words_the_user_can_act_on(self, monkeypatch):
+        import app.api.routes_meta as routes_meta
+
+        monkeypatch.setattr(routes_meta, "rates_are_stale", lambda: True)
+        monkeypatch.setattr(routes_meta, "rate_age_days", lambda: 400)
+
+        block = routes_meta.capabilities()["currency"]
+        assert block["rate_age_days"] == 400
+        assert "400 days old" in block["stale_warning"]
+        assert "check the current rate" in block["stale_warning"]
+
+    def test_the_rate_source_names_the_product_correctly(self):
+        from app.domain.currency import RATE_SOURCE
+
+        assert "ASHYQ Apply" in RATE_SOURCE
+        assert "UniMatch" not in RATE_SOURCE

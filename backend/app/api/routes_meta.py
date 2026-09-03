@@ -11,7 +11,13 @@ from sqlalchemy.orm import Session
 from app.config import get_settings
 from app.db import get_session
 from app.domain import enums
-from app.domain.currency import RATE_DATE, RATE_SOURCE, supported_currencies
+from app.domain.currency import (
+    RATE_DATE,
+    RATE_SOURCE,
+    rate_age_days,
+    rates_are_stale,
+    supported_currencies,
+)
 from app.models import CURRENT_SCHEMA_VERSION, AuditEvent
 from app.security import Principal, get_principal
 
@@ -75,6 +81,16 @@ def capabilities() -> dict:
             "supported": supported_currencies(),
             "rate_date": RATE_DATE.isoformat(),
             "rate_source": RATE_SOURCE,
+            "rate_age_days": rate_age_days(),
+            # The snapshot is deliberately static; saying nothing about its age
+            # is what would make it dishonest.
+            "stale_warning": (
+                f"These conversions use exchange rates from {RATE_DATE.isoformat()}, "
+                f"{rate_age_days()} days old. Treat converted amounts as indicative and "
+                f"check the current rate before relying on one."
+                if rates_are_stale()
+                else ""
+            ),
         },
         "guarantees": [
             "robots.txt is honoured before every fetch, including the browser tier",

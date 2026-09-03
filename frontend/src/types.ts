@@ -398,7 +398,14 @@ export interface Capabilities {
   data_origin: string;
   adapters: { name: string; role: string; live: boolean }[];
   fetch_tiers: string[];
-  currency: { supported: string[]; rate_date: string; rate_source: string };
+  currency: {
+    supported: string[];
+    rate_date: string;
+    rate_source: string;
+    rate_age_days?: number;
+    //: Empty while the snapshot is fresh; a sentence to show verbatim once it is not.
+    stale_warning?: string;
+  };
   guarantees: string[];
   limits: string[];
 }
