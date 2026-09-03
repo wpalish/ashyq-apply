@@ -410,3 +410,74 @@ class TestEnqueueTransaction:
         with bound_db() as session:
             assert session.get(ResearchRun, run_id).cancelled is True
             assert session.query(Job).filter(Job.idempotency_key == "shared").count() == 1
+
+
+class TestLeaseConfiguration:
+    """`job_lease_seconds` is configurable, so nothing may assume 120."""
+
+    def test_the_expiry_check_follows_the_configured_lease(self, settings, monkeypatch):
+        from datetime import timedelta
+
+        from app.pipeline.state import is_lease_expired
+
+        monkeypatch.setattr("app.config.get_settings", lambda: settings)
+        settings.job_lease_seconds = 600
+        beat = datetime.now(UTC) - timedelta(seconds=300)
+        assert not is_lease_expired("funding_discovery", beat), (
+            "a 300s silence is fine when the lease is 600s"
+        )
+
+        settings.job_lease_seconds = 60
+        assert is_lease_expired("funding_discovery", beat)
+
+    def test_the_api_reports_stale_using_the_configured_lease(
+        self, bound_db, settings, profile, monkeypatch
+    ):
+        """The run view used a hardcoded 120s while the worker used the setting."""
+        from datetime import timedelta
+
+        import app.api.routes_research as routes_research
+        from app.api.routes_research import _view
+
+        monkeypatch.setattr(routes_research, "get_settings", lambda: settings)
+        settings.job_lease_seconds = 30
+        run_id, _ = seed_run(bound_db, profile)
+        with bound_db() as session:
+            run = session.get(ResearchRun, run_id)
+            run.stage = "program_verification"
+            run.heartbeat_at = datetime.now(UTC) - timedelta(seconds=60)
+            session.commit()
+
+        with bound_db() as session:
+            view = _view(session, session.get(ResearchRun, run_id))
+            assert view.stale is True, "60s of silence exceeds a 30s lease"
+
+
+class TestHeartbeatCadence:
+    def test_every_verified_candidate_refreshes_the_heartbeat(
+        self, bound_db, settings, profile, monkeypatch
+    ):
+        """A healthy run was flagged stale because verification beat once per
+        four candidates, which in live mode can outlast the whole lease."""
+        beats: list[str] = []
+        original = ResearchRun.__setattr__
+
+        def record(self, name, value):
+            if name == "heartbeat_at" and value is not None:
+                beats.append(self.stage)
+            original(self, name, value)
+
+        run_id, job_id = seed_run(bound_db, profile, candidate_limit=8, verify_limit=8)
+        monkeypatch.setattr(ResearchRun, "__setattr__", record)
+        worker = Worker(settings)
+        worker.claim_one()
+        asyncio.run(worker.execute(job_id))
+        monkeypatch.undo()
+
+        with bound_db() as session:
+            verified = session.get(ResearchRun, run_id).programs_verified
+        during_verification = [s for s in beats if s == "program_verification"]
+        assert verified >= 8, f"the corpus must supply enough candidates (got {verified})"
+        assert len(during_verification) >= verified, (
+            f"only {len(during_verification)} heartbeats while verifying {verified} programmes"
+        )

@@ -12,9 +12,10 @@ import { ProgressScreen } from './ProgressScreen';
 import type { RunView } from '@/types';
 
 const retryRun = vi.fn();
+const cancelRun = vi.fn();
 
 vi.mock('@/lib/store', () => ({
-  useStore: () => ({ run: currentRun, cancelRun: vi.fn(), retryRun, results: [] }),
+  useStore: () => ({ run: currentRun, cancelRun, retryRun, results: [] }),
 }));
 
 let currentRun: RunView;
@@ -57,6 +58,7 @@ function makeRun(overrides: Partial<RunView> = {}): RunView {
 
 beforeEach(() => {
   retryRun.mockReset();
+  cancelRun.mockReset();
   currentRun = makeRun();
 });
 
@@ -88,5 +90,47 @@ describe('retry controls', () => {
     render(<ProgressScreen onDone={() => {}} />);
     expect(screen.queryByTestId('retry-stage')).toBeNull();
     expect(screen.getByTestId('retry-run')).toBeInTheDocument();
+  });
+});
+
+describe('a run whose worker died', () => {
+  const stale = () =>
+    makeRun({
+      stage: 'program_verification',
+      stale: true,
+      job_running: false,
+      job_error: 'lease lost: job 4f21a0c1 is no longer held by host:9182',
+      recovery_count: 2,
+      heartbeat_at: '2026-09-01T10:03:00Z',
+      stages: makeRun().stages.map((s) =>
+        s.stage === 'program_verification' ? { ...s, status: 'running' } : s,
+      ),
+    });
+
+  it('says the worker stopped instead of showing a frozen spinner', () => {
+    currentRun = stale();
+    render(<ProgressScreen onDone={() => {}} />);
+
+    const banner = screen.getByTestId('stale-run');
+    expect(banner).toHaveTextContent('The worker stopped responding');
+    expect(banner).toHaveTextContent('lease lost');
+    expect(banner).toHaveTextContent('Recovered and restarted 2 times');
+  });
+
+  it('offers a way out: resume from where it stopped, or cancel', () => {
+    currentRun = stale();
+    render(<ProgressScreen onDone={() => {}} />);
+
+    fireEvent.click(screen.getByTestId('retry-stale'));
+    expect(retryRun).toHaveBeenCalledWith('program_verification');
+
+    fireEvent.click(screen.getByTestId('cancel-stale'));
+    expect(cancelRun).toHaveBeenCalled();
+  });
+
+  it('stays quiet while the worker is actually working', () => {
+    currentRun = makeRun({ stage: 'program_verification', stale: false, job_running: true });
+    render(<ProgressScreen onDone={() => {}} />);
+    expect(screen.queryByTestId('stale-run')).toBeNull();
   });
 });

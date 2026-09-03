@@ -47,6 +47,10 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
   // that already succeeded, which is what the old single button claimed to do
   // while in fact restarting everything.
   const stoppedStage = run.stages.find((s) => s.status === 'failed' || s.status === 'running')?.stage;
+  // The API says stale when a run claims to be working but its worker has gone
+  // silent. Without this the screen showed a frozen spinner, no error and no
+  // way out — the user could only reload and hope.
+  const abandoned = run.stale && !run.job_running && !finished && !failed && !cancelled;
   const groupedErrors = run.errors.reduce<Record<string, string[]>>((groups, message) => {
     const category = errorCategory(message);
     (groups[category] ??= []).push(message);
@@ -77,6 +81,37 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
             </span>
           </div>
         </div>
+
+        {abandoned && (
+          <Notice kind="risk">
+            <div className="stack stack--tight" data-testid="stale-run">
+              <div>
+                <strong>The worker stopped responding.</strong> This run last reported progress
+                {run.heartbeat_at ? ` at ${dateTime(run.heartbeat_at)}` : ' some time ago'} and
+                nothing has happened since. Your results so far are saved.
+              </div>
+              {run.job_error && <div className="xs mono muted">{run.job_error}</div>}
+              {run.recovery_count > 0 && (
+                <div className="xs muted">
+                  Recovered and restarted {run.recovery_count} time
+                  {run.recovery_count === 1 ? '' : 's'} already.
+                </div>
+              )}
+              <div className="row">
+                <button
+                  className="btn btn--primary"
+                  onClick={() => retryRun(stoppedStage)}
+                  data-testid="retry-stale"
+                >
+                  Resume from {STAGE_LABELS[stoppedStage ?? ''] ?? 'where it stopped'}
+                </button>
+                <button className="btn btn--ghost" onClick={cancelRun} data-testid="cancel-stale">
+                  Cancel this run
+                </button>
+              </div>
+            </div>
+          </Notice>
+        )}
 
         <div className="statband">
           <Stat value={run.candidates_found} label="Candidates found" />

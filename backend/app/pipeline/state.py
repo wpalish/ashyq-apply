@@ -24,8 +24,11 @@ IN_PROGRESS_STAGES = {
 }
 
 #: How long a worker may go silent before its run is treated as abandoned.
-#: Long enough to cover a slow page fetch with its retries and backoff.
-LEASE_SECONDS = 120
+#: Long enough to cover a slow page fetch with its retries and backoff. This is
+#: only the fallback: the live value is UNIMATCH_JOB_LEASE_SECONDS, and holding
+#: a second copy here is how the API came to call a healthy run stale while the
+#: worker considered its lease perfectly valid.
+DEFAULT_LEASE_SECONDS = 120
 
 #: Stages that may be re-run on their own after a failure.
 RETRYABLE = {
@@ -105,7 +108,7 @@ def is_lease_expired(
     heartbeat_at: datetime | None,
     *,
     now: datetime | None = None,
-    lease_seconds: int = LEASE_SECONDS,
+    lease_seconds: int | None = None,
 ) -> bool:
     """Whether a run claims to be working but nothing is behind it.
 
@@ -121,6 +124,10 @@ def is_lease_expired(
     heartbeat_at = ensure_utc(heartbeat_at)
     if heartbeat_at is None:
         return False
+    if lease_seconds is None:
+        from app.config import get_settings
+
+        lease_seconds = get_settings().job_lease_seconds
     reference = now or datetime.now(UTC)
     return (reference - heartbeat_at).total_seconds() > lease_seconds
 

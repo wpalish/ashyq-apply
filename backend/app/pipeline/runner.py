@@ -400,8 +400,11 @@ class ResearchRunner:
                 self.run.programs_verified = len(seen_keys)
                 self.run.claims_recorded += len(all_claims)
 
-            if i % 4 == 0:
-                self._save()
+            # Once per candidate, not once per four: in live mode four page
+            # fetches with their retries can outlast the lease, and a healthy
+            # run would then be reported as abandoned. The counters and the
+            # stage state ride on the same commit as the heartbeat.
+            self._save()
 
         self.run.errors = list(self.run.errors or []) + errors[:200]
         self.run.retry_urls = sorted(set(list(self.run.retry_urls or []) + retry))[:200]

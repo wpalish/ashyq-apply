@@ -102,11 +102,12 @@ def settings_default(name: str) -> int:
 
 def _view(session: Session, run: ResearchRun) -> RunView:
     state = RunState.load(run.stage_state)
+    lease_seconds = get_settings().job_lease_seconds
     job = session.query(Job).filter(Job.run_id == run.id).order_by(Job.created_at.desc()).first()
     # "Running" is a property of the job, not of the stage the run stopped at.
     job_running = job is not None and job.status == JobStatus.RUNNING.value
     lease_expiry = ensure_utc(job.lease_expires_at) if job else None
-    stale = is_lease_expired(run.stage, run.heartbeat_at) or (
+    stale = is_lease_expired(run.stage, run.heartbeat_at, lease_seconds=lease_seconds) or (
         job is not None
         and job.status == JobStatus.RUNNING.value
         and lease_expiry is not None
