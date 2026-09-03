@@ -26,7 +26,10 @@ export default defineConfig({
   webServer: [
     {
       // The API only enqueues; a worker is needed to consume the queue.
-      command: '../backend/run.sh --with-worker',
+      // Invoked through bash rather than as an executable: on Windows the
+      // shebang means nothing to cmd.exe and the suite dies before the first
+      // test with an unhelpful "'..' is not recognized".
+      command: 'bash ../backend/run.sh --with-worker',
       url: `http://127.0.0.1:${API_PORT}/api/health`,
       reuseExistingServer: true,
       timeout: 60_000,
