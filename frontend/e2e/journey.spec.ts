@@ -226,3 +226,33 @@ test('rejection is remembered with the row kept', async () => {
   await page.getByTestId('nav-approved').click();
   await expect(page.getByText('no funding')).toBeVisible();
 });
+
+test('screens have addresses: back, forward, reload and a gated link', async () => {
+  await openShortlist(page);
+  await expect(page).toHaveURL(/#\/shortlist$/);
+
+  await page.getByTestId('nav-funding').click();
+  await expect(page).toHaveURL(/#\/funding$/);
+
+  await page.goBack();
+  await expect(page).toHaveURL(/#\/shortlist$/);
+  await expect(page.getByRole('heading', { name: 'The shortlist' })).toBeVisible();
+
+  await page.goForward();
+  await expect(page).toHaveURL(/#\/funding$/);
+
+  // A reload lands on the same screen rather than back at step 01.
+  await page.reload();
+  await expect(page).toHaveURL(/#\/funding$/);
+  await expect(page.getByRole('heading', { name: 'What you would actually pay' })).toBeVisible();
+});
+
+test('a link to a screen that is not reachable yet explains itself', async ({ browser }) => {
+  // A bookmark made before there were any results, opened in a clean session.
+  const fresh = await browser.newPage();
+  await fresh.goto('/#/shortlist');
+  await expect(fresh.getByTestId('redirect-notice')).toBeVisible();
+  await expect(fresh.getByTestId('redirect-notice')).toContainText('No results yet');
+  await expect(fresh).toHaveURL(/#\/profile$/);
+  await fresh.close();
+});

@@ -75,6 +75,13 @@ export interface Store {
   newCase: () => void;
   /** True once a stored profile has been loaded back into the draft. */
   restored: boolean;
+  /**
+   * True once the initial restore has finished, whether or not there was
+   * anything to restore. Anything that judges the app's state - a deep link
+   * against the screen gates, say - must wait for this, or it judges an empty
+   * store and concludes there are no results a moment before they arrive.
+   */
+  hydrated: boolean;
   loadDemoProfile: () => void;
   clearProfile: () => void;
   validation: ProfileValidationReport | null;
@@ -162,6 +169,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [error, setError] = useState<string | null>(null);
   const [restored, setRestored] = useState(false);
   const [draftRestored, setDraftRestored] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
   //: What the draft looked like when it was last saved or loaded. Comparing
   //: against this is what makes "unsaved changes" a fact rather than a guess.
   const [baseline, setBaseline] = useState<string>('');
@@ -266,9 +274,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         });
     }
     const storedRun = readLocal(RUN_KEY);
-    if (storedRun) {
-      api.getRun(storedRun).then(setRun).catch(() => writeLocal(RUN_KEY, null));
-    }
+    const runLoaded = storedRun
+      ? api.getRun(storedRun)
+          .then((stored) => { setRun(stored); return api.results(stored.id); })
+          .then(setResults)
+          .catch(() => writeLocal(RUN_KEY, null))
+      : Promise.resolve();
+    void runLoaded.finally(() => setHydrated(true));
   }, []);
 
   // Poll while work is outstanding.
@@ -560,13 +572,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const value = useMemo<Store>(
     () => ({
       capabilities, profileDraft, setProfileDraft, savedProfile, cases, switchCase, newCase, restored,
-      dirty, draftRestored, discardDraft,
+      dirty, draftRestored, discardDraft, hydrated,
       loadDemoProfile, clearProfile, validation, run, results,
       summary, loading, error, saveProfile, startRun, cancelRun, retryRun, recheckNow, collectDocuments,
       decide, saveNotes, refreshResults, deleteEverything, clearError: () => setError(null),
     }),
     [capabilities, profileDraft, setProfileDraft, savedProfile, cases, switchCase, newCase,
-     restored, dirty, draftRestored, discardDraft, loadDemoProfile,
+     restored, dirty, draftRestored, discardDraft, hydrated, loadDemoProfile,
      clearProfile, validation, run, results, summary, loading, error, saveProfile, startRun,
      cancelRun, retryRun, recheckNow, collectDocuments, decide, saveNotes, refreshResults,
      deleteEverything],
