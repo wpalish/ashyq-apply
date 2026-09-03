@@ -202,12 +202,27 @@ test('rejection is remembered with the row kept', async () => {
 
   const first = page.locator('tbody tr').first();
   const name = await first.locator('.uni-cell__name').innerText();
+
+  // Saying No asks why. The reason is optional, but the product promises that
+  // whatever is given is kept with the row.
   await first.locator('.decision-btn--reject').click();
+  const reason = first.locator('[data-testid^="reject-reason-"]');
+  await expect(reason).toBeVisible();
+  await reason.locator('button', { hasText: 'no funding' }).click();
+  await reason.locator('[data-testid^="reject-save-"]').click();
+
   await expect(first.locator('.decision-btn--reject')).toHaveAttribute('aria-pressed', 'true');
   await expect(first).toHaveClass(/is-rejected/);
+  await expect(first).toContainText('Rejected: no funding');
 
   await page.getByTestId('nav-approved').click();
   await expect(page.getByText('Rejected (1)')).toBeVisible();
   await expect(page.getByText(name)).toBeVisible();
+  await expect(page.getByText('no funding')).toBeVisible();
   await expect(page.getByText(/not proposed again unless something material changes/)).toBeVisible();
+
+  // And it survives a reload: the reason lives on the server, not in the tab.
+  await page.reload();
+  await page.getByTestId('nav-approved').click();
+  await expect(page.getByText('no funding')).toBeVisible();
 });

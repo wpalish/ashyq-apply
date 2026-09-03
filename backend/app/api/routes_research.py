@@ -105,7 +105,16 @@ def settings_default(name: str) -> int:
 def _view(session: Session, run: ResearchRun) -> RunView:
     state = RunState.load(run.stage_state)
     lease_seconds = get_settings().job_lease_seconds
-    job = session.query(Job).filter(Job.run_id == run.id).order_by(Job.created_at.desc()).first()
+    # The job the user is waiting on, which is not always the newest row: a
+    # recheck is queued months ahead, and reporting it as this run's job made
+    # every screen believe work was in flight for ever.
+    now = datetime.now(UTC)
+    job = (
+        session.query(Job)
+        .filter(Job.run_id == run.id, Job.available_at <= now)
+        .order_by(Job.created_at.desc())
+        .first()
+    )
     # "Running" is a property of the job, not of the stage the run stopped at.
     job_running = job is not None and job.status == JobStatus.RUNNING.value
     lease_expiry = ensure_utc(job.lease_expires_at) if job else None

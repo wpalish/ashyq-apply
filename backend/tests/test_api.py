@@ -477,3 +477,47 @@ class TestHealth:
         # The configuration fields survive, so the probe still says what build
         # it reached.
         assert "schema_version" in body
+
+
+class TestRunViewJobReporting:
+    """The run view reports the job the user is waiting on.
+
+    A recheck job is queued months ahead. Reporting it as the run's current
+    job made every screen believe work was in flight for ever: the collect
+    button sat disabled at "Collecting…" and never came back.
+    """
+
+    def test_a_deferred_recheck_is_not_reported_as_work_in_flight(self, client, finished_run):
+        _, run = finished_run
+        state = client.get(f"/api/runs/{run['id']}").json()
+
+        from app.db import SessionLocal
+        from app.models import Job
+
+        with SessionLocal() as session:
+            assert session.query(Job).filter(
+                Job.run_id == run["id"], Job.kind == "recheck"
+            ).count() == 1, "the recheck must exist for this test to mean anything"
+
+        assert state["job_status"] == "succeeded", "the research job is the one that matters"
+        assert state["job_running"] is False
+        assert state["next_recheck_at"] is not None
+
+    def test_documents_can_still_be_collected_after_a_recheck_is_queued(
+        self, client, finished_run
+    ):
+        _, run = finished_run
+        result = client.get(f"/api/runs/{run['id']}/results").json()[0]
+        client.post(
+            f"/api/runs/{run['id']}/results/{result['id']}/decision",
+            json={"decision": "approved", "reason": "", "notes": ""},
+        )
+        assert client.post(f"/api/runs/{run['id']}/collect-documents").status_code == 202
+
+        state = client.get(f"/api/runs/{run['id']}").json()
+        assert state["job_status"] == "queued", "the documents job is what is now outstanding"
+        assert asyncio.run(drain_queue()) == 1
+
+        done = client.get(f"/api/runs/{run['id']}").json()
+        assert done["stage"] == "completed"
+        assert done["job_status"] == "succeeded", "a future recheck must not read as running"
