@@ -28,6 +28,7 @@ from app.schemas.result import (
     ProgramResult,
     Scholarship,
 )
+from tests.conftest import profile_row
 
 
 def result(**kwargs) -> ProgramResult:
@@ -259,9 +260,7 @@ class TestPreferencesThatBecomeQuestions:
         migrate_to_head(settings.database_url)
         engine = sa.create_engine(settings.database_url, connect_args={"check_same_thread": False})
         session = sessionmaker(bind=engine, future=True)()
-        row = ApplicantProfileRow(display_name="t", payload=profile.model_dump(mode="json"))
-        session.add(row)
-        session.flush()
+        row = profile_row(session, profile)
         run = ResearchRun(
             profile_id=row.id, stage="queued", demo_mode=True,
             candidate_limit=4, verify_limit=4, stage_state=RunState.load(None).dump(),
@@ -304,9 +303,7 @@ class TestPreferencesThatBecomeQuestions:
         migrate_to_head(settings.database_url)
         engine = sa.create_engine(settings.database_url, connect_args={"check_same_thread": False})
         session = sessionmaker(bind=engine, future=True)()
-        row = ApplicantProfileRow(display_name="t", payload=profile.model_dump(mode="json"))
-        session.add(row)
-        session.flush()
+        row = profile_row(session, profile)
         run = ResearchRun(
             profile_id=row.id, stage="queued", demo_mode=True,
             candidate_limit=4, verify_limit=4, stage_state=RunState.load(None).dump(),

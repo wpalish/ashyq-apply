@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 
-from fastapi import APIRouter, Depends, Response
+from fastapi import APIRouter, Depends, Query, Response
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
@@ -130,7 +130,7 @@ def vocabulary() -> dict:
 
 @router.get("/audit")
 def audit_log(
-    limit: int = 200,
+    limit: int = Query(default=200, ge=1, le=1000),
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
 ) -> list[dict]:
@@ -139,7 +139,7 @@ def audit_log(
         session.query(AuditEvent)
         .filter(AuditEvent.organization_id == principal.organization_id)
         .order_by(AuditEvent.created_at.desc())
-        .limit(min(limit, 1000))
+        .limit(limit)
         .all()
     )
     return [

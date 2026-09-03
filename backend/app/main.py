@@ -108,7 +108,24 @@ class FixedWindowLimiter:
         if len(bucket) >= limit:
             return False
         bucket.append(now)
+        self._collect(cutoff)
         return True
+
+    #: Every distinct caller left an empty deque behind for the life of the
+    #: process. One address per login attempt is a slow leak in a long-running
+    #: API, so the map is swept occasionally rather than never.
+    _SWEEP_EVERY = 500
+
+    def _collect(self, cutoff: float) -> None:
+        self._since_sweep = getattr(self, "_since_sweep", 0) + 1
+        if self._since_sweep < self._SWEEP_EVERY:
+            return
+        self._since_sweep = 0
+        for key, bucket in list(self.hits.items()):
+            while bucket and bucket[0] <= cutoff:
+                bucket.popleft()
+            if not bucket:
+                del self.hits[key]
 
 
 _limiter = FixedWindowLimiter()

@@ -24,9 +24,11 @@ class ApplicantProfileRow(TimestampedBase):
 
     #: An applicant profile is the product's case boundary.  Every API query
     #: scopes through this organization id; knowing a UUID is never authority.
+    #: No default on purpose. A default meant a caller that forgot the tenant
+    #: silently wrote into the development organization, which is the one
+    #: mistake this column exists to prevent.
     organization_id: Mapped[str] = mapped_column(
-        String(32), ForeignKey("organizations.id", ondelete="CASCADE"), index=True,
-        default="00000000000000000000000000000001",
+        String(32), ForeignKey("organizations.id", ondelete="CASCADE"), index=True
     )
     display_name: Mapped[str] = mapped_column(String(80), default="Applicant")
     payload: Mapped[dict] = mapped_column(JSON, nullable=False)

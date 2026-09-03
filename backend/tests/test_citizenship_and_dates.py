@@ -12,6 +12,7 @@ import pytest
 
 from app.domain.citizenship import CitizenshipMatch, match_citizenship
 from app.domain.dates import is_ambiguous, parse_published_date
+from tests.conftest import profile_row
 
 
 class TestCitizenshipMatching:
@@ -124,9 +125,7 @@ class TestGovernmentEvidenceReachesEveryRow:
         engine = sa.create_engine(settings.database_url, connect_args={"check_same_thread": False})
         session = sessionmaker(bind=engine, future=True)()
 
-        row = ApplicantProfileRow(display_name="t", payload=profile.model_dump(mode="json"))
-        session.add(row)
-        session.flush()
+        row = profile_row(session, profile)
         run = ResearchRun(
             profile_id=row.id, stage="queued", demo_mode=True,
             candidate_limit=12, verify_limit=12, stage_state=RunState.load(None).dump(),
@@ -228,9 +227,7 @@ class TestDocumentCollectionIsNeverSilent:
         engine = sa.create_engine(settings.database_url, connect_args={"check_same_thread": False})
         session = sessionmaker(bind=engine, future=True)()
 
-        row = ApplicantProfileRow(display_name="t", payload=profile.model_dump(mode="json"))
-        session.add(row)
-        session.flush()
+        row = profile_row(session, profile)
         run = ResearchRun(
             profile_id=row.id, stage="queued", demo_mode=True,
             candidate_limit=4, verify_limit=4, stage_state=RunState.load(None).dump(),

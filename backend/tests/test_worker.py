@@ -20,6 +20,7 @@ from app.jobs.worker import Worker, reconcile_startup, wait_for_schema
 from app.models import ApplicantProfileRow, Job, JobStatus, ResearchRun
 from app.models.base import ensure_utc
 from app.pipeline.state import RunState
+from tests.conftest import profile_row
 
 
 @pytest.fixture
@@ -45,11 +46,7 @@ def bound_db(settings, monkeypatch):
 def seed_run(factory, profile, **run_kwargs) -> tuple[str, str]:
     """A profile, a run and a queued job. Returns (run_id, job_id)."""
     with factory() as session:
-        row = ApplicantProfileRow(
-            display_name="t", payload=profile.model_dump(mode="json")
-        )
-        session.add(row)
-        session.flush()
+        row = profile_row(session, profile)
         run = ResearchRun(
             profile_id=row.id, stage="queued", demo_mode=True,
             candidate_limit=run_kwargs.pop("candidate_limit", 3),
@@ -172,11 +169,7 @@ class TestReaping:
 class TestReconciliation:
     def test_a_run_with_no_job_is_recovered(self, bound_db, settings, profile):
         with bound_db() as session:
-            row = ApplicantProfileRow(
-                display_name="t", payload=profile.model_dump(mode="json")
-            )
-            session.add(row)
-            session.flush()
+            row = profile_row(session, profile)
             run = ResearchRun(profile_id=row.id, stage="assessment", stage_state={})
             session.add(run)
             session.commit()
@@ -189,11 +182,7 @@ class TestReconciliation:
     def test_a_run_awaiting_a_decision_is_not_recovered(self, bound_db, settings, profile):
         """Waiting on the user is not stranded work, however long it waits."""
         with bound_db() as session:
-            row = ApplicantProfileRow(
-                display_name="t", payload=profile.model_dump(mode="json")
-            )
-            session.add(row)
-            session.flush()
+            row = profile_row(session, profile)
             run = ResearchRun(
                 profile_id=row.id, stage="awaiting_user_decision", stage_state={}
             )

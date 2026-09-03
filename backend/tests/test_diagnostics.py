@@ -5,6 +5,7 @@ from __future__ import annotations
 import pytest
 
 from app.domain.diagnostics import DiagnosticKind, classify, split
+from tests.conftest import profile_row
 
 
 class TestClassification:
@@ -72,9 +73,7 @@ class TestARunSeparatesThem:
         engine = sa.create_engine(settings.database_url, connect_args={"check_same_thread": False})
         session = sessionmaker(bind=engine, future=True)()
 
-        row = ApplicantProfileRow(display_name="t", payload=profile.model_dump(mode="json"))
-        session.add(row)
-        session.flush()
+        row = profile_row(session, profile)
         run = ResearchRun(
             profile_id=row.id, stage="queued", demo_mode=True,
             candidate_limit=8, verify_limit=8, stage_state=RunState.load(None).dump(),
@@ -90,3 +89,37 @@ class TestARunSeparatesThem:
 
         session.close()
         engine.dispose()
+
+
+class TestTheLimiterDoesNotLeak:
+    def test_empty_buckets_are_swept(self):
+        """Every distinct caller left an empty deque behind for ever."""
+        from app.main import FixedWindowLimiter
+
+        limiter = FixedWindowLimiter()
+        # One address per attempt, as a credential-stuffing run would produce.
+        for index in range(FixedWindowLimiter._SWEEP_EVERY):
+            limiter.allow(f"auth:10.0.0.{index}", 10, 0.0)
+        assert len(limiter.hits) == FixedWindowLimiter._SWEEP_EVERY
+
+        # An hour later a second wave arrives; the sweep it triggers finds the
+        # first wave long past its window.
+        for index in range(FixedWindowLimiter._SWEEP_EVERY):
+            limiter.allow(f"auth:10.0.1.{index}", 10, 3_600.0)
+
+        assert len(limiter.hits) <= FixedWindowLimiter._SWEEP_EVERY, (
+            f"{len(limiter.hits)} buckets survived the sweep"
+        )
+        assert "auth:10.0.0.1" not in limiter.hits
+        assert "auth:10.0.1.1" in limiter.hits
+
+    def test_a_live_bucket_is_never_swept_away(self):
+        from app.main import FixedWindowLimiter
+
+        limiter = FixedWindowLimiter()
+        assert limiter.allow("auth:live", 10, 100.0) is True
+        for index in range(FixedWindowLimiter._SWEEP_EVERY + 1):
+            limiter.allow(f"auth:other-{index}", 10, 100.0)
+        # Still inside the window, so the count still stands.
+        assert limiter.allow("auth:live", 2, 101.0) is True
+        assert limiter.allow("auth:live", 2, 102.0) is False

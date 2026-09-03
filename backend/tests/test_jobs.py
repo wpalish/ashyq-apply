@@ -16,6 +16,7 @@ from sqlalchemy.orm import sessionmaker
 
 from app.jobs.store import BACKOFF_SECONDS, JobStore, backoff_for
 from app.models import Job, JobStatus
+from tests.conftest import TEST_ORGANIZATION_ID
 
 
 @pytest.fixture
@@ -313,7 +314,8 @@ class TestPostgresSchema:
     def test_deleting_a_profile_cascades_at_the_database_level(self, pg_session):
         from app.models import ApplicantProfileRow, ClaimRow, ProgramResultRow, ResearchRun
 
-        profile = ApplicantProfileRow(display_name="x", payload={})
+        profile = ApplicantProfileRow(
+            organization_id=TEST_ORGANIZATION_ID, display_name="x", payload={})
         pg_session.add(profile)
         pg_session.flush()
         run = ResearchRun(profile_id=profile.id, stage="queued", stage_state={})
@@ -342,7 +344,8 @@ class TestPostgresSchema:
     def test_the_dedupe_index_is_unique_per_run(self, pg_session):
         from app.models import ApplicantProfileRow, ProgramResultRow, ResearchRun
 
-        profile = ApplicantProfileRow(display_name="x", payload={})
+        profile = ApplicantProfileRow(
+            organization_id=TEST_ORGANIZATION_ID, display_name="x", payload={})
         pg_session.add(profile)
         pg_session.flush()
         run = ResearchRun(profile_id=profile.id, stage="queued", stage_state={})
@@ -412,7 +415,8 @@ class TestTimezoneHandling:
         engine = create_engine(url, connect_args={"check_same_thread": False})
         session = sessionmaker(bind=engine, future=True)()
         try:
-            row = ApplicantProfileRow(display_name="t", payload=profile.model_dump(mode="json"))
+            row = ApplicantProfileRow(
+            organization_id=TEST_ORGANIZATION_ID, display_name="t", payload=profile.model_dump(mode="json"))
             session.add(row)
             session.flush()
             run = ResearchRun(profile_id=row.id, stage="funding_discovery", stage_state={})

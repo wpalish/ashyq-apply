@@ -22,6 +22,7 @@ from app.adapters.page_classifier import PageType, classify_page
 from app.adapters.requirements.web_requirements import WebRequirementsAdapter
 from app.adapters.scholarship.web_scholarships import WebScholarshipAdapter
 from app.domain.enums import ClaimType, DegreeLevel
+from tests.conftest import TEST_ORGANIZATION_ID
 
 SHAPES = Path(__file__).parent / "fixtures" / "live_shapes"
 
@@ -460,7 +461,8 @@ class TestCandidateLimit:
         Base.metadata.create_all(engine)
         session = sessionmaker(bind=engine)()
         try:
-            row = ApplicantProfileRow(display_name="t", payload=profile.model_dump(mode="json"))
+            row = ApplicantProfileRow(
+            organization_id=TEST_ORGANIZATION_ID, display_name="t", payload=profile.model_dump(mode="json"))
             session.add(row)
             session.flush()
             run = ResearchRun(
@@ -730,7 +732,8 @@ class TestCrashRecovery:
 
         engine, session = self._session(settings)
         try:
-            row = ApplicantProfileRow(display_name="t", payload=profile.model_dump(mode="json"))
+            row = ApplicantProfileRow(
+            organization_id=TEST_ORGANIZATION_ID, display_name="t", payload=profile.model_dump(mode="json"))
             session.add(row)
             session.flush()
             run = ResearchRun(profile_id=row.id, stage="queued", demo_mode=True,
@@ -758,7 +761,8 @@ class TestCrashRecovery:
         monkeypatch.setattr(db_module, "engine", engine)
         monkeypatch.setattr(db_module, "SessionLocal", sessionmaker(bind=engine, future=True))
         try:
-            row = ApplicantProfileRow(display_name="t", payload=profile.model_dump(mode="json"))
+            row = ApplicantProfileRow(
+            organization_id=TEST_ORGANIZATION_ID, display_name="t", payload=profile.model_dump(mode="json"))
             session.add(row)
             session.flush()
             run = ResearchRun(profile_id=row.id, stage="funding_discovery", demo_mode=True,
@@ -794,7 +798,8 @@ class TestCrashRecovery:
         monkeypatch.setattr(db_module, "engine", engine)
         monkeypatch.setattr(db_module, "SessionLocal", sessionmaker(bind=engine, future=True))
         try:
-            row = ApplicantProfileRow(display_name="t", payload=profile.model_dump(mode="json"))
+            row = ApplicantProfileRow(
+            organization_id=TEST_ORGANIZATION_ID, display_name="t", payload=profile.model_dump(mode="json"))
             session.add(row)
             session.flush()
             live = ResearchRun(profile_id=row.id, stage="funding_discovery", demo_mode=True,
@@ -825,7 +830,8 @@ class TestCrashRecovery:
         engine, session = self._session(settings)
         monkeypatch.setattr(db_module, "engine", engine)
         try:
-            row = ApplicantProfileRow(display_name="t", payload=profile.model_dump(mode="json"))
+            row = ApplicantProfileRow(
+            organization_id=TEST_ORGANIZATION_ID, display_name="t", payload=profile.model_dump(mode="json"))
             session.add(row)
             session.flush()
             run = ResearchRun(

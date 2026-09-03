@@ -10,7 +10,7 @@ from __future__ import annotations
 import logging
 import os
 import socket
-from datetime import UTC, date, datetime
+from datetime import UTC, datetime
 
 from sqlalchemy.orm import Session
 
@@ -732,7 +732,9 @@ class ResearchRunner:
         self._transition(PipelineStage.ASSESSMENT)
         self._save()
 
-        today = date.today()
+        # UTC, not the server's local day: a deadline is not "passed" because
+        # the machine running the worker happens to be east of the applicant.
+        today = datetime.now(UTC).date()
         for i, row in enumerate(rows):
             result = ProgramResult.model_validate(row.payload)
             claims = [_from_out(c) for c in result.claims]

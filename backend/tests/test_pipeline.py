@@ -21,6 +21,7 @@ from app.models import ApplicantProfileRow, Base, ClaimRow, ProgramResultRow, Re
 from app.pipeline.runner import ResearchRunner, RunCancelled
 from app.pipeline.state import RunState
 from app.schemas.result import ProgramResult
+from tests.conftest import TEST_ORGANIZATION_ID, profile_row
 
 
 @pytest.fixture
@@ -35,7 +36,8 @@ def session(settings):
 
 @pytest.fixture
 async def completed_run(session, settings, profile):
-    row = ApplicantProfileRow(display_name="t", payload=profile.model_dump(mode="json"))
+    row = ApplicantProfileRow(
+            organization_id=TEST_ORGANIZATION_ID, display_name="t", payload=profile.model_dump(mode="json"))
     session.add(row)
     session.flush()
     run = ResearchRun(profile_id=row.id, stage=PipelineStage.QUEUED.value,
@@ -241,9 +243,7 @@ class TestScoringAndDecisions:
 class TestCancellation:
     @pytest.mark.asyncio
     async def test_a_cancelled_run_stops_and_is_marked(self, session, settings, profile):
-        row = ApplicantProfileRow(display_name="t", payload=profile.model_dump(mode="json"))
-        session.add(row)
-        session.flush()
+        row = profile_row(session, profile)
         run = ResearchRun(profile_id=row.id, stage=PipelineStage.QUEUED.value,
                           demo_mode=True, cancelled=True,
                           stage_state=RunState.load(None).dump())

@@ -285,5 +285,8 @@ class ProgramResult(Base):
 
 class DecisionIn(Base):
     decision: UserDecision
-    reason: str = ""
-    notes: str = ""
+    # Bounded, because these are the two free-text fields the API accepts and
+    # an unbounded string is a row the database will take and a screen will
+    # not render.
+    reason: str = Field(default="", max_length=2000)
+    notes: str = Field(default="", max_length=20_000)

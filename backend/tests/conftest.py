@@ -207,3 +207,27 @@ def event_loop():
     loop = asyncio.new_event_loop()
     yield loop
     loop.close()
+
+
+#: The tenant test fixtures write into. Explicit, because the column no longer
+#: carries a default: a caller that forgets the organization must fail loudly
+#: rather than quietly writing into someone else's workspace.
+TEST_ORGANIZATION_ID = "00000000000000000000000000000001"
+
+
+def profile_row(session, profile, display_name: str = "t"):
+    """An ApplicantProfileRow in a real organization, created if missing."""
+    from app.models import ApplicantProfileRow, Organization
+
+    if session.get(Organization, TEST_ORGANIZATION_ID) is None:
+        session.add(
+            Organization(id=TEST_ORGANIZATION_ID, name="Test workspace", slug="test-workspace")
+        )
+        session.flush()
+    payload = profile if isinstance(profile, dict) else profile.model_dump(mode="json")
+    row = ApplicantProfileRow(
+        organization_id=TEST_ORGANIZATION_ID, display_name=display_name, payload=payload
+    )
+    session.add(row)
+    session.flush()
+    return row

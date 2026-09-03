@@ -11,7 +11,7 @@ Two asymmetries are deliberate:
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import date
+from datetime import UTC, date, datetime
 
 from app.domain.dates import parse_published_date
 from app.domain.enums import (
@@ -119,7 +119,8 @@ def evaluate_program(
     today: date | None = None,
 ) -> EligibilityOutcome:
     """Compare one programme's published requirements against the profile."""
-    today = today or date.today()
+    # UTC by default, so the verdict does not depend on the server's timezone.
+    today = today or datetime.now(UTC).date()
     checks: list[RequirementCheck] = []
     a = profile.academics
 
