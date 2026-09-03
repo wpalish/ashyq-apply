@@ -39,7 +39,12 @@ from app.domain.enums import (
     UserDecision,
 )
 from app.domain.freshness import age_days, apply_freshness, is_stale, next_recheck_at
-from app.domain.funding import classify, funding_fit_for
+from app.domain.funding import (
+    award_meets_shape,
+    classify,
+    funding_fit_for,
+    unmet_coverage_requirements,
+)
 from app.domain.scoring import admissions_fit_for, score_result
 from app.domain.validation import validate_profile
 from app.models import AuditEvent, ClaimRow, ConflictRow, ProgramResultRow, ResearchRun, new_id
@@ -395,14 +400,29 @@ class ResearchRunner:
                     intake=self.intake,
                     rankings=cand.rankings,
                     climate_fit=_fit_label(
-                        cand.attributes.get("climate"), self.profile.preferences.climate
+                        cand.attributes.get("climate"),
+                        self.profile.preferences.climate,
+                        "climate",
                     ),
                     city_fit=_fit_label(
-                        cand.attributes.get("city_size"), self.profile.preferences.city_size
+                        cand.attributes.get("city_size"),
+                        self.profile.preferences.city_size,
+                        "city",
                     ),
                     workload_fit=_fit_label(
                         cand.attributes.get("workload"),
                         self.profile.preferences.acceptable_workload,
+                        "workload",
+                    ),
+                    size_fit=_fit_label(
+                        cand.attributes.get("size"),
+                        self.profile.preferences.university_size,
+                        "size",
+                    ),
+                    campus_fit=_fit_label(
+                        cand.attributes.get("campus"),
+                        self.profile.preferences.campus_type,
+                        "campus",
                     ),
                     career_notes="",
                 )
@@ -590,12 +610,91 @@ class ResearchRunner:
                         " The page uses promotional wording such as 'full ride'; the classification "
                         "here follows the published coverage table instead."
                     )
-                if any(
-                    c.status.value == "NOT_ELIGIBLE"
-                    for c in s.eligibility_checks
-                    if hasattr(c.status, "value")
-                ):
-                    pass
+                # Two things the form asked about and nothing read: whether
+                # this shape of award is usable at all, and whether it excludes
+                # a cost the applicant said must be covered.
+                shape_ok, shape_reason = award_meets_shape(s, self.profile.funding)
+                s.meets_applicant_shape = shape_ok
+                s.shape_mismatch_reason = shape_reason
+                if not shape_ok:
+                    s.classification_reason += f" {shape_reason}"
+
+                unmet = unmet_coverage_requirements(s, self.profile.funding)
+                if unmet:
+                    names = ", ".join(category.value.replace("_", " ") for category in unmet)
+                    s.classification_reason += (
+                        f" The profile requires {names} to be covered; this award states it is"
+                        f" not."
+                    )
+                    result.unresolved.append(
+                        UnresolvedQuestion(
+                            topic="funding",
+                            question=(
+                                f"Is there any support for {names} alongside {s.name}?"
+                            ),
+                            why_it_matters=(
+                                f"The profile lists {names} as costs that must be covered, and "
+                                f"this award excludes them. The gap is real money the family "
+                                f"would have to find."
+                            ),
+                            university=result.university,
+                            program=result.program,
+                        )
+                    )
+
+            # Three preferences the form collects that no official page
+            # answers directly. They become questions for the admissions
+            # office rather than numbers this product cannot justify.
+            prefs = self.profile.preferences
+            careers = (result.career_notes or "").lower()
+            if prefs.values_coop and "co-op" not in careers and "coop" not in careers:
+                result.unresolved.append(
+                    UnresolvedQuestion(
+                        topic="study and work",
+                        question=f"Does {result.program} offer a co-op or placement year?",
+                        why_it_matters=(
+                            "The profile says co-op programmes matter. Nothing on the pages read "
+                            "states whether this programme has one."
+                        ),
+                        university=result.university,
+                        program=result.program,
+                    )
+                )
+            if prefs.needs_work_during_study and not result.work_during_study:
+                result.unresolved.append(
+                    UnresolvedQuestion(
+                        topic="study and work",
+                        question=(
+                            f"How many hours a week may an international student work while "
+                            f"studying in {result.country}?"
+                        ),
+                        why_it_matters=(
+                            "The profile says work during study is necessary, and no official "
+                            "statement of the limit was found."
+                        ),
+                        university=result.university,
+                        program=result.program,
+                    )
+                )
+            for interest in prefs.research_interests[:3]:
+                if interest.lower() not in careers and interest.lower() not in (
+                    result.program or ""
+                ).lower():
+                    result.unresolved.append(
+                        UnresolvedQuestion(
+                            topic="research",
+                            question=(
+                                f"Which groups at {result.university} work on {interest}?"
+                            ),
+                            why_it_matters=(
+                                f"The profile lists {interest} as a research interest. The pages "
+                                f"read do not mention it, which is not the same as it being "
+                                f"absent."
+                            ),
+                            university=result.university,
+                            program=result.program,
+                        )
+                    )
 
             result.scholarships = scholarships
             result.conflicts.extend(conflicts)
@@ -1107,23 +1206,41 @@ def _completeness(claims) -> float:
     return round(answered / len(CORE_QUESTIONS), 3)
 
 
-def _fit_label(actual: str | None, preferred: str) -> str:
+#: Dimensions whose values sit on a line, so a near miss is worth more than a
+#: far one. Anything not listed here is a plain category: it matches or it
+#: does not.
+_FIT_LADDERS: dict[str, list[str]] = {
+    "city": ["small", "medium", "large", "metropolis"],
+    "climate": ["cold", "temperate", "mediterranean", "warm"],
+    "workload": ["moderate", "demanding", "very_demanding"],
+    "size": ["small", "medium", "large"],
+}
+
+
+def _fit_label(actual: str | None, preferred: str, dimension: str = "") -> str:
+    """Grade what a university is against what the applicant asked for.
+
+    The dimension is named by the caller rather than guessed from the values.
+    Guessing meant the first ladder containing both values won, so the `size`
+    ladder was dead code shadowed by `city`, and a campus preference - which
+    has no ordering at all - fell through every ladder to "acceptable". A
+    known mismatch was therefore reported with the same positive word as "no
+    preference stated", which is an unknown dressed up as a mild yes.
+    """
     if not actual or actual == "unknown":
         return "unknown"
     if preferred in ("any", ""):
         return "acceptable"
     if actual == preferred:
         return "strong"
-    ladders = {
-        "city": ["small", "medium", "large", "metropolis"],
-        "climate": ["cold", "temperate", "mediterranean", "warm"],
-        "workload": ["moderate", "demanding", "very_demanding"],
-    }
-    for ladder in ladders.values():
-        if actual in ladder and preferred in ladder:
-            gap = abs(ladder.index(actual) - ladder.index(preferred))
-            return {0: "strong", 1: "good", 2: "acceptable"}.get(gap, "weak")
-    return "acceptable"
+
+    ladder = _FIT_LADDERS.get(dimension)
+    if ladder and actual in ladder and preferred in ladder:
+        gap = abs(ladder.index(actual) - ladder.index(preferred))
+        return {0: "strong", 1: "good", 2: "acceptable"}.get(gap, "weak")
+    # A category that simply differs - an urban university for someone who
+    # asked for a campus one. Not a disaster, and not a match either.
+    return "weak"
 
 
 def _as_date(v):

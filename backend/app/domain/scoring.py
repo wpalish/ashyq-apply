@@ -48,8 +48,24 @@ def score_result(result: ProgramResult, profile: ApplicantProfileIn) -> Explaina
         )
 
     # --- academic fit --------------------------------------------------
+    # Class rank is context for a human reader, never a number: no university
+    # in this product publishes a rank threshold, so scoring it would be
+    # inventing a judgement.
+    rank = profile.academics.class_rank
+    rank_note = (
+        f" Class rank {rank}"
+        + (f" of {profile.academics.class_size}" if profile.academics.class_size else "")
+        + " is recorded for the admissions office to weigh; it is not scored here."
+        if rank is not None
+        else ""
+    )
     if result.eligibility == EligibilityStatus.MET:
-        add("Academic fit", 1.0, w.academic_fit, "All published requirements checked are met.")
+        add(
+            "Academic fit",
+            1.0,
+            w.academic_fit,
+            "All published requirements checked are met." + rank_note,
+        )
     elif result.eligibility == EligibilityStatus.PENDING:
         add(
             "Academic fit",
@@ -63,6 +79,14 @@ def score_result(result: ProgramResult, profile: ApplicantProfileIn) -> Explaina
         add("Academic fit", None, w.academic_fit, "Requirements could not be verified officially.", "published requirements")
 
     # --- funding fit ---------------------------------------------------
+    # The form asks how decisive funding is and nothing read the answer. It
+    # scales the weight of the two funding components rather than their raw
+    # values: a fully funded place is still fully funded, it simply matters
+    # more to someone who cannot go without it.
+    criticality = {"nice_to_have": 0.5, "important": 0.75, "decisive": 1.0}.get(
+        profile.funding.funding_criticality, 1.0
+    )
+    funding_weight = w.funding_fit * criticality
     funding_raw = {
         FundingFit.CONFIRMED_OPPORTUNITY: 1.0,
         FundingFit.COMPETITIVE_OPPORTUNITY: 0.75,
@@ -70,19 +94,19 @@ def score_result(result: ProgramResult, profile: ApplicantProfileIn) -> Explaina
         FundingFit.NOT_ELIGIBLE: 0.0,
     }.get(result.funding_fit)
     if result.funding_fit == FundingFit.UNKNOWN:
-        add("Funding fit", None, w.funding_fit, "No official funding information was confirmed.", "scholarship data")
+        add("Funding fit", None, funding_weight, "No official funding information was confirmed.", "scholarship data")
     else:
         add(
             "Funding fit",
             funding_raw,
-            w.funding_fit,
+            funding_weight,
             f"Funding fit is {result.funding_fit.value}; best classification "
             f"{result.best_funding_classification.value}.",
         )
 
     # --- affordability against the family's own ceiling ------------------
     gap = result.funding_gap
-    weight = w.funding_fit * 0.5
+    weight = funding_weight * 0.5
     if gap is None or not gap.computable or gap.gap is None:
         add("Affordability", None, weight, "Remaining annual cost could not be computed.", "cost of attendance")
     else:
@@ -104,12 +128,19 @@ def score_result(result: ProgramResult, profile: ApplicantProfileIn) -> Explaina
                 # "I can contribute nothing" against a cost that remains: the
                 # worst case, not a middling one.
                 raw = 1.0 if gap.gap.amount == 0 else 0.0
+            contribution = profile.funding.max_family_contribution
             add(
                 "Affordability",
                 raw,
                 weight,
                 f"Remaining annual cost {gap.gap.amount:,.0f} {gap.gap.currency} against a stated "
-                f"ceiling of {ceiling:,.0f} {gap.gap.currency}{note}.",
+                f"ceiling of {ceiling:,.0f} {gap.gap.currency}{note}."
+                + (
+                    f" The family states it can contribute up to {contribution:,.0f} "
+                    f"{(profile.funding.budget_currency or 'USD').upper()} a year."
+                    if contribution is not None
+                    else ""
+                ),
             )
 
     # --- country preference ---------------------------------------------
@@ -153,6 +184,22 @@ def score_result(result: ProgramResult, profile: ApplicantProfileIn) -> Explaina
     add("City fit", _label_to_raw(result.city_fit), w.city_fit, f"City fit assessed as {result.city_fit}.")
     add("Climate fit", _label_to_raw(result.climate_fit), w.climate_fit, f"Climate fit assessed as {result.climate_fit}.")
     add("Workload fit", _label_to_raw(result.workload_fit), w.workload_fit, f"Workload fit assessed as {result.workload_fit}.")
+    add(
+        "University size",
+        _label_to_raw(result.size_fit),
+        w.university_size_fit,
+        f"Preferred size {prefs.university_size}; this university is assessed as "
+        f"{result.size_fit}.",
+        "university size",
+    )
+    add(
+        "Campus type",
+        _label_to_raw(result.campus_fit),
+        w.campus_fit,
+        f"Preferred campus {prefs.campus_type}; this university is assessed as "
+        f"{result.campus_fit}.",
+        "campus type",
+    )
 
     # --- careers -------------------------------------------------------------
     if result.career_notes:

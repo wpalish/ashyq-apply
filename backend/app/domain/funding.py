@@ -19,6 +19,7 @@ from app.domain.enums import (
     FundingFit,
     ScholarshipType,
 )
+from app.schemas.profile import FundingNeeds
 from app.schemas.result import CoverageBreakdown, Scholarship
 
 #: Marketing phrases that must never, alone, drive a classification.
@@ -236,6 +237,19 @@ def funding_fit_for(scholarships: list[Scholarship]) -> tuple[FundingFit, Fundin
             "Every scholarship found for this programme officially excludes this applicant.",
         )
 
+    # An award the applicant told us they could not take up does not make this
+    # programme funded. It stays on the row with its reason - the information
+    # is not hidden - but it stops carrying the verdict.
+    usable = [s for s in eligible if s.meets_applicant_shape]
+    if not usable:
+        return (
+            FundingFit.LIMITED_OPPORTUNITY,
+            eligible[0].classification,
+            "Awards were found, but none is the kind of funding this profile says it needs; "
+            "each says why on its own row.",
+        )
+    eligible = usable
+
     order = [
         FundingClassification.FULL_RIDE_CONFIRMED,
         FundingClassification.FULL_TUITION,
@@ -292,3 +306,77 @@ def funding_fit_for(scholarships: list[Scholarship]) -> tuple[FundingFit, Fundin
         best.classification,
         f"The strongest confirmed option, '{best.name}', covers only a limited share of cost.",
     )
+
+
+#: The applicant's must-cover flags, mapped to the categories an award reports.
+_MUST_COVER_FIELDS: dict[str, CostCategory] = {
+    "must_cover_housing": CostCategory.HOUSING,
+    "must_cover_meals": CostCategory.MEALS,
+    "must_cover_health_insurance": CostCategory.HEALTH_INSURANCE,
+    "must_cover_books": CostCategory.BOOKS,
+    "must_cover_travel": CostCategory.TRAVEL,
+}
+
+
+def unmet_coverage_requirements(
+    scholarship: Scholarship, funding: FundingNeeds
+) -> list[CostCategory]:
+    """Categories the applicant said they need covered and the award excludes.
+
+    Only an explicit "no" counts. A category the page says nothing about is
+    unknown, and reporting an unknown as a refusal is the failure this product
+    exists to avoid - so silence produces nothing here, and the open question
+    raised elsewhere is what tells the applicant to ask.
+    """
+    covered = _coverage_map(scholarship.coverage)
+    return [
+        category
+        for attribute, category in _MUST_COVER_FIELDS.items()
+        if getattr(funding, attribute, False) and covered.get(category) == "no"
+    ]
+
+
+def award_meets_shape(scholarship: Scholarship, funding: FundingNeeds) -> tuple[bool, str]:
+    """Whether the award is the *shape* of help this applicant said they need.
+
+    Three flags the form collected and nothing read: requires_full_ride,
+    accepts_full_tuition and accepts_partial. An applicant who cannot take up a
+    place without full funding is not helped by a 10% tuition discount, and the
+    shortlist should say so rather than counting it as funding.
+
+    An award whose classification is still unknown passes: refusing it would
+    turn "we could not read the page" into "this will not help you".
+    """
+    classification = scholarship.classification
+    if classification in (
+        FundingClassification.UNKNOWN,
+        # Eligibility is answered elsewhere, from the award's own restrictions.
+        FundingClassification.NOT_ELIGIBLE,
+    ):
+        return True, ""
+
+    is_full_ride = classification is FundingClassification.FULL_RIDE_CONFIRMED
+    is_full_tuition = classification is FundingClassification.FULL_TUITION
+    is_partial = classification in (
+        FundingClassification.PARTIAL,
+        FundingClassification.LARGE_GRANT,
+    )
+
+    if funding.requires_full_ride and not is_full_ride:
+        return False, (
+            f"The profile states that only a full ride makes this affordable; this award is "
+            f"classified as {classification.value}."
+        )
+    if is_full_tuition and not funding.accepts_full_tuition:
+        return False, "The profile states that a tuition-only award would not be taken up."
+    if is_partial and not funding.accepts_partial:
+        return False, "The profile states that a partial award would not be taken up."
+    if (
+        classification is FundingClassification.NEED_BASED_POSSIBLE
+        and not funding.willing_to_submit_need_documents
+    ):
+        return False, (
+            "This award is need-based and the profile states that financial documents will not "
+            "be submitted, which is what a need-based application requires."
+        )
+    return True, ""

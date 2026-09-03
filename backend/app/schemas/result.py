@@ -76,6 +76,12 @@ class Scholarship(Base):
     # These were previously collapsed, which let "an award exists" stand in for
     # "this applicant can apply for it in this cycle". Each is now answered
     # from its own evidence and defaults to unknown.
+    #: False when the applicant told us this shape of help does not work for
+    #: them - a tuition-only award to someone who cannot go without a full
+    #: ride. The award stays visible with its reason; it simply stops counting
+    #: as this programme's funding.
+    meets_applicant_shape: bool = True
+    shape_mismatch_reason: str = ""
     international_eligible: Tristate = "unknown"
     citizenship_restrictions: list[str] = Field(default_factory=list)
     residency_restrictions: list[str] = Field(default_factory=list)
@@ -251,6 +257,11 @@ class ProgramResult(Base):
     climate_fit: str = "unknown"
     city_fit: str = "unknown"
     workload_fit: str = "unknown"
+    #: The same mechanism, for two preferences the form collected and nothing
+    #: read. "unknown" when the registry says nothing about this university,
+    #: which scores as missing data rather than as a mismatch.
+    size_fit: str = "unknown"
+    campus_fit: str = "unknown"
     career_notes: str = ""
     post_study_work: str = ""
     work_during_study: str = ""

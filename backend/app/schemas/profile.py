@@ -279,6 +279,11 @@ class ScoringWeights(Base):
     city_fit: float = Field(default=0.4, ge=0, le=3)
     climate_fit: float = Field(default=0.3, ge=0, le=3)
     workload_fit: float = Field(default=0.3, ge=0, le=3)
+    #: Soft, like the other location fits: the registry knows the size and the
+    #: campus shape, so a stated preference for one is worth something - but
+    #: not enough to outrank a funded place.
+    university_size_fit: float = Field(default=0.3, ge=0, le=3)
+    campus_fit: float = Field(default=0.3, ge=0, le=3)
     career_outcomes: float = Field(default=0.7, ge=0, le=3)
     post_study_work: float = Field(default=0.5, ge=0, le=3)
 
