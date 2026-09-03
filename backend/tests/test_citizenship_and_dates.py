@@ -199,3 +199,74 @@ class TestCurrencySnapshotAge:
 
         assert "ASHYQ Apply" in RATE_SOURCE
         assert "UniMatch" not in RATE_SOURCE
+
+
+class TestDocumentCollectionIsNeverSilent:
+    """A row that cannot be matched must say so, not disappear.
+
+    Candidates were looked up by exact name. Any drift between the discovery
+    name and the stored result name - a renamed university, a trailing comma -
+    made the row `continue` without a word, and "Checklists built for 0" still
+    finished as COMPLETED.
+    """
+
+    @pytest.mark.asyncio
+    async def test_an_unmatched_row_is_reported_rather_than_skipped(
+        self, settings, profile, tmp_path
+    ):
+        import sqlalchemy as sa
+        from sqlalchemy.orm import sessionmaker
+
+        from app.db import migrate_to_head
+        from app.domain.enums import UserDecision
+        from app.models import ApplicantProfileRow, ProgramResultRow, ResearchRun
+        from app.pipeline.runner import ResearchRunner
+        from app.pipeline.state import RunState
+        from app.schemas.result import ProgramResult
+
+        migrate_to_head(settings.database_url)
+        engine = sa.create_engine(settings.database_url, connect_args={"check_same_thread": False})
+        session = sessionmaker(bind=engine, future=True)()
+
+        row = ApplicantProfileRow(display_name="t", payload=profile.model_dump(mode="json"))
+        session.add(row)
+        session.flush()
+        run = ResearchRun(
+            profile_id=row.id, stage="queued", demo_mode=True,
+            candidate_limit=4, verify_limit=4, stage_state=RunState.load(None).dump(),
+        )
+        session.add(run)
+        session.commit()
+
+        runner = ResearchRunner(session, run, profile, settings)
+        await runner.run_to_decision()
+
+        results = session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run.id).all()
+        assert results
+        for result_row in results:
+            result_row.user_decision = UserDecision.APPROVED.value
+        # One row now names a university no candidate carries, exactly as a
+        # renamed institution would.
+        orphan = results[0]
+        payload = dict(orphan.payload)
+        payload["university"] = "University of Nowhere (renamed)"
+        orphan.university = payload["university"]
+        orphan.payload = payload
+        session.commit()
+
+        built = await ResearchRunner(session, run, profile, settings).collect_documents()
+
+        session.refresh(run)
+        assert built == len(results) - 1
+        joined = " ".join(run.errors or [])
+        assert "University of Nowhere (renamed)" in joined, (
+            "an unmatched approved row must be named in the run's diagnostics"
+        )
+
+        session.refresh(orphan)
+        unresolved = ProgramResult.model_validate(orphan.payload).unresolved
+        assert any("document" in q.topic.lower() or "document" in q.question.lower()
+                   for q in unresolved), "the row itself must carry the open question"
+
+        session.close()
+        engine.dispose()

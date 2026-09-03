@@ -341,6 +341,9 @@ class ResearchRunner:
         self._check_cancelled()
         st = self.state[PipelineStage.PROGRAM_VERIFICATION]
         targets = list(self._candidates)[: self.verify_limit]
+        # Counted in programmes, not candidates: a candidate can carry two
+        # programmes, so "12/20 candidates" and "18 programmes checked" were
+        # two different numbers on the same screen describing the same work.
         st.start(len(targets), "Reading official programme pages")
         self._transition(PipelineStage.PROGRAM_VERIFICATION)
         self._save()
@@ -358,7 +361,7 @@ class ResearchRunner:
         retry: list[str] = []
         seen_keys: set[str] = set()
 
-        for i, cand in enumerate(targets):
+        for cand in targets:
             self._check_cancelled()
             programs = cand.programs or [
                 CandidateProgram(
@@ -464,9 +467,13 @@ class ResearchRunner:
                 result.source_urls = sorted({c.source_url for c in all_claims})
                 result.last_verified = max((c.accessed_at for c in all_claims), default=None)
                 self._persist_result(result, all_claims, conflicts)
-                st.items_done = i + 1
                 self.run.programs_verified = len(seen_keys)
                 self.run.claims_recorded += len(all_claims)
+                # Programmes done and programmes expected, so the ratio on
+                # screen counts the same thing on both sides. The total grows
+                # as candidates reveal how many programmes they carry.
+                st.items_done = len(seen_keys)
+                st.items_total = max(st.items_total, len(seen_keys), len(targets))
 
             # Once per candidate, not once per four: in live mode four page
             # fetches with their retries can outlast the lease, and a healthy
@@ -493,14 +500,35 @@ class ResearchRunner:
         self._save()
 
         adapter = WebScholarshipAdapter(fetcher, self.settings.academic_year)
-        by_name = {c.name: c for c in self._candidates}
+        # Keyed on the normalized university key, not the display name: a
+        # trailing comma or a renamed institution used to drop the row.
+        by_key = {dedupe.university_key(c.name, c.country): c for c in self._candidates}
         errors: list[str] = []
+        unmatched: list[str] = []
 
         for i, row in enumerate(rows):
             self._check_cancelled()
             result = ProgramResult.model_validate(row.payload)
-            cand = by_name.get(result.university)
+            cand = by_key.get(dedupe.university_key(result.university, result.country))
             if cand is None:
+                unmatched.append(result.university)
+                errors.append(
+                    f"No candidate matched {result.university} ({result.country}); its funding "
+                    f"was not read. The row keeps whatever earlier stages established."
+                )
+                self._add_unresolved(
+                    row,
+                    result,
+                    topic="funding",
+                    question=(
+                        f"Which official page publishes funding for {result.program} at "
+                        f"{result.university}?"
+                    ),
+                    why=(
+                        "This programme could not be matched back to a discovered university, so "
+                        "no scholarship page was read for it. Nothing here is assumed."
+                    ),
+                )
                 st.items_done = i + 1
                 continue
 
@@ -681,21 +709,43 @@ class ResearchRunner:
 
         fetcher = self._make_fetcher()
         built = 0
+        errors: list[str] = []
         async with fetcher:
             adapter = WebDocumentsAdapter(fetcher, self.settings.academic_year)
-            by_name = {c.name: c for c in self._candidates}
-            if not by_name:
+            by_key = {dedupe.university_key(c.name, c.country): c for c in self._candidates}
+            if not by_key:
                 disc = (
                     FixtureDiscoveryAdapter(fetcher) if self.demo else LiveDiscoveryAdapter(fetcher)
                 )
                 self._candidates = await disc.discover(self.profile, self.candidate_limit)
-                by_name = {c.name: c for c in self._candidates}
+                by_key = {dedupe.university_key(c.name, c.country): c for c in self._candidates}
 
+            unmatched: list[str] = []
             for i, row in enumerate(rows):
                 self._check_cancelled()
                 result = ProgramResult.model_validate(row.payload)
-                cand = by_name.get(result.university)
+                cand = by_key.get(dedupe.university_key(result.university, result.country))
                 if cand is None:
+                    # Never a silent continue: the applicant approved this row
+                    # and is owed either a checklist or a reason there is none.
+                    unmatched.append(result.university)
+                    errors.append(
+                        f"No candidate matched {result.university} ({result.country}); no document "
+                        f"checklist could be built for it."
+                    )
+                    self._add_unresolved(
+                        row,
+                        result,
+                        topic="documents",
+                        question=(
+                            f"What documents does {result.university} require for "
+                            f"{result.program}?"
+                        ),
+                        why=(
+                            "This approved programme could not be matched back to a discovered "
+                            "university, so its document list was never read."
+                        ),
+                    )
                     st.items_done = i + 1
                     continue
                 prog = CandidateProgram(
@@ -713,7 +763,19 @@ class ResearchRunner:
                 st.items_done = i + 1
                 self._save()
 
-        st.finish(f"Checklists built for {built} approved programmes.")
+        detail = f"Checklists built for {built} approved programmes."
+        if unmatched:
+            detail += (
+                f" {len(unmatched)} approved programme(s) could not be matched to a discovered "
+                f"university and have no checklist: {', '.join(sorted(set(unmatched))[:5])}."
+            )
+        if built == 0 and rows:
+            detail += (
+                " No checklist was built at all - the approved rows are listed in this run's "
+                "diagnostics with the reason."
+            )
+        self.run.errors = list(self.run.errors or []) + errors[:200]
+        st.finish(detail)
         completed = self.state[PipelineStage.COMPLETED]
         completed.start(detail="Research and document collection complete.")
         completed.finish("Research and document collection complete.")
@@ -721,6 +783,28 @@ class ResearchRunner:
         self.run.finished_at = datetime.now(UTC)
         self._save()
         return built
+
+
+    def _add_unresolved(
+        self, row: ProgramResultRow, result: ProgramResult, *, topic: str, question: str, why: str
+    ) -> None:
+        """Attach an open question to a row, and persist it.
+
+        Used where a stage cannot do its job for one row: the applicant sees
+        the gap on the row itself rather than having to notice a missing
+        checklist.
+        """
+        result.unresolved.append(
+            UnresolvedQuestion(
+                topic=topic,
+                question=question,
+                why_it_matters=why,
+                university=result.university,
+                program=result.program,
+                blocking=False,
+            )
+        )
+        self._update_result(row, result)
 
     # --- persistence helpers ---------------------------------------------
 

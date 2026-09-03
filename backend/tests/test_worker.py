@@ -589,3 +589,46 @@ class TestFreshnessRecheck:
                 for c in session.query(ClaimRow).filter(ClaimRow.run_id == run_id)
             )
             assert newest > datetime.now(UTC) - timedelta(minutes=5), "evidence was re-read"
+
+
+class TestProgressCounters:
+    def test_progress_counts_programmes_on_both_sides_of_the_ratio(
+        self, bound_db, settings, profile
+    ):
+        """items_done counted candidates while programs_verified counted
+        programmes, so the screen showed two numbers for the same work."""
+        run_id, job_id = seed_run(bound_db, profile, candidate_limit=6, verify_limit=6)
+        worker = Worker(settings)
+        worker.claim_one()
+        asyncio.run(worker.execute(job_id))
+
+        with bound_db() as session:
+            run = session.get(ResearchRun, run_id)
+            verification = RunState.load(run.stage_state).stages["program_verification"]
+            assert verification.items_done == run.programs_verified
+            assert verification.items_total >= verification.items_done
+            assert verification.items_done > 0
+
+    def test_counters_survive_an_interrupted_run(self, bound_db, settings, profile):
+        """A run stopped mid-flight must not report more done than it has."""
+        from app.models import ProgramResultRow
+
+        run_id, job_id = seed_run(bound_db, profile, candidate_limit=6, verify_limit=6)
+        worker = Worker(settings)
+        worker.claim_one()
+
+        with bound_db() as session:
+            session.get(ResearchRun, run_id).cancelled = True
+            session.commit()
+        asyncio.run(worker.execute(job_id))
+
+        with bound_db() as session:
+            run = session.get(ResearchRun, run_id)
+            rows = (
+                session.query(ProgramResultRow)
+                .filter(ProgramResultRow.run_id == run_id)
+                .count()
+            )
+            verification = RunState.load(run.stage_state).stages["program_verification"]
+            assert run.programs_verified == rows
+            assert verification.items_done <= verification.items_total
