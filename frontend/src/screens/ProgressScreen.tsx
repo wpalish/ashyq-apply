@@ -30,7 +30,7 @@ function errorCategory(message: string): string {
 }
 
 export function ProgressScreen({ onDone }: { onDone: () => void }) {
-  const { run, cancelRun, retryRun, results } = useStore();
+  const { run, cancelRun, retryRun, recheckNow, results } = useStore();
 
   if (!run) {
     return (
@@ -127,6 +127,19 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
             Pages that could not be read: <strong>{run.pages_failed}</strong>. Any facts depending
             on them remain unknown and are never guessed.
           </p>
+        )}
+
+        {finished && (
+          <div className="row" style={{ justifyContent: 'space-between' }} data-testid="recheck">
+            <span className="small muted">
+              {run.next_recheck_at
+                ? <>Next automatic re-check of this evidence: <strong>{dateTime(run.next_recheck_at)}</strong>.</>
+                : 'This run holds no dated evidence to re-check.'}
+            </span>
+            <button className="btn btn--sm btn--ghost" onClick={recheckNow} data-testid="recheck-now">
+              Re-verify now
+            </button>
+          </div>
         )}
 
         <Panel title="Stages">

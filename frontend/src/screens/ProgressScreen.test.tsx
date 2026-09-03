@@ -13,9 +13,10 @@ import type { RunView } from '@/types';
 
 const retryRun = vi.fn();
 const cancelRun = vi.fn();
+const recheckNow = vi.fn();
 
 vi.mock('@/lib/store', () => ({
-  useStore: () => ({ run: currentRun, cancelRun, retryRun, results: [] }),
+  useStore: () => ({ run: currentRun, cancelRun, retryRun, recheckNow, results: [] }),
 }));
 
 let currentRun: RunView;
@@ -59,6 +60,7 @@ function makeRun(overrides: Partial<RunView> = {}): RunView {
 beforeEach(() => {
   retryRun.mockReset();
   cancelRun.mockReset();
+  recheckNow.mockReset();
   currentRun = makeRun();
 });
 
@@ -132,5 +134,30 @@ describe('a run whose worker died', () => {
     currentRun = makeRun({ stage: 'program_verification', stale: false, job_running: true });
     render(<ProgressScreen onDone={() => {}} />);
     expect(screen.queryByTestId('stale-run')).toBeNull();
+  });
+});
+
+describe('freshness', () => {
+  it('says when the evidence is next re-read, and offers to do it now', () => {
+    currentRun = makeRun({
+      stage: 'awaiting_user_decision',
+      next_recheck_at: '2026-12-01T09:00:00Z',
+      stages: makeRun().stages.map((s) => ({ ...s, status: 'done' })),
+    });
+    render(<ProgressScreen onDone={() => {}} />);
+
+    expect(screen.getByTestId('recheck')).toHaveTextContent('Next automatic re-check');
+    fireEvent.click(screen.getByTestId('recheck-now'));
+    expect(recheckNow).toHaveBeenCalled();
+  });
+
+  it('is honest when there is no dated evidence to re-check', () => {
+    currentRun = makeRun({
+      stage: 'awaiting_user_decision',
+      next_recheck_at: null,
+      stages: makeRun().stages.map((s) => ({ ...s, status: 'done' })),
+    });
+    render(<ProgressScreen onDone={() => {}} />);
+    expect(screen.getByTestId('recheck')).toHaveTextContent('no dated evidence');
   });
 });

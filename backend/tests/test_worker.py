@@ -18,6 +18,7 @@ from sqlalchemy.orm import sessionmaker
 from app.jobs.store import JobStore
 from app.jobs.worker import Worker, reconcile_startup, wait_for_schema
 from app.models import ApplicantProfileRow, Job, JobStatus, ResearchRun
+from app.models.base import ensure_utc
 from app.pipeline.state import RunState
 
 
@@ -481,3 +482,110 @@ class TestHeartbeatCadence:
         assert len(during_verification) >= verified, (
             f"only {len(during_verification)} heartbeats while verifying {verified} programmes"
         )
+
+
+class TestFreshnessRecheck:
+    """POSSIBLY_STALE claims used to stay stale for ever.
+
+    `next_recheck_at` existed but was computed only in tests: nothing ever
+    went back to re-read a page whose evidence had aged out.
+    """
+
+    def test_a_finished_run_queues_its_own_next_look(self, bound_db, settings, profile):
+        run_id, job_id = seed_run(bound_db, profile)
+        worker = Worker(settings)
+        worker.claim_one()
+        asyncio.run(worker.execute(job_id))
+
+        with bound_db() as session:
+            run = session.get(ResearchRun, run_id)
+            assert run.next_recheck_at is not None, "the run must know when its evidence ages out"
+            recheck = (
+                session.query(Job)
+                .filter(Job.run_id == run_id, Job.kind == "recheck")
+                .one()
+            )
+            assert recheck.status == JobStatus.QUEUED.value
+            # Queued for the date the evidence expires, not for now.
+            assert ensure_utc(recheck.available_at) == ensure_utc(run.next_recheck_at)
+            assert ensure_utc(recheck.available_at) > datetime.now(UTC)
+
+    def test_a_recheck_with_nothing_stale_does_no_work_and_re_arms(
+        self, bound_db, settings, profile
+    ):
+        run_id, job_id = seed_run(bound_db, profile)
+        worker = Worker(settings)
+        worker.claim_one()
+        asyncio.run(worker.execute(job_id))
+
+        with bound_db() as session:
+            recheck_id = (
+                session.query(Job).filter(Job.run_id == run_id, Job.kind == "recheck").one().id
+            )
+            # Pull it forward, as the queue would once the date arrives.
+            session.execute(
+                sa.update(Job).where(Job.id == recheck_id).values(available_at=datetime.now(UTC))
+            )
+            before = session.get(ResearchRun, run_id).pages_checked
+            session.commit()
+
+        assert worker.claim_one() == recheck_id
+        asyncio.run(worker.execute(recheck_id))
+
+        with bound_db() as session:
+            run = session.get(ResearchRun, run_id)
+            assert session.get(Job, recheck_id).status == JobStatus.SUCCEEDED.value
+            assert run.pages_checked == before, "nothing was stale, so nothing was re-read"
+            assert run.stage == "awaiting_user_decision"
+
+    def test_a_stale_claim_is_re_read_and_decisions_survive(
+        self, bound_db, settings, profile
+    ):
+        from app.models import ClaimRow, ProgramResultRow
+
+        run_id, job_id = seed_run(bound_db, profile)
+        worker = Worker(settings)
+        worker.claim_one()
+        asyncio.run(worker.execute(job_id))
+
+        with bound_db() as session:
+            row = (
+                session.query(ProgramResultRow)
+                .filter(ProgramResultRow.run_id == run_id)
+                .first()
+            )
+            row.user_decision = "approved"
+            row.user_decision_reason = "best funded"
+            payload = dict(row.payload)
+            payload["user_decision"] = "approved"
+            payload["user_decision_reason"] = "best funded"
+            row.payload = payload
+            decided_id = row.id
+            # Age every claim well past its window.
+            session.execute(
+                sa.update(ClaimRow)
+                .where(ClaimRow.run_id == run_id)
+                .values(accessed_at=datetime.now(UTC) - timedelta(days=900))
+            )
+            recheck_id = (
+                session.query(Job).filter(Job.run_id == run_id, Job.kind == "recheck").one().id
+            )
+            session.execute(
+                sa.update(Job).where(Job.id == recheck_id).values(available_at=datetime.now(UTC))
+            )
+            session.commit()
+
+        assert worker.claim_one() == recheck_id
+        asyncio.run(worker.execute(recheck_id))
+
+        with bound_db() as session:
+            run = session.get(ResearchRun, run_id)
+            assert run.stage == "awaiting_user_decision"
+            fresh = session.get(ProgramResultRow, decided_id)
+            assert fresh.user_decision == "approved", "a recheck must not discard decisions"
+            assert fresh.user_decision_reason == "best funded"
+            newest = max(
+                ensure_utc(c.accessed_at)
+                for c in session.query(ClaimRow).filter(ClaimRow.run_id == run_id)
+            )
+            assert newest > datetime.now(UTC) - timedelta(minutes=5), "evidence was re-read"

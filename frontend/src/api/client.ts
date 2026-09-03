@@ -72,6 +72,37 @@ export const api = {
       method: 'POST', body: JSON.stringify({ email, password }),
     }),
   logout: () => request<void>('/api/auth/logout', { method: 'POST' }),
+  changePassword: (currentPassword: string, newPassword: string) =>
+    request<AuthPrincipal>('/api/auth/password', {
+      method: 'POST',
+      body: JSON.stringify({ current_password: currentPassword, new_password: newPassword }),
+    }),
+  // The answer is the same whether or not the address has an account, so the
+  // form can never be used to find out who is registered.
+  requestPasswordReset: (email: string) =>
+    request<{ detail: string; reset_link?: string }>('/api/auth/password/reset-request', {
+      method: 'POST',
+      body: JSON.stringify({ email }),
+    }),
+  confirmPasswordReset: (token: string, newPassword: string) =>
+    request<AuthPrincipal>('/api/auth/password/reset', {
+      method: 'POST',
+      body: JSON.stringify({ token, new_password: newPassword }),
+    }),
+  organizations: () =>
+    request<{ id: string; name: string; role: string; current: boolean }[]>(
+      '/api/auth/organizations',
+    ),
+  switchOrganization: (organizationId: string) =>
+    request<AuthPrincipal>('/api/auth/session/organization', {
+      method: 'POST',
+      body: JSON.stringify({ organization_id: organizationId }),
+    }),
+  deleteAccount: (password: string, confirmDeleteData: boolean) =>
+    request<void>('/api/auth/me/delete', {
+      method: 'POST',
+      body: JSON.stringify({ password, confirm_delete_data: confirmDeleteData }),
+    }),
   cases: () => request<ApplicantCase[]>('/api/cases'),
   health: () => request<{ status: string; demo_mode: boolean; schema_version: number }>('/api/health'),
   capabilities: () => request<Capabilities>('/api/capabilities'),
@@ -122,6 +153,7 @@ export const api = {
     request<RunView>(`/api/runs/${id}/retry${stage ? `?stage=${encodeURIComponent(stage)}` : ''}`, {
       method: 'POST',
     }),
+  recheckNow: (id: string) => request<RunView>(`/api/runs/${id}/recheck`, { method: 'POST' }),
   collectDocuments: (id: string) =>
     request<RunView>(`/api/runs/${id}/collect-documents`, { method: 'POST' }),
 

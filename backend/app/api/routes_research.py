@@ -94,6 +94,8 @@ class RunView(BaseModel):
     worker_id: str | None = None
     heartbeat_at: str | None = None
     recovery_count: int = 0
+    #: When the evidence in this run next ages out and is re-read automatically.
+    next_recheck_at: str | None = None
 
 
 def settings_default(name: str) -> int:
@@ -154,6 +156,7 @@ def _view(session: Session, run: ResearchRun) -> RunView:
         worker_id=run.worker_id,
         heartbeat_at=run.heartbeat_at.isoformat() if run.heartbeat_at else None,
         recovery_count=run.recovery_count or 0,
+        next_recheck_at=run.next_recheck_at.isoformat() if run.next_recheck_at else None,
     )
 
 
@@ -411,6 +414,45 @@ def collect_documents(
         run_id=run_id,
         idempotency_key=f"documents:{run_id}:{shortlist_digest}",
         priority=5,
+    )
+    session.commit()
+    session.refresh(run)
+    return _view(session, run)
+
+
+@router.post("/{run_id}/recheck", response_model=RunView, status_code=202)
+def recheck_now(
+    run_id: str,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> RunView:
+    """Re-read the evidence for this run now, instead of waiting for its date.
+
+    The automatic recheck is queued for `next_recheck_at`; this is the same job
+    made available immediately. Results are upserted and decisions are kept.
+    """
+    run = owned_run(session, run_id, principal)
+    store = JobStore(session)
+    if any(j.status == JobStatus.RUNNING.value for j in store.for_run(run_id)):
+        raise HTTPException(409, "This run is still executing; wait for it to finish.")
+
+    now = datetime.now(UTC)
+    store.enqueue(
+        "recheck",
+        run_id=run_id,
+        idempotency_key=f"recheck:{run_id}:manual:{now.isoformat(timespec='seconds')}",
+        available_at=now,
+        priority=0,
+    )
+    session.add(
+        AuditEvent(
+            organization_id=principal.organization_id,
+            actor=f"user:{principal.user_id[:8]}",
+            action="run_recheck_requested",
+            entity_type="run",
+            entity_id=run_id,
+            detail={},
+        )
     )
     session.commit()
     session.refresh(run)

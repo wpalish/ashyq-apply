@@ -60,6 +60,7 @@ export interface Store {
   startRun: (demoMode: boolean) => Promise<void>;
   cancelRun: () => Promise<void>;
   retryRun: (stage?: string) => Promise<void>;
+  recheckNow: () => Promise<void>;
   collectDocuments: () => Promise<void>;
   decide: (resultId: string, decision: UserDecision, reason: string, notes: string) => Promise<void>;
   refreshResults: () => Promise<void>;
@@ -358,6 +359,15 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     }
   }, [run, fail]);
 
+  const recheckNow = useCallback(async () => {
+    if (!run) return;
+    try {
+      setRun(await api.recheckNow(run.id));
+    } catch (e) {
+      fail(e);
+    }
+  }, [run, fail]);
+
   const collectDocuments = useCallback(async () => {
     if (!run) return;
     setError(null);
@@ -410,13 +420,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     () => ({
       capabilities, profileDraft, setProfileDraft, savedProfile, cases, switchCase, newCase, restored,
       loadDemoProfile, clearProfile, validation, run, results,
-      summary, loading, error, saveProfile, startRun, cancelRun, retryRun, collectDocuments,
+      summary, loading, error, saveProfile, startRun, cancelRun, retryRun, recheckNow, collectDocuments,
       decide, refreshResults, deleteEverything, clearError: () => setError(null),
     }),
     [capabilities, profileDraft, setProfileDraft, savedProfile, cases, switchCase, newCase,
      restored, loadDemoProfile,
      clearProfile, validation, run, results, summary, loading, error, saveProfile, startRun,
-     cancelRun, retryRun, collectDocuments, decide, refreshResults, deleteEverything],
+     cancelRun, retryRun, recheckNow, collectDocuments, decide, refreshResults, deleteEverything],
   );
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;

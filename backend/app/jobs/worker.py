@@ -21,6 +21,7 @@ from app.db import session_scope
 from app.domain.enums import PipelineStage
 from app.jobs.store import JobStore, worker_identity
 from app.models import ApplicantProfileRow, AuditEvent, Job, JobStatus, ResearchRun
+from app.models.base import ensure_utc
 from app.pipeline.runner import LeaseLost, ResearchRunner, RunCancelled
 from app.schemas.profile import ApplicantProfileIn
 
@@ -163,6 +164,25 @@ class Worker:
         except asyncio.CancelledError:
             return
 
+    def _schedule_recheck(self, store: JobStore, run: ResearchRun) -> None:
+        """Queue the next look at this run's evidence, at the date it ages out.
+
+        Idempotent by (run, date): re-running the same research does not stack
+        up duplicate recheck jobs.
+        """
+        when = run.next_recheck_at
+        if when is None:
+            return
+        when = ensure_utc(when)
+        assert when is not None
+        store.enqueue(
+            "recheck",
+            run_id=run.id,
+            idempotency_key=f"recheck:{run.id}:{when.date().isoformat()}",
+            available_at=when,
+            priority=-5,  # never ahead of work a person is waiting for
+        )
+
     async def _dispatch(self, session, store: JobStore, job: Job) -> None:
         """Route a job to its handler, in the job's own transaction."""
         run = session.get(ResearchRun, job.run_id) if job.run_id else None
@@ -184,6 +204,11 @@ class Worker:
             await runner.collect_documents()
         elif job.kind == "research":
             await runner.run_to_decision()
+            self._schedule_recheck(store, run)
+        elif job.kind == "recheck":
+            stale = await runner.recheck_stale()
+            log.info("recheck of run %s: %d stale claims", run.id[:8], stale)
+            self._schedule_recheck(store, run)
         else:
             store.fail(job.id, f"unknown job kind {job.kind!r}", retry=False)
             return

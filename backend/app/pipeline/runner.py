@@ -38,7 +38,7 @@ from app.domain.enums import (
     PipelineStage,
     UserDecision,
 )
-from app.domain.freshness import age_days, apply_freshness, is_stale
+from app.domain.freshness import age_days, apply_freshness, is_stale, next_recheck_at
 from app.domain.funding import classify, funding_fit_for
 from app.domain.scoring import admissions_fit_for, score_result
 from app.domain.validation import validate_profile
@@ -161,6 +161,63 @@ class ResearchRunner:
             if not store.owns(self.job_id):
                 raise LeaseLost(f"job {self.job_id[:8]} is no longer held by {self.worker_id}")
 
+
+    def earliest_recheck(self) -> datetime | None:
+        """When this run's oldest claim ages out, or None if it has none.
+
+        Freshness rules already downgraded stale claims to POSSIBLY_STALE, but
+        nothing ever went back to look. This is the date a recheck job waits
+        for.
+        """
+        rows = (
+            self.session.query(ClaimRow.claim_type, ClaimRow.accessed_at)
+            .filter(ClaimRow.run_id == self.run.id)
+            .all()
+        )
+        moments = []
+        for claim_type, accessed_at in rows:
+            accessed = ensure_utc(accessed_at)
+            if accessed is None:
+                continue
+            try:
+                moments.append(next_recheck_at(ClaimType(claim_type), accessed))
+            except ValueError:  # a claim type this build no longer knows
+                continue
+        return min(moments) if moments else None
+
+    async def recheck_stale(self) -> int:
+        """Re-read the evidence that has aged out. Returns how many claims were stale.
+
+        Deliberately coarse: it re-runs verification onwards for the whole run
+        rather than only the rows holding stale claims. Results are upserted and
+        user decisions are carried across, so the outcome is the same; the cost
+        is re-reading pages that were still fresh. Narrow it to the affected
+        rows if outbound traffic ever becomes the constraint.
+        """
+        now = datetime.now(UTC)
+        stale_claims = [
+            row
+            for row in self.session.query(ClaimRow).filter(ClaimRow.run_id == self.run.id).all()
+            if _claim_is_stale(row, now)
+        ]
+        if not stale_claims:
+            self.run.next_recheck_at = self.earliest_recheck()
+            self._save()
+            return 0
+
+        for stage in (
+            PipelineStage.PROGRAM_VERIFICATION,
+            PipelineStage.FUNDING_DISCOVERY,
+            PipelineStage.ASSESSMENT,
+            PipelineStage.AWAITING_USER_DECISION,
+        ):
+            self.state[stage].status = "pending"
+            self.state[stage].error = ""
+        self._audit("run_recheck_started", "run", self.run.id, stale_claims=len(stale_claims))
+        self._save()
+        await self.run_to_decision()
+        return len(stale_claims)
+
     # --- entry point ------------------------------------------------------
 
     async def run_to_decision(self) -> None:
@@ -199,6 +256,7 @@ class ResearchRunner:
             waiting.finish("Shortlist ready; waiting for the applicant's decisions.")
             self._transition(PipelineStage.AWAITING_USER_DECISION)
             self.run.finished_at = datetime.now(UTC)
+            self.run.next_recheck_at = self.earliest_recheck()
             self._save()
         except RunCancelled:
             self.run.stage = PipelineStage.CANCELLED.value
@@ -975,3 +1033,13 @@ def _fit_label(actual: str | None, preferred: str) -> str:
 def _as_date(v):
     """Shared with eligibility: an ambiguous d/m vs m/d string reads as None."""
     return parse_published_date(v)
+
+
+def _claim_is_stale(row: ClaimRow, now: datetime) -> bool:
+    accessed = ensure_utc(row.accessed_at)
+    if accessed is None:
+        return False
+    try:
+        return is_stale(ClaimType(row.claim_type), accessed, now)
+    except ValueError:
+        return False

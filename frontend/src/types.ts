@@ -366,6 +366,8 @@ export interface RunView {
   worker_id: string | null;
   heartbeat_at: string | null;
   recovery_count: number;
+  //: When the evidence is next re-read automatically (ISO 8601), if ever.
+  next_recheck_at?: string | null;
 }
 
 export interface ProfileGap {
