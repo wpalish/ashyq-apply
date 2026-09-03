@@ -31,7 +31,7 @@ jobs:
           .venv/bin/ruff check app tests
           .venv/bin/ruff format --check app tests
           .venv/bin/mypy app tests
-          UNIMATCH_DATABASE_URL=sqlite:////tmp/unimatch-ci.db .venv/bin/pytest --cov=app --cov-fail-under=80
+          UNIMATCH_DATABASE_URL=sqlite:////tmp/unimatch-ci.db .venv/bin/pytest --cov=app --cov-fail-under=92
       - if: matrix.database == 'postgresql'
         run: .venv/bin/python scripts/pg.py .venv/bin/pytest
 
