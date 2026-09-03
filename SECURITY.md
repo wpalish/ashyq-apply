@@ -8,9 +8,13 @@ attests, pays, uploads to a portal or impersonates a recommender.
 ## Trust boundaries
 
 - The browser is untrusted input. Authentication uses a random opaque session
-  token in an `HttpOnly`, `SameSite=Strict` cookie; only its SHA-256 hash is
-  stored. Production refuses to start without authentication, PostgreSQL,
-  HTTPS-only CORS origins and Secure cookies.
+  token in an `HttpOnly`, `SameSite=Lax` cookie; only its SHA-256 hash is
+  stored. Lax rather than Strict because Strict drops the cookie on any
+  cross-site navigation, which signed people out as they arrived from a
+  password-reset link; CSRF is carried by the Fetch Metadata and `Origin`
+  checks below. Production refuses to start without authentication,
+  PostgreSQL, HTTPS-only CORS origins, Secure cookies, an HTTPS public base
+  URL, a configured mail sender and scrypt at 2**17 or stronger.
 - Every database read and mutation starts from the authenticated organization.
   Applicant cases, runs, results, claims, exports and audit events are filtered
   by that tenant; another tenant's identifier returns 404 rather than revealing
@@ -30,7 +34,25 @@ attests, pays, uploads to a portal or impersonates a recommender.
 
 ## Web controls
 
-- Passwords are normalized only by length and stored with salted `scrypt`.
+- Passwords are normalized only by length and stored with salted `scrypt`, at
+  cost 2**17 for new hashes. Older 2**14 hashes still verify - the parameters
+  travel in the encoded string - so raising the cost locks nobody out.
+- Changing a password revokes every other session; completing a password reset
+  revokes all of them, including the one that asked. Reset tokens are stored
+  as digests, are single-use, expire in an hour, and are rate-limited per
+  address and per account. The reset response is identical whether or not the
+  email has an account, and only a non-production build ever returns the link
+  in the response body.
+- Sessions are capped per user (20 by default, oldest revoked first) and
+  expired rows are cleaned up on the next sign-in.
+- Deleting an account requires the password, and erases the workspaces where
+  that user is the only member together with their applicant cases, runs and
+  claims. The audit record is written before the deletion, so the act survives
+  the data it describes.
+- `email_verified` is recorded but not enforced: there is no verification flow
+  yet, and `UNIMATCH_AUTH_REQUIRE_VERIFIED_EMAIL` stays false until there is
+  one. Saying so is the honest position; pretending otherwise would be
+  theatre.
 - Login, registration and expensive research starts have fixed-window abuse
   limits. The limiter is a per-process safety shield, not a distributed quota.
 - Unsafe authenticated requests reject cross-site Fetch Metadata and untrusted

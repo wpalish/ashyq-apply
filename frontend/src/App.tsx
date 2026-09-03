@@ -9,6 +9,7 @@
 import { useEffect, useState } from 'react';
 import { useStore } from '@/lib/store';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { AccountMenu } from '@/components/AccountMenu';
 import { ProfileScreen } from '@/screens/ProfileScreen';
 import { PreferencesScreen } from '@/screens/PreferencesScreen';
 import { ProgressScreen } from '@/screens/ProgressScreen';
@@ -198,6 +199,7 @@ export default function App() {
               {plural(summary.with_open_questions, 'open question')}
             </span>
           )}
+          <AccountMenu onSignedOut={() => window.location.reload()} />
           <button className="btn btn--sm btn--ghost" type="button" onClick={async () => {
             await api.logout(); window.location.reload();
           }}>Sign out</button>

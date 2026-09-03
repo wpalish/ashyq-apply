@@ -14,6 +14,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app.adapters.fetching import PIILeakError
 from app.api import (
+    routes_account,
     routes_auth,
     routes_cases,
     routes_meta,
@@ -77,6 +78,7 @@ app.add_middleware(
 )
 
 for module in (
+    routes_account,
     routes_auth,
     routes_cases,
     routes_meta,

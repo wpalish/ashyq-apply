@@ -21,6 +21,9 @@ def auth_client(tmp_path, monkeypatch, corpus_dir):
         auth_registration_enabled=True,
         auth_rate_limit_per_minute=20,
         run_rate_limit_per_minute=20,
+        # Production hashes at 2**17 (~1s each). Paying that a hundred times
+        # over in the suite proves nothing the parameters in the hash do not.
+        password_scrypt_log2=14,
         # The deployed stack always sits behind nginx or Fly, so that is the
         # configuration worth testing.
         trust_proxy_headers=True,
@@ -87,7 +90,11 @@ class TestAuthentication:
         assert cookie and "." not in cookie  # opaque, not a JWT carrying claims
         header = client.post("/api/auth/logout").headers.get("set-cookie", "").lower()
         assert "httponly" in header
-        assert "samesite=strict" in header
+        # Lax, not Strict: Strict drops the cookie on any cross-site
+        # navigation, so arriving from a password-reset link in an email
+        # landed the user on a signed-out page. CSRF is covered by the Origin
+        # and Sec-Fetch-Site checks, which the tests below still enforce.
+        assert "samesite=lax" in header
 
     def test_passwords_are_not_stored_verbatim(self, auth_client):
         client, _ = auth_client
