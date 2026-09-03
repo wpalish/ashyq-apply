@@ -11,8 +11,9 @@ Two asymmetries are deliberate:
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import date, datetime
+from datetime import date
 
+from app.domain.dates import parse_published_date
 from app.domain.enums import (
     SPECIFICITY_RANK,
     ClaimStatus,
@@ -372,14 +373,9 @@ def _to_float(v: object) -> float | None:
 
 
 def _as_date(v: object) -> date | None:
-    if isinstance(v, date) and not isinstance(v, datetime):
-        return v
-    if isinstance(v, datetime):
-        return v.date()
-    if isinstance(v, str):
-        for fmt in ("%Y-%m-%d", "%d/%m/%Y", "%m/%d/%Y", "%d %B %Y", "%B %d, %Y"):
-            try:
-                return datetime.strptime(v.strip(), fmt).date()
-            except ValueError:
-                continue
-    return None
+    """Trying %d/%m/%Y then %m/%d/%Y silently picked a reading of 03/04/2027.
+
+    A deadline a month wrong decides whether an applicant applies at all, so an
+    ambiguous string now comes back as None and the check says why.
+    """
+    return parse_published_date(v)

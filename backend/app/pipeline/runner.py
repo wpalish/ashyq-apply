@@ -26,8 +26,10 @@ from app.adapters.requirements.web_requirements import WebRequirementsAdapter
 from app.adapters.scholarship.web_scholarships import WebScholarshipAdapter
 from app.config import Settings
 from app.domain import dedupe
+from app.domain.citizenship import CitizenshipMatch, match_citizenship
 from app.domain.conflicts import enforce_source_hierarchy, find_conflicts
 from app.domain.costs import compute_funding_gap, total_cost
+from app.domain.dates import parse_published_date
 from app.domain.eligibility import evaluate_program
 from app.domain.enums import (
     ClaimType,
@@ -288,7 +290,11 @@ class ResearchRunner:
         req = WebRequirementsAdapter(fetcher, self.settings.academic_year)
         cost = WebCostAdapter(fetcher, self.settings.academic_year)
         gov = WebGovernmentAdapter(fetcher)
-        gov_cache: dict[str, str] = {}
+        # Both the value *and* the claims behind it. Caching only the string
+        # meant the second candidate in a country showed a post-study-work
+        # right with no source in its own row - a value on screen with nothing
+        # behind it, which is precisely what this product must never do.
+        gov_cache: dict[str, tuple[str, list]] = {}
 
         errors: list[str] = []
         retry: list[str] = []
@@ -358,10 +364,14 @@ class ResearchRunner:
                     self.run.pages_checked += gr.pages_checked
                     self.run.pages_failed += gr.pages_failed
                     gov_cache[cand.country] = (
-                        str(gr.claims[0].normalized_value) if gr.claims else ""
+                        str(gr.claims[0].normalized_value) if gr.claims else "",
+                        list(gr.claims),
                     )
-                    ar.claims.extend(gr.claims)
-                result.post_study_work = gov_cache[cand.country]
+                government_value, government_claims = gov_cache[cand.country]
+                # Every row of that country gets the government page as its own
+                # evidence, not just the first one to trigger the fetch.
+                ar.claims.extend(government_claims)
+                result.post_study_work = government_value
 
                 all_claims = ar.claims + cr.claims
                 all_claims, demotion_qs = enforce_source_hierarchy(all_claims)
@@ -817,20 +827,25 @@ def _scholarship_eligibility(s, profile: ApplicantProfileIn):
     checks = []
     citizenship = profile.context.citizenship
     if s.citizenship_restrictions:
-        allowed = " ".join(s.citizenship_restrictions).lower()
-        ok = citizenship.lower() in allowed
+        # A substring test here used to say "Korea" satisfies "North Korea only"
+        # and that "Kazakhstan" fails "Central Asian nationals". Both readings
+        # were guesses; a group restriction is now left for the office to settle.
+        verdict, explanation = match_citizenship(
+            s.citizenship_restrictions,
+            [citizenship, profile.context.second_citizenship],
+        )
+        status = {
+            CitizenshipMatch.MET: EligibilityStatus.MET,
+            CitizenshipMatch.NOT_APPLICABLE: EligibilityStatus.NOT_APPLICABLE,
+            CitizenshipMatch.PENDING: EligibilityStatus.PENDING,
+        }[verdict]
         checks.append(
             _check(
                 "Scholarship citizenship eligibility",
                 s.citizenship_restrictions,
                 citizenship,
-                EligibilityStatus.MET if ok else EligibilityStatus.NOT_APPLICABLE,
-                (
-                    f"The award is restricted to {', '.join(s.citizenship_restrictions)}. "
-                    f"An applicant holding {citizenship} citizenship is not eligible."
-                    if not ok
-                    else f"{citizenship} citizenship falls within the published restriction."
-                ),
+                status,
+                explanation,
             )
         )
     elif s.international_eligible == "no":
@@ -958,9 +973,5 @@ def _fit_label(actual: str | None, preferred: str) -> str:
 
 
 def _as_date(v):
-    if isinstance(v, str):
-        try:
-            return date.fromisoformat(v)
-        except ValueError:
-            return None
-    return v if isinstance(v, date) else None
+    """Shared with eligibility: an ambiguous d/m vs m/d string reads as None."""
+    return parse_published_date(v)
