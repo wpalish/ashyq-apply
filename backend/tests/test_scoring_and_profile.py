@@ -15,8 +15,9 @@ from app.domain.scoring import (
     score_result,
 )
 from app.domain.validation import validate_profile
+from app.schemas.money import Money
 from app.schemas.profile import GradeValue
-from app.schemas.result import ProgramResult, RankingEntry, RequirementCheck
+from app.schemas.result import FundingGap, ProgramResult, RankingEntry, RequirementCheck
 
 
 def result(**kwargs) -> ProgramResult:
@@ -26,6 +27,57 @@ def result(**kwargs) -> ProgramResult:
         "intake": "fall 2027",
         **kwargs,
     })
+
+
+class TestAffordabilityRespectsTheStatedCurrency:
+    """The ceiling is in the family's currency; the gap is in the target one.
+
+    Comparing them as bare numbers made a 6,000,000 KZT ceiling look infinitely
+    generous against a 20,000 USD gap: ratio ~= 0.003, "affordable" at every
+    university on the list.
+    """
+
+    @staticmethod
+    def _result_with_gap(amount: float, currency: str = "USD"):
+        return result(
+            funding_gap=FundingGap(
+                computable=True, gap=Money(amount=amount, currency=currency)
+            )
+        )
+
+    def test_a_tenge_ceiling_is_converted_before_it_is_compared(self, profile):
+        # 2,880,000 KZT is 6,000 USD at the bundled 480 KZT/USD snapshot rate.
+        profile.funding.budget_currency = "KZT"
+        profile.funding.max_acceptable_gap = 2_880_000
+        affordable = self._affordability(self._result_with_gap(6_000), profile)
+        assert affordable.raw == pytest.approx(1.0), "equal purchasing power must score as met"
+
+        stretched = self._affordability(self._result_with_gap(24_000), profile)
+        assert stretched.raw < 0.5, "four times the ceiling is not affordable"
+        assert "KZT" in stretched.explanation and "USD" in stretched.explanation
+
+    def test_a_ceiling_of_zero_is_a_real_ceiling_not_a_missing_one(self, profile):
+        profile.funding.budget_currency = "USD"
+        profile.funding.max_acceptable_gap = 0
+        profile.funding.max_annual_budget = 50_000
+
+        component = self._affordability(self._result_with_gap(10_000), profile)
+        assert component.raw == 0.0, "'I can pay nothing' must not fall through to the budget"
+
+    def test_an_unsupported_currency_is_missing_data_not_a_number(self, profile):
+        profile.funding.budget_currency = "XTS"
+        profile.funding.max_acceptable_gap = 1_000
+
+        component = self._affordability(self._result_with_gap(6_000), profile)
+        assert component.data_present is False, "an unknown rate must not become a score"
+        assert "XTS" in component.explanation
+        assert "guessed" in component.explanation
+
+    @staticmethod
+    def _affordability(res, profile):
+        score = score_result(res, profile)
+        component = next(c for c in score.components if c.name == "Affordability")
+        return component
 
 
 class TestScoreIsExplainable:

@@ -8,7 +8,9 @@ outcomes, and the schema carries a disclaimer saying so, because a number like
 
 from __future__ import annotations
 
+from app.domain.currency import UnsupportedCurrency, convert
 from app.domain.enums import AdmissionsFit, EligibilityStatus, FundingFit
+from app.schemas.money import ConvertedMoney, Money
 from app.schemas.profile import ApplicantProfileIn, ScoringWeights
 from app.schemas.result import ExplainableScore, ProgramResult, ScoreComponent
 
@@ -80,26 +82,35 @@ def score_result(result: ProgramResult, profile: ApplicantProfileIn) -> Explaina
 
     # --- affordability against the family's own ceiling ------------------
     gap = result.funding_gap
-    ceiling = profile.funding.max_acceptable_gap or profile.funding.max_annual_budget
+    weight = w.funding_fit * 0.5
     if gap is None or not gap.computable or gap.gap is None:
-        add("Affordability", None, w.funding_fit * 0.5, "Remaining annual cost could not be computed.", "cost of attendance")
-    elif ceiling is None:
-        add(
-            "Affordability",
-            0.5,
-            w.funding_fit * 0.5,
-            f"Remaining annual cost is {gap.gap}. No family budget ceiling was set to compare against.",
-        )
+        add("Affordability", None, weight, "Remaining annual cost could not be computed.", "cost of attendance")
     else:
-        ratio = gap.gap.amount / ceiling if ceiling > 0 else (0.0 if gap.gap.amount == 0 else 2.0)
-        raw = 1.0 if ratio <= 1 else max(0.0, 1.5 - ratio / 2)
-        add(
-            "Affordability",
-            raw,
-            w.funding_fit * 0.5,
-            f"Remaining annual cost {gap.gap.amount:,.0f} {gap.gap.currency} against a stated "
-            f"ceiling of {ceiling:,.0f}.",
-        )
+        ceiling, note, refusal = _comparable_ceiling(profile, gap.gap.currency)
+        if refusal:
+            add("Affordability", None, weight, refusal, "exchange rate for the stated budget currency")
+        elif ceiling is None:
+            add(
+                "Affordability",
+                0.5,
+                weight,
+                f"Remaining annual cost is {gap.gap}. No family budget ceiling was set to compare against.",
+            )
+        else:
+            if ceiling > 0:
+                ratio = gap.gap.amount / ceiling
+                raw = 1.0 if ratio <= 1 else max(0.0, 1.5 - ratio / 2)
+            else:
+                # "I can contribute nothing" against a cost that remains: the
+                # worst case, not a middling one.
+                raw = 1.0 if gap.gap.amount == 0 else 0.0
+            add(
+                "Affordability",
+                raw,
+                weight,
+                f"Remaining annual cost {gap.gap.amount:,.0f} {gap.gap.currency} against a stated "
+                f"ceiling of {ceiling:,.0f} {gap.gap.currency}{note}.",
+            )
 
     # --- country preference ---------------------------------------------
     prefs = profile.preferences
@@ -172,6 +183,54 @@ def score_result(result: ProgramResult, profile: ApplicantProfileIn) -> Explaina
 
 def _label_to_raw(label: str) -> float | None:
     return {"strong": 1.0, "good": 0.75, "acceptable": 0.5, "weak": 0.25, "poor": 0.1}.get(label)
+
+
+def _comparable_ceiling(
+    profile: ApplicantProfileIn, target_currency: str
+) -> tuple[float | None, str, str]:
+    """The family's ceiling, expressed in the currency the gap is in.
+
+    Returns (ceiling, explanatory note, refusal). The ceiling is stated in
+    `funding.budget_currency` while the gap is in the target currency, so
+    comparing the bare numbers made a 2,880,000 KZT ceiling look infinite
+    beside a 6,000 USD gap and every option scored as affordable.
+
+    An unsupported currency is a refusal, never a number: converting at a rate
+    we do not hold would be exactly the guess this product refuses to make.
+    """
+    funding = profile.funding
+    # `or` treated a deliberate "I can contribute nothing" as no ceiling at all
+    # and silently fell through to the annual budget, a different question.
+    ceiling = (
+        funding.max_acceptable_gap
+        if funding.max_acceptable_gap is not None
+        else funding.max_annual_budget
+    )
+    if ceiling is None:
+        return None, "", ""
+
+    source_currency = (funding.budget_currency or "USD").upper()
+    target = target_currency.upper()
+    if source_currency == target:
+        return float(ceiling), "", ""
+
+    try:
+        converted = convert(Money(amount=float(ceiling), currency=source_currency), target)
+    except UnsupportedCurrency as exc:
+        return (
+            None,
+            "",
+            f"The budget is stated in {source_currency} and the remaining cost in {target}. "
+            f"No bundled rate connects them, so affordability is left unknown rather than "
+            f"guessed. {exc}",
+        )
+    if not isinstance(converted, ConvertedMoney):  # pragma: no cover - currencies differ here
+        return float(converted.amount), "", ""
+    note = (
+        f" (converted from {ceiling:,.0f} {source_currency} at "
+        f"{converted.rate:,.4f} {target}/{source_currency}, rate of {converted.rate_date})"
+    )
+    return converted.amount, note, ""
 
 
 def _best_rank(result: ProgramResult) -> int | None:
