@@ -166,3 +166,38 @@ here), live programme recall is still 1 of 10 canary institutions, and Phases
 3-6 of the plan — the ~20 collected-but-unused profile fields, URL routing,
 polling behaviour, pagination, the deadline calendar, observability and i18n —
 are untouched.
+
+## Update — Phase 3 of the audit fix plan
+
+Fourteen P2 defects, all in what the applicant sees and does:
+
+- **Unsaved edits were lost** on a reload, and switching case discarded them
+  without asking. The draft is autosaved and restored with a banner — and,
+  carefully, never written back into the saved profile, which is the shape of
+  the old defect where demo data overwrote a real record.
+- **Screens had no address.** Back, forward and reload now work, and a link to
+  a screen that is not reachable yet explains itself instead of showing an
+  empty page.
+- **Polling rebuilt its interval on every tick**, kept running in a hidden tab,
+  and raised a banner on a single dropped request.
+- **~20 profile fields were collected and read by nothing.** Each is now
+  scored, or shown as context, or removed from the form; `docs/PROFILE_FIELDS.md`
+  records which and why.
+- **A clean run listed 47 "limitations".** Every one was an honest unknown.
+  Failures and unknowns are separate fields now, with separate panels.
+- **"Show my stored data" was not the complete record** it claimed to be: no
+  results, no claims, no audit trail.
+- **Editing a note recorded a decision**, stamping `decided_at` on rows the
+  applicant had not decided.
+- Deadlines can go into a calendar; lists are paged; an unmatched row says so;
+  progress counts programmes on both sides of the ratio; filters read as
+  English; money and dates share one locale; and the product is called ASHYQ
+  Apply everywhere a person reads.
+
+Two of these fixes broke something in turn and the E2E suite caught both — a
+gate redirect that fought the collect-documents workflow, and a recheck job
+queued months ahead being read as work in flight. Both are fixed with tests.
+
+Still open and unchanged: the container stack has never been run (no Docker
+here), live programme recall is still 1 of 10 canary institutions, and Phases
+4–6 — hygiene, observability and i18n — are untouched.

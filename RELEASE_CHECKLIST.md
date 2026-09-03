@@ -8,16 +8,16 @@ the release report, not "implemented".
 partial and one fails; the local container stack is still the unverified gate,
 and the release commit/tag waits on it.
 
-**next: Phase 3** of [`docs/FIX_PLAN.md`](docs/FIX_PLAN.md). Phase 0
-(baseline), Phase 1 (P0 blockers 1.1–1.6) and Phase 2 (P1 reliability and
-security, 2.1–2.17) are done; gates 36–54 below record what each fix is now
-held to. Two audit findings did not reproduce against this tree and are
+**next: Phase 4** of [`docs/FIX_PLAN.md`](docs/FIX_PLAN.md). Phase 0
+(baseline), Phase 1 (P0 blockers), Phase 2 (P1 reliability and security) and
+Phase 3 (P2 UX, 3.1–3.14) are done; gates 36–73 below record what each fix is
+now held to. Two audit findings did not reproduce against this tree and are
 recorded as such rather than "fixed" — see gates 22 and 47.
 
 | # | Gate | Status | Evidence / what is missing |
 |---|---|---|---|
-| 1 | Existing 240 + 39 + 42 tests kept or replaced by stricter ones | **PASS** | 606 + 75 + 50 (25 desktop + 25 mobile). Nothing removed; Phase 1 added 14 and Phase 2 added 65. The backend number is lower than the 547 recorded earlier because 25 PostgreSQL tests now *skip* on a machine without a working `pgserver` instead of erroring — they still run in CI |
-| 2 | All new unit / integration / E2E / security tests green | **PARTIAL** | `pytest` 606 passed / 25 skipped (SQLite; the PostgreSQL branch could not be provisioned on this machine — `pgserver`'s `initdb.exe` fails here), `vitest` 75, `playwright` 25 desktop + 25 mobile |
+| 1 | Existing 240 + 39 + 42 tests kept or replaced by stricter ones | **PASS** | 656 + 93 + 54 (27 desktop + 27 mobile). Nothing removed; Phase 1 added 14, Phase 2 added 65, Phase 3 added 50. The backend number is lower than the 547 recorded earlier because 25 PostgreSQL tests now *skip* on a machine without a working `pgserver` instead of erroring — they still run in CI |
+| 2 | All new unit / integration / E2E / security tests green | **PARTIAL** | `pytest` 656 passed / 25 skipped (SQLite; the PostgreSQL branch could not be provisioned on this machine — `pgserver`'s `initdb.exe` fails here), `vitest` 93, `playwright` 27 desktop + 27 mobile |
 | 3 | ruff, mypy, TypeScript, ESLint, production build clean | **PASS** | all clean; build 74.0 kB JS gzip |
 | 4 | PostgreSQL migrations work on fresh and upgraded databases | **PASS** | Alembic. Verified fresh, downgrade to base, re-upgrade, re-apply as a no-op, on PostgreSQL 16.2 and SQLite. `create_all()` removed from the production path; startup refuses a mismatched revision |
 | 5 | Worker survives a crash restart | **PASS** | `scripts/crash_test.py` SIGKILLs a real worker after 12 results are written; a second worker recovers the job and finishes with no duplicates. Stable over 3 runs. **PostgreSQL-backed queue, not Redis — see ADR 0001** |
@@ -92,20 +92,38 @@ recorded as such rather than "fixed" — see gates 22 and 47.
 | 59 | The rate snapshot admits its age | **PASS** | Past 90 days `/api/capabilities` carries `stale_warning` and the funding screen shows it; `scripts/update_rates.py` prints the drift and a ready block for a human to paste. 4 tests |
 
 
+### Added by Phase 3 of the audit fix plan
+
+| # | Gate | Status | Evidence |
+|---|---|---|---|
+| 60 | Unsaved edits are never discarded silently | **PASS** | The draft is autosaved under its own key and restored after a reload with a banner and a Discard button; switching case or starting a new one asks first. A restored draft is layered on the server copy, never written into it — the shape of the old demo-data-overwrites-real-profile defect. 4 vitest |
+| 61 | Every screen has an address | **PASS** | `#/shortlist` and friends; back, forward and reload work, and a deep link to a screen that is not reachable yet redirects with the reason. Gates apply to addresses, not to in-app navigation, so the redirect cannot fight the workflow. 2 E2E |
+| 62 | One polling loop, paused when nobody is looking | **PASS** | Timeout chain keyed on the run id, in-flight guard, pause while `document.hidden` with an immediate poll on return, backoff to 15s, and a banner only after four consecutive failures. 5 vitest with fake timers |
+| 63 | Every profile field changes something, or is not asked | **PASS** | ~20 dead fields resolved: scored where the registry holds comparable data, context where it does not, and three removed from the form outright. `docs/PROFILE_FIELDS.md` records each one with its test. 19 tests |
+| 64 | Filters read as English | **PASS** | `STATUS_LABEL` in the options, enum still the value. 2 vitest |
+| 65 | Money and dates share one locale | **PASS** | `DISPLAY_LOCALE` from the browser, en-GB fallback; money was en-US beside en-GB dates on the same screen |
+| 66 | The product is called ASHYQ Apply everywhere a person reads | **PASS** | Sidebar, disclaimers, export header, the bot's User-Agent, and browser storage keys migrated from `unimatch.*` with a test. Internal names stay, and the README says why |
+| 67 | The data export is complete | **PASS** | Profile, runs, results with decisions and notes, claims, conflicts and the audit trail, with counts and a Download button. It previously carried a count of results and called itself the complete record. 3 tests |
+| 68 | An unknown is not reported as a failure | **PASS** | `run.unknowns` beside `run.errors`, split where the diagnostic is recorded; a clean demo run reports zero failures where it used to list 47. Two panels in the UI, and an older run still renders. 16 tests |
+| 69 | Saving a note is not deciding the row | **PASS** | `PATCH …/notes`, tenant-scoped; the note no longer stamps `decided_at` on an undecided row. 3 tests |
+| 70 | Lists are paged and say how much there is | **PASS** | limit/offset and `X-Total-Count` on profiles, cases, runs and claims; the silent 2000-claim cap is gone. A test fails if the per-run N+1 in `list_runs` returns. 5 tests |
+| 71 | Deadlines can be put in a calendar | **PASS** | Valid VCALENDAR with stable UIDs, all-day events, and only confirmed dates; a JSON list marks passed deadlines rather than hiding them. 4 tests |
+| 72 | An unmatched row is never skipped silently | **PASS** | Matching by `university_key`; a row that still cannot be matched is named in the run's diagnostics and carries its own open question. 1 test |
+| 73 | Progress counts one thing | **PASS** | Programmes on both sides of the ratio, committed with the heartbeat. 2 tests |
+
+
 ## Summary
 
-- **PASS:** 27 (of 30 original) + 5 + 7 added by Phase 1 + 17 added by Phase 2
+- **PASS:** 27 (of 30 original) + 5 + 7 added by Phase 1 + 17 added by Phase 2 + 14 added by Phase 3
 - **PARTIAL:** 1 (gate 2 — the PostgreSQL branch was not exercised on this machine)
 - **FAIL:** 1 (gate 22 — the container stack has still never been run)
 - **BLOCKED:** 1
 
 ## Order of work remaining
 
-0. **Phase 2 of `docs/FIX_PLAN.md`** — P1 reliability and security (job-lease
-   fencing, `enqueue` rolling back the caller's transaction, `budget_currency`
-   ignored in scoring, stale-run UX, citizenship substring matching, ambiguous
-   dates, the global `ValueError → 400` handler, header injection in the export
-   filename, `/api/health` not touching the database, the missing auth flows)
+0. **Phase 4 of `docs/FIX_PLAN.md`** — P3 hygiene (dead code, `ruff format` in
+   CI, LICENSE and CONTRIBUTING, JSON→JSONB on PostgreSQL, small API bounds,
+   honest live-coverage in the UI, an authenticated E2E path, coverage floor)
 1. ~~**P1** — PostgreSQL, Alembic, durable queue, crash recovery~~ **done** (gates 4, 5)
 2. ~~**P2** — auth, organizations, cases, tenant isolation~~ **done**
 3. ~~**P3** — SSRF suite, headers, rate limiting, threat model~~ **done**
