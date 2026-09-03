@@ -8,6 +8,7 @@
 
 import { useEffect, useState } from 'react';
 import { useStore } from '@/lib/store';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { ProfileScreen } from '@/screens/ProfileScreen';
 import { PreferencesScreen } from '@/screens/PreferencesScreen';
 import { ProgressScreen } from '@/screens/ProgressScreen';
@@ -214,6 +215,9 @@ export default function App() {
         )}
 
         <main className="screen">
+          {/* Scoped to the screen, so one broken screen cannot take the
+              sidebar and the case switcher down with it. */}
+          <ErrorBoundary label={`the ${screen} screen`} key={screen}>
           {screen === 'profile' && <ProfileScreen onNext={() => setScreen('preferences')} />}
           {screen === 'preferences' && <PreferencesScreen onStarted={() => setScreen('progress')} />}
           {screen === 'progress' && <ProgressScreen onDone={() => setScreen('shortlist')} />}
@@ -223,6 +227,7 @@ export default function App() {
           {screen === 'approved' && <ApprovedScreen onCollect={() => setScreen('documents')} />}
           {screen === 'documents' && <DocumentsScreen />}
           {screen === 'export' && <ExportScreen />}
+          </ErrorBoundary>
         </main>
       </div>
     </div>
