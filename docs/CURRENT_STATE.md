@@ -102,3 +102,30 @@ reach the API can read and delete every profile. The container stack has never
 been run. There is no CI. The profile form covers a subset of the schema.
 
 See `RELEASE_CHECKLIST.md` for all thirty gates.
+
+## Update — Phase 1 of the audit fix plan
+
+An external audit produced [`FIX_PLAN.md`](FIX_PLAN.md). Phase 0 re-established
+the baseline and Phase 1 closed its six P0 blockers, each with a regression
+test written before the fix:
+
+- **Retry destroyed the shortlist.** It deleted every result row while
+  resetting only failed stages, so retrying a finished run left 0 of 20
+  results and discarded the applicant's decisions. Rows are upserted now and
+  decisions travel with them.
+- **Repeating document collection was a silent no-op** whenever the shortlist
+  changed without changing size.
+- **`set_decision` had no tenant check**: an authenticated user of another
+  organization could approve or reject rows on someone else's shortlist.
+- **Two clicks on Start produced two runs**; the idempotency key was derived
+  from the run the request had just created.
+- **Rate limits were global behind a proxy**, and an unknown email answered
+  faster than a known one.
+- **The read-only API container** could not create the directories it makes at
+  import time.
+
+Still open and unchanged by Phase 1: the container stack has still never been
+run (no Docker here), live programme recall is still 1 of 10 canary
+institutions, and Phases 2–6 of the plan — job-lease fencing, the currency bug
+in scoring, the stale-run dead end in the UI, the missing auth flows and the
+~20 collected-but-unused profile fields — are untouched.
