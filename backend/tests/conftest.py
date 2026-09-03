@@ -103,6 +103,22 @@ def pg_session(pg_engine):
         session.close()
 
 
+@pytest.fixture(autouse=True)
+def _reset_rate_limiter():
+    """Give every test its own abuse budget.
+
+    The limiter is a per-process object keyed on the caller's address, and in
+    the suite every test is the same caller. Without this, the twenty-first
+    run started anywhere in the session gets a 429 and some unrelated test
+    fails with a KeyError on a response body it never expected.
+    """
+    import app.main as main_module
+
+    main_module._limiter.hits.clear()
+    yield
+    main_module._limiter.hits.clear()
+
+
 @pytest.fixture(scope="session")
 def corpus_dir() -> Path:
     if not CORPUS.exists():
