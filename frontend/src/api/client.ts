@@ -171,6 +171,14 @@ export const api = {
       body: JSON.stringify({ decision, reason, notes }),
     }),
 
+  // A note is not a decision: this route leaves user_decision and decided_at
+  // alone, which the decision endpoint cannot.
+  saveNotes: (runId: string, resultId: string, notes: string) =>
+    request<ProgramResult>(`/api/runs/${runId}/results/${resultId}/notes`, {
+      method: 'PATCH',
+      body: JSON.stringify({ notes }),
+    }),
+
   exportUrl: (runId: string, fmt: 'csv' | 'json' | 'xlsx', decision?: string) =>
     `/api/runs/${runId}/export.${fmt}${decision ? `?decision=${decision}` : ''}`,
 };

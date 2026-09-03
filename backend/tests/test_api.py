@@ -521,3 +521,42 @@ class TestRunViewJobReporting:
         done = client.get(f"/api/runs/{run['id']}").json()
         assert done["stage"] == "completed"
         assert done["job_status"] == "succeeded", "a future recheck must not read as running"
+
+
+class TestNotes:
+    def test_saving_a_note_does_not_decide_the_row(self, client, finished_run):
+        """Editing a note re-sent the decision, stamping decided_at on a row
+        the applicant had not decided anything about."""
+        _, run = finished_run
+        result = client.get(f"/api/runs/{run['id']}/results").json()[0]
+        assert result["user_decision"] == "undecided"
+
+        saved = client.patch(
+            f"/api/runs/{run['id']}/results/{result['id']}/notes",
+            json={"notes": "ask about housing"},
+        )
+        assert saved.status_code == 200
+        body = saved.json()
+        assert body["user_notes"] == "ask about housing"
+        assert body["user_decision"] == "undecided"
+        assert body["decided_at"] is None, "a note is not a decision"
+
+    def test_a_note_survives_a_later_decision(self, client, finished_run):
+        _, run = finished_run
+        result = client.get(f"/api/runs/{run['id']}/results").json()[0]
+        client.patch(
+            f"/api/runs/{run['id']}/results/{result['id']}/notes", json={"notes": "keep me"}
+        )
+        decided = client.post(
+            f"/api/runs/{run['id']}/results/{result['id']}/decision",
+            json={"decision": "approved", "reason": "", "notes": ""},
+        ).json()
+        assert decided["user_notes"] == "keep me"
+
+    def test_the_notes_route_is_tenant_scoped_like_every_other(self, client, finished_run):
+        _, run = finished_run
+        result = client.get(f"/api/runs/{run['id']}/results").json()[0]
+        response = client.patch(
+            f"/api/runs/{'0' * 32}/results/{result['id']}/notes", json={"notes": "x"}
+        )
+        assert response.status_code == 404

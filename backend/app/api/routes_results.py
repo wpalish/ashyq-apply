@@ -6,7 +6,7 @@ import re
 from datetime import UTC, datetime
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Response
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
 from app.api.tenancy import owned_run
@@ -152,6 +152,47 @@ def set_decision(
             entity_type="result",
             entity_id=result_id,
             detail={"decision": decision.decision.value},
+        )
+    )
+    session.commit()
+    return result
+
+
+class NotesIn(BaseModel):
+    notes: str = Field(default="", max_length=20_000)
+
+
+@router.patch("/results/{result_id}/notes", response_model=ProgramResult)
+def set_notes(
+    run_id: str,
+    result_id: str,
+    payload: NotesIn,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> ProgramResult:
+    """Save a note without touching the decision.
+
+    Editing a note used to re-POST the decision, which stamped `decided_at` on
+    a row the applicant had not decided anything about - so an undecided row
+    started claiming it was decided the moment they typed a reminder in it.
+    """
+    owned_run(session, run_id, principal)
+    row = session.get(ProgramResultRow, result_id)
+    if row is None or row.run_id != run_id:
+        raise HTTPException(404, "Result not found")
+
+    result = ProgramResult.model_validate(row.payload)
+    result.user_notes = payload.notes
+    row.user_notes = payload.notes
+    row.payload = result.model_dump(mode="json")
+    session.add(
+        AuditEvent(
+            organization_id=principal.organization_id,
+            actor=f"user:{principal.user_id[:8]}",
+            action="note_saved",
+            entity_type="result",
+            entity_id=result_id,
+            detail={},
         )
     )
     session.commit()

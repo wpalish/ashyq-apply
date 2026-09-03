@@ -78,6 +78,7 @@ export interface Store {
   recheckNow: () => Promise<void>;
   collectDocuments: () => Promise<void>;
   decide: (resultId: string, decision: UserDecision, reason: string, notes: string) => Promise<void>;
+  saveNotes: (resultId: string, notes: string) => Promise<void>;
   refreshResults: () => Promise<void>;
   deleteEverything: () => Promise<void>;
   clearError: () => void;
@@ -166,6 +167,16 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     }, 400);
     return () => window.clearTimeout(timer);
   }, [profileDraft]);
+
+  const saveNotes = useCallback(async (resultId: string, notes: string) => {
+    if (!run) return;
+    try {
+      const updated = await api.saveNotes(run.id, resultId, notes);
+      setResults((rows) => rows.map((r) => (r.id === resultId ? updated : r)));
+    } catch (e) {
+      fail(e);
+    }
+  }, [run, fail]);
 
   const refreshResults = useCallback(async () => {
     if (!run) return;
@@ -436,12 +447,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       capabilities, profileDraft, setProfileDraft, savedProfile, cases, switchCase, newCase, restored,
       loadDemoProfile, clearProfile, validation, run, results,
       summary, loading, error, saveProfile, startRun, cancelRun, retryRun, recheckNow, collectDocuments,
-      decide, refreshResults, deleteEverything, clearError: () => setError(null),
+      decide, saveNotes, refreshResults, deleteEverything, clearError: () => setError(null),
     }),
     [capabilities, profileDraft, setProfileDraft, savedProfile, cases, switchCase, newCase,
      restored, loadDemoProfile,
      clearProfile, validation, run, results, summary, loading, error, saveProfile, startRun,
-     cancelRun, retryRun, recheckNow, collectDocuments, decide, refreshResults, deleteEverything],
+     cancelRun, retryRun, recheckNow, collectDocuments, decide, saveNotes, refreshResults,
+     deleteEverything],
   );
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;

@@ -12,9 +12,10 @@ import { ShortlistScreen } from './ShortlistScreen';
 import type { ProgramResult } from '@/types';
 
 const decide = vi.fn().mockResolvedValue(undefined);
+const saveNotes = vi.fn().mockResolvedValue(undefined);
 
 vi.mock('@/lib/store', () => ({
-  useStore: () => ({ results: [row], summary, decide }),
+  useStore: () => ({ results: [row], summary, decide, saveNotes }),
 }));
 
 let row: ProgramResult;
@@ -60,6 +61,7 @@ function makeRow(overrides: Partial<ProgramResult> = {}): ProgramResult {
 
 beforeEach(() => {
   decide.mockClear();
+  saveNotes.mockClear();
   row = makeRow();
 });
 
@@ -135,5 +137,19 @@ describe('filter labels', () => {
       .querySelector('option[value="MET"]');
     expect(option).not.toBeNull();
     expect(option?.textContent).toContain('Met');
+  });
+});
+
+describe('notes', () => {
+  it('saves a note without deciding the row', async () => {
+    render(<ShortlistScreen />);
+    fireEvent.click(screen.getByRole('button', { name: 'Add note' }));
+    fireEvent.change(screen.getByTestId('note-input-result-1'), {
+      target: { value: 'ask about housing' },
+    });
+    fireEvent.click(screen.getByTestId('note-save-result-1'));
+
+    await waitFor(() => expect(saveNotes).toHaveBeenCalledWith('result-1', 'ask about housing'));
+    expect(decide).not.toHaveBeenCalled();
   });
 });

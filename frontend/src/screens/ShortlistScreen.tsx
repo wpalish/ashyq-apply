@@ -25,7 +25,7 @@ type SortKey = 'score' | 'gap' | 'university' | 'deadline';
 const REJECTION_REASONS = ['cost', 'deadline passed', 'no funding', 'not a fit'];
 
 export function ShortlistScreen() {
-  const { results, summary, decide } = useStore();
+  const { results, summary, decide, saveNotes } = useStore();
   const [expanded, setExpanded] = useState<string | null>(null);
   const [sort, setSort] = useState<SortKey>('score');
   const [country, setCountry] = useState('');
@@ -306,9 +306,10 @@ export function ShortlistScreen() {
                             <button
                               className="btn btn--sm"
                               onClick={async () => {
-                                await decide(r.id, r.user_decision, r.user_decision_reason, noteText);
+                                await saveNotes(r.id, noteText);
                                 setNoteFor(null);
                               }}
+                              data-testid={`note-save-${r.id}`}
                             >Save note</button>
                           </div>
                         )}
