@@ -8,15 +8,16 @@ the release report, not "implemented".
 partial and one fails; the local container stack is still the unverified gate,
 and the release commit/tag waits on it.
 
-**next: Phase 2** of [`docs/FIX_PLAN.md`](docs/FIX_PLAN.md). Phase 0 (baseline)
-and Phase 1 (P0 blockers 1.1–1.6) are done; gates 36–42 below record what each
-fix is now held to. Phase 1 found that two of the three compose defects the
-audit reported do not exist in this tree — see gate 22.
+**next: Phase 3** of [`docs/FIX_PLAN.md`](docs/FIX_PLAN.md). Phase 0
+(baseline), Phase 1 (P0 blockers 1.1–1.6) and Phase 2 (P1 reliability and
+security, 2.1–2.17) are done; gates 36–54 below record what each fix is now
+held to. Two audit findings did not reproduce against this tree and are
+recorded as such rather than "fixed" — see gates 22 and 47.
 
 | # | Gate | Status | Evidence / what is missing |
 |---|---|---|---|
-| 1 | Existing 240 + 39 + 42 tests kept or replaced by stricter ones | **PASS** | 541 + 53 + 50 (25 desktop + 25 mobile). Nothing removed; Phase 1 added 14. The backend number is lower than the 547 recorded earlier because 25 PostgreSQL tests now *skip* on a machine without a working `pgserver` instead of erroring — they still run in CI |
-| 2 | All new unit / integration / E2E / security tests green | **PARTIAL** | `pytest` 541 passed / 25 skipped (SQLite; the PostgreSQL branch could not be provisioned on this machine — `pgserver`'s `initdb.exe` fails here), `vitest` 53, `playwright` 25 desktop + 25 mobile |
+| 1 | Existing 240 + 39 + 42 tests kept or replaced by stricter ones | **PASS** | 606 + 75 + 50 (25 desktop + 25 mobile). Nothing removed; Phase 1 added 14 and Phase 2 added 65. The backend number is lower than the 547 recorded earlier because 25 PostgreSQL tests now *skip* on a machine without a working `pgserver` instead of erroring — they still run in CI |
+| 2 | All new unit / integration / E2E / security tests green | **PARTIAL** | `pytest` 606 passed / 25 skipped (SQLite; the PostgreSQL branch could not be provisioned on this machine — `pgserver`'s `initdb.exe` fails here), `vitest` 75, `playwright` 25 desktop + 25 mobile |
 | 3 | ruff, mypy, TypeScript, ESLint, production build clean | **PASS** | all clean; build 74.0 kB JS gzip |
 | 4 | PostgreSQL migrations work on fresh and upgraded databases | **PASS** | Alembic. Verified fresh, downgrade to base, re-upgrade, re-apply as a no-op, on PostgreSQL 16.2 and SQLite. `create_all()` removed from the production path; startup refuses a mismatched revision |
 | 5 | Worker survives a crash restart | **PASS** | `scripts/crash_test.py` SIGKILLs a real worker after 12 results are written; a second worker recovers the job and finishes with no duplicates. Stable over 3 runs. **PostgreSQL-backed queue, not Redis — see ADR 0001** |
@@ -68,9 +69,32 @@ audit reported do not exist in this tree — see gate 22.
 | 41 | The retry buttons say what they do | **PASS** | Two buttons: "Retry from &lt;stage&gt;" passes the stage that stopped, "Re-run everything" confirms first and states decisions are kept. 4 tests in `ProgressScreen.test.tsx`. The single old button was labelled "from the failed stage" while calling the full retry |
 | 42 | Playwright E2E re-run after Phase 1 | **PASS** | 25 desktop + 25 mobile, green, against the Phase 1 code. Getting there required two fixes: the launchers hardcoded the Linux venv layout so the `webServer` never started the API, and `playwright.config.ts` now invokes `run.sh` through bash rather than a shebang `cmd.exe` cannot read |
 
+### Added by Phase 2 of the audit fix plan
+
+| # | Gate | Status | Evidence |
+|---|---|---|---|
+| 43 | A worker that lost its lease stops and records nothing | **PASS** | Every terminal job update is fenced on (running, worker_id); the runner's checkpoint raises LeaseLost when the job is no longer ours, so the abandoned attempt stops between units of work. 4 tests in `TestLeaseFencing` |
+| 44 | `enqueue` never rolls back the caller's transaction | **PASS** | The insert runs in a SAVEPOINT. Test forces the unique-key race and asserts the caller's own pending change survives |
+| 45 | Budget and cost are compared in the same currency | **PASS** | The ceiling is converted through the bundled snapshot with the rate and date in the explanation; an unsupported currency is honestly absent. A 2,880,000 KZT ceiling used to read as infinite against a 6,000 USD gap. 3 tests |
+| 46 | One lease definition, and a heartbeat that keeps up with it | **PASS** | `is_lease_expired` resolves `UNIMATCH_JOB_LEASE_SECONDS`; verification saves progress, counters and heartbeat after every candidate rather than every fourth. 3 tests |
+| 47 | A dead run is visible and escapable in the UI | **PASS** | ProgressScreen renders `stale`, `job_error` and `recovery_count` with Resume-from-stage and Cancel. 3 vitest cases. (The related audit claim that `/api/runs` reported no job at all did not reproduce; what did was the opposite — see gate 54) |
+| 48 | Rejections keep their reason | **PASS** | Inline prompt with four one-click chips and free text; the reason shows on the row, on the approved screen, and after a reload. 6 vitest + 1 E2E |
+| 49 | A failed grade conversion cannot damage the profile | **PASS** | Typed client call, draft written only on success, error surfaced. A 400 used to overwrite the applicant's GPA with `{detail: …}`. 3 vitest |
+| 50 | Every value on screen carries its own source | **PASS** | Government post-study-work claims are cached with their evidence and attached to every row of that country, not only the first. Regression test asserts the claim and its source URL on each row |
+| 51 | Citizenship and dates are matched, never guessed | **PASS** | Phrase matching with demonyms and published blocs; vague groups are PENDING, never a refusal. Ambiguous d/m vs m/d dates return None with the reason. 18 tests |
+| 52 | Errors say what they are | **PASS** | The global `ValueError → 400` handler is gone: an internal ValueError is a 500 with no internal text, while a bad email is still a readable 400. Export filters are validated against the enum and the filename stem is rebuilt from a safe alphabet. 3 tests |
+| 53 | `/api/health` fails when the database does | **PASS** | `SELECT 1`, 503 and `status: degraded`. Both the container HEALTHCHECK and the Fly check already treat that as a failure. 2 tests |
+| 54 | Stale evidence is re-read, and a queued recheck is not mistaken for work | **PASS** | A finished run records `next_recheck_at` and queues a `recheck` job for that date; the UI names the date and offers "Re-verify now". The E2E suite then caught the consequence — a job queued months ahead read as work in flight and froze the collect button — so the run view now reports only jobs available to run. 5 tests |
+| 55 | The account flows exist | **PASS** | Password change (revoking other sessions), single-use hour-long reset tokens stored as digests with identical answers for unknown addresses, password-confirmed account deletion that erases sole-owner workspaces and their cases, workspace listing and switching. 20 tests in `test_account_flows.py`; SECURITY.md updated |
+| 56 | Session and password hygiene | **PASS** | scrypt 2**17 for new hashes with 2**14 still verifying, 20 sessions per user with the oldest revoked, expired rows cleaned on sign-in, SameSite=Lax with the Origin/Fetch-Metadata checks unchanged |
+| 57 | Typography does not depend on a third party | **PASS** | Fonts self-hosted through @fontsource; `grep` over `dist` finds no external URL. The production CSP had been blocking Google Fonts outright |
+| 58 | A render error is not a white page | **PASS** | Root and per-screen ErrorBoundary with a fallback that says the server data is safe, plus Reload. 3 vitest |
+| 59 | The rate snapshot admits its age | **PASS** | Past 90 days `/api/capabilities` carries `stale_warning` and the funding screen shows it; `scripts/update_rates.py` prints the drift and a ready block for a human to paste. 4 tests |
+
+
 ## Summary
 
-- **PASS:** 27 (of 30 original) + 5 + 7 added by Phase 1
+- **PASS:** 27 (of 30 original) + 5 + 7 added by Phase 1 + 17 added by Phase 2
 - **PARTIAL:** 1 (gate 2 — the PostgreSQL branch was not exercised on this machine)
 - **FAIL:** 1 (gate 22 — the container stack has still never been run)
 - **BLOCKED:** 1

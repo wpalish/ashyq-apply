@@ -129,3 +129,40 @@ run (no Docker here), live programme recall is still 1 of 10 canary
 institutions, and Phases 2–6 of the plan — job-lease fencing, the currency bug
 in scoring, the stale-run dead end in the UI, the missing auth flows and the
 ~20 collected-but-unused profile fields — are untouched.
+
+## Update — Phase 2 of the audit fix plan
+
+Seventeen P1 defects, each with a test written before the fix. The ones worth
+knowing about if you are reading the code:
+
+- **A worker that lost its lease kept working** and could mark a job succeeded
+  that another worker had already taken over, double-counting the run's
+  counters. Terminal updates are fenced on the owner now, and the runner stops
+  at its next checkpoint.
+- **A KZT budget was compared with a USD cost as bare numbers**, so every
+  option scored as affordable. The ceiling is converted, with the rate and its
+  date in the explanation.
+- **Citizenship was matched by substring**: "Korea" satisfied "North Korea
+  only", and "Kazakhstan" failed "Central Asian nationals". Both directions
+  cost the applicant money. Vague groups are now PENDING rather than a refusal.
+- **03/04/2027 was silently read as 3 April.** An ambiguous date is refused.
+- **A cached post-study-work right appeared with no source** on every row after
+  the first in a country.
+- **A global `ValueError → 400` handler** masked 500s as client errors and
+  leaked internal text; **the export filter** landed unchecked in a response
+  header.
+- **`/api/health` never touched the database**, so the probe stayed green with
+  PostgreSQL down.
+- **POSSIBLY_STALE claims were never re-read.** A finished run now queues a
+  recheck for the date its evidence ages out.
+- **The account flows did not exist**: no password change, no reset, no
+  deletion, no way to reach a second workspace. All four exist, with the
+  negative cases tested.
+- **The production CSP blocked the fonts the app asked for**, and a render
+  error produced a white page with no way back.
+
+Still open and unchanged: the container stack has never been run (no Docker
+here), live programme recall is still 1 of 10 canary institutions, and Phases
+3-6 of the plan — the ~20 collected-but-unused profile fields, URL routing,
+polling behaviour, pagination, the deadline calendar, observability and i18n —
+are untouched.
