@@ -91,6 +91,14 @@ export const api = {
     }),
   exportProfile: (id: string) => request<Record<string, unknown>>(`/api/profiles/${id}/export`),
   deleteProfile: (id: string) => request<void>(`/api/profiles/${id}`, { method: 'DELETE' }),
+  // Typed, and error-checked: ProfileScreen used a bare fetch().then(json)
+  // here, so a 400 wrote {detail: "..."} into the applicant's GPA field.
+  previewConversion: (grade: unknown, methodKey: string) =>
+    request<Record<string, unknown>>(
+      `/api/profiles/conversions/preview?method_key=${encodeURIComponent(methodKey)}`,
+      { method: 'POST', body: JSON.stringify(grade) },
+    ),
+
   conversionMethods: (scale: string) =>
     request<{ methods: { key: string; description: string; source: string; caveat: string; to_scale: string }[]; note: string }>(
       `/api/profiles/conversions/methods?scale_label=${encodeURIComponent(scale)}`,
