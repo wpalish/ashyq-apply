@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 from datetime import UTC, datetime
 from typing import Literal
 
@@ -324,18 +325,29 @@ def collect_documents(
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
 ) -> RunView:
-    """Deep document collection, for approved and maybe rows only."""
+    """Deep document collection, for approved and maybe rows only.
+
+    Idempotent by *shortlist content*: the job key is a hash of the approved
+    row ids, so pressing the button twice on the same shortlist is a no-op,
+    while changing which programmes are approved always enqueues real work.
+    Keying on the number of approved rows - the previous behaviour - made
+    swapping one approval for another silently return the finished job, and
+    the newly approved programme never received a checklist.
+
+    A finished job for the same key is therefore a deliberate no-op, not a
+    lost request: the documents it collected are still the right ones.
+    """
     run = owned_run(session, run_id, principal)
-    approved = (
-        session.query(ProgramResultRow)
-        .filter(
+    approved_ids = sorted(
+        row.id
+        for row in session.query(ProgramResultRow.id).filter(
             ProgramResultRow.run_id == run_id,
             ProgramResultRow.user_decision.in_(
                 [UserDecision.APPROVED.value, UserDecision.MAYBE.value]
             ),
         )
-        .count()
     )
+    approved = len(approved_ids)
     if approved == 0:
         raise HTTPException(
             400,
@@ -352,10 +364,11 @@ def collect_documents(
             detail={"approved": approved},
         )
     )
+    shortlist_digest = hashlib.sha256(",".join(approved_ids).encode()).hexdigest()[:16]
     JobStore(session).enqueue(
         "documents",
         run_id=run_id,
-        idempotency_key=f"documents:{run_id}:{approved}",
+        idempotency_key=f"documents:{run_id}:{shortlist_digest}",
         priority=5,
     )
     session.commit()

@@ -205,6 +205,57 @@ class TestResearchAndResults:
         assert updated["checklist"]["ordered_steps"]
 
 
+class TestDocumentIdempotency:
+    """Collecting documents twice must follow the shortlist, not its size.
+
+    The audited defect keyed the job on the *count* of approved rows, so
+    swapping one approval for another left the count unchanged, returned the
+    old succeeded job, and the newly approved programme never got a checklist.
+    """
+
+    def test_swapping_an_approval_collects_documents_for_the_new_row(self, client, finished_run):
+        _, run = finished_run
+        rows = client.get(f"/api/runs/{run['id']}/results").json()
+        first, second, third, replacement = rows[0], rows[1], rows[2], rows[3]
+
+        def decide(result_id: str, decision: str) -> None:
+            response = client.post(
+                f"/api/runs/{run['id']}/results/{result_id}/decision",
+                json={"decision": decision, "reason": "", "notes": ""},
+            )
+            assert response.status_code == 200, response.text
+
+        for row in (first, second, third):
+            decide(row["id"], "approved")
+        assert client.post(f"/api/runs/{run['id']}/collect-documents").status_code == 202
+        assert asyncio.run(drain_queue()) == 1
+
+        # Same count, different set: one approval withdrawn, another added.
+        decide(third["id"], "undecided")
+        decide(replacement["id"], "approved")
+        assert client.post(f"/api/runs/{run['id']}/collect-documents").status_code == 202
+        assert asyncio.run(drain_queue()) == 1, "the second request must enqueue real work"
+
+        added = client.get(f"/api/runs/{run['id']}/results/{replacement['id']}").json()
+        assert added["checklist"] is not None
+        assert added["checklist"]["ordered_steps"]
+
+    def test_collecting_twice_for_the_same_shortlist_does_no_work_twice(
+        self, client, finished_run
+    ):
+        _, run = finished_run
+        row = client.get(f"/api/runs/{run['id']}/results").json()[0]
+        client.post(
+            f"/api/runs/{run['id']}/results/{row['id']}/decision",
+            json={"decision": "approved", "reason": "", "notes": ""},
+        )
+        assert client.post(f"/api/runs/{run['id']}/collect-documents").status_code == 202
+        assert asyncio.run(drain_queue()) == 1
+
+        assert client.post(f"/api/runs/{run['id']}/collect-documents").status_code == 202
+        assert asyncio.run(drain_queue()) == 0, "an unchanged shortlist must not re-fetch pages"
+
+
 class TestRetry:
     """Retry must never be a way to lose work.
 
