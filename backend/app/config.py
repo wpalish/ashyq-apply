@@ -62,6 +62,11 @@ class Settings(BaseSettings):
     cookie_secure: bool = False
     auth_rate_limit_per_minute: int = 10
     run_rate_limit_per_minute: int = 20
+    #: Whether X-Forwarded-For may be believed. True only when something we
+    #: control terminates the connection and rewrites the header (nginx in the
+    #: compose stack, Fly's edge). Believing it on a directly exposed port
+    #: would let any client invent an address and walk around the limiter.
+    trust_proxy_headers: bool = False
 
     @property
     def is_production(self) -> bool:

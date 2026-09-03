@@ -57,6 +57,10 @@ services:
       UNIMATCH_AUTH_REGISTRATION_ENABLED: ${UNIMATCH_AUTH_REGISTRATION_ENABLED:-true}
       # localhost uses HTTP; external deployments must set this true behind TLS.
       UNIMATCH_COOKIE_SECURE: ${UNIMATCH_COOKIE_SECURE:-false}
+      # nginx is the only thing that reaches the API here and it rewrites
+      # X-Forwarded-For, so the caller's address can be believed. On a directly
+      # exposed port this must stay false or the rate limits are spoofable.
+      UNIMATCH_TRUST_PROXY_HEADERS: "true"
     depends_on:
       postgres:
         condition: service_healthy
@@ -77,6 +81,11 @@ services:
     read_only: true
     tmpfs:
       - /tmp
+      # get_settings() calls ensure_dirs() at import time, so /app/data must be
+      # writable or the container dies on startup with EROFS before it serves a
+      # single request. The API never fetches pages, so this is scratch space
+      # that may vanish with the container.
+      - /app/data
     security_opt:
       - no-new-privileges:true
     deploy:

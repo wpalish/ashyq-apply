@@ -112,6 +112,22 @@ class FixedWindowLimiter:
 _limiter = FixedWindowLimiter()
 
 
+def client_address(request: Request) -> str:
+    """The address a limit should be charged to.
+
+    Behind a reverse proxy every request arrives from the proxy, so keying on
+    the socket peer makes one limit for the whole world: a single script would
+    lock every user out of login. The first hop of X-Forwarded-For is the
+    caller, but only when we put the proxy there ourselves — hence the setting.
+    """
+    if settings.trust_proxy_headers:
+        forwarded = request.headers.get("x-forwarded-for", "")
+        first_hop = forwarded.split(",")[0].strip()
+        if first_hop:
+            return first_hop
+    return request.client.host if request.client else "unknown"
+
+
 def _secure(response: Response) -> Response:
     """Apply the browser security policy to every response, including early refusals."""
     response.headers["X-Content-Type-Options"] = "nosniff"
@@ -158,7 +174,7 @@ async def security_middleware(request: Request, call_next):
         limit = 0
         group = ""
     if limit:
-        peer = request.client.host if request.client else "unknown"
+        peer = client_address(request)
         if not _limiter.allow(f"{group}:{peer}", limit, time.monotonic()):
             return _secure(
                 JSONResponse(

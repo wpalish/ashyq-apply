@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from time import monotonic
 
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from pydantic import BaseModel, Field
@@ -22,6 +23,11 @@ from app.security import (
     token_hash,
     verify_password,
 )
+
+#: A real scrypt hash of a value nobody holds. Verifying against it costs the
+#: same as verifying a genuine one, which is the point: an unknown email must
+#: not answer faster than a known one.
+DUMMY_PASSWORD_HASH = hash_password("no account holds this password value")
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
@@ -116,15 +122,30 @@ def login(
     response: Response,
     session: Session = Depends(get_session),
 ) -> PrincipalView:
-    if not get_settings().auth_enabled:
+    settings = get_settings()
+    if not settings.auth_enabled:
         raise HTTPException(403, "Authentication is disabled in local development mode.")
     email = normalize_email(payload.email)
+
+    # Per-address limiting is in the middleware, but an attacker rotating
+    # addresses walks straight past it while pounding one account. The account
+    # itself therefore carries a budget too. In-memory and per-process: it
+    # slows credential stuffing, it is not a distributed quota.
+    from app.main import _limiter
+
+    if not _limiter.allow(f"auth:email:{email}", settings.auth_rate_limit_per_minute, monotonic()):
+        raise HTTPException(
+            429, "Too many sign-in attempts for this account. Try again in a minute."
+        )
+
     user = session.query(User).filter(User.email == email).first()
-    if (
-        user is None
-        or not user.is_active
-        or not verify_password(payload.password, user.password_hash)
-    ):
+    if user is None or not user.is_active:
+        # Hash something anyway. Returning early for an unknown address makes
+        # the response measurably faster, which turns login into an oracle for
+        # which emails hold an account.
+        verify_password(payload.password, DUMMY_PASSWORD_HASH)
+        raise HTTPException(401, "Invalid email or password.")
+    if not verify_password(payload.password, user.password_hash):
         raise HTTPException(401, "Invalid email or password.")
     membership = (
         session.query(OrganizationMembership)

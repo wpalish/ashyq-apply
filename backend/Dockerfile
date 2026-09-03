@@ -52,4 +52,5 @@ HEALTHCHECK --interval=15s --timeout=5s --start-period=20s --retries=3 \
   CMD curl -fsS http://127.0.0.1:8099/api/health || exit 1
 
 # Overridden by the worker service in compose.
-CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8099"]
+# Behind nginx in the compose stack, which sets X-Forwarded-For.
+CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8099", "--proxy-headers", "--forwarded-allow-ips", "*"]

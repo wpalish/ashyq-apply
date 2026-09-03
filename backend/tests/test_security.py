@@ -21,6 +21,9 @@ def auth_client(tmp_path, monkeypatch, corpus_dir):
         auth_registration_enabled=True,
         auth_rate_limit_per_minute=20,
         run_rate_limit_per_minute=20,
+        # The deployed stack always sits behind nginx or Fly, so that is the
+        # configuration worth testing.
+        trust_proxy_headers=True,
         database_url=f"sqlite:///{tmp_path / 'auth.db'}",
         cache_dir=tmp_path / "cache",
         export_dir=tmp_path / "exports",
@@ -181,6 +184,87 @@ class TestTenantIsolation:
         )
         owner_view = client.get(f"/api/runs/{run['id']}/results/{result_id}").json()
         assert owner_view["user_decision"] == "undecided"
+
+
+class TestAbuseLimits:
+    """Limits must bind the abuser, not everyone behind the same proxy.
+
+    In production uvicorn sits behind nginx or Fly's edge, so request.client
+    is the proxy for every user. Keying the limiter on it turned a 10/min
+    login limit into a global one: one script locked out the whole product.
+    """
+
+    def test_two_clients_behind_one_proxy_get_their_own_budget(self, auth_client):
+        client, settings = auth_client
+        register(client, "proxy-abuser")
+        client.post("/api/auth/logout")
+        register(client, "proxy-bystander")
+        client.post("/api/auth/logout")
+
+        for _ in range(settings.auth_rate_limit_per_minute):
+            client.post(
+                "/api/auth/login",
+                json={"email": "proxy-abuser@example.test", "password": "wrong password here"},
+                headers={"X-Forwarded-For": "203.0.113.7"},
+            )
+        exhausted = client.post(
+            "/api/auth/login",
+            json={"email": "proxy-abuser@example.test", "password": "wrong password here"},
+            headers={"X-Forwarded-For": "203.0.113.7"},
+        )
+        assert exhausted.status_code == 429
+        assert "Too many requests" in exhausted.json()["detail"], "the address limit must fire"
+
+        # Another user, same proxy, different address: unaffected.
+        bystander = client.post(
+            "/api/auth/login",
+            json={
+                "email": "proxy-bystander@example.test",
+                "password": "correct horse battery proxy-bystander",
+            },
+            headers={"X-Forwarded-For": "198.51.100.4"},
+        )
+        assert bystander.status_code == 200, "one abuser must not spend everyone else's budget"
+
+    def test_an_email_cannot_be_pounded_from_a_fresh_address_each_time(self, auth_client):
+        client, settings = auth_client
+        register(client, "target")
+        client.post("/api/auth/logout")
+
+        attempts = [
+            client.post(
+                "/api/auth/login",
+                json={"email": "target@example.test", "password": "wrong password entirely"},
+                headers={"X-Forwarded-For": f"198.51.100.{i + 1}"},
+            )
+            for i in range(settings.auth_rate_limit_per_minute + 1)
+        ]
+        assert attempts[-1].status_code == 429, "per-email limit must survive IP rotation"
+
+    def test_an_unknown_email_costs_the_same_work_as_a_known_one(self, auth_client, monkeypatch):
+        """Skipping the hash for an unknown email leaks which emails exist."""
+        client, _ = auth_client
+        register(client, "known")
+        client.post("/api/auth/logout")
+
+        import app.api.routes_auth as routes_auth
+
+        calls: list[str] = []
+        real_verify = routes_auth.verify_password
+
+        def counting_verify(password: str, encoded: str) -> bool:
+            calls.append(encoded)
+            return real_verify(password, encoded)
+
+        monkeypatch.setattr(routes_auth, "verify_password", counting_verify)
+
+        unknown = client.post(
+            "/api/auth/login",
+            json={"email": "nobody@example.test", "password": "correct horse battery known"},
+        )
+        assert unknown.status_code == 401
+        assert unknown.json()["detail"] == "Invalid email or password."
+        assert len(calls) == 1, "a password check must run even when the account does not exist"
 
 
 class TestRequestSecurity:
