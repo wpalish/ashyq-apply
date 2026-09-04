@@ -532,3 +532,23 @@ export interface FeedFilters {
   university?: string;
   status?: string;
 }
+
+/**
+ * One value read off an applicant's transcript, with the words it came from.
+ *
+ * `field` is the dotted path into the profile form, so a suggestion can be
+ * applied without a second mapping table drifting out of step with the API.
+ * Nothing here is applied until the applicant says so.
+ */
+export interface TranscriptSuggestion {
+  field: string;
+  label: string;
+  value: unknown;
+  excerpt: string;
+}
+
+export interface TranscriptReading {
+  suggestions: TranscriptSuggestion[];
+  /** Why the list is empty, when it is. A scan of paper carries no text. */
+  note: string;
+}

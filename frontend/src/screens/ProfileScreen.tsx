@@ -11,6 +11,19 @@ import { ApiError, api } from '@/api/client';
 import { Chip, Field, Notice, Panel } from '@/components/primitives';
 import { castInput, get, setIn, type Path } from '@/lib/immutable';
 import { useStore } from '@/lib/store';
+import type { TranscriptSuggestion } from '@/types';
+
+/** "4.82 out of 5", not "[object Object]". */
+function describe(value: unknown): string {
+  if (value && typeof value === 'object') {
+    const gpa = value as { raw_value?: unknown; raw_scale_max?: unknown };
+    if (gpa.raw_value != null && gpa.raw_scale_max != null) {
+      return `${gpa.raw_value} out of ${gpa.raw_scale_max}`;
+    }
+    return Object.values(value as Record<string, unknown>).filter(Boolean).join(', ');
+  }
+  return String(value ?? '');
+}
 
 const SEVERITY_LABEL: Record<string, string> = {
   blocking: 'Blocks research',
@@ -46,6 +59,49 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
       setSaved(false);
     },
   });
+
+  const [suggestions, setSuggestions] = useState<TranscriptSuggestion[]>([]);
+  const [transcriptNote, setTranscriptNote] = useState('');
+  const [transcriptBusy, setTranscriptBusy] = useState(false);
+
+  const readTranscript = async (file: File | undefined) => {
+    if (!file) return;
+    setTranscriptBusy(true);
+    setSuggestions([]);
+    try {
+      const reading = await api.readTranscript(file);
+      setSuggestions(reading.suggestions);
+      setTranscriptNote(reading.note);
+    } catch (e) {
+      // The draft is not touched on failure, for the same reason the grade
+      // conversion leaves it alone: a refused read must not cost the applicant
+      // what they have already typed.
+      setTranscriptNote(e instanceof ApiError ? e.message : 'That file could not be read.');
+    } finally {
+      setTranscriptBusy(false);
+    }
+  };
+
+  /**
+   * Apply one suggestion, field by field rather than wholesale.
+   *
+   * A transcript states a number and a scale; it does not know what the
+   * applicant calls their grading system. Writing the whole object in would
+   * blank the scale name they had already typed.
+   */
+  const applySuggestion = (suggestion: TranscriptSuggestion) => {
+    const path = suggestion.field.split('.') as Path;
+    setProfileDraft((d) => {
+      if (suggestion.value && typeof suggestion.value === 'object') {
+        return Object.entries(suggestion.value as Record<string, unknown>)
+          .filter(([, v]) => v !== '' && v !== null && v !== undefined)
+          .reduce((draft, [key, v]) => setIn(draft, [...path, key] as Path, v), d);
+      }
+      return setIn(d, path, suggestion.value);
+    });
+    setSuggestions((rest) => rest.filter((s) => s.field !== suggestion.field));
+    setSaved(false);
+  };
 
   const applyConversion = async (key: string) => {
     // The draft is only touched on success. The old code parsed the response
@@ -222,6 +278,42 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
             <Field label="Finishing school on" htmlFor="grad">
               <input id="grad" type="date" {...bind(['context', 'graduation_date'])} />
             </Field>
+          </div>
+        </Panel>
+
+        <Panel
+          title="Read it off your transcript"
+          hint="Optional. The file is read and discarded — it is never saved, and nothing is filled in until you say so."
+        >
+          <div className="stack stack--tight">
+            <input
+              type="file"
+              accept="application/pdf"
+              data-testid="transcript-file"
+              onChange={(e) => readTranscript(e.target.files?.[0])}
+            />
+            {transcriptBusy && <p className="xs muted">Reading…</p>}
+            {transcriptNote && (
+              <p className="xs muted" data-testid="transcript-note">{transcriptNote}</p>
+            )}
+            {suggestions.map((suggestion) => (
+              <div key={suggestion.field} className="notice" data-testid={`suggestion-${suggestion.field}`}>
+                <div style={{ flex: 1 }}>
+                  <div className="small"><strong>{suggestion.label}:</strong> {describe(suggestion.value)}</div>
+                  {/* The quote is the point: the applicant checks the number
+                      against their own document instead of trusting ours. */}
+                  <div className="xs faint">“{suggestion.excerpt}”</div>
+                </div>
+                <button
+                  type="button"
+                  className="btn btn--sm"
+                  data-testid={`apply-${suggestion.field}`}
+                  onClick={() => applySuggestion(suggestion)}
+                >
+                  Use this
+                </button>
+              </div>
+            ))}
           </div>
         </Panel>
 

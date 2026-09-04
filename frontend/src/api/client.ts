@@ -26,6 +26,7 @@ import type {
   RunView,
   ShortlistSummary,
   StoredProfile,
+  TranscriptReading,
   UserDecision,
 } from '@/types';
 
@@ -61,7 +62,13 @@ async function requestWithHeaders<T>(
     response = await fetch(path, {
       ...init,
       credentials: 'include',
-      headers: { 'Content-Type': 'application/json', ...(init?.headers ?? {}) },
+      headers: {
+        // A multipart upload must be left to the browser: it appends the
+        // boundary to the content type, and a hand-written header omits it,
+        // which makes the body unparseable at the other end.
+        ...(init?.body instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
+        ...(init?.headers ?? {}),
+      },
     });
   } catch {
     // A network-level failure has no HTTP status; say what to check instead.
@@ -152,6 +159,16 @@ export const api = {
       body: JSON.stringify(payload),
     }),
   exportProfile: (id: string) => request<Record<string, unknown>>(`/api/profiles/${id}/export`),
+  /**
+   * Read a transcript PDF into suggestions. The answer is never applied here:
+   * the screen shows each one with the line it was read from, and the
+   * applicant decides — the same contract as a grade conversion.
+   */
+  readTranscript: (file: File) => {
+    const form = new FormData();
+    form.append('file', file);
+    return request<TranscriptReading>('/api/profiles/transcript', { method: 'POST', body: form });
+  },
   deleteProfile: (id: string) => request<void>(`/api/profiles/${id}`, { method: 'DELETE' }),
   // Typed, and error-checked: ProfileScreen used a bare fetch().then(json)
   // here, so a 400 wrote {detail: "..."} into the applicant's GPA field.
@@ -250,6 +267,10 @@ export const api = {
     request<PostView>('/api/social/posts', { method: 'POST', body: JSON.stringify({ body }) }),
   thread: (postId: string, cursor?: string | null) =>
     request<Page<ReplyView>>(`/api/social/posts/${postId}/replies${query({ cursor })}`),
+  deletePost: (postId: string) =>
+    request<void>(`/api/social/posts/${postId}`, { method: 'DELETE' }),
+  deleteReply: (postId: string, replyId: string) =>
+    request<void>(`/api/social/posts/${postId}/replies/${replyId}`, { method: 'DELETE' }),
   createReply: (postId: string, body: string) =>
     request<ReplyView>(`/api/social/posts/${postId}/replies`, {
       method: 'POST',

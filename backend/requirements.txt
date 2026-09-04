@@ -12,5 +12,6 @@ httpx==0.28.1
 beautifulsoup4==4.12.3
 lxml==6.1.0
 pypdf>=6.15.0              # 20 advisories incl. malformed-PDF DoS in our parse path
+python-multipart>=0.0.20   # back: the transcript upload is the multipart form it was removed for
 openpyxl==3.1.5
 playwright==1.60.0

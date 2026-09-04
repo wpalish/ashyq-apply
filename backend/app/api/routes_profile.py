@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, HTTPException, Query, Response
+from fastapi import APIRouter, Depends, File, HTTPException, Query, Response, UploadFile
 from sqlalchemy.orm import Session
 
+from app.adapters.extraction import pdf_to_text
 from app.api.tenancy import owned_profile
 from app.db import get_session
 from app.domain.grades import METHODS, available_methods, propose_conversion
+from app.domain.transcript import suggest_from_transcript
 from app.domain.validation import validate_profile
 from app.models import (
     ApplicantProfileRow,
@@ -128,6 +130,78 @@ def validate(
 ) -> ProfileValidationReport:
     """Validate without saving, so the onboarding form can preview the impact."""
     return validate_profile(profile)
+
+
+#: A school transcript is a few pages. Ten megabytes is generous for a scan and
+#: small enough that parsing one cannot be used to occupy a worker: pypdf's own
+#: advisories include denial of service on malformed input.
+MAX_TRANSCRIPT_BYTES = 10 * 1024 * 1024
+
+
+@router.post("/transcript")
+async def read_transcript(
+    file: UploadFile = File(...),
+    _principal: Principal = Depends(get_principal),
+) -> dict:
+    """Read a transcript PDF into suggestions. Nothing is saved, here or later.
+
+    The applicant already has these numbers on a document; typing them again is
+    where a 4.82 becomes a 4.28. The answer is a list of proposals, each
+    quoting the line it came from, and the screen applies only what the person
+    confirms — the same rule as a grade conversion, which is offered and never
+    applied on the applicant's behalf.
+
+    The upload is held in memory for the length of the request and then
+    discarded. It is never written to disk, never attached to the profile, and
+    never leaves the process.
+    """
+    if (file.content_type or "").split(";")[0].strip() not in (
+        "application/pdf",
+        "application/x-pdf",
+    ):
+        raise HTTPException(400, "Upload the transcript as a PDF.")
+
+    # Read one byte past the cap: a file exactly at the limit is fine, and a
+    # larger one is refused without ever holding all of it.
+    data = await file.read(MAX_TRANSCRIPT_BYTES + 1)
+    if len(data) > MAX_TRANSCRIPT_BYTES:
+        raise HTTPException(413, "That file is larger than 10 MB. Upload the transcript alone.")
+    if not data:
+        raise HTTPException(400, "That file is empty.")
+
+    text = pdf_to_text(data)
+    if not text.strip():
+        # A scan with no text layer is the ordinary case here, not a failure:
+        # say which it is, because the two need different things from the user.
+        return {
+            "suggestions": [],
+            "note": (
+                "No text could be read from that PDF. If it is a photograph or a scan, the "
+                "words are an image and there is nothing to read; type the values instead."
+            ),
+        }
+
+    suggestions = suggest_from_transcript(text)
+    return {
+        "suggestions": [
+            {
+                "field": s.field,
+                "label": s.label,
+                "value": s.value,
+                "excerpt": s.excerpt,
+            }
+            for s in suggestions
+        ],
+        "note": (
+            "Nothing has been saved. Check each value against your own document and apply "
+            "the ones that are right."
+            if suggestions
+            else (
+                "The document was read, but it does not state a grade average with its scale, "
+                "or a graduation date, in a form that can be quoted back to you."
+            )
+        ),
+    }
 
 
 @router.get("/{profile_id}/validation", response_model=ProfileValidationReport)

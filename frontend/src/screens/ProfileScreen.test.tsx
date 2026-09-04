@@ -86,3 +86,71 @@ describe('applying a grade conversion', () => {
     expect(validate).not.toHaveBeenCalled();
   });
 });
+
+describe('reading a transcript', () => {
+  const pdf = () => new File([new Uint8Array([37, 80, 68, 70])], 'attestat.pdf', {
+    type: 'application/pdf',
+  });
+
+  const suggestion = {
+    field: 'academics.gpa',
+    label: 'Grade average',
+    value: { raw_value: 4.82, raw_scale_max: 5, raw_scale_label: '' },
+    excerpt: 'Grade point average: 4.82 out of 5',
+  };
+
+  it('shows what it read, quoting the line, and applies none of it on its own', async () => {
+    vi.spyOn(api, 'readTranscript').mockResolvedValue({
+      suggestions: [suggestion],
+      note: 'Nothing has been saved.',
+    });
+    render(<ProfileScreen onNext={() => {}} />);
+
+    fireEvent.change(screen.getByTestId('transcript-file'), { target: { files: [pdf()] } });
+
+    const card = await screen.findByTestId('suggestion-academics.gpa');
+    expect(card).toHaveTextContent('4.82 out of 5');
+    expect(card).toHaveTextContent('Grade point average: 4.82 out of 5');
+    // Read, not applied: the applicant's own value is still theirs.
+    expect((draft.academics as Record<string, typeof GPA>).gpa.raw_value).toBe(4.8);
+  });
+
+  it('applies one suggestion when asked, and keeps the scale name already typed', async () => {
+    vi.spyOn(api, 'readTranscript').mockResolvedValue({
+      suggestions: [suggestion],
+      note: '',
+    });
+    render(<ProfileScreen onNext={() => {}} />);
+    fireEvent.change(screen.getByTestId('transcript-file'), { target: { files: [pdf()] } });
+
+    fireEvent.click(await screen.findByTestId('apply-academics.gpa'));
+
+    await waitFor(() => {
+      const gpa = (draft.academics as Record<string, typeof GPA>).gpa;
+      expect(gpa.raw_value).toBe(4.82);
+      // The document says 4.82 out of 5; it does not know what the applicant
+      // calls their grading system, and must not blank what they wrote.
+      expect(gpa.raw_scale_label).toBe('KZ 5-point');
+    });
+  });
+
+  it('says why nothing came back, instead of showing an empty box', async () => {
+    vi.spyOn(api, 'readTranscript').mockResolvedValue({
+      suggestions: [],
+      note: 'No text could be read from that PDF.',
+    });
+    render(<ProfileScreen onNext={() => {}} />);
+    fireEvent.change(screen.getByTestId('transcript-file'), { target: { files: [pdf()] } });
+
+    expect(await screen.findByTestId('transcript-note')).toHaveTextContent('No text could be read');
+  });
+
+  it('leaves the profile untouched when the upload is refused', async () => {
+    vi.spyOn(api, 'readTranscript').mockRejectedValue(new ApiError(400, 'Upload the transcript as a PDF.'));
+    render(<ProfileScreen onNext={() => {}} />);
+    fireEvent.change(screen.getByTestId('transcript-file'), { target: { files: [pdf()] } });
+
+    expect(await screen.findByTestId('transcript-note')).toHaveTextContent('Upload the transcript as a PDF.');
+    expect((draft.academics as Record<string, typeof GPA>).gpa.raw_value).toBe(4.8);
+  });
+});
