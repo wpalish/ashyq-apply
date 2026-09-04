@@ -413,6 +413,14 @@ export interface Capabilities {
   };
   guarantees: string[];
   limits: string[];
+  //: What live mode can actually reach. Someone switching demo mode off
+  //: pictures the open web; the truth is a curated registry, and the
+  //: difference has to be on screen before they choose, not after.
+  live_coverage: {
+    institutions: number;
+    countries: string[];
+    recall_note: string;
+  };
 }
 
 export interface StoredProfile {

@@ -143,3 +143,27 @@ def test_the_scholarship_interface_carries_every_decomposed_state(types_source):
         f"types.ts declares fields the backend does not have: "
         f"{sorted(declared - set(Scholarship.model_fields))}"
     )
+
+
+def test_live_coverage_reaches_the_frontend_with_the_shape_it_declares(types_source):
+    """The registry's real size has to survive the trip to the screen.
+
+    Someone turning demo mode off pictures the open web and gets ten curated
+    institutions. PreferencesScreen now says so, reading `live_coverage`
+    straight from `capabilities` — so a renamed or dropped key here would
+    quietly restore the old, flattering silence rather than break loudly.
+    """
+    from app.api.routes_meta import live_coverage
+
+    payload = live_coverage()
+    assert set(payload) == {"institutions", "countries", "recall_note"}
+    assert isinstance(payload["institutions"], int)
+    assert isinstance(payload["countries"], list)
+    assert payload["recall_note"], "live mode must state its own recall"
+
+    block = re.search(r"live_coverage: \{(.*?)\n  \};", types_source, re.DOTALL)
+    assert block, "types.ts does not declare `live_coverage` on Capabilities"
+    declared = set(re.findall(r"^\s*(\w+)[?]?:", block.group(1), re.M))
+    assert declared == set(payload), (
+        f"types.ts declares {sorted(declared)}; the API returns {sorted(payload)}"
+    )

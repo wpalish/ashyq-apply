@@ -245,11 +245,26 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
 
             {!demoMode && (
               <Notice kind="warn">
-                <div>
+                <div data-testid="live-mode-notice">
                   <strong>Live mode fetches real university websites.</strong> It honours robots.txt,
                   rate-limits per host, and never sends any part of your profile off this machine.
                   It is slower, and pages that cannot be read are reported as not found rather than
                   guessed.
+                  {capabilities?.live_coverage && (
+                    // Without this, "live" reads as "the open web". It is ten
+                    // curated institutions, and the applicant deserves to know
+                    // the size of the search before they wait for it.
+                    <div className="stack stack--tight" data-testid="live-coverage">
+                      <div><strong>{capabilities.live_coverage.recall_note}</strong></div>
+                      {capabilities.live_coverage.countries.length > 0 && (
+                        <div className="row row--tight">
+                          {capabilities.live_coverage.countries.map((c) => (
+                            <Chip key={c}>{c}</Chip>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               </Notice>
             )}
