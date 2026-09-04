@@ -307,8 +307,15 @@ button { font: inherit; color: inherit; }
     gap: var(--space-2);
   }
   .brand__tag { display: none; }
-  .nav { flex-direction: row; flex-wrap: nowrap; gap: var(--space-1); overflow-x: auto; }
+  /* Wrapped, not scrolled. As a strip this was 2223px of content in 343px of
+     room: one item visible, and Community 1660px along a scroller with no
+     affordance saying it was there. Six rows of nav is a lot of chrome; a
+     feature you cannot reach is worse. */
+  .nav { flex-direction: row; flex-wrap: wrap; gap: var(--space-1); }
   .nav__item { width: auto; white-space: nowrap; }
+  /* The number is half of "Prepare · 01", and the group labels are hidden
+     here. On its own it is noise that costs three characters a row. */
+  .nav__num { display: none; }
   .nav__item[aria-current='page'] { box-shadow: inset 0 -2px 0 var(--accent); }
   .nav__group-label { display: none; }
   .screen { padding: var(--space-5) var(--space-4) var(--space-7); }
