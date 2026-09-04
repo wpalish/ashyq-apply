@@ -129,12 +129,13 @@ function ProfileForm({
 }
 
 export function PersonScreen({
-  userId, myUserId, onOpenPerson, onProfileSaved,
+  userId, myUserId, onOpenPerson, onProfileSaved, onLeft,
 }: {
   userId: string | null;
   myUserId: string | null;
   onOpenPerson: (id: string) => void;
   onProfileSaved: (saved: PersonCard) => void;
+  onLeft: () => void;
 }) {
   const isMe = userId === null || userId === myUserId;
   const [person, setPerson] = useState<PersonCard | null>(null);
@@ -142,6 +143,7 @@ export function PersonScreen({
   const [state, setState] = useState<'loading' | 'ready' | 'absent' | 'error'>('loading');
   const [message, setMessage] = useState('');
   const [editing, setEditing] = useState(false);
+  const [leaving, setLeaving] = useState(false);
 
   const load = useCallback(async () => {
     setState('loading');
@@ -174,7 +176,7 @@ export function PersonScreen({
           <h1 className="screen__title">Join the community</h1>
           <p className="screen__lede">
             Registering an account did not publish anything about you. This form is what
-            puts you in Discover, and you can change or empty it at any time.
+            puts you in Discover, and you can edit it or leave again at any time.
           </p>
         </div>
         <Panel>
@@ -251,6 +253,51 @@ export function PersonScreen({
           </div>
         )}
       </Panel>
+
+      {isMe && (
+        <Panel
+          title="Leave the community"
+          hint="Your account and your applicant research stay. Your profile, your posts and your replies are deleted, and you disappear from Discover."
+        >
+          {leaving ? (
+            <div className="row">
+              <strong className="small">
+                Delete your profile and {posts.length === 1 ? 'your post' : `${posts.length} posts`}?
+                This cannot be undone.
+              </strong>
+              <button
+                className="btn btn--sm btn--danger"
+                type="button"
+                onClick={async () => {
+                  try {
+                    await api.leaveCommunity();
+                    onLeft();
+                    setPerson(null);
+                    setPosts([]);
+                    setState('absent');
+                  } catch (problem) {
+                    setMessage(
+                      problem instanceof ApiError ? problem.message : 'Could not leave.',
+                    );
+                    setState('error');
+                  } finally {
+                    setLeaving(false);
+                  }
+                }}
+              >
+                Yes, delete it
+              </button>
+              <button className="btn btn--sm" type="button" onClick={() => setLeaving(false)}>
+                Keep my profile
+              </button>
+            </div>
+          ) : (
+            <button className="btn btn--danger" type="button" onClick={() => setLeaving(true)}>
+              Leave the community
+            </button>
+          )}
+        </Panel>
+      )}
     </div>
   );
 }

@@ -238,6 +238,7 @@ export const api = {
   // Paging is a cursor, never an offset: two posts written in the same second
   // would make an offset page repeat one and drop the other.
   socialMe: () => request<MyProfile>('/api/social/me'),
+  leaveCommunity: () => request<void>('/api/social/me', { method: 'DELETE' }),
   saveSocialProfile: (payload: ProfileInput) =>
     request<PersonCard>('/api/social/me', { method: 'PUT', body: JSON.stringify(payload) }),
   people: (filters: PeopleFilters = {}, cursor?: string | null) =>

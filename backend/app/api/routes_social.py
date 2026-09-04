@@ -21,7 +21,7 @@ import binascii
 from datetime import datetime
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Response
 from sqlalchemy import and_, func, or_
 from sqlalchemy.orm import Session, joinedload, selectinload
 
@@ -205,6 +205,37 @@ def join_or_update(
     session.commit()
     session.refresh(profile)
     return _card(profile)
+
+
+@router.delete("/me", status_code=204)
+def leave(
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> Response:
+    """Leave the community, keeping the account.
+
+    Joining is a choice, so leaving has to be one too — and the only other way
+    out was closing the whole account, which would destroy the applicant
+    research the account was opened for.
+
+    Posts and replies go with the profile. Someone who has left a public
+    directory has not agreed to leave their name on it, and a post whose author
+    is no longer here is exactly that. The deletes are issued by the ORM for the
+    same reason account closure issues its own: SQLite's foreign-key pragma is
+    per-connection, and this is a privacy promise rather than a best effort.
+    """
+    profile = session.get(SocialProfile, principal.user_id)
+    if profile is None:
+        raise HTTPException(404, "You are not a member of the community.")
+
+    user = _account(session, principal.user_id)
+    for reply in list(user.post_replies):
+        session.delete(reply)
+    for own_post in list(user.posts):
+        session.delete(own_post)
+    session.delete(profile)
+    session.commit()
+    return Response(status_code=204)
 
 
 def _require_membership(session: Session, principal: Principal) -> SocialProfile:

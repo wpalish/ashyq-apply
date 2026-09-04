@@ -105,3 +105,19 @@ test('an over-long post cannot be sent', async ({ page }) => {
   await expect(page.getByText('1 over')).toBeVisible();
   await expect(page.getByRole('button', { name: 'Post', exact: true })).toBeDisabled();
 });
+
+test('leaving the community is reversible from the same screen', async ({ page }) => {
+  await ensureJoined(page);
+
+  await page.getByRole('button', { name: 'Leave the community' }).click();
+  await page.getByRole('button', { name: 'Keep my profile' }).click();
+  await expect(page.getByRole('button', { name: 'Edit profile' })).toBeVisible();
+
+  await page.getByRole('button', { name: 'Leave the community' }).click();
+  await page.getByRole('button', { name: 'Yes, delete it' }).click();
+
+  // Back to the join form, with the account still signed in.
+  await expect(page.getByRole('heading', { name: 'Join the community' })).toBeVisible();
+  await page.getByTestId('nav-discover').click();
+  await expect(page.getByText('Nobody has joined yet')).toBeVisible();
+});

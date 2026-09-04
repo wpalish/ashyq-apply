@@ -399,6 +399,7 @@ export default function App() {
               myUserId={me?.user_id ?? null}
               onOpenPerson={(id) => { setPersonId(id); setScreen('person'); }}
               onProfileSaved={(saved) => { setMe(saved); setJoined(true); }}
+              onLeft={() => { setMe(null); setJoined(false); }}
             />
           )}
           </ErrorBoundary>

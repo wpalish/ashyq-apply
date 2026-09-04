@@ -401,6 +401,114 @@ class TestDiscover:
         assert [person["display_name"] for person in listed] == ["Curious"]
 
 
+class TestLeaving:
+    """Joining is a choice, so leaving has to be one too.
+
+    Without this the only way out of a public directory was closing the whole
+    account — which would also destroy the applicant research the account was
+    opened for.
+    """
+
+    def test_leaving_removes_the_profile_the_posts_and_the_replies(self, client):
+        register(client, "quitter")
+        join(client)
+        mine = post(client, "Пост, который уйдёт со мной")
+        client.post(f"/api/social/posts/{mine['id']}/replies", json={"body": "свой же ответ"})
+
+        assert client.delete("/api/social/me").status_code == 204
+
+        assert client.get("/api/social/me").json() == {"joined": False, "profile": None}
+        assert client.get("/api/social/people").json()["items"] == []
+        assert client.get("/api/social/feed").json()["items"] == []
+
+    def test_the_account_survives_leaving(self, client):
+        register(client, "stayer")
+        join(client)
+        client.delete("/api/social/me")
+
+        # Still signed in, still able to use the product it was opened for.
+        assert client.get("/api/auth/me").status_code == 200
+        assert client.get("/api/profiles").status_code == 200
+
+    def test_leaving_and_rejoining_starts_clean(self, client):
+        register(client, "returner")
+        join(client, universities=["KBTU"], bio="first time")
+        client.delete("/api/social/me")
+        join(client, universities=["KIMEP"], bio="second time")
+
+        profile = client.get("/api/social/me").json()["profile"]
+        assert profile["universities"] == ["KIMEP"]
+        assert profile["bio"] == "second time"
+
+    def test_leaving_when_never_joined_says_so(self, client):
+        register(client, "never-joined")
+        assert client.delete("/api/social/me").status_code == 404
+
+    def test_leaving_does_not_touch_anyone_else(self, client):
+        register(client, "goer")
+        join(client)
+        goers_post = post(client, "Вопрос от уходящего")
+        client.post("/api/auth/logout")
+
+        register(client, "stayer2")
+        join(client)
+        mine = post(client, "Мой пост остаётся")
+        client.post(f"/api/social/posts/{goers_post['id']}/replies", json={"body": "мой ответ"})
+        client.post("/api/auth/logout")
+
+        login(client, "goer")
+        client.delete("/api/social/me")
+        client.post("/api/auth/logout")
+
+        login(client, "stayer2")
+        # Their post is gone and my reply went with it; my own post and profile
+        # are untouched.
+        assert [item["id"] for item in client.get("/api/social/feed").json()["items"]] == [
+            mine["id"]
+        ]
+        assert client.get("/api/social/me").json()["joined"] is True
+
+
+class TestClosingAnAccount:
+    """The seam between account deletion and the social module.
+
+    Deleting an account erases its social presence through the ORM cascades on
+    `User`. Nothing else asserts that: the account tests know about workspaces
+    and applicant cases, and the social tests delete a `User` directly rather
+    than through the endpoint a person actually presses.
+    """
+
+    def test_closing_an_account_erases_its_posts_and_the_answers_under_them(self, client):
+        register(client, "leaver")
+        join(client)
+        question = post(client, "Вопрос, который скоро исчезнет")
+        client.post("/api/auth/logout")
+
+        register(client, "answerer")
+        join(client)
+        client.post(
+            f"/api/social/posts/{question['id']}/replies", json={"body": "Ответ на чужой пост"}
+        )
+        client.post("/api/auth/logout")
+
+        login(client, "leaver")
+        leaver = client.get("/api/social/me").json()["profile"]["user_id"]
+        closed = client.post(
+            "/api/auth/me/delete",
+            json={"password": "correct horse battery leaver", "confirm_delete_data": True},
+        )
+        assert closed.status_code == 204, closed.text
+
+        login(client, "answerer")
+        # The post is gone, and the answer went with it: there is nowhere for an
+        # answer to a deleted question to be read in context.
+        assert client.get("/api/social/feed").json()["items"] == []
+        assert client.get(f"/api/social/people/{leaver}").status_code == 404
+        # The person who answered still has an account and a profile.
+        listed = client.get("/api/social/people").json()["items"]
+        assert [person["display_name"] for person in listed] == ["Answerer"]
+
+
 class TestTheTenantBoundary:
     """Discover crosses organizations. Nothing else does."""
 
