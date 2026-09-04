@@ -16,17 +16,19 @@ export function PaywallNotice() {
   if (!paywall) return null;
 
   return (
-    <div className="paywall" role="note">
-      <h3>Этот раздел открывается после оплаты кейса</h3>
-      <ul>
-        <li>Все найденные программы, а не первые пять</li>
-        <li>Источник под каждым значением</li>
-        <li>Стипендии, стоимость и разрыв между ними</li>
-        <li>Чек-лист документов и экспорт</li>
-      </ul>
-      <button type="button" onClick={() => setPaying(true)}>
-        Открыть за {paywall.priceKzt} ₸
-      </button>
+    <div style={{ padding: 'var(--space-4) var(--space-6) 0' }}>
+      <div className="notice notice--info" role="note">
+        <div style={{ flex: 1 }}>
+          <strong>Этот раздел открывается после оплаты кейса.</strong> Полный охват программ,
+          источник под каждым значением, финансирование и экспорт.
+        </div>
+        <button className="btn btn--sm btn--primary" onClick={() => setPaying(true)}>
+          Открыть за {paywall.priceKzt} ₸
+        </button>
+        <button className="btn btn--sm btn--ghost" onClick={clearPaywall}>
+          Не сейчас
+        </button>
+      </div>
 
       {paying && (
         <PaymentModal

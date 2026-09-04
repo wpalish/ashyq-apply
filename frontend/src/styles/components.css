@@ -386,3 +386,16 @@
   .timeline__item { grid-template-columns: 1fr; gap: var(--space-1); }
   .stat { border-right: 0; border-bottom: 1px solid var(--rule); }
 }
+
+/* The only new shape payments needed: everything inside reuses .panel,
+   .auth-card, .field, .notice and .btn. */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: var(--space-6);
+  background: rgb(0 0 0 / 60%);
+  overflow-y: auto;
+}

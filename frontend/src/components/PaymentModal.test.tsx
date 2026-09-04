@@ -29,14 +29,14 @@ function open() {
 describe('PaymentModal', () => {
   it('shows the price before asking for anything', () => {
     open();
-    expect(screen.getByText(/4990/)).toBeInTheDocument();
+    expect(screen.getAllByText(/4990/).length).toBeGreaterThan(0);
   });
 
   it('refuses a malformed phone number without calling the API', () => {
     const openOrder = vi.spyOn(api, 'openOrder');
     open();
     fireEvent.change(screen.getByLabelText(/номер телефона/i), { target: { value: '123' } });
-    fireEvent.click(screen.getByRole('button', { name: 'Оплатить' }));
+    fireEvent.click(screen.getByRole('button', { name: /^Оплатить/ }));
     expect(openOrder).not.toHaveBeenCalled();
     expect(screen.getByRole('alert')).toHaveTextContent('8XXXXXXXXXX');
   });
@@ -53,7 +53,7 @@ describe('PaymentModal', () => {
     fireEvent.change(screen.getByLabelText(/номер телефона/i), {
       target: { value: '87071234455' },
     });
-    fireEvent.click(screen.getByRole('button', { name: 'Оплатить' }));
+    fireEvent.click(screen.getByRole('button', { name: /^Оплатить/ }));
 
     await waitFor(() => expect(api.openOrder).toHaveBeenCalled());
     await vi.advanceTimersByTimeAsync(5000);
@@ -68,7 +68,7 @@ describe('PaymentModal', () => {
     fireEvent.change(screen.getByLabelText(/номер телефона/i), {
       target: { value: '87071234455' },
     });
-    fireEvent.click(screen.getByRole('button', { name: 'Оплатить' }));
+    fireEvent.click(screen.getByRole('button', { name: /^Оплатить/ }));
     await waitFor(() => expect(screen.getByText(/8707\*\*\*4455/)).toBeInTheDocument());
     expect(document.body.textContent).not.toContain('87071234455');
   });
@@ -84,7 +84,7 @@ describe('PaymentModal', () => {
 
     open();
     fireEvent.click(screen.getByRole('button', { name: 'QR' }));
-    fireEvent.click(screen.getByRole('button', { name: 'Оплатить' }));
+    fireEvent.click(screen.getByRole('button', { name: /^Оплатить/ }));
     await waitFor(() => expect(screen.getByText(/pay.kaspi.test/)).toBeInTheDocument());
   });
 
@@ -94,7 +94,7 @@ describe('PaymentModal', () => {
     fireEvent.change(screen.getByLabelText(/номер телефона/i), {
       target: { value: '87071234455' },
     });
-    fireEvent.click(screen.getByRole('button', { name: 'Оплатить' }));
+    fireEvent.click(screen.getByRole('button', { name: /^Оплатить/ }));
     await waitFor(() => expect(screen.getByRole('alert')).toBeInTheDocument());
   });
 });

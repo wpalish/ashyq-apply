@@ -78,64 +78,87 @@ export function PaymentModal({ profileId, priceKzt, onClose, onPaid }: Props) {
   }, [order, onPaid]);
 
   return (
-    <div className="modal" role="dialog" aria-label="Оплата кейса">
-      <h2>Полный отчёт по кейсу</h2>
-      <p>
-        Разовая оплата — <strong>{priceKzt} ₸</strong>. Открывает полный охват программ,
-        источник под каждым значением, финансирование и экспорт.
-      </p>
+    <div className="modal-overlay">
+      <div className="panel auth-card stack" role="dialog" aria-label="Оплата кейса">
+        <div>
+          <p className="screen__eyebrow">Kaspi</p>
+          <h2>Полный отчёт по кейсу</h2>
+          <p className="muted small">
+            Разовая оплата — <strong>{priceKzt} ₸</strong>. Открывает полный охват программ,
+            источник под каждым значением, финансирование и экспорт. Кейс остаётся открытым.
+          </p>
+        </div>
 
-      {!order && (
-        <>
-          <div role="group" aria-label="Способ оплаты">
-            <button
-              type="button"
-              aria-pressed={method === 'phone'}
-              onClick={() => setMethod('phone')}
-            >
-              По номеру Kaspi
+        {!order && (
+          <>
+            <div className="decision-group" role="group" aria-label="Способ оплаты">
+              <button
+                type="button"
+                className={`decision-btn${method === 'phone' ? ' decision-btn--approve' : ''}`}
+                aria-pressed={method === 'phone'}
+                onClick={() => setMethod('phone')}
+              >
+                По номеру Kaspi
+              </button>
+              <button
+                type="button"
+                className={`decision-btn${method === 'qr' ? ' decision-btn--approve' : ''}`}
+                aria-pressed={method === 'qr'}
+                onClick={() => setMethod('qr')}
+              >
+                QR
+              </button>
+            </div>
+
+            {method === 'phone' && (
+              <label className="field" htmlFor="kaspi-phone">
+                <span className="field__label">Номер телефона</span>
+                <input
+                  id="kaspi-phone"
+                  inputMode="numeric"
+                  value={phone}
+                  onChange={(event) => setPhone(event.target.value.trim())}
+                  placeholder="87071234455"
+                />
+                <span className="field__hint">
+                  Счёт придёт в приложение Kaspi на этот номер.
+                </span>
+              </label>
+            )}
+
+            <button className="btn btn--primary" type="button" onClick={start} disabled={busy}>
+              {busy ? 'Выставляем счёт…' : `Оплатить ${priceKzt} ₸`}
             </button>
-            <button type="button" aria-pressed={method === 'qr'} onClick={() => setMethod('qr')}>
-              QR
-            </button>
+          </>
+        )}
+
+        {order?.method === 'phone' && order.status === 'pending' && (
+          <div className="notice notice--info">
+            Счёт отправлен на {order.phone_masked}. Подтвердите его в приложении Kaspi — страница
+            обновится сама.
           </div>
+        )}
 
-          {method === 'phone' && (
-            <label htmlFor="kaspi-phone">
-              Номер телефона
-              <input
-                id="kaspi-phone"
-                inputMode="numeric"
-                value={phone}
-                onChange={(event) => setPhone(event.target.value.trim())}
-                placeholder="87071234455"
-              />
-            </label>
-          )}
+        {order?.method === 'qr' && order.qr_payload && (
+          <div className="notice notice--info">
+            Отсканируйте в приложении Kaspi: <code>{order.qr_payload}</code>
+          </div>
+        )}
 
-          <button type="button" onClick={start} disabled={busy}>
-            {busy ? 'Выставляем счёт…' : 'Оплатить'}
-          </button>
-        </>
-      )}
+        {order?.status === 'paid' && (
+          <div className="notice notice--demo">Оплачено. Открываем полный отчёт…</div>
+        )}
 
-      {order?.method === 'phone' && order.status === 'pending' && (
-        <p>Счёт отправлен на {order.phone_masked}. Подтвердите его в приложении Kaspi.</p>
-      )}
+        {error && (
+          <div className="notice notice--risk" role="alert">
+            {error}
+          </div>
+        )}
 
-      {order?.method === 'qr' && order.qr_payload && (
-        <p>
-          Отсканируйте в Kaspi: <code>{order.qr_payload}</code>
-        </p>
-      )}
-
-      {order?.status === 'paid' && <p>Оплачено. Открываем полный отчёт…</p>}
-
-      {error && <p role="alert">{error}</p>}
-
-      <button type="button" onClick={onClose}>
-        Закрыть
-      </button>
+        <button className="btn btn--ghost" type="button" onClick={onClose}>
+          Закрыть
+        </button>
+      </div>
     </div>
   );
 }
