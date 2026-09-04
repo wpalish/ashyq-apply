@@ -98,7 +98,7 @@ New file `backend/app/models/billing.py`, following the shape of `models/auth.py
 | `profile_id` | FK — the case being unlocked |
 | `kind` | `case_unlock` |
 | `amount_kzt` | integer tenge, server-decided |
-| `status` | `created` / `pending` / `paid` / `cancelled` / `expired` / `failed` |
+| `status` | `created` / `pending` / `paid` / `cancelled` / `expired` / `failed` — the provider's `processing` maps to our `pending`, so we carry one vocabulary |
 | `provider` | `apipay` / `fake` |
 | `provider_invoice_id` | nullable until the provider answers |
 | `external_order_id` | unique — our idempotency key to the provider |
@@ -116,9 +116,15 @@ payload. This is the record we reach for when a customer says they paid.
 
 **`entitlements`** — `organization_id`, `profile_id`, `kind` (`case_full`),
 `source` (`purchase` / `manual` / later `subscription`), `order_id`, `granted_at`.
-Unique on `(organization_id, profile_id, kind)`. **This table is the only thing
-the rest of the application asks about.** Phase 2 inserts rows with
-`kind='org_subscription'` and `profile_id` null; no route changes.
+**This table is the only thing the rest of the application asks about.** Phase 2
+inserts rows with `kind='org_subscription'` that cover the whole organization
+rather than one case.
+
+Uniqueness needs care: `profile_id` is null for an organization-wide entitlement,
+and in PostgreSQL a plain unique constraint would let unlimited null rows through.
+So there are two partial unique indexes — one on `(organization_id, profile_id, kind)`
+where `profile_id IS NOT NULL`, one on `(organization_id, kind)` where it is null.
+The suite asserts both, on PostgreSQL and on SQLite.
 
 Migration: one Alembic revision on top of `c3a1f4e9b2d7`.
 
@@ -154,7 +160,12 @@ Authenticated, tenant-scoped, mounted like the existing routers:
   the existing `owned_profile`, refuses if an entitlement already exists, returns
   the order view.
 * `GET  /billing/orders/{id}` — the frontend polls this.
-* `POST /billing/orders/{id}/cancel`.
+* `POST /billing/orders/{id}/cancel` — for a phone order this calls the provider's
+  cancel. ApiPay does not support cancelling a QR invoice, so for a QR order it is
+  local only: our order becomes `cancelled` and the reconciler stops. If that QR is
+  paid anyway before it expires, the webhook still arrives and still grants the
+  entitlement — a terminal `paid` outranks a local cancellation, and `apply_status`
+  is where that rule lives.
 
 Unauthenticated but signed:
 
@@ -162,8 +173,13 @@ Unauthenticated but signed:
   limited by the existing `FixedWindowLimiter`, unknown event types acknowledged
   with 200 and recorded, never acted on.
 
-Paid routes answer `402` with `{"error": "payment_required", "profile_id": ..., "price_kzt": ...}`
-so the frontend can raise the paywall without guessing.
+Two different behaviours, and the distinction matters:
+
+* The **shortlist list** stays `200` and is truncated — a free user must see that
+  results exist and what they roughly are, or there is nothing to buy.
+* The **detail, claims, conflicts, questions, export and document routes** answer
+  `402` with `{"error": "payment_required", "profile_id": ..., "price_kzt": ...}`,
+  so the frontend can raise the paywall without guessing.
 
 ## 8. Lifecycle and idempotency
 
@@ -248,9 +264,11 @@ No provider keys exist yet, so the evidence is local and contract-based.
   responses, including `duplicate_idempotency_key`, `tariff_inactive`, 422
   validation and 429 with `Retry-After`. Fixtures are derived from the published
   OpenAPI document, not from prose.
-* **API** — 402 on each paid route; webhook grants access; replayed webhook grants
-  once; out-of-order events; reconciler recovers a lost webhook; an order for
-  another tenant's case 404s; `payments_enabled=False` restores today's behaviour.
+* **API** — 402 on each gated route and a truncated 200 on the shortlist; webhook
+  grants access; replayed webhook grants once; out-of-order events; a paid webhook
+  after a local QR cancellation still grants; reconciler recovers a lost webhook;
+  an order for another tenant's case 404s; `payments_enabled=False` restores
+  today's behaviour.
 * **Frontend** — paywall states, polling, QR expiry, and the post-payment prompt.
 
 Gates that must stay green: `pytest` (553 passing at baseline), `ruff`, `mypy`,
