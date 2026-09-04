@@ -58,6 +58,10 @@ test-results/
 blob-report/
 .playwright/
 
+# Worktrees created for isolated sessions live under .claude/, which is tracked.
+# Without this they surface as untracked files in every other checkout.
+.claude/worktrees/
+
 # Tooling output
 sbom*.json
 *-audit.json
