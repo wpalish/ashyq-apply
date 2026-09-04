@@ -11,9 +11,13 @@ from datetime import UTC, datetime
 
 import pytest
 
-# The two-tenant harness already exists; a second copy of it would be a second
-# thing to keep in step with the auth settings it configures.
-from tests.test_security import auth_client, register  # noqa: F401
+from tests.test_security import register
+
+# The two-tenant harness already exists beside the security suite, and a second
+# copy would be a second thing to keep in step with the auth settings it
+# configures. Loaded as a plugin rather than imported, so `auth_client` arrives
+# as a fixture instead of as a module-level name every test then shadows.
+pytest_plugins = ["tests.test_security"]
 
 
 def make_job(session, run_id: str, *, status: str, kind: str = "research") -> str:
@@ -69,9 +73,7 @@ def organization_of(client) -> str:
 
 
 class TestWhatAnOwnerSees:
-    def test_a_dead_job_of_my_workspace_is_listed_with_its_cause(
-        self, auth_client, session
-    ):  # noqa: F811
+    def test_a_dead_job_of_my_workspace_is_listed_with_its_cause(self, auth_client, session):
         client, _ = auth_client
         register(client, "alice")
         run_id = make_run(session, organization_of(client))
@@ -85,10 +87,8 @@ class TestWhatAnOwnerSees:
         assert listed[0]["attempts"] == 3
         assert "stopped without finishing" in listed[0]["last_error"]
 
-    def test_the_count_is_a_header_so_the_ui_need_not_fetch_the_list(
-        self, auth_client, session
-    ):  # noqa: F811
-        """"3 jobs need attention" is one request, not a page of job rows."""
+    def test_the_count_is_a_header_so_the_ui_need_not_fetch_the_list(self, auth_client, session):
+        """ "3 jobs need attention" is one request, not a page of job rows."""
         client, _ = auth_client
         register(client, "alice")
         run_id = make_run(session, organization_of(client))
@@ -99,9 +99,7 @@ class TestWhatAnOwnerSees:
         assert response.headers["X-Total-Count"] == "3"
         assert len(response.json()) == 1
 
-    def test_healthy_jobs_are_not_reported_as_needing_attention(
-        self, auth_client, session
-    ):  # noqa: F811
+    def test_healthy_jobs_are_not_reported_as_needing_attention(self, auth_client, session):
         client, _ = auth_client
         register(client, "alice")
         run_id = make_run(session, organization_of(client))
@@ -112,7 +110,7 @@ class TestWhatAnOwnerSees:
 
 
 class TestWhatIsRefused:
-    def test_another_workspaces_dead_job_is_not_mine_to_see(self, auth_client, session):  # noqa: F811
+    def test_another_workspaces_dead_job_is_not_mine_to_see(self, auth_client, session):
         """The queue is one table for the whole deployment; the view is not."""
         client, _ = auth_client
         register(client, "alice")
@@ -128,7 +126,7 @@ class TestWhatIsRefused:
         listed = client.get("/api/admin/jobs?status=dead").json()
         assert [job["run_id"] for job in listed] == [bob_run]
 
-    def test_an_unknown_status_is_refused_rather_than_matching_nothing(self, auth_client):  # noqa: F811
+    def test_an_unknown_status_is_refused_rather_than_matching_nothing(self, auth_client):
         """Silently returning [] would read as "your queue is fine"."""
         client, _ = auth_client
         register(client, "alice")
@@ -136,11 +134,11 @@ class TestWhatIsRefused:
         assert response.status_code == 400
         assert "deadd" in response.json()["detail"]
 
-    def test_signing_in_is_required(self, auth_client):  # noqa: F811
+    def test_signing_in_is_required(self, auth_client):
         client, _ = auth_client
         assert client.get("/api/admin/jobs?status=dead").status_code == 401
 
-    def test_a_member_is_not_an_operator(self, auth_client, session):  # noqa: F811
+    def test_a_member_is_not_an_operator(self, auth_client, session):
         client, _ = auth_client
         register(client, "alice")
         from app.models import OrganizationMembership
