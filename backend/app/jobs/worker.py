@@ -297,7 +297,14 @@ def main() -> int:  # pragma: no cover - process entry point
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     for sig in (signal.SIGINT, signal.SIGTERM):
-        loop.add_signal_handler(sig, worker.request_stop)
+        try:
+            loop.add_signal_handler(sig, worker.request_stop)
+        except NotImplementedError:
+            # Windows has no asyncio signal handlers. Deployment is Linux, so
+            # this only affects a developer's machine — but without it the
+            # worker cannot start there at all. signal.signal still delivers
+            # SIGINT, which is what Ctrl+C sends.
+            signal.signal(sig, lambda _s, _f: worker.request_stop())
     try:
         loop.run_until_complete(worker.run_forever())
     finally:
