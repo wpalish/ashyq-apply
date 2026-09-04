@@ -251,3 +251,65 @@ tests, 54 E2E, 6 auth E2E, typecheck and lint clean.
 Still open and unchanged: the container stack has never been run (no Docker
 here, gate 22), live programme recall is still 1 of 10 canary institutions, and
 Phases 5–6 — observability, ops and i18n — are untouched.
+
+## Update — Phase 5 of the audit fix plan
+
+Ops and observability: the parts that decide whether a problem is noticed at
+all. Nothing here changes what the product answers; it changes whether anyone
+can see the product failing.
+
+- **The queue could only be read from the database.** `/metrics` now speaks
+  Prometheus text: requests by route and status, a latency histogram, refusals
+  by the abuse limiter, and jobs and runs by state read at scrape time. Written
+  by hand rather than pulling `prometheus_client` for four counters and a
+  histogram. Requests are counted under their route template — a run id in a
+  label is a new time series per run, which is how a metrics endpoint becomes a
+  memory leak in the scraper.
+- **The endpoint is not a second door to applicant data.** Everything it
+  carries is an aggregate, asserted by a test that plants a name and looks for
+  it. A bearer token gates it when one is configured; production refuses to
+  start with the endpoint open and no token; `fly.toml` ships with it off,
+  because that deployment is on the open internet with no internal port to hide
+  behind; nginx refuses `/metrics` outright.
+- **A dead job was invisible to everyone it affected.** The run said "failed"
+  and the cause — attempts exhausted, lease lost, the worker's own error — sat
+  in a table nobody watched. `GET /api/admin/jobs?status=dead` is scoped to the
+  caller's own organization, not to the deployment: a global view would need a
+  deployment-wide credential putting every tenant's errors behind one shared
+  token. The progress screen says "N jobs need attention", and says nothing at
+  all to someone who may not read the queue.
+- **"Use the platform's snapshots" was the entire backup plan.**
+  `scripts/backup.sh` takes one dump, verifies it by reading its table of
+  contents back, then prunes old dumps — and only after the new one has
+  verified, so a failed backup can never be the reason a good one is deleted.
+  The cron line is in the document rather than in someone's shell history.
+- **Running the restore drill found two defects in the drill itself.** It asked
+  for `pg_dump` by its POSIX name and so never found the `pg_dump.exe` beside
+  it; and it took the path from `mkstemp` while leaving the descriptor open, so
+  its own cleanup failed with a permission error that hid the first problem
+  entirely. Fixed, and the drill now passes: 18 tables restored with identical
+  row counts. That is this repository's first restore that actually happened.
+- **The product held grades, citizenship and family budgets and said nothing
+  about any of it.** There is a privacy policy and a set of terms now, at
+  `#/legal`, and every factual claim in them is true of the code today. They
+  are drafts and say so in a banner, because implying a legal review nobody
+  performed would be a worse lie than the silence they replace. The paragraph
+  on applicants under 18 names the gap — no age asked, no parental consent — as
+  a gap.
+
+One correction to an earlier record: the PostgreSQL branch was marked as
+unprovisionable on this machine, and it runs here after all — 50 tests, no
+skips, and a real cluster behind the restore drill. The note was true when it
+was written and had not been re-tried since.
+
+Backend: 785 tests green, coverage floor of 92 held, mypy and ruff clean.
+Frontend: 120 unit tests, 63 E2E (1 skipped), typecheck, lint and production
+build clean. The authenticated E2E config was **not** re-run in this session:
+it insists on starting its own dev server and port 5173 was held by another
+process on this machine. It is unchanged since Phase 4 and nothing here touches
+authentication, but that is a reason to expect it still passes, not evidence
+that it does.
+
+Still open and unchanged: the container stack has never been run (no Docker
+here, gate 22), live programme recall is still 1 in 10 canary institutions, and
+the privacy policy and terms need a lawyer before real applicants see them.

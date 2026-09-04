@@ -8,16 +8,16 @@ the release report, not "implemented".
 partial and one fails; the local container stack is still the unverified gate,
 and the release commit/tag waits on it.
 
-**next: Phase 4** of [`docs/FIX_PLAN.md`](docs/FIX_PLAN.md). Phase 0
-(baseline), Phase 1 (P0 blockers), Phase 2 (P1 reliability and security) and
-Phase 3 (P2 UX, 3.1–3.14) are done; gates 36–73 below record what each fix is
-now held to. Two audit findings did not reproduce against this tree and are
-recorded as such rather than "fixed" — see gates 22 and 47.
+**next: Phase 6** of [`docs/FIX_PLAN.md`](docs/FIX_PLAN.md) — the optional one
+(i18n, transcript import, a wider live registry). Phases 0–5 are done; gates
+36–88 below record what each fix is now held to. Two audit findings did not
+reproduce against this tree and are recorded as such rather than "fixed" — see
+gates 22 and 47.
 
 | # | Gate | Status | Evidence / what is missing |
 |---|---|---|---|
-| 1 | Existing 240 + 39 + 42 tests kept or replaced by stricter ones | **PASS** | 656 + 93 + 54 (27 desktop + 27 mobile). Nothing removed; Phase 1 added 14, Phase 2 added 65, Phase 3 added 50. The backend number is lower than the 547 recorded earlier because 25 PostgreSQL tests now *skip* on a machine without a working `pgserver` instead of erroring — they still run in CI |
-| 2 | All new unit / integration / E2E / security tests green | **PARTIAL** | `pytest` 656 passed / 25 skipped (SQLite; the PostgreSQL branch could not be provisioned on this machine — `pgserver`'s `initdb.exe` fails here), `vitest` 93, `playwright` 27 desktop + 27 mobile |
+| 1 | Existing 240 + 39 + 42 tests kept or replaced by stricter ones | **PASS** | 785 + 120 + 63 (desktop and mobile, 1 skipped) + 6 auth E2E. Nothing removed; Phase 1 added 14, Phase 2 added 65, Phase 3 added 50, and Phase 5 added 21 backend (metrics, dead jobs) and 8 frontend (the needs-attention line, the legal page) |
+| 2 | All new unit / integration / E2E / security tests green | **PASS** | `pytest` 785 passed, **including the PostgreSQL branch** — `pgserver` does provision a cluster on this machine after all, so the 25 tests recorded as unrunnable here now run and pass (`test_jobs.py` and `test_social_models.py`, 50 tests, no skips). `vitest` 120, `playwright` 63 passed / 1 skipped (desktop + mobile). The authenticated E2E config was not re-run here: it starts its own dev server and port 5173 was held by another process on this machine |
 | 3 | ruff, mypy, TypeScript, ESLint, production build clean | **PASS** | all clean; build 74.0 kB JS gzip |
 | 4 | PostgreSQL migrations work on fresh and upgraded databases | **PASS** | Alembic. Verified fresh, downgrade to base, re-upgrade, re-apply as a no-op, on PostgreSQL 16.2 and SQLite. `create_all()` removed from the production path; startup refuses a mismatched revision |
 | 5 | Worker survives a crash restart | **PASS** | `scripts/crash_test.py` SIGKILLs a real worker after 12 results are written; a second worker recovers the job and finishes with no duplicates. Stable over 3 runs. **PostgreSQL-backed queue, not Redis — see ADR 0001** |
@@ -121,19 +121,37 @@ recorded as such rather than "fixed" — see gates 22 and 47.
 | 82 | The coverage floor means something | **PASS** | Raised from 80 to 92, the level actually measured on a green run (6010 statements, 504 uncovered) |
 
 
+### Added by Phase 5 of the audit fix plan
+
+| # | Gate | Status | Evidence |
+|---|---|---|---|
+| 83 | The service can be watched from outside its logs | **PASS** | `/metrics` in Prometheus text: requests by route and status, a latency histogram, limiter refusals, and jobs and runs by state read from the database at scrape time. Verified against a running API, not only in tests: a 404 on `/api/runs/nope` was counted as `route="/api/runs/{run_id}"`, and a queued demo run appeared as `ashyq_jobs{status="queued"} 1`. 14 tests |
+| 84 | The scrape endpoint is not a second way to read applicant data | **PASS** | Aggregates only, and a canary display name is asserted never to appear. Bearer token when one is configured, 404 when disabled, and production refuses to start with the endpoint open and no token. `fly.toml` ships with it off because that app is published on the open internet; nginx refuses `/metrics` explicitly |
+| 85 | Work the queue gave up on is visible to the people it affects | **PASS** | `GET /api/admin/jobs?status=dead`, scoped to the caller's own organization and to owners, with the count in `X-Total-Count`; the progress screen says "N jobs need attention" and stays silent for anyone who may not read the queue. 7 backend tests + 4 vitest |
+| 86 | A backup happens on a schedule, and a restore has been proven | **PASS** | `scripts/backup.sh` — one dump, verified by listing its contents, then pruning older than `RETENTION_DAYS`, and only after the new one verifies; the cron line and the Fly equivalent are in `docs/BACKUP_RESTORE.md`. `backup_drill.py` restored 18 tables with identical row counts against the bundled PostgreSQL — the first restore this repository has actually performed rather than described |
+| 87 | The product says what it does with personal data | **PARTIAL** | A privacy policy and terms exist, have an address (`#/legal`), and every factual claim in them is true of the code. They are **drafts and say so**: no lawyer has read them, and the product asks no age although it is built for applicants who will include minors. Legal review is outstanding and is a release blocker for real applicants, not a formality. 4 vitest |
+| 88 | Every log line can be tied to the request that produced it | **PASS** | Request-id middleware honouring a safe inbound `X-Request-ID` and echoing it back, JSON log format behind `UNIMATCH_LOG_FORMAT`, correlation id carried per context and through the worker on the job id. 12 tests (Phase 5.1–5.2) |
+
 ## Summary
 
-- **PASS:** 27 (of 30 original) + 5 + 7 added by Phase 1 + 17 added by Phase 2 + 14 added by Phase 3 + 9 added by Phase 4
-- **PARTIAL:** 1 (gate 2 — the PostgreSQL branch was not exercised on this machine)
+- **PASS:** 28 (of 30 original) + 5 + 7 added by Phase 1 + 17 added by Phase 2 + 14 added by Phase 3 + 9 added by Phase 4 + 5 added by Phase 5
+- **PARTIAL:** 1 (gate 87 — the privacy policy and terms are drafts no lawyer has read)
 - **FAIL:** 1 (gate 22 — the container stack has still never been run)
 - **BLOCKED:** 1
+
+Gate 2 moved from PARTIAL to PASS on evidence rather than on work: the
+PostgreSQL branch was recorded as unprovisionable on this machine, and it
+turns out to run here — 50 tests, no skips. The earlier note was true when it
+was written and had simply not been re-tried.
 
 ## Order of work remaining
 
 0. ~~**Phase 4 of `docs/FIX_PLAN.md`** — P3 hygiene~~ **done** (gates 74-82)
-0a. **Phase 5** — ops and observability: request-id middleware, JSON logs,
+0a. ~~**Phase 5** — ops and observability: request-id middleware, JSON logs,
    `/metrics`, a scheduled backup, admin visibility of dead jobs, and Privacy
-   Policy / Terms stubs. Not started.
+   Policy / Terms stubs~~ **done** (gates 83-88)
+0b. **Phase 6** — optional: i18n groundwork (ru/kk), transcript import, and
+   ten more live-registry institutions. Not started.
 1. ~~**P1** — PostgreSQL, Alembic, durable queue, crash recovery~~ **done** (gates 4, 5)
 2. ~~**P2** — auth, organizations, cases, tenant isolation~~ **done**
 3. ~~**P3** — SSRF suite, headers, rate limiting, threat model~~ **done**
@@ -148,3 +166,6 @@ recorded as such rather than "fixed" — see gates 22 and 47.
   cannot be installed without your password. The files are written; they have
   never been executed.
 * **Any external deployment**, domain or billing.
+* **A lawyer to read the privacy policy and terms** (gate 87). They are honest
+  drafts, and the product will be used by applicants under 18 while asking
+  nobody's age — that is a decision for a person, not for this repository.
