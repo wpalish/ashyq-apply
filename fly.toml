@@ -20,6 +20,12 @@ primary_region = "waw"
   # Only Fly's edge can reach this app, and it rewrites X-Forwarded-For.
   UNIMATCH_TRUST_PROXY_HEADERS = "true"
   UNIMATCH_WORKER_CONCURRENCY = "2"
+  # This app is published on the open internet, so /metrics would be too:
+  # there is no internal-only port to hide it behind here. Off unless a
+  # scraper is actually configured — to turn it on, set the token as a secret
+  # (`fly secrets set UNIMATCH_METRICS_TOKEN=…`) and flip this to "true".
+  # Production refuses to start with metrics on and no token.
+  UNIMATCH_METRICS_ENABLED = "false"
 
 [processes]
   # --proxy-headers: Fly terminates TLS at its edge and passes the caller

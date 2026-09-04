@@ -101,6 +101,12 @@ class Settings(BaseSettings):
     #: would let any client invent an address and walk around the limiter.
     trust_proxy_headers: bool = False
 
+    #: `/metrics` for a Prometheus scraper. It carries no applicant data, only
+    #: aggregates, but traffic and queue depth are still not public facts:
+    #: production must either set a token or switch the endpoint off.
+    metrics_enabled: bool = True
+    metrics_token: str = ""
+
     @property
     def is_production(self) -> bool:
         return self.environment.lower() in ("production", "prod")
@@ -157,6 +163,12 @@ class Settings(BaseSettings):
             raise RuntimeError("UNIMATCH_PUBLIC_BASE_URL must be an HTTPS origin in production.")
         if self.is_production and self.password_scrypt_log2 < 17:
             raise RuntimeError("Production password hashing must use at least scrypt 2**17.")
+        if self.is_production and self.metrics_enabled and not self.metrics_token:
+            raise RuntimeError(
+                "UNIMATCH_METRICS_TOKEN must be set in production, or set "
+                "UNIMATCH_METRICS_ENABLED=false. An open /metrics publishes traffic volumes "
+                "and queue depth to anyone who asks."
+            )
 
 
 @lru_cache

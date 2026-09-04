@@ -12,12 +12,15 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 
+from app import metrics
 from app.adapters.fetching import PIILeakError
 from app.api import (
     routes_account,
+    routes_admin,
     routes_auth,
     routes_cases,
     routes_meta,
+    routes_metrics,
     routes_profile,
     routes_research,
     routes_results,
@@ -78,9 +81,11 @@ app.add_middleware(
 
 for module in (
     routes_account,
+    routes_admin,
     routes_auth,
     routes_cases,
     routes_meta,
+    routes_metrics,
     routes_profile,
     routes_research,
     routes_results,
@@ -198,6 +203,7 @@ async def security_middleware(request: Request, call_next):
     if limit:
         peer = client_address(request)
         if not _limiter.allow(f"{group}:{peer}", limit, time.monotonic()):
+            metrics.count_rate_limited(group)
             return _secure(
                 JSONResponse(
                     status_code=429,
@@ -207,6 +213,29 @@ async def security_middleware(request: Request, call_next):
             )
 
     return _secure(await call_next(request))
+
+
+@app.middleware("http")
+async def metrics_middleware(request: Request, call_next):
+    """Time every request, including the ones refused before they reach a route.
+
+    Declared after the security middleware so it wraps it: a 429 the limiter
+    returned is a served request as far as an operator is concerned, and the
+    latency of a refusal is worth seeing. Declared before the correlation
+    middleware so that one stays outermost, as its own docstring requires.
+    """
+    started = time.perf_counter()
+    response = await call_next(request)
+    if request.url.path != "/metrics":
+        # The route template, never the URL. `scope["route"]` is set during
+        # routing, so it is present by the time the response comes back; a
+        # request that matched nothing has no template and is grouped as such.
+        route = request.scope.get("route")
+        template = getattr(route, "path", None) or "unmatched"
+        metrics.observe_request(
+            request.method, template, response.status_code, time.perf_counter() - started
+        )
+    return response
 
 
 @app.middleware("http")
