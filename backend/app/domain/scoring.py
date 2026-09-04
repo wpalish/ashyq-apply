@@ -231,13 +231,34 @@ def score_result(result: ProgramResult, profile: ApplicantProfileIn) -> Explaina
             "activities",
         )
     else:
+        # hours_per_week without weeks_per_year (or the reverse) cannot become
+        # annual hours: a school club runs about 34 weeks, a summer lab about
+        # 8, a paid job about 48. Any fixed week count would be an invented
+        # number multiplied straight into the score, so the half-stated
+        # activity keeps the neutral "hours unknown" footing that
+        # `_activity_strength` already gives it - and the gap is named rather
+        # than left to look like a complete answer.
+        partial = [
+            a
+            for a in profile.activities
+            if a.annual_hours is None
+            and (a.hours_per_week is not None or a.weeks_per_year is not None)
+        ]
+        note = (
+            ""
+            if not partial
+            else f" Sustained hours are unknown for {len(partial)} of them: hours per week and"
+            " weeks per year only mean something together, and the missing half is not assumed."
+        )
         add(
             "Extracurricular profile",
             _activity_strength(profile),
             w.extracurricular_alignment,
             f"{len(profile.activities)} activities and {len(profile.achievements)} achievements, "
-            "weighted by level, leadership and sustained hours.",
+            "weighted by level, leadership and sustained hours." + note,
         )
+        if partial:
+            missing.append("weeks per year for activities with stated hours")
 
     # --- soft location fits --------------------------------------------------
     add(

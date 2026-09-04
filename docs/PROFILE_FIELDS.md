@@ -44,6 +44,29 @@ in place to imply a tailoring that never happened.
 | `class_rank`, `class_size` | Context | Stated in the academic-fit explanation for a human to weigh; never scored, because no university in the registry publishes a rank threshold | `test_class_rank_is_stated_in_the_explanation_without_becoming_a_score` |
 | `second_citizenship` | Scored | Checked against scholarship citizenship restrictions alongside the primary one | `test_a_second_citizenship_counts` |
 
+## Activities and achievements
+
+| Field | State | What it does | Test |
+|---|---|---|---|
+| `responsibility_level` | Scored | Sets an activity's base weight, participant 0.3 through founder 1.0 | `test_scoring_and_profile.py` |
+| `measurable_outcome` | Scored | An activity with a stated outcome outweighs one without | `test_scoring_and_profile.py` |
+| `hours_per_week`, `weeks_per_year` | Scored **as a pair** | Multiplied into annual hours, which raise an activity's "sustained" weighting up to a 200-hour ceiling | `TestHalfStatedActivityHours` |
+
+**Why the pair is all-or-nothing.** Half an answer is not converted into a
+whole one. A school club runs about 34 weeks a year, a summer lab about 8, a
+paid job about 48 - a spread wide enough that assuming any fixed number would
+manufacture a strong activity out of one field. The plan offered a documented
+40-weeks assumption as an alternative; it was rejected, because at 40 weeks a
+mere 5 hours a week already saturates the 200-hour ceiling, so the assumption
+would not be a small correction but the whole score.
+
+So an activity missing either half keeps the same neutral footing as one that
+states no hours at all - it is never scored *below* a silent answer - and the
+gap is named in `missing_fields` and in the component's own explanation. Before
+this, filling `hours_per_week` alone produced a byte-for-byte identical score
+to filling neither, while the explanation still claimed the result was
+"weighted by ... sustained hours".
+
 ## Funding
 
 | Field | State | What it does | Test |

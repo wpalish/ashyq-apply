@@ -349,3 +349,60 @@ class TestNeedBasedDocuments:
 
         profile.funding.willing_to_submit_need_documents = True
         assert award_meets_shape(award, profile.funding)[0] is True
+
+
+class TestHalfStatedActivityHours:
+    """`hours_per_week` without `weeks_per_year` is an answer, not a blank.
+
+    The pair only means something together: a school club runs about 34 weeks,
+    a summer lab about 8, a paid job about 48. So the score cannot turn one
+    half into annual hours, and it does not try - `annual_hours` is None and
+    `_activity_strength` falls back to a neutral footing. What was wrong is
+    that this was invisible. Filling `hours_per_week` alone produced a
+    byte-for-byte identical score to filling neither, while the explanation
+    claimed the result was "weighted by ... sustained hours". The applicant
+    answered a question that was then silently discarded.
+    """
+
+    def _one_activity(self, profile, **hours):
+        from app.schemas.profile import Activity
+
+        profile.activities = [
+            Activity(
+                name="Robotics club",
+                category="research",
+                role="Captain",
+                responsibility_level="leader",
+                measurable_outcome="Placed second at the national final.",
+                **hours,
+            )
+        ]
+        return profile
+
+    def test_hours_without_weeks_is_named_rather_than_quietly_dropped(self, profile):
+        res = result()
+        stated = score_result(res, self._one_activity(profile, hours_per_week=10))
+        assert any("weeks per year" in m for m in stated.missing_fields), (
+            "hours_per_week was answered and then discarded with no trace"
+        )
+        comp = next(c for c in stated.components if c.name == "Extracurricular profile")
+        assert "unknown" in comp.explanation.lower()
+
+    def test_the_mirror_case_counts_too(self, profile):
+        res = result()
+        stated = score_result(res, self._one_activity(profile, weeks_per_year=30))
+        assert any("weeks per year" in m for m in stated.missing_fields)
+
+    def test_a_complete_pair_is_not_reported_as_missing(self, profile):
+        res = result()
+        both = score_result(res, self._one_activity(profile, hours_per_week=10, weeks_per_year=40))
+        assert not any("weeks per year" in m for m in both.missing_fields)
+
+    def test_a_partial_answer_is_never_scored_below_no_answer(self, profile):
+        """Naming the gap must not become a penalty for answering."""
+        res = result()
+        silent = score_result(res, self._one_activity(profile))
+        partial = score_result(res, self._one_activity(profile, hours_per_week=10))
+        a = next(c for c in silent.components if c.name == "Extracurricular profile")
+        b = next(c for c in partial.components if c.name == "Extracurricular profile")
+        assert b.raw == a.raw
