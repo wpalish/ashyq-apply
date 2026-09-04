@@ -54,6 +54,18 @@ export function LegalScreen() {
               only — never applicant data.
             </p>
             <p>
+              <strong>The community is public, and it is the only part that is.</strong>{' '}
+              Everything above stays inside your workspace. The community does not: if you create
+              a community profile, your display name, the city, major and universities you say you
+              are aiming at, the status you choose, your description of yourself, and every post
+              and reply you write are visible to every other signed-in applicant, including people
+              in other workspaces. That is the point of it — but it is a separate decision, and
+              registering an account does not make it for you. Nothing from your applicant case,
+              your research or your shortlist appears there. You can leave at any time, which
+              deletes your community profile, your posts and your replies and keeps your account
+              and your research.
+            </p>
+            <p>
               <strong>What leaves the service.</strong> Requests to universities&apos; own public
               pages, which never carry your data: the fetcher refuses to place applicant
               information in an outbound URL, honours robots.txt, reads nothing behind a login and
@@ -108,9 +120,22 @@ export function LegalScreen() {
               yours to bear, which is why the sources are on every screen.
             </p>
             <p>
-              <strong>Acceptable use.</strong> Do not use the service to collect data about other
+              <strong>Acceptable use.</strong> Do not use the service to harvest data about other
               people, to evade a site&apos;s stated crawling rules, or to submit applications
-              automatically. The fetcher enforces the first two; the third it simply cannot do.
+              automatically. Reading the community and its profiles is what they are there for;
+              copying them out in bulk, or contacting people through anything you learn there
+              without being asked, is not. The fetcher enforces the crawling rules; automatic
+              submission it simply cannot do.
+            </p>
+            <p>
+              <strong>What you write in the community.</strong> You keep what you write and stay
+              responsible for it. Do not post another person&apos;s private information, impersonate
+              anyone, or harass, and do not present a rumour about a university&apos;s requirements
+              as a fact — the rest of the product exists precisely because published criteria and
+              hearsay are not the same thing. The operator of a deployment may remove a post or an
+              account. Be aware that there is no reporting button, no moderation queue and no
+              automated filtering in this build: removal today means someone with database access
+              doing it by hand.
             </p>
           </div>
         </Panel>

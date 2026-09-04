@@ -30,6 +30,34 @@ describe('privacy and terms', () => {
     expect(screen.getByText(/shown as\s+unknown/)).toBeInTheDocument();
   });
 
+  it('says which part of the product is public, and what it publishes', () => {
+    // The policy enumerated tenant-private storage only. A reader would have
+    // concluded their data never leaves their workspace, while the community
+    // shows a name, a city and every post to every other signed-in applicant.
+    render(<LegalScreen />);
+    const community = screen.getByText(/The community is public/).closest('p');
+    expect(community).toHaveTextContent('every other signed-in applicant');
+    expect(community).toHaveTextContent('including people in other workspaces');
+    expect(community).toHaveTextContent('registering an account does not make it for you');
+    expect(community).toHaveTextContent('Nothing from your applicant case');
+  });
+
+  it('does not forbid the feature the product ships', () => {
+    // "Do not collect data about other people" read as a ban on Discover,
+    // whose whole purpose is looking at other applicants' profiles.
+    render(<LegalScreen />);
+    const use = screen.getByText(/Acceptable use/).closest('p');
+    expect(use).toHaveTextContent('Reading the community and its profiles is what they are there for');
+    expect(use).toHaveTextContent('harvest');
+  });
+
+  it('admits there is no moderation rather than implying one', () => {
+    render(<LegalScreen />);
+    const posting = screen.getByText(/What you write in the community/).closest('p');
+    expect(posting).toHaveTextContent('no reporting button');
+    expect(posting).toHaveTextContent('someone with database access doing it by hand');
+  });
+
   it('names what is stored rather than gesturing at "your data"', () => {
     render(<LegalScreen />);
     const stored = screen.getByText(/What is stored/).closest('p');
