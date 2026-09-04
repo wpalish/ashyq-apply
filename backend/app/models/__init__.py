@@ -10,6 +10,13 @@ from app.models.research import (
     ProgramResultRow,
     ResearchRun,
 )
+from app.models.social import (
+    Post,
+    PostReply,
+    PostTag,
+    SocialProfile,
+    SocialProfileUniversity,
+)
 
 __all__ = [
     "CURRENT_SCHEMA_VERSION",
@@ -24,9 +31,14 @@ __all__ = [
     "JobStatus",
     "Organization",
     "OrganizationMembership",
+    "Post",
+    "PostReply",
+    "PostTag",
     "ProgramResultRow",
     "ResearchRun",
     "SchemaVersion",
+    "SocialProfile",
+    "SocialProfileUniversity",
     "TimestampedBase",
     "User",
     "new_id",

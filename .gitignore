@@ -67,3 +67,6 @@ sbom*.json
 *.swp
 data/pgdata/
 backend/data/pgdata/
+
+# Generated code map (graphify). Regenerate with `graphify update .`
+graphify-out/

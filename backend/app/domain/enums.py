@@ -307,3 +307,18 @@ class FetchOutcome(StrEnum):
     BLOCKED = "blocked"
     #: The body was larger than we will read.
     TOO_LARGE = "too_large"
+
+
+# --- Social module ------------------------------------------------------
+
+
+class ApplicantStatus(StrEnum):
+    """Where an applicant says they stand with their universities.
+
+    Two members only, and the column is nullable. A brand-new account has not
+    told us anything, and NULL says exactly that — the product does not seed a
+    default that would read on someone else's screen as a claim they made.
+    """
+
+    ACCEPTED = "accepted"
+    WAITLIST = "waitlist"

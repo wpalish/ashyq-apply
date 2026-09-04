@@ -3,11 +3,15 @@
 from __future__ import annotations
 
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import Boolean, DateTime, ForeignKey, Index, String, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import Base, TimestampedBase, utcnow
+
+if TYPE_CHECKING:
+    from app.models.social import Post, PostReply, SocialProfile
 
 
 class Organization(TimestampedBase):
@@ -30,6 +34,20 @@ class User(TimestampedBase):
     )
     sessions: Mapped[list[AuthSession]] = relationship(
         back_populates="user", cascade="all, delete-orphan"
+    )
+
+    #: The social module hangs off the account. Closing an account has to erase
+    #: the profile, the posts and the replies with it, so the ORM issues those
+    #: deletes itself rather than trusting SQLite's per-connection foreign-key
+    #: pragma to be on — the same reasoning as `ApplicantProfileRow.runs`.
+    social_profile: Mapped[SocialProfile | None] = relationship(
+        back_populates="user", cascade="all, delete-orphan", passive_deletes=False
+    )
+    posts: Mapped[list[Post]] = relationship(
+        back_populates="author", cascade="all, delete-orphan", passive_deletes=False
+    )
+    post_replies: Mapped[list[PostReply]] = relationship(
+        back_populates="author", cascade="all, delete-orphan", passive_deletes=False
     )
 
 
