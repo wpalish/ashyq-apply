@@ -49,10 +49,12 @@ async def apipay_webhook(
         raise HTTPException(400, "Malformed JSON") from exc
 
     event_type = str(payload.get("event", ""))
-    data = payload.get("data") or {}
-    provider_status = str(data.get("status", ""))
-    invoice_id = str(data.get("id", ""))
-    external_order_id = data.get("external_order_id")
+    # ApiPay puts the invoice fields at the top level and repeats them in a
+    # nested object. Read the top level, fall back to the nesting.
+    nested = payload.get("invoice") or payload.get("data") or {}
+    invoice_id = str(payload.get("id") or nested.get("id") or "")
+    provider_status = str(payload.get("status") or nested.get("status") or "")
+    external_order_id = payload.get("external_order_id") or nested.get("external_order_id")
 
     session: Session = next(get_session())
     try:

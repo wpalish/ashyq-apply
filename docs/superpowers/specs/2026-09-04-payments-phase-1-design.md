@@ -64,8 +64,8 @@ header. Endpoints this phase uses:
 
 | Purpose | Call |
 |---|---|
-| Invoice by phone | `POST /invoices` — `amount` (whole tenge), `phone` (`8XXXXXXXXXX`), `description`, `external_order_id`; async, returns status `processing` |
-| Invoice by QR | `POST /invoices/qr` — synchronous, returns status `pending` and a `qr_expires_at` a few minutes out |
+| Invoice by phone | `POST /invoices` — `amount` (whole tenge), `phone` (`8XXXXXXXXXX`), `description`, `external_order_id`; 201 with `id`, `status` (`processing`), `amount`, `created_at` |
+| Invoice by QR | `POST /invoices/qr` — 201 with `status` `pending` plus `qr_token`, `qr_image_url` and a `qr_expires_at` a few minutes out |
 | Status read | `GET /invoices/{id}` — `processing` / `pending` / `paid` / `cancelled` / `expired` / `partially_refunded` |
 | Cancel | `POST /invoices/{id}/cancel` — pending or processing only; QR cancellation is not supported |
 | Sandbox | `POST /invoices/{invoice}/simulate-status` |
@@ -78,12 +78,14 @@ Error shapes we must handle by name, not by guessing: `duplicate_idempotency_key
 `amount_must_be_whole_tenge`, `request_rate_limited` (429, honour `Retry-After`),
 and 422 validation payloads of the form `{"message": ..., "errors": {field: [...]}}`.
 
-**Verification obligation.** The table above was read from ApiPay's published
-OpenAPI document. Before the adapter is considered done, the implementation must
-re-read `openapi.yaml` from the published spec and reconcile field names, enum
-values and the webhook body against it. Any divergence is a bug in our adapter,
-and the contract test fixtures must be regenerated from the spec rather than from
-our assumptions.
+**Verified 2026-09-04** against `bazarbaykz/apipay-docs`, `openapi.yaml`. Three
+things this reconciliation corrected in an earlier draft of this document:
+
+* the QR payload is `qr_token` with `qr_image_url` beside it — not `qr_payload`;
+* invoice creation answers `201`, not `200`;
+* the webhook carries the invoice fields at the **top level** of the body and
+  repeats them in a nested object. The route reads the top level and falls back
+  to the nesting, and both shapes are tested.
 
 ## 5. Data model
 

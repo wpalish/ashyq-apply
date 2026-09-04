@@ -18,8 +18,14 @@ def order(paid_client, case_id) -> dict:
 
 
 def _body(order: dict, status: str = "paid", event: str = "invoice.status_changed") -> bytes:
+    """The shape ApiPay documents: invoice fields at the top level."""
+    return json.dumps({"event": event, "id": order["id"], "status": status}).encode()
+
+
+def _nested_body(order: dict, status: str = "paid") -> bytes:
+    """The nested repeat of the same fields, which we also accept."""
     return json.dumps(
-        {"event": event, "data": {"id": order["id"], "status": status}}
+        {"event": "invoice.status_changed", "invoice": {"id": order["id"], "status": status}}
     ).encode()
 
 
@@ -77,9 +83,14 @@ def test_a_replayed_event_unlocks_once(paid_client, order) -> None:
         assert session.query(Entitlement).count() == 1
 
 
+def test_the_nested_payload_shape_also_unlocks(paid_client, order) -> None:
+    assert _post(paid_client, _nested_body(order)).status_code == 200
+    assert _full_access(paid_client, order["profile_id"]) is True
+
+
 def test_an_unknown_order_is_acknowledged_but_ignored(paid_client) -> None:
     body = json.dumps(
-        {"event": "invoice.status_changed", "data": {"id": "no-such-order", "status": "paid"}}
+        {"event": "invoice.status_changed", "id": "no-such-order", "status": "paid"}
     ).encode()
     assert _post(paid_client, body).status_code == 200
 
