@@ -183,3 +183,76 @@ def event_loop():
     loop = asyncio.new_event_loop()
     yield loop
     loop.close()
+
+
+#: The secret the payment fixtures sign webhooks with. Tests that forge a
+#: signature must use this exact value.
+WEBHOOK_SECRET = "whsec-test"
+
+
+@pytest.fixture
+def paid_client(tmp_path, monkeypatch, corpus_dir):
+    """An API client with payments switched on, behind the fake provider.
+
+    Payments are configured through the environment, not by patching
+    ``app.config.get_settings``. Modules bind that name at import time, so a
+    patch reaches only modules imported after it — which made the outcome
+    depend on which test module ran first. The environment reaches all of them.
+    """
+    from fastapi.testclient import TestClient
+
+    from app.config import Settings, get_settings
+    from app.payments.fake import reset_shared_fake
+
+    monkeypatch.setenv("UNIMATCH_PAYMENTS_ENABLED", "true")
+    monkeypatch.setenv("UNIMATCH_PAYMENTS_PROVIDER", "fake")
+    monkeypatch.setenv("UNIMATCH_APIPAY_WEBHOOK_SECRET", WEBHOOK_SECRET)
+
+    settings = Settings(
+        demo_mode=True,
+        database_url=f"sqlite:///{tmp_path / 'payments.db'}",
+        cache_dir=tmp_path / "cache",
+        export_dir=tmp_path / "exports",
+        corpus_dir=corpus_dir,
+        fetch_delay_seconds=0.0,
+        enable_browser_tier=False,
+        payments_enabled=True,
+        payments_provider="fake",
+        apipay_webhook_secret=WEBHOOK_SECRET,
+    )
+    settings.ensure_dirs()
+    get_settings.cache_clear()
+    reset_shared_fake()
+    monkeypatch.setattr("app.config.get_settings", lambda: settings)
+
+    import app.db as db_module
+
+    engine = db_module.create_engine(
+        settings.database_url, connect_args={"check_same_thread": False}
+    )
+    monkeypatch.setattr(db_module, "engine", engine)
+    monkeypatch.setattr(db_module, "SessionLocal", db_module.sessionmaker(bind=engine, future=True))
+    db_module.migrate_to_head(settings.database_url)
+
+    from app.main import app
+
+    with TestClient(app) as client:
+        yield client
+    get_settings.cache_clear()
+    reset_shared_fake()
+
+
+@pytest.fixture
+def case_id(paid_client) -> str:
+    """One applicant case owned by the paid client's tenant."""
+    from app.corpus.demo_profile import DEMO_PROFILE
+
+    return paid_client.post("/api/profiles", json=DEMO_PROFILE.model_dump(mode="json")).json()["id"]
+
+
+def sign_webhook(body: bytes) -> str:
+    """The signature ApiPay would send for this body."""
+    import hashlib
+    import hmac
+
+    return "sha256=" + hmac.new(WEBHOOK_SECRET.encode(), body, hashlib.sha256).hexdigest()

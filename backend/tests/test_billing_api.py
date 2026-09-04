@@ -2,64 +2,6 @@
 
 from __future__ import annotations
 
-import pytest
-from fastapi.testclient import TestClient
-
-from app.corpus.demo_profile import DEMO_PROFILE
-
-
-@pytest.fixture
-def paid_client(tmp_path, monkeypatch, corpus_dir):
-    """A client with payments switched on and the fake provider behind them."""
-    from app.config import Settings, get_settings
-    from app.payments.fake import reset_shared_fake
-
-    # Modules bind `get_settings` by name at import time, so patching
-    # app.config.get_settings only reaches modules imported after the patch —
-    # which makes it depend on which test ran first. The environment reaches
-    # every one of them, whenever they were imported.
-    monkeypatch.setenv("UNIMATCH_PAYMENTS_ENABLED", "true")
-    monkeypatch.setenv("UNIMATCH_PAYMENTS_PROVIDER", "fake")
-    monkeypatch.setenv("UNIMATCH_APIPAY_WEBHOOK_SECRET", "whsec-test")
-
-    settings = Settings(
-        demo_mode=True,
-        database_url=f"sqlite:///{tmp_path / 'billing.db'}",
-        cache_dir=tmp_path / "cache",
-        export_dir=tmp_path / "exports",
-        corpus_dir=corpus_dir,
-        fetch_delay_seconds=0.0,
-        enable_browser_tier=False,
-        payments_enabled=True,
-        payments_provider="fake",
-        apipay_webhook_secret="whsec-test",
-    )
-    settings.ensure_dirs()
-    get_settings.cache_clear()
-    reset_shared_fake()
-    monkeypatch.setattr("app.config.get_settings", lambda: settings)
-
-    import app.db as db_module
-
-    engine = db_module.create_engine(
-        settings.database_url, connect_args={"check_same_thread": False}
-    )
-    monkeypatch.setattr(db_module, "engine", engine)
-    monkeypatch.setattr(db_module, "SessionLocal", db_module.sessionmaker(bind=engine, future=True))
-    db_module.migrate_to_head(settings.database_url)
-
-    from app.main import app
-
-    with TestClient(app) as c:
-        yield c
-    get_settings.cache_clear()
-    reset_shared_fake()
-
-
-@pytest.fixture
-def case_id(paid_client) -> str:
-    return paid_client.post("/api/profiles", json=DEMO_PROFILE.model_dump(mode="json")).json()["id"]
-
 
 def test_pricing_states_the_amount_and_the_currency(paid_client) -> None:
     body = paid_client.get("/api/billing/pricing").json()

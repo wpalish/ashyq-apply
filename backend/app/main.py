@@ -21,6 +21,7 @@ from app.api import (
     routes_profile,
     routes_research,
     routes_results,
+    routes_webhooks,
 )
 from app.config import get_settings
 from app.db import init_db
@@ -86,6 +87,7 @@ for module in (
     routes_profile,
     routes_research,
     routes_results,
+    routes_webhooks,
 ):
     app.include_router(module.router)
 
