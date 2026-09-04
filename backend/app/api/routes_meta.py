@@ -83,6 +83,7 @@ def vocabulary() -> dict:
         "scholarship_type": [e.value for e in enums.ScholarshipType],
         "application_mode": [e.value for e in enums.ApplicationMode],
         "document_owner": [e.value for e in enums.DocumentOwner],
+        "applicant_status": [e.value for e in enums.ApplicantStatus],
     }
 
 

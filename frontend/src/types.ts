@@ -437,3 +437,78 @@ export interface ApplicantCase {
   created_at: string;
   updated_at: string;
 }
+
+/* --- Community ---------------------------------------------------------
+ *
+ * `status` is nullable everywhere it appears. Null means the person has not
+ * said, which the interface shows as "not stated" — never as waitlist.
+ */
+
+export type ApplicantStatus = 'accepted' | 'waitlist';
+
+export interface PersonCard {
+  user_id: string;
+  display_name: string;
+  status: ApplicantStatus | null;
+  target_city: string;
+  target_major: string;
+  universities: string[];
+  bio: string;
+}
+
+export interface MyProfile {
+  joined: boolean;
+  profile: PersonCard | null;
+}
+
+export interface ProfileInput {
+  status: ApplicantStatus | null;
+  target_city: string;
+  target_major: string;
+  bio: string;
+  universities: string[];
+}
+
+export interface AuthorRef {
+  user_id: string;
+  display_name: string;
+  status: ApplicantStatus | null;
+}
+
+export interface PostView {
+  id: string;
+  author: AuthorRef;
+  body: string;
+  tags: string[];
+  reply_count: number;
+  created_at: string;
+}
+
+export interface ReplyView {
+  id: string;
+  post_id: string;
+  author: AuthorRef;
+  body: string;
+  created_at: string;
+}
+
+/** A keyset page. `next_cursor` is null on the last one. */
+export interface Page<T> {
+  items: T[];
+  next_cursor: string | null;
+}
+
+export interface PeopleFilters {
+  city?: string;
+  university?: string;
+  major?: string;
+  status?: string;
+}
+
+export interface FeedFilters {
+  tag?: string;
+  author?: string;
+  city?: string;
+  university?: string;
+  status?: string;
+}

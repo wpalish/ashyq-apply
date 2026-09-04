@@ -13,13 +13,28 @@ import type {
   AuthStatus,
   ClaimOut,
   Conflict,
+  FeedFilters,
+  MyProfile,
+  Page,
+  PeopleFilters,
+  PersonCard,
+  PostView,
+  ProfileInput,
   ProfileValidationReport,
   ProgramResult,
+  ReplyView,
   RunView,
   ShortlistSummary,
   StoredProfile,
   UserDecision,
 } from '@/types';
+
+/** Drop empty filters, then build the query string. `?city=` matches nothing. */
+function query(params: Record<string, string | null | undefined>): string {
+  const pairs = Object.entries(params).filter(([, value]) => value);
+  if (pairs.length === 0) return '';
+  return `?${new URLSearchParams(pairs as [string, string][]).toString()}`;
+}
 
 export class ApiError extends Error {
   constructor(public status: number, message: string, public code?: string) {
@@ -124,4 +139,25 @@ export const api = {
 
   exportUrl: (runId: string, fmt: 'csv' | 'json' | 'xlsx', decision?: string) =>
     `/api/runs/${runId}/export.${fmt}${decision ? `?decision=${decision}` : ''}`,
+
+  // --- Community ---
+  // Paging is a cursor, never an offset: two posts written in the same second
+  // would make an offset page repeat one and drop the other.
+  socialMe: () => request<MyProfile>('/api/social/me'),
+  saveSocialProfile: (payload: ProfileInput) =>
+    request<PersonCard>('/api/social/me', { method: 'PUT', body: JSON.stringify(payload) }),
+  people: (filters: PeopleFilters = {}, cursor?: string | null) =>
+    request<Page<PersonCard>>(`/api/social/people${query({ ...filters, cursor })}`),
+  person: (userId: string) => request<PersonCard>(`/api/social/people/${userId}`),
+  feed: (filters: FeedFilters = {}, cursor?: string | null) =>
+    request<Page<PostView>>(`/api/social/feed${query({ ...filters, cursor })}`),
+  createPost: (body: string) =>
+    request<PostView>('/api/social/posts', { method: 'POST', body: JSON.stringify({ body }) }),
+  thread: (postId: string, cursor?: string | null) =>
+    request<Page<ReplyView>>(`/api/social/posts/${postId}/replies${query({ cursor })}`),
+  createReply: (postId: string, body: string) =>
+    request<ReplyView>(`/api/social/posts/${postId}/replies`, {
+      method: 'POST',
+      body: JSON.stringify({ body }),
+    }),
 };

@@ -134,6 +134,32 @@ class TestJoining:
         assert profile["universities"] == ["KBTU"]
         assert len(client.get("/api/social/people").json()["items"]) == 1
 
+    def test_saving_an_unchanged_university_list_is_not_an_error(self, client):
+        """Editing a bio without touching the universities is the commonest
+        edit there is. Replacing the whole collection made the new rows collide
+        with the old ones on `uq_profile_university` and returned a 500."""
+        register(client, "editor")
+        join(client, universities=["KBTU", "Nazarbayev University"], bio="first")
+        join(client, universities=["KBTU", "Nazarbayev University"], bio="second")
+
+        profile = client.get("/api/social/me").json()["profile"]
+        assert profile["bio"] == "second"
+        assert profile["universities"] == ["KBTU", "Nazarbayev University"]
+
+    def test_respelling_a_university_keeps_one_entry(self, client):
+        register(client, "respeller")
+        join(client, universities=["KBTU"])
+        join(client, universities=["K.B.T.U."])
+
+        assert client.get("/api/social/me").json()["profile"]["universities"] == ["K.B.T.U."]
+
+    def test_removing_a_university_removes_it(self, client):
+        register(client, "remover")
+        join(client, universities=["KBTU", "KIMEP"])
+        join(client, universities=["KIMEP"])
+
+        assert client.get("/api/social/me").json()["profile"]["universities"] == ["KIMEP"]
+
     def test_a_status_the_product_does_not_define_is_refused(self, client):
         register(client, "timur")
         assert client.put("/api/social/me", json={"status": "admitted"}).status_code == 422

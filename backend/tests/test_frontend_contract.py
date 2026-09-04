@@ -32,6 +32,7 @@ CONTRACT: dict[str, type] = {
     "ApplicationMode": enums.ApplicationMode,
     "DocumentOwner": enums.DocumentOwner,
     "DegreeLevel": enums.DegreeLevel,
+    "ApplicantStatus": enums.ApplicantStatus,
 }
 
 
@@ -136,3 +137,25 @@ def test_the_scholarship_interface_carries_every_decomposed_state(types_source):
         f"types.ts declares fields the backend does not have: "
         f"{sorted(declared - set(Scholarship.model_fields))}"
     )
+
+
+SOCIAL_TS = Path(__file__).resolve().parents[2] / "frontend" / "src" / "components" / "social.tsx"
+
+
+def test_the_composer_enforces_the_same_limits_as_the_database():
+    """The composer counts characters down for the person writing a post.
+
+    If its copy of the limit drifted above the backend's, the count would reach
+    zero after the server had already started refusing the post — the person
+    would be told they had room they did not have.
+    """
+    from app.domain import social
+
+    source = SOCIAL_TS.read_text(encoding="utf-8")
+    for name, expected in (
+        ("POST_MAX_CHARS", social.POST_MAX_CHARS),
+        ("BIO_MAX_CHARS", social.BIO_MAX_CHARS),
+    ):
+        match = re.search(rf"export const {name} = (\d+);", source)
+        assert match, f"social.tsx does not declare {name}"
+        assert int(match.group(1)) == expected, f"{name} disagrees with the backend"

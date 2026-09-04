@@ -166,12 +166,27 @@ def join_or_update(
     # rather than letting the unique constraint fire turns a 500 into the
     # obvious behaviour: the first spelling wins and the list is what the
     # person meant.
-    chosen: dict[str, str] = {}
+    wanted: dict[str, str] = {}
     for name in payload.universities:
         key = normalize_key(name)
         if key:
-            chosen.setdefault(key, name)
-    profile.universities = [SocialProfileUniversity(name=name) for name in chosen.values()]
+            wanted.setdefault(key, name)
+
+    # Reconcile the rows rather than replacing the collection. Replacing it
+    # made SQLAlchemy insert the new rows before deleting the old ones, so
+    # saving a profile without changing its universities — editing a bio, the
+    # commonest edit there is — collided with `uq_profile_university` and
+    # failed with a 500.
+    existing = {row.name_key: row for row in profile.universities}
+    for key, row in existing.items():
+        if key not in wanted:
+            profile.universities.remove(row)
+    for key, name in wanted.items():
+        current = existing.get(key)
+        if current is None:
+            profile.universities.append(SocialProfileUniversity(name=name))
+        else:
+            current.name = name  # same university, possibly a new spelling
 
     session.commit()
     session.refresh(profile)

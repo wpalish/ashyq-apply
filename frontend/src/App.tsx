@@ -17,14 +17,24 @@ import { ApprovedScreen } from '@/screens/ApprovedScreen';
 import { DocumentsScreen } from '@/screens/DocumentsScreen';
 import { SourcesScreen } from '@/screens/SourcesScreen';
 import { ExportScreen } from '@/screens/ExportScreen';
+import { FeedScreen } from '@/screens/FeedScreen';
+import { DiscoverScreen } from '@/screens/DiscoverScreen';
+import { PersonScreen } from '@/screens/PersonScreen';
 import { Chip } from '@/components/primitives';
 import { api } from '@/api/client';
+import type { PersonCard } from '@/types';
 
 export type ScreenId =
   | 'profile' | 'preferences' | 'progress' | 'shortlist' | 'funding'
-  | 'approved' | 'documents' | 'sources' | 'export';
+  | 'approved' | 'documents' | 'sources' | 'export'
+  | 'feed' | 'discover' | 'me' | 'person';
 
-const SCREENS: { id: ScreenId; num: string; label: string; group: string }[] = [
+/**
+ * The numbers are not decoration: the case screens are a sequence, and 04
+ * genuinely cannot be read before 03 has produced anything. Community is not a
+ * sequence, so those entries carry no number.
+ */
+const SCREENS: { id: ScreenId; num?: string; label: string; group: string }[] = [
   { id: 'profile', num: '01', label: 'Applicant profile', group: 'Prepare' },
   { id: 'preferences', num: '02', label: 'Preferences & budget', group: 'Prepare' },
   { id: 'progress', num: '03', label: 'Research progress', group: 'Research' },
@@ -34,6 +44,9 @@ const SCREENS: { id: ScreenId; num: string; label: string; group: string }[] = [
   { id: 'approved', num: '07', label: 'Approved universities', group: 'Decide' },
   { id: 'documents', num: '08', label: 'Documents & deadlines', group: 'Decide' },
   { id: 'export', num: '09', label: 'Export & data deletion', group: 'Decide' },
+  { id: 'feed', label: 'Feed', group: 'Community' },
+  { id: 'discover', label: 'Find applicants', group: 'Community' },
+  { id: 'me', label: 'My community profile', group: 'Community' },
 ];
 
 /** "1 conflict", not "1 conflicts". */
@@ -50,6 +63,11 @@ export default function App() {
     cases, savedProfile, switchCase, newCase,
   } = useStore();
   const [screen, setScreen] = useState<ScreenId>('profile');
+  // Who I am in the community, and whose profile is open. The community has no
+  // gates, so this is the only navigation state it needs.
+  const [me, setMe] = useState<PersonCard | null>(null);
+  const [joined, setJoined] = useState(false);
+  const [personId, setPersonId] = useState<string | null>(null);
   const [theme, setTheme] = useState<Theme>(() => {
     try {
       return (window.localStorage.getItem(THEME_KEY) as Theme) ?? 'system';
@@ -68,6 +86,12 @@ export default function App() {
       /* a browser blocking storage should not break theming */
     }
   }, [theme]);
+
+  useEffect(() => {
+    api.socialMe()
+      .then((state) => { setJoined(state.joined); setMe(state.profile); })
+      .catch(() => { /* the community is optional; its absence must not block the case */ });
+  }, []);
 
   // Follow the workflow forward on its own, but never take the user backwards.
   useEffect(() => {
@@ -91,6 +115,11 @@ export default function App() {
     approved: hasResults ? null : 'No results yet',
     documents: withChecklists > 0 ? null : 'Approve programmes, then collect documents',
     export: run ? null : 'Start research first',
+    // The community does not depend on a research run, so nothing gates it.
+    feed: null,
+    discover: null,
+    me: null,
+    person: null,
   };
 
   const badges: Partial<Record<ScreenId, number>> = {
@@ -128,7 +157,7 @@ export default function App() {
                   data-testid={`nav-${s.id}`}
                   onClick={() => setScreen(s.id)}
                 >
-                  <span className="nav__num">{s.num}</span>
+                  <span className="nav__num">{s.num ?? ''}</span>
                   <span>{s.label}</span>
                   {badges[s.id] !== undefined && <span className="nav__badge">{badges[s.id]}</span>}
                 </button>
@@ -223,6 +252,25 @@ export default function App() {
           {screen === 'approved' && <ApprovedScreen onCollect={() => setScreen('documents')} />}
           {screen === 'documents' && <DocumentsScreen />}
           {screen === 'export' && <ExportScreen />}
+          {screen === 'feed' && (
+            <FeedScreen
+              joined={joined}
+              onOpenPerson={(id) => { setPersonId(id); setScreen('person'); }}
+              onJoin={() => setScreen('me')}
+            />
+          )}
+          {screen === 'discover' && (
+            <DiscoverScreen onOpenPerson={(id) => { setPersonId(id); setScreen('person'); }} />
+          )}
+          {(screen === 'me' || screen === 'person') && (
+            <PersonScreen
+              key={screen === 'me' ? 'me' : personId}
+              userId={screen === 'me' ? null : personId}
+              myUserId={me?.user_id ?? null}
+              onOpenPerson={(id) => { setPersonId(id); setScreen('person'); }}
+              onProfileSaved={(saved) => { setMe(saved); setJoined(true); }}
+            />
+          )}
         </main>
       </div>
     </div>
