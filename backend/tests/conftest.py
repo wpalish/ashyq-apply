@@ -190,40 +190,51 @@ def event_loop():
 WEBHOOK_SECRET = "whsec-test"
 
 
+def configure_from_env(monkeypatch, tmp_path, corpus_dir, **overrides) -> None:
+    """Point the real ``get_settings`` at a throwaway environment.
+
+    Deliberately not ``monkeypatch.setattr("app.config.get_settings", ...)``.
+    Modules do ``from app.config import get_settings`` at import time, so a
+    module first imported while that patch was active binds the patch's lambda
+    permanently — and then reports the *first* test's settings for the rest of
+    the session, whatever later tests do. Configuring the environment and
+    clearing the cache keeps one real settings function that every module sees.
+    """
+    from app.config import get_settings
+
+    env = {
+        "UNIMATCH_DEMO_MODE": "true",
+        "UNIMATCH_DATABASE_URL": f"sqlite:///{tmp_path / 'payments.db'}",
+        "UNIMATCH_CACHE_DIR": str(tmp_path / "cache"),
+        "UNIMATCH_EXPORT_DIR": str(tmp_path / "exports"),
+        "UNIMATCH_CORPUS_DIR": str(corpus_dir),
+        "UNIMATCH_FETCH_DELAY_SECONDS": "0.0",
+        "UNIMATCH_ENABLE_BROWSER_TIER": "false",
+    }
+    env.update(overrides)
+    for key, value in env.items():
+        monkeypatch.setenv(key, value)
+    get_settings.cache_clear()
+
+
 @pytest.fixture
 def paid_client(tmp_path, monkeypatch, corpus_dir):
-    """An API client with payments switched on, behind the fake provider.
-
-    Payments are configured through the environment, not by patching
-    ``app.config.get_settings``. Modules bind that name at import time, so a
-    patch reaches only modules imported after it — which made the outcome
-    depend on which test module ran first. The environment reaches all of them.
-    """
+    """An API client with payments switched on, behind the fake provider."""
     from fastapi.testclient import TestClient
 
-    from app.config import Settings, get_settings
+    from app.config import get_settings
     from app.payments.fake import reset_shared_fake
 
-    monkeypatch.setenv("UNIMATCH_PAYMENTS_ENABLED", "true")
-    monkeypatch.setenv("UNIMATCH_PAYMENTS_PROVIDER", "fake")
-    monkeypatch.setenv("UNIMATCH_APIPAY_WEBHOOK_SECRET", WEBHOOK_SECRET)
-
-    settings = Settings(
-        demo_mode=True,
-        database_url=f"sqlite:///{tmp_path / 'payments.db'}",
-        cache_dir=tmp_path / "cache",
-        export_dir=tmp_path / "exports",
-        corpus_dir=corpus_dir,
-        fetch_delay_seconds=0.0,
-        enable_browser_tier=False,
-        payments_enabled=True,
-        payments_provider="fake",
-        apipay_webhook_secret=WEBHOOK_SECRET,
+    configure_from_env(
+        monkeypatch,
+        tmp_path,
+        corpus_dir,
+        UNIMATCH_PAYMENTS_ENABLED="true",
+        UNIMATCH_PAYMENTS_PROVIDER="fake",
+        UNIMATCH_APIPAY_WEBHOOK_SECRET=WEBHOOK_SECRET,
     )
-    settings.ensure_dirs()
-    get_settings.cache_clear()
     reset_shared_fake()
-    monkeypatch.setattr("app.config.get_settings", lambda: settings)
+    settings = get_settings()
 
     import app.db as db_module
 

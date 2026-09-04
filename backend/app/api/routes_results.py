@@ -8,10 +8,13 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Response
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
+from app.api.paywall import access_for_run, require_full_access
 from app.api.tenancy import owned_run
+from app.config import get_settings
 from app.db import get_session
 from app.export import tabular
 from app.models import AuditEvent, ClaimRow, ConflictRow, ProgramResultRow
+from app.payments.entitlements import free_view, truncate_shortlist
 from app.schemas.result import DecisionIn, ProgramResult
 from app.security import Principal, get_principal
 
@@ -51,7 +54,7 @@ def list_results(
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
 ) -> list[ProgramResult]:
-    owned_run(session, run_id, principal)
+    _profile_id, allowed = access_for_run(session, run_id, principal)
     rows = _results(
         session,
         run_id,
@@ -60,7 +63,13 @@ def list_results(
         funding=funding,
         country=country,
     )
-    return [ProgramResult.model_validate(r.payload) for r in rows]
+    results = [ProgramResult.model_validate(r.payload) for r in rows]
+    if allowed:
+        return results
+    # Truncated, not refused: a free user must see that results exist and
+    # roughly what they are, or there is nothing to buy.
+    settings = get_settings()
+    return [free_view(r) for r in truncate_shortlist(results, settings.free_shortlist_rows)]
 
 
 @router.get("/summary", response_model=ShortlistSummary)
@@ -97,8 +106,7 @@ def get_result(
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
 ) -> ProgramResult:
-    owned_run(session, run_id, principal)
-    owned_run(session, run_id, principal)
+    require_full_access(session, run_id, principal)
     row = session.get(ProgramResultRow, result_id)
     if row is None or row.run_id != run_id:
         raise HTTPException(404, "Result not found")
@@ -156,7 +164,7 @@ def list_claims(
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
 ) -> list[dict]:
-    owned_run(session, run_id, principal)
+    require_full_access(session, run_id, principal)
     q = session.query(ClaimRow).filter(ClaimRow.run_id == run_id)
     if result_id:
         q = q.filter(ClaimRow.result_id == result_id)
@@ -174,7 +182,7 @@ def list_conflicts(
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
 ) -> list[dict]:
-    owned_run(session, run_id, principal)
+    require_full_access(session, run_id, principal)
     rows = session.query(ConflictRow).filter(ConflictRow.run_id == run_id).all()
     return [{"id": c.id, "result_id": c.result_id, **c.payload} for c in rows]
 
@@ -186,7 +194,7 @@ def open_questions(
     session: Session = Depends(get_session),
 ) -> list[dict]:
     """Everything the pipeline could not settle from official sources."""
-    owned_run(session, run_id, principal)
+    require_full_access(session, run_id, principal)
     out: list[dict] = []
     for row in _results(session, run_id):
         result = ProgramResult.model_validate(row.payload)
@@ -223,6 +231,7 @@ def export(
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
 ) -> Response:
+    require_full_access(session, run_id, principal)
     run = owned_run(session, run_id, principal)
     rows = _results(session, run_id, decision=decision)
     results = [ProgramResult.model_validate(r.payload) for r in rows]

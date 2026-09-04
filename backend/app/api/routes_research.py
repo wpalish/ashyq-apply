@@ -9,6 +9,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
+from app.api.paywall import require_full_access
 from app.api.tenancy import owned_profile, owned_run
 from app.config import get_settings
 from app.db import get_session
@@ -23,6 +24,7 @@ from app.models import (
     ResearchRun,
 )
 from app.models.base import ensure_utc
+from app.payments.entitlements import has_full_access
 from app.pipeline.state import RunState, is_lease_expired
 from app.security import Principal, get_principal
 
@@ -164,12 +166,22 @@ def start_run(
     settings = get_settings()
     owned_profile(session, payload.profile_id, principal)
 
+    # An unpaid case is not merely shown less — it is allowed to fetch less, so
+    # a free run costs us little. Paying afterwards cannot widen this run; it
+    # queues a new one.
+    full_access = has_full_access(session, principal.organization_id, payload.profile_id)
+    candidate_limit = payload.candidate_limit
+    if not full_access:
+        candidate_limit = min(candidate_limit or settings.free_candidate_limit,
+                              settings.free_candidate_limit)
+
     run = ResearchRun(
         profile_id=payload.profile_id,
         stage=PipelineStage.QUEUED.value,
         demo_mode=settings.demo_mode if payload.demo_mode is None else payload.demo_mode,
-        candidate_limit=payload.candidate_limit,
+        candidate_limit=candidate_limit,
         verify_limit=payload.verify_limit,
+        access_tier="full" if full_access else "free",
         stage_state=RunState.load(None).dump(),
     )
     session.add(run)
@@ -315,6 +327,7 @@ def collect_documents(
     session: Session = Depends(get_session),
 ) -> RunView:
     """Deep document collection, for approved and maybe rows only."""
+    require_full_access(session, run_id, principal)
     run = owned_run(session, run_id, principal)
     approved = (
         session.query(ProgramResultRow)
