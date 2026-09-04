@@ -180,6 +180,17 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const resultsCountRef = useRef(0);
 
   const fail = useCallback((e: unknown) => {
+    // A 401 is not something the user can act on from this screen. AuthGate
+    // asks /api/auth/status once, at mount, so a session that expires mid-use
+    // otherwise became "Something went wrong. Authentication required." on a
+    // page with no way back to signing in. Reloading remounts AuthGate, which
+    // re-asks and renders the sign-in form. The guard lives here because all
+    // thirteen error paths already route through `fail`; putting it at the
+    // call sites would leave whichever one was added next still broken.
+    if (e instanceof ApiError && e.status === 401) {
+      window.location.reload();
+      return;
+    }
     setError(e instanceof ApiError ? e.message : String(e));
   }, []);
 

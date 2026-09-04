@@ -303,7 +303,7 @@ export default function App() {
             </span>
           )}
           <AccountMenu onSignedOut={() => window.location.reload()} />
-          <button className="btn btn--sm btn--ghost" type="button" onClick={async () => {
+          <button className="btn btn--sm btn--ghost" data-testid="sign-out" type="button" onClick={async () => {
             await api.logout(); window.location.reload();
           }}>Sign out</button>
         </header>

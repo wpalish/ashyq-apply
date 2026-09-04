@@ -58,6 +58,9 @@ jobs:
       - run: backend/.venv/bin/pip install -r backend/requirements-dev.txt
       - run: npx --prefix frontend playwright install --with-deps chromium
       - run: npm run e2e --prefix frontend
+      # Sequential, never parallel: the auth config reuses ports 5173 and 8099
+      # and refuses to adopt a server it did not start.
+      - run: npm run e2e:auth --prefix frontend
       - if: failure()
         uses: actions/upload-artifact@v4
         with:

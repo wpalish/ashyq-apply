@@ -12,6 +12,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "e2e": "playwright test",
+    "e2e:auth": "playwright test --config=playwright.auth.config.ts",
     "e2e:report": "playwright show-report"
   },
   "dependencies": {

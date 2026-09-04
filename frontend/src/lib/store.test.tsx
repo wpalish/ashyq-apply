@@ -29,7 +29,7 @@ const REAL_PROFILE: StoredProfile = {
 } as unknown as StoredProfile;
 
 function Probe() {
-  const { profileDraft, savedProfile, restored } = useStore();
+  const { profileDraft, savedProfile, restored, error } = useStore();
   const context = profileDraft.context as Record<string, unknown>;
   return (
     <div>
@@ -37,6 +37,7 @@ function Probe() {
       <span data-testid="display">{String(profileDraft.display_name)}</span>
       <span data-testid="saved">{savedProfile?.id ?? 'none'}</span>
       <span data-testid="restored">{String(restored)}</span>
+      <span data-testid="error">{error ?? ''}</span>
     </div>
   );
 }
@@ -304,6 +305,54 @@ describe('unsaved edits', () => {
 
     await waitFor(() =>
       expect(screen.getByTestId('saved-name')).toHaveTextContent('Aisha (real applicant)'),
+    );
+  });
+});
+
+describe('a session that dies mid-use', () => {
+  /**
+   * With auth on, `AuthGate` asks `/api/auth/status` exactly once, at mount.
+   * Every later 401 arrived at `fail`, which renders any ApiError as a topbar
+   * banner - so an expired session read as "Something went wrong.
+   * Authentication required." on a screen the user could no longer act on,
+   * with no way back to the sign-in form. The guard belongs in `fail`, which
+   * all thirteen call sites already route through, not at each of them.
+   */
+  it('reloads to the sign-in screen instead of showing an error banner', async () => {
+    const reload = vi.fn();
+    const original = window.location;
+    Object.defineProperty(window, 'location', {
+      configurable: true,
+      value: { ...original, reload },
+    });
+
+    try {
+      vi.spyOn(api, 'cases').mockRejectedValue(new ApiError(401, 'Authentication required.'));
+
+      render(
+        <StoreProvider>
+          <Probe />
+        </StoreProvider>,
+      );
+
+      await waitFor(() => expect(reload).toHaveBeenCalled());
+      expect(screen.queryByText(/Authentication required/)).not.toBeInTheDocument();
+    } finally {
+      Object.defineProperty(window, 'location', { configurable: true, value: original });
+    }
+  });
+
+  it('still shows the banner for errors that are not about authentication', async () => {
+    vi.spyOn(api, 'cases').mockRejectedValue(new ApiError(500, 'The database is unreachable.'));
+
+    render(
+      <StoreProvider>
+        <Probe />
+      </StoreProvider>,
+    );
+
+    await waitFor(() =>
+      expect(screen.getByText(/The database is unreachable/)).toBeInTheDocument(),
     );
   });
 });

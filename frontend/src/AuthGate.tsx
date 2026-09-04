@@ -127,28 +127,28 @@ export function AuthGate({ children }: { children: ReactNode }) {
           <>
             <label className="field">
               <span className="field__label">Your name</span>
-              <input autoComplete="name" required maxLength={120} value={name} onChange={(e) => setName(e.target.value)} />
+              <input data-testid="auth-name" autoComplete="name" required maxLength={120} value={name} onChange={(e) => setName(e.target.value)} />
             </label>
             <label className="field">
               <span className="field__label">Workspace name</span>
-              <input required maxLength={120} value={organization} onChange={(e) => setOrganization(e.target.value)} />
+              <input data-testid="auth-organization" required maxLength={120} value={organization} onChange={(e) => setOrganization(e.target.value)} />
             </label>
           </>
         )}
         <label className="field">
           <span className="field__label">Email</span>
-          <input type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+          <input data-testid="auth-email" type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
         </label>
         <label className="field">
           <span className="field__label">Password</span>
-          <input type="password" autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
+          <input data-testid="auth-password" type="password" autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
                  minLength={mode === 'register' ? 12 : undefined} required value={password}
                  onChange={(e) => setPassword(e.target.value)} />
           {mode === 'register' && <span className="field__hint">At least 12 characters.</span>}
         </label>
         {error && <div className="notice notice--risk" role="alert">{error}</div>}
         {notice && <div className="notice notice--ok small" data-testid="reset-notice">{notice}</div>}
-        <button className="btn btn--primary" disabled={busy} type="submit">
+        <button className="btn btn--primary" data-testid="auth-submit" disabled={busy} type="submit">
           {busy ? 'Please wait…' : mode === 'login' ? 'Sign in' : 'Create workspace'}
         </button>
         {mode === 'login' && (
@@ -160,7 +160,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
           </button>
         )}
         {status.registration_enabled && (
-          <button className="btn btn--ghost" type="button" onClick={() => {
+          <button className="btn btn--ghost" data-testid="auth-mode-toggle" type="button" onClick={() => {
             setMode(mode === 'login' ? 'register' : 'login'); setError('');
           }}>
             {mode === 'login' ? 'Create a new workspace' : 'I already have an account'}
