@@ -108,7 +108,10 @@ New file `backend/app/models/billing.py`, following the shape of `models/auth.py
 | `paid_at`, `failure_code` | |
 
 At most one non-terminal order per `(profile_id, kind)`, so a double click cannot
-open two invoices for the same case.
+open two invoices for the same case. This one is enforced in the service rather
+than by an index: the predicate would have to enumerate every non-terminal status
+on two dialects and be edited whenever a status is added. The unique
+`external_order_id` is the database-level backstop.
 
 **`payment_events`** — append-only. `order_id`, `source` (`webhook` / `poll`),
 `event_type`, `provider_status`, `signature_valid`, `received_at`, and a redacted
