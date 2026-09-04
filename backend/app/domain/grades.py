@@ -8,6 +8,7 @@ profile unless the caller accepts it explicitly.
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 
 from app.schemas.profile import GradeValue
@@ -55,6 +56,10 @@ METHODS: dict[str, ConversionMethod] = {
 }
 
 
+#: Scales the UK classification map may legitimately be offered against.
+_UK_SCALE = re.compile(r"\b(uk|british)\b")
+
+
 def available_methods(scale_label: str) -> list[ConversionMethod]:
     low = scale_label.lower()
     out = []
@@ -62,7 +67,16 @@ def available_methods(scale_label: str) -> list[ConversionMethod]:
         out.append(METHODS["kz5_to_us4_linear"])
     if "percent" in low or "/100" in low or "100" in low:
         out.append(METHODS["pct100_to_us4_linear"])
-        out.append(METHODS["uk_class_to_us4"])
+        # The UK map reads a mark through degree-classification bands, and its
+        # own caveat says UK marking is not linear. Against a Kazakh or
+        # Chinese percentage it is not a rougher approximation of the same
+        # thing - it is the wrong instrument, offered as a supported choice
+        # sitting beside the correct one. Only claim it when the scale says
+        # so.
+        # Whole words only: a substring test would read "Ukrainian" as "UK",
+        # which is the same mistake citizenship matching was fixed for.
+        if _UK_SCALE.search(low):
+            out.append(METHODS["uk_class_to_us4"])
     return out
 
 

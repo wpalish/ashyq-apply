@@ -265,6 +265,29 @@ class TestGradeConversion:
     def test_methods_are_offered_for_a_5_point_scale(self):
         assert any(m.key == "kz5_to_us4_linear" for m in available_methods("KZ 5-point"))
 
+    def test_a_uk_classification_map_is_not_offered_for_a_non_uk_percentage(self):
+        """The UK bands are a different instrument, not a second opinion.
+
+        `uk_class_to_us4` reads a mark through UK degree-classification bands,
+        and its own caveat says UK marking is not linear. Offered against a
+        Kazakh or Chinese percentage it does not approximate that scale badly
+        - it answers a question nobody asked, while looking like a supported
+        choice sitting next to the correct one.
+        """
+        offered = {m.key for m in available_methods("Percentage /100")}
+        assert "pct100_to_us4_linear" in offered
+        assert "uk_class_to_us4" not in offered
+
+    def test_the_uk_map_is_still_offered_when_the_scale_says_uk(self):
+        for label in ("UK percentage /100", "British undergraduate percentage /100"):
+            assert "uk_class_to_us4" in {m.key for m in available_methods(label)}
+
+    def test_ukrainian_is_not_read_as_uk(self):
+        """A substring test would offer a Ukrainian applicant the UK bands."""
+        offered = {m.key for m in available_methods("Ukrainian percentage /100")}
+        assert "uk_class_to_us4" not in offered
+        assert "pct100_to_us4_linear" in offered
+
     def test_a_grade_above_its_own_scale_is_rejected(self):
         with pytest.raises(ValueError, match="exceeds"):
             GradeValue(raw_value=6.0, raw_scale_max=5.0, raw_scale_label="KZ 5-point")
