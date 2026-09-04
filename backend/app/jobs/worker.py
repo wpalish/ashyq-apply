@@ -141,6 +141,20 @@ class Worker:
 
     async def _dispatch(self, session, store: JobStore, job: Job) -> None:
         """Route a job to its handler, in the job's own transaction."""
+        if job.kind == "payment_reconcile":
+            # A payment job has no run. Handle it before anything asks for one.
+            from app.jobs.payment_reconcile import reconcile_order
+            from app.models.billing import TERMINAL_ORDER_STATUSES
+
+            order_id = str((job.payload or {}).get("order_id", ""))
+            status = reconcile_order(session, order_id)
+            if status and status not in TERMINAL_ORDER_STATUSES:
+                # Not settled: fail softly so the queue's backoff re-runs it.
+                store.fail(job.id, f"order {order_id[:8]} still {status}", retry=True)
+                return
+            store.complete(job.id)
+            return
+
         run = session.get(ResearchRun, job.run_id) if job.run_id else None
         if run is None:
             store.fail(job.id, f"run {job.run_id} no longer exists", retry=False)
