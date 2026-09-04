@@ -286,12 +286,15 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
           hint="Optional. The file is read and discarded — it is never saved, and nothing is filled in until you say so."
         >
           <div className="stack stack--tight">
-            <input
-              type="file"
-              accept="application/pdf"
-              data-testid="transcript-file"
-              onChange={(e) => readTranscript(e.target.files?.[0])}
-            />
+            <Field label="Transcript (PDF)" htmlFor="transcript-file">
+              <input
+                id="transcript-file"
+                type="file"
+                accept="application/pdf"
+                data-testid="transcript-file"
+                onChange={(e) => readTranscript(e.target.files?.[0])}
+              />
+            </Field>
             {transcriptBusy && <p className="xs muted">Reading…</p>}
             {transcriptNote && (
               <p className="xs muted" data-testid="transcript-note">{transcriptNote}</p>

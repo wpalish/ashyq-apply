@@ -112,7 +112,7 @@ describe('reading a transcript', () => {
     expect(card).toHaveTextContent('4.82 out of 5');
     expect(card).toHaveTextContent('Grade point average: 4.82 out of 5');
     // Read, not applied: the applicant's own value is still theirs.
-    expect((draft.academics as Record<string, typeof GPA>).gpa.raw_value).toBe(4.8);
+    expect((draft.academics as { gpa: typeof GPA }).gpa.raw_value).toBe(4.8);
   });
 
   it('applies one suggestion when asked, and keeps the scale name already typed', async () => {
@@ -126,7 +126,7 @@ describe('reading a transcript', () => {
     fireEvent.click(await screen.findByTestId('apply-academics.gpa'));
 
     await waitFor(() => {
-      const gpa = (draft.academics as Record<string, typeof GPA>).gpa;
+      const gpa = (draft.academics as { gpa: typeof GPA }).gpa;
       expect(gpa.raw_value).toBe(4.82);
       // The document says 4.82 out of 5; it does not know what the applicant
       // calls their grading system, and must not blank what they wrote.
@@ -151,6 +151,6 @@ describe('reading a transcript', () => {
     fireEvent.change(screen.getByTestId('transcript-file'), { target: { files: [pdf()] } });
 
     expect(await screen.findByTestId('transcript-note')).toHaveTextContent('Upload the transcript as a PDF.');
-    expect((draft.academics as Record<string, typeof GPA>).gpa.raw_value).toBe(4.8);
+    expect((draft.academics as { gpa: typeof GPA }).gpa.raw_value).toBe(4.8);
   });
 });
