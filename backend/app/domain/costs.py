@@ -173,9 +173,7 @@ def compute_funding_gap(
     # Stacking needs consent from both sides: the award being added must say it
     # stacks, and the primary award must not forbid being combined.
     stackable_total = 0.0
-    others_offering_to_stack = [
-        s for s in eligible if s is not primary_s and s.stackable == "yes"
-    ]
+    others_offering_to_stack = [s for s in eligible if s is not primary_s and s.stackable == "yes"]
     if primary_s.stackable == "no":
         if others_offering_to_stack:
             warnings.append(

@@ -38,9 +38,7 @@ def client(tmp_path, monkeypatch, corpus_dir):
         settings.database_url, connect_args={"check_same_thread": False}
     )
     monkeypatch.setattr(db_module, "engine", engine)
-    monkeypatch.setattr(
-        db_module, "SessionLocal", db_module.sessionmaker(bind=engine, future=True)
-    )
+    monkeypatch.setattr(db_module, "SessionLocal", db_module.sessionmaker(bind=engine, future=True))
     # The schema is owned by Alembic now, so the test database is migrated the
     # same way production is rather than conjured with create_all().
     db_module.migrate_to_head(settings.database_url)
@@ -74,9 +72,7 @@ async def drain_queue(limit: int = 10) -> int:
 @pytest.fixture
 def finished_run(client):
     profile = client.post("/api/profiles", json=DEMO_PROFILE.model_dump(mode="json")).json()
-    queued = client.post(
-        "/api/runs", json={"profile_id": profile["id"], "demo_mode": True}
-    ).json()
+    queued = client.post("/api/runs", json={"profile_id": profile["id"], "demo_mode": True}).json()
     assert queued["stage"] == "queued"
     assert asyncio.run(drain_queue()) == 1, "the API must have enqueued exactly one job"
 
@@ -192,8 +188,10 @@ class TestResearchAndResults:
     def test_documents_are_collected_for_approved_rows(self, client, finished_run):
         _, run = finished_run
         result = client.get(f"/api/runs/{run['id']}/results").json()[0]
-        client.post(f"/api/runs/{run['id']}/results/{result['id']}/decision",
-                    json={"decision": "approved", "reason": "", "notes": ""})
+        client.post(
+            f"/api/runs/{run['id']}/results/{result['id']}/decision",
+            json={"decision": "approved", "reason": "", "notes": ""},
+        )
         assert client.post(f"/api/runs/{run['id']}/collect-documents").status_code == 202
         assert asyncio.run(drain_queue()) == 1
 
@@ -203,6 +201,165 @@ class TestResearchAndResults:
         updated = client.get(f"/api/runs/{run['id']}/results/{result['id']}").json()
         assert updated["checklist"] is not None
         assert updated["checklist"]["ordered_steps"]
+
+
+class TestStartingTwice:
+    """One profile, one research at a time.
+
+    idempotency_key was f"research:{run.id}" - unique per request by
+    construction, so it deduplicated nothing. Two clicks produced two runs,
+    both burning worker slots and outbound traffic.
+    """
+
+    def test_a_second_start_joins_the_run_already_in_flight(self, client):
+        profile = client.post("/api/profiles", json=DEMO_PROFILE.model_dump(mode="json")).json()
+        first = client.post("/api/runs", json={"profile_id": profile["id"], "demo_mode": True})
+        assert first.status_code == 202
+
+        second = client.post("/api/runs", json={"profile_id": profile["id"], "demo_mode": True})
+        assert second.status_code == 409, second.text
+        assert first.json()["id"] in second.json()["detail"]
+        assert len(client.get("/api/runs").json()) == 1
+
+    def test_an_idempotency_key_returns_the_same_run_rather_than_an_error(self, client):
+        profile = client.post("/api/profiles", json=DEMO_PROFILE.model_dump(mode="json")).json()
+        body = {"profile_id": profile["id"], "demo_mode": True}
+        headers = {"Idempotency-Key": "the-same-click"}
+
+        first = client.post("/api/runs", json=body, headers=headers)
+        second = client.post("/api/runs", json=body, headers=headers)
+
+        assert first.status_code == 202
+        assert second.status_code == 202, second.text
+        assert first.json()["id"] == second.json()["id"]
+        assert len(client.get("/api/runs").json()) == 1
+
+    def test_a_new_run_is_allowed_once_the_previous_one_is_finished(self, client, finished_run):
+        profile, _ = finished_run
+        again = client.post("/api/runs", json={"profile_id": profile["id"], "demo_mode": True})
+        assert again.status_code == 202
+        assert len(client.get("/api/runs").json()) == 2
+
+
+class TestDocumentIdempotency:
+    """Collecting documents twice must follow the shortlist, not its size.
+
+    The audited defect keyed the job on the *count* of approved rows, so
+    swapping one approval for another left the count unchanged, returned the
+    old succeeded job, and the newly approved programme never got a checklist.
+    """
+
+    def test_swapping_an_approval_collects_documents_for_the_new_row(self, client, finished_run):
+        _, run = finished_run
+        rows = client.get(f"/api/runs/{run['id']}/results").json()
+        first, second, third, replacement = rows[0], rows[1], rows[2], rows[3]
+
+        def decide(result_id: str, decision: str) -> None:
+            response = client.post(
+                f"/api/runs/{run['id']}/results/{result_id}/decision",
+                json={"decision": decision, "reason": "", "notes": ""},
+            )
+            assert response.status_code == 200, response.text
+
+        for row in (first, second, third):
+            decide(row["id"], "approved")
+        assert client.post(f"/api/runs/{run['id']}/collect-documents").status_code == 202
+        assert asyncio.run(drain_queue()) == 1
+
+        # Same count, different set: one approval withdrawn, another added.
+        decide(third["id"], "undecided")
+        decide(replacement["id"], "approved")
+        assert client.post(f"/api/runs/{run['id']}/collect-documents").status_code == 202
+        assert asyncio.run(drain_queue()) == 1, "the second request must enqueue real work"
+
+        added = client.get(f"/api/runs/{run['id']}/results/{replacement['id']}").json()
+        assert added["checklist"] is not None
+        assert added["checklist"]["ordered_steps"]
+
+    def test_collecting_twice_for_the_same_shortlist_does_no_work_twice(self, client, finished_run):
+        _, run = finished_run
+        row = client.get(f"/api/runs/{run['id']}/results").json()[0]
+        client.post(
+            f"/api/runs/{run['id']}/results/{row['id']}/decision",
+            json={"decision": "approved", "reason": "", "notes": ""},
+        )
+        assert client.post(f"/api/runs/{run['id']}/collect-documents").status_code == 202
+        assert asyncio.run(drain_queue()) == 1
+
+        assert client.post(f"/api/runs/{run['id']}/collect-documents").status_code == 202
+        assert asyncio.run(drain_queue()) == 0, "an unchanged shortlist must not re-fetch pages"
+
+
+class TestRetry:
+    """Retry must never be a way to lose work.
+
+    The audited defect: retry deleted every result row but only reset stages
+    that had failed. A successful run has every stage `done`, the runner skips
+    all of them, and the user is left with an empty shortlist.
+    """
+
+    def test_retrying_a_finished_run_keeps_its_results_and_decisions(self, client, finished_run):
+        _, run = finished_run
+        before = client.get(f"/api/runs/{run['id']}/results").json()
+        assert len(before) == 20
+        kept = before[0]
+        client.post(
+            f"/api/runs/{run['id']}/results/{kept['id']}/decision",
+            json={"decision": "approved", "reason": "shortlisted", "notes": "call the office"},
+        )
+
+        assert client.post(f"/api/runs/{run['id']}/retry").status_code == 200
+        assert asyncio.run(drain_queue()) == 1
+
+        state = client.get(f"/api/runs/{run['id']}").json()
+        assert state["stage"] == "awaiting_user_decision", state.get("errors")
+        after = client.get(f"/api/runs/{run['id']}/results").json()
+        assert len(after) == len(before)
+
+        decided = client.get(f"/api/runs/{run['id']}/results/{kept['id']}").json()
+        assert decided["user_decision"] == "approved"
+        assert decided["user_decision_reason"] == "shortlisted"
+        assert decided["user_notes"] == "call the office"
+        assert decided["decided_at"] is not None
+
+    def test_a_full_retry_re_runs_every_stage_rather_than_skipping_them(self, client, finished_run):
+        _, run = finished_run
+        assert client.post(f"/api/runs/{run['id']}/retry").status_code == 200
+
+        state = client.get(f"/api/runs/{run['id']}").json()
+        assert {s["status"] for s in state["stages"]} == {"pending"}
+
+    def test_retrying_one_stage_resets_it_and_everything_after_it(self, client, finished_run):
+        _, run = finished_run
+        response = client.post(f"/api/runs/{run['id']}/retry?stage=funding_discovery")
+        assert response.status_code == 200
+
+        stages = {s["stage"]: s["status"] for s in response.json()["stages"]}
+        # Untouched: they ran before the named stage.
+        assert stages["profile_validation"] == "done"
+        assert stages["candidate_discovery"] == "done"
+        assert stages["program_verification"] == "done"
+        # Reset: the named stage and everything downstream of it.
+        assert stages["funding_discovery"] == "pending"
+        assert stages["assessment"] == "pending"
+
+    def test_a_stage_retry_keeps_the_evidence_the_earlier_stages_produced(
+        self, client, finished_run
+    ):
+        _, run = finished_run
+        claims_before = len(client.get(f"/api/runs/{run['id']}/claims").json())
+        assert claims_before > 0
+
+        client.post(f"/api/runs/{run['id']}/retry?stage=assessment")
+        assert asyncio.run(drain_queue()) == 1
+
+        state = client.get(f"/api/runs/{run['id']}").json()
+        assert state["stage"] == "awaiting_user_decision", state.get("errors")
+        results = client.get(f"/api/runs/{run['id']}/results").json()
+        assert len(results) == 20
+        assert all(r["preference_score"] is not None for r in results), (
+            "assessment must have scored the rows it kept, not an empty set"
+        )
 
 
 class TestExports:
@@ -284,3 +441,355 @@ class TestPrivacy:
                 assert isinstance(value, int | float | bool) or (
                     isinstance(value, str) and len(value) < 60
                 ), f"audit detail carries an unexpected payload: {value!r}"
+
+
+class TestHealth:
+    """A health check that cannot fail is not a health check.
+
+    It reported the configuration only, so the probe stayed green with the
+    database down and the platform kept routing traffic to a machine that
+    could not answer one real request.
+    """
+
+    def test_a_healthy_service_reports_ok(self, client):
+        body = client.get("/api/health").json()
+        assert body["status"] == "ok"
+        assert body["database"] == "ok"
+
+    def test_an_unreachable_database_reports_degraded_with_503(self, client, monkeypatch):
+        import sqlalchemy as sa
+
+        import app.db as db_module
+
+        monkeypatch.setattr(
+            db_module, "engine", sa.create_engine("sqlite:///C:/nonexistent-dir/nope.db")
+        )
+        response = client.get("/api/health")
+
+        assert response.status_code == 503
+        body = response.json()
+        assert body["status"] == "degraded"
+        assert body["database"] == "unavailable"
+        # The configuration fields survive, so the probe still says what build
+        # it reached.
+        assert "schema_version" in body
+
+
+class TestRunViewJobReporting:
+    """The run view reports the job the user is waiting on.
+
+    A recheck job is queued months ahead. Reporting it as the run's current
+    job made every screen believe work was in flight for ever: the collect
+    button sat disabled at "Collecting…" and never came back.
+    """
+
+    def test_a_deferred_recheck_is_not_reported_as_work_in_flight(self, client, finished_run):
+        _, run = finished_run
+        state = client.get(f"/api/runs/{run['id']}").json()
+
+        from app.db import SessionLocal
+        from app.models import Job
+
+        with SessionLocal() as session:
+            assert (
+                session.query(Job).filter(Job.run_id == run["id"], Job.kind == "recheck").count()
+                == 1
+            ), "the recheck must exist for this test to mean anything"
+
+        assert state["job_status"] == "succeeded", "the research job is the one that matters"
+        assert state["job_running"] is False
+        assert state["next_recheck_at"] is not None
+
+    def test_documents_can_still_be_collected_after_a_recheck_is_queued(self, client, finished_run):
+        _, run = finished_run
+        result = client.get(f"/api/runs/{run['id']}/results").json()[0]
+        client.post(
+            f"/api/runs/{run['id']}/results/{result['id']}/decision",
+            json={"decision": "approved", "reason": "", "notes": ""},
+        )
+        assert client.post(f"/api/runs/{run['id']}/collect-documents").status_code == 202
+
+        state = client.get(f"/api/runs/{run['id']}").json()
+        assert state["job_status"] == "queued", "the documents job is what is now outstanding"
+        assert asyncio.run(drain_queue()) == 1
+
+        done = client.get(f"/api/runs/{run['id']}").json()
+        assert done["stage"] == "completed"
+        assert done["job_status"] == "succeeded", "a future recheck must not read as running"
+
+
+class TestNotes:
+    def test_saving_a_note_does_not_decide_the_row(self, client, finished_run):
+        """Editing a note re-sent the decision, stamping decided_at on a row
+        the applicant had not decided anything about."""
+        _, run = finished_run
+        result = client.get(f"/api/runs/{run['id']}/results").json()[0]
+        assert result["user_decision"] == "undecided"
+
+        saved = client.patch(
+            f"/api/runs/{run['id']}/results/{result['id']}/notes",
+            json={"notes": "ask about housing"},
+        )
+        assert saved.status_code == 200
+        body = saved.json()
+        assert body["user_notes"] == "ask about housing"
+        assert body["user_decision"] == "undecided"
+        assert body["decided_at"] is None, "a note is not a decision"
+
+    def test_a_note_survives_a_later_decision(self, client, finished_run):
+        _, run = finished_run
+        result = client.get(f"/api/runs/{run['id']}/results").json()[0]
+        client.patch(
+            f"/api/runs/{run['id']}/results/{result['id']}/notes", json={"notes": "keep me"}
+        )
+        decided = client.post(
+            f"/api/runs/{run['id']}/results/{result['id']}/decision",
+            json={"decision": "approved", "reason": "", "notes": ""},
+        ).json()
+        assert decided["user_notes"] == "keep me"
+
+    def test_the_notes_route_is_tenant_scoped_like_every_other(self, client, finished_run):
+        _, run = finished_run
+        result = client.get(f"/api/runs/{run['id']}/results").json()[0]
+        response = client.patch(
+            f"/api/runs/{'0' * 32}/results/{result['id']}/notes", json={"notes": "x"}
+        )
+        assert response.status_code == 404
+
+
+class TestFullExport:
+    """ "The complete record" has to mean it.
+
+    The export carried the profile and a count of results - no results, no
+    claims, no audit trail - while telling the reader it was everything they
+    held about them.
+    """
+
+    def test_the_export_carries_the_results_claims_and_audit_trail(self, client, finished_run):
+        profile, run = finished_run
+        result = client.get(f"/api/runs/{run['id']}/results").json()[0]
+        client.post(
+            f"/api/runs/{run['id']}/results/{result['id']}/decision",
+            json={"decision": "approved", "reason": "best funded", "notes": "call them"},
+        )
+
+        body = client.get(f"/api/profiles/{profile['id']}/export").json()
+
+        assert body["counts"]["runs"] == 1
+        assert body["counts"]["results"] == len(client.get(f"/api/runs/{run['id']}/results").json())
+        assert body["counts"]["claims"] > 50
+        assert body["counts"]["audit_events"] > 0
+
+        assert len(body["results"]) == body["counts"]["results"]
+        decided = next(r for r in body["results"] if r["id"] == result["id"])
+        assert decided["user_decision"] == "approved"
+        assert decided["user_decision_reason"] == "best funded"
+        assert decided["user_notes"] == "call them"
+        assert decided["university"], "the full result document travels, not just the decision"
+
+        assert all("source_url" in c for c in body["claims"][:5])
+        assert any(e["action"] == "decision_recorded" for e in body["audit"])
+
+    def test_the_note_matches_what_is_actually_included(self, client, finished_run):
+        profile, _ = finished_run
+        body = client.get(f"/api/profiles/{profile['id']}/export").json()
+        for word in ("profile", "result", "claim", "audit"):
+            assert word in body["note"].lower()
+
+    def test_the_export_stays_tenant_scoped(self, client, finished_run):
+        response = client.get(f"/api/profiles/{'0' * 32}/export")
+        assert response.status_code == 404
+
+
+class TestDeadlineCalendar:
+    """Deadlines belong where they will be seen, not only in a table."""
+
+    def test_the_ics_parses_and_carries_the_confirmed_deadlines(self, client, finished_run):
+        _, run = finished_run
+        response = client.get(f"/api/runs/{run['id']}/deadlines.ics")
+        assert response.status_code == 200
+        assert response.headers["content-type"].startswith("text/calendar")
+        assert ".ics" in response.headers["content-disposition"]
+
+        body = response.text
+        assert body.startswith("BEGIN:VCALENDAR\r\n")
+        assert body.rstrip().endswith("END:VCALENDAR")
+        assert "\r\n" in body, "RFC 5545 wants CRLF; several clients reject LF-only"
+
+        events = body.count("BEGIN:VEVENT")
+        assert events == body.count("END:VEVENT")
+        assert events > 0, "the demo corpus publishes deadlines"
+
+        results = client.get(f"/api/runs/{run['id']}/results").json()
+        confirmed = sum(1 for r in results if r["admission_deadline"]) + sum(
+            1 for r in results for s in r["scholarships"] if s["deadline"]
+        )
+        assert events == confirmed, "an unknown deadline must not become an event"
+
+        for line in ("UID:", "DTSTAMP:", "DTSTART;VALUE=DATE:", "SUMMARY:"):
+            assert line in body
+
+    def test_every_event_has_a_stable_unique_id(self, client, finished_run):
+        _, run = finished_run
+        first = client.get(f"/api/runs/{run['id']}/deadlines.ics").text
+        second = client.get(f"/api/runs/{run['id']}/deadlines.ics").text
+
+        uids = [ln for ln in first.splitlines() if ln.startswith("UID:")]
+        assert len(uids) == len(set(uids)), "duplicate UIDs collapse into one event"
+        assert uids == [ln for ln in second.splitlines() if ln.startswith("UID:")], (
+            "re-importing must update the same events, not duplicate them"
+        )
+
+    def test_the_upcoming_list_marks_passed_deadlines_rather_than_hiding_them(
+        self, client, finished_run
+    ):
+        _, run = finished_run
+        rows = client.get(f"/api/runs/{run['id']}/deadlines?limit=5").json()
+        assert rows
+        assert len(rows) <= 5
+        assert all({"kind", "date", "passed", "title"} <= set(row) for row in rows)
+        # Sorted with the still-open ones first, each group by date.
+        upcoming = [r["date"] for r in rows if not r["passed"]]
+        assert upcoming == sorted(upcoming)
+
+    def test_the_calendar_is_tenant_scoped(self, client, finished_run):
+        response = client.get(f"/api/runs/{'0' * 32}/deadlines.ics")
+        assert response.status_code == 404
+
+
+class TestPagination:
+    """Lists are paged, and say how much there is."""
+
+    def test_profiles_are_paged_and_report_the_total(self, client):
+        for index in range(3):
+            payload = DEMO_PROFILE.model_dump(mode="json")
+            payload["display_name"] = f"Applicant {index}"
+            assert client.post("/api/profiles", json=payload).status_code == 201
+
+        page = client.get("/api/profiles?limit=2")
+        assert page.status_code == 200
+        assert len(page.json()) == 2
+        assert page.headers["X-Total-Count"] == "3"
+
+        rest = client.get("/api/profiles?limit=2&offset=2")
+        assert len(rest.json()) == 1
+
+    def test_cases_are_paged_too(self, client):
+        for index in range(3):
+            payload = DEMO_PROFILE.model_dump(mode="json")
+            payload["display_name"] = f"Case {index}"
+            client.post("/api/profiles", json=payload)
+
+        page = client.get("/api/cases?limit=2")
+        assert len(page.json()) == 2
+        assert page.headers["X-Total-Count"] == "3"
+
+    def test_runs_are_paged_and_filtered_by_profile(self, client, finished_run):
+        profile, _ = finished_run
+        listed = client.get(f"/api/runs?profile_id={profile['id']}&limit=10")
+        assert listed.status_code == 200
+        assert listed.headers["X-Total-Count"] == "1"
+        assert [r["profile_id"] for r in listed.json()] == [profile["id"]]
+
+    def test_listing_runs_does_not_query_once_per_run(self, client, finished_run):
+        """_view counted results and decisions per row, so a list of runs ran
+        two extra queries for every run in it."""
+        import sqlalchemy as sa
+
+        from app.db import engine
+
+        statements: list[str] = []
+
+        def record(_conn, _cursor, statement, *_args):
+            statements.append(statement)
+
+        sa.event.listen(engine, "before_cursor_execute", record)
+        try:
+            assert client.get("/api/runs?limit=50").status_code == 200
+        finally:
+            sa.event.remove(engine, "before_cursor_execute", record)
+
+        counting = [s for s in statements if "count(" in s.lower()]
+        assert len(counting) <= 3, f"expected batched counts, saw {len(counting)}: {counting[:4]}"
+
+    def test_claims_are_paged_with_a_total(self, client, finished_run):
+        _, run = finished_run
+        page = client.get(f"/api/runs/{run['id']}/claims?limit=10")
+        assert len(page.json()) == 10
+        total = int(page.headers["X-Total-Count"])
+        assert total > 10
+
+        tail = client.get(f"/api/runs/{run['id']}/claims?limit=10&offset={total - 5}")
+        assert len(tail.json()) == 5
+
+
+class TestTheRequestIdIsUsable:
+    """A log line has to be findable from the response the user saw.
+
+    Nothing tied the two together before: when someone reported an error, the
+    only way to locate it in the logs was the clock.
+    """
+
+    def test_every_response_carries_a_generated_id(self, client):
+        import re
+
+        assert re.fullmatch(r"[0-9a-f]{32}", client.get("/api/health").headers["x-request-id"])
+
+    def test_a_proxys_own_id_is_carried_through(self, client):
+        response = client.get("/api/health", headers={"X-Request-ID": "trace-abc_123"})
+        assert response.headers["x-request-id"] == "trace-abc_123"
+
+    def test_a_hostile_id_is_replaced_rather_than_echoed(self, client):
+        """This value goes straight back out in a header.
+
+        `test_the_export_filename_cannot_be_injected` covers the other header
+        this codebase shipped without checking; the reasoning is the same.
+        """
+        import re
+
+        returned = client.get("/api/health", headers={"X-Request-ID": 'x"; drop="1'}).headers[
+            "x-request-id"
+        ]
+        assert returned != 'x"; drop="1'
+        assert re.fullmatch(r"[0-9a-f]{32}", returned)
+
+    def test_two_requests_do_not_share_an_id(self, client):
+        assert (
+            client.get("/api/health").headers["x-request-id"]
+            != client.get("/api/health").headers["x-request-id"]
+        )
+
+    def test_code_running_inside_the_request_sees_that_id(self, client, monkeypatch):
+        """The point of the whole exercise.
+
+        Asserted at the log call rather than at a handler: the id travels in a
+        ContextVar that `CorrelationFilter` reads when a record is formatted,
+        so what matters is that the id is correct in the context the request
+        is served on. `test_the_id_reaches_a_log_record_without_the_caller_knowing`
+        covers the second half, the filter putting it onto the record.
+        """
+        from app.logging_setup import get_correlation_id
+
+        seen: list[str] = []
+
+        import app.api.routes_meta as meta
+
+        class Spy:
+            def error(self, *_args, **_kwargs):
+                seen.append(get_correlation_id())
+
+        monkeypatch.setattr(meta, "log", Spy())
+
+        # The health check logs only when the database is unreachable, and it
+        # resolves the engine at call time precisely so this is possible.
+        import app.db as db_module
+
+        class _Broken:
+            def connect(self):
+                raise RuntimeError("database is gone")
+
+        monkeypatch.setattr(db_module, "engine", _Broken())
+        response = client.get("/api/health", headers={"X-Request-ID": "findme"})
+
+        assert response.status_code == 503, "the health check did not take its error path"
+        assert seen == ["findme"]

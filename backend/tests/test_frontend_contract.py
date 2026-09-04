@@ -67,12 +67,7 @@ def test_the_typescript_union_matches_the_backend_enum(alias, enum_cls, types_so
 
 def test_the_union_parser_is_not_fooled_by_comments():
     """Guards the guard: a `;` in a doc comment used to truncate the parse."""
-    sample = (
-        "export type X =\n"
-        "  | 'a'\n"
-        "  /** something; with a semicolon */\n"
-        "  | 'b';\n"
-    )
+    sample = "export type X =\n  | 'a'\n  /** something; with a semicolon */\n  | 'b';\n"
     assert parse_union(sample, "X") == {"a", "b"}
 
 
@@ -80,8 +75,13 @@ def test_every_status_the_ui_colours_is_a_real_backend_value(types_source):
     """A tone map keyed on a status that no longer exists is dead styling."""
     source = FORMAT_TS.read_text()
     known = {m.value for cls in CONTRACT.values() for m in cls}
-    for map_name in ("eligibilityTone", "admissionsFitTone", "fundingFitTone",
-                     "fundingClassTone", "claimStatusTone"):
+    for map_name in (
+        "eligibilityTone",
+        "admissionsFitTone",
+        "fundingFitTone",
+        "fundingClassTone",
+        "claimStatusTone",
+    ):
         block = re.search(rf"export const {map_name}[^=]*= \{{(.*?)\n\}};", source, re.DOTALL)
         assert block, f"format.ts does not declare {map_name}"
         for key in re.findall(r"^\s*([A-Z_]+):", block.group(1), re.M):
@@ -104,8 +104,9 @@ def test_the_vocabulary_endpoint_covers_every_contracted_type():
     exposed = vocabulary()
     for enum_cls in CONTRACT.values():
         values = {m.value for m in enum_cls}
-        assert any(set(v) == values for v in exposed.values()), \
+        assert any(set(v) == values for v in exposed.values()), (
             f"{enum_cls.__name__} is not exposed by /api/vocabulary"
+        )
 
 
 def test_the_job_status_union_matches_the_backend(types_source):
@@ -128,9 +129,15 @@ def test_the_scholarship_interface_carries_every_decomposed_state(types_source):
     from app.schemas.result import Scholarship
 
     required = {
-        "opportunity_exists", "currently_available", "applicant_eligible",
-        "application_window_open", "deadline_known", "deadline_passed",
-        "award_current_for_intake", "degree_applicability", "available_this_intake",
+        "opportunity_exists",
+        "currently_available",
+        "applicant_eligible",
+        "application_window_open",
+        "deadline_known",
+        "deadline_passed",
+        "award_current_for_intake",
+        "degree_applicability",
+        "available_this_intake",
     }
     assert required <= declared, f"types.ts is missing {sorted(required - declared)}"
     assert declared <= set(Scholarship.model_fields), (
@@ -159,3 +166,27 @@ def test_the_composer_enforces_the_same_limits_as_the_database():
         match = re.search(rf"export const {name} = (\d+);", source)
         assert match, f"social.tsx does not declare {name}"
         assert int(match.group(1)) == expected, f"{name} disagrees with the backend"
+
+
+def test_live_coverage_reaches_the_frontend_with_the_shape_it_declares(types_source):
+    """The registry's real size has to survive the trip to the screen.
+
+    Someone turning demo mode off pictures the open web and gets ten curated
+    institutions. PreferencesScreen now says so, reading `live_coverage`
+    straight from `capabilities` — so a renamed or dropped key here would
+    quietly restore the old, flattering silence rather than break loudly.
+    """
+    from app.api.routes_meta import live_coverage
+
+    payload = live_coverage()
+    assert set(payload) == {"institutions", "countries", "recall_note"}
+    assert isinstance(payload["institutions"], int)
+    assert isinstance(payload["countries"], list)
+    assert payload["recall_note"], "live mode must state its own recall"
+
+    block = re.search(r"live_coverage: \{(.*?)\n  \};", types_source, re.DOTALL)
+    assert block, "types.ts does not declare `live_coverage` on Capabilities"
+    declared = set(re.findall(r"^\s*(\w+)[?]?:", block.group(1), re.M))
+    assert declared == set(payload), (
+        f"types.ts declares {sorted(declared)}; the API returns {sorted(payload)}"
+    )

@@ -7,7 +7,7 @@
  */
 
 import { useEffect, useState } from 'react';
-import { api } from '@/api/client';
+import { ApiError, api } from '@/api/client';
 import { Chip, Field, Notice, Panel } from '@/components/primitives';
 import { castInput, get, setIn, type Path } from '@/lib/immutable';
 import { useStore } from '@/lib/store';
@@ -22,13 +22,15 @@ const SEVERITY_LABEL: Record<string, string> = {
 export function ProfileScreen({ onNext }: { onNext: () => void }) {
   const {
     profileDraft, setProfileDraft, validation, saveProfile, loading,
-    savedProfile, restored, loadDemoProfile, clearProfile,
+    savedProfile, restored, loadDemoProfile, clearProfile, draftRestored, discardDraft,
   } = useStore();
   const [saved, setSaved] = useState(false);
   const [confirmingReplace, setConfirmingReplace] = useState<'demo' | 'clear' | null>(null);
   const [methods, setMethods] = useState<
     { key: string; description: string; source: string; caveat: string; to_scale: string }[]
   >([]);
+
+  const [conversionError, setConversionError] = useState<string | null>(null);
 
   const scaleLabel = String(get(profileDraft, ['academics', 'gpa', 'raw_scale_label']) ?? '');
 
@@ -46,17 +48,17 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
   });
 
   const applyConversion = async (key: string) => {
+    // The draft is only touched on success. The old code parsed the response
+    // without checking it, so a 400 replaced the applicant's GPA object with
+    // {detail: "..."} — their grades, gone, with no error shown.
     const gpa = get(profileDraft, ['academics', 'gpa']) as Record<string, unknown>;
-    const converted = await api
-      .validateProfile(profileDraft)
-      .then(() =>
-        fetch(`/api/profiles/conversions/preview?method_key=${key}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(gpa),
-        }).then((r) => r.json()),
-      );
-    setProfileDraft((d) => setIn(d, ['academics', 'gpa'], converted));
+    setConversionError(null);
+    try {
+      const converted = await api.previewConversion(gpa, key);
+      setProfileDraft((d) => setIn(d, ['academics', 'gpa'], converted));
+    } catch (e) {
+      setConversionError(e instanceof ApiError ? e.message : 'The conversion could not be applied.');
+    }
   };
 
   const converted = get(profileDraft, ['academics', 'gpa', 'converted_value']);
@@ -87,6 +89,22 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
       </div>
 
       <div className="stack stack--loose">
+        {draftRestored && (
+          <Notice kind="warn">
+            <div className="stack stack--tight" data-testid="draft-restored">
+              <div>
+                <strong>Unsaved changes restored.</strong> This browser still had edits you had
+                not saved. Your saved profile on the server is untouched until you press Save.
+              </div>
+              <div className="row">
+                <button className="btn btn--sm" onClick={discardDraft} data-testid="discard-draft">
+                  Discard these edits
+                </button>
+              </div>
+            </div>
+          </Notice>
+        )}
+
         {restored && savedProfile && (
           <Notice kind="info">
             <div>
@@ -209,7 +227,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
 
         <Panel
           title="Grades"
-          hint="Enter the grade exactly as it appears on your transcript. UniMatch does not convert it silently."
+          hint="Enter the grade exactly as it appears on your transcript. ASHYQ Apply does not convert it silently."
         >
           <div className="grid-2">
             <Field label="GPA / average" htmlFor="gpa">
@@ -259,6 +277,14 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
                     </button>
                   ))}
                 </div>
+              )}
+              {conversionError && (
+                <Notice kind="risk">
+                  <div data-testid="conversion-error">
+                    <strong>The conversion was not applied.</strong> {conversionError} Your grade
+                    is unchanged.
+                  </div>
+                </Notice>
               )}
             </div>
           )}

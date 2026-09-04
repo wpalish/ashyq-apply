@@ -76,6 +76,12 @@ class Scholarship(Base):
     # These were previously collapsed, which let "an award exists" stand in for
     # "this applicant can apply for it in this cycle". Each is now answered
     # from its own evidence and defaults to unknown.
+    #: False when the applicant told us this shape of help does not work for
+    #: them - a tuition-only award to someone who cannot go without a full
+    #: ride. The award stays visible with its reason; it simply stops counting
+    #: as this programme's funding.
+    meets_applicant_shape: bool = True
+    shape_mismatch_reason: str = ""
     international_eligible: Tristate = "unknown"
     citizenship_restrictions: list[str] = Field(default_factory=list)
     residency_restrictions: list[str] = Field(default_factory=list)
@@ -96,7 +102,9 @@ class Scholarship(Base):
     renewal_requirements: list[str] = Field(default_factory=list)
     min_test_scores: dict[str, float] = Field(default_factory=dict)
     stackable: Tristate = "unknown"
-    published_count: int | None = Field(default=None, description="Only set when officially published")
+    published_count: int | None = Field(
+        default=None, description="Only set when officially published"
+    )
 
     # --- availability, decomposed -------------------------------------
     #: An award page exists and names this award.
@@ -251,6 +259,11 @@ class ProgramResult(Base):
     climate_fit: str = "unknown"
     city_fit: str = "unknown"
     workload_fit: str = "unknown"
+    #: The same mechanism, for two preferences the form collected and nothing
+    #: read. "unknown" when the registry says nothing about this university,
+    #: which scores as missing data rather than as a mismatch.
+    size_fit: str = "unknown"
+    campus_fit: str = "unknown"
     career_notes: str = ""
     post_study_work: str = ""
     work_during_study: str = ""
@@ -261,7 +274,10 @@ class ProgramResult(Base):
     source_urls: list[str] = Field(default_factory=list)
     last_verified: datetime | None = None
     verification_completeness: float = Field(
-        default=0.0, ge=0.0, le=1.0, description="Share of decision-grade fields backed by an official claim"
+        default=0.0,
+        ge=0.0,
+        le=1.0,
+        description="Share of decision-grade fields backed by an official claim",
     )
 
     user_decision: UserDecision = UserDecision.UNDECIDED
@@ -274,5 +290,8 @@ class ProgramResult(Base):
 
 class DecisionIn(Base):
     decision: UserDecision
-    reason: str = ""
-    notes: str = ""
+    # Bounded, because these are the two free-text fields the API accepts and
+    # an unbounded string is a row the database will take and a screen will
+    # not render.
+    reason: str = Field(default="", max_length=2000)
+    notes: str = Field(default="", max_length=20_000)

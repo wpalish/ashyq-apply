@@ -14,6 +14,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app.adapters.fetching import PIILeakError
 from app.api import (
+    routes_account,
     routes_auth,
     routes_cases,
     routes_meta,
@@ -25,12 +26,10 @@ from app.api import (
 from app.config import get_settings
 from app.db import init_db
 from app.jobs.worker import reconcile_startup
+from app.logging_setup import configure_logging, new_correlation_id, set_correlation_id
 
 settings = get_settings()
-logging.basicConfig(
-    level=getattr(logging, settings.log_level.upper(), logging.INFO),
-    format="%(asctime)s %(levelname)-7s %(name)s: %(message)s",
-)
+configure_logging(settings.log_level, settings.log_format)
 log = logging.getLogger("unimatch")
 
 
@@ -78,6 +77,7 @@ app.add_middleware(
 )
 
 for module in (
+    routes_account,
     routes_auth,
     routes_cases,
     routes_meta,
@@ -108,10 +108,43 @@ class FixedWindowLimiter:
         if len(bucket) >= limit:
             return False
         bucket.append(now)
+        self._collect(cutoff)
         return True
+
+    #: Every distinct caller left an empty deque behind for the life of the
+    #: process. One address per login attempt is a slow leak in a long-running
+    #: API, so the map is swept occasionally rather than never.
+    _SWEEP_EVERY = 500
+
+    def _collect(self, cutoff: float) -> None:
+        self._since_sweep = getattr(self, "_since_sweep", 0) + 1
+        if self._since_sweep < self._SWEEP_EVERY:
+            return
+        self._since_sweep = 0
+        for key, bucket in list(self.hits.items()):
+            while bucket and bucket[0] <= cutoff:
+                bucket.popleft()
+            if not bucket:
+                del self.hits[key]
 
 
 _limiter = FixedWindowLimiter()
+
+
+def client_address(request: Request) -> str:
+    """The address a limit should be charged to.
+
+    Behind a reverse proxy every request arrives from the proxy, so keying on
+    the socket peer makes one limit for the whole world: a single script would
+    lock every user out of login. The first hop of X-Forwarded-For is the
+    caller, but only when we put the proxy there ourselves — hence the setting.
+    """
+    if settings.trust_proxy_headers:
+        forwarded = request.headers.get("x-forwarded-for", "")
+        first_hop = forwarded.split(",")[0].strip()
+        if first_hop:
+            return first_hop
+    return request.client.host if request.client else "unknown"
 
 
 def _secure(response: Response) -> Response:
@@ -163,7 +196,7 @@ async def security_middleware(request: Request, call_next):
         limit = 0
         group = ""
     if limit:
-        peer = request.client.host if request.client else "unknown"
+        peer = client_address(request)
         if not _limiter.allow(f"{group}:{peer}", limit, time.monotonic()):
             return _secure(
                 JSONResponse(
@@ -176,6 +209,29 @@ async def security_middleware(request: Request, call_next):
     return _secure(await call_next(request))
 
 
+@app.middleware("http")
+async def correlation_middleware(request: Request, call_next):
+    """Give every request an id, and hand it back.
+
+    Registered last on purpose. Starlette inserts each `add_middleware` at the
+    front of the stack, so the last one declared is the outermost — which is
+    what a correlation id has to be, or the middleware that runs before it
+    logs without one.
+
+    An inbound `X-Request-ID` is honoured so a proxy's id survives into these
+    logs, but only if it is a safe shape: it goes straight back out in a
+    response header, and this codebase has already shipped one header it did
+    not check.
+    """
+    incoming = request.headers.get("x-request-id", "")
+    request_id = set_correlation_id(incoming)
+    if request_id == "-":
+        request_id = set_correlation_id(new_correlation_id())
+    response = await call_next(request)
+    response.headers["X-Request-ID"] = request_id
+    return response
+
+
 @app.exception_handler(PIILeakError)
 async def pii_handler(_: Request, exc: PIILeakError) -> JSONResponse:
     """A privacy violation is a server error we name explicitly, never a silent pass."""
@@ -183,9 +239,11 @@ async def pii_handler(_: Request, exc: PIILeakError) -> JSONResponse:
     return JSONResponse(status_code=400, content={"detail": str(exc), "code": "pii_guard"})
 
 
-@app.exception_handler(ValueError)
-async def value_error_handler(_: Request, exc: ValueError) -> JSONResponse:
-    return JSONResponse(status_code=400, content={"detail": str(exc)})
+# There is deliberately no global ValueError handler. One used to turn every
+# ValueError raised anywhere - including ordinary bugs and UnsupportedCurrency
+# from deep inside the domain - into a 400 carrying its raw text. That masked
+# real 500s as client errors and handed internal detail to the caller. Routes
+# where a ValueError is genuinely the user's mistake convert it themselves.
 
 
 if settings.frontend_dir and settings.frontend_dir.is_dir():

@@ -10,7 +10,13 @@ export function AuthGate({ children }: { children: ReactNode }) {
   const [name, setName] = useState('');
   const [organization, setOrganization] = useState('');
   const [error, setError] = useState('');
+  const [notice, setNotice] = useState('');
   const [busy, setBusy] = useState(false);
+  // A reset link lands on #/reset?token=… — the token comes from the email,
+  // never from anything this page knows.
+  const [resetToken, setResetToken] = useState(() =>
+    new URLSearchParams(window.location.hash.split('?')[1] ?? '').get('token') ?? '',
+  );
 
   useEffect(() => {
     api.authStatus().then(setStatus).catch((e) => setError(e instanceof Error ? e.message : String(e)));
@@ -46,6 +52,66 @@ export function AuthGate({ children }: { children: ReactNode }) {
     }
   };
 
+  if (resetToken) {
+    const finishReset = async (event: FormEvent) => {
+      event.preventDefault();
+      setBusy(true);
+      setError('');
+      try {
+        await api.confirmPasswordReset(resetToken, password);
+        window.location.hash = '';
+        setStatus(await api.authStatus());
+      } catch (e) {
+        setError(e instanceof ApiError ? e.message : String(e));
+      } finally {
+        setBusy(false);
+      }
+    };
+    return (
+      <main className="auth-shell">
+        <form className="panel auth-card stack" onSubmit={finishReset}>
+          <h1>Choose a new password</h1>
+          <label className="field">
+            <span className="field__label">New password</span>
+            <input
+              type="password" autoComplete="new-password" required minLength={12}
+              value={password} onChange={(e) => setPassword(e.target.value)}
+              data-testid="reset-password"
+            />
+            <span className="field__hint">At least 12 characters.</span>
+          </label>
+          {error && <div className="notice notice--risk" role="alert">{error}</div>}
+          <button className="btn btn--primary" disabled={busy} type="submit">
+            {busy ? 'Please wait…' : 'Set password and sign in'}
+          </button>
+          <button className="btn btn--ghost" type="button" onClick={() => {
+            window.location.hash = '';
+            setResetToken('');
+          }}>Back to sign in</button>
+        </form>
+      </main>
+    );
+  }
+
+  const requestReset = async () => {
+    setBusy(true);
+    setError('');
+    try {
+      const answer = await api.requestPasswordReset(email);
+      // The wording is the server's, and says nothing about whether the
+      // address has an account.
+      setNotice(
+        answer.reset_link
+          ? `${answer.detail} (development build: ${answer.reset_link})`
+          : answer.detail,
+      );
+    } catch (e) {
+      setError(e instanceof ApiError ? e.message : String(e));
+    } finally {
+      setBusy(false);
+    }
+  };
+
   return (
     <main className="auth-shell">
       <form className="panel auth-card stack" onSubmit={submit}>
@@ -61,31 +127,40 @@ export function AuthGate({ children }: { children: ReactNode }) {
           <>
             <label className="field">
               <span className="field__label">Your name</span>
-              <input autoComplete="name" required maxLength={120} value={name} onChange={(e) => setName(e.target.value)} />
+              <input data-testid="auth-name" autoComplete="name" required maxLength={120} value={name} onChange={(e) => setName(e.target.value)} />
             </label>
             <label className="field">
               <span className="field__label">Workspace name</span>
-              <input required maxLength={120} value={organization} onChange={(e) => setOrganization(e.target.value)} />
+              <input data-testid="auth-organization" required maxLength={120} value={organization} onChange={(e) => setOrganization(e.target.value)} />
             </label>
           </>
         )}
         <label className="field">
           <span className="field__label">Email</span>
-          <input type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+          <input data-testid="auth-email" type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
         </label>
         <label className="field">
           <span className="field__label">Password</span>
-          <input type="password" autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
+          <input data-testid="auth-password" type="password" autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
                  minLength={mode === 'register' ? 12 : undefined} required value={password}
                  onChange={(e) => setPassword(e.target.value)} />
           {mode === 'register' && <span className="field__hint">At least 12 characters.</span>}
         </label>
         {error && <div className="notice notice--risk" role="alert">{error}</div>}
-        <button className="btn btn--primary" disabled={busy} type="submit">
+        {notice && <div className="notice notice--ok small" data-testid="reset-notice">{notice}</div>}
+        <button className="btn btn--primary" data-testid="auth-submit" disabled={busy} type="submit">
           {busy ? 'Please wait…' : mode === 'login' ? 'Sign in' : 'Create workspace'}
         </button>
+        {mode === 'login' && (
+          <button
+            className="btn btn--ghost btn--sm" type="button" disabled={busy || !email}
+            onClick={requestReset} data-testid="forgot-password"
+          >
+            I forgot my password
+          </button>
+        )}
         {status.registration_enabled && (
-          <button className="btn btn--ghost" type="button" onClick={() => {
+          <button className="btn btn--ghost" data-testid="auth-mode-toggle" type="button" onClick={() => {
             setMode(mode === 'login' ? 'register' : 'login'); setError('');
           }}>
             {mode === 'login' ? 'Create a new workspace' : 'I already have an account'}

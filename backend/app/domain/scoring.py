@@ -8,7 +8,9 @@ outcomes, and the schema carries a disclaimer saying so, because a number like
 
 from __future__ import annotations
 
+from app.domain.currency import UnsupportedCurrency, convert
 from app.domain.enums import AdmissionsFit, EligibilityStatus, FundingFit
+from app.schemas.money import ConvertedMoney, Money
 from app.schemas.profile import ApplicantProfileIn, ScoringWeights
 from app.schemas.result import ExplainableScore, ProgramResult, ScoreComponent
 
@@ -29,7 +31,13 @@ def score_result(result: ProgramResult, profile: ApplicantProfileIn) -> Explaina
     comps: list[ScoreComponent] = []
     missing: list[str] = []
 
-    def add(name: str, raw: float | None, weight: float, explanation: str, missing_label: str | None = None) -> None:
+    def add(
+        name: str,
+        raw: float | None,
+        weight: float,
+        explanation: str,
+        missing_label: str | None = None,
+    ) -> None:
         present = raw is not None
         if not present:
             missing.append(missing_label or name)
@@ -46,8 +54,24 @@ def score_result(result: ProgramResult, profile: ApplicantProfileIn) -> Explaina
         )
 
     # --- academic fit --------------------------------------------------
+    # Class rank is context for a human reader, never a number: no university
+    # in this product publishes a rank threshold, so scoring it would be
+    # inventing a judgement.
+    rank = profile.academics.class_rank
+    rank_note = (
+        f" Class rank {rank}"
+        + (f" of {profile.academics.class_size}" if profile.academics.class_size else "")
+        + " is recorded for the admissions office to weigh; it is not scored here."
+        if rank is not None
+        else ""
+    )
     if result.eligibility == EligibilityStatus.MET:
-        add("Academic fit", 1.0, w.academic_fit, "All published requirements checked are met.")
+        add(
+            "Academic fit",
+            1.0,
+            w.academic_fit,
+            "All published requirements checked are met." + rank_note,
+        )
     elif result.eligibility == EligibilityStatus.PENDING:
         add(
             "Academic fit",
@@ -58,9 +82,23 @@ def score_result(result: ProgramResult, profile: ApplicantProfileIn) -> Explaina
     elif result.eligibility == EligibilityStatus.GAP:
         add("Academic fit", 0.15, w.academic_fit, "At least one published requirement is not met.")
     else:
-        add("Academic fit", None, w.academic_fit, "Requirements could not be verified officially.", "published requirements")
+        add(
+            "Academic fit",
+            None,
+            w.academic_fit,
+            "Requirements could not be verified officially.",
+            "published requirements",
+        )
 
     # --- funding fit ---------------------------------------------------
+    # The form asks how decisive funding is and nothing read the answer. It
+    # scales the weight of the two funding components rather than their raw
+    # values: a fully funded place is still fully funded, it simply matters
+    # more to someone who cannot go without it.
+    criticality = {"nice_to_have": 0.5, "important": 0.75, "decisive": 1.0}.get(
+        profile.funding.funding_criticality, 1.0
+    )
+    funding_weight = w.funding_fit * criticality
     funding_raw = {
         FundingFit.CONFIRMED_OPPORTUNITY: 1.0,
         FundingFit.COMPETITIVE_OPPORTUNITY: 0.75,
@@ -68,57 +106,114 @@ def score_result(result: ProgramResult, profile: ApplicantProfileIn) -> Explaina
         FundingFit.NOT_ELIGIBLE: 0.0,
     }.get(result.funding_fit)
     if result.funding_fit == FundingFit.UNKNOWN:
-        add("Funding fit", None, w.funding_fit, "No official funding information was confirmed.", "scholarship data")
+        add(
+            "Funding fit",
+            None,
+            funding_weight,
+            "No official funding information was confirmed.",
+            "scholarship data",
+        )
     else:
         add(
             "Funding fit",
             funding_raw,
-            w.funding_fit,
+            funding_weight,
             f"Funding fit is {result.funding_fit.value}; best classification "
             f"{result.best_funding_classification.value}.",
         )
 
     # --- affordability against the family's own ceiling ------------------
     gap = result.funding_gap
-    ceiling = profile.funding.max_acceptable_gap or profile.funding.max_annual_budget
+    weight = funding_weight * 0.5
     if gap is None or not gap.computable or gap.gap is None:
-        add("Affordability", None, w.funding_fit * 0.5, "Remaining annual cost could not be computed.", "cost of attendance")
-    elif ceiling is None:
         add(
             "Affordability",
-            0.5,
-            w.funding_fit * 0.5,
-            f"Remaining annual cost is {gap.gap}. No family budget ceiling was set to compare against.",
+            None,
+            weight,
+            "Remaining annual cost could not be computed.",
+            "cost of attendance",
         )
     else:
-        ratio = gap.gap.amount / ceiling if ceiling > 0 else (0.0 if gap.gap.amount == 0 else 2.0)
-        raw = 1.0 if ratio <= 1 else max(0.0, 1.5 - ratio / 2)
-        add(
-            "Affordability",
-            raw,
-            w.funding_fit * 0.5,
-            f"Remaining annual cost {gap.gap.amount:,.0f} {gap.gap.currency} against a stated "
-            f"ceiling of {ceiling:,.0f}.",
-        )
+        ceiling, note, refusal = _comparable_ceiling(profile, gap.gap.currency)
+        if refusal:
+            add(
+                "Affordability",
+                None,
+                weight,
+                refusal,
+                "exchange rate for the stated budget currency",
+            )
+        elif ceiling is None:
+            add(
+                "Affordability",
+                0.5,
+                weight,
+                f"Remaining annual cost is {gap.gap}. No family budget ceiling was set to compare against.",
+            )
+        else:
+            if ceiling > 0:
+                ratio = gap.gap.amount / ceiling
+                raw = 1.0 if ratio <= 1 else max(0.0, 1.5 - ratio / 2)
+            else:
+                # "I can contribute nothing" against a cost that remains: the
+                # worst case, not a middling one.
+                raw = 1.0 if gap.gap.amount == 0 else 0.0
+            contribution = profile.funding.max_family_contribution
+            add(
+                "Affordability",
+                raw,
+                weight,
+                f"Remaining annual cost {gap.gap.amount:,.0f} {gap.gap.currency} against a stated "
+                f"ceiling of {ceiling:,.0f} {gap.gap.currency}{note}."
+                + (
+                    f" The family states it can contribute up to {contribution:,.0f} "
+                    f"{(profile.funding.budget_currency or 'USD').upper()} a year."
+                    if contribution is not None
+                    else ""
+                ),
+            )
 
     # --- country preference ---------------------------------------------
     prefs = profile.preferences
     country = result.country.lower()
     if country in {c.lower() for c in prefs.excluded_countries}:
-        add("Country preference", 0.0, w.country_preference, f"{result.country} is on the excluded list.")
+        add(
+            "Country preference",
+            0.0,
+            w.country_preference,
+            f"{result.country} is on the excluded list.",
+        )
     elif not prefs.preferred_countries:
         add("Country preference", 0.5, w.country_preference, "No country preference was stated.")
     elif country in {c.lower() for c in prefs.preferred_countries}:
-        add("Country preference", 1.0, w.country_preference, f"{result.country} is a preferred country.")
+        add(
+            "Country preference",
+            1.0,
+            w.country_preference,
+            f"{result.country} is a preferred country.",
+        )
     else:
-        add("Country preference", 0.3, w.country_preference, f"{result.country} is outside the preferred list.")
+        add(
+            "Country preference",
+            0.3,
+            w.country_preference,
+            f"{result.country} is outside the preferred list.",
+        )
 
     # --- programme quality via ranking ------------------------------------
     rank = _best_rank(result)
     if rank is None:
-        add("Programme standing", None, w.program_quality, "No ranking position was found.", "ranking position")
+        add(
+            "Programme standing",
+            None,
+            w.program_quality,
+            "No ranking position was found.",
+            "ranking position",
+        )
     else:
-        target = {"top_50": 50, "top_100": 100, "top_300": 300, "top_500": 500}.get(prefs.target_ranking_band)
+        target = {"top_50": 50, "top_100": 100, "top_300": 300, "top_500": 500}.get(
+            prefs.target_ranking_band
+        )
         raw = max(0.0, 1.0 - (rank / 1000.0))
         note = f"Best ranking position found: {rank}."
         if target:
@@ -128,31 +223,111 @@ def score_result(result: ProgramResult, profile: ApplicantProfileIn) -> Explaina
 
     # --- extracurricular alignment -----------------------------------------
     if not profile.activities and not profile.achievements:
-        add("Extracurricular profile", None, w.extracurricular_alignment, "No activities or achievements recorded.", "activities")
+        add(
+            "Extracurricular profile",
+            None,
+            w.extracurricular_alignment,
+            "No activities or achievements recorded.",
+            "activities",
+        )
     else:
+        # hours_per_week without weeks_per_year (or the reverse) cannot become
+        # annual hours: a school club runs about 34 weeks, a summer lab about
+        # 8, a paid job about 48. Any fixed week count would be an invented
+        # number multiplied straight into the score, so the half-stated
+        # activity keeps the neutral "hours unknown" footing that
+        # `_activity_strength` already gives it - and the gap is named rather
+        # than left to look like a complete answer.
+        partial = [
+            a
+            for a in profile.activities
+            if a.annual_hours is None
+            and (a.hours_per_week is not None or a.weeks_per_year is not None)
+        ]
+        note = (
+            ""
+            if not partial
+            else f" Sustained hours are unknown for {len(partial)} of them: hours per week and"
+            " weeks per year only mean something together, and the missing half is not assumed."
+        )
         add(
             "Extracurricular profile",
             _activity_strength(profile),
             w.extracurricular_alignment,
             f"{len(profile.activities)} activities and {len(profile.achievements)} achievements, "
-            "weighted by level, leadership and sustained hours.",
+            "weighted by level, leadership and sustained hours." + note,
         )
+        if partial:
+            missing.append("weeks per year for activities with stated hours")
 
     # --- soft location fits --------------------------------------------------
-    add("City fit", _label_to_raw(result.city_fit), w.city_fit, f"City fit assessed as {result.city_fit}.")
-    add("Climate fit", _label_to_raw(result.climate_fit), w.climate_fit, f"Climate fit assessed as {result.climate_fit}.")
-    add("Workload fit", _label_to_raw(result.workload_fit), w.workload_fit, f"Workload fit assessed as {result.workload_fit}.")
+    add(
+        "City fit",
+        _label_to_raw(result.city_fit),
+        w.city_fit,
+        f"City fit assessed as {result.city_fit}.",
+    )
+    add(
+        "Climate fit",
+        _label_to_raw(result.climate_fit),
+        w.climate_fit,
+        f"Climate fit assessed as {result.climate_fit}.",
+    )
+    add(
+        "Workload fit",
+        _label_to_raw(result.workload_fit),
+        w.workload_fit,
+        f"Workload fit assessed as {result.workload_fit}.",
+    )
+    add(
+        "University size",
+        _label_to_raw(result.size_fit),
+        w.university_size_fit,
+        f"Preferred size {prefs.university_size}; this university is assessed as "
+        f"{result.size_fit}.",
+        "university size",
+    )
+    add(
+        "Campus type",
+        _label_to_raw(result.campus_fit),
+        w.campus_fit,
+        f"Preferred campus {prefs.campus_type}; this university is assessed as "
+        f"{result.campus_fit}.",
+        "campus type",
+    )
 
     # --- careers -------------------------------------------------------------
     if result.career_notes:
-        add("Career and internships", 0.8 if prefs.values_internships else 0.5, w.career_outcomes, result.career_notes[:200])
+        add(
+            "Career and internships",
+            0.8 if prefs.values_internships else 0.5,
+            w.career_outcomes,
+            result.career_notes[:200],
+        )
     else:
-        add("Career and internships", None, w.career_outcomes, "No official careers information was found.", "career information")
+        add(
+            "Career and internships",
+            None,
+            w.career_outcomes,
+            "No official careers information was found.",
+            "career information",
+        )
 
     if result.post_study_work:
-        add("Post-study work", 1.0 if prefs.needs_post_study_work else 0.6, w.post_study_work, result.post_study_work[:200])
+        add(
+            "Post-study work",
+            1.0 if prefs.needs_post_study_work else 0.6,
+            w.post_study_work,
+            result.post_study_work[:200],
+        )
     elif prefs.needs_post_study_work:
-        add("Post-study work", None, w.post_study_work, "Post-study work rules were not confirmed but matter to this applicant.", "post-study work rules")
+        add(
+            "Post-study work",
+            None,
+            w.post_study_work,
+            "Post-study work rules were not confirmed but matter to this applicant.",
+            "post-study work rules",
+        )
     else:
         add("Post-study work", 0.5, w.post_study_work, "Post-study work was not a stated priority.")
 
@@ -174,6 +349,54 @@ def _label_to_raw(label: str) -> float | None:
     return {"strong": 1.0, "good": 0.75, "acceptable": 0.5, "weak": 0.25, "poor": 0.1}.get(label)
 
 
+def _comparable_ceiling(
+    profile: ApplicantProfileIn, target_currency: str
+) -> tuple[float | None, str, str]:
+    """The family's ceiling, expressed in the currency the gap is in.
+
+    Returns (ceiling, explanatory note, refusal). The ceiling is stated in
+    `funding.budget_currency` while the gap is in the target currency, so
+    comparing the bare numbers made a 2,880,000 KZT ceiling look infinite
+    beside a 6,000 USD gap and every option scored as affordable.
+
+    An unsupported currency is a refusal, never a number: converting at a rate
+    we do not hold would be exactly the guess this product refuses to make.
+    """
+    funding = profile.funding
+    # `or` treated a deliberate "I can contribute nothing" as no ceiling at all
+    # and silently fell through to the annual budget, a different question.
+    ceiling = (
+        funding.max_acceptable_gap
+        if funding.max_acceptable_gap is not None
+        else funding.max_annual_budget
+    )
+    if ceiling is None:
+        return None, "", ""
+
+    source_currency = (funding.budget_currency or "USD").upper()
+    target = target_currency.upper()
+    if source_currency == target:
+        return float(ceiling), "", ""
+
+    try:
+        converted = convert(Money(amount=float(ceiling), currency=source_currency), target)
+    except UnsupportedCurrency as exc:
+        return (
+            None,
+            "",
+            f"The budget is stated in {source_currency} and the remaining cost in {target}. "
+            f"No bundled rate connects them, so affordability is left unknown rather than "
+            f"guessed. {exc}",
+        )
+    if not isinstance(converted, ConvertedMoney):  # pragma: no cover - currencies differ here
+        return float(converted.amount), "", ""
+    note = (
+        f" (converted from {ceiling:,.0f} {source_currency} at "
+        f"{converted.rate:,.4f} {target}/{source_currency}, rate of {converted.rate_date})"
+    )
+    return converted.amount, note, ""
+
+
 def _best_rank(result: ProgramResult) -> int | None:
     best: int | None = None
     for r in result.rankings:
@@ -186,7 +409,13 @@ def _best_rank(result: ProgramResult) -> int | None:
 
 def _activity_strength(profile: ApplicantProfileIn) -> float:
     level_w = {"school": 0.2, "city": 0.4, "regional": 0.6, "national": 0.85, "international": 1.0}
-    role_w = {"participant": 0.3, "contributor": 0.5, "coordinator": 0.7, "leader": 0.9, "founder": 1.0}
+    role_w = {
+        "participant": 0.3,
+        "contributor": 0.5,
+        "coordinator": 0.7,
+        "leader": 0.9,
+        "founder": 1.0,
+    }
     score = 0.0
     for act in profile.activities:
         base = role_w.get(act.responsibility_level, 0.3)
@@ -199,7 +428,9 @@ def _activity_strength(profile: ApplicantProfileIn) -> float:
     return min(1.0, score / 6.0)
 
 
-def admissions_fit_for(result: ProgramResult, profile: ApplicantProfileIn) -> tuple[AdmissionsFit, str]:
+def admissions_fit_for(
+    result: ProgramResult, profile: ApplicantProfileIn
+) -> tuple[AdmissionsFit, str]:
     """A coarse, four-way judgement — never a percentage."""
     if result.eligibility == EligibilityStatus.NEEDS_OFFICIAL_CLARIFICATION:
         return (
@@ -217,7 +448,9 @@ def admissions_fit_for(result: ProgramResult, profile: ApplicantProfileIn) -> tu
     margins = [
         (c.applicant_value - c.published_value) / c.published_value
         for c in met
-        if isinstance(c.applicant_value, int | float) and isinstance(c.published_value, int | float) and c.published_value
+        if isinstance(c.applicant_value, int | float)
+        and isinstance(c.published_value, int | float)
+        and c.published_value
     ]
     if not margins:
         return (

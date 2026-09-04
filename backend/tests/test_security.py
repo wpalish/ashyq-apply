@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import copy
 
 import pytest
@@ -20,6 +21,12 @@ def auth_client(tmp_path, monkeypatch, corpus_dir):
         auth_registration_enabled=True,
         auth_rate_limit_per_minute=20,
         run_rate_limit_per_minute=20,
+        # Production hashes at 2**17 (~1s each). Paying that a hundred times
+        # over in the suite proves nothing the parameters in the hash do not.
+        password_scrypt_log2=14,
+        # The deployed stack always sits behind nginx or Fly, so that is the
+        # configuration worth testing.
+        trust_proxy_headers=True,
         database_url=f"sqlite:///{tmp_path / 'auth.db'}",
         cache_dir=tmp_path / "cache",
         export_dir=tmp_path / "exports",
@@ -83,7 +90,11 @@ class TestAuthentication:
         assert cookie and "." not in cookie  # opaque, not a JWT carrying claims
         header = client.post("/api/auth/logout").headers.get("set-cookie", "").lower()
         assert "httponly" in header
-        assert "samesite=strict" in header
+        # Lax, not Strict: Strict drops the cookie on any cross-site
+        # navigation, so arriving from a password-reset link in an email
+        # landed the user on a signed-out page. CSRF is covered by the Origin
+        # and Sec-Fetch-Site checks, which the tests below still enforce.
+        assert "samesite=lax" in header
 
     def test_passwords_are_not_stored_verbatim(self, auth_client):
         client, _ = auth_client
@@ -139,6 +150,129 @@ class TestTenantIsolation:
         assert client.get("/api/cases").json() == []
         assert client.get("/api/audit").json() == []
 
+    def test_another_tenant_cannot_read_or_decide_a_result_row(self, auth_client):
+        """A result id is the last thing that leaked.
+
+        Every other route resolved the run through owned_run; the two result
+        routes took the id at face value, so an authenticated stranger could
+        approve or reject rows on someone else's shortlist.
+        """
+        from tests.test_api import drain_queue
+
+        client, _ = auth_client
+        register(client, "result-owner")
+        profile = client.post(
+            "/api/profiles", json=copy.deepcopy(DEMO_PROFILE.model_dump(mode="json"))
+        ).json()
+        run = client.post("/api/runs", json={"profile_id": profile["id"], "demo_mode": True}).json()
+        assert asyncio.run(drain_queue()) == 1
+        results = client.get(f"/api/runs/{run['id']}/results").json()
+        assert results, "the demo run must produce rows for this test to mean anything"
+        result_id = results[0]["id"]
+
+        assert client.post("/api/auth/logout").status_code == 204
+        register(client, "result-stranger")
+
+        assert client.get(f"/api/runs/{run['id']}/results/{result_id}").status_code == 404
+        decision = client.post(
+            f"/api/runs/{run['id']}/results/{result_id}/decision",
+            json={"decision": "rejected", "reason": "not mine to reject"},
+        )
+        assert decision.status_code == 404, decision.text
+
+        # And the row is untouched: the owner still sees no decision on it.
+        assert client.post("/api/auth/logout").status_code == 204
+        client.post(
+            "/api/auth/login",
+            json={
+                "email": "result-owner@example.test",
+                "password": "correct horse battery result-owner",
+            },
+        )
+        owner_view = client.get(f"/api/runs/{run['id']}/results/{result_id}").json()
+        assert owner_view["user_decision"] == "undecided"
+
+
+class TestAbuseLimits:
+    """Limits must bind the abuser, not everyone behind the same proxy.
+
+    In production uvicorn sits behind nginx or Fly's edge, so request.client
+    is the proxy for every user. Keying the limiter on it turned a 10/min
+    login limit into a global one: one script locked out the whole product.
+    """
+
+    def test_two_clients_behind_one_proxy_get_their_own_budget(self, auth_client):
+        client, settings = auth_client
+        register(client, "proxy-abuser")
+        client.post("/api/auth/logout")
+        register(client, "proxy-bystander")
+        client.post("/api/auth/logout")
+
+        for _ in range(settings.auth_rate_limit_per_minute):
+            client.post(
+                "/api/auth/login",
+                json={"email": "proxy-abuser@example.test", "password": "wrong password here"},
+                headers={"X-Forwarded-For": "203.0.113.7"},
+            )
+        exhausted = client.post(
+            "/api/auth/login",
+            json={"email": "proxy-abuser@example.test", "password": "wrong password here"},
+            headers={"X-Forwarded-For": "203.0.113.7"},
+        )
+        assert exhausted.status_code == 429
+        assert "Too many requests" in exhausted.json()["detail"], "the address limit must fire"
+
+        # Another user, same proxy, different address: unaffected.
+        bystander = client.post(
+            "/api/auth/login",
+            json={
+                "email": "proxy-bystander@example.test",
+                "password": "correct horse battery proxy-bystander",
+            },
+            headers={"X-Forwarded-For": "198.51.100.4"},
+        )
+        assert bystander.status_code == 200, "one abuser must not spend everyone else's budget"
+
+    def test_an_email_cannot_be_pounded_from_a_fresh_address_each_time(self, auth_client):
+        client, settings = auth_client
+        register(client, "target")
+        client.post("/api/auth/logout")
+
+        attempts = [
+            client.post(
+                "/api/auth/login",
+                json={"email": "target@example.test", "password": "wrong password entirely"},
+                headers={"X-Forwarded-For": f"198.51.100.{i + 1}"},
+            )
+            for i in range(settings.auth_rate_limit_per_minute + 1)
+        ]
+        assert attempts[-1].status_code == 429, "per-email limit must survive IP rotation"
+
+    def test_an_unknown_email_costs_the_same_work_as_a_known_one(self, auth_client, monkeypatch):
+        """Skipping the hash for an unknown email leaks which emails exist."""
+        client, _ = auth_client
+        register(client, "known")
+        client.post("/api/auth/logout")
+
+        import app.api.routes_auth as routes_auth
+
+        calls: list[str] = []
+        real_verify = routes_auth.verify_password
+
+        def counting_verify(password: str, encoded: str) -> bool:
+            calls.append(encoded)
+            return real_verify(password, encoded)
+
+        monkeypatch.setattr(routes_auth, "verify_password", counting_verify)
+
+        unknown = client.post(
+            "/api/auth/login",
+            json={"email": "nobody@example.test", "password": "correct horse battery known"},
+        )
+        assert unknown.status_code == 401
+        assert unknown.json()["detail"] == "Invalid email or password."
+        assert len(calls) == 1, "a password check must run even when the account does not exist"
+
 
 class TestRequestSecurity:
     def test_security_headers_are_on_success_and_error_responses(self, auth_client):
@@ -162,10 +296,13 @@ class TestRequestSecurity:
     def test_auth_rate_limit_returns_retry_after_and_security_headers(self, auth_client):
         client, settings = auth_client
         for _ in range(settings.auth_rate_limit_per_minute):
-            assert client.post(
-                "/api/auth/login",
-                json={"email": "nobody@example.test", "password": "not-the-password"},
-            ).status_code == 401
+            assert (
+                client.post(
+                    "/api/auth/login",
+                    json={"email": "nobody@example.test", "password": "not-the-password"},
+                ).status_code
+                == 401
+            )
         response = client.post(
             "/api/auth/login",
             json={"email": "nobody@example.test", "password": "not-the-password"},
@@ -211,3 +348,75 @@ def test_production_refuses_other_unsafe_defaults(overrides, message):
     }
     with pytest.raises(RuntimeError, match=message):
         Settings(**values).validate_runtime()
+
+
+class TestErrorsAndHeaders:
+    def test_an_internal_value_error_is_a_500_without_its_text(self, auth_client, monkeypatch):
+        """A global ValueError->400 handler masked bugs as client errors.
+
+        It also handed the caller whatever the exception happened to say, which
+        in this codebase includes internal currency and parsing detail.
+        """
+        from fastapi.testclient import TestClient
+
+        import app.api.routes_profile as routes_profile
+        import app.main as main_module
+
+        client, _ = auth_client
+        register(client, "error-paths")
+
+        def explode(*_args, **_kwargs):
+            raise ValueError("internal detail: rate table row 17 is malformed")
+
+        monkeypatch.setattr(routes_profile, "validate_profile", explode)
+        with TestClient(main_module.app, raise_server_exceptions=False) as raw:
+            raw.cookies.update(client.cookies)
+            response = raw.post(
+                "/api/profiles/validate", json=copy.deepcopy(DEMO_PROFILE.model_dump(mode="json"))
+            )
+
+        assert response.status_code == 500
+        assert "rate table row 17" not in response.text
+
+    def test_a_bad_email_is_still_a_readable_400(self, auth_client):
+        """Removing the handler must not turn a typo into a server error."""
+        client, _ = auth_client
+        response = client.post(
+            "/api/auth/register",
+            json={
+                "email": "not-an-email",
+                "password": "correct horse battery staple",
+                "display_name": "Typo",
+                "organization_name": "Typo",
+            },
+        )
+        assert response.status_code == 400
+        assert "valid email" in response.json()["detail"]
+
+    def test_the_export_filename_cannot_be_injected(self, auth_client):
+        from tests.test_api import drain_queue
+
+        client, _ = auth_client
+        register(client, "export-header")
+        profile = client.post(
+            "/api/profiles", json=copy.deepcopy(DEMO_PROFILE.model_dump(mode="json"))
+        ).json()
+        run = client.post("/api/runs", json={"profile_id": profile["id"], "demo_mode": True}).json()
+        assert asyncio.run(drain_queue()) == 1
+
+        hostile = client.get(
+            f"/api/runs/{run['id']}/export.csv",
+            params={"decision": 'approved" ; x-injected="1'},
+        )
+        assert hostile.status_code == 400
+        assert "Unknown decision filter" in hostile.json()["detail"]
+
+        crlf = client.get(
+            f"/api/runs/{run['id']}/export.csv", params={"decision": "approved\r\nX-Evil: 1"}
+        )
+        assert crlf.status_code == 400
+
+        good = client.get(f"/api/runs/{run['id']}/export.csv", params={"decision": "approved"})
+        assert good.status_code == 200
+        disposition = good.headers["content-disposition"]
+        assert disposition == 'attachment; filename="ashyq-{}-approved.csv"'.format(run["id"][:8])

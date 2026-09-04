@@ -20,8 +20,10 @@ from app.config import Settings, get_settings
 from app.db import session_scope
 from app.domain.enums import PipelineStage
 from app.jobs.store import JobStore, worker_identity
+from app.logging_setup import configure_logging, set_correlation_id
 from app.models import ApplicantProfileRow, AuditEvent, Job, JobStatus, ResearchRun
-from app.pipeline.runner import ResearchRunner, RunCancelled
+from app.models.base import ensure_utc
+from app.pipeline.runner import LeaseLost, ResearchRunner, RunCancelled
 from app.schemas.profile import ApplicantProfileIn
 
 log = logging.getLogger("unimatch.worker")
@@ -82,6 +84,12 @@ class Worker:
         )
 
     async def _run_and_release(self, job_id: str, semaphore: asyncio.Semaphore) -> None:
+        # The worker has no request to correlate against, so the job id plays
+        # that part: every line this task logs can be traced back to the job
+        # that produced it, which is what the API's request id buys there.
+        # Each job runs in its own task, so the ContextVar does not leak
+        # between the jobs running concurrently.
+        set_correlation_id(job_id)
         try:
             await self.execute(job_id)
         finally:
@@ -107,22 +115,39 @@ class Worker:
         heartbeat = asyncio.create_task(self._beat(job_id))
         try:
             with session_scope() as session:
-                store = JobStore(session, lease_seconds=self.settings.job_lease_seconds)
+                store = JobStore(
+                    session,
+                    lease_seconds=self.settings.job_lease_seconds,
+                    worker_id=self.worker_id,
+                )
                 job = store.get(job_id)
                 if job is None:
                     return
                 log.info("running job %s (%s) attempt %d", job.id[:8], job.kind, job.attempts)
                 await self._dispatch(session, store, job)
             self.jobs_done += 1
+        except LeaseLost as exc:
+            # Someone else owns this job now. Say so and touch nothing: the
+            # store's fencing would refuse the write anyway, and the new owner
+            # is already redoing the work.
+            log.warning("job %s abandoned: %s", job_id[:8], exc)
+            with session_scope() as session:
+                JobStore(
+                    session,
+                    lease_seconds=self.settings.job_lease_seconds,
+                    worker_id=self.worker_id,
+                ).fail(job_id, f"lease lost: {exc}", retry=False)
         except RunCancelled as exc:
             with session_scope() as session:
-                JobStore(session).mark_cancelled(job_id, str(exc))
+                JobStore(session, worker_id=self.worker_id).mark_cancelled(job_id, str(exc))
             log.info("job %s cancelled", job_id[:8])
         except Exception as exc:
             self.jobs_failed += 1
             log.exception("job %s failed", job_id[:8])
             with session_scope() as session:
-                status = JobStore(session).fail(job_id, f"{type(exc).__name__}: {exc}")
+                status = JobStore(session, worker_id=self.worker_id).fail(
+                    job_id, f"{type(exc).__name__}: {exc}"
+                )
             log.info("job %s -> %s", job_id[:8], status)
         finally:
             heartbeat.cancel()
@@ -133,11 +158,37 @@ class Worker:
             while True:
                 await asyncio.sleep(interval)
                 with session_scope() as session:
-                    if not JobStore(session).heartbeat(job_id):
+                    store = JobStore(
+                        session,
+                        lease_seconds=self.settings.job_lease_seconds,
+                        worker_id=self.worker_id,
+                    )
+                    if not store.heartbeat(job_id):
+                        # The runner observes this at its next checkpoint and
+                        # stops; logging alone let a zombie keep working.
                         log.warning("lost the lease on job %s", job_id[:8])
                         return
         except asyncio.CancelledError:
             return
+
+    def _schedule_recheck(self, store: JobStore, run: ResearchRun) -> None:
+        """Queue the next look at this run's evidence, at the date it ages out.
+
+        Idempotent by (run, date): re-running the same research does not stack
+        up duplicate recheck jobs.
+        """
+        when = run.next_recheck_at
+        if when is None:
+            return
+        when = ensure_utc(when)
+        assert when is not None
+        store.enqueue(
+            "recheck",
+            run_id=run.id,
+            idempotency_key=f"recheck:{run.id}:{when.date().isoformat()}",
+            available_at=when,
+            priority=-5,  # never ahead of work a person is waiting for
+        )
 
     async def _dispatch(self, session, store: JobStore, job: Job) -> None:
         """Route a job to its handler, in the job's own transaction."""
@@ -152,12 +203,19 @@ class Worker:
             return
 
         profile = ApplicantProfileIn.model_validate(profile_row.payload)
-        runner = ResearchRunner(session, run, profile, self.settings, job_id=job.id)
+        runner = ResearchRunner(
+            session, run, profile, self.settings, job_id=job.id, worker_id=self.worker_id
+        )
 
         if job.kind == "documents":
             await runner.collect_documents()
         elif job.kind == "research":
             await runner.run_to_decision()
+            self._schedule_recheck(store, run)
+        elif job.kind == "recheck":
+            stale = await runner.recheck_stale()
+            log.info("recheck of run %s: %d stale claims", run.id[:8], stale)
+            self._schedule_recheck(store, run)
         else:
             store.fail(job.id, f"unknown job kind {job.kind!r}", retry=False)
             return
@@ -270,10 +328,7 @@ def reconcile_startup() -> dict[str, int]:
 
 def main() -> int:  # pragma: no cover - process entry point
     settings = get_settings()
-    logging.basicConfig(
-        level=getattr(logging, settings.log_level.upper(), logging.INFO),
-        format="%(asctime)s %(levelname)-7s %(name)s: %(message)s",
-    )
+    configure_logging(settings.log_level, settings.log_format)
     if not wait_for_schema():
         return 1
     summary = reconcile_startup()
@@ -283,7 +338,12 @@ def main() -> int:  # pragma: no cover - process entry point
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     for sig in (signal.SIGINT, signal.SIGTERM):
-        loop.add_signal_handler(sig, worker.request_stop)
+        try:
+            loop.add_signal_handler(sig, worker.request_stop)
+        except NotImplementedError:
+            # Windows' ProactorEventLoop has no signal handlers; the plain
+            # signal module still delivers SIGINT/SIGTERM to the main thread.
+            signal.signal(sig, lambda *_: worker.request_stop())
     try:
         loop.run_until_complete(worker.run_forever())
     finally:

@@ -28,11 +28,21 @@ class ResearchRun(TimestampedBase):
     """One execution of the pipeline, resumable stage by stage."""
 
     __tablename__ = "research_runs"
+    __table_args__ = (
+        # A replayed click must find its run, and two clicks with the same key
+        # must never become two runs - the uniqueness is what makes the lookup
+        # in start_run a guarantee rather than a best effort.
+        Index("uq_runs_client_request_key", "profile_id", "client_request_key", unique=True),
+    )
 
     profile_id: Mapped[str] = mapped_column(
         String(32), ForeignKey("applicant_profiles.id", ondelete="CASCADE"), index=True
     )
     stage: Mapped[str] = mapped_column(String(40), default="queued", index=True)
+    #: The client's `Idempotency-Key` for the request that created this run.
+    #: Replaying that request returns this run instead of starting a second
+    #: one. Scoped per profile, so two applicants may reuse the same key.
+    client_request_key: Mapped[str | None] = mapped_column(String(120), nullable=True)
     demo_mode: Mapped[bool] = mapped_column(Boolean, default=True)
     #: Per-run research scope. Persisted so a retry or a restart uses the scope
     #: the user asked for, not whatever the server default happens to be.
@@ -52,7 +62,13 @@ class ResearchRun(TimestampedBase):
     #: How many pages each fetch tier produced. Proves the browser tier is
     #: actually doing work rather than merely being constructed.
     fetch_tiers: Mapped[dict] = mapped_column(JSON, default=dict)
+    #: Diagnostics that mean "a page could not be read".
     errors: Mapped[list] = mapped_column(JSON, default=list)
+    #: Diagnostics that mean "the page was read and does not say". Kept apart
+    #: because a clean run produces dozens of these and none of them is a
+    #: problem; mixing them into `errors` taught the applicant to distrust a
+    #: correct result.
+    unknowns: Mapped[list] = mapped_column(JSON, default=list)
     retry_urls: Mapped[list] = mapped_column(JSON, default=list)
     settings_snapshot: Mapped[dict] = mapped_column(JSON, default=dict)
 
@@ -65,6 +81,10 @@ class ResearchRun(TimestampedBase):
     #: Refreshed as the run makes progress. A lease that stops being refreshed
     #: is how a crashed worker becomes visible.
     heartbeat_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    #: When the oldest claim in this run ages out. A queued `recheck` job waits
+    #: until then; before this existed, POSSIBLY_STALE claims stayed stale for
+    #: ever and next_recheck_at was computed only in tests.
+    next_recheck_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     #: How many times this run has been recovered after a worker died.
     recovery_count: Mapped[int] = mapped_column(Integer, default=0)
 

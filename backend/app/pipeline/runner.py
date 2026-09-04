@@ -10,7 +10,7 @@ from __future__ import annotations
 import logging
 import os
 import socket
-from datetime import UTC, date, datetime
+from datetime import UTC, datetime
 
 from sqlalchemy.orm import Session
 
@@ -25,9 +25,11 @@ from app.adapters.government.web_government import WebGovernmentAdapter
 from app.adapters.requirements.web_requirements import WebRequirementsAdapter
 from app.adapters.scholarship.web_scholarships import WebScholarshipAdapter
 from app.config import Settings
-from app.domain import dedupe
+from app.domain import dedupe, diagnostics
+from app.domain.citizenship import CitizenshipMatch, match_citizenship
 from app.domain.conflicts import enforce_source_hierarchy, find_conflicts
 from app.domain.costs import compute_funding_gap, total_cost
+from app.domain.dates import parse_published_date
 from app.domain.eligibility import evaluate_program
 from app.domain.enums import (
     ClaimType,
@@ -36,11 +38,17 @@ from app.domain.enums import (
     PipelineStage,
     UserDecision,
 )
-from app.domain.freshness import age_days, apply_freshness, is_stale
-from app.domain.funding import classify, funding_fit_for
+from app.domain.freshness import age_days, apply_freshness, is_stale, next_recheck_at
+from app.domain.funding import (
+    award_meets_shape,
+    classify,
+    funding_fit_for,
+    unmet_coverage_requirements,
+)
 from app.domain.scoring import admissions_fit_for, score_result
 from app.domain.validation import validate_profile
 from app.models import AuditEvent, ClaimRow, ConflictRow, ProgramResultRow, ResearchRun, new_id
+from app.models.base import ensure_utc
 from app.pipeline.state import IN_PROGRESS_STAGES, RunState
 from app.schemas.claim import ClaimOut, UnresolvedQuestion
 from app.schemas.profile import ApplicantProfileIn
@@ -51,6 +59,15 @@ log = logging.getLogger("unimatch.pipeline")
 
 class RunCancelled(RuntimeError):
     pass
+
+
+class LeaseLost(RuntimeError):
+    """This worker no longer owns the job it is executing.
+
+    Raised at a checkpoint rather than mid-write, so the abandoned attempt
+    stops between units of work and leaves the database to the worker that
+    took the job over.
+    """
 
 
 class ResearchRunner:
@@ -64,6 +81,7 @@ class ResearchRunner:
         settings: Settings,
         *,
         job_id: str | None = None,
+        worker_id: str | None = None,
     ) -> None:
         self.session = session
         self.run = run
@@ -71,14 +89,16 @@ class ResearchRunner:
         self.settings = settings
         self.state = RunState.load(run.stage_state)
         self.demo = run.demo_mode
-        # A per-run override wins over the server default, and verification is
-        # never asked to cover more candidates than discovery produced.
-        self.worker_id = f"{socket.gethostname()}:{os.getpid()}"
+        # The worker passes its own identity so the fencing check compares
+        # against the id that actually claimed the job, not a lookalike.
+        self.worker_id = worker_id or f"{socket.gethostname()}:{os.getpid()}"
         #: When run by a worker, cancellation is observed through the job as
         #: well as the run, so either route stops the work.
         self.job_id = job_id
         #: Stages skipped because a previous attempt finished them.
         self.resumed_stages: list[str] = []
+        # A per-run override wins over the server default, and verification is
+        # never asked to cover more candidates than discovery produced.
         self.candidate_limit = run.candidate_limit or settings.candidate_limit
         self.verify_limit = min(run.verify_limit or settings.verify_limit, self.candidate_limit)
         self.intake = f"{profile.context.intake_term} {profile.context.intake_year}"
@@ -137,8 +157,70 @@ class ResearchRunner:
         if self.job_id is not None:
             from app.jobs.store import JobStore
 
-            if JobStore(self.session).is_cancel_requested(self.job_id):
+            store = JobStore(self.session, worker_id=self.worker_id)
+            if store.is_cancel_requested(self.job_id):
                 raise RunCancelled("Job was cancelled by the user.")
+            # A reaped lease means another worker is already redoing this job.
+            # Continuing would double every read-modify-write counter on the
+            # run and let this attempt report an outcome it no longer owns.
+            if not store.owns(self.job_id):
+                raise LeaseLost(f"job {self.job_id[:8]} is no longer held by {self.worker_id}")
+
+    def earliest_recheck(self) -> datetime | None:
+        """When this run's oldest claim ages out, or None if it has none.
+
+        Freshness rules already downgraded stale claims to POSSIBLY_STALE, but
+        nothing ever went back to look. This is the date a recheck job waits
+        for.
+        """
+        rows = (
+            self.session.query(ClaimRow.claim_type, ClaimRow.accessed_at)
+            .filter(ClaimRow.run_id == self.run.id)
+            .all()
+        )
+        moments = []
+        for claim_type, accessed_at in rows:
+            accessed = ensure_utc(accessed_at)
+            if accessed is None:
+                continue
+            try:
+                moments.append(next_recheck_at(ClaimType(claim_type), accessed))
+            except ValueError:  # a claim type this build no longer knows
+                continue
+        return min(moments) if moments else None
+
+    async def recheck_stale(self) -> int:
+        """Re-read the evidence that has aged out. Returns how many claims were stale.
+
+        Deliberately coarse: it re-runs verification onwards for the whole run
+        rather than only the rows holding stale claims. Results are upserted and
+        user decisions are carried across, so the outcome is the same; the cost
+        is re-reading pages that were still fresh. Narrow it to the affected
+        rows if outbound traffic ever becomes the constraint.
+        """
+        now = datetime.now(UTC)
+        stale_claims = [
+            row
+            for row in self.session.query(ClaimRow).filter(ClaimRow.run_id == self.run.id).all()
+            if _claim_is_stale(row, now)
+        ]
+        if not stale_claims:
+            self.run.next_recheck_at = self.earliest_recheck()
+            self._save()
+            return 0
+
+        for stage in (
+            PipelineStage.PROGRAM_VERIFICATION,
+            PipelineStage.FUNDING_DISCOVERY,
+            PipelineStage.ASSESSMENT,
+            PipelineStage.AWAITING_USER_DECISION,
+        ):
+            self.state[stage].status = "pending"
+            self.state[stage].error = ""
+        self._audit("run_recheck_started", "run", self.run.id, stale_claims=len(stale_claims))
+        self._save()
+        await self.run_to_decision()
+        return len(stale_claims)
 
     # --- entry point ------------------------------------------------------
 
@@ -178,6 +260,7 @@ class ResearchRunner:
             waiting.finish("Shortlist ready; waiting for the applicant's decisions.")
             self._transition(PipelineStage.AWAITING_USER_DECISION)
             self.run.finished_at = datetime.now(UTC)
+            self.run.next_recheck_at = self.earliest_recheck()
             self._save()
         except RunCancelled:
             self.run.stage = PipelineStage.CANCELLED.value
@@ -262,6 +345,9 @@ class ResearchRunner:
         self._check_cancelled()
         st = self.state[PipelineStage.PROGRAM_VERIFICATION]
         targets = list(self._candidates)[: self.verify_limit]
+        # Counted in programmes, not candidates: a candidate can carry two
+        # programmes, so "12/20 candidates" and "18 programmes checked" were
+        # two different numbers on the same screen describing the same work.
         st.start(len(targets), "Reading official programme pages")
         self._transition(PipelineStage.PROGRAM_VERIFICATION)
         self._save()
@@ -269,13 +355,17 @@ class ResearchRunner:
         req = WebRequirementsAdapter(fetcher, self.settings.academic_year)
         cost = WebCostAdapter(fetcher, self.settings.academic_year)
         gov = WebGovernmentAdapter(fetcher)
-        gov_cache: dict[str, str] = {}
+        # Both the value *and* the claims behind it. Caching only the string
+        # meant the second candidate in a country showed a post-study-work
+        # right with no source in its own row - a value on screen with nothing
+        # behind it, which is precisely what this product must never do.
+        gov_cache: dict[str, tuple[str, list]] = {}
 
         errors: list[str] = []
         retry: list[str] = []
         seen_keys: set[str] = set()
 
-        for i, cand in enumerate(targets):
+        for cand in targets:
             self._check_cancelled()
             programs = cand.programs or [
                 CandidateProgram(
@@ -309,14 +399,29 @@ class ResearchRunner:
                     intake=self.intake,
                     rankings=cand.rankings,
                     climate_fit=_fit_label(
-                        cand.attributes.get("climate"), self.profile.preferences.climate
+                        cand.attributes.get("climate"),
+                        self.profile.preferences.climate,
+                        "climate",
                     ),
                     city_fit=_fit_label(
-                        cand.attributes.get("city_size"), self.profile.preferences.city_size
+                        cand.attributes.get("city_size"),
+                        self.profile.preferences.city_size,
+                        "city",
                     ),
                     workload_fit=_fit_label(
                         cand.attributes.get("workload"),
                         self.profile.preferences.acceptable_workload,
+                        "workload",
+                    ),
+                    size_fit=_fit_label(
+                        cand.attributes.get("size"),
+                        self.profile.preferences.university_size,
+                        "size",
+                    ),
+                    campus_fit=_fit_label(
+                        cand.attributes.get("campus"),
+                        self.profile.preferences.campus_type,
+                        "campus",
                     ),
                     career_notes="",
                 )
@@ -339,10 +444,14 @@ class ResearchRunner:
                     self.run.pages_checked += gr.pages_checked
                     self.run.pages_failed += gr.pages_failed
                     gov_cache[cand.country] = (
-                        str(gr.claims[0].normalized_value) if gr.claims else ""
+                        str(gr.claims[0].normalized_value) if gr.claims else "",
+                        list(gr.claims),
                     )
-                    ar.claims.extend(gr.claims)
-                result.post_study_work = gov_cache[cand.country]
+                government_value, government_claims = gov_cache[cand.country]
+                # Every row of that country gets the government page as its own
+                # evidence, not just the first one to trigger the fetch.
+                ar.claims.extend(government_claims)
+                result.post_study_work = government_value
 
                 all_claims = ar.claims + cr.claims
                 all_claims, demotion_qs = enforce_source_hierarchy(all_claims)
@@ -377,14 +486,21 @@ class ResearchRunner:
                 result.source_urls = sorted({c.source_url for c in all_claims})
                 result.last_verified = max((c.accessed_at for c in all_claims), default=None)
                 self._persist_result(result, all_claims, conflicts)
-                st.items_done = i + 1
                 self.run.programs_verified = len(seen_keys)
                 self.run.claims_recorded += len(all_claims)
+                # Programmes done and programmes expected, so the ratio on
+                # screen counts the same thing on both sides. The total grows
+                # as candidates reveal how many programmes they carry.
+                st.items_done = len(seen_keys)
+                st.items_total = max(st.items_total, len(seen_keys), len(targets))
 
-            if i % 4 == 0:
-                self._save()
+            # Once per candidate, not once per four: in live mode four page
+            # fetches with their retries can outlast the lease, and a healthy
+            # run would then be reported as abandoned. The counters and the
+            # stage state ride on the same commit as the heartbeat.
+            self._save()
 
-        self.run.errors = list(self.run.errors or []) + errors[:200]
+        self._record_diagnostics(errors)
         self.run.retry_urls = sorted(set(list(self.run.retry_urls or []) + retry))[:200]
         st.finish(
             f"{self.run.programs_verified} programmes checked across "
@@ -403,14 +519,35 @@ class ResearchRunner:
         self._save()
 
         adapter = WebScholarshipAdapter(fetcher, self.settings.academic_year)
-        by_name = {c.name: c for c in self._candidates}
+        # Keyed on the normalized university key, not the display name: a
+        # trailing comma or a renamed institution used to drop the row.
+        by_key = {dedupe.university_key(c.name, c.country): c for c in self._candidates}
         errors: list[str] = []
+        unmatched: list[str] = []
 
         for i, row in enumerate(rows):
             self._check_cancelled()
             result = ProgramResult.model_validate(row.payload)
-            cand = by_name.get(result.university)
+            cand = by_key.get(dedupe.university_key(result.university, result.country))
             if cand is None:
+                unmatched.append(result.university)
+                errors.append(
+                    f"No candidate matched {result.university} ({result.country}); its funding "
+                    f"was not read. The row keeps whatever earlier stages established."
+                )
+                self._add_unresolved(
+                    row,
+                    result,
+                    topic="funding",
+                    question=(
+                        f"Which official page publishes funding for {result.program} at "
+                        f"{result.university}?"
+                    ),
+                    why=(
+                        "This programme could not be matched back to a discovered university, so "
+                        "no scholarship page was read for it. Nothing here is assumed."
+                    ),
+                )
                 st.items_done = i + 1
                 continue
 
@@ -472,12 +609,87 @@ class ResearchRunner:
                         " The page uses promotional wording such as 'full ride'; the classification "
                         "here follows the published coverage table instead."
                     )
-                if any(
-                    c.status.value == "NOT_ELIGIBLE"
-                    for c in s.eligibility_checks
-                    if hasattr(c.status, "value")
+                # Two things the form asked about and nothing read: whether
+                # this shape of award is usable at all, and whether it excludes
+                # a cost the applicant said must be covered.
+                shape_ok, shape_reason = award_meets_shape(s, self.profile.funding)
+                s.meets_applicant_shape = shape_ok
+                s.shape_mismatch_reason = shape_reason
+                if not shape_ok:
+                    s.classification_reason += f" {shape_reason}"
+
+                unmet = unmet_coverage_requirements(s, self.profile.funding)
+                if unmet:
+                    names = ", ".join(category.value.replace("_", " ") for category in unmet)
+                    s.classification_reason += (
+                        f" The profile requires {names} to be covered; this award states it is not."
+                    )
+                    result.unresolved.append(
+                        UnresolvedQuestion(
+                            topic="funding",
+                            question=(f"Is there any support for {names} alongside {s.name}?"),
+                            why_it_matters=(
+                                f"The profile lists {names} as costs that must be covered, and "
+                                f"this award excludes them. The gap is real money the family "
+                                f"would have to find."
+                            ),
+                            university=result.university,
+                            program=result.program,
+                        )
+                    )
+
+            # Three preferences the form collects that no official page
+            # answers directly. They become questions for the admissions
+            # office rather than numbers this product cannot justify.
+            prefs = self.profile.preferences
+            careers = (result.career_notes or "").lower()
+            if prefs.values_coop and "co-op" not in careers and "coop" not in careers:
+                result.unresolved.append(
+                    UnresolvedQuestion(
+                        topic="study and work",
+                        question=f"Does {result.program} offer a co-op or placement year?",
+                        why_it_matters=(
+                            "The profile says co-op programmes matter. Nothing on the pages read "
+                            "states whether this programme has one."
+                        ),
+                        university=result.university,
+                        program=result.program,
+                    )
+                )
+            if prefs.needs_work_during_study and not result.work_during_study:
+                result.unresolved.append(
+                    UnresolvedQuestion(
+                        topic="study and work",
+                        question=(
+                            f"How many hours a week may an international student work while "
+                            f"studying in {result.country}?"
+                        ),
+                        why_it_matters=(
+                            "The profile says work during study is necessary, and no official "
+                            "statement of the limit was found."
+                        ),
+                        university=result.university,
+                        program=result.program,
+                    )
+                )
+            for interest in prefs.research_interests[:3]:
+                if (
+                    interest.lower() not in careers
+                    and interest.lower() not in (result.program or "").lower()
                 ):
-                    pass
+                    result.unresolved.append(
+                        UnresolvedQuestion(
+                            topic="research",
+                            question=(f"Which groups at {result.university} work on {interest}?"),
+                            why_it_matters=(
+                                f"The profile lists {interest} as a research interest. The pages "
+                                f"read do not mention it, which is not the same as it being "
+                                f"absent."
+                            ),
+                            university=result.university,
+                            program=result.program,
+                        )
+                    )
 
             result.scholarships = scholarships
             result.conflicts.extend(conflicts)
@@ -501,7 +713,7 @@ class ResearchRunner:
             if i % 4 == 0:
                 self._save()
 
-        self.run.errors = list(self.run.errors or []) + errors[:200]
+        self._record_diagnostics(errors)
         st.finish(f"Funding checked for {len(rows)} programmes.")
         self._save()
 
@@ -515,7 +727,9 @@ class ResearchRunner:
         self._transition(PipelineStage.ASSESSMENT)
         self._save()
 
-        today = date.today()
+        # UTC, not the server's local day: a deadline is not "passed" because
+        # the machine running the worker happens to be east of the applicant.
+        today = datetime.now(UTC).date()
         for i, row in enumerate(rows):
             result = ProgramResult.model_validate(row.payload)
             claims = [_from_out(c) for c in result.claims]
@@ -591,21 +805,42 @@ class ResearchRunner:
 
         fetcher = self._make_fetcher()
         built = 0
+        errors: list[str] = []
         async with fetcher:
             adapter = WebDocumentsAdapter(fetcher, self.settings.academic_year)
-            by_name = {c.name: c for c in self._candidates}
-            if not by_name:
+            by_key = {dedupe.university_key(c.name, c.country): c for c in self._candidates}
+            if not by_key:
                 disc = (
                     FixtureDiscoveryAdapter(fetcher) if self.demo else LiveDiscoveryAdapter(fetcher)
                 )
                 self._candidates = await disc.discover(self.profile, self.candidate_limit)
-                by_name = {c.name: c for c in self._candidates}
+                by_key = {dedupe.university_key(c.name, c.country): c for c in self._candidates}
 
+            unmatched: list[str] = []
             for i, row in enumerate(rows):
                 self._check_cancelled()
                 result = ProgramResult.model_validate(row.payload)
-                cand = by_name.get(result.university)
+                cand = by_key.get(dedupe.university_key(result.university, result.country))
                 if cand is None:
+                    # Never a silent continue: the applicant approved this row
+                    # and is owed either a checklist or a reason there is none.
+                    unmatched.append(result.university)
+                    errors.append(
+                        f"No candidate matched {result.university} ({result.country}); no document "
+                        f"checklist could be built for it."
+                    )
+                    self._add_unresolved(
+                        row,
+                        result,
+                        topic="documents",
+                        question=(
+                            f"What documents does {result.university} require for {result.program}?"
+                        ),
+                        why=(
+                            "This approved programme could not be matched back to a discovered "
+                            "university, so its document list was never read."
+                        ),
+                    )
                     st.items_done = i + 1
                     continue
                 prog = CandidateProgram(
@@ -623,7 +858,19 @@ class ResearchRunner:
                 st.items_done = i + 1
                 self._save()
 
-        st.finish(f"Checklists built for {built} approved programmes.")
+        detail = f"Checklists built for {built} approved programmes."
+        if unmatched:
+            detail += (
+                f" {len(unmatched)} approved programme(s) could not be matched to a discovered "
+                f"university and have no checklist: {', '.join(sorted(set(unmatched))[:5])}."
+            )
+        if built == 0 and rows:
+            detail += (
+                " No checklist was built at all - the approved rows are listed in this run's "
+                "diagnostics with the reason."
+            )
+        self._record_diagnostics(errors)
+        st.finish(detail)
         completed = self.state[PipelineStage.COMPLETED]
         completed.start(detail="Research and document collection complete.")
         completed.finish("Research and document collection complete.")
@@ -631,6 +878,38 @@ class ResearchRunner:
         self.run.finished_at = datetime.now(UTC)
         self._save()
         return built
+
+    def _record_diagnostics(self, messages: list[str]) -> None:
+        """File each diagnostic as a failure or an honest unknown.
+
+        A clean demo run produces about fifty lines saying a page does not
+        state something. Reported beside real fetch failures they read as
+        fifty problems, which is how a correct result comes to look broken.
+        """
+        failures, unknowns = diagnostics.split(messages)
+        self.run.errors = list(self.run.errors or []) + failures[:200]
+        self.run.unknowns = list(self.run.unknowns or []) + unknowns[:400]
+
+    def _add_unresolved(
+        self, row: ProgramResultRow, result: ProgramResult, *, topic: str, question: str, why: str
+    ) -> None:
+        """Attach an open question to a row, and persist it.
+
+        Used where a stage cannot do its job for one row: the applicant sees
+        the gap on the row itself rather than having to notice a missing
+        checklist.
+        """
+        result.unresolved.append(
+            UnresolvedQuestion(
+                topic=topic,
+                question=question,
+                why_it_matters=why,
+                university=result.university,
+                program=result.program,
+                blocking=False,
+            )
+        )
+        self._update_result(row, result)
 
     # --- persistence helpers ---------------------------------------------
 
@@ -695,6 +974,14 @@ class ResearchRunner:
         self, row: ProgramResultRow, result: ProgramResult, extra_claims=None, conflicts=None
     ) -> None:
         result.id = row.id
+        # The re-derived result knows nothing about the user: it is built from
+        # pages, not from the database. Carrying the decision over is what makes
+        # a retry safe to press — otherwise re-running a stage silently discards
+        # every approval, rejection and note the applicant recorded.
+        result.user_decision = UserDecision(row.user_decision)
+        result.user_decision_reason = row.user_decision_reason
+        result.user_notes = row.user_notes
+        result.decided_at = ensure_utc(row.decided_at)
         row.payload = result.model_dump(mode="json")
         row.eligibility = result.eligibility.value
         row.admissions_fit = result.admissions_fit.value
@@ -787,20 +1074,25 @@ def _scholarship_eligibility(s, profile: ApplicantProfileIn):
     checks = []
     citizenship = profile.context.citizenship
     if s.citizenship_restrictions:
-        allowed = " ".join(s.citizenship_restrictions).lower()
-        ok = citizenship.lower() in allowed
+        # A substring test here used to say "Korea" satisfies "North Korea only"
+        # and that "Kazakhstan" fails "Central Asian nationals". Both readings
+        # were guesses; a group restriction is now left for the office to settle.
+        verdict, explanation = match_citizenship(
+            s.citizenship_restrictions,
+            [citizenship, profile.context.second_citizenship],
+        )
+        status = {
+            CitizenshipMatch.MET: EligibilityStatus.MET,
+            CitizenshipMatch.NOT_APPLICABLE: EligibilityStatus.NOT_APPLICABLE,
+            CitizenshipMatch.PENDING: EligibilityStatus.PENDING,
+        }[verdict]
         checks.append(
             _check(
                 "Scholarship citizenship eligibility",
                 s.citizenship_restrictions,
                 citizenship,
-                EligibilityStatus.MET if ok else EligibilityStatus.NOT_APPLICABLE,
-                (
-                    f"The award is restricted to {', '.join(s.citizenship_restrictions)}. "
-                    f"An applicant holding {citizenship} citizenship is not eligible."
-                    if not ok
-                    else f"{citizenship} citizenship falls within the published restriction."
-                ),
+                status,
+                explanation,
             )
         )
     elif s.international_eligible == "no":
@@ -908,29 +1200,53 @@ def _completeness(claims) -> float:
     return round(answered / len(CORE_QUESTIONS), 3)
 
 
-def _fit_label(actual: str | None, preferred: str) -> str:
+#: Dimensions whose values sit on a line, so a near miss is worth more than a
+#: far one. Anything not listed here is a plain category: it matches or it
+#: does not.
+_FIT_LADDERS: dict[str, list[str]] = {
+    "city": ["small", "medium", "large", "metropolis"],
+    "climate": ["cold", "temperate", "mediterranean", "warm"],
+    "workload": ["moderate", "demanding", "very_demanding"],
+    "size": ["small", "medium", "large"],
+}
+
+
+def _fit_label(actual: str | None, preferred: str, dimension: str = "") -> str:
+    """Grade what a university is against what the applicant asked for.
+
+    The dimension is named by the caller rather than guessed from the values.
+    Guessing meant the first ladder containing both values won, so the `size`
+    ladder was dead code shadowed by `city`, and a campus preference - which
+    has no ordering at all - fell through every ladder to "acceptable". A
+    known mismatch was therefore reported with the same positive word as "no
+    preference stated", which is an unknown dressed up as a mild yes.
+    """
     if not actual or actual == "unknown":
         return "unknown"
     if preferred in ("any", ""):
         return "acceptable"
     if actual == preferred:
         return "strong"
-    ladders = {
-        "city": ["small", "medium", "large", "metropolis"],
-        "climate": ["cold", "temperate", "mediterranean", "warm"],
-        "workload": ["moderate", "demanding", "very_demanding"],
-    }
-    for ladder in ladders.values():
-        if actual in ladder and preferred in ladder:
-            gap = abs(ladder.index(actual) - ladder.index(preferred))
-            return {0: "strong", 1: "good", 2: "acceptable"}.get(gap, "weak")
-    return "acceptable"
+
+    ladder = _FIT_LADDERS.get(dimension)
+    if ladder and actual in ladder and preferred in ladder:
+        gap = abs(ladder.index(actual) - ladder.index(preferred))
+        return {0: "strong", 1: "good", 2: "acceptable"}.get(gap, "weak")
+    # A category that simply differs - an urban university for someone who
+    # asked for a campus one. Not a disaster, and not a match either.
+    return "weak"
 
 
 def _as_date(v):
-    if isinstance(v, str):
-        try:
-            return date.fromisoformat(v)
-        except ValueError:
-            return None
-    return v if isinstance(v, date) else None
+    """Shared with eligibility: an ambiguous d/m vs m/d string reads as None."""
+    return parse_published_date(v)
+
+
+def _claim_is_stale(row: ClaimRow, now: datetime) -> bool:
+    accessed = ensure_utc(row.accessed_at)
+    if accessed is None:
+        return False
+    try:
+        return is_stale(ClaimType(row.claim_type), accessed, now)
+    except ValueError:
+        return False

@@ -346,6 +346,9 @@ export interface RunView {
   decided_count: number;
   stages: StageView[];
   errors: string[];
+  //: Diagnostics that mean 'the page was read and does not say'. Absent on
+  //: runs made before the two were separated.
+  unknowns?: string[];
   retry_urls: string[];
   settings: Record<string, unknown>;
   created_at: string;
@@ -366,6 +369,8 @@ export interface RunView {
   worker_id: string | null;
   heartbeat_at: string | null;
   recovery_count: number;
+  //: When the evidence is next re-read automatically (ISO 8601), if ever.
+  next_recheck_at?: string | null;
 }
 
 export interface ProfileGap {
@@ -398,9 +403,24 @@ export interface Capabilities {
   data_origin: string;
   adapters: { name: string; role: string; live: boolean }[];
   fetch_tiers: string[];
-  currency: { supported: string[]; rate_date: string; rate_source: string };
+  currency: {
+    supported: string[];
+    rate_date: string;
+    rate_source: string;
+    rate_age_days?: number;
+    //: Empty while the snapshot is fresh; a sentence to show verbatim once it is not.
+    stale_warning?: string;
+  };
   guarantees: string[];
   limits: string[];
+  //: What live mode can actually reach. Someone switching demo mode off
+  //: pictures the open web; the truth is a curated registry, and the
+  //: difference has to be on screen before they choose, not after.
+  live_coverage: {
+    institutions: number;
+    countries: string[];
+    recall_note: string;
+  };
 }
 
 export interface StoredProfile {

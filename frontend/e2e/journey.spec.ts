@@ -202,12 +202,57 @@ test('rejection is remembered with the row kept', async () => {
 
   const first = page.locator('tbody tr').first();
   const name = await first.locator('.uni-cell__name').innerText();
+
+  // Saying No asks why. The reason is optional, but the product promises that
+  // whatever is given is kept with the row.
   await first.locator('.decision-btn--reject').click();
+  const reason = first.locator('[data-testid^="reject-reason-"]');
+  await expect(reason).toBeVisible();
+  await reason.locator('button', { hasText: 'no funding' }).click();
+  await reason.locator('[data-testid^="reject-save-"]').click();
+
   await expect(first.locator('.decision-btn--reject')).toHaveAttribute('aria-pressed', 'true');
   await expect(first).toHaveClass(/is-rejected/);
+  await expect(first).toContainText('Rejected: no funding');
 
   await page.getByTestId('nav-approved').click();
   await expect(page.getByText('Rejected (1)')).toBeVisible();
   await expect(page.getByText(name)).toBeVisible();
+  await expect(page.getByText('no funding')).toBeVisible();
   await expect(page.getByText(/not proposed again unless something material changes/)).toBeVisible();
+
+  // And it survives a reload: the reason lives on the server, not in the tab.
+  await page.reload();
+  await page.getByTestId('nav-approved').click();
+  await expect(page.getByText('no funding')).toBeVisible();
+});
+
+test('screens have addresses: back, forward, reload and a gated link', async () => {
+  await openShortlist(page);
+  await expect(page).toHaveURL(/#\/shortlist$/);
+
+  await page.getByTestId('nav-funding').click();
+  await expect(page).toHaveURL(/#\/funding$/);
+
+  await page.goBack();
+  await expect(page).toHaveURL(/#\/shortlist$/);
+  await expect(page.getByRole('heading', { name: 'The shortlist' })).toBeVisible();
+
+  await page.goForward();
+  await expect(page).toHaveURL(/#\/funding$/);
+
+  // A reload lands on the same screen rather than back at step 01.
+  await page.reload();
+  await expect(page).toHaveURL(/#\/funding$/);
+  await expect(page.getByRole('heading', { name: 'What you would actually pay' })).toBeVisible();
+});
+
+test('a link to a screen that is not reachable yet explains itself', async ({ browser }) => {
+  // A bookmark made before there were any results, opened in a clean session.
+  const fresh = await browser.newPage();
+  await fresh.goto('/#/shortlist');
+  await expect(fresh.getByTestId('redirect-notice')).toBeVisible();
+  await expect(fresh.getByTestId('redirect-notice')).toContainText('No results yet');
+  await expect(fresh).toHaveURL(/#\/profile$/);
+  await fresh.close();
 });

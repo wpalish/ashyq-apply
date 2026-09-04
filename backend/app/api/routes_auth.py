@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from time import monotonic
 
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from pydantic import BaseModel, Field
@@ -22,6 +23,11 @@ from app.security import (
     token_hash,
     verify_password,
 )
+
+#: A real scrypt hash of a value nobody holds. Verifying against it costs the
+#: same as verifying a genuine one, which is the point: an unknown email must
+#: not answer faster than a known one.
+DUMMY_PASSWORD_HASH = hash_password("no account holds this password value")
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
@@ -83,13 +89,20 @@ def register(
     settings = get_settings()
     if not settings.auth_enabled or not settings.auth_registration_enabled:
         raise HTTPException(403, "Registration is disabled.")
-    email = normalize_email(payload.email)
+    # These validators raise ValueError, and their messages are written for the
+    # person typing. Converting here, rather than through a global handler,
+    # keeps an unexpected ValueError elsewhere a 500 where it belongs.
+    try:
+        email = normalize_email(payload.email)
+        password_hash = hash_password(payload.password)
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from exc
     if session.query(User.id).filter(User.email == email).first():
         raise HTTPException(409, "An account with this email already exists.")
     user = User(
         email=email,
         display_name=payload.display_name.strip(),
-        password_hash=hash_password(payload.password),
+        password_hash=password_hash,
     )
     org = Organization(
         name=payload.organization_name.strip(), slug=_slug(payload.organization_name)
@@ -116,15 +129,33 @@ def login(
     response: Response,
     session: Session = Depends(get_session),
 ) -> PrincipalView:
-    if not get_settings().auth_enabled:
+    settings = get_settings()
+    if not settings.auth_enabled:
         raise HTTPException(403, "Authentication is disabled in local development mode.")
-    email = normalize_email(payload.email)
+    try:
+        email = normalize_email(payload.email)
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from exc
+
+    # Per-address limiting is in the middleware, but an attacker rotating
+    # addresses walks straight past it while pounding one account. The account
+    # itself therefore carries a budget too. In-memory and per-process: it
+    # slows credential stuffing, it is not a distributed quota.
+    from app.main import _limiter
+
+    if not _limiter.allow(f"auth:email:{email}", settings.auth_rate_limit_per_minute, monotonic()):
+        raise HTTPException(
+            429, "Too many sign-in attempts for this account. Try again in a minute."
+        )
+
     user = session.query(User).filter(User.email == email).first()
-    if (
-        user is None
-        or not user.is_active
-        or not verify_password(payload.password, user.password_hash)
-    ):
+    if user is None or not user.is_active:
+        # Hash something anyway. Returning early for an unknown address makes
+        # the response measurably faster, which turns login into an oracle for
+        # which emails hold an account.
+        verify_password(payload.password, DUMMY_PASSWORD_HASH)
+        raise HTTPException(401, "Invalid email or password.")
+    if not verify_password(payload.password, user.password_hash):
         raise HTTPException(401, "Invalid email or password.")
     membership = (
         session.query(OrganizationMembership)

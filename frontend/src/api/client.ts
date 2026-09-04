@@ -53,7 +53,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     });
   } catch {
     // A network-level failure has no HTTP status; say what to check instead.
-    throw new ApiError(0, 'Cannot reach the UniMatch API. Is the backend running on port 8099?');
+    throw new ApiError(0, 'Cannot reach the ASHYQ Apply API. Is the backend running on port 8099?');
   }
 
   if (!response.ok) {
@@ -87,6 +87,37 @@ export const api = {
       method: 'POST', body: JSON.stringify({ email, password }),
     }),
   logout: () => request<void>('/api/auth/logout', { method: 'POST' }),
+  changePassword: (currentPassword: string, newPassword: string) =>
+    request<AuthPrincipal>('/api/auth/password', {
+      method: 'POST',
+      body: JSON.stringify({ current_password: currentPassword, new_password: newPassword }),
+    }),
+  // The answer is the same whether or not the address has an account, so the
+  // form can never be used to find out who is registered.
+  requestPasswordReset: (email: string) =>
+    request<{ detail: string; reset_link?: string }>('/api/auth/password/reset-request', {
+      method: 'POST',
+      body: JSON.stringify({ email }),
+    }),
+  confirmPasswordReset: (token: string, newPassword: string) =>
+    request<AuthPrincipal>('/api/auth/password/reset', {
+      method: 'POST',
+      body: JSON.stringify({ token, new_password: newPassword }),
+    }),
+  organizations: () =>
+    request<{ id: string; name: string; role: string; current: boolean }[]>(
+      '/api/auth/organizations',
+    ),
+  switchOrganization: (organizationId: string) =>
+    request<AuthPrincipal>('/api/auth/session/organization', {
+      method: 'POST',
+      body: JSON.stringify({ organization_id: organizationId }),
+    }),
+  deleteAccount: (password: string, confirmDeleteData: boolean) =>
+    request<void>('/api/auth/me/delete', {
+      method: 'POST',
+      body: JSON.stringify({ password, confirm_delete_data: confirmDeleteData }),
+    }),
   cases: () => request<ApplicantCase[]>('/api/cases'),
   health: () => request<{ status: string; demo_mode: boolean; schema_version: number }>('/api/health'),
   capabilities: () => request<Capabilities>('/api/capabilities'),
@@ -106,20 +137,43 @@ export const api = {
     }),
   exportProfile: (id: string) => request<Record<string, unknown>>(`/api/profiles/${id}/export`),
   deleteProfile: (id: string) => request<void>(`/api/profiles/${id}`, { method: 'DELETE' }),
+  // Typed, and error-checked: ProfileScreen used a bare fetch().then(json)
+  // here, so a 400 wrote {detail: "..."} into the applicant's GPA field.
+  previewConversion: (grade: unknown, methodKey: string) =>
+    request<Record<string, unknown>>(
+      `/api/profiles/conversions/preview?method_key=${encodeURIComponent(methodKey)}`,
+      { method: 'POST', body: JSON.stringify(grade) },
+    ),
+
   conversionMethods: (scale: string) =>
     request<{ methods: { key: string; description: string; source: string; caveat: string; to_scale: string }[]; note: string }>(
       `/api/profiles/conversions/methods?scale_label=${encodeURIComponent(scale)}`,
     ),
 
-  startRun: (profileId: string, demoMode: boolean) =>
+  // The key makes a retried request replay its own run instead of starting a
+  // second one; the caller keeps it stable for as long as one click lasts.
+  startRun: (profileId: string, demoMode: boolean, idempotencyKey?: string) =>
     request<RunView>('/api/runs', {
       method: 'POST',
       body: JSON.stringify({ profile_id: profileId, demo_mode: demoMode }),
+      headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : {},
     }),
-  listRuns: () => request<RunView[]>('/api/runs'),
+  // Filtered server-side: switchCase used to pull fifty runs across every
+  // applicant and search them in the browser for the one it wanted.
+  listRuns: (profileId?: string, limit = 50) =>
+    request<RunView[]>(
+      `/api/runs?limit=${limit}${profileId ? `&profile_id=${encodeURIComponent(profileId)}` : ''}`,
+    ),
   getRun: (id: string) => request<RunView>(`/api/runs/${id}`),
   cancelRun: (id: string) => request<RunView>(`/api/runs/${id}/cancel`, { method: 'POST' }),
-  retryRun: (id: string) => request<RunView>(`/api/runs/${id}/retry`, { method: 'POST' }),
+  // Without a stage the server resets every stage; with one it resets that
+  // stage and everything after it. The two buttons in ProgressScreen are the
+  // two calls, so the label the user reads matches what actually happens.
+  retryRun: (id: string, stage?: string) =>
+    request<RunView>(`/api/runs/${id}/retry${stage ? `?stage=${encodeURIComponent(stage)}` : ''}`, {
+      method: 'POST',
+    }),
+  recheckNow: (id: string) => request<RunView>(`/api/runs/${id}/recheck`, { method: 'POST' }),
   collectDocuments: (id: string) =>
     request<RunView>(`/api/runs/${id}/collect-documents`, { method: 'POST' }),
 
@@ -136,6 +190,18 @@ export const api = {
       method: 'POST',
       body: JSON.stringify({ decision, reason, notes }),
     }),
+
+  // A note is not a decision: this route leaves user_decision and decided_at
+  // alone, which the decision endpoint cannot.
+  saveNotes: (runId: string, resultId: string, notes: string) =>
+    request<ProgramResult>(`/api/runs/${runId}/results/${resultId}/notes`, {
+      method: 'PATCH',
+      body: JSON.stringify({ notes }),
+    }),
+
+  // A deadline in a table is something to remember; in a calendar it reminds
+  // you. Only confirmed dates become events.
+  deadlinesUrl: (runId: string) => `/api/runs/${runId}/deadlines.ics`,
 
   exportUrl: (runId: string, fmt: 'csv' | 'json' | 'xlsx', decision?: string) =>
     `/api/runs/${runId}/export.${fmt}${decision ? `?decision=${decision}` : ''}`,

@@ -38,7 +38,7 @@ from app.domain.enums import FetchOutcome
 log = logging.getLogger("unimatch.fetch")
 
 USER_AGENT = (
-    "UniMatchResearchBot/0.1 (+https://github.com/unimatch/unimatch; "
+    "ASHYQApplyBot/0.2 (+https://github.com/wpalish/ashyq-apply; "
     "university admissions research for a single applicant; contact: set FETCH_CONTACT)"
 )
 DEFAULT_TIMEOUT = 20.0

@@ -121,7 +121,9 @@ class IeltsScore(Base):
     reading: float | None = Field(default=None, ge=0, le=9)
     writing: float | None = Field(default=None, ge=0, le=9)
     speaking: float | None = Field(default=None, ge=0, le=9)
-    test_type: Literal["academic", "general_training", "ukvi_academic", "one_skill_retake"] = "academic"
+    test_type: Literal["academic", "general_training", "ukvi_academic", "one_skill_retake"] = (
+        "academic"
+    )
     dates: TestDate = Field(default_factory=TestDate)
     status: FieldStatus = FieldStatus.APPLICANT_CONFIRMED
 
@@ -191,7 +193,9 @@ class Activity(Base):
     duration_months: int | None = Field(default=None, ge=0, le=240)
     hours_per_week: float | None = Field(default=None, ge=0, le=80)
     weeks_per_year: int | None = Field(default=None, ge=0, le=52)
-    responsibility_level: Literal["participant", "contributor", "coordinator", "leader", "founder"] = "participant"
+    responsibility_level: Literal[
+        "participant", "contributor", "coordinator", "leader", "founder"
+    ] = "participant"
     measurable_outcome: Str2000 | None = None
     impact_on_others: Str2000 | None = None
     evidence_links: list[Str200] = Field(default_factory=list, max_length=5)
@@ -279,6 +283,11 @@ class ScoringWeights(Base):
     city_fit: float = Field(default=0.4, ge=0, le=3)
     climate_fit: float = Field(default=0.3, ge=0, le=3)
     workload_fit: float = Field(default=0.3, ge=0, le=3)
+    #: Soft, like the other location fits: the registry knows the size and the
+    #: campus shape, so a stated preference for one is worth something - but
+    #: not enough to outrank a funded place.
+    university_size_fit: float = Field(default=0.3, ge=0, le=3)
+    campus_fit: float = Field(default=0.3, ge=0, le=3)
     career_outcomes: float = Field(default=0.7, ge=0, le=3)
     post_study_work: float = Field(default=0.5, ge=0, le=3)
 
@@ -289,7 +298,9 @@ class ScoringWeights(Base):
 class ApplicantProfileIn(Base):
     """Inbound profile. ``display_name`` is a local label, never sent outward."""
 
-    display_name: Str80 = Field(default="Applicant", description="Local label only; never leaves this machine")
+    display_name: Str80 = Field(
+        default="Applicant", description="Local label only; never leaves this machine"
+    )
     context: ApplicationContext
     academics: AcademicRecord = Field(default_factory=AcademicRecord)
     activities: list[Activity] = Field(default_factory=list, max_length=30)

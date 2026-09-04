@@ -2,15 +2,17 @@
 
 from __future__ import annotations
 
+import re
 from datetime import UTC, datetime
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Response
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
 from app.api.tenancy import owned_run
 from app.db import get_session
-from app.export import tabular
+from app.domain.enums import UserDecision
+from app.export import calendar, tabular
 from app.models import AuditEvent, ClaimRow, ConflictRow, ProgramResultRow
 from app.schemas.result import DecisionIn, ProgramResult
 from app.security import Principal, get_principal
@@ -26,6 +28,12 @@ class ShortlistSummary(BaseModel):
     with_conflicts: int
     with_open_questions: int
     demo_data: bool
+
+
+def _safe_filename_stem(value: str) -> str:
+    """A filename stem that cannot break out of a quoted header value."""
+    cleaned = re.sub(r"[^a-z0-9-]+", "-", value.lower()).strip("-")
+    return cleaned or "ashyq-export"
 
 
 def _results(session: Session, run_id: str, **filters) -> list[ProgramResultRow]:
@@ -98,7 +106,6 @@ def get_result(
     session: Session = Depends(get_session),
 ) -> ProgramResult:
     owned_run(session, run_id, principal)
-    owned_run(session, run_id, principal)
     row = session.get(ProgramResultRow, result_id)
     if row is None or row.run_id != run_id:
         raise HTTPException(404, "Result not found")
@@ -118,6 +125,9 @@ def set_decision(
     A rejected row is kept, with its reason, so the same programme is not
     proposed again on a later run unless something material changed.
     """
+    # The result id alone is not authority: resolve the run through the
+    # principal's organization first, exactly as every read route does.
+    owned_run(session, run_id, principal)
     row = session.get(ProgramResultRow, result_id)
     if row is None or row.run_id != run_id:
         raise HTTPException(404, "Result not found")
@@ -148,23 +158,74 @@ def set_decision(
     return result
 
 
+class NotesIn(BaseModel):
+    notes: str = Field(default="", max_length=20_000)
+
+
+@router.patch("/results/{result_id}/notes", response_model=ProgramResult)
+def set_notes(
+    run_id: str,
+    result_id: str,
+    payload: NotesIn,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> ProgramResult:
+    """Save a note without touching the decision.
+
+    Editing a note used to re-POST the decision, which stamped `decided_at` on
+    a row the applicant had not decided anything about - so an undecided row
+    started claiming it was decided the moment they typed a reminder in it.
+    """
+    owned_run(session, run_id, principal)
+    row = session.get(ProgramResultRow, result_id)
+    if row is None or row.run_id != run_id:
+        raise HTTPException(404, "Result not found")
+
+    result = ProgramResult.model_validate(row.payload)
+    result.user_notes = payload.notes
+    row.user_notes = payload.notes
+    row.payload = result.model_dump(mode="json")
+    session.add(
+        AuditEvent(
+            organization_id=principal.organization_id,
+            actor=f"user:{principal.user_id[:8]}",
+            action="note_saved",
+            entity_type="result",
+            entity_id=result_id,
+            detail={},
+        )
+    )
+    session.commit()
+    return result
+
+
 @router.get("/claims")
 def list_claims(
     run_id: str,
+    response: Response,
     result_id: str | None = None,
     status: str | None = None,
+    limit: int = Query(default=500, ge=1, le=500),
+    offset: int = Query(default=0, ge=0),
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
 ) -> list[dict]:
+    """Evidence for this run, paged.
+
+    A run holds hundreds of claims and the sources screen fetched all of them
+    at once; the old cap of 2000 was silent, so a large run simply lost the
+    tail with nothing to say it had.
+    """
     owned_run(session, run_id, principal)
     q = session.query(ClaimRow).filter(ClaimRow.run_id == run_id)
     if result_id:
         q = q.filter(ClaimRow.result_id == result_id)
     if status:
         q = q.filter(ClaimRow.status == status)
+    response.headers["X-Total-Count"] = str(q.count())
     return [
         {"id": c.id, "result_id": c.result_id, **c.payload}
-        for c in q.order_by(ClaimRow.claim_type).limit(2000).all()
+        for c in q.order_by(ClaimRow.claim_type).limit(limit).offset(offset).all()
     ]
 
 
@@ -215,6 +276,45 @@ def open_questions(
     return out
 
 
+@router.get("/deadlines.ics")
+def deadlines_ics(
+    run_id: str,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> Response:
+    """Every confirmed deadline as a calendar file.
+
+    Only dates the pipeline actually confirmed become events: an unknown
+    deadline produces no event rather than a placeholder somebody might plan
+    around.
+    """
+    owned_run(session, run_id, principal)
+    results = [ProgramResult.model_validate(r.payload) for r in _results(session, run_id)]
+    body = calendar.to_ics(results, run_id=run_id, now=datetime.now(UTC))
+    return Response(
+        body,
+        media_type="text/calendar; charset=utf-8",
+        headers={
+            "Content-Disposition": (
+                f'attachment; filename="{_safe_filename_stem(f"ashyq-{run_id[:8]}-deadlines")}.ics"'
+            )
+        },
+    )
+
+
+@router.get("/deadlines")
+def deadlines(
+    run_id: str,
+    limit: int = Query(default=10, ge=1, le=100),
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> list[dict]:
+    """The nearest deadlines, soonest first, with passed ones marked."""
+    owned_run(session, run_id, principal)
+    results = [ProgramResult.model_validate(r.payload) for r in _results(session, run_id)]
+    return calendar.upcoming(results, today=datetime.now(UTC).date(), limit=limit)
+
+
 @router.get("/export.{fmt}")
 def export(
     run_id: str,
@@ -224,6 +324,15 @@ def export(
     session: Session = Depends(get_session),
 ) -> Response:
     run = owned_run(session, run_id, principal)
+    # The filter goes into the Content-Disposition header, so it is validated
+    # against the enum rather than trusted: `?decision=approved" ; x-injected="1`
+    # used to land inside the header verbatim.
+    if decision is not None and decision not in {d.value for d in UserDecision}:
+        raise HTTPException(
+            400,
+            f"Unknown decision filter {decision!r}. Use one of: "
+            f"{', '.join(sorted(d.value for d in UserDecision))}.",
+        )
     rows = _results(session, run_id, decision=decision)
     results = [ProgramResult.model_validate(r.payload) for r in rows]
     meta = {
@@ -232,7 +341,9 @@ def export(
         "stage": run.stage,
         "filter": {"decision": decision},
     }
-    stem = f"unimatch-{run_id[:8]}{'-' + decision if decision else ''}"
+    # Belt and braces: even a validated value is rebuilt from a safe alphabet,
+    # so no future caller can smuggle a quote or a newline into the header.
+    stem = _safe_filename_stem(f"ashyq-{run_id[:8]}{'-' + decision if decision else ''}")
 
     if fmt == "csv":
         return Response(

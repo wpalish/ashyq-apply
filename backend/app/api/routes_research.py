@@ -2,17 +2,19 @@
 
 from __future__ import annotations
 
+import hashlib
 from datetime import UTC, datetime
 from typing import Literal
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, Header, HTTPException, Query, Response
 from pydantic import BaseModel, Field
+from sqlalchemy import case, func
 from sqlalchemy.orm import Session
 
 from app.api.tenancy import owned_profile, owned_run
 from app.config import get_settings
 from app.db import get_session
-from app.domain.enums import PipelineStage, UserDecision
+from app.domain.enums import STAGE_ORDER, PipelineStage, UserDecision
 from app.jobs.store import JobStore
 from app.models import (
     ApplicantProfileRow,
@@ -23,7 +25,7 @@ from app.models import (
     ResearchRun,
 )
 from app.models.base import ensure_utc
-from app.pipeline.state import RunState, is_lease_expired
+from app.pipeline.state import IN_PROGRESS_STAGES, RunState, is_lease_expired
 from app.security import Principal, get_principal
 
 router = APIRouter(prefix="/api/runs", tags=["research"])
@@ -78,6 +80,9 @@ class RunView(BaseModel):
     decided_count: int
     stages: list[StageView]
     errors: list[str]
+    #: Diagnostics that mean "the page was read and does not say". Separate
+    #: from `errors` so the UI can stop presenting them as problems.
+    unknowns: list[str] = []
     retry_urls: list[str]
     settings: dict
     created_at: str
@@ -93,25 +98,54 @@ class RunView(BaseModel):
     worker_id: str | None = None
     heartbeat_at: str | None = None
     recovery_count: int = 0
+    #: When the evidence in this run next ages out and is re-read automatically.
+    next_recheck_at: str | None = None
 
 
 def settings_default(name: str) -> int:
     return int(getattr(get_settings(), name))
 
 
-def _view(session: Session, run: ResearchRun) -> RunView:
+def _view(
+    session: Session,
+    run: ResearchRun,
+    *,
+    counts: tuple[int, int] | None = None,
+    job: Job | None = None,
+) -> RunView:
+    """One run as the API describes it.
+
+    `counts` and `job` let a list endpoint pass values it already fetched in
+    one grouped query; alone, this function fetches them itself.
+    """
     state = RunState.load(run.stage_state)
-    job = session.query(Job).filter(Job.run_id == run.id).order_by(Job.created_at.desc()).first()
+    lease_seconds = get_settings().job_lease_seconds
+    # The job the user is waiting on, which is not always the newest row: a
+    # recheck is queued months ahead, and reporting it as this run's job made
+    # every screen believe work was in flight for ever.
+    now = datetime.now(UTC)
+    if job is None:
+        job = (
+            session.query(Job)
+            .filter(Job.run_id == run.id, Job.available_at <= now)
+            .order_by(Job.created_at.desc())
+            .first()
+        )
     # "Running" is a property of the job, not of the stage the run stopped at.
     job_running = job is not None and job.status == JobStatus.RUNNING.value
     lease_expiry = ensure_utc(job.lease_expires_at) if job else None
-    stale = is_lease_expired(run.stage, run.heartbeat_at) or (
+    stale = is_lease_expired(run.stage, run.heartbeat_at, lease_seconds=lease_seconds) or (
         job is not None
         and job.status == JobStatus.RUNNING.value
         and lease_expiry is not None
         and lease_expiry < datetime.now(UTC)
     )
-    results = session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run.id)
+    if counts is None:
+        results = session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run.id)
+        counts = (
+            results.count(),
+            results.filter(ProgramResultRow.user_decision != UserDecision.UNDECIDED.value).count(),
+        )
     return RunView(
         id=run.id,
         profile_id=run.profile_id,
@@ -127,16 +161,15 @@ def _view(session: Session, run: ResearchRun) -> RunView:
         candidate_limit=run.candidate_limit or settings_default("candidate_limit"),
         verify_limit=run.verify_limit or settings_default("verify_limit"),
         fetch_tiers=dict(run.fetch_tiers or {}),
-        results_count=results.count(),
-        decided_count=results.filter(
-            ProgramResultRow.user_decision != UserDecision.UNDECIDED.value
-        ).count(),
+        results_count=counts[0],
+        decided_count=counts[1],
         stages=[
             StageView(stage=name, **{k: v for k, v in vars(st).items() if k != "stage"})
             for name, st in state.stages.items()
             if name not in ("queued",)
         ],
         errors=list(run.errors or []),
+        unknowns=list(run.unknowns or []),
         retry_urls=list(run.retry_urls or []),
         settings=dict(run.settings_snapshot or {}),
         created_at=run.created_at.isoformat(),
@@ -152,19 +185,59 @@ def _view(session: Session, run: ResearchRun) -> RunView:
         worker_id=run.worker_id,
         heartbeat_at=run.heartbeat_at.isoformat() if run.heartbeat_at else None,
         recovery_count=run.recovery_count or 0,
+        next_recheck_at=run.next_recheck_at.isoformat() if run.next_recheck_at else None,
     )
 
 
 @router.post("", response_model=RunView, status_code=202)
 def start_run(
     payload: StartRunIn,
+    idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
 ) -> RunView:
+    """Start research for one profile.
+
+    Two guards, because they answer different questions. `Idempotency-Key`
+    identifies one *click*: replaying it returns the run that click created,
+    which is what a retried request or a double submit needs. The active-run
+    check answers "is this profile already being researched?" and refuses a
+    genuinely new request with 409, naming the run to join.
+    """
     settings = get_settings()
     owned_profile(session, payload.profile_id, principal)
 
+    if idempotency_key:
+        replayed = (
+            session.query(ResearchRun)
+            .filter(
+                ResearchRun.profile_id == payload.profile_id,
+                ResearchRun.client_request_key == idempotency_key,
+            )
+            .first()
+        )
+        if replayed is not None:
+            return _view(session, replayed)
+
+    active = (
+        session.query(ResearchRun)
+        .filter(
+            ResearchRun.profile_id == payload.profile_id,
+            ResearchRun.cancelled.is_(False),
+            ResearchRun.stage.in_([s.value for s in IN_PROGRESS_STAGES]),
+        )
+        .order_by(ResearchRun.created_at.desc())
+        .first()
+    )
+    if active is not None:
+        raise HTTPException(
+            409,
+            f"Research is already running for this applicant (run {active.id}). "
+            "Wait for it to finish, or cancel it first.",
+        )
+
     run = ResearchRun(
+        client_request_key=idempotency_key,
         profile_id=payload.profile_id,
         stage=PipelineStage.QUEUED.value,
         demo_mode=settings.demo_mode if payload.demo_mode is None else payload.demo_mode,
@@ -184,8 +257,9 @@ def start_run(
             detail={"demo_mode": run.demo_mode},
         )
     )
-    # Idempotent by run: a retried request or a double click cannot start the
-    # same research twice.
+    # One job per run. The request-level guards above are what stop a second
+    # run being created in the first place; this key only keeps a retried
+    # enqueue for the same run from queueing the work twice.
     JobStore(session).enqueue(
         "research",
         run_id=run.id,
@@ -199,19 +273,56 @@ def start_run(
 
 @router.get("", response_model=list[RunView])
 def list_runs(
+    response: Response,
     profile_id: str | None = None,
+    limit: int = Query(default=50, ge=1, le=200),
+    offset: int = Query(default=0, ge=0),
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
 ) -> list[RunView]:
+    """A page of runs, newest first.
+
+    `_view` counts results and decisions per run, so building this list ran two
+    queries per row. The counts are fetched in one grouped query and handed to
+    the view instead.
+    """
     q = (
         session.query(ResearchRun)
         .join(ApplicantProfileRow, ResearchRun.profile_id == ApplicantProfileRow.id)
         .filter(ApplicantProfileRow.organization_id == principal.organization_id)
-        .order_by(ResearchRun.created_at.desc())
     )
     if profile_id:
         q = q.filter(ResearchRun.profile_id == profile_id)
-    return [_view(session, r) for r in q.limit(50).all()]
+    response.headers["X-Total-Count"] = str(q.count())
+    runs = q.order_by(ResearchRun.created_at.desc()).limit(limit).offset(offset).all()
+    if not runs:
+        return []
+
+    run_ids = [r.id for r in runs]
+    counts = {
+        run_id: (int(total), int(decided))
+        for run_id, total, decided in session.query(
+            ProgramResultRow.run_id,
+            func.count(ProgramResultRow.id),
+            func.sum(
+                case(
+                    (ProgramResultRow.user_decision != UserDecision.UNDECIDED.value, 1),
+                    else_=0,
+                )
+            ),
+        )
+        .filter(ProgramResultRow.run_id.in_(run_ids))
+        .group_by(ProgramResultRow.run_id)
+        .all()
+    }
+    jobs = {
+        job.run_id: job
+        for job in session.query(Job)
+        .filter(Job.run_id.in_(run_ids), Job.available_at <= datetime.now(UTC))
+        .order_by(Job.created_at)
+        .all()
+    }
+    return [_view(session, r, counts=counts.get(r.id, (0, 0)), job=jobs.get(r.id)) for r in runs]
 
 
 @router.get("/{run_id}", response_model=RunView)
@@ -263,18 +374,23 @@ def retry_run(
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
 ) -> RunView:
-    """Re-run a failed run.
+    """Re-run a run, in whole or from one stage onwards.
 
-    A stage can be named to re-enter the pipeline there; without one the run
-    restarts from discovery. Existing results are cleared first so a retry
-    cannot silently double up rows.
+    Naming a stage re-enters the pipeline there: that stage and every stage
+    after it in STAGE_ORDER are reset, and the earlier ones keep their work.
+    Without a stage every stage is reset, which is what "re-run everything"
+    has to mean — resetting only the failed ones made a retry of a *successful*
+    run skip the whole pipeline.
+
+    Results are not deleted. `_persist_result` upserts on (run_id, dedupe_key),
+    so a re-run refreshes rows in place and carries the user's decisions over;
+    deleting them first is how a retry used to end with an empty shortlist.
     """
     run = owned_run(session, run_id, principal)
     store = JobStore(session)
     if any(j.status == JobStatus.RUNNING.value for j in store.for_run(run_id)):
         raise HTTPException(409, "This run is still executing; cancel it before retrying.")
 
-    session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run_id).delete()
     run.cancelled = False
     run.stage = PipelineStage.QUEUED.value
     run.errors = []
@@ -284,8 +400,13 @@ def retry_run(
     run.claims_recorded = 0
     run.programs_verified = 0
     state = RunState.load(run.stage_state)
+    order = [s.value for s in STAGE_ORDER]
+    from_index = order.index(stage) if stage else 0
     for name, st in state.stages.items():
-        if st.status in ("failed", "running") or (stage and name == stage):
+        after_entry_point = name in order and order.index(name) >= from_index
+        # A failed or half-run stage is always reset: leaving it "running" would
+        # make the runner skip it and the run would stall in the same place.
+        if after_entry_point or st.status in ("failed", "running"):
             st.status = "pending"
             st.error = ""
     run.stage_state = state.dump()
@@ -314,18 +435,29 @@ def collect_documents(
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
 ) -> RunView:
-    """Deep document collection, for approved and maybe rows only."""
+    """Deep document collection, for approved and maybe rows only.
+
+    Idempotent by *shortlist content*: the job key is a hash of the approved
+    row ids, so pressing the button twice on the same shortlist is a no-op,
+    while changing which programmes are approved always enqueues real work.
+    Keying on the number of approved rows - the previous behaviour - made
+    swapping one approval for another silently return the finished job, and
+    the newly approved programme never received a checklist.
+
+    A finished job for the same key is therefore a deliberate no-op, not a
+    lost request: the documents it collected are still the right ones.
+    """
     run = owned_run(session, run_id, principal)
-    approved = (
-        session.query(ProgramResultRow)
-        .filter(
+    approved_ids = sorted(
+        row.id
+        for row in session.query(ProgramResultRow.id).filter(
             ProgramResultRow.run_id == run_id,
             ProgramResultRow.user_decision.in_(
                 [UserDecision.APPROVED.value, UserDecision.MAYBE.value]
             ),
         )
-        .count()
     )
+    approved = len(approved_ids)
     if approved == 0:
         raise HTTPException(
             400,
@@ -342,11 +474,51 @@ def collect_documents(
             detail={"approved": approved},
         )
     )
+    shortlist_digest = hashlib.sha256(",".join(approved_ids).encode()).hexdigest()[:16]
     JobStore(session).enqueue(
         "documents",
         run_id=run_id,
-        idempotency_key=f"documents:{run_id}:{approved}",
+        idempotency_key=f"documents:{run_id}:{shortlist_digest}",
         priority=5,
+    )
+    session.commit()
+    session.refresh(run)
+    return _view(session, run)
+
+
+@router.post("/{run_id}/recheck", response_model=RunView, status_code=202)
+def recheck_now(
+    run_id: str,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> RunView:
+    """Re-read the evidence for this run now, instead of waiting for its date.
+
+    The automatic recheck is queued for `next_recheck_at`; this is the same job
+    made available immediately. Results are upserted and decisions are kept.
+    """
+    run = owned_run(session, run_id, principal)
+    store = JobStore(session)
+    if any(j.status == JobStatus.RUNNING.value for j in store.for_run(run_id)):
+        raise HTTPException(409, "This run is still executing; wait for it to finish.")
+
+    now = datetime.now(UTC)
+    store.enqueue(
+        "recheck",
+        run_id=run_id,
+        idempotency_key=f"recheck:{run_id}:manual:{now.isoformat(timespec='seconds')}",
+        available_at=now,
+        priority=0,
+    )
+    session.add(
+        AuditEvent(
+            organization_id=principal.organization_id,
+            actor=f"user:{principal.user_id[:8]}",
+            action="run_recheck_requested",
+            entity_type="run",
+            entity_id=run_id,
+            detail={},
+        )
     )
     session.commit()
     session.refresh(run)

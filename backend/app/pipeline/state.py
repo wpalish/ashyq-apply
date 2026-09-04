@@ -24,17 +24,11 @@ IN_PROGRESS_STAGES = {
 }
 
 #: How long a worker may go silent before its run is treated as abandoned.
-#: Long enough to cover a slow page fetch with its retries and backoff.
-LEASE_SECONDS = 120
-
-#: Stages that may be re-run on their own after a failure.
-RETRYABLE = {
-    PipelineStage.CANDIDATE_DISCOVERY,
-    PipelineStage.PROGRAM_VERIFICATION,
-    PipelineStage.FUNDING_DISCOVERY,
-    PipelineStage.ASSESSMENT,
-    PipelineStage.DOCUMENT_COLLECTION,
-}
+#: Long enough to cover a slow page fetch with its retries and backoff. This is
+#: only the fallback: the live value is UNIMATCH_JOB_LEASE_SECONDS, and holding
+#: a second copy here is how the API came to call a healthy run stale while the
+#: worker considered its lease perfectly valid.
+DEFAULT_LEASE_SECONDS = 120
 
 
 @dataclass
@@ -105,7 +99,7 @@ def is_lease_expired(
     heartbeat_at: datetime | None,
     *,
     now: datetime | None = None,
-    lease_seconds: int = LEASE_SECONDS,
+    lease_seconds: int | None = None,
 ) -> bool:
     """Whether a run claims to be working but nothing is behind it.
 
@@ -121,24 +115,19 @@ def is_lease_expired(
     heartbeat_at = ensure_utc(heartbeat_at)
     if heartbeat_at is None:
         return False
+    if lease_seconds is None:
+        from app.config import get_settings
+
+        lease_seconds = get_settings().job_lease_seconds
     reference = now or datetime.now(UTC)
     return (reference - heartbeat_at).total_seconds() > lease_seconds
 
 
-def can_transition(current: PipelineStage, target: PipelineStage) -> bool:
-    """Forward moves along STAGE_ORDER, plus terminal states and retries."""
-    if target in (PipelineStage.FAILED, PipelineStage.CANCELLED):
-        return True
-    if current in (PipelineStage.FAILED, PipelineStage.CANCELLED):
-        return target in RETRYABLE or target == PipelineStage.QUEUED
-    if current not in STAGE_ORDER or target not in STAGE_ORDER:
-        return False
-    ci, ti = STAGE_ORDER.index(current), STAGE_ORDER.index(target)
-    # Allow re-entering document collection: the user can approve more rows later.
-    if target == PipelineStage.DOCUMENT_COLLECTION and current in (
-        PipelineStage.AWAITING_USER_DECISION,
-        PipelineStage.DOCUMENT_COLLECTION,
-        PipelineStage.COMPLETED,
-    ):
-        return True
-    return ti >= ci
+#: `can_transition` used to live here: a rule set that forbade any backwards
+#: move along STAGE_ORDER while permitting any forward jump. Nothing called it,
+#: and both halves were wrong for this pipeline - retry-from-stage and the
+#: freshness recheck move a run backwards on purpose, while a forward jump over
+#: unfinished work is exactly what it let through. Deleted rather than
+#: repaired: the invariant that matters is enforced where the work happens, by
+#: `_maybe` skipping only stages already marked done, and by the API resetting
+#: a stage to pending before a re-run can enter it.

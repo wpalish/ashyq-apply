@@ -2,14 +2,21 @@
 
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, HTTPException, Response
+from fastapi import APIRouter, Depends, HTTPException, Query, Response
 from sqlalchemy.orm import Session
 
 from app.api.tenancy import owned_profile
 from app.db import get_session
 from app.domain.grades import METHODS, available_methods, propose_conversion
 from app.domain.validation import validate_profile
-from app.models import ApplicantProfileRow, AuditEvent, ResearchRun
+from app.models import (
+    ApplicantProfileRow,
+    AuditEvent,
+    ClaimRow,
+    ConflictRow,
+    ProgramResultRow,
+    ResearchRun,
+)
 from app.schemas.profile import (
     ApplicantProfile,
     ApplicantProfileIn,
@@ -59,15 +66,23 @@ def create_profile(
 
 @router.get("", response_model=list[ApplicantProfile])
 def list_profiles(
+    response: Response,
+    limit: int = Query(default=50, ge=1, le=200),
+    offset: int = Query(default=0, ge=0),
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
 ) -> list[ApplicantProfile]:
-    rows = (
-        session.query(ApplicantProfileRow)
-        .filter(ApplicantProfileRow.organization_id == principal.organization_id)
-        .order_by(ApplicantProfileRow.created_at.desc())
-        .all()
+    """A page of applicants, newest first.
+
+    The total travels in X-Total-Count rather than wrapping the array: the
+    frontend already treats this response as a list, and a counsellor with
+    three hundred applicants was previously sent all of them on every load.
+    """
+    query = session.query(ApplicantProfileRow).filter(
+        ApplicantProfileRow.organization_id == principal.organization_id
     )
+    response.headers["X-Total-Count"] = str(query.count())
+    rows = query.order_by(ApplicantProfileRow.created_at.desc()).limit(limit).offset(offset).all()
     return [_to_out(r) for r in rows]
 
 
@@ -162,23 +177,107 @@ def export_profile(
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
 ) -> dict:
-    """Everything held about this applicant, in one document."""
+    """Everything held about this applicant, in one document.
+
+    It used to say "the complete record" while carrying the profile and a count
+    of results - not the results themselves, not a single claim, not one audit
+    line. A person exercising a data right was handed a summary and told it was
+    everything.
+    """
     row = owned_profile(session, profile_id, principal)
     runs = session.query(ResearchRun).filter(ResearchRun.profile_id == profile_id).all()
+    run_ids = [r.id for r in runs]
+
+    results = (
+        session.query(ProgramResultRow).filter(ProgramResultRow.run_id.in_(run_ids)).all()
+        if run_ids
+        else []
+    )
+    claims = session.query(ClaimRow).filter(ClaimRow.run_id.in_(run_ids)).all() if run_ids else []
+    conflicts = (
+        session.query(ConflictRow).filter(ConflictRow.run_id.in_(run_ids)).all() if run_ids else []
+    )
+    # Audit events for this applicant's own entities, within their tenant.
+    entity_ids = {profile_id, *run_ids, *[r.id for r in results]}
+    audit = (
+        session.query(AuditEvent)
+        .filter(
+            AuditEvent.organization_id == principal.organization_id,
+            AuditEvent.entity_id.in_(entity_ids),
+        )
+        .order_by(AuditEvent.created_at)
+        .all()
+    )
+
     return {
         "profile": row.payload,
         "created_at": row.created_at.isoformat(),
+        "updated_at": row.updated_at.isoformat(),
         "runs": [
             {
                 "id": r.id,
                 "stage": r.stage,
                 "demo_mode": r.demo_mode,
                 "created_at": r.created_at.isoformat(),
-                "results": len(r.results),
+                "finished_at": r.finished_at.isoformat() if r.finished_at else None,
+                "settings": dict(r.settings_snapshot or {}),
+                "errors": list(r.errors or []),
+                "unknowns": list(r.unknowns or []),
+                "results": sum(1 for result in results if result.run_id == r.id),
             }
             for r in runs
         ],
-        "note": "This is the complete record held for this applicant.",
+        "results": [
+            {
+                "id": result.id,
+                "run_id": result.run_id,
+                "user_decision": result.user_decision,
+                "user_decision_reason": result.user_decision_reason,
+                "user_notes": result.user_notes,
+                "decided_at": result.decided_at.isoformat() if result.decided_at else None,
+                "checklist": result.checklist,
+                **result.payload,
+            }
+            for result in results
+        ],
+        "claims": [
+            {
+                "id": c.id,
+                "run_id": c.run_id,
+                "result_id": c.result_id,
+                "accessed_at": c.accessed_at.isoformat() if c.accessed_at else None,
+                **c.payload,
+            }
+            for c in claims
+        ],
+        "conflicts": [
+            {"id": c.id, "run_id": c.run_id, "result_id": c.result_id, **c.payload}
+            for c in conflicts
+        ],
+        "audit": [
+            {
+                "id": event.id,
+                "created_at": event.created_at.isoformat(),
+                "actor": event.actor,
+                "action": event.action,
+                "entity_type": event.entity_type,
+                "entity_id": event.entity_id,
+                "detail": event.detail,
+            }
+            for event in audit
+        ],
+        "counts": {
+            "runs": len(runs),
+            "results": len(results),
+            "claims": len(claims),
+            "conflicts": len(conflicts),
+            "audit_events": len(audit),
+        },
+        "note": (
+            "This is the complete record held for this applicant: the profile, every run, "
+            "every result with the decisions and notes on it, every claim and conflict behind "
+            "those results, and the audit trail. Deleting the applicant removes all of it."
+        ),
     }
 
 

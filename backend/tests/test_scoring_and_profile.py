@@ -15,17 +15,75 @@ from app.domain.scoring import (
     score_result,
 )
 from app.domain.validation import validate_profile
+from app.schemas.money import Money
 from app.schemas.profile import GradeValue
-from app.schemas.result import ProgramResult, RankingEntry, RequirementCheck
+from app.schemas.result import FundingGap, ProgramResult, RankingEntry, RequirementCheck
 
 
 def result(**kwargs) -> ProgramResult:
-    return ProgramResult(**{
-        "id": "r", "run_id": "run", "university": "Test University", "university_id": "u",
-        "country": "Netherlands", "city": "Delft", "program": "BSc CS", "degree": "bachelor",
-        "intake": "fall 2027",
-        **kwargs,
-    })
+    return ProgramResult(
+        **{
+            "id": "r",
+            "run_id": "run",
+            "university": "Test University",
+            "university_id": "u",
+            "country": "Netherlands",
+            "city": "Delft",
+            "program": "BSc CS",
+            "degree": "bachelor",
+            "intake": "fall 2027",
+            **kwargs,
+        }
+    )
+
+
+class TestAffordabilityRespectsTheStatedCurrency:
+    """The ceiling is in the family's currency; the gap is in the target one.
+
+    Comparing them as bare numbers made a 6,000,000 KZT ceiling look infinitely
+    generous against a 20,000 USD gap: ratio ~= 0.003, "affordable" at every
+    university on the list.
+    """
+
+    @staticmethod
+    def _result_with_gap(amount: float, currency: str = "USD"):
+        return result(
+            funding_gap=FundingGap(computable=True, gap=Money(amount=amount, currency=currency))
+        )
+
+    def test_a_tenge_ceiling_is_converted_before_it_is_compared(self, profile):
+        # 2,880,000 KZT is 6,000 USD at the bundled 480 KZT/USD snapshot rate.
+        profile.funding.budget_currency = "KZT"
+        profile.funding.max_acceptable_gap = 2_880_000
+        affordable = self._affordability(self._result_with_gap(6_000), profile)
+        assert affordable.raw == pytest.approx(1.0), "equal purchasing power must score as met"
+
+        stretched = self._affordability(self._result_with_gap(24_000), profile)
+        assert stretched.raw < 0.5, "four times the ceiling is not affordable"
+        assert "KZT" in stretched.explanation and "USD" in stretched.explanation
+
+    def test_a_ceiling_of_zero_is_a_real_ceiling_not_a_missing_one(self, profile):
+        profile.funding.budget_currency = "USD"
+        profile.funding.max_acceptable_gap = 0
+        profile.funding.max_annual_budget = 50_000
+
+        component = self._affordability(self._result_with_gap(10_000), profile)
+        assert component.raw == 0.0, "'I can pay nothing' must not fall through to the budget"
+
+    def test_an_unsupported_currency_is_missing_data_not_a_number(self, profile):
+        profile.funding.budget_currency = "XTS"
+        profile.funding.max_acceptable_gap = 1_000
+
+        component = self._affordability(self._result_with_gap(6_000), profile)
+        assert component.data_present is False, "an unknown rate must not become a score"
+        assert "XTS" in component.explanation
+        assert "guessed" in component.explanation
+
+    @staticmethod
+    def _affordability(res, profile):
+        score = score_result(res, profile)
+        component = next(c for c in score.components if c.name == "Affordability")
+        return component
 
 
 class TestScoreIsExplainable:
@@ -50,9 +108,11 @@ class TestScoreIsExplainable:
         assert score.missing_data_penalty <= MAX_MISSING_PENALTY
 
     def test_user_weights_change_the_result(self, profile):
-        rich = result(eligibility=EligibilityStatus.MET,
-                      funding_fit=FundingFit.CONFIRMED_OPPORTUNITY,
-                      rankings=[RankingEntry(source="QS", year=2026, position="49")])
+        rich = result(
+            eligibility=EligibilityStatus.MET,
+            funding_fit=FundingFit.CONFIRMED_OPPORTUNITY,
+            rankings=[RankingEntry(source="QS", year=2026, position="49")],
+        )
         baseline = score_result(rich, profile).total
         profile.weights.funding_fit = 3.0
         assert score_result(rich, profile).total > baseline
@@ -84,19 +144,33 @@ class TestAdmissionsFit:
     #: Scores comfortably above every published minimum. Only the activity
     #: record then separates a stronger fit from a plausible one.
     CLEAR_MARGIN: ClassVar[list[RequirementCheck]] = [
-        RequirementCheck(requirement="IELTS overall", published_value=6.0,
-                         applicant_value=7.5, status=EligibilityStatus.MET),
-        RequirementCheck(requirement="SAT total", published_value=1200,
-                         applicant_value=1450, status=EligibilityStatus.MET),
+        RequirementCheck(
+            requirement="IELTS overall",
+            published_value=6.0,
+            applicant_value=7.5,
+            status=EligibilityStatus.MET,
+        ),
+        RequirementCheck(
+            requirement="SAT total",
+            published_value=1200,
+            applicant_value=1450,
+            status=EligibilityStatus.MET,
+        ),
     ]
 
     def _with_activities(self, profile, count: int, achievements: int):
         from app.schemas.profile import Achievement, Activity
 
         profile.activities = [
-            Activity(name=f"Activity {i}", category="academic", role="lead",
-                     hours_per_week=8, weeks_per_year=36, responsibility_level="leader",
-                     measurable_outcome="Led a team to a national placing.")
+            Activity(
+                name=f"Activity {i}",
+                category="academic",
+                role="lead",
+                hours_per_week=8,
+                weeks_per_year=36,
+                responsibility_level="leader",
+                measurable_outcome="Led a team to a national placing.",
+            )
             for i in range(count)
         ]
         profile.achievements = [
@@ -124,16 +198,28 @@ class TestAdmissionsFit:
         assert fit is AdmissionsFit.PLAUSIBLE_FIT
 
     def test_scores_at_the_minimum_stay_ambitious(self, profile):
-        checks = [RequirementCheck(requirement="IELTS overall", published_value=7.0,
-                                   applicant_value=7.0, status=EligibilityStatus.MET)]
+        checks = [
+            RequirementCheck(
+                requirement="IELTS overall",
+                published_value=7.0,
+                applicant_value=7.0,
+                status=EligibilityStatus.MET,
+            )
+        ]
         fit, _ = admissions_fit_for(
             result(eligibility=EligibilityStatus.MET, requirement_checks=checks), profile
         )
         assert fit is AdmissionsFit.AMBITIOUS
 
     def test_no_numeric_thresholds_gives_a_plausible_fit_not_a_strong_one(self, profile):
-        checks = [RequirementCheck(requirement="Portfolio", published_value=True,
-                                   applicant_value=None, status=EligibilityStatus.MET)]
+        checks = [
+            RequirementCheck(
+                requirement="Portfolio",
+                published_value=True,
+                applicant_value=None,
+                status=EligibilityStatus.MET,
+            )
+        ]
         fit, reason = admissions_fit_for(
             result(eligibility=EligibilityStatus.MET, requirement_checks=checks), profile
         )
@@ -142,16 +228,19 @@ class TestAdmissionsFit:
 
     def test_no_fit_verdict_is_ever_a_percentage(self):
         assert set(AdmissionsFit) == {
-            AdmissionsFit.STRONGER_FIT, AdmissionsFit.PLAUSIBLE_FIT,
-            AdmissionsFit.AMBITIOUS, AdmissionsFit.INSUFFICIENT_DATA,
+            AdmissionsFit.STRONGER_FIT,
+            AdmissionsFit.PLAUSIBLE_FIT,
+            AdmissionsFit.AMBITIOUS,
+            AdmissionsFit.INSUFFICIENT_DATA,
         }
 
 
 class TestGradeConversion:
     def test_a_converted_value_without_a_documented_method_is_rejected(self):
         with pytest.raises(ValueError, match="silent grade conversion"):
-            GradeValue(raw_value=4.8, raw_scale_max=5.0, raw_scale_label="KZ 5-point",
-                       converted_value=3.9)
+            GradeValue(
+                raw_value=4.8, raw_scale_max=5.0, raw_scale_label="KZ 5-point", converted_value=3.9
+            )
 
     def test_a_proposed_conversion_carries_its_method_and_its_caveat(self):
         original = GradeValue(raw_value=4.8, raw_scale_max=5.0, raw_scale_label="KZ 5-point")
@@ -176,6 +265,29 @@ class TestGradeConversion:
     def test_methods_are_offered_for_a_5_point_scale(self):
         assert any(m.key == "kz5_to_us4_linear" for m in available_methods("KZ 5-point"))
 
+    def test_a_uk_classification_map_is_not_offered_for_a_non_uk_percentage(self):
+        """The UK bands are a different instrument, not a second opinion.
+
+        `uk_class_to_us4` reads a mark through UK degree-classification bands,
+        and its own caveat says UK marking is not linear. Offered against a
+        Kazakh or Chinese percentage it does not approximate that scale badly
+        - it answers a question nobody asked, while looking like a supported
+        choice sitting next to the correct one.
+        """
+        offered = {m.key for m in available_methods("Percentage /100")}
+        assert "pct100_to_us4_linear" in offered
+        assert "uk_class_to_us4" not in offered
+
+    def test_the_uk_map_is_still_offered_when_the_scale_says_uk(self):
+        for label in ("UK percentage /100", "British undergraduate percentage /100"):
+            assert "uk_class_to_us4" in {m.key for m in available_methods(label)}
+
+    def test_ukrainian_is_not_read_as_uk(self):
+        """A substring test would offer a Ukrainian applicant the UK bands."""
+        offered = {m.key for m in available_methods("Ukrainian percentage /100")}
+        assert "uk_class_to_us4" not in offered
+        assert "pct100_to_us4_linear" in offered
+
     def test_a_grade_above_its_own_scale_is_rejected(self):
         with pytest.raises(ValueError, match="exceeds"):
             GradeValue(raw_value=6.0, raw_scale_max=5.0, raw_scale_label="KZ 5-point")
@@ -183,16 +295,19 @@ class TestGradeConversion:
 
 class TestDedupe:
     def test_two_spellings_of_one_university_produce_one_key(self):
-        assert university_key("The University of Melbourne", "Australia") == \
-               university_key("Univ. of Melbourne", "australia")
+        assert university_key("The University of Melbourne", "Australia") == university_key(
+            "Univ. of Melbourne", "australia"
+        )
 
     def test_different_universities_keep_different_keys(self):
-        assert university_key("University of Toronto", "Canada") != \
-               university_key("York University", "Canada")
+        assert university_key("University of Toronto", "Canada") != university_key(
+            "York University", "Canada"
+        )
 
     def test_the_same_name_in_two_countries_stays_distinct(self):
-        assert university_key("Trinity College", "Ireland") != \
-               university_key("Trinity College", "United States")
+        assert university_key("Trinity College", "Ireland") != university_key(
+            "Trinity College", "United States"
+        )
 
     def test_a_programme_key_includes_degree_and_intake(self):
         a = program_key("X University", "Computer Science", "bachelor", "fall 2027", "NL")
@@ -200,8 +315,9 @@ class TestDedupe:
         assert a != b
 
     def test_award_keys_ignore_the_word_scholarship(self):
-        assert scholarship_key("X", "Talent Grant", "NL") == \
-               scholarship_key("X", "Talent Grant Scholarship", "NL")
+        assert scholarship_key("X", "Talent Grant", "NL") == scholarship_key(
+            "X", "Talent Grant Scholarship", "NL"
+        )
 
     def test_dedupe_keeps_the_first_occurrence_in_order(self):
         items = [{"k": "a", "n": 1}, {"k": "b", "n": 2}, {"k": "a", "n": 3}]

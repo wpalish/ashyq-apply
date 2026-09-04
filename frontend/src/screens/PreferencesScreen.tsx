@@ -104,13 +104,15 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
             <Field label="Research interests" htmlFor="research-interests" hint="Comma-separated.">
               <input id="research-interests" {...bindList(['preferences', 'research_interests'])} />
             </Field>
-            {(['safety_priority', 'diversity_priority', 'housing_guarantee_priority'] as const).map((key) => (
-              <Field key={key} label={key.replaceAll('_', ' ')} htmlFor={key}>
-                <select id={key} {...bind(['preferences', key])}>
-                  {['low', 'medium', 'high'].map((v) => <option key={v}>{v}</option>)}
-                </select>
-              </Field>
-            ))}
+            {/*
+              Safety, diversity and housing-guarantee priorities used to be
+              asked here. No official page this product reads publishes a
+              comparable figure for any of them, so the answers changed
+              nothing - and a question that changes nothing still implies the
+              result was tailored to it. They are gone from the form; the
+              fields remain in the schema only so profiles saved earlier still
+              load. See docs/PROFILE_FIELDS.md.
+            */}
           </div>
           <div className="row" style={{ marginTop: 'var(--space-4)' }}>
             <label className="row row--tight small">
@@ -243,11 +245,26 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
 
             {!demoMode && (
               <Notice kind="warn">
-                <div>
+                <div data-testid="live-mode-notice">
                   <strong>Live mode fetches real university websites.</strong> It honours robots.txt,
                   rate-limits per host, and never sends any part of your profile off this machine.
                   It is slower, and pages that cannot be read are reported as not found rather than
                   guessed.
+                  {capabilities?.live_coverage && (
+                    // Without this, "live" reads as "the open web". It is ten
+                    // curated institutions, and the applicant deserves to know
+                    // the size of the search before they wait for it.
+                    <div className="stack stack--tight" data-testid="live-coverage">
+                      <div><strong>{capabilities.live_coverage.recall_note}</strong></div>
+                      {capabilities.live_coverage.countries.length > 0 && (
+                        <div className="row row--tight">
+                          {capabilities.live_coverage.countries.map((c) => (
+                            <Chip key={c}>{c}</Chip>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               </Notice>
             )}

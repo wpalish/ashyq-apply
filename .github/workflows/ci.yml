@@ -29,8 +29,9 @@ jobs:
       - if: matrix.database == 'sqlite'
         run: |
           .venv/bin/ruff check app tests
+          .venv/bin/ruff format --check app tests
           .venv/bin/mypy app tests
-          UNIMATCH_DATABASE_URL=sqlite:////tmp/unimatch-ci.db .venv/bin/pytest --cov=app --cov-fail-under=80
+          UNIMATCH_DATABASE_URL=sqlite:////tmp/unimatch-ci.db .venv/bin/pytest --cov=app --cov-fail-under=92
       - if: matrix.database == 'postgresql'
         run: .venv/bin/python scripts/pg.py .venv/bin/pytest
 
@@ -57,6 +58,9 @@ jobs:
       - run: backend/.venv/bin/pip install -r backend/requirements-dev.txt
       - run: npx --prefix frontend playwright install --with-deps chromium
       - run: npm run e2e --prefix frontend
+      # Sequential, never parallel: the auth config reuses ports 5173 and 8099
+      # and refuses to adopt a server it did not start.
+      - run: npm run e2e:auth --prefix frontend
       - if: failure()
         uses: actions/upload-artifact@v4
         with:

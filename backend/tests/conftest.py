@@ -46,7 +46,15 @@ def postgres_url() -> Iterator[str]:
         "pgserver", reason="pgserver provides the local PostgreSQL used by these tests"
     )
     directory = Path(tempfile.mkdtemp(prefix="unimatch-pg-"))
-    server = pgserver.get_server(str(directory))
+    try:
+        server = pgserver.get_server(str(directory))
+    except Exception as exc:  # initdb refused: no cluster, so nothing to test against
+        # The wheel installs on Windows but its initdb.exe does not run there.
+        # That is an unavailable environment, not a failing product: skip, so a
+        # developer's local suite is honest, while CI on Linux still provisions
+        # a real PostgreSQL and asserts the SKIP LOCKED claim and the cascades.
+        shutil.rmtree(directory, ignore_errors=True)
+        pytest.skip(f"pgserver could not start a local PostgreSQL: {exc}")
     try:
         yield server.get_uri().replace("postgresql://", "postgresql+psycopg://")
     finally:
@@ -93,6 +101,22 @@ def pg_session(pg_engine):
         yield session
     finally:
         session.close()
+
+
+@pytest.fixture(autouse=True)
+def _reset_rate_limiter():
+    """Give every test its own abuse budget.
+
+    The limiter is a per-process object keyed on the caller's address, and in
+    the suite every test is the same caller. Without this, the twenty-first
+    run started anywhere in the session gets a 429 and some unrelated test
+    fails with a KeyError on a response body it never expected.
+    """
+    import app.main as main_module
+
+    main_module._limiter.hits.clear()
+    yield
+    main_module._limiter.hits.clear()
 
 
 @pytest.fixture(scope="session")
@@ -183,3 +207,27 @@ def event_loop():
     loop = asyncio.new_event_loop()
     yield loop
     loop.close()
+
+
+#: The tenant test fixtures write into. Explicit, because the column no longer
+#: carries a default: a caller that forgets the organization must fail loudly
+#: rather than quietly writing into someone else's workspace.
+TEST_ORGANIZATION_ID = "00000000000000000000000000000001"
+
+
+def profile_row(session, profile, display_name: str = "t"):
+    """An ApplicantProfileRow in a real organization, created if missing."""
+    from app.models import ApplicantProfileRow, Organization
+
+    if session.get(Organization, TEST_ORGANIZATION_ID) is None:
+        session.add(
+            Organization(id=TEST_ORGANIZATION_ID, name="Test workspace", slug="test-workspace")
+        )
+        session.flush()
+    payload = profile if isinstance(profile, dict) else profile.model_dump(mode="json")
+    row = ApplicantProfileRow(
+        organization_id=TEST_ORGANIZATION_ID, display_name=display_name, payload=payload
+    )
+    session.add(row)
+    session.flush()
+    return row

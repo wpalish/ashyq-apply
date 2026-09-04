@@ -2,29 +2,61 @@
 
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends
+import logging
+
+from fastapi import APIRouter, Depends, Query, Response
+from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 from app.config import get_settings
 from app.db import get_session
 from app.domain import enums
-from app.domain.currency import RATE_DATE, RATE_SOURCE, supported_currencies
+from app.domain.currency import (
+    RATE_DATE,
+    RATE_SOURCE,
+    rate_age_days,
+    rates_are_stale,
+    supported_currencies,
+)
 from app.models import CURRENT_SCHEMA_VERSION, AuditEvent
 from app.security import Principal, get_principal
+
+log = logging.getLogger("unimatch.meta")
 
 router = APIRouter(prefix="/api", tags=["meta"])
 
 
 @router.get("/health")
-def health() -> dict:
+def health(response: Response) -> dict:
+    """Liveness that actually touches the database.
+
+    Reporting the configuration alone made every probe green while PostgreSQL
+    was down: Fly kept routing traffic to a machine that could not answer a
+    single real request. A degraded answer is a 503 so the platform's own
+    health check fails with it.
+    """
     s = get_settings()
-    return {
+    body = {
         "status": "ok",
+        "database": "ok",
         "demo_mode": s.demo_mode,
         "schema_version": CURRENT_SCHEMA_VERSION,
         "respect_robots": s.respect_robots,
         "browser_tier": s.enable_browser_tier,
     }
+    try:
+        # Resolved at call time, not import time: the engine is swapped both by
+        # the test suite and by anything that reconnects after a failure.
+        import app.db as db_module
+
+        with db_module.engine.connect() as connection:
+            connection.execute(text("SELECT 1"))
+    except Exception as exc:  # any driver error means we cannot serve
+        log.error("health check could not reach the database: %s", exc)
+        body["status"] = "degraded"
+        body["database"] = "unavailable"
+        response.status_code = 503
+    return body
 
 
 @router.get("/capabilities")
@@ -49,7 +81,23 @@ def capabilities() -> dict:
             "supported": supported_currencies(),
             "rate_date": RATE_DATE.isoformat(),
             "rate_source": RATE_SOURCE,
+            "rate_age_days": rate_age_days(),
+            # The snapshot is deliberately static; saying nothing about its age
+            # is what would make it dishonest.
+            "stale_warning": (
+                f"These conversions use exchange rates from {RATE_DATE.isoformat()}, "
+                f"{rate_age_days()} days old. Treat converted amounts as indicative and "
+                f"check the current rate before relying on one."
+                if rates_are_stale()
+                else ""
+            ),
         },
+        # What live mode can actually reach today. The number matters: a user
+        # switching demo mode off imagines the open web and gets a curated list
+        # of ten institutions, with programme-page recall of one in ten. Saying
+        # so here is cheaper than letting them discover it from an empty
+        # shortlist.
+        "live_coverage": live_coverage(),
         "guarantees": [
             "robots.txt is honoured before every fetch, including the browser tier",
             "applicant data is never placed in an outbound URL",
@@ -89,7 +137,7 @@ def vocabulary() -> dict:
 
 @router.get("/audit")
 def audit_log(
-    limit: int = 200,
+    limit: int = Query(default=200, ge=1, le=1000),
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
 ) -> list[dict]:
@@ -98,7 +146,7 @@ def audit_log(
         session.query(AuditEvent)
         .filter(AuditEvent.organization_id == principal.organization_id)
         .order_by(AuditEvent.created_at.desc())
-        .limit(min(limit, 1000))
+        .limit(limit)
         .all()
     )
     return [
@@ -113,3 +161,33 @@ def audit_log(
         }
         for r in rows
     ]
+
+
+def live_coverage() -> dict:
+    """How far live mode reaches, read from the registry rather than asserted."""
+    import json
+    from pathlib import Path
+
+    registry = Path(__file__).resolve().parent.parent / "adapters" / "discovery"
+    path = registry / "institution_registry.json"
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):  # a missing registry is a limitation, not a crash
+        return {
+            "institutions": 0,
+            "countries": [],
+            "recall_note": "The institution registry could not be read; live mode has no seeds.",
+        }
+    entries = raw if isinstance(raw, list) else raw.get("institutions", [])
+    countries = sorted({e.get("country", "") for e in entries if e.get("country")})
+    return {
+        "institutions": len(entries),
+        "countries": countries,
+        "recall_note": (
+            f"Live mode searches {len(entries)} curated institutions in "
+            f"{len(countries)} countries, not the open web. Category pages "
+            f"(fees, scholarships, admissions) are read reliably; an individual "
+            f"programme page is reached at about one site in ten today. See "
+            f"docs/LIVE_DISCOVERY_REPORT.md."
+        ),
+    }

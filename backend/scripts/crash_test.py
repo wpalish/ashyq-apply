@@ -43,8 +43,11 @@ def env_for_worker() -> dict[str, str]:
 def start_worker() -> subprocess.Popen:
     return subprocess.Popen(
         [sys.executable, "-m", "app.jobs.worker"],
-        cwd=BACKEND, env=env_for_worker(),
-        stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
+        cwd=BACKEND,
+        env=env_for_worker(),
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
     )
 
 
@@ -68,14 +71,20 @@ def main() -> int:
         session.add(profile)
         session.flush()
         run = ResearchRun(
-            profile_id=profile.id, stage="queued", demo_mode=True,
-            candidate_limit=12, verify_limit=12, stage_state=RunState.load(None).dump(),
+            profile_id=profile.id,
+            stage="queued",
+            demo_mode=True,
+            candidate_limit=12,
+            verify_limit=12,
+            stage_state=RunState.load(None).dump(),
         )
         session.add(run)
         session.flush()
-        job_id = JobStore(session).enqueue(
-            "research", run_id=run.id, idempotency_key=f"research:{run.id}"
-        ).job_id
+        job_id = (
+            JobStore(session)
+            .enqueue("research", run_id=run.id, idempotency_key=f"research:{run.id}")
+            .job_id
+        )
         run_id = run.id
     print(f"enqueued job {job_id[:8]} for run {run_id[:8]}")
 
@@ -89,9 +98,9 @@ def main() -> int:
     while time.monotonic() < deadline:
         with session_scope() as session:
             stage = session.get(ResearchRun, run_id).stage
-            written = session.query(ProgramResultRow).filter(
-                ProgramResultRow.run_id == run_id
-            ).count()
+            written = (
+                session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run_id).count()
+            )
         if stage in STAGE_TO_KILL_IN and written >= MIN_RESULTS_BEFORE_KILL:
             reached = stage
             break
@@ -114,11 +123,13 @@ def main() -> int:
     with session_scope() as session:
         job = session.get(Job, job_id)
         run = session.get(ResearchRun, run_id)
-        results_before = session.query(ProgramResultRow).filter(
-            ProgramResultRow.run_id == run_id
-        ).count()
-        print(f"  immediately after: job={job.status} worker={job.worker_id} "
-              f"run={run.stage} results={results_before}")
+        results_before = (
+            session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run_id).count()
+        )
+        print(
+            f"  immediately after: job={job.status} worker={job.worker_id} "
+            f"run={run.stage} results={results_before}"
+        )
         assert job.status == "running", "the job should still look claimed"
 
     # --- 3. a new worker must notice and recover ---------------------------
@@ -157,9 +168,13 @@ def main() -> int:
         keys = [r.dedupe_key for r in rows]
 
         print()
-        print(f"  job    : {job.status}  attempts={job.attempts}/{job.max_attempts}  worker={job.worker_id}")
+        print(
+            f"  job    : {job.status}  attempts={job.attempts}/{job.max_attempts}  worker={job.worker_id}"
+        )
         print(f"  run    : {run.stage}  recovery_count={run.recovery_count}")
-        print(f"  results: {len(rows)}  unique={len(set(keys))}  duplicates={len(keys) - len(set(keys))}")
+        print(
+            f"  results: {len(rows)}  unique={len(set(keys))}  duplicates={len(keys) - len(set(keys))}"
+        )
         print(f"  claims : {run.claims_recorded}")
 
         problems = []

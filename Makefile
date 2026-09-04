@@ -1,6 +1,7 @@
 .PHONY: help setup dev api web test check e2e clean corpus
 
-PY := backend/.venv/bin/python
+# bin/ on Linux and macOS, Scripts/ on Windows.
+PY := $(if $(wildcard backend/.venv/bin/python),backend/.venv/bin/python,backend/.venv/Scripts/python.exe)
 
 help:
 	@echo "setup   Install backend and frontend dependencies, build the demo corpus"
@@ -29,15 +30,15 @@ corpus:
 	$(PY) -m app.corpus.build
 
 test:
-	cd backend && ./.venv/bin/python -m pytest
+	cd backend && ../$(PY) -m pytest
 	cd frontend && npm test
 
 e2e:
 	cd frontend && npm run e2e
 
 check:
-	cd backend && ./.venv/bin/python -m ruff check app tests
-	cd backend && ./.venv/bin/python -m mypy app
+	cd backend && ../$(PY) -m ruff check app tests
+	cd backend && ../$(PY) -m mypy app
 	cd frontend && npm run typecheck
 	cd frontend && npm run lint
 

@@ -54,6 +54,7 @@ yarn-error.log*
 
 # Test artefacts
 playwright-report/
+playwright-report-auth/
 test-results/
 blob-report/
 .playwright/
@@ -61,6 +62,7 @@ blob-report/
 # Tooling output
 sbom*.json
 *-audit.json
+graphify-out/
 .DS_Store
 .idea/
 .vscode/

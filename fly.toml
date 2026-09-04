@@ -17,10 +17,15 @@ primary_region = "waw"
   UNIMATCH_DEMO_MODE = "true"
   UNIMATCH_RESPECT_ROBOTS = "true"
   UNIMATCH_CORS_ORIGINS = "https://ashyq-apply-alisher.fly.dev"
+  # Only Fly's edge can reach this app, and it rewrites X-Forwarded-For.
+  UNIMATCH_TRUST_PROXY_HEADERS = "true"
   UNIMATCH_WORKER_CONCURRENCY = "2"
 
 [processes]
-  app = "python -m uvicorn app.main:app --host 0.0.0.0 --port 8099"
+  # --proxy-headers: Fly terminates TLS at its edge and passes the caller
+  # in X-Forwarded-For. Without this every request looks like it came from
+  # the edge, and the per-address rate limits become one global limit.
+  app = "python -m uvicorn app.main:app --host 0.0.0.0 --port 8099 --proxy-headers --forwarded-allow-ips=*"
   worker = "python -m app.jobs.worker"
 
 [http_service]

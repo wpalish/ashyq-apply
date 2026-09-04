@@ -6,8 +6,10 @@
  * and disabled nav items say *why* they are disabled instead of vanishing.
  */
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useStore } from '@/lib/store';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { AccountMenu } from '@/components/AccountMenu';
 import { ProfileScreen } from '@/screens/ProfileScreen';
 import { PreferencesScreen } from '@/screens/PreferencesScreen';
 import { ProgressScreen } from '@/screens/ProgressScreen';
@@ -49,20 +51,34 @@ const SCREENS: { id: ScreenId; num?: string; label: string; group: string }[] = 
   { id: 'me', label: 'My community profile', group: 'Community' },
 ];
 
+/** The screen named by `#/…`, if it names one at all. */
+function screenFromHash(): ScreenId | null {
+  const id = window.location.hash.replace(/^#\/?/, '').split('?')[0];
+  return SCREENS.some((s) => s.id === id) ? (id as ScreenId) : null;
+}
+
 /** "1 conflict", not "1 conflicts". */
 function plural(n: number, noun: string): string {
   return `${n} ${noun}${n === 1 ? '' : 's'}`;
 }
 
-const THEME_KEY = 'unimatch.theme';
+const THEME_KEY = 'ashyq.theme';
 type Theme = 'system' | 'light' | 'dark';
 
 export default function App() {
   const {
     run, results, summary, error, clearError, capabilities,
-    cases, savedProfile, switchCase, newCase,
+    cases, savedProfile, switchCase, newCase, dirty, hydrated,
   } = useStore();
-  const [screen, setScreen] = useState<ScreenId>('profile');
+  const [screen, setScreenState] = useState<ScreenId>(() => screenFromHash() ?? 'profile');
+  const [redirected, setRedirected] = useState<string | null>(null);
+  /** Ask before throwing away typing the applicant has not saved. */
+  const confirmDiscard = () =>
+    !dirty ||
+    window.confirm(
+      'You have unsaved changes to this profile. Leaving now discards them. '
+      + 'Save first, or continue and lose them?',
+    );
   // Who I am in the community, and whose profile is open. The community has no
   // gates, so this is the only navigation state it needs.
   const [me, setMe] = useState<PersonCard | null>(null);
@@ -105,6 +121,13 @@ export default function App() {
   const maybeCount = results.filter((r) => r.user_decision === 'maybe').length;
   const withChecklists = results.filter((r) => r.checklist).length;
 
+  const collectingDocuments = Boolean(
+    run
+      && (run.stage === 'document_collection'
+        || ((run.job_status === 'queued' || run.job_status === 'running')
+          && approvedCount + maybeCount > 0)),
+  );
+
   const gate: Record<ScreenId, string | null> = {
     profile: null,
     preferences: null,
@@ -113,7 +136,13 @@ export default function App() {
     funding: hasResults ? null : 'No results yet',
     sources: hasResults ? null : 'No results yet',
     approved: hasResults ? null : 'No results yet',
-    documents: withChecklists > 0 ? null : 'Approve programmes, then collect documents',
+    // Also open while collection is in flight: the applicant pressed Collect
+    // and the worker has not finished yet. Bouncing them off the screen they
+    // just asked for would be the redirect fighting the workflow.
+    documents:
+      withChecklists > 0 || collectingDocuments
+        ? null
+        : 'Approve programmes, then collect documents',
     export: run ? null : 'Start research first',
     // The community does not depend on a research run, so nothing gates it.
     feed: null,
@@ -121,6 +150,71 @@ export default function App() {
     me: null,
     person: null,
   };
+
+  // The hash is the address of the screen: back and forward work, a reload
+  // lands where it left off, and a link to a screen can be sent to someone.
+  // The gates still decide what may be shown - a bookmark to #/shortlist made
+  // before there were any results redirects to progress and says why.
+  const setScreen = useCallback((next: ScreenId) => {
+    setScreenState(next);
+    const target = `#/${next}`;
+    if (window.location.hash !== target) window.location.hash = target;
+  }, []);
+
+  // Only an address typed, bookmarked or arrived at through history is checked
+  // against the gates. In-app navigation is already gated by the disabled nav
+  // buttons, and re-checking on every state change made the redirect fight the
+  // workflow: pressing "Collect documents" bounced the applicant back to
+  // progress because the checklists did not exist *yet*.
+  const gateRef = useRef(gate);
+  gateRef.current = gate;
+  const runRef = useRef(run);
+  runRef.current = run;
+  const hydratedRef = useRef(hydrated);
+  hydratedRef.current = hydrated;
+
+  const [pendingLink, setPendingLink] = useState<ScreenId | null>(null);
+
+  const evaluateLink = useCallback((requested: ScreenId) => {
+    const blocked = gateRef.current[requested];
+    if (!blocked) {
+      setScreenState(requested);
+      return;
+    }
+    const fallback: ScreenId = runRef.current ? 'progress' : 'profile';
+    setRedirected(`${SCREENS.find((s) => s.id === requested)?.label ?? requested}: ${blocked}.`);
+    setScreen(fallback);
+  }, [setScreen]);
+
+  const openFromHash = useCallback(() => {
+    const requested = screenFromHash();
+    if (!requested) return;
+    // Before the store has loaded, "no results yet" would be a statement about
+    // an empty store rather than about the run. Show the screen and judge it
+    // once there is something to judge.
+    setScreenState(requested);
+    if (!hydratedRef.current) {
+      setPendingLink(requested);
+      return;
+    }
+    evaluateLink(requested);
+  }, [evaluateLink]);
+
+  useEffect(() => {
+    if (!hydrated || !pendingLink) return;
+    evaluateLink(pendingLink);
+    setPendingLink(null);
+  }, [hydrated, pendingLink, evaluateLink]);
+
+  useEffect(() => {
+    window.addEventListener('hashchange', openFromHash);
+    // Stamp the hash on first load so Back has somewhere to return to, and
+    // check a deep link before rendering the screen it names.
+    if (screenFromHash()) openFromHash();
+    else window.location.replace(`#/${screen}`);
+    return () => window.removeEventListener('hashchange', openFromHash);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [openFromHash]);
 
   const badges: Partial<Record<ScreenId, number>> = {
     shortlist: results.length || undefined,
@@ -135,7 +229,7 @@ export default function App() {
     <div className="app">
       <aside className="sidebar">
         <div className="brand">
-          <span className="brand__mark">UniMatch</span>
+          <span className="brand__mark">ASHYQ Apply</span>
           <span className="brand__tag">
             Evidence-backed university &amp; scholarship shortlisting
           </span>
@@ -155,7 +249,11 @@ export default function App() {
                   disabled={Boolean(blocked)}
                   title={blocked ?? undefined}
                   data-testid={`nav-${s.id}`}
-                  onClick={() => setScreen(s.id)}
+                  onClick={() => {
+                    // A deliberate move answers the explanation, so it goes.
+                    setRedirected(null);
+                    setScreen(s.id);
+                  }}
                 >
                   <span className="nav__num">{s.num ?? ''}</span>
                   <span>{s.label}</span>
@@ -180,7 +278,7 @@ export default function App() {
             </select>
           </div>
           <p className="xs faint" style={{ margin: 0 }}>
-            Published criteria only. UniMatch never predicts admission or funding outcomes.
+            Published criteria only. ASHYQ Apply never predicts admission or funding outcomes.
           </p>
         </div>
       </aside>
@@ -205,6 +303,12 @@ export default function App() {
               id="case-switcher"
               value={savedProfile?.id ?? ''}
               onChange={(event) => {
+                // Switching case replaces the form. Unsaved edits are the
+                // applicant's typing, so they are never discarded silently.
+                if (!confirmDiscard()) {
+                  event.target.value = savedProfile?.id ?? '';
+                  return;
+                }
                 if (event.target.value) void switchCase(event.target.value);
                 else newCase();
               }}
@@ -218,6 +322,7 @@ export default function App() {
             </select>
           </label>
           <button className="btn btn--sm" type="button" onClick={() => {
+            if (!confirmDiscard()) return;
             newCase(); setScreen('profile');
           }}>New case</button>
           {summary && (
@@ -226,10 +331,25 @@ export default function App() {
               {plural(summary.with_open_questions, 'open question')}
             </span>
           )}
-          <button className="btn btn--sm btn--ghost" type="button" onClick={async () => {
+          <AccountMenu onSignedOut={() => window.location.reload()} />
+          <button className="btn btn--sm btn--ghost" data-testid="sign-out" type="button" onClick={async () => {
             await api.logout(); window.location.reload();
           }}>Sign out</button>
         </header>
+
+        {redirected && (
+          <div style={{ padding: 'var(--space-4) var(--space-6) 0' }}>
+            <div className="notice notice--warn" role="status" data-testid="redirect-notice">
+              <div style={{ flex: 1 }}>
+                <strong>Not available yet.</strong> {redirected} You were taken to the screen that
+                comes first.
+              </div>
+              <button className="btn btn--sm btn--ghost" onClick={() => setRedirected(null)}>
+                Dismiss
+              </button>
+            </div>
+          </div>
+        )}
 
         {error && (
           <div style={{ padding: 'var(--space-4) var(--space-6) 0' }}>
@@ -243,6 +363,9 @@ export default function App() {
         )}
 
         <main className="screen">
+          {/* Scoped to the screen, so one broken screen cannot take the
+              sidebar and the case switcher down with it. */}
+          <ErrorBoundary label={`the ${screen} screen`} key={screen}>
           {screen === 'profile' && <ProfileScreen onNext={() => setScreen('preferences')} />}
           {screen === 'preferences' && <PreferencesScreen onStarted={() => setScreen('progress')} />}
           {screen === 'progress' && <ProgressScreen onDone={() => setScreen('shortlist')} />}
@@ -271,6 +394,7 @@ export default function App() {
               onProfileSaved={(saved) => { setMe(saved); setJoined(true); }}
             />
           )}
+          </ErrorBoundary>
         </main>
       </div>
     </div>

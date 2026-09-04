@@ -198,7 +198,9 @@ _GPA = re.compile(
 _SAT_OPTIONAL = re.compile(
     r"(test[- ]optional|test[- ]blind|SAT[^.\n]{0,40}(?:not required|optional))", re.IGNORECASE
 )
-_SAT_MIN = re.compile(r"SAT[^.\n]{0,60}?(?:minimum|at least|score of)[^.\n]{0,20}?(\d{3,4})", re.IGNORECASE)
+_SAT_MIN = re.compile(
+    r"SAT[^.\n]{0,60}?(?:minimum|at least|score of)[^.\n]{0,20}?(\d{3,4})", re.IGNORECASE
+)
 _SUPERSCORE = re.compile(r"(superscor\w+)", re.IGNORECASE)
 #: A currency marker must sit directly beside the number. Bare digits are never
 #: read as money, which keeps years and scores out of the cost table.
@@ -227,12 +229,42 @@ _TZ = re.compile(
 )
 
 _CURRENCY_SYMBOLS = {
-    "$": "USD", "us$": "USD", "usd": "USD", "€": "EUR", "eur": "EUR",
-    "£": "GBP", "gbp": "GBP", "cad": "CAD", "aud": "AUD", "chf": "CHF",
-    "sek": "SEK", "nok": "NOK", "dkk": "DKK", "sgd": "SGD", "jpy": "JPY",
+    "$": "USD",
+    "us$": "USD",
+    "usd": "USD",
+    "€": "EUR",
+    "eur": "EUR",
+    "£": "GBP",
+    "gbp": "GBP",
+    "cad": "CAD",
+    "aud": "AUD",
+    "chf": "CHF",
+    "sek": "SEK",
+    "nok": "NOK",
+    "dkk": "DKK",
+    "sgd": "SGD",
+    "jpy": "JPY",
 }
-_MONTHS = {m: i for i, m in enumerate(
-    ["january","february","march","april","may","june","july","august","september","october","november","december"], 1)}
+_MONTHS = {
+    m: i
+    for i, m in enumerate(
+        [
+            "january",
+            "february",
+            "march",
+            "april",
+            "may",
+            "june",
+            "july",
+            "august",
+            "september",
+            "october",
+            "november",
+            "december",
+        ],
+        1,
+    )
+}
 
 
 def parse_money(text: str) -> tuple[float, str] | None:
@@ -318,7 +350,8 @@ def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
     if toefl and 40 <= int(toefl.group(1)) <= 120:
         found.append(
             builder.add(
-                ClaimType.TOEFL_MIN_TOTAL, int(toefl.group(1)),
+                ClaimType.TOEFL_MIN_TOTAL,
+                int(toefl.group(1)),
                 excerpt_around(text, toefl.start(), toefl.end()),
             )
         )
@@ -327,7 +360,8 @@ def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
     if duolingo and 60 <= int(duolingo.group(1)) <= 160:
         found.append(
             builder.add(
-                ClaimType.DUOLINGO_MIN, int(duolingo.group(1)),
+                ClaimType.DUOLINGO_MIN,
+                int(duolingo.group(1)),
                 excerpt_around(text, duolingo.start(), duolingo.end()),
             )
         )
@@ -345,7 +379,8 @@ def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
     if optional:
         found.append(
             builder.add(
-                ClaimType.SAT_POLICY, optional.group(1),
+                ClaimType.SAT_POLICY,
+                optional.group(1),
                 excerpt_around(text, optional.start(), optional.end()),
             )
         )
@@ -354,7 +389,8 @@ def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
         if sat_min and 400 <= int(sat_min.group(1)) <= 1600:
             found.append(
                 builder.add(
-                    ClaimType.SAT_MIN_TOTAL, int(sat_min.group(1)),
+                    ClaimType.SAT_MIN_TOTAL,
+                    int(sat_min.group(1)),
                     excerpt_around(text, sat_min.start(), sat_min.end()),
                 )
             )
@@ -363,7 +399,8 @@ def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
     if superscore:
         found.append(
             builder.add(
-                ClaimType.SUPERSCORE_POLICY, superscore.group(1),
+                ClaimType.SUPERSCORE_POLICY,
+                superscore.group(1),
                 excerpt_around(text, superscore.start(), superscore.end()),
             )
         )
@@ -400,7 +437,8 @@ def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
         if requirement:
             found.append(
                 builder.add(
-                    ctype, True,
+                    ctype,
+                    True,
                     excerpt_around(text, requirement.start(), requirement.end()),
                     confidence=0.7,
                 )
@@ -419,8 +457,14 @@ def extract_costs(text: str, builder: ClaimBuilder) -> list[Claim]:
         (ClaimType.MEALS_COST, r"(?:meal plan|meals|board|food)"),
         (ClaimType.HEALTH_INSURANCE_COST, r"(?:health insurance|medical insurance)"),
         (ClaimType.BOOKS_COST, r"(?:books|books and supplies|study materials)"),
-        (ClaimType.MANDATORY_FEES, r"(?:mandatory fees|student fees|university fees|administrative fee)"),
-        (ClaimType.TOTAL_COST_OF_ATTENDANCE, r"(?:total cost of attendance|estimated total cost|total estimated cost)"),
+        (
+            ClaimType.MANDATORY_FEES,
+            r"(?:mandatory fees|student fees|university fees|administrative fee)",
+        ),
+        (
+            ClaimType.TOTAL_COST_OF_ATTENDANCE,
+            r"(?:total cost of attendance|estimated total cost|total estimated cost)",
+        ),
     )
     for ctype, label in patterns:
         m = re.search(rf"{label}[^.\n]{{0,120}}", text, re.IGNORECASE)

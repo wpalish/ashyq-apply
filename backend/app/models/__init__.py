@@ -1,5 +1,11 @@
 from app.models.applicant import ApplicantProfileRow
-from app.models.auth import AuthSession, Organization, OrganizationMembership, User
+from app.models.auth import (
+    AuthSession,
+    Organization,
+    OrganizationMembership,
+    PasswordResetToken,
+    User,
+)
 from app.models.base import Base, TimestampedBase, new_id, utcnow
 from app.models.jobs import TERMINAL_STATUSES, Job, JobStatus
 from app.models.meta import CURRENT_SCHEMA_VERSION, SchemaVersion
@@ -31,6 +37,7 @@ __all__ = [
     "JobStatus",
     "Organization",
     "OrganizationMembership",
+    "PasswordResetToken",
     "Post",
     "PostReply",
     "PostTag",

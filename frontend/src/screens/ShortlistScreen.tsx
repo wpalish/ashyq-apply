@@ -12,15 +12,20 @@ import { Fragment, useMemo, useState } from 'react';
 import { ResultDetail } from '@/components/ResultDetail';
 import { Chip, Empty, Field, Notice, Panel, StatusChip } from '@/components/primitives';
 import {
-  admissionsFitTone, date, eligibilityTone, fundingClassTone, money, scorePercent,
+  STATUS_LABEL, admissionsFitTone, date, eligibilityTone, fundingClassTone, humanize, money,
+  scorePercent,
 } from '@/lib/format';
 import { useStore } from '@/lib/store';
 import type { ProgramResult, UserDecision } from '@/types';
 
 type SortKey = 'score' | 'gap' | 'university' | 'deadline';
 
+//: The four reasons applicants actually give, as one-click chips. Free text
+//: stays available because these will never cover every case.
+const REJECTION_REASONS = ['cost', 'deadline passed', 'no funding', 'not a fit'];
+
 export function ShortlistScreen() {
-  const { results, summary, decide } = useStore();
+  const { results, summary, decide, saveNotes } = useStore();
   const [expanded, setExpanded] = useState<string | null>(null);
   const [sort, setSort] = useState<SortKey>('score');
   const [country, setCountry] = useState('');
@@ -29,6 +34,8 @@ export function ShortlistScreen() {
   const [hideRejected, setHideRejected] = useState(false);
   const [noteFor, setNoteFor] = useState<string | null>(null);
   const [noteText, setNoteText] = useState('');
+  const [rejectFor, setRejectFor] = useState<string | null>(null);
+  const [rejectReason, setRejectReason] = useState('');
 
   const countries = useMemo(
     () => Array.from(new Set(results.map((r) => r.country))).sort(),
@@ -59,8 +66,19 @@ export function ShortlistScreen() {
     return <Empty title="No results yet">Run the research first.</Empty>;
   }
 
-  const decideRow = (r: ProgramResult, d: UserDecision) =>
-    decide(r.id, r.user_decision === d ? 'undecided' : d, '', r.user_notes);
+  const decideRow = (r: ProgramResult, d: UserDecision) => {
+    const next = r.user_decision === d ? 'undecided' : d;
+    if (next === 'rejected') {
+      // The product promises rejections keep their reason, and the API has
+      // always accepted one; the UI simply never asked. Ask now, and let the
+      // reason stay optional so saying No is still one click away.
+      setRejectFor(r.id);
+      setRejectReason(r.user_decision_reason);
+      return Promise.resolve();
+    }
+    setRejectFor(null);
+    return decide(r.id, next, '', r.user_notes);
+  };
 
   return (
     <>
@@ -97,7 +115,8 @@ export function ShortlistScreen() {
               <select id="f-elig" value={eligibility} onChange={(e) => setEligibility(e.target.value)}>
                 <option value="">Any</option>
                 {Object.entries(summary?.by_eligibility ?? {}).map(([k, v]) => (
-                  <option key={k} value={k}>{k} ({v})</option>
+                  // The value stays the enum; only the label is for humans.
+                  <option key={k} value={k}>{STATUS_LABEL[k] ?? humanize(k)} ({v})</option>
                 ))}
               </select>
             </Field>
@@ -105,7 +124,7 @@ export function ShortlistScreen() {
               <select id="f-fund" value={funding} onChange={(e) => setFunding(e.target.value)}>
                 <option value="">Any</option>
                 {Object.entries(summary?.by_funding ?? {}).map(([k, v]) => (
-                  <option key={k} value={k}>{k} ({v})</option>
+                  <option key={k} value={k}>{STATUS_LABEL[k] ?? humanize(k)} ({v})</option>
                 ))}
               </select>
             </Field>
@@ -215,6 +234,55 @@ export function ShortlistScreen() {
                             data-testid={`reject-${r.id}`}
                           >No</button>
                         </div>
+                        {rejectFor === r.id && (
+                          <div
+                            className="stack stack--tight"
+                            style={{ marginTop: 6, minWidth: '13rem' }}
+                            data-testid={`reject-reason-${r.id}`}
+                          >
+                            <label className="xs muted" htmlFor={`reject-input-${r.id}`}>
+                              Why not this one? (optional — it is kept with the row)
+                            </label>
+                            <div className="row row--tight" style={{ flexWrap: 'wrap' }}>
+                              {REJECTION_REASONS.map((preset) => (
+                                <button
+                                  key={preset}
+                                  type="button"
+                                  className="btn btn--sm btn--ghost xs"
+                                  onClick={() => setRejectReason(preset)}
+                                  data-testid={`reject-chip-${preset.replace(/\s+/g, '-')}-${r.id}`}
+                                >{preset}</button>
+                              ))}
+                            </div>
+                            <input
+                              id={`reject-input-${r.id}`}
+                              value={rejectReason}
+                              onChange={(e) => setRejectReason(e.target.value)}
+                              placeholder="cost, deadline, fit…"
+                              data-testid={`reject-input-${r.id}`}
+                            />
+                            <div className="row row--tight">
+                              <button
+                                className="btn btn--sm"
+                                onClick={async () => {
+                                  await decide(r.id, 'rejected', rejectReason, r.user_notes);
+                                  setRejectFor(null);
+                                }}
+                                data-testid={`reject-save-${r.id}`}
+                              >Save rejection</button>
+                              <button
+                                className="btn btn--sm btn--ghost"
+                                onClick={() => setRejectFor(null)}
+                                data-testid={`reject-cancel-${r.id}`}
+                              >Cancel</button>
+                            </div>
+                          </div>
+                        )}
+                        {r.user_decision === 'rejected' && r.user_decision_reason && rejectFor !== r.id && (
+                          <p className="xs faint" style={{ margin: '4px 0 0', maxWidth: '12rem' }}>
+                            Rejected: {r.user_decision_reason}
+                          </p>
+                        )}
                         <div>
                           <button
                             className="btn btn--sm btn--ghost xs"
@@ -238,9 +306,10 @@ export function ShortlistScreen() {
                             <button
                               className="btn btn--sm"
                               onClick={async () => {
-                                await decide(r.id, r.user_decision, r.user_decision_reason, noteText);
+                                await saveNotes(r.id, noteText);
                                 setNoteFor(null);
                               }}
+                              data-testid={`note-save-${r.id}`}
                             >Save note</button>
                           </div>
                         )}

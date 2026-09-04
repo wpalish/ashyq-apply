@@ -9,6 +9,7 @@
 import { useMemo, useState } from 'react';
 import { Chip, Empty, Notice, Panel } from '@/components/primitives';
 import { date, dateTime } from '@/lib/format';
+import { api } from '@/api/client';
 import { useStore } from '@/lib/store';
 import type { DocumentItem, ProgramResult } from '@/types';
 
@@ -19,7 +20,7 @@ const OWNER_LABEL: Record<string, string> = {
   third_party: 'A third party (translator, WES/ECE, notary)',
 };
 
-const DONE_KEY = 'unimatch.docsDone';
+const DONE_KEY = 'ashyq.docsDone';
 
 function loadDone(): Record<string, boolean> {
   try {
@@ -30,7 +31,7 @@ function loadDone(): Record<string, boolean> {
 }
 
 export function DocumentsScreen() {
-  const { results } = useStore();
+  const { results, run } = useStore();
   const withChecklists = results.filter((r) => r.checklist);
   const [selected, setSelected] = useState<string>(withChecklists[0]?.id ?? '');
   const [done, setDone] = useState<Record<string, boolean>>(loadDone);
@@ -50,7 +51,10 @@ export function DocumentsScreen() {
   const deadlines = useMemo(() => {
     const items: { when: string; what: string; where: string; past: boolean }[] = [];
     const today = new Date().toISOString().slice(0, 10);
-    for (const r of withChecklists) {
+    // Every row on the shortlist, not only the ones with a checklist: the
+    // panel says "across your shortlist" and a deadline matters whether or not
+    // documents have been collected for it yet.
+    for (const r of results) {
       if (r.admission_deadline) {
         items.push({
           when: r.admission_deadline,
@@ -71,7 +75,7 @@ export function DocumentsScreen() {
       }
     }
     return items.sort((a, b) => a.when.localeCompare(b.when));
-  }, [withChecklists]);
+  }, [results]);
 
   if (withChecklists.length === 0) {
     return (
@@ -95,7 +99,22 @@ export function DocumentsScreen() {
       </div>
 
       <div className="stack stack--loose">
-        <Panel title="Every deadline across your shortlist" sunken>
+        <Panel
+          title="Every deadline across your shortlist"
+          sunken
+          actions={
+            run && deadlines.length > 0 ? (
+              <a
+                className="btn btn--sm"
+                href={api.deadlinesUrl(run.id)}
+                download
+                data-testid="download-ics"
+              >
+                Add to calendar (.ics)
+              </a>
+            ) : undefined
+          }
+        >
           <div className="timeline">
             {deadlines.map((d, i) => (
               <div key={i} className={`timeline__item ${d.past ? 'timeline__item--past' : ''}`}>
@@ -228,7 +247,7 @@ function ChecklistFor({
 
       <Notice kind="info">
         <div>
-          UniMatch prepares this list. It does not upload documents, submit an application, sign
+          ASHYQ Apply prepares this list. It does not upload documents, submit an application, sign
           anything on your behalf, or pay a fee. Those steps stay with you.
         </div>
       </Notice>

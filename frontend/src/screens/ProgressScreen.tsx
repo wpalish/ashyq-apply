@@ -30,7 +30,7 @@ function errorCategory(message: string): string {
 }
 
 export function ProgressScreen({ onDone }: { onDone: () => void }) {
-  const { run, cancelRun, retryRun, results } = useStore();
+  const { run, cancelRun, retryRun, recheckNow, results } = useStore();
 
   if (!run) {
     return (
@@ -43,11 +43,23 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
   const finished = ['awaiting_user_decision', 'completed'].includes(run.stage);
   const failed = run.stage === 'failed';
   const cancelled = run.stage === 'cancelled';
+  // Where the pipeline actually stopped. Retrying from here keeps the stages
+  // that already succeeded, which is what the old single button claimed to do
+  // while in fact restarting everything.
+  const stoppedStage = run.stages.find((s) => s.status === 'failed' || s.status === 'running')?.stage;
+  // The API says stale when a run claims to be working but its worker has gone
+  // silent. Without this the screen showed a frozen spinner, no error and no
+  // way out — the user could only reload and hope.
+  const abandoned = run.stale && !run.job_running && !finished && !failed && !cancelled;
   const groupedErrors = run.errors.reduce<Record<string, string[]>>((groups, message) => {
     const category = errorCategory(message);
     (groups[category] ??= []).push(message);
     return groups;
   }, {});
+  // Older runs, made before the two were separated, carry everything in
+  // `errors`; they keep rendering under the failures panel rather than being
+  // silently reclassified.
+  const unknowns = run.unknowns ?? [];
 
   return (
     <>
@@ -74,6 +86,37 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
           </div>
         </div>
 
+        {abandoned && (
+          <Notice kind="risk">
+            <div className="stack stack--tight" data-testid="stale-run">
+              <div>
+                <strong>The worker stopped responding.</strong> This run last reported progress
+                {run.heartbeat_at ? ` at ${dateTime(run.heartbeat_at)}` : ' some time ago'} and
+                nothing has happened since. Your results so far are saved.
+              </div>
+              {run.job_error && <div className="xs mono muted">{run.job_error}</div>}
+              {run.recovery_count > 0 && (
+                <div className="xs muted">
+                  Recovered and restarted {run.recovery_count} time
+                  {run.recovery_count === 1 ? '' : 's'} already.
+                </div>
+              )}
+              <div className="row">
+                <button
+                  className="btn btn--primary"
+                  onClick={() => retryRun(stoppedStage)}
+                  data-testid="retry-stale"
+                >
+                  Resume from {STAGE_LABELS[stoppedStage ?? ''] ?? 'where it stopped'}
+                </button>
+                <button className="btn btn--ghost" onClick={cancelRun} data-testid="cancel-stale">
+                  Cancel this run
+                </button>
+              </div>
+            </div>
+          </Notice>
+        )}
+
         <div className="statband">
           <Stat value={run.candidates_found} label="Candidates found" />
           <Stat value={run.programs_verified} label="Programmes checked" />
@@ -88,6 +131,19 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
             Pages that could not be read: <strong>{run.pages_failed}</strong>. Any facts depending
             on them remain unknown and are never guessed.
           </p>
+        )}
+
+        {finished && (
+          <div className="row" style={{ justifyContent: 'space-between' }} data-testid="recheck">
+            <span className="small muted">
+              {run.next_recheck_at
+                ? <>Next automatic re-check of this evidence: <strong>{dateTime(run.next_recheck_at)}</strong>.</>
+                : 'This run holds no dated evidence to re-check.'}
+            </span>
+            <button className="btn btn--sm btn--ghost" onClick={recheckNow} data-testid="recheck-now">
+              Re-verify now
+            </button>
+          </div>
         )}
 
         <Panel title="Stages">
@@ -113,9 +169,36 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
           </div>
         </Panel>
 
+        {unknowns.length > 0 && (
+          <Panel
+            title="What could not be confirmed"
+            hint={
+              `${unknowns.length} facts were not published on the pages that were read. `
+              + 'This is normal, and none of them was guessed — each stays unknown in the results.'
+            }
+          >
+            <details data-testid="unknowns-panel">
+              <summary className="small">
+                <strong>Unconfirmed facts</strong> · {unknowns.length}
+              </summary>
+              <div
+                className="stack stack--tight"
+                style={{ maxHeight: '12rem', overflowY: 'auto', marginTop: 'var(--space-2)' }}
+                tabIndex={0}
+                role="region"
+                aria-label="Facts that could not be confirmed"
+              >
+                {unknowns.slice(0, 60).map((message, index) => (
+                  <div key={index} className="xs mono muted" style={{ overflowWrap: 'anywhere' }}>{message}</div>
+                ))}
+              </div>
+            </details>
+          </Panel>
+        )}
+
         {run.errors.length > 0 && (
-          <Panel title="Research limitations"
-            hint={`${run.errors.length} diagnostics are grouped by what they mean. They never become guessed values.`}>
+          <Panel title="Fetch failures" data-testid="failures-panel"
+            hint={`${run.errors.length} pages could not be read at all. Anything that depended on them is unknown, never guessed.`}>
             <div className="stack stack--tight">
               {Object.entries(groupedErrors).map(([category, messages]) => (
                 <details key={category}>
@@ -155,9 +238,29 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
               </button>
             </>
           )}
-          {(failed || cancelled) && (
-            <button className="btn btn--primary" onClick={retryRun} data-testid="retry-run">
-              Retry from the failed stage
+          {(failed || cancelled) && stoppedStage && (
+            <button
+              className="btn btn--primary"
+              onClick={() => retryRun(stoppedStage)}
+              data-testid="retry-stage"
+            >
+              Retry from {STAGE_LABELS[stoppedStage] ?? stoppedStage.replace(/_/g, ' ')}
+            </button>
+          )}
+          {(failed || cancelled || finished) && (
+            <button
+              className="btn btn--ghost"
+              onClick={() => {
+                if (
+                  window.confirm(
+                    'Re-run every stage? Programmes are read again from their official pages, '
+                    + 'so values may change. Your approvals, rejections and notes are kept.',
+                  )
+                ) void retryRun();
+              }}
+              data-testid="retry-run"
+            >
+              Re-run everything
             </button>
           )}
           {finished && results.length > 0 && (
