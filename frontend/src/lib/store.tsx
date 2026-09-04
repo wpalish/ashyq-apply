@@ -61,6 +61,8 @@ export interface Store {
   cancelRun: () => Promise<void>;
   retryRun: () => Promise<void>;
   collectDocuments: () => Promise<void>;
+  /** Downloads through the client, so a 402 raises the paywall like any call. */
+  exportShortlist: (fmt: 'csv' | 'json' | 'xlsx', decision?: string) => Promise<void>;
   decide: (resultId: string, decision: UserDecision, reason: string, notes: string) => Promise<void>;
   refreshResults: () => Promise<void>;
   deleteEverything: () => Promise<void>;
@@ -359,6 +361,19 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     }
   }, [run, fail]);
 
+  const exportShortlist = useCallback(
+    async (fmt: 'csv' | 'json' | 'xlsx', decision?: string) => {
+      if (!run) return;
+      setError(null);
+      try {
+        await api.downloadExport(run.id, fmt, decision);
+      } catch (e) {
+        fail(e);
+      }
+    },
+    [run, fail],
+  );
+
   const decide = useCallback(
     async (resultId: string, decision: UserDecision, reason: string, notes: string) => {
       if (!run) return;
@@ -402,13 +417,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       capabilities, profileDraft, setProfileDraft, savedProfile, cases, switchCase, newCase, restored,
       loadDemoProfile, clearProfile, validation, run, results,
       summary, loading, error, saveProfile, startRun, cancelRun, retryRun, collectDocuments,
-      decide, refreshResults, deleteEverything, clearError: () => setError(null),
+      exportShortlist, decide, refreshResults, deleteEverything, clearError: () => setError(null),
       paywall, clearPaywall: () => setPaywall(null),
     }),
     [capabilities, profileDraft, setProfileDraft, savedProfile, cases, switchCase, newCase,
      restored, loadDemoProfile,
      clearProfile, validation, run, results, summary, loading, error, saveProfile, startRun,
-     cancelRun, retryRun, collectDocuments, decide, refreshResults, deleteEverything, paywall],
+     cancelRun, retryRun, collectDocuments, exportShortlist, decide, refreshResults,
+     deleteEverything, paywall],
   );
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;

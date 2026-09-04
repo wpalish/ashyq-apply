@@ -95,6 +95,28 @@ describe('billing client', () => {
     }
   });
 
+  it('routes a locked export through the client so the paywall can be raised', async () => {
+    // A plain <a href> would have rendered this JSON in a tab instead.
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() =>
+        respond(402, {
+          detail: 'Unlock this case to see the full report.',
+          code: 'payment_required',
+          profile_id: 'c1',
+          price_kzt: 4990,
+        }),
+      ),
+    );
+
+    try {
+      await api.downloadExport('run1', 'csv');
+      expect.unreachable('a locked export must reject');
+    } catch (error) {
+      expect(isPaymentRequired(error)).toBe(true);
+    }
+  });
+
   it('still reports a non-JSON error body by status', async () => {
     vi.stubGlobal(
       'fetch',
