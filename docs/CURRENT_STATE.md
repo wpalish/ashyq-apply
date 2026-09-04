@@ -313,3 +313,54 @@ that it does.
 Still open and unchanged: the container stack has never been run (no Docker
 here, gate 22), live programme recall is still 1 in 10 canary institutions, and
 the privacy policy and terms need a lawyer before real applicants see them.
+
+## Update — Phase 6 of the audit fix plan
+
+The optional phase, done in full: a wider live registry, transcript import, and
+the groundwork for Russian and Kazakh.
+
+- **Live coverage was ten institutions and none of them in Central Asia.** It
+  is nineteen now, chosen for where Kazakh applicants actually apply:
+  Nazarbayev University, METU, Sabanci, Charles, Masaryk, TUM, Tartu,
+  Politecnico di Milano and Vilnius. Every seed was fetched and classified by
+  the product's own classifier; a category with no verifiable page has no seed,
+  because one pointing at a landing page spends the fetch budget and returns
+  nothing. Six further institutions were evaluated and rejected — Jagiellonian
+  because its robots.txt disallows the English site, which is final. Nine
+  reached, zero blocked, zero false positives; programme pages 2 of 9, better
+  than 1 in 10 and still the same weakness.
+- **Running the canary found three defects, all in the canary.** It could not
+  run at all — it built its applicant without an organization, relying on the
+  `dev-org` default Phase 4 removed, and had been failing on a NOT NULL
+  constraint in its own throwaway database ever since. `--only` narrowed the
+  report but not the run, so asking about one institution ran the first N in
+  file order. And the release gate that reports false positives **could not
+  pass**: it read a requirement's provenance from attributes a plain string
+  does not have, while the source sits in `claim_ids`. Ten institutions never
+  reached that branch because no live requirement was ever decided; Charles
+  University reached it and was accused of a false positive it had not made.
+  The check is fixed and now has tests of its own.
+- **The transcript an applicant is already holding can be read.** Grade
+  average, its scale and the graduation date, each quoted back with the line it
+  came from, and applied only per field when the applicant says so. It refuses
+  more than it reads: a grade average with no scale is not offered, an
+  ambiguous numeric date is refused by the same parser that refuses an
+  ambiguous deadline, and a value above its own scale is treated as a misread
+  line. The upload is PDFs only, ten megabytes, held in memory and discarded.
+- **Russian and Kazakh have a foundation, and honest gaps.** Strings live in
+  dictionaries with English as the fallback, and the shell — navigation,
+  topbar, appearance, the disclaimer — reads from them. The product's own
+  vocabulary is deliberately *not* translated: claim, shortlist, funding gap,
+  conditional offer and the status words carry exact meanings, and choosing
+  their equivalents is a decision for someone who advises applicants in those
+  languages. Each is listed in `docs/i18n/GLOSSARY.md` with the question to
+  answer, and the strings containing them stay in English until it is
+  answered — visibly, because a machine translation would be indistinguishable
+  from a reviewed one to the applicant acting on it.
+
+Backend: 818 tests green, coverage floor of 92 held, mypy and ruff clean.
+Frontend: 137 unit tests, typecheck, lint and production build clean.
+
+Still open and unchanged: the container stack has never been run (gate 22), and
+the privacy policy and terms need a lawyer before real applicants see them
+(gate 87). Both need a person, not another phase.

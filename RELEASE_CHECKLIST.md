@@ -8,16 +8,17 @@ the release report, not "implemented".
 partial and one fails; the local container stack is still the unverified gate,
 and the release commit/tag waits on it.
 
-**next: Phase 6** of [`docs/FIX_PLAN.md`](docs/FIX_PLAN.md) — the optional one
-(i18n, transcript import, a wider live registry). Phases 0–5 are done; gates
-36–88 below record what each fix is now held to. Two audit findings did not
-reproduce against this tree and are recorded as such rather than "fixed" — see
-gates 22 and 47.
+**`docs/FIX_PLAN.md` is finished.** Phases 0–6 are done, including the optional
+sixth; gates 36–92 below record what each fix is held to. Two audit findings
+did not reproduce against this tree and are recorded as such rather than
+"fixed" — see gates 22 and 47. What remains open needs a person, not another
+phase: Docker for the container stack (gate 22) and a lawyer for the privacy
+policy and terms (gate 87).
 
 | # | Gate | Status | Evidence / what is missing |
 |---|---|---|---|
-| 1 | Existing 240 + 39 + 42 tests kept or replaced by stricter ones | **PASS** | 785 + 120 + 63 (desktop and mobile, 1 skipped) + 6 auth E2E. Nothing removed; Phase 1 added 14, Phase 2 added 65, Phase 3 added 50, and Phase 5 added 21 backend (metrics, dead jobs) and 8 frontend (the needs-attention line, the legal page) |
-| 2 | All new unit / integration / E2E / security tests green | **PASS** | `pytest` 785 passed, **including the PostgreSQL branch** — `pgserver` does provision a cluster on this machine after all, so the 25 tests recorded as unrunnable here now run and pass (`test_jobs.py` and `test_social_models.py`, 50 tests, no skips). `vitest` 120, `playwright` 63 passed / 1 skipped (desktop + mobile). The authenticated E2E config was not re-run here: it starts its own dev server and port 5173 was held by another process on this machine |
+| 1 | Existing 240 + 39 + 42 tests kept or replaced by stricter ones | **PASS** | 818 + 137 + 67 (desktop and mobile, 1 skipped) + 6 auth E2E. Nothing removed; Phase 1 added 14, Phase 2 added 65, Phase 3 added 50, and Phase 5 added 21 backend (metrics, dead jobs) and 8 frontend (the needs-attention line, the legal page) |
+| 2 | All new unit / integration / E2E / security tests green | **PASS** | `pytest` 818 passed, **including the PostgreSQL branch** — `pgserver` does provision a cluster on this machine after all, so the 25 tests recorded as unrunnable here now run and pass (`test_jobs.py` and `test_social_models.py`, 50 tests, no skips). `vitest` 137, `playwright` 67 passed / 1 skipped (desktop + mobile). The authenticated E2E config was not re-run here: it starts its own dev server and port 5173 was held by another process on this machine |
 | 3 | ruff, mypy, TypeScript, ESLint, production build clean | **PASS** | all clean; build 74.0 kB JS gzip |
 | 4 | PostgreSQL migrations work on fresh and upgraded databases | **PASS** | Alembic. Verified fresh, downgrade to base, re-upgrade, re-apply as a no-op, on PostgreSQL 16.2 and SQLite. `create_all()` removed from the production path; startup refuses a mismatched revision |
 | 5 | Worker survives a crash restart | **PASS** | `scripts/crash_test.py` SIGKILLs a real worker after 12 results are written; a second worker recovers the job and finishes with no duplicates. Stable over 3 runs. **PostgreSQL-backed queue, not Redis — see ADR 0001** |
@@ -132,10 +133,19 @@ gates 22 and 47.
 | 87 | The product says what it does with personal data | **PARTIAL** | A privacy policy and terms exist, have an address (`#/legal`), and every factual claim in them is true of the code. They are **drafts and say so**: no lawyer has read them, and the product asks no age although it is built for applicants who will include minors. Legal review is outstanding and is a release blocker for real applicants, not a formality. 4 vitest |
 | 88 | Every log line can be tied to the request that produced it | **PASS** | Request-id middleware honouring a safe inbound `X-Request-ID` and echoing it back, JSON log format behind `UNIMATCH_LOG_FORMAT`, correlation id carried per context and through the worker on the job id. 12 tests (Phase 5.1–5.2) |
 
+### Added by Phase 6 of the audit fix plan
+
+| # | Gate | Status | Evidence |
+|---|---|---|---|
+| 89 | Live mode reaches beyond ten Western universities | **PASS** | Nineteen institutions, the nine new ones chosen for where Kazakh applicants apply, including Nazarbayev University. Every seed fetched and classified by the product's own classifier before being written down; a category with no verifiable page has no seed. All 52 seeds resolve. Nine canaried the day they were added: nine reached, zero blocked, **zero false positives**, programme pages 2 of 9 |
+| 90 | The canary can actually run, and its verdict can be trusted | **PASS** | Three defects in the tool, none in the product: it died on a NOT NULL constraint from the `dev-org` default Phase 4 removed; `--only` narrowed the report but not the run; and the false-positive gate read a requirement's provenance from attributes a string does not have, so it could never pass and accused Charles University of a false positive it had not made. 4 tests now hold the gate to its own contract |
+| 91 | A transcript can be read instead of retyped | **PASS** | Grade average with its scale, and the graduation date, each quoted back with the line it came from and applied only per field on request. Refuses an average with no scale, an ambiguous numeric date, and a value above its own scale. PDFs only, 10 MB, authenticated, held in memory and discarded. 17 backend tests + 4 vitest |
+| 92 | Russian and Kazakh have a foundation that does not invent terms | **PARTIAL** | The shell reads from dictionaries with English as the visible fallback, and a language selector persists the choice. Deliberately incomplete: claim, shortlist, funding gap, conditional offer and the status vocabulary are listed in `docs/i18n/GLOSSARY.md` with the question each poses, and the strings containing them stay in English until a person who advises applicants in those languages decides. 7 vitest, including one that fails if a reserved term is quietly translated |
+
 ## Summary
 
-- **PASS:** 28 (of 30 original) + 5 + 7 added by Phase 1 + 17 added by Phase 2 + 14 added by Phase 3 + 9 added by Phase 4 + 5 added by Phase 5
-- **PARTIAL:** 1 (gate 87 — the privacy policy and terms are drafts no lawyer has read)
+- **PASS:** 28 (of 30 original) + 5 + 7 added by Phase 1 + 17 added by Phase 2 + 14 added by Phase 3 + 9 added by Phase 4 + 5 added by Phase 5 + 3 added by Phase 6
+- **PARTIAL:** 2 (gate 87 — the privacy policy and terms are drafts no lawyer has read; gate 92 — the product vocabulary is deliberately untranslated pending human review)
 - **FAIL:** 1 (gate 22 — the container stack has still never been run)
 - **BLOCKED:** 1
 
@@ -150,8 +160,11 @@ was written and had simply not been re-tried.
 0a. ~~**Phase 5** — ops and observability: request-id middleware, JSON logs,
    `/metrics`, a scheduled backup, admin visibility of dead jobs, and Privacy
    Policy / Terms stubs~~ **done** (gates 83-88)
-0b. **Phase 6** — optional: i18n groundwork (ru/kk), transcript import, and
-   ten more live-registry institutions. Not started.
+0b. ~~**Phase 6** — optional: i18n groundwork (ru/kk), transcript import, and
+   more live-registry institutions~~ **done** (gates 89-92). Nine institutions
+   were added rather than ten: six candidates were evaluated and rejected, one
+   of them because its robots.txt disallows the site, and padding the number
+   with an unverifiable seed would have made "verified" mean nothing.
 1. ~~**P1** — PostgreSQL, Alembic, durable queue, crash recovery~~ **done** (gates 4, 5)
 2. ~~**P2** — auth, organizations, cases, tenant isolation~~ **done**
 3. ~~**P3** — SSRF suite, headers, rate limiting, threat model~~ **done**
