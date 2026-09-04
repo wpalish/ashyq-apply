@@ -721,3 +721,75 @@ class TestPagination:
 
         tail = client.get(f"/api/runs/{run['id']}/claims?limit=10&offset={total - 5}")
         assert len(tail.json()) == 5
+
+
+class TestTheRequestIdIsUsable:
+    """A log line has to be findable from the response the user saw.
+
+    Nothing tied the two together before: when someone reported an error, the
+    only way to locate it in the logs was the clock.
+    """
+
+    def test_every_response_carries_a_generated_id(self, client):
+        import re
+
+        assert re.fullmatch(r"[0-9a-f]{32}", client.get("/api/health").headers["x-request-id"])
+
+    def test_a_proxys_own_id_is_carried_through(self, client):
+        response = client.get("/api/health", headers={"X-Request-ID": "trace-abc_123"})
+        assert response.headers["x-request-id"] == "trace-abc_123"
+
+    def test_a_hostile_id_is_replaced_rather_than_echoed(self, client):
+        """This value goes straight back out in a header.
+
+        `test_the_export_filename_cannot_be_injected` covers the other header
+        this codebase shipped without checking; the reasoning is the same.
+        """
+        import re
+
+        returned = client.get("/api/health", headers={"X-Request-ID": 'x"; drop="1'}).headers[
+            "x-request-id"
+        ]
+        assert returned != 'x"; drop="1'
+        assert re.fullmatch(r"[0-9a-f]{32}", returned)
+
+    def test_two_requests_do_not_share_an_id(self, client):
+        assert (
+            client.get("/api/health").headers["x-request-id"]
+            != client.get("/api/health").headers["x-request-id"]
+        )
+
+    def test_code_running_inside_the_request_sees_that_id(self, client, monkeypatch):
+        """The point of the whole exercise.
+
+        Asserted at the log call rather than at a handler: the id travels in a
+        ContextVar that `CorrelationFilter` reads when a record is formatted,
+        so what matters is that the id is correct in the context the request
+        is served on. `test_the_id_reaches_a_log_record_without_the_caller_knowing`
+        covers the second half, the filter putting it onto the record.
+        """
+        from app.logging_setup import get_correlation_id
+
+        seen: list[str] = []
+
+        import app.api.routes_meta as meta
+
+        class Spy:
+            def error(self, *_args, **_kwargs):
+                seen.append(get_correlation_id())
+
+        monkeypatch.setattr(meta, "log", Spy())
+
+        # The health check logs only when the database is unreachable, and it
+        # resolves the engine at call time precisely so this is possible.
+        import app.db as db_module
+
+        class _Broken:
+            def connect(self):
+                raise RuntimeError("database is gone")
+
+        monkeypatch.setattr(db_module, "engine", _Broken())
+        response = client.get("/api/health", headers={"X-Request-ID": "findme"})
+
+        assert response.status_code == 503, "the health check did not take its error path"
+        assert seen == ["findme"]

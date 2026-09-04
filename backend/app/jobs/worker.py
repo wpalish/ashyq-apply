@@ -20,6 +20,7 @@ from app.config import Settings, get_settings
 from app.db import session_scope
 from app.domain.enums import PipelineStage
 from app.jobs.store import JobStore, worker_identity
+from app.logging_setup import configure_logging, set_correlation_id
 from app.models import ApplicantProfileRow, AuditEvent, Job, JobStatus, ResearchRun
 from app.models.base import ensure_utc
 from app.pipeline.runner import LeaseLost, ResearchRunner, RunCancelled
@@ -83,6 +84,12 @@ class Worker:
         )
 
     async def _run_and_release(self, job_id: str, semaphore: asyncio.Semaphore) -> None:
+        # The worker has no request to correlate against, so the job id plays
+        # that part: every line this task logs can be traced back to the job
+        # that produced it, which is what the API's request id buys there.
+        # Each job runs in its own task, so the ContextVar does not leak
+        # between the jobs running concurrently.
+        set_correlation_id(job_id)
         try:
             await self.execute(job_id)
         finally:
@@ -321,10 +328,7 @@ def reconcile_startup() -> dict[str, int]:
 
 def main() -> int:  # pragma: no cover - process entry point
     settings = get_settings()
-    logging.basicConfig(
-        level=getattr(logging, settings.log_level.upper(), logging.INFO),
-        format="%(asctime)s %(levelname)-7s %(name)s: %(message)s",
-    )
+    configure_logging(settings.log_level, settings.log_format)
     if not wait_for_schema():
         return 1
     summary = reconcile_startup()

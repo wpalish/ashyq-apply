@@ -51,6 +51,10 @@ class Settings(BaseSettings):
 
     cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
     log_level: str = "INFO"
+    #: "text" for a person reading a terminal, "json" for anything that parses
+    #: logs. Production wants json; the default stays readable so development
+    #: does not pay for a machine that is not there.
+    log_format: str = "text"
 
     #: Authentication is deliberately opt-in for the zero-friction local demo,
     #: and mandatory in a production environment.  Sessions are opaque,

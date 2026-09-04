@@ -25,12 +25,10 @@ from app.api import (
 from app.config import get_settings
 from app.db import init_db
 from app.jobs.worker import reconcile_startup
+from app.logging_setup import configure_logging, new_correlation_id, set_correlation_id
 
 settings = get_settings()
-logging.basicConfig(
-    level=getattr(logging, settings.log_level.upper(), logging.INFO),
-    format="%(asctime)s %(levelname)-7s %(name)s: %(message)s",
-)
+configure_logging(settings.log_level, settings.log_format)
 log = logging.getLogger("unimatch")
 
 
@@ -204,6 +202,29 @@ async def security_middleware(request: Request, call_next):
             )
 
     return _secure(await call_next(request))
+
+
+@app.middleware("http")
+async def correlation_middleware(request: Request, call_next):
+    """Give every request an id, and hand it back.
+
+    Registered last on purpose. Starlette inserts each `add_middleware` at the
+    front of the stack, so the last one declared is the outermost — which is
+    what a correlation id has to be, or the middleware that runs before it
+    logs without one.
+
+    An inbound `X-Request-ID` is honoured so a proxy's id survives into these
+    logs, but only if it is a safe shape: it goes straight back out in a
+    response header, and this codebase has already shipped one header it did
+    not check.
+    """
+    incoming = request.headers.get("x-request-id", "")
+    request_id = set_correlation_id(incoming)
+    if request_id == "-":
+        request_id = set_correlation_id(new_correlation_id())
+    response = await call_next(request)
+    response.headers["X-Request-ID"] = request_id
+    return response
 
 
 @app.exception_handler(PIILeakError)
