@@ -39,6 +39,10 @@ class ResearchRun(TimestampedBase):
     candidate_limit: Mapped[int | None] = mapped_column(Integer, nullable=True)
     verify_limit: Mapped[int | None] = mapped_column(Integer, nullable=True)
     cancelled: Mapped[bool] = mapped_column(Boolean, default=False)
+    #: Which tier this run was allowed to spend at. A free run really did fetch
+    #: less, so paying afterwards cannot retroactively widen it — it queues a
+    #: new one. Recorded here so the run carries the truth about its own scope.
+    access_tier: Mapped[str] = mapped_column(String(10), default="full", index=True)
 
     candidates_found: Mapped[int] = mapped_column(Integer, default=0)
     programs_verified: Mapped[int] = mapped_column(Integer, default=0)
