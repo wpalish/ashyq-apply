@@ -20,6 +20,7 @@ from app.api import (
     routes_profile,
     routes_research,
     routes_results,
+    routes_social,
 )
 from app.config import get_settings
 from app.db import init_db
@@ -83,6 +84,7 @@ for module in (
     routes_profile,
     routes_research,
     routes_results,
+    routes_social,
 ):
     app.include_router(module.router)
 
@@ -154,6 +156,9 @@ async def security_middleware(request: Request, call_next):
     elif request.method == "POST" and path == "/api/runs":
         limit = settings.run_rate_limit_per_minute
         group = "research"
+    elif unsafe and path.startswith("/api/social/"):
+        limit = settings.social_rate_limit_per_minute
+        group = "social"
     else:
         limit = 0
         group = ""

@@ -239,6 +239,72 @@ class TestDeletion:
         assert social_session.query(PostReply).count() == 0
 
 
+class TestTheQueriesRunOnPostgres:
+    """SQLite tolerates a loose GROUP BY and a lax comparison; PostgreSQL does
+    not, and PostgreSQL is what production runs. The API tests drive SQLite for
+    speed, so the real queries are executed here against the real database."""
+
+    def _principal(self, user):
+        from app.security import Principal
+
+        return Principal(
+            user_id=user.id,
+            organization_id="00000000000000000000000000000001",
+            email=user.email,
+            display_name=user.display_name,
+            role="owner",
+        )
+
+    def test_the_feed_discover_and_thread_queries_execute(self, pg_engine):
+        from app.api import routes_social
+
+        factory = sessionmaker(bind=pg_engine, future=True)
+        session = factory()
+        try:
+            user = make_user(session, "pg-reader")
+            profile = SocialProfile(user_id=user.id, status="accepted", target_city="Astana")
+            profile.universities = [SocialProfileUniversity(name="KBTU")]
+            session.add(profile)
+            session.flush()
+            posts = [Post(author_id=user.id, body=f"пост {index}") for index in range(3)]
+            for item in posts:
+                item.tags = [PostTag(label="KBTU")]
+            session.add_all(posts)
+            session.flush()
+            session.add(PostReply(post_id=posts[0].id, author_id=user.id, body="ответ"))
+            session.commit()
+
+            principal = self._principal(user)
+
+            # The aggregate the feed uses is the part PostgreSQL is strict about.
+            first = routes_social.feed(
+                tag="kbtu", city="astana", status="accepted", limit=2,
+                principal=principal, session=session,
+            )
+            assert len(first.items) == 2
+            assert first.next_cursor is not None
+
+            second = routes_social.feed(
+                limit=2, cursor=first.next_cursor, principal=principal, session=session
+            )
+            assert len(second.items) == 1
+            ids = {item.id for item in first.items} | {item.id for item in second.items}
+            assert len(ids) == 3
+
+            people = routes_social.discover(
+                city="Astana", university="k.b.t.u.", status="accepted",
+                principal=principal, session=session,
+            )
+            assert [person.universities for person in people.items] == [["KBTU"]]
+
+            thread = routes_social.read_thread(
+                post_id=posts[0].id, principal=principal, session=session
+            )
+            assert [reply.body for reply in thread.items] == ["ответ"]
+        finally:
+            session.close()
+
+
 class TestPostgresEnforcesItToo:
     """The ORM issues the cascades; PostgreSQL is what actually holds the line."""
 

@@ -62,6 +62,10 @@ class Settings(BaseSettings):
     cookie_secure: bool = False
     auth_rate_limit_per_minute: int = 10
     run_rate_limit_per_minute: int = 20
+    #: Posting writes content other people read, so it gets its own bound.
+    #: Generous enough for a real conversation, narrow enough that a script
+    #: cannot fill the feed.
+    social_rate_limit_per_minute: int = 30
 
     @property
     def is_production(self) -> bool:
