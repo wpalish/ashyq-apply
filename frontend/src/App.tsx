@@ -19,6 +19,7 @@ import { ApprovedScreen } from '@/screens/ApprovedScreen';
 import { DocumentsScreen } from '@/screens/DocumentsScreen';
 import { SourcesScreen } from '@/screens/SourcesScreen';
 import { ExportScreen } from '@/screens/ExportScreen';
+import { LegalScreen } from '@/screens/LegalScreen';
 import { FeedScreen } from '@/screens/FeedScreen';
 import { DiscoverScreen } from '@/screens/DiscoverScreen';
 import { PersonScreen } from '@/screens/PersonScreen';
@@ -29,7 +30,7 @@ import type { PersonCard } from '@/types';
 export type ScreenId =
   | 'profile' | 'preferences' | 'progress' | 'shortlist' | 'funding'
   | 'approved' | 'documents' | 'sources' | 'export'
-  | 'feed' | 'discover' | 'me' | 'person';
+  | 'feed' | 'discover' | 'me' | 'person' | 'legal';
 
 /**
  * The numbers are not decoration: the case screens are a sequence, and 04
@@ -49,6 +50,9 @@ const SCREENS: { id: ScreenId; num?: string; label: string; group: string }[] = 
   { id: 'feed', label: 'Feed', group: 'Community' },
   { id: 'discover', label: 'Find applicants', group: 'Community' },
   { id: 'me', label: 'My community profile', group: 'Community' },
+  // Listed rather than tucked into the footer, so that it has an address a
+  // person can be sent to: "read the privacy policy" is a link, not a hunt.
+  { id: 'legal', label: 'Privacy & terms', group: 'About' },
 ];
 
 /** The screen named by `#/…`, if it names one at all. */
@@ -149,6 +153,8 @@ export default function App() {
     discover: null,
     me: null,
     person: null,
+    // A privacy policy nobody can reach before signing up is not a policy.
+    legal: null,
   };
 
   // The hash is the address of the screen: back and forward work, a reload
@@ -375,6 +381,7 @@ export default function App() {
           {screen === 'approved' && <ApprovedScreen onCollect={() => setScreen('documents')} />}
           {screen === 'documents' && <DocumentsScreen />}
           {screen === 'export' && <ExportScreen />}
+          {screen === 'legal' && <LegalScreen />}
           {screen === 'feed' && (
             <FeedScreen
               joined={joined}
