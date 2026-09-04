@@ -8,6 +8,7 @@
 
 import { useEffect, useState } from 'react';
 import { useStore } from '@/lib/store';
+import { PaywallNotice } from '@/components/PaywallNotice';
 import { ProfileScreen } from '@/screens/ProfileScreen';
 import { PreferencesScreen } from '@/screens/PreferencesScreen';
 import { ProgressScreen } from '@/screens/ProgressScreen';
@@ -212,6 +213,10 @@ export default function App() {
             </div>
           </div>
         )}
+
+        {/* Mounted once: the paywall is global state, raised by whichever
+            screen asked for locked material. */}
+        <PaywallNotice />
 
         <main className="screen">
           {screen === 'profile' && <ProfileScreen onNext={() => setScreen('preferences')} />}

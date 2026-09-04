@@ -10,7 +10,7 @@ import {
   createContext, useCallback, useContext, useEffect, useMemo, useRef, useState,
   type ReactNode,
 } from 'react';
-import { ApiError, api } from '@/api/client';
+import { ApiError, api, isPaymentRequired } from '@/api/client';
 import { DEFAULT_PROFILE } from '@/lib/defaultProfile';
 import type {
   ApplicantCase, Capabilities, ProfileValidationReport, ProgramResult, RunView,
@@ -65,6 +65,9 @@ export interface Store {
   refreshResults: () => Promise<void>;
   deleteEverything: () => Promise<void>;
   clearError: () => void;
+  /** Set when a gated route answered 402. Null when nothing is locked. */
+  paywall: { profileId: string; priceKzt: number } | null;
+  clearPaywall: () => void;
 }
 
 const StoreContext = createContext<Store | null>(null);
@@ -132,9 +135,16 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [restored, setRestored] = useState(false);
+  const [paywall, setPaywall] = useState<{ profileId: string; priceKzt: number } | null>(null);
   const pollRef = useRef<number | null>(null);
 
   const fail = useCallback((e: unknown) => {
+    // A 402 is not a failure to report — it is an offer to make. Every screen
+    // already routes its errors through here, so intercepting once covers all.
+    if (isPaymentRequired(e)) {
+      setPaywall({ profileId: e.profileId, priceKzt: e.priceKzt });
+      return;
+    }
     setError(e instanceof ApiError ? e.message : String(e));
   }, []);
 
@@ -393,11 +403,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       loadDemoProfile, clearProfile, validation, run, results,
       summary, loading, error, saveProfile, startRun, cancelRun, retryRun, collectDocuments,
       decide, refreshResults, deleteEverything, clearError: () => setError(null),
+      paywall, clearPaywall: () => setPaywall(null),
     }),
     [capabilities, profileDraft, setProfileDraft, savedProfile, cases, switchCase, newCase,
      restored, loadDemoProfile,
      clearProfile, validation, run, results, summary, loading, error, saveProfile, startRun,
-     cancelRun, retryRun, collectDocuments, decide, refreshResults, deleteEverything],
+     cancelRun, retryRun, collectDocuments, decide, refreshResults, deleteEverything, paywall],
   );
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
