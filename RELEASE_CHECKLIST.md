@@ -73,3 +73,14 @@ stack is the one unverified gate, and the release commit/tag waits on it.
   cannot be installed without your password. The files are written; they have
   never been executed.
 * **Any external deployment**, domain or billing.
+* **Payments cannot go live without you.** Specifically:
+  1. an ApiPay account with Kaspi Pay connected;
+  2. `UNIMATCH_APIPAY_API_KEY` and `UNIMATCH_APIPAY_WEBHOOK_SECRET` in the
+     deployment environment, then `UNIMATCH_PAYMENTS_ENABLED=true` and
+     `UNIMATCH_PAYMENTS_PROVIDER=apipay`;
+  3. the public HTTPS URL of `POST /webhooks/apipay` registered in the ApiPay
+     dashboard — which depends on the deployment above;
+  4. confirmation of the price; `4990 ₸` is a placeholder default;
+  5. one end-to-end payment of the real price, verified in both the ApiPay
+     dashboard and our `payment_events` table. Until that has happened, the
+     payment path is proven only by contract tests.

@@ -362,6 +362,41 @@ Copy `.env.example` to `backend/.env`. No secrets are required to run anything.
 
 ---
 
+## Payments
+
+The first run of a case is free and deliberately narrower. One payment unlocks
+that case permanently for the organization that owns it.
+
+| | Free | Case unlocked |
+|---|---|---|
+| Run coverage | `candidate_limit` capped at 5 | full |
+| Shortlist | top 5 rows: programme, institution, degree, score | every row, every field |
+| Evidence, claims, conflicts, open questions | `402` | shown |
+| Export, document collection | `402` | available |
+| Summary counts | shown | shown |
+
+Paying does not widen the run that already happened — a free run really did
+fetch less. It queues a fresh full run for the case.
+
+**Provider:** Kaspi Pay through [ApiPay](https://apipay.kz), either as an
+invoice pushed to the payer's phone or as a QR. Two independent sources settle
+an order: ApiPay's signed webhook, and a reconciler on the durable queue that
+polls in case the webhook never arrives. Both converge on one idempotent
+writer, so a replayed or out-of-order event grants exactly once.
+
+**Endpoints:** `GET /api/billing/pricing`, `GET /api/billing/entitlements`,
+`POST /api/billing/orders`, `GET /api/billing/orders/{id}`,
+`POST /api/billing/orders/{id}/cancel`, and the callback
+`POST /webhooks/apipay`, whose public HTTPS URL must be registered in the
+ApiPay dashboard.
+
+**Off by default.** With `UNIMATCH_PAYMENTS_ENABLED=false` — the default —
+there is no paywall, no truncation and every case is fully open; the product
+behaves exactly as it did before payments existed. A test asserts that.
+Configuration lives in `.env.example` under *Payments*.
+
+---
+
 ## Limitations
 
 These are real, and the UI states them rather than hiding them.
@@ -392,7 +427,12 @@ These are real, and the UI states them rather than hiding them.
    job and its output is a real advantage for minutes-long jobs. Very high job
    rates would eventually want a broker; the interface is ready for one.
 8. **Demo data is synthetic**, as described above.
-9. **No portal automation.** Nothing is uploaded, submitted, signed or paid for.
+9. **No portal automation.** Nothing is uploaded, submitted, signed or paid for
+   on the applicant's behalf. The only payment in the product is the customer
+   paying us to unlock their own case.
+10. **The payment adapter has never spoken to ApiPay.** No merchant account
+    exists yet, so every payment claim rests on contract tests written against
+    ApiPay's published OpenAPI document, not on an observed transaction.
 
 ---
 

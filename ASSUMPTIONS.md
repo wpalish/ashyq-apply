@@ -172,3 +172,23 @@ captures.
   a stated deployment model would be speculative.
 - **No portal automation of any kind.** Out of scope by the specification, and
   the boundary is stated in the UI rather than merely omitted.
+
+## Payments
+
+- **4990 ₸ is a placeholder.** It is the configured default for
+  `UNIMATCH_CASE_UNLOCK_PRICE_KZT` and has not been confirmed as the price the
+  product will launch at. It changes in `.env`, not in code.
+- **The adapter has never spoken to ApiPay.** No merchant account exists yet.
+  Every payment claim rests on contract tests written against ApiPay's
+  published OpenAPI document, read on 2026-09-04 — not on an observed
+  transaction. Field names, status vocabulary and the webhook body are as that
+  document defines them; if the live service differs, the adapter is wrong.
+- **Our own ApiPay tariff must stay active.** `tariff_inactive` is a 403 that
+  stops every customer paying, and nothing in the product can work around it.
+- **A free run is capped at 5 candidates.** Chosen so an unpaid case cannot
+  cost a full crawl, not from a measurement of what converts.
+- **Refunds are operated from the ApiPay dashboard.** The provider supports
+  them; we deliberately built no UI for them in phase 1.
+- **Organization subscriptions are not built.** The `entitlements` table and
+  its constraints already accommodate them, and `has_full_access` already
+  honours an organization-wide row, but nothing issues one yet.
