@@ -93,6 +93,20 @@ def _newer_than(moment_column, id_column, cursor: str):
 # --- Views --------------------------------------------------------------
 
 
+def _account(session: Session, user_id: str) -> User:
+    """The account behind a post, a reply or the caller.
+
+    Every author column is a foreign key to `users` with ON DELETE CASCADE, so
+    a post cannot outlive the account that wrote it. Reaching this raise means
+    the database has lost that constraint, and the honest answer is a 500 with
+    a traceback rather than a post rendered with a blank name.
+    """
+    user = session.get(User, user_id)
+    if user is None:
+        raise RuntimeError(f"social row references user {user_id}, which does not exist")
+    return user
+
+
 def _author(user: User, profile: SocialProfile | None) -> AuthorRef:
     return AuthorRef(
         user_id=user.id,
@@ -241,9 +255,7 @@ def discover(
             SocialProfileUniversity.profile_id == SocialProfile.user_id,
         ).filter(SocialProfileUniversity.name_key == normalize_key(university))
     if cursor:
-        query = query.filter(
-            _older_than(SocialProfile.created_at, SocialProfile.user_id, cursor)
-        )
+        query = query.filter(_older_than(SocialProfile.created_at, SocialProfile.user_id, cursor))
 
     rows = (
         query.order_by(SocialProfile.created_at.desc(), SocialProfile.user_id.desc())
@@ -297,7 +309,7 @@ def create_post(
     session.add(post)
     session.commit()
     session.refresh(post)
-    return _post_view(post, session.get(User, principal.user_id), profile, 0)
+    return _post_view(post, _account(session, principal.user_id), profile, 0)
 
 
 @router.get("/feed", response_model=PostPage)
@@ -344,9 +356,7 @@ def feed(
     if cursor:
         query = query.filter(_older_than(Post.created_at, Post.id, cursor))
 
-    rows = (
-        query.order_by(Post.created_at.desc(), Post.id.desc()).limit(limit + 1).all()
-    )
+    rows = query.order_by(Post.created_at.desc(), Post.id.desc()).limit(limit + 1).all()
     page, next_cursor = _split(rows, limit, lambda row: (row[0].created_at, row[0].id))
     return PostPage(
         items=[_post_view(post, user, profile, int(count)) for post, user, profile, count in page],
@@ -372,7 +382,7 @@ def read_post(
     replies = session.query(func.count(PostReply.id)).filter(PostReply.post_id == post.id).scalar()
     return _post_view(
         post,
-        session.get(User, post.author_id),
+        _account(session, post.author_id),
         session.get(SocialProfile, post.author_id),
         int(replies or 0),
     )
@@ -397,7 +407,7 @@ def create_reply(
     return ReplyView(
         id=reply.id,
         post_id=post.id,
-        author=_author(session.get(User, principal.user_id), profile),
+        author=_author(_account(session, principal.user_id), profile),
         body=reply.body,
         created_at=(ensure_utc(reply.created_at) or reply.created_at).isoformat(),
     )
@@ -422,9 +432,7 @@ def read_thread(
     if cursor:
         query = query.filter(_newer_than(PostReply.created_at, PostReply.id, cursor))
 
-    rows = (
-        query.order_by(PostReply.created_at.asc(), PostReply.id.asc()).limit(limit + 1).all()
-    )
+    rows = query.order_by(PostReply.created_at.asc(), PostReply.id.asc()).limit(limit + 1).all()
     page, next_cursor = _split(rows, limit, lambda row: (row[0].created_at, row[0].id))
     return ReplyPage(
         items=[

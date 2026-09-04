@@ -278,8 +278,12 @@ class TestTheQueriesRunOnPostgres:
 
             # The aggregate the feed uses is the part PostgreSQL is strict about.
             first = routes_social.feed(
-                tag="kbtu", city="astana", status="accepted", limit=2,
-                principal=principal, session=session,
+                tag="kbtu",
+                city="astana",
+                status="accepted",
+                limit=2,
+                principal=principal,
+                session=session,
             )
             assert len(first.items) == 2
             assert first.next_cursor is not None
@@ -292,8 +296,11 @@ class TestTheQueriesRunOnPostgres:
             assert len(ids) == 3
 
             people = routes_social.discover(
-                city="Astana", university="k.b.t.u.", status="accepted",
-                principal=principal, session=session,
+                city="Astana",
+                university="k.b.t.u.",
+                status="accepted",
+                principal=principal,
+                session=session,
             )
             assert [person.universities for person in people.items] == [["KBTU"]]
 

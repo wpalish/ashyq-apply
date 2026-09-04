@@ -4,8 +4,13 @@ Purely additive. No existing table is altered and no existing row is touched,
 so this migration is safe to apply to a live database and safe to reverse.
 
 Revision ID: e7c4a91b6f20
-Revises: c3a1f4e9b2d7
+Revises: c9e05a71f4d8
 Create Date: 2026-09-04
+
+Written against c3a1f4e9b2d7 on a branch, and re-pointed at the auth-flow
+chain when the two branches met. Nothing had been deployed, so moving it to
+the tail was one line and keeps the history linear — cheaper than a merge
+revision whose only content is the record of two people working at once.
 """
 
 from __future__ import annotations
@@ -16,7 +21,7 @@ import sqlalchemy as sa
 from alembic import op
 
 revision: str = "e7c4a91b6f20"
-down_revision: str | None = "c3a1f4e9b2d7"
+down_revision: str | None = "c9e05a71f4d8"
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
 
