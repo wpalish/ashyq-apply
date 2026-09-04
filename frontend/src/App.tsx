@@ -25,7 +25,7 @@ import { DiscoverScreen } from '@/screens/DiscoverScreen';
 import { PersonScreen } from '@/screens/PersonScreen';
 import { Chip } from '@/components/primitives';
 import { api } from '@/api/client';
-import { LOCALES, type Locale, type MessageKey } from '@/lib/i18n';
+import { LOCALES, t as translate, type Locale, type MessageKey } from '@/lib/i18n';
 import { useTranslation } from '@/lib/useTranslation';
 import type { PersonCard } from '@/types';
 
@@ -63,6 +63,19 @@ function screenFromHash(): ScreenId | null {
   return SCREENS.some((s) => s.id === id) ? (id as ScreenId) : null;
 }
 
+/**
+ * A screen's name for a sentence, in the reader's language.
+ *
+ * Module scope rather than a closure over the hook's `t`: it would otherwise
+ * be a new function on every render and a dependency of the memoised gate
+ * check. `translate` reads the current locale when it is called, so this is
+ * just as live as the hook.
+ */
+function label(id: ScreenId): string {
+  const entry = SCREENS.find((s) => s.id === id);
+  return entry ? translate(entry.label) : id;
+}
+
 /** "1 conflict", not "1 conflicts". */
 function plural(n: number, noun: string): string {
   return `${n} ${noun}${n === 1 ? '' : 's'}`;
@@ -77,11 +90,6 @@ export default function App() {
     cases, savedProfile, switchCase, newCase, dirty, hydrated,
   } = useStore();
   const { t, locale, setLocale } = useTranslation();
-  /** A screen's name for a sentence, in the reader's language. */
-  const label = (id: ScreenId): string => {
-    const entry = SCREENS.find((s) => s.id === id);
-    return entry ? t(entry.label) : id;
-  };
   const [screen, setScreenState] = useState<ScreenId>(() => screenFromHash() ?? 'profile');
   const [redirected, setRedirected] = useState<string | null>(null);
   /** Ask before throwing away typing the applicant has not saved. */
@@ -245,7 +253,7 @@ export default function App() {
         <div className="brand">
           <span className="brand__mark">ASHYQ Apply</span>
           <span className="brand__tag">
-            Evidence-backed university &amp; scholarship shortlisting
+            {t('brand.tagline')}
           </span>
         </div>
 
@@ -343,7 +351,7 @@ export default function App() {
                 else newCase();
               }}
             >
-              <option value="">New applicant</option>
+              <option value="">{t('topbar.newApplicant')}</option>
               {cases.map((item) => (
                 <option key={item.id} value={item.profile_id}>
                   {item.display_name} · {item.run_count} run{item.run_count === 1 ? '' : 's'}
@@ -354,7 +362,7 @@ export default function App() {
           <button className="btn btn--sm" type="button" onClick={() => {
             if (!confirmDiscard()) return;
             newCase(); setScreen('profile');
-          }}>New case</button>
+          }}>{t('topbar.newCase')}</button>
           {summary && (
             <span className="xs muted">
               {plural(summary.total, 'programme')} · {plural(summary.with_conflicts, 'conflict')} ·{' '}
@@ -364,7 +372,7 @@ export default function App() {
           <AccountMenu onSignedOut={() => window.location.reload()} />
           <button className="btn btn--sm btn--ghost" data-testid="sign-out" type="button" onClick={async () => {
             await api.logout(); window.location.reload();
-          }}>Sign out</button>
+          }}>{t('topbar.signOut')}</button>
         </header>
 
         {redirected && (
