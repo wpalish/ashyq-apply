@@ -15,6 +15,7 @@ from fastapi.staticfiles import StaticFiles
 from app.adapters.fetching import PIILeakError
 from app.api import (
     routes_auth,
+    routes_billing,
     routes_cases,
     routes_meta,
     routes_profile,
@@ -24,6 +25,7 @@ from app.api import (
 from app.config import get_settings
 from app.db import init_db
 from app.jobs.worker import reconcile_startup
+from app.payments.http import PaymentRequired, payment_required_handler
 
 settings = get_settings()
 logging.basicConfig(
@@ -78,6 +80,7 @@ app.add_middleware(
 
 for module in (
     routes_auth,
+    routes_billing,
     routes_cases,
     routes_meta,
     routes_profile,
@@ -85,6 +88,10 @@ for module in (
     routes_results,
 ):
     app.include_router(module.router)
+
+# A gated route raises PaymentRequired; this renders it as the 402 the frontend
+# recognises, carrying which case to sell and for how much.
+app.add_exception_handler(PaymentRequired, payment_required_handler)
 
 
 class FixedWindowLimiter:
