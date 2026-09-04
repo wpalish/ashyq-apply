@@ -437,3 +437,29 @@ export interface ApplicantCase {
   created_at: string;
   updated_at: string;
 }
+
+export type PaymentMethod = 'phone' | 'qr';
+
+export interface Pricing {
+  case_unlock_price_kzt: number;
+  currency: string;
+  payments_enabled: boolean;
+  includes: string[];
+}
+
+export interface EntitlementView {
+  profile_id: string;
+  full_access: boolean;
+}
+
+export interface OrderView {
+  id: string;
+  profile_id: string;
+  status: 'created' | 'pending' | 'paid' | 'cancelled' | 'expired' | 'failed';
+  method: PaymentMethod;
+  amount_kzt: number;
+  phone_masked: string;
+  qr_payload: string;
+  qr_expires_at: string | null;
+  created_at: string;
+}

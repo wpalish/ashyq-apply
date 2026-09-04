@@ -13,6 +13,10 @@ import type {
   AuthStatus,
   ClaimOut,
   Conflict,
+  EntitlementView,
+  OrderView,
+  PaymentMethod,
+  Pricing,
   ProfileValidationReport,
   ProgramResult,
   RunView,
@@ -22,10 +26,27 @@ import type {
 } from '@/types';
 
 export class ApiError extends Error {
+  /** Set only on a 402: which case to sell, and for how much. */
+  profileId?: string;
+  priceKzt?: number;
+
   constructor(public status: number, message: string, public code?: string) {
     super(message);
     this.name = 'ApiError';
   }
+}
+
+/** A 402 from a gated route, carrying everything the paywall needs to sell. */
+export function isPaymentRequired(
+  error: unknown,
+): error is ApiError & { profileId: string; priceKzt: number } {
+  return (
+    error instanceof ApiError &&
+    error.status === 402 &&
+    error.code === 'payment_required' &&
+    typeof error.profileId === 'string' &&
+    typeof error.priceKzt === 'number'
+  );
 }
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
@@ -44,6 +65,8 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   if (!response.ok) {
     let detail = `${response.status} ${response.statusText}`;
     let code: string | undefined;
+    let profileId: string | undefined;
+    let priceKzt: number | undefined;
     try {
       const body = await response.json();
       if (typeof body?.detail === 'string') detail = body.detail;
@@ -53,10 +76,16 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
           .join('; ');
       }
       code = body?.code;
+      // A 402 names the case to sell and its price. No other status carries these.
+      if (typeof body?.profile_id === 'string') profileId = body.profile_id;
+      if (typeof body?.price_kzt === 'number') priceKzt = body.price_kzt;
     } catch {
       /* a non-JSON error body is still reported by status */
     }
-    throw new ApiError(response.status, detail, code);
+    const failure = new ApiError(response.status, detail, code);
+    failure.profileId = profileId;
+    failure.priceKzt = priceKzt;
+    throw failure;
   }
 
   if (response.status === 204) return undefined as T;
@@ -124,4 +153,16 @@ export const api = {
 
   exportUrl: (runId: string, fmt: 'csv' | 'json' | 'xlsx', decision?: string) =>
     `/api/runs/${runId}/export.${fmt}${decision ? `?decision=${decision}` : ''}`,
+
+  pricing: () => request<Pricing>('/api/billing/pricing'),
+  entitlements: (profileId: string) =>
+    request<EntitlementView>(
+      `/api/billing/entitlements?profile_id=${encodeURIComponent(profileId)}`,
+    ),
+  // No price field: the server decides what a case costs.
+  openOrder: (input: { profile_id: string; method: PaymentMethod; phone?: string }) =>
+    request<OrderView>('/api/billing/orders', { method: 'POST', body: JSON.stringify(input) }),
+  readOrder: (orderId: string) => request<OrderView>(`/api/billing/orders/${orderId}`),
+  cancelOrder: (orderId: string) =>
+    request<OrderView>(`/api/billing/orders/${orderId}/cancel`, { method: 'POST' }),
 };
