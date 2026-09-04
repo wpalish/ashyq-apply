@@ -201,3 +201,53 @@ queued months ahead being read as work in flight. Both are fixed with tests.
 Still open and unchanged: the container stack has never been run (no Docker
 here), live programme recall is still 1 of 10 canary institutions, and Phases
 4–6 — hygiene, observability and i18n — are untouched.
+
+## Update — Phase 4 of the audit fix plan
+
+Hygiene, and two defects that hygiene uncovered.
+
+- **Dead code is gone**: `queue.py`, `can_transition`, `RETRYABLE`, `tenacity`,
+  `python-multipart`. The `arg-type` mypy exclusions for `app.api` and
+  `app.corpus` were dead too — removing them surfaced exactly one error, and it
+  was a loop variable named `p` bound to a `Path` in a cleanup loop, which
+  pinned `p` for the whole function and made two later program-dict loops read
+  as Paths. mypy now checks `app` and `tests` with no per-module escape hatch
+  except the Playwright lazy-init one.
+- **`ruff format --check` is a CI gate**, and the coverage floor is 92 — the
+  level actually measured — instead of 80, which could have lost twelve points
+  without anyone noticing.
+- **Half-stated activity hours were silently discarded.** Filling
+  `hours_per_week` without `weeks_per_year` produced a byte-for-byte identical
+  score to filling neither, while the explanation still claimed the result was
+  "weighted by ... sustained hours". The gap is named now. The score is
+  deliberately unchanged, pinned by a test, so that naming it cannot become a
+  penalty for answering. The plan's 40-weeks-per-year assumption was rejected:
+  at 40 weeks, five hours a week already saturates the 200-hour ceiling, so the
+  assumption would be the whole score rather than a small correction.
+- **The UK grade map was offered to every percentage scale**, including
+  Kazakh and Chinese ones, though its own caveat says UK marking is not linear.
+  Gated on the scale label, matched on word boundaries — a substring test would
+  have read "Ukrainian" as "UK", which is the mistake citizenship matching was
+  fixed for in Phase 2.
+- **Live mode did not say how small it is.** Someone switching demo mode off
+  pictured the open web and got ten curated institutions across eight
+  countries, with programme-page recall of about one site in ten. The registry's
+  own note is now on screen before the run starts, and a contract test pins the
+  API shape to the TypeScript type.
+- **The authenticated path had no end-to-end coverage at all** — every spec ran
+  against a backend where auth was disabled and the sign-in screen never
+  appeared. It has its own Playwright config now, and writing it found a real
+  defect: AuthGate asks `/api/auth/status` once, at mount, so an expired
+  session became "Something went wrong. Authentication required." on a screen
+  the user could neither act on nor leave. Fixed in the store's shared `fail`,
+  with both the E2E case and the unit test confirmed to fail without the guard.
+- Also: JSON→JSONB on PostgreSQL, the `dev-org` default off
+  `ApplicantProfileRow`, a periodic sweep for the rate limiter's empty deques,
+  bounds on `audit?limit` and the decision text fields, and a LICENSE.
+
+Backend: 92% coverage on a green run, mypy and ruff clean. Frontend: 98 unit
+tests, 54 E2E, 6 auth E2E, typecheck and lint clean.
+
+Still open and unchanged: the container stack has never been run (no Docker
+here, gate 22), live programme recall is still 1 of 10 canary institutions, and
+Phases 5–6 — observability, ops and i18n — are untouched.

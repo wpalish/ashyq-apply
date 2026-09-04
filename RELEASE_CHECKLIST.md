@@ -110,20 +110,30 @@ recorded as such rather than "fixed" — see gates 22 and 47.
 | 71 | Deadlines can be put in a calendar | **PASS** | Valid VCALENDAR with stable UIDs, all-day events, and only confirmed dates; a JSON list marks passed deadlines rather than hiding them. 4 tests |
 | 72 | An unmatched row is never skipped silently | **PASS** | Matching by `university_key`; a row that still cannot be matched is named in the run's diagnostics and carries its own open question. 1 test |
 | 73 | Progress counts one thing | **PASS** | Programmes on both sides of the ratio, committed with the heartbeat. 2 tests |
+| 74 | No dead code left behind | **PASS** | `queue.py`, `can_transition`, `RETRYABLE`, `tenacity` and `python-multipart` deleted; the `arg-type` mypy exclusions for `app.api` and `app.corpus` turned out to be dead too, and removing them surfaced one shadowed loop variable rather than a class of errors. `mypy app tests` clean on 99 files with no escape hatch but the Playwright lazy-init one |
+| 75 | Formatting is a gate, not a habit | **PASS** | `ruff format --check app tests` runs in CI; `ruff format` applied once as its own commit. 99 files already formatted |
+| 76 | The repository can be contributed to | **PASS** | LICENSE (MIT), CONTRIBUTING.md, bug and feature issue templates; `LOOP_REPORT.md` moved under `docs/process/` |
+| 77 | Half an answer is never rounded up to a whole one | **PASS** | `hours_per_week` without `weeks_per_year` is named in `missing_fields` and in the explanation instead of being silently discarded; the score is unchanged, so answering cannot cost the applicant anything. The 40-weeks assumption was rejected and the reasoning is recorded in `docs/PROFILE_FIELDS.md`. 4 tests |
+| 78 | A conversion method is only offered where it applies | **PASS** | `uk_class_to_us4` is no longer offered for non-UK percentage scales; matched on word boundaries, so "Ukrainian" is not read as "UK". 3 tests |
+| 79 | Live mode says how far it reaches | **PASS** | PreferencesScreen shows the registry's own recall note and country list when demo mode is switched off — ten institutions across eight countries, not the open web. A contract test pins the API shape to the TypeScript type and was verified to fail on a renamed key. 3 unit tests + 1 contract test |
+| 80 | The authenticated path is exercised end to end | **PASS** | `npm run e2e:auth` — a second Playwright config with `UNIMATCH_AUTH_ENABLED=true` and `reuseExistingServer: false`, covering register → profile → run → sign out → sign in → data still there. 6 tests |
+| 81 | An expired session returns to sign-in | **PASS** | Found by writing gate 80: every 401 was rendered as a topbar banner on a screen the user could not leave. Guarded in the store's shared `fail`. Both the E2E case and the unit test were confirmed to fail with the guard removed. 2 tests |
+| 82 | The coverage floor means something | **PASS** | Raised from 80 to 92, the level actually measured on a green run (6010 statements, 504 uncovered) |
 
 
 ## Summary
 
-- **PASS:** 27 (of 30 original) + 5 + 7 added by Phase 1 + 17 added by Phase 2 + 14 added by Phase 3
+- **PASS:** 27 (of 30 original) + 5 + 7 added by Phase 1 + 17 added by Phase 2 + 14 added by Phase 3 + 9 added by Phase 4
 - **PARTIAL:** 1 (gate 2 — the PostgreSQL branch was not exercised on this machine)
 - **FAIL:** 1 (gate 22 — the container stack has still never been run)
 - **BLOCKED:** 1
 
 ## Order of work remaining
 
-0. **Phase 4 of `docs/FIX_PLAN.md`** — P3 hygiene (dead code, `ruff format` in
-   CI, LICENSE and CONTRIBUTING, JSON→JSONB on PostgreSQL, small API bounds,
-   honest live-coverage in the UI, an authenticated E2E path, coverage floor)
+0. ~~**Phase 4 of `docs/FIX_PLAN.md`** — P3 hygiene~~ **done** (gates 74-82)
+0a. **Phase 5** — ops and observability: request-id middleware, JSON logs,
+   `/metrics`, a scheduled backup, admin visibility of dead jobs, and Privacy
+   Policy / Terms stubs. Not started.
 1. ~~**P1** — PostgreSQL, Alembic, durable queue, crash recovery~~ **done** (gates 4, 5)
 2. ~~**P2** — auth, organizations, cases, tenant isolation~~ **done**
 3. ~~**P3** — SSRF suite, headers, rate limiting, threat model~~ **done**
