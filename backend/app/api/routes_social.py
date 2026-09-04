@@ -419,6 +419,53 @@ def read_post(
     )
 
 
+@router.delete("/posts/{post_id}", status_code=204)
+def delete_post(
+    post_id: str,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> Response:
+    """Retract one post, rather than everything you ever wrote.
+
+    Leaving the community deletes the lot; without this, taking back a single
+    sentence meant doing that. The thread goes with the post, as it does
+    everywhere else in this module.
+
+    A stranger gets 403, not the 404 the tenant-scoped routes use. There the
+    404 hides whether an identifier exists; here the feed has already shown
+    them the post, so pretending otherwise would be a lie they can disprove by
+    scrolling.
+    """
+    target = _load_post(session, post_id)
+    if target.author_id != principal.user_id:
+        raise HTTPException(403, "Only the person who wrote a post can delete it.")
+    session.delete(target)
+    session.commit()
+    return Response(status_code=204)
+
+
+@router.delete("/posts/{post_id}/replies/{reply_id}", status_code=204)
+def delete_reply(
+    post_id: str,
+    reply_id: str,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> Response:
+    """Retract one answer. Owning the post does not extend to its answers."""
+    reply = (
+        session.query(PostReply)
+        .filter(PostReply.id == reply_id, PostReply.post_id == post_id)
+        .first()
+    )
+    if reply is None:
+        raise HTTPException(404, "This reply does not exist.")
+    if reply.author_id != principal.user_id:
+        raise HTTPException(403, "Only the person who wrote a reply can delete it.")
+    session.delete(reply)
+    session.commit()
+    return Response(status_code=204)
+
+
 # --- Threads ------------------------------------------------------------
 
 

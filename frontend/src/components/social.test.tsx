@@ -9,7 +9,7 @@
 
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { Body, Composer, POST_MAX_CHARS, StatusChip, initials, statusLabel } from './social';
+import { Body, Composer, POST_MAX_CHARS, Retract, StatusChip, initials, statusLabel } from './social';
 
 function type(value: string): HTMLTextAreaElement {
   const box = screen.getByRole('textbox') as HTMLTextAreaElement;
@@ -56,6 +56,38 @@ describe('Body', () => {
     render(<Body text="Кто подаётся в #KBTU в этом году?" />);
     expect(screen.getByText('#KBTU')).toBeInTheDocument();
     expect(screen.getByText(/Кто подаётся в/)).toBeInTheDocument();
+  });
+});
+
+describe('Retract', () => {
+  it('asks before deleting, and names what goes', () => {
+    render(<Retract what="post and its answers" onConfirm={vi.fn()} />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Delete' }));
+    expect(screen.getByText('Delete this post and its answers?')).toBeInTheDocument();
+  });
+
+  it('deletes nothing if you change your mind', () => {
+    const onConfirm = vi.fn();
+    render(<Retract what="post" onConfirm={onConfirm} />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Delete' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Keep it' }));
+
+    expect(onConfirm).not.toHaveBeenCalled();
+    expect(screen.getByRole('button', { name: 'Delete' })).toBeInTheDocument();
+  });
+
+  it('deletes once confirmed', async () => {
+    const onConfirm = vi.fn().mockResolvedValue(undefined);
+    render(<Retract what="answer" onConfirm={onConfirm} />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Delete' }));
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: 'Yes, delete' }));
+    });
+
+    expect(onConfirm).toHaveBeenCalledTimes(1);
   });
 });
 

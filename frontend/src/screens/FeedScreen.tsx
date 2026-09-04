@@ -9,10 +9,12 @@
 import { useCallback, useEffect, useState } from 'react';
 import { api, ApiError } from '@/api/client';
 import { Empty, Loading, Notice, Panel } from '@/components/primitives';
-import { Byline, Composer, Post } from '@/components/social';
+import { Byline, Composer, Post, Retract } from '@/components/social';
 import type { FeedFilters, Page, PostView, ReplyView } from '@/types';
 
-function Thread({ postId, onOpenPerson }: { postId: string; onOpenPerson: (id: string) => void }) {
+function Thread({
+  postId, myUserId, onOpenPerson,
+}: { postId: string; myUserId: string | null; onOpenPerson: (id: string) => void }) {
   const [page, setPage] = useState<Page<ReplyView> | null>(null);
   const [replies, setReplies] = useState<ReplyView[]>([]);
   const [error, setError] = useState('');
@@ -38,6 +40,17 @@ function Thread({ postId, onOpenPerson }: { postId: string; onOpenPerson: (id: s
         <div className="reply" key={reply.id} data-testid={`reply-${reply.id}`}>
           <Byline author={reply.author} at={reply.created_at} onOpenPerson={onOpenPerson} />
           <p className="post__body">{reply.body}</p>
+          {reply.author.user_id === myUserId && (
+            <div className="post__foot">
+              <Retract
+                what="answer"
+                onConfirm={async () => {
+                  await api.deleteReply(postId, reply.id);
+                  setReplies((prev) => prev.filter((item) => item.id !== reply.id));
+                }}
+              />
+            </div>
+          )}
         </div>
       ))}
       {page !== null && replies.length === 0 && (
@@ -70,8 +83,13 @@ function Thread({ postId, onOpenPerson }: { postId: string; onOpenPerson: (id: s
 }
 
 export function FeedScreen({
-  joined, onOpenPerson, onJoin,
-}: { joined: boolean; onOpenPerson: (id: string) => void; onJoin: () => void }) {
+  joined, myUserId, onOpenPerson, onJoin,
+}: {
+  joined: boolean;
+  myUserId: string | null;
+  onOpenPerson: (id: string) => void;
+  onJoin: () => void;
+}) {
   const [filters, setFilters] = useState<FeedFilters>({});
   const [posts, setPosts] = useState<PostView[]>([]);
   const [cursor, setCursor] = useState<string | null>(null);
@@ -188,24 +206,32 @@ export function FeedScreen({
             key={post.id}
             post={post}
             onOpenPerson={onOpenPerson}
+            onDelete={
+              post.author.user_id === myUserId
+                ? async () => {
+                    await api.deletePost(post.id);
+                    setPosts((prev) => prev.filter((item) => item.id !== post.id));
+                  }
+                : undefined
+            }
             footer={
-              <div className="post__foot">
-                <button
-                  type="button"
-                  className="linkish"
-                  aria-expanded={openThread === post.id}
-                  onClick={() => setOpenThread((open) => (open === post.id ? null : post.id))}
-                >
-                  {openThread === post.id
-                    ? 'Hide answers'
-                    : post.reply_count === 0
-                      ? 'Answer'
-                      : `${post.reply_count} answer${post.reply_count === 1 ? '' : 's'}`}
-                </button>
-              </div>
+              <button
+                type="button"
+                className="linkish"
+                aria-expanded={openThread === post.id}
+                onClick={() => setOpenThread((open) => (open === post.id ? null : post.id))}
+              >
+                {openThread === post.id
+                  ? 'Hide answers'
+                  : post.reply_count === 0
+                    ? 'Answer'
+                    : `${post.reply_count} answer${post.reply_count === 1 ? '' : 's'}`}
+              </button>
             }
           >
-            {openThread === post.id && <Thread postId={post.id} onOpenPerson={onOpenPerson} />}
+            {openThread === post.id && (
+              <Thread postId={post.id} myUserId={myUserId} onOpenPerson={onOpenPerson} />
+            )}
           </Post>
         ))}
       </div>

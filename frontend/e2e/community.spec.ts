@@ -106,6 +106,25 @@ test('an over-long post cannot be sent', async ({ page }) => {
   await expect(page.getByRole('button', { name: 'Post', exact: true })).toBeDisabled();
 });
 
+test('a post can be taken back without leaving the community', async ({ page }) => {
+  await page.goto('/');
+  await page.getByTestId('nav-feed').click();
+
+  const body = `Сказал не подумав ${RUN}`;
+  await page.getByPlaceholder('Ask something, or say where you are applying').fill(body);
+  await page.getByRole('button', { name: 'Post', exact: true }).click();
+
+  const mine = page.locator('.post').filter({ hasText: body });
+  await mine.getByRole('button', { name: 'Delete' }).click();
+  await mine.getByRole('button', { name: 'Yes, delete' }).click();
+
+  await expect(page.getByText(body)).toBeHidden();
+  // Still a member: the composer is still there.
+  await expect(
+    page.getByPlaceholder('Ask something, or say where you are applying'),
+  ).toBeVisible();
+});
+
 test('leaving the community is reversible from the same screen', async ({ page }) => {
   await ensureJoined(page);
 

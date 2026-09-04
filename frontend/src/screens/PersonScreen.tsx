@@ -248,7 +248,19 @@ export function PersonScreen({
         ) : (
           <div className="feed">
             {posts.map((post) => (
-              <Post key={post.id} post={post} onOpenPerson={onOpenPerson} />
+              <Post
+                key={post.id}
+                post={post}
+                onOpenPerson={onOpenPerson}
+                onDelete={
+                  isMe
+                    ? async () => {
+                        await api.deletePost(post.id);
+                        setPosts((prev) => prev.filter((item) => item.id !== post.id));
+                      }
+                    : undefined
+                }
+              />
             ))}
           </div>
         )}

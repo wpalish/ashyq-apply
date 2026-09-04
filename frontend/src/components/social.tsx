@@ -124,11 +124,58 @@ export function Body({ text }: { text: string }) {
   );
 }
 
+/**
+ * Take something back.
+ *
+ * Asks first, and names what goes. Deleting a post takes its answers with it,
+ * so the question is not the same question for a post and for a reply.
+ */
+export function Retract({
+  what, onConfirm,
+}: { what: string; onConfirm: () => Promise<void> }) {
+  const [asking, setAsking] = useState(false);
+  const [busy, setBusy] = useState(false);
+
+  if (!asking) {
+    return (
+      <button type="button" className="linkish linkish--quiet" onClick={() => setAsking(true)}>
+        Delete
+      </button>
+    );
+  }
+  return (
+    <span className="row row--tight">
+      <span className="xs muted">Delete this {what}?</span>
+      <button
+        type="button"
+        className="btn btn--sm btn--danger"
+        disabled={busy}
+        onClick={async () => {
+          setBusy(true);
+          try {
+            await onConfirm();
+          } finally {
+            setBusy(false);
+            setAsking(false);
+          }
+        }}
+      >
+        {busy ? 'Deleting…' : 'Yes, delete'}
+      </button>
+      <button type="button" className="btn btn--sm" onClick={() => setAsking(false)}>
+        Keep it
+      </button>
+    </span>
+  );
+}
+
 export function Post({
-  post, onOpenPerson, footer, children,
+  post, onOpenPerson, onDelete, footer, children,
 }: {
   post: PostView;
   onOpenPerson?: (userId: string) => void;
+  /** Passed only when the reader wrote this post. */
+  onDelete?: () => Promise<void>;
   footer?: ReactNode;
   children?: ReactNode;
 }) {
@@ -136,7 +183,17 @@ export function Post({
     <article className="post" data-testid={`post-${post.id}`}>
       <Byline author={post.author} at={post.created_at} onOpenPerson={onOpenPerson} />
       <Body text={post.body} />
-      {footer}
+      {(footer || onDelete) && (
+        <div className="post__foot">
+          {footer}
+          {onDelete && (
+            <Retract
+              what={post.reply_count > 0 ? 'post and its answers' : 'post'}
+              onConfirm={onDelete}
+            />
+          )}
+        </div>
+      )}
       {children}
     </article>
   );

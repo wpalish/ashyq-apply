@@ -401,6 +401,100 @@ class TestDiscover:
         assert [person["display_name"] for person in listed] == ["Curious"]
 
 
+class TestRetracting:
+    """One post, not everything you ever wrote.
+
+    Leaving deletes the lot. Without this, retracting a single sentence meant
+    doing that — which in a product used by school leavers is the difference
+    between fixing a mistake and being punished for one.
+    """
+
+    def test_an_author_can_delete_their_own_post(self, client):
+        register(client, "author")
+        join(client)
+        mine = post(client, "Сказал не подумав")
+
+        assert client.delete(f"/api/social/posts/{mine['id']}").status_code == 204
+        assert client.get("/api/social/feed").json()["items"] == []
+        # The profile and the account are untouched.
+        assert client.get("/api/social/me").json()["joined"] is True
+
+    def test_deleting_a_post_takes_its_thread(self, client):
+        register(client, "asker2")
+        join(client)
+        question = post(client, "Вопрос")
+        client.post("/api/auth/logout")
+
+        register(client, "helper")
+        join(client)
+        client.post(f"/api/social/posts/{question['id']}/replies", json={"body": "Ответ"})
+        client.post("/api/auth/logout")
+
+        login(client, "asker2")
+        assert client.delete(f"/api/social/posts/{question['id']}").status_code == 204
+
+        login(client, "helper")
+        assert client.get(f"/api/social/posts/{question['id']}/replies").status_code == 404
+
+    def test_nobody_else_can_delete_your_post(self, client):
+        register(client, "owner")
+        join(client)
+        mine = post(client, "Мой пост")
+        client.post("/api/auth/logout")
+
+        register(client, "stranger2")
+        join(client)
+        response = client.delete(f"/api/social/posts/{mine['id']}")
+
+        # 403, not 404: the feed already showed them this post, so pretending it
+        # does not exist would be a lie they can disprove by scrolling.
+        assert response.status_code == 403
+        assert len(client.get("/api/social/feed").json()["items"]) == 1
+
+    def test_an_author_can_delete_their_own_reply(self, client):
+        register(client, "questioner")
+        join(client)
+        question = post(client, "Вопрос про дедлайны")
+        client.post("/api/auth/logout")
+
+        register(client, "replier")
+        join(client)
+        reply = client.post(
+            f"/api/social/posts/{question['id']}/replies", json={"body": "Неверный ответ"}
+        ).json()
+
+        deleted = client.delete(f"/api/social/posts/{question['id']}/replies/{reply['id']}")
+        assert deleted.status_code == 204
+
+        thread = client.get(f"/api/social/posts/{question['id']}/replies").json()
+        assert thread["items"] == []
+        # The post it hung off is still there, and its count is back to zero.
+        assert client.get("/api/social/feed").json()["items"][0]["reply_count"] == 0
+
+    def test_nobody_else_can_delete_your_reply(self, client):
+        register(client, "host")
+        join(client)
+        question = post(client, "Открытый вопрос")
+        client.post("/api/auth/logout")
+
+        register(client, "guest")
+        join(client)
+        reply = client.post(
+            f"/api/social/posts/{question['id']}/replies", json={"body": "Мой ответ"}
+        ).json()
+        client.post("/api/auth/logout")
+
+        # Even the author of the post cannot delete someone else's answer to it.
+        login(client, "host")
+        response = client.delete(f"/api/social/posts/{question['id']}/replies/{reply['id']}")
+        assert response.status_code == 403
+
+    def test_deleting_something_that_is_already_gone_is_a_404(self, client):
+        register(client, "ghost")
+        join(client)
+        assert client.delete("/api/social/posts/deadbeef").status_code == 404
+
+
 class TestLeaving:
     """Joining is a choice, so leaving has to be one too.
 

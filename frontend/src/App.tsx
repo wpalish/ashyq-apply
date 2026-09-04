@@ -25,6 +25,8 @@ import { DiscoverScreen } from '@/screens/DiscoverScreen';
 import { PersonScreen } from '@/screens/PersonScreen';
 import { Chip } from '@/components/primitives';
 import { api } from '@/api/client';
+import { LOCALES, type Locale, type MessageKey } from '@/lib/i18n';
+import { useTranslation } from '@/lib/useTranslation';
 import type { PersonCard } from '@/types';
 
 export type ScreenId =
@@ -37,22 +39,22 @@ export type ScreenId =
  * genuinely cannot be read before 03 has produced anything. Community is not a
  * sequence, so those entries carry no number.
  */
-const SCREENS: { id: ScreenId; num?: string; label: string; group: string }[] = [
-  { id: 'profile', num: '01', label: 'Applicant profile', group: 'Prepare' },
-  { id: 'preferences', num: '02', label: 'Preferences & budget', group: 'Prepare' },
-  { id: 'progress', num: '03', label: 'Research progress', group: 'Research' },
-  { id: 'shortlist', num: '04', label: 'University shortlist', group: 'Research' },
-  { id: 'funding', num: '05', label: 'Funding comparison', group: 'Research' },
-  { id: 'sources', num: '06', label: 'Sources & conflicts', group: 'Research' },
-  { id: 'approved', num: '07', label: 'Approved universities', group: 'Decide' },
-  { id: 'documents', num: '08', label: 'Documents & deadlines', group: 'Decide' },
-  { id: 'export', num: '09', label: 'Export & data deletion', group: 'Decide' },
-  { id: 'feed', label: 'Feed', group: 'Community' },
-  { id: 'discover', label: 'Find applicants', group: 'Community' },
-  { id: 'me', label: 'My community profile', group: 'Community' },
+const SCREENS: { id: ScreenId; num?: string; label: MessageKey; group: MessageKey }[] = [
+  { id: 'profile', num: '01', label: 'nav.profile', group: 'nav.group.prepare' },
+  { id: 'preferences', num: '02', label: 'nav.preferences', group: 'nav.group.prepare' },
+  { id: 'progress', num: '03', label: 'nav.progress', group: 'nav.group.research' },
+  { id: 'shortlist', num: '04', label: 'nav.shortlist', group: 'nav.group.research' },
+  { id: 'funding', num: '05', label: 'nav.funding', group: 'nav.group.research' },
+  { id: 'sources', num: '06', label: 'nav.sources', group: 'nav.group.research' },
+  { id: 'approved', num: '07', label: 'nav.approved', group: 'nav.group.decide' },
+  { id: 'documents', num: '08', label: 'nav.documents', group: 'nav.group.decide' },
+  { id: 'export', num: '09', label: 'nav.export', group: 'nav.group.decide' },
+  { id: 'feed', label: 'nav.feed', group: 'nav.group.community' },
+  { id: 'discover', label: 'nav.discover', group: 'nav.group.community' },
+  { id: 'me', label: 'nav.me', group: 'nav.group.community' },
   // Listed rather than tucked into the footer, so that it has an address a
   // person can be sent to: "read the privacy policy" is a link, not a hunt.
-  { id: 'legal', label: 'Privacy & terms', group: 'About' },
+  { id: 'legal', label: 'nav.legal', group: 'nav.group.about' },
 ];
 
 /** The screen named by `#/…`, if it names one at all. */
@@ -74,6 +76,12 @@ export default function App() {
     run, results, summary, error, clearError, capabilities,
     cases, savedProfile, switchCase, newCase, dirty, hydrated,
   } = useStore();
+  const { t, locale, setLocale } = useTranslation();
+  /** A screen's name for a sentence, in the reader's language. */
+  const label = (id: ScreenId): string => {
+    const entry = SCREENS.find((s) => s.id === id);
+    return entry ? t(entry.label) : id;
+  };
   const [screen, setScreenState] = useState<ScreenId>(() => screenFromHash() ?? 'profile');
   const [redirected, setRedirected] = useState<string | null>(null);
   /** Ask before throwing away typing the applicant has not saved. */
@@ -188,7 +196,7 @@ export default function App() {
       return;
     }
     const fallback: ScreenId = runRef.current ? 'progress' : 'profile';
-    setRedirected(`${SCREENS.find((s) => s.id === requested)?.label ?? requested}: ${blocked}.`);
+    setRedirected(`${label(requested)}: ${blocked}.`);
     setScreen(fallback);
   }, [setScreen]);
 
@@ -247,7 +255,7 @@ export default function App() {
             const blocked = gate[s.id];
             return (
               <div key={s.id}>
-                {header && <div className="nav__group-label">{header}</div>}
+                {header && <div className="nav__group-label">{t(header)}</div>}
                 <button
                   type="button"
                   className="nav__item"
@@ -262,7 +270,7 @@ export default function App() {
                   }}
                 >
                   <span className="nav__num">{s.num ?? ''}</span>
-                  <span>{s.label}</span>
+                  <span>{t(s.label)}</span>
                   {badges[s.id] !== undefined && <span className="nav__badge">{badges[s.id]}</span>}
                 </button>
               </div>
@@ -272,19 +280,35 @@ export default function App() {
 
         <div className="stack stack--tight" style={{ marginTop: 'auto' }}>
           <div className="field">
-            <label className="field__label xs" htmlFor="theme">Appearance</label>
+            <label className="field__label xs" htmlFor="theme">{t('appearance.label')}</label>
             <select
               id="theme"
               value={theme}
               onChange={(e) => setTheme(e.target.value as Theme)}
             >
-              <option value="system">Match system</option>
-              <option value="light">Light</option>
-              <option value="dark">Dark</option>
+              <option value="system">{t('appearance.system')}</option>
+              <option value="light">{t('appearance.light')}</option>
+              <option value="dark">{t('appearance.dark')}</option>
+            </select>
+          </div>
+          <div className="field">
+            <label className="field__label xs" htmlFor="locale">{t('language.label')}</label>
+            {/* Russian and Kazakh are partial on purpose: a string whose terms
+                are still under review stays in English rather than being
+                machine-translated. See docs/i18n/GLOSSARY.md. */}
+            <select
+              id="locale"
+              data-testid="locale"
+              value={locale}
+              onChange={(e) => setLocale(e.target.value as Locale)}
+            >
+              {LOCALES.map((option) => (
+                <option key={option.id} value={option.id}>{option.label}</option>
+              ))}
             </select>
           </div>
           <p className="xs faint" style={{ margin: 0 }}>
-            Published criteria only. ASHYQ Apply never predicts admission or funding outcomes.
+            {t('brand.disclaimer')}
           </p>
         </div>
       </aside>
@@ -385,6 +409,7 @@ export default function App() {
           {screen === 'feed' && (
             <FeedScreen
               joined={joined}
+              myUserId={me?.user_id ?? null}
               onOpenPerson={(id) => { setPersonId(id); setScreen('person'); }}
               onJoin={() => setScreen('me')}
             />

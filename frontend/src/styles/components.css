@@ -525,3 +525,8 @@
   .post__body, .post__foot { padding-left: 0; }
   .thread { margin-left: var(--space-2); }
 }
+
+/* A destructive action should not compete with the thing it sits beside. */
+.linkish--quiet { color: var(--ink-faint); font-weight: 500; }
+.linkish--quiet:hover { color: var(--risk); }
+.post__foot { display: flex; align-items: center; gap: var(--space-4); flex-wrap: wrap; }
