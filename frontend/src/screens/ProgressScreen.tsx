@@ -5,6 +5,8 @@
  * doing, how far it has got, and every page it failed to read.
  */
 
+import { useEffect, useState } from 'react';
+import { api } from '@/api/client';
 import { Chip, Loading, Notice, Panel, Stat } from '@/components/primitives';
 import { dateTime } from '@/lib/format';
 import { useStore } from '@/lib/store';
@@ -31,6 +33,20 @@ function errorCategory(message: string): string {
 
 export function ProgressScreen({ onDone }: { onDone: () => void }) {
   const { run, cancelRun, retryRun, recheckNow, results } = useStore();
+  // Work the queue gave up on after exhausting its attempts. It is asked for
+  // here, before the early return, because a hook cannot live behind one.
+  const [deadJobs, setDeadJobs] = useState(0);
+  const runStage = run?.stage;
+
+  useEffect(() => {
+    api
+      .deadJobCount()
+      .then(setDeadJobs)
+      .catch(() => {
+        // Only a workspace owner may read the queue. For anyone else this
+        // line simply does not exist, and its absence must not break progress.
+      });
+  }, [runStage]);
 
   if (!run) {
     return (
@@ -113,6 +129,20 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
                   Cancel this run
                 </button>
               </div>
+            </div>
+          </Notice>
+        )}
+
+        {deadJobs > 0 && (
+          <Notice kind="warn">
+            <div data-testid="dead-jobs">
+              <strong>
+                {deadJobs} job{deadJobs === 1 ? '' : 's'} need
+                {deadJobs === 1 ? 's' : ''} attention.
+              </strong>{' '}
+              The queue tried each of them until its attempts ran out and then stopped. Nothing is
+              retrying them on its own — re-run the affected research, or ask an operator to look
+              at the queue.
             </div>
           </Notice>
         )}

@@ -19,6 +19,9 @@ vi.mock('@/lib/store', () => ({
   useStore: () => ({ run: currentRun, cancelRun, retryRun, recheckNow, results: [] }),
 }));
 
+const { deadJobCount } = vi.hoisted(() => ({ deadJobCount: vi.fn() }));
+vi.mock('@/api/client', () => ({ api: { deadJobCount } }));
+
 let currentRun: RunView;
 
 function makeRun(overrides: Partial<RunView> = {}): RunView {
@@ -61,6 +64,8 @@ beforeEach(() => {
   retryRun.mockReset();
   cancelRun.mockReset();
   recheckNow.mockReset();
+  deadJobCount.mockReset();
+  deadJobCount.mockResolvedValue(0);
   currentRun = makeRun();
 });
 
@@ -200,5 +205,40 @@ describe('diagnostics', () => {
     render(<ProgressScreen onDone={() => {}} />);
 
     expect(screen.getByText('Fetch failures')).toBeInTheDocument();
+  });
+});
+
+describe('work the queue gave up on', () => {
+  it('says how many jobs need attention, and that nothing is retrying them', async () => {
+    deadJobCount.mockResolvedValue(3);
+    render(<ProgressScreen onDone={() => {}} />);
+
+    const line = await screen.findByTestId('dead-jobs');
+    expect(line).toHaveTextContent('3 jobs need attention');
+    expect(line).toHaveTextContent('Nothing is retrying them');
+  });
+
+  it('counts one job in the singular', async () => {
+    deadJobCount.mockResolvedValue(1);
+    render(<ProgressScreen onDone={() => {}} />);
+
+    expect(await screen.findByTestId('dead-jobs')).toHaveTextContent('1 job needs attention');
+  });
+
+  it('says nothing at all when the queue is healthy', async () => {
+    render(<ProgressScreen onDone={() => {}} />);
+
+    expect(await screen.findByText(/of stages complete/)).toBeInTheDocument();
+    expect(screen.queryByTestId('dead-jobs')).toBeNull();
+  });
+
+  it('is invisible to anyone who may not read the queue', async () => {
+    // A member, not an owner: the endpoint answers 403 and the screen carries
+    // on rather than showing an error about a panel they never asked for.
+    deadJobCount.mockRejectedValue(new Error('403'));
+    render(<ProgressScreen onDone={() => {}} />);
+
+    expect(await screen.findByText(/of stages complete/)).toBeInTheDocument();
+    expect(screen.queryByTestId('dead-jobs')).toBeNull();
   });
 });

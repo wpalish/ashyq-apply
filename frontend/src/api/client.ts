@@ -43,7 +43,19 @@ export class ApiError extends Error {
   }
 }
 
-async function request<T>(path: string, init?: RequestInit): Promise<T> {
+/**
+ * The same request, with the response headers kept.
+ *
+ * Paged endpoints put the whole count in `X-Total-Count`, which `request`
+ * throws away with the rest of the response. Reaching for a bare `fetch` to
+ * read one header is how this codebase previously ended up writing `{detail}`
+ * into an applicant's profile, so the header-reading path goes through the
+ * same error handling as everything else.
+ */
+async function requestWithHeaders<T>(
+  path: string,
+  init?: RequestInit,
+): Promise<{ body: T; headers: Headers }> {
   let response: Response;
   try {
     response = await fetch(path, {
@@ -74,8 +86,12 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     throw new ApiError(response.status, detail, code);
   }
 
-  if (response.status === 204) return undefined as T;
-  return (await response.json()) as T;
+  if (response.status === 204) return { body: undefined as T, headers: response.headers };
+  return { body: (await response.json()) as T, headers: response.headers };
+}
+
+async function request<T>(path: string, init?: RequestInit): Promise<T> {
+  return (await requestWithHeaders<T>(path, init)).body;
 }
 
 export const api = {
@@ -202,6 +218,18 @@ export const api = {
   // A deadline in a table is something to remember; in a calendar it reminds
   // you. Only confirmed dates become events.
   deadlinesUrl: (runId: string) => `/api/runs/${runId}/deadlines.ics`,
+
+  /**
+   * How many jobs of this workspace the queue gave up on.
+   *
+   * Only the count is fetched — one row, and the total from the header — so
+   * the screen can say that something needs attention without pulling a page
+   * of job rows nobody has asked to see yet.
+   */
+  deadJobCount: async (): Promise<number> => {
+    const { headers } = await requestWithHeaders<unknown[]>('/api/admin/jobs?status=dead&limit=1');
+    return Number(headers.get('X-Total-Count') ?? 0);
+  },
 
   exportUrl: (runId: string, fmt: 'csv' | 'json' | 'xlsx', decision?: string) =>
     `/api/runs/${runId}/export.${fmt}${decision ? `?decision=${decision}` : ''}`,
