@@ -11,7 +11,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.models.base import Base, TimestampedBase, utcnow
 
 if TYPE_CHECKING:
-    from app.models.social import Post, PostReply, SocialProfile
+    from app.models.social import Conversation, Post, PostReply, SocialProfile
 
 
 class Organization(TimestampedBase):
@@ -52,6 +52,19 @@ class User(TimestampedBase):
     )
     post_replies: Mapped[list[PostReply]] = relationship(
         back_populates="author", cascade="all, delete-orphan", passive_deletes=False
+    )
+    #: A conversation cannot exist with one side missing, so closing an account
+    #: takes both of its sides with it. Two relationships because the pair is
+    #: stored ordered, and this account may be on either end of it.
+    conversations_as_lower: Mapped[list[Conversation]] = relationship(
+        cascade="all, delete-orphan",
+        passive_deletes=False,
+        foreign_keys="Conversation.lower_id",
+    )
+    conversations_as_higher: Mapped[list[Conversation]] = relationship(
+        cascade="all, delete-orphan",
+        passive_deletes=False,
+        foreign_keys="Conversation.higher_id",
     )
 
 

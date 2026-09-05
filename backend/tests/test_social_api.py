@@ -634,6 +634,10 @@ class TestTheTenantBoundary:
             "target_city",
             "target_major",
             "universities",
+            # Not private: it is what the screen needs to know whether offering
+            # a "Message" button would lead anywhere. It says how this person
+            # can be reached, never anything about them.
+            "dm_policy",
             "bio",
         }
         # No email, no organization, and nothing that names a case or a run.

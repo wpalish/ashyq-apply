@@ -322,3 +322,21 @@ class ApplicantStatus(StrEnum):
 
     ACCEPTED = "accepted"
     WAITLIST = "waitlist"
+
+
+class DirectMessagePolicy(StrEnum):
+    """Who may open a conversation with this person.
+
+    The product has no follow graph, so "mutual follows" has no meaning here.
+    The nearest thing it does have is a thread the two of them were both in,
+    which is a real signal: one of them answered the other in public first.
+
+    `THREADS` is the default rather than `ANYONE`. The users are school
+    leavers, some of them minors, and the profiles are public across the whole
+    service — an inbox open to every stranger by default is a decision nobody
+    made.
+    """
+
+    ANYONE = "anyone"
+    THREADS = "threads"
+    NOBODY = "nobody"

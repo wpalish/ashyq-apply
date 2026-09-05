@@ -17,6 +17,8 @@ from app.models.research import (
     ResearchRun,
 )
 from app.models.social import (
+    Conversation,
+    DirectMessage,
     Post,
     PostReply,
     PostTag,
@@ -33,6 +35,8 @@ __all__ = [
     "Base",
     "ClaimRow",
     "ConflictRow",
+    "Conversation",
+    "DirectMessage",
     "Job",
     "JobStatus",
     "Organization",

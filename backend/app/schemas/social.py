@@ -10,10 +10,11 @@ from typing import Annotated
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from app.domain.enums import ApplicantStatus
+from app.domain.enums import ApplicantStatus, DirectMessagePolicy
 from app.domain.social import (
     BIO_MAX_CHARS,
     MAX_TARGET_UNIVERSITIES,
+    MESSAGE_MAX_CHARS,
     POST_MAX_CHARS,
     REPLY_MAX_CHARS,
 )
@@ -40,6 +41,9 @@ class ProfileIn(Base):
     universities: list[UniversityName] = Field(
         default_factory=list, max_length=MAX_TARGET_UNIVERSITIES
     )
+    #: Who may open a conversation. Defaulted rather than nullable: everyone
+    #: has a policy, and a form that omits the field keeps the narrow one.
+    dm_policy: DirectMessagePolicy = DirectMessagePolicy.THREADS
 
 
 class PostIn(Base):
@@ -75,6 +79,9 @@ class PersonCard(BaseModel):
     target_city: str
     target_major: str
     universities: list[str]
+    #: Shown on your own profile only; on someone else's card it says whether
+    #: writing to them is possible at all.
+    dm_policy: str
     bio: str
 
 
@@ -115,4 +122,38 @@ class PostPage(BaseModel):
 
 class ReplyPage(BaseModel):
     items: list[ReplyView]
+    next_cursor: str | None = None
+
+
+# --- Direct messages ----------------------------------------------------
+
+
+class MessageIn(Base):
+    body: Annotated[str, Field(min_length=1, max_length=MESSAGE_MAX_CHARS)]
+
+
+class MessageView(BaseModel):
+    id: str
+    body: str
+    created_at: str
+    #: Whose side of the conversation this is. The screen needs it to place the
+    #: line; the sender's id would make the reader do the comparison itself.
+    mine: bool
+
+
+class ConversationView(BaseModel):
+    person: PersonCard
+    last_message: str
+    last_message_at: str
+    unread: int
+
+
+class ConversationPage(BaseModel):
+    items: list[ConversationView]
+    next_cursor: str | None = None
+
+
+class MessagePage(BaseModel):
+    person: PersonCard
+    items: list[MessageView]
     next_cursor: str | None = None

@@ -26,11 +26,26 @@ from sqlalchemy import and_, func, or_
 from sqlalchemy.orm import Session, joinedload, selectinload
 
 from app.db import get_session
+from app.domain.enums import DirectMessagePolicy
 from app.domain.social import extract_tags, normalize_key
-from app.models import Post, PostReply, PostTag, SocialProfile, SocialProfileUniversity, User
-from app.models.base import ensure_utc
+from app.models import (
+    Conversation,
+    DirectMessage,
+    Post,
+    PostReply,
+    PostTag,
+    SocialProfile,
+    SocialProfileUniversity,
+    User,
+)
+from app.models.base import ensure_utc, utcnow
 from app.schemas.social import (
     AuthorRef,
+    ConversationPage,
+    ConversationView,
+    MessageIn,
+    MessagePage,
+    MessageView,
     MyProfileView,
     PeoplePage,
     PersonCard,
@@ -123,6 +138,7 @@ def _card(profile: SocialProfile) -> PersonCard:
         target_city=profile.target_city,
         target_major=profile.target_major,
         universities=[row.name for row in profile.universities],
+        dm_policy=profile.dm_policy,
         bio=profile.bio,
     )
 
@@ -175,6 +191,7 @@ def join_or_update(
     profile.target_city = payload.target_city
     profile.target_major = payload.target_major
     profile.bio = payload.bio
+    profile.dm_policy = payload.dm_policy.value
 
     # Two spellings of one university are one university. Deduplicating here
     # rather than letting the unique constraint fire turns a 500 into the
@@ -223,6 +240,12 @@ def leave(
     is no longer here is exactly that. The deletes are issued by the ORM for the
     same reason account closure issues its own: SQLite's foreign-key pragma is
     per-connection, and this is a privacy promise rather than a best effort.
+
+    Private conversations stay. What is published is addressed to everyone, and
+    leaving withdraws it; a private thread was addressed to one person, and
+    deleting it would take away their record of a conversation they were half
+    of. Leaving still ends being reachable — with no profile there is nobody to
+    write to. Closing the account, which is the stronger act, does erase them.
     """
     profile = session.get(SocialProfile, principal.user_id)
     if profile is None:
@@ -524,4 +547,242 @@ def read_thread(
             for reply, user, profile in page
         ],
         next_cursor=next_cursor,
+    )
+
+
+# --- Private conversations ----------------------------------------------
+
+
+def _profile_or_404(session: Session, user_id: str) -> SocialProfile:
+    profile = session.get(SocialProfile, user_id)
+    if profile is None:
+        raise HTTPException(404, "This applicant has no social profile.")
+    return profile
+
+
+def _shared_thread(session: Session, one: str, other: str) -> bool:
+    """Did one of them answer the other in public?
+
+    Both directions count, and only replies do: writing a post a stranger
+    happened to read is not something either of them did together.
+    """
+    for author, poster in ((one, other), (other, one)):
+        exists = (
+            session.query(PostReply.id)
+            .join(Post, Post.id == PostReply.post_id)
+            .filter(PostReply.author_id == author, Post.author_id == poster)
+            .first()
+        )
+        if exists is not None:
+            return True
+    return False
+
+
+def _conversation(session: Session, one: str, other: str) -> Conversation | None:
+    lower, higher = Conversation.pair(one, other)
+    return (
+        session.query(Conversation)
+        .filter(Conversation.lower_id == lower, Conversation.higher_id == higher)
+        .first()
+    )
+
+
+def _may_open(session: Session, sender: str, recipient: SocialProfile) -> bool:
+    if recipient.dm_policy == DirectMessagePolicy.ANYONE:
+        return True
+    if recipient.dm_policy == DirectMessagePolicy.NOBODY:
+        return False
+    return _shared_thread(session, sender, recipient.user_id)
+
+
+def _unread_in(session: Session, conversation: Conversation, reader: str) -> int:
+    """How many of the other side's messages arrived since the reader looked."""
+    query = session.query(func.count(DirectMessage.id)).filter(
+        DirectMessage.conversation_id == conversation.id,
+        DirectMessage.sender_id != reader,
+    )
+    seen = conversation.read_at_for(reader)
+    if seen is not None:
+        query = query.filter(DirectMessage.created_at > seen)
+    return int(query.scalar() or 0)
+
+
+def _departed(session: Session, user_id: str) -> PersonCard:
+    """A card for someone who left the community after talking to you.
+
+    Their messages stay — they are half of a conversation the other person is
+    still entitled to read — but everything they published is gone, so the card
+    carries only the name on the account.
+    """
+    user = _account(session, user_id)
+    return PersonCard(
+        user_id=user.id,
+        display_name=user.display_name,
+        status=None,
+        target_city="",
+        target_major="",
+        universities=[],
+        dm_policy=DirectMessagePolicy.NOBODY.value,
+        bio="",
+    )
+
+
+def _mine(user_id: str):
+    return or_(Conversation.lower_id == user_id, Conversation.higher_id == user_id)
+
+
+@router.get("/messages", response_model=ConversationPage)
+def conversations(
+    limit: Annotated[int, Query(ge=1, le=MAX_PAGE)] = DEFAULT_PAGE,
+    cursor: str | None = None,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> ConversationPage:
+    """Every conversation this person is in, most recently active first."""
+    query = session.query(Conversation).filter(_mine(principal.user_id))
+    if cursor:
+        query = query.filter(_older_than(Conversation.last_message_at, Conversation.id, cursor))
+
+    rows = (
+        query.order_by(Conversation.last_message_at.desc(), Conversation.id.desc())
+        .limit(limit + 1)
+        .all()
+    )
+    page, next_cursor = _split(rows, limit, lambda row: (row.last_message_at, row.id))
+
+    items = []
+    for conversation in page:
+        other = conversation.other_than(principal.user_id)
+        profile = session.get(SocialProfile, other)
+        newest = (
+            session.query(DirectMessage)
+            .filter(DirectMessage.conversation_id == conversation.id)
+            .order_by(DirectMessage.created_at.desc())
+            .first()
+        )
+        items.append(
+            ConversationView(
+                person=_card(profile) if profile else _departed(session, other),
+                last_message=newest.body if newest else "",
+                last_message_at=(
+                    ensure_utc(conversation.last_message_at) or conversation.last_message_at
+                ).isoformat(),
+                unread=_unread_in(session, conversation, principal.user_id),
+            )
+        )
+    return ConversationPage(items=items, next_cursor=next_cursor)
+
+
+@router.get("/messages/unread")
+def unread_total(
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> dict:
+    """One number for the navigation badge, so it costs one request."""
+    rows = session.query(Conversation).filter(_mine(principal.user_id)).all()
+    return {"unread": sum(_unread_in(session, row, principal.user_id) for row in rows)}
+
+
+@router.get("/messages/{user_id}", response_model=MessagePage)
+def conversation_with(
+    user_id: str,
+    limit: Annotated[int, Query(ge=1, le=MAX_PAGE)] = DEFAULT_PAGE,
+    cursor: str | None = None,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> MessagePage:
+    """The thread with one person, oldest first.
+
+    Reading it marks it read. That is a write on a GET, which is worth naming:
+    the alternative is a second request every screen has to remember to send,
+    and a badge that lies whenever one forgets.
+    """
+    profile = session.get(SocialProfile, user_id)
+    person = _card(profile) if profile else _departed(session, user_id)
+    conversation = _conversation(session, principal.user_id, user_id)
+    if conversation is None:
+        return MessagePage(person=person, items=[], next_cursor=None)
+
+    query = session.query(DirectMessage).filter(DirectMessage.conversation_id == conversation.id)
+    if cursor:
+        query = query.filter(_newer_than(DirectMessage.created_at, DirectMessage.id, cursor))
+    rows = (
+        query.order_by(DirectMessage.created_at.asc(), DirectMessage.id.asc())
+        .limit(limit + 1)
+        .all()
+    )
+    page, next_cursor = _split(rows, limit, lambda row: (row.created_at, row.id))
+
+    if principal.user_id == conversation.lower_id:
+        conversation.lower_read_at = utcnow()
+    else:
+        conversation.higher_read_at = utcnow()
+    session.commit()
+
+    return MessagePage(
+        person=person,
+        items=[
+            MessageView(
+                id=message.id,
+                body=message.body,
+                created_at=(ensure_utc(message.created_at) or message.created_at).isoformat(),
+                mine=message.sender_id == principal.user_id,
+            )
+            for message in page
+        ],
+        next_cursor=next_cursor,
+    )
+
+
+@router.post("/messages/{user_id}", response_model=MessageView, status_code=201)
+def send_message(
+    user_id: str,
+    payload: MessageIn,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> MessageView:
+    """Write to someone, opening the conversation if they do not have one.
+
+    The recipient's policy is checked only when there is no conversation yet.
+    Closing an inbox stops strangers arriving; it does not silence someone you
+    were already talking to, which would be a way of ending a conversation
+    without saying so.
+    """
+    if user_id == principal.user_id:
+        raise HTTPException(400, "You cannot write to yourself.")
+    _require_membership(session, principal)
+    recipient = _profile_or_404(session, user_id)
+
+    conversation = _conversation(session, principal.user_id, user_id)
+    if conversation is None:
+        if not _may_open(session, principal.user_id, recipient):
+            raise HTTPException(
+                403,
+                "This applicant only accepts messages from people they have answered in "
+                "public, or has turned messages off.",
+            )
+        lower, higher = Conversation.pair(principal.user_id, user_id)
+        conversation = Conversation(lower_id=lower, higher_id=higher)
+        session.add(conversation)
+        session.flush()
+
+    message = DirectMessage(
+        conversation_id=conversation.id, sender_id=principal.user_id, body=payload.body
+    )
+    session.add(message)
+    session.flush()
+    conversation.last_message_at = message.created_at
+    # Writing is reading: a line you just sent is not unread to you.
+    if principal.user_id == conversation.lower_id:
+        conversation.lower_read_at = message.created_at
+    else:
+        conversation.higher_read_at = message.created_at
+    session.commit()
+    session.refresh(message)
+
+    return MessageView(
+        id=message.id,
+        body=message.body,
+        created_at=(ensure_utc(message.created_at) or message.created_at).isoformat(),
+        mine=True,
     )

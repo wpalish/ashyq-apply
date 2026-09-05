@@ -38,6 +38,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship, validates
 
 from app.domain.social import (
     BIO_MAX_CHARS,
+    MESSAGE_MAX_CHARS,
     POST_MAX_CHARS,
     REPLY_MAX_CHARS,
     normalize_key,
@@ -91,6 +92,11 @@ class SocialProfile(Base):
 
     bio: Mapped[str] = mapped_column(String(BIO_MAX_CHARS), default="")
     avatar_url: Mapped[str] = mapped_column(String(500), default="")
+
+    #: Who may start a conversation with this person — `DirectMessagePolicy`.
+    #: Not null and not a guess: everyone gets the narrow default until they
+    #: choose otherwise. See the enum for why that is the right way round.
+    dm_policy: Mapped[str] = mapped_column(String(20), default="threads")
 
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
     updated_at: Mapped[datetime] = mapped_column(
@@ -245,3 +251,74 @@ class PostReply(TimestampedBase):
 
     post: Mapped[Post] = relationship(back_populates="replies")
     author: Mapped[User] = relationship(back_populates="post_replies")
+
+
+class Conversation(TimestampedBase):
+    """One private thread between exactly two people.
+
+    The pair is stored ordered — `lower_id` is always the smaller of the two
+    user ids — so a unique constraint is all it takes to stop the same two
+    people ending up with two conversations from a simultaneous first message.
+
+    Read state is two columns rather than a per-message read table. The only
+    question anyone asks is "is there anything new for me here", and a
+    timestamp answers it without a row per message per reader.
+    """
+
+    __tablename__ = "conversations"
+    __table_args__ = (
+        UniqueConstraint("lower_id", "higher_id", name="uq_conversation_pair"),
+        CheckConstraint("lower_id < higher_id", name="ck_conversations_ordered_pair"),
+        Index("ix_conversations_lower_activity", "lower_id", "last_message_at"),
+        Index("ix_conversations_higher_activity", "higher_id", "last_message_at"),
+    )
+
+    lower_id: Mapped[str] = mapped_column(
+        String(32), ForeignKey("users.id", ondelete="CASCADE"), index=True
+    )
+    higher_id: Mapped[str] = mapped_column(
+        String(32), ForeignKey("users.id", ondelete="CASCADE"), index=True
+    )
+    #: Kept in step with the newest message so the list can be ordered without
+    #: an aggregate over every message the two have ever exchanged.
+    last_message_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    lower_read_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    higher_read_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+    messages: Mapped[list[DirectMessage]] = relationship(
+        back_populates="conversation",
+        cascade="all, delete-orphan",
+        passive_deletes=False,
+        order_by="DirectMessage.created_at",
+    )
+
+    @staticmethod
+    def pair(one: str, other: str) -> tuple[str, str]:
+        """The two ids in the order this table stores them."""
+        return (one, other) if one < other else (other, one)
+
+    def read_at_for(self, user_id: str) -> datetime | None:
+        return self.lower_read_at if user_id == self.lower_id else self.higher_read_at
+
+    def other_than(self, user_id: str) -> str:
+        return self.higher_id if user_id == self.lower_id else self.lower_id
+
+
+class DirectMessage(TimestampedBase):
+    """One message. Same limits as a post: this is a conversation, not a file transfer."""
+
+    __tablename__ = "direct_messages"
+    __table_args__ = (
+        *_body_constraints("direct_messages", MESSAGE_MAX_CHARS),
+        Index("ix_direct_messages_conversation_created", "conversation_id", "created_at"),
+    )
+
+    conversation_id: Mapped[str] = mapped_column(
+        String(32), ForeignKey("conversations.id", ondelete="CASCADE"), index=True
+    )
+    sender_id: Mapped[str] = mapped_column(
+        String(32), ForeignKey("users.id", ondelete="CASCADE"), index=True
+    )
+    body: Mapped[str] = mapped_column(Text)
+
+    conversation: Mapped[Conversation] = relationship(back_populates="messages")
