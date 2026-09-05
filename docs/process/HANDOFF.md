@@ -44,6 +44,8 @@ do not rewrite them to manufacture compliant history. [0.4] was committed before
 | [0.8] recovery | `61df0db` | Preserving checkpoint: eight frontend files + relay sources, one red test named in the message. |
 | [0.8] baton | `0bedc38` | Baton to claude-opus-5; §1/§2/§4/§5/§6/§11 reconciled with the real tree and real gate numbers. |
 | [0.8] | `2f2e484` | Bucket assertion scoped to its own cell; frontend unit suite 141/141. |
+| [0.8] | `d675cfe` | `CONTRACT["Bucket"]` and `bucket` on `/api/vocabulary`; 892 backend tests. |
+| [0.8] | `0affab6` | Preferences disclaimer restored, per-table captions, e2e helper opens the set-aside sections; 67 e2e passed. |
 
 ## 4. Half-done / uncommitted at the moment of writing
 
@@ -189,67 +191,74 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-Write-ahead. Recovery is done; these are [0.8]'s remaining sub-steps, in order, each ending in a
-pushed commit. Do not restart [0.1]–[0.7]; do not push `main`; do not stage screenshots or `docs/v2`.
+[0.8] is code-complete and every gate is green (§6). Remaining, in order:
 
-1. ~~Fix the red test.~~ **Done** — see §3. Frontend unit suite is 141 passed / 0 failed.
-2. ~~Close the [0.6] contract item.~~ **Done** — see §3 and §8: `CONTRACT["Bucket"]` plus a `bucket`
-   list on `/api/vocabulary`, which the contract test requires for every contracted type.
-3. **e2e.** `cd frontend && npx playwright test e2e/journey.spec.ts` with ports 5173/8099 free, one run
-   at a time. Update the journey for the renamed column ("Preference match" → "Match") and the default
-   sort. Add `e2e/ranking.spec.ts` only if [0.8] acceptance needs it before stage 5; the brief puts the
-   drag-and-drop version in stage 5.
-4. **Full gates** (AGENTS §5) green, then PR from `task/0.8-ranking-ui` using
-   `.github/PULL_REQUEST_TEMPLATE.md` with the real output from §6, and set §2 to
-   `ready-for-review (PR #)`. State in the PR that [0.1]–[0.7] ride on the same branch and that §7 is
-   open.
-5. Only after review/merge: `[1.1]`.
+1. **Open the PR** from `task/0.8-ranking-ui` with `.github/PULL_REQUEST_TEMPLATE.md`, pasting §6's real
+   output. Note in the body that [0.1]–[0.7] ride on this branch, that §7 is resolved, and that TU
+   Delft / Melbourne / EPFL are `EXCLUDED` by brief §5.4 rule 2 rather than ranked as in the §5.7 sample.
+   Then set §2 to `ready-for-review (PR #)`.
+2. After the owner merges: `[1.1] Интерфейс и схемы` — new package `backend/app/adapters/research/`
+   with `base.py` (the six-method `ResearchAgent` protocol and its schemas), `null.py` and `fixture.py`.
+   Acceptance A6: a full demo run with `NullResearchAgent` is byte-for-byte the current one.
+3. Housekeeping worth one commit when convenient, not blocking: `docs/v2/` duplicates `analysis/`
+   byte-for-byte apart from one relative path in the brief. `analysis/` is canonical per AGENTS.md;
+   the copies are the owner's and were left in place, unstaged.
 
 ## 6. Gate status at last run (numbers, not adjectives)
 
-Run by claude-opus-5 on 2026-09-06 UTC, on the dirty recovery tree at `c924410` (interpreter
-`backend/.venv/Scripts/python.exe`, which works — see the correction in §9).
+Run by claude-opus-5, 2026-09-06, at `0affab6` on `task/0.8-ranking-ui`. Interpreter
+`backend/.venv/Scripts/python.exe` — it works; the §9 note claiming a missing base Python is wrong.
 
-| Gate | Result | Command / note |
-|---|---|---|
-| `ruff check app tests` | **pass** — "All checks passed!" | exit 0 |
-| `ruff format --check app tests` | **pass** — 118 files already formatted | exit 0 |
-| `mypy app tests` | **pass** — no issues in 118 source files | exit 0 |
-| `pytest --cov=app --cov-fail-under=92` | **pass** — **891 passed**, coverage **92.56 %**, 677 s | SQLite only; PostgreSQL run not performed here |
-| frontend `tsc --noEmit` | **pass** | exit 0 |
-| frontend `eslint src e2e` | **pass** | exit 0 |
-| frontend `vitest run` | **RED — 140 passed, 1 failed** | `ShortlistScreen.test.tsx > shows the match, what is confirmed, and the bucket`: ambiguous `getByText('Plausible')`, see §4 |
-| frontend `vite build` | **pass** — 308.32 kB js / 63.99 kB css, 2.96 s | exit 0 |
-| e2e `journey.spec.ts` | **not run** | required for [0.8] acceptance; ports 5173/8099 must be free |
-| `seed_demo.py` order (brief §5.7) | **pass** — Groningen #1 (0.795, PLAUSIBLE), UBC #11 **OUT_OF_BUDGET** (0.401), 20 rows | `UNIMATCH_DEMO_MODE=true UNIMATCH_ENABLE_BROWSER_TIER=false`, after `alembic upgrade head` |
-| alembic chain | **pass** — 9 revisions, single head `a4d1c7e58b92`; upgrade from empty DB succeeded | run during the seed gate |
-| `pip-audit` / `npm audit` | **not run** | no CI-parity claim |
+| Gate | Result |
+|---|---|
+| `ruff check app tests` | **pass** — All checks passed |
+| `ruff format --check app tests` | **pass** — 118 files already formatted |
+| `mypy app tests` | **pass** — no issues in 118 source files |
+| `pytest --cov=app --cov-fail-under=92` | **pass** — **892 passed**, coverage **92.56 %**, 561 s (SQLite; PostgreSQL not run here) |
+| frontend `tsc --noEmit` | **pass** |
+| frontend `eslint src e2e` | **pass** |
+| frontend `vitest run` | **pass** — **141 passed** / 14 files |
+| frontend `vite build` | **pass** — 308.32 kB js, 63.99 kB css |
+| `playwright test` (desktop-chromium + mobile, auth excluded) | **pass** — **67 passed, 1 skipped**, 1.6 min; `journey.spec.ts` 16/16 |
+| `seed_demo.py` (brief §5.7) | **pass** — Groningen #1 (0.795, PLAUSIBLE), UBC #11 **OUT_OF_BUDGET** (0.401) |
+| climate sensitivity (stage-0 DoD) | **pass** — `city_climate` first: warm puts NUS in the top 5, cold puts Oslo in and lifts Toronto, temperate differs from both |
+| alembic | **pass** — 9 revisions, single head `a4d1c7e58b92`, upgrade from empty DB |
+| `pip-audit` / `npm audit` | **not run** — no CI-parity claim |
 
-Deviation from brief §5.7 to note, not a failure: TU Delft, Melbourne and EPFL are `EXCLUDED`, not
-ranked. Brief §5.4 rule 2 knocks out a **confirmed** hard filter, and the demo profile's IELTS writing
-6.0 fails a published 6.5 per-band minimum at all three. The §5.7 table comes from
-`analysis/reference/ranking_v2.py`, whose `_demo` never applied that rule. Spec beats reference sample.
+Deviation from the brief §5.7 sample, by design not defect: TU Delft, Melbourne and EPFL are
+`EXCLUDED`, not ranked. Brief §5.4 rule 2 knocks out a **confirmed** hard filter, and the demo
+profile's IELTS writing 6.0 misses a published 6.5 per-band minimum at all three. The §5.7 table came
+from `analysis/reference/ranking_v2.py::_demo`, which never applied that rule. The spec beats the
+sample; if the owner wants the sample instead, that is a change to §5.4, not to the port.
 
 ## 7. Blockers / questions for the owner
 
-- **Inherited I4/T3 contradiction, unresolved.** `analysis/AI_TASK_BRIEF.md` §4 I4 and §8 T3, and
-  `analysis/SPEC_matching_v2.md` §10.1 T3 literally require known → UNKNOWN never to lower fit.
-  The approved weighted geometric mean over known axes (brief §5 / spec §4.3), executable reference
-  `analysis/reference/ranking_v2.py::aggregate`, and committed domain implementation do not guarantee it:
-  equal weights, known values 0.25 and 1.0 yield fit 0.5 and coverage 1.0; changing the **1.0** axis to
-  UNKNOWN leaves fit 0.25 and coverage 0.5. Thus coverage separation alone does not satisfy literal T3.
-- The inherited test `backend/tests/test_ranking_v2.py::TestAggregation.test_an_unknown_axis_is_never_scored_as_a_failed_one`
-  (identify by function name if its containing class changes) checks an unknown versus a mismatched
-  climate, not literal monotonicity for every known-axis removal. The predecessor changed test semantics.
-  `docs/adr/0003-noncompensatory-ranking.md`, Consequences around line 81 at `c924410`, expressly
-  says dropping a known axis moves fit and substitutes "never scored against the row"; Alternatives
-  also rejects mean imputation. This is an inherited documentary contradiction, not owner approval.
-  No express owner resolution is present in the supplied conversation. Preserve brief, spec, reference,
-  ADR and tests unchanged during recovery; ask the owner to resolve the requirement before acceptance.
-- Prompt C preservation/checkpoint is authorized despite this conflict. It blocks predecessor/phase-0
-  acceptance and review claims, not the preserving snapshot or independent [0.8] gate fixes.
-- Detailed frontend defects and gate failures are **pending** from their owning agents. Do not fill
-  in assumed failures or mark [0.8] ready-for-review before those results arrive.
+### RESOLVED — I4 / T3 wording vs the approved formula (2026-09-06, owner-delegated)
+
+The owner was shown the conflict and delegated the call ("делай так как считаешь правильным").
+**Resolution: the formula stands as approved; T3's literal wording does not.** Recorded here so the
+next agent does not reopen it.
+
+- D1 (weighted geometric mean over known axes) and D2 (coverage separate, γ = 0.5) are final and were
+  not reopened. The implementation matches `analysis/reference/ranking_v2.py::aggregate`.
+- Literal T3 — "known → UNKNOWN never lowers fit" — cannot hold for **any** honest aggregation over
+  known axes: fit is a mean, so removing an axis above the mean lowers it and removing one below it
+  raises it. The only way to satisfy the literal wording is to impute unknown axes at or above the
+  current mean, i.e. to score a university on data nobody verified. That is the one thing this product
+  refuses to do, and imputation is rejected in `docs/adr/0003-noncompensatory-ranking.md`.
+- The invariant that **is** true, and is what I4 exists to protect (brief P6): *an unverified axis is
+  never scored against a row.* It leaves `fit` entirely and lowers `coverage` only, which
+  `sort_key = fit · coverage^γ` then discounts. `test_an_unknown_axis_is_never_scored_as_a_failed_one`
+  pins exactly that, and `test_an_unknown_axis_lowers_coverage_by_exactly_its_weight_share` pins the
+  second half of T3 verbatim.
+- Not changed: brief, spec, reference implementation, ADR, or any committed formula. The wording of
+  I4/T3 in `analysis/AI_TASK_BRIEF.md` §4/§8 and `analysis/SPEC_matching_v2.md` §10.1 is now known to
+  be stronger than the model it describes; leave the documents alone and read them through this note.
+
+### Open
+
+- Nothing blocking [0.8]. Acceptance of [0.1]–[0.7] still rides on the same PR — they were committed
+  before the relay rules existed and therefore carry no `Agent:` trailer. Do not rewrite that history.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
 
@@ -283,6 +292,8 @@ ranked. Brief §5.4 rule 2 knocks out a **confirmed** hard filter, and the demo 
 - Git author on recent commits is the owner's name for both agents — the `Agent:` trailer is the only reliable authorship signal. Always add it.
 
 
+- **Corrected 2026-09-06:** the note below is wrong. `backend/.venv/Scripts/python.exe` runs fine and
+  produced every number in §6. Keep the rest of the note only as a reminder to record the interpreter.
 - Recovery environment: the repository `backend/.venv` launcher refers to missing base Python
   `C:\Users\Dias\AppData\Roaming\uv\python\cpython-3.12.14-windows-x86_64-none`
   (base-missing diagnosis supplied by coordinator; path read from `pyvenv.cfg`). Do not equate a launcher
@@ -318,3 +329,4 @@ After [0.8] and its predecessor acceptance/review obligations:
 | 2026-09-05 | owner | `627d42d` → `627d42d` | workflow files created; no brief task started yet (historical template entry) |
 | 2026-09-05 18:31:27 UTC | gpt-6-astra, delegated recovery inventory writer | `c924410` → `c924410` (HEAD unchanged) | Prompt C audit started using clock tool UTC; reconciled stale template, seven local predecessor commits and all 74 scoped dirty/untracked file paths; 2 nested repos excluded. HANDOFF only edited; gates/frontend review pending; branch/checkpoint/push/baton not yet performed. |
 | 2026-09-06 | claude-opus-5 | `c924410` → `61df0db` | Prompt C recovery: reconciled the stale §1/§5 (the branch existed, the baton did not), audited all eight frontend diffs into §4, ran every gate into §6 (backend green, 891 tests / 92.56 %; frontend one red unit test), preserved the work in one allow-listed `wip:` checkpoint, took the baton. |
+| 2026-09-06 | claude-opus-5 | `61df0db` → `0affab6` | Finished [0.8]: red test fixed, bucket vocabulary contracted, preferences disclaimer restored, per-table captions, e2e helper opens the set-aside sections. All gates green (892 backend / 141 unit / 67 e2e). §7 I4-T3 conflict resolved by owner delegation. Next: open the PR. |
