@@ -395,6 +395,38 @@ there is no paywall, no truncation and every case is fully open; the product
 behaves exactly as it did before payments existed. A test asserts that.
 Configuration lives in `.env.example` under *Payments*.
 
+### Schools
+
+Schools do not buy one case at a time. They sign a contract, pay an invoice by
+bank transfer, and receive **a quota of cases for a term**. ApiPay is not
+involved: money arrives outside the product, and the product's job is to record
+what was sold and spend it correctly.
+
+* Opening a case spends **one** unit, once. Re-running or re-reading it spends
+  nothing more. A school with quota never sees a price.
+* When the quota runs out, or the term ends, the organization falls back to the
+  per-case price above. Nobody is stuck mid-work.
+* **An early renewal queues rather than burning what is left.** A school that
+  renews before its term ends holds two subscriptions; the new one starts the
+  moment the old is exhausted by usage *or* reaches its end date.
+
+Because a queued subscription's start is unknown when it is sold, it carries a
+duration rather than a start date, and its term begins when the school opens
+its first case under it.
+
+Recording a paid subscription is a CLI step, not a network endpoint — it needs
+database access and happens about once a year per school:
+
+```bash
+python scripts/grant_subscription.py --org <slug> --cases 50 --days 365 \
+    --invoice "Договор 14/26"
+python scripts/grant_subscription.py --list
+python scripts/grant_subscription.py --list --org <slug>
+python scripts/grant_subscription.py --cancel <subscription-id>
+```
+
+Omitting `--cases` records an unlimited contract.
+
 ---
 
 ## Limitations

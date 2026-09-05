@@ -84,3 +84,9 @@ stack is the one unverified gate, and the release commit/tag waits on it.
   5. one end-to-end payment of the real price, verified in both the ApiPay
      dashboard and our `payment_events` table. Until that has happened, the
      payment path is proven only by contract tests.
+* **School subscriptions need two things from you:**
+  1. the price list and standard term — the product records what was sold and
+     never quotes anyone;
+  2. whoever sells must be able to reach a shell with database access, because
+     recording a paid subscription is `scripts/grant_subscription.py` and
+     deliberately not a network endpoint.

@@ -189,6 +189,21 @@ captures.
   cost a full crawl, not from a measurement of what converts.
 - **Refunds are operated from the ApiPay dashboard.** The provider supports
   them; we deliberately built no UI for them in phase 1.
-- **Organization subscriptions are not built.** The `entitlements` table and
-  its constraints already accommodate them, and `has_full_access` already
-  honours an organization-wide row, but nothing issues one yet.
+- **Organization subscriptions are built, as a quota rather than blanket
+  access.** Phase 1 had reserved an organization-wide entitlement meaning "this
+  school sees everything"; phase 2 removed it, because a quota grants the right
+  to spend rather than the right to see. Anything written against that earlier
+  shape is out of date.
+- **The subscription price list is not in the product.** It only records what
+  was sold. Nothing here quotes a school, and nothing validates that the number
+  in `--cases` matches an invoice.
+- **An expired term burns whatever quota it still held.** That is what "until
+  the term ends" means; only exhaustion-then-renewal preserves value, and it
+  does so by starting the next subscription rather than carrying anything over.
+- **A school's term starts when it opens its first case, not when the invoice
+  was paid.** A queued renewal cannot know its start date at sale time, and
+  using two different rules for first and subsequent subscriptions would need
+  two activation paths that must agree.
+- **Two subscriptions sold in the same microsecond have undefined order.**
+  Grants are manual CLI actions, so this cannot happen in practice; the tie is
+  broken by a random id if it ever does.
