@@ -123,12 +123,24 @@ def test_an_organization_without_one_has_none(pg_session, org) -> None:
 
 
 def test_queued_subscriptions_are_the_pending_ones_oldest_first(pg_session, org) -> None:
+    # Explicit timestamps: two rows created in the same microsecond tie on
+    # created_at and fall back to a random id, which is not an order.
     _sub(pg_session, org)
     first = _sub(
-        pg_session, org, status=SubscriptionStatus.PENDING.value, starts_at=None, ends_at=None
+        pg_session,
+        org,
+        status=SubscriptionStatus.PENDING.value,
+        starts_at=None,
+        ends_at=None,
+        created_at=utcnow() - timedelta(hours=2),
     )
     second = _sub(
-        pg_session, org, status=SubscriptionStatus.PENDING.value, starts_at=None, ends_at=None
+        pg_session,
+        org,
+        status=SubscriptionStatus.PENDING.value,
+        starts_at=None,
+        ends_at=None,
+        created_at=utcnow() - timedelta(hours=1),
     )
     queued = queued_subscriptions(pg_session, org.id)
     assert [q.id for q in queued] == [first.id, second.id]

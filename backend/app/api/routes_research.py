@@ -170,6 +170,17 @@ def start_run(
     # a free run costs us little. Paying afterwards cannot widen this run; it
     # queues a new one.
     full_access = has_full_access(session, principal.organization_id, payload.profile_id)
+    if not full_access:
+        # A school with quota gets a full run without being asked. The unit is
+        # spent here, once, when the case is actually opened.
+        from app.payments.subscriptions import consume_for_case
+
+        full_access = consume_for_case(
+            session,
+            organization_id=principal.organization_id,
+            profile_id=payload.profile_id,
+        ).granted
+
     candidate_limit = payload.candidate_limit
     if not full_access:
         candidate_limit = min(candidate_limit or settings.free_candidate_limit,
