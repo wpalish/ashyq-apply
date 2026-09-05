@@ -88,9 +88,9 @@ def test_a_second_case_still_sees_the_remaining_quota(paid_client, case_id) -> N
     _grant(2)
     paid_client.post("/api/runs", json={"profile_id": case_id, "demo_mode": True})
 
-    second = paid_client.post(
-        "/api/profiles", json=DEMO_PROFILE.model_dump(mode="json")
-    ).json()["id"]
+    second = paid_client.post("/api/profiles", json=DEMO_PROFILE.model_dump(mode="json")).json()[
+        "id"
+    ]
     body = paid_client.get(f"/api/billing/entitlements?profile_id={second}").json()
     assert body["full_access"] is False
     assert body["subscription_cases_left"] == 1

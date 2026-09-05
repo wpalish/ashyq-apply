@@ -57,18 +57,14 @@ def _sub(session, org, **overrides) -> Subscription:
 
 
 def test_without_a_subscription_nothing_is_spent(pg_session, org) -> None:
-    result = consume_for_case(
-        pg_session, organization_id=org.id, profile_id=_case(pg_session, org)
-    )
+    result = consume_for_case(pg_session, organization_id=org.id, profile_id=_case(pg_session, org))
     assert result.granted is False
     assert result.reason == "no_subscription"
 
 
 def test_the_first_use_activates_a_pending_subscription(pg_session, org) -> None:
     sub = _sub(pg_session, org)
-    result = consume_for_case(
-        pg_session, organization_id=org.id, profile_id=_case(pg_session, org)
-    )
+    result = consume_for_case(pg_session, organization_id=org.id, profile_id=_case(pg_session, org))
     pg_session.flush()
     pg_session.refresh(sub)
 
@@ -146,9 +142,7 @@ def test_an_expired_term_hands_over_to_the_renewal(pg_session, org) -> None:
     )
     renewal = _sub(pg_session, org, case_quota=5)
 
-    result = consume_for_case(
-        pg_session, organization_id=org.id, profile_id=_case(pg_session, org)
-    )
+    result = consume_for_case(pg_session, organization_id=org.id, profile_id=_case(pg_session, org))
     pg_session.flush()
 
     pg_session.refresh(expiring)
@@ -169,9 +163,7 @@ def test_an_unlimited_contract_keeps_granting(pg_session, org) -> None:
 
 def test_a_cancelled_subscription_is_never_spent(pg_session, org) -> None:
     _sub(pg_session, org, status=SubscriptionStatus.CANCELLED.value)
-    result = consume_for_case(
-        pg_session, organization_id=org.id, profile_id=_case(pg_session, org)
-    )
+    result = consume_for_case(pg_session, organization_id=org.id, profile_id=_case(pg_session, org))
     assert result.granted is False
 
 

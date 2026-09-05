@@ -61,17 +61,27 @@ def client(tmp_path, monkeypatch, corpus_dir):
 
 
 def join_as(client: TestClient, slug: str) -> str:
-    registered = client.post("/api/auth/register", json={
-        "email": f"{slug}@example.test",
-        "password": f"correct horse battery {slug}",
-        "display_name": slug.title(),
-        "organization_name": f"{slug.title()} Workspace",
-    })
+    registered = client.post(
+        "/api/auth/register",
+        json={
+            "email": f"{slug}@example.test",
+            "password": f"correct horse battery {slug}",
+            "display_name": slug.title(),
+            "organization_name": f"{slug.title()} Workspace",
+        },
+    )
     assert registered.status_code == 201, registered.text
-    client.put("/api/social/me", json={
-        "status": None, "target_city": "", "target_major": "", "bio": "",
-        "universities": [], "dm_policy": "anyone",
-    }).raise_for_status()
+    client.put(
+        "/api/social/me",
+        json={
+            "status": None,
+            "target_city": "",
+            "target_major": "",
+            "bio": "",
+            "universities": [],
+            "dm_policy": "anyone",
+        },
+    ).raise_for_status()
     return registered.json()["user_id"]
 
 
@@ -101,8 +111,8 @@ class TestUploading:
     def test_a_png_works_too(self, client):
         me = join_as(client, "screenshotter")
         assert upload(client, png_with_text(), "shot.png", "image/png").status_code == 204
-        assert client.get(f"/api/social/avatars/{me}").headers["content-type"].startswith(
-            "image/png"
+        assert (
+            client.get(f"/api/social/avatars/{me}").headers["content-type"].startswith("image/png")
         )
 
     def test_the_bytes_decide_the_format_not_the_header(self, client):
@@ -127,18 +137,21 @@ class TestUploading:
         me = join_as(client, "changeable")
         upload(client, jpeg_with_exif())
         assert upload(client, png_with_text(), "shot.png", "image/png").status_code == 204
-        assert client.get(f"/api/social/avatars/{me}").headers["content-type"].startswith(
-            "image/png"
+        assert (
+            client.get(f"/api/social/avatars/{me}").headers["content-type"].startswith("image/png")
         )
 
     def test_a_picture_needs_a_profile_first(self, client):
         """Same rule as posting: joining is what publishes anything about you."""
-        client.post("/api/auth/register", json={
-            "email": "lurker@example.test",
-            "password": "correct horse battery lurker",
-            "display_name": "Lurker",
-            "organization_name": "Lurker Workspace",
-        }).raise_for_status()
+        client.post(
+            "/api/auth/register",
+            json={
+                "email": "lurker@example.test",
+                "password": "correct horse battery lurker",
+                "display_name": "Lurker",
+                "organization_name": "Lurker Workspace",
+            },
+        ).raise_for_status()
         assert upload(client, jpeg_with_exif()).status_code == 409
 
 
@@ -162,15 +175,23 @@ class TestReadingSomeoneElses:
         assert client.get(f"/api/social/avatars/{subject}").status_code == 200
         client.post("/api/auth/logout")
 
-        client.post("/api/auth/login", json={
-            "email": "blocker@example.test", "password": "correct horse battery blocker",
-        }).raise_for_status()
+        client.post(
+            "/api/auth/login",
+            json={
+                "email": "blocker@example.test",
+                "password": "correct horse battery blocker",
+            },
+        ).raise_for_status()
         client.post(f"/api/social/blocks/{other}").raise_for_status()
         client.post("/api/auth/logout")
 
-        client.post("/api/auth/login", json={
-            "email": "blocked-one@example.test", "password": "correct horse battery blocked-one",
-        }).raise_for_status()
+        client.post(
+            "/api/auth/login",
+            json={
+                "email": "blocked-one@example.test",
+                "password": "correct horse battery blocked-one",
+            },
+        ).raise_for_status()
         assert client.get(f"/api/social/avatars/{subject}").status_code == 404
 
     def test_the_picture_is_not_public(self, client):

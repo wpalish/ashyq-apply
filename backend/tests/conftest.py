@@ -291,6 +291,8 @@ def sign_webhook(body: bytes) -> str:
     import hmac
 
     return "sha256=" + hmac.new(WEBHOOK_SECRET.encode(), body, hashlib.sha256).hexdigest()
+
+
 #: The tenant test fixtures write into. Explicit, because the column no longer
 #: carries a default: a caller that forgets the organization must fail loudly
 #: rather than quietly writing into someone else's workspace.

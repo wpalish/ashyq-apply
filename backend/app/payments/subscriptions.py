@@ -33,9 +33,7 @@ def spent(session: Session, subscription: Subscription) -> int:
     Counted, never stored. A ``used_count`` column can drift from the rows it
     claims to describe, and the day it drifts is a dispute with a customer.
     """
-    return (
-        session.query(Entitlement).filter(Entitlement.subscription_id == subscription.id).count()
-    )
+    return session.query(Entitlement).filter(Entitlement.subscription_id == subscription.id).count()
 
 
 def quota_remaining(session: Session, subscription: Subscription) -> int | None:

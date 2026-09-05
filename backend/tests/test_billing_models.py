@@ -82,9 +82,7 @@ def test_an_entitlement_records_the_subscription_that_paid_for_it(pg_session, te
     """Phase 2: counting these rows is how remaining quota is known."""
     from app.models.subscription import Subscription
 
-    sub = Subscription(
-        organization_id=tenant["organization_id"], case_quota=50, duration_days=365
-    )
+    sub = Subscription(organization_id=tenant["organization_id"], case_quota=50, duration_days=365)
     pg_session.add(sub)
     pg_session.flush()
 

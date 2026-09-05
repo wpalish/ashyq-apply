@@ -41,13 +41,16 @@ def test_an_unlimited_contract_has_no_quota(pg_session, org) -> None:
 
 
 def test_exhausted_expired_and_cancelled_are_terminal() -> None:
-    assert frozenset(
-        {
-            SubscriptionStatus.EXHAUSTED.value,
-            SubscriptionStatus.EXPIRED.value,
-            SubscriptionStatus.CANCELLED.value,
-        }
-    ) == TERMINAL_SUBSCRIPTION_STATUSES
+    assert (
+        frozenset(
+            {
+                SubscriptionStatus.EXHAUSTED.value,
+                SubscriptionStatus.EXPIRED.value,
+                SubscriptionStatus.CANCELLED.value,
+            }
+        )
+        == TERMINAL_SUBSCRIPTION_STATUSES
+    )
 
 
 def test_an_entitlement_can_name_the_subscription_that_paid_for_it(pg_session, org) -> None:
