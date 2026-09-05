@@ -10,6 +10,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { api, ApiError } from '@/api/client';
 import { Empty, Loading, Notice, Panel } from '@/components/primitives';
 import { Avatar, BIO_MAX_CHARS, Post, StatusChip } from '@/components/social';
+import { BlockButton, ReportButton } from '@/components/moderation';
 import { useTranslation } from '@/lib/useTranslation';
 import type {
   ApplicantStatus,
@@ -173,6 +174,7 @@ export function PersonScreen({
   const [message, setMessage] = useState('');
   const [editing, setEditing] = useState(false);
   const [leaving, setLeaving] = useState(false);
+  const [blocked, setBlocked] = useState(false);
 
   const load = useCallback(async () => {
     setState('loading');
@@ -182,6 +184,12 @@ export function PersonScreen({
         : await api.person(userId as string);
       setPerson(card);
       if (card) setPosts((await api.feed({ author: card.user_id })).items);
+      if (card && !isMe) {
+        // Read rather than assumed: the button has to say "unblock" when they
+        // are already blocked, and this screen can be reached from anywhere.
+        const mine = await api.blockedPeople();
+        setBlocked(mine.items.some((person) => person.user_id === card.user_id));
+      }
       setState(card ? 'ready' : 'absent');
     } catch (problem) {
       if (problem instanceof ApiError && problem.status === 404) {
@@ -253,7 +261,15 @@ export function PersonScreen({
             {!isMe && card.dm_policy === 'nobody' && (
               <span className="xs faint">{t('messages.closed')}</span>
             )}
+            {!isMe && (
+              <BlockButton
+                userId={card.user_id}
+                blocked={blocked}
+                onChanged={() => { setBlocked((was) => !was); void load(); }}
+              />
+            )}
           </div>
+          {!isMe && <ReportButton subjectType="profile" subjectId={card.user_id} />}
         </div>
       </header>
 

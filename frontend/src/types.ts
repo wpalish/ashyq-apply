@@ -579,3 +579,38 @@ export interface TranscriptReading {
   /** Why the list is empty, when it is. A scan of paper carries no text. */
   note: string;
 }
+
+/* --- Moderation -------------------------------------------------------- */
+
+export type ReportReason =
+  | 'harassment'
+  | 'personal_information'
+  | 'impersonation'
+  | 'spam'
+  | 'misleading_advice'
+  | 'other';
+
+export type ReportTarget = 'post' | 'reply' | 'message' | 'profile';
+
+export type ReportStatus = 'open' | 'actioned' | 'dismissed';
+
+export interface ReporterRef {
+  user_id: string;
+  display_name: string;
+}
+
+export interface ReportView {
+  id: string;
+  reporter: ReporterRef;
+  subject_type: ReportTarget;
+  subject_id: string;
+  subject_author: ReporterRef | null;
+  reason: ReportReason;
+  note: string;
+  /** What the content said when it was reported, kept for after it is gone. */
+  excerpt: string;
+  status: ReportStatus;
+  created_at: string;
+  resolved_by: string | null;
+  resolution_note: string;
+}

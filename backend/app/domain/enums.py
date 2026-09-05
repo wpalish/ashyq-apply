@@ -340,3 +340,38 @@ class DirectMessagePolicy(StrEnum):
     ANYONE = "anyone"
     THREADS = "threads"
     NOBODY = "nobody"
+
+
+class ReportReason(StrEnum):
+    """Why something was reported.
+
+    A closed list rather than free text: a queue of prose cannot be sorted,
+    counted or triaged, and the person reporting harassment should not have to
+    compose an essay to be heard. The note beside it is optional and is where
+    anything not on this list goes.
+    """
+
+    HARASSMENT = "harassment"
+    PERSONAL_INFORMATION = "personal_information"
+    IMPERSONATION = "impersonation"
+    SPAM = "spam"
+    #: A claim about a university's requirements dressed as fact. The whole
+    #: product exists because published criteria and hearsay are not the same
+    #: thing, so the community has to be able to flag the difference.
+    MISLEADING_ADVICE = "misleading_advice"
+    OTHER = "other"
+
+
+class ReportTarget(StrEnum):
+    POST = "post"
+    REPLY = "reply"
+    MESSAGE = "message"
+    PROFILE = "profile"
+
+
+class ReportStatus(StrEnum):
+    OPEN = "open"
+    #: The content was removed, or the profile acted on.
+    ACTIONED = "actioned"
+    #: Looked at, nothing to do. Not the same as unread.
+    DISMISSED = "dismissed"

@@ -10,6 +10,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { api, ApiError } from '@/api/client';
 import { Empty, Loading, Notice, Panel } from '@/components/primitives';
 import { Byline, Composer, Post, Retract } from '@/components/social';
+import { ReportButton } from '@/components/moderation';
 import { useTranslation } from '@/lib/useTranslation';
 import type { FeedFilters, Page, PostView, ReplyView } from '@/types';
 
@@ -50,8 +51,8 @@ function Thread({
         <div className="reply" key={reply.id} data-testid={`reply-${reply.id}`}>
           <Byline author={reply.author} at={reply.created_at} onOpenPerson={onOpenPerson} />
           <p className="post__body">{reply.body}</p>
-          {reply.author.user_id === myUserId && (
-            <div className="post__foot">
+          <div className="post__foot">
+            {reply.author.user_id === myUserId ? (
               <Retract
                 question={t('community.deleteAnswerQ')}
                 onConfirm={async () => {
@@ -60,8 +61,10 @@ function Thread({
                   onCountChange(-1);
                 }}
               />
-            </div>
-          )}
+            ) : (
+              <ReportButton subjectType="reply" subjectId={reply.id} />
+            )}
+          </div>
         </div>
       ))}
       {page !== null && replies.length === 0 && (
@@ -225,6 +228,7 @@ export function FeedScreen({
             key={post.id}
             post={post}
             onOpenPerson={onOpenPerson}
+            reportable={post.author.user_id !== myUserId}
             onDelete={
               post.author.user_id === myUserId
                 ? async () => {

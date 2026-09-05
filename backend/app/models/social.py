@@ -41,6 +41,7 @@ from app.domain.social import (
     MESSAGE_MAX_CHARS,
     POST_MAX_CHARS,
     REPLY_MAX_CHARS,
+    REPORT_NOTE_MAX_CHARS,
     normalize_key,
 )
 from app.models.base import Base, TimestampedBase, utcnow
@@ -322,3 +323,80 @@ class DirectMessage(TimestampedBase):
     body: Mapped[str] = mapped_column(Text)
 
     conversation: Mapped[Conversation] = relationship(back_populates="messages")
+
+
+class Block(Base):
+    """One person deciding another cannot reach them.
+
+    The tool that works without staff, at the moment it is needed, and the
+    reason it comes before the report queue: a report is a request to somebody
+    else, a block is a decision.
+
+    Not symmetric on purpose — it records who did it — but enforced in both
+    directions. Someone who has been blocked cannot write to, reply to, or be
+    shown to the person who blocked them, and vice versa: making the block
+    visible only one way would tell the blocked person they had been blocked,
+    which is its own kind of contact.
+    """
+
+    __tablename__ = "social_blocks"
+    __table_args__ = (
+        UniqueConstraint("blocker_id", "blocked_id", name="uq_block_pair"),
+        CheckConstraint("blocker_id <> blocked_id", name="ck_blocks_not_self"),
+        Index("ix_social_blocks_blocked_id", "blocked_id"),
+    )
+
+    id: Mapped[str] = mapped_column(String(32), primary_key=True, default=None)
+    blocker_id: Mapped[str] = mapped_column(
+        String(32), ForeignKey("users.id", ondelete="CASCADE"), index=True
+    )
+    blocked_id: Mapped[str] = mapped_column(
+        String(32), ForeignKey("users.id", ondelete="CASCADE")
+    )
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+    def __init__(self, **kwargs: object) -> None:
+        from app.models.base import new_id
+
+        kwargs.setdefault("id", new_id())
+        super().__init__(**kwargs)
+
+
+class ContentReport(TimestampedBase):
+    """Something a person asked a moderator to look at.
+
+    The reported content is named by type and id rather than by a foreign key
+    per kind: a report has to survive the thing it is about being deleted, both
+    so the queue does not lose its history and so "this was removed" is a state
+    the queue can show. `subject_id` is therefore not a foreign key, and the
+    excerpt is copied at the time of reporting for the same reason — a
+    moderator reading the queue after a deletion still needs to know what they
+    are deciding about.
+    """
+
+    __tablename__ = "content_reports"
+    __table_args__ = (
+        Index("ix_reports_status_created", "status", "created_at"),
+        Index("ix_reports_subject", "subject_type", "subject_id"),
+        UniqueConstraint(
+            "reporter_id", "subject_type", "subject_id", name="uq_report_once_per_person"
+        ),
+    )
+
+    reporter_id: Mapped[str] = mapped_column(
+        String(32), ForeignKey("users.id", ondelete="CASCADE"), index=True
+    )
+    subject_type: Mapped[str] = mapped_column(String(20))
+    subject_id: Mapped[str] = mapped_column(String(32))
+    #: Whose content it was, so the queue can see a pattern across reports.
+    subject_author_id: Mapped[str | None] = mapped_column(String(32), nullable=True, index=True)
+    reason: Mapped[str] = mapped_column(String(30), index=True)
+    note: Mapped[str] = mapped_column(String(REPORT_NOTE_MAX_CHARS), default="")
+    #: What the content said when it was reported. Kept because deletion is the
+    #: usual outcome and a queue of empty rows cannot be reviewed or appealed.
+    excerpt: Mapped[str] = mapped_column(String(600), default="")
+
+    status: Mapped[str] = mapped_column(String(20), default="open", index=True)
+    resolved_by: Mapped[str | None] = mapped_column(String(320), nullable=True)
+    resolved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    resolution_note: Mapped[str] = mapped_column(String(REPORT_NOTE_MAX_CHARS), default="")

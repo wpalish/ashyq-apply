@@ -24,6 +24,7 @@ import { FeedScreen } from '@/screens/FeedScreen';
 import { DiscoverScreen } from '@/screens/DiscoverScreen';
 import { PersonScreen } from '@/screens/PersonScreen';
 import { MessagesScreen } from '@/screens/MessagesScreen';
+import { ModerationScreen } from '@/screens/ModerationScreen';
 import { Chip } from '@/components/primitives';
 import { api } from '@/api/client';
 import { LOCALES, t as translate, type Locale, type MessageKey } from '@/lib/i18n';
@@ -33,7 +34,7 @@ import type { PersonCard } from '@/types';
 export type ScreenId =
   | 'profile' | 'preferences' | 'progress' | 'shortlist' | 'funding'
   | 'approved' | 'documents' | 'sources' | 'export'
-  | 'feed' | 'discover' | 'messages' | 'me' | 'person' | 'legal';
+  | 'feed' | 'discover' | 'messages' | 'me' | 'person' | 'moderation' | 'legal';
 
 /**
  * The numbers are not decoration: the case screens are a sequence, and 04
@@ -54,6 +55,7 @@ const SCREENS: { id: ScreenId; num?: string; label: MessageKey; group: MessageKe
   { id: 'discover', label: 'nav.discover', group: 'nav.group.community' },
   { id: 'messages', label: 'nav.messages', group: 'nav.group.community' },
   { id: 'me', label: 'nav.me', group: 'nav.group.community' },
+  { id: 'moderation', label: 'nav.moderation', group: 'nav.group.community' },
   // Listed rather than tucked into the footer, so that it has an address a
   // person can be sent to: "read the privacy policy" is a link, not a hunt.
   { id: 'legal', label: 'nav.legal', group: 'nav.group.about' },
@@ -190,6 +192,7 @@ export default function App() {
     discover: null,
     messages: null,
     me: null,
+    moderation: null,
     person: null,
     // A privacy policy nobody can reach before signing up is not a policy.
     legal: null,
@@ -448,6 +451,7 @@ export default function App() {
           {screen === 'discover' && (
             <DiscoverScreen onOpenPerson={(id) => { setPersonId(id); setScreen('person'); }} />
           )}
+          {screen === 'moderation' && <ModerationScreen />}
           {screen === 'messages' && (
             <MessagesScreen
               openWith={messagingWith}

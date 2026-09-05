@@ -6,17 +6,23 @@ with a reason; the CHECK constraint is what makes the limit true.
 
 from __future__ import annotations
 
-from typing import Annotated
+from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from app.domain.enums import ApplicantStatus, DirectMessagePolicy
+from app.domain.enums import (
+    ApplicantStatus,
+    DirectMessagePolicy,
+    ReportReason,
+    ReportTarget,
+)
 from app.domain.social import (
     BIO_MAX_CHARS,
     MAX_TARGET_UNIVERSITIES,
     MESSAGE_MAX_CHARS,
     POST_MAX_CHARS,
     REPLY_MAX_CHARS,
+    REPORT_NOTE_MAX_CHARS,
 )
 
 UniversityName = Annotated[str, Field(min_length=1, max_length=160)]
@@ -157,3 +163,50 @@ class MessagePage(BaseModel):
     person: PersonCard
     items: list[MessageView]
     next_cursor: str | None = None
+
+
+# --- Moderation ---------------------------------------------------------
+
+
+class ReportIn(Base):
+    subject_type: ReportTarget
+    subject_id: Annotated[str, Field(min_length=1, max_length=32)]
+    reason: ReportReason
+    note: Annotated[str, Field(max_length=REPORT_NOTE_MAX_CHARS)] = ""
+
+
+class ResolveIn(Base):
+    #: `remove` deletes the content; `dismiss` closes the report and leaves it.
+    action: Literal["remove", "dismiss"]
+    note: Annotated[str, Field(max_length=REPORT_NOTE_MAX_CHARS)] = ""
+
+
+class ReporterRef(BaseModel):
+    user_id: str
+    display_name: str
+
+
+class ReportView(BaseModel):
+    id: str
+    reporter: ReporterRef
+    subject_type: str
+    subject_id: str
+    subject_author: ReporterRef | None
+    reason: str
+    note: str
+    #: What the content said when it was reported, kept so the queue can still
+    #: be reviewed after the content is gone.
+    excerpt: str
+    status: str
+    created_at: str
+    resolved_by: str | None
+    resolution_note: str
+
+
+class ReportPage(BaseModel):
+    items: list[ReportView]
+    next_cursor: str | None = None
+
+
+class BlockedPage(BaseModel):
+    items: list[ReporterRef]

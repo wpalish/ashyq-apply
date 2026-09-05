@@ -25,10 +25,20 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Response
 from sqlalchemy import and_, func, or_
 from sqlalchemy.orm import Session, joinedload, selectinload
 
+# The module rather than the function: `get_settings` is replaced per test and
+# per deployment, and binding the name at import would freeze whichever object
+# existed when this module was first imported.
+from app import config
 from app.db import get_session
-from app.domain.enums import DirectMessagePolicy
+from app.domain.enums import (
+    DirectMessagePolicy,
+    ReportStatus,
+    ReportTarget,
+)
 from app.domain.social import extract_tags, normalize_key
 from app.models import (
+    Block,
+    ContentReport,
     Conversation,
     DirectMessage,
     Post,
@@ -41,6 +51,7 @@ from app.models import (
 from app.models.base import ensure_utc, utcnow
 from app.schemas.social import (
     AuthorRef,
+    BlockedPage,
     ConversationPage,
     ConversationView,
     MessageIn,
@@ -56,6 +67,11 @@ from app.schemas.social import (
     ReplyIn,
     ReplyPage,
     ReplyView,
+    ReporterRef,
+    ReportIn,
+    ReportPage,
+    ReportView,
+    ResolveIn,
 )
 from app.security import Principal, get_principal
 
@@ -296,6 +312,7 @@ def discover(
         .options(joinedload(SocialProfile.user), selectinload(SocialProfile.universities))
         .join(User, User.id == SocialProfile.user_id)
         .filter(User.is_active.is_(True))
+        .filter(SocialProfile.user_id.notin_(_hidden_from(session, principal.user_id)))
     )
     if city:
         query = query.filter(SocialProfile.target_city_key == normalize_key(city))
@@ -391,6 +408,8 @@ def feed(
         .outerjoin(SocialProfile, SocialProfile.user_id == Post.author_id)
         .outerjoin(PostReply, PostReply.post_id == Post.id)
         .group_by(Post.id, User.id, SocialProfile.user_id)
+        # A block is mutual silence: neither side appears to the other.
+        .filter(Post.author_id.notin_(_hidden_from(session, principal.user_id)))
     )
     if author:
         query = query.filter(Post.author_id == author)
@@ -501,6 +520,11 @@ def create_reply(
 ) -> ReplyView:
     profile = _require_membership(session, principal)
     post = _load_post(session, post_id)
+    # Answering someone's post is contact, so a block stops it here too.
+    # Otherwise blocking would only silence the private channel and leave the
+    # public one — the louder of the two — wide open.
+    if _blocked_either_way(session, principal.user_id, post.author_id):
+        raise HTTPException(403, "You cannot reply to this applicant's posts.")
     reply = PostReply(post_id=post.id, author_id=principal.user_id, body=payload.body)
     session.add(reply)
     session.commit()
@@ -751,6 +775,11 @@ def send_message(
     if user_id == principal.user_id:
         raise HTTPException(400, "You cannot write to yourself.")
     _require_membership(session, principal)
+    # Checked before the conversation, so a block ends an existing thread too.
+    # A block that only stopped new conversations would leave the person who
+    # already had one able to keep writing, which is the case that matters.
+    if _blocked_either_way(session, principal.user_id, user_id):
+        raise HTTPException(403, "This conversation is closed.")
     recipient = _profile_or_404(session, user_id)
 
     conversation = _conversation(session, principal.user_id, user_id)
@@ -786,3 +815,284 @@ def send_message(
         created_at=(ensure_utc(message.created_at) or message.created_at).isoformat(),
         mine=True,
     )
+
+
+# --- Blocking ------------------------------------------------------------
+
+
+def _blocked_either_way(session: Session, one: str, other: str) -> bool:
+    """Whether a block stands between these two, in either direction.
+
+    Enforced symmetrically on purpose. A one-way silence would tell the blocked
+    person they had been blocked — the blocker's posts would keep appearing
+    while theirs vanished — and being told is its own kind of contact.
+    """
+    return (
+        session.query(Block.id)
+        .filter(
+            or_(
+                and_(Block.blocker_id == one, Block.blocked_id == other),
+                and_(Block.blocker_id == other, Block.blocked_id == one),
+            )
+        )
+        .first()
+        is not None
+    )
+
+
+def _hidden_from(session: Session, user_id: str):
+    """The ids this person must not be shown, for a NOT IN."""
+    return session.query(Block.blocked_id).filter(Block.blocker_id == user_id).union(
+        session.query(Block.blocker_id).filter(Block.blocked_id == user_id)
+    )
+
+
+@router.get("/blocks", response_model=BlockedPage)
+def blocked_people(
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> BlockedPage:
+    """Who you have blocked. Yours to read, and the only way to undo one."""
+    rows = (
+        session.query(Block, User)
+        .join(User, User.id == Block.blocked_id)
+        .filter(Block.blocker_id == principal.user_id)
+        .order_by(Block.created_at.desc())
+        .all()
+    )
+    return BlockedPage(
+        items=[ReporterRef(user_id=user.id, display_name=user.display_name) for _, user in rows]
+    )
+
+
+@router.post("/blocks/{user_id}", status_code=204)
+def block(
+    user_id: str,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> Response:
+    """Stop someone reaching you. Takes effect at once and asks nobody."""
+    if user_id == principal.user_id:
+        raise HTTPException(400, "You cannot block yourself.")
+    _account(session, user_id)
+    if not _blocked_either_way(session, principal.user_id, user_id):
+        session.add(Block(blocker_id=principal.user_id, blocked_id=user_id))
+        session.commit()
+    return Response(status_code=204)
+
+
+@router.delete("/blocks/{user_id}", status_code=204)
+def unblock(
+    user_id: str,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> Response:
+    row = (
+        session.query(Block)
+        .filter(Block.blocker_id == principal.user_id, Block.blocked_id == user_id)
+        .first()
+    )
+    if row is not None:
+        session.delete(row)
+        session.commit()
+    return Response(status_code=204)
+
+
+# --- Reporting and the queue --------------------------------------------
+
+
+def _subject(session: Session, kind: str, subject_id: str) -> tuple[str | None, str]:
+    """The author and an excerpt of the reported thing, or a 404."""
+    if kind == ReportTarget.POST:
+        row = session.get(Post, subject_id)
+        if row is not None:
+            return row.author_id, row.body
+    elif kind == ReportTarget.REPLY:
+        reply = session.get(PostReply, subject_id)
+        if reply is not None:
+            return reply.author_id, reply.body
+    elif kind == ReportTarget.MESSAGE:
+        message = session.get(DirectMessage, subject_id)
+        if message is not None:
+            return message.sender_id, message.body
+    elif kind == ReportTarget.PROFILE:
+        profile = session.get(SocialProfile, subject_id)
+        if profile is not None:
+            return profile.user_id, profile.bio
+    raise HTTPException(404, "There is nothing here to report.")
+
+
+def _report_view(session: Session, report: ContentReport) -> ReportView:
+    reporter = _account(session, report.reporter_id)
+    author = session.get(User, report.subject_author_id) if report.subject_author_id else None
+    return ReportView(
+        id=report.id,
+        reporter=ReporterRef(user_id=reporter.id, display_name=reporter.display_name),
+        subject_type=report.subject_type,
+        subject_id=report.subject_id,
+        subject_author=(
+            ReporterRef(user_id=author.id, display_name=author.display_name) if author else None
+        ),
+        reason=report.reason,
+        note=report.note,
+        excerpt=report.excerpt,
+        status=report.status,
+        created_at=(ensure_utc(report.created_at) or report.created_at).isoformat(),
+        resolved_by=report.resolved_by,
+        resolution_note=report.resolution_note,
+    )
+
+
+@router.post("/reports", response_model=ReportView, status_code=201)
+def file_report(
+    payload: ReportIn,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> ReportView:
+    """Ask a moderator to look at something.
+
+    A private message can be reported, but only by one of the two people in the
+    conversation. Reporting is the one thing that puts a private line in front
+    of somebody else, and the person receiving harassment has to be able to do
+    it; nobody else has any business naming a message id.
+    """
+    author, excerpt = _subject(session, payload.subject_type.value, payload.subject_id)
+    if payload.subject_type == ReportTarget.MESSAGE:
+        message = session.get(DirectMessage, payload.subject_id)
+        conversation = session.get(Conversation, message.conversation_id) if message else None
+        if conversation is None or principal.user_id not in (
+            conversation.lower_id,
+            conversation.higher_id,
+        ):
+            raise HTTPException(404, "There is nothing here to report.")
+
+    already = (
+        session.query(ContentReport)
+        .filter(
+            ContentReport.reporter_id == principal.user_id,
+            ContentReport.subject_type == payload.subject_type.value,
+            ContentReport.subject_id == payload.subject_id,
+        )
+        .first()
+    )
+    if already is not None:
+        raise HTTPException(409, "You have already reported this.")
+
+    report = ContentReport(
+        reporter_id=principal.user_id,
+        subject_type=payload.subject_type.value,
+        subject_id=payload.subject_id,
+        subject_author_id=author,
+        reason=payload.reason.value,
+        note=payload.note,
+        excerpt=excerpt[:600],
+        status=ReportStatus.OPEN.value,
+    )
+    session.add(report)
+    session.commit()
+    session.refresh(report)
+    return _report_view(session, report)
+
+
+def require_moderator(principal: Principal = Depends(get_principal)) -> Principal:
+    """The deployment names its moderators; nothing in the database grants this.
+
+    A workspace owner administers their own tenant, and the community is not
+    theirs — it spans every workspace — so no tenant role can carry this. See
+    `Settings.moderator_emails` for why that is a setting rather than a table.
+    """
+    if principal.email.casefold() not in config.get_settings().moderator_email_list:
+        raise HTTPException(403, "This is the moderation queue for this deployment.")
+    return principal
+
+
+@router.get("/moderation/reports", response_model=ReportPage)
+def moderation_queue(
+    status: str = ReportStatus.OPEN.value,
+    limit: Annotated[int, Query(ge=1, le=MAX_PAGE)] = DEFAULT_PAGE,
+    cursor: str | None = None,
+    principal: Principal = Depends(require_moderator),
+    session: Session = Depends(get_session),
+) -> ReportPage:
+    """Reports in one status, oldest first: a queue, not a feed."""
+    if status not in {s.value for s in ReportStatus}:
+        raise HTTPException(400, f"Unknown report status {status!r}.")
+    query = session.query(ContentReport).filter(ContentReport.status == status)
+    if cursor:
+        query = query.filter(_newer_than(ContentReport.created_at, ContentReport.id, cursor))
+    rows = (
+        query.order_by(ContentReport.created_at.asc(), ContentReport.id.asc())
+        .limit(limit + 1)
+        .all()
+    )
+    page, next_cursor = _split(rows, limit, lambda row: (row.created_at, row.id))
+    return ReportPage(
+        items=[_report_view(session, report) for report in page], next_cursor=next_cursor
+    )
+
+
+def _remove_subject(session: Session, report: ContentReport) -> None:
+    """Delete the reported content, if it is still there.
+
+    A profile is emptied rather than the account deleted: the person behind it
+    is still applying to universities, and their research is not the
+    community's to take away. This is the same operation as leaving the
+    community, performed by somebody else.
+    """
+    kind = report.subject_type
+    if kind == ReportTarget.PROFILE:
+        profile = session.get(SocialProfile, report.subject_id)
+        if profile is not None:
+            user = _account(session, profile.user_id)
+            for reply in list(user.post_replies):
+                session.delete(reply)
+            for own_post in list(user.posts):
+                session.delete(own_post)
+            session.delete(profile)
+        return
+
+    row: Post | PostReply | DirectMessage | None = None
+    if kind == ReportTarget.POST:
+        row = session.get(Post, report.subject_id)
+    elif kind == ReportTarget.REPLY:
+        row = session.get(PostReply, report.subject_id)
+    elif kind == ReportTarget.MESSAGE:
+        row = session.get(DirectMessage, report.subject_id)
+    if row is not None:
+        session.delete(row)
+
+
+@router.post("/moderation/reports/{report_id}", response_model=ReportView)
+def resolve_report(
+    report_id: str,
+    payload: ResolveIn,
+    principal: Principal = Depends(require_moderator),
+    session: Session = Depends(get_session),
+) -> ReportView:
+    """Act on a report, or close it having decided there is nothing to do.
+
+    Removing content that has already gone still closes the report rather than
+    failing: the author deleting their own post is the outcome the report asked
+    for, and a queue that cannot record that fills with work nobody can finish.
+
+    Who resolved it and what they wrote is kept on the row. Deleting somebody
+    else's words is not a traceless act.
+    """
+    report = session.get(ContentReport, report_id)
+    if report is None:
+        raise HTTPException(404, "No such report.")
+    if report.status != ReportStatus.OPEN.value:
+        raise HTTPException(409, "This report has already been resolved.")
+
+    if payload.action == "remove":
+        _remove_subject(session, report)
+
+    report.status = (
+        ReportStatus.ACTIONED.value if payload.action == "remove" else ReportStatus.DISMISSED.value
+    )
+    report.resolved_by = principal.email
+    report.resolved_at = utcnow()
+    report.resolution_note = payload.note
+    session.commit()
+    session.refresh(report)
+    return _report_view(session, report)

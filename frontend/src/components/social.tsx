@@ -10,6 +10,7 @@
 
 import { useState, type ReactNode } from 'react';
 import { Chip } from '@/components/primitives';
+import { ReportButton } from '@/components/moderation';
 import type { Tone } from '@/lib/format';
 // `t` rather than the hook: these are leaf components, and the screens above
 // them subscribe to the locale, so a language change re-renders them anyway.
@@ -170,12 +171,14 @@ export function Retract({
 }
 
 export function Post({
-  post, onOpenPerson, onDelete, footer, children,
+  post, onOpenPerson, onDelete, reportable = false, footer, children,
 }: {
   post: PostView;
   onOpenPerson?: (userId: string) => void;
   /** Passed only when the reader wrote this post. */
   onDelete?: () => Promise<void>;
+  /** Offered on someone else's post: you do not report your own words. */
+  reportable?: boolean;
   footer?: ReactNode;
   children?: ReactNode;
 }) {
@@ -183,7 +186,7 @@ export function Post({
     <article className="post" data-testid={`post-${post.id}`}>
       <Byline author={post.author} at={post.created_at} onOpenPerson={onOpenPerson} />
       <Body text={post.body} />
-      {(footer || onDelete) && (
+      {(footer || onDelete || reportable) && (
         <div className="post__foot">
           {footer}
           {onDelete && (
@@ -196,6 +199,7 @@ export function Post({
               onConfirm={onDelete}
             />
           )}
+          {reportable && <ReportButton subjectType="post" subjectId={post.id} />}
         </div>
       )}
       {children}

@@ -25,6 +25,9 @@ MAX_POST_TAGS = 5
 #: A private message is a message, not a file transfer.
 MESSAGE_MAX_CHARS = 2000
 
+#: A report is a pointer plus a sentence, not an essay.
+REPORT_NOTE_MAX_CHARS = 500
+
 #: A dot or an apostrophe abbreviates a word; it does not separate two.
 _ABBREVIATION_MARKS = re.compile(r"[.'’ʼ`\"]")
 #: Everything else that is not a letter or a digit separates words. `\w` is

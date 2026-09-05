@@ -26,6 +26,11 @@ import type {
   ProfileValidationReport,
   ProgramResult,
   ReplyView,
+  ReporterRef,
+  ReportReason,
+  ReportStatus,
+  ReportTarget,
+  ReportView,
   RunView,
   ShortlistSummary,
   StoredProfile,
@@ -259,6 +264,29 @@ export const api = {
   // would make an offset page repeat one and drop the other.
   socialMe: () => request<MyProfile>('/api/social/me'),
   leaveCommunity: () => request<void>('/api/social/me', { method: 'DELETE' }),
+
+  // --- Blocking and moderation ---
+  blockedPeople: () => request<{ items: ReporterRef[] }>('/api/social/blocks'),
+  blockPerson: (userId: string) =>
+    request<void>(`/api/social/blocks/${userId}`, { method: 'POST' }),
+  unblockPerson: (userId: string) =>
+    request<void>(`/api/social/blocks/${userId}`, { method: 'DELETE' }),
+  reportContent: (payload: {
+    subject_type: ReportTarget;
+    subject_id: string;
+    reason: ReportReason;
+    note: string;
+  }) => request<ReportView>('/api/social/reports', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  }),
+  moderationQueue: (status: ReportStatus = 'open', cursor?: string | null) =>
+    request<Page<ReportView>>(`/api/social/moderation/reports${query({ status, cursor })}`),
+  resolveReport: (reportId: string, action: 'remove' | 'dismiss', note: string) =>
+    request<ReportView>(`/api/social/moderation/reports/${reportId}`, {
+      method: 'POST',
+      body: JSON.stringify({ action, note }),
+    }),
   conversations: (cursor?: string | null) =>
     request<Page<ConversationView>>(`/api/social/messages${query({ cursor })}`),
   // One number for the badge, so the navigation costs one request rather than

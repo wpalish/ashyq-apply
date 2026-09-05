@@ -133,6 +133,9 @@ def vocabulary() -> dict:
         "document_owner": [e.value for e in enums.DocumentOwner],
         "applicant_status": [e.value for e in enums.ApplicantStatus],
         "direct_message_policy": [e.value for e in enums.DirectMessagePolicy],
+        "report_reason": [e.value for e in enums.ReportReason],
+        "report_target": [e.value for e in enums.ReportTarget],
+        "report_status": [e.value for e in enums.ReportStatus],
     }
 
 

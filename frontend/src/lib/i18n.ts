@@ -188,6 +188,59 @@ const EN = {
     'Everything here is public to other applicants. Your applicant case is not.',
 
   'nav.messages': 'Messages',
+  'nav.moderation': 'Moderation queue',
+
+  'report.action': 'Report',
+  'report.title': 'Report this to a moderator',
+  'report.reason': 'What is wrong with it',
+  'report.harassment': 'Harassment or abuse',
+  'report.personal_information': "Someone's private information",
+  'report.impersonation': 'Pretending to be someone else',
+  'report.spam': 'Spam or advertising',
+  'report.misleading_advice': 'A rumour about a university stated as fact',
+  'report.other': 'Something else',
+  'report.note': 'Anything the moderator should know (optional)',
+  'report.send': 'Send report',
+  'report.sending': 'Sending…',
+  'report.cancel': 'Cancel',
+  'report.sent': 'Reported. A moderator will look at it.',
+  'report.already': 'You have already reported this.',
+  'report.slow':
+    'Reports are read by a person, so this is not instant. If someone is reaching you and you '
+    + 'want it to stop now, block them — that works immediately.',
+
+  'block.action': 'Block',
+  'block.unblock': 'Unblock',
+  'block.confirm': 'Block this applicant?',
+  'block.explain':
+    'They will not be able to write to you or answer your posts, and neither of you will see '
+    + 'the other in the feed or in Discover. They are not told.',
+  'block.blocked': 'Blocked',
+  'block.list': 'People you blocked',
+  'block.listEmpty': 'You have not blocked anyone.',
+
+  'moderation.title': 'Moderation queue',
+  'moderation.lede':
+    'Reports from the community, oldest first. Removing something deletes it for everyone and '
+    + 'records who did it.',
+  'moderation.open': 'Open',
+  'moderation.actioned': 'Acted on',
+  'moderation.dismissed': 'Dismissed',
+  'moderation.empty': 'Nothing waiting',
+  'moderation.emptyHint': 'Reports appear here as the community files them.',
+  'moderation.loading': 'Loading the queue',
+  'moderation.reportedBy': 'Reported by',
+  'moderation.about': 'About',
+  'moderation.excerpt': 'What it said when it was reported',
+  'moderation.gone': 'This content has since been deleted.',
+  'moderation.remove': 'Remove it',
+  'moderation.dismiss': 'Leave it',
+  'moderation.resolutionNote': 'Why (recorded with your name)',
+  'moderation.resolvedBy': 'Resolved by',
+  'moderation.subjectPost': 'a post',
+  'moderation.subjectReply': 'an answer',
+  'moderation.subjectMessage': 'a private message',
+  'moderation.subjectProfile': 'a profile',
   'messages.title': 'Messages',
   'messages.lede':
     'Private conversations. Nobody else can read them, and nothing you write here appears in '
@@ -365,6 +418,59 @@ const RU: Partial<Record<MessageKey, string>> = {
     'Всё это видно другим абитуриентам. Ваше дело по поступлению — нет.',
 
   'nav.messages': 'Сообщения',
+  'nav.moderation': 'Очередь модерации',
+
+  'report.action': 'Пожаловаться',
+  'report.title': 'Пожаловаться модератору',
+  'report.reason': 'Что здесь не так',
+  'report.harassment': 'Травля или оскорбления',
+  'report.personal_information': 'Чужие личные данные',
+  'report.impersonation': 'Выдаёт себя за другого',
+  'report.spam': 'Спам или реклама',
+  'report.misleading_advice': 'Слух о вузе подан как факт',
+  'report.other': 'Другое',
+  'report.note': 'Что стоит знать модератору (необязательно)',
+  'report.send': 'Отправить жалобу',
+  'report.sending': 'Отправляем…',
+  'report.cancel': 'Отмена',
+  'report.sent': 'Жалоба отправлена. Её посмотрит человек.',
+  'report.already': 'Вы уже жаловались на это.',
+  'report.slow':
+    'Жалобы читает человек, поэтому это не мгновенно. Если вас достают прямо сейчас — '
+    + 'заблокируйте: это срабатывает сразу.',
+
+  'block.action': 'Заблокировать',
+  'block.unblock': 'Разблокировать',
+  'block.confirm': 'Заблокировать этого абитуриента?',
+  'block.explain':
+    'Он не сможет вам писать и отвечать на ваши посты, и вы перестанете видеть друг друга в '
+    + 'ленте и в поиске. Ему об этом не сообщат.',
+  'block.blocked': 'Заблокирован',
+  'block.list': 'Заблокированные',
+  'block.listEmpty': 'Вы никого не блокировали.',
+
+  'moderation.title': 'Очередь модерации',
+  'moderation.lede':
+    'Жалобы сообщества, старые сверху. Удаление убирает содержимое у всех и записывает, кто '
+    + 'это сделал.',
+  'moderation.open': 'Открытые',
+  'moderation.actioned': 'Удалено',
+  'moderation.dismissed': 'Отклонено',
+  'moderation.empty': 'Ничего не ждёт',
+  'moderation.emptyHint': 'Жалобы появятся здесь, как только их подадут.',
+  'moderation.loading': 'Загружаем очередь',
+  'moderation.reportedBy': 'Пожаловался',
+  'moderation.about': 'На что',
+  'moderation.excerpt': 'Что там было написано на момент жалобы',
+  'moderation.gone': 'Это содержимое уже удалено.',
+  'moderation.remove': 'Удалить',
+  'moderation.dismiss': 'Оставить',
+  'moderation.resolutionNote': 'Почему (запишется вместе с вашим именем)',
+  'moderation.resolvedBy': 'Решение принял',
+  'moderation.subjectPost': 'пост',
+  'moderation.subjectReply': 'ответ',
+  'moderation.subjectMessage': 'личное сообщение',
+  'moderation.subjectProfile': 'профиль',
   'messages.title': 'Сообщения',
   'messages.lede':
     'Личная переписка. Её не видит никто посторонний, и написанное здесь не попадает ни в '
@@ -536,6 +642,59 @@ const KK: Partial<Record<MessageKey, string>> = {
     'Мұның бәрін басқа талапкерлер көреді. Түсу бойынша ісіңізді — көрмейді.',
 
   'nav.messages': 'Хабарламалар',
+  'nav.moderation': 'Модерация кезегі',
+
+  'report.action': 'Шағымдану',
+  'report.title': 'Модераторға шағымдану',
+  'report.reason': 'Мұнда не дұрыс емес',
+  'report.harassment': 'Қудалау немесе қорлау',
+  'report.personal_information': 'Бөгде адамның жеке деректері',
+  'report.impersonation': 'Өзін басқа адам етіп көрсетеді',
+  'report.spam': 'Спам немесе жарнама',
+  'report.misleading_advice': 'Университет туралы қауесет факт ретінде айтылған',
+  'report.other': 'Басқа',
+  'report.note': 'Модератор білуі керек нәрсе (міндетті емес)',
+  'report.send': 'Шағым жіберу',
+  'report.sending': 'Жіберілуде…',
+  'report.cancel': 'Болдырмау',
+  'report.sent': 'Шағым жіберілді. Оны адам қарайды.',
+  'report.already': 'Сіз бұған бұрын шағымдансыз.',
+  'report.slow':
+    'Шағымды адам оқиды, сондықтан бұл бірден болмайды. Егер сізді дәл қазір мазаласа — '
+    + 'бұғаттаңыз: ол лезде жұмыс істейді.',
+
+  'block.action': 'Бұғаттау',
+  'block.unblock': 'Бұғаттан шығару',
+  'block.confirm': 'Осы талапкер бұғатталсын ба?',
+  'block.explain':
+    'Ол сізге жаза алмайды және жазбаларыңызға жауап бере алмайды, әрі екеуіңіз бір-біріңізді '
+    + 'таспадан да, іздеуден де көрмейсіздер. Оған бұл айтылмайды.',
+  'block.blocked': 'Бұғатталған',
+  'block.list': 'Бұғатталғандар',
+  'block.listEmpty': 'Сіз ешкімді бұғаттамағансыз.',
+
+  'moderation.title': 'Модерация кезегі',
+  'moderation.lede':
+    'Қауымдастықтың шағымдары, ескісі жоғарыда. Жою мазмұнды бәрінен алып тастайды және оны '
+    + 'кім жасағанын жазып қояды.',
+  'moderation.open': 'Ашық',
+  'moderation.actioned': 'Жойылған',
+  'moderation.dismissed': 'Қабылданбаған',
+  'moderation.empty': 'Күтіп тұрған ештеңе жоқ',
+  'moderation.emptyHint': 'Шағымдар түскен сайын осында шығады.',
+  'moderation.loading': 'Кезек жүктелуде',
+  'moderation.reportedBy': 'Шағымданған',
+  'moderation.about': 'Не туралы',
+  'moderation.excerpt': 'Шағым түскен кездегі мәтін',
+  'moderation.gone': 'Бұл мазмұн әлдеқашан жойылған.',
+  'moderation.remove': 'Жою',
+  'moderation.dismiss': 'Қалдыру',
+  'moderation.resolutionNote': 'Себебі (атыңызбен бірге жазылады)',
+  'moderation.resolvedBy': 'Шешім қабылдаған',
+  'moderation.subjectPost': 'жазба',
+  'moderation.subjectReply': 'жауап',
+  'moderation.subjectMessage': 'жеке хабарлама',
+  'moderation.subjectProfile': 'профиль',
   'messages.title': 'Хабарламалар',
   'messages.lede':
     'Жеке хат алмасу. Оны бөгде адам көрмейді, әрі мұнда жазылған нәрсе таспаға да, '

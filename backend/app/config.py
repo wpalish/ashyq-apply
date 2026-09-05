@@ -101,6 +101,18 @@ class Settings(BaseSettings):
     #: would let any client invent an address and walk around the limiter.
     trust_proxy_headers: bool = False
 
+    #: Who may read the moderation queue and act on it, as a comma-separated
+    #: list of account emails.
+    #:
+    #: Deliberately not a role in the database. A workspace owner is the admin
+    #: of their own tenant, and the community is not theirs — it spans every
+    #: workspace — so tenant roles cannot grant this. A setting the deployment
+    #: operator edits is crude, but it puts the decision where it belongs and
+    #: needs no table, no grant flow and no way for one applicant to make
+    #: themselves a moderator. A real deployment with more than a handful of
+    #: moderators should replace it.
+    moderator_emails: str = ""
+
     #: `/metrics` for a Prometheus scraper. It carries no applicant data, only
     #: aggregates, but traffic and queue depth are still not public facts:
     #: production must either set a token or switch the endpoint off.
@@ -118,6 +130,10 @@ class Settings(BaseSettings):
     @property
     def cors_origin_list(self) -> list[str]:
         return [o.strip() for o in self.cors_origins.split(",") if o.strip()]
+
+    @property
+    def moderator_email_list(self) -> list[str]:
+        return [e.strip().casefold() for e in self.moderator_emails.split(",") if e.strip()]
 
     def ensure_dirs(self) -> None:
         directories = [self.cache_dir, self.export_dir]
