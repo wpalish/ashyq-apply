@@ -61,7 +61,7 @@ describe('Body', () => {
 
 describe('Retract', () => {
   it('asks before deleting, and names what goes', () => {
-    render(<Retract what="post and its answers" onConfirm={vi.fn()} />);
+    render(<Retract question="Delete this post and its answers?" onConfirm={vi.fn()} />);
 
     fireEvent.click(screen.getByRole('button', { name: 'Delete' }));
     expect(screen.getByText('Delete this post and its answers?')).toBeInTheDocument();
@@ -69,7 +69,7 @@ describe('Retract', () => {
 
   it('deletes nothing if you change your mind', () => {
     const onConfirm = vi.fn();
-    render(<Retract what="post" onConfirm={onConfirm} />);
+    render(<Retract question="Delete this post?" onConfirm={onConfirm} />);
 
     fireEvent.click(screen.getByRole('button', { name: 'Delete' }));
     fireEvent.click(screen.getByRole('button', { name: 'Keep it' }));
@@ -80,7 +80,7 @@ describe('Retract', () => {
 
   it('deletes once confirmed', async () => {
     const onConfirm = vi.fn().mockResolvedValue(undefined);
-    render(<Retract what="answer" onConfirm={onConfirm} />);
+    render(<Retract question="Delete this answer?" onConfirm={onConfirm} />);
 
     fireEvent.click(screen.getByRole('button', { name: 'Delete' }));
     await act(async () => {

@@ -9,15 +9,19 @@ import { useCallback, useEffect, useState } from 'react';
 import { api, ApiError } from '@/api/client';
 import { Empty, Loading, Notice } from '@/components/primitives';
 import { PersonTile } from '@/components/social';
+import type { MessageKey } from '@/lib/i18n';
+import { useTranslation } from '@/lib/useTranslation';
 import type { PeopleFilters, PersonCard } from '@/types';
 
-const FIELDS: { key: keyof PeopleFilters; label: string; placeholder: string }[] = [
-  { key: 'city', label: 'City', placeholder: 'Astana' },
-  { key: 'university', label: 'University', placeholder: 'KBTU' },
-  { key: 'major', label: 'Major', placeholder: 'Computer science' },
+const FIELDS: { key: keyof PeopleFilters; label: MessageKey; placeholder: string }[] = [
+  // The placeholders are proper nouns, so they read the same in every language.
+  { key: 'city', label: 'discover.city', placeholder: 'Astana' },
+  { key: 'university', label: 'discover.university', placeholder: 'KBTU' },
+  { key: 'major', label: 'discover.major', placeholder: 'Computer science' },
 ];
 
 export function DiscoverScreen({ onOpenPerson }: { onOpenPerson: (id: string) => void }) {
+  const { t } = useTranslation();
   const [filters, setFilters] = useState<PeopleFilters>({});
   const [people, setPeople] = useState<PersonCard[]>([]);
   const [cursor, setCursor] = useState<string | null>(null);
@@ -45,17 +49,16 @@ export function DiscoverScreen({ onOpenPerson }: { onOpenPerson: (id: string) =>
   return (
     <div className="stack">
       <div className="screen__head">
-        <h1 className="screen__title">Find applicants like you</h1>
-        <p className="screen__lede">
-          Everyone listed here chose to be listed. Spelling does not matter — KBTU, kbtu and
-          K.B.T.U. are one university to the filter.
-        </p>
+        <h1 className="screen__title">{t('discover.title')}</h1>
+        <p className="screen__lede">{t('discover.lede')}</p>
       </div>
 
       <div className="filters">
         {FIELDS.map((field) => (
           <div className="field" key={field.key}>
-            <label className="field__label xs" htmlFor={`discover-${field.key}`}>{field.label}</label>
+            <label className="field__label xs" htmlFor={`discover-${field.key}`}>
+              {t(field.label)}
+            </label>
             <input
               id={`discover-${field.key}`}
               placeholder={field.placeholder}
@@ -67,20 +70,20 @@ export function DiscoverScreen({ onOpenPerson }: { onOpenPerson: (id: string) =>
           </div>
         ))}
         <div className="field">
-          <label className="field__label xs" htmlFor="discover-status">Status</label>
+          <label className="field__label xs" htmlFor="discover-status">{t('discover.status')}</label>
           <select
             id="discover-status"
             value={filters.status ?? ''}
             onChange={(event) => setFilters((f) => ({ ...f, status: event.target.value }))}
           >
-            <option value="">Any status</option>
-            <option value="accepted">Accepted</option>
-            <option value="waitlist">On a waitlist</option>
+            <option value="">{t('discover.anyStatus')}</option>
+            <option value="accepted">{t('person.statusAccepted')}</option>
+            <option value="waitlist">{t('person.statusWaitlist')}</option>
           </select>
         </div>
         {filtered && (
           <button className="btn btn--sm btn--ghost" type="button" onClick={() => setFilters({})}>
-            Clear filters
+            {t('community.clearFilters')}
           </button>
         )}
       </div>
@@ -93,19 +96,15 @@ export function DiscoverScreen({ onOpenPerson }: { onOpenPerson: (id: string) =>
         ))}
       </div>
 
-      {loading && <Loading label="Looking" />}
+      {loading && <Loading label={t('discover.looking')} />}
       {!loading && people.length === 0 && (
-        <Empty title={filtered ? 'Nobody matches yet' : 'Nobody has joined yet'}>
-          <p className="small">
-            {filtered
-              ? 'Try one filter at a time — city alone usually finds the most people.'
-              : 'Create your own profile and you will be the first person here.'}
-          </p>
+        <Empty title={t(filtered ? 'discover.noMatch' : 'discover.empty')}>
+          <p className="small">{t(filtered ? 'discover.noMatchHint' : 'discover.emptyHint')}</p>
         </Empty>
       )}
       {cursor && !loading && (
         <button className="btn" type="button" onClick={() => load(filters, cursor)}>
-          Show more people
+          {t('discover.more')}
         </button>
       )}
     </div>

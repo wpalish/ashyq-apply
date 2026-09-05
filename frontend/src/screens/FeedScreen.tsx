@@ -10,11 +10,21 @@ import { useCallback, useEffect, useState } from 'react';
 import { api, ApiError } from '@/api/client';
 import { Empty, Loading, Notice, Panel } from '@/components/primitives';
 import { Byline, Composer, Post, Retract } from '@/components/social';
+import { useTranslation } from '@/lib/useTranslation';
 import type { FeedFilters, Page, PostView, ReplyView } from '@/types';
 
 function Thread({
-  postId, myUserId, onOpenPerson,
-}: { postId: string; myUserId: string | null; onOpenPerson: (id: string) => void }) {
+  postId, myUserId, onOpenPerson, onCountChange,
+}: {
+  postId: string;
+  myUserId: string | null;
+  onOpenPerson: (id: string) => void;
+  /** The count lives on the post in the feed's list, not in this component.
+   *  Without this the footer kept saying "Answer" under a thread you had just
+   *  answered, and "2 answers" over a thread showing one. */
+  onCountChange: (delta: number) => void;
+}) {
+  const { t } = useTranslation();
   const [page, setPage] = useState<Page<ReplyView> | null>(null);
   const [replies, setReplies] = useState<ReplyView[]>([]);
   const [error, setError] = useState('');
@@ -35,7 +45,7 @@ function Thread({
   return (
     <div className="thread">
       {error && <Notice kind="risk">{error}</Notice>}
-      {page === null && !error && <Loading label="Opening the thread" />}
+      {page === null && !error && <Loading label={t('community.openingThread')} />}
       {replies.map((reply) => (
         <div className="reply" key={reply.id} data-testid={`reply-${reply.id}`}>
           <Byline author={reply.author} at={reply.created_at} onOpenPerson={onOpenPerson} />
@@ -43,10 +53,11 @@ function Thread({
           {reply.author.user_id === myUserId && (
             <div className="post__foot">
               <Retract
-                what="answer"
+                question={t('community.deleteAnswerQ')}
                 onConfirm={async () => {
                   await api.deleteReply(postId, reply.id);
                   setReplies((prev) => prev.filter((item) => item.id !== reply.id));
+                  onCountChange(-1);
                 }}
               />
             </div>
@@ -54,22 +65,23 @@ function Thread({
         </div>
       ))}
       {page !== null && replies.length === 0 && (
-        <p className="small muted">No answers yet. Be the first.</p>
+        <p className="small muted">{t('community.noAnswers')}</p>
       )}
       {page?.next_cursor && (
         <button className="btn btn--sm btn--ghost" type="button" onClick={() => load(page.next_cursor)}>
-          Show earlier answers
+          {t('community.earlierAnswers')}
         </button>
       )}
       <Composer
-        placeholder="Answer this"
-        submitLabel="Reply"
+        placeholder={t('community.answerPlaceholder')}
+        submitLabel={t('community.reply')}
         busy={busy}
         onSubmit={async (body) => {
           setBusy(true);
           try {
             const created = await api.createReply(postId, body);
             setReplies((prev) => [...prev, created]);
+            onCountChange(1);
             setError('');
           } catch (problem) {
             setError(problem instanceof ApiError ? problem.message : 'Could not post that reply.');
@@ -90,6 +102,7 @@ export function FeedScreen({
   onOpenPerson: (id: string) => void;
   onJoin: () => void;
 }) {
+  const { t } = useTranslation();
   const [filters, setFilters] = useState<FeedFilters>({});
   const [posts, setPosts] = useState<PostView[]>([]);
   const [cursor, setCursor] = useState<string | null>(null);
@@ -116,33 +129,37 @@ export function FeedScreen({
 
   const filtered = Object.values(filters).some(Boolean);
 
+  /**
+   * "Answer" with the count beside it, rather than "2 answers".
+   *
+   * Russian has three plural forms and Kazakh has none, and this dictionary has
+   * no plural rules. A parenthesised count is right in all three languages and
+   * needs no rule to be invented for two of them.
+   */
+  const answersLabel = (count: number) =>
+    count === 0 ? t('community.answer') : `${t('community.answer')} (${count})`;
+
   return (
     <div className="stack community-column">
       <div className="screen__head">
-        <h1 className="screen__title">Community</h1>
-        <p className="screen__lede">
-          Applicants aiming at the same cities and universities. What people write here is
-          their own experience — it is not verified against a university page.
-        </p>
+        <h1 className="screen__title">{t('community.title')}</h1>
+        <p className="screen__lede">{t('community.lede')}</p>
       </div>
 
       {!joined && (
         <Notice kind="info">
-          <div style={{ flex: 1 }}>
-            You can read the feed now. Create a community profile to post, reply and be
-            findable by people applying where you are.
-          </div>
+          <div style={{ flex: 1 }}>{t('community.joinPrompt')}</div>
           <button className="btn btn--sm btn--primary" type="button" onClick={onJoin}>
-            Create profile
+            {t('community.createProfile')}
           </button>
         </Notice>
       )}
 
       {joined && (
-        <Panel title="Write a post" hint="Tag a university or a city with # so the right people find it.">
+        <Panel title={t('community.write')} hint={t('community.writeHint')}>
           <Composer
-            placeholder="Ask something, or say where you are applying"
-            submitLabel="Post"
+            placeholder={t('community.placeholder')}
+            submitLabel={t('community.post')}
             busy={posting}
             onSubmit={async (body) => {
               setPosting(true);
@@ -162,7 +179,7 @@ export function FeedScreen({
 
       <div className="filters">
         <div className="field">
-          <label className="field__label xs" htmlFor="feed-tag">Tag</label>
+          <label className="field__label xs" htmlFor="feed-tag">{t('community.filterTag')}</label>
           <input
             id="feed-tag"
             placeholder="KBTU"
@@ -171,7 +188,7 @@ export function FeedScreen({
           />
         </div>
         <div className="field">
-          <label className="field__label xs" htmlFor="feed-city">Applying to city</label>
+          <label className="field__label xs" htmlFor="feed-city">{t('community.filterCity')}</label>
           <input
             id="feed-city"
             placeholder="Astana"
@@ -180,20 +197,22 @@ export function FeedScreen({
           />
         </div>
         <div className="field">
-          <label className="field__label xs" htmlFor="feed-status">Author status</label>
+          <label className="field__label xs" htmlFor="feed-status">
+            {t('community.filterAuthorStatus')}
+          </label>
           <select
             id="feed-status"
             value={filters.status ?? ''}
             onChange={(event) => setFilters((f) => ({ ...f, status: event.target.value }))}
           >
-            <option value="">Anyone</option>
-            <option value="accepted">Accepted</option>
-            <option value="waitlist">On a waitlist</option>
+            <option value="">{t('community.anyone')}</option>
+            <option value="accepted">{t('person.statusAccepted')}</option>
+            <option value="waitlist">{t('person.statusWaitlist')}</option>
           </select>
         </div>
         {filtered && (
           <button className="btn btn--sm btn--ghost" type="button" onClick={() => setFilters({})}>
-            Clear filters
+            {t('community.clearFilters')}
           </button>
         )}
       </div>
@@ -222,33 +241,42 @@ export function FeedScreen({
                 onClick={() => setOpenThread((open) => (open === post.id ? null : post.id))}
               >
                 {openThread === post.id
-                  ? 'Hide answers'
-                  : post.reply_count === 0
-                    ? 'Answer'
-                    : `${post.reply_count} answer${post.reply_count === 1 ? '' : 's'}`}
+                  ? t('community.hideAnswers')
+                  : answersLabel(post.reply_count)}
               </button>
             }
           >
             {openThread === post.id && (
-              <Thread postId={post.id} myUserId={myUserId} onOpenPerson={onOpenPerson} />
+              <Thread
+                postId={post.id}
+                myUserId={myUserId}
+                onOpenPerson={onOpenPerson}
+                onCountChange={(delta) =>
+                  setPosts((prev) =>
+                    prev.map((item) =>
+                      item.id === post.id
+                        ? { ...item, reply_count: Math.max(0, item.reply_count + delta) }
+                        : item,
+                    ),
+                  )
+                }
+              />
             )}
           </Post>
         ))}
       </div>
 
-      {loading && <Loading label="Loading posts" />}
+      {loading && <Loading label={t('community.loadingPosts')} />}
       {!loading && posts.length === 0 && (
-        <Empty title={filtered ? 'Nothing matches those filters' : 'No posts yet'}>
+        <Empty title={t(filtered ? 'community.noMatch' : 'community.noPosts')}>
           <p className="small">
-            {filtered
-              ? 'Widen the filters, or clear them to see everything.'
-              : 'The first post here sets the tone. Ask the question you could not find an answer to.'}
+            {t(filtered ? 'community.noMatchHint' : 'community.noPostsHint')}
           </p>
         </Empty>
       )}
       {cursor && !loading && (
         <button className="btn" type="button" onClick={() => load(filters, cursor)}>
-          Load older posts
+          {t('community.olderPosts')}
         </button>
       )}
     </div>

@@ -75,6 +75,21 @@ describe('the gaps are deliberate', () => {
     }
   });
 
+  it('leaves nothing in the community untranslated', () => {
+    // The community says post, answer, city, major — ordinary words, none of
+    // them in the glossary. There is no excuse for a gap here, and a screen
+    // half in English is the one a Kazakh school leaver actually reads most.
+    for (const locale of ['ru', 'kk'] as const) {
+      const gaps = untranslated(locale).filter(
+        (key) => key.startsWith('community.')
+          || key.startsWith('discover.')
+          || key.startsWith('person.')
+          || key.startsWith('leave.'),
+      );
+      expect(gaps, `${locale} is missing community strings`).toEqual([]);
+    }
+  });
+
   it('translates the ordinary interface words in both locales', () => {
     for (const locale of ['ru', 'kk'] as const) {
       const gaps = untranslated(locale);

@@ -11,6 +11,9 @@
 import { useState, type ReactNode } from 'react';
 import { Chip } from '@/components/primitives';
 import type { Tone } from '@/lib/format';
+// `t` rather than the hook: these are leaf components, and the screens above
+// them subscribe to the locale, so a language change re-renders them anyway.
+import { t } from '@/lib/i18n';
 import type { ApplicantStatus, AuthorRef, PersonCard, PostView } from '@/types';
 
 /** Mirrors POST_MAX_CHARS in `backend/app/domain/social.py`.
@@ -18,29 +21,25 @@ import type { ApplicantStatus, AuthorRef, PersonCard, PostView } from '@/types';
 export const POST_MAX_CHARS = 500;
 export const BIO_MAX_CHARS = 280;
 
-export const STATUS_LABEL: Record<string, string> = {
-  accepted: 'Accepted',
-  waitlist: 'On a waitlist',
-};
-
 export const STATUS_TONE: Record<string, Tone> = {
   accepted: 'ok',
   waitlist: 'warn',
 };
 
+const STATUS_KEY = {
+  accepted: 'person.statusAccepted',
+  waitlist: 'person.statusWaitlist',
+} as const;
+
 export function statusLabel(status: ApplicantStatus | null): string {
-  return (status && STATUS_LABEL[status]) || 'Status not stated';
+  return t(status ? STATUS_KEY[status] : 'person.statusUnstated');
 }
 
 export function StatusChip({ status }: { status: ApplicantStatus | null }) {
   return (
     <Chip
       tone={status ? STATUS_TONE[status] : 'neutral'}
-      title={
-        status
-          ? 'What this applicant says about their own applications.'
-          : 'This applicant has not said where they stand.'
-      }
+      title={t(status ? 'person.statusStatedTitle' : 'person.statusUnstatedTitle')}
     >
       {statusLabel(status)}
     </Chip>
@@ -131,21 +130,21 @@ export function Body({ text }: { text: string }) {
  * so the question is not the same question for a post and for a reply.
  */
 export function Retract({
-  what, onConfirm,
-}: { what: string; onConfirm: () => Promise<void> }) {
+  question, onConfirm,
+}: { question: string; onConfirm: () => Promise<void> }) {
   const [asking, setAsking] = useState(false);
   const [busy, setBusy] = useState(false);
 
   if (!asking) {
     return (
       <button type="button" className="linkish linkish--quiet" onClick={() => setAsking(true)}>
-        Delete
+        {t('community.delete')}
       </button>
     );
   }
   return (
     <span className="row row--tight">
-      <span className="xs muted">Delete this {what}?</span>
+      <span className="xs muted">{question}</span>
       <button
         type="button"
         className="btn btn--sm btn--danger"
@@ -160,10 +159,10 @@ export function Retract({
           }
         }}
       >
-        {busy ? 'Deleting…' : 'Yes, delete'}
+        {busy ? t('community.deleting') : t('community.deleteConfirm')}
       </button>
       <button type="button" className="btn btn--sm" onClick={() => setAsking(false)}>
-        Keep it
+        {t('community.keepIt')}
       </button>
     </span>
   );
@@ -188,7 +187,11 @@ export function Post({
           {footer}
           {onDelete && (
             <Retract
-              what={post.reply_count > 0 ? 'post and its answers' : 'post'}
+              question={t(
+                post.reply_count > 0
+                  ? 'community.deletePostThreadQ'
+                  : 'community.deletePostQ',
+              )}
               onConfirm={onDelete}
             />
           )}
@@ -213,7 +216,7 @@ export function PersonTile({
       <Avatar name={person.display_name} status={person.status} large />
       <span className="person__body">
         <span className="person__name">{person.display_name}</span>
-        <span className="person__aim">{aims || 'Has not said where they are aiming'}</span>
+        <span className="person__aim">{aims || t('discover.noAim')}</span>
         {/* The status sits under the name rather than in a column of its own:
             a third column squeezed every name onto two lines. */}
         <span className="person__meta">
@@ -276,16 +279,18 @@ export function Composer({
       />
       <div className="composer__foot">
         <div className="composer__tags">
-          {tags.length > 0 && <span className="xs faint">Will be tagged</span>}
+          {tags.length > 0 && <span className="xs faint">{t('community.willBeTagged')}</span>}
           {tags.map((tag) => (
             <Chip key={tag} tone="accent" mono>{tag}</Chip>
           ))}
         </div>
         <span className={`composer__count ${left < 0 ? 'is-over' : ''}`} aria-live="polite">
-          {left < 0 ? `${-left} over` : `${left} left`}
+          {left < 0
+            ? `${-left} ${t('community.charsOver')}`
+            : `${left} ${t('community.charsLeft')}`}
         </span>
         <button className="btn btn--primary btn--sm" type="submit" disabled={!canSend}>
-          {busy ? 'Posting…' : submitLabel}
+          {busy ? t('community.posting') : submitLabel}
         </button>
       </div>
     </form>

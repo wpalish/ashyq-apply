@@ -10,6 +10,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { api, ApiError } from '@/api/client';
 import { Empty, Loading, Notice, Panel } from '@/components/primitives';
 import { Avatar, BIO_MAX_CHARS, Post, StatusChip } from '@/components/social';
+import { useTranslation } from '@/lib/useTranslation';
 import type { ApplicantStatus, PersonCard, PostView, ProfileInput } from '@/types';
 
 const MAX_UNIVERSITIES = 10;
@@ -17,6 +18,7 @@ const MAX_UNIVERSITIES = 10;
 function ProfileForm({
   initial, onSaved,
 }: { initial: PersonCard | null; onSaved: (saved: PersonCard) => void }) {
+  const { t } = useTranslation();
   const [status, setStatus] = useState<ApplicantStatus | ''>(initial?.status ?? '');
   const [city, setCity] = useState(initial?.target_city ?? '');
   const [major, setMajor] = useState(initial?.target_major ?? '');
@@ -57,22 +59,22 @@ function ProfileForm({
       {error && <Notice kind="risk">{error}</Notice>}
       <div className="grid-2">
         <div className="field">
-          <label className="field__label" htmlFor="profile-status">Where you stand</label>
+          <label className="field__label" htmlFor="profile-status">{t('person.formStatus')}</label>
           <select
             id="profile-status"
             value={status}
             onChange={(event) => setStatus(event.target.value as ApplicantStatus | '')}
           >
-            <option value="">Prefer not to say</option>
-            <option value="waitlist">On a waitlist</option>
-            <option value="accepted">Accepted</option>
+            <option value="">{t('person.formStatusNone')}</option>
+            <option value="waitlist">{t('person.statusWaitlist')}</option>
+            <option value="accepted">{t('person.statusAccepted')}</option>
           </select>
           <span className="field__hint">
-            Left unset, your profile says "not stated" rather than guessing.
+            {t('person.formStatusHint')}
           </span>
         </div>
         <div className="field">
-          <label className="field__label" htmlFor="profile-city">City you are applying to</label>
+          <label className="field__label" htmlFor="profile-city">{t('person.formCity')}</label>
           <input
             id="profile-city"
             value={city}
@@ -82,7 +84,7 @@ function ProfileForm({
           />
         </div>
         <div className="field">
-          <label className="field__label" htmlFor="profile-major">Major</label>
+          <label className="field__label" htmlFor="profile-major">{t('person.formMajor')}</label>
           <input
             id="profile-major"
             value={major}
@@ -92,7 +94,7 @@ function ProfileForm({
           />
         </div>
         <div className="field">
-          <label className="field__label" htmlFor="profile-unis">Universities you are aiming at</label>
+          <label className="field__label" htmlFor="profile-unis">{t('person.formUniversities')}</label>
           <input
             id="profile-unis"
             value={universities}
@@ -100,12 +102,12 @@ function ProfileForm({
             onChange={(event) => setUniversities(event.target.value)}
           />
           <span className="field__hint">
-            Separate with commas. Up to {MAX_UNIVERSITIES}; {parsed.length} so far.
+            {t('person.formUniversitiesHint')} {parsed.length}/{MAX_UNIVERSITIES}
           </span>
         </div>
       </div>
       <div className="field">
-        <label className="field__label" htmlFor="profile-bio">About you</label>
+        <label className="field__label" htmlFor="profile-bio">{t('person.formBio')}</label>
         <textarea
           id="profile-bio"
           rows={3}
@@ -114,14 +116,18 @@ function ProfileForm({
           placeholder="What you are working on, and what you would like to be asked about."
           onChange={(event) => setBio(event.target.value)}
         />
-        <span className="field__hint">{BIO_MAX_CHARS - bio.trim().length} characters left</span>
+        <span className="field__hint">
+          {BIO_MAX_CHARS - bio.trim().length} {t('community.charsLeft')}
+        </span>
       </div>
       <div className="row">
         <button className="btn btn--primary" type="submit" disabled={saving}>
-          {saving ? 'Saving…' : initial ? 'Save profile' : 'Create profile'}
+          {saving
+            ? t('person.saving')
+            : t(initial ? 'person.save' : 'community.createProfile')}
         </button>
         <span className="xs faint">
-          Everything here is public to other applicants. Your applicant case is not.
+          {t('person.publicWarning')}
         </span>
       </div>
     </form>
@@ -137,6 +143,7 @@ export function PersonScreen({
   onProfileSaved: (saved: PersonCard) => void;
   onLeft: () => void;
 }) {
+  const { t } = useTranslation();
   const isMe = userId === null || userId === myUserId;
   const [person, setPerson] = useState<PersonCard | null>(null);
   const [posts, setPosts] = useState<PostView[]>([]);
@@ -166,18 +173,15 @@ export function PersonScreen({
 
   useEffect(() => { void load(); }, [load]);
 
-  if (state === 'loading') return <Loading label="Loading profile" />;
+  if (state === 'loading') return <Loading label={t('person.loading')} />;
   if (state === 'error') return <Notice kind="risk">{message}</Notice>;
 
   if (state === 'absent') {
     return isMe ? (
       <div className="stack">
         <div className="screen__head">
-          <h1 className="screen__title">Join the community</h1>
-          <p className="screen__lede">
-            Registering an account did not publish anything about you. This form is what
-            puts you in Discover, and you can edit it or leave again at any time.
-          </p>
+          <h1 className="screen__title">{t('person.joinTitle')}</h1>
+          <p className="screen__lede">{t('person.joinLede')}</p>
         </div>
         <Panel>
           <ProfileForm
@@ -187,17 +191,17 @@ export function PersonScreen({
         </Panel>
       </div>
     ) : (
-      <Empty title="No profile here">
-        <p className="small">This applicant has not joined the community.</p>
+      <Empty title={t('person.noProfile')}>
+        <p className="small">{t('person.noProfileHint')}</p>
       </Empty>
     );
   }
 
   const card = person as PersonCard;
   const aims: [string, string][] = [
-    ['City', card.target_city],
-    ['Major', card.target_major],
-    ['Universities', card.universities.join(', ')],
+    [t('person.city'), card.target_city],
+    [t('person.major'), card.target_major],
+    [t('person.universities'), card.universities.join(', ')],
   ];
 
   return (
@@ -210,7 +214,7 @@ export function PersonScreen({
             <StatusChip status={card.status} />
             {isMe && (
               <button className="btn btn--sm" type="button" onClick={() => setEditing((v) => !v)}>
-                {editing ? 'Cancel' : 'Edit profile'}
+                {t(editing ? 'person.cancel' : 'person.edit')}
               </button>
             )}
           </div>
@@ -218,7 +222,7 @@ export function PersonScreen({
       </header>
 
       {editing && (
-        <Panel title="Your profile">
+        <Panel title={t('person.yourProfile')}>
           <ProfileForm
             initial={card}
             onSaved={(saved) => { setPerson(saved); setEditing(false); onProfileSaved(saved); }}
@@ -226,24 +230,22 @@ export function PersonScreen({
         </Panel>
       )}
 
-      <Panel title="Aiming at" hint="Stated by this applicant. Not checked against a university page.">
+      <Panel title={t('person.aimingAt')} hint={t('person.aimingHint')}>
         <dl className="kv">
           {aims.map(([label, value]) => (
             <div key={label} style={{ display: 'contents' }}>
               <dt>{label}</dt>
-              <dd>{value || <span className="faint">not stated</span>}</dd>
+              <dd>{value || <span className="faint">{t('person.notStated')}</span>}</dd>
             </div>
           ))}
         </dl>
         {card.bio && <p className="profile-bio">{card.bio}</p>}
       </Panel>
 
-      <Panel title={isMe ? 'Your posts' : `Posts by ${card.display_name}`}>
+      <Panel title={t(isMe ? 'person.yourPosts' : 'person.postsBy')}>
         {posts.length === 0 ? (
-          <Empty title={isMe ? 'You have not posted yet' : 'Nothing posted yet'}>
-            <p className="small">
-              {isMe ? 'Anything you post in the community shows up here.' : ' '}
-            </p>
+          <Empty title={t(isMe ? 'person.noPostsYou' : 'person.noPostsThem')}>
+            <p className="small">{isMe ? t('person.noPostsYouHint') : ' '}</p>
           </Empty>
         ) : (
           <div className="feed">
@@ -267,15 +269,11 @@ export function PersonScreen({
       </Panel>
 
       {isMe && (
-        <Panel
-          title="Leave the community"
-          hint="Your account and your applicant research stay. Your profile, your posts and your replies are deleted, and you disappear from Discover."
-        >
+        <Panel title={t('leave.title')} hint={t('leave.hint')}>
           {leaving ? (
             <div className="row">
               <strong className="small">
-                Delete your profile and {posts.length === 1 ? 'your post' : `${posts.length} posts`}?
-                This cannot be undone.
+                {t('leave.confirm')} {t('leave.confirmSuffix')}
               </strong>
               <button
                 className="btn btn--sm btn--danger"
@@ -297,15 +295,15 @@ export function PersonScreen({
                   }
                 }}
               >
-                Yes, delete it
+                {t('leave.yes')}
               </button>
               <button className="btn btn--sm" type="button" onClick={() => setLeaving(false)}>
-                Keep my profile
+                {t('leave.keep')}
               </button>
             </div>
           ) : (
             <button className="btn btn--danger" type="button" onClick={() => setLeaving(true)}>
-              Leave the community
+              {t('leave.title')}
             </button>
           )}
         </Panel>

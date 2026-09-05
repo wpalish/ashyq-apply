@@ -76,6 +76,125 @@ const EN = {
   'brand.tagline': 'Evidence-backed university & scholarship shortlisting',
   'brand.disclaimer':
     'Published criteria only. ASHYQ Apply never predicts admission or funding outcomes.',
+
+  // --- Community -------------------------------------------------------
+  // These are ordinary words - post, answer, city, major - not the admissions
+  // vocabulary the glossary holds back. Nothing here needs a specialist to
+  // choose it, so all three languages are filled in.
+  'community.title': 'Community',
+  'community.lede':
+    'Applicants aiming at the same cities and universities. What people write here is their '
+    + 'own experience — it is not verified against a university page.',
+  'community.joinPrompt':
+    'You can read the feed now. Create a community profile to post, reply and be findable by '
+    + 'people applying where you are.',
+  'community.createProfile': 'Create profile',
+  'community.write': 'Write a post',
+  'community.writeHint': 'Tag a university or a city with # so the right people find it.',
+  'community.placeholder': 'Ask something, or say where you are applying',
+  'community.post': 'Post',
+  'community.posting': 'Posting…',
+  'community.willBeTagged': 'Will be tagged',
+  'community.charsLeft': 'left',
+  'community.charsOver': 'over',
+  'community.answerPlaceholder': 'Answer this',
+  'community.reply': 'Reply',
+  'community.answer': 'Answer',
+  'community.hideAnswers': 'Hide answers',
+  'community.noAnswers': 'No answers yet. Be the first.',
+  'community.earlierAnswers': 'Show earlier answers',
+  'community.openingThread': 'Opening the thread',
+  'community.loadingPosts': 'Loading posts',
+  'community.olderPosts': 'Load older posts',
+  'community.noPosts': 'No posts yet',
+  'community.noPostsHint':
+    'The first post here sets the tone. Ask the question you could not find an answer to.',
+  'community.noMatch': 'Nothing matches those filters',
+  'community.noMatchHint': 'Widen the filters, or clear them to see everything.',
+  'community.clearFilters': 'Clear filters',
+  'community.filterTag': 'Tag',
+  'community.filterCity': 'Applying to city',
+  'community.filterAuthorStatus': 'Author status',
+  'community.anyone': 'Anyone',
+
+  'community.delete': 'Delete',
+  'community.deleteConfirm': 'Yes, delete',
+  'community.keepIt': 'Keep it',
+  'community.deleting': 'Deleting…',
+  // Whole questions rather than a noun slotted into a sentence: Russian and
+  // Kazakh decline the noun, and this dictionary has no interpolation.
+  'community.deletePostQ': 'Delete this post?',
+  'community.deletePostThreadQ': 'Delete this post and its answers?',
+  'community.deleteAnswerQ': 'Delete this answer?',
+
+  'discover.title': 'Find applicants like you',
+  'discover.lede':
+    'Everyone listed here chose to be listed. Spelling does not matter — KBTU, kbtu and '
+    + 'K.B.T.U. are one university to the filter.',
+  'discover.city': 'City',
+  'discover.university': 'University',
+  'discover.major': 'Major',
+  'discover.status': 'Status',
+  'discover.anyStatus': 'Any status',
+  'discover.looking': 'Looking',
+  'discover.more': 'Show more people',
+  'discover.noMatch': 'Nobody matches yet',
+  'discover.noMatchHint': 'Try one filter at a time — city alone usually finds the most people.',
+  'discover.empty': 'Nobody has joined yet',
+  'discover.emptyHint': 'Create your own profile and you will be the first person here.',
+  'discover.noAim': 'Has not said where they are aiming',
+
+  'person.statusAccepted': 'Accepted',
+  'person.statusWaitlist': 'On a waitlist',
+  'person.statusUnstated': 'Status not stated',
+  'person.statusStatedTitle': 'What this applicant says about their own applications.',
+  'person.statusUnstatedTitle': 'This applicant has not said where they stand.',
+  'person.joinTitle': 'Join the community',
+  'person.joinLede':
+    'Registering an account did not publish anything about you. This form is what puts you in '
+    + 'Discover, and you can edit it or leave again at any time.',
+  'person.noProfile': 'No profile here',
+  'person.noProfileHint': 'This applicant has not joined the community.',
+  'person.loading': 'Loading profile',
+  'person.edit': 'Edit profile',
+  'person.cancel': 'Cancel',
+  'person.yourProfile': 'Your profile',
+  'person.aimingAt': 'Aiming at',
+  'person.aimingHint': 'Stated by this applicant. Not checked against a university page.',
+  'person.city': 'City',
+  'person.major': 'Major',
+  'person.universities': 'Universities',
+  'person.notStated': 'not stated',
+  'person.yourPosts': 'Your posts',
+  'person.noPostsYou': 'You have not posted yet',
+  'person.noPostsYouHint': 'Anything you post in the community shows up here.',
+  'person.noPostsThem': 'Nothing posted yet',
+  'person.postsBy': 'Posts',
+
+  'person.formStatus': 'Where you stand',
+  'person.formStatusNone': 'Prefer not to say',
+  'person.formStatusHint':
+    'Left unset, your profile says "not stated" rather than guessing.',
+  'person.formCity': 'City you are applying to',
+  'person.formMajor': 'Major',
+  'person.formUniversities': 'Universities you are aiming at',
+  'person.formUniversitiesHint': 'Separate with commas.',
+  'person.formBio': 'About you',
+  'person.formBioPlaceholder':
+    'What you are working on, and what you would like to be asked about.',
+  'person.save': 'Save profile',
+  'person.saving': 'Saving…',
+  'person.publicWarning':
+    'Everything here is public to other applicants. Your applicant case is not.',
+
+  'leave.title': 'Leave the community',
+  'leave.hint':
+    'Your account and your applicant research stay. Your profile, your posts and your replies '
+    + 'are deleted, and you disappear from Discover.',
+  'leave.confirm': 'Delete your profile and everything you posted?',
+  'leave.confirmSuffix': 'This cannot be undone.',
+  'leave.yes': 'Yes, delete it',
+  'leave.keep': 'Keep my profile',
 } as const;
 
 export type MessageKey = keyof typeof EN;
@@ -110,6 +229,119 @@ const RU: Partial<Record<MessageKey, string>> = {
   'appearance.dark': 'Тёмное',
 
   'language.label': 'Язык',
+
+  'community.title': 'Сообщество',
+  'community.lede':
+    'Абитуриенты, которые метят в те же города и вузы. Всё, что здесь пишут, — личный опыт '
+    + 'людей, а не проверенные данные с сайта университета.',
+  'community.joinPrompt':
+    'Ленту можно читать уже сейчас. Создайте профиль, чтобы писать, отвечать и попадаться на '
+    + 'глаза тем, кто подаётся туда же.',
+  'community.createProfile': 'Создать профиль',
+  'community.write': 'Написать пост',
+  'community.writeHint': 'Отметьте вуз или город через #, чтобы вас нашли нужные люди.',
+  'community.placeholder': 'Спросите что-нибудь или расскажите, куда подаётесь',
+  'community.post': 'Опубликовать',
+  'community.posting': 'Публикуем…',
+  'community.willBeTagged': 'Будут отмечены',
+  'community.charsLeft': 'осталось',
+  'community.charsOver': 'лишних',
+  'community.answerPlaceholder': 'Ответьте на это',
+  'community.reply': 'Ответить',
+  'community.answer': 'Ответить',
+  'community.hideAnswers': 'Скрыть ответы',
+  'community.noAnswers': 'Ответов пока нет. Будьте первым.',
+  'community.earlierAnswers': 'Показать ранние ответы',
+  'community.openingThread': 'Открываем ветку',
+  'community.loadingPosts': 'Загружаем посты',
+  'community.olderPosts': 'Показать старые посты',
+  'community.noPosts': 'Постов пока нет',
+  'community.noPostsHint':
+    'Первый пост задаёт тон. Задайте вопрос, ответ на который вы так и не нашли.',
+  'community.noMatch': 'Под эти фильтры ничего не подходит',
+  'community.noMatchHint': 'Ослабьте фильтры или сбросьте их, чтобы увидеть всё.',
+  'community.clearFilters': 'Сбросить фильтры',
+  'community.filterTag': 'Тег',
+  'community.filterCity': 'Город поступления',
+  'community.filterAuthorStatus': 'Статус автора',
+  'community.anyone': 'Любой',
+
+  'community.delete': 'Удалить',
+  'community.deleteConfirm': 'Да, удалить',
+  'community.keepIt': 'Оставить',
+  'community.deleting': 'Удаляем…',
+  'community.deletePostQ': 'Удалить этот пост?',
+  'community.deletePostThreadQ': 'Удалить пост вместе с ответами?',
+  'community.deleteAnswerQ': 'Удалить этот ответ?',
+
+  'discover.title': 'Найдите таких же абитуриентов',
+  'discover.lede':
+    'Все, кто здесь есть, сами решили здесь быть. Написание не важно: KBTU, kbtu и K.B.T.U. — '
+    + 'для фильтра один и тот же вуз.',
+  'discover.city': 'Город',
+  'discover.university': 'Университет',
+  'discover.major': 'Специальность',
+  'discover.status': 'Статус',
+  'discover.anyStatus': 'Любой статус',
+  'discover.looking': 'Ищем',
+  'discover.more': 'Показать ещё',
+  'discover.noMatch': 'Пока никто не подходит',
+  'discover.noMatchHint':
+    'Пробуйте по одному фильтру — по городу обычно находится больше всего людей.',
+  'discover.empty': 'Пока никто не вступил',
+  'discover.emptyHint': 'Создайте свой профиль — и вы будете здесь первым.',
+  'discover.noAim': 'Не указал, куда поступает',
+
+  'person.statusAccepted': 'Поступил',
+  'person.statusWaitlist': 'В листе ожидания',
+  'person.statusUnstated': 'Статус не указан',
+  'person.statusStatedTitle': 'То, что абитуриент сам говорит о своих заявках.',
+  'person.statusUnstatedTitle': 'Абитуриент не сказал, на каком он этапе.',
+  'person.joinTitle': 'Вступить в сообщество',
+  'person.joinLede':
+    'Регистрация ничего о вас не опубликовала. Именно эта форма помещает вас в поиск, и её '
+    + 'можно изменить или выйти обратно в любой момент.',
+  'person.noProfile': 'Здесь нет профиля',
+  'person.noProfileHint': 'Этот абитуриент не вступал в сообщество.',
+  'person.loading': 'Загружаем профиль',
+  'person.edit': 'Изменить профиль',
+  'person.cancel': 'Отмена',
+  'person.yourProfile': 'Ваш профиль',
+  'person.aimingAt': 'Куда поступает',
+  'person.aimingHint': 'Со слов самого абитуриента. Не сверялось с сайтом университета.',
+  'person.city': 'Город',
+  'person.major': 'Специальность',
+  'person.universities': 'Университеты',
+  'person.notStated': 'не указано',
+  'person.yourPosts': 'Ваши посты',
+  'person.noPostsYou': 'Вы ещё ничего не писали',
+  'person.noPostsYouHint': 'Всё, что вы напишете в сообществе, появится здесь.',
+  'person.noPostsThem': 'Постов пока нет',
+  'person.postsBy': 'Посты',
+
+  'person.formStatus': 'На каком вы этапе',
+  'person.formStatusNone': 'Предпочитаю не говорить',
+  'person.formStatusHint':
+    'Если не выбрать, в профиле будет написано «не указан», а не придуманный статус.',
+  'person.formCity': 'Город, куда вы поступаете',
+  'person.formMajor': 'Специальность',
+  'person.formUniversities': 'Университеты, куда метите',
+  'person.formUniversitiesHint': 'Через запятую.',
+  'person.formBio': 'О себе',
+  'person.formBioPlaceholder': 'Чем вы заняты и о чём вас стоит спрашивать.',
+  'person.save': 'Сохранить профиль',
+  'person.saving': 'Сохраняем…',
+  'person.publicWarning':
+    'Всё это видно другим абитуриентам. Ваше дело по поступлению — нет.',
+
+  'leave.title': 'Выйти из сообщества',
+  'leave.hint':
+    'Аккаунт и ваше исследование останутся. Профиль, посты и ответы будут удалены, и вы '
+    + 'исчезнете из поиска.',
+  'leave.confirm': 'Удалить профиль и всё, что вы написали?',
+  'leave.confirmSuffix': 'Это необратимо.',
+  'leave.yes': 'Да, удалить',
+  'leave.keep': 'Оставить профиль',
 };
 
 /** Kazakh, on the same rule. */
@@ -139,6 +371,118 @@ const KK: Partial<Record<MessageKey, string>> = {
   'appearance.dark': 'Күңгірт',
 
   'language.label': 'Тіл',
+
+  'community.title': 'Қауымдастық',
+  'community.lede':
+    'Сол қалалар мен университеттерге ұмтылатын талапкерлер. Мұнда жазылғанның бәрі — '
+    + 'адамдардың жеке тәжірибесі, университет сайтынан тексерілген дерек емес.',
+  'community.joinPrompt':
+    'Таспаны қазір де оқуға болады. Жазу, жауап беру және сол жаққа құжат тапсырып жүргендерге '
+    + 'көріну үшін профиль жасаңыз.',
+  'community.createProfile': 'Профиль жасау',
+  'community.write': 'Жазба жазу',
+  'community.writeHint': 'Университет пен қаланы # арқылы белгілеңіз — керек адам табады.',
+  'community.placeholder': 'Бірдеңе сұраңыз немесе қайда тапсырғаныңызды жазыңыз',
+  'community.post': 'Жариялау',
+  'community.posting': 'Жарияланып жатыр…',
+  'community.willBeTagged': 'Белгіленеді',
+  'community.charsLeft': 'қалды',
+  'community.charsOver': 'артық',
+  'community.answerPlaceholder': 'Осыған жауап беріңіз',
+  'community.reply': 'Жауап беру',
+  'community.answer': 'Жауап беру',
+  'community.hideAnswers': 'Жауаптарды жасыру',
+  'community.noAnswers': 'Әзірге жауап жоқ. Бірінші болыңыз.',
+  'community.earlierAnswers': 'Ертерек жауаптарды көрсету',
+  'community.openingThread': 'Тармақ ашылып жатыр',
+  'community.loadingPosts': 'Жазбалар жүктелуде',
+  'community.olderPosts': 'Ескі жазбаларды көрсету',
+  'community.noPosts': 'Әзірге жазба жоқ',
+  'community.noPostsHint':
+    'Алғашқы жазба үлгі болады. Жауабын таба алмаған сұрағыңызды қойыңыз.',
+  'community.noMatch': 'Бұл сүзгілерге ештеңе сай келмейді',
+  'community.noMatchHint': 'Сүзгіні босаңсытыңыз немесе бәрін көру үшін тазалаңыз.',
+  'community.clearFilters': 'Сүзгілерді тазалау',
+  'community.filterTag': 'Тег',
+  'community.filterCity': 'Түсетін қала',
+  'community.filterAuthorStatus': 'Автордың мәртебесі',
+  'community.anyone': 'Кез келген',
+
+  'community.delete': 'Жою',
+  'community.deleteConfirm': 'Иә, жою',
+  'community.keepIt': 'Қалдыру',
+  'community.deleting': 'Жойылып жатыр…',
+  'community.deletePostQ': 'Осы жазба жойылсын ба?',
+  'community.deletePostThreadQ': 'Жазба жауаптарымен бірге жойылсын ба?',
+  'community.deleteAnswerQ': 'Осы жауап жойылсын ба?',
+
+  'discover.title': 'Өзіңізге ұқсас талапкерлерді табыңыз',
+  'discover.lede':
+    'Мұндағылардың бәрі өз қалауымен тіркелген. Жазылуы маңызды емес: KBTU, kbtu және '
+    + 'K.B.T.U. — сүзгі үшін бір университет.',
+  'discover.city': 'Қала',
+  'discover.university': 'Университет',
+  'discover.major': 'Мамандық',
+  'discover.status': 'Мәртебе',
+  'discover.anyStatus': 'Кез келген мәртебе',
+  'discover.looking': 'Ізделуде',
+  'discover.more': 'Тағы көрсету',
+  'discover.noMatch': 'Әзірге ешкім сай келмейді',
+  'discover.noMatchHint': 'Сүзгіні бір-бірлеп қолданыңыз — қала бойынша көбірек адам табылады.',
+  'discover.empty': 'Әзірге ешкім қосылмаған',
+  'discover.emptyHint': 'Өз профиліңізді жасаңыз — мұндағы бірінші адам боласыз.',
+  'discover.noAim': 'Қайда түсетінін айтпаған',
+
+  'person.statusAccepted': 'Қабылданған',
+  'person.statusWaitlist': 'Күту тізімінде',
+  'person.statusUnstated': 'Мәртебесі көрсетілмеген',
+  'person.statusStatedTitle': 'Талапкердің өз өтініштері туралы айтқаны.',
+  'person.statusUnstatedTitle': 'Талапкер қай кезеңде екенін айтпаған.',
+  'person.joinTitle': 'Қауымдастыққа қосылу',
+  'person.joinLede':
+    'Тіркелу сіз туралы ештеңе жарияламады. Дәл осы форма сізді іздеуге қосады, оны кез келген '
+    + 'уақытта өзгертуге немесе қайта шығуға болады.',
+  'person.noProfile': 'Мұнда профиль жоқ',
+  'person.noProfileHint': 'Бұл талапкер қауымдастыққа қосылмаған.',
+  'person.loading': 'Профиль жүктелуде',
+  'person.edit': 'Профильді өзгерту',
+  'person.cancel': 'Болдырмау',
+  'person.yourProfile': 'Сіздің профиліңіз',
+  'person.aimingAt': 'Қайда түседі',
+  'person.aimingHint': 'Талапкердің өз сөзінен. Университет сайтымен салыстырылмаған.',
+  'person.city': 'Қала',
+  'person.major': 'Мамандық',
+  'person.universities': 'Университеттер',
+  'person.notStated': 'көрсетілмеген',
+  'person.yourPosts': 'Сіздің жазбаларыңыз',
+  'person.noPostsYou': 'Сіз әлі ештеңе жазбадыңыз',
+  'person.noPostsYouHint': 'Қауымдастықта жазғаныңыздың бәрі осында шығады.',
+  'person.noPostsThem': 'Әзірге жазба жоқ',
+  'person.postsBy': 'Жазбалар',
+
+  'person.formStatus': 'Қай кезеңдесіз',
+  'person.formStatusNone': 'Айтпағанды жөн көремін',
+  'person.formStatusHint':
+    'Таңдамасаңыз, профильде ойдан шығарылған мәртебе емес, «көрсетілмеген» деп тұрады.',
+  'person.formCity': 'Түсетін қалаңыз',
+  'person.formMajor': 'Мамандық',
+  'person.formUniversities': 'Мақсат еткен университеттер',
+  'person.formUniversitiesHint': 'Үтір арқылы жазыңыз.',
+  'person.formBio': 'Өзіңіз туралы',
+  'person.formBioPlaceholder': 'Немен айналысасыз және сізден не сұраған жөн.',
+  'person.save': 'Профильді сақтау',
+  'person.saving': 'Сақталуда…',
+  'person.publicWarning':
+    'Мұның бәрін басқа талапкерлер көреді. Түсу бойынша ісіңізді — көрмейді.',
+
+  'leave.title': 'Қауымдастықтан шығу',
+  'leave.hint':
+    'Аккаунт пен зерттеуіңіз қалады. Профиль, жазбалар және жауаптар жойылады, сіз іздеуден '
+    + 'жоғаласыз.',
+  'leave.confirm': 'Профиль мен жазғаныңыздың бәрі жойылсын ба?',
+  'leave.confirmSuffix': 'Мұны қайтару мүмкін емес.',
+  'leave.yes': 'Иә, жою',
+  'leave.keep': 'Профильді қалдыру',
 };
 
 const DICTIONARIES: Record<Locale, Partial<Record<MessageKey, string>>> = {
