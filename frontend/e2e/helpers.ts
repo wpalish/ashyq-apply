@@ -55,6 +55,18 @@ export async function runDemoResearch(page: Page): Promise<void> {
 export async function openShortlist(page: Page): Promise<void> {
   await page.getByTestId('nav-shortlist').click();
   await expect(page.getByTestId('shortlist-table')).toBeVisible();
+
+  // Out-of-budget, needs-clarification and excluded rows sit in sections that
+  // are collapsed by design - the ranked table is the answer to "where can I
+  // go", not "what exists". The journey asserts on rows from all of them, so
+  // it opens every section rather than each test remembering to.
+  const sections = page.locator('details[data-testid^="section-"]');
+  for (let i = 0; i < (await sections.count()); i += 1) {
+    const section = sections.nth(i);
+    if (!(await section.evaluate((el: HTMLDetailsElement) => el.open))) {
+      await section.locator('summary').click();
+    }
+  }
 }
 
 /** The shortlist row whose university cell carries `name`. */

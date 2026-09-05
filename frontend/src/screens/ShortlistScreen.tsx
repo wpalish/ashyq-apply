@@ -100,12 +100,12 @@ export function ShortlistScreen() {
     return decide(r.id, next, '', r.user_notes);
   };
 
-  const renderTable = (tableRows: ProgramResult[], testId: string) => (
+  const renderTable = (tableRows: ProgramResult[], testId: string, caption: string) => (
           <div className="table-wrap">
             <table className="dtable" data-testid={testId}>
-              <caption className="visually-hidden">
-                Shortlisted university programmes with eligibility, fit, funding and remaining cost
-              </caption>
+              {/* Each table says which list it is: four identically captioned
+                  tables read as one repeated table to a screen reader. */}
+              <caption className="visually-hidden">{caption}</caption>
               <thead>
                 <tr>
                   <th scope="col">University &amp; programme</th>
@@ -390,7 +390,11 @@ export function ShortlistScreen() {
         )}
 
         {ranked.length > 0 ? (
-          renderTable(ranked, 'shortlist-table')
+          renderTable(
+            ranked,
+            'shortlist-table',
+            'Shortlisted university programmes with eligibility, fit, funding and remaining cost',
+          )
         ) : (
           // An empty table with headers reads as "nothing found". Something
           // was found; it is all in the sections below, with its reason.
@@ -417,7 +421,12 @@ export function ShortlistScreen() {
                 {STATUS_LABEL[bucket] ?? humanize(bucket)} ({setAside.length})
               </summary>
               <p className="xs muted">{SET_ASIDE_HINT[bucket]}</p>
-              {renderTable(setAside, `table-${bucket}`)}
+              {renderTable(
+                setAside,
+                `table-${bucket}`,
+                `Shortlisted university programmes set aside as ${(STATUS_LABEL[bucket] ?? humanize(bucket)).toLowerCase()}, `
+                + 'with eligibility, fit, funding and remaining cost',
+              )}
             </details>
           );
         })}

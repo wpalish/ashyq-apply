@@ -232,6 +232,10 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
           title="What matters more?"
           hint="Put them in your order. The first one counts for about four times what the last one does; nothing here predicts an admission."
         >
+          <p className="small muted">
+            The order only decides which of the qualifying options rise first.
+            It is not a probability of admission.
+          </p>
           <ol className="stack stack--tight" data-testid="priorities">
             {priorities.map((group, i) => (
               <li key={group} className="row row--tight" data-testid={`priority-${group}`}>
