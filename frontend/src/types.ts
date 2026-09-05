@@ -450,6 +450,10 @@ export interface Pricing {
 export interface EntitlementView {
   profile_id: string;
   full_access: boolean;
+  /** Cases left on the current subscription; null when there is none. */
+  subscription_cases_left: number | null;
+  /** Bought-but-not-started subscriptions waiting behind it. */
+  subscription_queued: number;
 }
 
 export interface OrderView {

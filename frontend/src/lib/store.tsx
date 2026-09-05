@@ -68,8 +68,10 @@ export interface Store {
   deleteEverything: () => Promise<void>;
   clearError: () => void;
   /** Set when a gated route answered 402. Null when nothing is locked. */
-  paywall: { profileId: string; priceKzt: number } | null;
+  paywall: { profileId: string; priceKzt: number; casesLeft: number | null } | null;
   clearPaywall: () => void;
+  /** Open one case out of the organization's subscription quota. */
+  unlockFromSubscription: (profileId: string) => Promise<void>;
 }
 
 const StoreContext = createContext<Store | null>(null);
@@ -137,14 +139,20 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [restored, setRestored] = useState(false);
-  const [paywall, setPaywall] = useState<{ profileId: string; priceKzt: number } | null>(null);
+  const [paywall, setPaywall] = useState<
+    { profileId: string; priceKzt: number; casesLeft: number | null } | null
+  >(null);
   const pollRef = useRef<number | null>(null);
 
   const fail = useCallback((e: unknown) => {
     // A 402 is not a failure to report — it is an offer to make. Every screen
     // already routes its errors through here, so intercepting once covers all.
     if (isPaymentRequired(e)) {
-      setPaywall({ profileId: e.profileId, priceKzt: e.priceKzt });
+      setPaywall({
+        profileId: e.profileId,
+        priceKzt: e.priceKzt,
+        casesLeft: e.subscriptionCasesLeft ?? null,
+      });
       return;
     }
     setError(e instanceof ApiError ? e.message : String(e));
@@ -374,6 +382,22 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     [run, fail],
   );
 
+  // Takes the case rather than reading the paywall state, so the caller that
+  // rendered the button and the action that spends the unit cannot disagree.
+  const unlockFromSubscription = useCallback(
+    async (profileId: string) => {
+      setError(null);
+      try {
+        await api.unlockFromSubscription(profileId);
+        setPaywall(null);
+        await refreshResults();
+      } catch (e) {
+        fail(e);
+      }
+    },
+    [fail, refreshResults],
+  );
+
   const decide = useCallback(
     async (resultId: string, decision: UserDecision, reason: string, notes: string) => {
       if (!run) return;
@@ -418,13 +442,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       loadDemoProfile, clearProfile, validation, run, results,
       summary, loading, error, saveProfile, startRun, cancelRun, retryRun, collectDocuments,
       exportShortlist, decide, refreshResults, deleteEverything, clearError: () => setError(null),
-      paywall, clearPaywall: () => setPaywall(null),
+      paywall, clearPaywall: () => setPaywall(null), unlockFromSubscription,
     }),
     [capabilities, profileDraft, setProfileDraft, savedProfile, cases, switchCase, newCase,
      restored, loadDemoProfile,
      clearProfile, validation, run, results, summary, loading, error, saveProfile, startRun,
      cancelRun, retryRun, collectDocuments, exportShortlist, decide, refreshResults,
-     deleteEverything, paywall],
+     deleteEverything, paywall, unlockFromSubscription],
   );
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;

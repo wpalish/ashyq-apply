@@ -29,6 +29,8 @@ export class ApiError extends Error {
   /** Set only on a 402: which case to sell, and for how much. */
   profileId?: string;
   priceKzt?: number;
+  /** Cases left on the organization's subscription, when a 402 reported one. */
+  subscriptionCasesLeft?: number | null;
 
   constructor(public status: number, message: string, public code?: string) {
     super(message);
@@ -55,6 +57,7 @@ async function failureFrom(response: Response): Promise<ApiError> {
   let code: string | undefined;
   let profileId: string | undefined;
   let priceKzt: number | undefined;
+  let casesLeft: number | null | undefined;
   try {
     const body = await response.json();
     if (typeof body?.detail === 'string') detail = body.detail;
@@ -64,15 +67,20 @@ async function failureFrom(response: Response): Promise<ApiError> {
         .join('; ');
     }
     code = body?.code;
-    // A 402 names the case to sell and its price. No other status carries these.
+    // A 402 names the case to sell, its price, and whether the organization can
+    // pay from a subscription instead. No other status carries these.
     if (typeof body?.profile_id === 'string') profileId = body.profile_id;
     if (typeof body?.price_kzt === 'number') priceKzt = body.price_kzt;
+    if (typeof body?.subscription_cases_left === 'number') {
+      casesLeft = body.subscription_cases_left;
+    }
   } catch {
     /* a non-JSON error body is still reported by status */
   }
   const failure = new ApiError(response.status, detail, code);
   failure.profileId = profileId;
   failure.priceKzt = priceKzt;
+  failure.subscriptionCasesLeft = casesLeft;
   return failure;
 }
 
@@ -188,6 +196,11 @@ export const api = {
   // No price field: the server decides what a case costs.
   openOrder: (input: { profile_id: string; method: PaymentMethod; phone?: string }) =>
     request<OrderView>('/api/billing/orders', { method: 'POST', body: JSON.stringify(input) }),
+  unlockFromSubscription: (profileId: string) =>
+    request<EntitlementView>('/api/billing/unlock-from-subscription', {
+      method: 'POST',
+      body: JSON.stringify({ profile_id: profileId }),
+    }),
   readOrder: (orderId: string) => request<OrderView>(`/api/billing/orders/${orderId}`),
   cancelOrder: (orderId: string) =>
     request<OrderView>(`/api/billing/orders/${orderId}/cancel`, { method: 'POST' }),
