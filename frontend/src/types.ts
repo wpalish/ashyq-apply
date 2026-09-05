@@ -31,6 +31,20 @@ export type SourceSpecificity =
 
 export type UserDecision = 'undecided' | 'approved' | 'maybe' | 'rejected';
 
+/**
+ * Where a row sits in a balanced list.
+ *
+ * Deliberately not "safety / match / reach": *safety* reads as a promise, and
+ * nothing here predicts an admission.
+ */
+export type Bucket =
+  | 'WELL_PLACED' | 'PLAUSIBLE' | 'AMBITIOUS' | 'OUT_OF_BUDGET'
+  | 'NEEDS_CLARIFICATION' | 'EXCLUDED';
+
+/** The six groups the applicant ranks; their order becomes the axis weights. */
+export type PriorityGroup =
+  | 'funding' | 'academic' | 'country' | 'city_climate' | 'career' | 'campus_life';
+
 export type JobStatus =
   | 'queued' | 'running' | 'succeeded'
   /** Failed but retryable: it will be picked up again after its backoff. */
@@ -188,6 +202,50 @@ export interface ExplainableScore {
   disclaimer: string;
 }
 
+export interface RerankIn {
+  priorities?: PriorityGroup[];
+  weights?: Record<string, number>;
+  gamma?: number;
+  /** Off by default: trying an ordering out must not rewrite the profile. */
+  persist?: boolean;
+}
+
+export interface BalancedShortlist {
+  chosen: ProgramResult[];
+  /** What the quotas could not fill, said out loud rather than hidden. */
+  notes: string[];
+  quotas: Record<string, number>;
+}
+
+export interface AxisScore {
+  axis: string;
+  /** null whenever `state` is not 'known'. */
+  value: number | null;
+  /** 'unknown' lowers coverage; 'not_applicable' is ignored by both numbers. */
+  state: 'known' | 'unknown' | 'not_applicable';
+  weight: number;
+  reason: string;
+  evidence_claim_ids: string[];
+}
+
+export interface RankingV2 {
+  /** Match against the stated priorities, 0-1. Never a probability. */
+  fit: number | null;
+  /** Share of the weight that rests on verified data. */
+  coverage: number;
+  sort_key: number;
+  gamma: number;
+  axes: AxisScore[];
+  unknown_axes: string[];
+  not_applicable_axes: string[];
+  knocked_out_by: string[];
+  bucket: Bucket;
+  bucket_reason: string;
+  weights_source: 'priorities_roc' | 'weights_override';
+  version: '2';
+  disclaimer: string;
+}
+
 export interface ClaimOut {
   claim_type: string;
   normalized_value: unknown;
@@ -296,6 +354,9 @@ export interface ProgramResult {
   costs: CostBreakdown;
   funding_gap: FundingGap | null;
   preference_score: ExplainableScore | null;
+  ranking: RankingV2 | null;
+  catalog_attributes: Record<string, string>;
+  catalog_attributes_source: string;
   admission_deadline: string | null;
   admission_deadline_timezone: string | null;
   admission_deadline_raw: string | null;
@@ -303,6 +364,8 @@ export interface ProgramResult {
   climate_fit: string;
   city_fit: string;
   workload_fit: string;
+  size_fit: string;
+  campus_fit: string;
   career_notes: string;
   post_study_work: string;
   work_during_study: string;

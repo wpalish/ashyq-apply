@@ -15,7 +15,7 @@ const decide = vi.fn().mockResolvedValue(undefined);
 const saveNotes = vi.fn().mockResolvedValue(undefined);
 
 vi.mock('@/lib/store', () => ({
-  useStore: () => ({ results: [row], summary, decide, saveNotes }),
+  useStore: () => ({ results: [row], summary, shortlist: null, decide, saveNotes }),
 }));
 
 let row: ProgramResult;
@@ -151,5 +151,53 @@ describe('notes', () => {
 
     await waitFor(() => expect(saveNotes).toHaveBeenCalledWith('result-1', 'ask about housing'));
     expect(decide).not.toHaveBeenCalled();
+  });
+});
+
+
+describe('the v2 ranking on the shortlist', () => {
+  const ranking = (overrides: Record<string, unknown> = {}) => ({
+    fit: 0.82,
+    coverage: 0.94,
+    sort_key: 0.79,
+    gamma: 0.5,
+    axes: [],
+    unknown_axes: [],
+    not_applicable_axes: [],
+    knocked_out_by: [],
+    bucket: 'PLAUSIBLE',
+    bucket_reason: 'Requirements and funding both look reachable.',
+    weights_source: 'priorities_roc',
+    version: '2',
+    disclaimer: 'Not a probability of admission.',
+    ...overrides,
+  });
+
+  it('shows the match, what is confirmed, and the bucket', () => {
+    row = makeRow({ ranking: ranking() } as Partial<ProgramResult>);
+    render(<ShortlistScreen />);
+
+    expect(screen.getByText('0.82')).toBeInTheDocument();
+    expect(screen.getByText('94%')).toBeInTheDocument();
+    expect(screen.getByText('Plausible')).toBeInTheDocument();
+  });
+
+  it('never presents the match as a probability', () => {
+    row = makeRow({ ranking: ranking() } as Partial<ProgramResult>);
+    render(<ShortlistScreen />);
+    expect(screen.getByText(/not a probability of admission/i)).toBeInTheDocument();
+  });
+
+  it('moves an unaffordable row out of the ranked table into its own section', () => {
+    row = makeRow({ ranking: ranking({ bucket: 'OUT_OF_BUDGET' }) } as Partial<ProgramResult>);
+    render(<ShortlistScreen />);
+
+    expect(screen.getByTestId('section-OUT_OF_BUDGET')).toBeInTheDocument();
+    expect(screen.queryByTestId('shortlist-table')).toBeNull();
+  });
+
+  it('keeps a row assessed before v2 in the ranked table', () => {
+    render(<ShortlistScreen />);
+    expect(screen.getByTestId('shortlist-table')).toBeInTheDocument();
   });
 });
