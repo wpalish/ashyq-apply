@@ -43,27 +43,35 @@ class PageType(StrEnum):
 #: and reported, never guessed at.
 ACCEPTS: dict[str, frozenset[PageType]] = {
     "program_exists": frozenset({PageType.PROGRAM_DETAIL, PageType.INTAKE_SPECIFIC_PROGRAM}),
-    "requirements": frozenset({
-        PageType.PROGRAM_DETAIL,
-        PageType.INTAKE_SPECIFIC_PROGRAM,
-        PageType.GENERAL_ADMISSIONS,
-        PageType.COUNTRY_CREDENTIAL_REQUIREMENTS,
-    }),
+    "requirements": frozenset(
+        {
+            PageType.PROGRAM_DETAIL,
+            PageType.INTAKE_SPECIFIC_PROGRAM,
+            PageType.GENERAL_ADMISSIONS,
+            PageType.COUNTRY_CREDENTIAL_REQUIREMENTS,
+        }
+    ),
     "intake": frozenset({PageType.PROGRAM_DETAIL, PageType.INTAKE_SPECIFIC_PROGRAM}),
     "costs": frozenset({PageType.COSTS, PageType.PROGRAM_DETAIL, PageType.INTAKE_SPECIFIC_PROGRAM}),
     "scholarship_award": frozenset({PageType.SCHOLARSHIP_AWARD}),
     # A fees page often lists the awards alongside the costs; following its
     # links is safe because each target must classify as an award itself.
-    "scholarship_links": frozenset({
-        PageType.SCHOLARSHIP_INDEX, PageType.SCHOLARSHIP_AWARD, PageType.COSTS,
-    }),
-    "documents": frozenset({
-        PageType.DOCUMENTS,
-        PageType.PROGRAM_DETAIL,
-        PageType.INTAKE_SPECIFIC_PROGRAM,
-        PageType.GENERAL_ADMISSIONS,
-        PageType.SCHOLARSHIP_AWARD,
-    }),
+    "scholarship_links": frozenset(
+        {
+            PageType.SCHOLARSHIP_INDEX,
+            PageType.SCHOLARSHIP_AWARD,
+            PageType.COSTS,
+        }
+    ),
+    "documents": frozenset(
+        {
+            PageType.DOCUMENTS,
+            PageType.PROGRAM_DETAIL,
+            PageType.INTAKE_SPECIFIC_PROGRAM,
+            PageType.GENERAL_ADMISSIONS,
+            PageType.SCHOLARSHIP_AWARD,
+        }
+    ),
 }
 
 
@@ -155,12 +163,35 @@ _DOCUMENTS = re.compile(
 )
 #: A page has to say something substantive about an award to be an award page.
 _AWARD_SIGNALS: tuple[tuple[str, re.Pattern[str]], ...] = (
-    ("amount", re.compile(r"\b(amount|value|worth|covers?|waiver|per year|per month|% of tuition)\b", re.I)),
-    ("coverage", re.compile(r"\b(covers?|coverage|includes?|tuition|housing|accommodation|stipend|living costs)\b", re.I)),
-    ("eligibility", re.compile(r"\b(eligib|who can apply|criteria|requirements|open to|restricted to)\b", re.I)),
-    ("application", re.compile(r"\b(how to apply|apply for this|nominat|no separate application|separate application)\b", re.I)),
+    (
+        "amount",
+        re.compile(
+            r"\b(amount|value|worth|covers?|waiver|per year|per month|% of tuition)\b", re.I
+        ),
+    ),
+    (
+        "coverage",
+        re.compile(
+            r"\b(covers?|coverage|includes?|tuition|housing|accommodation|stipend|living costs)\b",
+            re.I,
+        ),
+    ),
+    (
+        "eligibility",
+        re.compile(r"\b(eligib|who can apply|criteria|requirements|open to|restricted to)\b", re.I),
+    ),
+    (
+        "application",
+        re.compile(
+            r"\b(how to apply|apply for this|nominat|no separate application|separate application)\b",
+            re.I,
+        ),
+    ),
     ("deadline", re.compile(r"\b(deadline|closing date|applications? close|apply by)\b", re.I)),
-    ("duration", re.compile(r"\b(renewable|duration|for the duration|years of study|one-?time)\b", re.I)),
+    (
+        "duration",
+        re.compile(r"\b(renewable|duration|for the duration|years of study|one-?time)\b", re.I),
+    ),
 )
 _ACADEMIC_YEAR = re.compile(r"\b(20\d{2})\s*[/–—-]\s*(\d{2}|20\d{2})\b")
 _LANGUAGE = re.compile(
@@ -252,7 +283,10 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
     # --- cost pages --------------------------------------------------------
     if _COSTS.search(identity) or _COSTS.search(title.lower()):
         return PageClassification(
-            PageType.COSTS, 0.8, ["cost vocabulary in the page heading"], title,
+            PageType.COSTS,
+            0.8,
+            ["cost vocabulary in the page heading"],
+            title,
             academic_year=_academic_year(body),
         )
 
@@ -266,7 +300,9 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
         named = _award_name(identity)
         plural_index = bool(
             _PLURAL_FUNDING_HEADING.match(identity)
-            or re.search(r"\b(overview of|list of|available) (scholarships|funding|grants)\b", low_body)
+            or re.search(
+                r"\b(overview of|list of|available) (scholarships|funding|grants)\b", low_body
+            )
         )
 
         # A listing heading, or several links out to named awards, or links out
@@ -283,14 +319,17 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
         # A named award plus at least two substantive signals.
         if named and len(present) >= 2:
             return PageClassification(
-                PageType.SCHOLARSHIP_AWARD, 0.75 + 0.05 * min(len(present), 4),
+                PageType.SCHOLARSHIP_AWARD,
+                0.75 + 0.05 * min(len(present), 4),
                 [f"named award {named!r}", f"signals: {', '.join(present)}"],
-                title, subject=named,
+                title,
+                subject=named,
                 degree_level=_degree_level(f"{head} {body[:2500]}"),
                 academic_year=_academic_year(body),
             )
         return PageClassification(
-            PageType.UNKNOWN, 0.3,
+            PageType.UNKNOWN,
+            0.3,
             [f"funding page with {len(present)} substantive signals and no clear award name"],
             title,
         )
@@ -302,8 +341,10 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
     program_links = _program_link_count(soup) if soup else 0
     if _PLURAL_PROGRAM_HEADING.match(identity) or _CATALOG.search(low_head) or program_links >= 5:
         return PageClassification(
-            PageType.PROGRAM_CATALOG, 0.75,
-            [f"{program_links} programme links", "plural catalogue heading"], title,
+            PageType.PROGRAM_CATALOG,
+            0.75,
+            [f"{program_links} programme links", "plural catalogue heading"],
+            title,
         )
 
     # A programme page is identified before the admissions rules run: a real
@@ -318,13 +359,17 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
     if not subject:
         if _CREDENTIAL.search(low_head) and _ADMISSIONS.search(low_head):
             return PageClassification(
-                PageType.COUNTRY_CREDENTIAL_REQUIREMENTS, 0.75,
-                ["admissions page scoped to a diploma type"], title,
+                PageType.COUNTRY_CREDENTIAL_REQUIREMENTS,
+                0.75,
+                ["admissions page scoped to a diploma type"],
+                title,
             )
         if _ADMISSIONS.search(low_head):
             return PageClassification(
-                PageType.GENERAL_ADMISSIONS, 0.8,
-                ["admissions phrasing without a single programme identity"], title,
+                PageType.GENERAL_ADMISSIONS,
+                0.8,
+                ["admissions phrasing without a single programme identity"],
+                title,
             )
 
     if subject and degree:
@@ -334,28 +379,41 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
         if year:
             signals.append(f"academic year {year}")
             return PageClassification(
-                PageType.INTAKE_SPECIFIC_PROGRAM, 0.85, signals, title,
-                subject=subject, degree_level=degree,
-                language_of_instruction=language, academic_year=year,
+                PageType.INTAKE_SPECIFIC_PROGRAM,
+                0.85,
+                signals,
+                title,
+                subject=subject,
+                degree_level=degree,
+                language_of_instruction=language,
+                academic_year=year,
             )
         return PageClassification(
-            PageType.PROGRAM_DETAIL, 0.75, signals, title,
-            subject=subject, degree_level=degree, language_of_instruction=language,
+            PageType.PROGRAM_DETAIL,
+            0.75,
+            signals,
+            title,
+            subject=subject,
+            degree_level=degree,
+            language_of_instruction=language,
         )
 
     if _CREDENTIAL.search(low_head) and _ADMISSIONS.search(low_head):
         return PageClassification(
-            PageType.COUNTRY_CREDENTIAL_REQUIREMENTS, 0.7,
-            ["admissions page scoped to a diploma type"], title,
+            PageType.COUNTRY_CREDENTIAL_REQUIREMENTS,
+            0.7,
+            ["admissions page scoped to a diploma type"],
+            title,
         )
     if _ADMISSIONS.search(low_head):
-        return PageClassification(
-            PageType.GENERAL_ADMISSIONS, 0.7, ["admissions phrasing"], title
-        )
+        return PageClassification(PageType.GENERAL_ADMISSIONS, 0.7, ["admissions phrasing"], title)
     cost_mentions = len(_COSTS.findall(low_body))
     if cost_mentions >= 2:
         return PageClassification(
-            PageType.COSTS, 0.6, [f"{cost_mentions} cost phrases in the body"], title,
+            PageType.COSTS,
+            0.6,
+            [f"{cost_mentions} cost phrases in the body"],
+            title,
             academic_year=_academic_year(body),
         )
 
@@ -445,7 +503,9 @@ def _award_name(identity: str) -> str | None:
         r"(admission services|menu.*|search.*)", name.strip(), re.IGNORECASE
     ):
         return None
-    if not _SCHOLARSHIP_WORD.search(name) and not re.search(r"\b(award|prize|fund|fellowship)\b", name, re.I):
+    if not _SCHOLARSHIP_WORD.search(name) and not re.search(
+        r"\b(award|prize|fund|fellowship)\b", name, re.I
+    ):
         return None
     return name
 
@@ -454,7 +514,8 @@ def _award_link_count(soup: BeautifulSoup | None) -> int:
     if soup is None:
         return 0
     return sum(
-        1 for a in soup.find_all("a", href=True)
+        1
+        for a in soup.find_all("a", href=True)
         if _SCHOLARSHIP_WORD.search(a.get_text(" ", strip=True) or "")
         and not _FAQ.search(a.get_text(" ", strip=True) or "")
     )
@@ -464,6 +525,9 @@ def _program_link_count(soup: BeautifulSoup | None) -> int:
     if soup is None:
         return 0
     return sum(
-        1 for a in soup.find_all("a", href=True)
-        if re.search(r"/(bsc|msc|ba|ma|bachelor|master|programme|program|course)s?/", a.get("href", ""), re.I)
+        1
+        for a in soup.find_all("a", href=True)
+        if re.search(
+            r"/(bsc|msc|ba|ma|bachelor|master|programme|program|course)s?/", a.get("href", ""), re.I
+        )
     )

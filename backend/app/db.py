@@ -35,7 +35,6 @@ engine = create_engine(
 )
 
 if _is_sqlite:
-
     #: SQLite allows one writer at a time. With the API and a worker both
     #: writing, the loser fails immediately unless it is told to wait — which
     #: surfaced as a 500 from the API while a run was in progress. PostgreSQL

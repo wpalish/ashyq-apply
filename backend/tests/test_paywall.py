@@ -82,7 +82,20 @@ def test_the_summary_stays_open(paid_client, free_run) -> None:
 
 @pytest.mark.parametrize(
     "path",
-    ["/claims", "/conflicts", "/questions", "/export.csv", "/export.json"],
+    [
+        "/claims",
+        "/conflicts",
+        "/questions",
+        "/export.csv",
+        "/export.json",
+        # Added by the ranking and calendar work after the paywall existed.
+        # Each one returns whole-run material, so each one had to be gated when
+        # the two branches met — a new read route is how a paywall quietly
+        # stops being one.
+        "/deadlines",
+        "/deadlines.ics",
+        "/shortlist",
+    ],
 )
 def test_the_paid_routes_answer_402(paid_client, free_run, path: str) -> None:
     response = paid_client.get(f"/api/runs/{free_run['run_id']}{path}")
@@ -108,9 +121,29 @@ def test_document_collection_answers_402(paid_client, free_run) -> None:
 
 def test_paying_opens_every_gated_route(paid_client, free_run) -> None:
     _unlock(paid_client, free_run["case_id"])
-    for path in ("/claims", "/conflicts", "/questions", "/export.csv"):
+    for path in (
+        "/claims",
+        "/conflicts",
+        "/questions",
+        "/export.csv",
+        "/deadlines",
+        "/deadlines.ics",
+        "/shortlist",
+    ):
         response = paid_client.get(f"/api/runs/{free_run['run_id']}{path}")
         assert response.status_code == 200, path
+
+
+def test_reranking_stays_free(paid_client, free_run) -> None:
+    """It returns counts, fetches nothing, and reorders what is already shown.
+
+    Gating it would charge for arithmetic on data the user can already see.
+    """
+    response = paid_client.post(
+        f"/api/runs/{free_run['run_id']}/rerank",
+        json={"priorities": None, "preferences": None, "funding": None},
+    )
+    assert response.status_code == 200, response.text
 
 
 def test_paying_restores_the_full_shortlist_fields(paid_client, free_run) -> None:
@@ -127,12 +160,24 @@ def test_paying_queues_a_full_run(paid_client, free_run) -> None:
     assert any(r["candidate_limit"] > 5 for r in runs)
 
 
-def test_a_run_started_after_paying_is_not_capped(paid_client, free_run) -> None:
+def test_paying_leaves_nothing_for_the_user_to_start(paid_client, free_run) -> None:
+    """The full run is queued by the payment, and a duplicate is refused.
+
+    Both halves matter. Paying enqueues the run itself, so asking the user to
+    press start again would be busywork; and because that run is in progress,
+    the guard against concurrent research on one case answers 409 rather than
+    quietly starting a second crawl of the same twenty universities.
+    """
     _unlock(paid_client, free_run["case_id"])
-    run = paid_client.post(
+
+    queued = [r for r in paid_client.get("/api/runs").json() if r["candidate_limit"] > 5]
+    assert queued, "paying should have queued an uncapped run"
+
+    duplicate = paid_client.post(
         "/api/runs", json={"profile_id": free_run["case_id"], "demo_mode": True}
-    ).json()
-    assert run["candidate_limit"] > 5
+    )
+    assert duplicate.status_code == 409
+    assert "already running" in duplicate.json()["detail"]
 
 
 def test_with_payments_disabled_nothing_is_gated(tmp_path, monkeypatch, corpus_dir) -> None:

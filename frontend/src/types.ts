@@ -31,6 +31,20 @@ export type SourceSpecificity =
 
 export type UserDecision = 'undecided' | 'approved' | 'maybe' | 'rejected';
 
+/**
+ * Where a row sits in a balanced list.
+ *
+ * Deliberately not "safety / match / reach": *safety* reads as a promise, and
+ * nothing here predicts an admission.
+ */
+export type Bucket =
+  | 'WELL_PLACED' | 'PLAUSIBLE' | 'AMBITIOUS' | 'OUT_OF_BUDGET'
+  | 'NEEDS_CLARIFICATION' | 'EXCLUDED';
+
+/** The six groups the applicant ranks; their order becomes the axis weights. */
+export type PriorityGroup =
+  | 'funding' | 'academic' | 'country' | 'city_climate' | 'career' | 'campus_life';
+
 export type JobStatus =
   | 'queued' | 'running' | 'succeeded'
   /** Failed but retryable: it will be picked up again after its backoff. */
@@ -188,6 +202,50 @@ export interface ExplainableScore {
   disclaimer: string;
 }
 
+export interface RerankIn {
+  priorities?: PriorityGroup[];
+  weights?: Record<string, number>;
+  gamma?: number;
+  /** Off by default: trying an ordering out must not rewrite the profile. */
+  persist?: boolean;
+}
+
+export interface BalancedShortlist {
+  chosen: ProgramResult[];
+  /** What the quotas could not fill, said out loud rather than hidden. */
+  notes: string[];
+  quotas: Record<string, number>;
+}
+
+export interface AxisScore {
+  axis: string;
+  /** null whenever `state` is not 'known'. */
+  value: number | null;
+  /** 'unknown' lowers coverage; 'not_applicable' is ignored by both numbers. */
+  state: 'known' | 'unknown' | 'not_applicable';
+  weight: number;
+  reason: string;
+  evidence_claim_ids: string[];
+}
+
+export interface RankingV2 {
+  /** Match against the stated priorities, 0-1. Never a probability. */
+  fit: number | null;
+  /** Share of the weight that rests on verified data. */
+  coverage: number;
+  sort_key: number;
+  gamma: number;
+  axes: AxisScore[];
+  unknown_axes: string[];
+  not_applicable_axes: string[];
+  knocked_out_by: string[];
+  bucket: Bucket;
+  bucket_reason: string;
+  weights_source: 'priorities_roc' | 'weights_override';
+  version: '2';
+  disclaimer: string;
+}
+
 export interface ClaimOut {
   claim_type: string;
   normalized_value: unknown;
@@ -296,6 +354,9 @@ export interface ProgramResult {
   costs: CostBreakdown;
   funding_gap: FundingGap | null;
   preference_score: ExplainableScore | null;
+  ranking: RankingV2 | null;
+  catalog_attributes: Record<string, string>;
+  catalog_attributes_source: string;
   admission_deadline: string | null;
   admission_deadline_timezone: string | null;
   admission_deadline_raw: string | null;
@@ -303,6 +364,8 @@ export interface ProgramResult {
   climate_fit: string;
   city_fit: string;
   workload_fit: string;
+  size_fit: string;
+  campus_fit: string;
   career_notes: string;
   post_study_work: string;
   work_during_study: string;
@@ -346,6 +409,9 @@ export interface RunView {
   decided_count: number;
   stages: StageView[];
   errors: string[];
+  //: Diagnostics that mean 'the page was read and does not say'. Absent on
+  //: runs made before the two were separated.
+  unknowns?: string[];
   retry_urls: string[];
   settings: Record<string, unknown>;
   created_at: string;
@@ -366,6 +432,8 @@ export interface RunView {
   worker_id: string | null;
   heartbeat_at: string | null;
   recovery_count: number;
+  //: When the evidence is next re-read automatically (ISO 8601), if ever.
+  next_recheck_at?: string | null;
 }
 
 export interface ProfileGap {
@@ -398,9 +466,24 @@ export interface Capabilities {
   data_origin: string;
   adapters: { name: string; role: string; live: boolean }[];
   fetch_tiers: string[];
-  currency: { supported: string[]; rate_date: string; rate_source: string };
+  currency: {
+    supported: string[];
+    rate_date: string;
+    rate_source: string;
+    rate_age_days?: number;
+    //: Empty while the snapshot is fresh; a sentence to show verbatim once it is not.
+    stale_warning?: string;
+  };
   guarantees: string[];
   limits: string[];
+  //: What live mode can actually reach. Someone switching demo mode off
+  //: pictures the open web; the truth is a curated registry, and the
+  //: difference has to be on screen before they choose, not after.
+  live_coverage: {
+    institutions: number;
+    countries: string[];
+    recall_note: string;
+  };
 }
 
 export interface StoredProfile {
@@ -466,4 +549,161 @@ export interface OrderView {
   qr_payload: string;
   qr_expires_at: string | null;
   created_at: string;
+}
+
+/* --- Community ---------------------------------------------------------
+ *
+ * `status` is nullable everywhere it appears. Null means the person has not
+ * said, which the interface shows as "not stated" — never as waitlist.
+ */
+
+export type ApplicantStatus = 'accepted' | 'waitlist';
+
+/** Who may open a conversation with you. */
+export type DirectMessagePolicy = 'anyone' | 'threads' | 'nobody';
+
+export interface PersonCard {
+  user_id: string;
+  display_name: string;
+  status: ApplicantStatus | null;
+  target_city: string;
+  target_major: string;
+  universities: string[];
+  /** How this person can be reached — never anything about them. */
+  dm_policy: DirectMessagePolicy;
+  bio: string;
+}
+
+export interface MyProfile {
+  joined: boolean;
+  profile: PersonCard | null;
+}
+
+export interface ProfileInput {
+  status: ApplicantStatus | null;
+  target_city: string;
+  target_major: string;
+  bio: string;
+  universities: string[];
+  dm_policy: DirectMessagePolicy;
+}
+
+export interface MessageView {
+  id: string;
+  body: string;
+  created_at: string;
+  /** Whose side of the conversation this is: the screen places the line by it. */
+  mine: boolean;
+}
+
+export interface ConversationView {
+  person: PersonCard;
+  last_message: string;
+  last_message_at: string;
+  unread: number;
+}
+
+export interface MessagePage {
+  person: PersonCard;
+  items: MessageView[];
+  next_cursor: string | null;
+}
+
+export interface AuthorRef {
+  user_id: string;
+  display_name: string;
+  status: ApplicantStatus | null;
+}
+
+export interface PostView {
+  id: string;
+  author: AuthorRef;
+  body: string;
+  tags: string[];
+  reply_count: number;
+  created_at: string;
+}
+
+export interface ReplyView {
+  id: string;
+  post_id: string;
+  author: AuthorRef;
+  body: string;
+  created_at: string;
+}
+
+/** A keyset page. `next_cursor` is null on the last one. */
+export interface Page<T> {
+  items: T[];
+  next_cursor: string | null;
+}
+
+export interface PeopleFilters {
+  city?: string;
+  university?: string;
+  major?: string;
+  status?: string;
+}
+
+export interface FeedFilters {
+  tag?: string;
+  author?: string;
+  city?: string;
+  university?: string;
+  status?: string;
+}
+
+/**
+ * One value read off an applicant's transcript, with the words it came from.
+ *
+ * `field` is the dotted path into the profile form, so a suggestion can be
+ * applied without a second mapping table drifting out of step with the API.
+ * Nothing here is applied until the applicant says so.
+ */
+export interface TranscriptSuggestion {
+  field: string;
+  label: string;
+  value: unknown;
+  excerpt: string;
+}
+
+export interface TranscriptReading {
+  suggestions: TranscriptSuggestion[];
+  /** Why the list is empty, when it is. A scan of paper carries no text. */
+  note: string;
+}
+
+/* --- Moderation -------------------------------------------------------- */
+
+export type ReportReason =
+  | 'harassment'
+  | 'personal_information'
+  | 'impersonation'
+  | 'spam'
+  | 'misleading_advice'
+  | 'other';
+
+export type ReportTarget = 'post' | 'reply' | 'message' | 'profile';
+
+export type ReportStatus = 'open' | 'actioned' | 'dismissed';
+
+export interface ReporterRef {
+  user_id: string;
+  display_name: string;
+}
+
+export interface ReportView {
+  id: string;
+  reporter: ReporterRef;
+  subject_type: ReportTarget;
+  subject_id: string;
+  subject_author: ReporterRef | null;
+  reason: ReportReason;
+  note: string;
+  /** What the content said when it was reported, kept for after it is gone. */
+  excerpt: string;
+  status: ReportStatus;
+  created_at: string;
+  resolved_by: string | null;
+  resolution_note: string;
 }

@@ -8,6 +8,7 @@ profile unless the caller accepts it explicitly.
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 
 from app.schemas.profile import GradeValue
@@ -29,7 +30,7 @@ METHODS: dict[str, ConversionMethod] = {
         from_scale="KZ 5-point",
         to_scale="US 4.0",
         description="Linear map of the passing band 3.0-5.0 onto 2.0-4.0.",
-        source="UniMatch built-in approximation (app/domain/grades.py) — not a credential evaluation",
+        source="ASHYQ Apply built-in approximation (app/domain/grades.py) — not a credential evaluation",
         caveat=(
             "Universities in the United States generally require an evaluation by a NACES member "
             "(WES, ECE, SpanTran). This figure is for shortlisting only and must not be entered "
@@ -41,7 +42,7 @@ METHODS: dict[str, ConversionMethod] = {
         from_scale="Percentage /100",
         to_scale="US 4.0",
         description="Linear map of 50-100% onto 1.0-4.0.",
-        source="UniMatch built-in approximation (app/domain/grades.py) — not a credential evaluation",
+        source="ASHYQ Apply built-in approximation (app/domain/grades.py) — not a credential evaluation",
         caveat="Institutions differ widely on percentage bands; treat as indicative only.",
     ),
     "uk_class_to_us4": ConversionMethod(
@@ -49,10 +50,14 @@ METHODS: dict[str, ConversionMethod] = {
         from_scale="UK percentage /100",
         to_scale="US 4.0",
         description="UK degree classification bands mapped to common US equivalents.",
-        source="UniMatch built-in approximation (app/domain/grades.py) — not a credential evaluation",
+        source="ASHYQ Apply built-in approximation (app/domain/grades.py) — not a credential evaluation",
         caveat="UK marking is not linear; a 70% first-class mark is not a 2.8 GPA.",
     ),
 }
+
+
+#: Scales the UK classification map may legitimately be offered against.
+_UK_SCALE = re.compile(r"\b(uk|british)\b")
 
 
 def available_methods(scale_label: str) -> list[ConversionMethod]:
@@ -62,7 +67,16 @@ def available_methods(scale_label: str) -> list[ConversionMethod]:
         out.append(METHODS["kz5_to_us4_linear"])
     if "percent" in low or "/100" in low or "100" in low:
         out.append(METHODS["pct100_to_us4_linear"])
-        out.append(METHODS["uk_class_to_us4"])
+        # The UK map reads a mark through degree-classification bands, and its
+        # own caveat says UK marking is not linear. Against a Kazakh or
+        # Chinese percentage it is not a rougher approximation of the same
+        # thing - it is the wrong instrument, offered as a supported choice
+        # sitting beside the correct one. Only claim it when the scale says
+        # so.
+        # Whole words only: a substring test would read "Ukrainian" as "UK",
+        # which is the same mistake citizenship matching was fixed for.
+        if _UK_SCALE.search(low):
+            out.append(METHODS["uk_class_to_us4"])
     return out
 
 

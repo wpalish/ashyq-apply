@@ -44,7 +44,9 @@ class Claim(Base):
     source_specificity: SourceSpecificity = SourceSpecificity.UNKNOWN
     confidence: float = Field(default=0.5, ge=0.0, le=1.0)
     status: ClaimStatus = ClaimStatus.UNVERIFIED
-    extraction_method: Literal["structured", "html_rule", "pdf_rule", "llm_assisted", "fixture"] = "html_rule"
+    extraction_method: Literal["structured", "html_rule", "pdf_rule", "llm_assisted", "fixture"] = (
+        "html_rule"
+    )
     notes: str = ""
 
     @field_validator("original_text_excerpt", mode="before")
@@ -81,7 +83,8 @@ class Conflict(Base):
     values: list[Any]
     source_urls: list[str]
     preferred_claim_id: str | None = Field(
-        default=None, description="Higher-specificity source, shown as 'preferred' but never as settled"
+        default=None,
+        description="Higher-specificity source, shown as 'preferred' but never as settled",
     )
     resolution_rule: str = ""
     question_for_admissions: str = Field(

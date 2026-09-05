@@ -8,6 +8,7 @@
 
 import type {
   AdmissionsFit,
+  Bucket,
   ClaimStatus,
   EligibilityStatus,
   FundingClassification,
@@ -20,12 +21,23 @@ export type Tone = 'ok' | 'info' | 'warn' | 'risk' | 'neutral' | 'demo' | 'accen
 export const NOT_PUBLISHED = 'not published';
 export const NOT_FOUND = 'not found';
 
+/**
+ * One locale for money and dates alike.
+ *
+ * Money was formatted en-US and dates en-GB, so the same screen showed
+ * "1,234 EUR" beside "05 Mar 2027" — two conventions, neither chosen by the
+ * reader. The browser's own locale is the honest default; en-GB is the
+ * fallback because the product's copy is British English.
+ */
+export const DISPLAY_LOCALE =
+  typeof navigator !== 'undefined' && navigator.language ? navigator.language : 'en-GB';
+
 export function money(value: Money | null | undefined): string {
   if (!value) return NOT_FOUND;
-  const base = `${Math.round(value.amount).toLocaleString('en-US')} ${value.currency}`;
+  const base = `${Math.round(value.amount).toLocaleString(DISPLAY_LOCALE)} ${value.currency}`;
   const range =
     value.range_low != null && value.range_high != null && value.range_low !== value.range_high
-      ? ` (${Math.round(value.range_low).toLocaleString('en-US')}–${Math.round(value.range_high).toLocaleString('en-US')})`
+      ? ` (${Math.round(value.range_low).toLocaleString(DISPLAY_LOCALE)}–${Math.round(value.range_high).toLocaleString(DISPLAY_LOCALE)})`
       : '';
   const year = value.academic_year ? ` · ${value.academic_year}` : '';
   const est = value.is_estimate ? ' est.' : '';
@@ -36,14 +48,14 @@ export function date(iso: string | null | undefined): string {
   if (!iso) return NOT_FOUND;
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return iso;
-  return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  return d.toLocaleDateString(DISPLAY_LOCALE, { day: '2-digit', month: 'short', year: 'numeric' });
 }
 
 export function dateTime(iso: string | null | undefined): string {
   if (!iso) return 'never';
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return iso;
-  return d.toLocaleString('en-GB', {
+  return d.toLocaleString(DISPLAY_LOCALE, {
     day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit',
   });
 }
@@ -85,6 +97,15 @@ export const fundingClassTone: Record<FundingClassification, Tone> = {
   NEED_BASED_POSSIBLE: 'warn',
   NOT_ELIGIBLE: 'risk',
   UNKNOWN: 'neutral',
+};
+
+export const bucketTone: Record<Bucket, Tone> = {
+  WELL_PLACED: 'ok',
+  PLAUSIBLE: 'info',
+  AMBITIOUS: 'warn',
+  OUT_OF_BUDGET: 'risk',
+  NEEDS_CLARIFICATION: 'neutral',
+  EXCLUDED: 'neutral',
 };
 
 export const claimStatusTone: Record<ClaimStatus, Tone> = {
@@ -143,7 +164,25 @@ export const STATUS_MEANING: Record<string, string> = {
   CONFLICTING: 'Two official sources disagree. Neither has been chosen as correct.',
   UNVERIFIED: 'Not confirmed against an official source.',
   NOT_FOUND: 'No source published this value.',
+  WELL_PLACED: 'Requirements met with room, funding confirmed, and the remaining cost within your ceiling.',
+  PLAUSIBLE: 'Requirements and funding both look reachable on published data.',
+  OUT_OF_BUDGET: 'What remains to pay is past the ceiling you stated. The row is kept, with the number.',
+  EXCLUDED: 'A published requirement you do not meet, or a country you excluded. Listed, not ranked.',
+  NEEDS_CLARIFICATION: 'Too little could be verified to place this row at all.',
 };
+
+/** The fit number never travels without this sentence. */
+export const FIT_DISCLAIMER =
+  'How well this matches your stated priorities, on confirmed data. Not a probability of admission.';
+
+/** A fit or coverage value, or an explicit dash when nothing was known. */
+export function ratio(value: number | null | undefined, digits = 2): string {
+  return value === null || value === undefined ? '—' : value.toFixed(digits);
+}
+
+export function percent(value: number | null | undefined): string {
+  return value === null || value === undefined ? '—' : `${Math.round(value * 100)}%`;
+}
 
 export function scorePercent(total: number, max: number): number {
   return max > 0 ? Math.round((total / max) * 100) : 0;

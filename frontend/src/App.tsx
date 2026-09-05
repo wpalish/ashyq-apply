@@ -6,9 +6,11 @@
  * and disabled nav items say *why* they are disabled instead of vanishing.
  */
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useStore } from '@/lib/store';
 import { PaywallNotice } from '@/components/PaywallNotice';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { AccountMenu } from '@/components/AccountMenu';
 import { ProfileScreen } from '@/screens/ProfileScreen';
 import { PreferencesScreen } from '@/screens/PreferencesScreen';
 import { ProgressScreen } from '@/screens/ProgressScreen';
@@ -18,39 +20,97 @@ import { ApprovedScreen } from '@/screens/ApprovedScreen';
 import { DocumentsScreen } from '@/screens/DocumentsScreen';
 import { SourcesScreen } from '@/screens/SourcesScreen';
 import { ExportScreen } from '@/screens/ExportScreen';
+import { LegalScreen } from '@/screens/LegalScreen';
+import { FeedScreen } from '@/screens/FeedScreen';
+import { DiscoverScreen } from '@/screens/DiscoverScreen';
+import { PersonScreen } from '@/screens/PersonScreen';
+import { MessagesScreen } from '@/screens/MessagesScreen';
+import { ModerationScreen } from '@/screens/ModerationScreen';
 import { Chip } from '@/components/primitives';
 import { api } from '@/api/client';
+import { LOCALES, t as translate, type Locale, type MessageKey } from '@/lib/i18n';
+import { useTranslation } from '@/lib/useTranslation';
+import type { PersonCard } from '@/types';
 
 export type ScreenId =
   | 'profile' | 'preferences' | 'progress' | 'shortlist' | 'funding'
-  | 'approved' | 'documents' | 'sources' | 'export';
+  | 'approved' | 'documents' | 'sources' | 'export'
+  | 'feed' | 'discover' | 'messages' | 'me' | 'person' | 'moderation' | 'legal';
 
-const SCREENS: { id: ScreenId; num: string; label: string; group: string }[] = [
-  { id: 'profile', num: '01', label: 'Applicant profile', group: 'Prepare' },
-  { id: 'preferences', num: '02', label: 'Preferences & budget', group: 'Prepare' },
-  { id: 'progress', num: '03', label: 'Research progress', group: 'Research' },
-  { id: 'shortlist', num: '04', label: 'University shortlist', group: 'Research' },
-  { id: 'funding', num: '05', label: 'Funding comparison', group: 'Research' },
-  { id: 'sources', num: '06', label: 'Sources & conflicts', group: 'Research' },
-  { id: 'approved', num: '07', label: 'Approved universities', group: 'Decide' },
-  { id: 'documents', num: '08', label: 'Documents & deadlines', group: 'Decide' },
-  { id: 'export', num: '09', label: 'Export & data deletion', group: 'Decide' },
+/**
+ * The numbers are not decoration: the case screens are a sequence, and 04
+ * genuinely cannot be read before 03 has produced anything. Community is not a
+ * sequence, so those entries carry no number.
+ */
+const SCREENS: { id: ScreenId; num?: string; label: MessageKey; group: MessageKey }[] = [
+  { id: 'profile', num: '01', label: 'nav.profile', group: 'nav.group.prepare' },
+  { id: 'preferences', num: '02', label: 'nav.preferences', group: 'nav.group.prepare' },
+  { id: 'progress', num: '03', label: 'nav.progress', group: 'nav.group.research' },
+  { id: 'shortlist', num: '04', label: 'nav.shortlist', group: 'nav.group.research' },
+  { id: 'funding', num: '05', label: 'nav.funding', group: 'nav.group.research' },
+  { id: 'sources', num: '06', label: 'nav.sources', group: 'nav.group.research' },
+  { id: 'approved', num: '07', label: 'nav.approved', group: 'nav.group.decide' },
+  { id: 'documents', num: '08', label: 'nav.documents', group: 'nav.group.decide' },
+  { id: 'export', num: '09', label: 'nav.export', group: 'nav.group.decide' },
+  { id: 'feed', label: 'nav.feed', group: 'nav.group.community' },
+  { id: 'discover', label: 'nav.discover', group: 'nav.group.community' },
+  { id: 'messages', label: 'nav.messages', group: 'nav.group.community' },
+  { id: 'me', label: 'nav.me', group: 'nav.group.community' },
+  { id: 'moderation', label: 'nav.moderation', group: 'nav.group.community' },
+  // Listed rather than tucked into the footer, so that it has an address a
+  // person can be sent to: "read the privacy policy" is a link, not a hunt.
+  { id: 'legal', label: 'nav.legal', group: 'nav.group.about' },
 ];
+
+/** The screen named by `#/…`, if it names one at all. */
+function screenFromHash(): ScreenId | null {
+  const id = window.location.hash.replace(/^#\/?/, '').split('?')[0];
+  return SCREENS.some((s) => s.id === id) ? (id as ScreenId) : null;
+}
+
+/**
+ * A screen's name for a sentence, in the reader's language.
+ *
+ * Module scope rather than a closure over the hook's `t`: it would otherwise
+ * be a new function on every render and a dependency of the memoised gate
+ * check. `translate` reads the current locale when it is called, so this is
+ * just as live as the hook.
+ */
+function label(id: ScreenId): string {
+  const entry = SCREENS.find((s) => s.id === id);
+  return entry ? translate(entry.label) : id;
+}
 
 /** "1 conflict", not "1 conflicts". */
 function plural(n: number, noun: string): string {
   return `${n} ${noun}${n === 1 ? '' : 's'}`;
 }
 
-const THEME_KEY = 'unimatch.theme';
+const THEME_KEY = 'ashyq.theme';
 type Theme = 'system' | 'light' | 'dark';
 
 export default function App() {
   const {
     run, results, summary, error, clearError, capabilities,
-    cases, savedProfile, switchCase, newCase,
+    cases, savedProfile, switchCase, newCase, dirty, hydrated,
   } = useStore();
-  const [screen, setScreen] = useState<ScreenId>('profile');
+  const { t, locale, setLocale } = useTranslation();
+  const [screen, setScreenState] = useState<ScreenId>(() => screenFromHash() ?? 'profile');
+  const [redirected, setRedirected] = useState<string | null>(null);
+  /** Ask before throwing away typing the applicant has not saved. */
+  const confirmDiscard = () =>
+    !dirty ||
+    window.confirm(
+      'You have unsaved changes to this profile. Leaving now discards them. '
+      + 'Save first, or continue and lose them?',
+    );
+  // Who I am in the community, and whose profile is open. The community has no
+  // gates, so this is the only navigation state it needs.
+  const [me, setMe] = useState<PersonCard | null>(null);
+  const [joined, setJoined] = useState(false);
+  const [personId, setPersonId] = useState<string | null>(null);
+  const [messagingWith, setMessagingWith] = useState<string | null>(null);
+  const [unread, setUnread] = useState(0);
   const [theme, setTheme] = useState<Theme>(() => {
     try {
       return (window.localStorage.getItem(THEME_KEY) as Theme) ?? 'system';
@@ -70,6 +130,29 @@ export default function App() {
     }
   }, [theme]);
 
+  useEffect(() => {
+    api.socialMe()
+      .then((state) => { setJoined(state.joined); setMe(state.profile); })
+      .catch(() => { /* the community is optional; its absence must not block the case */ });
+  }, []);
+
+  /**
+   * The unread badge.
+   *
+   * Read once on load and again whenever a conversation is closed, rather than
+   * polled: nothing else in this app polls, and a timer that wakes a phone
+   * every few seconds to ask a question whose answer is almost always "no" is
+   * a battery cost the product has not earned. A message that arrives while
+   * you are looking at another screen shows up on the next navigation.
+   */
+  const refreshUnread = useCallback(() => {
+    api.unreadMessages()
+      .then((state) => setUnread(state.unread))
+      .catch(() => { /* a badge that cannot be fetched simply does not show */ });
+  }, []);
+
+  useEffect(() => { refreshUnread(); }, [refreshUnread, screen]);
+
   // Follow the workflow forward on its own, but never take the user backwards.
   useEffect(() => {
     if (!run) return;
@@ -82,6 +165,13 @@ export default function App() {
   const maybeCount = results.filter((r) => r.user_decision === 'maybe').length;
   const withChecklists = results.filter((r) => r.checklist).length;
 
+  const collectingDocuments = Boolean(
+    run
+      && (run.stage === 'document_collection'
+        || ((run.job_status === 'queued' || run.job_status === 'running')
+          && approvedCount + maybeCount > 0)),
+  );
+
   const gate: Record<ScreenId, string | null> = {
     profile: null,
     preferences: null,
@@ -90,15 +180,96 @@ export default function App() {
     funding: hasResults ? null : 'No results yet',
     sources: hasResults ? null : 'No results yet',
     approved: hasResults ? null : 'No results yet',
-    documents: withChecklists > 0 ? null : 'Approve programmes, then collect documents',
+    // Also open while collection is in flight: the applicant pressed Collect
+    // and the worker has not finished yet. Bouncing them off the screen they
+    // just asked for would be the redirect fighting the workflow.
+    documents:
+      withChecklists > 0 || collectingDocuments
+        ? null
+        : 'Approve programmes, then collect documents',
     export: run ? null : 'Start research first',
+    // The community does not depend on a research run, so nothing gates it.
+    feed: null,
+    discover: null,
+    messages: null,
+    me: null,
+    moderation: null,
+    person: null,
+    // A privacy policy nobody can reach before signing up is not a policy.
+    legal: null,
   };
+
+  // The hash is the address of the screen: back and forward work, a reload
+  // lands where it left off, and a link to a screen can be sent to someone.
+  // The gates still decide what may be shown - a bookmark to #/shortlist made
+  // before there were any results redirects to progress and says why.
+  const setScreen = useCallback((next: ScreenId) => {
+    setScreenState(next);
+    const target = `#/${next}`;
+    if (window.location.hash !== target) window.location.hash = target;
+  }, []);
+
+  // Only an address typed, bookmarked or arrived at through history is checked
+  // against the gates. In-app navigation is already gated by the disabled nav
+  // buttons, and re-checking on every state change made the redirect fight the
+  // workflow: pressing "Collect documents" bounced the applicant back to
+  // progress because the checklists did not exist *yet*.
+  const gateRef = useRef(gate);
+  gateRef.current = gate;
+  const runRef = useRef(run);
+  runRef.current = run;
+  const hydratedRef = useRef(hydrated);
+  hydratedRef.current = hydrated;
+
+  const [pendingLink, setPendingLink] = useState<ScreenId | null>(null);
+
+  const evaluateLink = useCallback((requested: ScreenId) => {
+    const blocked = gateRef.current[requested];
+    if (!blocked) {
+      setScreenState(requested);
+      return;
+    }
+    const fallback: ScreenId = runRef.current ? 'progress' : 'profile';
+    setRedirected(`${label(requested)}: ${blocked}.`);
+    setScreen(fallback);
+  }, [setScreen]);
+
+  const openFromHash = useCallback(() => {
+    const requested = screenFromHash();
+    if (!requested) return;
+    // Before the store has loaded, "no results yet" would be a statement about
+    // an empty store rather than about the run. Show the screen and judge it
+    // once there is something to judge.
+    setScreenState(requested);
+    if (!hydratedRef.current) {
+      setPendingLink(requested);
+      return;
+    }
+    evaluateLink(requested);
+  }, [evaluateLink]);
+
+  useEffect(() => {
+    if (!hydrated || !pendingLink) return;
+    evaluateLink(pendingLink);
+    setPendingLink(null);
+  }, [hydrated, pendingLink, evaluateLink]);
+
+  useEffect(() => {
+    window.addEventListener('hashchange', openFromHash);
+    // Stamp the hash on first load so Back has somewhere to return to, and
+    // check a deep link before rendering the screen it names.
+    if (screenFromHash()) openFromHash();
+    else window.location.replace(`#/${screen}`);
+    return () => window.removeEventListener('hashchange', openFromHash);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [openFromHash]);
 
   const badges: Partial<Record<ScreenId, number>> = {
     shortlist: results.length || undefined,
     approved: approvedCount + maybeCount || undefined,
     documents: withChecklists || undefined,
     sources: (summary ? summary.with_conflicts + summary.with_open_questions : 0) || undefined,
+    messages: unread || undefined,
   };
 
   let groupSeen = '';
@@ -107,9 +278,9 @@ export default function App() {
     <div className="app">
       <aside className="sidebar">
         <div className="brand">
-          <span className="brand__mark">UniMatch</span>
+          <span className="brand__mark">ASHYQ Apply</span>
           <span className="brand__tag">
-            Evidence-backed university &amp; scholarship shortlisting
+            {t('brand.tagline')}
           </span>
         </div>
 
@@ -119,7 +290,7 @@ export default function App() {
             const blocked = gate[s.id];
             return (
               <div key={s.id}>
-                {header && <div className="nav__group-label">{header}</div>}
+                {header && <div className="nav__group-label">{t(header)}</div>}
                 <button
                   type="button"
                   className="nav__item"
@@ -127,10 +298,14 @@ export default function App() {
                   disabled={Boolean(blocked)}
                   title={blocked ?? undefined}
                   data-testid={`nav-${s.id}`}
-                  onClick={() => setScreen(s.id)}
+                  onClick={() => {
+                    // A deliberate move answers the explanation, so it goes.
+                    setRedirected(null);
+                    setScreen(s.id);
+                  }}
                 >
-                  <span className="nav__num">{s.num}</span>
-                  <span>{s.label}</span>
+                  <span className="nav__num">{s.num ?? ''}</span>
+                  <span>{t(s.label)}</span>
                   {badges[s.id] !== undefined && <span className="nav__badge">{badges[s.id]}</span>}
                 </button>
               </div>
@@ -140,19 +315,35 @@ export default function App() {
 
         <div className="stack stack--tight" style={{ marginTop: 'auto' }}>
           <div className="field">
-            <label className="field__label xs" htmlFor="theme">Appearance</label>
+            <label className="field__label xs" htmlFor="theme">{t('appearance.label')}</label>
             <select
               id="theme"
               value={theme}
               onChange={(e) => setTheme(e.target.value as Theme)}
             >
-              <option value="system">Match system</option>
-              <option value="light">Light</option>
-              <option value="dark">Dark</option>
+              <option value="system">{t('appearance.system')}</option>
+              <option value="light">{t('appearance.light')}</option>
+              <option value="dark">{t('appearance.dark')}</option>
+            </select>
+          </div>
+          <div className="field">
+            <label className="field__label xs" htmlFor="locale">{t('language.label')}</label>
+            {/* Russian and Kazakh are partial on purpose: a string whose terms
+                are still under review stays in English rather than being
+                machine-translated. See docs/i18n/GLOSSARY.md. */}
+            <select
+              id="locale"
+              data-testid="locale"
+              value={locale}
+              onChange={(e) => setLocale(e.target.value as Locale)}
+            >
+              {LOCALES.map((option) => (
+                <option key={option.id} value={option.id}>{option.label}</option>
+              ))}
             </select>
           </div>
           <p className="xs faint" style={{ margin: 0 }}>
-            Published criteria only. UniMatch never predicts admission or funding outcomes.
+            {t('brand.disclaimer')}
           </p>
         </div>
       </aside>
@@ -177,11 +368,17 @@ export default function App() {
               id="case-switcher"
               value={savedProfile?.id ?? ''}
               onChange={(event) => {
+                // Switching case replaces the form. Unsaved edits are the
+                // applicant's typing, so they are never discarded silently.
+                if (!confirmDiscard()) {
+                  event.target.value = savedProfile?.id ?? '';
+                  return;
+                }
                 if (event.target.value) void switchCase(event.target.value);
                 else newCase();
               }}
             >
-              <option value="">New applicant</option>
+              <option value="">{t('topbar.newApplicant')}</option>
               {cases.map((item) => (
                 <option key={item.id} value={item.profile_id}>
                   {item.display_name} · {item.run_count} run{item.run_count === 1 ? '' : 's'}
@@ -190,18 +387,34 @@ export default function App() {
             </select>
           </label>
           <button className="btn btn--sm" type="button" onClick={() => {
+            if (!confirmDiscard()) return;
             newCase(); setScreen('profile');
-          }}>New case</button>
+          }}>{t('topbar.newCase')}</button>
           {summary && (
             <span className="xs muted">
               {plural(summary.total, 'programme')} · {plural(summary.with_conflicts, 'conflict')} ·{' '}
               {plural(summary.with_open_questions, 'open question')}
             </span>
           )}
-          <button className="btn btn--sm btn--ghost" type="button" onClick={async () => {
+          <AccountMenu onSignedOut={() => window.location.reload()} />
+          <button className="btn btn--sm btn--ghost" data-testid="sign-out" type="button" onClick={async () => {
             await api.logout(); window.location.reload();
-          }}>Sign out</button>
+          }}>{t('topbar.signOut')}</button>
         </header>
+
+        {redirected && (
+          <div style={{ padding: 'var(--space-4) var(--space-6) 0' }}>
+            <div className="notice notice--warn" role="status" data-testid="redirect-notice">
+              <div style={{ flex: 1 }}>
+                <strong>Not available yet.</strong> {redirected} You were taken to the screen that
+                comes first.
+              </div>
+              <button className="btn btn--sm btn--ghost" onClick={() => setRedirected(null)}>
+                Dismiss
+              </button>
+            </div>
+          </div>
+        )}
 
         {error && (
           <div style={{ padding: 'var(--space-4) var(--space-6) 0' }}>
@@ -219,6 +432,9 @@ export default function App() {
         <PaywallNotice />
 
         <main className="screen">
+          {/* Scoped to the screen, so one broken screen cannot take the
+              sidebar and the case switcher down with it. */}
+          <ErrorBoundary label={`the ${screen} screen`} key={screen}>
           {screen === 'profile' && <ProfileScreen onNext={() => setScreen('preferences')} />}
           {screen === 'preferences' && <PreferencesScreen onStarted={() => setScreen('progress')} />}
           {screen === 'progress' && <ProgressScreen onDone={() => setScreen('shortlist')} />}
@@ -228,6 +444,38 @@ export default function App() {
           {screen === 'approved' && <ApprovedScreen onCollect={() => setScreen('documents')} />}
           {screen === 'documents' && <DocumentsScreen />}
           {screen === 'export' && <ExportScreen />}
+          {screen === 'legal' && <LegalScreen />}
+          {screen === 'feed' && (
+            <FeedScreen
+              joined={joined}
+              myUserId={me?.user_id ?? null}
+              onOpenPerson={(id) => { setPersonId(id); setScreen('person'); }}
+              onJoin={() => setScreen('me')}
+            />
+          )}
+          {screen === 'discover' && (
+            <DiscoverScreen onOpenPerson={(id) => { setPersonId(id); setScreen('person'); }} />
+          )}
+          {screen === 'moderation' && <ModerationScreen />}
+          {screen === 'messages' && (
+            <MessagesScreen
+              openWith={messagingWith}
+              onOpenChange={setMessagingWith}
+              onReadSomething={refreshUnread}
+            />
+          )}
+          {(screen === 'me' || screen === 'person') && (
+            <PersonScreen
+              key={screen === 'me' ? 'me' : personId}
+              userId={screen === 'me' ? null : personId}
+              myUserId={me?.user_id ?? null}
+              onOpenPerson={(id) => { setPersonId(id); setScreen('person'); }}
+              onOpenMessages={(id) => { setMessagingWith(id); setScreen('messages'); }}
+              onProfileSaved={(saved) => { setMe(saved); setJoined(true); }}
+              onLeft={() => { setMe(null); setJoined(false); }}
+            />
+          )}
+          </ErrorBoundary>
         </main>
       </div>
     </div>

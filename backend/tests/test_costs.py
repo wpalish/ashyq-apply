@@ -24,7 +24,8 @@ def costs(**items) -> CostBreakdown:
 
 def award(amount: float, currency="USD", year=YEAR, **kwargs) -> Scholarship:
     return Scholarship(
-        id="a", name=kwargs.pop("name", "Award"),
+        id="a",
+        name=kwargs.pop("name", "Award"),
         amount=Money(amount=amount, currency=currency, academic_year=year),
         classification=kwargs.pop("classification", FundingClassification.FULL_TUITION),
         **kwargs,
@@ -57,8 +58,12 @@ class TestArithmetic:
         assert any("exceeds the published cost" in w for w in gap.warnings)
 
     def test_a_percentage_of_tuition_award_is_resolved_against_tuition(self):
-        s = Scholarship(id="p", name="Pct", amount_is_percentage_of_tuition=100.0,
-                        classification=FundingClassification.FULL_TUITION)
+        s = Scholarship(
+            id="p",
+            name="Pct",
+            amount_is_percentage_of_tuition=100.0,
+            classification=FundingClassification.FULL_TUITION,
+        )
         gap = compute_funding_gap(costs(tuition=15000, housing=8000), [s])
         assert gap.computable
         assert gap.gap.amount == 8000
@@ -66,10 +71,12 @@ class TestArithmetic:
 
 class TestRefusals:
     def test_cost_components_from_different_years_are_not_summed(self):
-        mixed = CostBreakdown(items={
-            "tuition": Money(amount=40000, currency="USD", academic_year="2026/27"),
-            "housing": Money(amount=12000, currency="USD", academic_year="2024/25"),
-        })
+        mixed = CostBreakdown(
+            items={
+                "tuition": Money(amount=40000, currency="USD", academic_year="2026/27"),
+                "housing": Money(amount=12000, currency="USD", academic_year="2024/25"),
+            }
+        )
         gap = compute_funding_gap(mixed, [award(40000)])
         assert not gap.computable
         assert gap.year_mismatch
@@ -78,11 +85,14 @@ class TestRefusals:
     def test_a_cross_year_zero_is_refused(self):
         """The arithmetic reaches zero, but the figures describe different years."""
         full_ride = Scholarship(
-            id="fr", name="Full Ride",
+            id="fr",
+            name="Full Ride",
             classification=FundingClassification.FULL_RIDE_CONFIRMED,
             amount=Money(amount=90_000, currency="USD", academic_year="2024/25"),
-            coverage=[CoverageBreakdown(category=c, covered="yes")
-                      for c in ("tuition", "mandatory_fees", "housing", "meals")],
+            coverage=[
+                CoverageBreakdown(category=c, covered="yes")
+                for c in ("tuition", "mandatory_fees", "housing", "meals")
+            ],
         )
         gap = compute_funding_gap(
             costs(tuition=40000, mandatory_fees=2000, housing=12000, meals=6000), [full_ride]
@@ -93,11 +103,14 @@ class TestRefusals:
 
     def test_a_full_ride_missing_a_published_category_is_flagged(self):
         partial_ride = Scholarship(
-            id="fr", name="Full Ride",
+            id="fr",
+            name="Full Ride",
             classification=FundingClassification.FULL_RIDE_CONFIRMED,
             amount=Money(amount=100_000, currency="USD", academic_year=YEAR),
-            coverage=[CoverageBreakdown(category=c, covered="yes")
-                      for c in ("tuition", "mandatory_fees", "housing")],
+            coverage=[
+                CoverageBreakdown(category=c, covered="yes")
+                for c in ("tuition", "mandatory_fees", "housing")
+            ],
         )
         gap = compute_funding_gap(
             costs(tuition=40000, mandatory_fees=2000, housing=12000, meals=6000), [partial_ride]
@@ -108,11 +121,14 @@ class TestRefusals:
     def test_a_confirmed_living_stipend_satisfies_the_meals_category(self):
         """The gap check must agree with the classifier about the same award."""
         stipend_ride = Scholarship(
-            id="fr", name="Full Ride",
+            id="fr",
+            name="Full Ride",
             classification=FundingClassification.FULL_RIDE_CONFIRMED,
             amount=Money(amount=100_000, currency="USD", academic_year=YEAR),
-            coverage=[CoverageBreakdown(category=c, covered="yes")
-                      for c in ("tuition", "mandatory_fees", "housing", "personal")],
+            coverage=[
+                CoverageBreakdown(category=c, covered="yes")
+                for c in ("tuition", "mandatory_fees", "housing", "personal")
+            ],
         )
         gap = compute_funding_gap(
             costs(tuition=40000, mandatory_fees=2000, housing=12000, meals=6000), [stipend_ride]
@@ -125,15 +141,17 @@ class TestRefusals:
         assert "No official cost of attendance" in gap.reason
 
     def test_an_award_with_no_published_amount_is_excluded_and_named(self):
-        unsized = Scholarship(id="u", name="Mystery Grant",
-                              classification=FundingClassification.FULL_TUITION)
+        unsized = Scholarship(
+            id="u", name="Mystery Grant", classification=FundingClassification.FULL_TUITION
+        )
         gap = compute_funding_gap(costs(tuition=40000), [unsized])
         assert not gap.computable
         assert any("Mystery Grant" in w for w in gap.warnings)
 
     def test_need_based_aid_is_excluded_from_the_arithmetic(self):
-        need = Scholarship(id="n", name="Need Aid",
-                           classification=FundingClassification.NEED_BASED_POSSIBLE)
+        need = Scholarship(
+            id="n", name="Need Aid", classification=FundingClassification.NEED_BASED_POSSIBLE
+        )
         gap = compute_funding_gap(costs(tuition=40000), [need, award(10000)])
         assert gap.computable
         assert gap.gap.amount == 30000

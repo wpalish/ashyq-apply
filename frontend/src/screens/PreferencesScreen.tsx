@@ -9,6 +9,25 @@ import { useState } from 'react';
 import { Chip, Field, Notice, Panel } from '@/components/primitives';
 import { castInput, get, setIn, type Path } from '@/lib/immutable';
 import { useStore } from '@/lib/store';
+import type { PriorityGroup } from '@/types';
+
+/**
+ * The six groups, most important first by default.
+ *
+ * Ranking them replaces twelve 0-3 sliders that nobody moved: nobody can say
+ * what climate is worth out of three, but everybody can say whether money
+ * matters more than weather.
+ */
+const PRIORITY_LABELS: Record<PriorityGroup, string> = {
+  funding: 'Funding and what it leaves you to pay',
+  academic: 'Academic fit and programme standing',
+  country: 'Country',
+  city_climate: 'City and climate',
+  career: 'Careers and post-study work',
+  campus_life: 'Campus, size and workload',
+};
+
+const DEFAULT_PRIORITIES = Object.keys(PRIORITY_LABELS) as PriorityGroup[];
 
 const WEIGHT_LABELS: Record<string, string> = {
   academic_fit: 'Academic fit',
@@ -24,9 +43,12 @@ const WEIGHT_LABELS: Record<string, string> = {
 };
 
 export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
-  const { profileDraft, setProfileDraft, startRun, loading, capabilities, validation } = useStore();
+  const {
+    profileDraft, setProfileDraft, startRun, loading, capabilities, validation, run, rerank,
+  } = useStore();
   const [demoMode, setDemoMode] = useState(true);
   const [showAdvancedWeights, setShowAdvancedWeights] = useState(false);
+  const [recomputed, setRecomputed] = useState(false);
 
   const bind = (path: Path, cast: 'string' | 'number' | 'float' = 'string') => ({
     value: String(get(profileDraft, path) ?? ''),
@@ -50,6 +72,22 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
   });
 
   const weights = (get(profileDraft, ['weights']) ?? {}) as Record<string, number>;
+
+  const stored = (get(profileDraft, ['preferences', 'priorities']) ?? []) as PriorityGroup[];
+  // A partial ordering is normal - move one card and stop - so the rest keeps
+  // the default order, exactly as the backend completes it.
+  const priorities: PriorityGroup[] = [
+    ...stored.filter((g) => DEFAULT_PRIORITIES.includes(g)),
+    ...DEFAULT_PRIORITIES.filter((g) => !stored.includes(g)),
+  ];
+
+  const move = (from: number, to: number) => {
+    if (to < 0 || to >= priorities.length) return;
+    const next = [...priorities];
+    next.splice(to, 0, ...next.splice(from, 1));
+    setProfileDraft((d) => setIn(d, ['preferences', 'priorities'], next));
+    setRecomputed(false);
+  };
 
   return (
     <>
@@ -104,13 +142,15 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
             <Field label="Research interests" htmlFor="research-interests" hint="Comma-separated.">
               <input id="research-interests" {...bindList(['preferences', 'research_interests'])} />
             </Field>
-            {(['safety_priority', 'diversity_priority', 'housing_guarantee_priority'] as const).map((key) => (
-              <Field key={key} label={key.replaceAll('_', ' ')} htmlFor={key}>
-                <select id={key} {...bind(['preferences', key])}>
-                  {['low', 'medium', 'high'].map((v) => <option key={v}>{v}</option>)}
-                </select>
-              </Field>
-            ))}
+            {/*
+              Safety, diversity and housing-guarantee priorities used to be
+              asked here. No official page this product reads publishes a
+              comparable figure for any of them, so the answers changed
+              nothing - and a question that changes nothing still implies the
+              result was tailored to it. They are gone from the form; the
+              fields remain in the schema only so profiles saved earlier still
+              load. See docs/PROFILE_FIELDS.md.
+            */}
           </div>
           <div className="row" style={{ marginTop: 'var(--space-4)' }}>
             <label className="row row--tight small">
@@ -189,41 +229,85 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
         </Panel>
 
         <Panel
-          title="How should options be ordered?"
-          hint="Choose a starting point. Advanced weights are available when you need fine control; this remains a preference match, never an admission probability."
+          title="What matters more?"
+          hint="Put them in your order. The first one counts for about four times what the last one does; nothing here predicts an admission."
         >
           <p className="small muted">
-            The score only compares your stated preferences. It is not a probability of admission.
+            The order only decides which of the qualifying options rise first.
+            It is not a probability of admission.
           </p>
-          <div className="row">
-            {([
-              ['Funding first', { funding_fit: 2.5, academic_fit: 1.2, program_quality: 0.6 }],
-              ['Balanced', { funding_fit: 1.5, academic_fit: 1.0, program_quality: 0.8 }],
-              ['Academic fit first', { funding_fit: 1.0, academic_fit: 2.3, program_quality: 1.4 }],
-            ] as const).map(([label, preset]) => (
-              <button key={label} className="btn btn--sm" type="button" onClick={() =>
-                setProfileDraft((draft) => setIn(draft, ['weights'], { ...weights, ...preset }))
-              }>{label}</button>
+          <ol className="stack stack--tight" data-testid="priorities">
+            {priorities.map((group, i) => (
+              <li key={group} className="row row--tight" data-testid={`priority-${group}`}>
+                <span className="mono xs muted" style={{ minWidth: '1.5rem' }}>{i + 1}</span>
+                <span className="small" style={{ flex: 1 }}>{PRIORITY_LABELS[group]}</span>
+                <button
+                  type="button"
+                  className="btn btn--sm btn--ghost"
+                  aria-label={`Move ${PRIORITY_LABELS[group]} up`}
+                  disabled={i === 0}
+                  onClick={() => move(i, i - 1)}
+                  data-testid={`priority-up-${group}`}
+                >↑</button>
+                <button
+                  type="button"
+                  className="btn btn--sm btn--ghost"
+                  aria-label={`Move ${PRIORITY_LABELS[group]} down`}
+                  disabled={i === priorities.length - 1}
+                  onClick={() => move(i, i + 1)}
+                  data-testid={`priority-down-${group}`}
+                >↓</button>
+              </li>
             ))}
-            <button className="btn btn--sm btn--ghost" type="button" onClick={() => setShowAdvancedWeights((value) => !value)}>
-              {showAdvancedWeights ? 'Hide advanced weights' : 'Advanced weights'}
-            </button>
-          </div>
-          {showAdvancedWeights && (
-            <div className="grid-2" style={{ marginTop: 'var(--space-4)' }}>
-              {Object.entries(WEIGHT_LABELS).map(([key, label]) => (
-                <Field key={key} label={`${label} — ${(weights[key] ?? 0).toFixed(1)}`} htmlFor={`w-${key}`}>
-                  <input
-                    id={`w-${key}`} type="range" min={0} max={3} step={0.1}
-                    value={weights[key] ?? 0}
-                    onChange={(e) =>
-                      setProfileDraft((d) => setIn(d, ['weights', key], Number.parseFloat(e.target.value)))
-                    }
-                  />
-                </Field>
-              ))}
+          </ol>
+
+          {run && (
+            <div className="row" style={{ marginTop: 'var(--space-4)' }}>
+              <button
+                type="button"
+                className="btn btn--sm"
+                data-testid="recompute"
+                onClick={async () => {
+                  // No pages are fetched: everything the ranking reads is
+                  // already stored on the rows from the run that finished.
+                  await rerank({
+                    priorities,
+                    weights: get(profileDraft, ['weights_override']) ? weights : undefined,
+                  });
+                  setRecomputed(true);
+                }}
+              >Recompute the shortlist</button>
+              {recomputed && <Chip tone="ok">Reordered — no pages were fetched</Chip>}
             </div>
           )}
+
+          <details style={{ marginTop: 'var(--space-4)' }} onToggle={(e) => setShowAdvancedWeights(e.currentTarget.open)}>
+            <summary className="small">Advanced weights</summary>
+            <label className="row row--tight small" style={{ marginTop: 'var(--space-3)' }}>
+              <input type="checkbox" data-testid="weights-override" {...bindBool(['weights_override'])} />
+              Use these sliders instead of the order above
+            </label>
+            {showAdvancedWeights && (
+              <div className="grid-2" style={{ marginTop: 'var(--space-4)' }}>
+                {Object.entries(WEIGHT_LABELS).map(([key, label]) => (
+                  <Field key={key} label={`${label} — ${(weights[key] ?? 0).toFixed(1)}`} htmlFor={`w-${key}`}>
+                    <input
+                      id={`w-${key}`} type="range" min={0} max={3} step={0.1}
+                      value={weights[key] ?? 0}
+                      onChange={(e) =>
+                        setProfileDraft((d) => setIn(d, ['weights', key], Number.parseFloat(e.target.value)))
+                      }
+                    />
+                  </Field>
+                ))}
+                <p className="xs muted">
+                  Activities no longer weigh a university: the same record produced the same number
+                  on every row. They still decide how your profile sits against the published
+                  minimums.
+                </p>
+              </div>
+            )}
+          </details>
         </Panel>
 
         <Panel title="Run the research">
@@ -243,11 +327,26 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
 
             {!demoMode && (
               <Notice kind="warn">
-                <div>
+                <div data-testid="live-mode-notice">
                   <strong>Live mode fetches real university websites.</strong> It honours robots.txt,
                   rate-limits per host, and never sends any part of your profile off this machine.
                   It is slower, and pages that cannot be read are reported as not found rather than
                   guessed.
+                  {capabilities?.live_coverage && (
+                    // Without this, "live" reads as "the open web". It is ten
+                    // curated institutions, and the applicant deserves to know
+                    // the size of the search before they wait for it.
+                    <div className="stack stack--tight" data-testid="live-coverage">
+                      <div><strong>{capabilities.live_coverage.recall_note}</strong></div>
+                      {capabilities.live_coverage.countries.length > 0 && (
+                        <div className="row row--tight">
+                          {capabilities.live_coverage.countries.map((c) => (
+                            <Chip key={c}>{c}</Chip>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               </Notice>
             )}

@@ -72,7 +72,9 @@ class DiscoveryAdapter(Protocol):
 class RequirementsAdapter(Protocol):
     name: str
 
-    async def verify(self, candidate: Candidate, program: CandidateProgram, intake: str) -> AdapterResult: ...
+    async def verify(
+        self, candidate: Candidate, program: CandidateProgram, intake: str
+    ) -> AdapterResult: ...
 
 
 @runtime_checkable

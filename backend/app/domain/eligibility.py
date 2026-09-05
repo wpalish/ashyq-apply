@@ -11,8 +11,9 @@ Two asymmetries are deliberate:
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import date, datetime
+from datetime import UTC, date, datetime
 
+from app.domain.dates import parse_published_date
 from app.domain.enums import (
     SPECIFICITY_RANK,
     ClaimStatus,
@@ -118,13 +119,18 @@ def evaluate_program(
     today: date | None = None,
 ) -> EligibilityOutcome:
     """Compare one programme's published requirements against the profile."""
-    today = today or date.today()
+    # UTC by default, so the verdict does not depend on the server's timezone.
+    today = today or datetime.now(UTC).date()
     checks: list[RequirementCheck] = []
     a = profile.academics
 
     # --- intake open --------------------------------------------------
     intake_claim = _first(claims, ClaimType.INTAKE_OPEN)
-    if intake_claim is not None and intake_claim.normalized_value is False and _confirmed(intake_claim):
+    if (
+        intake_claim is not None
+        and intake_claim.normalized_value is False
+        and _confirmed(intake_claim)
+    ):
         checks.append(
             RequirementCheck(
                 requirement="Intake accepting applications",
@@ -204,7 +210,9 @@ def evaluate_program(
     # --- SAT ----------------------------------------------------------
     sat_policy = _first(claims, ClaimType.SAT_POLICY)
     policy_text = str(sat_policy.normalized_value).lower() if sat_policy else ""
-    test_optional = "optional" in policy_text or "blind" in policy_text or "not required" in policy_text
+    test_optional = (
+        "optional" in policy_text or "blind" in policy_text or "not required" in policy_text
+    )
     sat_min = _first(claims, ClaimType.SAT_MIN_TOTAL)
     if sat_min is not None and not test_optional:
         checks.append(_check_numeric_minimum("SAT total", sat_min, _to_float(a.sat.total)))
@@ -214,7 +222,9 @@ def evaluate_program(
                 requirement="SAT policy",
                 published_value=sat_policy.normalized_value,
                 applicant_value=a.sat.total,
-                status=EligibilityStatus.NOT_APPLICABLE if test_optional else EligibilityStatus.PENDING,
+                status=EligibilityStatus.NOT_APPLICABLE
+                if test_optional
+                else EligibilityStatus.PENDING,
                 explanation=(
                     "The programme is test-optional, so a missing SAT score is not a barrier."
                     if test_optional
@@ -360,7 +370,11 @@ def _summarise(checks: list[RequirementCheck]) -> EligibilityOutcome:
         status,
         checks,
         [],
-        [c.requirement for c in checks if c.status in {EligibilityStatus.GAP, EligibilityStatus.PENDING}],
+        [
+            c.requirement
+            for c in checks
+            if c.status in {EligibilityStatus.GAP, EligibilityStatus.PENDING}
+        ],
     )
 
 
@@ -372,14 +386,9 @@ def _to_float(v: object) -> float | None:
 
 
 def _as_date(v: object) -> date | None:
-    if isinstance(v, date) and not isinstance(v, datetime):
-        return v
-    if isinstance(v, datetime):
-        return v.date()
-    if isinstance(v, str):
-        for fmt in ("%Y-%m-%d", "%d/%m/%Y", "%m/%d/%Y", "%d %B %Y", "%B %d, %Y"):
-            try:
-                return datetime.strptime(v.strip(), fmt).date()
-            except ValueError:
-                continue
-    return None
+    """Trying %d/%m/%Y then %m/%d/%Y silently picked a reading of 03/04/2027.
+
+    A deadline a month wrong decides whether an applicant applies at all, so an
+    ambiguous string now comes back as None and the check says why.
+    """
+    return parse_published_date(v)

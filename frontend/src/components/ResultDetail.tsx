@@ -9,7 +9,8 @@
 import { useState } from 'react';
 import { Chip, Notice, SourceLink, StatusChip } from '@/components/primitives';
 import {
-  claimStatusTone, date, dateTime, eligibilityTone, fundingClassTone, humanize, money,
+  FIT_DISCLAIMER, bucketTone, claimStatusTone, date, dateTime, eligibilityTone, fundingClassTone,
+  humanize, money, percent, ratio,
 } from '@/lib/format';
 import type { ProgramResult } from '@/types';
 
@@ -20,7 +21,7 @@ const TABS: { id: Tab; label: string }[] = [
   { id: 'funding', label: 'Funding' },
   { id: 'costs', label: 'Costs' },
   { id: 'documents', label: 'Documents' },
-  { id: 'score', label: 'Why this score' },
+  { id: 'score', label: 'Why this order' },
   { id: 'sources', label: 'Sources & evidence' },
 ];
 
@@ -309,8 +310,63 @@ function Documents({ result }: { result: ProgramResult }) {
   );
 }
 
+/**
+ * One line per axis: what it scored, what it weighed, and why.
+ *
+ * An axis with no value says which kind of nothing it is — unverified, or a
+ * question the applicant did not ask — because those are different answers and
+ * only one of them is a gap worth chasing.
+ */
+function Axes({ result }: { result: ProgramResult }) {
+  const r = result.ranking;
+  if (!r) return null;
+  return (
+    <div className="stack stack--tight">
+      <Notice kind="info"><div>{r.disclaimer || FIT_DISCLAIMER}</div></Notice>
+      <div className="row">
+        <span className="num small">Match <strong>{ratio(r.fit)}</strong></span>
+        <span className="num small">Confirmed <strong>{percent(r.coverage)}</strong></span>
+        <Chip tone={bucketTone[r.bucket]}>{humanize(r.bucket)}</Chip>
+        <span className="xs muted">{r.bucket_reason}</span>
+      </div>
+      {r.knocked_out_by.length > 0 && (
+        <Notice kind="risk">
+          <div>
+            <strong>Listed, not ranked.</strong>
+            <ul style={{ margin: '4px 0 0', paddingLeft: '1.1rem' }}>
+              {r.knocked_out_by.map((reason) => <li key={reason} className="small">{reason}</li>)}
+            </ul>
+          </div>
+        </Notice>
+      )}
+      <dl className="kv">
+        {r.axes.map((a) => (
+          <div key={a.axis} style={{ display: 'contents' }}>
+            <dt>
+              {humanize(a.axis)}
+              {a.state === 'unknown' && <span className="xs faint"> · not verified</span>}
+              {a.state === 'not_applicable' && <span className="xs faint"> · you did not ask</span>}
+            </dt>
+            <dd>
+              <span className="num small">
+                {ratio(a.value)} × weight {a.weight.toFixed(3)}
+              </span>
+              <p className="xs muted" style={{ margin: '2px 0 0' }}>{a.reason}</p>
+            </dd>
+          </div>
+        ))}
+      </dl>
+      <p className="xs faint">
+        Match is a geometric mean over the axes above, so a near-zero one cannot be bought back by
+        the others. Unverified axes stay out of it and lower <em>Confirmed</em> instead.
+      </p>
+    </div>
+  );
+}
+
 function Score({ result }: { result: ProgramResult }) {
   const s = result.preference_score;
+  if (result.ranking) return <Axes result={result} />;
   if (!s) return <p className="muted small">No score was computed for this row.</p>;
   return (
     <div className="stack stack--tight">

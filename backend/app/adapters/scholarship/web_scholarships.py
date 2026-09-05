@@ -105,7 +105,9 @@ class WebScholarshipAdapter:
         out.pages_checked += 1
         if not index.ok:
             out.pages_failed += 1
-            out.errors.append(f"{candidate.scholarships_url}: {index.outcome.value} — {index.error}")
+            out.errors.append(
+                f"{candidate.scholarships_url}: {index.outcome.value} — {index.error}"
+            )
             out.retry_urls.append(candidate.scholarships_url)
             return [], out
 
@@ -146,16 +148,23 @@ class WebScholarshipAdapter:
         return scholarships, out
 
     def _parse_award(
-        self, candidate: Candidate, program: CandidateProgram, url: str,
-        html: str, accessed_at: datetime, classification, index: int,
+        self,
+        candidate: Candidate,
+        program: CandidateProgram,
+        url: str,
+        html: str,
+        accessed_at: datetime,
+        classification,
+        index: int,
     ) -> tuple[Scholarship, list]:
         soup = BeautifulSoup(html, "lxml")
         text = readable_text(html)
         low = text.lower()
         title = html_title(html)
-        name = classification.subject or (
-            soup.find("h1").get_text(strip=True) if soup.find("h1") else title
-        ).split(" - ")[0]
+        name = (
+            classification.subject
+            or (soup.find("h1").get_text(strip=True) if soup.find("h1") else title).split(" - ")[0]
+        )
 
         # Every claim from this page is about this one award; the subject key
         # keeps a second award at the same university from looking like a
@@ -166,7 +175,8 @@ class WebScholarshipAdapter:
             specificity=SourceSpecificity.SCHOLARSHIP_ADMINISTRATOR,
             program=program.name,
             academic_year=self.academic_year,
-            official_domain=url.startswith("fixture://") or is_official_domain(url, [candidate.domain]),
+            official_domain=url.startswith("fixture://")
+            or is_official_domain(url, [candidate.domain]),
             extraction_method="fixture" if url.startswith("fixture://") else "html_rule",
             accessed_at=accessed_at or datetime.now(UTC),
         )
@@ -180,7 +190,8 @@ class WebScholarshipAdapter:
         # The excerpt must be text from the page. "Award page: <title>" was a
         # sentence we wrote, shown in the evidence panel as though quoted.
         builder.add(
-            ClaimType.SCHOLARSHIP_EXISTS, name,
+            ClaimType.SCHOLARSHIP_EXISTS,
+            name,
             _first_sentence_with(text, name) or name,
             confidence=0.95,
             notes=f"page classified as {classification.page_type.value}",
@@ -199,28 +210,38 @@ class WebScholarshipAdapter:
         amount_line = _line_with(text, "the award is worth")
         if pct:
             sch.amount_is_percentage_of_tuition = float(pct.group(1))
-            builder.add(ClaimType.SCHOLARSHIP_AMOUNT, {"percent_of_tuition": float(pct.group(1))},
-                        _excerpt(text, pct.start()))
+            builder.add(
+                ClaimType.SCHOLARSHIP_AMOUNT,
+                {"percent_of_tuition": float(pct.group(1))},
+                _excerpt(text, pct.start()),
+            )
         elif amount_line:
             amount = parse_money(amount_line)
             if amount:
                 year_m = re.search(r"\b(20\d{2}/\d{2})\b", amount_line)
                 sch.amount = Money(
-                    amount=amount[0], currency=amount[1],
+                    amount=amount[0],
+                    currency=amount[1],
                     academic_year=year_m.group(1) if year_m else self.academic_year,
                     source_url=url,
                 )
                 builder.add(
                     ClaimType.SCHOLARSHIP_AMOUNT,
-                    {"amount": amount[0], "currency": amount[1],
-                     "academic_year": sch.amount.academic_year},
+                    {
+                        "amount": amount[0],
+                        "currency": amount[1],
+                        "academic_year": sch.amount.academic_year,
+                    },
                     amount_line,
                 )
         elif "determined individually" in low or "depends on an assessment" in low:
-            builder.add(ClaimType.SCHOLARSHIP_AMOUNT, None,
-                        _line_with(text, "determined individually") or _line_with(text, "assessment"),
-                        confidence=0.9,
-                        notes="Award size is not published; it cannot be entered into the gap arithmetic.")
+            builder.add(
+                ClaimType.SCHOLARSHIP_AMOUNT,
+                None,
+                _line_with(text, "determined individually") or _line_with(text, "assessment"),
+                confidence=0.9,
+                notes="Award size is not published; it cannot be entered into the gap arithmetic.",
+            )
 
         # --- coverage table (the only route to FULL_RIDE_CONFIRMED) -----
         sch.coverage, coverage_quote = _coverage_from_tables(soup)
@@ -247,8 +268,12 @@ class WebScholarshipAdapter:
             sch.citizenship_restrictions = [
                 p.strip() for p in re.split(r",| and ", cit.group(1)) if p.strip()
             ]
-            builder.add(ClaimType.SCHOLARSHIP_CITIZENSHIP_RESTRICTION, sch.citizenship_restrictions,
-                        _excerpt(text, cit.start()), confidence=0.9)
+            builder.add(
+                ClaimType.SCHOLARSHIP_CITIZENSHIP_RESTRICTION,
+                sch.citizenship_restrictions,
+                _excerpt(text, cit.start()),
+                confidence=0.9,
+            )
 
         # A restriction list is not itself an answer about international
         # eligibility - the applicant may hold one of the listed citizenships.
@@ -288,8 +313,11 @@ class WebScholarshipAdapter:
         elif "separate scholarship application" in low or "must be submitted in addition" in low:
             sch.application_mode = ApplicationMode.SEPARATE
         if sch.application_mode != ApplicationMode.UNKNOWN:
-            builder.add(ClaimType.SCHOLARSHIP_APPLICATION_MODE, sch.application_mode.value,
-                        _line_with(text, "how to apply") or _line_with(text, "application"))
+            builder.add(
+                ClaimType.SCHOLARSHIP_APPLICATION_MODE,
+                sch.application_mode.value,
+                _line_with(text, "how to apply") or _line_with(text, "application"),
+            )
         sch.requires_extra_essays = "additional essays" in low or "statement of motivation" in low
 
         # --- deadline ----------------------------------------------------
@@ -301,8 +329,12 @@ class WebScholarshipAdapter:
                 sch.deadline = deadline
                 sch.deadline_raw = match.group(1).strip()
                 sch.deadline_timezone = parse_timezone(dl_line)
-                builder.add(ClaimType.SCHOLARSHIP_DEADLINE, deadline.isoformat(), dl_line,
-                            notes=f"timezone: {sch.deadline_timezone or 'not stated on page'}")
+                builder.add(
+                    ClaimType.SCHOLARSHIP_DEADLINE,
+                    deadline.isoformat(),
+                    dl_line,
+                    notes=f"timezone: {sch.deadline_timezone or 'not stated on page'}",
+                )
 
         # --- renewal ------------------------------------------------------
         if "not renewable" in low or "one-time award" in low:
@@ -313,8 +345,11 @@ class WebScholarshipAdapter:
             dur = re.search(r"up to (\d+) years", low)
             if dur:
                 sch.duration_years = float(dur.group(1))
-                builder.add(ClaimType.SCHOLARSHIP_DURATION_YEARS, float(dur.group(1)),
-                            _excerpt(text, dur.start()))
+                builder.add(
+                    ClaimType.SCHOLARSHIP_DURATION_YEARS,
+                    float(dur.group(1)),
+                    _excerpt(text, dur.start()),
+                )
             builder.add(ClaimType.SCHOLARSHIP_RENEWABLE, True, _line_with(text, "renewable"))
             for phrase in ("maintain", "remain in the top", "complete at least"):
                 line = _line_with(text, phrase)
@@ -329,8 +364,11 @@ class WebScholarshipAdapter:
         elif "may be held together with other" in low:
             sch.stackable = "yes"
         if sch.stackable != "unknown":
-            builder.add(ClaimType.SCHOLARSHIP_STACKABLE, sch.stackable, _line_with(text, "combined")
-                        or _line_with(text, "held together"))
+            builder.add(
+                ClaimType.SCHOLARSHIP_STACKABLE,
+                sch.stackable,
+                _line_with(text, "combined") or _line_with(text, "held together"),
+            )
 
         cnt = re.search(r"(\d+)\s+awards? are offered", low)
         if cnt:
@@ -340,8 +378,11 @@ class WebScholarshipAdapter:
         score = re.search(r"an?\s+(ielts|toefl|sat)\s+score of at least\s+(\d+(?:\.\d+)?)", low)
         if score:
             sch.min_test_scores[score.group(1)] = float(score.group(2))
-            builder.add(ClaimType.SCHOLARSHIP_MIN_TEST_SCORE,
-                        {score.group(1): float(score.group(2))}, _excerpt(text, score.start()))
+            builder.add(
+                ClaimType.SCHOLARSHIP_MIN_TEST_SCORE,
+                {score.group(1): float(score.group(2))},
+                _excerpt(text, score.start()),
+            )
 
         self._derive_availability(sch)
         sch.claim_ids = [c.source_url for c in builder.claims]
@@ -382,13 +423,31 @@ class WebScholarshipAdapter:
 
 #: A link worth following from a funding index page.
 _AWARD_HINTS = (
-    "scholarship", "grant", "award", "bursary", "fellowship", "stipend",
-    "financial aid", "funding", "beurs", "stipendium",
+    "scholarship",
+    "grant",
+    "award",
+    "bursary",
+    "fellowship",
+    "stipend",
+    "financial aid",
+    "funding",
+    "beurs",
+    "stipendium",
 )
 #: Site furniture that appears on every page and is never an award.
 _NAV_NOISE = (
-    "skip to", "main content", "navigation", "search", "menu", "cookie",
-    "privacy", "contact", "login", "sitemap", "back to top", "share",
+    "skip to",
+    "main content",
+    "navigation",
+    "search",
+    "menu",
+    "cookie",
+    "privacy",
+    "contact",
+    "login",
+    "sitemap",
+    "back to top",
+    "share",
 )
 
 
@@ -496,4 +555,4 @@ def _line_with(text: str, needle: str) -> str:
 
 
 def _excerpt(text: str, at: int, radius: int = 150) -> str:
-    return text[max(0, at - radius): at + radius].replace("\n", " ").strip()
+    return text[max(0, at - radius) : at + radius].replace("\n", " ").strip()

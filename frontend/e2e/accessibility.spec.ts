@@ -54,14 +54,20 @@ test('the mobile shortlist becomes cards without an inner horizontal scroller', 
   await openShortlist(page);
   await page.setViewportSize({ width: 375, height: 800 });
 
-  const layout = await page.locator('.table-wrap').evaluate(
-    (el) => ({
+  // Every table on the screen, not just the first: the ranked list and the
+  // out-of-budget / needs-clarification / excluded sections use the same
+  // wrapper, and a card layout that only reaches one of them is not a fix.
+  const wrappers = page.locator('.table-wrap');
+  const count = await wrappers.count();
+  expect(count).toBeGreaterThan(0);
+  for (let i = 0; i < count; i += 1) {
+    const layout = await wrappers.nth(i).evaluate((el) => ({
       overflow: getComputedStyle(el).overflowX,
       overflowPixels: el.scrollWidth - el.clientWidth,
-    }),
-  );
-  expect(layout.overflow).toBe('visible');
-  expect(layout.overflowPixels).toBeLessThanOrEqual(1);
+    }));
+    expect(layout.overflow, `table ${i} still scrolls sideways`).toBe('visible');
+    expect(layout.overflowPixels).toBeLessThanOrEqual(1);
+  }
 });
 
 test('the whole workflow is reachable by keyboard', async () => {
@@ -86,7 +92,13 @@ test('progress is announced to assistive technology', async () => {
 test('the results table is labelled and its controls are named', async () => {
   await openShortlist(page);
 
-  await expect(page.locator('table caption')).toContainText('Shortlisted university programmes');
+  // Every table is captioned; the ranked one is the first.
+  await expect(page.locator('table caption').first()).toContainText(
+    'Shortlisted university programmes',
+  );
+  for (const caption of await page.locator('table caption').all()) {
+    await expect(caption).toContainText('Shortlisted university programmes');
+  }
   // Every decision control belongs to a named group, so a screen reader says
   // which university a "Yes" applies to.
   const group = page.getByRole('group').first();

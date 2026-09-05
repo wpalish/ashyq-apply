@@ -36,13 +36,21 @@ class FixtureRankingAdapter:
             if row["university"] != name:
                 continue
             entries.append(
-                RankingEntry(source=row["source"], year=row["year"], position=str(row["position"]),
-                             url="fixture://rankings.json")
+                RankingEntry(
+                    source=row["source"],
+                    year=row["year"],
+                    position=str(row["position"]),
+                    url="fixture://rankings.json",
+                )
             )
             claims.append(
                 Claim(
                     claim_type=ClaimType.RANKING_POSITION,
-                    normalized_value={"source": row["source"], "year": row["year"], "position": row["position"]},
+                    normalized_value={
+                        "source": row["source"],
+                        "year": row["year"],
+                        "position": row["position"],
+                    },
                     original_text_excerpt=f"{row['university']} — {row['source']} {row['year']}: {row['position']}",
                     source_url="fixture://rankings.json",
                     page_title="Ranking snapshot (demo fixture)",

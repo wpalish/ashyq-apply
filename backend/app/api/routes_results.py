@@ -2,19 +2,33 @@
 
 from __future__ import annotations
 
-from datetime import UTC, datetime
+import math
+import re
+from dataclasses import asdict
+from datetime import UTC, date, datetime
+from typing import Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Response
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
 from app.api.paywall import access_for_run, require_full_access
 from app.api.tenancy import owned_run
 from app.config import get_settings
 from app.db import get_session
-from app.export import tabular
-from app.models import AuditEvent, ClaimRow, ConflictRow, ProgramResultRow
+from app.domain.enums import Bucket, UserDecision
+from app.domain.ranking_v2 import Quotas, ShortlistCandidate, build_shortlist, rank_result
+from app.export import calendar, tabular
+from app.models import ApplicantProfileRow, AuditEvent, ClaimRow, ConflictRow, ProgramResultRow
 from app.payments.entitlements import free_view, truncate_shortlist
+from app.pipeline.runner import apply_fit_labels, store_result
+from app.schemas.profile import (
+    ApplicantProfileIn,
+    FundingNeeds,
+    Preferences,
+    PriorityGroup,
+    ScoringWeights,
+)
 from app.schemas.result import DecisionIn, ProgramResult
 from app.security import Principal, get_principal
 
@@ -31,6 +45,12 @@ class ShortlistSummary(BaseModel):
     demo_data: bool
 
 
+def _safe_filename_stem(value: str) -> str:
+    """A filename stem that cannot break out of a quoted header value."""
+    cleaned = re.sub(r"[^a-z0-9-]+", "-", value.lower()).strip("-")
+    return cleaned or "ashyq-export"
+
+
 def _results(session: Session, run_id: str, **filters) -> list[ProgramResultRow]:
     q = session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run_id)
     if filters.get("decision"):
@@ -41,7 +61,39 @@ def _results(session: Session, run_id: str, **filters) -> list[ProgramResultRow]
         q = q.filter(ProgramResultRow.funding_classification == filters["funding"])
     if filters.get("country"):
         q = q.filter(ProgramResultRow.country == filters["country"])
+    if filters.get("bucket"):
+        q = q.filter(ProgramResultRow.bucket == filters["bucket"])
     return q.order_by(ProgramResultRow.score_total.desc(), ProgramResultRow.university).all()
+
+
+#: Sorts the shortlist screen offers. `key` is the stored order; the rest read
+#: the document, because fit and coverage are not columns.
+Sort = Literal["key", "fit", "coverage", "gap", "deadline"]
+
+
+def _sorted(results: list[ProgramResult], sort: Sort) -> list[ProgramResult]:
+    """Order by one visible quantity, with unknowns last and ties by name.
+
+    Unknowns sort last on purpose: a programme whose cost could not be read is
+    not the cheapest one, and a missing deadline is not the most urgent.
+    """
+    if sort == "key":
+        return results
+
+    def gap_of(r: ProgramResult) -> float:
+        g = r.funding_gap
+        return g.gap.amount if (g and g.computable and g.gap) else math.inf
+
+    def deadline_of(r: ProgramResult) -> date:
+        return r.admission_deadline or date.max
+
+    keys = {
+        "fit": lambda r: (-(r.ranking.fit or 0.0) if r.ranking else 0.0, r.university),
+        "coverage": lambda r: (-(r.ranking.coverage if r.ranking else 0.0), r.university),
+        "gap": lambda r: (gap_of(r), r.university),
+        "deadline": lambda r: (deadline_of(r), r.university),
+    }
+    return sorted(results, key=keys[sort])
 
 
 @router.get("/results", response_model=list[ProgramResult])
@@ -51,6 +103,8 @@ def list_results(
     eligibility: str | None = None,
     funding: str | None = None,
     country: str | None = None,
+    bucket: str | None = None,
+    sort: Sort = "key",
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
 ) -> list[ProgramResult]:
@@ -62,12 +116,14 @@ def list_results(
         eligibility=eligibility,
         funding=funding,
         country=country,
+        bucket=bucket,
     )
-    results = [ProgramResult.model_validate(r.payload) for r in rows]
+    results = _sorted([ProgramResult.model_validate(r.payload) for r in rows], sort)
     if allowed:
         return results
     # Truncated, not refused: a free user must see that results exist and
-    # roughly what they are, or there is nothing to buy.
+    # roughly what they are, or there is nothing to buy. Cut after sorting, so
+    # the visible rows are the top of the ranking rather than an arbitrary slice.
     settings = get_settings()
     return [free_view(r) for r in truncate_shortlist(results, settings.free_shortlist_rows)]
 
@@ -126,6 +182,9 @@ def set_decision(
     A rejected row is kept, with its reason, so the same programme is not
     proposed again on a later run unless something material changed.
     """
+    # The result id alone is not authority: resolve the run through the
+    # principal's organization first, exactly as every read route does.
+    owned_run(session, run_id, principal)
     row = session.get(ProgramResultRow, result_id)
     if row is None or row.run_id != run_id:
         raise HTTPException(404, "Result not found")
@@ -156,23 +215,74 @@ def set_decision(
     return result
 
 
+class NotesIn(BaseModel):
+    notes: str = Field(default="", max_length=20_000)
+
+
+@router.patch("/results/{result_id}/notes", response_model=ProgramResult)
+def set_notes(
+    run_id: str,
+    result_id: str,
+    payload: NotesIn,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> ProgramResult:
+    """Save a note without touching the decision.
+
+    Editing a note used to re-POST the decision, which stamped `decided_at` on
+    a row the applicant had not decided anything about - so an undecided row
+    started claiming it was decided the moment they typed a reminder in it.
+    """
+    owned_run(session, run_id, principal)
+    row = session.get(ProgramResultRow, result_id)
+    if row is None or row.run_id != run_id:
+        raise HTTPException(404, "Result not found")
+
+    result = ProgramResult.model_validate(row.payload)
+    result.user_notes = payload.notes
+    row.user_notes = payload.notes
+    row.payload = result.model_dump(mode="json")
+    session.add(
+        AuditEvent(
+            organization_id=principal.organization_id,
+            actor=f"user:{principal.user_id[:8]}",
+            action="note_saved",
+            entity_type="result",
+            entity_id=result_id,
+            detail={},
+        )
+    )
+    session.commit()
+    return result
+
+
 @router.get("/claims")
 def list_claims(
     run_id: str,
+    response: Response,
     result_id: str | None = None,
     status: str | None = None,
+    limit: int = Query(default=500, ge=1, le=500),
+    offset: int = Query(default=0, ge=0),
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
 ) -> list[dict]:
+    """Evidence for this run, paged.
+
+    A run holds hundreds of claims and the sources screen fetched all of them
+    at once; the old cap of 2000 was silent, so a large run simply lost the
+    tail with nothing to say it had.
+    """
     require_full_access(session, run_id, principal)
     q = session.query(ClaimRow).filter(ClaimRow.run_id == run_id)
     if result_id:
         q = q.filter(ClaimRow.result_id == result_id)
     if status:
         q = q.filter(ClaimRow.status == status)
+    response.headers["X-Total-Count"] = str(q.count())
     return [
         {"id": c.id, "result_id": c.result_id, **c.payload}
-        for c in q.order_by(ClaimRow.claim_type).limit(2000).all()
+        for c in q.order_by(ClaimRow.claim_type).limit(limit).offset(offset).all()
     ]
 
 
@@ -223,6 +333,49 @@ def open_questions(
     return out
 
 
+@router.get("/deadlines.ics")
+def deadlines_ics(
+    run_id: str,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> Response:
+    """Every confirmed deadline as a calendar file.
+
+    Only dates the pipeline actually confirmed become events: an unknown
+    deadline produces no event rather than a placeholder somebody might plan
+    around.
+    """
+    # An export of every confirmed deadline is paid material, exactly as
+    # export.{fmt} is.
+    require_full_access(session, run_id, principal)
+    results = [ProgramResult.model_validate(r.payload) for r in _results(session, run_id)]
+    body = calendar.to_ics(results, run_id=run_id, now=datetime.now(UTC))
+    return Response(
+        body,
+        media_type="text/calendar; charset=utf-8",
+        headers={
+            "Content-Disposition": (
+                f'attachment; filename="{_safe_filename_stem(f"ashyq-{run_id[:8]}-deadlines")}.ics"'
+            )
+        },
+    )
+
+
+@router.get("/deadlines")
+def deadlines(
+    run_id: str,
+    limit: int = Query(default=10, ge=1, le=100),
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> list[dict]:
+    """The nearest deadlines, soonest first, with passed ones marked."""
+    # Spans every result, including the rows a free tier does not show, so it
+    # would otherwise leak past the truncated shortlist.
+    require_full_access(session, run_id, principal)
+    results = [ProgramResult.model_validate(r.payload) for r in _results(session, run_id)]
+    return calendar.upcoming(results, today=datetime.now(UTC).date(), limit=limit)
+
+
 @router.get("/export.{fmt}")
 def export(
     run_id: str,
@@ -233,6 +386,15 @@ def export(
 ) -> Response:
     require_full_access(session, run_id, principal)
     run = owned_run(session, run_id, principal)
+    # The filter goes into the Content-Disposition header, so it is validated
+    # against the enum rather than trusted: `?decision=approved" ; x-injected="1`
+    # used to land inside the header verbatim.
+    if decision is not None and decision not in {d.value for d in UserDecision}:
+        raise HTTPException(
+            400,
+            f"Unknown decision filter {decision!r}. Use one of: "
+            f"{', '.join(sorted(d.value for d in UserDecision))}.",
+        )
     rows = _results(session, run_id, decision=decision)
     results = [ProgramResult.model_validate(r.payload) for r in rows]
     meta = {
@@ -241,7 +403,9 @@ def export(
         "stage": run.stage,
         "filter": {"decision": decision},
     }
-    stem = f"unimatch-{run_id[:8]}{'-' + decision if decision else ''}"
+    # Belt and braces: even a validated value is rebuilt from a safe alphabet,
+    # so no future caller can smuggle a quote or a newline into the header.
+    stem = _safe_filename_stem(f"ashyq-{run_id[:8]}{'-' + decision if decision else ''}")
 
     if fmt == "csv":
         return Response(
@@ -262,3 +426,137 @@ def export(
             headers={"Content-Disposition": f'attachment; filename="{stem}.xlsx"'},
         )
     raise HTTPException(400, "Supported formats: csv, json, xlsx")
+
+
+class RerankIn(BaseModel):
+    """What to change before re-ranking. Everything is optional."""
+
+    priorities: list[PriorityGroup] | None = None
+    preferences: Preferences | None = None
+    funding: FundingNeeds | None = None
+    weights: ScoringWeights | None = None
+    gamma: float | None = Field(default=None, ge=0.0, le=2.0)
+    #: Off by default: trying an ordering out must not silently rewrite the
+    #: applicant's stored profile.
+    persist: bool = False
+
+
+class RerankOut(BaseModel):
+    rows: int
+    gamma: float
+    weights_source: str
+
+
+@router.post("/rerank", response_model=RerankOut)
+def rerank(
+    run_id: str,
+    payload: RerankIn,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> RerankOut:
+    """Re-rank a finished run against changed preferences, fetching nothing.
+
+    Every input the ranking needs is already stored on the row, so changing
+    what matters is arithmetic — not a reason to crawl twenty universities
+    again and wait five minutes for the same pages.
+    """
+    settings = get_settings()
+    run = owned_run(session, run_id, principal)
+    profile_row = session.get(ApplicantProfileRow, run.profile_id)
+    if profile_row is None:  # pragma: no cover - a run cannot outlive its profile
+        raise HTTPException(404, "Applicant case not found")
+
+    profile = ApplicantProfileIn.model_validate(profile_row.payload)
+    if payload.preferences is not None:
+        profile.preferences = payload.preferences
+    if payload.priorities is not None:
+        profile.preferences.priorities = payload.priorities
+    if payload.funding is not None:
+        profile.funding = payload.funding
+    if payload.weights is not None:
+        profile.weights = payload.weights
+        # Moving a slider by hand is the statement that the sliders are in use.
+        profile.weights_override = True
+
+    gamma = payload.gamma if payload.gamma is not None else settings.ranking_gamma
+    rows = session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run_id).all()
+    source = "priorities_roc"
+    for row in rows:
+        result = ProgramResult.model_validate(row.payload)
+        apply_fit_labels(result, profile)
+        result.ranking = rank_result(result, profile, gamma=gamma)
+        source = result.ranking.weights_source
+        store_result(row, result, ranking_version=settings.ranking_version)
+        session.add(row)
+
+    if payload.persist:
+        profile_row.payload = profile.model_dump(mode="json")
+        session.add(profile_row)
+    session.add(
+        AuditEvent(
+            organization_id=principal.organization_id,
+            actor=f"user:{principal.user_id[:8]}",
+            action="results_reranked",
+            entity_type="run",
+            entity_id=run_id,
+            detail={"rows": len(rows), "gamma": gamma, "persisted": payload.persist},
+        )
+    )
+    session.commit()
+    return RerankOut(rows=len(rows), gamma=gamma, weights_source=source)
+
+
+class ShortlistOut(BaseModel):
+    chosen: list[ProgramResult]
+    notes: list[str]
+    quotas: dict[str, int]
+
+
+@router.get("/shortlist", response_model=ShortlistOut)
+def shortlist(
+    run_id: str,
+    size: int = Query(default=10, ge=1, le=50),
+    min_well_placed: int = Query(default=2, ge=0, le=50),
+    min_plausible: int = Query(default=4, ge=0, le=50),
+    max_ambitious: int = Query(default=3, ge=0, le=50),
+    max_per_country: int = Query(default=3, ge=1, le=50),
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> ShortlistOut:
+    """A balanced list, not the top ten of one sort column.
+
+    Twenty ambitious options ranked by fit is a list nobody can act on, so the
+    quotas are filled first and any shortfall is stated in `notes`.
+    """
+    # Returns whole ProgramResult rows, so without this it is a way round the
+    # truncated shortlist. Not truncated here instead: cutting a
+    # quota-balanced portfolio to five rows would make its own notes untrue.
+    require_full_access(session, run_id, principal)
+    quotas = Quotas(
+        size=size,
+        min_well_placed=min_well_placed,
+        min_plausible=min_plausible,
+        max_ambitious=max_ambitious,
+        max_per_country=max_per_country,
+    )
+    rows = {
+        r.id: r
+        for r in session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run_id).all()
+        # A rejected row is out of the portfolio; the reason stays on the row.
+        if r.user_decision != UserDecision.REJECTED.value
+    }
+    candidates = [
+        ShortlistCandidate(
+            id=r.id,
+            country=r.country,
+            bucket=Bucket(r.bucket) if r.bucket else Bucket.NEEDS_CLARIFICATION,
+            sort_key=r.score_total,
+        )
+        for r in rows.values()
+    ]
+    chosen, notes = build_shortlist(candidates, quotas)
+    return ShortlistOut(
+        chosen=[ProgramResult.model_validate(rows[c.id].payload) for c in chosen],
+        notes=notes,
+        quotas=asdict(quotas),
+    )

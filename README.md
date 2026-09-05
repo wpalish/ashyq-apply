@@ -1,7 +1,12 @@
 # ASHYQ Apply
 
-*Internal package, database and module names remain `unimatch`; renaming them
-now would be churn without benefit. The product name is ASHYQ Apply.*
+*Internal package, database and module names remain `unimatch` — including the
+`UNIMATCH_` environment prefix, the SQLite filename and the logger names.
+Renaming them would be churn without benefit, and every one of them is
+invisible to the user. Everything a person reads says ASHYQ Apply: the page
+title, the sidebar, the disclaimers, the export header and filename, the bot's
+User-Agent and the browser storage keys (migrated from `unimatch.*` on first
+load).*
 
 University and scholarship shortlisting for international applicants, where every
 material value on screen traces back to the page it was read from.

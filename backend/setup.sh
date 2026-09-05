@@ -18,13 +18,16 @@ echo "==> Python 3.12 virtual environment"
 "$UV" venv --python 3.12 .venv
 
 echo "==> Dependencies"
-"$UV" pip install --python .venv/bin/python -r requirements-dev.txt
+# uv writes bin/ on Linux and macOS, Scripts/ on Windows.
+PY_BIN=.venv/bin/python
+[ -x "$PY_BIN" ] || PY_BIN=.venv/Scripts/python.exe
+"$UV" pip install --python "$PY_BIN" -r requirements-dev.txt
 
 echo "==> Demo corpus"
-./.venv/bin/python -m app.corpus.build
+"$PY_BIN" -m app.corpus.build
 
 echo "==> Chromium for the browser tier and for E2E"
-./.venv/bin/python -m playwright install chromium
+"$PY_BIN" -m playwright install chromium
 
 echo
 echo "Setup complete. Start the API with:  ./run.sh"

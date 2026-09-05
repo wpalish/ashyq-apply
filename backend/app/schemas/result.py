@@ -10,6 +10,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from app.domain.enums import (
     AdmissionsFit,
     ApplicationMode,
+    Bucket,
     CostCategory,
     DegreeLevel,
     DocumentOwner,
@@ -76,6 +77,12 @@ class Scholarship(Base):
     # These were previously collapsed, which let "an award exists" stand in for
     # "this applicant can apply for it in this cycle". Each is now answered
     # from its own evidence and defaults to unknown.
+    #: False when the applicant told us this shape of help does not work for
+    #: them - a tuition-only award to someone who cannot go without a full
+    #: ride. The award stays visible with its reason; it simply stops counting
+    #: as this programme's funding.
+    meets_applicant_shape: bool = True
+    shape_mismatch_reason: str = ""
     international_eligible: Tristate = "unknown"
     citizenship_restrictions: list[str] = Field(default_factory=list)
     residency_restrictions: list[str] = Field(default_factory=list)
@@ -96,7 +103,9 @@ class Scholarship(Base):
     renewal_requirements: list[str] = Field(default_factory=list)
     min_test_scores: dict[str, float] = Field(default_factory=dict)
     stackable: Tristate = "unknown"
-    published_count: int | None = Field(default=None, description="Only set when officially published")
+    published_count: int | None = Field(
+        default=None, description="Only set when officially published"
+    )
 
     # --- availability, decomposed -------------------------------------
     #: An award page exists and names this award.
@@ -171,6 +180,51 @@ class ExplainableScore(Base):
     )
 
 
+class AxisScore(Base):
+    """One dimension of the v2 ranking, with its own verdict and its reason.
+
+    ``state`` separates the two ways a dimension can have no value. An axis the
+    applicant said nothing about ("any climate") is *not_applicable* and is
+    ignored; an axis we could not verify is *unknown* and lowers coverage
+    without ever lowering fit — a badly parsed website must not read as a
+    worse university (AI_TASK_BRIEF P6, invariants I4 and I5).
+    """
+
+    axis: str
+    value: float | None = Field(default=None, ge=0.0, le=1.0)
+    state: Literal["known", "unknown", "not_applicable"]
+    weight: float = Field(ge=0.0)
+    reason: str
+    evidence_claim_ids: list[str] = Field(default_factory=list)
+
+
+class RankingV2(Base):
+    """The non-compensatory ranking: a fit, how much of it was verified, and why.
+
+    ``fit`` is a weighted *geometric* mean, so a near-zero axis cannot be
+    bought back by strong ones — which is how a place with a 21,471 USD annual
+    shortfall reached the top of the v1 list (AI_TASK_BRIEF P1).
+    """
+
+    fit: float | None = Field(default=None, ge=0.0, le=1.0)
+    coverage: float = Field(ge=0.0, le=1.0)
+    sort_key: float = Field(ge=0.0)
+    gamma: float
+    axes: list[AxisScore] = Field(default_factory=list)
+    unknown_axes: list[str] = Field(default_factory=list)
+    not_applicable_axes: list[str] = Field(default_factory=list)
+    #: Non-empty means the row is listed with its reason and never ranked.
+    knocked_out_by: list[str] = Field(default_factory=list)
+    bucket: Bucket
+    bucket_reason: str = ""
+    weights_source: Literal["priorities_roc", "weights_override"] = "priorities_roc"
+    version: Literal["2"] = "2"
+    disclaimer: str = (
+        "How well this matches your stated priorities, on confirmed data. "
+        "Not a probability of admission."
+    )
+
+
 class DocumentItem(Base):
     name: str
     purpose: DocumentPurpose
@@ -241,7 +295,18 @@ class ProgramResult(Base):
     costs: CostBreakdown = Field(default_factory=CostBreakdown)
     funding_gap: FundingGap | None = None
 
+    #: v1. Kept through the transition so a stored run still renders.
     preference_score: ExplainableScore | None = None
+    ranking: RankingV2 | None = None
+
+    #: What the university *is* — climate, city size, size, campus, workload —
+    #: rather than how well it fit. Labels were frozen at verify time, so a
+    #: changed preference meant crawling everything again (AI_TASK_BRIEF P4);
+    #: the raw attributes let the ranking be recomputed from stored data.
+    catalog_attributes: dict[str, str] = Field(default_factory=dict)
+    #: "registry", "fixture-catalog", "agent:<model>" — an attribute is only as
+    #: trustworthy as where it came from, so it says.
+    catalog_attributes_source: str = ""
 
     admission_deadline: date | None = None
     admission_deadline_timezone: str | None = None
@@ -251,6 +316,11 @@ class ProgramResult(Base):
     climate_fit: str = "unknown"
     city_fit: str = "unknown"
     workload_fit: str = "unknown"
+    #: The same mechanism, for two preferences the form collected and nothing
+    #: read. "unknown" when the registry says nothing about this university,
+    #: which scores as missing data rather than as a mismatch.
+    size_fit: str = "unknown"
+    campus_fit: str = "unknown"
     career_notes: str = ""
     post_study_work: str = ""
     work_during_study: str = ""
@@ -261,7 +331,10 @@ class ProgramResult(Base):
     source_urls: list[str] = Field(default_factory=list)
     last_verified: datetime | None = None
     verification_completeness: float = Field(
-        default=0.0, ge=0.0, le=1.0, description="Share of decision-grade fields backed by an official claim"
+        default=0.0,
+        ge=0.0,
+        le=1.0,
+        description="Share of decision-grade fields backed by an official claim",
     )
 
     user_decision: UserDecision = UserDecision.UNDECIDED
@@ -274,5 +347,8 @@ class ProgramResult(Base):
 
 class DecisionIn(Base):
     decision: UserDecision
-    reason: str = ""
-    notes: str = ""
+    # Bounded, because these are the two free-text fields the API accepts and
+    # an unbounded string is a row the database will take and a screen will
+    # not render.
+    reason: str = Field(default="", max_length=2000)
+    notes: str = Field(default="", max_length=20_000)

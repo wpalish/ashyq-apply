@@ -13,21 +13,51 @@ from typing import Literal
 
 #: How each degree level is written on real pages.
 DEGREE_SYNONYMS: dict[str, tuple[str, ...]] = {
-    "bachelor": ("bachelor'?s?", "bachelor of (?:science|arts|engineering|laws)",
-                 r"b\.?sc\b", r"b\.?a\b", "beng", "llb", "undergraduate"),
-    "master": ("master'?s?", "master of (?:science|arts|engineering|laws)",
-               r"m\.?sc\b", r"m\.?a\b", "meng", "llm", "mba", "mphil",
-               "postgraduate taught", "graduate"),
+    "bachelor": (
+        "bachelor'?s?",
+        "bachelor of (?:science|arts|engineering|laws)",
+        r"b\.?sc\b",
+        r"b\.?a\b",
+        "beng",
+        "llb",
+        "undergraduate",
+    ),
+    "master": (
+        "master'?s?",
+        "master of (?:science|arts|engineering|laws)",
+        r"m\.?sc\b",
+        r"m\.?a\b",
+        "meng",
+        "llm",
+        "mba",
+        "mphil",
+        "postgraduate taught",
+        "graduate",
+    ),
     "phd": ("ph\\.?d", "doctoral", "doctorate", "dphil"),
     "foundation": ("foundation year", "foundation programme", "pre-?bachelor"),
 }
 _NEGATION = (
-    r"not available for", r"not open to", r"does not apply to", r"excludes?",
-    r"is not intended for", r"not eligible", r"unavailable to", r"other than",
+    r"not available for",
+    r"not open to",
+    r"does not apply to",
+    r"excludes?",
+    r"is not intended for",
+    r"not eligible",
+    r"unavailable to",
+    r"other than",
 )
 _INCLUSION = (
-    r"awarded to", r"open to", r"available to", r"for", r"intended for",
-    r"who wish to pursue", r"enrolling in", r"enrolled in", r"pursuing", r"studying",
+    r"awarded to",
+    r"open to",
+    r"available to",
+    r"for",
+    r"intended for",
+    r"who wish to pursue",
+    r"enrolling in",
+    r"enrolled in",
+    r"pursuing",
+    r"studying",
 )
 #: A degree the applicant already holds is an entry requirement, not the level
 #: the award is for. TU Delft's van Effen page says the applicant must be
@@ -72,7 +102,8 @@ def _mentions_as_prior_qualification(sentence: str, degree_pattern: str) -> bool
 
 def _mentioned(text: str) -> tuple[str, ...]:
     return tuple(
-        level for level, words in DEGREE_SYNONYMS.items()
+        level
+        for level, words in DEGREE_SYNONYMS.items()
         if re.search(rf"\b(?:{'|'.join(words)})\b", text, re.IGNORECASE)
     )
 
@@ -82,7 +113,8 @@ def _positive_inclusion(text: str, degree_pattern: str) -> str:
     for inclusion in _INCLUSION:
         match = re.search(
             rf"[^.]*\b{inclusion}\b[^.]{{0,140}}?\b(?:{degree_pattern})\b[^.]{{0,80}}",
-            text, re.IGNORECASE,
+            text,
+            re.IGNORECASE,
         )
         if not match:
             continue
@@ -187,20 +219,39 @@ def assess_degree_applicability(text: str, requested_degree: str) -> Applicabili
 #: students" is not evidence — "few external scholarships are offered to
 #: international students" is a discouragement, not an eligibility statement.
 _INTERNATIONAL_YES = (
-    re.compile(r"[^.]*\binternational (?:students?|applicants?|candidates?)\b[^.]{0,60}\b"
-               r"(?:are eligible|may apply|can apply|are welcome to apply|are invited to apply)\b[^.]{0,60}\.", re.I),
-    re.compile(r"[^.]*\bopen to\b[^.]{0,60}\b(?:international|non-?(?:eu|eea|domestic|resident)|all nationalities|students of any nationality)\b[^.]{0,60}\.", re.I),
-    re.compile(r"[^.]*\b(?:students|applicants|candidates) of (?:all|any) nationalit(?:y|ies)\b[^.]{0,60}\.", re.I),
+    re.compile(
+        r"[^.]*\binternational (?:students?|applicants?|candidates?)\b[^.]{0,60}\b"
+        r"(?:are eligible|may apply|can apply|are welcome to apply|are invited to apply)\b[^.]{0,60}\.",
+        re.I,
+    ),
+    re.compile(
+        r"[^.]*\bopen to\b[^.]{0,60}\b(?:international|non-?(?:eu|eea|domestic|resident)|all nationalities|students of any nationality)\b[^.]{0,60}\.",
+        re.I,
+    ),
+    re.compile(
+        r"[^.]*\b(?:students|applicants|candidates) of (?:all|any) nationalit(?:y|ies)\b[^.]{0,60}\.",
+        re.I,
+    ),
     re.compile(
         r"[^.]*\bavailable (?:to|for)\b[^.]{0,40}\binternational (?:students?|applicants?|candidates?)\b[^.]{0,60}\.",
         re.I,
     ),
-    re.compile(r"[^.]*\bawarded to\b[^.]{0,60}\b(?:excellent )?students from outside\b[^.]{0,60}\.", re.I),
+    re.compile(
+        r"[^.]*\bawarded to\b[^.]{0,60}\b(?:excellent )?students from outside\b[^.]{0,60}\.", re.I
+    ),
 )
 _INTERNATIONAL_NO = (
-    re.compile(r"[^.]*\bnot (?:open|available) to international (?:students?|applicants?)\b[^.]{0,60}\.", re.I),
-    re.compile(r"[^.]*\b(?:domestic|home|national) (?:students?|applicants?) only\b[^.]{0,60}\.", re.I),
-    re.compile(r"[^.]*\binternational (?:students?|applicants?)\b[^.]{0,40}\bnot eligible\b[^.]{0,60}\.", re.I),
+    re.compile(
+        r"[^.]*\bnot (?:open|available) to international (?:students?|applicants?)\b[^.]{0,60}\.",
+        re.I,
+    ),
+    re.compile(
+        r"[^.]*\b(?:domestic|home|national) (?:students?|applicants?) only\b[^.]{0,60}\.", re.I
+    ),
+    re.compile(
+        r"[^.]*\binternational (?:students?|applicants?)\b[^.]{0,40}\bnot eligible\b[^.]{0,60}\.",
+        re.I,
+    ),
 )
 
 
@@ -210,13 +261,17 @@ def assess_international_eligibility(text: str) -> Applicability:
     for pattern in _INTERNATIONAL_NO:
         match = pattern.search(flat)
         if match:
-            return Applicability("no", "the page excludes international applicants",
-                                 match.group(0).strip()[:400])
+            return Applicability(
+                "no", "the page excludes international applicants", match.group(0).strip()[:400]
+            )
     for pattern in _INTERNATIONAL_YES:
         match = pattern.search(flat)
         if match:
-            return Applicability("yes", "the page affirmatively admits international applicants",
-                                 match.group(0).strip()[:400])
+            return Applicability(
+                "yes",
+                "the page affirmatively admits international applicants",
+                match.group(0).strip()[:400],
+            )
     return Applicability(
         "unknown",
         "the page contains no affirmative statement about international eligibility",

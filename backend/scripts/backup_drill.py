@@ -12,6 +12,7 @@ scratch database it created.  The dump itself contains no credentials.
 
 from __future__ import annotations
 
+import os
 import secrets
 import subprocess
 import sys
@@ -40,10 +41,15 @@ def database_url(url: str, name: str) -> str:
 def postgres_binary(name: str) -> str:
     import pgserver
 
-    path = Path(pgserver.__file__).resolve().parent / "pginstall" / "bin" / name
-    if not path.is_file():
-        raise RuntimeError(f"{name} not found at {path}")
-    return str(path)
+    bin_dir = Path(pgserver.__file__).resolve().parent / "pginstall" / "bin"
+    # The wheel ships pg_dump.exe on Windows and pg_dump elsewhere. Asking for
+    # the POSIX name only meant the drill could never find a binary on Windows,
+    # and reported the tool as missing when it was sitting beside the name it
+    # looked for.
+    for candidate in (bin_dir / name, bin_dir / f"{name}.exe"):
+        if candidate.is_file():
+            return str(candidate)
+    raise RuntimeError(f"{name} not found in {bin_dir}")
 
 
 def counts(engine: sa.Engine) -> dict[str, int]:
@@ -83,7 +89,13 @@ def main() -> int:
     scratch = f"unimatch_restore_{secrets.token_hex(6)}"
     restored_url = database_url(source_url, scratch)
     admin = sa.create_engine(source_url, isolation_level="AUTOCOMMIT")
-    dump_path = Path(tempfile.mkstemp(prefix="unimatch-backup-", suffix=".dump")[1])
+    # mkstemp hands back an open descriptor as well as a path. pg_dump writes
+    # the file by name, so ours is never used - and leaving it open meant the
+    # cleanup below could not delete the file on Windows, raising a
+    # PermissionError that buried whatever had actually gone wrong.
+    handle, dump_name = tempfile.mkstemp(prefix="unimatch-backup-", suffix=".dump")
+    os.close(handle)
+    dump_path = Path(dump_name)
     try:
         subprocess.run(
             [

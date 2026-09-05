@@ -1,7 +1,12 @@
 """Orders, payment events, entitlements, and the tier a run was allowed.
 
 Revision ID: d4b2c8f17a90
-Revises: c3a1f4e9b2d7
+Revises: c8f3b0d47a19
+
+Written against c3a1f4e9b2d7 and re-pointed when payments met the social and
+ranking work on main: two chains had branched from the same revision. Nothing
+here touches those tables, so linearising is enough and a merge revision would
+only add a node that explains nothing.
 """
 
 from __future__ import annotations
@@ -10,7 +15,7 @@ import sqlalchemy as sa
 from alembic import op
 
 revision = "d4b2c8f17a90"
-down_revision = "c3a1f4e9b2d7"
+down_revision = "c8f3b0d47a19"
 branch_labels = None
 depends_on = None
 

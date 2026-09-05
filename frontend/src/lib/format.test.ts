@@ -7,6 +7,7 @@
 
 import { describe, expect, it } from 'vitest';
 import {
+  DISPLAY_LOCALE,
   NOT_FOUND,
   STATUS_LABEL,
   STATUS_MEANING,
@@ -68,8 +69,24 @@ describe('money', () => {
 });
 
 describe('dates', () => {
-  it('formats an ISO date readably', () => {
-    expect(date('2027-01-15')).toBe('15 Jan 2027');
+  it('formats an ISO date readably, in the reader own locale', () => {
+    // Money and dates now share DISPLAY_LOCALE. Asserting the literal string
+    // would pin the test to whichever locale the runner happens to have, so
+    // this asserts the parts that must be there in any of them.
+    const formatted = date('2027-01-15');
+    expect(formatted).toContain('2027');
+    expect(formatted).toMatch(/15/);
+    expect(formatted).toBe(
+      new Date('2027-01-15').toLocaleDateString(DISPLAY_LOCALE, {
+        day: '2-digit', month: 'short', year: 'numeric',
+      }),
+    );
+  });
+
+  it('uses one locale for money and dates alike', () => {
+    // The defect: money was en-US and dates en-GB, so the same screen mixed
+    // two conventions the reader never chose.
+    expect(money(usd(1234567))).toContain((1234567).toLocaleString(DISPLAY_LOCALE));
   });
 
   it('reports a missing date rather than showing a dash', () => {

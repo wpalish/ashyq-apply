@@ -22,6 +22,7 @@ from app.adapters.page_classifier import PageType, classify_page
 from app.adapters.requirements.web_requirements import WebRequirementsAdapter
 from app.adapters.scholarship.web_scholarships import WebScholarshipAdapter
 from app.domain.enums import ClaimType, DegreeLevel
+from tests.conftest import TEST_ORGANIZATION_ID
 
 SHAPES = Path(__file__).parent / "fixtures" / "live_shapes"
 
@@ -72,7 +73,9 @@ class TestProgramExistence:
         self, settings, tmp_path, monkeypatch
     ):
         result = await _verify_against(
-            monkeypatch, settings, tmp_path,
+            monkeypatch,
+            settings,
+            tmp_path,
             page_html=shape("general_admissions_dutch_diploma.html"),
             program_name="computer science (bachelor)",
             url="https://www.tudelft.nl/en/education/admission-and-application/bsc-dutch-diploma",
@@ -85,7 +88,9 @@ class TestProgramExistence:
     ):
         """The guard must not simply suppress everything."""
         result = await _verify_against(
-            monkeypatch, settings, tmp_path,
+            monkeypatch,
+            settings,
+            tmp_path,
             page_html=shape("program_detail_cse.html"),
             program_name="BSc Computer Science and Engineering",
             url="https://www.tudelft.nl/en/education/programmes/bachelors/cse",
@@ -93,12 +98,12 @@ class TestProgramExistence:
         assert ClaimType.PROGRAM_EXISTS in claims_by_type(result.claims)
 
     @pytest.mark.asyncio
-    async def test_a_degree_level_mismatch_blocks_the_claim(
-        self, settings, tmp_path, monkeypatch
-    ):
+    async def test_a_degree_level_mismatch_blocks_the_claim(self, settings, tmp_path, monkeypatch):
         """A master's page does not confirm a bachelor's programme."""
         result = await _verify_against(
-            monkeypatch, settings, tmp_path,
+            monkeypatch,
+            settings,
+            tmp_path,
             page_html=shape("scholarship_award_msc_only.html"),
             program_name="BSc Computer Science",
             url="https://www.tudelft.nl/en/education/programmes/masters/cs",
@@ -117,7 +122,9 @@ class TestIntakeAvailability:
         self, settings, tmp_path, monkeypatch
     ):
         result = await _verify_against(
-            monkeypatch, settings, tmp_path,
+            monkeypatch,
+            settings,
+            tmp_path,
             page_html=shape("general_admissions_dutch_diploma.html"),
             program_name="computer science (bachelor)",
             url="https://www.tudelft.nl/en/education/admission-and-application/bsc-dutch-diploma",
@@ -130,7 +137,9 @@ class TestIntakeAvailability:
         self, settings, tmp_path, monkeypatch
     ):
         result = await _verify_against(
-            monkeypatch, settings, tmp_path,
+            monkeypatch,
+            settings,
+            tmp_path,
             page_html=shape("program_detail_cse.html"),
             program_name="BSc Computer Science and Engineering",
             url="https://www.tudelft.nl/en/education/programmes/bachelors/cse",
@@ -157,18 +166,25 @@ class TestExcerptsAreRealQuotes:
         return " ".join(text.split()).lower()
 
     @pytest.mark.asyncio
-    @pytest.mark.parametrize("fixture,program", [
-        ("program_detail_cse.html", "BSc Computer Science and Engineering"),
-        ("general_admissions_dutch_diploma.html", "computer science (bachelor)"),
-        ("news_page.html", "computer science (bachelor)"),
-    ])
+    @pytest.mark.parametrize(
+        "fixture,program",
+        [
+            ("program_detail_cse.html", "BSc Computer Science and Engineering"),
+            ("general_admissions_dutch_diploma.html", "computer science (bachelor)"),
+            ("news_page.html", "computer science (bachelor)"),
+        ],
+    )
     async def test_every_excerpt_appears_verbatim_in_the_page(
         self, settings, tmp_path, monkeypatch, fixture, program
     ):
         html = shape(fixture)
         result = await _verify_against(
-            monkeypatch, settings, tmp_path, page_html=html,
-            program_name=program, url="https://uni.edu/page",
+            monkeypatch,
+            settings,
+            tmp_path,
+            page_html=html,
+            program_name=program,
+            url="https://uni.edu/page",
         )
         page_text = self._normalise(html_to_text(html))
         for claim in result.claims:
@@ -181,10 +197,13 @@ class TestExcerptsAreRealQuotes:
             )
 
     @pytest.mark.asyncio
-    @pytest.mark.parametrize("fixture", [
-        "scholarship_award_msc_only.html",
-        "scholarship_award_no_deadline.html",
-    ])
+    @pytest.mark.parametrize(
+        "fixture",
+        [
+            "scholarship_award_msc_only.html",
+            "scholarship_award_no_deadline.html",
+        ],
+    )
     async def test_award_claims_quote_the_award_page(
         self, settings, tmp_path, monkeypatch, fixture
     ):
@@ -195,7 +214,9 @@ class TestExcerptsAreRealQuotes:
         """
         html = shape(fixture)
         awards = await _find_awards(
-            monkeypatch, settings, tmp_path,
+            monkeypatch,
+            settings,
+            tmp_path,
             pages={"https://uni.edu/scholarships/x": html},
             index_html='<a href="https://uni.edu/scholarships/x">Award Scholarship</a>',
         )
@@ -207,8 +228,7 @@ class TestExcerptsAreRealQuotes:
             if not claim.original_text_excerpt:
                 continue
             assert self._normalise(claim.original_text_excerpt) in page_text, (
-                f"{claim.claim_type} excerpt is not on the page: "
-                f"{claim.original_text_excerpt!r}"
+                f"{claim.claim_type} excerpt is not on the page: {claim.original_text_excerpt!r}"
             )
 
 
@@ -219,7 +239,9 @@ class TestExcerptsAreRealQuotes:
 
 class TestScholarshipPageClassification:
     def test_an_index_page_is_an_index(self):
-        page = classify_page(url="https://uni.edu/scholarships", html=shape("scholarship_index.html"))
+        page = classify_page(
+            url="https://uni.edu/scholarships", html=shape("scholarship_index.html")
+        )
         assert page.page_type is PageType.SCHOLARSHIP_INDEX
 
     def test_a_faq_is_a_faq(self):
@@ -241,19 +263,23 @@ class TestScholarshipPageClassification:
         self, settings, tmp_path, monkeypatch, fixture
     ):
         awards = await _find_awards(
-            monkeypatch, settings, tmp_path,
+            monkeypatch,
+            settings,
+            tmp_path,
             pages={"https://uni.edu/scholarships/x": shape(fixture)},
             index_html='<a href="https://uni.edu/scholarships/x">Scholarship information</a>',
         )
         assert awards == []
 
     @pytest.mark.asyncio
-    async def test_an_award_page_still_produces_an_award(
-        self, settings, tmp_path, monkeypatch
-    ):
+    async def test_an_award_page_still_produces_an_award(self, settings, tmp_path, monkeypatch):
         awards = await _find_awards(
-            monkeypatch, settings, tmp_path,
-            pages={"https://uni.edu/scholarships/merit": shape("scholarship_award_no_deadline.html")},
+            monkeypatch,
+            settings,
+            tmp_path,
+            pages={
+                "https://uni.edu/scholarships/merit": shape("scholarship_award_no_deadline.html")
+            },
             index_html='<a href="https://uni.edu/scholarships/merit">Faculty Merit Award</a>',
         )
         assert len(awards) == 1
@@ -270,11 +296,15 @@ class TestInternationalEligibility:
     async def test_a_generic_mention_does_not_confirm_eligibility(
         self, settings, tmp_path, monkeypatch
     ):
-        """"few external scholarships are offered to international students" is
+        """ "few external scholarships are offered to international students" is
         not an affirmative eligibility clause."""
         awards = await _find_awards(
-            monkeypatch, settings, tmp_path,
-            pages={"https://uni.edu/scholarships/merit": shape("scholarship_award_no_deadline.html")},
+            monkeypatch,
+            settings,
+            tmp_path,
+            pages={
+                "https://uni.edu/scholarships/merit": shape("scholarship_award_no_deadline.html")
+            },
             index_html='<a href="https://uni.edu/scholarships/merit">Faculty Merit Award</a>',
         )
         assert awards[0].international_eligible == "unknown"
@@ -288,7 +318,9 @@ class TestInternationalEligibility:
             "<h2>Eligibility</h2><p>International applicants are eligible to apply.</p>",
         )
         awards = await _find_awards(
-            monkeypatch, settings, tmp_path,
+            monkeypatch,
+            settings,
+            tmp_path,
             pages={"https://uni.edu/scholarships/merit": html},
             index_html='<a href="https://uni.edu/scholarships/merit">Faculty Merit Award</a>',
         )
@@ -306,8 +338,12 @@ class TestDegreeApplicability:
         self, settings, tmp_path, monkeypatch
     ):
         awards = await _find_awards(
-            monkeypatch, settings, tmp_path,
-            pages={"https://uni.edu/scholarships/van-effen": shape("scholarship_award_msc_only.html")},
+            monkeypatch,
+            settings,
+            tmp_path,
+            pages={
+                "https://uni.edu/scholarships/van-effen": shape("scholarship_award_msc_only.html")
+            },
             index_html='<a href="https://uni.edu/scholarships/van-effen">van Effen Scholarship</a>',
             degree="bachelor",
         )
@@ -321,8 +357,12 @@ class TestDegreeApplicability:
         self, settings, tmp_path, monkeypatch
     ):
         awards = await _find_awards(
-            monkeypatch, settings, tmp_path,
-            pages={"https://uni.edu/scholarships/van-effen": shape("scholarship_award_msc_only.html")},
+            monkeypatch,
+            settings,
+            tmp_path,
+            pages={
+                "https://uni.edu/scholarships/van-effen": shape("scholarship_award_msc_only.html")
+            },
             index_html='<a href="https://uni.edu/scholarships/van-effen">van Effen Scholarship</a>',
             degree="master",
         )
@@ -332,12 +372,18 @@ class TestDegreeApplicability:
     async def test_an_award_silent_on_degree_is_unknown_not_eligible(
         self, settings, tmp_path, monkeypatch
     ):
-        html = shape("scholarship_award_no_deadline.html").replace(
-            "for outstanding bachelor's students", "for outstanding students"
-        ).replace("Open to admitted bachelor's students in the Faculty of Science.",
-                  "Open to admitted students in the Faculty of Science.")
+        html = (
+            shape("scholarship_award_no_deadline.html")
+            .replace("for outstanding bachelor's students", "for outstanding students")
+            .replace(
+                "Open to admitted bachelor's students in the Faculty of Science.",
+                "Open to admitted students in the Faculty of Science.",
+            )
+        )
         awards = await _find_awards(
-            monkeypatch, settings, tmp_path,
+            monkeypatch,
+            settings,
+            tmp_path,
             pages={"https://uni.edu/scholarships/merit": html},
             index_html='<a href="https://uni.edu/scholarships/merit">Faculty Merit Award</a>',
             degree="bachelor",
@@ -356,8 +402,12 @@ class TestAvailabilityStates:
         self, settings, tmp_path, monkeypatch
     ):
         awards = await _find_awards(
-            monkeypatch, settings, tmp_path,
-            pages={"https://uni.edu/scholarships/merit": shape("scholarship_award_no_deadline.html")},
+            monkeypatch,
+            settings,
+            tmp_path,
+            pages={
+                "https://uni.edu/scholarships/merit": shape("scholarship_award_no_deadline.html")
+            },
             index_html='<a href="https://uni.edu/scholarships/merit">Faculty Merit Award</a>',
         )
         award = awards[0]
@@ -371,9 +421,14 @@ class TestAvailabilityStates:
 
         fields = set(Scholarship.model_fields)
         for name in (
-            "opportunity_exists", "currently_available", "applicant_eligible",
-            "application_window_open", "deadline_known", "deadline_passed",
-            "award_current_for_intake", "degree_applicability",
+            "opportunity_exists",
+            "currently_available",
+            "applicant_eligible",
+            "application_window_open",
+            "deadline_known",
+            "deadline_passed",
+            "award_current_for_intake",
+            "degree_applicability",
         ):
             assert name in fields, f"Scholarship is missing the {name!r} state"
 
@@ -384,30 +439,52 @@ class TestAvailabilityStates:
 
 
 async def _verify_against(
-    monkeypatch, settings, tmp_path, *, page_html: str, program_name: str,
-    url: str, intake: str = "fall 2027",
+    monkeypatch,
+    settings,
+    tmp_path,
+    *,
+    page_html: str,
+    program_name: str,
+    url: str,
+    intake: str = "fall 2027",
 ):
     """Run the requirements adapter against one in-memory page."""
     async with Fetcher(tmp_path / "cache", offline=True) as fetcher:
         _serve(monkeypatch, fetcher, {url: page_html})
-        candidate = Candidate(name="Test University", country="Netherlands", city="Delft",
-                              domain="uni.edu")
-        program = CandidateProgram(name=program_name, field="computer science",
-                                   degree=DegreeLevel.BACHELOR, url=url)
+        candidate = Candidate(
+            name="Test University", country="Netherlands", city="Delft", domain="uni.edu"
+        )
+        program = CandidateProgram(
+            name=program_name, field="computer science", degree=DegreeLevel.BACHELOR, url=url
+        )
         return await WebRequirementsAdapter(fetcher, "2026/27").verify(candidate, program, intake)
 
 
 async def _find_awards(
-    monkeypatch, settings, tmp_path, *, pages: dict[str, str], index_html: str,
+    monkeypatch,
+    settings,
+    tmp_path,
+    *,
+    pages: dict[str, str],
+    index_html: str,
     degree: DegreeLevel = DegreeLevel.BACHELOR,
 ):
     index_url = "https://uni.edu/scholarships"
     async with Fetcher(tmp_path / "cache", offline=True) as fetcher:
         _serve(monkeypatch, fetcher, {index_url: _wrap_index(index_html), **pages})
-        candidate = Candidate(name="Test University", country="Netherlands", city="Delft",
-                              domain="uni.edu", scholarships_url=index_url)
-        program = CandidateProgram(name="BSc Computer Science", field="computer science",
-                                   degree=degree, url="https://uni.edu/bsc/cs")
+        candidate = Candidate(
+            name="Test University",
+            country="Netherlands",
+            city="Delft",
+            domain="uni.edu",
+            scholarships_url=index_url,
+        )
+        program = CandidateProgram(
+            name="BSc Computer Science",
+            field="computer science",
+            degree=degree,
+            url="https://uni.edu/bsc/cs",
+        )
         awards, result = await WebScholarshipAdapter(fetcher, "2026/27").find(
             candidate, program, None
         )
@@ -430,12 +507,23 @@ def _serve(monkeypatch, fetcher: Fetcher, pages: dict[str, str]) -> None:
     async def fake_get(url: str, *, use_cache: bool = True) -> FetchResult:
         html = pages.get(url) or pages.get(url.rstrip("/"))
         if html is None:
-            return FetchResult(url=url, outcome=FetchOutcome.HTTP_ERROR, status_code=404,
-                               error="not in this test's page set", final_url=url)
+            return FetchResult(
+                url=url,
+                outcome=FetchOutcome.HTTP_ERROR,
+                status_code=404,
+                error="not in this test's page set",
+                final_url=url,
+            )
         body = html.encode()
         return FetchResult(
-            url=url, outcome=FetchOutcome.OK, status_code=200, content=body, text=html,
-            content_type="text/html; charset=utf-8", fetched_at=datetime.now(UTC), final_url=url,
+            url=url,
+            outcome=FetchOutcome.OK,
+            status_code=200,
+            content=body,
+            text=html,
+            content_type="text/html; charset=utf-8",
+            fetched_at=datetime.now(UTC),
+            final_url=url,
         )
 
     monkeypatch.setattr(fetcher, "get", fake_get)
@@ -460,12 +548,20 @@ class TestCandidateLimit:
         Base.metadata.create_all(engine)
         session = sessionmaker(bind=engine)()
         try:
-            row = ApplicantProfileRow(display_name="t", payload=profile.model_dump(mode="json"))
+            row = ApplicantProfileRow(
+                organization_id=TEST_ORGANIZATION_ID,
+                display_name="t",
+                payload=profile.model_dump(mode="json"),
+            )
             session.add(row)
             session.flush()
             run = ResearchRun(
-                profile_id=row.id, stage="queued", demo_mode=True,
-                candidate_limit=1, verify_limit=1, stage_state=RunState.load(None).dump(),
+                profile_id=row.id,
+                stage="queued",
+                demo_mode=True,
+                candidate_limit=1,
+                verify_limit=1,
+                stage_state=RunState.load(None).dump(),
             )
             session.add(run)
             session.flush()
@@ -484,8 +580,14 @@ class TestCandidateLimit:
         from app.models import ResearchRun
         from app.pipeline.runner import ResearchRunner
 
-        run = ResearchRun(profile_id="p", stage="queued", demo_mode=True,
-                          candidate_limit=3, verify_limit=50, stage_state={})
+        run = ResearchRun(
+            profile_id="p",
+            stage="queued",
+            demo_mode=True,
+            candidate_limit=3,
+            verify_limit=50,
+            stage_state={},
+        )
         runner = ResearchRunner(None, run, profile, settings)  # type: ignore[arg-type]
         assert runner.verify_limit == 3
 
@@ -517,11 +619,18 @@ class TestBrowserTierIsReallyUsed:
         class RecordingRenderer:
             async def render(self, url: str) -> FetchResult:
                 rendered_urls.append(url)
-                html = "<html><body><main><p>" + ("Real content. " * 60) + "</p></main></body></html>"
+                html = (
+                    "<html><body><main><p>" + ("Real content. " * 60) + "</p></main></body></html>"
+                )
                 return FetchResult(
-                    url=url, outcome=FetchOutcome.OK, status_code=200,
-                    content=html.encode(), text=html, content_type="text/html",
-                    fetched_at=datetime.now(UTC), final_url=url,
+                    url=url,
+                    outcome=FetchOutcome.OK,
+                    status_code=200,
+                    content=html.encode(),
+                    text=html,
+                    content_type="text/html",
+                    fetched_at=datetime.now(UTC),
+                    final_url=url,
                 )
 
         async with Fetcher(tmp_path / "cache", delay_seconds=0.0) as fetcher:
@@ -546,7 +655,11 @@ class TestBrowserTierIsReallyUsed:
                 rendered.append(url)
                 raise AssertionError("should not escalate a page that already has content")
 
-        html = "<html><body><main><p>" + ("Plenty of readable prose. " * 40) + "</p></main></body></html>"
+        html = (
+            "<html><body><main><p>"
+            + ("Plenty of readable prose. " * 40)
+            + "</p></main></body></html>"
+        )
         async with Fetcher(tmp_path / "cache", delay_seconds=0.0) as fetcher:
             fetcher.attach_renderer(RecordingRenderer())
             fetcher._client = _StubClient({"https://uni.edu/static": html})  # type: ignore[assignment]
@@ -622,8 +735,9 @@ class TestSchemaDrift:
 
         import app.db as db_module
 
-        engine = create_engine(f"sqlite:///{tmp_path / 'empty.db'}",
-                               connect_args={"check_same_thread": False})
+        engine = create_engine(
+            f"sqlite:///{tmp_path / 'empty.db'}", connect_args={"check_same_thread": False}
+        )
         monkeypatch.setattr(db_module, "engine", engine)
         with pytest.raises(db_module.SchemaOutOfDate) as exc:
             db_module.assert_at_head()
@@ -694,18 +808,14 @@ class TestCrashRecovery:
 
         from app.pipeline.state import is_lease_expired
 
-        assert not is_lease_expired(
-            "funding_discovery", datetime.now(UTC) - timedelta(seconds=5)
-        )
+        assert not is_lease_expired("funding_discovery", datetime.now(UTC) - timedelta(seconds=5))
 
     def test_a_silent_worker_expires_its_lease(self):
         from datetime import UTC, datetime, timedelta
 
         from app.pipeline.state import is_lease_expired
 
-        assert is_lease_expired(
-            "funding_discovery", datetime.now(UTC) - timedelta(seconds=600)
-        )
+        assert is_lease_expired("funding_discovery", datetime.now(UTC) - timedelta(seconds=600))
 
     def test_a_run_awaiting_a_decision_is_never_abandoned(self):
         """Waiting for the user is not work, however long it lasts."""
@@ -730,12 +840,21 @@ class TestCrashRecovery:
 
         engine, session = self._session(settings)
         try:
-            row = ApplicantProfileRow(display_name="t", payload=profile.model_dump(mode="json"))
+            row = ApplicantProfileRow(
+                organization_id=TEST_ORGANIZATION_ID,
+                display_name="t",
+                payload=profile.model_dump(mode="json"),
+            )
             session.add(row)
             session.flush()
-            run = ResearchRun(profile_id=row.id, stage="queued", demo_mode=True,
-                              candidate_limit=2, verify_limit=2,
-                              stage_state=RunState.load(None).dump())
+            run = ResearchRun(
+                profile_id=row.id,
+                stage="queued",
+                demo_mode=True,
+                candidate_limit=2,
+                verify_limit=2,
+                stage_state=RunState.load(None).dump(),
+            )
             session.add(run)
             session.flush()
             await ResearchRunner(session, run, profile, settings).run_to_decision()
@@ -758,11 +877,20 @@ class TestCrashRecovery:
         monkeypatch.setattr(db_module, "engine", engine)
         monkeypatch.setattr(db_module, "SessionLocal", sessionmaker(bind=engine, future=True))
         try:
-            row = ApplicantProfileRow(display_name="t", payload=profile.model_dump(mode="json"))
+            row = ApplicantProfileRow(
+                organization_id=TEST_ORGANIZATION_ID,
+                display_name="t",
+                payload=profile.model_dump(mode="json"),
+            )
             session.add(row)
             session.flush()
-            run = ResearchRun(profile_id=row.id, stage="funding_discovery", demo_mode=True,
-                              worker_id="host:9999", stage_state={})
+            run = ResearchRun(
+                profile_id=row.id,
+                stage="funding_discovery",
+                demo_mode=True,
+                worker_id="host:9999",
+                stage_state={},
+            )
             session.add(run)
             session.commit()
             run_id = run.id
@@ -794,13 +922,23 @@ class TestCrashRecovery:
         monkeypatch.setattr(db_module, "engine", engine)
         monkeypatch.setattr(db_module, "SessionLocal", sessionmaker(bind=engine, future=True))
         try:
-            row = ApplicantProfileRow(display_name="t", payload=profile.model_dump(mode="json"))
+            row = ApplicantProfileRow(
+                organization_id=TEST_ORGANIZATION_ID,
+                display_name="t",
+                payload=profile.model_dump(mode="json"),
+            )
             session.add(row)
             session.flush()
-            live = ResearchRun(profile_id=row.id, stage="funding_discovery", demo_mode=True,
-                               stage_state={})
-            done = ResearchRun(profile_id=row.id, stage="completed", demo_mode=True,
-                               stage_state={}, finished_at=datetime.now(UTC))
+            live = ResearchRun(
+                profile_id=row.id, stage="funding_discovery", demo_mode=True, stage_state={}
+            )
+            done = ResearchRun(
+                profile_id=row.id,
+                stage="completed",
+                demo_mode=True,
+                stage_state={},
+                finished_at=datetime.now(UTC),
+            )
             session.add_all([live, done])
             session.flush()
             JobStore(session).enqueue("research", run_id=live.id)
@@ -825,12 +963,19 @@ class TestCrashRecovery:
         engine, session = self._session(settings)
         monkeypatch.setattr(db_module, "engine", engine)
         try:
-            row = ApplicantProfileRow(display_name="t", payload=profile.model_dump(mode="json"))
+            row = ApplicantProfileRow(
+                organization_id=TEST_ORGANIZATION_ID,
+                display_name="t",
+                payload=profile.model_dump(mode="json"),
+            )
             session.add(row)
             session.flush()
             run = ResearchRun(
-                profile_id=row.id, stage="program_verification", demo_mode=True,
-                worker_id="host:dead", stage_state={},
+                profile_id=row.id,
+                stage="program_verification",
+                demo_mode=True,
+                worker_id="host:dead",
+                stage_state={},
                 heartbeat_at=datetime.now(UTC) - timedelta(seconds=600),
             )
             session.add(run)
@@ -872,7 +1017,9 @@ class TestSiteChromeIsIgnored:
         <a href="/scholarships/other">Scholarships from other providers</a>
       </nav>
     """
-    FOOTER = '<footer><a href="/scholarships">Scholarships</a><a href="/privacy">Privacy</a></footer>'
+    FOOTER = (
+        '<footer><a href="/scholarships">Scholarships</a><a href="/privacy">Privacy</a></footer>'
+    )
 
     def _page(self, title: str, body: str) -> str:
         return (
@@ -929,16 +1076,21 @@ class TestCostVocabulary:
     """`\\btuition fee\\b` does not match "tuition fees"; a fees page was
     therefore classified as general admissions and its costs never read."""
 
-    @pytest.mark.parametrize("heading", [
-        "Application, registration and tuition fees",
-        "Tuition fee",
-        "Cost of attendance",
-        "Tuition fees and funding",
-        "Living costs",
-    ])
+    @pytest.mark.parametrize(
+        "heading",
+        [
+            "Application, registration and tuition fees",
+            "Tuition fee",
+            "Cost of attendance",
+            "Tuition fees and funding",
+            "Living costs",
+        ],
+    )
     def test_cost_headings_are_recognised_in_singular_and_plural(self, heading):
-        html = f"<!doctype html><html><head><title>{heading}</title></head><body><main>" \
-               f"<h1>{heading}</h1><p>Details of what studying here costs.</p></main></body></html>"
+        html = (
+            f"<!doctype html><html><head><title>{heading}</title></head><body><main>"
+            f"<h1>{heading}</h1><p>Details of what studying here costs.</p></main></body></html>"
+        )
         page = classify_page(url="https://uni.edu/fees", html=html)
         assert page.page_type is PageType.COSTS
 
@@ -993,7 +1145,7 @@ class TestDegreeApplicabilityOnRealShapes:
         assert assess_degree_applicability(self.EXCLUSION_PAGE, "master").verdict == "yes"
 
     def test_a_degree_held_is_not_the_degree_awarded(self):
-        """"obtained your bachelor's degree" must not read as "for bachelors"."""
+        """ "obtained your bachelor's degree" must not read as "for bachelors"."""
         from app.adapters.applicability import assess_degree_applicability
 
         assert assess_degree_applicability(self.EXCLUSION_PAGE, "bachelor").verdict != "yes"

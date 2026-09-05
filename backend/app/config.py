@@ -45,6 +45,13 @@ class Settings(BaseSettings):
     academic_year: str = "2026/27"
     target_currency: str = "USD"
 
+    #: 2 ranks with the non-compensatory geometric mean and the portfolio
+    #: buckets; 1 restores the v1 additive score, byte for byte, so a bad
+    #: release can be rolled back without a migration.
+    ranking_version: int = 2
+    #: How hard an unverified row is discounted: sort_key = fit * coverage**y.
+    ranking_gamma: float = 0.5
+
     #: Worker
     worker_concurrency: int = 2
     worker_poll_seconds: float = 1.0
@@ -52,6 +59,10 @@ class Settings(BaseSettings):
 
     cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
     log_level: str = "INFO"
+    #: "text" for a person reading a terminal, "json" for anything that parses
+    #: logs. Production wants json; the default stays readable so development
+    #: does not pay for a machine that is not there.
+    log_format: str = "text"
 
     #: Authentication is deliberately opt-in for the zero-friction local demo,
     #: and mandatory in a production environment.  Sessions are opaque,
@@ -61,8 +72,60 @@ class Settings(BaseSettings):
     session_cookie_name: str = "unimatch_session"
     session_ttl_hours: int = 24 * 7
     cookie_secure: bool = False
+    #: A person has a laptop, a phone and a work machine; twenty covers that
+    #: with room to spare. Past it the oldest session is revoked rather than
+    #: letting them accumulate for years.
+    max_sessions_per_user: int = 20
+    #: scrypt cost as a power of two. 17 is ~1s of CPU per hash, which is the
+    #: production value; the test suite lowers it because hashing a hundred
+    #: throwaway passwords at full cost buys nothing.
+    password_scrypt_log2: int = 17
+    #: Public origin of the frontend, used to build links a person clicks from
+    #: their email. HTTPS in production, where startup refuses anything else.
+    public_base_url: str = "http://127.0.0.1:5173"
+    #: Password reset. The link is single-use and short-lived on purpose.
+    password_reset_ttl_minutes: int = 60
+    #: Where reset links are sent. "console" logs them (development and the
+    #: demo); "smtp" uses the settings below. There is no third option, and
+    #: production refuses to start on "console".
+    email_sender: str = "console"
+    smtp_host: str = ""
+    smtp_port: int = 587
+    smtp_username: str = ""
+    smtp_password: str = ""
+    smtp_from: str = "no-reply@ashyq.example"
+    #: Recorded on the user, never enforced while this is false: there is no
+    #: verification flow yet, and pretending otherwise would be theatre.
+    auth_require_verified_email: bool = False
     auth_rate_limit_per_minute: int = 10
     run_rate_limit_per_minute: int = 20
+    #: Posting writes content other people read, so it gets its own bound.
+    #: Generous enough for a real conversation, narrow enough that a script
+    #: cannot fill the feed.
+    social_rate_limit_per_minute: int = 30
+    #: Whether X-Forwarded-For may be believed. True only when something we
+    #: control terminates the connection and rewrites the header (nginx in the
+    #: compose stack, Fly's edge). Believing it on a directly exposed port
+    #: would let any client invent an address and walk around the limiter.
+    trust_proxy_headers: bool = False
+
+    #: Who may read the moderation queue and act on it, as a comma-separated
+    #: list of account emails.
+    #:
+    #: Deliberately not a role in the database. A workspace owner is the admin
+    #: of their own tenant, and the community is not theirs — it spans every
+    #: workspace — so tenant roles cannot grant this. A setting the deployment
+    #: operator edits is crude, but it puts the decision where it belongs and
+    #: needs no table, no grant flow and no way for one applicant to make
+    #: themselves a moderator. A real deployment with more than a handful of
+    #: moderators should replace it.
+    moderator_emails: str = ""
+
+    #: `/metrics` for a Prometheus scraper. It carries no applicant data, only
+    #: aggregates, but traffic and queue depth are still not public facts:
+    #: production must either set a token or switch the endpoint off.
+    metrics_enabled: bool = True
+    metrics_token: str = ""
 
     #: Payments are off until a merchant account exists. With this false the
     #: product behaves exactly as it did before payments were written: no
@@ -91,6 +154,10 @@ class Settings(BaseSettings):
     @property
     def cors_origin_list(self) -> list[str]:
         return [o.strip() for o in self.cors_origins.split(",") if o.strip()]
+
+    @property
+    def moderator_email_list(self) -> list[str]:
+        return [e.strip().casefold() for e in self.moderator_emails.split(",") if e.strip()]
 
     def ensure_dirs(self) -> None:
         directories = [self.cache_dir, self.export_dir]
@@ -125,6 +192,23 @@ class Settings(BaseSettings):
             )
         if self.session_ttl_hours < 1 or self.session_ttl_hours > 24 * 30:
             raise RuntimeError("UNIMATCH_SESSION_TTL_HOURS must be between 1 and 720.")
+        if self.is_production and self.email_sender == "console":
+            raise RuntimeError(
+                "UNIMATCH_EMAIL_SENDER=console only logs reset links. Configure SMTP before "
+                "running in production, or password reset silently does nothing."
+            )
+        if self.email_sender == "smtp" and not self.smtp_host:
+            raise RuntimeError("UNIMATCH_SMTP_HOST is required when the sender is smtp.")
+        if self.is_production and not self.public_base_url.startswith("https://"):
+            raise RuntimeError("UNIMATCH_PUBLIC_BASE_URL must be an HTTPS origin in production.")
+        if self.is_production and self.password_scrypt_log2 < 17:
+            raise RuntimeError("Production password hashing must use at least scrypt 2**17.")
+        if self.is_production and self.metrics_enabled and not self.metrics_token:
+            raise RuntimeError(
+                "UNIMATCH_METRICS_TOKEN must be set in production, or set "
+                "UNIMATCH_METRICS_ENABLED=false. An open /metrics publishes traffic volumes "
+                "and queue depth to anyone who asks."
+            )
 
 
 @lru_cache

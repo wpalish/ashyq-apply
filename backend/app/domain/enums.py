@@ -203,6 +203,26 @@ class FundingClassification(StrEnum):
     UNKNOWN = "UNKNOWN"
 
 
+class Bucket(StrEnum):
+    """Where a row sits in a balanced list.
+
+    Not "safety / match / reach": "safety" reads as a promise, and this product
+    never promises an admission. Every name here describes what the confirmed
+    data says about the row, not what an admissions committee will do.
+    """
+
+    #: Requirements met with room, funding confirmed, cost within the ceiling.
+    WELL_PLACED = "WELL_PLACED"
+    PLAUSIBLE = "PLAUSIBLE"
+    AMBITIOUS = "AMBITIOUS"
+    #: The remaining cost is past what the family said it can absorb.
+    OUT_OF_BUDGET = "OUT_OF_BUDGET"
+    #: Too little was verified to place the row at all.
+    NEEDS_CLARIFICATION = "NEEDS_CLARIFICATION"
+    #: A confirmed hard filter or an excluded country: listed, never ranked.
+    EXCLUDED = "EXCLUDED"
+
+
 class CostCategory(StrEnum):
     TUITION = "tuition"
     MANDATORY_FEES = "mandatory_fees"
@@ -307,3 +327,71 @@ class FetchOutcome(StrEnum):
     BLOCKED = "blocked"
     #: The body was larger than we will read.
     TOO_LARGE = "too_large"
+
+
+# --- Social module ------------------------------------------------------
+
+
+class ApplicantStatus(StrEnum):
+    """Where an applicant says they stand with their universities.
+
+    Two members only, and the column is nullable. A brand-new account has not
+    told us anything, and NULL says exactly that — the product does not seed a
+    default that would read on someone else's screen as a claim they made.
+    """
+
+    ACCEPTED = "accepted"
+    WAITLIST = "waitlist"
+
+
+class DirectMessagePolicy(StrEnum):
+    """Who may open a conversation with this person.
+
+    The product has no follow graph, so "mutual follows" has no meaning here.
+    The nearest thing it does have is a thread the two of them were both in,
+    which is a real signal: one of them answered the other in public first.
+
+    `THREADS` is the default rather than `ANYONE`. The users are school
+    leavers, some of them minors, and the profiles are public across the whole
+    service — an inbox open to every stranger by default is a decision nobody
+    made.
+    """
+
+    ANYONE = "anyone"
+    THREADS = "threads"
+    NOBODY = "nobody"
+
+
+class ReportReason(StrEnum):
+    """Why something was reported.
+
+    A closed list rather than free text: a queue of prose cannot be sorted,
+    counted or triaged, and the person reporting harassment should not have to
+    compose an essay to be heard. The note beside it is optional and is where
+    anything not on this list goes.
+    """
+
+    HARASSMENT = "harassment"
+    PERSONAL_INFORMATION = "personal_information"
+    IMPERSONATION = "impersonation"
+    SPAM = "spam"
+    #: A claim about a university's requirements dressed as fact. The whole
+    #: product exists because published criteria and hearsay are not the same
+    #: thing, so the community has to be able to flag the difference.
+    MISLEADING_ADVICE = "misleading_advice"
+    OTHER = "other"
+
+
+class ReportTarget(StrEnum):
+    POST = "post"
+    REPLY = "reply"
+    MESSAGE = "message"
+    PROFILE = "profile"
+
+
+class ReportStatus(StrEnum):
+    OPEN = "open"
+    #: The content was removed, or the profile acted on.
+    ACTIONED = "actioned"
+    #: Looked at, nothing to do. Not the same as unread.
+    DISMISSED = "dismissed"

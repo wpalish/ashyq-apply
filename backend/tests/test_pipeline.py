@@ -12,6 +12,7 @@ from sqlalchemy.orm import sessionmaker
 
 from app.domain.enums import (
     AdmissionsFit,
+    Bucket,
     EligibilityStatus,
     FundingClassification,
     PipelineStage,
@@ -21,6 +22,7 @@ from app.models import ApplicantProfileRow, Base, ClaimRow, ProgramResultRow, Re
 from app.pipeline.runner import ResearchRunner, RunCancelled
 from app.pipeline.state import RunState
 from app.schemas.result import ProgramResult
+from tests.conftest import TEST_ORGANIZATION_ID, profile_row
 
 
 @pytest.fixture
@@ -35,11 +37,19 @@ def session(settings):
 
 @pytest.fixture
 async def completed_run(session, settings, profile):
-    row = ApplicantProfileRow(display_name="t", payload=profile.model_dump(mode="json"))
+    row = ApplicantProfileRow(
+        organization_id=TEST_ORGANIZATION_ID,
+        display_name="t",
+        payload=profile.model_dump(mode="json"),
+    )
     session.add(row)
     session.flush()
-    run = ResearchRun(profile_id=row.id, stage=PipelineStage.QUEUED.value,
-                      demo_mode=True, stage_state=RunState.load(None).dump())
+    run = ResearchRun(
+        profile_id=row.id,
+        stage=PipelineStage.QUEUED.value,
+        demo_mode=True,
+        stage_state=RunState.load(None).dump(),
+    )
     session.add(run)
     session.flush()
     runner = ResearchRunner(session, run, profile, settings)
@@ -62,9 +72,13 @@ class TestPipelineShape:
     async def test_every_stage_before_the_decision_point_completed(self, session, completed_run):
         _, run = completed_run
         state = RunState.load(run.stage_state)
-        for stage in (PipelineStage.PROFILE_VALIDATION, PipelineStage.CANDIDATE_DISCOVERY,
-                      PipelineStage.PROGRAM_VERIFICATION, PipelineStage.FUNDING_DISCOVERY,
-                      PipelineStage.ASSESSMENT):
+        for stage in (
+            PipelineStage.PROFILE_VALIDATION,
+            PipelineStage.CANDIDATE_DISCOVERY,
+            PipelineStage.PROGRAM_VERIFICATION,
+            PipelineStage.FUNDING_DISCOVERY,
+            PipelineStage.ASSESSMENT,
+        ):
             assert state[stage].status == "done", f"{stage} did not complete"
 
     @pytest.mark.asyncio
@@ -94,17 +108,23 @@ class TestPipelineShape:
         _, run = completed_run
         results = results_of(session, run)
         # A programme can be eligible and unfunded, or funded and ineligible.
-        assert any(r.eligibility is EligibilityStatus.MET and
-                   r.best_funding_classification is FundingClassification.UNKNOWN
-                   for r in results.values())
-        assert any(r.eligibility is EligibilityStatus.GAP and
-                   r.best_funding_classification is FundingClassification.FULL_RIDE_CONFIRMED
-                   for r in results.values())
+        assert any(
+            r.eligibility is EligibilityStatus.MET
+            and r.best_funding_classification is FundingClassification.UNKNOWN
+            for r in results.values()
+        )
+        assert any(
+            r.eligibility is EligibilityStatus.GAP
+            and r.best_funding_classification is FundingClassification.FULL_RIDE_CONFIRMED
+            for r in results.values()
+        )
 
 
 class TestSeededFailureCases:
     @pytest.mark.asyncio
-    async def test_a_qualifying_applicant_reaches_met_with_a_full_ride(self, session, completed_run):
+    async def test_a_qualifying_applicant_reaches_met_with_a_full_ride(
+        self, session, completed_run
+    ):
         _, run = completed_run
         groningen = results_of(session, run)["University of Groningen"]
         assert groningen.best_funding_classification is FundingClassification.FULL_RIDE_CONFIRMED
@@ -118,7 +138,9 @@ class TestSeededFailureCases:
         assert any("writing" in f.lower() for f in delft.hard_filter_failures)
 
     @pytest.mark.asyncio
-    async def test_a_citizenship_restricted_award_is_marked_not_eligible(self, session, completed_run):
+    async def test_a_citizenship_restricted_award_is_marked_not_eligible(
+        self, session, completed_run
+    ):
         _, run = completed_run
         leuven = results_of(session, run)["KU Leuven"]
         flemish = next(s for s in leuven.scholarships if "Flemish" in s.name)
@@ -127,7 +149,9 @@ class TestSeededFailureCases:
         assert leuven.best_funding_classification is FundingClassification.FULL_TUITION
 
     @pytest.mark.asyncio
-    async def test_full_ride_marketing_does_not_survive_the_coverage_table(self, session, completed_run):
+    async def test_full_ride_marketing_does_not_survive_the_coverage_table(
+        self, session, completed_run
+    ):
         _, run = completed_run
         asu = results_of(session, run)["Arizona State University"]
         assert asu.best_funding_classification is FundingClassification.FULL_TUITION
@@ -166,7 +190,9 @@ class TestSeededFailureCases:
         assert vienna.unresolved
 
     @pytest.mark.asyncio
-    async def test_an_unreachable_site_yields_insufficient_data_not_a_guess(self, session, completed_run):
+    async def test_an_unreachable_site_yields_insufficient_data_not_a_guess(
+        self, session, completed_run
+    ):
         _, run = completed_run
         oslo = results_of(session, run)["University of Oslo"]
         assert oslo.eligibility is EligibilityStatus.NEEDS_OFFICIAL_CLARIFICATION
@@ -220,10 +246,14 @@ class TestScoringAndDecisions:
     @pytest.mark.asyncio
     async def test_a_checklist_separates_who_must_act(self, session, completed_run):
         runner, run = completed_run
-        row = session.query(ProgramResultRow).filter(
-            ProgramResultRow.run_id == run.id,
-            ProgramResultRow.university == "University of Groningen",
-        ).one()
+        row = (
+            session.query(ProgramResultRow)
+            .filter(
+                ProgramResultRow.run_id == run.id,
+                ProgramResultRow.university == "University of Groningen",
+            )
+            .one()
+        )
         row.user_decision = UserDecision.APPROVED.value
         session.commit()
         await runner.collect_documents()
@@ -233,20 +263,24 @@ class TestScoringAndDecisions:
         assert checklist.recommender_actions, "the referee must have their own actions"
         assert checklist.ordered_steps
         # Longest lead time first.
-        leads = [d.lead_time_days or 0 for d in
-                 checklist.recommender_actions + checklist.applicant_actions]
+        leads = [
+            d.lead_time_days or 0
+            for d in checklist.recommender_actions + checklist.applicant_actions
+        ]
         assert leads[0] >= leads[-1]
 
 
 class TestCancellation:
     @pytest.mark.asyncio
     async def test_a_cancelled_run_stops_and_is_marked(self, session, settings, profile):
-        row = ApplicantProfileRow(display_name="t", payload=profile.model_dump(mode="json"))
-        session.add(row)
-        session.flush()
-        run = ResearchRun(profile_id=row.id, stage=PipelineStage.QUEUED.value,
-                          demo_mode=True, cancelled=True,
-                          stage_state=RunState.load(None).dump())
+        row = profile_row(session, profile)
+        run = ResearchRun(
+            profile_id=row.id,
+            stage=PipelineStage.QUEUED.value,
+            demo_mode=True,
+            cancelled=True,
+            stage_state=RunState.load(None).dump(),
+        )
         session.add(run)
         session.commit()
 
@@ -257,3 +291,73 @@ class TestCancellation:
             await runner.run_to_decision()
         assert run.stage == PipelineStage.CANCELLED.value
         assert run.finished_at is not None
+
+
+class TestRankingV2InThePipeline:
+    """The list the applicant sees comes from the axes, not from a sum."""
+
+    @pytest.mark.asyncio
+    async def test_verify_stores_what_a_university_is_not_how_well_it_fits(
+        self, session, completed_run
+    ):
+        _, run = completed_run
+        groningen = results_of(session, run)["University of Groningen"]
+        assert groningen.catalog_attributes["climate"] == "temperate"
+        assert groningen.catalog_attributes_source == "fixture-catalog"
+
+    @pytest.mark.asyncio
+    async def test_every_assessed_row_carries_its_ranking(self, session, completed_run):
+        _, run = completed_run
+        for result in results_of(session, run).values():
+            assert result.ranking is not None
+            assert result.ranking.version == "2"
+
+    @pytest.mark.asyncio
+    async def test_the_stored_sort_column_is_the_v2_key(self, session, completed_run):
+        _, run = completed_run
+        rows = session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run.id).all()
+        for row in rows:
+            ranking = ProgramResult.model_validate(row.payload).ranking
+            assert row.score_total == pytest.approx(ranking.sort_key)
+            assert row.bucket == ranking.bucket.value
+
+    @pytest.mark.asyncio
+    async def test_a_place_nobody_can_pay_for_no_longer_leads_the_list(
+        self, session, completed_run
+    ):
+        """The v1 list opened with a 21,471 USD annual shortfall."""
+        _, run = completed_run
+        rows = session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run.id).all()
+        best = max(rows, key=lambda r: r.score_total)
+        assert best.university == "University of Groningen"
+        ubc = next(r for r in rows if r.university == "University of British Columbia")
+        assert ubc.bucket == Bucket.OUT_OF_BUDGET.value
+
+    @pytest.mark.asyncio
+    async def test_the_labels_the_frontend_reads_are_still_filled(self, session, completed_run):
+        _, run = completed_run
+        groningen = results_of(session, run)["University of Groningen"]
+        assert groningen.climate_fit != "unknown"
+        assert groningen.campus_fit != "unknown"
+
+    @pytest.mark.asyncio
+    async def test_version_one_restores_the_additive_score(self, session, settings, profile):
+        """The rollback switch, exercised: v1 ordering, no bucket."""
+        row = profile_row(session, profile)
+        run = ResearchRun(
+            profile_id=row.id,
+            stage=PipelineStage.QUEUED.value,
+            demo_mode=True,
+            stage_state=RunState.load(None).dump(),
+        )
+        session.add(run)
+        session.flush()
+        runner = ResearchRunner(
+            session, run, profile, settings.model_copy(update={"ranking_version": 1})
+        )
+        await runner.run_to_decision()
+
+        rows = session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run.id).all()
+        best = max(rows, key=lambda r: r.score_total)
+        assert best.university == "University of British Columbia"
+        assert all(r.bucket == "" for r in rows)

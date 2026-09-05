@@ -11,8 +11,21 @@ from datetime import date
 
 from app.schemas.money import ConvertedMoney, Money
 
-RATE_SOURCE = "Static snapshot bundled with UniMatch (see app/domain/currency.py)"
+RATE_SOURCE = "Static snapshot bundled with ASHYQ Apply (see app/domain/currency.py)"
 RATE_DATE = date(2026, 8, 1)
+
+#: Past this age the snapshot stops being "dated but honest" and starts being
+#: misleading, so the API says so and the UI shows it next to every conversion.
+RATE_MAX_AGE_DAYS = 90
+
+
+def rate_age_days(today: date | None = None) -> int:
+    return ((today or date.today()) - RATE_DATE).days
+
+
+def rates_are_stale(today: date | None = None) -> bool:
+    return rate_age_days(today) > RATE_MAX_AGE_DAYS
+
 
 #: Units of the currency per 1 USD, as of RATE_DATE.
 _PER_USD: dict[str, float] = {

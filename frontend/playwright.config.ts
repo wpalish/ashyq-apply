@@ -5,6 +5,10 @@ const API_PORT = 8099;
 
 export default defineConfig({
   testDir: './e2e',
+  // auth-journey.spec.ts needs a backend with UNIMATCH_AUTH_ENABLED=true, so
+  // it runs under playwright.auth.config.ts. Without this exclusion it would
+  // be picked up here too and assert a sign-in screen that never appears.
+  testIgnore: '**/auth-journey.spec.ts',
   timeout: 120_000,
   expect: { timeout: 20_000 },
   fullyParallel: false,
@@ -26,7 +30,10 @@ export default defineConfig({
   webServer: [
     {
       // The API only enqueues; a worker is needed to consume the queue.
-      command: '../backend/run.sh --with-worker',
+      // Invoked through bash rather than as an executable: on Windows the
+      // shebang means nothing to cmd.exe and the suite dies before the first
+      // test with an unhelpful "'..' is not recognized".
+      command: 'bash ../backend/run.sh --with-worker',
       url: `http://127.0.0.1:${API_PORT}/api/health`,
       reuseExistingServer: true,
       timeout: 60_000,

@@ -88,16 +88,66 @@ SITEMAP_FALLBACK_PATHS = (
 #: Multi-part public suffixes common among universities. Used to work out the
 #: registrable domain without depending on the full public suffix list: "same
 #: domain" must mean rug.nl and www.rug.nl, not ac.uk and anything under it.
-MULTIPART_SUFFIXES = frozenset({
-    "ac.uk", "ac.nz", "ac.jp", "ac.kr", "ac.at", "ac.be", "ac.il", "ac.in",
-    "ac.za", "ac.th", "ac.id", "ac.ir", "ac.cy", "ac.rs", "ac.ma",
-    "edu.au", "edu.sg", "edu.hk", "edu.cn", "edu.tw", "edu.my", "edu.pl",
-    "edu.tr", "edu.mx", "edu.br", "edu.ar", "edu.co", "edu.pe", "edu.vn",
-    "edu.ph", "edu.sa", "edu.eg", "edu.lb", "edu.jo", "edu.kw", "edu.pk",
-    "co.uk", "org.uk", "gov.uk", "com.au", "net.au", "org.au", "com.br",
-    "com.sg", "com.hk", "com.tr", "com.mx", "co.jp", "co.nz", "co.za",
-    "or.jp", "ne.jp", "go.jp", "re.kr", "or.kr", "go.kr",
-})
+MULTIPART_SUFFIXES = frozenset(
+    {
+        "ac.uk",
+        "ac.nz",
+        "ac.jp",
+        "ac.kr",
+        "ac.at",
+        "ac.be",
+        "ac.il",
+        "ac.in",
+        "ac.za",
+        "ac.th",
+        "ac.id",
+        "ac.ir",
+        "ac.cy",
+        "ac.rs",
+        "ac.ma",
+        "edu.au",
+        "edu.sg",
+        "edu.hk",
+        "edu.cn",
+        "edu.tw",
+        "edu.my",
+        "edu.pl",
+        "edu.tr",
+        "edu.mx",
+        "edu.br",
+        "edu.ar",
+        "edu.co",
+        "edu.pe",
+        "edu.vn",
+        "edu.ph",
+        "edu.sa",
+        "edu.eg",
+        "edu.lb",
+        "edu.jo",
+        "edu.kw",
+        "edu.pk",
+        "co.uk",
+        "org.uk",
+        "gov.uk",
+        "com.au",
+        "net.au",
+        "org.au",
+        "com.br",
+        "com.sg",
+        "com.hk",
+        "com.tr",
+        "com.mx",
+        "co.jp",
+        "co.nz",
+        "co.za",
+        "or.jp",
+        "ne.jp",
+        "go.jp",
+        "re.kr",
+        "or.kr",
+        "go.kr",
+    }
+)
 
 
 class PageCategory:
@@ -191,8 +241,7 @@ _URL_EXCLUSIONS = re.compile(
 #: A programme page for the wrong level is not a match for this applicant.
 _DEGREE_SLUGS: dict[str, tuple[str, ...]] = {
     "bachelor": ("bsc", "ba", "beng", "llb", "bachelor", "bachelors", "undergraduate"),
-    "master": ("msc", "ma", "meng", "llm", "mba", "master", "masters", "graduate",
-               "postgraduate"),
+    "master": ("msc", "ma", "meng", "llm", "mba", "master", "masters", "graduate", "postgraduate"),
     "phd": ("phd", "doctoral", "doctorate", "dphil"),
     "foundation": ("foundation", "pre-bachelor", "preparatory"),
 }
@@ -271,7 +320,8 @@ def canonical_url(url: str) -> str:
         path = path.rstrip("/")
 
     kept = [
-        pair for pair in parts.query.split("&")
+        pair
+        for pair in parts.query.split("&")
         if pair and not _TRACKING_PARAM.match(pair.split("=", 1)[0])
     ]
     return urlunparse((parts.scheme, host, path, "", "&".join(sorted(kept)), ""))
@@ -758,8 +808,11 @@ class LiveDiscoveryAdapter:
             selected[PageCategory.PROGRAM_PAGE] = confirmed
 
     def _apply(
-        self, candidate: Candidate, selected: dict[str, list[str]],
-        profile: ApplicantProfileIn, trace: DiscoveryTrace,
+        self,
+        candidate: Candidate,
+        selected: dict[str, list[str]],
+        profile: ApplicantProfileIn,
+        trace: DiscoveryTrace,
     ) -> None:
         """Attach what was found. A category with nothing stays None."""
         candidate.admissions_url = _first(selected[PageCategory.ADMISSIONS])
@@ -786,14 +839,17 @@ class LiveDiscoveryAdapter:
 
         found = [c for c in PageCategory.ALL if selected[c]]
         missing = [c for c in PageCategory.ALL if not selected[c]]
-        candidate.notes = (
-            f"Sitemap-first discovery found: {', '.join(found) or 'nothing'}."
-            + (f" Not found: {', '.join(missing)}." if missing else "")
+        candidate.notes = f"Sitemap-first discovery found: {', '.join(found) or 'nothing'}." + (
+            f" Not found: {', '.join(missing)}." if missing else ""
         )
 
     async def _navigation_fallback(
-        self, entry: dict, domain: str, selected: dict[str, list[str]],
-        trace: DiscoveryTrace, profile: ApplicantProfileIn,
+        self,
+        entry: dict,
+        domain: str,
+        selected: dict[str, list[str]],
+        trace: DiscoveryTrace,
+        profile: ApplicantProfileIn,
     ) -> None:
         """Walk the catalogue's links, then the homepage's.
 
@@ -830,9 +886,7 @@ class LiveDiscoveryAdapter:
                 )
                 continue
             from_catalogue = start in selected[PageCategory.PROGRAM_CATALOG]
-            for url, label in _harvest_links(
-                result.text, result.final_url or start, domain
-            ):
+            for url, label in _harvest_links(result.text, result.final_url or start, domain):
                 category, score = categorise_url(url)
                 if category is None:
                     # On a catalogue page, a link whose own text names the

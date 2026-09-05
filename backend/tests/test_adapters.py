@@ -36,14 +36,17 @@ def builder(**kwargs) -> ClaimBuilder:
 
 
 class TestParsing:
-    @pytest.mark.parametrize("text,expected", [
-        ("EUR 450 per year", (450.0, "EUR")),
-        ("$42,500", (42500.0, "USD")),
-        ("USD 100 applies", (100.0, "USD")),
-        ("JPY 535,800", (535800.0, "JPY")),
-        ("CHF 1,580", (1580.0, "CHF")),
-        ("16 500 EUR", (16500.0, "EUR")),
-    ])
+    @pytest.mark.parametrize(
+        "text,expected",
+        [
+            ("EUR 450 per year", (450.0, "EUR")),
+            ("$42,500", (42500.0, "USD")),
+            ("USD 100 applies", (100.0, "USD")),
+            ("JPY 535,800", (535800.0, "JPY")),
+            ("CHF 1,580", (1580.0, "CHF")),
+            ("16 500 EUR", (16500.0, "EUR")),
+        ],
+    )
     def test_money_is_parsed_with_its_currency(self, text, expected):
         assert parse_money(text) == expected
 
@@ -51,12 +54,15 @@ class TestParsing:
     def test_bare_numbers_are_never_read_as_money(self, text):
         assert parse_money(text) is None
 
-    @pytest.mark.parametrize("raw,iso", [
-        ("15 January 2027", "2027-01-15"),
-        ("January 15, 2027", "2027-01-15"),
-        ("2027-01-15", "2027-01-15"),
-        ("5 September 2027", "2027-09-05"),
-    ])
+    @pytest.mark.parametrize(
+        "raw,iso",
+        [
+            ("15 January 2027", "2027-01-15"),
+            ("January 15, 2027", "2027-01-15"),
+            ("2027-01-15", "2027-01-15"),
+            ("5 September 2027", "2027-09-05"),
+        ],
+    )
     def test_dates_are_parsed_in_the_formats_universities_publish(self, raw, iso):
         assert parse_date_string(raw).isoformat() == iso
 
@@ -86,7 +92,9 @@ The application deadline is 15 January 2027 at 23:59 CET. A portfolio is require
         assert by_type[ClaimType.IELTS_MIN_OVERALL] == 6.5
 
     def test_every_published_requirement_in_the_sample_is_extracted(self):
-        by_type = {c.claim_type: c.normalized_value for c in extract_requirements(self.TEXT, builder())}
+        by_type = {
+            c.claim_type: c.normalized_value for c in extract_requirements(self.TEXT, builder())
+        }
         assert by_type[ClaimType.IELTS_MIN_SUBSCORE] == 6.0
         assert by_type[ClaimType.TOEFL_MIN_TOTAL] == 90
         assert by_type[ClaimType.MIN_GPA] == 3.0
@@ -99,12 +107,18 @@ The application deadline is 15 January 2027 at 23:59 CET. A portfolio is require
             assert claim.original_text_excerpt, f"{claim.claim_type} has no excerpt"
 
     def test_a_deadline_records_its_timezone(self):
-        deadline = next(c for c in extract_requirements(self.TEXT, builder())
-                        if c.claim_type is ClaimType.ADMISSION_DEADLINE)
+        deadline = next(
+            c
+            for c in extract_requirements(self.TEXT, builder())
+            if c.claim_type is ClaimType.ADMISSION_DEADLINE
+        )
         assert "CET" in deadline.notes
 
     def test_a_page_with_no_requirements_yields_nothing_rather_than_defaults(self):
-        assert extract_requirements("Welcome to our university. We have a nice campus.", builder()) == []
+        assert (
+            extract_requirements("Welcome to our university. We have a nice campus.", builder())
+            == []
+        )
 
     def test_an_unofficial_page_cannot_produce_a_verified_claim(self):
         claims = extract_requirements(
@@ -115,32 +129,40 @@ The application deadline is 15 January 2027 at 23:59 CET. A portfolio is require
 
 class TestCostExtraction:
     def test_labelled_costs_are_extracted_with_their_currency(self):
-        text = ("Tuition fee for international students: USD 42,500 per year. "
-                "Housing costs approximately $11,200. Meal plan: $6,400.")
+        text = (
+            "Tuition fee for international students: USD 42,500 per year. "
+            "Housing costs approximately $11,200. Meal plan: $6,400."
+        )
         by_type = {c.claim_type: c.normalized_value for c in extract_costs(text, builder())}
         assert by_type[ClaimType.TUITION] == {"amount": 42500.0, "currency": "USD"}
         assert by_type[ClaimType.HOUSING_COST]["amount"] == 11200.0
 
 
 class TestPrivacyGuard:
-    @pytest.mark.parametrize("url", [
-        "https://x.com/search?q=someone@example.com",
-        "https://x.com/lookup?id=123456789012",
-        "https://x.com/a?password=hunter2",
-        "https://x.com/a?api_key=abc",
-        "https://x.com/a?token=xyz",
-    ])
+    @pytest.mark.parametrize(
+        "url",
+        [
+            "https://x.com/search?q=someone@example.com",
+            "https://x.com/lookup?id=123456789012",
+            "https://x.com/a?password=hunter2",
+            "https://x.com/a?api_key=abc",
+            "https://x.com/a?token=xyz",
+        ],
+    )
     def test_applicant_data_is_never_placed_in_an_outbound_url(self, url):
         with pytest.raises(PIILeakError):
             assert_no_pii(url)
 
-    @pytest.mark.parametrize("url", [
-        "https://www.rug.nl/education/bachelor/computing-science",
-        # A numeric CMS node id in a path is not a passport number. Treating it
-        # as one made the guard fire on ordinary university URLs.
-        "https://www.aalto.fi/en/node/1008496",
-        "https://uni.edu/programmes/2026202720282029",
-    ])
+    @pytest.mark.parametrize(
+        "url",
+        [
+            "https://www.rug.nl/education/bachelor/computing-science",
+            # A numeric CMS node id in a path is not a passport number. Treating it
+            # as one made the guard fire on ordinary university URLs.
+            "https://www.aalto.fi/en/node/1008496",
+            "https://uni.edu/programmes/2026202720282029",
+        ],
+    )
     def test_an_ordinary_university_url_is_allowed(self, url):
         assert_no_pii(url)
 
@@ -160,7 +182,9 @@ class TestPrivacyGuard:
 
 class TestFetching:
     @pytest.mark.asyncio
-    async def test_offline_mode_reports_unavailability_rather_than_inventing_content(self, tmp_path):
+    async def test_offline_mode_reports_unavailability_rather_than_inventing_content(
+        self, tmp_path
+    ):
         async with Fetcher(tmp_path / "cache", offline=True) as f:
             result = await f.get("https://example.org/page")
         assert result.outcome is FetchOutcome.NETWORK_UNAVAILABLE
@@ -209,12 +233,16 @@ class TestHtmlToText:
 
 class TestAdaptersAgainstTheCorpus:
     @pytest.mark.asyncio
-    async def test_discovery_returns_the_configured_number_of_candidates(self, settings, profile, corpus_dir):
+    async def test_discovery_returns_the_configured_number_of_candidates(
+        self, settings, profile, corpus_dir
+    ):
         async with Fetcher(settings.cache_dir, offline=True, corpus_dir=corpus_dir) as f:
             candidates = await FixtureDiscoveryAdapter(f).discover(profile, 40)
         assert 30 <= len(candidates) <= 50
         assert any(c.verifiable for c in candidates)
-        assert any(not c.verifiable for c in candidates), "unverifiable leads must be kept, not dropped"
+        assert any(not c.verifiable for c in candidates), (
+            "unverifiable leads must be kept, not dropped"
+        )
 
     @pytest.mark.asyncio
     async def test_excluded_countries_are_never_proposed(self, settings, profile, corpus_dir):
@@ -228,53 +256,79 @@ class TestAdaptersAgainstTheCorpus:
         self, settings, corpus_dir
     ):
         candidate = Candidate(
-            name="Delft University of Technology", country="Netherlands", city="Delft",
-            domain="tudelft.nl", admissions_url="fixture://tu-delft/admissions.html",
+            name="Delft University of Technology",
+            country="Netherlands",
+            city="Delft",
+            domain="tudelft.nl",
+            admissions_url="fixture://tu-delft/admissions.html",
         )
-        program = CandidateProgram(name="BSc CSE", field="cs", degree="bachelor",
-                                   url="fixture://tu-delft/program-0.html")
+        program = CandidateProgram(
+            name="BSc CSE", field="cs", degree="bachelor", url="fixture://tu-delft/program-0.html"
+        )
         async with Fetcher(settings.cache_dir, offline=True, corpus_dir=corpus_dir) as f:
-            result = await WebRequirementsAdapter(f, "2026/27").verify(candidate, program, "fall 2027")
+            result = await WebRequirementsAdapter(f, "2026/27").verify(
+                candidate, program, "fall 2027"
+            )
 
-        overalls = [c.normalized_value for c in result.claims
-                    if c.claim_type is ClaimType.IELTS_MIN_OVERALL]
+        overalls = [
+            c.normalized_value for c in result.claims if c.claim_type is ClaimType.IELTS_MIN_OVERALL
+        ]
         assert sorted(overalls) == [6.0, 6.5]
         assert result.pages_checked == 2
 
     @pytest.mark.asyncio
     async def test_an_unreachable_programme_is_reported_not_skipped(self, settings, corpus_dir):
-        candidate = Candidate(name="Gone University", country="X", city="Y",
-                              admissions_url="fixture://u-oslo/admissions.html")
+        candidate = Candidate(
+            name="Gone University",
+            country="X",
+            city="Y",
+            admissions_url="fixture://u-oslo/admissions.html",
+        )
         program = CandidateProgram(name="P", field="cs", degree="bachelor", url=None)
         async with Fetcher(settings.cache_dir, offline=True, corpus_dir=corpus_dir) as f:
-            result = await WebRequirementsAdapter(f, "2026/27").verify(candidate, program, "fall 2027")
+            result = await WebRequirementsAdapter(f, "2026/27").verify(
+                candidate, program, "fall 2027"
+            )
         assert result.pages_failed == 1
         assert result.errors
 
     @pytest.mark.asyncio
     async def test_costs_are_extracted_and_currency_is_preserved(self, settings, corpus_dir):
-        candidate = Candidate(name="EPFL", country="Switzerland", city="Lausanne",
-                              costs_url="fixture://epfl/costs.html")
+        candidate = Candidate(
+            name="EPFL",
+            country="Switzerland",
+            city="Lausanne",
+            costs_url="fixture://epfl/costs.html",
+        )
         async with Fetcher(settings.cache_dir, offline=True, corpus_dir=corpus_dir) as f:
             breakdown, _ = await WebCostAdapter(f, "2026/27").fetch(candidate)
         assert breakdown.items["tuition"].currency == "CHF"
         assert breakdown.academic_year == "2026/27"
 
     @pytest.mark.asyncio
-    async def test_a_missing_scholarship_page_is_an_error_not_an_empty_list(self, settings, corpus_dir):
-        candidate = Candidate(name="University of Vienna", country="Austria", city="Vienna",
-                              scholarships_url=None)
+    async def test_a_missing_scholarship_page_is_an_error_not_an_empty_list(
+        self, settings, corpus_dir
+    ):
+        candidate = Candidate(
+            name="University of Vienna", country="Austria", city="Vienna", scholarships_url=None
+        )
         program = CandidateProgram(name="P", field="cs", degree="bachelor")
         async with Fetcher(settings.cache_dir, offline=True, corpus_dir=corpus_dir) as f:
-            awards, result = await WebScholarshipAdapter(f, "2026/27").find(candidate, program, None)
+            awards, result = await WebScholarshipAdapter(f, "2026/27").find(
+                candidate, program, None
+            )
         assert awards == []
         assert "rather than assumed absent" in result.errors[0]
 
     @pytest.mark.asyncio
     async def test_the_coverage_table_drives_classification_end_to_end(self, settings, corpus_dir):
         """ASU's page says 'a full ride'; its table says tuition and fees only."""
-        candidate = Candidate(name="Arizona State University", country="United States", city="Tempe",
-                              scholarships_url="fixture://arizona-state/scholarships.html")
+        candidate = Candidate(
+            name="Arizona State University",
+            country="United States",
+            city="Tempe",
+            scholarships_url="fixture://arizona-state/scholarships.html",
+        )
         program = CandidateProgram(name="BS CS", field="cs", degree="bachelor")
         async with Fetcher(settings.cache_dir, offline=True, corpus_dir=corpus_dir) as f:
             awards, _ = await WebScholarshipAdapter(f, "2026/27").find(candidate, program, None)
@@ -292,8 +346,12 @@ class TestAdaptersAgainstTheCorpus:
         applicant and would qualify. Whether this particular applicant is
         excluded is decided later, against their own citizenship.
         """
-        candidate = Candidate(name="KU Leuven", country="Belgium", city="Leuven",
-                              scholarships_url="fixture://ku-leuven/scholarships.html")
+        candidate = Candidate(
+            name="KU Leuven",
+            country="Belgium",
+            city="Leuven",
+            scholarships_url="fixture://ku-leuven/scholarships.html",
+        )
         program = CandidateProgram(name="BSc Informatics", field="cs", degree="bachelor")
         async with Fetcher(settings.cache_dir, offline=True, corpus_dir=corpus_dir) as f:
             awards, _ = await WebScholarshipAdapter(f, "2026/27").find(candidate, program, None)
@@ -311,8 +369,12 @@ class TestAdaptersAgainstTheCorpus:
         from app.domain.funding import classify
         from app.pipeline.runner import _applicant_eligible, _scholarship_eligibility
 
-        candidate = Candidate(name="KU Leuven", country="Belgium", city="Leuven",
-                              scholarships_url="fixture://ku-leuven/scholarships.html")
+        candidate = Candidate(
+            name="KU Leuven",
+            country="Belgium",
+            city="Leuven",
+            scholarships_url="fixture://ku-leuven/scholarships.html",
+        )
         program = CandidateProgram(name="BSc Informatics", field="cs", degree="bachelor")
         async with Fetcher(settings.cache_dir, offline=True, corpus_dir=corpus_dir) as f:
             awards, _ = await WebScholarshipAdapter(f, "2026/27").find(candidate, program, None)
@@ -443,7 +505,9 @@ class TestClaimHonesty:
     """A value we could not read must not become a claim."""
 
     @pytest.mark.asyncio
-    async def test_an_unreadable_application_fee_produces_no_claim(self, settings, corpus_dir, tmp_path):
+    async def test_an_unreadable_application_fee_produces_no_claim(
+        self, settings, corpus_dir, tmp_path
+    ):
         from app.adapters.requirements.web_requirements import _fee
 
         # A page that mentions the fee without publishing an amount.
@@ -461,22 +525,28 @@ class TestClaimHonesty:
 class TestTimezoneParsing:
     """A timezone must be read, never inferred from any three-letter word."""
 
-    @pytest.mark.parametrize("text,expected", [
-        ("Applications close 15 January 2027 at 23:59 CET", "CET"),
-        ("The deadline is 5pm PST", "PST"),
-        ("by 17:00 JST", "JST"),
-        ("closes 23:59 AEDT", "AEDT"),
-    ])
+    @pytest.mark.parametrize(
+        "text,expected",
+        [
+            ("Applications close 15 January 2027 at 23:59 CET", "CET"),
+            ("The deadline is 5pm PST", "PST"),
+            ("by 17:00 JST", "JST"),
+            ("closes 23:59 AEDT", "AEDT"),
+        ],
+    )
     def test_a_published_timezone_is_captured(self, text, expected):
         from app.adapters.extraction import parse_timezone
 
         assert parse_timezone(text) == expected
 
-    @pytest.mark.parametrize("text", [
-        "We are test-optional; the SAT is not required.",
-        "Submit the SAT and ACT if taken.",
-        "Applications close 1 May 2027.",
-    ])
+    @pytest.mark.parametrize(
+        "text",
+        [
+            "We are test-optional; the SAT is not required.",
+            "Submit the SAT and ACT if taken.",
+            "Applications close 1 May 2027.",
+        ],
+    )
     def test_an_ordinary_acronym_is_not_read_as_a_timezone(self, text):
         from app.adapters.extraction import parse_timezone
 

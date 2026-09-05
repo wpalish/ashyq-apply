@@ -1,5 +1,11 @@
 from app.models.applicant import ApplicantProfileRow
-from app.models.auth import AuthSession, Organization, OrganizationMembership, User
+from app.models.auth import (
+    AuthSession,
+    Organization,
+    OrganizationMembership,
+    PasswordResetToken,
+    User,
+)
 from app.models.base import Base, TimestampedBase, new_id, utcnow
 from app.models.billing import (
     TERMINAL_ORDER_STATUSES,
@@ -21,6 +27,18 @@ from app.models.research import (
     ProgramResultRow,
     ResearchRun,
 )
+from app.models.social import (
+    Avatar,
+    Block,
+    ContentReport,
+    Conversation,
+    DirectMessage,
+    Post,
+    PostReply,
+    PostTag,
+    SocialProfile,
+    SocialProfileUniversity,
+)
 from app.models.subscription import (
     TERMINAL_SUBSCRIPTION_STATUSES,
     Subscription,
@@ -35,9 +53,14 @@ __all__ = [
     "ApplicantProfileRow",
     "AuditEvent",
     "AuthSession",
+    "Avatar",
     "Base",
+    "Block",
     "ClaimRow",
     "ConflictRow",
+    "ContentReport",
+    "Conversation",
+    "DirectMessage",
     "Entitlement",
     "EntitlementKind",
     "EntitlementSource",
@@ -48,11 +71,17 @@ __all__ = [
     "OrderStatus",
     "Organization",
     "OrganizationMembership",
+    "PasswordResetToken",
     "PaymentEvent",
     "PaymentMethod",
+    "Post",
+    "PostReply",
+    "PostTag",
     "ProgramResultRow",
     "ResearchRun",
     "SchemaVersion",
+    "SocialProfile",
+    "SocialProfileUniversity",
     "Subscription",
     "SubscriptionStatus",
     "TimestampedBase",

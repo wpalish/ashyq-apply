@@ -12,7 +12,7 @@ import { fundingClassTone, money } from '@/lib/format';
 import { useStore } from '@/lib/store';
 
 export function FundingScreen() {
-  const { results } = useStore();
+  const { results, capabilities } = useStore();
   const [onlyFunded, setOnlyFunded] = useState(false);
 
   const rows = useMemo(() => {
@@ -46,6 +46,11 @@ export function FundingScreen() {
       </div>
 
       <div className="stack stack--loose">
+        {capabilities?.currency.stale_warning && (
+          <Notice kind="warn">
+            <div data-testid="stale-rates">{capabilities.currency.stale_warning}</div>
+          </Notice>
+        )}
         <div className="row" style={{ justifyContent: 'space-between' }}>
           <label className="row row--tight small">
             <input type="checkbox" checked={onlyFunded} onChange={(e) => setOnlyFunded(e.target.checked)} />

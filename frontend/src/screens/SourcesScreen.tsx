@@ -51,7 +51,7 @@ export function SourcesScreen() {
         <p className="screen__eyebrow">Step 06</p>
         <h1 className="screen__title">What we could not settle</h1>
         <p className="screen__lede">
-          When two official pages disagree, UniMatch shows both and marks the more specific one as
+          When two official pages disagree, ASHYQ Apply shows both and marks the more specific one as
           preferred — it does not pick a winner. Each contradiction comes with a ready-to-send
           question for the admissions office.
         </p>

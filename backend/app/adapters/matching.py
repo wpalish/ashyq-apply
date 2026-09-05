@@ -13,10 +13,37 @@ from app.domain.enums import DegreeLevel
 
 #: Words that describe the *kind* of qualification rather than its subject.
 _DEGREE_TOKENS = {
-    "bsc", "ba", "beng", "llb", "msc", "ma", "meng", "llm", "mba", "mphil", "phd",
-    "bachelor", "bachelors", "master", "masters", "doctoral", "doctorate",
-    "undergraduate", "postgraduate", "graduate", "foundation", "honours", "hons",
-    "programme", "program", "degree", "course", "studies", "study", "hbsc", "mod",
+    "bsc",
+    "ba",
+    "beng",
+    "llb",
+    "msc",
+    "ma",
+    "meng",
+    "llm",
+    "mba",
+    "mphil",
+    "phd",
+    "bachelor",
+    "bachelors",
+    "master",
+    "masters",
+    "doctoral",
+    "doctorate",
+    "undergraduate",
+    "postgraduate",
+    "graduate",
+    "foundation",
+    "honours",
+    "hons",
+    "programme",
+    "program",
+    "degree",
+    "course",
+    "studies",
+    "study",
+    "hbsc",
+    "mod",
 }
 _STOPWORDS = {"and", "of", "the", "in", "for", "with", "a", "an", "at", "to"}
 _SPLIT = re.compile(r"[^\w]+", re.UNICODE)
@@ -25,7 +52,8 @@ _SPLIT = re.compile(r"[^\w]+", re.UNICODE)
 def content_tokens(name: str) -> set[str]:
     """Subject words only — degree words and stopwords removed."""
     return {
-        t for t in (p.lower() for p in _SPLIT.split(name or "") if p)
+        t
+        for t in (p.lower() for p in _SPLIT.split(name or "") if p)
         if t not in _DEGREE_TOKENS and t not in _STOPWORDS and not t.isdigit() and len(t) > 1
     }
 
@@ -55,9 +83,7 @@ def program_matches(
 
     level = degree_matches(requested_degree, page_degree)
     if level is False:
-        return False, (
-            f"the page describes a {page_degree} programme, not {requested_degree}"
-        )
+        return False, (f"the page describes a {page_degree} programme, not {requested_degree}")
 
     wanted = content_tokens(requested_name) | content_tokens(requested_field)
     found = content_tokens(page_subject)

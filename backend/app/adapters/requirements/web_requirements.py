@@ -35,16 +35,28 @@ from app.domain.enums import ClaimType, FetchOutcome, SourceSpecificity
 #: An intake is open only when a page says so. Each pattern must capture the
 #: sentence it matched, which becomes the claim's excerpt.
 _INTAKE_OPEN_EVIDENCE: tuple[tuple[str, re.Pattern[str]], ...] = (
-    ("application window", re.compile(
-        r"[^.]*\bapplications?\b[^.]{0,80}\b(?:open|opens|opened|will open)\b[^.]{0,80}\.", re.I)),
-    ("currently accepting", re.compile(
-        r"[^.]*\b(?:now accepting|currently accepting|accepting applications|applications are open)\b[^.]{0,80}\.", re.I)),
-    ("apply now for cycle", re.compile(
-        r"[^.]*\bapply (?:now|online|here)\b[^.]{0,80}\b(20\d{2})\b[^.]{0,60}\.", re.I)),
+    (
+        "application window",
+        re.compile(
+            r"[^.]*\bapplications?\b[^.]{0,80}\b(?:open|opens|opened|will open)\b[^.]{0,80}\.", re.I
+        ),
+    ),
+    (
+        "currently accepting",
+        re.compile(
+            r"[^.]*\b(?:now accepting|currently accepting|accepting applications|applications are open)\b[^.]{0,80}\.",
+            re.I,
+        ),
+    ),
+    (
+        "apply now for cycle",
+        re.compile(r"[^.]*\bapply (?:now|online|here)\b[^.]{0,80}\b(20\d{2})\b[^.]{0,60}\.", re.I),
+    ),
 )
 _INTAKE_CLOSED_EVIDENCE = re.compile(
     r"[^.]*\b(?:applications? (?:are |is )?closed|no longer accepting|admissions? (?:are |is )?closed"
-    r"|intake (?:is )?closed|not accepting applications)\b[^.]{0,80}\.", re.I,
+    r"|intake (?:is )?closed|not accepting applications)\b[^.]{0,80}\.",
+    re.I,
 )
 
 
@@ -71,7 +83,8 @@ class WebRequirementsAdapter:
         targets = [
             _Target(program.url, SourceSpecificity.PROGRAM_INTAKE) if program.url else None,
             _Target(candidate.admissions_url, SourceSpecificity.UNIVERSITY_ADMISSIONS)
-            if candidate.admissions_url else None,
+            if candidate.admissions_url
+            else None,
         ]
         for target in [t for t in targets if t]:
             res = await self.fetcher.get(target.url)
@@ -107,7 +120,9 @@ class WebRequirementsAdapter:
 
             builder = ClaimBuilder(
                 source_url=target.url,
-                page_title=html_title(res.text) if not res.is_pdf else target.url.rsplit("/", 1)[-1],
+                page_title=html_title(res.text)
+                if not res.is_pdf
+                else target.url.rsplit("/", 1)[-1],
                 specificity=(
                     SourceSpecificity.PROGRAM_INTAKE
                     if page.page_type is PageType.INTAKE_SPECIFIC_PROGRAM
@@ -157,7 +172,9 @@ class WebRequirementsAdapter:
             page_degree=page.degree_level,
         )
         if not matched:
-            out.errors.append(f"{builder.meta['source_url']}: not confirming {program.name!r} — {why}")
+            out.errors.append(
+                f"{builder.meta['source_url']}: not confirming {program.name!r} — {why}"
+            )
             return
 
         excerpt = _first_sentence_containing(text, page.subject) or page.subject or ""
@@ -183,8 +200,11 @@ class WebRequirementsAdapter:
         closed = _INTAKE_CLOSED_EVIDENCE.search(flat)
         if closed:
             builder.add(
-                ClaimType.INTAKE_OPEN, False, closed.group(0).strip()[:400],
-                confidence=0.85, section="Key dates",
+                ClaimType.INTAKE_OPEN,
+                False,
+                closed.group(0).strip()[:400],
+                confidence=0.85,
+                section="Key dates",
             )
             return
 
@@ -203,8 +223,11 @@ class WebRequirementsAdapter:
                 )
                 continue
             builder.add(
-                ClaimType.INTAKE_OPEN, True, sentence[:400],
-                confidence=0.8, section="Key dates",
+                ClaimType.INTAKE_OPEN,
+                True,
+                sentence[:400],
+                confidence=0.8,
+                section="Key dates",
                 notes=f"positive evidence: {label}",
             )
             return
@@ -234,7 +257,9 @@ class WebRequirementsAdapter:
             accepted.append("general_training")
         if accepted:
             builder.add(
-                ClaimType.IELTS_ACCEPTED_TYPES, accepted, sentence[:400],
+                ClaimType.IELTS_ACCEPTED_TYPES,
+                accepted,
+                sentence[:400],
                 section="English language requirements",
             )
 

@@ -102,3 +102,265 @@ reach the API can read and delete every profile. The container stack has never
 been run. There is no CI. The profile form covers a subset of the schema.
 
 See `RELEASE_CHECKLIST.md` for all thirty gates.
+
+## Update — Phase 1 of the audit fix plan
+
+An external audit produced [`FIX_PLAN.md`](FIX_PLAN.md). Phase 0 re-established
+the baseline and Phase 1 closed its six P0 blockers, each with a regression
+test written before the fix:
+
+- **Retry destroyed the shortlist.** It deleted every result row while
+  resetting only failed stages, so retrying a finished run left 0 of 20
+  results and discarded the applicant's decisions. Rows are upserted now and
+  decisions travel with them.
+- **Repeating document collection was a silent no-op** whenever the shortlist
+  changed without changing size.
+- **`set_decision` had no tenant check**: an authenticated user of another
+  organization could approve or reject rows on someone else's shortlist.
+- **Two clicks on Start produced two runs**; the idempotency key was derived
+  from the run the request had just created.
+- **Rate limits were global behind a proxy**, and an unknown email answered
+  faster than a known one.
+- **The read-only API container** could not create the directories it makes at
+  import time.
+
+Still open and unchanged by Phase 1: the container stack has still never been
+run (no Docker here), live programme recall is still 1 of 10 canary
+institutions, and Phases 2–6 of the plan — job-lease fencing, the currency bug
+in scoring, the stale-run dead end in the UI, the missing auth flows and the
+~20 collected-but-unused profile fields — are untouched.
+
+## Update — Phase 2 of the audit fix plan
+
+Seventeen P1 defects, each with a test written before the fix. The ones worth
+knowing about if you are reading the code:
+
+- **A worker that lost its lease kept working** and could mark a job succeeded
+  that another worker had already taken over, double-counting the run's
+  counters. Terminal updates are fenced on the owner now, and the runner stops
+  at its next checkpoint.
+- **A KZT budget was compared with a USD cost as bare numbers**, so every
+  option scored as affordable. The ceiling is converted, with the rate and its
+  date in the explanation.
+- **Citizenship was matched by substring**: "Korea" satisfied "North Korea
+  only", and "Kazakhstan" failed "Central Asian nationals". Both directions
+  cost the applicant money. Vague groups are now PENDING rather than a refusal.
+- **03/04/2027 was silently read as 3 April.** An ambiguous date is refused.
+- **A cached post-study-work right appeared with no source** on every row after
+  the first in a country.
+- **A global `ValueError → 400` handler** masked 500s as client errors and
+  leaked internal text; **the export filter** landed unchecked in a response
+  header.
+- **`/api/health` never touched the database**, so the probe stayed green with
+  PostgreSQL down.
+- **POSSIBLY_STALE claims were never re-read.** A finished run now queues a
+  recheck for the date its evidence ages out.
+- **The account flows did not exist**: no password change, no reset, no
+  deletion, no way to reach a second workspace. All four exist, with the
+  negative cases tested.
+- **The production CSP blocked the fonts the app asked for**, and a render
+  error produced a white page with no way back.
+
+Still open and unchanged: the container stack has never been run (no Docker
+here), live programme recall is still 1 of 10 canary institutions, and Phases
+3-6 of the plan — the ~20 collected-but-unused profile fields, URL routing,
+polling behaviour, pagination, the deadline calendar, observability and i18n —
+are untouched.
+
+## Update — Phase 3 of the audit fix plan
+
+Fourteen P2 defects, all in what the applicant sees and does:
+
+- **Unsaved edits were lost** on a reload, and switching case discarded them
+  without asking. The draft is autosaved and restored with a banner — and,
+  carefully, never written back into the saved profile, which is the shape of
+  the old defect where demo data overwrote a real record.
+- **Screens had no address.** Back, forward and reload now work, and a link to
+  a screen that is not reachable yet explains itself instead of showing an
+  empty page.
+- **Polling rebuilt its interval on every tick**, kept running in a hidden tab,
+  and raised a banner on a single dropped request.
+- **~20 profile fields were collected and read by nothing.** Each is now
+  scored, or shown as context, or removed from the form; `docs/PROFILE_FIELDS.md`
+  records which and why.
+- **A clean run listed 47 "limitations".** Every one was an honest unknown.
+  Failures and unknowns are separate fields now, with separate panels.
+- **"Show my stored data" was not the complete record** it claimed to be: no
+  results, no claims, no audit trail.
+- **Editing a note recorded a decision**, stamping `decided_at` on rows the
+  applicant had not decided.
+- Deadlines can go into a calendar; lists are paged; an unmatched row says so;
+  progress counts programmes on both sides of the ratio; filters read as
+  English; money and dates share one locale; and the product is called ASHYQ
+  Apply everywhere a person reads.
+
+Two of these fixes broke something in turn and the E2E suite caught both — a
+gate redirect that fought the collect-documents workflow, and a recheck job
+queued months ahead being read as work in flight. Both are fixed with tests.
+
+Still open and unchanged: the container stack has never been run (no Docker
+here), live programme recall is still 1 of 10 canary institutions, and Phases
+4–6 — hygiene, observability and i18n — are untouched.
+
+## Update — Phase 4 of the audit fix plan
+
+Hygiene, and two defects that hygiene uncovered.
+
+- **Dead code is gone**: `queue.py`, `can_transition`, `RETRYABLE`, `tenacity`,
+  `python-multipart`. The `arg-type` mypy exclusions for `app.api` and
+  `app.corpus` were dead too — removing them surfaced exactly one error, and it
+  was a loop variable named `p` bound to a `Path` in a cleanup loop, which
+  pinned `p` for the whole function and made two later program-dict loops read
+  as Paths. mypy now checks `app` and `tests` with no per-module escape hatch
+  except the Playwright lazy-init one.
+- **`ruff format --check` is a CI gate**, and the coverage floor is 92 — the
+  level actually measured — instead of 80, which could have lost twelve points
+  without anyone noticing.
+- **Half-stated activity hours were silently discarded.** Filling
+  `hours_per_week` without `weeks_per_year` produced a byte-for-byte identical
+  score to filling neither, while the explanation still claimed the result was
+  "weighted by ... sustained hours". The gap is named now. The score is
+  deliberately unchanged, pinned by a test, so that naming it cannot become a
+  penalty for answering. The plan's 40-weeks-per-year assumption was rejected:
+  at 40 weeks, five hours a week already saturates the 200-hour ceiling, so the
+  assumption would be the whole score rather than a small correction.
+- **The UK grade map was offered to every percentage scale**, including
+  Kazakh and Chinese ones, though its own caveat says UK marking is not linear.
+  Gated on the scale label, matched on word boundaries — a substring test would
+  have read "Ukrainian" as "UK", which is the mistake citizenship matching was
+  fixed for in Phase 2.
+- **Live mode did not say how small it is.** Someone switching demo mode off
+  pictured the open web and got ten curated institutions across eight
+  countries, with programme-page recall of about one site in ten. The registry's
+  own note is now on screen before the run starts, and a contract test pins the
+  API shape to the TypeScript type.
+- **The authenticated path had no end-to-end coverage at all** — every spec ran
+  against a backend where auth was disabled and the sign-in screen never
+  appeared. It has its own Playwright config now, and writing it found a real
+  defect: AuthGate asks `/api/auth/status` once, at mount, so an expired
+  session became "Something went wrong. Authentication required." on a screen
+  the user could neither act on nor leave. Fixed in the store's shared `fail`,
+  with both the E2E case and the unit test confirmed to fail without the guard.
+- Also: JSON→JSONB on PostgreSQL, the `dev-org` default off
+  `ApplicantProfileRow`, a periodic sweep for the rate limiter's empty deques,
+  bounds on `audit?limit` and the decision text fields, and a LICENSE.
+
+Backend: 92% coverage on a green run, mypy and ruff clean. Frontend: 98 unit
+tests, 54 E2E, 6 auth E2E, typecheck and lint clean.
+
+Still open and unchanged: the container stack has never been run (no Docker
+here, gate 22), live programme recall is still 1 of 10 canary institutions, and
+Phases 5–6 — observability, ops and i18n — are untouched.
+
+## Update — Phase 5 of the audit fix plan
+
+Ops and observability: the parts that decide whether a problem is noticed at
+all. Nothing here changes what the product answers; it changes whether anyone
+can see the product failing.
+
+- **The queue could only be read from the database.** `/metrics` now speaks
+  Prometheus text: requests by route and status, a latency histogram, refusals
+  by the abuse limiter, and jobs and runs by state read at scrape time. Written
+  by hand rather than pulling `prometheus_client` for four counters and a
+  histogram. Requests are counted under their route template — a run id in a
+  label is a new time series per run, which is how a metrics endpoint becomes a
+  memory leak in the scraper.
+- **The endpoint is not a second door to applicant data.** Everything it
+  carries is an aggregate, asserted by a test that plants a name and looks for
+  it. A bearer token gates it when one is configured; production refuses to
+  start with the endpoint open and no token; `fly.toml` ships with it off,
+  because that deployment is on the open internet with no internal port to hide
+  behind; nginx refuses `/metrics` outright.
+- **A dead job was invisible to everyone it affected.** The run said "failed"
+  and the cause — attempts exhausted, lease lost, the worker's own error — sat
+  in a table nobody watched. `GET /api/admin/jobs?status=dead` is scoped to the
+  caller's own organization, not to the deployment: a global view would need a
+  deployment-wide credential putting every tenant's errors behind one shared
+  token. The progress screen says "N jobs need attention", and says nothing at
+  all to someone who may not read the queue.
+- **"Use the platform's snapshots" was the entire backup plan.**
+  `scripts/backup.sh` takes one dump, verifies it by reading its table of
+  contents back, then prunes old dumps — and only after the new one has
+  verified, so a failed backup can never be the reason a good one is deleted.
+  The cron line is in the document rather than in someone's shell history.
+- **Running the restore drill found two defects in the drill itself.** It asked
+  for `pg_dump` by its POSIX name and so never found the `pg_dump.exe` beside
+  it; and it took the path from `mkstemp` while leaving the descriptor open, so
+  its own cleanup failed with a permission error that hid the first problem
+  entirely. Fixed, and the drill now passes: 18 tables restored with identical
+  row counts. That is this repository's first restore that actually happened.
+- **The product held grades, citizenship and family budgets and said nothing
+  about any of it.** There is a privacy policy and a set of terms now, at
+  `#/legal`, and every factual claim in them is true of the code today. They
+  are drafts and say so in a banner, because implying a legal review nobody
+  performed would be a worse lie than the silence they replace. The paragraph
+  on applicants under 18 names the gap — no age asked, no parental consent — as
+  a gap.
+
+One correction to an earlier record: the PostgreSQL branch was marked as
+unprovisionable on this machine, and it runs here after all — 50 tests, no
+skips, and a real cluster behind the restore drill. The note was true when it
+was written and had not been re-tried since.
+
+Backend: 785 tests green, coverage floor of 92 held, mypy and ruff clean.
+Frontend: 120 unit tests, 63 E2E (1 skipped), typecheck, lint and production
+build clean. The authenticated E2E config was **not** re-run in this session:
+it insists on starting its own dev server and port 5173 was held by another
+process on this machine. It is unchanged since Phase 4 and nothing here touches
+authentication, but that is a reason to expect it still passes, not evidence
+that it does.
+
+Still open and unchanged: the container stack has never been run (no Docker
+here, gate 22), live programme recall is still 1 in 10 canary institutions, and
+the privacy policy and terms need a lawyer before real applicants see them.
+
+## Update — Phase 6 of the audit fix plan
+
+The optional phase, done in full: a wider live registry, transcript import, and
+the groundwork for Russian and Kazakh.
+
+- **Live coverage was ten institutions and none of them in Central Asia.** It
+  is nineteen now, chosen for where Kazakh applicants actually apply:
+  Nazarbayev University, METU, Sabanci, Charles, Masaryk, TUM, Tartu,
+  Politecnico di Milano and Vilnius. Every seed was fetched and classified by
+  the product's own classifier; a category with no verifiable page has no seed,
+  because one pointing at a landing page spends the fetch budget and returns
+  nothing. Six further institutions were evaluated and rejected — Jagiellonian
+  because its robots.txt disallows the English site, which is final. Nine
+  reached, zero blocked, zero false positives; programme pages 2 of 9, better
+  than 1 in 10 and still the same weakness.
+- **Running the canary found three defects, all in the canary.** It could not
+  run at all — it built its applicant without an organization, relying on the
+  `dev-org` default Phase 4 removed, and had been failing on a NOT NULL
+  constraint in its own throwaway database ever since. `--only` narrowed the
+  report but not the run, so asking about one institution ran the first N in
+  file order. And the release gate that reports false positives **could not
+  pass**: it read a requirement's provenance from attributes a plain string
+  does not have, while the source sits in `claim_ids`. Ten institutions never
+  reached that branch because no live requirement was ever decided; Charles
+  University reached it and was accused of a false positive it had not made.
+  The check is fixed and now has tests of its own.
+- **The transcript an applicant is already holding can be read.** Grade
+  average, its scale and the graduation date, each quoted back with the line it
+  came from, and applied only per field when the applicant says so. It refuses
+  more than it reads: a grade average with no scale is not offered, an
+  ambiguous numeric date is refused by the same parser that refuses an
+  ambiguous deadline, and a value above its own scale is treated as a misread
+  line. The upload is PDFs only, ten megabytes, held in memory and discarded.
+- **Russian and Kazakh have a foundation, and honest gaps.** Strings live in
+  dictionaries with English as the fallback, and the shell — navigation,
+  topbar, appearance, the disclaimer — reads from them. The product's own
+  vocabulary is deliberately *not* translated: claim, shortlist, funding gap,
+  conditional offer and the status words carry exact meanings, and choosing
+  their equivalents is a decision for someone who advises applicants in those
+  languages. Each is listed in `docs/i18n/GLOSSARY.md` with the question to
+  answer, and the strings containing them stay in English until it is
+  answered — visibly, because a machine translation would be indistinguishable
+  from a reviewed one to the applicant acting on it.
+
+Backend: 818 tests green, coverage floor of 92 held, mypy and ruff clean.
+Frontend: 137 unit tests, typecheck, lint and production build clean.
+
+Still open and unchanged: the container stack has never been run (gate 22), and
+the privacy policy and terms need a lawyer before real applicants see them
+(gate 87). Both need a person, not another phase.

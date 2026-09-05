@@ -12,23 +12,42 @@ import { Fragment, useMemo, useState } from 'react';
 import { ResultDetail } from '@/components/ResultDetail';
 import { Chip, Empty, Field, Notice, Panel, StatusChip } from '@/components/primitives';
 import {
-  admissionsFitTone, date, eligibilityTone, fundingClassTone, money, scorePercent,
+  FIT_DISCLAIMER, STATUS_LABEL, admissionsFitTone, bucketTone, date, eligibilityTone,
+  fundingClassTone, humanize, money, percent, ratio,
 } from '@/lib/format';
 import { useStore } from '@/lib/store';
-import type { ProgramResult, UserDecision } from '@/types';
+import type { Bucket, ProgramResult, UserDecision } from '@/types';
 
-type SortKey = 'score' | 'gap' | 'university' | 'deadline';
+type SortKey = 'key' | 'fit' | 'coverage' | 'gap' | 'university' | 'deadline';
+
+//: Buckets that are ranked against each other. The rest are real answers too,
+//: but they answer a different question, so they sit in their own sections
+//: below rather than competing for a place in the top ten.
+const RANKED: Bucket[] = ['WELL_PLACED', 'PLAUSIBLE', 'AMBITIOUS'];
+const SET_ASIDE: Bucket[] = ['OUT_OF_BUDGET', 'NEEDS_CLARIFICATION', 'EXCLUDED'];
+
+const SET_ASIDE_HINT: Record<string, string> = {
+  OUT_OF_BUDGET: 'Kept with the number, not hidden: you may know something about the money that we do not.',
+  NEEDS_CLARIFICATION: 'Too little could be verified to place these. Ask the admissions office the open questions on the row.',
+  EXCLUDED: 'A published requirement that is not met, or a country you excluded.',
+};
+
+//: The four reasons applicants actually give, as one-click chips. Free text
+//: stays available because these will never cover every case.
+const REJECTION_REASONS = ['cost', 'deadline passed', 'no funding', 'not a fit'];
 
 export function ShortlistScreen() {
-  const { results, summary, decide } = useStore();
+  const { results, summary, shortlist, decide, saveNotes } = useStore();
   const [expanded, setExpanded] = useState<string | null>(null);
-  const [sort, setSort] = useState<SortKey>('score');
+  const [sort, setSort] = useState<SortKey>('key');
   const [country, setCountry] = useState('');
   const [eligibility, setEligibility] = useState('');
   const [funding, setFunding] = useState('');
   const [hideRejected, setHideRejected] = useState(false);
   const [noteFor, setNoteFor] = useState<string | null>(null);
   const [noteText, setNoteText] = useState('');
+  const [rejectFor, setRejectFor] = useState<string | null>(null);
+  const [rejectReason, setRejectReason] = useState('');
 
   const countries = useMemo(
     () => Array.from(new Set(results.map((r) => r.country))).sort(),
@@ -48,19 +67,239 @@ export function ShortlistScreen() {
     return [...filtered].sort((a, b) => {
       if (sort === 'university') return a.university.localeCompare(b.university);
       if (sort === 'gap') return gapOf(a) - gapOf(b);
+      if (sort === 'fit') return (b.ranking?.fit ?? 0) - (a.ranking?.fit ?? 0);
+      if (sort === 'coverage') return (b.ranking?.coverage ?? 0) - (a.ranking?.coverage ?? 0);
       if (sort === 'deadline') {
         return (a.admission_deadline ?? '9999').localeCompare(b.admission_deadline ?? '9999');
       }
-      return (b.preference_score?.total ?? 0) - (a.preference_score?.total ?? 0);
+      // Ties break on the identifier so the same data is always the same order.
+      const key = (r: ProgramResult) => r.ranking?.sort_key ?? r.preference_score?.total ?? 0;
+      return key(b) - key(a) || a.id.localeCompare(b.id);
     });
   }, [results, country, eligibility, funding, hideRejected, sort]);
+
+  // A row with no ranking is one assessed under v1; it still belongs in the
+  // list rather than in a set-aside section it was never scored for.
+  const ranked = rows.filter((r) => !r.ranking || RANKED.includes(r.ranking.bucket));
 
   if (results.length === 0) {
     return <Empty title="No results yet">Run the research first.</Empty>;
   }
 
-  const decideRow = (r: ProgramResult, d: UserDecision) =>
-    decide(r.id, r.user_decision === d ? 'undecided' : d, '', r.user_notes);
+  const decideRow = (r: ProgramResult, d: UserDecision) => {
+    const next = r.user_decision === d ? 'undecided' : d;
+    if (next === 'rejected') {
+      // The product promises rejections keep their reason, and the API has
+      // always accepted one; the UI simply never asked. Ask now, and let the
+      // reason stay optional so saying No is still one click away.
+      setRejectFor(r.id);
+      setRejectReason(r.user_decision_reason);
+      return Promise.resolve();
+    }
+    setRejectFor(null);
+    return decide(r.id, next, '', r.user_notes);
+  };
+
+  const renderTable = (tableRows: ProgramResult[], testId: string, caption: string) => (
+          <div className="table-wrap">
+            <table className="dtable" data-testid={testId}>
+              {/* Each table says which list it is: four identically captioned
+                  tables read as one repeated table to a screen reader. */}
+              <caption className="visually-hidden">{caption}</caption>
+              <thead>
+                <tr>
+                  <th scope="col">University &amp; programme</th>
+                  <th scope="col">Eligibility</th>
+                  <th scope="col">Admissions fit</th>
+                  <th scope="col">Funding</th>
+                  <th scope="col">Remaining&nbsp;/&nbsp;year</th>
+                  <th scope="col">Deadline</th>
+                  <th scope="col" title={FIT_DISCLAIMER}>Match</th>
+                  <th scope="col" title="How much of the weight rests on data we confirmed.">Confirmed</th>
+                  <th scope="col">Bucket</th>
+                  <th scope="col">Decision</th>
+                </tr>
+              </thead>
+              <tbody>
+                {tableRows.map((r) => {
+                  const open = expanded === r.id;
+                  const gap = r.funding_gap;
+                  return (
+                    // The Fragment carries the key: a row and its detail drawer are
+                    // two siblings produced by one iteration.
+                    <Fragment key={r.id}>
+                      <tr
+                        className={`${open ? 'is-expanded' : ''} ${r.user_decision === 'rejected' ? 'is-rejected' : ''}`}
+                        data-testid={`row-${r.id}`}
+                      >
+                        <td data-label="University & programme">
+                          <div className="uni-cell">
+                            <button
+                              className="uni-cell__name"
+                              onClick={() => setExpanded(open ? null : r.id)}
+                              aria-expanded={open}
+                              data-testid={`expand-${r.id}`}
+                            >
+                              {r.university}
+                            </button>
+                            <span className="uni-cell__prog">{r.program}</span>
+                            <span className="uni-cell__meta">
+                              {r.city}, {r.country}
+                              {r.rankings[0] && ` · ${r.rankings[0].source} ${r.rankings[0].year}: ${r.rankings[0].position}`}
+                            </span>
+                          </div>
+                        </td>
+                        <td data-label="Eligibility"><StatusChip status={r.eligibility} tone={eligibilityTone[r.eligibility]} /></td>
+                        <td data-label="Admissions fit"><StatusChip status={r.admissions_fit} tone={admissionsFitTone[r.admissions_fit]} /></td>
+                        <td data-label="Funding">
+                          <StatusChip
+                            status={r.best_funding_classification}
+                            tone={fundingClassTone[r.best_funding_classification]}
+                          />
+                        </td>
+                        <td className="num" data-label="Remaining / year">
+                          {gap?.computable && gap.gap ? (
+                            money(gap.gap)
+                          ) : (
+                            <span className="xs muted" title={gap?.reason}>not computable</span>
+                          )}
+                        </td>
+                        <td className="num" data-label="Deadline">
+                          {r.admission_deadline ? date(r.admission_deadline) : <span className="xs muted">not found</span>}
+                          {r.deadline_passed && <div><Chip tone="risk">passed</Chip></div>}
+                        </td>
+                        <td className="num" data-label="Match" title={FIT_DISCLAIMER}>
+                          {ratio(r.ranking?.fit ?? null)}
+                        </td>
+                        <td className="num" data-label="Confirmed">
+                          {percent(r.ranking?.coverage ?? null)}
+                        </td>
+                        <td data-label="Bucket">
+                          {r.ranking ? (
+                            <StatusChip status={r.ranking.bucket} tone={bucketTone[r.ranking.bucket]} />
+                          ) : (
+                            <span className="xs muted">not ranked</span>
+                          )}
+                        </td>
+                        <td data-label="Decision">
+                          <div className="decision-group" role="group" aria-label={`Decision for ${r.university}`}>
+                            <button
+                              className="decision-btn decision-btn--approve"
+                              aria-pressed={r.user_decision === 'approved'}
+                              onClick={() => decideRow(r, 'approved')}
+                              data-testid={`approve-${r.id}`}
+                            >Yes</button>
+                            <button
+                              className="decision-btn decision-btn--maybe"
+                              aria-pressed={r.user_decision === 'maybe'}
+                              onClick={() => decideRow(r, 'maybe')}
+                              data-testid={`maybe-${r.id}`}
+                            >Maybe</button>
+                            <button
+                              className="decision-btn decision-btn--reject"
+                              aria-pressed={r.user_decision === 'rejected'}
+                              onClick={() => decideRow(r, 'rejected')}
+                              data-testid={`reject-${r.id}`}
+                            >No</button>
+                          </div>
+                          {rejectFor === r.id && (
+                            <div
+                              className="stack stack--tight"
+                              style={{ marginTop: 6, minWidth: '13rem' }}
+                              data-testid={`reject-reason-${r.id}`}
+                            >
+                              <label className="xs muted" htmlFor={`reject-input-${r.id}`}>
+                                Why not this one? (optional — it is kept with the row)
+                              </label>
+                              <div className="row row--tight" style={{ flexWrap: 'wrap' }}>
+                                {REJECTION_REASONS.map((preset) => (
+                                  <button
+                                    key={preset}
+                                    type="button"
+                                    className="btn btn--sm btn--ghost xs"
+                                    onClick={() => setRejectReason(preset)}
+                                    data-testid={`reject-chip-${preset.replace(/\s+/g, '-')}-${r.id}`}
+                                  >{preset}</button>
+                                ))}
+                              </div>
+                              <input
+                                id={`reject-input-${r.id}`}
+                                value={rejectReason}
+                                onChange={(e) => setRejectReason(e.target.value)}
+                                placeholder="cost, deadline, fit…"
+                                data-testid={`reject-input-${r.id}`}
+                              />
+                              <div className="row row--tight">
+                                <button
+                                  className="btn btn--sm"
+                                  onClick={async () => {
+                                    await decide(r.id, 'rejected', rejectReason, r.user_notes);
+                                    setRejectFor(null);
+                                  }}
+                                  data-testid={`reject-save-${r.id}`}
+                                >Save rejection</button>
+                                <button
+                                  className="btn btn--sm btn--ghost"
+                                  onClick={() => setRejectFor(null)}
+                                  data-testid={`reject-cancel-${r.id}`}
+                                >Cancel</button>
+                              </div>
+                            </div>
+                          )}
+                          {r.user_decision === 'rejected' && r.user_decision_reason && rejectFor !== r.id && (
+                            <p className="xs faint" style={{ margin: '4px 0 0', maxWidth: '12rem' }}>
+                              Rejected: {r.user_decision_reason}
+                            </p>
+                          )}
+                          <div>
+                            <button
+                              className="btn btn--sm btn--ghost xs"
+                              onClick={() => {
+                                setNoteFor(noteFor === r.id ? null : r.id);
+                                setNoteText(r.user_notes);
+                              }}
+                            >
+                              {r.user_notes ? 'Edit note' : 'Add note'}
+                            </button>
+                          </div>
+                          {noteFor === r.id && (
+                            <div className="stack stack--tight" style={{ marginTop: 6, minWidth: '13rem' }}>
+                              <textarea
+                                rows={2}
+                                value={noteText}
+                                onChange={(e) => setNoteText(e.target.value)}
+                                placeholder="Why this one?"
+                                data-testid={`note-input-${r.id}`}
+                              />
+                              <button
+                                className="btn btn--sm"
+                                onClick={async () => {
+                                  await saveNotes(r.id, noteText);
+                                  setNoteFor(null);
+                                }}
+                                data-testid={`note-save-${r.id}`}
+                              >Save note</button>
+                            </div>
+                          )}
+                          {r.user_notes && noteFor !== r.id && (
+                            <p className="xs faint" style={{ margin: '4px 0 0', maxWidth: '12rem' }}>
+                              {r.user_notes}
+                            </p>
+                          )}
+                        </td>
+                      </tr>
+                      {open && (
+                        <tr className="detail-row">
+                          <td colSpan={10}><ResultDetail result={r} /></td>
+                        </tr>
+                      )}
+                    </Fragment>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+  );
 
   return (
     <>
@@ -97,7 +336,8 @@ export function ShortlistScreen() {
               <select id="f-elig" value={eligibility} onChange={(e) => setEligibility(e.target.value)}>
                 <option value="">Any</option>
                 {Object.entries(summary?.by_eligibility ?? {}).map(([k, v]) => (
-                  <option key={k} value={k}>{k} ({v})</option>
+                  // The value stays the enum; only the label is for humans.
+                  <option key={k} value={k}>{STATUS_LABEL[k] ?? humanize(k)} ({v})</option>
                 ))}
               </select>
             </Field>
@@ -105,13 +345,15 @@ export function ShortlistScreen() {
               <select id="f-fund" value={funding} onChange={(e) => setFunding(e.target.value)}>
                 <option value="">Any</option>
                 {Object.entries(summary?.by_funding ?? {}).map(([k, v]) => (
-                  <option key={k} value={k}>{k} ({v})</option>
+                  <option key={k} value={k}>{STATUS_LABEL[k] ?? humanize(k)} ({v})</option>
                 ))}
               </select>
             </Field>
             <Field label="Sort by" htmlFor="f-sort">
               <select id="f-sort" value={sort} onChange={(e) => setSort(e.target.value as SortKey)}>
-                <option value="score">Preference score</option>
+                <option value="key">Match, discounted by what is unverified</option>
+                <option value="fit">Match with your priorities</option>
+                <option value="coverage">Most confirmed</option>
                 <option value="gap">Smallest remaining cost</option>
                 <option value="deadline">Earliest deadline</option>
                 <option value="university">University name</option>
@@ -124,144 +366,71 @@ export function ShortlistScreen() {
           </div>
         </Panel>
 
-        <div className="table-wrap">
-          <table className="dtable" data-testid="shortlist-table">
-            <caption className="visually-hidden">
-              Shortlisted university programmes with eligibility, fit, funding and remaining cost
-            </caption>
-            <thead>
-              <tr>
-                <th scope="col">University &amp; programme</th>
-                <th scope="col">Eligibility</th>
-                <th scope="col">Admissions fit</th>
-                <th scope="col">Funding</th>
-                <th scope="col">Remaining&nbsp;/&nbsp;year</th>
-                <th scope="col">Deadline</th>
-                <th scope="col">Preference match</th>
-                <th scope="col">Decision</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((r) => {
-                const open = expanded === r.id;
-                const gap = r.funding_gap;
-                return (
-                  // The Fragment carries the key: a row and its detail drawer are
-                  // two siblings produced by one iteration.
-                  <Fragment key={r.id}>
-                    <tr
-                      className={`${open ? 'is-expanded' : ''} ${r.user_decision === 'rejected' ? 'is-rejected' : ''}`}
-                      data-testid={`row-${r.id}`}
-                    >
-                      <td data-label="University & programme">
-                        <div className="uni-cell">
-                          <button
-                            className="uni-cell__name"
-                            onClick={() => setExpanded(open ? null : r.id)}
-                            aria-expanded={open}
-                            data-testid={`expand-${r.id}`}
-                          >
-                            {r.university}
-                          </button>
-                          <span className="uni-cell__prog">{r.program}</span>
-                          <span className="uni-cell__meta">
-                            {r.city}, {r.country}
-                            {r.rankings[0] && ` · ${r.rankings[0].source} ${r.rankings[0].year}: ${r.rankings[0].position}`}
-                          </span>
-                        </div>
-                      </td>
-                      <td data-label="Eligibility"><StatusChip status={r.eligibility} tone={eligibilityTone[r.eligibility]} /></td>
-                      <td data-label="Admissions fit"><StatusChip status={r.admissions_fit} tone={admissionsFitTone[r.admissions_fit]} /></td>
-                      <td data-label="Funding">
-                        <StatusChip
-                          status={r.best_funding_classification}
-                          tone={fundingClassTone[r.best_funding_classification]}
-                        />
-                      </td>
-                      <td className="num" data-label="Remaining / year">
-                        {gap?.computable && gap.gap ? (
-                          money(gap.gap)
-                        ) : (
-                          <span className="xs muted" title={gap?.reason}>not computable</span>
-                        )}
-                      </td>
-                      <td className="num" data-label="Deadline">
-                        {r.admission_deadline ? date(r.admission_deadline) : <span className="xs muted">not found</span>}
-                        {r.deadline_passed && <div><Chip tone="risk">passed</Chip></div>}
-                      </td>
-                      <td className="num" data-label="Preference match">
-                        {r.preference_score
-                          ? `${(scorePercent(r.preference_score.total, r.preference_score.max_possible) / 10).toFixed(1)} / 10`
-                          : '—'}
-                      </td>
-                      <td data-label="Decision">
-                        <div className="decision-group" role="group" aria-label={`Decision for ${r.university}`}>
-                          <button
-                            className="decision-btn decision-btn--approve"
-                            aria-pressed={r.user_decision === 'approved'}
-                            onClick={() => decideRow(r, 'approved')}
-                            data-testid={`approve-${r.id}`}
-                          >Yes</button>
-                          <button
-                            className="decision-btn decision-btn--maybe"
-                            aria-pressed={r.user_decision === 'maybe'}
-                            onClick={() => decideRow(r, 'maybe')}
-                            data-testid={`maybe-${r.id}`}
-                          >Maybe</button>
-                          <button
-                            className="decision-btn decision-btn--reject"
-                            aria-pressed={r.user_decision === 'rejected'}
-                            onClick={() => decideRow(r, 'rejected')}
-                            data-testid={`reject-${r.id}`}
-                          >No</button>
-                        </div>
-                        <div>
-                          <button
-                            className="btn btn--sm btn--ghost xs"
-                            onClick={() => {
-                              setNoteFor(noteFor === r.id ? null : r.id);
-                              setNoteText(r.user_notes);
-                            }}
-                          >
-                            {r.user_notes ? 'Edit note' : 'Add note'}
-                          </button>
-                        </div>
-                        {noteFor === r.id && (
-                          <div className="stack stack--tight" style={{ marginTop: 6, minWidth: '13rem' }}>
-                            <textarea
-                              rows={2}
-                              value={noteText}
-                              onChange={(e) => setNoteText(e.target.value)}
-                              placeholder="Why this one?"
-                              data-testid={`note-input-${r.id}`}
-                            />
-                            <button
-                              className="btn btn--sm"
-                              onClick={async () => {
-                                await decide(r.id, r.user_decision, r.user_decision_reason, noteText);
-                                setNoteFor(null);
-                              }}
-                            >Save note</button>
-                          </div>
-                        )}
-                        {r.user_notes && noteFor !== r.id && (
-                          <p className="xs faint" style={{ margin: '4px 0 0', maxWidth: '12rem' }}>
-                            {r.user_notes}
-                          </p>
-                        )}
-                      </td>
-                    </tr>
-                    {open && (
-                      <tr className="detail-row">
-                        <td colSpan={8}><ResultDetail result={r} /></td>
-                      </tr>
-                    )}
-                  </Fragment>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+        {shortlist && shortlist.chosen.length > 0 && (
+          <Panel
+            title="A balanced shortlist"
+            hint="Filled to quota before the ranking speaks: a top ten of ten ambitious options is a list nobody can act on."
+          >
+            <ol className="stack stack--tight" data-testid="balanced-shortlist">
+              {shortlist.chosen.map((r) => (
+                <li key={r.id} className="small">
+                  <strong>{r.university}</strong> — {r.program}{' '}
+                  {r.ranking && (
+                    <Chip tone={bucketTone[r.ranking.bucket]}>
+                      {STATUS_LABEL[r.ranking.bucket] ?? humanize(r.ranking.bucket)}
+                    </Chip>
+                  )}
+                </li>
+              ))}
+            </ol>
+            {shortlist.notes.map((note) => (
+              <p key={note} className="xs muted" data-testid="shortlist-note">{note}</p>
+            ))}
+          </Panel>
+        )}
+
+        {ranked.length > 0 ? (
+          renderTable(
+            ranked,
+            'shortlist-table',
+            'Shortlisted university programmes with eligibility, fit, funding and remaining cost',
+          )
+        ) : (
+          // An empty table with headers reads as "nothing found". Something
+          // was found; it is all in the sections below, with its reason.
+          <Notice kind="info">
+            <div>
+              Nothing here is both affordable and verified enough to rank. Every option is in a
+              section below, with the reason it is there.
+            </div>
+          </Notice>
+        )}
+
+        <p className="xs faint">
+          Showing {ranked.length} of {results.length} ranked rows. <strong>Match</strong> is how well
+          a place fits the priorities you stated, on confirmed data — not a probability of admission.
+          <strong> Confirmed</strong> is how much of that judgement rests on data we could verify.
+        </p>
+
+        {SET_ASIDE.map((bucket) => {
+          const setAside = rows.filter((r) => r.ranking?.bucket === bucket);
+          if (setAside.length === 0) return null;
+          return (
+            <details key={bucket} className="stack" data-testid={`section-${bucket}`}>
+              <summary className="small">
+                {STATUS_LABEL[bucket] ?? humanize(bucket)} ({setAside.length})
+              </summary>
+              <p className="xs muted">{SET_ASIDE_HINT[bucket]}</p>
+              {renderTable(
+                setAside,
+                `table-${bucket}`,
+                `Shortlisted university programmes set aside as ${(STATUS_LABEL[bucket] ?? humanize(bucket)).toLowerCase()}, `
+                + 'with eligibility, fit, funding and remaining cost',
+              )}
+            </details>
+          );
+        })}
+
 
         <p className="xs faint">
           Showing {rows.length} of {results.length}. Rejected rows are kept with their reason so the

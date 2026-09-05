@@ -11,9 +11,24 @@ import re
 import unicodedata
 
 _NOISE = {
-    "university", "universiteit", "universitat", "universite", "universidad", "universita",
-    "the", "of", "at", "for", "and", "college", "institute", "school",
-    "hochschule", "politecnico", "polytechnic", "univ",
+    "university",
+    "universiteit",
+    "universitat",
+    "universite",
+    "universidad",
+    "universita",
+    "the",
+    "of",
+    "at",
+    "for",
+    "and",
+    "college",
+    "institute",
+    "school",
+    "hochschule",
+    "politecnico",
+    "polytechnic",
+    "univ",
 }
 _PUNCT = re.compile(r"[^\w\s]", re.UNICODE)
 _WS = re.compile(r"\s+")
@@ -34,12 +49,18 @@ def university_key(name: str, country: str = "") -> str:
 
 
 def program_key(university: str, program: str, degree: str, intake: str, country: str = "") -> str:
-    prog_tokens = [t for t in normalize(program).split() if t not in {"bsc", "msc", "ba", "ma", "in", "the"}]
+    prog_tokens = [
+        t for t in normalize(program).split() if t not in {"bsc", "msc", "ba", "ma", "in", "the"}
+    ]
     return f"{university_key(university, country)}|{'-'.join(prog_tokens)}|{normalize(degree)}|{normalize(intake)}"
 
 
 def scholarship_key(university: str, name: str, country: str = "") -> str:
-    tokens = [t for t in normalize(name).split() if t not in {"scholarship", "award", "grant", "the", "programme", "program"}]
+    tokens = [
+        t
+        for t in normalize(name).split()
+        if t not in {"scholarship", "award", "grant", "the", "programme", "program"}
+    ]
     if not tokens:
         tokens = normalize(name).split()
     return f"{university_key(university, country)}|{'-'.join(tokens)}"

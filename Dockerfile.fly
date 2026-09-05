@@ -35,4 +35,5 @@ COPY --from=frontend-builder --chown=ashyq:ashyq /build/frontend/dist /app/front
 RUN mkdir -p /app/backend/data && chown -R ashyq:ashyq /app/backend/data
 USER ashyq
 EXPOSE 8099
-CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8099"]
+# Behind Fly's edge; see UNIMATCH_TRUST_PROXY_HEADERS for the app-side half.
+CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8099", "--proxy-headers", "--forwarded-allow-ips", "*"]

@@ -20,14 +20,36 @@ from app.pipeline.state import RunState
 from app.schemas.result import ProgramResult
 
 
+def ensure_development_organization(session) -> str:
+    """The tenant the seeded demo belongs to, created explicitly.
+
+    It used to arrive through a column default, which meant nothing in the
+    code said which organization the demo data was for.
+    """
+    from app.models import Organization
+    from app.security import DEV_ORGANIZATION_ID
+
+    org = session.get(Organization, DEV_ORGANIZATION_ID)
+    if org is None:
+        org = Organization(id=DEV_ORGANIZATION_ID, name="Development", slug="development")
+        session.add(org)
+        session.flush()
+    return org.id
+
+
 async def main(approve: bool) -> int:
     init_db()
-    settings = get_settings()
-    settings.demo_mode = True
+    # A copy, not the shared singleton: mutating get_settings() here changed
+    # the configuration of every other caller in the process, including an API
+    # server started from the same shell.
+    settings = get_settings().model_copy(update={"demo_mode": True})
 
     with session_scope() as s:
+        organization = ensure_development_organization(s)
         profile_row = ApplicantProfileRow(
-            display_name=DEMO_PROFILE.display_name, payload=DEMO_PROFILE.model_dump(mode="json")
+            organization_id=organization,
+            display_name=DEMO_PROFILE.display_name,
+            payload=DEMO_PROFILE.model_dump(mode="json"),
         )
         s.add(profile_row)
         s.flush()
