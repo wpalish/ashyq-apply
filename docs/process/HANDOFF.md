@@ -8,24 +8,21 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 | | |
 |---|---|
-| Holder | nobody |
-| Since (UTC) | — (recovery inventory in progress; baton not yet taken) |
-| Branch | `main` (observed; planned recovery branch `task/0.8-ranking-ui` does not yet exist as an action of this writer) |
-| HEAD when written | `c924410a1adcdc7d131d4e0630e3e392fc1cf038` |
-| Origin main when checked | `627d42d5fd42c1489dbeb7bd2dea43763914c7f5`; local main 7 ahead / 0 behind |
-| Previous holder | template recorded owner; predecessor commits have Claude co-author lines but no required Agent trailers; no valid baton acquisition recorded |
-| Recovery audit started (UTC) | 2026-09-05 18:31:27 UTC |
-
-The coordinating task verified successful fetch. This writer independently checked branch, log,
-ahead/behind and the empty index. This is an initial recovery record, not a claim that a branch,
-checkpoint, push, baseline gates or baton commit has completed.
+| Holder | **claude-opus-5** |
+| Since (UTC) | 2026-09-06 |
+| Branch | `task/0.8-ranking-ui` (exists; created from the predecessor tip `main@c924410`) |
+| HEAD when written | `61df0db4aaaf265aaa154d2e5ead592fa97d2fcb` — the recovery checkpoint `wip: [0.8] preserve the ranking ui …` |
+| Origin main when checked | `627d42d`; local `main` 7 ahead / 0 behind. Never push main. |
+| Previous holder | nobody. gpt-6-astra's delegated writer produced the §4 inventory and stopped there: no branch, checkpoint, gates, push or baton. |
+| Recovery (prompt C) completed | Steps 1–3 + the per-file audit, the full gates and the preserving checkpoint are done by this holder. |
 
 ## 2. Current task
 
-`[0.8] Frontend этапа 0` — **in-progress (prompt C recovery)**, inferred from the eight dirty frontend
-paths and preceding [0.1]–[0.7] commits. Recovery checkpoint and baton acquisition are pending.
-The stale template's `none` / next `[0.1]` / HEAD `627d42d` did not describe the checkout.
-Predecessor acceptance remains unverified; the inherited I4/T3 contradiction is open (§7).
+`[0.8] Frontend этапа 0` — **in-progress**, held by claude-opus-5 on `task/0.8-ranking-ui`.
+Recovery is finished: the tree is reconciled, the gates are measured (§6) and the work is preserved
+in `61df0db`. Remaining for [0.8]: one red unit test, the `Bucket` row in the frontend contract test,
+and the e2e journey. Acceptance of [0.1]–[0.7] is still outstanding and the I4/T3 conflict in §7 is
+still open — neither blocks finishing [0.8]'s own UI work.
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
@@ -189,94 +186,29 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-Recovery write-ahead for the coordinating agent; **none of the Git mutations below has been executed
-by this inventory writer**. Its write scope is only this file. Prompt C explicitly authorizes a
-preserving recovery checkpoint; it does not resolve the requirement conflict in §7.
+Write-ahead. Recovery is done; these are [0.8]'s remaining sub-steps, in order, each ending in a
+pushed commit. Do not restart [0.1]–[0.7]; do not push `main`; do not stage screenshots or `docs/v2`.
 
-**Predecessor branch exception (AGENTS §4):** branch [0.8] from the current local predecessor tip
-`main@c924410`, which contains [0.1]–[0.7], even though these predecessors are not on `origin/main`.
-The intended relationship is `origin/main@627d42d → seven preserved local predecessor commits →
-task/0.8-ranking-ui → recovery checkpoint → baton commit`. This is an explicit recovery exception,
-not acceptance of the predecessors or permission to push main. Do not reset, rebase, amend, cherry-pick
-or restart [0.1]. Do not use the stale template's one-time bootstrap push to main.
-
-1. Finish prompt A/C baseline reconciliation: paste the successful UTF-8 handoff-check output and
-   full gate results from the coordinator into §6, including failures, skipped/blocked checks and
-   exact command/runtime. Incorporate the dedicated frontend audit's per-file verdicts into §4
-   and its actionable findings into §7. Before any feature edit, keep its exact file/function/test
-   step written here. Gate failures can be preserved in a named `wip:` checkpoint; never call them green.
-2. Recheck `git status --short --untracked-files=all`, `git diff`, `git diff --cached`,
-   `git rev-parse HEAD` and `git branch --list task/0.8-ranking-ui`. Expect current `c924410` and an
-   empty index. If another agent changed them, reconcile first. If the target is absent, run
-   `git switch -c task/0.8-ranking-ui c924410` to carry the existing dirty files onto the recovery branch.
-   If it already exists, inspect its tip and relationship before switching; do not overwrite it.
-3. Once the audit confirms the frontend is coherent enough to preserve, explicitly stage the
-   **30 paths below only** (22 workflow/source paths plus eight frontend paths). Record any justified
-   allowlist adjustment here before doing it. Do not use `git add .`, `git add -A`, or `git commit -am`:
-   screenshots must stay out. Preserve the eight `docs/v2` copies and both nested repos outside staging.
-
-```powershell
-git add -- ".github/PULL_REQUEST_TEMPLATE.md" `
-  "AGENTS.md" `
-  "CLAUDE.md" `
-  "analysis/AI_TASK_BRIEF.md" `
-  "analysis/ANALYSIS.md" `
-  "analysis/DEPLOYMENT_SECURITY_LEGAL.md" `
-  "analysis/DESIGN_agentic_search.md" `
-  "analysis/README.md" `
-  "analysis/SPEC_matching_v2.md" `
-  "analysis/TWO_AGENT_WORKFLOW.md" `
-  "analysis/agents/AGENTS.md" `
-  "analysis/agents/CLAUDE.md" `
-  "analysis/agents/HANDOFF.md" `
-  "analysis/agents/KICKOFF_PROMPTS.md" `
-  "analysis/agents/PULL_REQUEST_TEMPLATE.md" `
-  "analysis/agents/handoff_check.py" `
-  "analysis/reference/ranking_v2.py" `
-  "analysis/scripts/01_discovery_sensitivity.py" `
-  "analysis/scripts/02_score_components.py" `
-  "analysis/scripts/03_climate_sensitivity.py" `
-  "docs/process/HANDOFF.md" `
-  "scripts/handoff_check.py" `
-  "frontend/src/api/client.ts" `
-  "frontend/src/components/ResultDetail.tsx" `
-  "frontend/src/lib/format.ts" `
-  "frontend/src/lib/store.tsx" `
-  "frontend/src/screens/PreferencesScreen.tsx" `
-  "frontend/src/screens/ShortlistScreen.test.tsx" `
-  "frontend/src/screens/ShortlistScreen.tsx" `
-  "frontend/src/types.ts"
-git diff --cached --name-status
-git diff --cached --stat
-git diff --cached --check
-```
-
-4. Confirm that the staged list exactly matches the allowlist and contains no screenshots, nested
-   repository entries, data, credentials or unrelated files. Update §4–§6 with the actual audit and
-   baseline. Create a recovery commit whose subject records the remaining failure if any, e.g.
-   `wip: [0.8] preserve ranking ui and relay sources (recovered from cut-off)`, and body lists the
-   actual red/blocked gates plus inherited I4/T3 acceptance blocker; trailer `Agent: gpt-6-astra`.
-   No snapshot hash can be written before the commit exists; record the real hash in the next baton update.
-   If coherence is not established, preserve the working files and document the exact issue; this
-   writer has no stash authorization and does not execute prompt C's stash alternative.
-5. Push **the task branch only**:
-   `git push -u origin task/0.8-ranking-ui`. Verify `git rev-parse HEAD` against
-   `git ls-remote --heads origin task/0.8-ranking-ui`. Record the actual snapshot hash and push result
-   in §3/§11. If push fails, retain `Holder: nobody` and record the failure; never fall back to pushing main.
-6. Only after the preserving checkpoint is pushed, take the baton: set §1 Holder to `gpt-6-astra`,
-   actual since UTC, task branch and then-current HEAD; append §11. Stage **only**
-   `docs/process/HANDOFF.md`, commit `handoff: gpt-6-astra takes the baton at [0.8]`
-   with `Agent: gpt-6-astra`, and push the task branch. Verify remote tip again. In the committed
-   HANDOFF, "HEAD when written" describes the predecessor HEAD; report the baton commit hash afterward
-   rather than attempting a self-referential hash.
-7. With the baton acquired, fix independent [0.8] frontend failures identified by the audit/gates:
-   write the exact file, function and validating test here first, then edit those scoped frontend files,
-   rerun affected checks and required gates, checkpoint and push. Main supplies the concrete findings;
-   no invented frontend verdicts or preemptive formula/test changes. The inherited I4/T3 issue does not
-   prevent independent UI recovery, but blocks acceptance/review claims until the owner resolves it.
-8. Before `ready-for-review`, complete [0.8] acceptance (including `journey.spec.ts`), account for
-   predecessor review and resolve §7's requirement contradiction explicitly. Use real gate output
-   in the PR. Next task remains [1.1] only after the normal review/merge handoff.
+1. **Fix the red test.** `frontend/src/screens/ShortlistScreen.test.tsx`, case
+   `shows the match, what is confirmed, and the bucket`: replace the ambiguous
+   `screen.getByText('Plausible')` with an assertion scoped to the bucket cell
+   (`document.querySelector('[data-label="Bucket"]')` → `toHaveTextContent('Plausible')`).
+   `PLAUSIBLE_FIT` and the `PLAUSIBLE` bucket legitimately render the same word.
+   Validate: `npx vitest run src/screens/ShortlistScreen.test.tsx` → 13 passed.
+   Commit `test: scope the bucket assertion so the fit chip cannot answer for it`.
+2. **Close the [0.6] acceptance item the frontend blocked.** `backend/tests/test_frontend_contract.py`:
+   add `"Bucket": enums.Bucket` to `CONTRACT`. It could not be added before `types.ts` declared the
+   union; it does now. Validate: `pytest tests/test_frontend_contract.py`.
+   Commit `test: hold the frontend's bucket union to the backend enum`.
+3. **e2e.** `cd frontend && npx playwright test e2e/journey.spec.ts` with ports 5173/8099 free, one run
+   at a time. Update the journey for the renamed column ("Preference match" → "Match") and the default
+   sort. Add `e2e/ranking.spec.ts` only if [0.8] acceptance needs it before stage 5; the brief puts the
+   drag-and-drop version in stage 5.
+4. **Full gates** (AGENTS §5) green, then PR from `task/0.8-ranking-ui` using
+   `.github/PULL_REQUEST_TEMPLATE.md` with the real output from §6, and set §2 to
+   `ready-for-review (PR #)`. State in the PR that [0.1]–[0.7] ride on the same branch and that §7 is
+   open.
+5. Only after review/merge: `[1.1]`.
 
 ## 6. Gate status at last run (numbers, not adjectives)
 
@@ -389,3 +321,4 @@ After [0.8] and its predecessor acceptance/review obligations:
 |---|---|---|---|
 | 2026-09-05 | owner | `627d42d` → `627d42d` | workflow files created; no brief task started yet (historical template entry) |
 | 2026-09-05 18:31:27 UTC | gpt-6-astra, delegated recovery inventory writer | `c924410` → `c924410` (HEAD unchanged) | Prompt C audit started using clock tool UTC; reconciled stale template, seven local predecessor commits and all 74 scoped dirty/untracked file paths; 2 nested repos excluded. HANDOFF only edited; gates/frontend review pending; branch/checkpoint/push/baton not yet performed. |
+| 2026-09-06 | claude-opus-5 | `c924410` → `61df0db` | Prompt C recovery: reconciled the stale §1/§5 (the branch existed, the baton did not), audited all eight frontend diffs into §4, ran every gate into §6 (backend green, 891 tests / 92.56 %; frontend one red unit test), preserved the work in one allow-listed `wip:` checkpoint, took the baton. |
