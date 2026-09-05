@@ -593,3 +593,7 @@
 }
 .bubble__body { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.55; }
 .bubble__at { display: block; margin-top: 4px; font-size: var(--text-xs); color: var(--ink-faint); }
+
+/* A photo fills the same tile the initials occupy, so nothing shifts when one
+   person has a picture and the next does not. */
+.avatar--photo { object-fit: cover; padding: 0; }

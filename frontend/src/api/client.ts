@@ -266,6 +266,15 @@ export const api = {
   leaveCommunity: () => request<void>('/api/social/me', { method: 'DELETE' }),
 
   // --- Blocking and moderation ---
+  // Multipart, so the content type is left to the browser: it appends the
+  // boundary, and a hand-written header omits it.
+  uploadAvatar: (file: File) => {
+    const form = new FormData();
+    form.append('file', file);
+    return request<void>('/api/social/me/avatar', { method: 'PUT', body: form });
+  },
+  deleteAvatar: () => request<void>('/api/social/me/avatar', { method: 'DELETE' }),
+
   blockedPeople: () => request<{ items: ReporterRef[] }>('/api/social/blocks'),
   blockPerson: (userId: string) =>
     request<void>(`/api/social/blocks/${userId}`, { method: 'POST' }),

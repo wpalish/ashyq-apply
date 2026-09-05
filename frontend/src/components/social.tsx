@@ -59,13 +59,33 @@ export function initials(name: string): string {
 }
 
 export function Avatar({
-  name, status, large = false,
-}: { name: string; status: ApplicantStatus | null; large?: boolean }) {
+  name, status, userId, large = false,
+}: {
+  name: string;
+  status: ApplicantStatus | null;
+  /** Given a person, their picture is tried; without one, initials stand in. */
+  userId?: string;
+  large?: boolean;
+}) {
+  const [failed, setFailed] = useState(false);
+  const tone = status ? `avatar--${status}` : 'avatar--unstated';
+  const size = large ? 'avatar--lg' : '';
+
+  // Most people have no picture, so the 404 is the common case rather than an
+  // error: it is handled by falling back to the initials that were already
+  // there, with no request wasted asking first.
+  if (userId && !failed) {
+    return (
+      <img
+        className={`avatar avatar--photo ${tone} ${size}`}
+        src={`/api/social/avatars/${userId}`}
+        alt=""
+        onError={() => setFailed(true)}
+      />
+    );
+  }
   return (
-    <span
-      className={`avatar ${status ? `avatar--${status}` : 'avatar--unstated'} ${large ? 'avatar--lg' : ''}`}
-      aria-hidden="true"
-    >
+    <span className={`avatar ${tone} ${size}`} aria-hidden="true">
       {initials(name)}
     </span>
   );
@@ -95,7 +115,7 @@ export function Byline({
   const moment = when(at);
   return (
     <div className="byline">
-      <Avatar name={author.display_name} status={author.status} />
+      <Avatar name={author.display_name} status={author.status} userId={author.user_id} />
       <div className="byline__who">
         {onOpenPerson ? (
           <button type="button" className="linkish" onClick={() => onOpenPerson(author.user_id)}>
@@ -218,7 +238,7 @@ export function PersonTile({
       onClick={() => onOpen(person.user_id)}
       data-testid={`person-${person.user_id}`}
     >
-      <Avatar name={person.display_name} status={person.status} large />
+      <Avatar name={person.display_name} status={person.status} userId={person.user_id} large />
       <span className="person__body">
         <span className="person__name">{person.display_name}</span>
         <span className="person__aim">{aims || t('discover.noAim')}</span>

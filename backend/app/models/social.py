@@ -30,6 +30,7 @@ from sqlalchemy import (
     DateTime,
     ForeignKey,
     Index,
+    LargeBinary,
     String,
     Text,
     UniqueConstraint,
@@ -92,7 +93,6 @@ class SocialProfile(Base):
     target_major_key: Mapped[str] = mapped_column(String(120), default="", index=True)
 
     bio: Mapped[str] = mapped_column(String(BIO_MAX_CHARS), default="")
-    avatar_url: Mapped[str] = mapped_column(String(500), default="")
 
     #: Who may start a conversation with this person — `DirectMessagePolicy`.
     #: Not null and not a guess: everyone gets the narrow default until they
@@ -400,3 +400,31 @@ class ContentReport(TimestampedBase):
     resolved_by: Mapped[str | None] = mapped_column(String(320), nullable=True)
     resolved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     resolution_note: Mapped[str] = mapped_column(String(REPORT_NOTE_MAX_CHARS), default="")
+
+
+class Avatar(Base):
+    """One person's picture, stored as bytes beside the profile rather than in it.
+
+    A separate table because every Discover card, byline and conversation row
+    loads a profile, and none of them wants half a megabyte of image attached to
+    that query. The picture is fetched by its own request, which the browser
+    then caches.
+
+    In the database rather than on a disk: the deployment is a container with no
+    persistent volume promised, backups already cover the database, and there is
+    nothing to keep in step. It is the wrong answer at a hundred thousand
+    users - object storage is - and right at the size this product is.
+    """
+
+    __tablename__ = "social_avatars"
+
+    user_id: Mapped[str] = mapped_column(
+        String(32), ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
+    )
+    content_type: Mapped[str] = mapped_column(String(30))
+    #: Metadata already removed: see `app.domain.avatar`.
+    data: Mapped[bytes] = mapped_column(LargeBinary)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, onupdate=utcnow
+    )

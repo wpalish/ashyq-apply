@@ -66,6 +66,20 @@ export function LegalScreen() {
               and your research.
             </p>
             <p>
+              <strong>A picture, if you add one.</strong> It is stored here rather than anywhere
+              else, and served only to signed-in applicants. Before it is stored, the metadata is
+              stripped — a photograph taken on a phone records where it was taken, and that is not
+              something to publish alongside a school leaver&apos;s name. Nothing is inferred from
+              the image: it is not scanned, matched against anything, or used to identify you.
+            </p>
+            <p>
+              <strong>Private messages.</strong> Conversations are stored so both people can read
+              them, and are visible to nobody else — with one exception, which exists so that
+              harassment can be dealt with: either person in a conversation can report a message,
+              and reporting it shows that message to a moderator. Who may write to you first is
+              your setting, and it starts narrow.
+            </p>
+            <p>
               <strong>What leaves the service.</strong> Requests to universities&apos; own public
               pages, which never carry your data: the fetcher refuses to place applicant
               information in an outbound URL, honours robots.txt, reads nothing behind a login and
@@ -133,9 +147,11 @@ export function LegalScreen() {
               anyone, or harass, and do not present a rumour about a university&apos;s requirements
               as a fact — the rest of the product exists precisely because published criteria and
               hearsay are not the same thing. The operator of a deployment may remove a post or an
-              account. Be aware that there is no reporting button, no moderation queue and no
-              automated filtering in this build: removal today means someone with database access
-              doing it by hand.
+              account. There is a reporting button on posts, answers, messages and profiles, and a
+              queue that a moderator named by this deployment works from. There is no automated
+              filtering and no alert when a report arrives, so how soon anything happens depends
+              on a person opening the queue. If you need something to stop now rather than soon,
+              blocking is the tool that works without waiting for anybody.
             </p>
           </div>
         </Panel>

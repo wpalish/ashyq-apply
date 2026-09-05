@@ -262,6 +262,14 @@ const EN = {
     'This applicant only accepts messages from people they have answered in public. '
     + 'Answer one of their posts, or ask a question they can answer.',
 
+  'person.avatar': 'Your picture',
+  'person.avatarChoose': 'Choose a picture',
+  'person.avatarRemove': 'Remove it',
+  'person.avatarUploading': 'Uploading…',
+  'person.avatarHint':
+    'A JPEG or a PNG, up to 512 kB. Where the photo was taken is removed before it is stored, '
+    + 'and the picture is shown to every applicant who can see your profile.',
+
   'person.formDmPolicy': 'Who may write to you first',
   'person.formDmAnyone': 'Anyone in the community',
   'person.formDmThreads': 'Only people I have answered, or who answered me',
@@ -492,6 +500,14 @@ const RU: Partial<Record<MessageKey, string>> = {
     'Этот абитуриент принимает сообщения только от тех, кому отвечал публично. Ответьте на '
     + 'его пост или задайте вопрос, на который он сможет ответить.',
 
+  'person.avatar': 'Ваше фото',
+  'person.avatarChoose': 'Выбрать фото',
+  'person.avatarRemove': 'Удалить',
+  'person.avatarUploading': 'Загружаем…',
+  'person.avatarHint':
+    'JPEG или PNG, до 512 КБ. Место съёмки удаляется до сохранения, а само фото видят все '
+    + 'абитуриенты, которым доступен ваш профиль.',
+
   'person.formDmPolicy': 'Кто может написать вам первым',
   'person.formDmAnyone': 'Любой участник сообщества',
   'person.formDmThreads': 'Только те, кому я отвечал, или кто отвечал мне',
@@ -715,6 +731,14 @@ const KK: Partial<Record<MessageKey, string>> = {
   'messages.needsThread':
     'Бұл талапкер тек өзі жауап берген адамдардан хабарлама қабылдайды. Оның жазбасына жауап '
     + 'беріңіз немесе ол жауап бере алатын сұрақ қойыңыз.',
+
+  'person.avatar': 'Сіздің фотоңыз',
+  'person.avatarChoose': 'Фото таңдау',
+  'person.avatarRemove': 'Жою',
+  'person.avatarUploading': 'Жүктелуде…',
+  'person.avatarHint':
+    'JPEG немесе PNG, 512 КБ дейін. Түсірілген жер сақтауға дейін өшіріледі, ал фотоны '
+    + 'профиліңізді көре алатын әрбір талапкер көреді.',
 
   'person.formDmPolicy': 'Сізге кім бірінші жаза алады',
   'person.formDmAnyone': 'Қауымдастықтағы кез келген адам',

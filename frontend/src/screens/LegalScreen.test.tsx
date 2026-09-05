@@ -51,11 +51,29 @@ describe('privacy and terms', () => {
     expect(use).toHaveTextContent('harvest');
   });
 
-  it('admits there is no moderation rather than implying one', () => {
+  it('says what moderation there is, and what it still cannot do', () => {
     render(<LegalScreen />);
     const posting = screen.getByText(/What you write in the community/).closest('p');
-    expect(posting).toHaveTextContent('no reporting button');
-    expect(posting).toHaveTextContent('someone with database access doing it by hand');
+    expect(posting).toHaveTextContent('reporting button');
+    // The limits stay named: no filtering, no alert, so no promise of speed.
+    expect(posting).toHaveTextContent('no automated filtering');
+    expect(posting).toHaveTextContent('no alert when a report arrives');
+    expect(posting).toHaveTextContent('blocking is the tool that works without waiting');
+  });
+
+  it('names the picture and what is stripped from it', () => {
+    render(<LegalScreen />);
+    const picture = screen.getByText(/A picture, if you add one/).closest('p');
+    expect(picture).toHaveTextContent('metadata is stripped');
+    expect(picture).toHaveTextContent('where it was taken');
+    expect(picture).toHaveTextContent('not scanned');
+  });
+
+  it('says private messages are private, and names the one exception', () => {
+    render(<LegalScreen />);
+    const messages = screen.getByText(/Private messages/).closest('p');
+    expect(messages).toHaveTextContent('visible to nobody else');
+    expect(messages).toHaveTextContent('reporting it shows that message to a moderator');
   });
 
   it('names what is stored rather than gesturing at "your data"', () => {

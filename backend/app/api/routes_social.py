@@ -21,7 +21,7 @@ import binascii
 from datetime import datetime
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, Query, Response
+from fastapi import APIRouter, Depends, File, HTTPException, Query, Response, UploadFile
 from sqlalchemy import and_, func, or_
 from sqlalchemy.orm import Session, joinedload, selectinload
 
@@ -30,6 +30,7 @@ from sqlalchemy.orm import Session, joinedload, selectinload
 # existed when this module was first imported.
 from app import config
 from app.db import get_session
+from app.domain.avatar import MAX_AVATAR_BYTES, sniff, strip_metadata
 from app.domain.enums import (
     DirectMessagePolicy,
     ReportStatus,
@@ -37,6 +38,7 @@ from app.domain.enums import (
 )
 from app.domain.social import extract_tags, normalize_key
 from app.models import (
+    Avatar,
     Block,
     ContentReport,
     Conversation,
@@ -272,9 +274,17 @@ def leave(
         session.delete(reply)
     for own_post in list(user.posts):
         session.delete(own_post)
+    _forget_avatar(session, principal.user_id)
     session.delete(profile)
     session.commit()
     return Response(status_code=204)
+
+
+def _forget_avatar(session: Session, user_id: str) -> None:
+    """A picture is published content, so it leaves with the profile."""
+    avatar = session.get(Avatar, user_id)
+    if avatar is not None:
+        session.delete(avatar)
 
 
 def _require_membership(session: Session, principal: Principal) -> SocialProfile:
@@ -1048,6 +1058,7 @@ def _remove_subject(session: Session, report: ContentReport) -> None:
                 session.delete(reply)
             for own_post in list(user.posts):
                 session.delete(own_post)
+            _forget_avatar(session, profile.user_id)
             session.delete(profile)
         return
 
@@ -1096,3 +1107,89 @@ def resolve_report(
     session.commit()
     session.refresh(report)
     return _report_view(session, report)
+
+
+# --- Avatars -------------------------------------------------------------
+
+
+@router.put("/me/avatar", status_code=204)
+async def upload_avatar(
+    file: UploadFile = File(...),
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> Response:
+    """Replace your picture.
+
+    The format is read from the bytes rather than from `content_type`, which the
+    caller chooses, and this file is served back from our own origin — believing
+    a header here would let somebody host what they liked on our domain.
+
+    Metadata is removed before it is stored: a phone photo carries the place it
+    was taken, and these profiles are public across the whole service.
+    """
+    _require_membership(session, principal)
+
+    # One byte past the cap, so a file at the limit is fine and a larger one is
+    # refused without ever being held whole.
+    data = await file.read(MAX_AVATAR_BYTES + 1)
+    if len(data) > MAX_AVATAR_BYTES:
+        raise HTTPException(413, "A picture must be 512 kB or smaller.")
+    if not data:
+        raise HTTPException(400, "That file is empty.")
+
+    kind = sniff(data)
+    if kind is None:
+        raise HTTPException(400, "Upload a JPEG or a PNG.")
+
+    clean = strip_metadata(data, kind)
+    avatar = session.get(Avatar, principal.user_id)
+    if avatar is None:
+        session.add(Avatar(user_id=principal.user_id, content_type=kind, data=clean))
+    else:
+        avatar.content_type = kind
+        avatar.data = clean
+    session.commit()
+    return Response(status_code=204)
+
+
+@router.delete("/me/avatar", status_code=204)
+def delete_avatar(
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> Response:
+    avatar = session.get(Avatar, principal.user_id)
+    if avatar is not None:
+        session.delete(avatar)
+        session.commit()
+    return Response(status_code=204)
+
+
+@router.get("/avatars/{user_id}")
+def read_avatar(
+    user_id: str,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> Response:
+    """The picture, or a 404 for someone who has not set one.
+
+    A 404 rather than a placeholder: the screen already draws initials, and
+    sending bytes to say "no picture" would be a round trip that learns
+    nothing. Someone blocked is refused here as they disappear everywhere else.
+    """
+    if _blocked_either_way(session, principal.user_id, user_id):
+        raise HTTPException(404, "No picture here.")
+    avatar = session.get(Avatar, user_id)
+    if avatar is None:
+        raise HTTPException(404, "No picture here.")
+
+    stamp = ensure_utc(avatar.updated_at) or avatar.updated_at
+    return Response(
+        content=avatar.data,
+        media_type=avatar.content_type,
+        headers={
+            # The bytes of one version never change, so a browser may keep
+            # them; the URL carries a version that moves when the picture does.
+            "Cache-Control": "private, max-age=86400",
+            "ETag": f'"{int(stamp.timestamp())}"',
+        },
+    )

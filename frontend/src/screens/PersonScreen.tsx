@@ -22,6 +22,69 @@ import type {
 
 const MAX_UNIVERSITIES = 10;
 
+/**
+ * The picture, uploaded on its own rather than with the rest of the form.
+ *
+ * A file is not a field: it goes as multipart, it can fail on its own terms
+ * (too large, wrong format), and making the person press Save to find that out
+ * would attach the failure to the wrong action. `version` moves after each
+ * change so the browser fetches the new bytes instead of its cached copy.
+ */
+function AvatarField({ userId, name }: { userId: string; name: string }) {
+  const { t } = useTranslation();
+  const [version, setVersion] = useState(0);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+
+  return (
+    <div className="field">
+      <span className="field__label">{t('person.avatar')}</span>
+      {error && <Notice kind="risk">{error}</Notice>}
+      <div className="row">
+        <Avatar key={version} name={name} status={null} userId={userId} large />
+        <label className="btn btn--sm">
+          {busy ? t('person.avatarUploading') : t('person.avatarChoose')}
+          <input
+            type="file"
+            accept="image/jpeg,image/png"
+            className="visually-hidden"
+            disabled={busy}
+            onChange={async (event) => {
+              const file = event.target.files?.[0];
+              event.target.value = '';
+              if (!file) return;
+              setBusy(true);
+              try {
+                await api.uploadAvatar(file);
+                setVersion((n) => n + 1);
+                setError('');
+              } catch (problem) {
+                setError(
+                  problem instanceof ApiError ? problem.message : 'Could not upload that.',
+                );
+              } finally {
+                setBusy(false);
+              }
+            }}
+          />
+        </label>
+        <button
+          className="btn btn--sm btn--danger"
+          type="button"
+          disabled={busy}
+          onClick={async () => {
+            await api.deleteAvatar();
+            setVersion((n) => n + 1);
+          }}
+        >
+          {t('person.avatarRemove')}
+        </button>
+      </div>
+      <span className="field__hint">{t('person.avatarHint')}</span>
+    </div>
+  );
+}
+
 function ProfileForm({
   initial, onSaved,
 }: { initial: PersonCard | null; onSaved: (saved: PersonCard) => void }) {
@@ -66,6 +129,7 @@ function ProfileForm({
       }}
     >
       {error && <Notice kind="risk">{error}</Notice>}
+      {initial && <AvatarField userId={initial.user_id} name={initial.display_name} />}
       <div className="grid-2">
         <div className="field">
           <label className="field__label" htmlFor="profile-status">{t('person.formStatus')}</label>

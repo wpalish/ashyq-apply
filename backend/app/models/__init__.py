@@ -17,6 +17,7 @@ from app.models.research import (
     ResearchRun,
 )
 from app.models.social import (
+    Avatar,
     Block,
     ContentReport,
     Conversation,
@@ -34,6 +35,7 @@ __all__ = [
     "ApplicantProfileRow",
     "AuditEvent",
     "AuthSession",
+    "Avatar",
     "Base",
     "Block",
     "ClaimRow",
