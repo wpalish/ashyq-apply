@@ -203,6 +203,26 @@ class FundingClassification(StrEnum):
     UNKNOWN = "UNKNOWN"
 
 
+class Bucket(StrEnum):
+    """Where a row sits in a balanced list.
+
+    Not "safety / match / reach": "safety" reads as a promise, and this product
+    never promises an admission. Every name here describes what the confirmed
+    data says about the row, not what an admissions committee will do.
+    """
+
+    #: Requirements met with room, funding confirmed, cost within the ceiling.
+    WELL_PLACED = "WELL_PLACED"
+    PLAUSIBLE = "PLAUSIBLE"
+    AMBITIOUS = "AMBITIOUS"
+    #: The remaining cost is past what the family said it can absorb.
+    OUT_OF_BUDGET = "OUT_OF_BUDGET"
+    #: Too little was verified to place the row at all.
+    NEEDS_CLARIFICATION = "NEEDS_CLARIFICATION"
+    #: A confirmed hard filter or an excluded country: listed, never ranked.
+    EXCLUDED = "EXCLUDED"
+
+
 class CostCategory(StrEnum):
     TUITION = "tuition"
     MANDATORY_FEES = "mandatory_fees"

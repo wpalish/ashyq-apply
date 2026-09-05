@@ -13,8 +13,8 @@ import {
 import { ApiError, api } from '@/api/client';
 import { DEFAULT_PROFILE } from '@/lib/defaultProfile';
 import type {
-  ApplicantCase, Capabilities, ProfileValidationReport, ProgramResult, RunView,
-  ShortlistSummary, StoredProfile, UserDecision,
+  ApplicantCase, BalancedShortlist, Capabilities, ProfileValidationReport, ProgramResult,
+  RerankIn, RunView, ShortlistSummary, StoredProfile, UserDecision,
 } from '@/types';
 
 const POLL_MS = 1200;
@@ -99,6 +99,10 @@ export interface Store {
   decide: (resultId: string, decision: UserDecision, reason: string, notes: string) => Promise<void>;
   saveNotes: (resultId: string, notes: string) => Promise<void>;
   refreshResults: () => Promise<void>;
+  /** Re-order the finished run against changed priorities. Fetches no pages. */
+  rerank: (body: RerankIn) => Promise<void>;
+  /** The balanced list, refreshed with the results. */
+  shortlist: BalancedShortlist | null;
   deleteEverything: () => Promise<void>;
   clearError: () => void;
 }
@@ -164,6 +168,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [validation, setValidation] = useState<ProfileValidationReport | null>(null);
   const [run, setRun] = useState<RunView | null>(null);
   const [results, setResults] = useState<ProgramResult[]>([]);
+  const [shortlist, setShortlist] = useState<BalancedShortlist | null>(null);
   const [summary, setSummary] = useState<ShortlistSummary | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -246,6 +251,19 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       fail(e);
     }
   }, [run, fail]);
+
+  const rerank = useCallback(
+    async (body: RerankIn) => {
+      if (!run) return;
+      try {
+        await api.rerank(run.id, body);
+        setResults(await api.results(run.id));
+      } catch (e) {
+        fail(e);
+      }
+    },
+    [run, fail],
+  );
 
   // Restore the saved profile and any in-flight run after a reload.
   //
@@ -556,6 +574,20 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     [run, fail],
   );
 
+  // The balanced list is derived from the rows, so it follows them rather than
+  // every call site that loads results having to remember to ask for it too.
+  useEffect(() => {
+    if (!run || results.length === 0) {
+      setShortlist(null);
+      return;
+    }
+    let cancelled = false;
+    api.shortlist(run.id)
+      .then((list) => { if (!cancelled) setShortlist(list); })
+      .catch(fail);
+    return () => { cancelled = true; };
+  }, [run, results, fail]);
+
   const deleteEverything = useCallback(async () => {
     if (!savedProfile) return;
     try {
@@ -586,13 +618,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       dirty, draftRestored, discardDraft, hydrated,
       loadDemoProfile, clearProfile, validation, run, results,
       summary, loading, error, saveProfile, startRun, cancelRun, retryRun, recheckNow, collectDocuments,
-      decide, saveNotes, refreshResults, deleteEverything, clearError: () => setError(null),
+      decide, saveNotes, refreshResults, rerank, shortlist, deleteEverything,
+      clearError: () => setError(null),
     }),
     [capabilities, profileDraft, setProfileDraft, savedProfile, cases, switchCase, newCase,
      restored, dirty, draftRestored, discardDraft, hydrated, loadDemoProfile,
      clearProfile, validation, run, results, summary, loading, error, saveProfile, startRun,
      cancelRun, retryRun, recheckNow, collectDocuments, decide, saveNotes, refreshResults,
-     deleteEverything],
+     rerank, shortlist, deleteEverything],
   );
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;

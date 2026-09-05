@@ -12,6 +12,7 @@ from sqlalchemy.orm import sessionmaker
 
 from app.domain.enums import (
     AdmissionsFit,
+    Bucket,
     EligibilityStatus,
     FundingClassification,
     PipelineStage,
@@ -290,3 +291,73 @@ class TestCancellation:
             await runner.run_to_decision()
         assert run.stage == PipelineStage.CANCELLED.value
         assert run.finished_at is not None
+
+
+class TestRankingV2InThePipeline:
+    """The list the applicant sees comes from the axes, not from a sum."""
+
+    @pytest.mark.asyncio
+    async def test_verify_stores_what_a_university_is_not_how_well_it_fits(
+        self, session, completed_run
+    ):
+        _, run = completed_run
+        groningen = results_of(session, run)["University of Groningen"]
+        assert groningen.catalog_attributes["climate"] == "temperate"
+        assert groningen.catalog_attributes_source == "fixture-catalog"
+
+    @pytest.mark.asyncio
+    async def test_every_assessed_row_carries_its_ranking(self, session, completed_run):
+        _, run = completed_run
+        for result in results_of(session, run).values():
+            assert result.ranking is not None
+            assert result.ranking.version == "2"
+
+    @pytest.mark.asyncio
+    async def test_the_stored_sort_column_is_the_v2_key(self, session, completed_run):
+        _, run = completed_run
+        rows = session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run.id).all()
+        for row in rows:
+            ranking = ProgramResult.model_validate(row.payload).ranking
+            assert row.score_total == pytest.approx(ranking.sort_key)
+            assert row.bucket == ranking.bucket.value
+
+    @pytest.mark.asyncio
+    async def test_a_place_nobody_can_pay_for_no_longer_leads_the_list(
+        self, session, completed_run
+    ):
+        """The v1 list opened with a 21,471 USD annual shortfall."""
+        _, run = completed_run
+        rows = session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run.id).all()
+        best = max(rows, key=lambda r: r.score_total)
+        assert best.university == "University of Groningen"
+        ubc = next(r for r in rows if r.university == "University of British Columbia")
+        assert ubc.bucket == Bucket.OUT_OF_BUDGET.value
+
+    @pytest.mark.asyncio
+    async def test_the_labels_the_frontend_reads_are_still_filled(self, session, completed_run):
+        _, run = completed_run
+        groningen = results_of(session, run)["University of Groningen"]
+        assert groningen.climate_fit != "unknown"
+        assert groningen.campus_fit != "unknown"
+
+    @pytest.mark.asyncio
+    async def test_version_one_restores_the_additive_score(self, session, settings, profile):
+        """The rollback switch, exercised: v1 ordering, no bucket."""
+        row = profile_row(session, profile)
+        run = ResearchRun(
+            profile_id=row.id,
+            stage=PipelineStage.QUEUED.value,
+            demo_mode=True,
+            stage_state=RunState.load(None).dump(),
+        )
+        session.add(run)
+        session.flush()
+        runner = ResearchRunner(
+            session, run, profile, settings.model_copy(update={"ranking_version": 1})
+        )
+        await runner.run_to_decision()
+
+        rows = session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run.id).all()
+        best = max(rows, key=lambda r: r.score_total)
+        assert best.university == "University of British Columbia"
+        assert all(r.bucket == "" for r in rows)

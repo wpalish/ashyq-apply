@@ -8,6 +8,7 @@
 
 import type {
   AdmissionsFit,
+  Bucket,
   ClaimStatus,
   EligibilityStatus,
   FundingClassification,
@@ -98,6 +99,15 @@ export const fundingClassTone: Record<FundingClassification, Tone> = {
   UNKNOWN: 'neutral',
 };
 
+export const bucketTone: Record<Bucket, Tone> = {
+  WELL_PLACED: 'ok',
+  PLAUSIBLE: 'info',
+  AMBITIOUS: 'warn',
+  OUT_OF_BUDGET: 'risk',
+  NEEDS_CLARIFICATION: 'neutral',
+  EXCLUDED: 'neutral',
+};
+
 export const claimStatusTone: Record<ClaimStatus, Tone> = {
   VERIFIED_CURRENT: 'ok',
   POSSIBLY_STALE: 'warn',
@@ -154,7 +164,25 @@ export const STATUS_MEANING: Record<string, string> = {
   CONFLICTING: 'Two official sources disagree. Neither has been chosen as correct.',
   UNVERIFIED: 'Not confirmed against an official source.',
   NOT_FOUND: 'No source published this value.',
+  WELL_PLACED: 'Requirements met with room, funding confirmed, and the remaining cost within your ceiling.',
+  PLAUSIBLE: 'Requirements and funding both look reachable on published data.',
+  OUT_OF_BUDGET: 'What remains to pay is past the ceiling you stated. The row is kept, with the number.',
+  EXCLUDED: 'A published requirement you do not meet, or a country you excluded. Listed, not ranked.',
+  NEEDS_CLARIFICATION: 'Too little could be verified to place this row at all.',
 };
+
+/** The fit number never travels without this sentence. */
+export const FIT_DISCLAIMER =
+  'How well this matches your stated priorities, on confirmed data. Not a probability of admission.';
+
+/** A fit or coverage value, or an explicit dash when nothing was known. */
+export function ratio(value: number | null | undefined, digits = 2): string {
+  return value === null || value === undefined ? '—' : value.toFixed(digits);
+}
+
+export function percent(value: number | null | undefined): string {
+  return value === null || value === undefined ? '—' : `${Math.round(value * 100)}%`;
+}
 
 export function scorePercent(total: number, max: number): number {
   return max > 0 ? Math.round((total / max) * 100) : 0;

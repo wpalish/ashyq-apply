@@ -28,6 +28,8 @@ in place to imply a tailoring that never happened.
 | `university_size` | Scored | University size component, graded against the registry's `size` on a small/medium/large ladder | `test_university_size_moves_the_score` |
 | `campus_type` | Scored | Campus type component. Campus has no ordering, so it matches or it does not — a known mismatch grades as *weak*, never as the *acceptable* that means "no preference stated" | `test_a_campus_mismatch_is_not_dressed_up_as_acceptable` |
 | `target_ranking_band` | Scored | Programme standing component | `test_every_component_names_its_weight_and_its_reason` |
+| `priorities` | Scored | The order of the six priority groups becomes the axis weights, by rank-order centroid. Empty means the default order, funding first | `TestRankOrderCentroidWeights` |
+| `research_privacy` | Context | Decides what may be put in an outbound research prompt. `preferences_only` (the default) keeps grades, budget, citizenship and name out of it entirely | `tests/test_research_agent.py` (stage 2) |
 | `values_internships` | Scored | Weights the careers component | existing scoring tests |
 | `values_coop` | Context | Raises "does this programme offer a co-op or placement year?" when the careers text does not say | `test_the_run_raises_the_questions_the_pages_do_not_answer` |
 | `needs_work_during_study` | Context | Raises the work-hours question when no official statement was found | as above |
@@ -51,6 +53,7 @@ in place to imply a tailoring that never happened.
 | `responsibility_level` | Scored | Sets an activity's base weight, participant 0.3 through founder 1.0 | `test_scoring_and_profile.py` |
 | `measurable_outcome` | Scored | An activity with a stated outcome outweighs one without | `test_scoring_and_profile.py` |
 | `hours_per_week`, `weeks_per_year` | Scored **as a pair** | Multiplied into annual hours, which raise an activity's "sustained" weighting up to a 200-hour ceiling | `TestHalfStatedActivityHours` |
+| activities and achievements, as a whole | Context in ranking; scored via admissions fit | Ranking v2 does not score them as a university axis: the same record produced the same number on every row, so it separated nothing. They still decide `STRONGER_FIT` against `PLAUSIBLE_FIT`, and through that the portfolio bucket | `test_ranking_v2.py`, `admissions_fit_for` tests |
 
 **Why the pair is all-or-nothing.** Half an answer is not converted into a
 whole one. A school club runs about 34 weeks a year, a summer lab about 8, a
@@ -66,6 +69,13 @@ gap is named in `missing_fields` and in the component's own explanation. Before
 this, filling `hours_per_week` alone produced a byte-for-byte identical score
 to filling neither, while the explanation still claimed the result was
 "weighted by ... sustained hours".
+
+## Ranking mode
+
+| Field | State | What it does | Test |
+|---|---|---|---|
+| `weights_override` | Scored | True once someone edits the advanced sliders; the ranking then reads `weights` instead of the weights derived from `priorities` | `test_the_ranking_records_where_its_weights_came_from` |
+| `weights` | Scored **in advanced mode only** | The twelve v1 sliders, mapped onto the v2 axes and normalised. `extracurricular_alignment` maps to nothing — see the row above | `TestAdvancedModeWeights` |
 
 ## Funding
 
