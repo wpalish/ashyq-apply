@@ -21,6 +21,7 @@ FORMAT_TS = Path(__file__).resolve().parents[2] / "frontend" / "src" / "lib" / "
 CONTRACT: dict[str, type] = {
     "EligibilityStatus": enums.EligibilityStatus,
     "AdmissionsFit": enums.AdmissionsFit,
+    "Bucket": enums.Bucket,
     "FundingFit": enums.FundingFit,
     "FundingClassification": enums.FundingClassification,
     "ClaimStatus": enums.ClaimStatus,

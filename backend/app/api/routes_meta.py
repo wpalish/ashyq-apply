@@ -121,6 +121,7 @@ def vocabulary() -> dict:
         "curriculum_type": [e.value for e in enums.CurriculumType],
         "eligibility": [e.value for e in enums.EligibilityStatus],
         "admissions_fit": [e.value for e in enums.AdmissionsFit],
+        "bucket": [e.value for e in enums.Bucket],
         "funding_fit": [e.value for e in enums.FundingFit],
         "funding_classification": [e.value for e in enums.FundingClassification],
         "claim_status": [e.value for e in enums.ClaimStatus],

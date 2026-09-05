@@ -43,6 +43,7 @@ do not rewrite them to manufacture compliant history. [0.4] was committed before
 | [0.7] | `c924410` | Profile-field documentation and ADR 0003; ADR changes I4 interpretation without recorded owner resolution. |
 | [0.8] recovery | `61df0db` | Preserving checkpoint: eight frontend files + relay sources, one red test named in the message. |
 | [0.8] baton | `0bedc38` | Baton to claude-opus-5; §1/§2/§4/§5/§6/§11 reconciled with the real tree and real gate numbers. |
+| [0.8] | `2f2e484` | Bucket assertion scoped to its own cell; frontend unit suite 141/141. |
 
 ## 4. Half-done / uncommitted at the moment of writing
 
@@ -192,10 +193,8 @@ Write-ahead. Recovery is done; these are [0.8]'s remaining sub-steps, in order, 
 pushed commit. Do not restart [0.1]–[0.7]; do not push `main`; do not stage screenshots or `docs/v2`.
 
 1. ~~Fix the red test.~~ **Done** — see §3. Frontend unit suite is 141 passed / 0 failed.
-2. **Close the [0.6] acceptance item the frontend blocked.** `backend/tests/test_frontend_contract.py`:
-   add `"Bucket": enums.Bucket` to `CONTRACT`. It could not be added before `types.ts` declared the
-   union; it does now. Validate: `pytest tests/test_frontend_contract.py`.
-   Commit `test: hold the frontend's bucket union to the backend enum`.
+2. ~~Close the [0.6] contract item.~~ **Done** — see §3 and §8: `CONTRACT["Bucket"]` plus a `bucket`
+   list on `/api/vocabulary`, which the contract test requires for every contracted type.
 3. **e2e.** `cd frontend && npx playwright test e2e/journey.spec.ts` with ports 5173/8099 free, one run
    at a time. Update the journey for the renamed column ("Preference match" → "Match") and the default
    sort. Add `e2e/ranking.spec.ts` only if [0.8] acceptance needs it before stage 5; the brief puts the
@@ -270,6 +269,7 @@ ranked. Brief §5.4 rule 2 knocks out a **confirmed** hard filter, and the demo 
 | 2026-09-05 | [0.6] e1d8078 | `pipeline/runner.py::apply_fit_labels`, `store_result`; `POST /api/runs/{run_id}/rerank` | Request priorities/preferences/funding/weights/gamma (0–2)/persist(false); response rows/gamma/weights_source; persisted audit action `results_reranked`. |
 | 2026-09-05 | [0.6] e1d8078 | `GET /api/runs/{run_id}/results`: bucket filter, sort key/fit/coverage/gap/deadline (default key) | Observed list API additions. |
 | 2026-09-05 | [0.6] e1d8078 | `GET /api/runs/{run_id}/shortlist`: chosen/notes/quotas; defaults size=10, min_well_placed=2, min_plausible=4, max_ambitious=3, max_per_country=3 | Observed balanced-list API; rejected rows omitted. |
+| 2026-09-06 | [0.8] | `/api/vocabulary` gains `bucket` (six values); `tests/test_frontend_contract.py::CONTRACT` gains `Bucket` → `types.ts` must keep the union in step | The contract test demands every contracted type be readable at runtime, so the UI never hard-codes a bucket string. |
 | 2026-09-05 | recovery | Historical setup row above is retained append-only, not revalidated as current test counts/line anchors; [0.8] frontend contracts are uncommitted and under separate audit | Keeps history without upgrading old claims to acceptance. |
 
 ## 9. Traps and lessons (things that cost a session; keep them)
