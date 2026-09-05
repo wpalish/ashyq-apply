@@ -45,6 +45,7 @@ from app.domain.funding import (
     funding_fit_for,
     unmet_coverage_requirements,
 )
+from app.domain.ranking_v2 import rank_result
 from app.domain.scoring import admissions_fit_for, score_result
 from app.domain.validation import validate_profile
 from app.models import AuditEvent, ClaimRow, ConflictRow, ProgramResultRow, ResearchRun, new_id
@@ -398,31 +399,11 @@ class ResearchRunner:
                     degree=prog.degree,
                     intake=self.intake,
                     rankings=cand.rankings,
-                    climate_fit=_fit_label(
-                        cand.attributes.get("climate"),
-                        self.profile.preferences.climate,
-                        "climate",
-                    ),
-                    city_fit=_fit_label(
-                        cand.attributes.get("city_size"),
-                        self.profile.preferences.city_size,
-                        "city",
-                    ),
-                    workload_fit=_fit_label(
-                        cand.attributes.get("workload"),
-                        self.profile.preferences.acceptable_workload,
-                        "workload",
-                    ),
-                    size_fit=_fit_label(
-                        cand.attributes.get("size"),
-                        self.profile.preferences.university_size,
-                        "size",
-                    ),
-                    campus_fit=_fit_label(
-                        cand.attributes.get("campus"),
-                        self.profile.preferences.campus_type,
-                        "campus",
-                    ),
+                    # What the university *is*, not how well it fits. Freezing
+                    # the verdict here meant a changed preference could only be
+                    # answered by crawling every page again.
+                    catalog_attributes=dict(cand.attributes),
+                    catalog_attributes_source=("fixture-catalog" if self.demo else "registry"),
                     career_notes="",
                 )
 
@@ -773,8 +754,13 @@ class ResearchRunner:
                 result.funding_gap.warnings.append(reason)
 
             result.admissions_fit, fit_reason = admissions_fit_for(result, self.profile)
+            # Recomputed from the stored attributes on every assessment, so the
+            # v1 score sees the same labels it always did without them having
+            # been frozen at verify time.
+            _apply_fit_labels(result, self.profile)
             result.preference_score = score_result(result, self.profile)
             result.preference_score.components.append(_explanation_component(fit_reason))
+            result.ranking = rank_result(result, self.profile, gamma=self.settings.ranking_gamma)
             result.verification_completeness = _completeness(claims)
             result.career_notes = result.career_notes or ""
 
@@ -987,7 +973,12 @@ class ResearchRunner:
         row.admissions_fit = result.admissions_fit.value
         row.funding_fit = result.funding_fit.value
         row.funding_classification = result.best_funding_classification.value
-        row.score_total = result.preference_score.total if result.preference_score else 0.0
+        ranking = result.ranking
+        if ranking is not None and self.settings.ranking_version >= 2:
+            row.score_total = ranking.sort_key
+            row.bucket = ranking.bucket.value
+        else:
+            row.score_total = result.preference_score.total if result.preference_score else 0.0
         self.session.add(row)
         if extra_claims:
             self._store_claims(row.id, extra_claims)
@@ -1209,6 +1200,38 @@ _FIT_LADDERS: dict[str, list[str]] = {
     "workload": ["moderate", "demanding", "very_demanding"],
     "size": ["small", "medium", "large"],
 }
+
+
+#: Result label -> the catalogue attribute behind it and the preference it is
+#: compared against.
+_LABELLED_FITS: tuple[tuple[str, str, str], ...] = (
+    ("climate_fit", "climate", "climate"),
+    ("city_fit", "city_size", "city_size"),
+    ("workload_fit", "workload", "acceptable_workload"),
+    ("size_fit", "size", "university_size"),
+    ("campus_fit", "campus", "campus_type"),
+)
+
+#: `_fit_label` names the dimension itself; the ladders are keyed by it.
+_FIT_DIMENSIONS = {"climate_fit": "climate", "city_fit": "city", "size_fit": "size"}
+
+
+def _apply_fit_labels(result: ProgramResult, profile: ApplicantProfileIn) -> None:
+    """Grade the stored attributes against the current preferences.
+
+    A pure function of data already on the row, so changing a preference and
+    re-ranking gives new labels without a single page being fetched again.
+    """
+    for label, attribute, preference in _LABELLED_FITS:
+        setattr(
+            result,
+            label,
+            _fit_label(
+                result.catalog_attributes.get(attribute),
+                getattr(profile.preferences, preference),
+                _FIT_DIMENSIONS.get(label, label.removesuffix("_fit")),
+            ),
+        )
 
 
 def _fit_label(actual: str | None, preferred: str, dimension: str = "") -> str:

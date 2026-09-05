@@ -121,6 +121,9 @@ class ProgramResultRow(TimestampedBase):
     funding_fit: Mapped[str] = mapped_column(String(40), index=True)
     funding_classification: Mapped[str] = mapped_column(String(40), index=True)
     score_total: Mapped[float] = mapped_column(Float, default=0.0, index=True)
+    #: Ranking v2 portfolio bucket. Indexed because the shortlist screen asks
+    #: for one bucket at a time; empty on rows assessed under v1.
+    bucket: Mapped[str] = mapped_column(String(40), default="", index=True)
 
     user_decision: Mapped[str] = mapped_column(String(20), default="undecided", index=True)
     user_decision_reason: Mapped[str] = mapped_column(Text, default="")
