@@ -187,6 +187,36 @@ const EN = {
   'person.publicWarning':
     'Everything here is public to other applicants. Your applicant case is not.',
 
+  'nav.messages': 'Messages',
+  'messages.title': 'Messages',
+  'messages.lede':
+    'Private conversations. Nobody else can read them, and nothing you write here appears in '
+    + 'the feed or on your profile.',
+  'messages.loading': 'Loading your messages',
+  'messages.opening': 'Opening the conversation',
+  'messages.empty': 'No conversations yet',
+  'messages.emptyHint':
+    'Answer someone in the feed, or open a profile and write to them. Who may write to you '
+    + 'first is up to you — the setting is on your own profile.',
+  'messages.emptyThread': 'Nothing here yet',
+  'messages.emptyThreadHint': 'Write the first message.',
+  'messages.placeholder': 'Write a message',
+  'messages.send': 'Send',
+  'messages.back': 'All conversations',
+  'messages.write': 'Send a message',
+  'messages.closed': 'This applicant does not accept messages.',
+  'messages.needsThread':
+    'This applicant only accepts messages from people they have answered in public. '
+    + 'Answer one of their posts, or ask a question they can answer.',
+
+  'person.formDmPolicy': 'Who may write to you first',
+  'person.formDmAnyone': 'Anyone in the community',
+  'person.formDmThreads': 'Only people I have answered, or who answered me',
+  'person.formDmNobody': 'Nobody — keep my inbox closed',
+  'person.formDmHint':
+    'This guards the first message only. Someone you are already talking to can still reach '
+    + 'you, whatever you choose here.',
+
   'leave.title': 'Leave the community',
   'leave.hint':
     'Your account and your applicant research stay. Your profile, your posts and your replies '
@@ -334,6 +364,36 @@ const RU: Partial<Record<MessageKey, string>> = {
   'person.publicWarning':
     'Всё это видно другим абитуриентам. Ваше дело по поступлению — нет.',
 
+  'nav.messages': 'Сообщения',
+  'messages.title': 'Сообщения',
+  'messages.lede':
+    'Личная переписка. Её не видит никто посторонний, и написанное здесь не попадает ни в '
+    + 'ленту, ни в ваш профиль.',
+  'messages.loading': 'Загружаем переписку',
+  'messages.opening': 'Открываем разговор',
+  'messages.empty': 'Переписок пока нет',
+  'messages.emptyHint':
+    'Ответьте кому-нибудь в ленте или откройте профиль и напишите. Кто может написать вам '
+    + 'первым — решаете вы: настройка в вашем профиле.',
+  'messages.emptyThread': 'Здесь пока пусто',
+  'messages.emptyThreadHint': 'Напишите первое сообщение.',
+  'messages.placeholder': 'Напишите сообщение',
+  'messages.send': 'Отправить',
+  'messages.back': 'Все переписки',
+  'messages.write': 'Написать сообщение',
+  'messages.closed': 'Этот абитуриент не принимает сообщения.',
+  'messages.needsThread':
+    'Этот абитуриент принимает сообщения только от тех, кому отвечал публично. Ответьте на '
+    + 'его пост или задайте вопрос, на который он сможет ответить.',
+
+  'person.formDmPolicy': 'Кто может написать вам первым',
+  'person.formDmAnyone': 'Любой участник сообщества',
+  'person.formDmThreads': 'Только те, кому я отвечал, или кто отвечал мне',
+  'person.formDmNobody': 'Никто — входящие закрыты',
+  'person.formDmHint':
+    'Это правило только для первого сообщения. Тот, с кем вы уже переписываетесь, сможет '
+    + 'написать вам при любом выборе.',
+
   'leave.title': 'Выйти из сообщества',
   'leave.hint':
     'Аккаунт и ваше исследование останутся. Профиль, посты и ответы будут удалены, и вы '
@@ -474,6 +534,36 @@ const KK: Partial<Record<MessageKey, string>> = {
   'person.saving': 'Сақталуда…',
   'person.publicWarning':
     'Мұның бәрін басқа талапкерлер көреді. Түсу бойынша ісіңізді — көрмейді.',
+
+  'nav.messages': 'Хабарламалар',
+  'messages.title': 'Хабарламалар',
+  'messages.lede':
+    'Жеке хат алмасу. Оны бөгде адам көрмейді, әрі мұнда жазылған нәрсе таспаға да, '
+    + 'профиліңізге де түспейді.',
+  'messages.loading': 'Хат алмасу жүктелуде',
+  'messages.opening': 'Әңгіме ашылып жатыр',
+  'messages.empty': 'Әзірге әңгіме жоқ',
+  'messages.emptyHint':
+    'Таспада біреуге жауап беріңіз немесе профильді ашып жазыңыз. Сізге кім бірінші жаза '
+    + 'алатынын өзіңіз шешесіз — баптау профиліңізде.',
+  'messages.emptyThread': 'Мұнда әзірге бос',
+  'messages.emptyThreadHint': 'Алғашқы хабарламаны жазыңыз.',
+  'messages.placeholder': 'Хабарлама жазыңыз',
+  'messages.send': 'Жіберу',
+  'messages.back': 'Барлық әңгімелер',
+  'messages.write': 'Хабарлама жазу',
+  'messages.closed': 'Бұл талапкер хабарлама қабылдамайды.',
+  'messages.needsThread':
+    'Бұл талапкер тек өзі жауап берген адамдардан хабарлама қабылдайды. Оның жазбасына жауап '
+    + 'беріңіз немесе ол жауап бере алатын сұрақ қойыңыз.',
+
+  'person.formDmPolicy': 'Сізге кім бірінші жаза алады',
+  'person.formDmAnyone': 'Қауымдастықтағы кез келген адам',
+  'person.formDmThreads': 'Тек мен жауап бергендер немесе маған жауап бергендер',
+  'person.formDmNobody': 'Ешкім — кіріс жабық',
+  'person.formDmHint':
+    'Бұл ереже тек алғашқы хабарламаға қатысты. Сіз хат алысып жүрген адам таңдауыңызға '
+    + 'қарамастан жаза алады.',
 
   'leave.title': 'Қауымдастықтан шығу',
   'leave.hint':

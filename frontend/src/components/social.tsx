@@ -20,6 +20,7 @@ import type { ApplicantStatus, AuthorRef, PersonCard, PostView } from '@/types';
  *  `test_frontend_contract.py` fails if the two drift apart. */
 export const POST_MAX_CHARS = 500;
 export const BIO_MAX_CHARS = 280;
+export const MESSAGE_MAX_CHARS = 2000;
 
 export const STATUS_TONE: Record<string, Tone> = {
   accepted: 'ok',

@@ -13,7 +13,10 @@ import type {
   AuthStatus,
   ClaimOut,
   Conflict,
+  ConversationView,
   FeedFilters,
+  MessagePage,
+  MessageView,
   MyProfile,
   Page,
   PeopleFilters,
@@ -256,6 +259,18 @@ export const api = {
   // would make an offset page repeat one and drop the other.
   socialMe: () => request<MyProfile>('/api/social/me'),
   leaveCommunity: () => request<void>('/api/social/me', { method: 'DELETE' }),
+  conversations: (cursor?: string | null) =>
+    request<Page<ConversationView>>(`/api/social/messages${query({ cursor })}`),
+  // One number for the badge, so the navigation costs one request rather than
+  // one per conversation.
+  unreadMessages: () => request<{ unread: number }>('/api/social/messages/unread'),
+  conversation: (userId: string, cursor?: string | null) =>
+    request<MessagePage>(`/api/social/messages/${userId}${query({ cursor })}`),
+  sendMessage: (userId: string, body: string) =>
+    request<MessageView>(`/api/social/messages/${userId}`, {
+      method: 'POST',
+      body: JSON.stringify({ body }),
+    }),
   saveSocialProfile: (payload: ProfileInput) =>
     request<PersonCard>('/api/social/me', { method: 'PUT', body: JSON.stringify(payload) }),
   people: (filters: PeopleFilters = {}, cursor?: string | null) =>

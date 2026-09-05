@@ -11,7 +11,13 @@ import { api, ApiError } from '@/api/client';
 import { Empty, Loading, Notice, Panel } from '@/components/primitives';
 import { Avatar, BIO_MAX_CHARS, Post, StatusChip } from '@/components/social';
 import { useTranslation } from '@/lib/useTranslation';
-import type { ApplicantStatus, PersonCard, PostView, ProfileInput } from '@/types';
+import type {
+  ApplicantStatus,
+  DirectMessagePolicy,
+  PersonCard,
+  PostView,
+  ProfileInput,
+} from '@/types';
 
 const MAX_UNIVERSITIES = 10;
 
@@ -23,6 +29,7 @@ function ProfileForm({
   const [city, setCity] = useState(initial?.target_city ?? '');
   const [major, setMajor] = useState(initial?.target_major ?? '');
   const [bio, setBio] = useState(initial?.bio ?? '');
+  const [dmPolicy, setDmPolicy] = useState<DirectMessagePolicy>(initial?.dm_policy ?? 'threads');
   const [universities, setUniversities] = useState((initial?.universities ?? []).join(', '));
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
@@ -44,6 +51,7 @@ function ProfileForm({
           target_city: city.trim(),
           target_major: major.trim(),
           bio: bio.trim(),
+          dm_policy: dmPolicy,
           universities: parsed,
         };
         try {
@@ -107,6 +115,19 @@ function ProfileForm({
         </div>
       </div>
       <div className="field">
+        <label className="field__label" htmlFor="profile-dm">{t('person.formDmPolicy')}</label>
+        <select
+          id="profile-dm"
+          value={dmPolicy}
+          onChange={(event) => setDmPolicy(event.target.value as DirectMessagePolicy)}
+        >
+          <option value="threads">{t('person.formDmThreads')}</option>
+          <option value="anyone">{t('person.formDmAnyone')}</option>
+          <option value="nobody">{t('person.formDmNobody')}</option>
+        </select>
+        <span className="field__hint">{t('person.formDmHint')}</span>
+      </div>
+      <div className="field">
         <label className="field__label" htmlFor="profile-bio">{t('person.formBio')}</label>
         <textarea
           id="profile-bio"
@@ -135,11 +156,12 @@ function ProfileForm({
 }
 
 export function PersonScreen({
-  userId, myUserId, onOpenPerson, onProfileSaved, onLeft,
+  userId, myUserId, onOpenPerson, onOpenMessages, onProfileSaved, onLeft,
 }: {
   userId: string | null;
   myUserId: string | null;
   onOpenPerson: (id: string) => void;
+  onOpenMessages: (id: string) => void;
   onProfileSaved: (saved: PersonCard) => void;
   onLeft: () => void;
 }) {
@@ -216,6 +238,20 @@ export function PersonScreen({
               <button className="btn btn--sm" type="button" onClick={() => setEditing((v) => !v)}>
                 {t(editing ? 'person.cancel' : 'person.edit')}
               </button>
+            )}
+            {/* Offered only when it would work. A button that leads to a 403 is
+                worse than none: it invites the person to be refused. */}
+            {!isMe && card.dm_policy !== 'nobody' && (
+              <button
+                className="btn btn--sm btn--primary"
+                type="button"
+                onClick={() => onOpenMessages(card.user_id)}
+              >
+                {t('messages.write')}
+              </button>
+            )}
+            {!isMe && card.dm_policy === 'nobody' && (
+              <span className="xs faint">{t('messages.closed')}</span>
             )}
           </div>
         </div>

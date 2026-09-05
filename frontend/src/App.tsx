@@ -23,6 +23,7 @@ import { LegalScreen } from '@/screens/LegalScreen';
 import { FeedScreen } from '@/screens/FeedScreen';
 import { DiscoverScreen } from '@/screens/DiscoverScreen';
 import { PersonScreen } from '@/screens/PersonScreen';
+import { MessagesScreen } from '@/screens/MessagesScreen';
 import { Chip } from '@/components/primitives';
 import { api } from '@/api/client';
 import { LOCALES, t as translate, type Locale, type MessageKey } from '@/lib/i18n';
@@ -32,7 +33,7 @@ import type { PersonCard } from '@/types';
 export type ScreenId =
   | 'profile' | 'preferences' | 'progress' | 'shortlist' | 'funding'
   | 'approved' | 'documents' | 'sources' | 'export'
-  | 'feed' | 'discover' | 'me' | 'person' | 'legal';
+  | 'feed' | 'discover' | 'messages' | 'me' | 'person' | 'legal';
 
 /**
  * The numbers are not decoration: the case screens are a sequence, and 04
@@ -51,6 +52,7 @@ const SCREENS: { id: ScreenId; num?: string; label: MessageKey; group: MessageKe
   { id: 'export', num: '09', label: 'nav.export', group: 'nav.group.decide' },
   { id: 'feed', label: 'nav.feed', group: 'nav.group.community' },
   { id: 'discover', label: 'nav.discover', group: 'nav.group.community' },
+  { id: 'messages', label: 'nav.messages', group: 'nav.group.community' },
   { id: 'me', label: 'nav.me', group: 'nav.group.community' },
   // Listed rather than tucked into the footer, so that it has an address a
   // person can be sent to: "read the privacy policy" is a link, not a hunt.
@@ -104,6 +106,8 @@ export default function App() {
   const [me, setMe] = useState<PersonCard | null>(null);
   const [joined, setJoined] = useState(false);
   const [personId, setPersonId] = useState<string | null>(null);
+  const [messagingWith, setMessagingWith] = useState<string | null>(null);
+  const [unread, setUnread] = useState(0);
   const [theme, setTheme] = useState<Theme>(() => {
     try {
       return (window.localStorage.getItem(THEME_KEY) as Theme) ?? 'system';
@@ -128,6 +132,23 @@ export default function App() {
       .then((state) => { setJoined(state.joined); setMe(state.profile); })
       .catch(() => { /* the community is optional; its absence must not block the case */ });
   }, []);
+
+  /**
+   * The unread badge.
+   *
+   * Read once on load and again whenever a conversation is closed, rather than
+   * polled: nothing else in this app polls, and a timer that wakes a phone
+   * every few seconds to ask a question whose answer is almost always "no" is
+   * a battery cost the product has not earned. A message that arrives while
+   * you are looking at another screen shows up on the next navigation.
+   */
+  const refreshUnread = useCallback(() => {
+    api.unreadMessages()
+      .then((state) => setUnread(state.unread))
+      .catch(() => { /* a badge that cannot be fetched simply does not show */ });
+  }, []);
+
+  useEffect(() => { refreshUnread(); }, [refreshUnread, screen]);
 
   // Follow the workflow forward on its own, but never take the user backwards.
   useEffect(() => {
@@ -167,6 +188,7 @@ export default function App() {
     // The community does not depend on a research run, so nothing gates it.
     feed: null,
     discover: null,
+    messages: null,
     me: null,
     person: null,
     // A privacy policy nobody can reach before signing up is not a policy.
@@ -243,6 +265,7 @@ export default function App() {
     approved: approvedCount + maybeCount || undefined,
     documents: withChecklists || undefined,
     sources: (summary ? summary.with_conflicts + summary.with_open_questions : 0) || undefined,
+    messages: unread || undefined,
   };
 
   let groupSeen = '';
@@ -425,12 +448,20 @@ export default function App() {
           {screen === 'discover' && (
             <DiscoverScreen onOpenPerson={(id) => { setPersonId(id); setScreen('person'); }} />
           )}
+          {screen === 'messages' && (
+            <MessagesScreen
+              openWith={messagingWith}
+              onOpenChange={setMessagingWith}
+              onReadSomething={refreshUnread}
+            />
+          )}
           {(screen === 'me' || screen === 'person') && (
             <PersonScreen
               key={screen === 'me' ? 'me' : personId}
               userId={screen === 'me' ? null : personId}
               myUserId={me?.user_id ?? null}
               onOpenPerson={(id) => { setPersonId(id); setScreen('person'); }}
+              onOpenMessages={(id) => { setMessagingWith(id); setScreen('messages'); }}
               onProfileSaved={(saved) => { setMe(saved); setJoined(true); }}
               onLeft={() => { setMe(null); setJoined(false); }}
             />

@@ -466,6 +466,9 @@ export interface ApplicantCase {
 
 export type ApplicantStatus = 'accepted' | 'waitlist';
 
+/** Who may open a conversation with you. */
+export type DirectMessagePolicy = 'anyone' | 'threads' | 'nobody';
+
 export interface PersonCard {
   user_id: string;
   display_name: string;
@@ -473,6 +476,8 @@ export interface PersonCard {
   target_city: string;
   target_major: string;
   universities: string[];
+  /** How this person can be reached — never anything about them. */
+  dm_policy: DirectMessagePolicy;
   bio: string;
 }
 
@@ -487,6 +492,28 @@ export interface ProfileInput {
   target_major: string;
   bio: string;
   universities: string[];
+  dm_policy: DirectMessagePolicy;
+}
+
+export interface MessageView {
+  id: string;
+  body: string;
+  created_at: string;
+  /** Whose side of the conversation this is: the screen places the line by it. */
+  mine: boolean;
+}
+
+export interface ConversationView {
+  person: PersonCard;
+  last_message: string;
+  last_message_at: string;
+  unread: number;
+}
+
+export interface MessagePage {
+  person: PersonCard;
+  items: MessageView[];
+  next_cursor: string | null;
 }
 
 export interface AuthorRef {

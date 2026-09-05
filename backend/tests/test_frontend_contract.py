@@ -33,6 +33,7 @@ CONTRACT: dict[str, type] = {
     "DocumentOwner": enums.DocumentOwner,
     "DegreeLevel": enums.DegreeLevel,
     "ApplicantStatus": enums.ApplicantStatus,
+    "DirectMessagePolicy": enums.DirectMessagePolicy,
 }
 
 
@@ -162,6 +163,7 @@ def test_the_composer_enforces_the_same_limits_as_the_database():
     for name, expected in (
         ("POST_MAX_CHARS", social.POST_MAX_CHARS),
         ("BIO_MAX_CHARS", social.BIO_MAX_CHARS),
+        ("MESSAGE_MAX_CHARS", social.MESSAGE_MAX_CHARS),
     ):
         match = re.search(rf"export const {name} = (\d+);", source)
         assert match, f"social.tsx does not declare {name}"

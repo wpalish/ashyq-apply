@@ -530,3 +530,66 @@
 .linkish--quiet { color: var(--ink-faint); font-weight: 500; }
 .linkish--quiet:hover { color: var(--risk); }
 .post__foot { display: flex; align-items: center; gap: var(--space-4); flex-wrap: wrap; }
+
+/* --- private conversations ------------------------------------------------
+ *
+ * Bubbles, not ruled entries: a feed is read, a conversation is followed, and
+ * the alternating sides are what carry who said what without a name on every
+ * line.
+ */
+
+.conversation {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: var(--space-3);
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  padding: var(--space-3) 0;
+  border: 0;
+  border-bottom: 1px solid var(--rule);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.conversation:hover { background: var(--surface-sunken); }
+.conversation__body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.conversation__head { display: flex; gap: var(--space-3); align-items: baseline; }
+.conversation__head time { font-size: var(--text-xs); color: var(--ink-faint); }
+.conversation__last {
+  font-size: var(--text-sm);
+  color: var(--ink-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.conversation__unread {
+  flex: none;
+  min-width: 1.4rem;
+  padding: 0 0.35rem;
+  border-radius: 99px;
+  background: var(--accent);
+  color: oklch(99% 0 0);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.chat { display: flex; flex-direction: column; gap: var(--space-2); }
+.bubble {
+  align-self: flex-start;
+  max-width: min(80%, 34rem);
+  padding: var(--space-3);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+.bubble--mine {
+  align-self: flex-end;
+  background: var(--accent-soft);
+  border-color: var(--accent-border);
+}
+.bubble__body { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.55; }
+.bubble__at { display: block; margin-top: 4px; font-size: var(--text-xs); color: var(--ink-faint); }
