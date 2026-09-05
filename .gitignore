@@ -72,3 +72,7 @@ backend/data/pgdata/
 
 # Generated code map (graphify). Regenerate with `graphify update .`
 graphify-out/
+
+# Git worktrees created by Claude Code. Each is a full checkout of another
+# branch; committing one would duplicate the whole repo inside itself.
+.claude/worktrees/
