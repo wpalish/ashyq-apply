@@ -47,6 +47,7 @@ do not rewrite them to manufacture compliant history. [0.4] was committed before
 | [0.8] | `2f2e484` | Bucket assertion scoped to its own cell; frontend unit suite 141/141. |
 | [0.8] | `d675cfe` | `CONTRACT["Bucket"]` and `bucket` on `/api/vocabulary`; 892 backend tests. |
 | [0.8] | `0affab6` | Preferences disclaimer restored, per-table captions, e2e helper opens the set-aside sections; 67 e2e passed. |
+| [0.8] | see below | Shortlist table made readable: the pinned decision column was covering `Confirmed` and all of `Bucket`. Screenshots regenerated. |
 
 ## 4. Half-done / uncommitted at the moment of writing
 
@@ -217,6 +218,7 @@ Run by claude-opus-5, 2026-09-06, at `0affab6` on `task/0.8-ranking-ui`. Interpr
 | frontend `tsc --noEmit` | **pass** |
 | frontend `eslint src e2e` | **pass** |
 | frontend `vitest run` | **pass** — **141 passed** / 14 files |
+| table layout at 1440px | **pass** — wrapper overflow 183px → 6px; the bucket chip now ends 8px before the pinned decision cell instead of underneath it |
 | frontend `vite build` | **pass** — 308.32 kB js, 63.99 kB css |
 | `playwright test` (desktop-chromium + mobile, auth excluded) | **pass** — **67 passed, 1 skipped**, 1.6 min; `journey.spec.ts` 16/16 |
 | `seed_demo.py` (brief §5.7) | **pass** — Groningen #1 (0.795, PLAUSIBLE), UBC #11 **OUT_OF_BUDGET** (0.401) |
@@ -291,6 +293,13 @@ next agent does not reopen it.
 - Git author on recent commits is the owner's name for both agents — the `Agent:` trailer is the only reliable authorship signal. Always add it.
 
 
+- **The demo database poisons the e2e suite once it grows.** `backend/data/unimatch.db` accumulates a
+  profile and a run per `seed_demo.py` and per e2e run; at ~54 MB,
+  `profile-persistence.spec.ts::a saved profile is restored into the form after a reload` began failing
+  intermittently — the reload restored the *demo* profile (Kazakhstan) over the saved one (Uzbekistan),
+  on desktop or mobile at random, while passing when the spec ran alone. The same suite passes 67/67 on
+  a fresh database. Move the file aside and let `backend/run.sh` migrate a new one before trusting a red
+  e2e run. Worth a real fix later: restore should resolve the profile by its stored id, never by "latest".
 - `gh` is installed per-user via `winget install --id GitHub.cli --scope user`; it lands in
   `%LOCALAPPDATA%\Microsoft\WinGet\Packages\GitHub.cli_*in\gh.exe` and needs a new shell to be on
   PATH. `gh auth login --with-token` **rejects** the token Git Credential Manager stores, because it
@@ -339,3 +348,4 @@ After [0.8] and its predecessor acceptance/review obligations:
 | 2026-09-06 | claude-opus-5 | `c924410` → `61df0db` | Prompt C recovery: reconciled the stale §1/§5 (the branch existed, the baton did not), audited all eight frontend diffs into §4, ran every gate into §6 (backend green, 891 tests / 92.56 %; frontend one red unit test), preserved the work in one allow-listed `wip:` checkpoint, took the baton. |
 | 2026-09-06 | claude-opus-5 | `61df0db` → `0affab6` | Finished [0.8]: red test fixed, bucket vocabulary contracted, preferences disclaimer restored, per-table captions, e2e helper opens the set-aside sections. All gates green (892 backend / 141 unit / 67 e2e). §7 I4-T3 conflict resolved by owner delegation. Next: open the PR. |
 | 2026-09-06 | claude-opus-5 | `9ee7078` → `9ee7078` | Installed `gh`, authenticated it from the stored git credential, opened **PR #2** for stage 0. Baton stays with nobody; next is review. |
+| 2026-09-06 | claude-opus-5 | `bfc06cd` → (this commit) | Read the regenerated screenshots and found the pinned decision column hiding two of the new shortlist columns; merged coverage under the match, dropped the bucket column where the section heading already names it, reclaimed the width, regenerated the screenshots. Diagnosed the profile-persistence e2e flake as demo-database growth, not a regression (§9). |

@@ -178,7 +178,9 @@ describe('the v2 ranking on the shortlist', () => {
     render(<ShortlistScreen />);
 
     expect(screen.getByText('0.82')).toBeInTheDocument();
-    expect(screen.getByText('94%')).toBeInTheDocument();
+    // Coverage sits under the match, in the same cell: two columns did not fit
+    // beside the pinned decision buttons, which covered the bucket entirely.
+    expect(screen.getByTestId('coverage-result-1')).toHaveTextContent('94% confirmed');
     // Scoped to its own cell: PLAUSIBLE_FIT and the PLAUSIBLE bucket both read
     // "Plausible", and a bare text query lets the fit chip answer for the bucket.
     expect(document.querySelector('[data-label="Bucket"]')).toHaveTextContent('Plausible');
