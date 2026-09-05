@@ -11,6 +11,7 @@ import type {
   ApplicantCase,
   AuthPrincipal,
   AuthStatus,
+  BalancedShortlist,
   ClaimOut,
   Conflict,
   ConversationView,
@@ -31,6 +32,7 @@ import type {
   ReportStatus,
   ReportTarget,
   ReportView,
+  RerankIn,
   RunView,
   ShortlistSummary,
   StoredProfile,
@@ -223,6 +225,18 @@ export const api = {
     return request<ProgramResult[]>(`/api/runs/${runId}/results${qs ? `?${qs}` : ''}`);
   },
   summary: (runId: string) => request<ShortlistSummary>(`/api/runs/${runId}/summary`),
+
+  /**
+   * Re-order a finished run against changed priorities. Fetches nothing: every
+   * input the ranking needs is already on the row.
+   */
+  rerank: (runId: string, body: RerankIn) =>
+    request<{ rows: number; gamma: number; weights_source: string }>(
+      `/api/runs/${runId}/rerank`,
+      { method: 'POST', body: JSON.stringify(body) },
+    ),
+  shortlist: (runId: string) =>
+    request<BalancedShortlist>(`/api/runs/${runId}/shortlist`),
   claims: (runId: string) => request<ClaimOut[]>(`/api/runs/${runId}/claims`),
   conflicts: (runId: string) => request<Conflict[]>(`/api/runs/${runId}/conflicts`),
   questions: (runId: string) => request<Record<string, unknown>[]>(`/api/runs/${runId}/questions`),
