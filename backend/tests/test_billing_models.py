@@ -78,19 +78,27 @@ def test_one_case_entitlement_per_organization(pg_session, tenant) -> None:
         pg_session.flush()
 
 
-def test_one_organization_wide_entitlement_despite_null_profile(pg_session, tenant) -> None:
-    """A plain unique constraint would let unlimited null rows through."""
-    for _ in range(2):
-        pg_session.add(
-            Entitlement(
-                organization_id=tenant["organization_id"],
-                profile_id=None,
-                kind=EntitlementKind.ORG_SUBSCRIPTION.value,
-                source=EntitlementSource.SUBSCRIPTION.value,
-            )
+def test_an_entitlement_records_the_subscription_that_paid_for_it(pg_session, tenant) -> None:
+    """Phase 2: counting these rows is how remaining quota is known."""
+    from app.models.subscription import Subscription
+
+    sub = Subscription(
+        organization_id=tenant["organization_id"], case_quota=50, duration_days=365
+    )
+    pg_session.add(sub)
+    pg_session.flush()
+
+    pg_session.add(
+        Entitlement(
+            organization_id=tenant["organization_id"],
+            profile_id=tenant["profile_id"],
+            kind=EntitlementKind.CASE_FULL.value,
+            source=EntitlementSource.SUBSCRIPTION.value,
+            subscription_id=sub.id,
         )
-    with pytest.raises(IntegrityError):
-        pg_session.flush()
+    )
+    pg_session.flush()
+    assert pg_session.query(Entitlement).filter(Entitlement.subscription_id == sub.id).count() == 1
 
 
 def test_payment_events_accumulate_against_an_order(pg_session, tenant) -> None:

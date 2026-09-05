@@ -21,11 +21,17 @@ from app.models.research import (
     ProgramResultRow,
     ResearchRun,
 )
+from app.models.subscription import (
+    TERMINAL_SUBSCRIPTION_STATUSES,
+    Subscription,
+    SubscriptionStatus,
+)
 
 __all__ = [
     "CURRENT_SCHEMA_VERSION",
     "TERMINAL_ORDER_STATUSES",
     "TERMINAL_STATUSES",
+    "TERMINAL_SUBSCRIPTION_STATUSES",
     "ApplicantProfileRow",
     "AuditEvent",
     "AuthSession",
@@ -47,6 +53,8 @@ __all__ = [
     "ProgramResultRow",
     "ResearchRun",
     "SchemaVersion",
+    "Subscription",
+    "SubscriptionStatus",
     "TimestampedBase",
     "User",
     "new_id",

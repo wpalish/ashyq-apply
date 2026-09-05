@@ -6,7 +6,7 @@ The rules a customer is paying for should be readable in a single screen.
 
 from __future__ import annotations
 
-from sqlalchemy import or_, select
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.config import get_settings
@@ -23,17 +23,14 @@ def has_full_access(session: Session, organization_id: str, profile_id: str) -> 
     if not get_settings().payments_enabled:
         return True
 
+    # One rule: this case was granted to this organization. A subscription does
+    # not grant access on its own — it grants the right to spend a unit, and
+    # spending one writes exactly the row below.
     found = session.scalar(
         select(Entitlement.id).where(
             Entitlement.organization_id == organization_id,
-            or_(
-                # This case, bought outright.
-                (Entitlement.kind == EntitlementKind.CASE_FULL.value)
-                & (Entitlement.profile_id == profile_id),
-                # Or the whole organization, under a subscription (phase 2).
-                (Entitlement.kind == EntitlementKind.ORG_SUBSCRIPTION.value)
-                & (Entitlement.profile_id.is_(None)),
-            ),
+            Entitlement.kind == EntitlementKind.CASE_FULL.value,
+            Entitlement.profile_id == profile_id,
         )
     )
     return found is not None

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from app.models.billing import Entitlement, EntitlementKind, EntitlementSource
+from app.models.billing import Entitlement, EntitlementSource
 from app.payments.entitlements import (
     free_view,
     grant_case_access,
@@ -101,18 +101,15 @@ def test_another_organization_is_not_covered(pg_session, tenant) -> None:
     assert has_full_access(pg_session, other.id, tenant["profile_id"]) is False
 
 
-def test_an_organization_wide_entitlement_covers_every_case(pg_session, tenant) -> None:
-    """Phase 2 inserts this row. Phase 1 must already honour it."""
+def test_a_subscription_no_longer_grants_blanket_access(pg_session, tenant) -> None:
+    """Phase 2 turned the subscription into a right to spend, not access."""
+    from app.models.subscription import Subscription
+
     pg_session.add(
-        Entitlement(
-            organization_id=tenant["organization_id"],
-            profile_id=None,
-            kind=EntitlementKind.ORG_SUBSCRIPTION.value,
-            source=EntitlementSource.SUBSCRIPTION.value,
-        )
+        Subscription(organization_id=tenant["organization_id"], case_quota=50, duration_days=365)
     )
     pg_session.flush()
-    assert has_full_access(pg_session, tenant["organization_id"], "any-case") is True
+    assert has_full_access(pg_session, tenant["organization_id"], tenant["profile_id"]) is False
 
 
 def test_a_free_row_keeps_identity_and_drops_evidence() -> None:

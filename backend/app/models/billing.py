@@ -46,9 +46,10 @@ class PaymentMethod(str, Enum):
 
 
 class EntitlementKind(str, Enum):
+    #: The only kind. Phase 1 reserved an org-wide kind for a subscription that
+    #: granted blanket access; phase 2 made a subscription a right to *spend*,
+    #: so that shape was removed rather than left to be misread.
     CASE_FULL = "case_full"
-    #: Phase 2. Declared here so the constraint guarding it exists from day one.
-    ORG_SUBSCRIPTION = "org_subscription"
 
 
 class EntitlementSource(str, Enum):
@@ -117,9 +118,9 @@ class Entitlement(TimestampedBase):
 
     __tablename__ = "entitlements"
     __table_args__ = (
-        # Two partial indexes rather than one constraint: in PostgreSQL a plain
-        # UNIQUE treats every NULL profile_id as distinct, which would let an
-        # organization accumulate unlimited subscriptions.
+        # One case is granted once per organization. The partial predicate is
+        # what remains of phase 1's pair: the org-wide index guarded a blanket
+        # entitlement that no longer exists.
         Index(
             "uq_entitlements_case",
             "organization_id",
@@ -129,22 +130,16 @@ class Entitlement(TimestampedBase):
             postgresql_where=text("profile_id IS NOT NULL"),
             sqlite_where=text("profile_id IS NOT NULL"),
         ),
-        Index(
-            "uq_entitlements_org",
-            "organization_id",
-            "kind",
-            unique=True,
-            postgresql_where=text("profile_id IS NULL"),
-            sqlite_where=text("profile_id IS NULL"),
-        ),
     )
 
     organization_id: Mapped[str] = mapped_column(
         String(32), ForeignKey("organizations.id", ondelete="CASCADE"), index=True
     )
-    #: Null means the entitlement covers the whole organization (phase 2).
     profile_id: Mapped[str | None] = mapped_column(String(32), nullable=True, index=True)
     kind: Mapped[str] = mapped_column(String(30))
     source: Mapped[str] = mapped_column(String(20), default=EntitlementSource.PURCHASE.value)
     order_id: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    #: Which subscription paid for this case, when one did. Counting these rows
+    #: is how a subscription's remaining quota is known.
+    subscription_id: Mapped[str | None] = mapped_column(String(32), nullable=True, index=True)
     granted_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
