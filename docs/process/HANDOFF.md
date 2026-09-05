@@ -199,9 +199,10 @@ No branch, commit, push or stash has been performed by this writer.
 2. After the owner merges: `[1.1] Интерфейс и схемы` — new package `backend/app/adapters/research/`
    with `base.py` (the six-method `ResearchAgent` protocol and its schemas), `null.py` and `fixture.py`.
    Acceptance A6: a full demo run with `NullResearchAgent` is byte-for-byte the current one.
-3. Housekeeping worth one commit when convenient, not blocking: `docs/v2/` duplicates `analysis/`
-   byte-for-byte apart from one relative path in the brief. `analysis/` is canonical per AGENTS.md;
-   the copies are the owner's and were left in place, unstaged.
+3. ~~Housekeeping: `docs/v2/` duplicates `analysis/`.~~ **Done** — the owner authorised deletion;
+   `docs/v2/` is removed and the one documentary reference in `backend/app/schemas/profile.py:225`
+   now points at the canonical `analysis/AI_TASK_BRIEF.md`. The table in §5 below is the audit as
+   it stood then, kept unchanged as a record.
 
 ## 6. Gate status at last run (numbers, not adjectives)
 
