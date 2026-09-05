@@ -179,7 +179,9 @@ describe('the v2 ranking on the shortlist', () => {
 
     expect(screen.getByText('0.82')).toBeInTheDocument();
     expect(screen.getByText('94%')).toBeInTheDocument();
-    expect(screen.getByText('Plausible')).toBeInTheDocument();
+    // Scoped to its own cell: PLAUSIBLE_FIT and the PLAUSIBLE bucket both read
+    // "Plausible", and a bare text query lets the fit chip answer for the bucket.
+    expect(document.querySelector('[data-label="Bucket"]')).toHaveTextContent('Plausible');
   });
 
   it('never presents the match as a probability', () => {

@@ -41,6 +41,8 @@ do not rewrite them to manufacture compliant history. [0.4] was committed before
 | [0.5] | `0b8d97f` | Assessment from stored attributes, ranking config, bucket model/migration and pipeline tests. |
 | [0.6] | `e1d8078` | Rerank, result sorting/filtering and balanced shortlist API; pipeline helpers and API tests. |
 | [0.7] | `c924410` | Profile-field documentation and ADR 0003; ADR changes I4 interpretation without recorded owner resolution. |
+| [0.8] recovery | `61df0db` | Preserving checkpoint: eight frontend files + relay sources, one red test named in the message. |
+| [0.8] baton | `0bedc38` | Baton to claude-opus-5; §1/§2/§4/§5/§6/§11 reconciled with the real tree and real gate numbers. |
 
 ## 4. Half-done / uncommitted at the moment of writing
 
@@ -189,13 +191,7 @@ No branch, commit, push or stash has been performed by this writer.
 Write-ahead. Recovery is done; these are [0.8]'s remaining sub-steps, in order, each ending in a
 pushed commit. Do not restart [0.1]–[0.7]; do not push `main`; do not stage screenshots or `docs/v2`.
 
-1. **Fix the red test.** `frontend/src/screens/ShortlistScreen.test.tsx`, case
-   `shows the match, what is confirmed, and the bucket`: replace the ambiguous
-   `screen.getByText('Plausible')` with an assertion scoped to the bucket cell
-   (`document.querySelector('[data-label="Bucket"]')` → `toHaveTextContent('Plausible')`).
-   `PLAUSIBLE_FIT` and the `PLAUSIBLE` bucket legitimately render the same word.
-   Validate: `npx vitest run src/screens/ShortlistScreen.test.tsx` → 13 passed.
-   Commit `test: scope the bucket assertion so the fit chip cannot answer for it`.
+1. ~~Fix the red test.~~ **Done** — see §3. Frontend unit suite is 141 passed / 0 failed.
 2. **Close the [0.6] acceptance item the frontend blocked.** `backend/tests/test_frontend_contract.py`:
    add `"Bucket": enums.Bucket` to `CONTRACT`. It could not be added before `types.ts` declared the
    union; it does now. Validate: `pytest tests/test_frontend_contract.py`.
