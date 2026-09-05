@@ -18,11 +18,12 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 2. Current task
 
-`[0.8] Frontend этапа 0` — **in-progress**, held by claude-opus-5 on `task/0.8-ranking-ui`.
-Recovery is finished: the tree is reconciled, the gates are measured (§6) and the work is preserved
-in `61df0db`. Remaining for [0.8]: one red unit test, the `Bucket` row in the frontend contract test,
-and the e2e journey. Acceptance of [0.1]–[0.7] is still outstanding and the I4/T3 conflict in §7 is
-still open — neither blocks finishing [0.8]'s own UI work.
+`[0.8] Frontend этапа 0` — **ready-for-review (PR not yet opened: `gh` is not installed on this
+machine; the branch is pushed and the filled-in body is with the owner)**, by claude-opus-5 on
+`task/0.8-ranking-ui`. Stage 0 is complete: [0.1]–[0.8] all ride on this branch.
+Recovery is finished and so is the task: every gate in §6 is green, including the full e2e suite and
+the §5.7 seed order. The I4/T3 conflict is resolved in §7. What remains is the owner opening the PR
+from `https://github.com/wpalish/ashyq-apply/pull/new/task/0.8-ranking-ui` and reviewing it.
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
@@ -193,10 +194,9 @@ No branch, commit, push or stash has been performed by this writer.
 
 [0.8] is code-complete and every gate is green (§6). Remaining, in order:
 
-1. **Open the PR** from `task/0.8-ranking-ui` with `.github/PULL_REQUEST_TEMPLATE.md`, pasting §6's real
-   output. Note in the body that [0.1]–[0.7] ride on this branch, that §7 is resolved, and that TU
-   Delft / Melbourne / EPFL are `EXCLUDED` by brief §5.4 rule 2 rather than ranked as in the §5.7 sample.
-   Then set §2 to `ready-for-review (PR #)`.
+1. **Open the PR.** `gh` is not installed here, so the branch is pushed and the filled-in template
+   went to the owner instead. Compare URL:
+   `https://github.com/wpalish/ashyq-apply/pull/new/task/0.8-ranking-ui`. Record the number in §2.
 2. After the owner merges: `[1.1] Интерфейс и схемы` — new package `backend/app/adapters/research/`
    with `base.py` (the six-method `ResearchAgent` protocol and its schemas), `null.py` and `fixture.py`.
    Acceptance A6: a full demo run with `NullResearchAgent` is byte-for-byte the current one.
