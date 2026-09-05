@@ -222,7 +222,7 @@ class Achievement(Base):
 #: The six groups a ranking weight can belong to. Ranking them is the whole
 #: weighting UI: twelve 0-3 sliders were never touched, so the order below is
 #: what the applicant actually states and what Rank-Order Centroid turns into
-#: weights (docs/v2/AI_TASK_BRIEF.md D8).
+#: weights (analysis/AI_TASK_BRIEF.md D8).
 PriorityGroup = Literal["funding", "academic", "country", "city_climate", "career", "campus_life"]
 
 #: Used when ``Preferences.priorities`` is empty. Money first: a place nobody
