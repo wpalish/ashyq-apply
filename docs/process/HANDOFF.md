@@ -18,12 +18,12 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 2. Current task
 
-`[0.8] Frontend этапа 0` — **ready-for-review (PR not yet opened: `gh` is not installed on this
-machine; the branch is pushed and the filled-in body is with the owner)**, by claude-opus-5 on
-`task/0.8-ranking-ui`. Stage 0 is complete: [0.1]–[0.8] all ride on this branch.
+`[0.8] Frontend этапа 0` — **ready-for-review (PR #2)**, by claude-opus-5 on `task/0.8-ranking-ui`.
+Stage 0 is complete: [0.1]–[0.8] all ride on this branch, 15 commits.
+<https://github.com/wpalish/ashyq-apply/pull/2>
 Recovery is finished and so is the task: every gate in §6 is green, including the full e2e suite and
 the §5.7 seed order. The I4/T3 conflict is resolved in §7. What remains is the owner opening the PR
-from `https://github.com/wpalish/ashyq-apply/pull/new/task/0.8-ranking-ui` and reviewing it.
+in PR #2.
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
@@ -194,9 +194,8 @@ No branch, commit, push or stash has been performed by this writer.
 
 [0.8] is code-complete and every gate is green (§6). Remaining, in order:
 
-1. **Open the PR.** `gh` is not installed here, so the branch is pushed and the filled-in template
-   went to the owner instead. Compare URL:
-   `https://github.com/wpalish/ashyq-apply/pull/new/task/0.8-ranking-ui`. Record the number in §2.
+1. ~~Open the PR.~~ **Done — PR #2**, template filled in with the real output from §6.
+   Review it against `.github/PULL_REQUEST_TEMPLATE.md`; the relay *is* the review.
 2. After the owner merges: `[1.1] Интерфейс и схемы` — new package `backend/app/adapters/research/`
    with `base.py` (the six-method `ResearchAgent` protocol and its schemas), `null.py` and `fixture.py`.
    Acceptance A6: a full demo run with `NullResearchAgent` is byte-for-byte the current one.
@@ -292,6 +291,15 @@ next agent does not reopen it.
 - Git author on recent commits is the owner's name for both agents — the `Agent:` trailer is the only reliable authorship signal. Always add it.
 
 
+- `gh` is installed per-user via `winget install --id GitHub.cli --scope user`; it lands in
+  `%LOCALAPPDATA%\Microsoft\WinGet\Packages\GitHub.cli_*in\gh.exe` and needs a new shell to be on
+  PATH. `gh auth login --with-token` **rejects** the token Git Credential Manager stores, because it
+  validates `read:org` which that token lacks; the same token works as `GH_TOKEN` for `gh api` / `gh pr`.
+  Load it without ever printing it:
+  `export GH_TOKEN=$(printf 'protocol=https
+host=github.com
+
+' | git credential fill | sed -n 's/^password=//p')`.
 - **Corrected 2026-09-06:** the note below is wrong. `backend/.venv/Scripts/python.exe` runs fine and
   produced every number in §6. Keep the rest of the note only as a reminder to record the interpreter.
 - Recovery environment: the repository `backend/.venv` launcher refers to missing base Python
@@ -330,3 +338,4 @@ After [0.8] and its predecessor acceptance/review obligations:
 | 2026-09-05 18:31:27 UTC | gpt-6-astra, delegated recovery inventory writer | `c924410` → `c924410` (HEAD unchanged) | Prompt C audit started using clock tool UTC; reconciled stale template, seven local predecessor commits and all 74 scoped dirty/untracked file paths; 2 nested repos excluded. HANDOFF only edited; gates/frontend review pending; branch/checkpoint/push/baton not yet performed. |
 | 2026-09-06 | claude-opus-5 | `c924410` → `61df0db` | Prompt C recovery: reconciled the stale §1/§5 (the branch existed, the baton did not), audited all eight frontend diffs into §4, ran every gate into §6 (backend green, 891 tests / 92.56 %; frontend one red unit test), preserved the work in one allow-listed `wip:` checkpoint, took the baton. |
 | 2026-09-06 | claude-opus-5 | `61df0db` → `0affab6` | Finished [0.8]: red test fixed, bucket vocabulary contracted, preferences disclaimer restored, per-table captions, e2e helper opens the set-aside sections. All gates green (892 backend / 141 unit / 67 e2e). §7 I4-T3 conflict resolved by owner delegation. Next: open the PR. |
+| 2026-09-06 | claude-opus-5 | `9ee7078` → `9ee7078` | Installed `gh`, authenticated it from the stored git credential, opened **PR #2** for stage 0. Baton stays with nobody; next is review. |
