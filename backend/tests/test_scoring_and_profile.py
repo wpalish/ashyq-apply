@@ -16,7 +16,7 @@ from app.domain.scoring import (
 )
 from app.domain.validation import validate_profile
 from app.schemas.money import Money
-from app.schemas.profile import GradeValue
+from app.schemas.profile import ApplicantProfileIn, GradeValue, Preferences
 from app.schemas.result import FundingGap, ProgramResult, RankingEntry, RequirementCheck
 
 
@@ -354,3 +354,34 @@ class TestProfileValidation:
             profile.preferences.__class__(
                 preferred_countries=["Canada"], excluded_countries=["canada"]
             )
+
+
+class TestPriorities:
+    """The six priority groups replace twelve sliders nobody moved."""
+
+    def test_a_repeated_priority_group_is_rejected(self):
+        with pytest.raises(ValueError, match="each group appears at most once"):
+            Preferences(priorities=["funding", "academic", "funding"])
+
+    def test_priorities_default_to_empty_so_the_default_order_applies(self):
+        assert Preferences().priorities == []
+
+    def test_the_profile_does_not_share_the_applicant_by_default(self):
+        assert Preferences().research_privacy == "preferences_only"
+
+    def test_a_profile_saved_before_v2_still_loads(self, profile):
+        """Stored profiles are re-validated on read, and Base forbids extras.
+
+        A field without a default would make every profile written before this
+        release unreadable.
+        """
+        stored = profile.model_dump(mode="json")
+        for new_field in ("priorities", "research_privacy"):
+            stored["preferences"].pop(new_field)
+        stored.pop("weights_override")
+
+        reloaded = ApplicantProfileIn.model_validate(stored)
+
+        assert reloaded.preferences.priorities == []
+        assert reloaded.preferences.research_privacy == "preferences_only"
+        assert reloaded.weights_override is False

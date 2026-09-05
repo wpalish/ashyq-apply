@@ -5,7 +5,7 @@ the narrow policy rather than the permissive one: an inbox opened to strangers
 is a decision each person makes, and a migration must not make it for them.
 
 Revision ID: f2a8c17d9e04
-Revises: e7c4a91b6f20
+Revises: a4d1c7e58b92
 Create Date: 2026-09-05
 """
 
@@ -17,7 +17,7 @@ import sqlalchemy as sa
 from alembic import op
 
 revision: str = "f2a8c17d9e04"
-down_revision: str | None = "e7c4a91b6f20"
+down_revision: str | None = "a4d1c7e58b92"
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
 

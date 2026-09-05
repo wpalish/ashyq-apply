@@ -10,6 +10,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from app.domain.enums import (
     AdmissionsFit,
     ApplicationMode,
+    Bucket,
     CostCategory,
     DegreeLevel,
     DocumentOwner,
@@ -179,6 +180,51 @@ class ExplainableScore(Base):
     )
 
 
+class AxisScore(Base):
+    """One dimension of the v2 ranking, with its own verdict and its reason.
+
+    ``state`` separates the two ways a dimension can have no value. An axis the
+    applicant said nothing about ("any climate") is *not_applicable* and is
+    ignored; an axis we could not verify is *unknown* and lowers coverage
+    without ever lowering fit — a badly parsed website must not read as a
+    worse university (AI_TASK_BRIEF P6, invariants I4 and I5).
+    """
+
+    axis: str
+    value: float | None = Field(default=None, ge=0.0, le=1.0)
+    state: Literal["known", "unknown", "not_applicable"]
+    weight: float = Field(ge=0.0)
+    reason: str
+    evidence_claim_ids: list[str] = Field(default_factory=list)
+
+
+class RankingV2(Base):
+    """The non-compensatory ranking: a fit, how much of it was verified, and why.
+
+    ``fit`` is a weighted *geometric* mean, so a near-zero axis cannot be
+    bought back by strong ones — which is how a place with a 21,471 USD annual
+    shortfall reached the top of the v1 list (AI_TASK_BRIEF P1).
+    """
+
+    fit: float | None = Field(default=None, ge=0.0, le=1.0)
+    coverage: float = Field(ge=0.0, le=1.0)
+    sort_key: float = Field(ge=0.0)
+    gamma: float
+    axes: list[AxisScore] = Field(default_factory=list)
+    unknown_axes: list[str] = Field(default_factory=list)
+    not_applicable_axes: list[str] = Field(default_factory=list)
+    #: Non-empty means the row is listed with its reason and never ranked.
+    knocked_out_by: list[str] = Field(default_factory=list)
+    bucket: Bucket
+    bucket_reason: str = ""
+    weights_source: Literal["priorities_roc", "weights_override"] = "priorities_roc"
+    version: Literal["2"] = "2"
+    disclaimer: str = (
+        "How well this matches your stated priorities, on confirmed data. "
+        "Not a probability of admission."
+    )
+
+
 class DocumentItem(Base):
     name: str
     purpose: DocumentPurpose
@@ -249,7 +295,18 @@ class ProgramResult(Base):
     costs: CostBreakdown = Field(default_factory=CostBreakdown)
     funding_gap: FundingGap | None = None
 
+    #: v1. Kept through the transition so a stored run still renders.
     preference_score: ExplainableScore | None = None
+    ranking: RankingV2 | None = None
+
+    #: What the university *is* — climate, city size, size, campus, workload —
+    #: rather than how well it fit. Labels were frozen at verify time, so a
+    #: changed preference meant crawling everything again (AI_TASK_BRIEF P4);
+    #: the raw attributes let the ranking be recomputed from stored data.
+    catalog_attributes: dict[str, str] = Field(default_factory=dict)
+    #: "registry", "fixture-catalog", "agent:<model>" — an attribute is only as
+    #: trustworthy as where it came from, so it says.
+    catalog_attributes_source: str = ""
 
     admission_deadline: date | None = None
     admission_deadline_timezone: str | None = None

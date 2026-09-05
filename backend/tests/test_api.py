@@ -793,3 +793,93 @@ class TestTheRequestIdIsUsable:
 
         assert response.status_code == 503, "the health check did not take its error path"
         assert seen == ["findme"]
+
+
+class TestRerankAndShortlist:
+    """T8: changing what matters is arithmetic, not another five-minute crawl."""
+
+    def test_reranking_reorders_the_list_without_fetching_anything(
+        self, client, finished_run, monkeypatch
+    ):
+        import app.adapters.fetching as fetching
+
+        _, run = finished_run
+        before = [r["university"] for r in client.get(f"/api/runs/{run['id']}/results").json()]
+
+        def refuse(*args, **kwargs):
+            raise AssertionError("a re-rank must not fetch anything")
+
+        monkeypatch.setattr(fetching.Fetcher, "get", refuse)
+
+        response = client.post(
+            f"/api/runs/{run['id']}/rerank",
+            json={"priorities": ["campus_life", "city_climate", "career"]},
+        )
+        assert response.status_code == 200
+        assert response.json()["rows"] == len(before)
+
+        after = [r["university"] for r in client.get(f"/api/runs/{run['id']}/results").json()]
+        assert after != before
+        assert sorted(after) == sorted(before), "a re-rank reorders, it never drops a row"
+
+    def test_a_rerank_does_not_touch_the_stored_profile_unless_asked(self, client, finished_run):
+        profile, run = finished_run
+        client.post(f"/api/runs/{run['id']}/rerank", json={"priorities": ["career", "campus_life"]})
+        stored = client.get(f"/api/profiles/{profile['id']}").json()
+        assert stored["preferences"]["priorities"] == []
+
+        client.post(
+            f"/api/runs/{run['id']}/rerank",
+            json={"priorities": ["career", "campus_life"], "persist": True},
+        )
+        stored = client.get(f"/api/profiles/{profile['id']}").json()
+        assert stored["preferences"]["priorities"] == ["career", "campus_life"]
+
+    def test_moving_a_slider_switches_the_ranking_to_the_sliders(self, client, finished_run):
+        _, run = finished_run
+        body = client.post(
+            f"/api/runs/{run['id']}/rerank",
+            json={"weights": {**DEMO_PROFILE.weights.model_dump(), "climate_fit": 3.0}},
+        ).json()
+        assert body["weights_source"] == "weights_override"
+
+    def test_the_shortlist_is_balanced_and_says_what_it_could_not_fill(self, client, finished_run):
+        _, run = finished_run
+        body = client.get(f"/api/runs/{run['id']}/shortlist").json()
+        assert len(body["chosen"]) <= body["quotas"]["size"]
+        countries = [r["country"] for r in body["chosen"]]
+        assert all(countries.count(c) <= body["quotas"]["max_per_country"] for c in countries)
+        assert isinstance(body["notes"], list)
+
+    def test_the_shortlist_never_offers_a_rejected_row(self, client, finished_run):
+        _, run = finished_run
+        first = client.get(f"/api/runs/{run['id']}/shortlist").json()["chosen"][0]
+        client.post(
+            f"/api/runs/{run['id']}/results/{first['id']}/decision",
+            json={"decision": "rejected", "reason": "too far from home"},
+        )
+        again = client.get(f"/api/runs/{run['id']}/shortlist").json()["chosen"]
+        assert first["id"] not in [r["id"] for r in again]
+
+    def test_results_can_be_filtered_to_one_bucket(self, client, finished_run):
+        _, run = finished_run
+        rows = client.get(f"/api/runs/{run['id']}/results?bucket=OUT_OF_BUDGET").json()
+        assert rows, "the demo corpus has places this family cannot afford"
+        assert all(r["ranking"]["bucket"] == "OUT_OF_BUDGET" for r in rows)
+
+    def test_results_can_be_sorted_by_what_is_verified(self, client, finished_run):
+        _, run = finished_run
+        rows = client.get(f"/api/runs/{run['id']}/results?sort=coverage").json()
+        coverage = [r["ranking"]["coverage"] for r in rows]
+        assert coverage == sorted(coverage, reverse=True)
+
+    def test_a_row_with_no_readable_cost_is_not_sorted_as_the_cheapest(self, client, finished_run):
+        _, run = finished_run
+        rows = client.get(f"/api/runs/{run['id']}/results?sort=gap").json()
+        computable = [bool(r["funding_gap"] and r["funding_gap"]["computable"]) for r in rows]
+        assert computable == sorted(computable, reverse=True)
+
+    def test_another_tenant_cannot_rerank_this_run(self, client, finished_run):
+        _, run = finished_run
+        assert client.post("/api/runs/does-not-exist/rerank", json={}).status_code == 404
+        assert client.get("/api/runs/does-not-exist/shortlist").status_code == 404

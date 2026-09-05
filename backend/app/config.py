@@ -44,6 +44,13 @@ class Settings(BaseSettings):
     academic_year: str = "2026/27"
     target_currency: str = "USD"
 
+    #: 2 ranks with the non-compensatory geometric mean and the portfolio
+    #: buckets; 1 restores the v1 additive score, byte for byte, so a bad
+    #: release can be rolled back without a migration.
+    ranking_version: int = 2
+    #: How hard an unverified row is discounted: sort_key = fit * coverage**y.
+    ranking_gamma: float = 0.5
+
     #: Worker
     worker_concurrency: int = 2
     worker_poll_seconds: float = 1.0
