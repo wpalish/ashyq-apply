@@ -43,8 +43,14 @@ def grant_case_access(
     profile_id: str,
     order_id: str | None,
     source: str = EntitlementSource.PURCHASE.value,
+    subscription_id: str | None = None,
 ) -> Entitlement:
-    """Idempotent: granting an entitlement that exists returns the existing one."""
+    """Idempotent: granting an entitlement that exists returns the existing one.
+
+    ``subscription_id`` is written here rather than patched in afterwards,
+    because this row *is* the unit of quota spent — a grant that briefly exists
+    without naming what paid for it is a row that can be miscounted.
+    """
     existing = session.scalar(
         select(Entitlement).where(
             Entitlement.organization_id == organization_id,
@@ -61,6 +67,7 @@ def grant_case_access(
         kind=EntitlementKind.CASE_FULL.value,
         source=source,
         order_id=order_id,
+        subscription_id=subscription_id,
     )
     session.add(granted)
     return granted
