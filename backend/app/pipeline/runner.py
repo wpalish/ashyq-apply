@@ -757,7 +757,7 @@ class ResearchRunner:
             # Recomputed from the stored attributes on every assessment, so the
             # v1 score sees the same labels it always did without them having
             # been frozen at verify time.
-            _apply_fit_labels(result, self.profile)
+            apply_fit_labels(result, self.profile)
             result.preference_score = score_result(result, self.profile)
             result.preference_score.components.append(_explanation_component(fit_reason))
             result.ranking = rank_result(result, self.profile, gamma=self.settings.ranking_gamma)
@@ -968,17 +968,11 @@ class ResearchRunner:
         result.user_decision_reason = row.user_decision_reason
         result.user_notes = row.user_notes
         result.decided_at = ensure_utc(row.decided_at)
-        row.payload = result.model_dump(mode="json")
         row.eligibility = result.eligibility.value
         row.admissions_fit = result.admissions_fit.value
         row.funding_fit = result.funding_fit.value
         row.funding_classification = result.best_funding_classification.value
-        ranking = result.ranking
-        if ranking is not None and self.settings.ranking_version >= 2:
-            row.score_total = ranking.sort_key
-            row.bucket = ranking.bucket.value
-        else:
-            row.score_total = result.preference_score.total if result.preference_score else 0.0
+        store_result(row, result, ranking_version=self.settings.ranking_version)
         self.session.add(row)
         if extra_claims:
             self._store_claims(row.id, extra_claims)
@@ -1216,7 +1210,22 @@ _LABELLED_FITS: tuple[tuple[str, str, str], ...] = (
 _FIT_DIMENSIONS = {"climate_fit": "climate", "city_fit": "city", "size_fit": "size"}
 
 
-def _apply_fit_labels(result: ProgramResult, profile: ApplicantProfileIn) -> None:
+def store_result(row: ProgramResultRow, result: ProgramResult, *, ranking_version: int) -> None:
+    """Write the document back, and with it the number the shortlist sorts on.
+
+    One place decides which ranking the sort column carries, so a re-rank
+    through the API and a fresh assessment can never disagree about it.
+    """
+    row.payload = result.model_dump(mode="json")
+    ranking = result.ranking
+    if ranking is not None and ranking_version >= 2:
+        row.score_total = ranking.sort_key
+        row.bucket = ranking.bucket.value
+    else:
+        row.score_total = result.preference_score.total if result.preference_score else 0.0
+
+
+def apply_fit_labels(result: ProgramResult, profile: ApplicantProfileIn) -> None:
     """Grade the stored attributes against the current preferences.
 
     A pure function of data already on the row, so changing a preference and
