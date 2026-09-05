@@ -219,6 +219,24 @@ class Achievement(Base):
 # --- D. Preferences ------------------------------------------------------
 
 
+#: The six groups a ranking weight can belong to. Ranking them is the whole
+#: weighting UI: twelve 0-3 sliders were never touched, so the order below is
+#: what the applicant actually states and what Rank-Order Centroid turns into
+#: weights (docs/v2/AI_TASK_BRIEF.md D8).
+PriorityGroup = Literal["funding", "academic", "country", "city_climate", "career", "campus_life"]
+
+#: Used when ``Preferences.priorities`` is empty. Money first: a place nobody
+#: will pay for is not an option, however good the fit on every other axis.
+DEFAULT_PRIORITIES: tuple[PriorityGroup, ...] = (
+    "funding",
+    "academic",
+    "country",
+    "city_climate",
+    "career",
+    "campus_life",
+)
+
+
 class Preferences(Base):
     preferred_countries: list[Str80] = Field(default_factory=list, max_length=25)
     excluded_countries: list[Str80] = Field(default_factory=list, max_length=25)
@@ -236,6 +254,21 @@ class Preferences(Base):
     safety_priority: Literal["low", "medium", "high"] = "medium"
     diversity_priority: Literal["low", "medium", "high"] = "medium"
     housing_guarantee_priority: Literal["low", "medium", "high"] = "medium"
+    #: Most important first. Empty means DEFAULT_PRIORITIES.
+    priorities: list[PriorityGroup] = Field(default_factory=list, max_length=6)
+    #: What may be sent to an LLM research provider. ``profile_aware`` is only
+    #: ever set by an explicit opt-in with consent text; the default keeps the
+    #: applicant's grades, budget and citizenship out of every outbound prompt.
+    research_privacy: Literal["preferences_only", "profile_aware"] = "preferences_only"
+
+    @field_validator("priorities")
+    @classmethod
+    def _priorities_are_a_ranking(cls, v: list[str]) -> list[str]:
+        # A repeated group would silently take two positions of the centroid
+        # weights, so the same axis would be weighted twice.
+        if len(set(v)) != len(v):
+            raise ValueError("priorities is a ranking: each group appears at most once")
+        return v
 
     @model_validator(mode="after")
     def _no_country_in_both_lists(self) -> Preferences:
@@ -308,6 +341,9 @@ class ApplicantProfileIn(Base):
     preferences: Preferences = Field(default_factory=Preferences)
     funding: FundingNeeds = Field(default_factory=FundingNeeds)
     weights: ScoringWeights = Field(default_factory=ScoringWeights)
+    #: True once the applicant edits ``weights`` in advanced mode; ranking then
+    #: uses those weights instead of the ones derived from ``priorities``.
+    weights_override: bool = False
 
 
 class ApplicantProfile(ApplicantProfileIn):
