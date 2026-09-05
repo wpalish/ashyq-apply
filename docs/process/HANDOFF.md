@@ -8,7 +8,7 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 | | |
 |---|---|
-| Holder | **claude-opus-5** |
+| Holder | nobody — released at [0.8] ready-for-review |
 | Since (UTC) | 2026-09-06 |
 | Branch | `task/0.8-ranking-ui` (exists; created from the predecessor tip `main@c924410`) |
 | HEAD when written | `61df0db4aaaf265aaa154d2e5ead592fa97d2fcb` — the recovery checkpoint `wip: [0.8] preserve the ranking ui …` |
