@@ -185,6 +185,23 @@ def event_loop():
     loop.close()
 
 
+@pytest.fixture(autouse=True)
+def _reset_rate_limiter():
+    """Give every test its own rate-limit budget.
+
+    The limiter is a per-process dict that no test clears, so a suite with
+    enough run-starts eventually trips it and later tests get 429s that have
+    nothing to do with what they are testing. It surfaced as a KeyError in a
+    test that had exhausted the budget of the tests before it, and only in
+    orderings where enough of them ran first.
+    """
+    from app.main import _limiter
+
+    _limiter.hits.clear()
+    yield
+    _limiter.hits.clear()
+
+
 #: The secret the payment fixtures sign webhooks with. Tests that forge a
 #: signature must use this exact value.
 WEBHOOK_SECRET = "whsec-test"

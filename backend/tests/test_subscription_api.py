@@ -73,7 +73,9 @@ def test_unlocking_without_quota_is_a_conflict(paid_client, case_id) -> None:
 
 
 def test_a_402_tells_the_frontend_there_is_no_quota(paid_client, case_id) -> None:
-    run = paid_client.post("/api/runs", json={"profile_id": case_id, "demo_mode": True}).json()
+    started = paid_client.post("/api/runs", json={"profile_id": case_id, "demo_mode": True})
+    assert started.status_code == 202, started.text
+    run = started.json()
     body = paid_client.get(f"/api/runs/{run['id']}/claims").json()
     assert body["code"] == "payment_required"
     assert body["subscription_cases_left"] is None
