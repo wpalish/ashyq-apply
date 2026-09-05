@@ -134,7 +134,7 @@ def score_result(result: ProgramResult, profile: ApplicantProfileIn) -> Explaina
             "cost of attendance",
         )
     else:
-        ceiling, note, refusal = _comparable_ceiling(profile, gap.gap.currency)
+        ceiling, note, refusal = comparable_ceiling(profile, gap.gap.currency)
         if refusal:
             add(
                 "Affordability",
@@ -201,7 +201,7 @@ def score_result(result: ProgramResult, profile: ApplicantProfileIn) -> Explaina
         )
 
     # --- programme quality via ranking ------------------------------------
-    rank = _best_rank(result)
+    rank = best_rank(result)
     if rank is None:
         add(
             "Programme standing",
@@ -349,7 +349,7 @@ def _label_to_raw(label: str) -> float | None:
     return {"strong": 1.0, "good": 0.75, "acceptable": 0.5, "weak": 0.25, "poor": 0.1}.get(label)
 
 
-def _comparable_ceiling(
+def comparable_ceiling(
     profile: ApplicantProfileIn, target_currency: str
 ) -> tuple[float | None, str, str]:
     """The family's ceiling, expressed in the currency the gap is in.
@@ -397,7 +397,25 @@ def _comparable_ceiling(
     return converted.amount, note, ""
 
 
-def _best_rank(result: ProgramResult) -> int | None:
+def requirement_margin(result: ProgramResult) -> float | None:
+    """Average relative room above the published numeric minimums, or None.
+
+    None means "met, but nothing numeric to measure": an honest absence, not a
+    zero margin. Both the v1 admissions fit and the v2 academic axis read this
+    so the two can never disagree about the same requirement checks.
+    """
+    margins = [
+        (c.applicant_value - c.published_value) / c.published_value
+        for c in result.requirement_checks
+        if c.status == EligibilityStatus.MET
+        and isinstance(c.applicant_value, int | float)
+        and isinstance(c.published_value, int | float)
+        and c.published_value
+    ]
+    return sum(margins) / len(margins) if margins else None
+
+
+def best_rank(result: ProgramResult) -> int | None:
     best: int | None = None
     for r in result.rankings:
         digits = "".join(ch for ch in r.position.split("-")[0] if ch.isdigit())
@@ -444,22 +462,14 @@ def admissions_fit_for(
             "factors beyond the published criteria.",
         )
 
-    met = [c for c in result.requirement_checks if c.status == EligibilityStatus.MET]
-    margins = [
-        (c.applicant_value - c.published_value) / c.published_value
-        for c in met
-        if isinstance(c.applicant_value, int | float)
-        and isinstance(c.published_value, int | float)
-        and c.published_value
-    ]
-    if not margins:
+    avg = requirement_margin(result)
+    if avg is None:
         return (
             AdmissionsFit.PLAUSIBLE_FIT,
             "Formal requirements are met, but there are no numeric published thresholds to "
             "compare the profile against.",
         )
 
-    avg = sum(margins) / len(margins)
     strength = _activity_strength(profile)
     if avg >= 0.12 and strength >= 0.5:
         return (
