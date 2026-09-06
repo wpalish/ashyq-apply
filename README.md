@@ -13,10 +13,18 @@ material value on screen traces back to the page it was read from.
 
 > **Status: release candidate, not publicly deployed.** Authentication, tenant
 > isolation, durable PostgreSQL jobs, CI, backups and production images exist
-> and are tested. The remaining release blockers are a real container/deploy
-> run and low live programme-page recall (1 of 10 canary institutions). See
-> [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md) for the honest position and
-> [`RELEASE_CHECKLIST.md`](RELEASE_CHECKLIST.md) for what is left.
+> and are tested, and the container stack has now been run for real — see
+> [`docs/DOCKER_VERIFICATION.md`](docs/DOCKER_VERIFICATION.md). Since the
+> hardening phases the product has also gained non-compensatory ranking v2, a
+> community module, and payments — payments are **off by default** and the
+> adapter has never spoken to a live ApiPay account.
+>
+> The remaining release blockers are an external deployment, a lawyer for the
+> privacy policy and terms, live programme-page recall (2 of 9 canary
+> institutions), and one red end-to-end test that has kept CI on `main` failing
+> since 2026-09-04. See [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md) for the
+> honest position and [`RELEASE_CHECKLIST.md`](RELEASE_CHECKLIST.md) for what is
+> left.
 
 The product answers one question — *which universities can I get into, and which
 of those will actually pay for it?* — and it answers it with a source, an
@@ -134,21 +142,22 @@ backend/
 │   │   ├── cost/            Fee pages, HTML and PDF
 │   │   ├── documents/       Document checklists
 │   │   └── government/      Post-study work rules
-│   ├── jobs/            Durable queue (store.py) and the worker process
+│   ├── jobs/            Durable queue (store.py), the worker, payment reconcile
 │   ├── pipeline/        State machine, resumable per stage
-│   ├── api/             FastAPI routes
+│   ├── payments/        Orders, entitlements, subscriptions, the ApiPay adapter
+│   ├── api/             FastAPI routes (research, account, social, billing, admin)
 │   ├── export/          CSV / JSON / XLSX, provenance included
 │   ├── models/          SQLAlchemy + Alembic (PostgreSQL production, SQLite local)
 │   └── corpus/          The bundled synthetic demo corpus + its generator
-└── tests/               547 tests
+└── tests/               1110 tests
 frontend/
 ├── src/
-│   ├── screens/         The nine workflow screens
-│   ├── components/      Primitives + the university detail drawer
-│   ├── lib/             Store, formatting, immutable helpers
+│   ├── screens/         The workflow screens, plus community and legal
+│   ├── components/      Primitives, the university detail drawer, the paywall
+│   ├── lib/             Store, formatting, i18n, immutable helpers
 │   ├── api/             Typed client
 │   └── styles/          Design tokens + component styles
-└── e2e/                 50 Playwright tests (desktop + mobile, including axe)
+└── e2e/                 74 Playwright tests (desktop + mobile, including axe)
 ```
 
 ### The claim is the unit of truth
@@ -294,8 +303,8 @@ cd backend
 python scripts/pg.py --print-uri              # a local PostgreSQL, no install needed
 python scripts/pg.py .venv/bin/pytest         # run the suite against PostgreSQL
 python scripts/pg.py .venv/bin/python scripts/crash_test.py   # SIGKILL recovery proof
-./.venv/bin/python -m pytest                  # 547 tests
-./.venv/bin/python -m pytest --cov=app        # with coverage (89%)
+./.venv/bin/python -m pytest                  # 1110 tests
+./.venv/bin/python -m pytest --cov=app        # with coverage (93%)
 ./.venv/bin/python -m ruff check app tests    # lint
 ./.venv/bin/python -m mypy app                # type check
 ./.venv/bin/python seed_demo.py --approve     # run the whole pipeline on the CLI
