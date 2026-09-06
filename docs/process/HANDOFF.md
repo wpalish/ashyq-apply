@@ -8,21 +8,22 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 | | |
 |---|---|
-| Holder | **claude-opus-5** |
-| Since (UTC) | 2026-09-06 |
-| Branch | `fix/shortlist-columns`, originally from `origin/main@2be6b55`; reconciling with `origin/main@85352b5` |
-| HEAD when written | `d6e59d5` plus the conflict-resolution merge described in §5 |
+| Holder | **gpt-6-astra** |
+| Since (UTC) | 2026-09-06 16:59:45 UTC |
+| Branch | `fix/shortlist-columns`, merged normally with `origin/main@85352b5` |
+| HEAD when written | `4a7171c` (green recovery/review fix; this handoff commit follows) |
 | Origin main when checked | `85352b5` — PR #2 (stage 0), PR #3 (payments), PR #4 (docs catch-up), and PR #5 (the saved-locator e2e fix) are **merged** |
-| Previous holder | nobody on paper. gpt-6-astra made four commits (`0815fa1`, `e4dfbcf`, `7ecfaf5`, `f88f77d`) without taking the baton or writing §1/§2/§11; its docker note is in §7 |
+| Previous holder | claude-opus-5; its PR #6 patch was reviewed, corrected, and reconciled with current main before this takeover |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
 
 **`[0.8]` is `merged`** — PR #2 landed stage 0 on main, and PR #3 (payments) landed on top.
 
-Current: a one-commit fix-forward on `fix/shortlist-columns` — **ready-for-review (PR #6)** — then `[1.1]`.
+Current: the fix-forward on `fix/shortlist-columns` is **ready-for-review (PR #6)** at `4a7171c` plus
+this handoff commit — then `[1.1]` after the owner merge.
 PR #4 (documentation catch-up) and PR #5 (the red saved-locator e2e test) landed while PR #6 was open;
-the only merge conflict is this shared handoff file and is being reconciled without rewriting history.
+the only merge conflict was this shared handoff file and was resolved without rewriting history.
 The last [0.8] commit
 `14d556b` was pushed *after* the owner merged PR #2, so it never reached main: the shortlist on main
 today renders `Confirmed` and `Bucket` underneath the pinned decision column, where nobody can read
@@ -53,6 +54,7 @@ manufacture compliant history. [0.4] was committed before [0.3].
 | [0.8] | `0affab6` | Preferences disclaimer restored, per-table captions, e2e helper opens the set-aside sections; 67 e2e passed. |
 | [0.8] fix-forward | `c220095` | Re-applied the orphaned shortlist-width fix after PR #2 merged. |
 | [0.8] handoff | `d6e59d5` | Published PR #6 and pointed §5 at review, then `[1.1]`. |
+| [0.8] review fix | `4a7171c` | Merged current main, restored the independent Confirmed column, protected longest-chip geometry, regenerated screenshots, and passed current gates/re-review. |
 
 ## 4. Half-done / uncommitted at the moment of writing
 
@@ -210,9 +212,8 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-1. Finish Prompt C recovery for **PR #6**: commit and push the normal merge of
-   `origin/main@85352b5`, the review fixes, regenerated screenshots, current gate evidence, and the
-   reconciled handoff. Re-check GitHub CI; the owner then squash-merges PR #6.
+1. Re-check GitHub CI for **PR #6** at `4a7171c` plus the handoff commit; all local gates and the
+   independent review are green. The owner then squash-merges PR #6.
 2. **`[1.1] Интерфейс и схемы`** on `task/1.1-research-agent`, branched from `main` after PR #6 (no predecessor
    exception needed any more — stage 0 is merged):
    - `backend/app/adapters/research/base.py`: `Protocol ResearchAgent` with `discover`,
@@ -398,3 +399,4 @@ the I4/T3 wording question is resolved in §7 and must not be reopened.
 | 2026-09-06 | claude-opus-5 | `61df0db` → `0affab6` | Finished [0.8]: red test fixed, bucket vocabulary contracted, preferences disclaimer restored, per-table captions, e2e helper opens the set-aside sections. All gates green (892 backend / 141 unit / 67 e2e). §7 I4-T3 conflict resolved by owner delegation. Next: open the PR. |
 | 2026-09-06 | claude-opus-5 | `9ee7078` → `9ee7078` | Installed `gh`, authenticated it from the stored git credential, opened **PR #2** for stage 0. Baton stays with nobody; next is review. |
 | 2026-09-06 | claude-opus-5 | `f88f77d` → `fix/shortlist-columns` | Prompt A. Found PR #2 and #3 merged, `[0.8]`'s last commit `14d556b` orphaned outside the merge, Codex's docker branch 40 commits behind main and unlogged, and the e2e suite red on clean main from the §9 database trap. Re-applied the three shortlist hunks on the new base; 164 unit and 73 e2e green. |
+| 2026-09-06 16:59:45 UTC | gpt-6-astra | `d6e59d5` → `4a7171c` + this handoff commit | Prompt C completed: initial tree was clean; fetched PRs #4/#5, merged `origin/main@85352b5` without rewriting history, reviewed PR #6, fixed separate-column semantics and longest-chip overlap coverage, regenerated screenshots, ran full gates, recorded the review on the PR, and took the baton. |
