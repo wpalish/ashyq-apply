@@ -8,6 +8,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useStore } from '@/lib/store';
+import { PaywallNotice } from '@/components/PaywallNotice';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { AccountMenu } from '@/components/AccountMenu';
 import { ProfileScreen } from '@/screens/ProfileScreen';
@@ -425,6 +426,10 @@ export default function App() {
             </div>
           </div>
         )}
+
+        {/* Mounted once: the paywall is global state, raised by whichever
+            screen asked for locked material. */}
+        <PaywallNotice />
 
         <main className="screen">
           {/* Scoped to the screen, so one broken screen cannot take the

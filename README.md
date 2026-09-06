@@ -367,6 +367,73 @@ Copy `.env.example` to `backend/.env`. No secrets are required to run anything.
 
 ---
 
+## Payments
+
+The first run of a case is free and deliberately narrower. One payment unlocks
+that case permanently for the organization that owns it.
+
+| | Free | Case unlocked |
+|---|---|---|
+| Run coverage | `candidate_limit` capped at 5 | full |
+| Shortlist | top 5 rows: programme, institution, degree, score | every row, every field |
+| Evidence, claims, conflicts, open questions | `402` | shown |
+| Export, document collection | `402` | available |
+| Summary counts | shown | shown |
+
+Paying does not widen the run that already happened — a free run really did
+fetch less. It queues a fresh full run for the case.
+
+**Provider:** Kaspi Pay through [ApiPay](https://apipay.kz), either as an
+invoice pushed to the payer's phone or as a QR. Two independent sources settle
+an order: ApiPay's signed webhook, and a reconciler on the durable queue that
+polls in case the webhook never arrives. Both converge on one idempotent
+writer, so a replayed or out-of-order event grants exactly once.
+
+**Endpoints:** `GET /api/billing/pricing`, `GET /api/billing/entitlements`,
+`POST /api/billing/orders`, `GET /api/billing/orders/{id}`,
+`POST /api/billing/orders/{id}/cancel`, and the callback
+`POST /webhooks/apipay`, whose public HTTPS URL must be registered in the
+ApiPay dashboard.
+
+**Off by default.** With `UNIMATCH_PAYMENTS_ENABLED=false` — the default —
+there is no paywall, no truncation and every case is fully open; the product
+behaves exactly as it did before payments existed. A test asserts that.
+Configuration lives in `.env.example` under *Payments*.
+
+### Schools
+
+Schools do not buy one case at a time. They sign a contract, pay an invoice by
+bank transfer, and receive **a quota of cases for a term**. ApiPay is not
+involved: money arrives outside the product, and the product's job is to record
+what was sold and spend it correctly.
+
+* Opening a case spends **one** unit, once. Re-running or re-reading it spends
+  nothing more. A school with quota never sees a price.
+* When the quota runs out, or the term ends, the organization falls back to the
+  per-case price above. Nobody is stuck mid-work.
+* **An early renewal queues rather than burning what is left.** A school that
+  renews before its term ends holds two subscriptions; the new one starts the
+  moment the old is exhausted by usage *or* reaches its end date.
+
+Because a queued subscription's start is unknown when it is sold, it carries a
+duration rather than a start date, and its term begins when the school opens
+its first case under it.
+
+Recording a paid subscription is a CLI step, not a network endpoint — it needs
+database access and happens about once a year per school:
+
+```bash
+python scripts/grant_subscription.py --org <slug> --cases 50 --days 365 \
+    --invoice "Договор 14/26"
+python scripts/grant_subscription.py --list
+python scripts/grant_subscription.py --list --org <slug>
+python scripts/grant_subscription.py --cancel <subscription-id>
+```
+
+Omitting `--cases` records an unlimited contract.
+
+---
+
 ## Limitations
 
 These are real, and the UI states them rather than hiding them.
@@ -397,7 +464,12 @@ These are real, and the UI states them rather than hiding them.
    job and its output is a real advantage for minutes-long jobs. Very high job
    rates would eventually want a broker; the interface is ready for one.
 8. **Demo data is synthetic**, as described above.
-9. **No portal automation.** Nothing is uploaded, submitted, signed or paid for.
+9. **No portal automation.** Nothing is uploaded, submitted, signed or paid for
+   on the applicant's behalf. The only payment in the product is the customer
+   paying us to unlock their own case.
+10. **The payment adapter has never spoken to ApiPay.** No merchant account
+    exists yet, so every payment claim rests on contract tests written against
+    ApiPay's published OpenAPI document, not on an observed transaction.
 
 ---
 

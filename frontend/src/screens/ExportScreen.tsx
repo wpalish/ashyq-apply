@@ -15,7 +15,8 @@ import { useStore } from '@/lib/store';
 const CONFIRM_WORD = 'DELETE';
 
 export function ExportScreen() {
-  const { run, results, summary, savedProfile, capabilities, deleteEverything } = useStore();
+  const { run, results, summary, savedProfile, capabilities, deleteEverything, exportShortlist } =
+    useStore();
   const [confirm, setConfirm] = useState('');
   const [exported, setExported] = useState<Record<string, unknown> | null>(null);
   const [deleted, setDeleted] = useState(false);
@@ -48,22 +49,28 @@ export function ExportScreen() {
           title="Export the shortlist"
           hint="CSV for a spreadsheet, JSON for everything including every claim, XLSX for a three-sheet workbook: shortlist, evidence, and open questions."
         >
+          {/* Buttons, not links: a plain <a href> bypasses the API client, so a
+              402 would open raw JSON in a tab instead of raising the paywall. */}
           <div className="row">
             {(['csv', 'json', 'xlsx'] as const).map((fmt) => (
-              <a
+              <button
                 key={fmt}
+                type="button"
                 className="btn"
-                href={api.exportUrl(run.id, fmt)}
-                download
+                onClick={() => exportShortlist(fmt)}
                 data-testid={`export-${fmt}`}
               >
                 Download .{fmt}
-              </a>
+              </button>
             ))}
             {approved > 0 && (
-              <a className="btn btn--primary" href={api.exportUrl(run.id, 'xlsx', 'approved')} download>
+              <button
+                type="button"
+                className="btn btn--primary"
+                onClick={() => exportShortlist('xlsx', 'approved')}
+              >
                 Approved only (.xlsx)
-              </a>
+              </button>
             )}
           </div>
           {capabilities?.demo_mode && (

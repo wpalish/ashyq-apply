@@ -76,7 +76,13 @@ def join_as(client: TestClient, slug: str, **profile) -> str:
         },
     )
     assert registered.status_code == 201, registered.text
-    payload = {"status": None, "target_city": "", "target_major": "", "bio": "", "universities": []}
+    payload: dict[str, object] = {
+        "status": None,
+        "target_city": "",
+        "target_major": "",
+        "bio": "",
+        "universities": [],
+    }
     payload.update(profile)
     saved = client.put("/api/social/me", json=payload)
     assert saved.status_code == 200, saved.text
@@ -129,21 +135,30 @@ class TestWhoMayWriteFirst:
 
         # The person who answered may now write privately...
         sign_in(client, "answerer")
-        assert client.post(f"/api/social/messages/{asker}", json={"body": "Могу помочь"}).status_code == 201
+        assert (
+            client.post(f"/api/social/messages/{asker}", json={"body": "Могу помочь"}).status_code
+            == 201
+        )
         client.post("/api/auth/logout")
 
         # ...and so may the person whose post was answered.
         sign_in(client, "asker")
-        assert client.post(f"/api/social/messages/{answerer}", json={"body": "Спасибо!"}).status_code == 201
+        assert (
+            client.post(f"/api/social/messages/{answerer}", json={"body": "Спасибо!"}).status_code
+            == 201
+        )
 
     def test_anyone_means_anyone(self, client):
         open_person = join_as(client, "open-person", dm_policy="anyone")
         client.post("/api/auth/logout")
         join_as(client, "some-stranger")
 
-        assert client.post(
-            f"/api/social/messages/{open_person}", json={"body": "Здравствуйте"}
-        ).status_code == 201
+        assert (
+            client.post(
+                f"/api/social/messages/{open_person}", json={"body": "Здравствуйте"}
+            ).status_code
+            == 201
+        )
 
     def test_nobody_means_nobody_even_after_a_public_thread(self, client):
         join_as(client, "quiet", dm_policy="nobody")
@@ -174,12 +189,19 @@ class TestWhoMayWriteFirst:
         client.put(
             "/api/social/me",
             json={
-                "status": None, "target_city": "", "target_major": "", "bio": "",
-                "universities": [], "dm_policy": "nobody",
+                "status": None,
+                "target_city": "",
+                "target_major": "",
+                "bio": "",
+                "universities": [],
+                "dm_policy": "nobody",
             },
         )
         # The existing thread still works, in both directions.
-        assert client.post(f"/api/social/messages/{guest}", json={"body": "Отвечаю"}).status_code == 201
+        assert (
+            client.post(f"/api/social/messages/{guest}", json={"body": "Отвечаю"}).status_code
+            == 201
+        )
         client.post("/api/auth/logout")
         sign_in(client, "guest2")
         assert client.post(f"/api/social/messages/{host}", json={"body": "И я"}).status_code == 201
@@ -189,8 +211,12 @@ class TestWhoMayWriteFirst:
         response = client.put(
             "/api/social/me",
             json={
-                "status": None, "target_city": "", "target_major": "", "bio": "",
-                "universities": [], "dm_policy": "friends-of-friends",
+                "status": None,
+                "target_city": "",
+                "target_major": "",
+                "bio": "",
+                "universities": [],
+                "dm_policy": "friends-of-friends",
             },
         )
         assert response.status_code == 422
@@ -213,7 +239,9 @@ class TestWhoMayWriteFirst:
 
     def test_you_cannot_message_yourself(self, client):
         me = join_as(client, "solo", dm_policy="anyone")
-        assert client.post(f"/api/social/messages/{me}", json={"body": "Заметка"}).status_code == 400
+        assert (
+            client.post(f"/api/social/messages/{me}", json={"body": "Заметка"}).status_code == 400
+        )
 
 
 class TestTheConversation:
@@ -269,9 +297,10 @@ class TestTheConversation:
         ainur, _ = self._pair(client)
         assert client.post(f"/api/social/messages/{ainur}", json={"body": "   "}).status_code == 422
         long_body = "x" * (MESSAGE_MAX_CHARS + 1)
-        assert client.post(
-            f"/api/social/messages/{ainur}", json={"body": long_body}
-        ).status_code == 422
+        assert (
+            client.post(f"/api/social/messages/{ainur}", json={"body": long_body}).status_code
+            == 422
+        )
 
     def test_the_inbox_is_closed_to_strangers(self, client):
         assert client.get("/api/social/messages").status_code == 401

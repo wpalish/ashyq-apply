@@ -12,6 +12,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Response
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
+from app.api.paywall import access_for_run, require_full_access
 from app.api.tenancy import owned_run
 from app.config import get_settings
 from app.db import get_session
@@ -19,6 +20,7 @@ from app.domain.enums import Bucket, UserDecision
 from app.domain.ranking_v2 import Quotas, ShortlistCandidate, build_shortlist, rank_result
 from app.export import calendar, tabular
 from app.models import ApplicantProfileRow, AuditEvent, ClaimRow, ConflictRow, ProgramResultRow
+from app.payments.entitlements import free_view, truncate_shortlist
 from app.pipeline.runner import apply_fit_labels, store_result
 from app.schemas.profile import (
     ApplicantProfileIn,
@@ -106,7 +108,7 @@ def list_results(
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
 ) -> list[ProgramResult]:
-    owned_run(session, run_id, principal)
+    _profile_id, allowed = access_for_run(session, run_id, principal)
     rows = _results(
         session,
         run_id,
@@ -116,7 +118,14 @@ def list_results(
         country=country,
         bucket=bucket,
     )
-    return _sorted([ProgramResult.model_validate(r.payload) for r in rows], sort)
+    results = _sorted([ProgramResult.model_validate(r.payload) for r in rows], sort)
+    if allowed:
+        return results
+    # Truncated, not refused: a free user must see that results exist and
+    # roughly what they are, or there is nothing to buy. Cut after sorting, so
+    # the visible rows are the top of the ranking rather than an arbitrary slice.
+    settings = get_settings()
+    return [free_view(r) for r in truncate_shortlist(results, settings.free_shortlist_rows)]
 
 
 @router.get("/summary", response_model=ShortlistSummary)
@@ -153,7 +162,7 @@ def get_result(
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
 ) -> ProgramResult:
-    owned_run(session, run_id, principal)
+    require_full_access(session, run_id, principal)
     row = session.get(ProgramResultRow, result_id)
     if row is None or row.run_id != run_id:
         raise HTTPException(404, "Result not found")
@@ -264,7 +273,7 @@ def list_claims(
     at once; the old cap of 2000 was silent, so a large run simply lost the
     tail with nothing to say it had.
     """
-    owned_run(session, run_id, principal)
+    require_full_access(session, run_id, principal)
     q = session.query(ClaimRow).filter(ClaimRow.run_id == run_id)
     if result_id:
         q = q.filter(ClaimRow.result_id == result_id)
@@ -283,7 +292,7 @@ def list_conflicts(
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
 ) -> list[dict]:
-    owned_run(session, run_id, principal)
+    require_full_access(session, run_id, principal)
     rows = session.query(ConflictRow).filter(ConflictRow.run_id == run_id).all()
     return [{"id": c.id, "result_id": c.result_id, **c.payload} for c in rows]
 
@@ -295,7 +304,7 @@ def open_questions(
     session: Session = Depends(get_session),
 ) -> list[dict]:
     """Everything the pipeline could not settle from official sources."""
-    owned_run(session, run_id, principal)
+    require_full_access(session, run_id, principal)
     out: list[dict] = []
     for row in _results(session, run_id):
         result = ProgramResult.model_validate(row.payload)
@@ -336,7 +345,9 @@ def deadlines_ics(
     deadline produces no event rather than a placeholder somebody might plan
     around.
     """
-    owned_run(session, run_id, principal)
+    # An export of every confirmed deadline is paid material, exactly as
+    # export.{fmt} is.
+    require_full_access(session, run_id, principal)
     results = [ProgramResult.model_validate(r.payload) for r in _results(session, run_id)]
     body = calendar.to_ics(results, run_id=run_id, now=datetime.now(UTC))
     return Response(
@@ -358,7 +369,9 @@ def deadlines(
     session: Session = Depends(get_session),
 ) -> list[dict]:
     """The nearest deadlines, soonest first, with passed ones marked."""
-    owned_run(session, run_id, principal)
+    # Spans every result, including the rows a free tier does not show, so it
+    # would otherwise leak past the truncated shortlist.
+    require_full_access(session, run_id, principal)
     results = [ProgramResult.model_validate(r.payload) for r in _results(session, run_id)]
     return calendar.upcoming(results, today=datetime.now(UTC).date(), limit=limit)
 
@@ -371,6 +384,7 @@ def export(
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
 ) -> Response:
+    require_full_access(session, run_id, principal)
     run = owned_run(session, run_id, principal)
     # The filter goes into the Content-Disposition header, so it is validated
     # against the enum rather than trusted: `?decision=approved" ; x-injected="1`
@@ -514,7 +528,10 @@ def shortlist(
     Twenty ambitious options ranked by fit is a list nobody can act on, so the
     quotas are filled first and any shortfall is stated in `notes`.
     """
-    owned_run(session, run_id, principal)
+    # Returns whole ProgramResult rows, so without this it is a way round the
+    # truncated shortlist. Not truncated here instead: cutting a
+    # quota-balanced portfolio to five rows would make its own notes untrue.
+    require_full_access(session, run_id, principal)
     quotas = Quotas(
         size=size,
         min_well_placed=min_well_placed,

@@ -852,8 +852,10 @@ def _blocked_either_way(session: Session, one: str, other: str) -> bool:
 
 def _hidden_from(session: Session, user_id: str):
     """The ids this person must not be shown, for a NOT IN."""
-    return session.query(Block.blocked_id).filter(Block.blocker_id == user_id).union(
-        session.query(Block.blocker_id).filter(Block.blocked_id == user_id)
+    return (
+        session.query(Block.blocked_id)
+        .filter(Block.blocker_id == user_id)
+        .union(session.query(Block.blocker_id).filter(Block.blocked_id == user_id))
     )
 
 

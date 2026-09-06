@@ -172,3 +172,38 @@ captures.
   a stated deployment model would be speculative.
 - **No portal automation of any kind.** Out of scope by the specification, and
   the boundary is stated in the UI rather than merely omitted.
+
+## Payments
+
+- **4990 ₸ is a placeholder.** It is the configured default for
+  `UNIMATCH_CASE_UNLOCK_PRICE_KZT` and has not been confirmed as the price the
+  product will launch at. It changes in `.env`, not in code.
+- **The adapter has never spoken to ApiPay.** No merchant account exists yet.
+  Every payment claim rests on contract tests written against ApiPay's
+  published OpenAPI document, read on 2026-09-04 — not on an observed
+  transaction. Field names, status vocabulary and the webhook body are as that
+  document defines them; if the live service differs, the adapter is wrong.
+- **Our own ApiPay tariff must stay active.** `tariff_inactive` is a 403 that
+  stops every customer paying, and nothing in the product can work around it.
+- **A free run is capped at 5 candidates.** Chosen so an unpaid case cannot
+  cost a full crawl, not from a measurement of what converts.
+- **Refunds are operated from the ApiPay dashboard.** The provider supports
+  them; we deliberately built no UI for them in phase 1.
+- **Organization subscriptions are built, as a quota rather than blanket
+  access.** Phase 1 had reserved an organization-wide entitlement meaning "this
+  school sees everything"; phase 2 removed it, because a quota grants the right
+  to spend rather than the right to see. Anything written against that earlier
+  shape is out of date.
+- **The subscription price list is not in the product.** It only records what
+  was sold. Nothing here quotes a school, and nothing validates that the number
+  in `--cases` matches an invoice.
+- **An expired term burns whatever quota it still held.** That is what "until
+  the term ends" means; only exhaustion-then-renewal preserves value, and it
+  does so by starting the next subscription rather than carrying anything over.
+- **A school's term starts when it opens its first case, not when the invoice
+  was paid.** A queued renewal cannot know its start date at sale time, and
+  using two different rules for first and subsequent subscriptions would need
+  two activation paths that must agree.
+- **Two subscriptions sold in the same microsecond have undefined order.**
+  Grants are manual CLI actions, so this cannot happen in practice; the tie is
+  broken by a random id if it ever does.

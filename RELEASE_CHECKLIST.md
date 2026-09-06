@@ -179,6 +179,23 @@ was written and had simply not been re-tried.
   cannot be installed without your password. The files are written; they have
   never been executed.
 * **Any external deployment**, domain or billing.
+* **Payments cannot go live without you.** Specifically:
+  1. an ApiPay account with Kaspi Pay connected;
+  2. `UNIMATCH_APIPAY_API_KEY` and `UNIMATCH_APIPAY_WEBHOOK_SECRET` in the
+     deployment environment, then `UNIMATCH_PAYMENTS_ENABLED=true` and
+     `UNIMATCH_PAYMENTS_PROVIDER=apipay`;
+  3. the public HTTPS URL of `POST /webhooks/apipay` registered in the ApiPay
+     dashboard — which depends on the deployment above;
+  4. confirmation of the price; `4990 ₸` is a placeholder default;
+  5. one end-to-end payment of the real price, verified in both the ApiPay
+     dashboard and our `payment_events` table. Until that has happened, the
+     payment path is proven only by contract tests.
+* **School subscriptions need two things from you:**
+  1. the price list and standard term — the product records what was sold and
+     never quotes anyone;
+  2. whoever sells must be able to reach a shell with database access, because
+     recording a paid subscription is `scripts/grant_subscription.py` and
+     deliberately not a network endpoint.
 * **A lawyer to read the privacy policy and terms** (gate 87). They are honest
   drafts, and the product will be used by applicants under 18 while asking
   nobody's age — that is a decision for a person, not for this repository.

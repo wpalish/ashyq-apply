@@ -64,6 +64,38 @@ attests, pays, uploads to a portal or impersonates a recommender.
 - Application logs and audit events contain identifiers and actions, not names,
   scores, citizenship, passwords or source-page bodies.
 
+## Payments
+
+- `POST /webhooks/apipay` is the only unauthenticated write endpoint in the
+  service. It caps the body at 64 KiB before parsing, verifies
+  `X-Webhook-Signature` as HMAC-SHA256 over the raw bytes with
+  `hmac.compare_digest`, and answers an invalid signature with a bare `401`
+  that says nothing about why.
+- An unrecognised event type is recorded and ignored; an unknown invoice is
+  acknowledged so the provider stops retrying, and acts on nothing.
+- A replayed webhook grants exactly once. `apply_status` is the single writer,
+  and it is idempotent and indifferent to arrival order.
+- **The price is server-side only.** The create-order request has no amount
+  field; the amount comes from configuration. A test asserts that sending one
+  changes nothing.
+- The payer's phone is stored masked (`8707***4455`) and never enters a log
+  line, a URL, an audit detail or an error body. A provider validation failure
+  names the fields it rejected, never their values.
+- `apipay_api_key` and `apipay_webhook_secret` are `SecretStr` and do not
+  render in a settings dump. The API key travels in a header, never a URL.
+- Unlocking is authorised through the same `owned_profile` check as everything
+  else, so an order against another organization's case answers `404`.
+- Subscription quota is spent by exactly one function, `consume_for_case`,
+  which takes a row lock (`SELECT … FOR UPDATE`, PostgreSQL) before deciding.
+  A test asserts the lock by holding it in one transaction and requiring a
+  second with a 500ms `lock_timeout` to fail; with the lock removed that test
+  fails, which is the only reason to trust it.
+- Remaining quota is counted from the entitlement rows that spent it, never
+  from a stored counter, so it cannot drift from what was actually granted.
+- Granting a subscription is a CLI action requiring database access. It is
+  deliberately not a network endpoint: it happens about once a year per school
+  and an admin route would be a privileged surface bought for nothing.
+
 ## Data lifecycle
 
 - Deleting an applicant case cascades through its runs, results, evidence,

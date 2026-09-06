@@ -11,6 +11,7 @@ from pydantic import BaseModel, Field
 from sqlalchemy import case, func
 from sqlalchemy.orm import Session
 
+from app.api.paywall import require_full_access
 from app.api.tenancy import owned_profile, owned_run
 from app.config import get_settings
 from app.db import get_session
@@ -25,6 +26,7 @@ from app.models import (
     ResearchRun,
 )
 from app.models.base import ensure_utc
+from app.payments.entitlements import has_full_access
 from app.pipeline.state import IN_PROGRESS_STAGES, RunState, is_lease_expired
 from app.security import Principal, get_principal
 
@@ -236,13 +238,38 @@ def start_run(
             "Wait for it to finish, or cancel it first.",
         )
 
+    # Quota is spent only after the guards above: a replayed request or a
+    # double click must not cost a school one of its cases.
+    #
+    # An unpaid case is not merely shown less — it is allowed to fetch less, so
+    # a free run costs us little. Paying afterwards cannot widen this run; it
+    # queues a new one.
+    full_access = has_full_access(session, principal.organization_id, payload.profile_id)
+    if not full_access:
+        # A school with quota gets a full run without being asked. The unit is
+        # spent here, once, when the case is actually opened.
+        from app.payments.subscriptions import consume_for_case
+
+        full_access = consume_for_case(
+            session,
+            organization_id=principal.organization_id,
+            profile_id=payload.profile_id,
+        ).granted
+
+    candidate_limit = payload.candidate_limit
+    if not full_access:
+        candidate_limit = min(
+            candidate_limit or settings.free_candidate_limit, settings.free_candidate_limit
+        )
+
     run = ResearchRun(
         client_request_key=idempotency_key,
         profile_id=payload.profile_id,
         stage=PipelineStage.QUEUED.value,
         demo_mode=settings.demo_mode if payload.demo_mode is None else payload.demo_mode,
-        candidate_limit=payload.candidate_limit,
+        candidate_limit=candidate_limit,
         verify_limit=payload.verify_limit,
+        access_tier="full" if full_access else "free",
         stage_state=RunState.load(None).dump(),
     )
     session.add(run)
@@ -447,6 +474,7 @@ def collect_documents(
     A finished job for the same key is therefore a deliberate no-op, not a
     lost request: the documents it collected are still the right ones.
     """
+    require_full_access(session, run_id, principal)
     run = owned_run(session, run_id, principal)
     approved_ids = sorted(
         row.id

@@ -77,16 +77,16 @@ def _strip_jpeg(data: bytes) -> bytes:
             break
         marker = data[i + 1]
         if marker == 0xD8 or 0xD0 <= marker <= 0xD7 or marker == 0x01:
-            out += data[i:i + 2]
+            out += data[i : i + 2]
             i += 2
             continue
         if marker == 0xD9:  # EOI
-            out += data[i:i + 2]
+            out += data[i : i + 2]
             break
         if i + 3 >= end:
             out += data[i:]
             break
-        length = int.from_bytes(data[i + 2:i + 4], "big")
+        length = int.from_bytes(data[i + 2 : i + 4], "big")
         segment_end = i + 2 + length
         if length < 2 or segment_end > end:
             out += data[i:]
@@ -108,8 +108,8 @@ def _strip_png(data: bytes) -> bytes:
     i = len(_PNG_MAGIC)
     end = len(data)
     while i + 8 <= end:
-        length = int.from_bytes(data[i:i + 4], "big")
-        kind = data[i + 4:i + 8]
+        length = int.from_bytes(data[i : i + 4], "big")
+        kind = data[i + 4 : i + 8]
         chunk_end = i + 12 + length
         if chunk_end > end:
             break  # truncated file; what has been copied is still a valid PNG

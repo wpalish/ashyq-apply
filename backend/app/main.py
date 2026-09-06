@@ -18,6 +18,7 @@ from app.api import (
     routes_account,
     routes_admin,
     routes_auth,
+    routes_billing,
     routes_cases,
     routes_meta,
     routes_metrics,
@@ -25,11 +26,13 @@ from app.api import (
     routes_research,
     routes_results,
     routes_social,
+    routes_webhooks,
 )
 from app.config import get_settings
 from app.db import init_db
 from app.jobs.worker import reconcile_startup
 from app.logging_setup import configure_logging, new_correlation_id, set_correlation_id
+from app.payments.http import PaymentRequired, payment_required_handler
 
 settings = get_settings()
 configure_logging(settings.log_level, settings.log_format)
@@ -83,6 +86,7 @@ for module in (
     routes_account,
     routes_admin,
     routes_auth,
+    routes_billing,
     routes_cases,
     routes_meta,
     routes_metrics,
@@ -90,8 +94,13 @@ for module in (
     routes_research,
     routes_results,
     routes_social,
+    routes_webhooks,
 ):
     app.include_router(module.router)
+
+# A gated route raises PaymentRequired; this renders it as the 402 the frontend
+# recognises, carrying which case to sell and for how much.
+app.add_exception_handler(PaymentRequired, payment_required_handler)
 
 
 class FixedWindowLimiter:

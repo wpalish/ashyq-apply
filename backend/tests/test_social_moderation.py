@@ -77,9 +77,13 @@ def join_as(client: TestClient, slug: str, **profile) -> str:
         },
     )
     assert registered.status_code == 201, registered.text
-    payload = {
-        "status": None, "target_city": "Astana", "target_major": "", "bio": "",
-        "universities": [], "dm_policy": "anyone",
+    payload: dict[str, object] = {
+        "status": None,
+        "target_city": "Astana",
+        "target_major": "",
+        "bio": "",
+        "universities": [],
+        "dm_policy": "anyone",
     }
     payload.update(profile)
     assert client.put("/api/social/me", json=payload).status_code == 200
@@ -100,7 +104,9 @@ class TestBlocking:
         client.post("/api/auth/logout")
         loud = join_as(client, "loud-one")
         # They were talking before the block.
-        assert client.post(f"/api/social/messages/{quiet}", json={"body": "Привет"}).status_code == 201
+        assert (
+            client.post(f"/api/social/messages/{quiet}", json={"body": "Привет"}).status_code == 201
+        )
         client.post("/api/auth/logout")
 
         sign_in(client, "quiet-one")
@@ -210,12 +216,15 @@ class TestReporting:
     def test_reporting_a_post_files_it_with_its_words_kept(self, client):
         post_id = self._a_post_to_report(client)
 
-        filed = client.post("/api/social/reports", json={
-            "subject_type": "post",
-            "subject_id": post_id,
-            "reason": "misleading_advice",
-            "note": "На сайте написано другое.",
-        })
+        filed = client.post(
+            "/api/social/reports",
+            json={
+                "subject_type": "post",
+                "subject_id": post_id,
+                "reason": "misleading_advice",
+                "note": "На сайте написано другое.",
+            },
+        )
         assert filed.status_code == 201, filed.text
         client.post("/api/auth/logout")
 
@@ -237,16 +246,28 @@ class TestReporting:
 
     def test_a_reason_the_product_does_not_define_is_refused(self, client):
         post_id = self._a_post_to_report(client)
-        refused = client.post("/api/social/reports", json={
-            "subject_type": "post", "subject_id": post_id, "reason": "i-dont-like-it", "note": "",
-        })
+        refused = client.post(
+            "/api/social/reports",
+            json={
+                "subject_type": "post",
+                "subject_id": post_id,
+                "reason": "i-dont-like-it",
+                "note": "",
+            },
+        )
         assert refused.status_code == 422
 
     def test_reporting_something_that_does_not_exist_is_a_404(self, client):
         join_as(client, "confused")
-        response = client.post("/api/social/reports", json={
-            "subject_type": "post", "subject_id": "deadbeef", "reason": "spam", "note": "",
-        })
+        response = client.post(
+            "/api/social/reports",
+            json={
+                "subject_type": "post",
+                "subject_id": "deadbeef",
+                "reason": "spam",
+                "note": "",
+            },
+        )
         assert response.status_code == 404
 
     def test_a_person_can_be_reported_not_only_their_words(self, client):
@@ -254,12 +275,15 @@ class TestReporting:
         client.post("/api/auth/logout")
         join_as(client, "noticer")
 
-        filed = client.post("/api/social/reports", json={
-            "subject_type": "profile",
-            "subject_id": subject,
-            "reason": "impersonation",
-            "note": "Выдаёт себя за приёмную комиссию.",
-        })
+        filed = client.post(
+            "/api/social/reports",
+            json={
+                "subject_type": "profile",
+                "subject_id": subject,
+                "reason": "impersonation",
+                "note": "Выдаёт себя за приёмную комиссию.",
+            },
+        )
         assert filed.status_code == 201
         client.post("/api/auth/logout")
 
@@ -275,10 +299,15 @@ class TestTheQueue:
         post = client.post("/api/social/posts", json={"body": "Пост, на который пожалуются"})
         client.post("/api/auth/logout")
         join_as(client, "reporter2")
-        client.post("/api/social/reports", json={
-            "subject_type": "post", "subject_id": post.json()["id"],
-            "reason": "harassment", "note": "",
-        }).raise_for_status()
+        client.post(
+            "/api/social/reports",
+            json={
+                "subject_type": "post",
+                "subject_id": post.json()["id"],
+                "reason": "harassment",
+                "note": "",
+            },
+        ).raise_for_status()
         client.post("/api/auth/logout")
         return post.json()["id"], "writer2"
 
@@ -345,8 +374,14 @@ class TestTheQueue:
         report = client.get("/api/social/moderation/reports").json()["items"][0]
         body = {"action": "dismiss", "note": ""}
 
-        assert client.post(f"/api/social/moderation/reports/{report['id']}", json=body).status_code == 200
-        assert client.post(f"/api/social/moderation/reports/{report['id']}", json=body).status_code == 409
+        assert (
+            client.post(f"/api/social/moderation/reports/{report['id']}", json=body).status_code
+            == 200
+        )
+        assert (
+            client.post(f"/api/social/moderation/reports/{report['id']}", json=body).status_code
+            == 409
+        )
 
     def test_a_removal_leaves_a_record_behind(self, client):
         """Deleting somebody else's words is not a traceless act."""

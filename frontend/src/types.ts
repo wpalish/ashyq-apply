@@ -521,6 +521,36 @@ export interface ApplicantCase {
   updated_at: string;
 }
 
+export type PaymentMethod = 'phone' | 'qr';
+
+export interface Pricing {
+  case_unlock_price_kzt: number;
+  currency: string;
+  payments_enabled: boolean;
+  includes: string[];
+}
+
+export interface EntitlementView {
+  profile_id: string;
+  full_access: boolean;
+  /** Cases left on the current subscription; null when there is none. */
+  subscription_cases_left: number | null;
+  /** Bought-but-not-started subscriptions waiting behind it. */
+  subscription_queued: number;
+}
+
+export interface OrderView {
+  id: string;
+  profile_id: string;
+  status: 'created' | 'pending' | 'paid' | 'cancelled' | 'expired' | 'failed';
+  method: PaymentMethod;
+  amount_kzt: number;
+  phone_masked: string;
+  qr_payload: string;
+  qr_expires_at: string | null;
+  created_at: string;
+}
+
 /* --- Community ---------------------------------------------------------
  *
  * `status` is nullable everywhere it appears. Null means the person has not

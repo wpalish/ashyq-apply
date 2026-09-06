@@ -10,7 +10,7 @@ import {
   createContext, useCallback, useContext, useEffect, useMemo, useRef, useState,
   type ReactNode,
 } from 'react';
-import { ApiError, api } from '@/api/client';
+import { ApiError, api, isPaymentRequired } from '@/api/client';
 import { DEFAULT_PROFILE } from '@/lib/defaultProfile';
 import type {
   ApplicantCase, BalancedShortlist, Capabilities, ProfileValidationReport, ProgramResult,
@@ -96,6 +96,8 @@ export interface Store {
   retryRun: (stage?: string) => Promise<void>;
   recheckNow: () => Promise<void>;
   collectDocuments: () => Promise<void>;
+  /** Downloads through the client, so a 402 raises the paywall like any call. */
+  exportShortlist: (fmt: 'csv' | 'json' | 'xlsx', decision?: string) => Promise<void>;
   decide: (resultId: string, decision: UserDecision, reason: string, notes: string) => Promise<void>;
   saveNotes: (resultId: string, notes: string) => Promise<void>;
   refreshResults: () => Promise<void>;
@@ -105,6 +107,11 @@ export interface Store {
   shortlist: BalancedShortlist | null;
   deleteEverything: () => Promise<void>;
   clearError: () => void;
+  /** Set when a gated route answered 402. Null when nothing is locked. */
+  paywall: { profileId: string; priceKzt: number; casesLeft: number | null } | null;
+  clearPaywall: () => void;
+  /** Open one case out of the organization's subscription quota. */
+  unlockFromSubscription: (profileId: string) => Promise<void>;
 }
 
 const StoreContext = createContext<Store | null>(null);
@@ -173,6 +180,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [restored, setRestored] = useState(false);
+  const [paywall, setPaywall] = useState<
+    { profileId: string; priceKzt: number; casesLeft: number | null } | null
+  >(null);
   const [draftRestored, setDraftRestored] = useState(false);
   const [hydrated, setHydrated] = useState(false);
   //: What the draft looked like when it was last saved or loaded. Comparing
@@ -194,6 +204,16 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     // call sites would leave whichever one was added next still broken.
     if (e instanceof ApiError && e.status === 401) {
       window.location.reload();
+      return;
+    }
+    // A 402 is not a failure to report — it is an offer to make. Checked after
+    // 401 for the same reason: an expired session cannot be sold anything.
+    if (isPaymentRequired(e)) {
+      setPaywall({
+        profileId: e.profileId,
+        priceKzt: e.priceKzt,
+        casesLeft: e.subscriptionCasesLeft ?? null,
+      });
       return;
     }
     setError(e instanceof ApiError ? e.message : String(e));
@@ -560,6 +580,35 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     }
   }, [run, fail]);
 
+  const exportShortlist = useCallback(
+    async (fmt: 'csv' | 'json' | 'xlsx', decision?: string) => {
+      if (!run) return;
+      setError(null);
+      try {
+        await api.downloadExport(run.id, fmt, decision);
+      } catch (e) {
+        fail(e);
+      }
+    },
+    [run, fail],
+  );
+
+  // Takes the case rather than reading the paywall state, so the caller that
+  // rendered the button and the action that spends the unit cannot disagree.
+  const unlockFromSubscription = useCallback(
+    async (profileId: string) => {
+      setError(null);
+      try {
+        await api.unlockFromSubscription(profileId);
+        setPaywall(null);
+        await refreshResults();
+      } catch (e) {
+        fail(e);
+      }
+    },
+    [fail, refreshResults],
+  );
+
   const decide = useCallback(
     async (resultId: string, decision: UserDecision, reason: string, notes: string) => {
       if (!run) return;
@@ -618,14 +667,15 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       dirty, draftRestored, discardDraft, hydrated,
       loadDemoProfile, clearProfile, validation, run, results,
       summary, loading, error, saveProfile, startRun, cancelRun, retryRun, recheckNow, collectDocuments,
-      decide, saveNotes, refreshResults, rerank, shortlist, deleteEverything,
+      exportShortlist, decide, saveNotes, refreshResults, rerank, shortlist, deleteEverything,
       clearError: () => setError(null),
+      paywall, clearPaywall: () => setPaywall(null), unlockFromSubscription,
     }),
     [capabilities, profileDraft, setProfileDraft, savedProfile, cases, switchCase, newCase,
      restored, dirty, draftRestored, discardDraft, hydrated, loadDemoProfile,
      clearProfile, validation, run, results, summary, loading, error, saveProfile, startRun,
-     cancelRun, retryRun, recheckNow, collectDocuments, decide, saveNotes, refreshResults,
-     rerank, shortlist, deleteEverything],
+     cancelRun, retryRun, recheckNow, collectDocuments, exportShortlist, decide, saveNotes,
+     refreshResults, rerank, shortlist, deleteEverything, paywall, unlockFromSubscription],
   );
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;

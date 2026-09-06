@@ -209,6 +209,90 @@ def event_loop():
     loop.close()
 
 
+#: The secret the payment fixtures sign webhooks with. Tests that forge a
+#: signature must use this exact value.
+WEBHOOK_SECRET = "whsec-test"
+
+
+def configure_from_env(monkeypatch, tmp_path, corpus_dir, **overrides) -> None:
+    """Point the real ``get_settings`` at a throwaway environment.
+
+    Deliberately not ``monkeypatch.setattr("app.config.get_settings", ...)``.
+    Modules do ``from app.config import get_settings`` at import time, so a
+    module first imported while that patch was active binds the patch's lambda
+    permanently — and then reports the *first* test's settings for the rest of
+    the session, whatever later tests do. Configuring the environment and
+    clearing the cache keeps one real settings function that every module sees.
+    """
+    from app.config import get_settings
+
+    env = {
+        "UNIMATCH_DEMO_MODE": "true",
+        "UNIMATCH_DATABASE_URL": f"sqlite:///{tmp_path / 'payments.db'}",
+        "UNIMATCH_CACHE_DIR": str(tmp_path / "cache"),
+        "UNIMATCH_EXPORT_DIR": str(tmp_path / "exports"),
+        "UNIMATCH_CORPUS_DIR": str(corpus_dir),
+        "UNIMATCH_FETCH_DELAY_SECONDS": "0.0",
+        "UNIMATCH_ENABLE_BROWSER_TIER": "false",
+    }
+    env.update(overrides)
+    for key, value in env.items():
+        monkeypatch.setenv(key, value)
+    get_settings.cache_clear()
+
+
+@pytest.fixture
+def paid_client(tmp_path, monkeypatch, corpus_dir):
+    """An API client with payments switched on, behind the fake provider."""
+    from fastapi.testclient import TestClient
+
+    from app.config import get_settings
+    from app.payments.fake import reset_shared_fake
+
+    configure_from_env(
+        monkeypatch,
+        tmp_path,
+        corpus_dir,
+        UNIMATCH_PAYMENTS_ENABLED="true",
+        UNIMATCH_PAYMENTS_PROVIDER="fake",
+        UNIMATCH_APIPAY_WEBHOOK_SECRET=WEBHOOK_SECRET,
+    )
+    reset_shared_fake()
+    settings = get_settings()
+
+    import app.db as db_module
+
+    engine = db_module.create_engine(
+        settings.database_url, connect_args={"check_same_thread": False}
+    )
+    monkeypatch.setattr(db_module, "engine", engine)
+    monkeypatch.setattr(db_module, "SessionLocal", db_module.sessionmaker(bind=engine, future=True))
+    db_module.migrate_to_head(settings.database_url)
+
+    from app.main import app
+
+    with TestClient(app) as client:
+        yield client
+    get_settings.cache_clear()
+    reset_shared_fake()
+
+
+@pytest.fixture
+def case_id(paid_client) -> str:
+    """One applicant case owned by the paid client's tenant."""
+    from app.corpus.demo_profile import DEMO_PROFILE
+
+    return paid_client.post("/api/profiles", json=DEMO_PROFILE.model_dump(mode="json")).json()["id"]
+
+
+def sign_webhook(body: bytes) -> str:
+    """The signature ApiPay would send for this body."""
+    import hashlib
+    import hmac
+
+    return "sha256=" + hmac.new(WEBHOOK_SECRET.encode(), body, hashlib.sha256).hexdigest()
+
+
 #: The tenant test fixtures write into. Explicit, because the column no longer
 #: carries a default: a caller that forgets the organization must fail loudly
 #: rather than quietly writing into someone else's workspace.

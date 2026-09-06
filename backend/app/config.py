@@ -5,6 +5,7 @@ from __future__ import annotations
 from functools import lru_cache
 from pathlib import Path
 
+from pydantic import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BACKEND_ROOT = Path(__file__).resolve().parent.parent
@@ -125,6 +126,22 @@ class Settings(BaseSettings):
     #: production must either set a token or switch the endpoint off.
     metrics_enabled: bool = True
     metrics_token: str = ""
+
+    #: Payments are off until a merchant account exists. With this false the
+    #: product behaves exactly as it did before payments were written: no
+    #: paywall, no truncation, every case fully open.
+    payments_enabled: bool = False
+    #: "fake" drives the tests and local development; "apipay" talks to Kaspi.
+    payments_provider: str = "fake"
+    apipay_base_url: str = "https://api.apipay.kz/api/v1"
+    apipay_api_key: SecretStr = SecretStr("")
+    apipay_webhook_secret: SecretStr = SecretStr("")
+    apipay_timeout_seconds: float = 20.0
+    #: Whole tenge. The server is the only authority on what a case costs.
+    case_unlock_price_kzt: int = 4990
+    #: What an unpaid case is allowed to spend, and to show.
+    free_candidate_limit: int = 5
+    free_shortlist_rows: int = 5
 
     @property
     def is_production(self) -> bool:
