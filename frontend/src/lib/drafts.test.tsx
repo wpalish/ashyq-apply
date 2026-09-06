@@ -17,6 +17,13 @@
  *   pointers and reports the error.
  * - React StrictMode double mount leaves one final state and does not wipe
  *   the slot while hydration is pending.
+ * - A2 (reviewer finding 3): a restored local-case draft survives not just one
+ *   reload but a second one too — a restored draft is clean (baseline equals
+ *   the envelope), so an autosave tick that treats "clean" as "delete the
+ *   slot" loses the edits on the next reload.
+ * - A2 (reviewer finding 1): a failed saveProfile loses nothing — the draft,
+ *   the dirty flag and the persisted envelope stay, the error is reported,
+ *   and a successful retry clears the dirty flag and retires the slot.
  *
  * Several of these fail at the baseline SHA on purpose (RED). Do not weaken
  * an assertion to match the bug being fixed.
@@ -199,6 +206,105 @@ describe('FE01: a brand-new unsaved case survives a reload', () => {
     expect(screen.getByTestId('citizenship')).toHaveTextContent(EDIT_MARKER);
     expect(screen.getByTestId('draft-restored')).toHaveTextContent('true');
     expect(screen.getByTestId('saved')).toHaveTextContent('none');
+  });
+
+  it('keeps a restored local-case draft across a second reload', async () => {
+    // Session one: a brand-new case gets an edit, autosaved into its own slot.
+    const first = render(<StoreProvider><Probe /></StoreProvider>);
+    await flush();
+
+    await act(async () => { screen.getByText('new').click(); });
+    await editCitizenship();
+    expect(screen.getByTestId('dirty')).toHaveTextContent('true');
+    await advance(600);
+    expect(anyStorageMentions(EDIT_MARKER)).toBe(true);
+    first.unmount();
+
+    // First reload: the edits come back (covered by the test above).
+    const second = render(<StoreProvider><Probe /></StoreProvider>);
+    await flush();
+    expect(screen.getByTestId('citizenship')).toHaveTextContent(EDIT_MARKER);
+    expect(screen.getByTestId('draft-restored')).toHaveTextContent('true');
+
+    // Let the autosave debounce tick while the restored draft sits unedited.
+    // The restored draft is clean, so this tick must not treat the case as
+    // "nothing worth keeping": a local case has no server copy to fall back
+    // to, and the next reload reads only what this slot holds.
+    await advance(600);
+    second.unmount();
+
+    // Second reload without new edits: the restored draft must still be there.
+    render(<StoreProvider><Probe /></StoreProvider>);
+    await flush();
+
+    expect(screen.getByTestId('citizenship')).toHaveTextContent(EDIT_MARKER);
+    expect(screen.getByTestId('draft-restored')).toHaveTextContent('true');
+    expect(screen.getByTestId('saved')).toHaveTextContent('none');
+  });
+});
+
+describe('a rejected save keeps the draft and reports the error', () => {
+  function SaveProbe() {
+    const store = useStore();
+    const context = store.profileDraft.context as Record<string, unknown> | undefined;
+    return (
+      <div>
+        <span data-testid="citizenship">{String(context?.citizenship)}</span>
+        <span data-testid="saved">{store.savedProfile?.id ?? 'none'}</span>
+        <span data-testid="dirty">{String(store.dirty)}</span>
+        <span data-testid="loading">{String(store.loading)}</span>
+        <span data-testid="error">{store.error ?? ''}</span>
+        <button onClick={() => store.setProfileDraft((d) => ({
+          ...d,
+          context: { ...(d.context as object), citizenship: EDIT_MARKER },
+        }))}>edit</button>
+        <button onClick={() => {
+          // A rejected save rethrows after reporting; the UI just calls it.
+          void store.saveProfile().catch(() => { /* asserted via `error` */ });
+        }}>save</button>
+      </div>
+    );
+  }
+
+  it('loses nothing on a failed save and retires the slot on a successful retry', async () => {
+    window.localStorage.setItem('ashyq.activeProfile', PROFILE_A.id);
+    vi.spyOn(api, 'getProfile').mockResolvedValue(PROFILE_A);
+    render(<StoreProvider><SaveProbe /></StoreProvider>);
+    await flush();
+    expect(screen.getByTestId('saved')).toHaveTextContent('A');
+
+    await editCitizenship();
+    await advance(600);
+    // The unsaved edit is persisted in the case's own slot before saving.
+    expect(draftSlotKeys(EDIT_MARKER).length).toBeGreaterThan(0);
+
+    // Save fails: the edit stays dirty, the envelope stays persisted and the
+    // failure is reported instead of being swallowed as a silent success.
+    const update = vi.spyOn(api, 'updateProfile')
+      .mockRejectedValueOnce(new ApiError(500, 'The database is unreachable.'));
+    await act(async () => { screen.getByText('save').click(); });
+    await flush();
+
+    expect(screen.getByTestId('error')).toHaveTextContent('The database is unreachable');
+    expect(screen.getByTestId('dirty')).toHaveTextContent('true');
+    expect(screen.getByTestId('saved')).toHaveTextContent('A');
+    expect(screen.getByTestId('loading')).toHaveTextContent('false');
+    expect(draftSlotKeys(EDIT_MARKER).length).toBeGreaterThan(0);
+
+    // Retry succeeds: the draft is saved, dirty clears, the error clears and
+    // the now-merged draft slot retires — the saved profile is the baseline.
+    update.mockResolvedValue({
+      ...structuredClone(PROFILE_A),
+      updated_at: '2026-08-03T00:00:00Z',
+      context: { ...(structuredClone(PROFILE_A).context as object), citizenship: EDIT_MARKER },
+    } as unknown as StoredProfile);
+    await act(async () => { screen.getByText('save').click(); });
+    await flush();
+
+    expect(screen.getByTestId('dirty')).toHaveTextContent('false');
+    expect(screen.getByTestId('error')).toBeEmptyDOMElement();
+    expect(screen.getByTestId('saved')).toHaveTextContent('A');
+    expect(draftSlotKeys(EDIT_MARKER)).toEqual([]);
   });
 });
 
@@ -455,6 +561,10 @@ describe('error semantics on initial hydration', () => {
     await flush();
 
     expect(window.localStorage.getItem('ashyq.activeProfile')).toBeNull();
+    // Forgotten completely: the per-tab pointer is gone too, and no storage
+    // still carries the id in any form (unlike a 500, which keeps it).
+    expect(window.sessionStorage.getItem('ashyq.activeProfile')).toBeNull();
+    expect(pointerSurvives(PROFILE_A.id)).toBe(false);
     // A proven absence is not an error to report.
     expect(screen.getByTestId('error')).toBeEmptyDOMElement();
   });
