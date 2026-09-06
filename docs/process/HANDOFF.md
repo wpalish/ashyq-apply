@@ -8,22 +8,22 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 | | |
 |---|---|
-| Holder | nobody — released at [0.8] ready-for-review |
+| Holder | **claude-opus-5** |
 | Since (UTC) | 2026-09-06 |
-| Branch | `task/0.8-ranking-ui` (exists; created from the predecessor tip `main@c924410`) |
-| HEAD when written | `61df0db4aaaf265aaa154d2e5ead592fa97d2fcb` — the recovery checkpoint `wip: [0.8] preserve the ranking ui …` |
-| Origin main when checked | `627d42d`; local `main` 7 ahead / 0 behind. Never push main. |
-| Previous holder | nobody. gpt-6-astra's delegated writer produced the §4 inventory and stopped there: no branch, checkpoint, gates, push or baton. |
-| Recovery (prompt C) completed | Steps 1–3 + the per-file audit, the full gates and the preserving checkpoint are done by this holder. |
+| Branch | `fix/shortlist-columns`, from `origin/main@2be6b55` |
+| HEAD when written | `2be6b55` plus the working change described in §4 |
+| Origin main when checked | `2be6b55` — PR #2 (stage 0) and PR #3 (payments) are **merged**; local `main` fast-forwarded to it |
+| Previous holder | nobody on paper. gpt-6-astra made four commits (`0815fa1`, `e4dfbcf`, `7ecfaf5`, `f88f77d`) without taking the baton or writing §1/§2/§11; its docker note is in §7 |
 
 ## 2. Current task
 
-`[0.8] Frontend этапа 0` — **ready-for-review (PR #2)**, by claude-opus-5 on `task/0.8-ranking-ui`.
-Stage 0 is complete: [0.1]–[0.8] all ride on this branch, 15 commits.
-<https://github.com/wpalish/ashyq-apply/pull/2>
-Recovery is finished and so is the task: every gate in §6 is green, including the full e2e suite and
-the §5.7 seed order. The I4/T3 conflict is resolved in §7. What remains is the owner opening the PR
-in PR #2.
+**`[0.8]` is `merged`** — PR #2 landed stage 0 on main, and PR #3 (payments) landed on top.
+
+Current: a one-commit fix-forward on `fix/shortlist-columns`, then `[1.1]`. The last [0.8] commit
+`14d556b` was pushed *after* the owner merged PR #2, so it never reached main: the shortlist on main
+today renders `Confirmed` and `Bucket` underneath the pinned decision column, where nobody can read
+them. That is what this branch carries — the same three files, re-applied on the new base (main's
+`components.css` has since grown by 89 lines, so only the three hunks were taken, not the old file).
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
@@ -192,43 +192,39 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-[0.8] is code-complete and every gate is green (§6). Remaining, in order:
-
-1. ~~Open the PR.~~ **Done — PR #2**, template filled in with the real output from §6.
-   Review it against `.github/PULL_REQUEST_TEMPLATE.md`; the relay *is* the review.
-2. After the owner merges: `[1.1] Интерфейс и схемы` — new package `backend/app/adapters/research/`
-   with `base.py` (the six-method `ResearchAgent` protocol and its schemas), `null.py` and `fixture.py`.
-   Acceptance A6: a full demo run with `NullResearchAgent` is byte-for-byte the current one.
-3. Housekeeping worth one commit when convenient, not blocking: `docs/v2/` duplicates `analysis/`
-   byte-for-byte apart from one relative path in the brief. `analysis/` is canonical per AGENTS.md;
-   the copies are the owner's and were left in place, unstaged.
+1. **This branch**: open a PR for `fix/shortlist-columns` and let the owner merge it. It is three
+   frontend files plus the screenshots the e2e run regenerated on the new base.
+2. **`[1.1] Интерфейс и схемы`** on `task/1.1-research-agent`, branched from `main` (no predecessor
+   exception needed any more — stage 0 is merged):
+   - `backend/app/adapters/research/base.py`: `Protocol ResearchAgent` with `discover`,
+     `locate_pages`, `extract_claims`, `programme_brief`, `applicant_commentary`,
+     `community_insights`, plus the schemas `DiscoveryQuery`, `CandidateLead`, `PageSet`,
+     `ProposedClaim`, `ExtractionContext`, `AdvisorCommentary`, `Insight`
+     (fields: `analysis/SPEC_matching_v2.md` §6.2, §7, §8.2).
+   - `null.py` — `NullResearchAgent`, every method empty / NOT_FOUND.
+   - `fixture.py` — `FixtureResearchAgent`, answering from `app/corpus/pages/catalog.json`.
+   - Acceptance **A6**: a full demo run with `NullResearchAgent` is byte-for-byte the current one.
+     Write the comparison as a test, do not eyeball it.
+3. Then `[1.2]` (excerpt validator), per §10.
 
 ## 6. Gate status at last run (numbers, not adjectives)
 
-Run by claude-opus-5, 2026-09-06, at `0affab6` on `task/0.8-ranking-ui`. Interpreter
-`backend/.venv/Scripts/python.exe` — it works; the §9 note claiming a missing base Python is wrong.
+Run by claude-opus-5, 2026-09-06, on `fix/shortlist-columns` = `origin/main@2be6b55` + three frontend
+files. These are the first numbers measured on main *after* the payments and community merges.
 
 | Gate | Result |
 |---|---|
-| `ruff check app tests` | **pass** — All checks passed |
-| `ruff format --check app tests` | **pass** — 118 files already formatted |
-| `mypy app tests` | **pass** — no issues in 118 source files |
-| `pytest --cov=app --cov-fail-under=92` | **pass** — **892 passed**, coverage **92.56 %**, 561 s (SQLite; PostgreSQL not run here) |
-| frontend `tsc --noEmit` | **pass** |
-| frontend `eslint src e2e` | **pass** |
-| frontend `vitest run` | **pass** — **141 passed** / 14 files |
-| frontend `vite build` | **pass** — 308.32 kB js, 63.99 kB css |
-| `playwright test` (desktop-chromium + mobile, auth excluded) | **pass** — **67 passed, 1 skipped**, 1.6 min; `journey.spec.ts` 16/16 |
-| `seed_demo.py` (brief §5.7) | **pass** — Groningen #1 (0.795, PLAUSIBLE), UBC #11 **OUT_OF_BUDGET** (0.401) |
-| climate sensitivity (stage-0 DoD) | **pass** — `city_climate` first: warm puts NUS in the top 5, cold puts Oslo in and lifts Toronto, temperate differs from both |
-| alembic | **pass** — 9 revisions, single head `a4d1c7e58b92`, upgrade from empty DB |
-| `pip-audit` / `npm audit` | **not run** — no CI-parity claim |
+| `ruff check app tests` | **pass** |
+| `ruff format --check app tests` | **pass** — 153 files |
+| `mypy app tests` | **pass** — 153 source files |
+| `pytest --cov=app --cov-fail-under=92` | **pass** — **1110 passed**, coverage **92.86 %**, 912 s (SQLite) |
+| frontend `tsc --noEmit` / `eslint src e2e` | **pass** |
+| frontend `vitest run` | **pass** — **164 passed** / 18 files |
+| frontend `playwright test` | **pass** — **73 passed, 1 skipped**, 1.6 min, *on a fresh demo database* (see §9) |
+| `pip-audit` / `npm audit` | **not run** |
 
-Deviation from the brief §5.7 sample, by design not defect: TU Delft, Melbourne and EPFL are
-`EXCLUDED`, not ranked. Brief §5.4 rule 2 knocks out a **confirmed** hard filter, and the demo
-profile's IELTS writing 6.0 misses a published 6.5 per-band minimum at all three. The §5.7 table came
-from `analysis/reference/ranking_v2.py::_demo`, which never applied that rule. The spec beats the
-sample; if the owner wants the sample instead, that is a change to §5.4, not to the port.
+The e2e suite is red on a crowded `unimatch.db`, on this branch and on clean `main` alike — §9 has the
+reproduction and the one-line reset.
 
 ## 7. Blockers / questions for the owner
 
@@ -256,8 +252,15 @@ next agent does not reopen it.
 
 ### Open
 
-- Nothing blocking [0.8]. Acceptance of [0.1]–[0.7] still rides on the same PR — they were committed
-  before the relay rules existed and therefore carry no `Agent:` trailer. Do not rewrite that history.
+- **gpt-6-astra's `task/docker-stack-verification` is in flight and unreviewed.** Four commits
+  (`0815fa1` product epics, `e4dfbcf` ignore `.claude/worktrees`, `7ecfaf5` drop `docs/v2`,
+  `f88f77d` `wip: [docker]`) sit on a branch cut from `task/0.8-ranking-ui@7ecfaf5`, which is now
+  **40 commits behind `origin/main`** — it predates the payments and community merges, so any gate
+  run on it does not describe main. Its own note says the full unit suites were not rerun. Owner:
+  either Codex rebases it on `main` and finishes it, or it is closed. Do not silently rebase another
+  agent's branch.
+- The `[0.1]`–`[0.7]` commits still carry no `Agent:` trailer (they predate `AGENTS.md`). Merged as
+  they are; do not rewrite that history.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
 
@@ -322,6 +325,27 @@ host=github.com
 - The legacy branch-ahead/conflict counts and line anchors above are historical template observations;
   this writer did not refresh those unrelated branches.
 
+- **The demo database poisons the whole e2e suite once it grows, and it is not subtle.** On
+  2026-09-06 a crowded `backend/data/unimatch.db` failed `journey.spec.ts` at its *first* assertion —
+  "Who is applying" never renders, because the app restores the organisation's latest case instead of
+  a blank profile — and that took five spec files' `beforeAll` down with it: `5 failed, 64 did not
+  run`. Clean `main` reproduced it exactly, so it is nobody's regression. `rm backend/data/unimatch.db*`
+  and re-run: the same suite is 73 passed / 1 skipped. Stop the API process first, or Windows refuses
+  the delete with "Device or resource busy". Worth a real fix: restore should resolve a profile by the
+  id this browser stored, never by "latest".
+- `gh` is installed per-user via `winget install --id GitHub.cli --scope user`, landing in
+  `%LOCALAPPDATA%\Microsoft\WinGet\Packages\GitHub.cli_*in\gh.exe`. `gh auth login --with-token`
+  **rejects** the token Git Credential Manager stores (it validates `read:org`, which that token lacks);
+  the same token works as `GH_TOKEN` for `gh api` / `gh pr`. Load it without printing it:
+  `export GH_TOKEN=$(printf 'protocol=https
+host=github.com
+
+' | git credential fill | sed -n 's/^password=//p')`.
+- The repository `backend/.venv` works; an earlier note claiming its base Python is missing was wrong.
+- A commit pushed to a task branch *after* the owner merges its PR does not reach main. Check
+  `git merge-base --is-ancestor <sha> origin/main` before assuming your last commit shipped — that is
+  how `14d556b` was orphaned.
+
 ## 10. Queue (brief §6 order; do not reorder without the owner)
 
 **Now: finish recovery and [0.8], not restart [0.1].** [0.1]–[0.7] have local implementation history
@@ -339,3 +363,4 @@ After [0.8] and its predecessor acceptance/review obligations:
 | 2026-09-06 | claude-opus-5 | `c924410` → `61df0db` | Prompt C recovery: reconciled the stale §1/§5 (the branch existed, the baton did not), audited all eight frontend diffs into §4, ran every gate into §6 (backend green, 891 tests / 92.56 %; frontend one red unit test), preserved the work in one allow-listed `wip:` checkpoint, took the baton. |
 | 2026-09-06 | claude-opus-5 | `61df0db` → `0affab6` | Finished [0.8]: red test fixed, bucket vocabulary contracted, preferences disclaimer restored, per-table captions, e2e helper opens the set-aside sections. All gates green (892 backend / 141 unit / 67 e2e). §7 I4-T3 conflict resolved by owner delegation. Next: open the PR. |
 | 2026-09-06 | claude-opus-5 | `9ee7078` → `9ee7078` | Installed `gh`, authenticated it from the stored git credential, opened **PR #2** for stage 0. Baton stays with nobody; next is review. |
+| 2026-09-06 | claude-opus-5 | `f88f77d` → `fix/shortlist-columns` | Prompt A. Found PR #2 and #3 merged, `[0.8]`'s last commit `14d556b` orphaned outside the merge, Codex's docker branch 40 commits behind main and unlogged, and the e2e suite red on clean main from the §9 database trap. Re-applied the three shortlist hunks on the new base; 164 unit and 73 e2e green. |
