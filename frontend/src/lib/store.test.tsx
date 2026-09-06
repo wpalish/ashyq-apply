@@ -44,6 +44,9 @@ function Probe() {
 
 beforeEach(() => {
   window.localStorage.clear();
+  // T09: the active case/run pointers are per-tab sessionStorage, so tests
+  // must not leak a pointer from one test into the next.
+  window.sessionStorage.clear();
   vi.restoreAllMocks();
   vi.spyOn(api, 'capabilities').mockResolvedValue({} as never);
   vi.spyOn(api, 'validateProfile').mockResolvedValue({
@@ -181,7 +184,9 @@ describe('starting research twice', () => {
     expect(getRun).toHaveBeenCalledWith(active.id);
     expect(screen.getByTestId('run')).toHaveTextContent(active.id);
     expect(screen.getByTestId('error')).toHaveTextContent('none');
-    expect(window.localStorage.getItem('ashyq.activeRun')).toBe(active.id);
+    // T09: the run pointer is per-tab sessionStorage; no global copy is kept.
+    expect(window.sessionStorage.getItem('ashyq.activeRun')).toBe(active.id);
+    expect(window.localStorage.getItem('ashyq.activeRun')).toBeNull();
   });
 
   it('sends an idempotency key so a retried request cannot start a second run', async () => {
@@ -202,14 +207,17 @@ describe('starting research twice', () => {
 describe('renaming the storage keys', () => {
   it('carries a session stored under the old name across, once', async () => {
     // A rename with no migration would have signed everyone out of their own
-    // case the first time they loaded the renamed build.
+    // case the first time they loaded the renamed build. T09 moved the active
+    // case pointer to per-tab sessionStorage: the legacy global pointer is
+    // adopted into this tab once and the global keys are then removed.
     window.localStorage.setItem('unimatch.activeProfile', REAL_PROFILE.id);
     vi.spyOn(api, 'getProfile').mockResolvedValue(REAL_PROFILE);
 
     render(<StoreProvider><Probe /></StoreProvider>);
 
     await waitFor(() => expect(screen.getByTestId('saved')).toHaveTextContent(REAL_PROFILE.id));
-    expect(window.localStorage.getItem('ashyq.activeProfile')).toBe(REAL_PROFILE.id);
+    expect(window.sessionStorage.getItem('ashyq.activeProfile')).toBe(REAL_PROFILE.id);
+    expect(window.localStorage.getItem('ashyq.activeProfile')).toBeNull();
     expect(window.localStorage.getItem('unimatch.activeProfile')).toBeNull();
   });
 
