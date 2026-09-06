@@ -225,10 +225,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     if (!hydrated || activeCaseKey === null) return;
     const timer = window.setTimeout(() => {
       if (dirty) writeDraftEnvelope(activeCaseKey, profileDraft, savedProfile?.updated_at ?? null);
-      else clearDraftSlot(activeCaseKey);
+      // A restored draft's baseline IS its envelope, so a clean restored draft
+      // looks "nothing to keep". On a local case the slot is the only copy of
+      // those edits, so clearing it here would lose them on the next reload;
+      // the slot retires on a successful save or an explicit discard instead.
+      else if (!(isLocalCaseKey(activeCaseKey) && draftRestored)) clearDraftSlot(activeCaseKey);
     }, 600);
     return () => window.clearTimeout(timer);
-  }, [profileDraft, dirty, hydrated, activeCaseKey, savedProfile]);
+  }, [profileDraft, dirty, hydrated, activeCaseKey, savedProfile, draftRestored]);
 
   const discardDraft = useCallback(() => {
     if (activeCaseKey !== null) clearDraftSlot(activeCaseKey);
