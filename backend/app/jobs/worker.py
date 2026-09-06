@@ -112,7 +112,12 @@ class Worker:
 
     async def execute(self, job_id: str) -> None:
         """Run one job to a terminal state."""
-        heartbeat = asyncio.create_task(self._beat(job_id))
+        heartbeat: asyncio.Task | None = None
+        # The attempt token, read once off the claimed row: every write this
+        # attempt makes - checkpoints, beats, the outcome - is conditioned on
+        # it, so a re-claim of the same job under this worker_id (the self-reap
+        # loop with concurrency > 1) still cannot be spoken for by this task.
+        lease_token: int | None = None
         try:
             with session_scope() as session:
                 store = JobStore(
@@ -123,36 +128,36 @@ class Worker:
                 job = store.get(job_id)
                 if job is None:
                     return
-                log.info("running job %s (%s) attempt %d", job.id[:8], job.kind, job.attempts)
-                await self._dispatch(session, store, job)
+                lease_token = job.attempts
+                log.info("running job %s (%s) attempt %d", job.id[:8], job.kind, lease_token)
+                heartbeat = asyncio.create_task(self._beat(job_id, lease_token=lease_token))
+                await self._dispatch(session, store, job, lease_token=lease_token)
             self.jobs_done += 1
         except LeaseLost as exc:
-            # Someone else owns this job now. Say so and touch nothing: the
-            # store's fencing would refuse the write anyway, and the new owner
-            # is already redoing the work.
+            # Someone else owns this job now. Say so and touch nothing: any
+            # write this attempt could still make is fenced off, the new owner
+            # is already redoing the work, and a failure recorded here would
+            # be the new owner's job reporting a failure it never had.
             log.warning("job %s abandoned: %s", job_id[:8], exc)
-            with session_scope() as session:
-                JobStore(
-                    session,
-                    lease_seconds=self.settings.job_lease_seconds,
-                    worker_id=self.worker_id,
-                ).fail(job_id, f"lease lost: {exc}", retry=False)
         except RunCancelled as exc:
             with session_scope() as session:
-                JobStore(session, worker_id=self.worker_id).mark_cancelled(job_id, str(exc))
+                JobStore(session, worker_id=self.worker_id).mark_cancelled(
+                    job_id, str(exc), lease_token=lease_token
+                )
             log.info("job %s cancelled", job_id[:8])
         except Exception as exc:
             self.jobs_failed += 1
             log.exception("job %s failed", job_id[:8])
             with session_scope() as session:
                 status = JobStore(session, worker_id=self.worker_id).fail(
-                    job_id, f"{type(exc).__name__}: {exc}"
+                    job_id, f"{type(exc).__name__}: {exc}", lease_token=lease_token
                 )
             log.info("job %s -> %s", job_id[:8], status)
         finally:
-            heartbeat.cancel()
+            if heartbeat is not None:
+                heartbeat.cancel()
 
-    async def _beat(self, job_id: str) -> None:
+    async def _beat(self, job_id: str, *, lease_token: int | None = None) -> None:
         interval = max(1.0, self.settings.job_lease_seconds / HEARTBEAT_DIVISOR)
         try:
             while True:
@@ -163,7 +168,7 @@ class Worker:
                         lease_seconds=self.settings.job_lease_seconds,
                         worker_id=self.worker_id,
                     )
-                    if not store.heartbeat(job_id):
+                    if not store.heartbeat(job_id, lease_token=lease_token):
                         # The runner observes this at its next checkpoint and
                         # stops; logging alone let a zombie keep working.
                         log.warning("lost the lease on job %s", job_id[:8])
@@ -190,8 +195,16 @@ class Worker:
             priority=-5,  # never ahead of work a person is waiting for
         )
 
-    async def _dispatch(self, session, store: JobStore, job: Job) -> None:
-        """Route a job to its handler, in the job's own transaction."""
+    async def _dispatch(
+        self, session, store: JobStore, job: Job, *, lease_token: int | None
+    ) -> None:
+        """Route a job to its handler, in the job's own transaction.
+
+        Every store write here is fenced with the attempt token read at claim
+        time, and the completion commit is the owner's alone: a worker whose
+        lease was taken rolls its remaining transaction back and records
+        nothing - no audit event, no artefacts, no recheck.
+        """
         if job.kind == "payment_reconcile":
             # A payment job has no run. Handle it before anything asks for one.
             from app.jobs.payment_reconcile import reconcile_order
@@ -201,24 +214,40 @@ class Worker:
             status = reconcile_order(session, order_id)
             if status and status not in TERMINAL_ORDER_STATUSES:
                 # Not settled: fail softly so the queue's backoff re-runs it.
-                store.fail(job.id, f"order {order_id[:8]} still {status}", retry=True)
+                store.fail(
+                    job.id,
+                    f"order {order_id[:8]} still {status}",
+                    retry=True,
+                    lease_token=lease_token,
+                )
                 return
-            store.complete(job.id)
+            if not store.complete(job.id, lease_token=lease_token):
+                session.rollback()
             return
 
         run = session.get(ResearchRun, job.run_id) if job.run_id else None
         if run is None:
-            store.fail(job.id, f"run {job.run_id} no longer exists", retry=False)
+            store.fail(
+                job.id, f"run {job.run_id} no longer exists", retry=False, lease_token=lease_token
+            )
             return
 
         profile_row = session.get(ApplicantProfileRow, run.profile_id)
         if profile_row is None:
-            store.fail(job.id, "the applicant profile was deleted", retry=False)
+            store.fail(
+                job.id, "the applicant profile was deleted", retry=False, lease_token=lease_token
+            )
             return
 
         profile = ApplicantProfileIn.model_validate(profile_row.payload)
         runner = ResearchRunner(
-            session, run, profile, self.settings, job_id=job.id, worker_id=self.worker_id
+            session,
+            run,
+            profile,
+            self.settings,
+            job_id=job.id,
+            worker_id=self.worker_id,
+            lease_token=lease_token,
         )
 
         if job.kind == "documents":
@@ -231,12 +260,22 @@ class Worker:
             log.info("recheck of run %s: %d stale claims", run.id[:8], stale)
             self._schedule_recheck(store, run)
         else:
-            store.fail(job.id, f"unknown job kind {job.kind!r}", retry=False)
+            store.fail(
+                job.id, f"unknown job kind {job.kind!r}", retry=False, lease_token=lease_token
+            )
             return
 
         # The job's completion and the work it produced commit together, so a
-        # crash can never mark a job done with its results missing.
-        store.complete(job.id)
+        # crash can never mark a job done with its results missing. The fence
+        # makes it one-sided: False means another attempt owns the job now, so
+        # this one leaves the transaction - recheck enqueue and all - to it.
+        if not store.complete(job.id, lease_token=lease_token):
+            log.warning(
+                "job %s was taken over; leaving its outcome and trail to the new owner",
+                job.id[:8],
+            )
+            session.rollback()
+            return
         session.add(
             AuditEvent(
                 organization_id=profile_row.organization_id,

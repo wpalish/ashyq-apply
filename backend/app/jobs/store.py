@@ -18,8 +18,9 @@ import os
 import socket
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
+from typing import Any
 
-from sqlalchemy import select, text, update
+from sqlalchemy import case, select, text, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
@@ -72,29 +73,16 @@ class JobStore:
         self.worker_id = worker_id
 
     def owns(self, job_id: str) -> bool:
-        """Whether this worker still holds a running claim on the job."""
+        """Whether this worker still holds a running claim on the job.
+
+        A fast-fail for checkpoints, read-only by design. It is not the
+        guarantee: the guarantee is that every write below is a conditional
+        UPDATE that re-checks the claim in the same statement.
+        """
         job = self.session.get(Job, job_id)
         if job is None or job.status != JobStatus.RUNNING.value:
             return False
         return self.worker_id is None or job.worker_id == self.worker_id
-
-    def _fenced_out(self, job_id: str) -> bool:
-        """True when this store may no longer speak for the job."""
-        if self.worker_id is None:
-            return False
-        job = self.session.get(Job, job_id)
-        if job is None:
-            return True
-        fenced = job.status != JobStatus.RUNNING.value or job.worker_id != self.worker_id
-        if fenced:
-            log.warning(
-                "worker %s no longer owns job %s (status=%s, owner=%s); refusing to update it",
-                self.worker_id,
-                job_id[:8],
-                job.status,
-                job.worker_id,
-            )
-        return fenced
 
     # --- producing -------------------------------------------------------
 
@@ -161,6 +149,11 @@ class JobStore:
         The row is locked and updated in one statement. On PostgreSQL
         SKIP LOCKED lets a second worker step over a row another is claiming
         instead of waiting behind it.
+
+        The claimed job's ``attempts`` value is the lease token for this
+        attempt: every fenced update below re-checks it, so a re-claim of the
+        same job under one worker_id - the self-reap loop with concurrency
+        greater than one - cannot be spoken for by the stale attempt.
         """
         worker = worker_id or worker_identity()
         now = datetime.now(UTC)
@@ -204,12 +197,19 @@ class JobStore:
         self.session.flush()
         return self.session.get(Job, claimed)
 
-    def heartbeat(self, job_id: str) -> bool:
-        """Extend the lease. False if the job is no longer ours to extend."""
+    def heartbeat(self, job_id: str, *, lease_token: int | None = None) -> bool:
+        """Extend the lease. False if the job is no longer ours to extend.
+
+        With a ``lease_token`` the renewal is fenced to the one attempt that
+        claimed the job at that count, so the beat of a stale attempt cannot
+        keep a lease alive that a newer attempt now holds.
+        """
         now = datetime.now(UTC)
         statement = update(Job).where(Job.id == job_id, Job.status == JobStatus.RUNNING.value)
         if self.worker_id is not None:
             statement = statement.where(Job.worker_id == self.worker_id)
+        if lease_token is not None:
+            statement = statement.where(Job.attempts == lease_token)
         updated = self.session.execute(
             statement.values(
                 heartbeat_at=now, lease_expires_at=now + timedelta(seconds=self.lease_seconds)
@@ -217,14 +217,18 @@ class JobStore:
         ).scalar()
         return updated is not None
 
-    def complete(self, job_id: str) -> bool:
-        """Mark the job done. False when it is no longer ours to finish."""
+    def complete(self, job_id: str, *, lease_token: int | None = None) -> bool:
+        """Mark the job done. False when it is no longer ours to finish.
+
+        One conditional UPDATE, so check and write cannot drift apart: a stale
+        attempt changes zero rows - no status, no finish time, no error.
+        """
         now = datetime.now(UTC)
-        statement = update(Job).where(Job.id == job_id)
+        statement = update(Job).where(Job.id == job_id, Job.status == JobStatus.RUNNING.value)
         if self.worker_id is not None:
-            statement = statement.where(
-                Job.status == JobStatus.RUNNING.value, Job.worker_id == self.worker_id
-            )
+            statement = statement.where(Job.worker_id == self.worker_id)
+        if lease_token is not None:
+            statement = statement.where(Job.attempts == lease_token)
         completed = self.session.execute(
             statement.values(
                 status=JobStatus.SUCCEEDED.value,
@@ -240,66 +244,106 @@ class JobStore:
             )
         return completed is not None
 
-    def fail(self, job_id: str, error: str, *, retry: bool = True) -> str:
+    def fail(
+        self, job_id: str, error: str, *, retry: bool = True, lease_token: int | None = None
+    ) -> str:
         """Record a failure. Returns the resulting status.
 
         A job that has used its attempts goes to ``dead`` rather than looping:
         an automatic retry that can never succeed is just a slower outage.
+
+        The write is one conditional UPDATE, and the retry-versus-dead call is
+        made inside it, so a stale attempt records nothing - not even
+        ``last_error`` - and learns only the status that stands without it.
         """
-        job = self.session.get(Job, job_id)
-        if job is None:
-            return JobStatus.DEAD.value
-        if self._fenced_out(job_id):
-            # Another worker owns it now; its outcome is theirs to record.
-            return job.status
         now = datetime.now(UTC)
-        exhausted = job.attempts >= job.max_attempts
+        statement = update(Job).where(Job.id == job_id, Job.status == JobStatus.RUNNING.value)
+        if self.worker_id is not None:
+            statement = statement.where(Job.worker_id == self.worker_id)
+        if lease_token is not None:
+            statement = statement.where(Job.attempts == lease_token)
 
-        if not retry or exhausted:
-            job.status = JobStatus.DEAD.value
-            job.finished_at = now
+        exhausted = Job.attempts >= Job.max_attempts
+        values: dict[str, Any] = {
+            "worker_id": None,
+            "lease_expires_at": None,
+            "last_error": error[:4000],
+        }
+        if not retry:
+            values.update(status=JobStatus.DEAD.value, finished_at=now)
         else:
-            job.status = JobStatus.QUEUED.value
-            job.available_at = now + backoff_for(job.attempts)
-            job.finished_at = None
+            # The backoff slots are fixed per attempt count, so each branch
+            # binds a plain constant: no interval arithmetic in SQL.
+            values.update(
+                status=case((exhausted, JobStatus.DEAD.value), else_=JobStatus.QUEUED.value),
+                finished_at=case((exhausted, now), else_=None),
+                available_at=case(
+                    (exhausted, Job.available_at),
+                    (Job.attempts <= 1, now + timedelta(seconds=BACKOFF_SECONDS[0])),
+                    (Job.attempts == 2, now + timedelta(seconds=BACKOFF_SECONDS[1])),
+                    else_=now + timedelta(seconds=BACKOFF_SECONDS[-1]),
+                ),
+            )
+        failed = self.session.execute(statement.values(**values).returning(Job.status)).scalar()
+        if failed is not None:
+            return str(failed)
+        # Fenced, or the job is gone. Write nothing; report what stands.
+        current = self.session.execute(select(Job.status).where(Job.id == job_id)).scalar()
+        return current if current is not None else JobStatus.DEAD.value
 
-        job.lease_expires_at = None
-        job.worker_id = None
-        job.last_error = error[:4000]
-        self.session.add(job)
-        self.session.flush()
-        return job.status
+    def mark_cancelled(
+        self, job_id: str, reason: str = "cancelled by the user", *, lease_token: int | None = None
+    ) -> bool:
+        """Terminal status for work a person stopped deliberately.
 
-    def mark_cancelled(self, job_id: str, reason: str = "cancelled by the user") -> None:
-        """Terminal status for work a person stopped deliberately."""
-        job = self.session.get(Job, job_id)
-        if job is None or self._fenced_out(job_id):
-            return
-        job.status = JobStatus.CANCELLED.value
-        job.finished_at = datetime.now(UTC)
-        job.lease_expires_at = None
-        job.worker_id = None
-        job.last_error = reason[:4000]
-        self.session.add(job)
-        self.session.flush()
+        Only the attempt that still holds the running claim can record it; a
+        stale attempt's cancellation is zero rows and returns False.
+        """
+        now = datetime.now(UTC)
+        statement = update(Job).where(Job.id == job_id, Job.status == JobStatus.RUNNING.value)
+        if self.worker_id is not None:
+            statement = statement.where(Job.worker_id == self.worker_id)
+        if lease_token is not None:
+            statement = statement.where(Job.attempts == lease_token)
+        cancelled = self.session.execute(
+            statement.values(
+                status=JobStatus.CANCELLED.value,
+                finished_at=now,
+                lease_expires_at=None,
+                worker_id=None,
+                last_error=reason[:4000],
+            ).returning(Job.id)
+        ).scalar()
+        return cancelled is not None
 
     def cancel(self, job_id: str) -> bool:
         """Request cancellation.
 
         A queued job is cancelled at once. A running one is flagged; the worker
         observes the flag between units of work so it stops at a consistent
-        point rather than mid-stage.
+        point rather than mid-stage. One conditional UPDATE carries both cases,
+        so the status read and the write cannot drift apart.
         """
-        job = self.session.get(Job, job_id)
-        if job is None or job.status in TERMINAL_STATUSES:
-            return False
-        job.cancel_requested = True
-        if job.status == JobStatus.QUEUED.value:
-            job.status = JobStatus.CANCELLED.value
-            job.finished_at = datetime.now(UTC)
-        self.session.add(job)
-        self.session.flush()
-        return True
+        cancelled = self.session.execute(
+            update(Job)
+            .where(
+                Job.id == job_id,
+                Job.status.not_in([status.value for status in TERMINAL_STATUSES]),
+            )
+            .values(
+                cancel_requested=True,
+                status=case(
+                    (Job.status == JobStatus.QUEUED.value, JobStatus.CANCELLED.value),
+                    else_=Job.status,
+                ),
+                finished_at=case(
+                    (Job.status == JobStatus.QUEUED.value, datetime.now(UTC)),
+                    else_=Job.finished_at,
+                ),
+            )
+            .returning(Job.id)
+        ).scalar()
+        return cancelled is not None
 
     def is_cancel_requested(self, job_id: str) -> bool:
         return bool(
@@ -314,36 +358,65 @@ class JobStore:
         This is what makes a crash recoverable: the job is not lost, and it is
         not left claiming to run. Attempts are already counted by the claim, so
         a job that keeps killing its worker still reaches ``dead``.
+
+        The take-back is a conditional UPDATE per expired job - it lands only
+        if the job is still running on an expired lease at the moment of the
+        write - and the retry-versus-dead call is made from what that UPDATE
+        returns. A heartbeat that lands between the read and the write leaves
+        the job with the worker that renewed it.
         """
         now = now or datetime.now(UTC)
-        expired = list(
-            self.session.scalars(
-                select(Job).where(
+        expired = self.session.execute(
+            select(Job.id, Job.worker_id, Job.lease_expires_at)
+            .where(
+                Job.status == JobStatus.RUNNING.value,
+                Job.lease_expires_at.is_not(None),
+                Job.lease_expires_at < now,
+            )
+            .order_by(Job.id)
+        ).all()
+        reaped: list[str] = []
+        for job_id, worker, expiry in expired:
+            expiry = ensure_utc(expiry)
+            expired_at = expiry.isoformat() if expiry else "unknown"
+            note = (
+                f"The worker holding this job ({worker or 'unknown'}) stopped without "
+                f"finishing. Lease expired at {expired_at}."
+            )
+            row = self.session.execute(
+                update(Job)
+                .where(
+                    Job.id == job_id,
                     Job.status == JobStatus.RUNNING.value,
                     Job.lease_expires_at.is_not(None),
                     Job.lease_expires_at < now,
                 )
+                .values(worker_id=None, lease_expires_at=None, last_error=note)
+                .returning(Job.id, Job.attempts, Job.max_attempts)
+            ).first()
+            if row is None:
+                continue  # the worker beat again: the job is still its own
+            _, attempts, max_attempts = row
+            # The take-away above is the fence for this write: the lease is
+            # already cleared and the row is this transaction's, so the outcome
+            # cannot race the worker it was taken from.
+            outcome = update(Job).where(
+                Job.id == job_id,
+                Job.status == JobStatus.RUNNING.value,
+                Job.worker_id.is_(None),
+                Job.lease_expires_at.is_(None),
             )
-        )
-        reaped: list[str] = []
-        for job in expired:
-            expiry = ensure_utc(job.lease_expires_at)
-            expired_at = expiry.isoformat() if expiry else "unknown"
-            note = (
-                f"The worker holding this job ({job.worker_id or 'unknown'}) stopped without "
-                f"finishing. Lease expired at {expired_at}."
-            )
-            if job.attempts >= job.max_attempts:
-                job.status = JobStatus.DEAD.value
-                job.finished_at = now
+            if attempts >= max_attempts:
+                self.session.execute(outcome.values(status=JobStatus.DEAD.value, finished_at=now))
             else:
-                job.status = JobStatus.QUEUED.value
-                job.available_at = now + backoff_for(job.attempts)
-            job.worker_id = None
-            job.lease_expires_at = None
-            job.last_error = note
-            self.session.add(job)
-            reaped.append(job.id)
+                self.session.execute(
+                    outcome.values(
+                        status=JobStatus.QUEUED.value,
+                        available_at=now + backoff_for(attempts),
+                        finished_at=None,
+                    )
+                )
+            reaped.append(job_id)
         if reaped:
             log.warning("reaped %d job(s) with expired leases", len(reaped))
         self.session.flush()
