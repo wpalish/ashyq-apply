@@ -87,7 +87,7 @@ services:
       # writable or the container dies on startup with EROFS before it serves a
       # single request. The API never fetches pages, so this is scratch space
       # that may vanish with the container.
-      - /app/data
+      - /app/data:uid=10001,gid=10001,mode=0750
     security_opt:
       - no-new-privileges:true
     deploy:
@@ -99,6 +99,10 @@ services:
     build:
       context: ./backend
     command: ["python", "-m", "app.jobs.worker"]
+    # The shared image probes the API's HTTP port, which this process does not
+    # serve. Worker readiness is verified by consuming a queued research run.
+    healthcheck:
+      disable: true
     environment:
       <<: *backend-env
       UNIMATCH_WORKER_CONCURRENCY: ${UNIMATCH_WORKER_CONCURRENCY:-2}

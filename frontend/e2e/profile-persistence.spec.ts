@@ -5,6 +5,11 @@
  * `savedProfile` pointed at the real one, so the next save wrote demo data over
  * the applicant's own. Its own session on purpose: it needs a clean
  * localStorage and it edits the profile, which the shared journey relies on.
+ *
+ * The `Saved` chip is asserted with `exact: true`. Without it the match is a
+ * case-insensitive substring, so the transcript hint — "it is never saved" —
+ * answers for the chip and the assertion fails in strict mode. Only the chip's
+ * whole text is `Saved`.
  */
 
 import { expect, test } from '@playwright/test';
@@ -23,7 +28,7 @@ test('a saved profile is restored into the form after a reload', async ({ page }
   await page.getByLabel('Field of study').fill('civil engineering');
   await page.getByTestId('ielts-overall').fill('7');
   await page.getByTestId('save-profile').click();
-  await expect(page.getByText('Saved')).toBeVisible();
+  await expect(page.getByText('Saved', { exact: true })).toBeVisible();
 
   await page.reload();
 
@@ -57,7 +62,7 @@ test('replacing a saved profile asks first', async ({ page }) => {
 
   await page.getByLabel('Citizenship').fill('Georgia');
   await page.getByTestId('save-profile').click();
-  await expect(page.getByText('Saved')).toBeVisible();
+  await expect(page.getByText('Saved', { exact: true })).toBeVisible();
 
   await page.getByTestId('load-demo-profile').click();
   await expect(page.getByText('Replace the profile you have saved?')).toBeVisible();

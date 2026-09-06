@@ -364,3 +364,78 @@ Frontend: 137 unit tests, typecheck, lint and production build clean.
 Still open and unchanged: the container stack has never been run (gate 22), and
 the privacy policy and terms need a lawyer before real applicants see them
 (gate 87). Both need a person, not another phase.
+
+## Update — what landed after the fix plan closed
+
+`docs/FIX_PLAN.md` ended at Phase 6, and this file stopped with it while three
+more bodies of work were merged into `main`. Recorded here so the gap between
+what the repository does and what it says about itself closes.
+
+**Ranking v2 (PR #2).** The shortlist no longer sums six weighted axes: it takes
+a geometric mean of them, so a place the applicant cannot afford cannot buy its
+way to the top with the other five. A result carries its bucket, its per-axis
+scores with the reason for each, and the attributes it was ranked from — which
+is what lets a changed priority re-rank a finished run in place, with no page
+fetched. The applicant ranks six priorities instead of moving twelve sliders,
+and the screen says in plain words that the order is not a probability. The
+reasoning is `docs/adr/0003-noncompensatory-ranking.md`.
+
+**A community.** Feed, threads, private conversations with a setting that
+decides who may open one, blocking, a report queue somebody can actually work,
+and avatars served by us with their metadata stripped. Account deletion has a
+test for its seam with the community. What does not exist: written community
+rules and any statement of who moderates, how fast, and against what.
+
+**Payments, off by default.** Kaspi Pay through ApiPay: an order, a signed
+webhook, and a reconciler that polls in case the webhook never arrives, both
+converging on one idempotent writer. School subscriptions are a quota that
+queues rather than expires. With `UNIMATCH_PAYMENTS_ENABLED=false` — the
+default — none of it is reachable and every case is fully open, which a test
+asserts. **The adapter has never spoken to ApiPay**: no merchant account exists,
+so every payment claim rests on contract tests written against their published
+OpenAPI document. `4990 ₸` is a placeholder, not a decided price.
+
+### The numbers, measured rather than remembered
+
+On `2be6b55`, which is `main`:
+
+| | |
+|---|---|
+| Backend tests | **1110 passed** — in CI on SQLite and PostgreSQL, and again locally on Windows/SQLite with the same count |
+| Backend coverage | 92.86%, floor 92 |
+| Frontend unit tests | 164 passed, 18 files |
+| End-to-end | **70 passed, 1 failed, 1 skipped of 74** |
+| ruff, ruff format, mypy, tsc, eslint, build | clean |
+| `pip-audit`, `npm audit`, `docker compose build` | clean |
+
+Earlier updates in this file say 818 backend tests and 137 frontend. Those were
+true when written; payments, subscriptions and the community were added after.
+
+### What is red, and what that costs
+
+**CI on `main` has failed on every push since 2026-09-04.** One test does it:
+`e2e/profile-persistence.spec.ts:26` asserts `getByText('Saved')` is visible and
+two elements now match, so Playwright refuses in strict mode. It first failed on
+desktop, then on mobile. The cost is larger than one test: the suite exits
+before `npm run e2e:auth`, so the authenticated path — register, profile, run,
+sign out, sign in, data still there — has not been exercised on `main` for two
+days.
+
+### Still open
+
+- **Live programme-page recall is 2 of 9.** Scholarship pages are found at eight
+  of nine institutions; programme pages are not. In live mode most institutions
+  still end at `NEEDS_OFFICIAL_CLARIFICATION`, and the product is only fully
+  itself against the bundled demo corpus. This is the product risk, not a
+  hardening gap.
+- **The interface is effectively English.** 378 keys exist in the dictionary,
+  184 are translated into Russian and Kazakh, and only seven components read
+  from it at all. The audience is Kazakhstani applicants and their parents.
+- **The privacy policy and terms are drafts no lawyer has read**, and the
+  product asks nobody's age while being built for applicants who include minors.
+- **Nothing is deployed externally.** The container stack runs locally; a
+  domain, TLS, secrets, a backup cron and monitoring are all outstanding.
+- **`epics.md` describes a redesign of which none is built.** Seventeen epics;
+  R1 alone is a design system, a public landing page with consents, the profile
+  as a wizard instead of ~80 fields on one screen, and a mobile shortlist of
+  cards instead of a table.
