@@ -10,7 +10,7 @@ from app.domain.costs import compute_funding_gap, total_cost
 from app.domain.currency import UnsupportedCurrency, convert, rate
 from app.domain.enums import FundingClassification
 from app.schemas.money import Money
-from app.schemas.result import CostBreakdown, CoverageBreakdown, Scholarship
+from app.schemas.result import CostBreakdown, CoverageBreakdown, FundingGap, Scholarship
 
 YEAR = "2026/27"
 
@@ -193,3 +193,75 @@ class TestCurrency:
             assert "XYZ" in str(exc)
         else:
             raise AssertionError("an unknown currency must not be silently converted")
+
+
+def _category_names(categories) -> list[str]:
+    """Missing/known categories as plain names, whatever representation is used."""
+    return [getattr(c, "value", str(c)) for c in categories]
+
+
+class TestPartialCostIsNotFullCost:
+    """F01: a subtotal of known categories is not a full cost of attendance.
+
+    A tuition-only cost table plus a matching full-tuition award must not read
+    as "everything is covered": housing, meals and mandatory fees are unknown,
+    and unknown is not zero.
+    """
+
+    def test_tuition_only_costs_with_a_matching_award_do_not_report_a_zero_gap(self):
+        gap = compute_funding_gap(costs(tuition=10000), [award(10000)])
+        assert gap.computable is False
+        assert gap.gap is None
+        assert gap.gap_low is None
+        assert gap.gap_high is None
+        assert gap.cost_basis == "itemised_partial"
+        assert {"mandatory_fees", "housing", "meals"} <= set(
+            _category_names(gap.missing_categories)
+        )
+        # The known subtotal stays visible, as a lower bound — never as the full cost.
+        assert gap.total_cost is not None
+        assert gap.total_cost.amount == 10000
+        assert gap.warnings
+        named = " ".join(gap.warnings).replace("_", " ").lower()
+        assert "housing" in named and "meals" in named
+
+    def test_an_explicit_zero_is_known_but_a_missing_key_is_not(self):
+        """Meals priced at zero are a known cost; no meals line at all is not."""
+        known_zero = compute_funding_gap(
+            costs(tuition=40000, mandatory_fees=2000, housing=12000, meals=0), [award(40000)]
+        )
+        assert known_zero.cost_basis == "itemised_complete"
+        assert _category_names(known_zero.missing_categories) == []
+        assert known_zero.computable
+        assert known_zero.gap.amount == 14000
+
+        no_meals_key = compute_funding_gap(
+            costs(tuition=40000, mandatory_fees=2000, housing=12000), [award(40000)]
+        )
+        assert no_meals_key.cost_basis == "itemised_partial"
+        assert _category_names(no_meals_key.missing_categories) == ["meals"]
+        assert no_meals_key.computable is False
+        assert no_meals_key.gap is None
+        assert no_meals_key.total_cost is not None
+        assert no_meals_key.total_cost.amount == 54000
+
+    def test_a_published_total_keeps_the_old_rules_even_with_partial_itemisation(self):
+        """A university-published total is authoritative; the guard is that the
+        new basis state never demotes it."""
+        breakdown = costs(tuition=40000, housing=12000)
+        breakdown.total = Money(amount=59000, currency="USD", academic_year=YEAR)
+        gap = compute_funding_gap(breakdown, [award(40000)])
+        assert gap.cost_basis == "published_total"
+        assert gap.computable
+        assert gap.gap.amount == 19000
+
+    def test_a_legacy_funding_gap_payload_validates_with_defaults(self):
+        """Rows stored before cost_basis existed must still load, with defaults."""
+        legacy = FundingGap.model_validate(
+            {"computable": False, "reason": "stored before cost basis existed"}
+        )
+        assert legacy.cost_basis is None
+        assert legacy.missing_categories == []
+        dumped = legacy.model_dump()
+        assert dumped["cost_basis"] is None
+        assert dumped["missing_categories"] == []
