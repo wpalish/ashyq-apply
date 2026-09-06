@@ -138,6 +138,13 @@ class CostBreakdown(Base):
     is_range: bool = False
 
 
+#: What the cost figure rests on: the university's own published total, an
+#: itemisation that names every core category, or a partial itemisation where
+#: some core categories are simply absent. ``None`` means no cost basis was
+#: established at all (legacy rows, or no cost data either way).
+CostBasis = Literal["published_total", "itemised_complete", "itemised_partial"]
+
+
 class FundingGap(Base):
     """Result of the cost-minus-aid arithmetic, including refusals to compute."""
 
@@ -152,6 +159,11 @@ class FundingGap(Base):
     year_mismatch: bool = False
     currency_mismatch: bool = False
     category_mismatch: bool = False
+    cost_basis: CostBasis | None = None
+    #: Core categories the cost table does not mention. Non-empty only for
+    #: ``itemised_partial``: a line priced at zero is a known cost, not a
+    #: missing one.
+    missing_categories: list[CostCategory] = Field(default_factory=list)
     warnings: list[str] = Field(default_factory=list)
 
 

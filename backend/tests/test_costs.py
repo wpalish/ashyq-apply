@@ -34,9 +34,12 @@ def award(amount: float, currency="USD", year=YEAR, **kwargs) -> Scholarship:
 
 class TestArithmetic:
     def test_gap_is_cost_minus_aid(self):
-        gap = compute_funding_gap(costs(tuition=40000, housing=12000), [award(40000)])
+        # Full core basis: a partial itemisation is never a computable gap (F01).
+        gap = compute_funding_gap(
+            costs(tuition=40000, mandatory_fees=2000, housing=12000, meals=6000), [award(40000)]
+        )
         assert gap.computable
-        assert gap.gap.amount == 12000
+        assert gap.gap.amount == 20000
 
     def test_a_published_total_is_converted_to_the_target_currency(self):
         """A CAD total netted against a USD award would be off by ~35%."""
@@ -53,7 +56,9 @@ class TestArithmetic:
         assert total_cost(breakdown, "USD").amount == 59_000
 
     def test_aid_exceeding_cost_reports_zero_and_says_so(self):
-        gap = compute_funding_gap(costs(tuition=20000), [award(30000)])
+        gap = compute_funding_gap(
+            costs(tuition=20000, mandatory_fees=2000, housing=12000, meals=6000), [award(50000)]
+        )
         assert gap.gap.amount == 0
         assert any("exceeds the published cost" in w for w in gap.warnings)
 
@@ -64,9 +69,11 @@ class TestArithmetic:
             amount_is_percentage_of_tuition=100.0,
             classification=FundingClassification.FULL_TUITION,
         )
-        gap = compute_funding_gap(costs(tuition=15000, housing=8000), [s])
+        gap = compute_funding_gap(
+            costs(tuition=15000, mandatory_fees=2000, housing=8000, meals=6000), [s]
+        )
         assert gap.computable
-        assert gap.gap.amount == 8000
+        assert gap.gap.amount == 16000
 
 
 class TestRefusals:
@@ -152,9 +159,12 @@ class TestRefusals:
         need = Scholarship(
             id="n", name="Need Aid", classification=FundingClassification.NEED_BASED_POSSIBLE
         )
-        gap = compute_funding_gap(costs(tuition=40000), [need, award(10000)])
+        gap = compute_funding_gap(
+            costs(tuition=40000, mandatory_fees=2000, housing=12000, meals=6000),
+            [need, award(10000)],
+        )
         assert gap.computable
-        assert gap.gap.amount == 30000
+        assert gap.gap.amount == 50000
         assert any("need assessment" in w for w in gap.warnings)
 
 
@@ -163,15 +173,21 @@ class TestStacking:
         primary = award(20000, stackable="yes", name="Primary")
         secondary = award(5000, stackable="yes", name="Secondary")
         no_stack = award(3000, stackable="no", name="Solo")
-        gap = compute_funding_gap(costs(tuition=40000), [primary, secondary, no_stack])
+        gap = compute_funding_gap(
+            costs(tuition=40000, mandatory_fees=2000, housing=12000, meals=6000),
+            [primary, secondary, no_stack],
+        )
         assert gap.stackable_aid.amount == 5000
 
     def test_a_primary_that_forbids_combining_blocks_stacking_entirely(self):
         primary = award(20000, stackable="no", name="Exclusive")
         secondary = award(5000, stackable="yes", name="Add-on")
-        gap = compute_funding_gap(costs(tuition=40000), [primary, secondary])
+        gap = compute_funding_gap(
+            costs(tuition=40000, mandatory_fees=2000, housing=12000, meals=6000),
+            [primary, secondary],
+        )
         assert gap.stackable_aid is None
-        assert gap.gap.amount == 20000
+        assert gap.gap.amount == 40000
         assert any("may not be combined" in w for w in gap.warnings)
 
 

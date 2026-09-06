@@ -169,6 +169,9 @@ export interface CostBreakdown {
   is_range: boolean;
 }
 
+/** What the cost figure rests on; null when no cost basis was established. */
+export type CostBasis = 'published_total' | 'itemised_complete' | 'itemised_partial';
+
 export interface FundingGap {
   computable: boolean;
   gap: Money | null;
@@ -181,6 +184,9 @@ export interface FundingGap {
   year_mismatch: boolean;
   currency_mismatch: boolean;
   category_mismatch: boolean;
+  cost_basis: CostBasis | null;
+  /** Core categories the cost table omits; non-empty only for itemised_partial. */
+  missing_categories: CostCategory[];
   warnings: string[];
 }
 

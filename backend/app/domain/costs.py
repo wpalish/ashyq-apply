@@ -11,7 +11,7 @@ from __future__ import annotations
 from app.domain.currency import UnsupportedCurrency, convert
 from app.domain.enums import CostCategory, FundingClassification
 from app.schemas.money import Money
-from app.schemas.result import CostBreakdown, FundingGap, Scholarship
+from app.schemas.result import CostBasis, CostBreakdown, FundingGap, Scholarship
 
 #: Categories that make up a normal published cost of attendance.
 CORE_COST_CATEGORIES = (
@@ -20,6 +20,28 @@ CORE_COST_CATEGORIES = (
     CostCategory.HOUSING,
     CostCategory.MEALS,
 )
+
+
+def _missing_core_categories(costs: CostBreakdown) -> list[CostCategory]:
+    """Core categories the itemised table does not mention at all.
+
+    A line priced at zero is a known cost; an absent key is an unknown one.
+    """
+    return [category for category in CORE_COST_CATEGORIES if category not in costs.items]
+
+
+def _cost_basis(costs: CostBreakdown) -> tuple[CostBasis, list[CostCategory]]:
+    """Classify where the cost figure rests, and which core categories are absent.
+
+    A published total is authoritative even over a partial itemisation, so the
+    missing list is only reported for a partial itemised basis.
+    """
+    missing = _missing_core_categories(costs)
+    if costs.total is not None:
+        return "published_total", []
+    if missing:
+        return "itemised_partial", missing
+    return "itemised_complete", []
 
 
 def total_cost(breakdown: CostBreakdown, target_currency: str = "USD") -> Money | None:
@@ -111,6 +133,7 @@ def compute_funding_gap(
     """estimated_funding_gap = cost of attendance − confirmed aid − stackable aid."""
     warnings: list[str] = []
 
+    basis, missing = _cost_basis(costs)
     cost = total_cost(costs, target_currency)
     if cost is None:
         years = sorted({m.academic_year for m in costs.items.values() if m.academic_year})
@@ -118,6 +141,8 @@ def compute_funding_gap(
             return FundingGap(
                 computable=False,
                 year_mismatch=True,
+                cost_basis=basis,
+                missing_categories=missing,
                 reason=(
                     "Published cost components come from different academic years "
                     f"({', '.join(years)}). They are not summed, because a mixed-year total "
@@ -157,9 +182,34 @@ def compute_funding_gap(
         if best is None or amt.amount > best[0].amount:
             best = (amt, s)
 
+    if basis == "itemised_partial":
+        # The known categories sum to a lower bound, not to the cost of
+        # attendance: the absent core categories are unknown, and unknown is
+        # not zero. No gap is computed against a half-known cost. The check
+        # sits after award resolution so that award warnings the user needs
+        # (exclusions, need-based deferrals) travel with the refusal.
+        warnings.append(
+            "The cost table does not itemise "
+            + ", ".join(c.value.replace("_", " ") for c in missing)
+            + "; the figure shown is the known subtotal, a lower bound on the "
+            "real cost of attendance."
+        )
+        return FundingGap(
+            computable=False,
+            cost_basis=basis,
+            missing_categories=missing,
+            total_cost=cost,
+            reason=(
+                "Only part of the core cost of attendance is published, so the full annual "
+                "cost is unknown and no remaining-cost figure is computed."
+            ),
+            warnings=warnings,
+        )
+
     if best is None:
         return FundingGap(
             computable=False,
+            cost_basis=basis,
             total_cost=cost,
             reason=(
                 "Cost of attendance is known, but no scholarship with an officially published "
@@ -218,6 +268,7 @@ def compute_funding_gap(
     if gap_amount <= 0 and (year_mismatch or category_mismatch):
         return FundingGap(
             computable=False,
+            cost_basis=basis,
             total_cost=cost,
             confirmed_aid=primary,
             stackable_aid=Money(amount=stackable_total, currency=target_currency.upper())
@@ -246,6 +297,7 @@ def compute_funding_gap(
 
     return FundingGap(
         computable=True,
+        cost_basis=basis,
         gap=Money(
             amount=round(gap_amount, 2),
             currency=target_currency.upper(),
