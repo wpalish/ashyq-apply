@@ -19,7 +19,7 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 **`[0.8]` is `merged`** — PR #2 landed stage 0 on main, and PR #3 (payments) landed on top.
 
-Current: a one-commit fix-forward on `fix/shortlist-columns`, then `[1.1]`. The last [0.8] commit
+Current: a one-commit fix-forward on `fix/shortlist-columns` — **ready-for-review (PR #6)** — then `[1.1]`. The last [0.8] commit
 `14d556b` was pushed *after* the owner merged PR #2, so it never reached main: the shortlist on main
 today renders `Confirmed` and `Bucket` underneath the pinned decision column, where nobody can read
 them. That is what this branch carries — the same three files, re-applied on the new base (main's
@@ -192,8 +192,7 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-1. **This branch**: open a PR for `fix/shortlist-columns` and let the owner merge it. It is three
-   frontend files plus the screenshots the e2e run regenerated on the new base.
+1. ~~Open a PR for `fix/shortlist-columns`.~~ **Done — PR #6**, gates in §6. Awaiting the owner.
 2. **`[1.1] Интерфейс и схемы`** on `task/1.1-research-agent`, branched from `main` (no predecessor
    exception needed any more — stage 0 is merged):
    - `backend/app/adapters/research/base.py`: `Protocol ResearchAgent` with `discover`,
