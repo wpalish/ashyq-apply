@@ -193,6 +193,16 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+Docker verification requested by owner, 2026-09-06 (gpt-6-astra), branch
+`task/docker-stack-verification` from `7ecfaf5`. Initial Compose build and migrations
+succeeded; API failed creating `/app/data/httpcache` because tmpfs is root-owned.
+Done: API tmpfs ownership fixed; worker's inherited API HTTP healthcheck disabled.
+Compose starts; nginx registration and demo run completed with 20 results.
+Evidence: `docs/DOCKER_VERIFICATION.md`; gate 22 is locally PASS.
+Next: review the Compose-only changes; full unit suites were not rerun.
+Ranking PR review
+remains separate; this task does not merge or approve it.
+
 [0.8] is code-complete and every gate is green (§6). Remaining, in order:
 
 1. ~~Open the PR.~~ **Done — PR #2**, template filled in with the real output from §6.

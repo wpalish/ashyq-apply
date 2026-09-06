@@ -4,15 +4,14 @@ Thirty gates. A release may be declared only when every one is green. Status is
 recorded honestly: `PASS` means verified by a command whose output is shown in
 the release report, not "implemented".
 
-**Current verdict: NOT DEPLOYED.** 27 of the 30 original gates pass, one is
-partial and one fails; the local container stack is still the unverified gate,
-and the release commit/tag waits on it.
+**Current verdict: NOT DEPLOYED externally.** The local Docker stack was verified
+on 2026-09-06; gate 22 now passes. Other gate evidence retains its original scope.
 
 **`docs/FIX_PLAN.md` is finished.** Phases 0–6 are done, including the optional
 sixth; gates 36–92 below record what each fix is held to. Two audit findings
 did not reproduce against this tree and are recorded as such rather than
 "fixed" — see gates 22 and 47. What remains open needs a person, not another
-phase: Docker for the container stack (gate 22) and a lawyer for the privacy
+phase: a lawyer for the privacy
 policy and terms (gate 87).
 
 | # | Gate | Status | Evidence / what is missing |
@@ -38,7 +37,7 @@ policy and terms (gate 87).
 | 19 | Approve / reject / maybe and document collection work | **PASS** | Covered by E2E |
 | 20 | CSV / JSON / XLSX exports carry provenance and data origin | **PASS** | 38 columns incl. source links, last-verified, data origin |
 | 21 | Accessibility audit passed | **PASS** | axe WCAG A/AA scans every reachable workflow screen on desktop and mobile; focused keyboard/progress/table/overflow checks also pass |
-| 22 | Docker Compose brings up a production-like stack | **FAIL** | One real defect fixed: the read-only `api` had no writable `/app/data`, and `ensure_dirs()` runs at import, so the container would have died with EROFS before serving a request. The audit's other two compose findings did not reproduce — the worker's `worker-cache:/app/data` matches `BACKEND_ROOT` for the image compose builds, and `backend/Dockerfile` already carries a `curl` HEALTHCHECK. `scripts/verify_compose.sh` drives the whole stack to a finished demo run. **WRITTEN, NOT RUN: Docker is not installed on this machine.** Requires a user checkpoint |
+| 22 | Docker Compose brings up a production-like stack | **PASS** | 2026-09-06: real Docker Desktop build, PostgreSQL migrations exit 0, API/web/postgres healthy; registration and demo research through nginx returned 20 results at awaiting_user_decision. Fixed API tmpfs ownership and removed the worker's inherited API HTTP probe. See docs/DOCKER_VERIFICATION.md. |
 | 23 | Backup / restore and crash recovery verified | **PASS** | Real SIGKILL recovery plus a PostgreSQL `pg_dump`/`pg_restore` scratch-database drill: 12 tables and a synthetic probe restored identically |
 | 24 | Documentation matches actual behaviour | **PASS** | Three README overstatements corrected; status banner added |
 | 25 | No TODO / FIXME in a production path | **PASS** | `grep -rn "TODO\|FIXME" backend/app frontend/src` → none |
@@ -146,7 +145,7 @@ policy and terms (gate 87).
 
 - **PASS:** 28 (of 30 original) + 5 + 7 added by Phase 1 + 17 added by Phase 2 + 14 added by Phase 3 + 9 added by Phase 4 + 5 added by Phase 5 + 3 added by Phase 6
 - **PARTIAL:** 2 (gate 87 — the privacy policy and terms are drafts no lawyer has read; gate 92 — the product vocabulary is deliberately untranslated pending human review)
-- **FAIL:** 1 (gate 22 — the container stack has still never been run)
+- **FAIL:** 0 (gate 22 verified locally on 2026-09-06)
 - **BLOCKED:** 1
 
 Gate 2 moved from PARTIAL to PASS on evidence rather than on work: the
@@ -175,9 +174,7 @@ was written and had simply not been re-tried.
 
 ## Needs the user
 
-* **Running the container stack** requires Docker, which is not installed and
-  cannot be installed without your password. The files are written; they have
-  never been executed.
+* The local Docker stack is installed and verified; no external deployment was performed.
 * **Any external deployment**, domain or billing.
 * **A lawyer to read the privacy policy and terms** (gate 87). They are honest
   drafts, and the product will be used by applicants under 18 while asking
