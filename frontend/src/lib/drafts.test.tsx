@@ -469,7 +469,7 @@ describe('error semantics on initial hydration', () => {
     // A transient failure is not evidence that the case disappeared: the
     // pointer must survive so a retry can find the case again.
     expect(pointerSurvives(PROFILE_A.id)).toBe(true);
-    expect(screen.getByTestId('error')).toContainText('The database is unreachable');
+    expect(screen.getByTestId('error')).toHaveTextContent('The database is unreachable');
   });
 
   it('keeps the run pointer when the stored run cannot be fetched right now', async () => {
