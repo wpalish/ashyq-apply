@@ -17,8 +17,10 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 2. Current task
 
-`docs/catch-up` — **ready-for-review**, by claude-opus-5. Two things the previous sessions left
-behind:
+`docs/catch-up` — **ready-for-review (PR #4)**, by claude-opus-5.
+<https://github.com/wpalish/ashyq-apply/pull/4>
+
+Two things the previous sessions left behind:
 
 1. **`task/docker-stack-verification` was never merged.** Its content is here: the two
    `docker-compose.yml` fixes the real run found, `docs/DOCKER_VERIFICATION.md`, `epics.md`, the
