@@ -14,7 +14,7 @@ from fastapi.testclient import TestClient
 
 from app.config import Settings
 from app.corpus.demo_profile import DEMO_PROFILE
-from app.mail import EmailSender, Message
+from app.mail import Message, RecordingSender
 
 PASSWORD = "correct horse battery staple"
 NEW_PASSWORD = "a different long passphrase"
@@ -73,8 +73,8 @@ def mail_sink(auth_client, monkeypatch):
     The reset token must be observable through the delivered letter and
     through nothing else, so this stands in for the user's mailbox at the
     same seam the route itself uses: the module-level ``get_sender`` binding
-    in ``app.api.routes_account``. (``app.mail`` may grow an official
-    recording sender for tests; until it does, the sink lives here.)
+    in ``app.api.routes_account``. The sender itself is the official test
+    sink from ``app.mail``.
     """
     client, settings = auth_client
     sink = RecordingSender()
@@ -96,16 +96,6 @@ def register(client: TestClient, suffix: str, password: str = PASSWORD) -> dict:
     )
     assert response.status_code == 201, response.text
     return response.json()
-
-
-class RecordingSender(EmailSender):
-    """A mail sink: every letter the product would send, kept for the test."""
-
-    def __init__(self) -> None:
-        self.messages: list[Message] = []
-
-    def send(self, message: Message) -> None:
-        self.messages.append(message)
 
 
 def reset_token_from_letter(message: Message) -> str:
@@ -184,28 +174,34 @@ class TestPasswordChange:
 
 
 class TestPasswordReset:
-    def _request_link(self, client, email: str) -> str:
+    def _request_token(self, client: TestClient, sink: RecordingSender, email: str) -> str:
+        """Ask for a reset, then read the token off the delivered letter.
+
+        The API answer carries no token in any environment; the letter is the
+        only place the recipient ever sees one.
+        """
         response = client.post("/api/auth/password/reset-request", json={"email": email})
         assert response.status_code == 202
-        return response.json()["reset_link"]
+        assert len(sink.messages) == 1, "one request, one letter"
+        return reset_token_from_letter(sink.messages[0])
 
-    def test_a_reset_link_gets_the_account_back(self, auth_client):
-        client, _ = auth_client
+    def test_a_reset_link_gets_the_account_back(self, mail_sink):
+        client, _, sink = mail_sink
         register(client, "forgetful")
         client.post("/api/auth/logout")
 
-        token = self._request_link(client, "forgetful@example.test").split("token=")[1]
+        token = self._request_token(client, sink, "forgetful@example.test")
         response = client.post(
             "/api/auth/password/reset", json={"token": token, "new_password": NEW_PASSWORD}
         )
         assert response.status_code == 200
         assert client.get("/api/auth/me").status_code == 200, "the reset signs the user in"
 
-    def test_a_token_works_once(self, auth_client):
-        client, _ = auth_client
+    def test_a_token_works_once(self, mail_sink):
+        client, _, sink = mail_sink
         register(client, "replayer")
         client.post("/api/auth/logout")
-        token = self._request_link(client, "replayer@example.test").split("token=")[1]
+        token = self._request_token(client, sink, "replayer@example.test")
 
         assert (
             client.post(
@@ -219,15 +215,15 @@ class TestPasswordReset:
         assert again.status_code == 400
         assert "no longer valid" in again.json()["detail"]
 
-    def test_an_expired_token_is_refused(self, auth_client):
+    def test_an_expired_token_is_refused(self, mail_sink):
         from datetime import UTC, datetime, timedelta
 
         import sqlalchemy as sa
 
-        client, _ = auth_client
+        client, _, sink = mail_sink
         register(client, "slowpoke")
         client.post("/api/auth/logout")
-        token = self._request_link(client, "slowpoke@example.test").split("token=")[1]
+        token = self._request_token(client, sink, "slowpoke@example.test")
 
         from app.db import SessionLocal
         from app.models import PasswordResetToken
@@ -245,14 +241,14 @@ class TestPasswordReset:
         )
         assert response.status_code == 400
 
-    def test_someone_elses_token_is_just_a_token(self, auth_client):
-        client, _ = auth_client
+    def test_someone_elses_token_is_just_a_token(self, mail_sink):
+        client, _, sink = mail_sink
         register(client, "victim")
         client.post("/api/auth/logout")
         register(client, "attacker")
         client.post("/api/auth/logout")
 
-        victim_token = self._request_link(client, "victim@example.test").split("token=")[1]
+        victim_token = self._request_token(client, sink, "victim@example.test")
         # The attacker holds a token: it resets the account it was issued for,
         # and nothing else. Ownership travels with the token, not the request.
         response = client.post(
@@ -262,8 +258,8 @@ class TestPasswordReset:
         assert response.status_code == 200
         assert response.json()["email"] == "victim@example.test"
 
-    def test_a_reset_ends_every_existing_session(self, auth_client):
-        client, _ = auth_client
+    def test_a_reset_ends_every_existing_session(self, mail_sink):
+        client, _, sink = mail_sink
         register(client, "compromised")
         intruder = TestClient(client.app)
         intruder.post(
@@ -271,7 +267,7 @@ class TestPasswordReset:
         )
         assert intruder.get("/api/auth/me").status_code == 200
 
-        token = self._request_link(client, "compromised@example.test").split("token=")[1]
+        token = self._request_token(client, sink, "compromised@example.test")
         client.post("/api/auth/password/reset", json={"token": token, "new_password": NEW_PASSWORD})
 
         assert intruder.get("/api/auth/me").status_code == 401

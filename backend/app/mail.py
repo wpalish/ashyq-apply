@@ -1,9 +1,12 @@
 """Outbound email, with a sender you can actually run locally.
 
-There are two senders and no third. The console sender logs the message and is
-what development and the demo use; the SMTP sender is what production must be
-configured with, and startup refuses `console` there — a reset link that is
-silently written to a log nobody reads is worse than no reset at all.
+``get_sender`` returns one of two senders and no third. The console sender
+logs the message and is what development and the demo use; the SMTP sender is
+what production must be configured with, and startup refuses `console` there —
+a reset link that is silently written to a log nobody reads is worse than no
+reset at all. The one other class here, ``RecordingSender``, is a test sink:
+it keeps the messages instead of sending them, and ``get_sender`` never
+selects it — a test has to install it explicitly at the seam the routes use.
 
 Nothing here formats applicant data into a message. The only mail this product
 sends is about the account itself.
@@ -62,6 +65,22 @@ class SmtpSender(EmailSender):
             if self.settings.smtp_username:
                 smtp.login(self.settings.smtp_username, self.settings.smtp_password)
             smtp.send_message(mail)
+
+
+class RecordingSender(EmailSender):
+    """Collects every message the product would send, for tests to read.
+
+    A stand-in for the user's mailbox, not a sender: nothing leaves the
+    process. ``get_sender`` never returns it — a test injects it where the
+    route resolves its sender (``app.api.routes_account.get_sender``) — so no
+    environment, however misconfigured, can deliver mail through this class.
+    """
+
+    def __init__(self) -> None:
+        self.messages: list[Message] = []
+
+    def send(self, message: Message) -> None:
+        self.messages.append(message)
 
 
 def get_sender(settings: Settings) -> EmailSender:

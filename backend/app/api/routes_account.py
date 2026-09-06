@@ -142,8 +142,11 @@ def request_password_reset(
 ) -> dict:
     """Start a reset. The answer never reveals whether the account exists.
 
-    Outside production the response carries the link, because the console
-    sender only writes it to a log; in production that field is never present.
+    Nor does it ever carry the token. The response body is exactly
+    ``{"detail": ...}`` in every environment, and the link reaches only the
+    delivered letter: anyone who can reach this endpoint without a mailbox —
+    a stranger, a staging port — must not be able to read a working,
+    single-use reset token out of the answer.
     """
     settings = get_settings()
     address = _client_address(request)
@@ -200,8 +203,6 @@ def request_password_reset(
         )
     )
     session.commit()
-    if not settings.is_production:
-        answer["reset_link"] = link
     return answer
 
 
