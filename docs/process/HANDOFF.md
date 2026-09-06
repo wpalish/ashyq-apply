@@ -8,22 +8,29 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 | | |
 |---|---|
-| Holder | nobody — released at [0.8] ready-for-review |
+| Holder | nobody — released after the documentation catch-up |
 | Since (UTC) | 2026-09-06 |
-| Branch | `task/0.8-ranking-ui` (exists; created from the predecessor tip `main@c924410`) |
-| HEAD when written | `61df0db4aaaf265aaa154d2e5ead592fa97d2fcb` — the recovery checkpoint `wip: [0.8] preserve the ranking ui …` |
-| Origin main when checked | `627d42d`; local `main` 7 ahead / 0 behind. Never push main. |
-| Previous holder | nobody. gpt-6-astra's delegated writer produced the §4 inventory and stopped there: no branch, checkpoint, gates, push or baton. |
-| Recovery (prompt C) completed | Steps 1–3 + the per-file audit, the full gates and the preserving checkpoint are done by this holder. |
+| Branch | `docs/catch-up`, from `origin/main` |
+| Origin main when checked | `2be6b55` (PR #3, payments phase 2) |
+| Previous holder | claude-opus-5, on `docs/catch-up`. Before that gpt-6-astra on `task/docker-stack-verification`, which ran the container stack and was never merged; its content is carried onto this branch. |
+| Sections 3, 4 and 6 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
 
-`[0.8] Frontend этапа 0` — **ready-for-review (PR #2)**, by claude-opus-5 on `task/0.8-ranking-ui`.
-Stage 0 is complete: [0.1]–[0.8] all ride on this branch, 15 commits.
-<https://github.com/wpalish/ashyq-apply/pull/2>
-Recovery is finished and so is the task: every gate in §6 is green, including the full e2e suite and
-the §5.7 seed order. The I4/T3 conflict is resolved in §7. What remains is the owner opening the PR
-in PR #2.
+`docs/catch-up` — **ready-for-review (PR #4)**, by claude-opus-5.
+<https://github.com/wpalish/ashyq-apply/pull/4>
+
+Two things the previous sessions left behind:
+
+1. **`task/docker-stack-verification` was never merged.** Its content is here: the two
+   `docker-compose.yml` fixes the real run found, `docs/DOCKER_VERIFICATION.md`, `epics.md`, the
+   `.claude/worktrees` ignore, and the `docs/v2` cleanup. Its `ShortlistScreen` commit is
+   deliberately **not** carried: the owner is re-applying that fix on `fix/shortlist-columns`.
+2. **The documentation had fallen behind the code.** `README.md`, `RELEASE_CHECKLIST.md` and
+   `docs/CURRENT_STATE.md` did not mention ranking v2, the community module or payments, quoted 818
+   backend tests where there are 1110, and said nothing about CI on `main` being red.
+
+Stage 0 (`[0.1]`–`[0.8]`) is **merged** — PR #2. Payments phase 2 is **merged** — PR #3.
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
@@ -192,16 +199,25 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-[0.8] is code-complete and every gate is green (§6). Remaining, in order:
+Stage 0 is merged. In order:
 
-1. ~~Open the PR.~~ **Done — PR #2**, template filled in with the real output from §6.
-   Review it against `.github/PULL_REQUEST_TEMPLATE.md`; the relay *is* the review.
-2. After the owner merges: `[1.1] Интерфейс и схемы` — new package `backend/app/adapters/research/`
-   with `base.py` (the six-method `ResearchAgent` protocol and its schemas), `null.py` and `fixture.py`.
+1. **Merge `docs/catch-up`**, then delete `task/docker-stack-verification` — everything on it except
+   the `ShortlistScreen` commit is now here, and that commit is being re-applied by the owner on
+   `fix/shortlist-columns`.
+2. **Fix the red end-to-end test.** `frontend/e2e/profile-persistence.spec.ts:26` asserts
+   `getByText('Saved')` is visible and two elements match, so Playwright refuses in strict mode.
+   Scope the query — the same shape as the `[0.8]` bucket assertion fixed in `2f2e484`. It has been
+   red on `main` since 2026-09-04 and it stops `npm run e2e:auth` from running at all, so the
+   authenticated path is currently unexercised. Nothing else should be called green until this is.
+3. **Close the stale branches.** PR #1 has been an open draft since 2026-08-29 and its content
+   reached `main` another way; `feature/social-network` is 130 commits behind and superseded by the
+   community work that merged through `social/community`.
+4. Then `[1.1] Интерфейс и схемы` — new package `backend/app/adapters/research/` with `base.py`
+   (the six-method `ResearchAgent` protocol and its schemas), `null.py` and `fixture.py`.
    Acceptance A6: a full demo run with `NullResearchAgent` is byte-for-byte the current one.
-3. Housekeeping worth one commit when convenient, not blocking: `docs/v2/` duplicates `analysis/`
-   byte-for-byte apart from one relative path in the brief. `analysis/` is canonical per AGENTS.md;
-   the copies are the owner's and were left in place, unstaged.
+
+Housekeeping that is done: `docs/v2/` is deleted, and the one documentary reference in
+`backend/app/schemas/profile.py` now points at the canonical `analysis/AI_TASK_BRIEF.md`.
 
 ## 6. Gate status at last run (numbers, not adjectives)
 

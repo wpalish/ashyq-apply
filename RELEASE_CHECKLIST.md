@@ -1,24 +1,35 @@
 # Release checklist — ASHYQ Apply 1.0
 
-Thirty gates. A release may be declared only when every one is green. Status is
+Ninety-six gates, grown from the original thirty. A release may be declared
+only when every one is green. Status is
 recorded honestly: `PASS` means verified by a command whose output is shown in
 the release report, not "implemented".
 
-**Current verdict: NOT DEPLOYED.** 27 of the 30 original gates pass, one is
-partial and one fails; the local container stack is still the unverified gate,
-and the release commit/tag waits on it.
+**Current verdict: NOT DEPLOYED externally.** The local container stack was
+verified against real Docker on 2026-09-06, so gate 22 now passes. What is left
+needs a person, not another phase: an external deployment, a lawyer for the
+privacy policy and terms (gate 87), and a live ApiPay account before payments
+can be switched on (gate 94).
+
+**CI on `main` is red, and has been since 2026-09-04.** One end-to-end test —
+`e2e/profile-persistence.spec.ts:26`, where `getByText('Saved')` matches two
+elements — fails on every push, first on desktop and now on mobile, and it stops
+`npm run e2e:auth` from running at all. Backend on both databases, lint, types,
+build, `pip-audit`, `npm audit` and `docker compose build` are green on the same
+commit. Gate 2 is PARTIAL until that test is fixed.
 
 **`docs/FIX_PLAN.md` is finished.** Phases 0–6 are done, including the optional
 sixth; gates 36–92 below record what each fix is held to. Two audit findings
 did not reproduce against this tree and are recorded as such rather than
 "fixed" — see gates 22 and 47. What remains open needs a person, not another
-phase: Docker for the container stack (gate 22) and a lawyer for the privacy
-policy and terms (gate 87).
+phase: a lawyer for the privacy policy and terms (gate 87), and a live ApiPay
+account (gate 94). Ranking v2, the community module and payments landed after
+Phase 6; gates 93-96 record what they are held to.
 
 | # | Gate | Status | Evidence / what is missing |
 |---|---|---|---|
-| 1 | Existing 240 + 39 + 42 tests kept or replaced by stricter ones | **PASS** | 818 + 137 + 67 (desktop and mobile, 1 skipped) + 6 auth E2E. Nothing removed; Phase 1 added 14, Phase 2 added 65, Phase 3 added 50, and Phase 5 added 21 backend (metrics, dead jobs) and 8 frontend (the needs-attention line, the legal page) |
-| 2 | All new unit / integration / E2E / security tests green | **PASS** | `pytest` 818 passed, **including the PostgreSQL branch** — `pgserver` does provision a cluster on this machine after all, so the 25 tests recorded as unrunnable here now run and pass (`test_jobs.py` and `test_social_models.py`, 50 tests, no skips). `vitest` 137, `playwright` 67 passed / 1 skipped (desktop + mobile). The authenticated E2E config was not re-run here: it starts its own dev server and port 5173 was held by another process on this machine |
+| 1 | Existing 240 + 39 + 42 tests kept or replaced by stricter ones | **PASS** | 1110 + 164 + 74 (desktop and mobile) + 6 auth E2E, measured on `2be6b55`. Nothing removed; Phase 1 added 14, Phase 2 added 65, Phase 3 added 50, and Phase 5 added 21 backend (metrics, dead jobs) and 8 frontend (the needs-attention line, the legal page) |
+| 2 | All new unit / integration / E2E / security tests green | **PARTIAL** | `pytest` 1110 passed on `2be6b55` — in CI on both databases (coverage 92.86%, floor 92) and again locally on Windows/SQLite, same count. `vitest` 164 passed. **`playwright` is red: 70 passed, 1 failed, 1 skipped of 74**, and `e2e:auth` never runs because the suite exits first. Historical note from the previous update: `pytest` 818 passed, **including the PostgreSQL branch** — `pgserver` does provision a cluster on this machine after all, so the 25 tests recorded as unrunnable here now run and pass (`test_jobs.py` and `test_social_models.py`, 50 tests, no skips). `vitest` 137, `playwright` 67 passed / 1 skipped (desktop + mobile). The authenticated E2E config was not re-run here: it starts its own dev server and port 5173 was held by another process on this machine |
 | 3 | ruff, mypy, TypeScript, ESLint, production build clean | **PASS** | all clean; build 74.0 kB JS gzip |
 | 4 | PostgreSQL migrations work on fresh and upgraded databases | **PASS** | Alembic. Verified fresh, downgrade to base, re-upgrade, re-apply as a no-op, on PostgreSQL 16.2 and SQLite. `create_all()` removed from the production path; startup refuses a mismatched revision |
 | 5 | Worker survives a crash restart | **PASS** | `scripts/crash_test.py` SIGKILLs a real worker after 12 results are written; a second worker recovers the job and finishes with no duplicates. Stable over 3 runs. **PostgreSQL-backed queue, not Redis — see ADR 0001** |
@@ -38,7 +49,7 @@ policy and terms (gate 87).
 | 19 | Approve / reject / maybe and document collection work | **PASS** | Covered by E2E |
 | 20 | CSV / JSON / XLSX exports carry provenance and data origin | **PASS** | 38 columns incl. source links, last-verified, data origin |
 | 21 | Accessibility audit passed | **PASS** | axe WCAG A/AA scans every reachable workflow screen on desktop and mobile; focused keyboard/progress/table/overflow checks also pass |
-| 22 | Docker Compose brings up a production-like stack | **FAIL** | One real defect fixed: the read-only `api` had no writable `/app/data`, and `ensure_dirs()` runs at import, so the container would have died with EROFS before serving a request. The audit's other two compose findings did not reproduce — the worker's `worker-cache:/app/data` matches `BACKEND_ROOT` for the image compose builds, and `backend/Dockerfile` already carries a `curl` HEALTHCHECK. `scripts/verify_compose.sh` drives the whole stack to a finished demo run. **WRITTEN, NOT RUN: Docker is not installed on this machine.** Requires a user checkpoint |
+| 22 | Docker Compose brings up a production-like stack | **PASS** | Run for real on 2026-09-06 against Docker Desktop 4.89.0 / Engine 29.7.2 under WSL2: images built, migrations exited 0, postgres/api/web healthy, and registration plus a demo research run through nginx on :8080 returned 20 results at `awaiting_user_decision`. Two defects the run itself found are fixed in `docker-compose.yml`: the `/app/data` tmpfs was root-owned so the API died creating its cache directory, and the worker inherited an HTTP healthcheck for a port it does not serve. Evidence: `docs/DOCKER_VERIFICATION.md`. CI additionally runs `docker compose build` on every push. Earlier finding, kept: one real defect fixed: the read-only `api` had no writable `/app/data`, and `ensure_dirs()` runs at import, so the container would have died with EROFS before serving a request. The audit's other two compose findings did not reproduce — the worker's `worker-cache:/app/data` matches `BACKEND_ROOT` for the image compose builds, and `backend/Dockerfile` already carries a `curl` HEALTHCHECK. `scripts/verify_compose.sh` drives the whole stack to a finished demo run. **WRITTEN, NOT RUN: Docker is not installed on this machine.** Requires a user checkpoint |
 | 23 | Backup / restore and crash recovery verified | **PASS** | Real SIGKILL recovery plus a PostgreSQL `pg_dump`/`pg_restore` scratch-database drill: 12 tables and a synthetic probe restored identically |
 | 24 | Documentation matches actual behaviour | **PASS** | Three README overstatements corrected; status banner added |
 | 25 | No TODO / FIXME in a production path | **PASS** | `grep -rn "TODO\|FIXME" backend/app frontend/src` → none |
@@ -142,17 +153,35 @@ policy and terms (gate 87).
 | 91 | A transcript can be read instead of retyped | **PASS** | Grade average with its scale, and the graduation date, each quoted back with the line it came from and applied only per field on request. Refuses an average with no scale, an ambiguous numeric date, and a value above its own scale. PDFs only, 10 MB, authenticated, held in memory and discarded. 17 backend tests + 4 vitest |
 | 92 | Russian and Kazakh have a foundation that does not invent terms | **PARTIAL** | The shell reads from dictionaries with English as the visible fallback, and a language selector persists the choice. Deliberately incomplete: claim, shortlist, funding gap, conditional offer and the status vocabulary are listed in `docs/i18n/GLOSSARY.md` with the question each poses, and the strings containing them stay in English until a person who advises applicants in those languages decides. 7 vitest, including one that fails if a reserved term is quietly translated |
 
+### Added after Phase 6 — ranking v2, community and payments
+
+These three landed on `main` after the fix plan closed. They are recorded here
+because a release gate document that does not mention a merged module is not a
+release gate document.
+
+| # | Gate | Status | Evidence |
+|---|---|---|---|
+| 93 | The shortlist ranks non-compensatively, and never as a probability | **PASS** | Ranking v2 (PR #2): a geometric mean over six axes, so an unaffordable place cannot buy its way to the top with the other five, plus portfolio buckets and re-ranking a finished run against new priorities without fetching a page. `backend/tests/test_ranking_v2.py`; the reasoning is `docs/adr/0003-noncompensatory-ranking.md`. The preferences screen says in plain words that the order is not a probability |
+| 94 | A real payment has been taken end to end | **BLOCKED — needs the owner** | The whole path exists and is tested — orders, a signed webhook that grants exactly once, a reconciler for the webhook that never arrives, the paywall, school subscriptions with quotas — across `test_billing_api.py`, `test_payment_webhook.py`, `test_payment_reconcile.py`, `test_paywall.py`, `test_subscription_*.py`. But **the adapter has never spoken to ApiPay**: every claim rests on contract tests written against their published OpenAPI document. Needs a merchant account with Kaspi Pay connected, the keys in the deployment, the public webhook URL registered, a confirmed price (4990 ₸ is a placeholder), and one real transaction reconciled in both dashboards |
+| 95 | Payments off changes nothing | **PASS** | `UNIMATCH_PAYMENTS_ENABLED=false` is the default, and `test_with_payments_disabled_everything_is_visible` in `test_entitlements.py` asserts every case stays fully open. `test_payments_config.py` pins the defaults and that secrets never render in a settings dump |
+| 96 | Community content can be moderated, and a person can leave | **PASS** | Feed, threads, private conversations with a setting that guards the first message, blocking, a report queue someone can work, and avatars stripped of their metadata. `test_social_api.py`, `test_social_messages.py`, `test_social_moderation.py`, `test_social_avatars.py`, `test_social_models.py`. Account deletion has a test for the seam with the community. **Not gated:** community rules and a moderation SLA are not written, and no gate covers what a moderator is supposed to do |
+
 ## Summary
 
-- **PASS:** 28 (of 30 original) + 5 + 7 added by Phase 1 + 17 added by Phase 2 + 14 added by Phase 3 + 9 added by Phase 4 + 5 added by Phase 5 + 3 added by Phase 6
-- **PARTIAL:** 2 (gate 87 — the privacy policy and terms are drafts no lawyer has read; gate 92 — the product vocabulary is deliberately untranslated pending human review)
-- **FAIL:** 1 (gate 22 — the container stack has still never been run)
-- **BLOCKED:** 1
+Counted on `2be6b55`, over gates 1-96.
 
-Gate 2 moved from PARTIAL to PASS on evidence rather than on work: the
-PostgreSQL branch was recorded as unprovisionable on this machine, and it
-turns out to run here — 50 tests, no skips. The earlier note was true when it
-was written and had simply not been re-tried.
+- **PASS:** 91
+- **PARTIAL:** 3 — gate 2 (one red end-to-end test on `main`), gate 87 (the
+  privacy policy and terms are drafts no lawyer has read), gate 92 (the product
+  vocabulary is deliberately untranslated pending human review)
+- **FAIL:** 0
+- **BLOCKED:** 2 — gate 29 (the release tag waits on the rest) and gate 94 (a
+  real payment needs a merchant account)
+
+Gate 22 moved from FAIL to PASS on work: the stack was actually run, and running
+it found two defects that no amount of reading the file would have shown. Gate 2
+moved the other way, from PASS to PARTIAL, on evidence: the end-to-end suite has
+been red on `main` since 2026-09-04 and the summary said nothing about it.
 
 ## Order of work remaining
 
@@ -169,15 +198,21 @@ was written and had simply not been re-tried.
 2. ~~**P2** — auth, organizations, cases, tenant isolation~~ **done**
 3. ~~**P3** — SSRF suite, headers, rate limiting, threat model~~ **done**
 4. ~~**P4** — full onboarding forms~~ **done**
-5. **P5–P6** — improve programme-page classifier recall and deepen funding/document extraction
-6. **P7** — run the container stack and verify a deployment (gate 22)
-7. ~~**P8** — canary audit across ten institutions~~ **done**
+5. **Fix the red end-to-end test** — `e2e/profile-persistence.spec.ts`, two
+   elements reading "Saved". Nothing else can be called green while `main` is
+   red, and `e2e:auth` has not run since 2026-09-04 (gate 2)
+6. **P5–P6** — improve programme-page classifier recall and deepen funding/document extraction
+7. ~~**P7** — run the container stack~~ **done** (gate 22). An external
+   deployment is still outstanding and needs the owner
+8. ~~**P8** — canary audit across ten institutions~~ **done**
+9. **Finish ru/kk** — 184 of 378 strings are translated and only seven
+   components read from the dictionary at all, so the interface is effectively
+   English for an audience that is not (gate 92)
 
 ## Needs the user
 
-* **Running the container stack** requires Docker, which is not installed and
-  cannot be installed without your password. The files are written; they have
-  never been executed.
+* ~~Running the container stack.~~ Done on 2026-09-06; see
+  `docs/DOCKER_VERIFICATION.md`. No external deployment was performed.
 * **Any external deployment**, domain or billing.
 * **Payments cannot go live without you.** Specifically:
   1. an ApiPay account with Kaspi Pay connected;
