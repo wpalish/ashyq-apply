@@ -770,7 +770,7 @@ class LiveDiscoveryAdapter:
         #    student newsletter as programme pages, all sitting under the same
         #    path as the real programmes. The classifier already knows the
         #    difference, so discovery asks it rather than guessing harder.
-        await self._confirm_programs(selected, ranked, trace)
+        await self._confirm_programs(selected, ranked, trace, profile)
 
         trace.selected = {k: list(v) for k, v in selected.items() if v}
         self._apply(candidate, selected, profile, trace)
@@ -781,8 +781,9 @@ class LiveDiscoveryAdapter:
         selected: dict[str, list[str]],
         ranked: dict[str, list[tuple[int, str]]],
         trace: DiscoveryTrace,
+        profile: ApplicantProfileIn,
     ) -> None:
-        """Keep only candidates a read of the page confirms is a programme."""
+        """Keep only programme pages that match the requested level and subject."""
         queued = [*selected[PageCategory.PROGRAM_PAGE]]
         # Next-best candidates, so rejecting one does not mean finding nothing.
         for _score, url in sorted(ranked[PageCategory.PROGRAM_PAGE], reverse=True):
@@ -799,6 +800,20 @@ class LiveDiscoveryAdapter:
                 continue
             page = classify_page(url=url, html=result.text)
             if page.page_type in (PageType.PROGRAM_DETAIL, PageType.INTAKE_SPECIFIC_PROGRAM):
+                requested_level = str(profile.context.level)
+                if page.degree_level and page.degree_level != requested_level:
+                    trace.reject(
+                        url,
+                        f"page names degree level {page.degree_level}, not {requested_level}",
+                    )
+                    continue
+                fields = list(profile.context.intended_fields)
+                if fields and not matches_field_text(page.subject or "", fields):
+                    trace.reject(
+                        url,
+                        f"page subject {page.subject!r} does not match requested fields {fields!r}",
+                    )
+                    continue
                 confirmed.append(url)
             else:
                 trace.reject(url, f"reads as {page.page_type.value}, not a programme page")
