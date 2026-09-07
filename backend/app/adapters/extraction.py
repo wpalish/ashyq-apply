@@ -10,11 +10,21 @@ from __future__ import annotations
 
 import io
 import re
-from collections.abc import Iterable
+from collections.abc import Iterable, Sequence
 from datetime import UTC, date, datetime
+from typing import Final, cast
+from urllib.parse import urlparse
 
 from bs4 import BeautifulSoup
 
+from app.domain.claim_verifier import (
+    OFFICIAL_PUBLIC_TLDS,
+    RejectReason,
+    VerificationInput,
+    registrable_domain,
+    url_matches_domains,
+    verify_claim,
+)
 from app.domain.enums import ClaimStatus, ClaimType, SourceSpecificity
 from app.schemas.claim import Claim
 
@@ -94,17 +104,35 @@ def excerpt_around(text: str, start: int, end: int, radius: int = EXCERPT_RADIUS
 
 
 def is_official_domain(url: str, university_domains: Iterable[str] = ()) -> bool:
-    low = url.lower()
-    if any(d.lower() in low for d in university_domains if d):
+    """True when this URL is served by the university or an official TLD.
+
+    Only the URL's host decides — the registrable domain of the host is
+    compared against the university's domains, never the raw URL string. The
+    old substring test accepted ``https://attacker.example/?u=narxoz.kz``
+    and ``https://narxoz.kz.attacker.example/`` as official sources; a
+    university's name inside a query parameter or a hostile subdomain is a
+    spoof, not a source.
+    """
+    if url_matches_domains(url, university_domains):
         return True
+    registrable = registrable_domain(urlparse(url).hostname or "")
     return any(
-        f".{tld}/" in low or low.rstrip("/").endswith(f".{tld}")
-        for tld in ("edu", "ac.uk", "edu.au", "gov", "gov.uk", "ac.nz", "edu.sg")
+        registrable == tld or registrable.endswith(f".{tld}") for tld in OFFICIAL_PUBLIC_TLDS
     )
 
 
 class ClaimBuilder:
-    """Accumulates claims that share one page's provenance."""
+    """Accumulates claims that share one page's provenance.
+
+    The optional verification context (``page_text``, ``page_type``,
+    ``allowed_domains``) feeds ``app.domain.claim_verifier``: each added claim
+    is checked against the evidence it arrived with, and only checks whose
+    context is present are evaluated — a builder without page text never
+    rejects for verbatim-ness, one without allowed domains never rejects on
+    domain, and so on. A rejected claim is recorded in ``rejected`` as
+    ``(claim_type, excerpt, reason)`` and never becomes a Claim; ``add``
+    returns None for it.
+    """
 
     def __init__(
         self,
@@ -118,6 +146,9 @@ class ClaimBuilder:
         official_domain: bool = False,
         extraction_method: str = "html_rule",
         accessed_at: datetime | None = None,
+        page_text: str | None = None,
+        page_type: str | None = None,
+        allowed_domains: Sequence[str] = (),
     ) -> None:
         self.meta: dict[str, object] = {
             "source_url": source_url,
@@ -131,6 +162,12 @@ class ClaimBuilder:
             "accessed_at": accessed_at or datetime.now(UTC),
         }
         self.claims: list[Claim] = []
+        self.rejected: list[tuple[ClaimType, str, RejectReason]] = []
+        # Verification context, deliberately outside meta: these feed the
+        # verifier only, and a Claim's persisted fields must not change.
+        self.page_text = page_text
+        self.page_type = page_type
+        self.allowed_domains: tuple[str, ...] = tuple(allowed_domains)
 
     def add(
         self,
@@ -143,7 +180,24 @@ class ClaimBuilder:
         status: ClaimStatus | None = None,
         notes: str = "",
         subject_key: str | None = None,
-    ) -> Claim:
+    ) -> Claim | None:
+        verdict = verify_claim(
+            VerificationInput(
+                claim_type=claim_type,
+                value=value,
+                excerpt=excerpt,
+                page_text=self.page_text,
+                source_url=cast("str", self.meta["source_url"]),
+                page_type=self.page_type,
+                official_domain=bool(self.meta["official_domain"]),
+                allowed_domains=self.allowed_domains,
+                today=cast("datetime", self.meta["accessed_at"]).date(),
+            )
+        )
+        if not verdict.accepted:
+            # A rejected verdict always carries its reason (verify_claim's contract).
+            self.rejected.append((claim_type, excerpt, cast("RejectReason", verdict.reason)))
+            return None
         # Only an official page can produce a "current" claim; anything else
         # stays unverified until a human or a better source confirms it.
         default_status = (
@@ -314,6 +368,16 @@ def parse_timezone(text: str) -> str | None:
     return m.group(1) if m else None
 
 
+def _keep(found: list[Claim], claim: Claim | None) -> None:
+    """Append the claim unless the builder's verifier rejected it.
+
+    A rejected claim stays recorded in ``builder.rejected`` with its reason;
+    it never reaches the result list.
+    """
+    if claim is not None:
+        found.append(claim)
+
+
 def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
     """Pull admission requirements out of readable page text."""
     found: list[Claim] = []
@@ -326,13 +390,14 @@ def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
         value = float(raw)
         if not 4.0 <= value <= 9.0:
             continue
-        found.append(
+        _keep(
+            found,
             builder.add(
                 ClaimType.IELTS_MIN_OVERALL,
                 value,
                 excerpt_around(text, m.start(), m.end()),
                 section="English language requirements",
-            )
+            ),
         )
         break
 
@@ -342,34 +407,37 @@ def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
             continue
         value = float(raw)
         if 4.0 <= value <= 9.0:
-            found.append(
+            _keep(
+                found,
                 builder.add(
                     ClaimType.IELTS_MIN_SUBSCORE,
                     value,
                     excerpt_around(text, m.start(), m.end()),
                     section="English language requirements",
-                )
+                ),
             )
             break
 
     toefl = _TOEFL.search(text)
     if toefl and 40 <= int(toefl.group(1)) <= 120:
-        found.append(
+        _keep(
+            found,
             builder.add(
                 ClaimType.TOEFL_MIN_TOTAL,
                 int(toefl.group(1)),
                 excerpt_around(text, toefl.start(), toefl.end()),
-            )
+            ),
         )
 
     duolingo = _DUOLINGO.search(text)
     if duolingo and 60 <= int(duolingo.group(1)) <= 160:
-        found.append(
+        _keep(
+            found,
             builder.add(
                 ClaimType.DUOLINGO_MIN,
                 int(duolingo.group(1)),
                 excerpt_around(text, duolingo.start(), duolingo.end()),
-            )
+            ),
         )
 
     gpa = _GPA.search(text)
@@ -378,37 +446,40 @@ def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
         # The scale must bound the value, or we have matched two unrelated numbers.
         if 0 < value <= scale <= 100:
             ex = excerpt_around(text, gpa.start(), gpa.end())
-            found.append(builder.add(ClaimType.MIN_GPA, value, ex))
-            found.append(builder.add(ClaimType.GPA_SCALE, scale, ex))
+            _keep(found, builder.add(ClaimType.MIN_GPA, value, ex))
+            _keep(found, builder.add(ClaimType.GPA_SCALE, scale, ex))
 
     optional = _SAT_OPTIONAL.search(text)
     if optional:
-        found.append(
+        _keep(
+            found,
             builder.add(
                 ClaimType.SAT_POLICY,
                 optional.group(1),
                 excerpt_around(text, optional.start(), optional.end()),
-            )
+            ),
         )
     else:
         sat_min = _SAT_MIN.search(text)
         if sat_min and 400 <= int(sat_min.group(1)) <= 1600:
-            found.append(
+            _keep(
+                found,
                 builder.add(
                     ClaimType.SAT_MIN_TOTAL,
                     int(sat_min.group(1)),
                     excerpt_around(text, sat_min.start(), sat_min.end()),
-                )
+                ),
             )
 
     superscore = _SUPERSCORE.search(text)
     if superscore:
-        found.append(
+        _keep(
+            found,
             builder.add(
                 ClaimType.SUPERSCORE_POLICY,
                 superscore.group(1),
                 excerpt_around(text, superscore.start(), superscore.end()),
-            )
+            ),
         )
 
     deadline_match = _DEADLINE.search(text)
@@ -416,13 +487,14 @@ def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
         deadline = parse_date_string(deadline_match.group(1))
         if deadline:
             ex = excerpt_around(text, deadline_match.start(), deadline_match.end())
-            found.append(
+            _keep(
+                found,
                 builder.add(
                     ClaimType.ADMISSION_DEADLINE,
                     deadline.isoformat(),
                     ex,
                     notes=f"timezone: {parse_timezone(ex) or 'not stated on page'}",
-                )
+                ),
             )
 
     for pattern, ctype in (
@@ -441,16 +513,30 @@ def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
             re.IGNORECASE,
         )
         if requirement:
-            found.append(
+            _keep(
+                found,
                 builder.add(
                     ctype,
                     True,
                     excerpt_around(text, requirement.start(), requirement.end()),
                     confidence=0.7,
-                )
+                ),
             )
 
     return found
+
+
+#: A tuition under this amount is a misread window, never a real figure: the
+#: 120-character label window routinely swallows a nearby "$50 application
+#: fee", and no university charges under $100 a year. The floor applies to
+#: TUITION (and the same-window TOTAL_COST_OF_ATTENDANCE); small legitimate
+#: numbers keep flowing for the other cost lines and for the application fee
+#: itself, which is read by its own extractor.
+TUITION_FLOOR_AMOUNT: Final = 100.0
+
+_FLOOR_AT_TUITION: Final[frozenset[ClaimType]] = frozenset(
+    {ClaimType.TUITION, ClaimType.TOTAL_COST_OF_ATTENDANCE}
+)
 
 
 def extract_costs(text: str, builder: ClaimBuilder) -> list[Claim]:
@@ -480,12 +566,15 @@ def extract_costs(text: str, builder: ClaimBuilder) -> list[Claim]:
         if parsed is None:
             continue
         amount, currency = parsed
-        found.append(
+        if ctype in _FLOOR_AT_TUITION and amount < TUITION_FLOOR_AMOUNT:
+            continue
+        _keep(
+            found,
             builder.add(
                 ctype,
                 {"amount": amount, "currency": currency},
                 excerpt_around(text, m.start(), m.end()),
                 section="Fees and costs",
-            )
+            ),
         )
     return found

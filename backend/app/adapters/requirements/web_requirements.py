@@ -58,6 +58,16 @@ _INTAKE_CLOSED_EVIDENCE = re.compile(
     r"|intake (?:is )?closed|not accepting applications)\b[^.]{0,80}\.",
     re.I,
 )
+#: A "fee waiver" line only yields a claim when the page actually settles the
+#: question. Negation is positive evidence of absence and is claimed as False;
+#: a line that merely mentions waivers settles nothing — unknown stays
+#: unknown, never a confident True.
+_WAIVER_NEGATION = re.compile(
+    r"\b(no|not|never|neither|nor|without|cannot|can'?t|won'?t|isn'?t|aren'?t"
+    r"|doesn'?t|don'?t|unavailable)\b",
+    re.IGNORECASE,
+)
+_WAIVER_OFFERED = re.compile(r"\b(available|offered|granted|waive[ds]?|waiving)\b", re.IGNORECASE)
 
 
 @dataclass(frozen=True)
@@ -309,9 +319,17 @@ class WebRequirementsAdapter:
             fee = _fee(fee_line)
             if fee is not None:
                 builder.add(ClaimType.APPLICATION_FEE, fee, fee_line, confidence=0.7)
-        waiver = _line_containing(text, "fee waiver")
-        if waiver:
-            builder.add(ClaimType.FEE_WAIVER_AVAILABLE, True, waiver, confidence=0.7)
+        waiver_line = _line_containing(text, "fee waiver")
+        if not waiver_line:
+            return
+        if _WAIVER_NEGATION.search(waiver_line):
+            # "Fee waivers are not available" — claiming True here was the
+            # opposite of the page. Explicit negation is claimed as False.
+            builder.add(ClaimType.FEE_WAIVER_AVAILABLE, False, waiver_line, confidence=0.7)
+        elif _WAIVER_OFFERED.search(waiver_line):
+            builder.add(ClaimType.FEE_WAIVER_AVAILABLE, True, waiver_line, confidence=0.7)
+        # Anything else (e.g. "questions about fee waivers ...") neither
+        # affirms nor negates: no claim at all.
 
 
 # --- helpers ---------------------------------------------------------------
