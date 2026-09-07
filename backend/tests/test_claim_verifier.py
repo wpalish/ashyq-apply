@@ -453,3 +453,120 @@ class TestVerifyClaim:
             )
         )
         assert (past.accepted, past.reason) == (False, RejectReason.VALUE_OUT_OF_RANGE)
+
+
+# ---------------------------------------------------------------------------
+# multi-part public suffix agreement (T27 A2 — reviewer blocking F1)
+# ---------------------------------------------------------------------------
+
+
+class TestMultiPartPublicSuffixAgreement:
+    """``claim_verifier._MULTIPART_PUBLIC_SUFFIXES`` and the discovery layer's
+    ``live_discovery.MULTIPART_SUFFIXES`` must agree. For a host under a
+    multi-part suffix the verifier does not list, ``registrable_domain``
+    returns the public suffix itself, so two different universities under the
+    same suffix collapse into one "registrable domain":
+
+    registrable_domain("uw.edu.pl") -> "edu.pl" == registrable_domain("pw.edu.pl")
+    -> url_matches_domains True -> is_official_domain True -> VERIFIED_CURRENT
+    claims published from a DIFFERENT institution's page. For *.edu.kz (the
+    home market) the official-domain check is entirely vacuous.
+    """
+
+    def test_a_sibling_university_under_edu_pl_is_not_the_allowed_domain(self):
+        assert url_matches_domains("https://pw.edu.pl/admissions", ["uw.edu.pl"]) is False, (
+            "pw.edu.pl and uw.edu.pl are different institutions; sharing the "
+            "edu.pl public suffix must not make one official for the other"
+        )
+
+    def test_a_sibling_university_under_edu_kz_is_not_the_allowed_domain(self):
+        assert url_matches_domains("https://iab.edu.kz/", ["kbtu.edu.kz"]) is False, (
+            "iab.edu.kz and kbtu.edu.kz are different institutions; the *.edu.kz "
+            "suffix must not make the domain check vacuous on the home market"
+        )
+
+    def test_the_registrable_domain_of_an_edu_pl_host_is_not_the_public_suffix(self):
+        assert registrable_domain("uw.edu.pl") == "uw.edu.pl"
+
+    def test_the_registrable_domain_of_an_edu_kz_host_is_not_the_public_suffix(self):
+        assert registrable_domain("iab.edu.kz") == "iab.edu.kz"
+
+    def test_a_listed_suffix_still_resolves_to_the_registrable_domain(self):
+        """Positive pin: suffixes already in the verifier's table keep their
+        behaviour — the fix must widen the table, not rewire resolution."""
+        assert registrable_domain("www.ox.ac.uk") == "ox.ac.uk"
+        assert url_matches_domains("https://www.ox.ac.uk/x", ["ox.ac.uk"]) is True
+
+    def test_the_verifier_suffix_table_covers_the_discovery_table(self):
+        """Structural guard against future divergence, both sides imported:
+        every multi-part suffix the discovery layer knows must also be known
+        to the verifier. domain/ may not import app.adapters.*, so the test
+        holds the two tables next to each other (the same pattern as the
+        page-type mirror guard above)."""
+        from app.adapters.discovery.live_discovery import MULTIPART_SUFFIXES
+        from app.domain import claim_verifier
+
+        missing = sorted(set(MULTIPART_SUFFIXES) - set(claim_verifier._MULTIPART_PUBLIC_SUFFIXES))
+        assert not missing, (
+            "claim_verifier._MULTIPART_PUBLIC_SUFFIXES is missing multi-part "
+            f"public suffixes known to live_discovery.MULTIPART_SUFFIXES: {missing}"
+        )
+
+    @pytest.mark.asyncio
+    async def test_a_sibling_university_page_is_never_verified_current(self, tmp_path, monkeypatch):
+        """End to end, through the requirements adapter (harness pattern of
+        test_live_regressions.TestSpoofedOfficialDomain): a page with readable
+        IELTS requirements served from pw.edu.pl must not publish
+        VERIFIED_CURRENT claims for a candidate whose domain is uw.edu.pl."""
+        from datetime import UTC, datetime
+
+        from app.adapters.base import Candidate, CandidateProgram
+        from app.adapters.fetching import Fetcher, FetchResult
+        from app.adapters.requirements.web_requirements import WebRequirementsAdapter
+        from app.domain.enums import ClaimStatus, DegreeLevel, FetchOutcome
+
+        url = "https://pw.edu.pl/admissions/requirements"
+        html = (
+            '<!doctype html><html lang="en"><head><title>Admission requirements '
+            "| pw.edu.pl admissions</title></head><body><main><h1>Admission "
+            "requirements</h1><p>An IELTS Academic score with an overall band of "
+            "6.5 is required for programmes taught in English.</p></main></body></html>"
+        )
+
+        async def fake_get(fetched_url: str, *, use_cache: bool = True) -> FetchResult:
+            return FetchResult(
+                url=fetched_url,
+                outcome=FetchOutcome.OK,
+                status_code=200,
+                content=html.encode(),
+                text=html,
+                content_type="text/html; charset=utf-8",
+                fetched_at=datetime.now(UTC),
+                final_url=fetched_url,
+            )
+
+        async with Fetcher(tmp_path / "cache", offline=True) as fetcher:
+            monkeypatch.setattr(fetcher, "get", fake_get)
+            candidate = Candidate(
+                name="University of Warsaw", country="Poland", city="Warsaw", domain="uw.edu.pl"
+            )
+            program = CandidateProgram(
+                name="computer science (bachelor)",
+                field="computer science",
+                degree=DegreeLevel.BACHELOR,
+                url=url,
+            )
+            result = await WebRequirementsAdapter(fetcher, "2026/27").verify(
+                candidate, program, "fall 2027"
+            )
+
+        assert result.claims, (
+            "the pw.edu.pl page does carry readable requirements; what must "
+            "change is their status, not their existence"
+        )
+        verified = [c for c in result.claims if c.status is ClaimStatus.VERIFIED_CURRENT]
+        assert not verified, (
+            "a page served from pw.edu.pl must not publish VERIFIED_CURRENT "
+            "claims for candidate uw.edu.pl: "
+            f"{[(c.claim_type, c.normalized_value) for c in verified]}"
+        )
