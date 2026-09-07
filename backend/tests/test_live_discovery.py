@@ -1260,7 +1260,7 @@ def _js_catalog_renderer(tmp_path, page: WalkerFakePage):
     return fetcher, renderer
 
 
-def _catalogue_html(*anchors: str) -> str:
+def _catalogue_html(*anchors: tuple[str, str]) -> str:
     items = "".join(f'<li><a href="{url}">{label}</a></li>' for url, label in anchors)
     return (
         "<html><head><title>Programmes | University</title></head><body><main>"
