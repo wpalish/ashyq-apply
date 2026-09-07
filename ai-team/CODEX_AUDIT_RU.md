@@ -216,6 +216,8 @@ production DB не использовались.
 ## Git-состояние и безопасный следующий шаг
 
 - Проверенный code/handoff baseline перед evidence commit: `ai/c1/integration@ab2e70a`.
+- Опубликованный evidence commit: `96c1082`.
+- GitHub PR: [#7 — fix: audit and harden the GLM campaign](https://github.com/wpalish/ashyq-apply/pull/7).
 - Включает актуальный `origin/main@7b1fce0`.
 - Оригинальный GLM candidate сохранён: `audit/glm-c1-e533d62`.
 - На момент завершения технического аудита upstream отсутствовал; последующая явная команда владельца
@@ -225,8 +227,8 @@ production DB не использовались.
 
 Безопасная последовательность дальше:
 
-1. Просмотреть diff `origin/main..ai/c1/integration` и этот отчёт.
-2. Если код устраивает — явно разрешить push ветки и создание PR. Merge делать после GitHub CI/review.
+1. Дождаться зелёных GitHub release-gates в PR #7 и просмотреть diff.
+2. Merge PR в protected `main` выполнять только после CI/review.
 3. Отдельно выбрать search/LLM strategy; без этого live research остаётся pilot.
 4. Отдельно reconcile `task/release-hardening`, затем провести production readiness review.
 5. Только после P0 — deployment в staging с реальными SMTP/observability/backup controls.

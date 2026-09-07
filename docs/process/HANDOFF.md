@@ -8,17 +8,17 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 | | |
 |---|---|
-| Holder | **codex** |
-| Since (UTC) | 2026-09-07 publication pass |
+| Holder | **nobody** |
+| Since (UTC) | released 2026-09-07 14:10:54 UTC |
 | Branch | `ai/c1/integration`, local-only; synchronized by merge with `origin/main@7b1fce0` |
-| HEAD when written | `ab2e70a` (owner explicitly authorized GitHub publication; evidence commit follows) |
-| Origin main when checked | `7b1fce0` — PR #6 is merged; the GLM campaign is not pushed and is not on main |
+| HEAD when written | `96c1082` (final publication handoff commit follows) |
+| Origin main when checked | `7b1fce0`; campaign published as GitHub PR #7, not merged into main |
 | Previous holder | gpt-6-astra on the now-merged shortlist fix; a separate ZCode/GLM campaign then produced five local task candidates without updating this baton |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
 
-**GLM campaign `c1` audit and release hardening — publishing branch and PR by explicit owner request.** The campaign
+**GLM campaign `c1` audit and release hardening — ready for review in GitHub PR #7.** The campaign
 integrated T01, T04, T09, T10 and a deliberately limited T18 slice: five of the 24 task cards, not the
 whole project. `25f5954` merged current `origin/main`; the original GLM candidate is preserved at
 `audit/glm-c1-e533d62`. The audit fixed stale payment journal writes (`7f364cf`), Kazakhstan academic
@@ -30,8 +30,10 @@ dependency audits report zero known vulnerabilities. A bounded NU live canary im
 claim after the selection fix, with zero false positives, but remains at 0% verification completeness
 because the plain fetch sees only a 42-character admissions shell. Provider-backed search/LLM,
 browser-tier hardening, most of the 24-task backlog, publication and deployment remain unfinished.
-The owner subsequently authorized publishing everything to GitHub. Push and PR creation are in
-progress; protected-main merge and application deployment remain separate operations.
+The owner subsequently authorized publishing everything to GitHub. `origin/ai/c1/integration` and
+PR #7 now contain the code, full evidence bundle and corrected audit. GitHub release-gates were in
+progress when this handoff was written. Protected-main merge and application deployment remain
+separate operations.
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
@@ -218,8 +220,8 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-1. Commit the complete `ai-team/` evidence bundle and audit, push `ai/c1/integration`, and open a PR.
-2. Record the PR URL and GitHub CI state here, release the baton, and push that final handoff commit.
+1. Wait for and inspect all release-gates on https://github.com/wpalish/ashyq-apply/pull/7.
+2. Owner reviews PR #7 and chooses whether to merge it into protected `main`.
 3. For real live research, choose a search provider and optional LLM provider, provision their secrets
    outside Git, then implement T16/T25 and the remaining T18 dependencies before calling it release-ready.
 4. Do not merge protected main, deploy, buy a provider, add secrets or touch production data implicitly.
@@ -281,8 +283,8 @@ next agent does not reopen it.
   backlog; live NU verification completeness is 0%; provider-backed search/LLM and deploy do not exist.
 - **Evidence provenance is only partly machine-verifiable.** All five acceptance packets pass
   `check_team.py packet`, but that command checks shape/non-empty strings, not the identity of runtime
-  agent IDs or the semantic authenticity of logs. `ai-team/` has 31 files with absolute
-  `/Users/wpalish` paths; the owner explicitly accepted publishing them as forensic evidence. No
+  agent IDs or the semantic authenticity of logs. Published `ai-team/` has 31 files with absolute
+  `/Users/wpalish` paths; the owner explicitly accepted them as forensic evidence. No
   secret-like material was found by the audit scan.
 - **Public deployment still needs a separate release-security pass.** Staging currently permits the
   console reset-mail sender, and browser egress hardening in the separate master-fix worktree has not
@@ -400,9 +402,9 @@ host=github.com
 
 ## 10. Queue (brief §6 order; do not reorder without the owner)
 
-**Now: owner review of local `ai/c1/integration`; do not publish automatically.** PR #6 is already
-merged on `origin/main@7b1fce0`. The separate brief queue below remains the repository sequence; the
-GLM 24-card campaign did not replace it and is not fully completed.
+**Now: GitHub review of PR #7 after all release-gates complete.** PR #6 is already merged on
+`origin/main@7b1fce0`. The separate brief queue below remains the repository sequence; the GLM
+24-card campaign did not replace it and is not fully completed.
 
 `[0.8]` → `[1.1]` → `[1.2]` → `[1.3]` → `[1.4]` → `[2.1]` → `[2.2]` → `[2.3]` → `[3.1]` → `[3.2]` → `[4.1]` → `[4.2]` → `[5]`
 
@@ -419,3 +421,4 @@ GLM 24-card campaign did not replace it and is not fully completed.
 | 2026-09-06 16:59:45 UTC | gpt-6-astra | `d6e59d5` → `4a7171c` + this handoff commit | Prompt C completed: initial tree was clean; fetched PRs #4/#5, merged `origin/main@85352b5` without rewriting history, reviewed PR #6, fixed separate-column semantics and longest-chip overlap coverage, regenerated screenshots, ran full gates, recorded the review on the PR, and took the baton. |
 | 2026-09-07 11:28:28 UTC | codex | `e533d62` → `25f5954` | Audited the local GLM campaign, independently reran backend/frontend and ordinary E2E, preserved the original candidate as `audit/glm-c1-e533d62`, merged current `origin/main@7b1fce0`, and opened a fix-forward for the stale payment-reconcile commit defect already noted by GLM security. No push/deploy. |
 | 2026-09-07 12:00:10 UTC | codex | `25f5954` → `02d648c` + final handoff | Fixed and PostgreSQL-tested stale payment rollback, fixed two live NU discovery defects, ran all backend/frontend/E2E/auth/dependency gates, and field-ran the bounded NU canary. Audit verdict: useful partial campaign, not completed project. Baton released; no push/main/deploy. |
+| 2026-09-07 14:10:54 UTC | codex | `ab2e70a` → `96c1082` + final publication handoff | Owner explicitly authorized GitHub publication. Secret-scanned and committed all 133 ai-team evidence files plus the corrected audit, pushed `ai/c1/integration`, and opened PR #7. Release-gates started; no protected-main merge or application deploy. |

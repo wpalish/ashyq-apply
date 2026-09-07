@@ -593,7 +593,7 @@
       "T09 (via 1e9f841b)"
     ],
     "combined_gates_final": "backend full pytest 1134 cov 92.84% (threshold 92 unchanged), mypy/ruff clean, frontend vitest 182/182 + typecheck/lint/build clean",
-    "publication": "NOT DONE — push/merge-to-main/deploy require explicit user approval",
+    "publication": "BRANCH+PR PUBLISHED by explicit owner approval: origin/ai/c1/integration, PR #7; protected-main merge and application deploy NOT DONE",
     "deferred_gates": [
       "T09 e2e acceptance 11-13 (playwright; env-dependent; NOT_RUN != PASS)"
     ],
@@ -633,7 +633,7 @@
       "stale_payment_rollback_fix": "7f364cfa01bd5ebc1a812feaf3bcba79a57b255f",
       "edu_kz_domain_fix": "135138a",
       "profile_matched_programme_selection_fix": "02d648c",
-      "current_local_candidate": "02d648c on ai/c1/integration; no push, protected-main merge or deploy performed"
+      "current_local_candidate": "96c1082 on origin/ai/c1/integration; PR #7 open; protected-main merge and application deploy not performed"
     },
     "independent_local_gates": {
       "backend": "1153 collected and passed; coverage 93.00% with fail-under 92; Ruff check/format and mypy clean",
@@ -665,8 +665,18 @@
     },
     "remaining_owner_decisions": [
       "Choose and provision a search provider and, if desired, an LLM extraction/verification provider; add secrets outside Git.",
-      "Review the published pull request and explicitly approve or perform the protected-main merge if wanted.",
+      "Review PR #7 and approve or perform the protected-main merge after GitHub release-gates pass.",
       "Choose deployment infrastructure and production settings before any deploy; no deployment was attempted."
-    ]
+    ],
+    "github_publication": {
+      "authorized_by_owner": "2026-09-07: deploy everything to GitHub",
+      "branch": "https://github.com/wpalish/ashyq-apply/tree/ai/c1/integration",
+      "pull_request": "https://github.com/wpalish/ashyq-apply/pull/7",
+      "published_head_before_final_handoff": "96c108264aba3306f2d97c79399bdbd88273b967",
+      "mergeable_at_open": true,
+      "checks_at_open": "release-gates in progress",
+      "protected_main_merge": "NOT DONE",
+      "application_deployment": "NOT DONE"
+    }
   }
 }
