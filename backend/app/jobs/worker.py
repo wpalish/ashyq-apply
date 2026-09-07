@@ -15,6 +15,7 @@ import contextlib
 import logging
 import signal
 import sys
+from datetime import UTC, datetime, timedelta
 
 from app.config import Settings, get_settings
 from app.db import session_scope
@@ -179,21 +180,58 @@ class Worker:
     def _schedule_recheck(self, store: JobStore, run: ResearchRun) -> None:
         """Queue the next look at this run's evidence, at the date it ages out.
 
-        Idempotent by (run, date): re-running the same research does not stack
-        up duplicate recheck jobs.
+        The key carries the run's recheck generation — the runner bumps it in
+        the same transaction as the new ``next_recheck_at`` — so a completed
+        recheck's key is never recomputed. The previous date-granular key was
+        the chain death: a no-op recheck re-derived the same date, the store's
+        dedupe matched the job that had just finished, and nothing was ever
+        scheduled again.
+
+        A queued recheck left over from an earlier attempt of the same run is
+        cancelled here: the freshly armed one supersedes it, and the old
+        date-keyed dedupe used to do the same job implicitly.
         """
         when = run.next_recheck_at
         if when is None:
             return
         when = ensure_utc(when)
         assert when is not None
+        now = datetime.now(UTC)
+        # A follow-up the queue can only pick up in the past is the chain
+        # death in another coat; never arm one.
+        if when <= now:
+            when = now + timedelta(seconds=60)
+        for stale in (
+            store.session.query(Job)
+            .filter(
+                Job.run_id == run.id,
+                Job.kind == "recheck",
+                Job.status == JobStatus.QUEUED.value,
+            )
+            .all()
+        ):
+            store.cancel(stale.id)
         store.enqueue(
             "recheck",
             run_id=run.id,
-            idempotency_key=f"recheck:{run.id}:{when.date().isoformat()}",
+            idempotency_key=f"recheck:{run.id}:{run.recheck_generation}",
             available_at=when,
             priority=-5,  # never ahead of work a person is waiting for
         )
+
+    def _complete_runless(self, session, job_id: str, *, lease_token: int | None) -> bool:
+        """Complete a run-less job (a source scan), fenced by the attempt token.
+
+        Deliberately without the worker-id condition the run-bound kinds keep:
+        a scan whose lease was taken mid-flight may legitimately be finished by
+        the attempt that continues it, and the token is what tells attempts
+        apart — a stale attempt's token matches nothing, so it can neither
+        complete the job nor renew a lease the new owner holds. What this
+        protects is the scan's one-transaction shape: its enqueued reextracts
+        and its reschedule commit exactly when this completion does.
+        """
+        store = JobStore(session, lease_seconds=self.settings.job_lease_seconds)
+        return store.complete(job_id, lease_token=lease_token)
 
     async def _dispatch(
         self, session, store: JobStore, job: Job, *, lease_token: int | None
@@ -203,7 +241,10 @@ class Worker:
         Every store write here is fenced with the attempt token read at claim
         time, and the completion commit is the owner's alone: a worker whose
         lease was taken rolls its remaining transaction back and records
-        nothing - no audit event, no artefacts, no recheck.
+        nothing - no audit event, no artefacts, no recheck. Run-less kinds
+        (``source_scan``) are routed before the run lookup, since there is no
+        run to find; their completion fence is the attempt token alone (see
+        ``_complete_runless``).
         """
         if job.kind == "payment_reconcile":
             # A payment job has no run. Handle it before anything asks for one.
@@ -232,6 +273,26 @@ class Worker:
                     )
                 return
             if not store.complete(job.id, lease_token=lease_token):
+                session.rollback()
+            return
+
+        if job.kind == "source_scan":
+            # A scan is run-less housekeeping: it belongs to an institution,
+            # not to a research run, so it is handled before anything asks for
+            # a run, and no run's organization stands behind an audit event.
+            from app.jobs.source_scanner import purge_source_pages, run_source_scan
+
+            scan_payload = job.payload or {}
+            if scan_payload.get("purge"):
+                purged = purge_source_pages(session, datetime.now(UTC))
+                log.info("daily source-page purge removed %d row(s)", purged)
+            else:
+                await run_source_scan(session, job, self.settings)
+            if not self._complete_runless(session, job.id, lease_token=lease_token):
+                log.warning(
+                    "job %s was taken over; leaving its outcome to the new owner",
+                    job.id[:8],
+                )
                 session.rollback()
             return
 
@@ -269,6 +330,10 @@ class Worker:
             stale = await runner.recheck_stale()
             log.info("recheck of run %s: %d stale claims", run.id[:8], stale)
             self._schedule_recheck(store, run)
+        elif job.kind == "reextract_page":
+            from app.jobs.source_scanner import reextract_page
+
+            await reextract_page(session, job, run, profile, self.settings)
         else:
             store.fail(
                 job.id, f"unknown job kind {job.kind!r}", retry=False, lease_token=lease_token
@@ -386,7 +451,15 @@ def reconcile_startup() -> dict[str, int]:
             )
             stranded += 1
 
-        return {"jobs_reaped": len(reaped), "runs_recovered": stranded}
+        from app.jobs.source_scanner import bootstrap_source_scans
+
+        scans_bootstrapped = bootstrap_source_scans(session, settings)
+
+        return {
+            "jobs_reaped": len(reaped),
+            "runs_recovered": stranded,
+            "scans_bootstrapped": scans_bootstrapped,
+        }
 
 
 def main() -> int:  # pragma: no cover - process entry point

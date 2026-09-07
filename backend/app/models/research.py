@@ -91,6 +91,14 @@ class ResearchRun(TimestampedBase):
     next_recheck_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     #: How many times this run has been recovered after a worker died.
     recovery_count: Mapped[int] = mapped_column(Integer, default=0)
+    #: Bumped every time the run's evidence is re-armed for a recheck, in the
+    #: same transaction as the new ``next_recheck_at``. The recheck job's
+    #: idempotency key carries it, so a completed recheck key can never be
+    #: reused — the previous date-granular key let a no-op recheck recompute
+    #: the key of a job that had already finished, and the chain died there.
+    recheck_generation: Mapped[int] = mapped_column(
+        Integer, nullable=False, server_default="0", default=0
+    )
 
     profile: Mapped[ApplicantProfileRow] = relationship(back_populates="runs")
     results: Mapped[list[ProgramResultRow]] = relationship(
@@ -152,6 +160,16 @@ class ClaimRow(TimestampedBase):
         String(32), ForeignKey("research_runs.id", ondelete="CASCADE"), index=True
     )
     result_id: Mapped[str | None] = mapped_column(String(32), nullable=True, index=True)
+    #: The source_pages row this evidence was read from, when the page is
+    #: tracked. Nullable, and ON DELETE SET NULL: the retention purge may
+    #: delete a page whose only referencers are SUPERSEDED, and the history
+    #: rows must survive it (payload.source_url keeps the provenance).
+    source_page_id: Mapped[str | None] = mapped_column(
+        String(32),
+        ForeignKey("source_pages.id", ondelete="SET NULL", name="fk_claims_source_page"),
+        nullable=True,
+        index=True,
+    )
     claim_type: Mapped[str] = mapped_column(String(60), index=True)
     status: Mapped[str] = mapped_column(String(40), index=True)
     source_url: Mapped[str] = mapped_column(Text)

@@ -10,7 +10,7 @@ from __future__ import annotations
 import logging
 import os
 import socket
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -33,6 +33,7 @@ from app.domain.costs import compute_funding_gap, total_cost
 from app.domain.dates import parse_published_date
 from app.domain.eligibility import evaluate_program
 from app.domain.enums import (
+    ClaimStatus,
     ClaimType,
     CostCategory,
     EligibilityStatus,
@@ -216,16 +217,20 @@ class ResearchRunner:
             if not store.owns(self.job_id):
                 raise LeaseLost(f"job {self.job_id[:8]} is no longer held by {self.worker_id}")
 
-    def earliest_recheck(self) -> datetime | None:
-        """When this run's oldest claim ages out, or None if it has none.
+    def _live_claim_moments(self) -> list[datetime]:
+        """The expiry moment of every live claim in this run.
 
-        Freshness rules already downgraded stale claims to POSSIBLY_STALE, but
-        nothing ever went back to look. This is the date a recheck job waits
-        for.
+        SUPERSEDED rows are history, not evidence: their accessed_at is in the
+        past by construction, so letting them into the minimum would re-derive
+        a moment that has already passed — the exact computation that killed
+        the recheck chain.
         """
         rows = (
             self.session.query(ClaimRow.claim_type, ClaimRow.accessed_at)
-            .filter(ClaimRow.run_id == self.run.id)
+            .filter(
+                ClaimRow.run_id == self.run.id,
+                ClaimRow.status != ClaimStatus.SUPERSEDED.value,
+            )
             .all()
         )
         moments = []
@@ -237,7 +242,41 @@ class ResearchRunner:
                 moments.append(next_recheck_at(ClaimType(claim_type), accessed))
             except ValueError:  # a claim type this build no longer knows
                 continue
+        return moments
+
+    def earliest_recheck(self) -> datetime | None:
+        """When this run's oldest live claim ages out, or None if it has none.
+
+        Freshness rules already downgraded stale claims to POSSIBLY_STALE, but
+        nothing ever went back to look. This is the date a recheck job waits
+        for.
+        """
+        moments = self._live_claim_moments()
         return min(moments) if moments else None
+
+    def _noop_recheck_moment(self, now: datetime) -> datetime:
+        """Where the chain waits when a recheck found nothing to do.
+
+        The old code recomputed ``earliest_recheck()`` from the same immutable
+        ``accessed_at`` — the same moment that had just passed — so the
+        follow-up job was born overdue and deduplicated itself into oblivion.
+        Each live claim is held out to at least an hour from now, and the
+        earliest such moment wins, so a no-op recheck always re-arms strictly
+        into the future. A run with no live claims at all still re-arms.
+        """
+        floor = now + timedelta(hours=1)
+        moments = [max(moment, floor) for moment in self._live_claim_moments()]
+        return min(moments) if moments else floor
+
+    def _arm_recheck(self, when: datetime | None) -> None:
+        """Store the next recheck moment and bump the generation key seed.
+
+        Both land in the same transaction (the caller's next ``_save``), so the
+        recheck job's idempotency key — ``recheck:{run}:{generation}`` — can
+        never repeat one that has already completed.
+        """
+        self.run.next_recheck_at = when
+        self.run.recheck_generation = (self.run.recheck_generation or 0) + 1
 
     async def recheck_stale(self) -> int:
         """Re-read the evidence that has aged out. Returns how many claims were stale.
@@ -255,7 +294,7 @@ class ResearchRunner:
             if _claim_is_stale(row, now)
         ]
         if not stale_claims:
-            self.run.next_recheck_at = self.earliest_recheck()
+            self._arm_recheck(self._noop_recheck_moment(now))
             self._save()
             return 0
 
@@ -310,7 +349,7 @@ class ResearchRunner:
             waiting.finish("Shortlist ready; waiting for the applicant's decisions.")
             self._transition(PipelineStage.AWAITING_USER_DECISION)
             self.run.finished_at = datetime.now(UTC)
-            self.run.next_recheck_at = self.earliest_recheck()
+            self._arm_recheck(self.earliest_recheck())
             self._save()
         except LeaseLost:
             # Losing the lease is control flow, not a failure of the run. The
@@ -1059,14 +1098,18 @@ class ResearchRunner:
             self._store_conflicts(row.id, conflicts)
 
     def _replace_evidence(self, result_id: str) -> None:
-        """Drop the evidence a previous attempt stored for this result.
+        """Drop the live evidence a previous attempt stored for this result.
 
         Re-running a stage re-reads the same pages, so keeping both copies
         would inflate the claim count and show the user duplicate evidence.
+        SUPERSEDED rows are not live evidence — they are the was/stale record
+        of a reextract — and a retry of the pipeline must never destroy them,
+        so only non-superseded rows are deleted here.
         """
-        self.session.query(ClaimRow).filter(ClaimRow.result_id == result_id).delete(
-            synchronize_session=False
-        )
+        self.session.query(ClaimRow).filter(
+            ClaimRow.result_id == result_id,
+            ClaimRow.status != ClaimStatus.SUPERSEDED.value,
+        ).delete(synchronize_session=False)
         self.session.query(ConflictRow).filter(ConflictRow.result_id == result_id).delete(
             synchronize_session=False
         )
