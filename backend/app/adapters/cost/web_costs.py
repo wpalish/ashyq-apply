@@ -47,6 +47,7 @@ class WebCostAdapter:
         out.pages_checked += 1
         if not res.ok:
             out.pages_failed += 1
+            out.errors.append(f"{candidate.costs_url}: {res.outcome.value} — {res.error}")
             out.page_outcomes.append(
                 PageOutcome(
                     url=candidate.costs_url,
@@ -60,6 +61,9 @@ class WebCostAdapter:
         text = pdf_to_text(res.content) if res.is_pdf else readable_text(res.text)
         if not text.strip():
             out.pages_failed += 1
+            out.errors.append(
+                f"{candidate.costs_url}: page fetched but no readable text could be extracted"
+            )
             out.page_outcomes.append(
                 PageOutcome(
                     url=candidate.costs_url,
@@ -110,6 +114,9 @@ class WebCostAdapter:
                 breakdown.items[category] = money
 
         if not breakdown.items and breakdown.total is None:
+            out.errors.append(
+                f"{candidate.costs_url}: page was read but no cost figures could be extracted."
+            )
             out.page_outcomes.append(
                 PageOutcome(
                     url=candidate.costs_url,
