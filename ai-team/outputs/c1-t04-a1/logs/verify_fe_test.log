@@ -1,0 +1,162 @@
+
+> unimatch-frontend@0.1.0 test
+> vitest run --run
+
+
+ RUN  v3.2.7 /Users/wpalish/ashyq-worktrees/c1-t04-verify/frontend
+
+stderr | src/components/PaywallNotice.test.tsx > PaywallNotice > offers the price when there is no subscription
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/ashyq-worktrees/c1-t04-verify/frontend/src/lib/store.tsx:97:26)
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/ashyq-worktrees/c1-t04-verify/frontend/src/lib/store.tsx:97:26)
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/ashyq-worktrees/c1-t04-verify/frontend/src/lib/store.tsx:97:26)
+
+ ✓ src/components/AccountMenu.test.tsx (5 tests) 99ms
+stderr | src/components/PaywallNotice.test.tsx > PaywallNotice > offers the subscription first when cases remain
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/ashyq-worktrees/c1-t04-verify/frontend/src/lib/store.tsx:97:26)
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/ashyq-worktrees/c1-t04-verify/frontend/src/lib/store.tsx:97:26)
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/ashyq-worktrees/c1-t04-verify/frontend/src/lib/store.tsx:97:26)
+
+stderr | src/components/PaywallNotice.test.tsx > PaywallNotice > falls back to the price when the quota is exhausted
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/ashyq-worktrees/c1-t04-verify/frontend/src/lib/store.tsx:97:26)
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/ashyq-worktrees/c1-t04-verify/frontend/src/lib/store.tsx:97:26)
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/ashyq-worktrees/c1-t04-verify/frontend/src/lib/store.tsx:97:26)
+
+stderr | src/components/PaymentModal.test.tsx > PaymentModal > opens an order and polls until it is paid
+Warning: An update to PaymentModal inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PaymentModal (/Users/wpalish/ashyq-worktrees/c1-t04-verify/frontend/src/components/PaymentModal.tsx:8:25)
+
+stderr | src/components/PaymentModal.test.tsx > PaymentModal > opens an order and polls until it is paid
+Warning: An update to PaymentModal inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PaymentModal (/Users/wpalish/ashyq-worktrees/c1-t04-verify/frontend/src/components/PaymentModal.tsx:8:25)
+
+ ✓ src/components/PaywallNotice.test.tsx (4 tests) 132ms
+ ✓ src/lib/polling.test.tsx (5 tests) 148ms
+ ✓ src/lib/store.test.tsx (18 tests) 179ms
+ ✓ src/components/PaymentModal.test.tsx (6 tests) 234ms
+ ✓ src/screens/ProgressScreen.test.tsx (16 tests) 300ms
+ ✓ src/components/social.test.tsx (17 tests) 296ms
+ ✓ src/screens/ShortlistScreen.test.tsx (13 tests) 382ms
+ ✓ src/screens/ProfileScreen.test.tsx (7 tests) 583ms
+ ✓ src/lib/format.test.ts (22 tests) 27ms
+ ✓ src/components/primitives.test.tsx (7 tests) 86ms
+ ✓ src/api/client.billing.test.ts (6 tests) 4ms
+ ✓ src/components/ErrorBoundary.test.tsx (3 tests) 139ms
+ ✓ src/components/moderation.test.tsx (4 tests) 140ms
+ ✓ src/lib/i18n.test.ts (8 tests) 14ms
+ ✓ src/lib/immutable.test.ts (11 tests) 5ms
+ ✓ src/screens/PreferencesScreen.test.tsx (3 tests) 172ms
+ ✓ src/screens/LegalScreen.test.tsx (9 tests) 152ms
+
+ Test Files  18 passed (18)
+      Tests  164 passed (164)
+   Start at  03:22:31
+   Duration  2.24s (transform 809ms, setup 1.24s, collect 3.00s, tests 3.09s, environment 7.58s, prepare 1.33s)
+

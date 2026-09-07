@@ -14,6 +14,7 @@ from fastapi.testclient import TestClient
 
 from app.config import Settings
 from app.corpus.demo_profile import DEMO_PROFILE
+from app.mail import Message, RecordingSender
 
 PASSWORD = "correct horse battery staple"
 NEW_PASSWORD = "a different long passphrase"
@@ -65,6 +66,24 @@ def auth_client(tmp_path, monkeypatch, corpus_dir):
     original_get_settings.cache_clear()
 
 
+@pytest.fixture
+def mail_sink(auth_client, monkeypatch):
+    """auth_client with the route's mail sender bound to a recording sink.
+
+    The reset token must be observable through the delivered letter and
+    through nothing else, so this stands in for the user's mailbox at the
+    same seam the route itself uses: the module-level ``get_sender`` binding
+    in ``app.api.routes_account``. The sender itself is the official test
+    sink from ``app.mail``.
+    """
+    client, settings = auth_client
+    sink = RecordingSender()
+    import app.api.routes_account as routes_account
+
+    monkeypatch.setattr(routes_account, "get_sender", lambda _settings: sink)
+    return client, settings, sink
+
+
 def register(client: TestClient, suffix: str, password: str = PASSWORD) -> dict:
     response = client.post(
         "/api/auth/register",
@@ -77,6 +96,12 @@ def register(client: TestClient, suffix: str, password: str = PASSWORD) -> dict:
     )
     assert response.status_code == 201, response.text
     return response.json()
+
+
+def reset_token_from_letter(message: Message) -> str:
+    """The token as the recipient of the letter would read it off the link."""
+    link_line = next(line for line in message.body.splitlines() if "token=" in line)
+    return link_line.split("token=", 1)[1]
 
 
 class TestPasswordChange:
@@ -149,28 +174,34 @@ class TestPasswordChange:
 
 
 class TestPasswordReset:
-    def _request_link(self, client, email: str) -> str:
+    def _request_token(self, client: TestClient, sink: RecordingSender, email: str) -> str:
+        """Ask for a reset, then read the token off the delivered letter.
+
+        The API answer carries no token in any environment; the letter is the
+        only place the recipient ever sees one.
+        """
         response = client.post("/api/auth/password/reset-request", json={"email": email})
         assert response.status_code == 202
-        return response.json()["reset_link"]
+        assert len(sink.messages) == 1, "one request, one letter"
+        return reset_token_from_letter(sink.messages[0])
 
-    def test_a_reset_link_gets_the_account_back(self, auth_client):
-        client, _ = auth_client
+    def test_a_reset_link_gets_the_account_back(self, mail_sink):
+        client, _, sink = mail_sink
         register(client, "forgetful")
         client.post("/api/auth/logout")
 
-        token = self._request_link(client, "forgetful@example.test").split("token=")[1]
+        token = self._request_token(client, sink, "forgetful@example.test")
         response = client.post(
             "/api/auth/password/reset", json={"token": token, "new_password": NEW_PASSWORD}
         )
         assert response.status_code == 200
         assert client.get("/api/auth/me").status_code == 200, "the reset signs the user in"
 
-    def test_a_token_works_once(self, auth_client):
-        client, _ = auth_client
+    def test_a_token_works_once(self, mail_sink):
+        client, _, sink = mail_sink
         register(client, "replayer")
         client.post("/api/auth/logout")
-        token = self._request_link(client, "replayer@example.test").split("token=")[1]
+        token = self._request_token(client, sink, "replayer@example.test")
 
         assert (
             client.post(
@@ -184,15 +215,15 @@ class TestPasswordReset:
         assert again.status_code == 400
         assert "no longer valid" in again.json()["detail"]
 
-    def test_an_expired_token_is_refused(self, auth_client):
+    def test_an_expired_token_is_refused(self, mail_sink):
         from datetime import UTC, datetime, timedelta
 
         import sqlalchemy as sa
 
-        client, _ = auth_client
+        client, _, sink = mail_sink
         register(client, "slowpoke")
         client.post("/api/auth/logout")
-        token = self._request_link(client, "slowpoke@example.test").split("token=")[1]
+        token = self._request_token(client, sink, "slowpoke@example.test")
 
         from app.db import SessionLocal
         from app.models import PasswordResetToken
@@ -210,14 +241,14 @@ class TestPasswordReset:
         )
         assert response.status_code == 400
 
-    def test_someone_elses_token_is_just_a_token(self, auth_client):
-        client, _ = auth_client
+    def test_someone_elses_token_is_just_a_token(self, mail_sink):
+        client, _, sink = mail_sink
         register(client, "victim")
         client.post("/api/auth/logout")
         register(client, "attacker")
         client.post("/api/auth/logout")
 
-        victim_token = self._request_link(client, "victim@example.test").split("token=")[1]
+        victim_token = self._request_token(client, sink, "victim@example.test")
         # The attacker holds a token: it resets the account it was issued for,
         # and nothing else. Ownership travels with the token, not the request.
         response = client.post(
@@ -227,8 +258,8 @@ class TestPasswordReset:
         assert response.status_code == 200
         assert response.json()["email"] == "victim@example.test"
 
-    def test_a_reset_ends_every_existing_session(self, auth_client):
-        client, _ = auth_client
+    def test_a_reset_ends_every_existing_session(self, mail_sink):
+        client, _, sink = mail_sink
         register(client, "compromised")
         intruder = TestClient(client.app)
         intruder.post(
@@ -236,7 +267,7 @@ class TestPasswordReset:
         )
         assert intruder.get("/api/auth/me").status_code == 200
 
-        token = self._request_link(client, "compromised@example.test").split("token=")[1]
+        token = self._request_token(client, sink, "compromised@example.test")
         client.post("/api/auth/password/reset", json={"token": token, "new_password": NEW_PASSWORD})
 
         assert intruder.get("/api/auth/me").status_code == 401
@@ -260,6 +291,172 @@ class TestPasswordReset:
             "/api/auth/password/reset-request", json={"email": "prod-user@example.test"}
         ).json()
         assert "reset_link" not in body
+
+
+class TestResetTokenNeverLeavesTheMailbox:
+    """S01: the reset token travels by mail, never in an API response.
+
+    The old behavior appended ``reset_link`` to the 202 body in every
+    non-production environment, handing a working single-use token to
+    whoever asked — no mailbox required. Whatever the environment, the
+    answer stays ``{"detail": ...}`` and the token is observable only in
+    the delivered letter.
+    """
+
+    @pytest.mark.parametrize("environment", ["development", "staging", "production", "testing"])
+    def test_no_environment_puts_the_token_in_the_response(
+        self, auth_client, monkeypatch, environment
+    ):
+        client, settings = auth_client
+        register(client, "envprobe")
+        client.post("/api/auth/logout")
+        monkeypatch.setattr(settings, "environment", environment)
+
+        response = client.post(
+            "/api/auth/password/reset-request", json={"email": "envprobe@example.test"}
+        )
+        assert response.status_code == 202
+        body = response.json()
+        assert set(body) == {"detail"}, f"[{environment}] response carried {sorted(body)}"
+        leaked = [key for key in body if "token" in key.lower() or "link" in key.lower()]
+        assert not leaked, f"[{environment}] response carried {leaked}"
+
+    def test_the_letter_delivers_a_working_token(self, mail_sink):
+        """The owner, with the mailbox, can complete the reset."""
+        client, _, sink = mail_sink
+        register(client, "mailbox")
+        client.post("/api/auth/logout")
+
+        response = client.post(
+            "/api/auth/password/reset-request", json={"email": "mailbox@example.test"}
+        )
+        assert response.status_code == 202
+        assert set(response.json()) == {"detail"}, "even success keeps the answer neutral"
+
+        assert len(sink.messages) == 1, "one request, one letter"
+        letter = sink.messages[0]
+        assert letter.to == "mailbox@example.test"
+        token = reset_token_from_letter(letter)
+
+        done = client.post(
+            "/api/auth/password/reset", json={"token": token, "new_password": NEW_PASSWORD}
+        )
+        assert done.status_code == 200
+        assert client.get("/api/auth/me").status_code == 200, "the reset signs the user in"
+
+    def test_a_stranger_gets_no_token_in_the_answer(self, mail_sink):
+        """A signed-out stranger asking for the victim's reset sees nothing."""
+        client, _, sink = mail_sink
+        register(client, "victim")
+
+        stranger = TestClient(client.app)
+        response = stranger.post(
+            "/api/auth/password/reset-request", json={"email": "victim@example.test"}
+        )
+        assert response.status_code == 202
+        assert set(response.json()) == {"detail"}
+
+        assert len(sink.messages) == 1, "the letter went out"
+        assert sink.messages[0].to == "victim@example.test", "to the victim, not the stranger"
+        token = reset_token_from_letter(sink.messages[0])
+        assert token not in response.text, "the token must not travel in the answer"
+
+    def test_every_address_shape_gets_the_same_neutral_answer(self, mail_sink):
+        """Existing, unknown, malformed and inactive read identically."""
+        client, _, sink = mail_sink
+        register(client, "neutral")
+        client.post("/api/auth/logout")
+        register(client, "inactive")
+
+        from app.db import SessionLocal
+        from app.models import User
+
+        with SessionLocal() as session:
+            dormant = session.query(User).filter(User.email == "inactive@example.test").one()
+            dormant.is_active = False
+            session.commit()
+        client.post("/api/auth/logout")
+
+        shapes = {
+            "existing": "neutral@example.test",
+            "unknown": "nobody@example.test",
+            "malformed": "not-an-email",
+            "inactive": "inactive@example.test",
+        }
+        answers = {}
+        for label, email in shapes.items():
+            response = client.post("/api/auth/password/reset-request", json={"email": email})
+            assert response.status_code == 202, label
+            answers[label] = response.json()
+
+        for label, body in answers.items():
+            assert set(body) == {"detail"}, f"[{label}] response carried {sorted(body)}"
+        assert all(body == answers["existing"] for body in answers.values()), (
+            "the four shapes must be indistinguishable"
+        )
+        assert [letter.to for letter in sink.messages] == ["neutral@example.test"], (
+            "only the existing, active account gets a letter"
+        )
+
+    def test_a_token_from_the_letter_works_exactly_once(self, mail_sink):
+        client, _, sink = mail_sink
+        register(client, "once")
+        client.post("/api/auth/logout")
+        client.post("/api/auth/password/reset-request", json={"email": "once@example.test"})
+        token = reset_token_from_letter(sink.messages[0])
+
+        first = client.post(
+            "/api/auth/password/reset", json={"token": token, "new_password": NEW_PASSWORD}
+        )
+        assert first.status_code == 200
+        again = client.post(
+            "/api/auth/password/reset",
+            json={"token": token, "new_password": "yet another long passphrase"},
+        )
+        assert again.status_code == 400
+        assert "no longer valid" in again.json()["detail"]
+
+    def test_an_expired_letter_is_refused(self, mail_sink, monkeypatch):
+        client, settings, sink = mail_sink
+        monkeypatch.setattr(settings, "password_reset_ttl_minutes", -1)
+        register(client, "expiredletter")
+        client.post("/api/auth/logout")
+        client.post(
+            "/api/auth/password/reset-request", json={"email": "expiredletter@example.test"}
+        )
+        token = reset_token_from_letter(sink.messages[0])
+
+        response = client.post(
+            "/api/auth/password/reset", json={"token": token, "new_password": NEW_PASSWORD}
+        )
+        assert response.status_code == 400
+        assert "no longer valid" in response.json()["detail"]
+
+    def test_a_reset_from_the_letter_ends_every_existing_session(self, mail_sink):
+        client, _, sink = mail_sink
+        register(client, "revoked")
+        intruder = TestClient(client.app)
+        intruder.post(
+            "/api/auth/login", json={"email": "revoked@example.test", "password": PASSWORD}
+        )
+        assert intruder.get("/api/auth/me").status_code == 200
+
+        client.post("/api/auth/password/reset-request", json={"email": "revoked@example.test"})
+        token = reset_token_from_letter(sink.messages[0])
+        done = client.post(
+            "/api/auth/password/reset", json={"token": token, "new_password": NEW_PASSWORD}
+        )
+        assert done.status_code == 200
+
+        assert intruder.get("/api/auth/me").status_code == 401, "old sessions are gone"
+        assert client.get("/api/auth/me").status_code == 200
+        client.post("/api/auth/logout")
+        assert (
+            client.post(
+                "/api/auth/login", json={"email": "revoked@example.test", "password": NEW_PASSWORD}
+            ).status_code
+            == 200
+        ), "the owner is back in with the new password"
 
 
 class TestWorkspaceSwitching:

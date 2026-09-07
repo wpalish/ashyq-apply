@@ -40,13 +40,17 @@ def auth_client(tmp_path, monkeypatch, corpus_dir):
     import app.db as db_module
     import app.main as main_module
     import app.security as security_module
-    from app.api import routes_auth
+    from app.api import routes_account, routes_auth
 
     original_get_settings = config_module.get_settings
     original_get_settings.cache_clear()
     monkeypatch.setattr(config_module, "get_settings", lambda: settings)
     monkeypatch.setattr(security_module, "get_settings", lambda: settings)
     monkeypatch.setattr(routes_auth, "get_settings", lambda: settings)
+    # routes_account resolves get_settings through its own module-level
+    # import; without this, its reset endpoints read the developer's real
+    # global settings (limits, TTL) instead of the test's.
+    monkeypatch.setattr(routes_account, "get_settings", lambda: settings)
     monkeypatch.setattr(main_module, "settings", settings)
     monkeypatch.setattr(main_module, "_limiter", main_module.FixedWindowLimiter())
 
@@ -272,6 +276,56 @@ class TestAbuseLimits:
         assert unknown.status_code == 401
         assert unknown.json()["detail"] == "Invalid email or password."
         assert len(calls) == 1, "a password check must run even when the account does not exist"
+
+
+class TestResetRequestSafety:
+    """The reset-request answer is public: the token travels only by mail."""
+
+    def test_staging_gets_the_same_silent_answer_as_production(self, auth_client, monkeypatch):
+        """The compose stack runs UNIMATCH_ENVIRONMENT=staging behind an
+        exposed API port; staging must be as silent as production."""
+        client, settings = auth_client
+        register(client, "staging-user")
+        client.post("/api/auth/logout")
+        monkeypatch.setattr(settings, "environment", "staging")
+
+        response = client.post(
+            "/api/auth/password/reset-request", json={"email": "staging-user@example.test"}
+        )
+        assert response.status_code == 202
+        assert set(response.json()) == {"detail"}
+        assert "reset_link" not in response.json()
+
+    def test_reset_requests_for_one_email_hit_the_per_email_limit(self, auth_client):
+        client, settings = auth_client
+        register(client, "pounded")
+        client.post("/api/auth/logout")
+
+        attempts = [
+            client.post(
+                "/api/auth/password/reset-request",
+                json={"email": "pounded@example.test"},
+                headers={"X-Forwarded-For": f"198.51.100.{i + 1}"},
+            )
+            for i in range(settings.auth_rate_limit_per_minute)
+        ]
+        assert all(attempt.status_code == 202 for attempt in attempts)
+        exhausted = client.post(
+            "/api/auth/password/reset-request",
+            json={"email": "pounded@example.test"},
+            headers={"X-Forwarded-For": "198.51.100.99"},
+        )
+        assert exhausted.status_code == 429
+        assert "Too many reset requests" in exhausted.json()["detail"]
+
+        # The bound is per email, not per address: a different email from yet
+        # another fresh address still has budget.
+        other = client.post(
+            "/api/auth/password/reset-request",
+            json={"email": "nobody@example.test"},
+            headers={"X-Forwarded-For": "198.51.100.98"},
+        )
+        assert other.status_code == 202
 
 
 class TestRequestSecurity:

@@ -1,0 +1,57 @@
+{
+  "task_id": "T01",
+  "baseline_sha": "REPLACE_WITH_FULL_BASELINE_SHA",
+  "candidate_sha": "REPLACE_WITH_FULL_CANDIDATE_SHA",
+  "participants": [
+    {
+      "role": "ashyq-planner",
+      "invocation_ref": "REPLACE_WITH_REAL_INVOCATION_REF_1",
+      "checked_sha": "REPLACE_WITH_FULL_BASELINE_SHA",
+      "verdict": "PENDING",
+      "evidence_file": "planner.md"
+    },
+    {
+      "role": "ashyq-developer",
+      "invocation_ref": "REPLACE_WITH_REAL_INVOCATION_REF_2",
+      "checked_sha": "REPLACE_WITH_FULL_CANDIDATE_SHA",
+      "verdict": "PENDING",
+      "evidence_file": "developer.md"
+    },
+    {
+      "role": "ashyq-qa",
+      "invocation_ref": "REPLACE_WITH_REAL_INVOCATION_REF_3",
+      "checked_sha": "REPLACE_WITH_FULL_CANDIDATE_SHA",
+      "verdict": "PENDING",
+      "evidence_file": "qa.md"
+    },
+    {
+      "role": "ashyq-reviewer",
+      "invocation_ref": "REPLACE_WITH_REAL_INVOCATION_REF_4",
+      "checked_sha": "REPLACE_WITH_FULL_CANDIDATE_SHA",
+      "verdict": "PENDING",
+      "evidence_file": "reviewer.md"
+    },
+    {
+      "role": "ashyq-security",
+      "invocation_ref": "REPLACE_WITH_REAL_INVOCATION_REF_5",
+      "checked_sha": "REPLACE_WITH_FULL_CANDIDATE_SHA",
+      "verdict": "PENDING",
+      "evidence_file": "security.md"
+    }
+  ],
+  "tests": [
+    {
+      "command": "REPLACE_WITH_EXECUTED_COMMAND",
+      "checked_sha": "REPLACE_WITH_FULL_CANDIDATE_SHA",
+      "status": "NOT_RUN",
+      "exit_code": null,
+      "log_file": "tests.log"
+    }
+  ],
+  "acceptance_items": [
+    {"criterion": "REPLACE_FROM_TASK_CONTRACT", "status": "NOT_RUN", "evidence_file": "qa.md"}
+  ],
+  "blockers": ["Template: no agents or tests have run yet"],
+  "scope_check": "NOT_RUN",
+  "note": "Packet validation checks structure and files, not truthfulness of model statements. Primary/integrator must match entries to real runtime evidence. This is not deployment approval."
+}

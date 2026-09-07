@@ -248,7 +248,31 @@ function Costs({ result }: { result: ProgramResult }) {
         </dl>
       )}
 
-      {gap && (
+      {gap && gap.cost_basis === 'itemised_partial' && gap.total_cost ? (
+        <div className="panel panel--sunken">
+          <h3 style={{ fontSize: 'var(--text-base)', marginBottom: 8 }}>Cost of attendance known so far</h3>
+          <p className="num" style={{ fontSize: 'var(--text-xl)', fontFamily: 'var(--font-display)', margin: 0 }}>
+            ≥ {money(gap.total_cost)}
+          </p>
+          <p className="xs muted" style={{ marginTop: 4 }}>
+            Only some core cost categories are itemised, so this figure is the known subtotal — a
+            lower bound on the real cost of attendance, never the full cost. No remaining-cost
+            figure is computed against a half-known cost.
+          </p>
+          {gap.missing_categories.length > 0 && (
+            <div className="row row--tight" style={{ marginTop: 'var(--space-3)' }}>
+              {gap.missing_categories.map((c) => (
+                <Chip key={c} tone="warn">{humanize(c)}: not itemised</Chip>
+              ))}
+            </div>
+          )}
+          {gap.warnings.length > 0 && (
+            <ul className="xs muted" style={{ marginTop: 'var(--space-3)', paddingLeft: '1.1rem' }}>
+              {gap.warnings.map((w, i) => <li key={i}>{w}</li>)}
+            </ul>
+          )}
+        </div>
+      ) : gap && (
         <div className="panel panel--sunken">
           <h3 style={{ fontSize: 'var(--text-base)', marginBottom: 8 }}>Remaining annual cost</h3>
           {gap.computable && gap.gap ? (

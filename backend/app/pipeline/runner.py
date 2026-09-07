@@ -12,9 +12,10 @@ import os
 import socket
 from datetime import UTC, datetime
 
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.adapters.base import Candidate, CandidateProgram
+from app.adapters.base import Candidate, CandidateProgram, PageOutcome
 from app.adapters.browser import BrowserFetcher
 from app.adapters.cost.web_costs import WebCostAdapter
 from app.adapters.discovery.fixture_discovery import FixtureDiscoveryAdapter
@@ -57,6 +58,23 @@ from app.schemas.result import ProgramResult, Tristate
 
 log = logging.getLogger("unimatch.pipeline")
 
+#: Page-outcome categories that mean the page could not be read at all; the
+#: rest (fetched-ok, no-pattern-match) are honest unknowns, not failures.
+_PAGE_PROBLEM_CATEGORIES = frozenset({"fetch-failed", "unreadable", "classifier-rejected"})
+
+
+def _page_outcome_line(outcome: PageOutcome) -> str:
+    """One parseable line per page: category, url, classification, reason.
+
+    This is the record the canary report reads back to separate
+    fetch-failed / unreadable / classifier-rejected / no-pattern-match and to
+    show each page's classification — the "35 pages, 0 claims" run used to
+    carry none of it.
+    """
+    size = f", {outcome.readable_chars} chars" if outcome.readable_chars else ""
+    page_type = outcome.page_type or "unclassified"
+    return f"page {outcome.category}: {outcome.url} (page_type {page_type}{size}): {outcome.detail}"
+
 
 class RunCancelled(RuntimeError):
     pass
@@ -83,6 +101,7 @@ class ResearchRunner:
         *,
         job_id: str | None = None,
         worker_id: str | None = None,
+        lease_token: int | None = None,
     ) -> None:
         self.session = session
         self.run = run
@@ -96,6 +115,10 @@ class ResearchRunner:
         #: When run by a worker, cancellation is observed through the job as
         #: well as the run, so either route stops the work.
         self.job_id = job_id
+        #: The attempt token the job was claimed with - its ``attempts`` value
+        #: at claim time. Every checkpoint write is fenced with it, so two
+        #: attempts of one job under the same worker_id are still told apart.
+        self.lease_token = lease_token
         #: Stages skipped because a previous attempt finished them.
         self.resumed_stages: list[str] = []
         # A per-run override wins over the server default, and verification is
@@ -136,6 +159,12 @@ class ResearchRunner:
 
         The heartbeat rides on the same commit as the progress it describes, so
         a worker that dies cannot leave a fresh heartbeat behind stale state.
+
+        The renewal is a fence, not a courtesy: it is one UPDATE conditioned on
+        still holding the claim - the job, its worker and the attempt token -
+        inside the same transaction as the progress it protects. Zero rows
+        means another attempt owns the job, so this one rolls its checkpoint
+        back and stops without having written anything.
         """
         self.run.stage_state = self.state.dump()
         self.run.heartbeat_at = datetime.now(UTC)
@@ -148,12 +177,32 @@ class ResearchRunner:
             in_progress = False
         self.run.worker_id = self.worker_id if in_progress else None
         self.session.add(self.run)
+        if self.job_id is not None:
+            from app.jobs.store import JobStore
+
+            store = JobStore(
+                self.session,
+                lease_seconds=self.settings.job_lease_seconds,
+                worker_id=self.worker_id,
+            )
+            if not store.heartbeat(self.job_id, lease_token=self.lease_token):
+                self.session.rollback()
+                raise LeaseLost(f"job {self.job_id[:8]} is no longer held by {self.worker_id}")
         self.session.commit()
 
     def _check_cancelled(self) -> None:
-        """Observed between units of work so cancellation lands cleanly."""
-        self.session.refresh(self.run)
-        if self.run.cancelled:
+        """Observed between units of work so cancellation lands cleanly.
+
+        A scalar read, not a refresh: the run object carries this stage's
+        pending counter increments, and ``session.refresh`` used to throw them
+        away at every checkpoint. The checkpoint only has to observe
+        cancellation - the promise that this attempt may still write is kept
+        by the fence in _save.
+        """
+        cancelled = self.session.execute(
+            select(ResearchRun.cancelled).where(ResearchRun.id == self.run.id)
+        ).scalar()
+        if cancelled:
             raise RunCancelled("Run was cancelled by the user.")
         if self.job_id is not None:
             from app.jobs.store import JobStore
@@ -263,6 +312,12 @@ class ResearchRunner:
             self.run.finished_at = datetime.now(UTC)
             self.run.next_recheck_at = self.earliest_recheck()
             self._save()
+        except LeaseLost:
+            # Losing the lease is control flow, not a failure of the run. The
+            # attempt that lost it has already rolled itself back in _save and
+            # must write nothing - not a failed stage, not an error, not an
+            # audit event: the worker that took the job over owns the outcome.
+            raise
         except RunCancelled:
             self.run.stage = PipelineStage.CANCELLED.value
             self.run.finished_at = datetime.now(UTC)
@@ -364,6 +419,7 @@ class ResearchRunner:
 
         errors: list[str] = []
         retry: list[str] = []
+        outcomes: list[PageOutcome] = []
         seen_keys: set[str] = set()
 
         for cand in targets:
@@ -410,12 +466,14 @@ class ResearchRunner:
                 ar = await req.verify(cand, prog, self.intake)
                 errors.extend(ar.errors)
                 retry.extend(ar.retry_urls)
+                outcomes.extend(ar.page_outcomes)
                 self.run.pages_checked += ar.pages_checked
                 self.run.pages_failed += ar.pages_failed
 
                 cb, cr = await cost.fetch(cand)
                 errors.extend(cr.errors)
                 retry.extend(cr.retry_urls)
+                outcomes.extend(cr.page_outcomes)
                 self.run.pages_checked += cr.pages_checked
                 self.run.pages_failed += cr.pages_failed
                 result.costs = cb
@@ -482,6 +540,7 @@ class ResearchRunner:
             self._save()
 
         self._record_diagnostics(errors)
+        self._record_page_outcomes(outcomes)
         self.run.retry_urls = sorted(set(list(self.run.retry_urls or []) + retry))[:200]
         st.finish(
             f"{self.run.programs_verified} programmes checked across "
@@ -874,6 +933,26 @@ class ResearchRunner:
         """
         failures, unknowns = diagnostics.split(messages)
         self.run.errors = list(self.run.errors or []) + failures[:200]
+        self.run.unknowns = list(self.run.unknowns or []) + unknowns[:400]
+
+    def _record_page_outcomes(self, outcomes: list[PageOutcome]) -> None:
+        """File one diagnostic per page touched, next to the prose errors.
+
+        A page that was fetched fine but answered nothing (unreadable text,
+        rejected by the classifier, no pattern matched) must not vanish: the
+        run keeps its category, its classification and the adapter's reason,
+        so a report built from this row can explain a zero instead of only
+        reporting it.
+        """
+        if not outcomes:
+            return
+        problems = [
+            _page_outcome_line(o) for o in outcomes if o.category in _PAGE_PROBLEM_CATEGORIES
+        ]
+        unknowns = [
+            _page_outcome_line(o) for o in outcomes if o.category not in _PAGE_PROBLEM_CATEGORIES
+        ]
+        self.run.errors = list(self.run.errors or []) + problems[:200]
         self.run.unknowns = list(self.run.unknowns or []) + unknowns[:400]
 
     def _add_unresolved(

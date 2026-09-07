@@ -1,0 +1,104 @@
+{
+  "task_id": "T09",
+  "finding_ids": ["FE01", "FE02", "FE03"],
+  "attempt_id": "A2",
+  "baseline_sha": "f7f14b28c43afe20df01ad38a26964c397f393fc",
+  "qa_commit_sha": "cdb4403d13aef4a0eb9b6351079683a94d839436",
+  "candidate_sha": "7fb0d3270de24f79adfea6a315ee80092a298bc0",
+  "integration_base_sha": "f7f14b28c43afe20df01ad38a26964c397f393fc",
+  "participants": [
+    {
+      "role": "ashyq-planner",
+      "invocation_ref": "agent_038babc3-f6ee-4ac1-b20f-4ebff7f9923d",
+      "checked_sha": "f7f14b28c43afe20df01ad38a26964c397f393fc",
+      "verdict": "PASS",
+      "evidence_file": "planner.md"
+    },
+    {
+      "role": "ashyq-qa",
+      "invocation_ref": "agent_be216803-cdd5-45d4-a970-4b6dde16d605",
+      "checked_sha": "7fb0d3270de24f79adfea6a315ee80092a298bc0",
+      "verdict": "PASS",
+      "evidence_file": "developer-a2.md"
+    },
+    {
+      "role": "ashyq-developer",
+      "invocation_ref": "agent_be9089d9-d877-4e3e-9c21-3ac5fc7615d7",
+      "checked_sha": "7fb0d3270de24f79adfea6a315ee80092a298bc0",
+      "verdict": "PASS",
+      "evidence_file": "developer-a2.md"
+    },
+    {
+      "role": "ashyq-reviewer",
+      "invocation_ref": "agent_93a2f1c4",
+      "checked_sha": "7fb0d3270de24f79adfea6a315ee80092a298bc0",
+      "verdict": "PASS",
+      "evidence_file": "reviews-a2.md"
+    },
+    {
+      "role": "ashyq-security",
+      "invocation_ref": "agent_c074846b-5c07-45be-9f03-f0064f269138",
+      "checked_sha": "7fb0d3270de24f79adfea6a315ee80092a298bc0",
+      "verdict": "PASS",
+      "evidence_file": "reviews-a2.md"
+    }
+  ],
+  "tests": [
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c1-t09-verify-a2/frontend && npx vitest run src/lib/store.test.tsx src/lib/drafts.test.tsx src/lib/hydrationErrors.test.tsx",
+      "checked_sha": "7fb0d3270de24f79adfea6a315ee80092a298bc0",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "logs/verify_target.log",
+      "summary": "36/36 passed (drafts 16 incl. two-reloads regression GREEN, hydrationErrors 2, store 18); 11 A1 RED + 1 A2 RED all GREEN"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c1-t09-verify-a2/frontend && npx vitest run",
+      "checked_sha": "7fb0d3270de24f79adfea6a315ee80092a298bc0",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "logs/verify_full.log",
+      "summary": "Full unit suite: 20 files, 182 passed, 0 failed"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c1-t09-verify-a2/frontend && npm run typecheck && npm run lint && npm run build",
+      "checked_sha": "7fb0d3270de24f79adfea6a315ee80092a298bc0",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "logs/verify_build.log",
+      "summary": "typecheck (verify_typecheck.log), lint (verify_lint.log), build all exit 0"
+    }
+  ],
+  "acceptance_items": [
+    {
+      "criterion": "Новый draft переживает reload",
+      "status": "PASS",
+      "evidence_file": "reviews-a2.md",
+      "note": "FE01 covered by QA tests (remount restore, draftRestored=true) AND A2 two-reloads regression (kept green by autosave guard fix); reviewer findings_closure #3 closed"
+    },
+    {
+      "criterion": "Slow hydration не удаляет edits",
+      "status": "PASS",
+      "evidence_file": "qa-test-author.md",
+      "note": "FE02: autosave double-gated on hydration (store.tsx:225); tests: slow getProfile vs debounce -> slot not cleared, edits restored; hydrated=false until BOTH requests settle; StrictMode double-mount safe"
+    },
+    {
+      "criterion": "Две вкладки/кейса изолированы; stale response не переключает назад",
+      "status": "PASS",
+      "evidence_file": "reviews-a2.md",
+      "note": "FE03: per-case envelope slots applied only on matching case_key (A->B, round-trip, foreign-key tests); generation guard discards stale responses entirely (switch A->B with late A -> final state B); e2e 11-13 remain a deferred release gate (NOT_RUN != PASS)"
+    }
+  ],
+  "scope_check": "PASS",
+  "scope_check_command": "python3 ai-team/check_team.py scope --task T09 --repo /Users/wpalish/ashyq-worktrees/c1-t09-verify-a2 --base f7f14b28c43afe20df01ad38a26964c397f393fc --head 7fb0d3270de24f79adfea6a315ee80092a298bc0",
+  "scope_check_result": "changed: caseDrafts.ts, drafts.test.tsx, hydrationErrors.test.tsx, store.test.tsx, store.tsx; outside_scope: []",
+  "blockers": [],
+  "notes": [
+    "Attempt A2 = repair loop after reviewer CHANGES_REQUESTED on b0caa004 (findings 1-4 closed; finding 5 envelope depth/size -> backlog).",
+    "Chain: bb137d7 (QA A1) -> febb6c33 (dev A1) -> b0caa004 (QA matcher amend) -> cdb4403 (QA A2 tests) -> 7fb0d327 (dev A2 fix).",
+    "Invocation refs: QA TEST_AUTHOR A1 agent_8d498240-020c-4819-b99b-58a13842503d; QA amend agent_25707a0f-321b-4265-8b4b-5bbe132a9bc5; QA A2 TEST_AUTHOR agent_91273f4b-02ec-4cc7-94cd-6a6dec142759; developer A1 agent_924bc3b2-4e00-4b16-91c3-ceaf2f323763; reviewer A1 (CHANGES_REQUESTED) agent_2a87c91e-3b35-4ef0-9033-182ec673b3a2. Reviewer A2 ref agent_93a2f1c4 is the runtime id self-reported by the review invocation; the runtime did not export a longer agentId to the dispatcher for that call - flagged as recorded-with-caveat.",
+    "Coordinator decisions: per-tab sessionStorage pointers and invisible orphan envelopes accepted (behavior changes); matcher amendment approved; 2 store.test.tsx assertion migrations approved; local-case slot retention fix approved.",
+    "Deferred release gate: e2e acceptance 11-13 (NOT_RUN != PASS). Backlog: envelope depth/size, draft-slot GC, draftRestored cosmetic after startRun create, client.ts path interpolation (pre-existing).",
+    "All invocations inherit the user-selected GLM model; no hardcoded model ids."
+  ]
+}

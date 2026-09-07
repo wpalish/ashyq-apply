@@ -1,0 +1,962 @@
+{
+  "format": "ashyq-coordination-manifest-v1",
+  "native_zcode_configuration": false,
+  "description": "Protocol consumed by the primary agent and optional validation helpers; not a built-in ZCode scheduler or file-lock service.",
+  "audited_commit": "f018307f5d4186a61fd3d463066abf799936dfc8",
+  "model_policy": "inherit the user-selected GLM model; no hardcoded model ID or API key",
+  "required_roles": [
+    "ashyq-planner",
+    "ashyq-developer",
+    "ashyq-qa",
+    "ashyq-reviewer"
+  ],
+  "minimum_independent_roles_per_task": 4,
+  "dispatcher": "one primary ZCode Agent session; subagents cannot delegate",
+  "profiles": {
+    "safe": {
+      "max_active_tasks": 1,
+      "max_simultaneous_writers": 1,
+      "max_heavy_test_suites": 1
+    },
+    "balanced": {
+      "max_active_tasks": 3,
+      "max_simultaneous_writers": 3,
+      "max_heavy_test_suites": 1
+    },
+    "max": {
+      "max_active_tasks": 6,
+      "max_simultaneous_writers": 6,
+      "max_heavy_test_suites": 1
+    }
+  },
+  "default_profile": "balanced",
+  "initial_preflight_profile": "safe",
+  "profile_note": "These are coordination ceilings, not promises about native/API concurrency or installed hardware.",
+  "protected_actions": [
+    "push",
+    "merge into protected main",
+    "deployment",
+    "production migration",
+    "external security attack"
+  ],
+  "global_slots": {
+    "dispatcher": 1,
+    "integration": 1,
+    "postgres_suite": 1,
+    "e2e_shared_ports": 1,
+    "docker_stack": 1
+  },
+  "task_state_file": "ai-team/ledger.json (only primary writes; create after preflight)",
+  "tasks": [
+    {
+      "id": "T01",
+      "findings": [
+        "S01"
+      ],
+      "title": "Reset без выдачи токена клиенту",
+      "priority": "P0",
+      "dependencies": [],
+      "locks": [
+        "auth-account",
+        "security-tests",
+        "backend-config"
+      ],
+      "allowed_paths": [
+        "backend/app/api/routes_account.py",
+        "backend/app/mail.py",
+        "backend/app/config.py",
+        "backend/tests/test_account*.py",
+        "backend/tests/test_security.py"
+      ],
+      "required_roles": [
+        "ashyq-planner",
+        "ashyq-developer",
+        "ashyq-qa",
+        "ashyq-reviewer",
+        "ashyq-security"
+      ],
+      "status": "BACKLOG",
+      "acceptance": [
+        "Token отсутствует в API responses всех окружений",
+        "Владелец получает token через test mail sink; stranger — нет",
+        "Existing/missing email, expiry и revoke sessions проверены"
+      ]
+    },
+    {
+      "id": "T02",
+      "findings": [
+        "S02"
+      ],
+      "title": "Trusted proxy и защита rate limit",
+      "priority": "P1",
+      "dependencies": [
+        "T01"
+      ],
+      "locks": [
+        "proxy-deploy",
+        "security-tests",
+        "backend-config"
+      ],
+      "allowed_paths": [
+        "backend/app/main.py",
+        "backend/app/config.py",
+        "frontend/nginx.conf",
+        "docker-compose.yml",
+        "backend/tests/test_security.py",
+        "backend/tests/test_rate*.py"
+      ],
+      "required_roles": [
+        "ashyq-planner",
+        "ashyq-developer",
+        "ashyq-qa",
+        "ashyq-reviewer",
+        "ashyq-security"
+      ],
+      "status": "BACKLOG",
+      "acceptance": [
+        "Spoofed XFF не обходит лимит",
+        "Недоверенный socket peer не задаёт identity заголовком",
+        "Разные настоящие клиенты за trusted proxy учитываются отдельно"
+      ]
+    },
+    {
+      "id": "T03",
+      "findings": [
+        "H01"
+      ],
+      "title": "Атомарный reset и topology лимитера",
+      "priority": "P1",
+      "dependencies": [
+        "T01",
+        "T02"
+      ],
+      "locks": [
+        "auth-account",
+        "proxy-deploy",
+        "migrations",
+        "security-tests"
+      ],
+      "allowed_paths": [
+        "backend/app/api/routes_account.py",
+        "backend/app/main.py",
+        "backend/app/models/auth.py",
+        "backend/migrations/versions/*.py",
+        "backend/tests/test_account*.py",
+        "backend/tests/test_security.py",
+        "docs/SECURITY*.md",
+        "SECURITY.md"
+      ],
+      "required_roles": [
+        "ashyq-planner",
+        "ashyq-developer",
+        "ashyq-qa",
+        "ashyq-reviewer",
+        "ashyq-security"
+      ],
+      "status": "BACKLOG",
+      "acceptance": [
+        "Два concurrent reset: один успех",
+        "Общий limiter или явно проверяемое single-replica constraint",
+        "Не ослаблены auth/session гарантии"
+      ]
+    },
+    {
+      "id": "T04",
+      "findings": [
+        "F01"
+      ],
+      "title": "Полная, частичная и неизвестная стоимость",
+      "priority": "P1",
+      "dependencies": [],
+      "locks": [
+        "financial-contract",
+        "costs",
+        "shared-types"
+      ],
+      "allowed_paths": [
+        "backend/app/domain/costs.py",
+        "backend/app/schemas/result.py",
+        "backend/app/schemas/money.py",
+        "backend/app/domain/financial_policy.py",
+        "frontend/src/types.ts",
+        "frontend/src/components/ResultDetail.tsx",
+        "backend/tests/test_cost*.py",
+        "backend/tests/test_funding*.py"
+      ],
+      "required_roles": [
+        "ashyq-planner",
+        "ashyq-developer",
+        "ashyq-qa",
+        "ashyq-reviewer",
+        "ashyq-security"
+      ],
+      "status": "BACKLOG",
+      "acceptance": [
+        "Tuition-only + tuition award не означает полный gap=0",
+        "Known zero отличается от missing",
+        "Legacy payloads и потребители совместимы"
+      ]
+    },
+    {
+      "id": "T05",
+      "findings": [
+        "F04"
+      ],
+      "title": "Currency/period-safe scholarship classification",
+      "priority": "P2",
+      "dependencies": [
+        "T04"
+      ],
+      "locks": [
+        "financial-contract",
+        "funding",
+        "costs"
+      ],
+      "allowed_paths": [
+        "backend/app/domain/funding.py",
+        "backend/app/domain/currency.py",
+        "backend/app/domain/costs.py",
+        "backend/app/pipeline/runner.py",
+        "backend/tests/test_funding*.py",
+        "backend/tests/test_cost*.py"
+      ],
+      "required_roles": [
+        "ashyq-planner",
+        "ashyq-developer",
+        "ashyq-qa",
+        "ashyq-reviewer",
+        "ashyq-security"
+      ],
+      "status": "BACKLOG",
+      "acceptance": [
+        "JPY/USD сравниваются после нормализации",
+        "Unsupported currency не превращается в достоверное число",
+        "Classification и gap согласованы"
+      ]
+    },
+    {
+      "id": "T06",
+      "findings": [
+        "F02"
+      ],
+      "title": "Применимость award по датам и intake",
+      "priority": "P1",
+      "dependencies": [
+        "T04",
+        "T05"
+      ],
+      "locks": [
+        "financial-contract",
+        "funding",
+        "costs",
+        "runner"
+      ],
+      "allowed_paths": [
+        "backend/app/domain/funding.py",
+        "backend/app/domain/costs.py",
+        "backend/app/domain/financial_policy.py",
+        "backend/app/pipeline/runner.py",
+        "backend/tests/test_funding*.py",
+        "backend/tests/test_citizenship_and_dates.py",
+        "backend/tests/test_cost*.py"
+      ],
+      "required_roles": [
+        "ashyq-planner",
+        "ashyq-developer",
+        "ashyq-qa",
+        "ashyq-reviewer",
+        "ashyq-security"
+      ],
+      "status": "BACKLOG",
+      "acceptance": [
+        "Expired/closed/unavailable award не уменьшает текущие расходы",
+        "Единый applicability predicate",
+        "Date boundaries и unknown availability покрыты"
+      ]
+    },
+    {
+      "id": "T07",
+      "findings": [
+        "F03"
+      ],
+      "title": "Подтверждённое stacking и совместимость aid",
+      "priority": "P1",
+      "dependencies": [
+        "T06"
+      ],
+      "locks": [
+        "financial-contract",
+        "costs",
+        "funding"
+      ],
+      "allowed_paths": [
+        "backend/app/domain/costs.py",
+        "backend/app/domain/funding.py",
+        "backend/app/domain/financial_policy.py",
+        "backend/tests/test_cost*.py",
+        "backend/tests/test_funding*.py"
+      ],
+      "required_roles": [
+        "ashyq-planner",
+        "ashyq-developer",
+        "ashyq-qa",
+        "ashyq-reviewer",
+        "ashyq-security"
+      ],
+      "status": "BACKLOG",
+      "acceptance": [
+        "Матрица yes/no/unknown с обеих сторон",
+        "Secondary year и overlapping coverage проверены",
+        "Неподтверждённая aid не улучшает gap"
+      ]
+    },
+    {
+      "id": "T08",
+      "findings": [
+        "F05"
+      ],
+      "title": "Согласованные buckets и affordability",
+      "priority": "P1",
+      "dependencies": [
+        "T07"
+      ],
+      "locks": [
+        "financial-contract",
+        "ranking",
+        "shared-types"
+      ],
+      "allowed_paths": [
+        "backend/app/domain/ranking_v2.py",
+        "backend/app/domain/scoring.py",
+        "backend/app/schemas/result.py",
+        "backend/tests/test_ranking_v2.py",
+        "backend/tests/test_scoring_and_profile.py",
+        "frontend/src/components/ResultDetail.tsx",
+        "frontend/src/screens/ShortlistScreen.tsx",
+        "frontend/src/screens/ShortlistScreen.test.tsx"
+      ],
+      "required_roles": [
+        "ashyq-planner",
+        "ashyq-developer",
+        "ashyq-qa",
+        "ashyq-reviewer",
+        "ashyq-security"
+      ],
+      "status": "BACKLOG",
+      "acceptance": [
+        "Budget=0/gap>0 не WELL_PLACED",
+        "Unknown не получает reason о доступности",
+        "API/UI/score/explanation и v1 compatibility проверены"
+      ]
+    },
+    {
+      "id": "T09",
+      "findings": [
+        "FE01",
+        "FE02",
+        "FE03"
+      ],
+      "title": "Draft lifecycle и изоляция кейсов",
+      "priority": "P1",
+      "dependencies": [],
+      "locks": [
+        "frontend-store",
+        "profile-ui",
+        "frontend-e2e"
+      ],
+      "allowed_paths": [
+        "frontend/src/lib/store.tsx",
+        "frontend/src/lib/*Draft*.ts",
+        "frontend/src/lib/*.test.tsx",
+        "frontend/src/screens/ProfileScreen.tsx",
+        "frontend/e2e/profile-persistence.spec.ts",
+        "frontend/e2e/helpers.ts"
+      ],
+      "required_roles": [
+        "ashyq-planner",
+        "ashyq-developer",
+        "ashyq-qa",
+        "ashyq-reviewer",
+        "ashyq-security"
+      ],
+      "status": "BACKLOG",
+      "acceptance": [
+        "Новый draft переживает reload",
+        "Slow hydration не удаляет edits",
+        "Две вкладки/кейса изолированы; stale response не переключает назад"
+      ]
+    },
+    {
+      "id": "T10",
+      "findings": [
+        "J02"
+      ],
+      "title": "Fencing всех writes после lease loss",
+      "priority": "P1",
+      "dependencies": [],
+      "locks": [
+        "runner",
+        "job-store",
+        "worker",
+        "worker-tests"
+      ],
+      "allowed_paths": [
+        "backend/app/pipeline/runner.py",
+        "backend/app/jobs/store.py",
+        "backend/app/jobs/worker.py",
+        "backend/app/models/jobs.py",
+        "backend/tests/test_worker.py",
+        "backend/tests/test_pipeline.py"
+      ],
+      "required_roles": [
+        "ashyq-planner",
+        "ashyq-developer",
+        "ashyq-qa",
+        "ashyq-reviewer",
+        "ashyq-security"
+      ],
+      "status": "BACKLOG",
+      "acceptance": [
+        "Stale worker не пишет даже из exception handler",
+        "PostgreSQL две сессии доказывают owner/attempt fencing",
+        "Cancel/complete/fail/reap согласованы"
+      ]
+    },
+    {
+      "id": "T11",
+      "findings": [
+        "A01"
+      ],
+      "title": "Run snapshots и canonical state",
+      "priority": "P1",
+      "dependencies": [
+        "T10"
+      ],
+      "locks": [
+        "runner",
+        "job-store",
+        "research-api",
+        "migrations",
+        "shared-types"
+      ],
+      "allowed_paths": [
+        "backend/app/models/research.py",
+        "backend/app/pipeline/runner.py",
+        "backend/app/api/routes_research.py",
+        "backend/migrations/versions/*.py",
+        "backend/tests/test_pipeline.py",
+        "backend/tests/test_api.py",
+        "backend/run.sh"
+      ],
+      "required_roles": [
+        "ashyq-planner",
+        "ashyq-developer",
+        "ashyq-qa",
+        "ashyq-reviewer",
+        "ashyq-security"
+      ],
+      "status": "BACKLOG",
+      "acceptance": [
+        "Run привязан к immutable input version",
+        "Payload и отдельные колонки обновляются согласованно",
+        "Wrapper/worker graceful cleanup; upgrade legacy DB безопасен"
+      ]
+    },
+    {
+      "id": "T12",
+      "findings": [
+        "J03"
+      ],
+      "title": "Версии checklist и повторная сборка",
+      "priority": "P1",
+      "dependencies": [
+        "T11"
+      ],
+      "locks": [
+        "runner",
+        "job-store",
+        "research-api",
+        "worker-tests"
+      ],
+      "allowed_paths": [
+        "backend/app/pipeline/runner.py",
+        "backend/app/api/routes_research.py",
+        "backend/app/jobs/store.py",
+        "backend/tests/test_pipeline.py",
+        "backend/tests/test_worker.py",
+        "backend/tests/test_api.py"
+      ],
+      "required_roles": [
+        "ashyq-planner",
+        "ashyq-developer",
+        "ashyq-qa",
+        "ashyq-reviewer",
+        "ashyq-security"
+      ],
+      "status": "BACKLOG",
+      "acceptance": [
+        "Research→approve→documents→retry→collect работает",
+        "Старый succeeded key не блокирует новое поколение",
+        "Decisions/notes/document progress не теряются"
+      ]
+    },
+    {
+      "id": "T13",
+      "findings": [
+        "J01"
+      ],
+      "title": "Правильные TTL и recheck scheduling",
+      "priority": "P1",
+      "dependencies": [
+        "T10"
+      ],
+      "locks": [
+        "runner",
+        "worker",
+        "job-store",
+        "worker-tests"
+      ],
+      "allowed_paths": [
+        "backend/app/domain/freshness.py",
+        "backend/app/jobs/worker.py",
+        "backend/app/jobs/store.py",
+        "backend/app/pipeline/runner.py",
+        "backend/tests/test_freshness*.py",
+        "backend/tests/test_worker.py"
+      ],
+      "required_roles": [
+        "ashyq-planner",
+        "ashyq-developer",
+        "ashyq-qa",
+        "ashyq-reviewer",
+        "ashyq-security"
+      ],
+      "status": "BACKLOG",
+      "acceptance": [
+        "TTL−ε / TTL / TTL+ε согласованы",
+        "Следующая дата продвигается",
+        "Нет overdue run без будущей работы/объяснённого terminal state"
+      ]
+    },
+    {
+      "id": "T14",
+      "findings": [
+        "R01"
+      ],
+      "title": "Валидный и атомарный rerank contract",
+      "priority": "P2",
+      "dependencies": [
+        "T08",
+        "T09",
+        "T11"
+      ],
+      "locks": [
+        "results-api",
+        "ranking",
+        "shared-types",
+        "frontend-store",
+        "api-tests"
+      ],
+      "allowed_paths": [
+        "backend/app/api/routes_results.py",
+        "backend/app/schemas/profile.py",
+        "backend/tests/test_api.py",
+        "backend/tests/test_scoring_and_profile.py",
+        "frontend/src/api/client.ts",
+        "frontend/src/lib/store.tsx",
+        "frontend/src/screens/PreferencesScreen.tsx",
+        "frontend/src/types.ts"
+      ],
+      "required_roles": [
+        "ashyq-planner",
+        "ashyq-developer",
+        "ashyq-qa",
+        "ashyq-reviewer",
+        "ashyq-security"
+      ],
+      "status": "BACKLOG",
+      "acceptance": [
+        "Invalid priorities →422 без записи",
+        "После successful persist профиль читается",
+        "UI передаёт обещанные изменения; error не выглядит как success"
+      ]
+    },
+    {
+      "id": "T15",
+      "findings": [
+        "S03"
+      ],
+      "title": "Безопасные XLSX/CSV text cells",
+      "priority": "P2",
+      "dependencies": [
+        "T04",
+        "T05"
+      ],
+      "locks": [
+        "export",
+        "export-tests"
+      ],
+      "allowed_paths": [
+        "backend/app/export/tabular.py",
+        "backend/tests/test_export*.py",
+        "backend/tests/test_tabular*.py"
+      ],
+      "required_roles": [
+        "ashyq-planner",
+        "ashyq-developer",
+        "ashyq-qa",
+        "ashyq-reviewer",
+        "ashyq-security"
+      ],
+      "status": "BACKLOG",
+      "acceptance": [
+        "Недоверенный текст не становится formula",
+        "CSV prefix handling и Unicode roundtrip",
+        "Денежные колонки остаются числами"
+      ]
+    },
+    {
+      "id": "T16",
+      "findings": [
+        "H02"
+      ],
+      "title": "Browser/HTTP egress и корректные outcomes",
+      "priority": "P1",
+      "dependencies": [],
+      "locks": [
+        "network-adapters",
+        "ssrf-tests",
+        "proxy-deploy"
+      ],
+      "allowed_paths": [
+        "backend/app/adapters/browser.py",
+        "backend/app/adapters/fetching.py",
+        "backend/app/adapters/network_policy.py",
+        "backend/tests/test_ssrf.py",
+        "backend/tests/test_fetch*.py",
+        "backend/tests/test_browser*.py",
+        "SECURITY.md"
+      ],
+      "required_roles": [
+        "ashyq-planner",
+        "ashyq-developer",
+        "ashyq-qa",
+        "ashyq-reviewer",
+        "ashyq-security"
+      ],
+      "status": "BACKLOG",
+      "acceptance": [
+        "Controlled forbidden destinations не достигаются",
+        "404/403/429/redirect/body limits корректны",
+        "Browser residual risks и infrastructure boundary честно указаны"
+      ]
+    },
+    {
+      "id": "T17",
+      "findings": [
+        "H03"
+      ],
+      "title": "Ограниченный и изолированный PDF parsing",
+      "priority": "P1",
+      "dependencies": [],
+      "locks": [
+        "pdf-parser",
+        "profile-api",
+        "api-tests"
+      ],
+      "allowed_paths": [
+        "backend/app/adapters/extraction.py",
+        "backend/app/api/routes_profile.py",
+        "backend/app/domain/transcript.py",
+        "backend/tests/test_transcript*.py",
+        "backend/tests/test_api.py",
+        "SECURITY.md"
+      ],
+      "required_roles": [
+        "ashyq-planner",
+        "ashyq-developer",
+        "ashyq-qa",
+        "ashyq-reviewer",
+        "ashyq-security"
+      ],
+      "status": "BACKLOG",
+      "acceptance": [
+        "Parser не блокирует API безлимитно",
+        "Time/memory/cleanup проверены безопасными fixtures",
+        "Privacy wording соответствует фактическому spooling"
+      ]
+    },
+    {
+      "id": "T18",
+      "findings": [
+        "L01"
+      ],
+      "title": "Измеримый live research на curated scope",
+      "priority": "P1",
+      "dependencies": [
+        "T08",
+        "T13",
+        "T16",
+        "T17"
+      ],
+      "locks": [
+        "network-adapters",
+        "live-corpus",
+        "runner",
+        "discovery-tests"
+      ],
+      "allowed_paths": [
+        "backend/app/adapters/**",
+        "backend/app/pipeline/runner.py",
+        "backend/tests/test_live*.py",
+        "backend/tests/fixtures/**",
+        "backend/scripts/canary_discovery.py",
+        "docs/LIVE*.md",
+        "docs/CANARY*.md"
+      ],
+      "required_roles": [
+        "ashyq-planner",
+        "ashyq-developer",
+        "ashyq-qa",
+        "ashyq-reviewer",
+        "ashyq-security"
+      ],
+      "status": "BACKLOG",
+      "acceptance": [
+        "Curated ground truth, несколько synthetic profiles",
+        "Recall/precision/coverage раздельно с числителем и знаменателем",
+        "Degree/intake/negation учтены; claims не сфабрикованы"
+      ]
+    },
+    {
+      "id": "T19",
+      "findings": [
+        "U01"
+      ],
+      "title": "Постепенное раскрытие анкеты",
+      "priority": "P2",
+      "dependencies": [
+        "T09"
+      ],
+      "locks": [
+        "profile-ui",
+        "frontend-e2e"
+      ],
+      "allowed_paths": [
+        "frontend/src/screens/ProfileScreen.tsx",
+        "frontend/src/screens/ProfileScreen.test.tsx",
+        "frontend/src/components/**",
+        "frontend/src/styles*.css",
+        "frontend/e2e/profile-persistence.spec.ts"
+      ],
+      "required_roles": [
+        "ashyq-planner",
+        "ashyq-developer",
+        "ashyq-qa",
+        "ashyq-reviewer"
+      ],
+      "status": "BACKLOG",
+      "acceptance": [
+        "Обязательное для первого результата отдельно от advanced",
+        "Draft/validation/accessibility не регрессировали",
+        "Никаких выдуманных conversion metrics"
+      ]
+    },
+    {
+      "id": "T20",
+      "findings": [
+        "U02"
+      ],
+      "title": "Mobile стоимость, период и accessibility",
+      "priority": "P2",
+      "dependencies": [
+        "T08",
+        "T09"
+      ],
+      "locks": [
+        "shortlist-ui",
+        "frontend-e2e"
+      ],
+      "allowed_paths": [
+        "frontend/src/screens/ShortlistScreen.tsx",
+        "frontend/src/components/ResultDetail.tsx",
+        "frontend/src/**/*.css",
+        "frontend/e2e/accessibility.spec.ts",
+        "frontend/src/screens/ShortlistScreen.test.tsx"
+      ],
+      "required_roles": [
+        "ashyq-planner",
+        "ashyq-developer",
+        "ashyq-qa",
+        "ashyq-reviewer"
+      ],
+      "status": "BACKLOG",
+      "acceptance": [
+        "320/360/768/desktop суммы не обрезаны",
+        "Нет маскировки overflow скрытием данных",
+        "Keyboard/focus/контраст/длинные валюты проверены"
+      ]
+    },
+    {
+      "id": "T21",
+      "findings": [
+        "Q01"
+      ],
+      "title": "Cross-module regression gates",
+      "priority": "P1",
+      "dependencies": [
+        "T03",
+        "T08",
+        "T12",
+        "T13",
+        "T14",
+        "T15",
+        "T16",
+        "T17"
+      ],
+      "locks": [
+        "all-shared-tests",
+        "backend-ci"
+      ],
+      "allowed_paths": [
+        "backend/tests/**",
+        "frontend/src/**/*.test.ts",
+        "frontend/src/**/*.test.tsx",
+        "backend/pyproject.toml",
+        "frontend/vitest.config.*"
+      ],
+      "required_roles": [
+        "ashyq-planner",
+        "ashyq-developer",
+        "ashyq-qa",
+        "ashyq-reviewer",
+        "ashyq-security"
+      ],
+      "status": "BACKLOG",
+      "acceptance": [
+        "Все confirmed findings имеют safe-behaviour assertions",
+        "Money/API/UI/export и concurrency проверены",
+        "Coverage не понижен; NOT_RUN не PASS"
+      ]
+    },
+    {
+      "id": "T22",
+      "findings": [
+        "Q02"
+      ],
+      "title": "Стабильный E2E и отдельные artifacts",
+      "priority": "P1",
+      "dependencies": [
+        "T19",
+        "T20",
+        "T21"
+      ],
+      "locks": [
+        "frontend-e2e",
+        "ci",
+        "frontend-test-config"
+      ],
+      "allowed_paths": [
+        "frontend/e2e/**",
+        "frontend/playwright*.ts",
+        "frontend/package.json",
+        ".github/workflows/**",
+        ".gitignore"
+      ],
+      "required_roles": [
+        "ashyq-planner",
+        "ashyq-developer",
+        "ashyq-qa",
+        "ashyq-reviewer",
+        "ashyq-security"
+      ],
+      "status": "BACKLOG",
+      "acceptance": [
+        "Locators однозначны, меньше каскадных skips",
+        "Artifacts вне tracked docs/screenshots",
+        "Default/auth последовательно, cleanup своих серверов"
+      ]
+    },
+    {
+      "id": "T23",
+      "findings": [
+        "D01",
+        "P01"
+      ],
+      "title": "Правдивые docs и scope release",
+      "priority": "P2",
+      "dependencies": [
+        "T18",
+        "T22"
+      ],
+      "locks": [
+        "docs",
+        "release-policy"
+      ],
+      "allowed_paths": [
+        "README.md",
+        "SECURITY.md",
+        "docs/**",
+        "backend/.env.example",
+        "frontend/.env.example"
+      ],
+      "required_roles": [
+        "ashyq-planner",
+        "ashyq-developer",
+        "ashyq-qa",
+        "ashyq-reviewer"
+      ],
+      "status": "BACKLOG",
+      "acceptance": [
+        "Implemented/verified/limitation/roadmap разделены",
+        "Reset/staging/proxy/retention/live scope актуальны",
+        "Новые community/LLM features не добавлены до core stability"
+      ]
+    },
+    {
+      "id": "T24",
+      "findings": [
+        "O01"
+      ],
+      "title": "Runtime, recovery, restore и release verdict",
+      "priority": "P1",
+      "dependencies": [
+        "T23"
+      ],
+      "locks": [
+        "integration",
+        "all-shared-tests",
+        "frontend-e2e",
+        "postgres-tests",
+        "ci",
+        "proxy-deploy",
+        "migrations"
+      ],
+      "allowed_paths": [
+        "docker-compose.yml",
+        "Dockerfile.fly",
+        "fly.toml",
+        "backend/Dockerfile",
+        "frontend/Dockerfile",
+        "frontend/nginx.conf",
+        ".github/workflows/**",
+        "backend/scripts/**",
+        "docs/RELEASE_CHECKLIST.md",
+        "docs/BACKUP_RESTORE.md"
+      ],
+      "required_roles": [
+        "ashyq-planner",
+        "ashyq-developer",
+        "ashyq-qa",
+        "ashyq-reviewer",
+        "ashyq-security"
+      ],
+      "status": "BACKLOG",
+      "acceptance": [
+        "Isolated stack smoke и worker interruption recovery",
+        "Fresh/upgrade migrations и scratch restore",
+        "Все gates на final SHA; human approval для публикации"
+      ]
+    }
+  ]
+}

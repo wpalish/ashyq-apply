@@ -134,6 +134,7 @@ class TestRegistrableDomain:
             ("rug.nl", "rug.nl"),
             ("studieren.univie.ac.at", "univie.ac.at"),
             ("admissions.hku.hk", "hku.hk"),
+            ("admissions.nu.edu.kz", "nu.edu.kz"),
             ("www.ntu.edu.sg", "ntu.edu.sg"),
             ("admission.kaist.ac.kr", "kaist.ac.kr"),
             ("you.ubc.ca", "ubc.ca"),
@@ -642,6 +643,36 @@ class TestAdapter:
             candidate = (await adapter.discover(profile_bachelor))[0]
 
         assert candidate.programs == [], "an MSc page is not a bachelor lead"
+
+    @pytest.mark.asyncio
+    async def test_fetched_programmes_must_match_requested_level_and_subject(
+        self, tmp_path, profile_bachelor
+    ):
+        """Opaque URLs must not let an MSc or unrelated BSc consume a verify slot."""
+        entry = {"name": "U", "country": "Kazakhstan", "city": "X", "homepage": "https://uni.edu/"}
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
+                "https://uni.edu/s.xml": sitemap_xml(
+                    "https://uni.edu/programmes/computer-science-ece",
+                    "https://uni.edu/programmes/math",
+                    "https://uni.edu/programmes/computer-science",
+                ),
+                "https://uni.edu/programmes/computer-science-ece": program_html(
+                    "MSc Electrical and Computer Engineering"
+                ),
+                "https://uni.edu/programmes/math": program_html("BSc Mathematics"),
+                "https://uni.edu/programmes/computer-science": program_html("BSc Computer Science"),
+            }
+        )
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, entry))
+            candidate = (await adapter.discover(profile_bachelor))[0]
+
+        assert [program.url for program in candidate.programs] == [
+            "https://uni.edu/programmes/computer-science"
+        ]
 
     @pytest.mark.asyncio
     async def test_a_candidate_that_reads_as_an_event_is_dropped(self, tmp_path, profile_bachelor):

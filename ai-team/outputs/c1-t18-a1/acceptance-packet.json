@@ -1,0 +1,121 @@
+{
+  "task_id": "T18",
+  "finding_ids": [
+    "L01"
+  ],
+  "attempt_id": "A3",
+  "baseline_sha": "1e9f841ba686d27fc28271f9592ad449c0b35004",
+  "qa_commit_sha": "18c4a901ad95fa59f9f83e3bbdae0e2d98436fea",
+  "candidate_sha": "e533d6229d67e04c05c9b1293c66a64d45d817a5",
+  "integration_base_sha": "1e9f841ba686d27fc28271f9592ad449c0b35004",
+  "participants": [
+    {
+      "role": "ashyq-planner",
+      "invocation_ref": "agent_c095ad9b-e9ee-4676-b582-99a080082df5",
+      "checked_sha": "1e9f841ba686d27fc28271f9592ad449c0b35004",
+      "verdict": "PASS",
+      "evidence_file": "planner-diag.md"
+    },
+    {
+      "role": "ashyq-qa",
+      "invocation_ref": "agent_179aa937-efab-4363-8da7-17ab2002cff1",
+      "checked_sha": "e533d6229d67e04c05c9b1293c66a64d45d817a5",
+      "verdict": "PASS",
+      "evidence_file": "qa-verify-a3.md"
+    },
+    {
+      "role": "ashyq-developer",
+      "invocation_ref": "agent_66fb7e9c-93c4-42d1-aeeb-bf6ce3943ad1",
+      "checked_sha": "e533d6229d67e04c05c9b1293c66a64d45d817a5",
+      "verdict": "PASS",
+      "evidence_file": "developer.md"
+    },
+    {
+      "role": "ashyq-reviewer",
+      "invocation_ref": "agent_c89323e9-6546-4463-b8ad-915f805bccc9",
+      "checked_sha": "e533d6229d67e04c05c9b1293c66a64d45d817a5",
+      "verdict": "PASS",
+      "evidence_file": "reviews.md"
+    },
+    {
+      "role": "ashyq-security",
+      "invocation_ref": "agent_b622705c-645b-4e6b-87f2-626bb5359bc6",
+      "checked_sha": "e533d6229d67e04c05c9b1293c66a64d45d817a5",
+      "verdict": "PASS",
+      "evidence_file": "reviews.md"
+    }
+  ],
+  "tests": [
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c1-t18-verify-a3/backend && ./.venv/bin/python -m pytest tests/test_adapters.py tests/test_live_extraction.py tests/test_live_regressions.py tests/test_live_discovery.py -q --tb=short",
+      "checked_sha": "e533d6229d67e04c05c9b1293c66a64d45d817a5",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "logs/qa_t18_a3_targeted2.log",
+      "summary": "258 passed (test_adapters 71 + extraction 16 + regressions 61 + discovery 110); 11 QA RED->GREEN"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c1-t18-verify-a3/backend && ./.venv/bin/python -m mypy app tests",
+      "checked_sha": "e533d6229d67e04c05c9b1293c66a64d45d817a5",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "logs/qa_t18_a3_mypy.log",
+      "summary": "Success: no issues in 154 source files (after QA mypy-guard amendment ea4be635)"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c1-t18-verify-a3/backend && ./.venv/bin/python -m ruff check app tests && ./.venv/bin/python -m ruff format --check app tests",
+      "checked_sha": "e533d6229d67e04c05c9b1293c66a64d45d817a5",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "logs/qa_t18_a3_ruff1.log",
+      "summary": "All checks passed; 154 files already formatted"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c1-t18-verify-a3/backend && ./.venv/bin/python -m pytest --cov=app --cov-fail-under=92 -p no:cacheprovider",
+      "checked_sha": "e533d6229d67e04c05c9b1293c66a64d45d817a5",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "logs/qa_t18_a3_full.log",
+      "summary": "FULL suite: 1150 passed, 0 failed; coverage 92.92% >= 92 (threshold unchanged); A2 was 1149/1 FAILED - dual-write repair fixed the shared test_adapters contract"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c1-t18-verify-a3/backend && UNIMATCH_DEMO_MODE=true UNIMATCH_ENABLE_BROWSER_TIER=false ./.venv/bin/python seed_demo.py",
+      "checked_sha": "e533d6229d67e04c05c9b1293c66a64d45d817a5",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "logs/qa_t18_a3_seed.log",
+      "summary": "exit 0; Groningen #1 (score 0.7947, sqlite-verified) and UBC OUT_OF_BUDGET (sqlite-verified)"
+    }
+  ],
+  "acceptance_items": [
+    {
+      "criterion": "Curated ground truth, несколько synthetic profiles",
+      "status": "PASS",
+      "evidence_file": "qa-verify-a3.md",
+      "note": "N/A for this slice: card-level acceptance deferred to benchmark stage (master prompt section 18). This slice acceptance from frozen planner contract: (1) canary per-page diagnostics implemented end-to-end (real runner + SQLite persistence + parser roundtrip, all 5 categories, 25/25 adversarial probes); (2) KZT fixture gives tuition claim 2,500,000 KZT, 'IELTS 6.5 overall' -> 6.5, existing live tests green (258); (3) report separates fetch-failed/unreadable/classifier-rejected/no-pattern-match; (4) every claim keeps original_text_excerpt+source_url (zero-FP tolerance intact)"
+    },
+    {
+      "criterion": "Recall/precision/coverage раздельно с числителем и знаменателем",
+      "status": "PASS",
+      "evidence_file": "reviews.md",
+      "note": "metrics separation preserved: search yield / fetch success / extraction yield counted separately (runner), completeness denominator CORE_QUESTIONS fixed; full benchmark measurement explicitly deferred to pilot card - live canary NOT RUN (PILOT-ONLY), root cause on nu.edu.kz NOT claimed confirmed"
+    },
+    {
+      "criterion": "Degree/intake/negation учтены; claims не сфабрикованы",
+      "status": "PASS",
+      "evidence_file": "reviews.md",
+      "note": "unknown!=zero preserved (guard C3: no-pattern -> reason, never 'not required'); precision guards green (scholarship $500 not tuition, IELTS without number -> no claim); year-gate untouched; every claim via ClaimBuilder with excerpt+source_url"
+    }
+  ],
+  "scope_check": "PASS",
+  "scope_check_command": "python3 ai-team/check_team.py scope --task T18 --repo /Users/wpalish/ashyq-worktrees/c1-t18-verify-a3 --base 1e9f841ba686d27fc28271f9592ad449c0b35004 --head e533d6229d67e04c05c9b1293c66a64d45d817a5",
+  "scope_check_result": "changed: 6 production files (adapters x4, runner.py, canary_discovery.py) + test_live_extraction.py + 8 fixtures qa_t18; outside_scope: [] (models/migrations/schemas/domain absent)",
+  "blockers": [],
+  "notes": [
+    "Chain: 18c4a901 (QA 11 RED) -> 9d328c4e (dev: KZT/IELTS/PageOutcome/canary) -> ea4be635 (QA mypy-guard amend, 1 insertion, test-only) -> e533d622 (dev A3 dual-write repair after A2 VERIFIED_FAIL: shared test_adapters contract restored, full suite 1149/1 FAILED -> 1150/0).",
+    "Invocation refs: QA TEST_AUTHOR agent_f9a36974-3d30-4749-bb3c-b70f382df2b5; QA amend agent_cc5a46fe-0a64-4432-8276-c3974f19abd5; QA VERIFY A2 (VERIFIED_FAIL) agent_3892a96c-fee4-4d4c-8432-65cb6de2c1f2; QA VERIFY A3 agent_179aa937-efab-4363-8da7-17ab2002cff1; developer A1 agent_c4976b8f-fa4f-4a1e-852c-587b3cf2ee07; developer A3 agent_66fb7e9c-93c4-42d1-aeeb-bf6ce3943ad1.",
+    "Honest scope: live canary against nu.edu.kz NOT run (PILOT-ONLY) - per frozen contract it needs separate pilot approval; root cause of historical zero-claims remains diagnosed-by-code + reproduced by targeted fixtures, not yet field-proven.",
+    "Coordinator follow-ups recorded: hardening ticket (log-line sanitization, [^.]* quadratic windows, canary artifact URL-query redaction), edu.kz multipart-suffix card, live canary pilot card, precision-edge fixture 'IELTS 6.0 band in each component'.",
+    "All invocations inherit the user-selected GLM model; no hardcoded model ids."
+  ]
+}

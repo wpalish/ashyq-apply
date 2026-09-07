@@ -1,0 +1,13 @@
+<!doctype html>
+<!-- QA SYNTHETIC FIXTURE (T18/L01). A JavaScript shell with no title and no
+     static text: the HTTP response is 200 OK but no readable text at all can
+     be extracted from it (same shape as the shell in TestBrowserTierIsReallyUsed). -->
+<html>
+  <head>
+    <script>
+      // All of the real content would be rendered client-side.
+      window.__BOOTSTRAP__ = { page: "costs", content: "loaded later" };
+    </script>
+  </head>
+  <body><div id="root"></div></body>
+</html>

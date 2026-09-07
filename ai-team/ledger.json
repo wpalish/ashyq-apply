@@ -1,0 +1,682 @@
+{
+  "campaign": "c1",
+  "dispatcher_invocation_ref": "primary-zcode-session-2026-09-06T23:06+03:00-local",
+  "repository": "/Users/wpalish/ashyq-apply",
+  "baseline_sha": "85352b52211f0dd7f446b011d3f8c2c270089019",
+  "profile": "balanced",
+  "profile_transition": "T01 full cycle completed under safe profile; balanced opened 2026-09-07 ~00:2x with T04/T09/T10 (locks disjoint, no shared write targets; baseline = integration HEAD f7f14b28).",
+  "note": "Only the primary agent writes this ledger. Reservations are procedural, not native ZCode or OS locks.",
+  "preflight": {
+    "completed_at_local": null,
+    "completed_at_local_source_invalid": "2026-09-06T23:2x+03:00",
+    "completed_at_local_note": "Exact minute cannot be recovered; the original value was not a valid timestamp and is preserved above rather than guessed.",
+    "subagents_verified": [
+      "ashyq-planner",
+      "ashyq-developer",
+      "ashyq-qa",
+      "ashyq-reviewer",
+      "ashyq-security",
+      "ashyq-integrator"
+    ],
+    "subagent_defs_path": "/Users/wpalish/.zcode/agents/",
+    "model_policy": "all roles inherit user-selected GLM; no hardcoded model id",
+    "git": {
+      "head": "85352b52211f0dd7f446b011d3f8c2c270089019",
+      "branch": "main",
+      "sync": "main == origin/main",
+      "user_changes": "only untracked ai-team/ coordination kit; no staged/unstaged tracked changes",
+      "audit_commit_f018307_is_ancestor": true,
+      "commits_since_audit": 48
+    },
+    "toolchain": {
+      "python": "/usr/bin/python3 3.9.6 (system; no 'python' alias)",
+      "node": "v22.23.1 (/Users/wpalish/.local/bin/node)",
+      "git": "2.50.1 (Apple Git-155)",
+      "docker": "absent"
+    },
+    "test_env": {
+      "backend_venv_main_checkout": "absent at preflight; provisioned per-worktree (gitignored)",
+      "frontend_node_modules": "absent; provision on demand",
+      "heavy_test_slot": "free (no docker stack; e2e ports 5173/8099 unused at start)"
+    },
+    "check_team_plan": "PLAN OK: 24 tasks; 4 independent roles minimum. No agents launched.",
+    "constraints": [
+      "no push, no merge to protected main, no deploy, no production DB",
+      "do not weaken tests; NOT_RUN != PASS",
+      "one heavy-test slot; integrator single; shared files serialized"
+    ]
+  },
+  "active_reservations": {
+    "financial-contract": "T04/A1",
+    "costs": "T04/A1",
+    "shared-types": "T04/A1",
+    "frontend-store": "T09/A1",
+    "profile-ui": "T09/A1",
+    "frontend-e2e": "T09/A1",
+    "runner": "T10/A1",
+    "job-store": "T10/A1",
+    "worker": "T10/A1",
+    "worker-tests": "T10/A1"
+  },
+  "integration_slot_owner": null,
+  "heavy_test_slot_owner": null,
+  "heavy_test_slot_policy": "1 slot total: full pytest --cov suites are serialized by the dispatcher on request; target-scope runs may run in parallel",
+  "worktrees": {
+    "c1-t01-qa": "branch ai/c1/t01/qa @ 7083f17ce9ff6b198461fdf1cf9f5f973bcb13f2 (QA TEST_AUTHOR)",
+    "c1-t01-dev": "branch ai/c1/t01/dev @ b5154ff778c3a96839ad499458debe64fd2e05bc (message-only amend of frozen f7f14b28; tree identical 0228bc7c)",
+    "c1-t01-verify": "branch ai/c1/t01/verify @ f7f14b28c43afe20df01ad38a26964c397f393fc (frozen candidate checkout)",
+    "c1-t18-qa": "branch ai/c1/t18/qa @ 18c4a901 (A1 QA TEST_AUTHOR)",
+    "c1-t18-dev": "branch ai/c1/t18/dev @ 9d328c4e (A1 dev)",
+    "c1-t18-qa-a2": "branch ai/c1/t18/qa-a2 @ ea4be635 (A2 QA mypy amend)",
+    "c1-t18-dev-a3": "branch ai/c1/t18/dev-a3 @ e533d622 (A3 dual-write repair)",
+    "c1-t18-verify": "branch ai/c1/t18/verify @ ea4be635 (A2 verify — VERIFIED_FAIL)",
+    "c1-t18-verify-a3": "branch ai/c1/t18/verify-a3 @ e533d622 (A3 verify — VERIFIED_PASS)",
+    "c1-integration": "branch ai/c1/integration @ e533d6229d67e04c05c9b1293c66a64d45d817a5 (FINAL campaign head: T01+T04+T10+T09+T18; slot released; NOT pushed — user decision)",
+    "c1-t04-qa": "branch ai/c1/t04/qa @ f7f14b28 (T04 QA TEST_AUTHOR)",
+    "c1-t09-qa": "branch ai/c1/t09/qa @ f7f14b28 (T09 QA TEST_AUTHOR)",
+    "c1-t10-qa": "branch ai/c1/t10/qa @ f7f14b28 (T10 QA TEST_AUTHOR)",
+    "c1-t09-qa-a2": "branch ai/c1/t09/qa-a2 @ b0caa004 (A2 QA test amendment)",
+    "c1-t09-dev-a2": "branch ai/c1/t09/dev-a2 @ 7fb0d327 (A2 fix)",
+    "c1-t09-verify-a2": "branch ai/c1/t09/verify-a2 @ 7fb0d327 (A2 verify)"
+  },
+  "tasks": {
+    "T25": {
+      "status": "BACKLOG",
+      "title": "search_web adapter + capability config (BLOCKED without key)",
+      "findings": ["L01"],
+      "priority": "P1",
+      "locks": ["network-adapters", "search-provider"],
+      "allowed_paths": ["backend/app/adapters/**", "backend/app/config.py", "backend/tests/test_search*.py"],
+      "required_roles": ["ashyq-planner", "ashyq-developer", "ashyq-qa", "ashyq-reviewer", "ashyq-security"],
+      "dependencies": ["T16", "T18"],
+      "reason_added": "master prompt sections 6/8: replaceable search provider adapter; BLOCKED-not-silent without API key; after T18 to avoid adapters write conflict"
+    },
+    "T26": {
+      "status": "BACKLOG",
+      "title": "News/SourceChange layer (master prompt stage 3)",
+      "findings": ["L01"],
+      "priority": "P1",
+      "locks": ["runner", "migrations", "news-corpus"],
+      "allowed_paths": ["backend/app/models/**", "backend/app/pipeline/runner.py", "backend/app/domain/**", "backend/migrations/versions/*.py", "backend/tests/test_news*.py"],
+      "required_roles": ["ashyq-planner", "ashyq-developer", "ashyq-qa", "ashyq-reviewer", "ashyq-security"],
+      "dependencies": ["T11", "T13", "T18"],
+      "reason_added": "master prompt sections 4/19: dated NewsEvent/SourceChange with applicability/conflicts/source-diff; no existing card covers it"
+    },
+    "T18": {
+      "status": "DONE_LOCAL_INTEGRATION",
+      "findings": ["L01"],
+      "priority": "P1",
+      "attempt": "A3",
+      "baseline_sha": "1e9f841ba686d27fc28271f9592ad449c0b35004",
+      "qa_commit_sha": "18c4a901ad95fa59f9f83e3bbdae0e2d98436fea",
+      "candidate_sha": "e533d6229d67e04c05c9b1293c66a64d45d817a5",
+      "combined_sha": "e533d6229d67e04c05c9b1293c66a64d45d817a5 (ff onto ai/c1/integration; FINAL campaign head: T01+T04+T10+T09+T18)",
+      "chain": "1e9f841 -> 18c4a901 (QA 11 RED) -> 9d328c4e (dev KZT/IELTS/PageOutcome/canary) -> ea4be635 (QA mypy-guard amend, 1 insertion) -> e533d622 (dev A3 dual-write repair after A2 VERIFIED_FAIL)",
+      "invocations": {
+        "planner_diag": {
+          "ref": "agent_c095ad9b-e9ee-4676-b582-99a080082df5",
+          "status": "PLANNED",
+          "artifact": "outputs/c1-t18-a0/planner-diag.md",
+          "root_cause": "0 claims = narrow deterministic extraction (no KZT, IELTS word order, deadline formats) + classifier gates + canary diagnostic blindness; NOT LLM-skip (no LLM in code), NOT verify-filter, NOT path-not-reached"
+        },
+        "qa_test_author": {
+          "ref": "agent_f9a36974-3d30-4749-bb3c-b70f382df2b5",
+          "status": "TESTS_READY",
+          "artifact": "outputs/c1-t18-a1/qa-test-author.md",
+          "qa_commit_sha": "18c4a901ad95fa59f9f83e3bbdae0e2d98436fea",
+          "red": "11 RED / 176 passed at baseline"
+        },
+        "developer": {
+          "ref": "agent_c4976b8f-fa4f-4a1e-852c-587b3cf2ee07",
+          "status": "IMPLEMENTED",
+          "artifact": "outputs/c1-t18-a1/developer.md",
+          "candidate_sha": "9d328c4e81e25ed69a44e98e8f68a9f93431a984",
+          "selfrun_gates": "target 187 passed; RED->GREEN 11; mypy app 0; 6 pre-existing mypy errors in QA harness -> QA amend"
+        },
+        "qa_amend": {
+          "ref": "agent_cc5a46fe-0a64-4432-8276-c3974f19abd5",
+          "status": "AMENDED",
+          "artifact": "outputs/c1-t18-a1/qa-contract-amendment.md",
+          "amend_commit_sha": "ea4be635a585f16c0125ad8856b2a33ab400ee7a",
+          "note": "test-only 1 insertion: assert stored is not None (own harness mypy fix)"
+        },
+        "qa_verify_a2": {
+          "ref": "agent_3892a96c-fee4-4d4c-8432-65cb6de2c1f2",
+          "status": "VERIFIED_FAIL",
+          "artifact": "outputs/c1-t18-a1/qa-verify-candidate.md",
+          "fail": "full suite 1149/1 FAILED: test_adapters::test_an_unreachable_programme_is_reported_not_skipped — candidate removed AdapterResult.errors prose (shared contract, test outside T18 scope)"
+        },
+        "developer_a3": {
+          "ref": "agent_66fb7e9c-93c4-42d1-aeeb-bf6ce3943ad1",
+          "status": "IMPLEMENTED",
+          "artifact": "outputs/c1-t18-a1/developer.md",
+          "candidate_sha": "e533d6229d67e04c05c9b1293c66a64d45d817a5",
+          "fix": "dual-write: baseline prose restored alongside PageOutcome (+15 lines, 2 files)"
+        },
+        "qa_verify_a3": {
+          "ref": "agent_179aa937-efab-4363-8da7-17ab2002cff1",
+          "status": "VERIFIED_PASS",
+          "artifact": "outputs/c1-t18-a1/qa-verify-a3.md",
+          "gates": "FULL suite 1150 passed / 0 failed, coverage 92.92%; target 258; mypy/ruff 0; seed_demo Groningen#1/UBC OUT_OF_BUDGET sqlite-verified; adversarial 25/25"
+        },
+        "reviewer": {
+          "ref": "agent_c89323e9-6546-4463-b8ad-915f805bccc9",
+          "verdict": "PASS",
+          "artifact": "outputs/c1-t18-a1/reviews.md",
+          "nonblocking": "IELTS '6.0 band in each component' precision-edge (needs negative fixture); dual-write 2x errors rows on problem pages; funding/documents stages without PageOutcome; PILOT-ONLY: live canary not run, nu.edu.kz root cause NOT field-proven"
+        },
+        "security": {
+          "ref": "agent_b622705c-645b-4e6b-87f2-626bb5359bc6",
+          "verdict": "PASS",
+          "artifact": "outputs/c1-t18-a1/reviews.md",
+          "nonblocking": "_page_outcome_line sanitization hardening; pre-existing quadratic [^.]* scans (crafted 5MB page -> O(n^2) loop stall); canary artifact URL-query redaction before publishing; _MONEY may read year as money ('2024 KZT')"
+        },
+        "integrator": {
+          "ref": "agent_3e25f73d-b9ce-41bb-acb7-6ce8bd16dc30",
+          "status": "INTEGRATED",
+          "artifact": "outputs/c1-t18-a1/integrator.md",
+          "combined_gates": "FULL pytest 1150 passed cov 92.91-92.92%; target 258; mypy/ruff 0; FE typecheck 0"
+        }
+      },
+      "followups": [
+        "hardening ticket: _page_outcome_line sanitization + [^.]{0,4000} window caps + canary artifact URL-query redaction + REQUIRED_EXTRA_TESTS (anti-spoofing fixture, newline/ANSI, long URL, 2MB timing, money/IELTS edge fixtures)",
+        "edu.kz multipart-suffix fix (registrable_domain) — отдельная карточка до живого пилота",
+        "live canary pilot card (nu.edu.kz) — root cause NOT field-proven until run; PILOT-ONLY verdict",
+        "funding/documents stages PageOutcome coverage; UI counter copy"
+      ],
+      "blockers": []
+    },
+    "T01": {
+      "status": "DONE",
+      "findings": [
+        "S01"
+      ],
+      "priority": "P0",
+      "baseline_sha": "85352b52211f0dd7f446b011d3f8c2c270089019",
+      "locks": [
+        "auth-account",
+        "security-tests",
+        "backend-config"
+      ],
+      "qa_commit_verified": "7083f17ce9ff6b198461fdf1cf9f5f973bcb13f2 (branch ai/c1/t01/qa; diff-tree = only the 2 allowed test files; dispatcher-verified)",
+      "red_evidence": "7 failed / 45 passed on QA test run at baseline; AssertionError {'detail','reset_link'} != {'detail'}",
+      "dispatcher_red_rerun": "2026-09-06T23:36+05:00 текущая сессия: pytest tests/test_account_flows.py tests/test_security.py в qa worktree → exit 1, ровно 7 FAILED, список идентичен артефакту; production-код worktree = baseline",
+      "continuity_note": "Сессия диспетчера возобновлена: предыдущая сессия завершила preflight+planner+QA(TEST_AUTHOR) в последние минуты и создала dev worktree параллельно со стартом текущей (последняя запись 23:33:16). Состояние принято текущей сессией после независимой верификации артефактов; коллизий записей не обнаружено. Второй активный диспетчер не наблюдается (нет свежих записей после 23:33:16).",
+      "session_continuity_active_2349": "Сессия-владелец invocation chain продолжила работу (23:48-23:49): developer результат получен В ЭТОЙ сессии (agent_d55c6320-2ba5-4050-a78f-303d3ccb3110), candidate f7f14b2 заморожен и dispatcher-verified, verify worktree создана. Записи 23:36-23:39 сохранены дословно как часть evidence. Если работает вторая dispatcher-сессия: она обязана уступить — реальная цепочка agentIds (planner agent_5ffbc4d0, qa agent_8d498240, developer agent_d55c6320) и runtime task refs находятся здесь; параллельный dispatch запрещён TEAM_RULES.",
+      "candidate_sha_frozen": "f7f14b28c43afe20df01ad38a26964c397f393fc (dispatcher-verified 23:49: parent=qa_commit 7083f17c, diff scope = routes_account.py+mail.py+test_account_flows.py — в allowed_paths, 'reset_link' отсутствует в routes_account.py, дерево чистое)",
+      "developer_gates_selfrun": "ruff 0 / mypy 0 / pytest 1122 passed, cov 92.91% (self-run developer'ом на candidate; независимый VERIFY_CANDIDATE pending — не засчитывать до него)",
+      "worktree_dev": "/Users/wpalish/ashyq-worktrees/c1-t01-dev (branch ai/c1/t01/dev from QA commit)",
+      "allowed_paths": [
+        "backend/app/api/routes_account.py",
+        "backend/app/mail.py",
+        "backend/app/config.py",
+        "backend/tests/test_account*.py",
+        "backend/tests/test_security.py"
+      ],
+      "required_roles": [
+        "ashyq-planner",
+        "ashyq-developer",
+        "ashyq-qa",
+        "ashyq-reviewer",
+        "ashyq-security"
+      ],
+      "attempt": "A1",
+      "worktree_qa": "/Users/wpalish/ashyq-worktrees/c1-t01-qa",
+      "worktree_verify": "/Users/wpalish/ashyq-worktrees/c1-t01-verify (branch ai/c1/t01/verify from candidate f7f14b2)",
+      "qa_commit_sha": "7083f17ce9ff6b198461fdf1cf9f5f973bcb13f2",
+      "candidate_sha": "f7f14b28c43afe20df01ad38a26964c397f393fc",
+      "outputs_dir": "/Users/wpalish/ashyq-apply/ai-team/outputs/c1-t01-a1",
+      "invocations": {
+        "planner": {
+          "ref": "agent_5ffbc4d0-8bfc-4130-b2f1-a00a93465754",
+          "status": "PLANNED",
+          "artifact": "outputs/c1-t01-a1/planner.md",
+          "root_cause": "routes_account.py:203-204 leaks reset_link in all non-production envs; config.py:146-148 is_production only for prod; compose staging env exposed on 0.0.0.0",
+          "contract_frozen": true
+        },
+        "qa_test_author": {
+          "ref": "agent_8d498240-020c-4819-b99b-58a13842503d",
+          "phase": "TEST_AUTHOR",
+          "status": "TESTS_READY",
+          "artifact": "outputs/c1-t01-a1/qa-test-author.md",
+          "qa_commit_sha": "7083f17ce9ff6b198461fdf1cf9f5f973bcb13f2",
+          "red": "7 failed / 45 passed at baseline; S01 reproduced assertion-level"
+        },
+        "developer": {
+          "ref": "agent_d55c6320-2ba5-4050-a78f-303d3ccb3110",
+          "status": "IMPLEMENTED",
+          "artifact": "outputs/c1-t01-a1/developer.md",
+          "candidate_sha": "f7f14b28c43afe20df01ad38a26964c397f393fc",
+          "selfrun_gates": "ruff 0, mypy 0, pytest 1122 passed cov 92.91%; 7 QA RED→GREEN, zero changes to QA assertion bodies",
+          "scope_changes": "3 files: routes_account.py, mail.py, test_account_flows.py; config.py no-op; test_security.py untouched"
+        },
+        "qa_verify_candidate": {
+          "ref": "agent_39fd4b9f-416e-4fb2-bb60-45324ddece1c",
+          "phase": "VERIFY_CANDIDATE",
+          "status": "VERIFIED_PASS",
+          "artifact": "outputs/c1-t01-a1/qa-verify-candidate.md",
+          "checked_sha": "f7f14b28c43afe20df01ad38a26964c397f393fc",
+          "gates": "52 passed target, 1122 passed full, cov 92.91%, mypy 0, ruff 0; adversarial staging probe clean; no test weakening (no removed assert lines)"
+        },
+        "reviewer": {
+          "ref": "agent_5ad45e36-68b4-4772-a40f-f682bbf29a81",
+          "status": "PASS",
+          "artifact": "outputs/c1-t01-a1/reviewer.md",
+          "checked_sha": "f7f14b28c43afe20df01ad38a26964c397f393fc",
+          "blocking": "none",
+          "nonblocking": "P1 process: dev branch amended post-freeze (message-only; tree IDs identical 0228bc7c — dispatcher-proven, PASS retained); P3 console-sender token in staging logs (S02-adjacent); P3 send-before-commit pre-existing; P3 frontend dead-code"
+        },
+        "security": {
+          "ref": "agent_29ea0b5a-9125-455d-9a02-1f398996c690",
+          "status": "PASS",
+          "artifact": "outputs/c1-t01-a1/security.md",
+          "checked_sha": "f7f14b28c43afe20df01ad38a26964c397f393fc",
+          "blocking": "none",
+          "nonblocking": "residual: S02 compose 0.0.0.0:8099 + trust_proxy XFF bypass (P1, queued T02), H01 token redemption race, ConsoleSender token in staging logs, frontend dead-code; guards not weakened"
+        },
+        "process_violations": [
+          "post-freeze amend of ai/c1/t01/dev: f7f14b28 -> b5154ff778c3a96839ad499458debe64fd2e05bc (commit (amend)); dispatcher verified: git diff f7f14b28..b5154ff --stat empty, tree IDs identical 0228bc7cc59254ea62d7a026c534d965b07dbdd4, same parent 7083f17c — message-only amend; PASS verdicts remain bound to frozen SHA f7f14b28; integration used exact SHA, not branch HEAD"
+        ],
+        "integrator": {
+          "ref": "agent_cd79626e-1416-4c6d-bfce-d9e1937ce016",
+          "status": "INTEGRATED",
+          "artifact": "outputs/c1-t01-a1/integrator.md",
+          "combined_sha": "f7f14b28c43afe20df01ad38a26964c397f393fc",
+          "merge_mode": "ff-only onto ai/c1/integration",
+          "combined_gates": "ruff 0, mypy 0, pytest 1122 passed cov 92.91%, target 52 passed — all re-run on combined SHA",
+          "publication": "NOT DONE — push/merge-to-main/deploy requires explicit user approval"
+        }
+      },
+      "env_notes": {
+        "qa_worktree_venv": "backend/.venv python3.12 (pytest 9.1.1) provisioned",
+        "dev_worktree_venv": "backend/.venv python3.12 provisioned (exec_8500bd4e exit 0)",
+        "verify_worktree_venv": "backend/.venv python3.12 provisioned (exec_2e3296fb exit 0)",
+        "planner_note": "planner had no Bash; QA must git rev-parse HEAD in qa worktree before authoring"
+      },
+      "blockers": []
+    },
+    "T04": {
+      "status": "DONE_LOCAL_INTEGRATION",
+      "findings": [
+        "F01"
+      ],
+      "priority": "P1",
+      "baseline_sha": "f7f14b28c43afe20df01ad38a26964c397f393fc (integration HEAD, includes accepted T01)",
+      "locks": [
+        "financial-contract",
+        "costs",
+        "shared-types"
+      ],
+      "allowed_paths": [
+        "backend/app/domain/costs.py",
+        "backend/app/schemas/result.py",
+        "backend/app/schemas/money.py",
+        "backend/app/domain/financial_policy.py",
+        "frontend/src/types.ts",
+        "frontend/src/components/ResultDetail.tsx",
+        "backend/tests/test_cost*.py",
+        "backend/tests/test_funding*.py"
+      ],
+      "required_roles": [
+        "ashyq-planner",
+        "ashyq-developer",
+        "ashyq-qa",
+        "ashyq-reviewer",
+        "ashyq-security"
+      ],
+      "attempt": "A1",
+      "worktree_qa": "/Users/wpalish/ashyq-worktrees/c1-t04-qa",
+      "worktree_dev": "/Users/wpalish/ashyq-worktrees/c1-t04-dev (ai/c1/t04/dev from d45a9cb4)",
+      "worktree_verify": "/Users/wpalish/ashyq-worktrees/c1-t04-verify (ai/c1/t04/verify from candidate)",
+      "qa_commit_sha": "d45a9cb4712a2c304f6ae83bcbca97f8f6f11663",
+      "candidate_sha": "3bdc0702dd25e80db16916a00d4e5710dbd65381",
+      "outputs_dir": "ai-team/outputs/c1-t04-a1",
+      "invocations": {
+        "planner": {
+          "ref": "agent_9a4c22d6-be95-45b5-9460-b4019184b6be",
+          "status": "PLANNED",
+          "artifact": "outputs/c1-t04-a1/planner.md",
+          "contract_frozen": true
+        },
+        "qa_test_author": {
+          "ref": "agent_3e981036-d921-46f4-9025-120a6e56fa3b",
+          "phase": "TEST_AUTHOR",
+          "status": "TESTS_READY",
+          "artifact": "outputs/c1-t04-a1/qa-test-author.md",
+          "qa_commit_sha": "d45a9cb4712a2c304f6ae83bcbca97f8f6f11663"
+        },
+        "developer": {
+          "ref": "agent_496c44cd-bd67-4a6c-a6f2-727b762356b1",
+          "status": "IMPLEMENTED",
+          "artifact": "outputs/c1-t04-a1/developer.md",
+          "candidate_sha": "3bdc0702dd25e80db16916a00d4e5710dbd65381"
+        },
+        "qa_verify": {
+          "ref": "agent_748d4ad4-bcfb-4663-ae25-9801aaef1680",
+          "status": "VERIFIED_PASS",
+          "artifact": "outputs/c1-t04-a1/qa-verify-candidate.md",
+          "gates": "full 1126 cov 92.91%, target 42, mypy/ruff 0, seed_demo Groningen#1/UBC OUT_OF_BUDGET, FE all green"
+        },
+        "reviewer": {
+          "ref": "agent_cac666ca-10c4-41f7-aed5-848806dee6d8",
+          "verdict": "PASS",
+          "artifact": "outputs/c1-t04-a1/reviews.md"
+        },
+        "security": {
+          "ref": "agent_9698c865-fc6a-422f-8667-eda8d521318d",
+          "verdict": "PASS",
+          "artifact": "outputs/c1-t04-a1/reviews.md",
+          "new_findings": "F7 formula injection (==T15/S03, pre-existing LOW-MED), F8 inf-JSON Money (pre-existing), F9 percentage unconstrained (pre-existing)"
+        },
+        "integrator": {
+          "ref": "agent_f5a0b4b8-9ca2-4465-9514-c7e1d7626b65",
+          "status": "INTEGRATED",
+          "merge_mode": "ff-only",
+          "artifact": "outputs/c1-t04-a1/integrator-note (in this report)",
+          "publication": "NOT DONE — user decision"
+        }
+      },
+      "coordinator_decisions": [
+        "Обязательные категории = дефолт CORE_COST_CATEGORIES (tuition, mandatory_fees, housing, meals) — утверждено координатором",
+        "share/classify residual (runner.py:579 -> funding.py:207-225 может считать % от частичного subtotal) — принят как residual, устраняется в T05-T07",
+        "Миграция 6 тест-фикстур (вместо 3 из packet) утверждена: контракт делает частичными все tuition-only fixture; структура assertions сохранена, числа пересчитаны"
+      ],
+      "blockers": [],
+      "qa_commit_verified": "d45a9cb4712a2c304f6ae83bcbca97f8f6f11663 (branch ai/c1/t04/qa; diff-tree = 1 test file; dispatcher-verified)",
+      "red_evidence": "4 failed / 38 passed: 1 assertion-level + 3 contract-field-level (cost_basis/missing_categories); F01 поведенчески воспроизведён до тестов",
+      "candidate_sha_frozen": "3bdc0702dd25e80db16916a00d4e5710dbd65381 (dispatcher-verified: parent=d45a9cb4, 5 files in allowed scope, tree clean)",
+      "combined_sha": "3bdc0702dd25e80db16916a00d4e5710dbd65381 (ff onto ai/c1/integration; affected gates green on combined: full pytest cov 92.92%, mypy/ruff 0, FE typecheck/lint/test 164/build 0)"
+    },
+    "T09": {
+      "status": "DONE_LOCAL_INTEGRATION",
+      "findings": [
+        "FE01",
+        "FE02",
+        "FE03"
+      ],
+      "priority": "P1",
+      "baseline_sha": "f7f14b28c43afe20df01ad38a26964c397f393fc (integration HEAD, includes accepted T01)",
+      "locks": [
+        "frontend-store",
+        "profile-ui",
+        "frontend-e2e"
+      ],
+      "allowed_paths": [
+        "frontend/src/lib/store.tsx",
+        "frontend/src/lib/*Draft*.ts",
+        "frontend/src/lib/*.test.tsx",
+        "frontend/src/screens/ProfileScreen.tsx",
+        "frontend/e2e/profile-persistence.spec.ts",
+        "frontend/e2e/helpers.ts"
+      ],
+      "required_roles": [
+        "ashyq-planner",
+        "ashyq-developer",
+        "ashyq-qa",
+        "ashyq-reviewer",
+        "ashyq-security"
+      ],
+      "attempt": "A2",
+      "worktree_qa": "/Users/wpalish/ashyq-worktrees/c1-t09-qa",
+      "worktree_dev": "/Users/wpalish/ashyq-worktrees/c1-t09-dev (ai/c1/t09/dev from bb137d7)",
+      "worktree_verify": "/Users/wpalish/ashyq-worktrees/c1-t09-qa-amend (ai/c1/t09/qa-amend) + fresh verify worktree to be cut at VERIFY",
+      "qa_commit_sha": "bb137d73c90286ec3c3d8aa1217c97461dedbfd7",
+      "candidate_sha": "7fb0d3270de24f79adfea6a315ee80092a298bc0 (A2 final; chain bb137d7->febb6c33->b0caa004->cdb4403->7fb0d327)",
+      "outputs_dir": "ai-team/outputs/c1-t09-a1",
+      "invocations": {
+        "planner": {
+          "ref": "agent_038babc3-f6ee-4ac1-b20f-4ebff7f9923d",
+          "status": "PLANNED",
+          "artifact": "outputs/c1-t09-a1/planner.md",
+          "contract_frozen": true
+        },
+        "qa_test_author": {
+          "ref": "agent_a10293ed-58d3-4345-8e15-8195c87b9263",
+          "phase": "TEST_AUTHOR",
+          "status": "TESTS_READY",
+          "artifact": "outputs/c1-t09-a1/qa-test-author.md",
+          "qa_commit_sha": "bb137d73c90286ec3c3d8aa1217c97461dedbfd7"
+        },
+        "developer": {
+          "ref": "agent_924bc3b2-4e00-4b16-91c3-ceaf2f323763",
+          "status": "IMPLEMENTED",
+          "artifact": "outputs/c1-t09-a1/developer.md",
+          "candidate_sha": "b0caa004b5351f84ee9ac07184d2486177a77d3f"
+        },
+        "qa_contract_amendment": {
+          "ref": "agent_25707a0f-321b-4265-8b4b-5bbe132a9bc5",
+          "phase": "TEST_CONTRACT_AMENDMENT",
+          "status": "AMENDED",
+          "artifact": "outputs/c1-t09-a1/qa-contract-amendment.md",
+          "amend_commit_sha": "b0caa004b5351f84ee9ac07184d2486177a77d3f"
+        },
+        "qa_test_author_a2": {
+          "ref": "agent_91273f4b-02ec-4cc7-94cd-6a6dec142759",
+          "phase": "TEST_AUTHOR_A2",
+          "status": "TESTS_READY",
+          "qa_commit_sha": "cdb4403d13aef4a0eb9b6351079683a94d839436",
+          "red": "1 contract RED (two-reloads local-case); B/C/D coverage green; 404 mock fix Error->ApiError documented"
+        },
+        "developer_a2": {
+          "ref": "agent_be9089d9-d877-4e3e-9c21-3ac5fc7615d7",
+          "status": "IMPLEMENTED",
+          "artifact": "outputs/c1-t09-a1/developer-a2.md",
+          "candidate_sha": "7fb0d3270de24f79adfea6a315ee80092a298bc0",
+          "fix": "autosave else-if guard (isLocalCaseKey && draftRestored) + deps; retire/discard/deleteEverything/404 paths intact"
+        },
+        "qa_verify_a2": {
+          "ref": "agent_be216803-cdd5-45d4-a970-4b6dde16d605",
+          "status": "VERIFIED_PASS",
+          "gates": "36/36 target (test A green), 182/182 full, typecheck/lint/build 0; QA A2 test bodies byte-identical"
+        },
+        "integrator": {
+          "ref": "agent_72663253-f410-4270-a9e7-a2f39c990c39",
+          "status": "INTEGRATED",
+          "artifact": "outputs/c1-t09-a1/integrator.md",
+          "combined_gates": "FE vitest 182/182 + typecheck/lint/build 0; backend 1134 cov 92.84%, mypy/ruff 0"
+        }
+      },
+      "coordinator_decisions": [
+        "Behavior changes контракта приняты: per-tab sessionStorage указатель, невидимые осиротевшие envelopes — задокументировать в PR",
+        "e2e — env-dependent gate, NOT_RUN != PASS; unit-уровень обязателен",
+        "QA test-contract amendment утверждён: toContainText -> toHaveTextContent (matcher не существует в vitest/jest-dom; тест был непроходим при любой реализации); b0caa004 test-only 1+/1-",
+        "Миграция 2 ассертов store.test.tsx на per-tab sessionStorage утверждена (замороженный контракт B; усиление, не ослабление)",
+        "Finding 3 (local-case single-reload): чинить — одна строка в autosave (слот не очищается пока draftRestored); findings 1-2,4 — QA amendment; finding 5 — backlog"
+      ],
+      "blockers": [],
+      "qa_commit_verified": "bb137d73c90286ec3c3d8aa1217c97461dedbfd7 (branch ai/c1/t09/qa; diff-tree = 1 test file; dispatcher-verified)",
+      "red_evidence": "11 failed / 167 passed (только новый drafts.test.tsx): FE01 x1, FE02 x2, FE03 x5, error-semantics x2, StrictMode x1; 3 green guards; baseline unit 164 passed",
+      "candidate_sha_frozen": "b0caa004b5351f84ee9ac07184d2486177a77d3f (chain: bb137d7 -> febb6c33 -> b0caa004; amend is test-only 1+/1-)",
+      "reviewer_ref": "agent_2a87c91e-3b35-4ef0-9033-182ec673b3a2",
+      "reviewer_verdict": "CHANGES_REQUESTED (b0caa004)",
+      "a2_plan": "QA тест-амендмент (save-failure #8, 404-strengthen, two-reloads local-case RED, discard-assert) -> developer однострочный фикс local-case очистки -> новый candidate -> VERIFY -> re-review + security",
+      "combined_sha": "1e9f841ba686d27fc28271f9592ad449c0b35004 (merge commit onto 9a401f63; final integration HEAD of campaign c1)",
+      "packet_check": "STRUCTURE OK (outputs/c1-t09-a1/acceptance-packet.json)"
+    },
+    "T10": {
+      "status": "DONE_LOCAL_INTEGRATION",
+      "findings": [
+        "J02"
+      ],
+      "priority": "P1",
+      "baseline_sha": "f7f14b28c43afe20df01ad38a26964c397f393fc (integration HEAD, includes accepted T01)",
+      "locks": [
+        "runner",
+        "job-store",
+        "worker",
+        "worker-tests"
+      ],
+      "allowed_paths": [
+        "backend/app/pipeline/runner.py",
+        "backend/app/jobs/store.py",
+        "backend/app/jobs/worker.py",
+        "backend/app/models/jobs.py",
+        "backend/tests/test_worker.py",
+        "backend/tests/test_pipeline.py"
+      ],
+      "required_roles": [
+        "ashyq-planner",
+        "ashyq-developer",
+        "ashyq-qa",
+        "ashyq-reviewer",
+        "ashyq-security"
+      ],
+      "attempt": "A1",
+      "worktree_qa": "/Users/wpalish/ashyq-worktrees/c1-t10-qa",
+      "worktree_dev": "/Users/wpalish/ashyq-worktrees/c1-t10-dev (ai/c1/t10/dev from e47cfd2)",
+      "worktree_verify": "/Users/wpalish/ashyq-worktrees/c1-t10-verify (ai/c1/t10/verify from candidate)",
+      "qa_commit_sha": "e47cfd2f982e8f3820825833b866bea67f56bfbe",
+      "candidate_sha": "df1ad1194abcd7812eb9bf7d66e417b3d211c157",
+      "outputs_dir": "ai-team/outputs/c1-t10-a1",
+      "invocations": {
+        "planner": {
+          "ref": "agent_5bfbc55c-34a2-434b-845d-23cb3de20910",
+          "status": "PLANNED",
+          "artifact": "outputs/c1-t10-a1/planner.md",
+          "contract_frozen": true
+        },
+        "qa_test_author": {
+          "ref": "agent_14ab3b13-5072-4b84-8dfe-fc9ccdc41650",
+          "phase": "TEST_AUTHOR",
+          "status": "TESTS_READY",
+          "artifact": "outputs/c1-t10-a1/qa-test-author.md",
+          "qa_commit_sha": "e47cfd2f982e8f3820825833b866bea67f56bfbe"
+        },
+        "developer": {
+          "ref": "agent_1cf00afc-992f-4af4-84fe-7eef013ed78f",
+          "status": "IMPLEMENTED",
+          "artifact": "outputs/c1-t10-a1/developer.md",
+          "candidate_sha": "df1ad1194abcd7812eb9bf7d66e417b3d211c157"
+        },
+        "qa_verify": {
+          "ref": "agent_f58b2399-ac7b-4682-a1f9-81580bd90459",
+          "status": "VERIFIED_PASS",
+          "artifact": "outputs/c1-t10-a1/qa-verify-candidate.md",
+          "gates": "full 1130 cov 92.81%, test_worker 35, test_jobs 30 PG, probe 38/38 PG"
+        },
+        "reviewer": {
+          "ref": "agent_74a0e896-28dd-4950-8fff-9530765ddc79",
+          "verdict": "PASS",
+          "artifact": "outputs/c1-t10-a1/reviews.md"
+        },
+        "security": {
+          "ref": "agent_b662c4b1-69fb-4886-874f-359490d99768",
+          "verdict": "PASS",
+          "artifact": "outputs/c1-t10-a1/reviews.md",
+          "followups": "F-1 token из claim_one; F-2 payment_reconcile rollback при fenced fail + защита _grant_and_schedule (money-adjacent, приоритет); F-3 reconcile_startup; F-4 run-level single-writer на enqueue (pre-existing)"
+        },
+        "integrator": {
+          "ref": "agent_1badfd92-05b2-48c5-81ff-0a6929bf6e8f",
+          "status": "INTEGRATED",
+          "artifact": "outputs/c1-t10-a1/integrator-note (report)",
+          "combined_gates": "full pytest 1134 cov 92.84%, worker+jobs 65 (PG), mypy/ruff 0, FE all green"
+        }
+      },
+      "coordinator_decisions": [
+        "attempts-token fencing без миграций — утверждено координатором; отклонение = запрос расширения",
+        "conftest.py вне scope; two-session proof на pgserver, skip не принимается"
+      ],
+      "blockers": [],
+      "qa_commit_verified": "e47cfd2f982e8f3820825833b866bea67f56bfbe (branch ai/c1/t10/qa; diff-tree = 1 test file; dispatcher-verified)",
+      "red_evidence": "8 failed / 27 passed: 3 assertion-level (stale stage=failed, stale job_completed audit, checkpoint counter loss) + 5 contract-field TypeError lease_token; PG работает (test_jobs 30 passed)",
+      "candidate_sha_frozen": "df1ad1194abcd7812eb9bf7d66e417b3d211c157 (dispatcher-verified: parent=e47cfd2, 3 prod files in scope, models/jobs.py untouched, tree clean)",
+      "packet_check": "STRUCTURE OK (outputs/c1-t10-a1/acceptance-packet.json)",
+      "combined_sha": "9a401f6317701aa47d3c35d72761528c64282796 (merge commit 9a401f63 onto 3bdc0702; real merge, no conflicts)"
+    }
+  },
+  "campaign_c1_summary": {
+    "integration_head": "1e9f841ba686d27fc28271f9592ad449c0b35004",
+    "tasks_integrated": [
+      "T01 (f7f14b28)",
+      "T04 (3bdc0702)",
+      "T10 (via 9a401f63)",
+      "T09 (via 1e9f841b)"
+    ],
+    "combined_gates_final": "backend full pytest 1134 cov 92.84% (threshold 92 unchanged), mypy/ruff clean, frontend vitest 182/182 + typecheck/lint/build clean",
+    "publication": "BRANCH+PR PUBLISHED by explicit owner approval: origin/ai/c1/integration, PR #7; protected-main merge and application deploy NOT DONE",
+    "deferred_gates": [
+      "T09 e2e acceptance 11-13 (playwright; env-dependent; NOT_RUN != PASS)"
+    ],
+    "backlog_from_reviews": [
+      "T10 F-1: thread lease token from claim_one (re-read window, needs >120s stall)",
+      "T10 F-2 (money-adjacent, priority): payment_reconcile rollback at fenced fail + guard _grant_and_schedule against duplicate ResearchRun",
+      "T10 F-3: reconcile_startup check-then-act; F-4: run-level single-writer on retry/recheck enqueue (pre-existing)",
+      "T04: F5 tabular annual_cost lower-bound marker (fits T05-T07); F7 formula injection = T15/S03; F8 Money inf-JSON; F9 unconstrained percentage (all pre-existing)",
+      "T09: envelope depth/size limits; draft-slot GC; draftRestored cosmetic after startRun create; client.ts path interpolation (pre-existing)",
+      "T01 process: post-freeze amend violation recorded (message-only, tree-identical)"
+    ],
+    "process_notes": "All 4 tasks passed full cycles (planner -> QA RED-first -> developer -> QA VERIFY -> reviewer+security -> scope/packet checks -> integrator with combined gates). T09 required one repair loop (A2). T01 had one process violation (message-only amend, dispatcher-proven tree-identical)."
+  },
+  "campaign_c2_directive": {
+    "received": "2026-09-07 (user dropped MASTER_UNIVERSITY_SEARCH_PROMPT_RU.md + README_RU into session)",
+    "source_files": "/Users/wpalish/Downloads/MASTER_UNIVERSITY_SEARCH_PROMPT_RU.md, README_RU (1).md; prompt copied to ai-team/reference/MASTER_UNIVERSITY_SEARCH_PROMPT_RU.md",
+    "scope": "live university research engine (product priority L01/T18); staged plan per master prompt section 19",
+    "delivery_gap": "README references skills/university-research folder — NOT present in Downloads delivery; repo has its own .claude/skills set (university-admissions-research etc). Flagged to user.",
+    "capability_preflight": {
+      "network_egress": "OK (single HEAD example.com -> 200; no load tests)",
+      "env_config": "NO .env anywhere -> no search API key, no LLM API key; payments provider fake",
+      "providers_in_code": "no external search/LLM provider adapters (grep clean); extraction pipeline is deterministic/regex-based; live_discovery adapter exists",
+      "main_checkout_env": "backend venv py3.12 + frontend node_modules present (provisioned after initial preflight)",
+      "docker": "absent; embedded pgserver available; playwright browsers unverified"
+    },
+    "implications": "deterministic HTTP live slice possible; LLM extract/verify and search-API discovery BLOCKED pending user config (no silent paid API)",
+    "standing_constraints_unchanged": "no push / no protected-main merge / no deploy / no production DB; tests not weakened"
+  },
+  "codex_audit_2026_09_07": {
+    "verdict": "PARTIAL_CAMPAIGN_VERIFIED_AND_REPAIRED; PROJECT_NOT_COMPLETE",
+    "scope_reality": "The plan contains 24 task cards. GLM locally integrated T01, T04, T09, T10 and a PILOT-ONLY T18 slice; 5/24 is not full-project completion. The ledger itself contains only T01, T04, T09, T10, T18, T25 and T26.",
+    "history": {
+      "glm_candidate_preserved": "e533d6229d67e04c05c9b1293c66a64d45d817a5 on audit/glm-c1-e533d62",
+      "origin_main_audited": "7b1fce0a5b58ca0540751b104baf2fce94817b22; public release-gates run 34115345524 succeeded",
+      "origin_sync_merge": "25f5954ec474d26397d0c5d28e981a195be0510f",
+      "audit_handoff": "2199bc3",
+      "stale_payment_rollback_fix": "7f364cfa01bd5ebc1a812feaf3bcba79a57b255f",
+      "edu_kz_domain_fix": "135138a",
+      "profile_matched_programme_selection_fix": "02d648c",
+      "current_local_candidate": "96c1082 on origin/ai/c1/integration; PR #7 open; protected-main merge and application deploy not performed"
+    },
+    "independent_local_gates": {
+      "backend": "1153 collected and passed; coverage 93.00% with fail-under 92; Ruff check/format and mypy clean",
+      "frontend": "typecheck and lint clean; Vitest 182/182; production build clean",
+      "e2e": "ordinary Playwright 75 passed, 1 skipped; auth Playwright 6/6 passed; generated screenshots restored",
+      "dependencies": "pip-audit: 39 production dependencies, 0 known vulnerabilities; npm audit --omit=dev: 0 vulnerabilities",
+      "acceptance_packets": "All five packet files pass check_team.py structural validation, but that validator does not authenticate invocation IDs or prove runtime log semantics. Some provenance therefore remains unverified from files alone."
+    },
+    "live_canary": {
+      "authorization_basis": "Owner asked Codex to finish the actions GLM had deferred; one bounded public NU canary was run with robots respected, browser tier disabled, no secrets and no production database.",
+      "before_profile_filter_fix": "Nazarbayev University REACHED; 35/0 pages ok/fail; programme and scholarship pages found; 0 claims; 0 false positives.",
+      "after_profile_filter_fix": "Nazarbayev University REACHED; 26/0 pages ok/fail; exact BSc Computer Science selected; 1 claim; 0 false positives; verification completeness remains 0%.",
+      "field_finding": "The normal HTTP fetch sees only 42 readable characters on the NU admissions page, so IELTS, deadline, tuition and funding facts visible in a rendered page are not extracted. Search/LLM providers do not exist in the code or configuration. T18 remains PILOT-ONLY and is not release-complete.",
+      "fixed_findings": [
+        "edu.kz was missing from the multi-part public suffix list",
+        "opaque MSc and unrelated bachelor programme pages could consume the two-program verification limit ahead of the requested BSc Computer Science page"
+      ]
+    },
+    "corrected_claims": [
+      "T09 Playwright was NOT_RUN in GLM evidence; it is now independently run and green on the audited candidate.",
+      "T10 security follow-up F-2 was real: a stale non-terminal payment poll committed its provider journal entry after losing its fence. A two-session PostgreSQL regression reproduced it and 7f364cf now raises LeaseLost so the transaction rolls back.",
+      "The feared duplicate ResearchRun in the terminal paid branch was not reproduced: that path already rolls back when the fenced completion fails.",
+      "T18 cannot be marked fully DONE while its declared dependencies T08, T13, T16 and T17 are unmet, T25/T26 are backlog, and the live canary remains at 0% verification completeness. The historical GLM status is retained above and superseded by this audit verdict."
+    ],
+    "evidence_hygiene": {
+      "secret_scan": "No secret-like files or values were found by the audit regex.",
+      "machine_paths": "31 ai-team files contain /Users/wpalish paths.",
+      "commit_decision": "The owner explicitly authorized publishing everything to GitHub on 2026-09-07. The bundle is committed with its 31 machine-specific path references preserved as forensic evidence; runtime invocation claims remain unauthenticated by the structural checker."
+    },
+    "remaining_owner_decisions": [
+      "Choose and provision a search provider and, if desired, an LLM extraction/verification provider; add secrets outside Git.",
+      "Review PR #7 and approve or perform the protected-main merge after GitHub release-gates pass.",
+      "Choose deployment infrastructure and production settings before any deploy; no deployment was attempted."
+    ],
+    "github_publication": {
+      "authorized_by_owner": "2026-09-07: deploy everything to GitHub",
+      "branch": "https://github.com/wpalish/ashyq-apply/tree/ai/c1/integration",
+      "pull_request": "https://github.com/wpalish/ashyq-apply/pull/7",
+      "published_head_before_final_handoff": "96c108264aba3306f2d97c79399bdbd88273b967",
+      "mergeable_at_open": true,
+      "checks_at_open": "release-gates in progress",
+      "protected_main_merge": "NOT DONE",
+      "application_deployment": "NOT DONE"
+    }
+  }
+}

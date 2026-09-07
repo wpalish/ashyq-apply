@@ -179,7 +179,11 @@ class ClaimBuilder:
 
 _IELTS_OVERALL = re.compile(
     r"IELTS[^.\n]{0,80}?(?:overall|minimum|score of|band)[^.\n]{0,30}?(\d(?:\.\d)?)"
-    r"|(?:overall|minimum)[^.\n]{0,30}?IELTS[^.\n]{0,30}?(\d(?:\.\d)?)",
+    r"|(?:overall|minimum)[^.\n]{0,30}?IELTS[^.\n]{0,30}?(\d(?:\.\d)?)"
+    # "IELTS 6.5 overall (or equivalent)": many pages state the keyword after
+    # the band. The keyword must follow the number directly, so "IELTS 6.5 in
+    # each component" stays a subscore statement, not an overall band.
+    r"|IELTS[^\d.\n]{0,20}?(\d(?:\.\d)?)\s*(?:overall|band)",
     re.IGNORECASE,
 )
 _IELTS_SUB = re.compile(
@@ -205,9 +209,9 @@ _SUPERSCORE = re.compile(r"(superscor\w+)", re.IGNORECASE)
 #: A currency marker must sit directly beside the number. Bare digits are never
 #: read as money, which keeps years and scores out of the cost table.
 _MONEY = re.compile(
-    r"(?:(US\$|USD|EUR|€|GBP|£|CAD|AUD|CHF|SEK|NOK|DKK|SGD|JPY|\$)\s*)"
+    r"(?:(US\$|USD|EUR|€|GBP|£|CAD|AUD|CHF|SEK|NOK|DKK|SGD|JPY|KZT|₸|\$)\s*)"
     r"([\d]{1,3}(?:[,\s]\d{3})+|\d{2,7})(?:\.(\d{2}))?"
-    r"|([\d]{1,3}(?:[,\s]\d{3})+|\d{2,7})\s*(EUR|USD|GBP|CHF|SEK|NOK|DKK|AUD|CAD|SGD|JPY)",
+    r"|([\d]{1,3}(?:[,\s]\d{3})+|\d{2,7})\s*(EUR|USD|GBP|CHF|SEK|NOK|DKK|AUD|CAD|SGD|JPY|KZT|₸)",
     re.IGNORECASE,
 )
 _PERCENT_TUITION = re.compile(r"(\d{1,3})\s*%\s*(?:of\s+)?(?:the\s+)?tuition", re.IGNORECASE)
@@ -244,6 +248,8 @@ _CURRENCY_SYMBOLS = {
     "dkk": "DKK",
     "sgd": "SGD",
     "jpy": "JPY",
+    "kzt": "KZT",
+    "₸": "KZT",
 }
 _MONTHS = {
     m: i
@@ -314,7 +320,7 @@ def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
     text = for_matching(text)
 
     for m in _IELTS_OVERALL.finditer(text):
-        raw = m.group(1) or m.group(2)
+        raw = m.group(1) or m.group(2) or m.group(3)
         if raw is None:
             continue
         value = float(raw)

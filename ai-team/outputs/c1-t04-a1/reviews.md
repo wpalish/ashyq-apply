@@ -1,0 +1,18 @@
+# T04 / A1 — reviewer + security outputs (сохранено диспетчером; сокращено без изменения оценки)
+
+## ashyq-reviewer — INVOCATION_REF: agent_cac666ca-10c4-41f7-aed5-848806dee6d8
+### VERDICT: PASS (только на 3bdc0702dd25e80db16916a00d4e5710dbd65381)
+- Ограничение метода: нет Bash; SHA по ref-файлам; diff побайтовым сравнением candidate vs QA-worktree копии; все 5 файлов сверены построчно.
+- FINDINGS (все non-blocking): 1. LOW costs.py:153-157 — refusal при пустых items+total не прикладывает basis/missing (безопасное направление, задокументировано developer'ом; edge-of-edge: items непустые, но валюта несконвертируема). 2. LOW tabular.py:111 — annual_cost печатает subtotal для partial без маркера lower bound (pre-existing колонка, residual T05-T07). 3. INFO FundingScreen.tsx:33 — масштаб от total_cost без computable-гейта (pre-existing). 4. INFO ResultDetail.tsx:262-273 — missing-категории показаны дважды (косметика).
+- CONTRACT_COMPLIANCE: соответствует. Root cause устранён (costs.py:185-207 partial → computable=False/gap=None/subtotal/warnings); схема аддитивна (result.py:145,162,166; extra="forbid" сохранён); сигнатуры не изменены (runner.py:561,577-582,750-754 идентичны); published total авторитетен; known zero по наличию ключа (costs.py:30); demotion-гейты целы; UI честный («Remaining annual cost 0» недостижим дважды); types.ts обязательные поля — breaking только для конструкторов литералов, которых нет.
+- TEST_ASSESSMENT: миграция 6 тестов чистая — каждое изменение имеет арифметическое основание (+20000 = 2000+12000+6000), структура assertions сохранена, ни один warning-ассерт не удалён; QA RED-класс побайтово идентичен; test_funding_classification/money.py идентичны.
+- SCOPE: ровно 5 файлов, все в WRITE_SCOPE; cost_basis/missing_categories больше нигде не упоминаются; scope creep нет.
+- RISKS_LEFT: runner.py:579 residual (T05-T07); rollback-окно extra="forbid"; T09 e2e tuition-only проверить до merge; review не исполнял тесты (gates по QA verify).
+- NEXT: интегрировать 3bdc0702 как есть; findings 1-2 → T05-T07.
+
+## ashyq-security — INVOCATION_REF: agent_9698c865-fc6a-422f-8667-eda8d521318d
+### VERDICT: PASS (только на 3bdc0702...)
+- ATTACK_SURFACE: 1. Утечки финансовых данных — новых путей нет (costs.py без логов; tabular COLUMNS без новых полей; entitlements.py:91 стрипает FundingGap для free-tier). 2. Раскрытие структур — типизированный enum list; рендер только ResultDetail:251-273. 3. Adversarial payload: missing-список ограничен 4 (CORE_COST_CATEGORIES), отрицательные/NaN отклонены ge=0; НО +inf проходит (allow_inf_nan default True → невалидный JSON Infinity) — PRE-EXISTING money.py, не усугублён T04; unconstrained amount_is_percentage_of_tuition (result.py:74) → ValidationError-краш — pre-existing. Partial-ветка новую арифметическую поверхность не создаёт. 4. Legacy: дефолты ок; противоречивое состояние (partial+gap задан) недостижимо из домена; отказ в безопасную сторону. 5. XSS: dangerouslySetInnerHTML/innerHTML/eval — ноль; enum-значения, React экранирует. 6. Guards T01/S01: routes_account не в diff; rate limiter/пароль/сессии/token_hash на месте.
+- FINDINGS: F5 [T04, INFO] tabular.py:111 annual_cost без lower-bound маркера. F6 [pre-existing LOW] refusal без basis. F7 [pre-existing LOW-MED] CSV/XLSX formula injection (tabular.py:176-184: crawler-строки с =+-@ без нейтрализации) — совпадает с T15/S03. F8 [pre-existing LOW-MED] money.py inf → Infinity JSON. F9 [pre-existing LOW] unconstrained percentage.
+- REQUIRED_EXTRA_TESTS: Money(infinity) JSON probe; formula-injection probe; negative percentage graceful; legacy partial+gap рендер; partial+unsupported currency.
+- NEXT: принять 3bdc0702; F7/F8 → бэклог (F7 = T15/S03); F5 → T05-T07 scope.

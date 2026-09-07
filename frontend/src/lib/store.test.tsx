@@ -44,6 +44,9 @@ function Probe() {
 
 beforeEach(() => {
   window.localStorage.clear();
+  // T09: the active case/run pointers are per-tab sessionStorage, so tests
+  // must not leak a pointer from one test into the next.
+  window.sessionStorage.clear();
   vi.restoreAllMocks();
   vi.spyOn(api, 'capabilities').mockResolvedValue({} as never);
   vi.spyOn(api, 'validateProfile').mockResolvedValue({
@@ -78,14 +81,22 @@ describe('profile restoration after a reload', () => {
   it('forgets the pointer when the stored profile is gone', async () => {
     window.localStorage.setItem('ashyq.activeProfile', 'deleted-id');
     window.localStorage.setItem('ashyq.activeRun', 'some-run');
-    vi.spyOn(api, 'getProfile').mockRejectedValue(new Error('404'));
-    vi.spyOn(api, 'getRun').mockRejectedValue(new Error('404'));
+    // A real ApiError: a plain Error would never run the store's 404 branch,
+    // and the pointer assertions below would only exercise the adopt step.
+    vi.spyOn(api, 'getProfile').mockRejectedValue(new ApiError(404, 'Not found.'));
+    vi.spyOn(api, 'getRun').mockRejectedValue(new ApiError(404, 'Not found.'));
 
     render(<StoreProvider><Probe /></StoreProvider>);
 
     await waitFor(() =>
       expect(window.localStorage.getItem('ashyq.activeProfile')).toBeNull(),
     );
+    // A 404 proves the case is gone: the per-tab pointers are forgotten too,
+    // not just the legacy global keys the adopt step already removed.
+    await waitFor(() =>
+      expect(window.sessionStorage.getItem('ashyq.activeProfile')).toBeNull(),
+    );
+    expect(window.sessionStorage.getItem('ashyq.activeRun')).toBeNull();
     expect(screen.getByTestId('saved')).toHaveTextContent('none');
   });
 
@@ -181,7 +192,9 @@ describe('starting research twice', () => {
     expect(getRun).toHaveBeenCalledWith(active.id);
     expect(screen.getByTestId('run')).toHaveTextContent(active.id);
     expect(screen.getByTestId('error')).toHaveTextContent('none');
-    expect(window.localStorage.getItem('ashyq.activeRun')).toBe(active.id);
+    // T09: the run pointer is per-tab sessionStorage; no global copy is kept.
+    expect(window.sessionStorage.getItem('ashyq.activeRun')).toBe(active.id);
+    expect(window.localStorage.getItem('ashyq.activeRun')).toBeNull();
   });
 
   it('sends an idempotency key so a retried request cannot start a second run', async () => {
@@ -202,14 +215,17 @@ describe('starting research twice', () => {
 describe('renaming the storage keys', () => {
   it('carries a session stored under the old name across, once', async () => {
     // A rename with no migration would have signed everyone out of their own
-    // case the first time they loaded the renamed build.
+    // case the first time they loaded the renamed build. T09 moved the active
+    // case pointer to per-tab sessionStorage: the legacy global pointer is
+    // adopted into this tab once and the global keys are then removed.
     window.localStorage.setItem('unimatch.activeProfile', REAL_PROFILE.id);
     vi.spyOn(api, 'getProfile').mockResolvedValue(REAL_PROFILE);
 
     render(<StoreProvider><Probe /></StoreProvider>);
 
     await waitFor(() => expect(screen.getByTestId('saved')).toHaveTextContent(REAL_PROFILE.id));
-    expect(window.localStorage.getItem('ashyq.activeProfile')).toBe(REAL_PROFILE.id);
+    expect(window.sessionStorage.getItem('ashyq.activeProfile')).toBe(REAL_PROFILE.id);
+    expect(window.localStorage.getItem('ashyq.activeProfile')).toBeNull();
     expect(window.localStorage.getItem('unimatch.activeProfile')).toBeNull();
   });
 
@@ -283,9 +299,21 @@ describe('unsaved edits', () => {
     render(<StoreProvider><DirtyProbe /></StoreProvider>);
     await waitFor(() => expect(screen.getByTestId('citizenship')).toHaveTextContent('Georgia'));
 
+    // The migration re-wrapped the legacy draft into the active case's own
+    // slot; discard must remove THAT slot — deleting the legacy key alone
+    // proves nothing, the migration already removed it before the discard.
+    const draftSlots: string[] = [];
+    for (let i = 0; i < window.localStorage.length; i += 1) {
+      const key = window.localStorage.key(i) as string;
+      if ((window.localStorage.getItem(key) ?? '').includes('Georgia')) draftSlots.push(key);
+    }
+    expect(draftSlots.length).toBeGreaterThan(0);
+
     await act(async () => { screen.getByText('discard').click(); });
     expect(screen.getByTestId('citizenship')).toHaveTextContent('Uzbekistan');
-    expect(window.localStorage.getItem('ashyq.unsavedDraft')).toBeNull();
+    for (const key of draftSlots) {
+      expect(window.localStorage.getItem(key)).toBeNull();
+    }
   });
 
   it('never lets a restored draft become the saved profile by itself', async () => {

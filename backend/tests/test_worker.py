@@ -599,3 +599,519 @@ class TestProgressCounters:
             verification = RunState.load(run.stage_state).stages["program_verification"]
             assert run.programs_verified == rows
             assert verification.items_done <= verification.items_total
+
+
+# ---------------------------------------------------------------------------
+# J02: fenced writes after lease loss.
+#
+# Two layers of RED are recorded against the baseline:
+#   * assertion-level — the stale attempt really corrupts state today: the
+#     runner's ``except Exception`` writes a terminal run state out of the
+#     LeaseLost handler, the dispatch commit writes a ``job_completed`` audit
+#     for a job the worker no longer owns, and checkpoints discard the
+#     stage's pending counter increments. Those tests use only the existing
+#     signatures.
+#   * contract-field-level — the two-session PostgreSQL proofs pass
+#     ``lease_token=``, the attempt token the frozen planner contract
+#     specifies (the job's ``attempts`` value at claim time). The baseline
+#     signatures do not accept it yet, so those tests fail with TypeError
+#     until the fence exists. The worker_id-only fence cannot express these
+#     scenarios at all: where both attempts share one worker_id, nothing but
+#     the attempt token can tell them apart.
+# ---------------------------------------------------------------------------
+
+
+@pytest.fixture
+def pg_factory(pg_engine):
+    """Independent sessions off one migrated PostgreSQL database.
+
+    The fencing proofs need two sessions that share nothing — no transaction,
+    no identity map: one claims, the other takes the job away, which is how
+    the reaper and a rival worker meet in production. A single session would
+    hide the very race it is supposed to expose.
+    """
+    return sessionmaker(bind=pg_engine, future=True)
+
+
+def _expire_lease_and_reap(factory, job_id: str) -> None:
+    """Age the lease past its horizon and let the reaper take the job back."""
+    with factory() as session:
+        session.execute(
+            sa.update(Job)
+            .where(Job.id == job_id)
+            .values(lease_expires_at=datetime.now(UTC) - timedelta(seconds=1))
+        )
+        session.commit()
+        assert JobStore(session).reap_expired() == [job_id]
+        # The reaper queues the job with backoff; pull that forward the way the
+        # queue itself would once the backoff elapsed.
+        session.execute(
+            sa.update(Job).where(Job.id == job_id).values(available_at=datetime.now(UTC))
+        )
+        session.commit()
+
+
+class TestStaleWorkerRunState:
+    """Losing the lease is control flow, not a run failure.
+
+    runner.run_to_decision's ``except Exception`` cannot tell a LeaseLost from
+    a real stage failure, so the stale attempt used to write stage=failed, a
+    run error and a run_failed audit over the run another worker is redoing.
+    test_a_run_stops_when_its_job_is_taken_away only asserts the run did not
+    finish — a "failed" stage satisfies it, which is why the defect survived.
+    """
+
+    def test_a_mid_run_takeover_does_not_write_terminal_run_state(
+        self, bound_db, settings, profile, monkeypatch
+    ):
+        from app.models import AuditEvent, ProgramResultRow
+        from app.pipeline.runner import ResearchRunner
+
+        run_id, job_id = seed_run(bound_db, profile)
+        worker = Worker(settings)
+        assert worker.claim_one() == job_id
+
+        checkpoint: dict = {}
+        original_verify = ResearchRunner._stage_verify
+
+        async def verify_then_takeover(self, fetcher):
+            await original_verify(self, fetcher)
+            # Another worker takes the job over mid-run; the next checkpoint
+            # must end this attempt as pure control flow.
+            with bound_db() as other:
+                other.execute(
+                    sa.text("UPDATE jobs SET worker_id = 'worker-b' WHERE id = :i"),
+                    {"i": job_id},
+                )
+                other.commit()
+            # Everything this attempt legitimately committed so far.
+            with bound_db() as other:
+                run = other.get(ResearchRun, run_id)
+                checkpoint["stage"] = run.stage
+                checkpoint["errors"] = list(run.errors or [])
+                checkpoint["results"] = (
+                    other.query(ProgramResultRow).filter(ProgramResultRow.run_id == run_id).count()
+                )
+
+        monkeypatch.setattr(ResearchRunner, "_stage_verify", verify_then_takeover)
+        asyncio.run(worker.execute(job_id))
+
+        assert checkpoint["results"] > 0, "the corpus must verify enough to commit artifacts"
+        assert worker.jobs_failed == 0, "the attempt must exit through the LeaseLost branch"
+        with bound_db() as session:
+            run = session.get(ResearchRun, run_id)
+            job = session.get(Job, job_id)
+            # The stale attempt leaves the run exactly as it last committed it.
+            assert run.stage == checkpoint["stage"], (
+                f"a lost lease must not rewrite the run's stage (it became {run.stage!r})"
+            )
+            assert run.errors == checkpoint["errors"], "a lost lease is not a run error"
+            assert run.finished_at is None
+            audits = (
+                session.query(AuditEvent)
+                .filter(AuditEvent.entity_id == run_id, AuditEvent.action == "run_failed")
+                .count()
+            )
+            assert audits == 0, "the stale attempt must not audit run_failed"
+            # Work committed before the lease was lost survives untouched.
+            results = (
+                session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run_id).count()
+            )
+            assert results == checkpoint["results"]
+            # And the job itself stays with its new owner.
+            assert job.status == JobStatus.RUNNING.value
+            assert job.worker_id == "worker-b"
+
+
+class TestCheckpointKeepsPendingCounters:
+    """A checkpoint must observe cancellation, not destroy progress.
+
+    _check_cancelled used to session.refresh(self.run), which silently
+    discarded the stage's uncommitted counter increments. In _stage_funding a
+    _save lands only every fourth row, so the increments of the rows in
+    between were lost at the very checkpoints meant to protect the run.
+    """
+
+    def test_pending_counter_increments_survive_a_checkpoint(self, bound_db, settings, profile):
+        from app.models import ApplicantProfileRow
+        from app.pipeline.runner import ResearchRunner
+        from app.schemas.profile import ApplicantProfileIn
+
+        run_id, job_id = seed_run(bound_db, profile)
+        worker = Worker(settings)
+        assert worker.claim_one() == job_id
+
+        with bound_db() as session:
+            run = session.get(ResearchRun, run_id)
+            profile_payload = session.get(ApplicantProfileRow, run.profile_id).payload
+            runner = ResearchRunner(
+                session,
+                run,
+                ApplicantProfileIn.model_validate(profile_payload),
+                settings,
+                job_id=job_id,
+                worker_id=worker.worker_id,
+            )
+            session.commit()  # the previous save boundary
+            # The long stage moves its counters on...
+            runner.run.pages_checked += 7
+            runner.run.claims_recorded += 3
+            # ...and reaches the next checkpoint uncancelled.
+            runner._check_cancelled()
+            runner._save()
+
+        with bound_db() as session:
+            run = session.get(ResearchRun, run_id)
+            assert run.pages_checked == 7, "the checkpoint discarded pending increments"
+            assert run.claims_recorded == 3
+
+
+class TestFencedWritesTwoSessionPostgreSQL:
+    """Two independent PostgreSQL sessions: a stale attempt must not be able
+    to speak for a job it no longer owns.
+
+    Written against the frozen planner contract:
+      * the lease token is the job's ``attempts`` value at claim time, read
+        off the job claim() returns;
+      * the fenced methods (``complete``, ``heartbeat``, ``fail``,
+        ``mark_cancelled``) take an optional ``lease_token`` keyword;
+      * a fenced write updates zero rows: no status, no last_error, no
+        finished_at, no worker_id change, and the caller's session is left
+        with nothing to commit.
+    """
+
+    def test_same_worker_reclaim_fences_the_first_attempt(self, pg_factory, profile):
+        """worker_concurrency=2 plus the self-reap loop: one worker can hold
+        two attempts of the same job under an identical worker_id. Only the
+        attempt token can tell the stale one from the live one."""
+        run_id, job_id = seed_run(pg_factory, profile)
+
+        s1 = pg_factory()
+        try:
+            store1 = JobStore(s1, worker_id="w")
+            job1 = store1.claim(worker_id="w")
+            s1.commit()
+            t1 = job1.attempts
+
+            # The lease expires and the worker's own reap loop takes the job
+            # back; the very same worker_id immediately re-claims it.
+            _expire_lease_and_reap(pg_factory, job_id)
+            s2 = pg_factory()
+            try:
+                store2 = JobStore(s2, worker_id="w")
+                job2 = store2.claim(worker_id="w")
+                s2.commit()
+                assert job2.id == job_id
+                assert job2.attempts == t1 + 1
+                t2 = job2.attempts
+                # The reaper's note is the last legitimate write; nothing the
+                # stale attempt does may change it.
+                reap_note = job2.last_error
+
+                # Attempt 1's writes are refused even though the worker_id
+                # matches on every row it touches.
+                assert store1.complete(job_id, lease_token=t1) is False
+                assert store1.heartbeat(job_id, lease_token=t1) is False
+                assert store1.fail(job_id, "stale attempt 1", lease_token=t1) == (
+                    JobStatus.RUNNING.value
+                )
+                store1.mark_cancelled(job_id, "stale attempt 1", lease_token=t1)
+                s1.commit()
+
+                with pg_factory() as check:
+                    job = check.get(Job, job_id)
+                    assert job.status == JobStatus.RUNNING.value
+                    assert job.attempts == t2, "the stale attempt must not move the counter"
+                    assert job.last_error == reap_note, "a fenced fail must not write last_error"
+                    assert job.finished_at is None
+
+                # The second attempt owns the outcome.
+                assert store2.complete(job_id, lease_token=t2) is True
+                s2.commit()
+                with pg_factory() as check:
+                    assert check.get(Job, job_id).status == JobStatus.SUCCEEDED.value
+            finally:
+                s2.close()
+        finally:
+            s1.close()
+
+    def test_a_takeover_leaves_the_outcome_to_the_new_owner(self, pg_factory, profile):
+        """The reaper hands the job to worker-b; worker-a's complete, fail and
+        mark_cancelled must all be refused, and worker-b's must stand."""
+        run_id, job_id = seed_run(pg_factory, profile)
+
+        s1 = pg_factory()
+        s2 = pg_factory()
+        try:
+            job1 = JobStore(s1, worker_id="worker-a").claim(worker_id="worker-a")
+            s1.commit()
+            t1 = job1.attempts
+
+            _expire_lease_and_reap(pg_factory, job_id)
+            job2 = JobStore(s2, worker_id="worker-b").claim(worker_id="worker-b")
+            s2.commit()
+            t2 = job2.attempts
+            reap_note = job2.last_error
+
+            assert JobStore(s1, worker_id="worker-a").complete(job_id, lease_token=t1) is False
+            assert (
+                JobStore(s1, worker_id="worker-a").fail(
+                    job_id, "worker-a reports failure", lease_token=t1
+                )
+                == JobStatus.RUNNING.value
+            )
+            JobStore(s1, worker_id="worker-a").mark_cancelled(
+                job_id, "worker-a cancels", lease_token=t1
+            )
+            s1.commit()
+
+            with pg_factory() as check:
+                job = check.get(Job, job_id)
+                assert job.status == JobStatus.RUNNING.value, "worker-b still owns the job"
+                assert job.worker_id == "worker-b"
+                assert job.last_error == reap_note, "a fenced fail must not write last_error"
+                assert job.finished_at is None
+
+            assert JobStore(s2, worker_id="worker-b").complete(job_id, lease_token=t2) is True
+            s2.commit()
+            with pg_factory() as check:
+                assert check.get(Job, job_id).status == JobStatus.SUCCEEDED.value
+        finally:
+            s1.close()
+            s2.close()
+
+    def test_a_renewed_lease_survives_the_reaper(self, pg_factory, profile):
+        """A heartbeat the owner just extended is not the reaper's to take."""
+        run_id, job_id = seed_run(pg_factory, profile)
+
+        s1 = pg_factory()
+        try:
+            store1 = JobStore(s1, worker_id="worker-a")
+            job1 = store1.claim(worker_id="worker-a")
+            s1.commit()
+            assert store1.heartbeat(job_id, lease_token=job1.attempts) is True
+            s1.commit()
+
+            with pg_factory() as reaper:
+                assert JobStore(reaper).reap_expired() == []
+            with pg_factory() as check:
+                job = check.get(Job, job_id)
+                assert job.status == JobStatus.RUNNING.value
+                assert job.attempts == 1, "a healthy lease must not be re-claimed"
+                assert job.heartbeat_at is not None
+        finally:
+            s1.close()
+
+    def test_a_finished_reap_refuses_the_dead_worker_s_heartbeat(self, pg_factory, profile):
+        """Once the reap dead-letters the job, the dead worker's beat must not
+        resurrect a lease."""
+        run_id, job_id = seed_run(pg_factory, profile)
+
+        s1 = pg_factory()
+        try:
+            store1 = JobStore(s1, worker_id="worker-a")
+            job1 = store1.claim(worker_id="worker-a")
+            s1.commit()
+            t1 = job1.attempts
+
+            # Attempts exhausted: the reap dead-letters instead of requeueing.
+            with pg_factory() as session:
+                session.execute(
+                    sa.update(Job)
+                    .where(Job.id == job_id)
+                    .values(
+                        max_attempts=1,
+                        lease_expires_at=datetime.now(UTC) - timedelta(seconds=1),
+                    )
+                )
+                session.commit()
+                assert JobStore(session).reap_expired() == [job_id]
+                session.commit()
+            with pg_factory() as check:
+                assert check.get(Job, job_id).status == JobStatus.DEAD.value
+
+            assert store1.heartbeat(job_id, lease_token=t1) is False
+            s1.commit()
+            with pg_factory() as check:
+                job = check.get(Job, job_id)
+                assert job.status == JobStatus.DEAD.value
+                assert job.lease_expires_at is None
+        finally:
+            s1.close()
+
+    def test_fenced_terminal_writes_change_nothing(self, pg_factory, profile):
+        """A fenced complete or fail is zero rows: no status, no finished_at,
+        no last_error — there is nothing for the caller's commit to carry."""
+        run_id, job_id = seed_run(pg_factory, profile)
+
+        s1 = pg_factory()
+        try:
+            job1 = JobStore(s1, worker_id="worker-a").claim(worker_id="worker-a")
+            s1.commit()
+            t1 = job1.attempts
+
+            # A direct handover keeps last_error empty, so the assertion on it
+            # is sharp: the fenced writes must not be the first to fill it.
+            with pg_factory() as session:
+                session.execute(
+                    sa.text("UPDATE jobs SET worker_id = 'worker-b' WHERE id = :i"),
+                    {"i": job_id},
+                )
+                session.commit()
+            with pg_factory() as check:
+                assert check.get(Job, job_id).worker_id == "worker-b"
+
+            assert JobStore(s1, worker_id="worker-a").complete(job_id, lease_token=t1) is False
+            s1.commit()
+            assert (
+                JobStore(s1, worker_id="worker-a").fail(
+                    job_id, "a failure nobody owns any more", lease_token=t1
+                )
+                == JobStatus.RUNNING.value
+            )
+            s1.commit()
+            JobStore(s1, worker_id="worker-a").mark_cancelled(
+                job_id, "a cancellation nobody owns any more", lease_token=t1
+            )
+            s1.commit()
+
+            with pg_factory() as check:
+                job = check.get(Job, job_id)
+                assert job.status == JobStatus.RUNNING.value
+                assert job.worker_id == "worker-b"
+                assert job.last_error == "", "a fenced fail must not write last_error"
+                assert job.finished_at is None
+        finally:
+            s1.close()
+
+
+class TestStaleDispatchCommit:
+    """The dispatch completion commit belongs to the owner alone.
+
+    worker._dispatch used to ignore store.complete()'s False and commit the
+    job_completed audit anyway, so a worker that lost its job after its last
+    checkpoint still stamped the trail as if it had finished it.
+    """
+
+    def test_a_stale_worker_writes_no_completion_audit(
+        self, pg_engine, pg_factory, settings, profile, monkeypatch
+    ):
+        import app.db as db_module
+        from app.models import AuditEvent
+        from app.pipeline.runner import ResearchRunner
+
+        run_id, job_id = seed_run(pg_factory, profile)
+
+        # worker-a claims, then loses the job to worker-b through the reaper.
+        with pg_factory() as session:
+            JobStore(session, worker_id="worker-a").claim(worker_id="worker-a")
+            session.commit()
+        _expire_lease_and_reap(pg_factory, job_id)
+        with pg_factory() as session:
+            job = JobStore(session, worker_id="worker-b").claim(worker_id="worker-b")
+            assert job.attempts == 2
+            session.commit()
+
+        # The takeover lands after the runner's last checkpoint: from the
+        # stale worker's view the run finished cleanly, and _dispatch walks
+        # straight into its completion commit.
+        async def already_finished(self):
+            return None
+
+        monkeypatch.setattr(ResearchRunner, "run_to_decision", already_finished)
+        monkeypatch.setattr(db_module, "engine", pg_engine)
+        monkeypatch.setattr(db_module, "SessionLocal", pg_factory)
+        monkeypatch.setattr("app.config.get_settings", lambda: settings)
+
+        worker = Worker(settings, worker_id="worker-a")
+        asyncio.run(worker.execute(job_id))
+
+        with pg_factory() as check:
+            job = check.get(Job, job_id)
+            assert job.status == JobStatus.RUNNING.value, "worker-b still owns the job"
+            assert job.worker_id == "worker-b"
+            audits = (
+                check.query(AuditEvent)
+                .filter(AuditEvent.entity_id == job_id, AuditEvent.action == "job_completed")
+                .count()
+            )
+            assert audits == 0, "the stale worker must not record job_completed"
+            assert check.get(ResearchRun, run_id).stage == "queued", (
+                "the stale dispatch must not move the run"
+            )
+
+    def test_a_stale_payment_poll_rolls_back_its_provider_journal(
+        self, pg_engine, pg_factory, settings, profile, monkeypatch
+    ):
+        """A provider answer and the fenced queue transition are one commit.
+
+        Payment reconciliation writes an append-only PaymentEvent even when a
+        provider still says "pending".  If the lease changes owner during the
+        provider call, that journal entry belongs to the stale attempt and must
+        be rolled back with every other payment-side write.
+        """
+        import app.db as db_module
+        from app.jobs import payment_reconcile
+        from app.models.billing import Order, OrderStatus, PaymentEvent
+        from app.payments.provider import ProviderInvoice
+
+        with pg_factory() as session:
+            row = profile_row(session, profile)
+            order = Order(
+                organization_id=row.organization_id,
+                profile_id=row.id,
+                amount_kzt=4990,
+                status=OrderStatus.PENDING.value,
+                provider="fake",
+                provider_invoice_id="invoice-stale-poll",
+                external_order_id="order-stale-poll",
+                method="phone",
+                phone_masked="8707***4455",
+            )
+            session.add(order)
+            session.flush()
+            order_id = order.id
+            job_id = (
+                JobStore(session)
+                .enqueue(
+                    "payment_reconcile",
+                    payload={"order_id": order_id},
+                    idempotency_key=f"payment_reconcile:{order_id}",
+                    max_attempts=30,
+                )
+                .job_id
+            )
+            session.commit()
+
+        monkeypatch.setattr(db_module, "engine", pg_engine)
+        monkeypatch.setattr(db_module, "SessionLocal", pg_factory)
+        monkeypatch.setattr("app.config.get_settings", lambda: settings)
+
+        class TakeoverDuringPoll:
+            def get_invoice(self, invoice_id: str) -> ProviderInvoice:
+                assert invoice_id == "invoice-stale-poll"
+                with pg_factory() as other:
+                    other.execute(
+                        sa.update(Job)
+                        .where(Job.id == job_id)
+                        .values(worker_id="worker-b", attempts=Job.attempts + 1)
+                    )
+                    other.commit()
+                return ProviderInvoice(invoice_id=invoice_id, status="processing")
+
+        monkeypatch.setattr(payment_reconcile, "get_provider", TakeoverDuringPoll)
+
+        worker = Worker(settings, worker_id="worker-a")
+        assert worker.claim_one() == job_id
+        asyncio.run(worker.execute(job_id))
+
+        with pg_factory() as check:
+            job = check.get(Job, job_id)
+            order = check.get(Order, order_id)
+            assert job.status == JobStatus.RUNNING.value
+            assert job.worker_id == "worker-b"
+            assert job.attempts == 2
+            assert order.status == OrderStatus.PENDING.value
+            assert (
+                check.query(PaymentEvent).filter(PaymentEvent.order_id == order_id).count() == 0
+            ), "a stale payment attempt committed its provider journal"
