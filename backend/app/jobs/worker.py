@@ -214,12 +214,22 @@ class Worker:
             status = reconcile_order(session, order_id)
             if status and status not in TERMINAL_ORDER_STATUSES:
                 # Not settled: fail softly so the queue's backoff re-runs it.
-                store.fail(
+                failed_status = store.fail(
                     job.id,
                     f"order {order_id[:8]} still {status}",
                     retry=True,
                     lease_token=lease_token,
                 )
+                # A successful retry transition from this running attempt can
+                # only become queued (or dead when attempts are exhausted).
+                # Anything else means the lease changed owner while the
+                # provider call was in flight. Raising from inside
+                # session_scope rolls back the PaymentEvent/order/grant writes
+                # reconcile_order may already have staged in this transaction.
+                if failed_status not in {JobStatus.QUEUED.value, JobStatus.DEAD.value}:
+                    raise LeaseLost(
+                        f"payment job {job.id[:8]} changed owner before retry scheduling"
+                    )
                 return
             if not store.complete(job.id, lease_token=lease_token):
                 session.rollback()

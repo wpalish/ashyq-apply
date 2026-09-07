@@ -53,6 +53,8 @@ manufacture compliant history. [0.4] was committed before [0.3].
 | [0.8] fix-forward | `c220095` | Re-applied the orphaned shortlist-width fix after PR #2 merged. |
 | [0.8] handoff | `d6e59d5` | Published PR #6 and pointed §5 at review, then `[1.1]`. |
 | [0.8] review fix | `4a7171c` | Merged current main, restored the independent Confirmed column, protected longest-chip geometry, regenerated screenshots, and passed current gates/re-review. |
+| GLM c1 sync | `25f5954` | Merged `origin/main@7b1fce0` into the local campaign candidate without conflicts; original `e533d62` preserved as `audit/glm-c1-e533d62`. |
+| T10 follow-up | pending commit | PostgreSQL regression proved a stale payment poll committed a provider journal entry; `worker.py` now turns a failed fenced retry transition into `LeaseLost`, rolling back the whole payment transaction. |
 
 ## 4. Half-done / uncommitted at the moment of writing
 
@@ -210,16 +212,13 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-1. Add a PostgreSQL two-session regression in `backend/tests/test_worker.py`: a stale
-   `payment_reconcile` attempt must roll back every `PaymentEvent`, `Order`, entitlement, run and
-   enqueue mutation when its fenced job transition loses the lease.
-2. Fix `backend/app/jobs/worker.py` so the payment branch treats any failed owner transition as
-   `LeaseLost` (or cancellation), forcing the surrounding transaction to roll back.
-3. Run focused payment/worker PostgreSQL tests, then all backend and frontend gates on the new SHA;
+1. Commit the T10 payment-reconcile fix after the focused PostgreSQL/static gates (30 tests) and
+   replace the pending marker in §3 with its SHA.
+2. Run all backend and frontend gates on the new SHA;
    run auth E2E and repeat ordinary E2E after the `origin/main` merge. Keep generated screenshots out.
-4. Reconcile the untracked `ai-team/` evidence: correct false completion wording/ledger defects,
+3. Reconcile the untracked `ai-team/` evidence: correct false completion wording/ledger defects,
    remove machine-specific path assumptions where practical, and commit it only to this local branch.
-5. Do not push, merge protected main, deploy, buy a provider, add secrets, or run a public live canary
+4. Do not push, merge protected main, deploy, buy a provider, add secrets, or run a public live canary
    without a separate owner decision.
 
 ## 6. Gate status at last run (numbers, not adjectives)

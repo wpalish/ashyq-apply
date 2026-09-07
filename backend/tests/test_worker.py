@@ -1039,3 +1039,79 @@ class TestStaleDispatchCommit:
             assert check.get(ResearchRun, run_id).stage == "queued", (
                 "the stale dispatch must not move the run"
             )
+
+    def test_a_stale_payment_poll_rolls_back_its_provider_journal(
+        self, pg_engine, pg_factory, settings, profile, monkeypatch
+    ):
+        """A provider answer and the fenced queue transition are one commit.
+
+        Payment reconciliation writes an append-only PaymentEvent even when a
+        provider still says "pending".  If the lease changes owner during the
+        provider call, that journal entry belongs to the stale attempt and must
+        be rolled back with every other payment-side write.
+        """
+        import app.db as db_module
+        from app.jobs import payment_reconcile
+        from app.models.billing import Order, OrderStatus, PaymentEvent
+        from app.payments.provider import ProviderInvoice
+
+        with pg_factory() as session:
+            row = profile_row(session, profile)
+            order = Order(
+                organization_id=row.organization_id,
+                profile_id=row.id,
+                amount_kzt=4990,
+                status=OrderStatus.PENDING.value,
+                provider="fake",
+                provider_invoice_id="invoice-stale-poll",
+                external_order_id="order-stale-poll",
+                method="phone",
+                phone_masked="8707***4455",
+            )
+            session.add(order)
+            session.flush()
+            order_id = order.id
+            job_id = (
+                JobStore(session)
+                .enqueue(
+                    "payment_reconcile",
+                    payload={"order_id": order_id},
+                    idempotency_key=f"payment_reconcile:{order_id}",
+                    max_attempts=30,
+                )
+                .job_id
+            )
+            session.commit()
+
+        monkeypatch.setattr(db_module, "engine", pg_engine)
+        monkeypatch.setattr(db_module, "SessionLocal", pg_factory)
+        monkeypatch.setattr("app.config.get_settings", lambda: settings)
+
+        class TakeoverDuringPoll:
+            def get_invoice(self, invoice_id: str) -> ProviderInvoice:
+                assert invoice_id == "invoice-stale-poll"
+                with pg_factory() as other:
+                    other.execute(
+                        sa.update(Job)
+                        .where(Job.id == job_id)
+                        .values(worker_id="worker-b", attempts=Job.attempts + 1)
+                    )
+                    other.commit()
+                return ProviderInvoice(invoice_id=invoice_id, status="processing")
+
+        monkeypatch.setattr(payment_reconcile, "get_provider", TakeoverDuringPoll)
+
+        worker = Worker(settings, worker_id="worker-a")
+        assert worker.claim_one() == job_id
+        asyncio.run(worker.execute(job_id))
+
+        with pg_factory() as check:
+            job = check.get(Job, job_id)
+            order = check.get(Order, order_id)
+            assert job.status == JobStatus.RUNNING.value
+            assert job.worker_id == "worker-b"
+            assert job.attempts == 2
+            assert order.status == OrderStatus.PENDING.value
+            assert (
+                check.query(PaymentEvent).filter(PaymentEvent.order_id == order_id).count() == 0
+            ), "a stale payment attempt committed its provider journal"
