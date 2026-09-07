@@ -360,6 +360,7 @@ class Fetcher:
             if response.is_redirect:
                 location = response.headers.get("location")
                 if not location:
+                    await response.aclose()
                     return FetchResult(
                         url=url,
                         outcome=FetchOutcome.HTTP_ERROR,
@@ -367,6 +368,10 @@ class Fetcher:
                         error="redirect without a Location header",
                         final_url=current,
                     )
+                # The hop was streamed, so its body is an open socket: close
+                # it before chasing the next Location, or every redirect
+                # leaks one connection.
+                await response.aclose()
                 current = str(httpx.URL(current).join(location))
                 continue
 
@@ -456,6 +461,17 @@ class Fetcher:
             return result
 
         rendered = await self._renderer.render(result.url)  # type: ignore[attr-defined]
+        # A renderer that reports OK while carrying an error status (an older
+        # browser tier did) must not launder its error page into the fetch of
+        # record or the disk cache: the rendered body stays unread and the
+        # original HTTP result stands.
+        if rendered.status_code is not None and rendered.status_code >= 400:
+            log.warning(
+                "browser tier returned HTTP %s for %s; keeping the plain HTTP result",
+                rendered.status_code,
+                result.url[:120],
+            )
+            return result
         if rendered.ok and len(html_to_text(rendered.text)) > len(html_to_text(result.text)):
             rendered.fetch_tier = "browser"
             self.tier_counts["browser"] += 1
@@ -616,7 +632,20 @@ class Fetcher:
                         self.cache.put(result)
                         self.stats[FetchOutcome.OK.value] += 1
                         self.tier_counts["pdf" if result.is_pdf else "http"] += 1
-                        return await self._maybe_render(result)
+                        try:
+                            return await self._maybe_render(result)
+                        except Exception as exc:
+                            # The escalation sits outside the retry excepts
+                            # above, so an infra failure in the browser tier
+                            # must be contained here: it becomes a diagnostic
+                            # result, never an exception out of get().
+                            log.warning("browser tier failed for %s: %s", url, exc)
+                            self.stats[FetchOutcome.UNPARSEABLE.value] += 1
+                            return FetchResult(
+                                url=url,
+                                outcome=FetchOutcome.UNPARSEABLE,
+                                error=f"browser tier failed: {exc}"[:300],
+                            )
                     # Retry only what is worth retrying.
                     retryable = result.status_code == 429 or (
                         result.status_code is not None and 500 <= result.status_code < 600

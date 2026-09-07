@@ -110,19 +110,31 @@ class BrowserFetcher:
             except BrowserUnavailable as exc:
                 return FetchResult(url=url, outcome=FetchOutcome.UNPARSEABLE, error=str(exc))
 
-            context = await self._browser.new_context(
-                user_agent=self.fetcher.user_agent,
-                # No downloads, no credentials, no service workers.
-                accept_downloads=False,
-                java_script_enabled=True,
-                bypass_csp=False,
-                service_workers="block",
-            )
-            # Every request the page makes - navigations and subresources alike -
-            # goes through the same policy. A page can otherwise fetch
-            # http://169.254.169.254 from JavaScript and read the response.
-            await context.route("**/*", self._gate_request)
-            page = await context.new_page()
+            # Setting the context up can fail exactly like a navigation can -
+            # the browser may have died between renders. A dead tier is a
+            # diagnostic, not a crash out of the fetcher.
+            try:
+                context = await self._browser.new_context(
+                    user_agent=self.fetcher.user_agent,
+                    # No downloads, no credentials, no service workers.
+                    accept_downloads=False,
+                    java_script_enabled=True,
+                    bypass_csp=False,
+                    service_workers="block",
+                )
+                # Every request the page makes - navigations and subresources
+                # alike - goes through the same policy. A page can otherwise
+                # fetch http://169.254.169.254 from JavaScript and read the
+                # response.
+                await context.route("**/*", self._gate_request)
+                page = await context.new_page()
+            except Exception as exc:
+                log.warning("browser tier unusable for %s: %s", url, exc)
+                return FetchResult(
+                    url=url,
+                    outcome=FetchOutcome.UNPARSEABLE,
+                    error=f"browser infrastructure failed: {exc}"[:300],
+                )
             # Never submit a form or accept a dialog on a page we are reading.
             page.on("dialog", lambda dialog: asyncio.ensure_future(dialog.dismiss()))
             try:
@@ -131,23 +143,43 @@ class BrowserFetcher:
                 )
                 await page.wait_for_timeout(1200)  # let late content settle
                 html = await page.content()
-                status = resp.status if resp else None
             except Exception as exc:
                 log.info("browser render failed for %s: %s", url, exc)
                 return FetchResult(url=url, outcome=FetchOutcome.TIMEOUT, error=str(exc)[:300])
             finally:
                 await context.close()
 
-        return FetchResult(
-            url=url,
-            outcome=FetchOutcome.OK,
-            status_code=status,
-            content=html.encode("utf-8"),
-            text=html,
-            content_type="text/html; charset=utf-8",
-            fetched_at=datetime.now(UTC),
-            final_url=url,
-        )
+            # The status of the *final* navigation decides the outcome. A
+            # rendered 404/403/429/5xx is an error page, not page content: it
+            # must not come back as OK, or the escalation in the fetcher will
+            # cache it and cite it as a verified claim.
+            if resp is None:
+                # goto() hands back None when no response was ever received.
+                return FetchResult(
+                    url=url,
+                    outcome=FetchOutcome.UNPARSEABLE,
+                    error="browser navigation returned no response (no status to trust)",
+                )
+            if resp.status >= 400:
+                log.info("browser tier got HTTP %s for %s", resp.status, url)
+                return FetchResult(
+                    url=url,
+                    outcome=FetchOutcome.HTTP_ERROR,
+                    status_code=resp.status,
+                    error=f"HTTP {resp.status} on the rendered page",
+                    final_url=url,
+                )
+
+            return FetchResult(
+                url=url,
+                outcome=FetchOutcome.OK,
+                status_code=resp.status,
+                content=html.encode("utf-8"),
+                text=html,
+                content_type="text/html; charset=utf-8",
+                fetched_at=datetime.now(UTC),
+                final_url=url,
+            )
 
 
 # Escalation lives in Fetcher.attach_renderer / Fetcher._maybe_render so that

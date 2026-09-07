@@ -27,8 +27,13 @@ attests, pays, uploads to a portal or impersonates a recommender.
   bodies are streamed under hard size limits.
 - Browser rendering is a fallback only. Every navigation and subresource is
   intercepted and checked by the same network policy; downloads, service
-  workers, media, fonts and websockets are disabled. Production infrastructure
-  should additionally deny private and metadata egress at the network layer.
+  workers, media, fonts and websockets are disabled. The final navigation's
+  HTTP status decides the outcome: a rendered error page (404/403/429/5xx) is
+  reported as a failed fetch, so it can never be escalated, cached or cited
+  as page content, and a navigation that returns no response fails closed
+  too. A browser that dies mid-render surfaces as a diagnostic result rather
+  than a crash. Production infrastructure should additionally deny private
+  and metadata egress at the network layer.
 - The worker treats jobs as hostile state: leases, bounded attempts,
   idempotency keys and unique constraints prevent duplicate or immortal work.
 
@@ -117,10 +122,22 @@ attests, pays, uploads to a portal or impersonates a recommender.
   disabled unless an operator is prepared to manage abuse and account support.
 - The abuse limiter is local to one API process. A multi-replica public service
   needs a shared limiter at the edge or in PostgreSQL/Redis.
-- Application-level DNS pinning protects the HTTP tier. Chromium still performs
-  its own connection after route validation, so a production host must also
-  enforce egress firewall rules that deny RFC1918, link-local and cloud metadata
-  ranges.
+- The crawler's egress controls are application-level. What the application
+  now enforces: every redirect hop is re-validated and its streamed response
+  is closed before the next hop, the address blocklist covers the 6to4 relay
+  and AS112 anycast ranges alongside loopback, private, link-local and
+  metadata addresses, and a browser-rendered error status is a failed fetch
+  that cannot reach the disk cache or a verified claim. What remains
+  best-effort: Chromium resolves names and connects by itself after the
+  policy's route check, so a DNS rebinding window survives that no in-process
+  check can close; the redirects a browser follows internally are not bounded
+  by the crawler's redirect cap; and the blocked-hostname list is deliberately
+  short, a belt-and-braces check rather than an exhaustive inventory of names
+  that resolve to the host. Guarantees therefore stop at the application
+  boundary: a production host must also enforce egress firewall rules that
+  deny RFC1918, link-local and cloud metadata ranges, which is what actually
+  bounds a resolver race. These rules gate outbound crawling only; the
+  service's own PostgreSQL and API traffic is unaffected.
 - Live extraction is conservative but not authoritative. A sourced result is a
   statement about a page, never a guarantee of admission or funding.
 - The container stack is defined and CI builds it, but it has not been run on
