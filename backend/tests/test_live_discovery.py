@@ -52,7 +52,13 @@ class StubSite:
         self.requested: list[str] = []
 
     def install(self, fetcher: Fetcher) -> Fetcher:
-        async def fake_get(url: str, *, use_cache: bool = True) -> FetchResult:
+        async def fake_get(
+            url: str,
+            *,
+            use_cache: bool = True,
+            etag: str | None = None,
+            if_modified_since: str | None = None,
+        ) -> FetchResult:
             self.requested.append(url)
             body = self.pages.get(url)
             if body is None:
