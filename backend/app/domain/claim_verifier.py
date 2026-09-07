@@ -199,21 +199,75 @@ def value_in_range(claim_type: ClaimType, value: object, *, today: date) -> bool
 # attacker hosts like narxoz.kz.attacker.example (whose registrable domain
 # is attacker.example, whatever the label says).
 
+# Kept as domain-level data even though the discovery layer carries its own
+# copy (live_discovery.MULTIPART_SUFFIXES): domain/ must not import from
+# app.adapters.*. The duplication is deliberate, and
+# test_claim_verifier.TestMultiPartPublicSuffixAgreement.
+# test_the_verifier_suffix_table_covers_the_discovery_table is the divergence
+# guard — it fails if the discovery table grows without this table following.
+# The reverse direction (an entry here that discovery lacks, e.g. govt.nz) is
+# intentionally allowed: this table only has to be at least as wide.
 _MULTIPART_PUBLIC_SUFFIXES: Final[frozenset[str]] = frozenset(
     {
-        "ac.uk",
-        "gov.uk",
-        "co.uk",
-        "org.uk",
-        "edu.au",
-        "gov.au",
-        "com.au",
+        "ac.at",
+        "ac.be",
+        "ac.cy",
+        "ac.id",
+        "ac.il",
+        "ac.in",
+        "ac.ir",
+        "ac.jp",
+        "ac.kr",
+        "ac.ma",
         "ac.nz",
-        "govt.nz",
-        "co.nz",
-        "edu.sg",
+        "ac.rs",
+        "ac.th",
+        "ac.uk",
         "ac.za",
+        "co.jp",
+        "co.nz",
+        "co.uk",
+        "co.za",
+        "com.au",
+        "com.br",
+        "com.hk",
+        "com.mx",
+        "com.sg",
+        "com.tr",
+        "edu.ar",
+        "edu.au",
+        "edu.br",
+        "edu.cn",
+        "edu.co",
+        "edu.eg",
         "edu.hk",
+        "edu.jo",
+        "edu.kw",
+        "edu.kz",
+        "edu.lb",
+        "edu.mx",
+        "edu.my",
+        "edu.pe",
+        "edu.ph",
+        "edu.pk",
+        "edu.pl",
+        "edu.sa",
+        "edu.sg",
+        "edu.tr",
+        "edu.tw",
+        "edu.vn",
+        "go.jp",
+        "go.kr",
+        "gov.au",
+        "gov.uk",
+        "govt.nz",
+        "ne.jp",
+        "net.au",
+        "or.jp",
+        "or.kr",
+        "org.au",
+        "org.uk",
+        "re.kr",
     }
 )
 
