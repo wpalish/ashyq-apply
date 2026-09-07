@@ -108,6 +108,7 @@ MULTIPART_SUFFIXES = frozenset(
         "edu.au",
         "edu.sg",
         "edu.hk",
+        "edu.kz",
         "edu.cn",
         "edu.tw",
         "edu.my",

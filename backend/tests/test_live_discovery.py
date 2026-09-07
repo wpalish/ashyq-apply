@@ -134,6 +134,7 @@ class TestRegistrableDomain:
             ("rug.nl", "rug.nl"),
             ("studieren.univie.ac.at", "univie.ac.at"),
             ("admissions.hku.hk", "hku.hk"),
+            ("admissions.nu.edu.kz", "nu.edu.kz"),
             ("www.ntu.edu.sg", "ntu.edu.sg"),
             ("admission.kaist.ac.kr", "kaist.ac.kr"),
             ("you.ubc.ca", "ubc.ca"),
