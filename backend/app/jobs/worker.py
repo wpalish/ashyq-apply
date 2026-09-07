@@ -392,11 +392,15 @@ def wait_for_schema(timeout: float = SCHEMA_WAIT_SECONDS) -> bool:
     return False
 
 
-def reconcile_startup() -> dict[str, int]:
+def reconcile_startup(*, arm_source_scans: bool = True) -> dict[str, int]:
     """Put the queue and the runs back into a consistent state.
 
     Runs before any work is claimed: expired leases go back to the queue, and a
     run whose job is no longer live stops claiming to be running.
+
+    ``arm_source_scans=False`` keeps every other reconciliation but leaves the
+    source-scan queue alone — the demo wiring, where there is nothing real to
+    scan (C3).
     """
     settings = get_settings()
     with session_scope() as session:
@@ -451,9 +455,11 @@ def reconcile_startup() -> dict[str, int]:
             )
             stranded += 1
 
-        from app.jobs.source_scanner import bootstrap_source_scans
+        scans_bootstrapped = 0
+        if arm_source_scans:
+            from app.jobs.source_scanner import bootstrap_source_scans
 
-        scans_bootstrapped = bootstrap_source_scans(session, settings)
+            scans_bootstrapped = bootstrap_source_scans(session, settings)
 
         return {
             "jobs_reaped": len(reaped),
@@ -467,7 +473,8 @@ def main() -> int:  # pragma: no cover - process entry point
     configure_logging(settings.log_level, settings.log_format)
     if not wait_for_schema():
         return 1
-    summary = reconcile_startup()
+    # Demo deployments never arm source scans: there is nothing real to scan (C3).
+    summary = reconcile_startup(arm_source_scans=not settings.demo_mode)
     log.info("startup reconciliation: %s", summary)
 
     worker = Worker(settings)
