@@ -100,23 +100,46 @@ export function ShortlistScreen() {
     return decide(r.id, next, '', r.user_notes);
   };
 
-  const renderTable = (tableRows: ProgramResult[], testId: string, caption: string) => (
+  const renderTable = (
+    tableRows: ProgramResult[],
+    testId: string,
+    caption: string,
+    // The set-aside sections name their bucket in the heading above the
+    // table, so repeating it on every row only costs the width that made it
+    // unreadable in the first place.
+    showBucket = true,
+  ) => (
           <div className="table-wrap">
-            <table className="dtable" data-testid={testId}>
+            <table
+              className={`dtable shortlist-table${showBucket ? ' shortlist-table--with-bucket' : ''}`}
+              data-testid={testId}
+            >
               {/* Each table says which list it is: four identically captioned
                   tables read as one repeated table to a screen reader. */}
               <caption className="visually-hidden">{caption}</caption>
+              <colgroup>
+                <col className="shortlist-col--university" />
+                <col className="shortlist-col--eligibility" />
+                <col className="shortlist-col--fit" />
+                <col className="shortlist-col--funding" />
+                <col className="shortlist-col--remaining" />
+                <col className="shortlist-col--deadline" />
+                <col className="shortlist-col--match" />
+                <col className="shortlist-col--confirmed" />
+                {showBucket && <col className="shortlist-col--bucket" />}
+                <col className="shortlist-col--decision" />
+              </colgroup>
               <thead>
                 <tr>
                   <th scope="col">University &amp; programme</th>
                   <th scope="col">Eligibility</th>
                   <th scope="col">Admissions fit</th>
                   <th scope="col">Funding</th>
-                  <th scope="col">Remaining&nbsp;/&nbsp;year</th>
+                  <th scope="col">Remaining / year</th>
                   <th scope="col">Deadline</th>
                   <th scope="col" title={FIT_DISCLAIMER}>Match</th>
                   <th scope="col" title="How much of the weight rests on data we confirmed.">Confirmed</th>
-                  <th scope="col">Bucket</th>
+                  {showBucket && <th scope="col">Bucket</th>}
                   <th scope="col">Decision</th>
                 </tr>
               </thead>
@@ -159,7 +182,15 @@ export function ShortlistScreen() {
                         </td>
                         <td className="num" data-label="Remaining / year">
                           {gap?.computable && gap.gap ? (
-                            money(gap.gap)
+                            <>
+                              {money({ ...gap.gap, academic_year: null })}
+                              {/* The year on its own line: on one line this was
+                                  the widest column in the table, and the width
+                                  it took came out of the bucket beside it. */}
+                              {gap.gap.academic_year && (
+                                <div className="xs muted">{gap.gap.academic_year}</div>
+                              )}
+                            </>
                           ) : (
                             <span className="xs muted" title={gap?.reason}>not computable</span>
                           )}
@@ -171,16 +202,21 @@ export function ShortlistScreen() {
                         <td className="num" data-label="Match" title={FIT_DISCLAIMER}>
                           {ratio(r.ranking?.fit ?? null)}
                         </td>
-                        <td className="num" data-label="Confirmed">
+                        <td className="num" data-label="Confirmed" data-testid={`coverage-${r.id}`}>
                           {percent(r.ranking?.coverage ?? null)}
                         </td>
-                        <td data-label="Bucket">
-                          {r.ranking ? (
-                            <StatusChip status={r.ranking.bucket} tone={bucketTone[r.ranking.bucket]} />
-                          ) : (
-                            <span className="xs muted">not ranked</span>
-                          )}
-                        </td>
+                        {showBucket && (
+                          <td data-label="Bucket">
+                            {r.ranking ? (
+                              <StatusChip
+                                status={r.ranking.bucket}
+                                tone={bucketTone[r.ranking.bucket]}
+                              />
+                            ) : (
+                              <span className="xs muted">not ranked</span>
+                            )}
+                          </td>
+                        )}
                         <td data-label="Decision">
                           <div className="decision-group" role="group" aria-label={`Decision for ${r.university}`}>
                             <button
@@ -290,7 +326,7 @@ export function ShortlistScreen() {
                       </tr>
                       {open && (
                         <tr className="detail-row">
-                          <td colSpan={10}><ResultDetail result={r} /></td>
+                          <td colSpan={showBucket ? 10 : 9}><ResultDetail result={r} /></td>
                         </tr>
                       )}
                     </Fragment>
@@ -409,7 +445,7 @@ export function ShortlistScreen() {
         <p className="xs faint">
           Showing {ranked.length} of {results.length} ranked rows. <strong>Match</strong> is how well
           a place fits the priorities you stated, on confirmed data — not a probability of admission.
-          <strong> Confirmed</strong> is how much of that judgement rests on data we could verify.
+          The <strong>Confirmed</strong> percentage is how much of that judgement rests on data we could verify.
         </p>
 
         {SET_ASIDE.map((bucket) => {
@@ -426,6 +462,7 @@ export function ShortlistScreen() {
                 `table-${bucket}`,
                 `Shortlisted university programmes set aside as ${(STATUS_LABEL[bucket] ?? humanize(bucket)).toLowerCase()}, `
                 + 'with eligibility, fit, funding and remaining cost',
+                false,
               )}
             </details>
           );

@@ -50,6 +50,39 @@ test('the page never scrolls horizontally at any breakpoint', async () => {
   }
 });
 
+test('the ranked bucket stays clear of the pinned decision column at 1440px', async () => {
+  await openShortlist(page);
+  await page.setViewportSize({ width: 1440, height: 900 });
+
+  const table = page.getByTestId('shortlist-table');
+  const firstRow = page.getByTestId('shortlist-table').locator('tbody tr').first();
+  const bucketChip = firstRow.locator('td[data-label="Bucket"] .chip');
+  const decisionCell = firstRow.locator('td[data-label="Decision"]');
+  const originalBucket = await bucketChip.textContent();
+
+  // The demo currently has no WELL_PLACED row. Stress the real chip with the
+  // longest label that can occur in a ranked row, then restore the page so the
+  // shared accessibility session and screenshots still reflect demo data.
+  await bucketChip.evaluate((element) => { element.textContent = 'Well placed'; });
+  const bucketBox = await bucketChip.boundingBox();
+  const decisionBox = await decisionCell.boundingBox();
+  const decisionGroupBox = await decisionCell.locator('.decision-group').boundingBox();
+  await bucketChip.evaluate((element, text) => { element.textContent = text; }, originalBucket);
+
+  expect(bucketBox, 'the ranked row must retain a visible Bucket chip').not.toBeNull();
+  expect(decisionBox, 'the ranked row must retain its Decision column').not.toBeNull();
+  expect(decisionGroupBox, 'the Decision controls must remain visible').not.toBeNull();
+  expect(bucketBox!.x + bucketBox!.width, 'Bucket chip must end before Decision begins').toBeLessThanOrEqual(
+    decisionBox!.x,
+  );
+  expect(
+    decisionGroupBox!.x + decisionGroupBox!.width,
+    'Decision controls must stay inside their cell',
+  ).toBeLessThanOrEqual(decisionBox!.x + decisionBox!.width);
+  const tableOverflow = await table.evaluate((element) => element.scrollWidth - element.clientWidth);
+  expect(tableOverflow, 'the ranked table must fit its 1440px wrapper').toBeLessThanOrEqual(1);
+});
+
 test('the mobile shortlist becomes cards without an inner horizontal scroller', async () => {
   await openShortlist(page);
   await page.setViewportSize({ width: 375, height: 800 });

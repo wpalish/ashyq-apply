@@ -6,7 +6,7 @@
  * recorded as "no reason given".
  */
 
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ShortlistScreen } from './ShortlistScreen';
 import type { ProgramResult } from '@/types';
@@ -178,7 +178,9 @@ describe('the v2 ranking on the shortlist', () => {
     render(<ShortlistScreen />);
 
     expect(screen.getByText('0.82')).toBeInTheDocument();
-    expect(screen.getByText('94%')).toBeInTheDocument();
+    const rankedTable = within(screen.getByTestId('shortlist-table'));
+    expect(rankedTable.getByRole('columnheader', { name: 'Confirmed' })).toBeInTheDocument();
+    expect(screen.getByTestId('coverage-result-1')).toHaveTextContent('94%');
     // Scoped to its own cell: PLAUSIBLE_FIT and the PLAUSIBLE bucket both read
     // "Plausible", and a bare text query lets the fit chip answer for the bucket.
     expect(document.querySelector('[data-label="Bucket"]')).toHaveTextContent('Plausible');
