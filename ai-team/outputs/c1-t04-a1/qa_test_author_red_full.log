@@ -1,0 +1,33 @@
+.................FFFF.....................                               [100%]
+=================================== FAILURES ===================================
+_ TestPartialCostIsNotFullCost.test_tuition_only_costs_with_a_matching_award_do_not_report_a_zero_gap _
+tests/test_costs.py:213: in test_tuition_only_costs_with_a_matching_award_do_not_report_a_zero_gap
+    assert gap.computable is False
+E   AssertionError: assert True is False
+E    +  where True = FundingGap(computable=True, gap=Money(amount=0.0, currency='USD', academic_year='2026/27', as_of=None, is_estimate=Fal...cially published, applicable aid.', year_mismatch=False, currency_mismatch=False, category_mismatch=False, warnings=[]).computable
+_ TestPartialCostIsNotFullCost.test_an_explicit_zero_is_known_but_a_missing_key_is_not _
+tests/test_costs.py:233: in test_an_explicit_zero_is_known_but_a_missing_key_is_not
+    assert known_zero.cost_basis == "itemised_complete"
+           ^^^^^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/pydantic/main.py:1042: in __getattr__
+    raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}')
+E   AttributeError: 'FundingGap' object has no attribute 'cost_basis'
+_ TestPartialCostIsNotFullCost.test_a_published_total_keeps_the_old_rules_even_with_partial_itemisation _
+tests/test_costs.py:254: in test_a_published_total_keeps_the_old_rules_even_with_partial_itemisation
+    assert gap.cost_basis == "published_total"
+           ^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/pydantic/main.py:1042: in __getattr__
+    raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}')
+E   AttributeError: 'FundingGap' object has no attribute 'cost_basis'
+_ TestPartialCostIsNotFullCost.test_a_legacy_funding_gap_payload_validates_with_defaults _
+tests/test_costs.py:263: in test_a_legacy_funding_gap_payload_validates_with_defaults
+    assert legacy.cost_basis is None
+           ^^^^^^^^^^^^^^^^^
+.venv/lib/python3.12/site-packages/pydantic/main.py:1042: in __getattr__
+    raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}')
+E   AttributeError: 'FundingGap' object has no attribute 'cost_basis'
+=========================== short test summary info ============================
+FAILED tests/test_costs.py::TestPartialCostIsNotFullCost::test_tuition_only_costs_with_a_matching_award_do_not_report_a_zero_gap
+FAILED tests/test_costs.py::TestPartialCostIsNotFullCost::test_an_explicit_zero_is_known_but_a_missing_key_is_not
+FAILED tests/test_costs.py::TestPartialCostIsNotFullCost::test_a_published_total_keeps_the_old_rules_even_with_partial_itemisation
+FAILED tests/test_costs.py::TestPartialCostIsNotFullCost::test_a_legacy_funding_gap_payload_validates_with_defaults

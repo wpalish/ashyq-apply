@@ -1,0 +1,126 @@
+{
+  "task_id": "T04",
+  "finding_ids": ["F01"],
+  "attempt_id": "A1",
+  "baseline_sha": "f7f14b28c43afe20df01ad38a26964c397f393fc",
+  "qa_commit_sha": "d45a9cb4712a2c304f6ae83bcbca97f8f6f11663",
+  "candidate_sha": "3bdc0702dd25e80db16916a00d4e5710dbd65381",
+  "integration_base_sha": "f7f14b28c43afe20df01ad38a26964c397f393fc",
+  "participants": [
+    {
+      "role": "ashyq-planner",
+      "invocation_ref": "agent_9a4c22d6-be95-45b5-9460-b4019184b6be",
+      "checked_sha": "f7f14b28c43afe20df01ad38a26964c397f393fc",
+      "verdict": "PASS",
+      "evidence_file": "planner.md"
+    },
+    {
+      "role": "ashyq-qa",
+      "invocation_ref": "agent_748d4ad4-bcfb-4663-ae25-9801aaef1680",
+      "checked_sha": "3bdc0702dd25e80db16916a00d4e5710dbd65381",
+      "verdict": "PASS",
+      "evidence_file": "qa-verify-candidate.md"
+    },
+    {
+      "role": "ashyq-developer",
+      "invocation_ref": "agent_496c44cd-bd67-4a6c-a6f2-727b762356b1",
+      "checked_sha": "3bdc0702dd25e80db16916a00d4e5710dbd65381",
+      "verdict": "PASS",
+      "evidence_file": "developer.md"
+    },
+    {
+      "role": "ashyq-reviewer",
+      "invocation_ref": "agent_cac666ca-10c4-41f7-aed5-848806dee6d8",
+      "checked_sha": "3bdc0702dd25e80db16916a00d4e5710dbd65381",
+      "verdict": "PASS",
+      "evidence_file": "reviews.md"
+    },
+    {
+      "role": "ashyq-security",
+      "invocation_ref": "agent_9698c865-fc6a-422f-8667-eda8d521318d",
+      "checked_sha": "3bdc0702dd25e80db16916a00d4e5710dbd65381",
+      "verdict": "PASS",
+      "evidence_file": "reviews.md"
+    }
+  ],
+  "tests": [
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c1-t04-verify/backend && ./.venv/bin/python -m pytest tests/test_costs.py tests/test_funding_classification.py -q --tb=short",
+      "checked_sha": "3bdc0702dd25e80db16916a00d4e5710dbd65381",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "logs/verify_target.log",
+      "summary": "42 passed; 4 QA RED->GREEN (TestPartialCostIsNotFullCost unchanged)"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c1-t04-verify/backend && ./.venv/bin/python -m mypy app tests",
+      "checked_sha": "3bdc0702dd25e80db16916a00d4e5710dbd65381",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "logs/verify_mypy.log",
+      "summary": "0 issues in 153 files"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c1-t04-verify/backend && ./.venv/bin/python -m ruff check app tests && ./.venv/bin/python -m ruff format --check app tests",
+      "checked_sha": "3bdc0702dd25e80db16916a00d4e5710dbd65381",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "logs/verify_ruff.log",
+      "summary": "All checks passed; formatted"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c1-t04-verify/backend && ./.venv/bin/python -m pytest --cov=app --cov-fail-under=92 -q",
+      "checked_sha": "3bdc0702dd25e80db16916a00d4e5710dbd65381",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "logs/verify_full.log",
+      "summary": "Full suite exit 0; coverage 92.91% >= 92 (threshold unchanged)"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c1-t04-verify/frontend && npm run typecheck && npm run lint && npm test -- --run && npm run build",
+      "checked_sha": "3bdc0702dd25e80db16916a00d4e5710dbd65381",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "logs/verify_fe_build.log",
+      "summary": "typecheck/lint/test(164)/build all exit 0 (logs verify_fe_*.log)"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c1-t04-verify/backend && UNIMATCH_DEMO_MODE=true UNIMATCH_ENABLE_BROWSER_TIER=false ./.venv/bin/python seed_demo.py",
+      "checked_sha": "3bdc0702dd25e80db16916a00d4e5710dbd65381",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate.md",
+      "summary": "Pipeline gate per AGENTS.md 5: Groningen #1 (published_total, computable, gap 1848), UBC OUT_OF_BUDGET verified in run payload DB (executed by independent QA verify, gate 4e)"
+    }
+  ],
+  "acceptance_items": [
+    {
+      "criterion": "Tuition-only + tuition award не означает полный gap=0",
+      "status": "PASS",
+      "evidence_file": "qa-verify-candidate.md",
+      "note": "F01 scenario -> computable=False, gap=None, basis=itemised_partial, missing names housing/meals/mandatory_fees, subtotal lower bound in total_cost, warnings non-empty; ranking demotes to unknown affordability; UI shows lower-bound panel, never 'Remaining annual cost 0'"
+    },
+    {
+      "criterion": "Known zero отличается от missing",
+      "status": "PASS",
+      "evidence_file": "qa-verify-candidate.md",
+      "note": "meals=Money(0) within full core set -> itemised_complete/missing=[]; absent key -> itemised_partial/missing=[meals]; verified by QA tests and independent probe"
+    },
+    {
+      "criterion": "Legacy payloads и потребители совместимы",
+      "status": "PASS",
+      "evidence_file": "reviews.md",
+      "note": "additive schema with defaults (legacy dict validates; independent round-trip probe), consumers gate on computable and unchanged (ranking_v2/routes_results/tabular/scoring verified), test_frontend_contract 24 passed, seed_demo order preserved; extra=forbid rollback window documented"
+    }
+  ],
+  "scope_check": "PASS",
+  "scope_check_command": "python3 ai-team/check_team.py scope --task T04 --repo /Users/wpalish/ashyq-worktrees/c1-t04-verify --base f7f14b28c43afe20df01ad38a26964c397f393fc --head 3bdc0702dd25e80db16916a00d4e5710dbd65381",
+  "scope_check_result": "changed: costs.py, result.py, test_costs.py, ResultDetail.tsx, types.ts; outside_scope: []",
+  "blockers": [],
+  "notes": [
+    "QA TEST_AUTHOR invocation ref: agent_3e981036-d921-46f4-9025-120a6e56fa3b (RED-first evidence in qa-test-author.md, qa commit d45a9cb4).",
+    "Coordinator decisions recorded: core category set = CORE_COST_CATEGORIES default; share/classify subtotal residual deferred to T05-T07; 6-test fixture migration approved (arithmetic recomputation, assertion structure preserved).",
+    "Security follow-ups for backlog: F7 formula injection in tabular export (matches T15/S03, pre-existing), F8 Money inf -> invalid JSON (pre-existing), F9 unconstrained percentage (pre-existing).",
+    "All invocations inherit the user-selected GLM model; no hardcoded model ids."
+  ]
+}

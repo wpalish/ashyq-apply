@@ -1,0 +1,208 @@
+
+ RUN  v3.2.7 /Users/wpalish/ashyq-worktrees/c1-t09-qa-a2/frontend
+
+stderr | src/components/PaymentModal.test.tsx > PaymentModal > opens an order and polls until it is paid
+Warning: An update to PaymentModal inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PaymentModal (/Users/wpalish/ashyq-worktrees/c1-t09-qa-a2/frontend/src/components/PaymentModal.tsx:8:25)
+
+stderr | src/components/PaymentModal.test.tsx > PaymentModal > opens an order and polls until it is paid
+Warning: An update to PaymentModal inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PaymentModal (/Users/wpalish/ashyq-worktrees/c1-t09-qa-a2/frontend/src/components/PaymentModal.tsx:8:25)
+
+ ✓ src/screens/PreferencesScreen.test.tsx (3 tests) 96ms
+ ✓ src/lib/polling.test.tsx (5 tests) 117ms
+ ✓ src/components/social.test.tsx (17 tests) 108ms
+ ✓ src/screens/ProgressScreen.test.tsx (16 tests) 168ms
+ ❯ src/lib/drafts.test.tsx (16 tests | 1 failed) 158ms
+   ✓ FE01: a brand-new unsaved case survives a reload > restores the edits and flags draftRestored after a remount 27ms
+   × FE01: a brand-new unsaved case survives a reload > keeps a restored local-case draft across a second reload 16ms
+     → expect(element).toHaveTextContent()
+
+Expected element to have text content:
+  Georgia
+Received:
+
+   ✓ a rejected save keeps the draft and reports the error > loses nothing on a failed save and retires the slot on a successful retry 6ms
+   ✓ FE02: hydration gates autosave > does not wipe the draft slot while getProfile is slower than the debounce 10ms
+   ✓ FE02: hydration gates autosave > keeps hydrated false until the profile request settles 11ms
+   ✓ FE02: hydration gates autosave > keeps hydrated false until both the profile and the run settle 8ms
+   ✓ FE03: case isolation > never applies case A saved edits to case B after a reload 15ms
+   ✓ FE03: case isolation > keeps case A draft through a round trip A → B → A 13ms
+   ✓ FE03: case isolation > discards a late response for case A after the user moved to case B 10ms
+   ✓ FE03: case isolation > falls back to the server profile and drops an envelope with an unknown version 10ms
+   ✓ FE03: case isolation > ignores an envelope that belongs to a different case 4ms
+   ✓ FE03: case isolation > falls back cleanly when the draft slot holds broken JSON 11ms
+   ✓ error semantics on initial hydration > treats 404 as proof the case is gone and forgets the pointer 1ms
+   ✓ error semantics on initial hydration > keeps the case pointer and reports a 500 3ms
+   ✓ error semantics on initial hydration > keeps the run pointer when the stored run cannot be fetched right now 3ms
+   ✓ React StrictMode double mount > leaves one final state and does not wipe the slot during hydration 7ms
+ ✓ src/lib/store.test.tsx (18 tests) 170ms
+ ✓ src/components/PaymentModal.test.tsx (6 tests) 200ms
+ ✓ src/screens/ShortlistScreen.test.tsx (13 tests) 202ms
+ ✓ src/screens/ProfileScreen.test.tsx (7 tests) 503ms
+ ✓ src/lib/format.test.ts (22 tests) 40ms
+ ✓ src/components/AccountMenu.test.tsx (5 tests) 84ms
+ ✓ src/lib/hydrationErrors.test.tsx (2 tests) 89ms
+stderr | src/components/PaywallNotice.test.tsx > PaywallNotice > offers the price when there is no subscription
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/ashyq-worktrees/c1-t09-qa-a2/frontend/src/lib/store.tsx:82:26)
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/ashyq-worktrees/c1-t09-qa-a2/frontend/src/lib/store.tsx:82:26)
+
+stderr | src/components/PaywallNotice.test.tsx > PaywallNotice > offers the price when there is no subscription
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/ashyq-worktrees/c1-t09-qa-a2/frontend/src/lib/store.tsx:82:26)
+
+ ✓ src/components/moderation.test.tsx (4 tests) 99ms
+ ✓ src/components/primitives.test.tsx (7 tests) 69ms
+stderr | src/components/PaywallNotice.test.tsx > PaywallNotice > offers the subscription first when cases remain
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/ashyq-worktrees/c1-t09-qa-a2/frontend/src/lib/store.tsx:82:26)
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/ashyq-worktrees/c1-t09-qa-a2/frontend/src/lib/store.tsx:82:26)
+
+stderr | src/components/PaywallNotice.test.tsx > PaywallNotice > offers the subscription first when cases remain
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/ashyq-worktrees/c1-t09-qa-a2/frontend/src/lib/store.tsx:82:26)
+
+stderr | src/components/PaywallNotice.test.tsx > PaywallNotice > falls back to the price when the quota is exhausted
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/ashyq-worktrees/c1-t09-qa-a2/frontend/src/lib/store.tsx:82:26)
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/ashyq-worktrees/c1-t09-qa-a2/frontend/src/lib/store.tsx:82:26)
+
+stderr | src/components/PaywallNotice.test.tsx > PaywallNotice > falls back to the price when the quota is exhausted
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/ashyq-worktrees/c1-t09-qa-a2/frontend/src/lib/store.tsx:82:26)
+
+ ✓ src/components/PaywallNotice.test.tsx (4 tests) 133ms
+ ✓ src/screens/LegalScreen.test.tsx (9 tests) 112ms
+ ✓ src/api/client.billing.test.ts (6 tests) 3ms
+ ✓ src/components/ErrorBoundary.test.tsx (3 tests) 157ms
+ ✓ src/lib/i18n.test.ts (8 tests) 5ms
+ ✓ src/lib/immutable.test.ts (11 tests) 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/drafts.test.tsx > FE01: a brand-new unsaved case survives a reload > keeps a restored local-case draft across a second reload
+Error: expect(element).toHaveTextContent()
+
+Expected element to have text content:
+  Georgia
+Received:
+
+ ❯ src/lib/drafts.test.tsx:240:47
+    238|     await flush();
+    239| 
+    240|     expect(screen.getByTestId('citizenship')).toHaveTextContent(EDIT_M…
+       |                                               ^
+    241|     expect(screen.getByTestId('draft-restored')).toHaveTextContent('tr…
+    242|     expect(screen.getByTestId('saved')).toHaveTextContent('none');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 19 passed (20)
+      Tests  1 failed | 181 passed (182)
+   Start at  03:15:45
+   Duration  2.37s (transform 696ms, setup 1.07s, collect 2.85s, tests 2.52s, environment 7.97s, prepare 1.50s)
+

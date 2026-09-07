@@ -1,0 +1,17 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.12.13, pytest-9.1.1, pluggy-1.6.0
+rootdir: /Users/wpalish/ashyq-worktrees/c1-t18-verify-a3/backend
+configfile: pytest.ini
+plugins: respx-0.22.0, cov-6.0.0, asyncio-1.4.0, anyio-4.15.1
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 258 items
+
+tests/test_adapters.py ................................................. [ 18%]
+......................                                                   [ 27%]
+tests/test_live_extraction.py ................                           [ 33%]
+tests/test_live_regressions.py ......................................... [ 49%]
+....................                                                     [ 57%]
+tests/test_live_discovery.py ........................................... [ 74%]
+...................................................................      [100%]
+
+============================= 258 passed in 1.86s ==============================

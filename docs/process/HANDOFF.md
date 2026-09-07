@@ -8,17 +8,17 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 | | |
 |---|---|
-| Holder | **nobody** |
-| Since (UTC) | released 2026-09-07 12:00:10 UTC |
+| Holder | **codex** |
+| Since (UTC) | 2026-09-07 publication pass |
 | Branch | `ai/c1/integration`, local-only; synchronized by merge with `origin/main@7b1fce0` |
-| HEAD when written | `02d648c` (final audit handoff commit follows) |
+| HEAD when written | `ab2e70a` (owner explicitly authorized GitHub publication; evidence commit follows) |
 | Origin main when checked | `7b1fce0` — PR #6 is merged; the GLM campaign is not pushed and is not on main |
 | Previous holder | gpt-6-astra on the now-merged shortlist fix; a separate ZCode/GLM campaign then produced five local task candidates without updating this baton |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
 
-**GLM campaign `c1` audit and release hardening — ready for owner review, local only.** The campaign
+**GLM campaign `c1` audit and release hardening — publishing branch and PR by explicit owner request.** The campaign
 integrated T01, T04, T09, T10 and a deliberately limited T18 slice: five of the 24 task cards, not the
 whole project. `25f5954` merged current `origin/main`; the original GLM candidate is preserved at
 `audit/glm-c1-e533d62`. The audit fixed stale payment journal writes (`7f364cf`), Kazakhstan academic
@@ -30,7 +30,8 @@ dependency audits report zero known vulnerabilities. A bounded NU live canary im
 claim after the selection fix, with zero false positives, but remains at 0% verification completeness
 because the plain fetch sees only a 42-character admissions shell. Provider-backed search/LLM,
 browser-tier hardening, most of the 24-task backlog, publication and deployment remain unfinished.
-No push/main merge/deploy was performed.
+The owner subsequently authorized publishing everything to GitHub. Push and PR creation are in
+progress; protected-main merge and application deployment remain separate operations.
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
@@ -217,12 +218,10 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-1. Owner reviews `ai/c1/integration@02d648c` and explicitly chooses whether to publish it as a branch/PR.
-2. For real live research, choose a search provider and optional LLM provider, provision their secrets
+1. Commit the complete `ai-team/` evidence bundle and audit, push `ai/c1/integration`, and open a PR.
+2. Record the PR URL and GitHub CI state here, release the baton, and push that final handoff commit.
+3. For real live research, choose a search provider and optional LLM provider, provision their secrets
    outside Git, then implement T16/T25 and the remaining T18 dependencies before calling it release-ready.
-3. Normalize or explicitly accept the 31 machine-specific paths in local untracked `ai-team/` before
-   committing that evidence bundle. Its ledger now contains a Codex correction record; do not publish
-   the old `DONE` wording without that correction.
 4. Do not merge protected main, deploy, buy a provider, add secrets or touch production data implicitly.
 
 ## 6. Gate status at last run (numbers, not adjectives)
@@ -282,8 +281,9 @@ next agent does not reopen it.
   backlog; live NU verification completeness is 0%; provider-backed search/LLM and deploy do not exist.
 - **Evidence provenance is only partly machine-verifiable.** All five acceptance packets pass
   `check_team.py packet`, but that command checks shape/non-empty strings, not the identity of runtime
-  agent IDs or the semantic authenticity of logs. Local `ai-team/` has 31 files with absolute
-  `/Users/wpalish` paths and remains untracked; no secret-like material was found by the audit scan.
+  agent IDs or the semantic authenticity of logs. `ai-team/` has 31 files with absolute
+  `/Users/wpalish` paths; the owner explicitly accepted publishing them as forensic evidence. No
+  secret-like material was found by the audit scan.
 - **Public deployment still needs a separate release-security pass.** Staging currently permits the
   console reset-mail sender, and browser egress hardening in the separate master-fix worktree has not
   been reconciled into this branch. Do not call the current candidate deployment-ready.

@@ -1,0 +1,110 @@
+{
+  "task_id": "T01",
+  "finding_ids": ["S01"],
+  "attempt_id": "A1",
+  "baseline_sha": "85352b52211f0dd7f446b011d3f8c2c270089019",
+  "qa_commit_sha": "7083f17ce9ff6b198461fdf1cf9f5f973bcb13f2",
+  "candidate_sha": "f7f14b28c43afe20df01ad38a26964c397f393fc",
+  "integration_base_sha": "85352b52211f0dd7f446b011d3f8c2c270089019",
+  "participants": [
+    {
+      "role": "ashyq-planner",
+      "invocation_ref": "agent_5ffbc4d0-8bfc-4130-b2f1-a00a93465754",
+      "checked_sha": "85352b52211f0dd7f446b011d3f8c2c270089019",
+      "verdict": "PASS",
+      "evidence_file": "planner.md"
+    },
+    {
+      "role": "ashyq-qa",
+      "invocation_ref": "agent_39fd4b9f-416e-4fb2-bb60-45324ddece1c",
+      "checked_sha": "f7f14b28c43afe20df01ad38a26964c397f393fc",
+      "verdict": "PASS",
+      "evidence_file": "qa-verify-candidate.md"
+    },
+    {
+      "role": "ashyq-developer",
+      "invocation_ref": "agent_d55c6320-2ba5-4050-a78f-303d3ccb3110",
+      "checked_sha": "f7f14b28c43afe20df01ad38a26964c397f393fc",
+      "verdict": "PASS",
+      "evidence_file": "developer.md"
+    },
+    {
+      "role": "ashyq-reviewer",
+      "invocation_ref": "agent_5ad45e36-68b4-4772-a40f-f682bbf29a81",
+      "checked_sha": "f7f14b28c43afe20df01ad38a26964c397f393fc",
+      "verdict": "PASS",
+      "evidence_file": "reviewer.md"
+    },
+    {
+      "role": "ashyq-security",
+      "invocation_ref": "agent_29ea0b5a-9125-455d-9a02-1f398996c690",
+      "checked_sha": "f7f14b28c43afe20df01ad38a26964c397f393fc",
+      "verdict": "PASS",
+      "evidence_file": "security.md"
+    }
+  ],
+  "tests": [
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c1-t01-verify/backend && ./.venv/bin/python -m pytest tests/test_account_flows.py tests/test_security.py -vv --tb=short",
+      "checked_sha": "f7f14b28c43afe20df01ad38a26964c397f393fc",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "logs/qa_t01_verify_a_verbose.log",
+      "summary": "52 passed, 0 failed; 12/12 TestResetTokenNeverLeavesTheMailbox + TestResetRequestSafety (7 former RED -> GREEN)"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c1-t01-verify/backend && ./.venv/bin/python -m mypy app tests",
+      "checked_sha": "f7f14b28c43afe20df01ad38a26964c397f393fc",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "logs/qa_t01_verify_b_mypy.log",
+      "summary": "Success: no issues found in 153 source files"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c1-t01-verify/backend && ./.venv/bin/python -m ruff check app tests && ./.venv/bin/python -m ruff format --check app tests",
+      "checked_sha": "f7f14b28c43afe20df01ad38a26964c397f393fc",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "logs/qa_t01_verify_c_ruff.log",
+      "summary": "All checks passed; files already formatted"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c1-t01-verify/backend && ./.venv/bin/python -m pytest --cov=app --cov-fail-under=92 -q",
+      "checked_sha": "f7f14b28c43afe20df01ad38a26964c397f393fc",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "logs/qa_t01_verify_d_full.log",
+      "summary": "1122 passed, 0 failed/skipped, coverage 92.91% >= 92 (threshold unchanged)"
+    }
+  ],
+  "acceptance_items": [
+    {
+      "criterion": "Token отсутствует в API responses всех окружений",
+      "status": "PASS",
+      "evidence_file": "qa-verify-candidate.md",
+      "note": "env matrix development/staging/production/testing: body exactly {\"detail\"}, no token/link keys; adversarial staging probe: raw response.text and headers clean; grep reset_link in backend/app = 0"
+    },
+    {
+      "criterion": "Владелец получает token через test mail sink; stranger — нет",
+      "status": "PASS",
+      "evidence_file": "qa-verify-candidate.md",
+      "note": "sink happy path: exactly one Message to owner email, token redeems once, /api/auth/me 200; stranger request: neutral 202, token not in response, letter only to victim"
+    },
+    {
+      "criterion": "Existing/missing email, expiry и revoke sessions проверены",
+      "status": "PASS",
+      "evidence_file": "reviewer.md",
+      "note": "neutrality 4 address shapes identical (existing/unknown/malformed/inactive), empty sink for unknown/malformed; single-use 400; TTL expiry 400; all prior sessions revoked -> 401; per-email rate limit 429"
+    }
+  ],
+  "scope_check": "PASS",
+  "scope_check_command": "python3 ai-team/check_team.py scope --task T01 --repo /Users/wpalish/ashyq-worktrees/c1-t01-verify --base 85352b52211f0dd7f446b011d3f8c2c270089019 --head f7f14b28c43afe20df01ad38a26964c397f393fc",
+  "scope_check_result": "changed: routes_account.py, mail.py, test_account_flows.py, test_security.py; outside_scope: []",
+  "blockers": [],
+  "notes": [
+    "Process violation recorded: post-freeze message-only amend of ai/c1/t01/dev (f7f14b28->b5154ff); tree IDs identical 0228bc7cc59254ea62d7a026c534d965b07dbdd4, so PASS verdicts remain bound to frozen SHA f7f14b28; integration must reference the exact SHA.",
+    "QA TEST_AUTHOR invocation ref: agent_8d498240-020c-4819-b99b-58a13842503d (artifact qa-test-author.md); packet QA participant is the VERIFY_CANDIDATE invocation that checked the candidate SHA.",
+    "RED-first evidence at baseline 85352b5 is intentionally NOT in tests[] (packet schema holds candidate gates only): pytest target files at baseline -> exit 1, exactly 7 failed on the S01 assertion defect; logs preserved at logs/qa_t01_red_counts.log, logs/qa_t01_red_full.log, logs/qa_t01_red_newonly.log; full narrative in qa-test-author.md.",
+    "All invocations inherit the user-selected GLM model; no hardcoded model ids."
+  ]
+}

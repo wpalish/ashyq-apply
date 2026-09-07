@@ -1,0 +1,54 @@
+
+ RUN  v3.2.7 /Users/wpalish/ashyq-worktrees/c1-t09-qa-a2/frontend
+
+ ✓ src/lib/hydrationErrors.test.tsx (2 tests) 69ms
+ ❯ src/lib/drafts.test.tsx (16 tests | 1 failed) 68ms
+   ✓ FE01: a brand-new unsaved case survives a reload > restores the edits and flags draftRestored after a remount 23ms
+   × FE01: a brand-new unsaved case survives a reload > keeps a restored local-case draft across a second reload 10ms
+     → expect(element).toHaveTextContent()
+
+Expected element to have text content:
+  Georgia
+Received:
+
+   ✓ a rejected save keeps the draft and reports the error > loses nothing on a failed save and retires the slot on a successful retry 4ms
+   ✓ FE02: hydration gates autosave > does not wipe the draft slot while getProfile is slower than the debounce 3ms
+   ✓ FE02: hydration gates autosave > keeps hydrated false until the profile request settles 2ms
+   ✓ FE02: hydration gates autosave > keeps hydrated false until both the profile and the run settle 3ms
+   ✓ FE03: case isolation > never applies case A saved edits to case B after a reload 3ms
+   ✓ FE03: case isolation > keeps case A draft through a round trip A → B → A 3ms
+   ✓ FE03: case isolation > discards a late response for case A after the user moved to case B 3ms
+   ✓ FE03: case isolation > falls back to the server profile and drops an envelope with an unknown version 2ms
+   ✓ FE03: case isolation > ignores an envelope that belongs to a different case 2ms
+   ✓ FE03: case isolation > falls back cleanly when the draft slot holds broken JSON 2ms
+   ✓ error semantics on initial hydration > treats 404 as proof the case is gone and forgets the pointer 1ms
+   ✓ error semantics on initial hydration > keeps the case pointer and reports a 500 1ms
+   ✓ error semantics on initial hydration > keeps the run pointer when the stored run cannot be fetched right now 2ms
+   ✓ React StrictMode double mount > leaves one final state and does not wipe the slot during hydration 4ms
+ ✓ src/lib/store.test.tsx (18 tests) 115ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/lib/drafts.test.tsx > FE01: a brand-new unsaved case survives a reload > keeps a restored local-case draft across a second reload
+Error: expect(element).toHaveTextContent()
+
+Expected element to have text content:
+  Georgia
+Received:
+
+ ❯ src/lib/drafts.test.tsx:240:47
+    238|     await flush();
+    239| 
+    240|     expect(screen.getByTestId('citizenship')).toHaveTextContent(EDIT_M…
+       |                                               ^
+    241|     expect(screen.getByTestId('draft-restored')).toHaveTextContent('tr…
+    242|     expect(screen.getByTestId('saved')).toHaveTextContent('none');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 35 passed (36)
+   Start at  03:15:38
+   Duration  753ms (transform 146ms, setup 158ms, collect 413ms, tests 252ms, environment 738ms, prepare 146ms)
+

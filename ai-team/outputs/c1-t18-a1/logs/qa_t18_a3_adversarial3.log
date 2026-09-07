@@ -1,0 +1,27 @@
+[PASS] REQ fetch-failed: prose in AdapterResult.errors :: https://qa-fixture.example/missing-program: http_error — not in this test's page set
+[PASS] REQ fetch-failed: PageOutcome category fetch-failed :: ['fetch-failed']
+[PASS] COST fetch-failed: prose in AdapterResult.errors :: https://qa-fixture.example/missing-costs: http_error — not in this test's page set
+[PASS] COST fetch-failed: PageOutcome category fetch-failed :: ['fetch-failed']
+[PASS] category recorded: fetch-failed :: outcomes=['fetch-failed']
+[PASS] dual-write prose present for fetch-failed :: https://qa-fixture.example/never-served: http_error — not in this test's page set
+[PASS] category recorded: unreadable :: outcomes=['unreadable']
+[PASS] dual-write prose present for unreadable :: https://qa-fixture.example/unreadable: page fetched but no readable text could be extracted
+[PASS] category recorded: classifier-rejected :: outcomes=['classifier-rejected']
+[PASS] dual-write prose present for classifier-rejected :: https://qa-fixture.example/nav-shell-program: classified as navigation; no requirement can be read from this kind of page.
+[PASS] category recorded: no-pattern-match :: outcomes=['no-pattern-match']
+[PASS] dual-write prose present for no-pattern-match :: https://qa-fixture.example/admissions-no-patterns: general_admissions pages cannot confirm that 'BSc Computer Science' exists.
+[PASS] category recorded: fetched-ok :: outcomes=['fetched-ok']
+[PASS] fetched-ok adds NO error prose (not an error) :: []
+[PASS] fetched-ok produced claims :: claims=[('tuition', {'amount': 2500000.0, 'currency': 'KZT'})]
+[PASS] scholarship $500 yields NO cost claim :: []
+[PASS] scholarship $500 leaves breakdown empty :: items={} total=None
+[PASS] extract_costs on aid text: no claims :: []
+[PASS] IELTS without number: no english/IELTS claim :: [('program_exists', {'program': 'BSc Computer Science', 'degree': 'bachelor', 'language': 'english', 'matched_because': "page subject 'BSc Computer Science' covers every requested subject word"})]
+[PASS] positive control: 'IELTS 6.5 overall' yields a claim :: [('program_exists', {'program': 'BSc Computer Science', 'degree': 'bachelor', 'language': 'english', 'matched_because': "page subject 'BSc Computer Science' covers every requested subject word"}), ('ielts_min_overall', 6.5)]
+[PASS] roundtrip parse: page fetch-failed: :: page fetch-failed: https://qa-fixture.example/a (page_type unclassified): http_error — 404
+[PASS] roundtrip parse: page unreadable: :: page unreadable: https://qa-fixture.example/b (page_type unclassified): page fetched but no readable text could be extracted
+[PASS] roundtrip parse: page classifier-rejected: :: page classifier-rejected: https://qa-fixture.example/c (page_type navigation, 812 chars): classified as navigation; no requirement can be read from this kind of page.
+[PASS] roundtrip parse: page no-pattern-match: :: page no-pattern-match: https://qa-fixture.example/d (page_type general_admissions, 1502 chars): page was read but no requirement pattern matched
+[PASS] roundtrip parse: page fetched-ok: :: page fetched-ok: https://qa-fixture.example/e (page_type program_detail, 3210 chars): 3 cost figures read from this page
+
+TOTAL=25 PASS=25 FAIL=0

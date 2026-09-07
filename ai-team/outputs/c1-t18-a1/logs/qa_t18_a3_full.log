@@ -1,0 +1,182 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.12.13, pytest-9.1.1, pluggy-1.6.0
+rootdir: /Users/wpalish/ashyq-worktrees/c1-t18-verify-a3/backend
+configfile: pytest.ini
+testpaths: tests
+plugins: respx-0.22.0, cov-6.0.0, asyncio-1.4.0, anyio-4.15.1
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 1150 items
+
+tests/test_account_flows.py ..............................               [  2%]
+tests/test_adapters.py ................................................. [  6%]
+......................                                                   [  8%]
+tests/test_admin_jobs.py .......                                         [  9%]
+tests/test_api.py ...................................................... [ 14%]
+............                                                             [ 15%]
+tests/test_apipay_adapter.py ...............                             [ 16%]
+tests/test_avatar_bytes.py .........                                     [ 17%]
+tests/test_billing_api.py ..........                                     [ 18%]
+tests/test_billing_models.py ......                                      [ 18%]
+tests/test_canary_checks.py ....                                         [ 18%]
+tests/test_citizenship_and_dates.py .........................            [ 21%]
+tests/test_claims_and_conflicts.py ..................                    [ 22%]
+tests/test_costs.py .....................                                [ 24%]
+tests/test_diagnostics.py ...............                                [ 25%]
+tests/test_eligibility.py ...................                            [ 27%]
+tests/test_entitlements.py ..........                                    [ 28%]
+tests/test_frontend_contract.py ........................                 [ 30%]
+tests/test_funding_classification.py .....................               [ 32%]
+tests/test_grant_subscription_cli.py ........                            [ 32%]
+tests/test_jobs.py ..............................                        [ 35%]
+tests/test_live_discovery.py ........................................... [ 39%]
+...................................................................      [ 45%]
+tests/test_live_extraction.py ................                           [ 46%]
+tests/test_live_regressions.py ......................................... [ 50%]
+....................                                                     [ 51%]
+tests/test_logging_and_correlation.py ............                       [ 52%]
+tests/test_metrics.py ..............                                     [ 54%]
+tests/test_payment_provider.py ...........                               [ 55%]
+tests/test_payment_reconcile.py .......                                  [ 55%]
+tests/test_payment_service.py .....................                      [ 57%]
+tests/test_payment_webhook.py ............                               [ 58%]
+tests/test_payments_config.py ....                                       [ 58%]
+tests/test_paywall.py ....................                               [ 60%]
+tests/test_pipeline.py ............................                      [ 63%]
+tests/test_profile_fields_are_used.py .......................            [ 65%]
+tests/test_ranking_v2.py ............................................... [ 69%]
+.......                                                                  [ 69%]
+tests/test_scoring_and_profile.py ...................................... [ 73%]
+.....                                                                    [ 73%]
+tests/test_security.py ......................                            [ 75%]
+tests/test_social_api.py ..............................................  [ 79%]
+tests/test_social_avatars.py .............                               [ 80%]
+tests/test_social_messages.py ................                           [ 81%]
+tests/test_social_models.py ....................                         [ 83%]
+tests/test_social_moderation.py ..................                       [ 85%]
+tests/test_ssrf.py ..................................................... [ 89%]
+............................                                             [ 92%]
+tests/test_subscription_api.py .........                                 [ 93%]
+tests/test_subscription_consume.py ...........                           [ 94%]
+tests/test_subscription_models.py .....                                  [ 94%]
+tests/test_subscription_reads.py ............                            [ 95%]
+tests/test_transcript_import.py .................                        [ 96%]
+tests/test_worker.py ...................................                 [100%]
+
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /Users/wpalish/ashyq-worktrees/c1-t18-verify-a3/backend/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+
+--------- coverage: platform darwin, python 3.12.13-final-0 ----------
+Name                                            Stmts   Miss  Cover
+-------------------------------------------------------------------
+app/__init__.py                                     0      0   100%
+app/adapters/__init__.py                            0      0   100%
+app/adapters/applicability.py                      86      9    90%
+app/adapters/base.py                               64      0   100%
+app/adapters/browser.py                            82     57    30%
+app/adapters/cost/__init__.py                       0      0   100%
+app/adapters/cost/web_costs.py                     64      1    98%
+app/adapters/discovery/__init__.py                  0      0   100%
+app/adapters/discovery/fixture_discovery.py        45      3    93%
+app/adapters/discovery/live_discovery.py          423     39    91%
+app/adapters/documents/__init__.py                  0      0   100%
+app/adapters/documents/web_documents.py            88      7    92%
+app/adapters/extraction.py                        172     15    91%
+app/adapters/fetching.py                          324     83    74%
+app/adapters/government/__init__.py                 0      0   100%
+app/adapters/government/web_government.py          28      2    93%
+app/adapters/matching.py                           32      6    81%
+app/adapters/network_policy.py                     81      0   100%
+app/adapters/page_classifier.py                   205     21    90%
+app/adapters/ranking/__init__.py                    0      0   100%
+app/adapters/ranking/fixture_rankings.py           26      0   100%
+app/adapters/requirements/__init__.py               0      0   100%
+app/adapters/requirements/web_requirements.py     135     13    90%
+app/adapters/scholarship/__init__.py                0      0   100%
+app/adapters/scholarship/web_scholarships.py      244     10    96%
+app/api/__init__.py                                 0      0   100%
+app/api/paywall.py                                 20      1    95%
+app/api/routes_account.py                         149      8    95%
+app/api/routes_admin.py                            17      0   100%
+app/api/routes_auth.py                             97      7    93%
+app/api/routes_billing.py                          94      3    97%
+app/api/routes_cases.py                            23      0   100%
+app/api/routes_meta.py                             50      2    96%
+app/api/routes_metrics.py                          17      0   100%
+app/api/routes_profile.py                          93     13    86%
+app/api/routes_research.py                        194     19    90%
+app/api/routes_results.py                         227     10    96%
+app/api/routes_social.py                          451     40    91%
+app/api/routes_webhooks.py                         54      4    93%
+app/api/tenancy.py                                 20      4    80%
+app/config.py                                     110      5    95%
+app/corpus/demo_profile.py                          3      0   100%
+app/db.py                                          76      4    95%
+app/domain/__init__.py                              0      0   100%
+app/domain/avatar.py                               63      7    89%
+app/domain/citizenship.py                          52      0   100%
+app/domain/conflicts.py                            51      0   100%
+app/domain/costs.py                               115     11    90%
+app/domain/currency.py                             26      0   100%
+app/domain/dates.py                                46      3    93%
+app/domain/dedupe.py                               34      2    94%
+app/domain/diagnostics.py                          24      0   100%
+app/domain/eligibility.py                         132      6    95%
+app/domain/enums.py                               213      0   100%
+app/domain/freshness.py                            22      2    91%
+app/domain/funding.py                             114      5    96%
+app/domain/grades.py                               46     10    78%
+app/domain/priorities.py                           30      0   100%
+app/domain/ranking_v2.py                          242     12    95%
+app/domain/scoring.py                             150      5    97%
+app/domain/social.py                               23      0   100%
+app/domain/transcript.py                           35      0   100%
+app/domain/validation.py                           31      5    84%
+app/export/__init__.py                              0      0   100%
+app/export/calendar.py                             46      0   100%
+app/export/tabular.py                              88      0   100%
+app/jobs/__init__.py                                0      0   100%
+app/jobs/payment_reconcile.py                      36      0   100%
+app/jobs/store.py                                 143      4    97%
+app/jobs/worker.py                                186     36    81%
+app/logging_setup.py                               43      0   100%
+app/mail.py                                        37     11    70%
+app/main.py                                       131      8    94%
+app/metrics.py                                    100      3    97%
+app/models/__init__.py                             10      0   100%
+app/models/applicant.py                            11      0   100%
+app/models/auth.py                                 49      0   100%
+app/models/base.py                                 20      0   100%
+app/models/billing.py                              63      0   100%
+app/models/jobs.py                                 34      0   100%
+app/models/meta.py                                 10      0   100%
+app/models/research.py                             87      0   100%
+app/models/social.py                              134      0   100%
+app/models/subscription.py                         23      0   100%
+app/payments/__init__.py                            0      0   100%
+app/payments/apipay.py                             59      4    93%
+app/payments/entitlements.py                       38      0   100%
+app/payments/errors.py                             22      0   100%
+app/payments/fake.py                               56      1    98%
+app/payments/http.py                               12      0   100%
+app/payments/provider.py                           30      2    93%
+app/payments/service.py                            81      1    99%
+app/payments/subscriptions.py                      76      3    96%
+app/pipeline/__init__.py                            0      0   100%
+app/pipeline/runner.py                            577     37    94%
+app/pipeline/state.py                              63      5    92%
+app/schemas/__init__.py                             0      0   100%
+app/schemas/claim.py                               59      0   100%
+app/schemas/money.py                               20      0   100%
+app/schemas/profile.py                            223      1    99%
+app/schemas/result.py                             216      0   100%
+app/schemas/social.py                             105      0   100%
+app/security.py                                   117     14    88%
+-------------------------------------------------------------------
+TOTAL                                            8248    584    93%
+
+Required test coverage of 92% reached. Total coverage: 92.92%
+================= 1150 passed, 1 warning in 201.92s (0:03:21) ==================

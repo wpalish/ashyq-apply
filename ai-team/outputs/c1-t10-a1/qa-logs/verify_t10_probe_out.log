@@ -1,0 +1,76 @@
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+WARNI [unimatch.jobs] reaped 1 job(s) with expired leases
+WARNI [unimatch.jobs] worker w could not complete job fdc369a0: it lost the lease
+WARNI [unimatch.worker] job 3a1ea7aa abandoned: job 3a1ea7aa is no longer held by iMac-Aliser.local:26545
+WARNI [unimatch.jobs] reaped 1 job(s) with expired leases
+WARNI [unimatch.jobs] reaped 1 job(s) with expired leases
+DB_URL: postgresql+psycopg://postgres:@/qadffbb4b1fa83?host=/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/qa-t10-verify-pg-o8mgp6jp
+
+=== PROBE 1: two-session PG, same worker_id reclaim fences attempt 1 ===
+PASS  1a claim t1  attempts=1
+PASS  1b reap after expiry  reaped=['fdc369a00a234586804a0eab269507b2']
+PASS  1c same worker_id re-claims, attempts=t1+1  t2=2
+PASS  1d stale complete -> False  got False
+PASS  1e stale heartbeat -> False  got False
+PASS  1f stale fail -> read-only current status  got 'running'
+PASS  1g stale mark_cancelled -> False  got False
+PASS  1h row untouched by stale attempt  row={'status': 'running', 'attempts': 2, 'worker_id': 'w', 'last_error': 'The worker holding this job (w) stopped without finishing. Lease expired at 2026-09-07T02:39:23.760488+05:00.', 'finished_at': None, 'cancel_requested': False, 'lease_expires_at': datetime.datetime(2026, 9, 7, 2, 41, 24, 764635, tzinfo=zoneinfo.ZoneInfo(key='Asia/Almaty')), 'available_at': datetime.datetime(2026, 9, 7, 2, 39, 24, 764300, tzinfo=zoneinfo.ZoneInfo(key='Asia/Almaty'))}
+PASS  1i new owner completes with t2  
+
+=== PROBE 2: LeaseLost mid-run — stale attempt writes NOTHING (real PG) ===
+PASS  2a claim  claimed=3a1ea7aa9aad4715a5f2ebace24944c8
+PASS  2b worker exited via LeaseLost branch  jobs_failed=0
+PASS  2c enough artifacts committed pre-takeover  results=3
+PASS  2d run.stage unchanged (not failed)  checkpoint='program_verification' final='program_verification'
+PASS  2e run.errors unchanged  errors=[]
+PASS  2f run.finished_at still NULL  
+PASS  2g no run_failed audit  audits=0
+PASS  2h artifacts survive  3 vs 3
+PASS  2i job still with new owner, no stale writes (last_error clean)  row={'status': 'running', 'attempts': 1, 'worker_id': 'worker-b', 'last_error': '', 'finished_at': None, 'cancel_requested': False, 'lease_expires_at': datetime.datetime(2026, 9, 7, 2, 41, 24, 849776, tzinfo=zoneinfo.ZoneInfo(key='Asia/Almaty')), 'available_at': datetime.datetime(2026, 9, 7, 2, 39, 24, 773315, tzinfo=zoneinfo.ZoneInfo(key='Asia/Almaty'))}
+
+=== PROBE 3: reap vs heartbeat race (dedicated queue p3) ===
+PASS  3a claimed the probe's own job  claimed=71fb0f9336434ee6a51720fdd172441f
+PASS  3b heartbeat renews  
+PASS  3c renewed lease survives reap  reaped=[]
+PASS  3d row still running, owned by w3, attempts kept  row={'status': 'running', 'attempts': 1, 'worker_id': 'w3', 'last_error': '', 'finished_at': None, 'cancel_requested': False, 'lease_expires_at': datetime.datetime(2026, 9, 7, 2, 41, 24, 867678, tzinfo=zoneinfo.ZoneInfo(key='Asia/Almaty')), 'available_at': datetime.datetime(2026, 9, 7, 2, 39, 24, 865008, tzinfo=zoneinfo.ZoneInfo(key='Asia/Almaty'))}
+PASS  3e finished job completes once (correct job)  
+PASS  3f heartbeat after finish -> False  
+PASS  3g reap skips finished job  reaped=[]
+PASS  3h reap -> queued with backoff, attempts unchanged (claim increments, reap does not)  row={'status': 'queued', 'attempts': 1, 'worker_id': None, 'last_error': 'The worker holding this job (w3) stopped without finishing. Lease expired at 2026-09-07T02:39:23.873734+05:00.', 'finished_at': None, 'cancel_requested': False, 'lease_expires_at': None, 'available_at': datetime.datetime(2026, 9, 7, 2, 39, 24, 874716, tzinfo=zoneinfo.ZoneInfo(key='Asia/Almaty'))}
+
+=== PROBE 4: cancel API (no token) semantics (dedicated queue p4) ===
+PASS  4a queued -> cancelled  row={'status': 'cancelled', 'attempts': 0, 'worker_id': None, 'last_error': '', 'finished_at': datetime.datetime(2026, 9, 7, 2, 39, 24, 876235, tzinfo=zoneinfo.ZoneInfo(key='Asia/Almaty')), 'cancel_requested': True, 'lease_expires_at': None, 'available_at': datetime.datetime(2026, 9, 7, 2, 39, 24, 875652, tzinfo=zoneinfo.ZoneInfo(key='Asia/Almaty'))}
+PASS  4b terminal (cancelled) -> no-op False  
+PASS  4c claimed exactly job5  claimed=7ac1b8d5628d4cfa8fe0bd8b66502428
+PASS  4d running -> flag only, status stays running  row={'status': 'running', 'attempts': 1, 'worker_id': 'w5', 'last_error': '', 'finished_at': None, 'cancel_requested': True, 'lease_expires_at': datetime.datetime(2026, 9, 7, 2, 41, 24, 878748, tzinfo=zoneinfo.ZoneInfo(key='Asia/Almaty')), 'available_at': datetime.datetime(2026, 9, 7, 2, 39, 24, 878241, tzinfo=zoneinfo.ZoneInfo(key='Asia/Almaty'))}
+PASS  4e owner completes flagged job  row={'status': 'succeeded', 'attempts': 1, 'worker_id': None, 'last_error': '', 'finished_at': datetime.datetime(2026, 9, 7, 2, 39, 24, 880300, tzinfo=zoneinfo.ZoneInfo(key='Asia/Almaty')), 'cancel_requested': True, 'lease_expires_at': None, 'available_at': datetime.datetime(2026, 9, 7, 2, 39, 24, 878241, tzinfo=zoneinfo.ZoneInfo(key='Asia/Almaty'))}
+PASS  4f succeeded is terminal -> cancel no-op  
+
+=== PROBE 5: positive control — owner+token CAN write (no over-fencing) ===
+PASS  5a owner heartbeat True  
+PASS  5b owner mark_cancelled True -> cancelled  row={'status': 'cancelled', 'attempts': 1, 'worker_id': None, 'last_error': 'user stopped', 'finished_at': datetime.datetime(2026, 9, 7, 2, 39, 24, 883705, tzinfo=zoneinfo.ZoneInfo(key='Asia/Almaty')), 'cancel_requested': False, 'lease_expires_at': None, 'available_at': datetime.datetime(2026, 9, 7, 2, 39, 24, 882041, tzinfo=zoneinfo.ZoneInfo(key='Asia/Almaty'))}
+PASS  5c owner fail retries: queued + last_error recorded  row={'status': 'queued', 'attempts': 1, 'worker_id': None, 'last_error': 'boom-1', 'finished_at': None, 'cancel_requested': False, 'lease_expires_at': None, 'available_at': datetime.datetime(2026, 9, 7, 2, 39, 54, 885970, tzinfo=zoneinfo.ZoneInfo(key='Asia/Almaty'))}
+PASS  5d non-retry fail -> dead  row={'status': 'dead', 'attempts': 2, 'worker_id': None, 'last_error': 'boom-final', 'finished_at': datetime.datetime(2026, 9, 7, 2, 39, 24, 887629, tzinfo=zoneinfo.ZoneInfo(key='Asia/Almaty')), 'cancel_requested': False, 'lease_expires_at': None, 'available_at': datetime.datetime(2026, 9, 7, 2, 39, 24, 886669, tzinfo=zoneinfo.ZoneInfo(key='Asia/Almaty'))}
+
+=== PROBE 6: worker.execute token re-read window (residual risk demo) ===
+PASS  6a claim  
+    run.stage after both attempts: 'awaiting_user_decision'; job_completed audits: 1; jobs_done=1
+PASS  6b RESULT (residual): stale task read the NEW attempt's token and completed the job  attempts=2 new_tok=2 status=succeeded
+
+================ SUMMARY ================
+total checks: 38, failed: 0

@@ -1,0 +1,110 @@
+{
+  "task_id": "T10",
+  "finding_ids": ["J02"],
+  "attempt_id": "A1",
+  "baseline_sha": "f7f14b28c43afe20df01ad38a26964c397f393fc",
+  "qa_commit_sha": "e47cfd2f982e8f3820825833b866bea67f56bfbe",
+  "candidate_sha": "df1ad1194abcd7812eb9bf7d66e417b3d211c157",
+  "integration_base_sha": "f7f14b28c43afe20df01ad38a26964c397f393fc",
+  "participants": [
+    {
+      "role": "ashyq-planner",
+      "invocation_ref": "agent_5bfbc55c-34a2-434b-845d-23cb3de20910",
+      "checked_sha": "f7f14b28c43afe20df01ad38a26964c397f393fc",
+      "verdict": "PASS",
+      "evidence_file": "planner.md"
+    },
+    {
+      "role": "ashyq-qa",
+      "invocation_ref": "agent_f58b2399-ac7b-4682-a1f9-81580bd90459",
+      "checked_sha": "df1ad1194abcd7812eb9bf7d66e417b3d211c157",
+      "verdict": "PASS",
+      "evidence_file": "qa-verify-candidate.md"
+    },
+    {
+      "role": "ashyq-developer",
+      "invocation_ref": "agent_1cf00afc-992f-4af4-84fe-7eef013ed78f",
+      "checked_sha": "df1ad1194abcd7812eb9bf7d66e417b3d211c157",
+      "verdict": "PASS",
+      "evidence_file": "developer.md"
+    },
+    {
+      "role": "ashyq-reviewer",
+      "invocation_ref": "agent_74a0e896-28dd-4950-8fff-9530765ddc79",
+      "checked_sha": "df1ad1194abcd7812eb9bf7d66e417b3d211c157",
+      "verdict": "PASS",
+      "evidence_file": "reviews.md"
+    },
+    {
+      "role": "ashyq-security",
+      "invocation_ref": "agent_b662c4b1-69fb-4886-874f-359490d99768",
+      "checked_sha": "df1ad1194abcd7812eb9bf7d66e417b3d211c157",
+      "verdict": "PASS",
+      "evidence_file": "reviews.md"
+    }
+  ],
+  "tests": [
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c1-t10-verify/backend && ./.venv/bin/python -m pytest tests/test_worker.py -q --tb=short",
+      "checked_sha": "df1ad1194abcd7812eb9bf7d66e417b3d211c157",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "logs/verify_target.log",
+      "summary": "35 passed (27 existing + 8 QA RED->GREEN); QA bodies byte-identical to QA commit e47cfd2"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c1-t10-verify/backend && ./.venv/bin/python -m pytest tests/test_jobs.py -q",
+      "checked_sha": "df1ad1194abcd7812eb9bf7d66e417b3d211c157",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "logs/verify_jobs_pg.log",
+      "summary": "30 passed on real PostgreSQL (pgserver pg_engine fixture)"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c1-t10-verify/backend && ./.venv/bin/python -m mypy app tests && ./.venv/bin/python -m ruff check app tests && ./.venv/bin/python -m ruff format --check app tests",
+      "checked_sha": "df1ad1194abcd7812eb9bf7d66e417b3d211c157",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "logs/verify_mypy.log",
+      "summary": "mypy 0 issues (153 files); ruff clean (logs/verify_ruff.log)"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c1-t10-verify/backend && ./.venv/bin/python -m pytest --cov=app --cov-fail-under=92 -q",
+      "checked_sha": "df1ad1194abcd7812eb9bf7d66e417b3d211c157",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "logs/verify_full.log",
+      "summary": "Full suite exit 0; coverage 92.82% >= 92 (threshold unchanged)"
+    }
+  ],
+  "acceptance_items": [
+    {
+      "criterion": "Stale worker не пишет даже из exception handler",
+      "status": "PASS",
+      "evidence_file": "qa-verify-candidate.md",
+      "note": "Probe 2 on real PG: LeaseLost mid-run -> jobs_failed=0, run.stage unchanged (not failed), errors=[], finished_at=NULL, run_failed audit=0, committed artifacts preserved, last_error clean; worker LeaseLost handler logs only; except LeaseLost: raise precedes except Exception (runner.py:298-303)"
+    },
+    {
+      "criterion": "PostgreSQL две сессии доказывают owner/attempt fencing",
+      "status": "PASS",
+      "evidence_file": "qa-verify-candidate.md",
+      "note": "Probe 1/38 checks: claim t1 -> reap -> re-claim with SAME worker_id -> stale t1 complete/heartbeat/mark_cancelled False, fail read-only, raw SQL confirms zero column writes; plus TestFencedWritesTwoSessionPostgreSQL (test_worker.py:783-985) on pgserver"
+    },
+    {
+      "criterion": "Cancel/complete/fail/reap согласованы",
+      "status": "PASS",
+      "evidence_file": "reviews.md",
+      "note": "Probe 3/4/5 + test_jobs 30/30: TERMINAL final; attempts+1 exactly on claim; cancel queued->cancelled/running->flag/terminal no-op; reap vs heartbeat conditional; retry backoff 30/120/600 -> dead at max; over-fencing absent (positive control)"
+    }
+  ],
+  "scope_check": "PASS",
+  "scope_check_command": "python3 ai-team/check_team.py scope --task T10 --repo /Users/wpalish/ashyq-worktrees/c1-t10-verify --base f7f14b28c43afe20df01ad38a26964c397f393fc --head df1ad1194abcd7812eb9bf7d66e417b3d211c157",
+  "scope_check_result": "changed: store.py, worker.py, runner.py, test_worker.py; outside_scope: [] (models/jobs.py untouched, no migrations)",
+  "blockers": [],
+  "notes": [
+    "QA TEST_AUTHOR invocation ref: agent_14ab3b13-5072-4b84-8dfe-fc9ccdc41650 (8 RED at baseline; test contract frozen: lease_token kwarg, claim returns attempts).",
+    "Coordinator decision: attempts-token fencing without migrations approved.",
+    "Security/developer follow-ups recorded for backlog: F-1 thread token from claim_one (re-read window, needs >120s stall); F-2 payment_reconcile rollback at fenced fail + guard _grant_and_schedule against duplicate ResearchRun (money-adjacent, priority); F-3 reconcile_startup check-then-act; F-4 run-level single-writer on retry/recheck enqueue (pre-existing).",
+    "All invocations inherit the user-selected GLM model; no hardcoded model ids."
+  ]
+}
