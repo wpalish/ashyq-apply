@@ -30,7 +30,10 @@
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--ink-muted);
-  padding: var(--space-3) var(--space-3);
+  /* Tighter horizontally than vertically: the row only fits the container when
+     the padding stops spending 24px a column, and a column that does not fit is
+     a column the pinned decision cell silently covers. */
+  padding: var(--space-3) var(--space-2);
   border-bottom: 1px solid var(--rule-strong);
   white-space: nowrap;
 }
@@ -41,7 +44,7 @@
 }
 .dtable th button:hover { color: var(--ink); }
 .dtable td {
-  padding: var(--space-3);
+  padding: var(--space-3) var(--space-2);
   border-bottom: 1px solid var(--rule);
   vertical-align: top;
 }
@@ -51,7 +54,27 @@
 .dtable tbody tr.is-rejected { opacity: 0.5; }
 .dtable tbody tr:last-child td { border-bottom: 0; }
 
-.uni-cell { display: flex; flex-direction: column; gap: 2px; min-width: 13rem; max-width: 20rem; }
+.uni-cell { display: flex; flex-direction: column; gap: 2px; min-width: 10rem; max-width: 18rem; }
+
+/* The shortlist has ten independently meaningful columns. A fixed layout and
+   explicit column budget keep Confirmed separate from Match while leaving the
+   pinned Decision cell at its natural edge instead of on top of Bucket. */
+.shortlist-table {
+  table-layout: fixed;
+  min-width: 64.25rem;
+}
+.shortlist-table--with-bucket { min-width: 69.75rem; }
+.shortlist-table th { white-space: normal; }
+.shortlist-col--university { width: 11rem; }
+.shortlist-col--eligibility { width: 6rem; }
+.shortlist-col--fit { width: 6.75rem; }
+.shortlist-col--funding { width: 6.5rem; }
+.shortlist-col--remaining { width: 7.5rem; }
+.shortlist-col--deadline { width: 6.5rem; }
+.shortlist-col--match { width: 4.5rem; }
+.shortlist-col--confirmed { width: 6rem; }
+.shortlist-col--bucket { width: 6rem; }
+.shortlist-col--decision { width: 9rem; }
 
 /*
  * The decision column is the primary action, so it is pinned to the right edge
@@ -343,6 +366,7 @@
 @media (max-width: 700px) {
   .table-wrap { overflow: visible; border: 0; background: transparent; }
   .dtable, .dtable tbody { display: block; width: 100%; min-width: 0; }
+  .dtable colgroup { display: none; }
   .dtable thead { display: none; }
   .dtable tbody tr:not(.detail-row) {
     display: block;

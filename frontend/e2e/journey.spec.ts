@@ -64,10 +64,19 @@ test('research runs to completion and reports what it could not read', async () 
 test('the shortlist separates eligibility, fit and funding', async () => {
   await openShortlist(page);
 
-  const headers = page.locator('thead th');
-  await expect(headers.nth(1)).toHaveText('Eligibility');
-  await expect(headers.nth(2)).toHaveText('Admissions fit');
-  await expect(headers.nth(3)).toHaveText('Funding');
+  const headers = page.getByTestId('shortlist-table').locator('thead th');
+  await expect(headers).toHaveText([
+    'University & programme',
+    'Eligibility',
+    'Admissions fit',
+    'Funding',
+    'Remaining / year',
+    'Deadline',
+    'Match',
+    'Confirmed',
+    'Bucket',
+    'Decision',
+  ]);
 
   await expect(page.locator('tbody tr')).not.toHaveCount(0);
   await expect(page.getByText('Demo data.', { exact: false }).first()).toBeVisible();
