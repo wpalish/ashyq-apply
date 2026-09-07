@@ -8,28 +8,26 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 | | |
 |---|---|
-| Holder | **gpt-6-astra** |
-| Since (UTC) | 2026-09-06 16:59:45 UTC |
-| Branch | `fix/shortlist-columns`, merged normally with `origin/main@85352b5` |
-| HEAD when written | `4a7171c` (green recovery/review fix; this handoff commit follows) |
-| Origin main when checked | `85352b5` — PR #2 (stage 0), PR #3 (payments), PR #4 (docs catch-up), and PR #5 (the saved-locator e2e fix) are **merged** |
-| Previous holder | claude-opus-5; its PR #6 patch was reviewed, corrected, and reconciled with current main before this takeover |
+| Holder | **codex** |
+| Since (UTC) | 2026-09-07 11:28:28 UTC |
+| Branch | `ai/c1/integration`, local-only; synchronized by merge with `origin/main@7b1fce0` |
+| HEAD when written | `25f5954` (GLM campaign candidate `e533d62` plus current origin main; audit hardening follows) |
+| Origin main when checked | `7b1fce0` — PR #6 is merged; the GLM campaign is not pushed and is not on main |
+| Previous holder | gpt-6-astra on the now-merged shortlist fix; a separate ZCode/GLM campaign then produced five local task candidates without updating this baton |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
 
-**`[0.8]` is `merged`** — PR #2 landed stage 0 on main, and PR #3 (payments) landed on top.
+**GLM campaign `c1` audit and release hardening — in progress, local only.** The campaign integrated
+T01, T04, T09, T10 and a deliberately limited T18 slice at `e533d62`; it did not complete the 24-task
+backlog, live canary, provider-backed search/LLM path, publication, or deployment. The candidate was
+five commits behind `origin/main`; `25f5954` merges current main without file overlap or conflicts.
 
-Current: the fix-forward on `fix/shortlist-columns` is **ready-for-review (PR #6)** at `4a7171c` plus
-this handoff commit — then `[1.1]` after the owner merge.
-PR #4 (documentation catch-up) and PR #5 (the red saved-locator e2e test) landed while PR #6 was open;
-the only merge conflict was this shared handoff file and was resolved without rewriting history.
-The last [0.8] commit
-`14d556b` was pushed *after* the owner merged PR #2, so it never reached main: the shortlist on main
-today renders `Confirmed` and `Bucket` underneath the pinned decision column, where nobody can read
-them. That is what this branch carries — the same three files, re-applied on the new base (main's
-`components.css` has since grown by 89 lines, so only the intended hunks were taken, not the old
-file), plus the focused unit/E2E regressions added during review.
+Independent reruns on the original candidate confirmed backend static gates/full suite (92.92%),
+frontend 182 unit tests/build, and — newly — 73 passed / 1 skipped local Playwright E2E. Lead review
+confirmed the campaign security review's own F-2: a stale `payment_reconcile` attempt can commit
+payment journal/order/run writes when its fenced retry update loses the lease. That money-adjacent
+transactional defect is the current fix-forward; no push/main/deploy is authorized.
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
@@ -212,20 +210,17 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-1. Re-check GitHub CI for **PR #6** at `4a7171c` plus the handoff commit; all local gates and the
-   independent review are green. The owner then squash-merges PR #6.
-2. **`[1.1] Интерфейс и схемы`** on `task/1.1-research-agent`, branched from `main` after PR #6 (no predecessor
-   exception needed any more — stage 0 is merged):
-   - `backend/app/adapters/research/base.py`: `Protocol ResearchAgent` with `discover`,
-     `locate_pages`, `extract_claims`, `programme_brief`, `applicant_commentary`,
-     `community_insights`, plus the schemas `DiscoveryQuery`, `CandidateLead`, `PageSet`,
-     `ProposedClaim`, `ExtractionContext`, `AdvisorCommentary`, `Insight`
-     (fields: `analysis/SPEC_matching_v2.md` §6.2, §7, §8.2).
-   - `null.py` — `NullResearchAgent`, every method empty / NOT_FOUND.
-   - `fixture.py` — `FixtureResearchAgent`, answering from `app/corpus/pages/catalog.json`.
-   - Acceptance **A6**: a full demo run with `NullResearchAgent` is byte-for-byte the current one.
-     Write the comparison as a test, do not eyeball it.
-3. Then `[1.2]` (excerpt validator), per §10.
+1. Add a PostgreSQL two-session regression in `backend/tests/test_worker.py`: a stale
+   `payment_reconcile` attempt must roll back every `PaymentEvent`, `Order`, entitlement, run and
+   enqueue mutation when its fenced job transition loses the lease.
+2. Fix `backend/app/jobs/worker.py` so the payment branch treats any failed owner transition as
+   `LeaseLost` (or cancellation), forcing the surrounding transaction to roll back.
+3. Run focused payment/worker PostgreSQL tests, then all backend and frontend gates on the new SHA;
+   run auth E2E and repeat ordinary E2E after the `origin/main` merge. Keep generated screenshots out.
+4. Reconcile the untracked `ai-team/` evidence: correct false completion wording/ledger defects,
+   remove machine-specific path assumptions where practical, and commit it only to this local branch.
+5. Do not push, merge protected main, deploy, buy a provider, add secrets, or run a public live canary
+   without a separate owner decision.
 
 ## 6. Gate status at last run (numbers, not adjectives)
 
@@ -400,3 +395,4 @@ the I4/T3 wording question is resolved in §7 and must not be reopened.
 | 2026-09-06 | claude-opus-5 | `9ee7078` → `9ee7078` | Installed `gh`, authenticated it from the stored git credential, opened **PR #2** for stage 0. Baton stays with nobody; next is review. |
 | 2026-09-06 | claude-opus-5 | `f88f77d` → `fix/shortlist-columns` | Prompt A. Found PR #2 and #3 merged, `[0.8]`'s last commit `14d556b` orphaned outside the merge, Codex's docker branch 40 commits behind main and unlogged, and the e2e suite red on clean main from the §9 database trap. Re-applied the three shortlist hunks on the new base; 164 unit and 73 e2e green. |
 | 2026-09-06 16:59:45 UTC | gpt-6-astra | `d6e59d5` → `4a7171c` + this handoff commit | Prompt C completed: initial tree was clean; fetched PRs #4/#5, merged `origin/main@85352b5` without rewriting history, reviewed PR #6, fixed separate-column semantics and longest-chip overlap coverage, regenerated screenshots, ran full gates, recorded the review on the PR, and took the baton. |
+| 2026-09-07 11:28:28 UTC | codex | `e533d62` → `25f5954` | Audited the local GLM campaign, independently reran backend/frontend and ordinary E2E, preserved the original candidate as `audit/glm-c1-e533d62`, merged current `origin/main@7b1fce0`, and opened a fix-forward for the stale payment-reconcile commit defect already noted by GLM security. No push/deploy. |
