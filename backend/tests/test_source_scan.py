@@ -33,7 +33,7 @@ import pytest
 import sqlalchemy as sa
 from sqlalchemy.orm import sessionmaker
 
-from app.adapters.fetching import FetchResult, Fetcher, FetchOutcome
+from app.adapters.fetching import Fetcher, FetchOutcome, FetchResult
 from app.jobs.store import JobStore
 from app.models import ClaimRow, Job, JobStatus, ProgramResultRow, ResearchRun, SourcePage
 from tests.conftest import profile_row
@@ -44,7 +44,9 @@ from tests.conftest import profile_row
 #: footing.
 FAKE_PAGE_BODY_PATH = "app/corpus/pages/tu-delft/admissions.html"
 
-REEXTRACT_KEY = re.compile(r"^reextract:(?P<page>[0-9a-f]{32}):(?P<result>[0-9a-f]{32}):(?P<gen>\d+)$")
+REEXTRACT_KEY = re.compile(
+    r"^reextract:(?P<page>[0-9a-f]{32}):(?P<result>[0-9a-f]{32}):(?P<gen>\d+)$"
+)
 ISO_DATE_IN_KEY = re.compile(r"\d{4}-\d{2}-\d{2}")
 
 
@@ -94,9 +96,7 @@ class ScriptedFetcher:
         return entry
 
     async def fake_get(self, url, *, use_cache=True, etag=None, if_modified_since=None):
-        self.calls.append(
-            {"url": url, "etag": etag, "if_modified_since": if_modified_since}
-        )
+        self.calls.append({"url": url, "etag": etag, "if_modified_since": if_modified_since})
         return self.result_for(url, etag, if_modified_since)
 
     def install(self, monkeypatch) -> None:
@@ -179,17 +179,21 @@ def _seed_run_result_claims(session, page: SourcePage, profile, *, claims: int =
 
 
 def _enqueue_reextract(session, run, page, result_id: str, reason: str = "content_hash") -> str:
-    return JobStore(session).enqueue(
-        "reextract_page",
-        run_id=run.id,
-        payload={
-            "source_page_id": page.id,
-            "url": page.url,
-            "reason": reason,
-            "run_id": run.id,
-            "result_id": result_id,
-        },
-    ).job_id
+    return (
+        JobStore(session)
+        .enqueue(
+            "reextract_page",
+            run_id=run.id,
+            payload={
+                "source_page_id": page.id,
+                "url": page.url,
+                "reason": reason,
+                "run_id": run.id,
+                "result_id": result_id,
+            },
+        )
+        .job_id
+    )
 
 
 def _drain(settings, limit: int = 5) -> int:
@@ -345,9 +349,7 @@ class TestReextractSupersedesAndAppendsAtomically:
                 f"unknown kind died at attempt 1: {job.status}/{job.attempts})"
             )
 
-            for old in (
-                check.query(ClaimRow).filter(ClaimRow.result_id == result_id_only).all()
-            ):
+            for old in check.query(ClaimRow).filter(ClaimRow.result_id == result_id_only).all():
                 assert old.status != "SUPERSEDED", (
                     "a fenced attempt must not leave a superseded claim behind"
                 )
@@ -360,9 +362,7 @@ class TestReextractSupersedesAndAppendsAtomically:
                 )
                 .all()
             )
-            assert len(news) == old_count, (
-                "a fenced attempt must not append re-read claims"
-            )
+            assert len(news) == old_count, "a fenced attempt must not append re-read claims"
             assert takeover["done"], "the takeover hook must have fired"
         finally:
             check.close()
@@ -381,6 +381,14 @@ def _take_over(factory, kind: str, takeover: dict) -> None:
         )
         session.commit()
         assert JobStore(session).reap_expired() == [job_id]
+        # The reaper requeues at now + backoff_for(attempts) (frozen T10/T28
+        # store semantics, 30s for attempt 1), so worker-b's immediate claim
+        # would never land. Restore available_at=now on the requeued row so
+        # this helper exercises real takeover, not the backoff.
+        session.execute(
+            sa.update(Job).where(Job.id == job_id).values(available_at=datetime.now(UTC))
+        )
+        session.commit()
         JobStore(session, worker_id="worker-b").claim(worker_id="worker-b")
         session.commit()
 
@@ -388,7 +396,14 @@ def _take_over(factory, kind: str, takeover: dict) -> None:
 # --- source_scan skeleton (C3) -----------------------------------------------
 
 
-def _seed_scan_world(session, profile, *, institution: str, url: str = "https://example.edu/programme", etag: str = '"v1"'):
+def _seed_scan_world(
+    session,
+    profile,
+    *,
+    institution: str,
+    url: str = "https://example.edu/programme",
+    etag: str = '"v1"',
+):
     page = _seed_page(
         session,
         url,
@@ -403,18 +418,22 @@ def _seed_scan_world(session, profile, *, institution: str, url: str = "https://
 
 
 def _enqueue_scan(session, institution: str) -> str:
-    return JobStore(session).enqueue(
-        "source_scan",
-        payload={"institution_key": institution},
-        idempotency_key=f"source_scan:{institution}:{datetime.now(UTC).date().isoformat()}",
-    ).job_id
+    return (
+        JobStore(session)
+        .enqueue(
+            "source_scan",
+            payload={"institution_key": institution},
+            idempotency_key=f"source_scan:{institution}:{datetime.now(UTC).date().isoformat()}",
+        )
+        .job_id
+    )
 
 
 def _sitemap_body(lastmod: datetime) -> str:
     stamp = lastmod.strftime("%Y-%m-%dT%H:%M:%S+00:00")
     return (
         '<?xml version="1.0" encoding="UTF-8"?>\n'
-        "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n"
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
         "  <url>\n"
         "    <loc>https://example.edu/programme</loc>\n"
         f"    <lastmod>{stamp}</lastmod>\n"
@@ -443,9 +462,7 @@ class TestSourceScanSkeleton:
             )
 
         def page_fetch(url, etag, ims):
-            assert etag == world["stored_etag"], (
-                "the conditional GET must carry the stored ETag"
-            )
+            assert etag == world["stored_etag"], "the conditional GET must carry the stored ETag"
             return FetchResult(
                 url=url,
                 outcome=FetchOutcome.OK,
@@ -466,7 +483,9 @@ class TestSourceScanSkeleton:
 
         session = pg_factory()
         try:
-            page, run, result_id = _seed_scan_world(session, profile, institution="university-of-nowhere")
+            page, run, result_id = _seed_scan_world(
+                session, profile, institution="university-of-nowhere"
+            )
             world["page_id"] = page.id
             world["stored_etag"] = page.etag
             world["result_id"] = result_id
@@ -481,12 +500,9 @@ class TestSourceScanSkeleton:
         try:
             job = check.get(Job, job_id)
             assert job.status == JobStatus.SUCCEEDED.value, (
-                f"source_scan must be a dispatched kind (baseline: "
-                f"last_error={job.last_error!r})"
+                f"source_scan must be a dispatched kind (baseline: last_error={job.last_error!r})"
             )
-            conditional = [
-                c for c in fetcher.calls if c["url"] == "https://example.edu/programme"
-            ]
+            conditional = [c for c in fetcher.calls if c["url"] == "https://example.edu/programme"]
             assert conditional, "a stored page with a moved lastmod must get a conditional GET"
             assert conditional[0]["etag"] == world["stored_etag"]
 
@@ -537,7 +553,9 @@ class TestSourceScanSkeleton:
 
         session = pg_factory()
         try:
-            page, run, _result = _seed_scan_world(session, profile, institution="university-of-nowhere")
+            page, run, _result = _seed_scan_world(
+                session, profile, institution="university-of-nowhere"
+            )
             page_id = page.id
             fetched_before = page.fetched_at
             job_id = _enqueue_scan(session, "university-of-nowhere")
@@ -575,7 +593,9 @@ class TestSourceScanSkeleton:
 
         session = pg_factory()
         try:
-            page, _run, _result = _seed_scan_world(session, profile, institution="university-of-nowhere")
+            page, _run, _result = _seed_scan_world(
+                session, profile, institution="university-of-nowhere"
+            )
             page_id = page.id
             before = (
                 page.etag,
@@ -594,8 +614,7 @@ class TestSourceScanSkeleton:
         try:
             job = check.get(Job, job_id)
             assert job.status == JobStatus.SUCCEEDED.value, (
-                f"source_scan must be a dispatched kind (baseline: "
-                f"last_error={job.last_error!r})"
+                f"source_scan must be a dispatched kind (baseline: last_error={job.last_error!r})"
             )
             fresh = check.get(SourcePage, page_id)
             assert (
@@ -632,9 +651,13 @@ class TestSourceScanBootstrapRaces:
 
         session = pg_factory()
         try:
-            _seed_scan_world(session, profile, institution="university-a", url="https://a.example.edu/programme")
+            _seed_scan_world(
+                session, profile, institution="university-a", url="https://a.example.edu/programme"
+            )
             _seed_page(session, "https://a.example.edu/other", institution_key="university-a")
-            _seed_scan_world(session, profile, institution="university-b", url="https://b.example.edu/programme")
+            _seed_scan_world(
+                session, profile, institution="university-b", url="https://b.example.edu/programme"
+            )
             session.commit()
         finally:
             session.close()
@@ -701,7 +724,9 @@ class TestSourceScanBootstrapRaces:
 
         session = pg_factory()
         try:
-            page, run, result_id = _seed_scan_world(session, profile, institution="university-of-nowhere")
+            page, run, result_id = _seed_scan_world(
+                session, profile, institution="university-of-nowhere"
+            )
             page_id = page.id
             _enqueue_scan(session, "university-of-nowhere")
             session.commit()
@@ -736,8 +761,7 @@ class TestSourceScanBootstrapRaces:
                 .all()
             )
             assert len(reextracts) == 1, (
-                f"exactly one reextract set must survive the takeover (got "
-                f"{len(reextracts)})"
+                f"exactly one reextract set must survive the takeover (got {len(reextracts)})"
             )
             payload = reextracts[0].payload or {}
             assert payload.get("result_id") == result_id
@@ -959,14 +983,11 @@ class TestRefreshEndpoint:
             self.PATH.format(run_id=seeded["run_id"], result_id=seeded["result_id"])
         )
         assert response.status_code == 409, (
-            f"demo runs are read-only (baseline: route missing → "
-            f"{response.status_code})"
+            f"demo runs are read-only (baseline: route missing → {response.status_code})"
         )
         assert response.json() == {"detail": "demo runs are read-only"}
 
-    def test_a_paid_refresh_schedules_one_reextract_per_page_and_result(
-        self, paid_client, case_id
-    ):
+    def test_a_paid_refresh_schedules_one_reextract_per_page_and_result(self, paid_client, case_id):
         _unlock_case(paid_client, case_id)
         seeded = _seed_refresh_run(paid_client, case_id, demo=False, pages=2, unknown_url=True)
         response = paid_client.post(

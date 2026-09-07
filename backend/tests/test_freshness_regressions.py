@@ -55,7 +55,6 @@ from app.domain.freshness import (
 )
 from app.models import ClaimRow, ResearchRun
 from app.models.base import ensure_utc
-
 from tests.conftest import TEST_ORGANIZATION_ID, make_claim, profile_row
 
 #: The revision T32's migration hangs off — the chain head on the baseline.
@@ -179,10 +178,9 @@ def bound_db(settings, monkeypatch):
 
 def _run_research_to_decision(bound_db, settings, profile) -> tuple[str, str]:
     """A finished demo research run: returns (run_id, recheck_id)."""
-    from tests.test_worker import seed_run
-
     from app.jobs.worker import Worker
     from app.models import Job
+    from tests.test_worker import seed_run
 
     run_id, job_id = seed_run(bound_db, profile)
     worker = Worker(settings)
@@ -214,9 +212,7 @@ class TestNoOpRecheckAdvancesTheChain:
             finished_key = recheck.idempotency_key
             # Pull it forward, as the queue would once the recheck date arrives.
             session.execute(
-                sa.update(Job)
-                .where(Job.id == recheck_id)
-                .values(available_at=datetime.now(UTC))
+                sa.update(Job).where(Job.id == recheck_id).values(available_at=datetime.now(UTC))
             )
             session.commit()
 
@@ -269,9 +265,7 @@ class TestNoOpRecheckAdvancesTheChain:
                 .values(accessed_at=datetime.now(UTC) - timedelta(days=30))
             )
             session.execute(
-                sa.update(Job)
-                .where(Job.id == recheck_id)
-                .values(available_at=datetime.now(UTC))
+                sa.update(Job).where(Job.id == recheck_id).values(available_at=datetime.now(UTC))
             )
             session.commit()
 
@@ -319,9 +313,7 @@ class TestRecheckChainSurvivesTwoCycles:
                 job = session.get(Job, current)
                 seen_keys.append(job.idempotency_key)
                 session.execute(
-                    sa.update(Job)
-                    .where(Job.id == current)
-                    .values(available_at=datetime.now(UTC))
+                    sa.update(Job).where(Job.id == current).values(available_at=datetime.now(UTC))
                 )
                 session.commit()
 
@@ -367,10 +359,7 @@ class TestSupersededExcluded:
         superseded = ClaimStatus.SUPERSEDED
         now = datetime.now(UTC)
         ancient = now - timedelta(days=900)
-        assert (
-            apply_freshness(superseded, ClaimType.ADMISSION_DEADLINE, ancient, now)
-            is superseded
-        )
+        assert apply_freshness(superseded, ClaimType.ADMISSION_DEADLINE, ancient, now) is superseded
 
     def test_a_superseded_value_does_not_conflict_with_its_successor(self):
         """The whole point of было/стало: yesterday's value, already marked
@@ -581,7 +570,9 @@ def _t32_migration_paths() -> list[Path]:
     versions = Path(__file__).resolve().parent.parent / "migrations" / "versions"
     pattern = re.compile(r"down_revision\s*=\s*[\"']" + PRE_T32_HEAD + r"[\"']")
     return [
-        path for path in sorted(versions.glob("*.py")) if path.name != "__init__.py" and pattern.search(path.read_text())
+        path
+        for path in sorted(versions.glob("*.py"))
+        if path.name != "__init__.py" and pattern.search(path.read_text())
     ]
 
 
@@ -630,7 +621,11 @@ class TestT32MigrationRoundTrip:
         ]
         assert fks, "claims.source_page_id must reference source_pages"
         fk = fks[0]
-        assert fk.get("ondelete") == "SET NULL", (
+        # SQLAlchemy 2.0.36 reflects the FK delete action under
+        # fk["options"]["ondelete"] (both dialects); older shapes exposed it
+        # at the top level. Accept either — the fact is what we assert.
+        reflected_ondelete = fk.get("ondelete") or (fk.get("options") or {}).get("ondelete")
+        assert reflected_ondelete == "SET NULL", (
             "the FK must be ON DELETE SET NULL or the retention purge fails "
             "on pages still referenced by superseded claims"
         )
@@ -640,7 +635,12 @@ class TestT32MigrationRoundTrip:
 
         gen = _column(insp.get_columns("research_runs"), "recheck_generation")
         assert gen["nullable"] is False, "recheck_generation must be NOT NULL"
+        # Reflection representation differs per dialect: PostgreSQL populates
+        # server_default, SQLite exposes the DDL default as gen["default"]
+        # ("'0'"). Accept either — the fact (default 0) is what we assert.
         default = gen.get("server_default")
+        if default is None:
+            default = gen.get("default")
         assert default is not None and "0" in str(getattr(default, "arg", default)), (
             "recheck_generation must carry a server default of 0"
         )
@@ -648,9 +648,7 @@ class TestT32MigrationRoundTrip:
     def _assert_no_t32_columns(self, engine):
         insp = sa.inspect(engine)
         assert "source_page_id" not in {c["name"] for c in insp.get_columns("claims")}
-        assert "recheck_generation" not in {
-            c["name"] for c in insp.get_columns("research_runs")
-        }
+        assert "recheck_generation" not in {c["name"] for c in insp.get_columns("research_runs")}
 
     def test_upgrade_then_downgrade_on_sqlite(self, tmp_path):
         from alembic import command
