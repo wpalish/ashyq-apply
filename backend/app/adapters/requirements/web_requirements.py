@@ -16,7 +16,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 
-from app.adapters.base import AdapterResult, Candidate, CandidateProgram
+from app.adapters.base import AdapterResult, Candidate, CandidateProgram, PageOutcome
 from app.adapters.extraction import (
     ClaimBuilder,
     excerpt_around,
@@ -91,7 +91,13 @@ class WebRequirementsAdapter:
             out.pages_checked += 1
             if not res.ok:
                 out.pages_failed += 1
-                out.errors.append(f"{target.url}: {res.outcome.value} — {res.error}")
+                out.page_outcomes.append(
+                    PageOutcome(
+                        url=target.url,
+                        category="fetch-failed",
+                        detail=f"{res.outcome.value} — {res.error}",
+                    )
+                )
                 if res.outcome in (
                     FetchOutcome.TIMEOUT,
                     FetchOutcome.NETWORK_UNAVAILABLE,
@@ -103,8 +109,12 @@ class WebRequirementsAdapter:
             text = pdf_to_text(res.content) if res.is_pdf else readable_text(res.text)
             if not text.strip():
                 out.pages_failed += 1
-                out.errors.append(
-                    f"{target.url}: page fetched but no readable text could be extracted"
+                out.page_outcomes.append(
+                    PageOutcome(
+                        url=target.url,
+                        category="unreadable",
+                        detail="page fetched but no readable text could be extracted",
+                    )
                 )
                 continue
 
@@ -112,9 +122,17 @@ class WebRequirementsAdapter:
             out.page_types.append((target.url, page.page_type.value))
 
             if not page.accepts("requirements"):
-                out.errors.append(
-                    f"{target.url}: classified as {page.page_type.value}; no requirement can be "
-                    "read from this kind of page."
+                out.page_outcomes.append(
+                    PageOutcome(
+                        url=target.url,
+                        category="classifier-rejected",
+                        page_type=page.page_type.value,
+                        readable_chars=len(text),
+                        detail=(
+                            f"classified as {page.page_type.value}; no requirement can be "
+                            "read from this kind of page."
+                        ),
+                    )
                 )
                 continue
 
@@ -145,6 +163,20 @@ class WebRequirementsAdapter:
             self._claim_fees(text, builder)
 
             out.claims.extend(builder.claims)
+            out.page_outcomes.append(
+                PageOutcome(
+                    url=target.url,
+                    category="fetched-ok" if builder.claims else "no-pattern-match",
+                    page_type=page.page_type.value,
+                    readable_chars=len(text),
+                    detail=(
+                        f"{len(builder.claims)} claims read from this page"
+                        if builder.claims
+                        else "page was read and accepted, but no requirement pattern "
+                        "matched; nothing on it is claimed"
+                    ),
+                )
+            )
 
         if not out.claims and out.pages_checked == 0:
             out.errors.append(

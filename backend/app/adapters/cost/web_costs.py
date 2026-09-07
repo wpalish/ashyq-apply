@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from app.adapters.base import AdapterResult, Candidate
+from app.adapters.base import AdapterResult, Candidate, PageOutcome
 from app.adapters.extraction import (
     ClaimBuilder,
     extract_costs,
@@ -12,6 +12,7 @@ from app.adapters.extraction import (
     readable_text,
 )
 from app.adapters.fetching import Fetcher
+from app.adapters.page_classifier import classify_page
 from app.domain.enums import ClaimType, CostCategory, SourceSpecificity
 from app.schemas.money import Money
 from app.schemas.result import CostBreakdown
@@ -46,11 +47,34 @@ class WebCostAdapter:
         out.pages_checked += 1
         if not res.ok:
             out.pages_failed += 1
-            out.errors.append(f"{candidate.costs_url}: {res.outcome.value} — {res.error}")
+            out.page_outcomes.append(
+                PageOutcome(
+                    url=candidate.costs_url,
+                    category="fetch-failed",
+                    detail=f"{res.outcome.value} — {res.error}",
+                )
+            )
             out.retry_urls.append(candidate.costs_url)
             return breakdown, out
 
         text = pdf_to_text(res.content) if res.is_pdf else readable_text(res.text)
+        if not text.strip():
+            out.pages_failed += 1
+            out.page_outcomes.append(
+                PageOutcome(
+                    url=candidate.costs_url,
+                    category="unreadable",
+                    detail="page fetched but no readable text could be extracted",
+                )
+            )
+            return breakdown, out
+
+        # Classified for the record only: a fees page read as a navigation
+        # shell still yields no figures, and the run should be able to say why.
+        page = classify_page(
+            url=candidate.costs_url, html="" if res.is_pdf else res.text, text=text
+        )
+        out.page_types.append((candidate.costs_url, page.page_type.value))
         year = _detect_year(text) or self.academic_year
         builder = ClaimBuilder(
             source_url=candidate.costs_url,
@@ -86,8 +110,24 @@ class WebCostAdapter:
                 breakdown.items[category] = money
 
         if not breakdown.items and breakdown.total is None:
-            out.errors.append(
-                f"{candidate.costs_url}: page was read but no cost figures could be extracted."
+            out.page_outcomes.append(
+                PageOutcome(
+                    url=candidate.costs_url,
+                    category="no-pattern-match",
+                    page_type=page.page_type.value,
+                    readable_chars=len(text),
+                    detail="page was read but no cost figures could be extracted",
+                )
+            )
+        else:
+            out.page_outcomes.append(
+                PageOutcome(
+                    url=candidate.costs_url,
+                    category="fetched-ok",
+                    page_type=page.page_type.value,
+                    readable_chars=len(text),
+                    detail=f"{len(claims)} cost figures read from this page",
+                )
             )
         return breakdown, out
 

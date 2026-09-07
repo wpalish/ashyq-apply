@@ -14,6 +14,9 @@ What it measures, per institution:
 * which URLs discovery selected, by category, and where each came from
 * whether a programme page and a scholarship page were found at all
 * pages fetched, and pages that failed, with the reason
+* per page: how its reading ended (fetched-ok / fetch-failed / unreadable /
+  classifier-rejected / no-pattern-match), what kind of page it was, and the
+  adapter's own reason — so a zero claims are explained, not just reported
 * how many claims came back, and the run's own completeness score
 * structural false positives, in the four categories where we allow none:
   a full-ride classification, a degree applicability verdict, a deadline and
@@ -36,6 +39,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import re
 import sys
 import tempfile
 from collections import Counter
@@ -186,6 +190,33 @@ class TracingAdapter(LiveDiscoveryAdapter):
             kwargs.setdefault("registry_path", TracingAdapter.registry_override)
         super().__init__(*args, **kwargs)
         TracingAdapter.instances.append(self)
+
+
+# --- per-page extraction outcomes -----------------------------------------
+
+#: The record the runner files on the run for every page it touched:
+#: "page <category>: <url> (page_type <type>[, <n> chars]): <reason>".
+#: Categories: fetch-failed / unreadable / classifier-rejected /
+#: no-pattern-match / fetched-ok.
+_PAGE_OUTCOME_RE = re.compile(
+    r"^page (?P<category>[a-z-]+): (?P<url>\S+) "
+    r"\(page_type (?P<page_type>[a-z_]+)(?:, (?P<characters>\d+) chars)?\): (?P<detail>.*)$"
+)
+
+
+def page_outcomes(run: ResearchRun) -> list[dict[str, str]]:
+    """The run's per-page outcome records, parsed back out of its diagnostics.
+
+    Both columns are read: a page that could not be read at all is filed as a
+    failure, a page that was read and said nothing as an unknown, and the
+    report has to count both to explain a zero.
+    """
+    found = []
+    for line in list(run.errors or []) + list(run.unknowns or []):
+        match = _PAGE_OUTCOME_RE.match(str(line))
+        if match:
+            found.append(match.groupdict())
+    return found
 
 
 # --- the four zero-tolerance checks --------------------------------------
@@ -410,6 +441,12 @@ async def run_canary(only: str | None, verbose: bool) -> dict:
 
     traces = {t.institution: t for adapter in TracingAdapter.instances for t in adapter.traces}
 
+    # Per-page outcomes, filed by the runner next to the prose errors. Grouped
+    # by domain so each institution's row explains its own pages.
+    records_by_domain: dict[str, list[dict[str, str]]] = {}
+    for record in page_outcomes(run):
+        records_by_domain.setdefault(registrable_domain(record["url"]), []).append(record)
+
     rows = []
     for entry in registry:
         name = entry["name"]
@@ -427,6 +464,11 @@ async def run_canary(only: str | None, verbose: bool) -> dict:
         trace = traces.get(name)
         result = results.get(name)
         claims = claims_by_result.get(result_ids.get(name, ""), [])
+        page_records = records_by_domain.get(domain, [])
+        outcome_counts = Counter(record["category"] for record in page_records)
+        type_counts = Counter(
+            record["page_type"] for record in page_records if record["page_type"] != "unclassified"
+        )
 
         row_out = {
             "institution": name,
@@ -464,6 +506,12 @@ async def run_canary(only: str | None, verbose: bool) -> dict:
             "funding_fit": result.funding_fit.value if result else "no result",
             "scholarships_found": len(result.scholarships) if result else 0,
             "false_positives": false_positives(result, claims) if result else [],
+            # Why the pages produced what they did, per page: fetch-failed /
+            # unreadable / classifier-rejected / no-pattern-match / fetched-ok,
+            # each read page's classification, and the adapter's own reason.
+            "page_outcomes": dict(outcome_counts),
+            "page_types": dict(type_counts),
+            "page_diagnostics": page_records[:40],
         }
         rows.append(row_out)
         if verbose:
@@ -474,6 +522,11 @@ async def run_canary(only: str | None, verbose: bool) -> dict:
             )
 
     session.close()
+    totals_outcomes: Counter = Counter()
+    totals_types: Counter = Counter()
+    for reported in rows:
+        totals_outcomes.update(reported["page_outcomes"])
+        totals_types.update(reported["page_types"])
     return {
         "accessed_at": started.isoformat(),
         "duration_seconds": round((finished - started).total_seconds(), 1),
@@ -487,6 +540,8 @@ async def run_canary(only: str | None, verbose: bool) -> dict:
             "scholarship_pages_found": sum(1 for r in rows if r["scholarship_page_found"]),
             "claims": sum(r["claims"] for r in rows),
             "false_positives": sum(len(r["false_positives"]) for r in rows),
+            "page_outcomes": dict(totals_outcomes),
+            "page_types": dict(totals_types),
         },
     }
 
@@ -569,6 +624,18 @@ async def main() -> int:
         f"claims {totals['claims']}, "
         f"false positives {totals['false_positives']}"
     )
+    outcomes = totals.get("page_outcomes") or {}
+    if outcomes:
+        print(
+            "page outcomes: "
+            + ", ".join(f"{category} {count}" for category, count in sorted(outcomes.items()))
+        )
+        types = totals.get("page_types") or {}
+        if types:
+            print(
+                "page types: "
+                + ", ".join(f"{page_type} {count}" for page_type, count in sorted(types.items()))
+            )
     if report["run_error"]:
         print(f"RUN ERROR: {report['run_error']}")
 

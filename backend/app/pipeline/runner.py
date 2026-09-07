@@ -15,7 +15,7 @@ from datetime import UTC, datetime
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.adapters.base import Candidate, CandidateProgram
+from app.adapters.base import Candidate, CandidateProgram, PageOutcome
 from app.adapters.browser import BrowserFetcher
 from app.adapters.cost.web_costs import WebCostAdapter
 from app.adapters.discovery.fixture_discovery import FixtureDiscoveryAdapter
@@ -57,6 +57,23 @@ from app.schemas.profile import ApplicantProfileIn
 from app.schemas.result import ProgramResult, Tristate
 
 log = logging.getLogger("unimatch.pipeline")
+
+#: Page-outcome categories that mean the page could not be read at all; the
+#: rest (fetched-ok, no-pattern-match) are honest unknowns, not failures.
+_PAGE_PROBLEM_CATEGORIES = frozenset({"fetch-failed", "unreadable", "classifier-rejected"})
+
+
+def _page_outcome_line(outcome: PageOutcome) -> str:
+    """One parseable line per page: category, url, classification, reason.
+
+    This is the record the canary report reads back to separate
+    fetch-failed / unreadable / classifier-rejected / no-pattern-match and to
+    show each page's classification — the "35 pages, 0 claims" run used to
+    carry none of it.
+    """
+    size = f", {outcome.readable_chars} chars" if outcome.readable_chars else ""
+    page_type = outcome.page_type or "unclassified"
+    return f"page {outcome.category}: {outcome.url} (page_type {page_type}{size}): {outcome.detail}"
 
 
 class RunCancelled(RuntimeError):
@@ -402,6 +419,7 @@ class ResearchRunner:
 
         errors: list[str] = []
         retry: list[str] = []
+        outcomes: list[PageOutcome] = []
         seen_keys: set[str] = set()
 
         for cand in targets:
@@ -448,12 +466,14 @@ class ResearchRunner:
                 ar = await req.verify(cand, prog, self.intake)
                 errors.extend(ar.errors)
                 retry.extend(ar.retry_urls)
+                outcomes.extend(ar.page_outcomes)
                 self.run.pages_checked += ar.pages_checked
                 self.run.pages_failed += ar.pages_failed
 
                 cb, cr = await cost.fetch(cand)
                 errors.extend(cr.errors)
                 retry.extend(cr.retry_urls)
+                outcomes.extend(cr.page_outcomes)
                 self.run.pages_checked += cr.pages_checked
                 self.run.pages_failed += cr.pages_failed
                 result.costs = cb
@@ -520,6 +540,7 @@ class ResearchRunner:
             self._save()
 
         self._record_diagnostics(errors)
+        self._record_page_outcomes(outcomes)
         self.run.retry_urls = sorted(set(list(self.run.retry_urls or []) + retry))[:200]
         st.finish(
             f"{self.run.programs_verified} programmes checked across "
@@ -912,6 +933,26 @@ class ResearchRunner:
         """
         failures, unknowns = diagnostics.split(messages)
         self.run.errors = list(self.run.errors or []) + failures[:200]
+        self.run.unknowns = list(self.run.unknowns or []) + unknowns[:400]
+
+    def _record_page_outcomes(self, outcomes: list[PageOutcome]) -> None:
+        """File one diagnostic per page touched, next to the prose errors.
+
+        A page that was fetched fine but answered nothing (unreadable text,
+        rejected by the classifier, no pattern matched) must not vanish: the
+        run keeps its category, its classification and the adapter's reason,
+        so a report built from this row can explain a zero instead of only
+        reporting it.
+        """
+        if not outcomes:
+            return
+        problems = [
+            _page_outcome_line(o) for o in outcomes if o.category in _PAGE_PROBLEM_CATEGORIES
+        ]
+        unknowns = [
+            _page_outcome_line(o) for o in outcomes if o.category not in _PAGE_PROBLEM_CATEGORIES
+        ]
+        self.run.errors = list(self.run.errors or []) + problems[:200]
         self.run.unknowns = list(self.run.unknowns or []) + unknowns[:400]
 
     def _add_unresolved(

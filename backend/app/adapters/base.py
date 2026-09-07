@@ -47,6 +47,24 @@ class Candidate:
         return bool(self.admissions_url or self.costs_url or any(p.url for p in self.programs))
 
 
+@dataclass(frozen=True)
+class PageOutcome:
+    """How one page's reading ended, in the run's own vocabulary.
+
+    The categories are the frozen T18 acceptance vocabulary: a report built
+    from a run must be able to separate fetch-failed / unreadable /
+    classifier-rejected / no-pattern-match instead of reporting "35 pages,
+    0 claims, 0 failed" — a fetch-level fact that cannot explain itself.
+    ``page_type`` is the classifier's answer for pages that were read.
+    """
+
+    url: str
+    category: str
+    page_type: str = ""
+    detail: str = ""
+    readable_chars: int = 0
+
+
 @dataclass
 class AdapterResult:
     """What an adapter produced plus what went wrong doing it."""
@@ -59,6 +77,8 @@ class AdapterResult:
     #: (url, page_type) for every page read, so a run can show *why* a page
     #: produced nothing rather than only that it did.
     page_types: list[tuple[str, str]] = field(default_factory=list)
+    #: One outcome per page touched, for the run's persisted diagnostics.
+    page_outcomes: list[PageOutcome] = field(default_factory=list)
 
 
 @runtime_checkable
