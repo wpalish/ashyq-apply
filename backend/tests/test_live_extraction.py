@@ -245,6 +245,7 @@ async def _run_pipeline(monkeypatch, settings, profile: ApplicantProfileIn) -> d
         # happens to carry: a canary in another process sees only the row.
         session.expire_all()
         stored = session.get(ResearchRun, run.id)
+        assert stored is not None  # mypy: narrow ResearchRun | None
         return {
             "stage": stored.stage,
             "errors": list(stored.errors or []),
