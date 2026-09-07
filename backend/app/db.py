@@ -65,7 +65,10 @@ def _alembic_config(url: str):
 
     config = Config(str(ALEMBIC_INI))
     config.set_main_option("script_location", str(MIGRATIONS_DIR))
-    config.set_main_option("sqlalchemy.url", url)
+    # set_main_option passes through configparser interpolation, so a raw %
+    # — e.g. the percent-encoded socket path of a libpq URL — raises
+    # ValueError. Escape it; alembic un-escapes when it reads the value back.
+    config.set_main_option("sqlalchemy.url", url.replace("%", "%%"))
     return config
 
 
