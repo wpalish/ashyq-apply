@@ -13,9 +13,11 @@ leads; only a fetched and classified page is evidence.
 
 from __future__ import annotations
 
+import asyncio
 import gzip
 import json
 from datetime import UTC, datetime
+from pathlib import Path
 
 import pytest
 
@@ -1110,3 +1112,704 @@ def _trace():
     from app.adapters.discovery.live_discovery import DiscoveryTrace
 
     return DiscoveryTrace(institution="test", domain="uni.edu")
+
+
+# --- T29 A1: the catalog walker (RED-first on baseline 2ed4f51e) -----------
+#
+# Scenarios R1-R10 from the frozen T29 planner contract, authored RED-first.
+# On this baseline ``app.adapters.discovery.catalog_walker`` does not exist,
+# ``DiscoveryTrace`` carries no ``walker`` field, ``as_dict()`` has no
+# ``walker`` key, ``LiveDiscoveryAdapter`` has no ``walker_outcomes`` attribute
+# and accepts no ``page_recorder`` keyword. Every scenario here drives the
+# safe behaviour the walker must implement; on the baseline they fail as:
+#
+#   R1-R4, R9, R10   ImportError (new module) / KeyError "walker" (new trace
+#                    key) / AttributeError walker_outcomes — the accepted
+#                    new-module pattern (see test_source_pages.py).
+#   R5-R7            the contract's predicted mode is "no interception
+#                    happened" (empty programme list). Constructing the
+#                    contract's CatalogRenderer is a precondition of these
+#                    scenarios, so on the baseline the lazy import fails
+#                    first; R6 additionally pins the baseline behaviour that
+#                    already holds (the HTML links confirm without a walker)
+#                    as a justified-GREEN sub-assertion.
+#   R8               TypeError: ``page_recorder`` is a new keyword.
+#
+# Justified-GREEN pins (behaviour that already holds on the baseline and must
+# survive the walker) are marked ``justified-GREEN`` in their docstrings.
+#
+# The browser doubles below are file-local copies of the FakeBrowser/FakePage
+# PATTERN from test_browser_network.py — deliberately not imported from it.
+
+LIVE_SHAPES = Path(__file__).parent / "fixtures" / "live_shapes"
+
+
+def _shape(name: str) -> str:
+    """One of the frozen live_shapes fixtures, as text."""
+    return (LIVE_SHAPES / name).read_text()
+
+
+def _json_shape(name: str) -> str:
+    """The JSON fixtures re-serialised, so the wire body matches the file."""
+    return json.dumps(json.loads(_shape(name)))
+
+
+class FakeJsResponse:
+    """A network response the rendered page received.
+
+    Exposes the surface a response listener plausibly reads: url, status,
+    content type (attribute and headers) and the body as text or bytes.
+    """
+
+    def __init__(self, url: str, content_type: str, body: str, status: int = 200) -> None:
+        self.url = url
+        self.status = status
+        self.content_type = content_type
+        self.headers = {"content-type": content_type}
+        self._body = body
+        self.request = type("Req", (), {"url": url, "headers": dict(self.headers)})()
+
+    async def text(self) -> str:
+        return self._body
+
+    async def body(self) -> bytes:
+        return self._body.encode("utf-8")
+
+    async def json(self):
+        return json.loads(self._body)
+
+
+class WalkerFakePage:
+    """A rendered page that fires its recorded network responses on goto."""
+
+    def __init__(self, content: str, responses=(), status: int = 200) -> None:
+        self.content_html = content
+        self.goto_result = FakePlaywrightResult(status)
+        self.responses = list(responses)
+        self.handlers: list[tuple[str, object]] = []
+
+    def on(self, event, handler) -> None:
+        self.handlers.append((event, handler))
+
+    async def goto(self, url, wait_until=None, timeout=None):
+        for event, handler in self.handlers:
+            if event != "response":
+                continue
+            for response in self.responses:
+                outcome = handler(response)
+                if asyncio.iscoroutine(outcome):
+                    await outcome
+        return self.goto_result
+
+    async def wait_for_timeout(self, ms) -> None:
+        return None
+
+    async def content(self) -> str:
+        return self.content_html
+
+
+class FakePlaywrightResult:
+    """Just the attribute browser.py reads off a navigation response."""
+
+    def __init__(self, status: int) -> None:
+        self.status = status
+
+
+class WalkerFakeContext:
+    def __init__(self, page: WalkerFakePage) -> None:
+        self.page = page
+        self.routes: list[tuple[str, object]] = []
+        self.closed = False
+
+    async def route(self, pattern, handler) -> None:
+        self.routes.append((pattern, handler))
+
+    async def new_page(self) -> WalkerFakePage:
+        return self.page
+
+    async def close(self) -> None:
+        self.closed = True
+
+
+class WalkerFakeBrowser:
+    """Stands in for the Chromium handle browser.py drives."""
+
+    def __init__(self, page: WalkerFakePage) -> None:
+        self.page = page
+        self.contexts: list[WalkerFakeContext] = []
+
+    async def new_context(self, **kwargs) -> WalkerFakeContext:
+        context = WalkerFakeContext(self.page)
+        self.contexts.append(context)
+        return context
+
+
+def _js_catalog_renderer(tmp_path, page: WalkerFakePage):
+    """The contract's CatalogRenderer over the fake browser seam.
+
+    The renderer is attached to a Fetcher that is never entered as a context
+    manager (so ``_client`` stays None and no network happens) and whose
+    transport is the StubSite — the same shape test_browser_network.py uses.
+    """
+    from app.adapters.discovery.catalog_walker import CatalogRenderer
+
+    fetcher = Fetcher(tmp_path / "walker-cache", delay_seconds=0.0, respect_robots=False)
+    renderer = CatalogRenderer(fetcher)
+    renderer._browser = WalkerFakeBrowser(page)  # type: ignore[assignment]
+    fetcher.attach_renderer(renderer)
+    return fetcher, renderer
+
+
+def _catalogue_html(*anchors: str) -> str:
+    items = "".join(f'<li><a href="{url}">{label}</a></li>' for url, label in anchors)
+    return (
+        "<html><head><title>Programmes | University</title></head><body><main>"
+        "<h1>Our programmes</h1>"
+        "<p>Browse all the programmes this university offers across every "
+        "faculty, with details about each course and how to apply for it.</p>"
+        f"<ul>{items}</ul></main></body></html>"
+    )
+
+
+def _walker_entry() -> dict:
+    return {"name": "U", "country": "Netherlands", "city": "X", "homepage": "https://uni.edu/"}
+
+
+def _letter_suffix(i: int) -> str:
+    letters = "abcdefghijklmnopqrstuvwxyz"
+    return letters[i // 26] + letters[i % 26]
+
+
+class TestCatalogWalkerContract:
+    """T29 A1 scenarios R1-R10 (see the block comment above for RED modes)."""
+
+    @staticmethod
+    def registry_file(tmp_path, entry: dict) -> Path:
+        path = tmp_path / "registry.json"
+        path.write_text(json.dumps([entry]))
+        return path
+
+    # --- R1 ---------------------------------------------------------------
+
+    def test_r1_walker_extracts_scored_links(self):
+        """R1 walker_extracts_scored_links: the catalogue's links come out
+        scored by the frozen weights, strongest first, and links that can
+        never be a programme lead are hard-rejected before any fetch.
+
+        ``score_link(url, label, degree, fields)`` follows the contract
+        surface; if the walker needs sibling context for the repeating-list
+        bonus it reaches it through walk_catalog, not through this call.
+        """
+        from app.adapters.discovery.catalog_walker import WalkerLink, extract_links, score_link
+
+        html = _catalogue_html(
+            ("/study/bsc-computer-science", "BSc Computer Science"),
+            ("/study/computer-systems", "Computer Systems and Networks"),
+            ("/study/student-services", "Student services and support"),
+            ("/news/2026/press", "University press office contact"),
+            ("/contact", "Ask us"),
+            ("https://other.example.com/study/computer-science", "Their computer science"),
+        )
+        links = extract_links(html, "https://uni.edu/en/programmes", "uni.edu")
+        assert links and all(isinstance(link, WalkerLink) for link in links)
+        by_url = {link.url: link for link in links}
+        assert "https://uni.edu/study/bsc-computer-science" in by_url
+        # Off-domain links never enter the candidate list at all.
+        assert not any("other.example" in url for url in by_url)
+
+        degree, fields = "bachelor", ["computer science"]
+        top = score_link(
+            "https://uni.edu/study/bsc-computer-science", "BSc Computer Science", degree, fields
+        )
+        subject_only = score_link(
+            "https://uni.edu/study/computer-systems",
+            "Computer Systems and Networks",
+            degree,
+            fields,
+        )
+        generic = score_link(
+            "https://uni.edu/study/student-services",
+            "Student services and support",
+            degree,
+            fields,
+        )
+        assert top is not None and subject_only is not None and generic is not None
+        assert top > subject_only >= generic
+        # A news URL and a too-short label are never worth a fetch.
+        assert (
+            score_link(
+                "https://uni.edu/news/2026/press", "University press office contact", degree, fields
+            )
+            is None
+        )
+        assert score_link("https://uni.edu/contact", "Ask us", degree, fields) is None
+        for link in links:
+            assert link.source, "provenance of the link must be recorded"
+
+    # --- R2 ---------------------------------------------------------------
+
+    @pytest.mark.asyncio
+    async def test_r2_each_link_fetched_with_outcome(self, tmp_path, profile_bachelor):
+        """R2 each_link_fetched_with_outcome: the walker fetches a
+        catalogue's leads and records one outcome per link — a missing page
+        as the fetch vocabulary's ``http_error``, a news page as
+        ``reads_as_news``, a real programme as its page type — and the
+        confirmed programme reaches the candidate while the outcomes reach
+        both trace.walker and adapter.walker_outcomes.
+        """
+        catalogue = _catalogue_html(
+            ("/study/bsc-computer-science", "BSc Computer Science"),
+            ("/study/closed-course", "A programme that has been discontinued"),
+            ("/media/march-roundup", "University news and campus updates"),
+        )
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
+                "https://uni.edu/s.xml": sitemap_xml("https://uni.edu/en/programmes"),
+                "https://uni.edu/en/programmes": catalogue,
+                "https://uni.edu/study/bsc-computer-science": program_html(),
+                "https://uni.edu/media/march-roundup": _shape("news_page.html"),
+            }
+        )
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, _walker_entry()))
+            candidate = (await adapter.discover(profile_bachelor))[0]
+
+        walker = adapter.traces[0].walker  # KeyError/AttributeError RED on baseline
+        outcomes = repr(walker["outcomes"])
+        assert "http_error" in outcomes, "the 404 lead must be reported in the fetch vocabulary"
+        assert "reads_as_news" in outcomes, "the news page must be reported, not silently kept"
+        assert "program_detail" in outcomes, "the confirmed programme must be reported as read"
+        assert walker["programs_confirmed"] == 1
+
+        assert adapter.walker_outcomes, "walker_outcomes must be populated for the run report"
+        assert all(o.category == "catalog-walker" for o in adapter.walker_outcomes)
+        assert {o.url for o in adapter.walker_outcomes} >= {
+            "https://uni.edu/study/closed-course",
+            "https://uni.edu/media/march-roundup",
+            "https://uni.edu/study/bsc-computer-science",
+        }
+        assert [p.url for p in candidate.programs] == ["https://uni.edu/study/bsc-computer-science"]
+
+    # --- R3 ---------------------------------------------------------------
+
+    @pytest.mark.asyncio
+    async def test_r3_profile_predicate_reused(self, tmp_path, profile_bachelor):
+        """R3 profile_predicate_reused: the walker applies the same applicant
+        predicate as _confirm_programs — an MSc page reached through an
+        opaque URL ends as ``degree_level_mismatch``, never as the
+        applicant's programme, while the bachelor lead the link text names
+        is kept.
+        """
+        catalogue = _catalogue_html(
+            ("/study/data-computing", "BSc Computer Science"),
+            ("/study/advanced-computing", "Advanced Computing (MSc)"),
+        )
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
+                "https://uni.edu/s.xml": sitemap_xml("https://uni.edu/en/programmes"),
+                "https://uni.edu/en/programmes": catalogue,
+                "https://uni.edu/study/data-computing": program_html("BSc Computer Science"),
+                "https://uni.edu/study/advanced-computing": program_html("MSc Advanced Computing"),
+            }
+        )
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, _walker_entry()))
+            candidate = (await adapter.discover(profile_bachelor))[0]
+
+        assert [p.url for p in candidate.programs] == ["https://uni.edu/study/data-computing"]
+        # justified-GREEN pin: the confirm-stage rejection already holds on
+        # the baseline and must survive the walker unchanged.
+        assert any("degree level master" in reason for _u, reason in adapter.traces[0].rejected)
+
+        walker = adapter.traces[0].walker  # KeyError RED on baseline
+        outcomes = repr(walker["outcomes"])
+        assert "degree_level_mismatch" in outcomes, "the MSc page must end in the frozen outcome"
+        assert "program_detail" in outcomes
+
+    # --- R4 ---------------------------------------------------------------
+
+    @pytest.mark.asyncio
+    async def test_r4_off_domain_never_fetched(self, tmp_path, profile_bachelor):
+        """R4 off_domain_never_fetched: a partner site's programme page is
+        never fetched and never offered; the walker records it under the
+        frozen ``off_domain`` outcome.
+        """
+        partner = "https://partner.example.com/study/computer-science"
+        catalogue = _catalogue_html(
+            ("/study/computer-science", "BSc Computer Science"),
+            (partner, "Computer Science at the partner campus"),
+        )
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
+                "https://uni.edu/s.xml": sitemap_xml("https://uni.edu/en/programmes"),
+                "https://uni.edu/en/programmes": catalogue,
+                "https://uni.edu/study/computer-science": program_html(),
+            }
+        )
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, _walker_entry()))
+            candidate = (await adapter.discover(profile_bachelor))[0]
+
+        # justified-GREEN pin: the same-domain boundary already holds on the
+        # baseline and must survive the walker unchanged.
+        assert partner not in site.requested
+        assert partner not in [p.url for p in candidate.programs]
+
+        walker = adapter.traces[0].walker  # KeyError RED on baseline
+        assert "off_domain" in repr(walker["outcomes"]), "the rejection must be explained"
+
+    # --- R5 ---------------------------------------------------------------
+
+    @pytest.mark.asyncio
+    async def test_r5_js_json_payload_yields_programs(self, tmp_path, profile_bachelor):
+        """R5 js_json_payload_yields_programs: a JS catalogue whose HTML is
+        an empty shell has its JSON payload intercepted and its {name, url}
+        entries fetched and confirmed — the URLs need not match any URL
+        pattern, because the payload is the university's own statement of
+        what its programmes are.
+        """
+        payload = _json_shape("js_catalog_payload.json")
+        page = WalkerFakePage(
+            content=_shape("js_catalog_shell.html"),
+            responses=[
+                FakeJsResponse(
+                    "https://uni.edu/api/catalogs/programmes.json", "application/json", payload
+                )
+            ],
+        )
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "User-agent: *\n",
+                "https://uni.edu/p/42": program_html("BSc Computer Science"),
+                "https://uni.edu/p/77": program_html("BSc Mathematics"),
+            }
+        )
+        fetcher, _renderer = _js_catalog_renderer(tmp_path, page)  # ImportError RED on baseline
+        site.install(fetcher)
+        adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, _walker_entry()))
+        candidate = (await adapter.discover(profile_bachelor))[0]
+
+        assert {p.url for p in candidate.programs} == {
+            "https://uni.edu/p/42",
+            "https://uni.edu/p/77",
+        }, "the JSON payload's programmes must be fetched even though /p/N matches no pattern"
+        walker = adapter.traces[0].walker
+        assert walker["catalogs_walked"] == 1
+        assert walker["programs_confirmed"] == 2
+        assert "https://uni.edu/p/42" in site.requested
+
+    # --- R6 ---------------------------------------------------------------
+
+    @pytest.mark.asyncio
+    async def test_r6_js_unrelated_json_falls_through(self, tmp_path, profile_bachelor):
+        """R6 js_unrelated_json_falls_through: JSON that carries no
+        {name, url} arrays is not a programme list — the catalogue's HTML
+        links drive the walk and nothing is invented from the JSON.
+
+        justified-GREEN sub-pin: on the baseline the plain HTML links are
+        already confirmed through the navigation fallback, and that must
+        survive the walker unchanged.
+        """
+        programme = "https://uni.edu/study/bsc-computer-science"
+        catalogue = _catalogue_html(
+            (programme, "BSc Computer Science"),
+            ("/study/physics", "BSc Physics"),
+        )
+        page = WalkerFakePage(
+            content=catalogue,
+            responses=[
+                FakeJsResponse(
+                    "https://uni.edu/api/analytics.json",
+                    "application/json",
+                    _json_shape("js_catalog_unrelated.json"),
+                )
+            ],
+        )
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "User-agent: *\n",
+                "https://uni.edu/en/programmes": catalogue,
+                programme: program_html(),
+            }
+        )
+        fetcher, _renderer = _js_catalog_renderer(tmp_path, page)  # ImportError RED on baseline
+        site.install(fetcher)
+        adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, _walker_entry()))
+        candidate = (await adapter.discover(profile_bachelor))[0]
+
+        # justified-GREEN: HTML alone already yields the programme on baseline.
+        assert [p.url for p in candidate.programs] == [programme], (
+            "the HTML fallback must drive, and the unrelated JSON must invent nothing"
+        )
+        walker = adapter.traces[0].walker  # KeyError RED on baseline
+        assert walker["catalogs_walked"] == 1
+        invented = {p.url for p in candidate.programs} - {programme}
+        assert not invented, f"programmes fabricated from a JSON that lists none: {invented}"
+
+    # --- R7 ---------------------------------------------------------------
+
+    @pytest.mark.asyncio
+    async def test_r7_js_silent_shell_is_recorded_not_fatal(self, tmp_path, profile_bachelor):
+        """R7 js_silent_shell_is_recorded_not_fatal: a shell with neither a
+        JSON programme list nor HTML links ends the walk with the frozen
+        ``js_no_program_list`` outcome — discovery completes, nothing
+        crashes, and the rest of the candidate is untouched.
+        """
+        page = WalkerFakePage(
+            content=_shape("js_catalog_shell.html"),
+            responses=[
+                FakeJsResponse(
+                    "https://uni.edu/api/analytics.json",
+                    "application/json",
+                    _json_shape("js_catalog_unrelated.json"),
+                )
+            ],
+        )
+        site = StubSite({"https://uni.edu/robots.txt": "User-agent: *\n"})
+        fetcher, _renderer = _js_catalog_renderer(tmp_path, page)  # ImportError RED on baseline
+        site.install(fetcher)
+        adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, _walker_entry()))
+        candidate = (await adapter.discover(profile_bachelor))[0]  # must not raise
+
+        assert candidate.programs == []
+        walker = adapter.traces[0].walker  # KeyError RED on baseline
+        assert "js_no_program_list" in repr(walker["outcomes"]), (
+            "a silent shell must be explained, not just empty"
+        )
+        assert walker["catalogs_walked"] == 1
+
+    # --- R8 ---------------------------------------------------------------
+
+    @pytest.fixture
+    def walker_source_session(self, tmp_path):
+        """A migrated SQLite database (the test_source_pages.py pattern):
+        migrated rather than create_all, so the migration stays under test."""
+        import sqlalchemy as sa
+        from sqlalchemy.orm import sessionmaker
+
+        from app.db import migrate_to_head
+
+        url = f"sqlite:///{tmp_path / 'walker_source_pages.db'}"
+        migrate_to_head(url)
+        engine = sa.create_engine(url)
+        session = sessionmaker(bind=engine, future=True)()
+        try:
+            yield session
+        finally:
+            session.close()
+            engine.dispose()
+
+    @pytest.mark.asyncio
+    async def test_r8_source_pages_rows_recorded(
+        self, tmp_path, profile_bachelor, walker_source_session
+    ):
+        """R8 source_pages_rows_recorded: with a page_recorder attached, every
+        walker-fetched link with an HTTP status writes one SourcePage row with
+        the frozen record kwargs — canonical url, registrable domain, the
+        classifier's page type, the status (definitive errors included) and
+        the fetch validators — and institution_key stays None because
+        discovery does not own the claim system's mapping.
+
+        RED on the baseline: TypeError, ``page_recorder`` is a new keyword.
+        """
+        from app.models import SourcePage
+
+        catalogue = _catalogue_html(
+            ("/study/bsc-computer-science", "BSc Computer Science"),
+            ("/study/closed-course", "A programme that has been discontinued"),
+            ("/media/march-roundup", "University news and campus updates"),
+            ("/study/quick-peek", "Peek"),
+        )
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
+                "https://uni.edu/s.xml": sitemap_xml("https://uni.edu/en/programmes"),
+                "https://uni.edu/en/programmes": catalogue,
+                "https://uni.edu/study/bsc-computer-science": program_html(),
+                "https://uni.edu/media/march-roundup": _shape("news_page.html"),
+            }
+        )
+        calls: list[dict] = []
+
+        def recorder(**kwargs):
+            calls.append(dict(kwargs))
+            return SourcePage.record(walker_source_session, **kwargs)
+
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            adapter = LiveDiscoveryAdapter(
+                fetcher,
+                self.registry_file(tmp_path, _walker_entry()),
+                page_recorder=recorder,  # TypeError RED on baseline
+            )
+            await adapter.discover(profile_bachelor)
+
+        walker_source_session.commit()
+        frozen = {
+            "url",
+            "registrable_domain",
+            "etag",
+            "last_modified_header",
+            "content_hash",
+            "http_status",
+            "page_type",
+            "institution_key",
+            "fetched_at",
+        }
+        assert calls, "the walker fetched pages but the recorder was never called"
+        assert all(set(call) == frozen for call in calls), "record kwargs are frozen by contract"
+        assert all(call["institution_key"] is None for call in calls)
+
+        rows = {row.url: row for row in walker_source_session.query(SourcePage).all()}
+        confirmed = rows["https://uni.edu/study/bsc-computer-science"]
+        assert confirmed.http_status == 200
+        assert confirmed.page_type == "program_detail"
+        assert confirmed.registrable_domain == "uni.edu"
+        assert confirmed.etag is None and confirmed.content_hash is None
+        assert confirmed.fetched_at is not None
+        assert confirmed.institution_key is None
+
+        missing = rows["https://uni.edu/study/closed-course"]
+        assert missing.http_status == 404, "a definitive HTTP error is still a fetch"
+        assert missing.page_type == "unknown", "an unreadable page was never classified"
+
+        news = rows["https://uni.edu/media/march-roundup"]
+        assert news.http_status == 200 and news.page_type == "news"
+
+        assert "https://uni.edu/study/quick-peek" not in rows, (
+            "a link below the label floor is never fetched, so never recorded"
+        )
+
+    # --- R9 ---------------------------------------------------------------
+
+    @pytest.mark.asyncio
+    async def test_r9_top_n_budget(self, tmp_path, profile_bachelor):
+        """R9 top_n_budget: thirty scored catalogue leads result in exactly
+        WALKER_TOP_N fetches — the strongest twenty, and none of the rest.
+        """
+        from app.adapters.discovery.catalog_walker import WALKER_TOP_N
+
+        assert WALKER_TOP_N == 20
+        computer_science = {
+            f"https://uni.edu/study/computer-science-{_letter_suffix(i)}": (
+                f"https://uni.edu/study/computer-science-{_letter_suffix(i)}",
+                f"BSc Computer Science group {_letter_suffix(i)}",
+            )
+            for i in range(20)
+        }
+        other = {
+            f"https://uni.edu/study/student-support-{_letter_suffix(i)}": (
+                f"https://uni.edu/study/student-support-{_letter_suffix(i)}",
+                f"Student services and support {_letter_suffix(i)}",
+            )
+            for i in range(10)
+        }
+        anchors = [*computer_science.values(), *other.values()]
+        served = {url: program_html() for url, _label in list(computer_science.values())[:2]}
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
+                "https://uni.edu/s.xml": sitemap_xml("https://uni.edu/en/programmes"),
+                "https://uni.edu/en/programmes": _catalogue_html(*anchors),
+                **served,
+            }
+        )
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, _walker_entry()))
+            await adapter.discover(profile_bachelor)
+
+        fetched = {u for u in site.requested if "/study/" in u}
+        assert fetched == set(computer_science), (
+            f"the walker's budget must stop at the top {WALKER_TOP_N} scored leads; "
+            f"fetched {len(fetched)}"
+        )
+        assert not any("student-support" in u for u in site.requested)
+
+    # --- R10 --------------------------------------------------------------
+
+    @pytest.mark.asyncio
+    async def test_r10_no_catalog_byte_identical(self, tmp_path, profile_bachelor):
+        """R10 no_catalog_byte_identical: with no catalogue anywhere the
+        walker is inactive — it fetches nothing, trace.walker reports zeros,
+        and every pre-existing trace key and the candidate keep exactly the
+        baseline values.
+        """
+        programme = "https://uni.edu/en/education/programmes/bachelors/computer-science"
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
+                "https://uni.edu/s.xml": sitemap_xml(programme),
+                programme: program_html(),
+            }
+        )
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, _walker_entry()))
+            candidate = (await adapter.discover(profile_bachelor))[0]
+
+        assert set(site.requested) == {
+            "https://uni.edu/robots.txt",
+            "https://uni.edu/s.xml",
+            programme,
+        }, "without a catalogue the walker must fetch nothing"
+        assert [p.url for p in candidate.programs] == [programme]
+
+        payload = adapter.traces[0].as_dict()
+        walker = payload["walker"]  # KeyError RED on baseline
+        assert set(walker) == {"catalogs_walked", "candidates", "programs_confirmed", "outcomes"}
+        assert walker["catalogs_walked"] == 0
+        assert walker["candidates"] == []
+        assert walker["programs_confirmed"] == 0
+        assert walker["outcomes"] == []
+        # Every pre-existing key keeps the baseline value: additive only.
+        assert payload["sitemaps_read"] == ["https://uni.edu/s.xml"]
+        assert payload["used_navigation_fallback"] is False
+        assert payload["selected"]["program_page"] == [programme]
+        assert payload["kept_by_link_text"] == []
+
+    @pytest.mark.asyncio
+    async def test_r10_demo_invariant(self, tmp_path, profile_bachelor):
+        """R10 demo_invariant: in demo mode discovery is the bundled corpus —
+        no university URL is ever requested and the demo adapter carries no
+        walker recording surface, so there is nothing a walker or a recorder
+        could be constructed from.
+
+        justified-GREEN: trivially true on the baseline (no walker exists)
+        and pinned so wiring the walker cannot silently change it.
+        """
+        from app.adapters.discovery.fixture_discovery import FixtureDiscoveryAdapter
+
+        site = StubSite({})
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            adapter = FixtureDiscoveryAdapter(fetcher)
+            await adapter.discover(profile_bachelor, 5)
+
+        assert site.requested == ["fixture://catalog.json"], (
+            "demo discovery must not crawl a university site"
+        )
+        assert not hasattr(adapter, "walker_outcomes"), "the demo adapter must stay walker-free"
+
+    # --- justified-GREEN pin ----------------------------------------------
+
+    def test_justified_green_titled_js_shell_is_a_catalogue(self):
+        """A titled JS shell is a PROGRAM_CATALOG already on the baseline
+        (page_classifier.py:341-348 via the title fallback at :471-477).
+
+        justified-GREEN, T27 pattern: pinned so the walker's JS tier starts
+        from a catalogue the classifier already recognises, and so a later
+        classifier change cannot silently drop the shell.
+        """
+        from app.adapters.page_classifier import PageType, classify_page
+
+        page = classify_page(
+            url="https://uni.edu/en/programmes", html=_shape("js_catalog_shell.html")
+        )
+        assert page.page_type == PageType.PROGRAM_CATALOG
