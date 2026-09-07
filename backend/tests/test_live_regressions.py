@@ -1188,3 +1188,226 @@ class TestDegreeApplicabilityOnRealShapes:
             "admitted students in the Faculty of Science. No separate application is required."
         )
         assert assess_degree_applicability(neutral, "bachelor").verdict == "unknown"
+
+
+# ---------------------------------------------------------------------------
+# T27 / L01 + audit FPs. RED at baseline 28d729c. Three audit false positives,
+# each written from the shape of the page that produced it:
+#
+# L01  a line that says fee waivers are NOT available was read as
+#      FEE_WAIVER_AVAILABLE=True (web_requirements.py:312-314);
+# FP   "$50 application fee" sitting in the 120-character window after a
+#      "tuition" label was published as a $50 tuition (extraction.py:475-482);
+# FP   a university domain appearing anywhere in the URL *string* (a query
+#      parameter, a hostile subdomain) made an attacker page "official", so
+#      its claims went out VERIFIED_CURRENT (extraction.py:96-103 and the
+#      ClaimBuilder.add gate at extraction.py:147-162).
+# ---------------------------------------------------------------------------
+
+
+async def _verify_page(
+    monkeypatch,
+    tmp_path,
+    *,
+    url: str,
+    html: str,
+    domain: str = "uni.edu",
+    program_name: str = "computer science (bachelor)",
+):
+    """Run the requirements adapter against one in-memory page.
+
+    Same harness as _verify_against, with the candidate's domain settable:
+    the spoofed-domain scenario needs a university whose domain differs from
+    the host the page is actually served from.
+    """
+    async with Fetcher(tmp_path / "cache", offline=True) as fetcher:
+        _serve(monkeypatch, fetcher, {url: html})
+        candidate = Candidate(
+            name="Test University", country="Netherlands", city="Delft", domain=domain
+        )
+        program = CandidateProgram(
+            name=program_name, field="computer science", degree=DegreeLevel.BACHELOR, url=url
+        )
+        return await WebRequirementsAdapter(fetcher, "2026/27").verify(
+            candidate, program, "fall 2027"
+        )
+
+
+async def _fetch_cost_page(monkeypatch, tmp_path, *, url: str, html: str, domain: str = "uni.edu"):
+    """Run the cost adapter against one in-memory fees page."""
+    from app.adapters.cost.web_costs import WebCostAdapter
+
+    async with Fetcher(tmp_path / "cache", offline=True) as fetcher:
+        _serve(monkeypatch, fetcher, {url: html})
+        candidate = Candidate(
+            name="Test University",
+            country="Netherlands",
+            city="Delft",
+            domain=domain,
+            costs_url=url,
+        )
+        return await WebCostAdapter(fetcher, "2026/27").fetch(candidate)
+
+
+class TestFeeWaiverNegation:
+    """A page that states waivers are NOT available must never yield
+    FEE_WAIVER_AVAILABLE=True. Frozen contract: explicit negation -> False,
+    an indeterminate mention -> no claim at all (unknown stays unknown)."""
+
+    URL = "https://uni.edu/admissions/requirements"
+
+    @pytest.mark.asyncio
+    async def test_an_explicit_negation_is_never_a_waiver_yes(self, tmp_path, monkeypatch):
+        result = await _verify_page(
+            monkeypatch,
+            tmp_path,
+            url=self.URL,
+            html=shape("requirements_fee_waiver_negation.html"),
+        )
+        waiver = claims_by_type(result.claims).get(ClaimType.FEE_WAIVER_AVAILABLE, [])
+        assert not [c for c in waiver if c.normalized_value is True], (
+            'the page says "Fee waivers are not available"; claiming True is '
+            f"the opposite of the page: {[c.normalized_value for c in waiver]}"
+        )
+
+    @pytest.mark.asyncio
+    async def test_an_indeterminate_waiver_mention_yields_no_claim(self, tmp_path, monkeypatch):
+        """A line that neither affirms nor negates waivers leaves the answer
+        unknown — and unknown is no claim, never a confident True."""
+        html = shape("requirements_fee_waiver_negation.html").replace(
+            "Fee waivers are not available for this programme.",
+            "Questions about fee waivers can be directed to the registry office.",
+        )
+        result = await _verify_page(monkeypatch, tmp_path, url=self.URL, html=html)
+        waiver = claims_by_type(result.claims).get(ClaimType.FEE_WAIVER_AVAILABLE, [])
+        assert not waiver, (
+            "an indeterminate 'fee waiver' mention must not become a claim at "
+            f"all, let alone True: {[c.normalized_value for c in waiver]}"
+        )
+
+    @pytest.mark.asyncio
+    async def test_the_application_fee_on_the_same_page_is_still_claimed(
+        self, tmp_path, monkeypatch
+    ):
+        """Justified GREEN guard: honest waiver handling must not stop the
+        adapter from reading the fee the page does publish."""
+        result = await _verify_page(
+            monkeypatch,
+            tmp_path,
+            url=self.URL,
+            html=shape("requirements_fee_waiver_negation.html"),
+        )
+        fees = claims_by_type(result.claims).get(ClaimType.APPLICATION_FEE, [])
+        assert [c.normalized_value for c in fees] == [{"amount": 50.0, "currency": "USD"}], (
+            "the published $50 application fee must survive as an "
+            f"APPLICATION_FEE claim: {[c.normalized_value for c in fees]}"
+        )
+
+
+class TestApplicationFeeSwallowedByTuitionWindow:
+    """extract_costs scans a 120-character window after the label "tuition"
+    (extraction.py:475-482) and reads the *first* money token in it. On this
+    page the first money after "Tuition" is the application fee, so the run
+    published a $50 tuition. A tuition under $100 is never a tuition."""
+
+    URL = "https://uni.edu/fees"
+
+    @pytest.mark.asyncio
+    async def test_the_cost_adapter_never_reads_the_fee_as_tuition(self, tmp_path, monkeypatch):
+        _, result = await _fetch_cost_page(
+            monkeypatch,
+            tmp_path,
+            url=self.URL,
+            html=shape("costs_application_fee_trap.html"),
+        )
+        tuition = claims_by_type(result.claims).get(ClaimType.TUITION, [])
+        assert not [c for c in tuition if c.normalized_value["amount"] < 100], (
+            "the $50 application fee inside the tuition label's window was "
+            f"read as tuition: {[c.normalized_value for c in tuition]}"
+        )
+
+    def test_extract_costs_itself_ignores_the_small_fee(self):
+        """Same guarantee at the extractor seam the fix lands on."""
+        from app.adapters.extraction import ClaimBuilder, extract_costs, readable_text
+
+        claims = extract_costs(
+            readable_text(shape("costs_application_fee_trap.html")),
+            ClaimBuilder(source_url=self.URL),
+        )
+        tuition = [c for c in claims if c.claim_type is ClaimType.TUITION]
+        assert not [c for c in tuition if c.normalized_value["amount"] < 100], (
+            f"extract_costs attached the application fee to tuition: "
+            f"{[c.normalized_value for c in tuition]}"
+        )
+
+    @pytest.mark.asyncio
+    async def test_a_genuine_tuition_figure_on_the_same_page_still_reads(
+        self, tmp_path, monkeypatch
+    ):
+        """Justified GREEN guard: the floor must not suppress tuition reading
+        altogether — the real $4,500 figure must still come through."""
+        html = shape("costs_application_fee_trap.html").replace(
+            "<p>Tuition for international students is set annually and a non-refundable\n"
+            "$50 application fee covers processing of the file</p>",
+            "<p>Fees are approved by the university council</p>",
+        )
+        _, result = await _fetch_cost_page(monkeypatch, tmp_path, url=self.URL, html=html)
+        tuition = claims_by_type(result.claims).get(ClaimType.TUITION, [])
+        assert [c.normalized_value["amount"] for c in tuition] == [4500.0], (
+            "a page that publishes a real tuition must still yield it: "
+            f"{[c.normalized_value for c in tuition]}"
+        )
+
+
+class TestSpoofedOfficialDomain:
+    """is_official_domain (extraction.py:96-103) asked whether the university
+    domain appears anywhere in the URL *string*. A query parameter or a
+    hostile subdomain therefore passed as an official source, and the
+    ClaimBuilder gate (extraction.py:147-162) published its claims as
+    VERIFIED_CURRENT."""
+
+    def test_a_query_parameter_is_not_the_page_host(self):
+        from app.adapters.extraction import is_official_domain
+
+        assert (
+            is_official_domain("https://attacker.example/?u=narxoz.kz", ["narxoz.kz"]) is False
+        ), "narxoz.kz inside ?u= is a URL substring, not the page's host"
+
+    def test_a_subdomain_of_an_attacker_domain_is_not_the_university(self):
+        from app.adapters.extraction import is_official_domain
+
+        assert is_official_domain("https://narxoz.kz.attacker.example/", ["narxoz.kz"]) is False, (
+            "narxoz.kz.attacker.example is a host owned by attacker.example"
+        )
+
+    def test_the_real_host_and_www_stay_official(self):
+        """Justified GREEN pin: the fix must keep recognising the real thing."""
+        from app.adapters.extraction import is_official_domain
+
+        assert is_official_domain("https://narxoz.kz/admissions", ["narxoz.kz"]) is True
+        assert is_official_domain("https://www.narxoz.kz/admissions", ["narxoz.kz"]) is True
+
+    @pytest.mark.asyncio
+    async def test_a_page_served_from_an_attacker_url_is_never_verified_current(
+        self, tmp_path, monkeypatch
+    ):
+        from app.domain.enums import ClaimStatus
+
+        url = "https://attacker.example/?u=narxoz.kz"
+        result = await _verify_page(
+            monkeypatch,
+            tmp_path,
+            url=url,
+            html=shape("requirements_attacker_spoofed_domain.html"),
+            domain="narxoz.kz",
+            program_name="BSc Computer Science",
+        )
+        assert result.claims, (
+            "the attacker page does carry readable requirements; what must "
+            "change is their status, not their existence"
+        )
+        verified = [c for c in result.claims if c.status is ClaimStatus.VERIFIED_CURRENT]
+        assert not verified, (
+            "a page served from attacker.example must not publish "
+            f"VERIFIED_CURRENT claims: {[(c.claim_type, c.normalized_value) for c in verified]}"
+        )
