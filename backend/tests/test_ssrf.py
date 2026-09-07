@@ -404,3 +404,74 @@ def _allow_example(url: str, **_kwargs):
     from app.adapters.network_policy import check_url as real
 
     return real(url, resolver=resolver_returning("93.184.216.34"))
+
+
+# --- T16 A1 additions: explicit non-2xx status guards ----------------------
+#
+# The HTTP tier already refuses >=400 responses (fetching.py:384-392). These
+# tests pin that behaviour explicitly for the statuses that matter most in the
+# wild, so the browser-tier fix in the same task cannot regress it. They are
+# justified-GREEN on the baseline: they guard existing correct behaviour.
+
+
+class TestErrorStatusesAreErrors:
+    @pytest.mark.asyncio
+    @pytest.mark.parametrize("status", [403, 404])
+    async def test_client_error_statuses_are_http_error_with_empty_text(
+        self, tmp_path, monkeypatch, status
+    ):
+        """A 403/404 is reported as HTTP_ERROR, status preserved, no body."""
+        import httpx
+
+        def handler(request: httpx.Request) -> httpx.Response:
+            return httpx.Response(status, text="you shall not pass")
+
+        async with Fetcher(tmp_path / "c", delay_seconds=0.0, respect_robots=False) as fetcher:
+            fetcher._client = httpx.AsyncClient(
+                transport=httpx.MockTransport(handler), follow_redirects=False
+            )
+            monkeypatch.setattr("app.adapters.fetching.check_url", _allow_example)
+            result = await fetcher.get("https://ok.example.com/gone")
+
+        assert result.outcome is FetchOutcome.HTTP_ERROR
+        assert result.status_code == status
+        assert str(status) in result.error
+        assert result.text == ""
+        assert result.content == b""
+
+    @pytest.mark.asyncio
+    async def test_429_is_retried_with_backoff_then_reported(self, tmp_path, monkeypatch):
+        """A rate-limited response is retried a bounded number of times.
+
+        MAX_ATTEMPTS caps the loop and the sleeps stay exponential (2s, 4s);
+        the sleeps are stubbed so the test proves the shape without paying it.
+        """
+        import asyncio
+
+        import httpx
+
+        attempts = {"n": 0}
+        slept: list[float] = []
+
+        async def fake_sleep(seconds):
+            slept.append(seconds)
+
+        def handler(request: httpx.Request) -> httpx.Response:
+            attempts["n"] += 1
+            return httpx.Response(429, text="slow down")
+
+        monkeypatch.setattr(asyncio, "sleep", fake_sleep)
+
+        async with Fetcher(tmp_path / "c", delay_seconds=0.0, respect_robots=False) as fetcher:
+            fetcher._client = httpx.AsyncClient(
+                transport=httpx.MockTransport(handler), follow_redirects=False
+            )
+            monkeypatch.setattr("app.adapters.fetching.check_url", _allow_example)
+            result = await fetcher.get("https://ok.example.com/busy")
+
+        assert attempts["n"] == 3  # bounded by MAX_ATTEMPTS, not a tight loop
+        assert slept == [2, 4]  # exponential backoff between attempts
+        assert result.outcome is FetchOutcome.HTTP_ERROR
+        assert result.status_code == 429
+        assert result.text == ""
+        assert result.content == b""
