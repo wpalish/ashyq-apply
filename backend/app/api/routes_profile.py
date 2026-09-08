@@ -19,12 +19,14 @@ from app.models import (
     ProgramResultRow,
     ResearchRun,
 )
+from app.payments.entitlements import free_view, has_full_access
 from app.schemas.profile import (
     ApplicantProfile,
     ApplicantProfileIn,
     GradeValue,
     ProfileValidationReport,
 )
+from app.schemas.result import ProgramResult
 from app.security import Principal, get_principal
 
 router = APIRouter(prefix="/api/profiles", tags=["profile"])
@@ -257,8 +259,15 @@ def export_profile(
     of results - not the results themselves, not a single claim, not one audit
     line. A person exercising a data right was handed a summary and told it was
     everything.
+
+    A data right covers the data held *about this person* - their profile,
+    decisions, notes and audit trail - not a free copy of research the
+    organization has not bought. Without the case entitlement the claims,
+    conflicts and per-result evidence are withheld (the counts still say how
+    much was withheld), and every row is marked ``paid_content_withheld``.
     """
     row = owned_profile(session, profile_id, principal)
+    allowed = has_full_access(session, principal.organization_id, profile_id)
     runs = session.query(ResearchRun).filter(ResearchRun.profile_id == profile_id).all()
     run_ids = [r.id for r in runs]
 
@@ -302,32 +311,49 @@ def export_profile(
             for r in runs
         ],
         "results": [
-            {
-                "id": result.id,
-                "run_id": result.run_id,
-                "user_decision": result.user_decision,
-                "user_decision_reason": result.user_decision_reason,
-                "user_notes": result.user_notes,
-                "decided_at": result.decided_at.isoformat() if result.decided_at else None,
-                "checklist": result.checklist,
-                **result.payload,
-            }
+            (
+                {
+                    "id": result.id,
+                    "run_id": result.run_id,
+                    "user_decision": result.user_decision,
+                    "user_decision_reason": result.user_decision_reason,
+                    "user_notes": result.user_notes,
+                    "decided_at": result.decided_at.isoformat() if result.decided_at else None,
+                    "checklist": result.checklist,
+                    **result.payload,
+                }
+                if allowed
+                else {
+                    **free_view(ProgramResult.model_validate(result.payload)).model_dump(
+                        mode="json"
+                    ),
+                    "paid_content_withheld": True,
+                }
+            )
             for result in results
         ],
-        "claims": [
-            {
-                "id": c.id,
-                "run_id": c.run_id,
-                "result_id": c.result_id,
-                "accessed_at": c.accessed_at.isoformat() if c.accessed_at else None,
-                **c.payload,
-            }
-            for c in claims
-        ],
-        "conflicts": [
-            {"id": c.id, "run_id": c.run_id, "result_id": c.result_id, **c.payload}
-            for c in conflicts
-        ],
+        "claims": (
+            [
+                {
+                    "id": c.id,
+                    "run_id": c.run_id,
+                    "result_id": c.result_id,
+                    "accessed_at": c.accessed_at.isoformat() if c.accessed_at else None,
+                    **c.payload,
+                }
+                for c in claims
+            ]
+            if allowed
+            else []
+        ),
+        "conflicts": (
+            [
+                {"id": c.id, "run_id": c.run_id, "result_id": c.result_id, **c.payload}
+                for c in conflicts
+            ]
+            if allowed
+            else []
+        ),
         "audit": [
             {
                 "id": event.id,
@@ -348,9 +374,20 @@ def export_profile(
             "audit_events": len(audit),
         },
         "note": (
-            "This is the complete record held for this applicant: the profile, every run, "
-            "every result with the decisions and notes on it, every claim and conflict behind "
-            "those results, and the audit trail. Deleting the applicant removes all of it."
+            (
+                "This is the complete record held for this applicant: the profile, every run, "
+                "every result with the decisions and notes on it, every claim and conflict behind "
+                "those results, and the audit trail. Deleting the applicant removes all of it."
+            )
+            if allowed
+            else (
+                "This is the record held for this applicant: the profile, every run, every result "
+                "with the decisions and notes on it, and the audit trail. The research evidence "
+                "behind the results (claims, conflicts, sources and funding detail) is withheld "
+                "here because this case has not been unlocked; the counts above state how much "
+                "there is, and each withheld row is marked paid_content_withheld. Deleting the "
+                "applicant removes all of it, withheld material included."
+            )
         ),
     }
 

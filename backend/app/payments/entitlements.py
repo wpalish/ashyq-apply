@@ -77,10 +77,13 @@ def free_view(result: ProgramResult) -> ProgramResult:
     """A copy of one row with the paid material removed.
 
     What survives is enough to know the programme exists and roughly how well
-    it fits. Everything that took a fetch to establish is withheld.
+    it fits. Everything that took a fetch to establish is withheld — including
+    where the cost figures came from: the cost breakdown itself stays readable,
+    but its source URLs do not.
     """
     trimmed = result.model_copy(deep=True)
     trimmed.source_urls = []
+    trimmed.costs.source_urls = []
     trimmed.claims = []
     trimmed.scholarships = []
     trimmed.requirement_checks = []

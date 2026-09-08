@@ -265,10 +265,14 @@ def set_decision(
 
     A rejected row is kept, with its reason, so the same programme is not
     proposed again on a later run unless something material changed.
+
+    A write is not a view: the answer is projected through the same free view
+    the shortlist uses, so a free organization can record a decision without
+    the response handing back the paid material a decision is about.
     """
     # The result id alone is not authority: resolve the run through the
     # principal's organization first, exactly as every read route does.
-    owned_run(session, run_id, principal)
+    _profile_id, allowed = access_for_run(session, run_id, principal)
     row = session.get(ProgramResultRow, result_id)
     if row is None or row.run_id != run_id:
         raise HTTPException(404, "Result not found")
@@ -296,7 +300,7 @@ def set_decision(
         )
     )
     session.commit()
-    return result
+    return result if allowed else free_view(result)
 
 
 class NotesIn(BaseModel):
@@ -316,8 +320,11 @@ def set_notes(
     Editing a note used to re-POST the decision, which stamped `decided_at` on
     a row the applicant had not decided anything about - so an undecided row
     started claiming it was decided the moment they typed a reminder in it.
+
+    Like the decision route, the answer is projected through the free view: a
+    note earns its author no look at the paid material behind the row.
     """
-    owned_run(session, run_id, principal)
+    _profile_id, allowed = access_for_run(session, run_id, principal)
     row = session.get(ProgramResultRow, result_id)
     if row is None or row.run_id != run_id:
         raise HTTPException(404, "Result not found")
@@ -337,7 +344,7 @@ def set_notes(
         )
     )
     session.commit()
-    return result
+    return result if allowed else free_view(result)
 
 
 @router.get("/claims")
