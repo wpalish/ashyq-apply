@@ -72,6 +72,12 @@ def get_provider() -> PaymentProvider:
             timeout_seconds=settings.apipay_timeout_seconds,
         )
 
+    # validate_runtime refuses an unknown provider at API startup, but the
+    # worker process never calls it: without this guard a typo like "apipy"
+    # would silently bill through the fake. A RuntimeError, not an assert —
+    # asserts vanish under `python -O`.
+    if settings.payments_provider != "fake":
+        raise RuntimeError("UNIMATCH_PAYMENTS_PROVIDER must be 'fake' or 'apipay'.")
     from app.payments.fake import get_shared_fake
 
     return get_shared_fake(settings.apipay_webhook_secret.get_secret_value() or "test-secret")

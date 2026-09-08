@@ -55,6 +55,13 @@ class ApiPayProvider:
         timeout_seconds: float = 20.0,
         transport: httpx.BaseTransport | None = None,
     ) -> None:
+        # The worker process never runs validate_runtime (T34), so refusing an
+        # empty credential here is its only line of defence against starting a
+        # billing-less client.
+        if not api_key:
+            raise ValueError("ApiPayProvider requires a non-empty api_key.")
+        if not webhook_secret:
+            raise ValueError("ApiPayProvider requires a non-empty webhook_secret.")
         self._secret = webhook_secret.encode()
         self._client = httpx.Client(
             base_url=base_url.rstrip("/"),
@@ -157,6 +164,10 @@ class ApiPayProvider:
     # -- webhooks ------------------------------------------------------
     def verify_webhook(self, raw_body: bytes, signature: str) -> bool:
         if not signature:
+            return False
+        # Fail closed: hmac.new(b"", ...) would verify a signature anyone can
+        # forge, so an empty secret must reject every signature outright.
+        if not self._secret:
             return False
         expected = "sha256=" + hmac.new(self._secret, raw_body, hashlib.sha256).hexdigest()
         return hmac.compare_digest(expected, signature)
