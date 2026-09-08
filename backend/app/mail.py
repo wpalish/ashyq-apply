@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import logging
 import smtplib
+import ssl
 from dataclasses import dataclass
 from email.message import EmailMessage
 
@@ -61,7 +62,14 @@ class SmtpSender(EmailSender):
         mail["Subject"] = message.subject
         mail.set_content(message.body)
         with smtplib.SMTP(self.settings.smtp_host, self.settings.smtp_port, timeout=20) as smtp:
-            smtp.starttls()
+            # The default context verifies the relay's certificate; without one
+            # smtplib would silently negotiate an encrypted but unauthenticated
+            # connection, and a machine on the path could relay the reset link.
+            ctx = ssl.create_default_context()
+            if not self.settings.smtp_tls_verify:
+                ctx.check_hostname = False
+                ctx.verify_mode = ssl.CERT_NONE
+            smtp.starttls(context=ctx)
             if self.settings.smtp_username:
                 smtp.login(self.settings.smtp_username, self.settings.smtp_password)
             smtp.send_message(mail)

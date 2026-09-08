@@ -94,6 +94,10 @@ class Settings(BaseSettings):
     smtp_username: str = ""
     smtp_password: str = ""
     smtp_from: str = "no-reply@ashyq.example"
+    #: Verify the relay's certificate before sending. False is for a self-hosted
+    #: relay on a trusted network whose name no public CA can check; production
+    #: refuses to start without it (env: UNIMATCH_SMTP_TLS_VERIFY).
+    smtp_tls_verify: bool = True
     #: Recorded on the user, never enforced while this is false: there is no
     #: verification flow yet, and pretending otherwise would be theatre.
     auth_require_verified_email: bool = False
@@ -199,6 +203,12 @@ class Settings(BaseSettings):
             )
         if self.email_sender == "smtp" and not self.smtp_host:
             raise RuntimeError("UNIMATCH_SMTP_HOST is required when the sender is smtp.")
+        if self.is_production and not self.smtp_tls_verify:
+            raise RuntimeError(
+                "UNIMATCH_SMTP_TLS_VERIFY must be true in production; STARTTLS without "
+                "certificate verification would deliver password-reset mail through anyone "
+                "on the path."
+            )
         if self.is_production and not self.public_base_url.startswith("https://"):
             raise RuntimeError("UNIMATCH_PUBLIC_BASE_URL must be an HTTPS origin in production.")
         if self.is_production and self.password_scrypt_log2 < 17:
