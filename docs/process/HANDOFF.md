@@ -8,32 +8,24 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 | | |
 |---|---|
-| Holder | **nobody** |
-| Since (UTC) | released 2026-09-07 14:10:54 UTC |
-| Branch | `ai/c1/integration`, local-only; synchronized by merge with `origin/main@7b1fce0` |
-| HEAD when written | `96c1082` (final publication handoff commit follows) |
-| Origin main when checked | `7b1fce0`; campaign published as GitHub PR #7, not merged into main |
-| Previous holder | gpt-6-astra on the now-merged shortlist fix; a separate ZCode/GLM campaign then produced five local task candidates without updating this baton |
+| Holder | **codex** |
+| Since (UTC) | 2026-09-08 03:38:21 UTC |
+| Branch | `ai/c2/integration`, local; publication authorized by owner |
+| HEAD when written | `9b362c8` (T16/T27/T28/T29/T32 integrated locally) |
+| Origin main when checked | `4d2125c`; PR #7 is merged and is the merge-base of this branch |
+| Previous holder | GLM/ZCode dispatcher; it released after integrating T32 but left T29 production wiring explicitly deferred |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
 
-**GLM campaign `c1` audit and release hardening — ready for review in GitHub PR #7.** The campaign
-integrated T01, T04, T09, T10 and a deliberately limited T18 slice: five of the 24 task cards, not the
-whole project. `25f5954` merged current `origin/main`; the original GLM candidate is preserved at
-`audit/glm-c1-e533d62`. The audit fixed stale payment journal writes (`7f364cf`), Kazakhstan academic
-domain handling (`135138a`) and wrong-level/subject live programme selection (`02d648c`).
-
-All local gates now pass: backend 1153 tests / 93.00% coverage plus Ruff/format/mypy; frontend 182
-unit tests plus typecheck/lint/build; ordinary E2E 75 passed/1 skipped; auth E2E 6/6; production
-dependency audits report zero known vulnerabilities. A bounded NU live canary improved from 0 to 1
-claim after the selection fix, with zero false positives, but remains at 0% verification completeness
-because the plain fetch sees only a 42-character admissions shell. Provider-backed search/LLM,
-browser-tier hardening, most of the 24-task backlog, publication and deployment remain unfinished.
-The owner subsequently authorized publishing everything to GitHub. `origin/ai/c1/integration` and
-PR #7 now contain the code, full evidence bundle and corrected audit. GitHub release-gates were in
-progress when this handoff was written. Protected-main merge and application deployment remain
-separate operations.
+**Campaign `c2` continuation — in progress at T29 production wiring, then T30 and T26.** GLM integrated
+T16 (browser/egress hardening), T27 (claim verifier), T28 (source pages), T29 (catalog walker at the
+adapter seam) and T32 (freshness/source scanning) onto this branch. Its own ledger and review correctly
+state that T29 remains dormant in production: `ResearchRunner` still constructs `BrowserFetcher` and
+`LiveDiscoveryAdapter(fetcher)` without `CatalogRenderer` or a `SourcePage.record` callback. The owner
+has now explicitly authorized completing the requested safe work, committing the `ai-team` campaign,
+publishing the branch and opening a PR, plus bounded T30 live batches. T31 remains blocked on an
+owner-selected provider, secrets outside Git, and the required data-policy acknowledgement.
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
@@ -220,11 +212,15 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-1. Wait for and inspect all release-gates on https://github.com/wpalish/ashyq-apply/pull/7.
-2. Owner reviews PR #7 and chooses whether to merge it into protected `main`.
-3. For real live research, choose a search provider and optional LLM provider, provision their secrets
-   outside Git, then implement T16/T25 and the remaining T18 dependencies before calling it release-ready.
-4. Do not merge protected main, deploy, buy a provider, add secrets or touch production data implicitly.
+1. Add RED-first tests for the T29 runner wiring and the two Low review findings: deeply nested JSON
+   never raises and JSON programme labels are bounded to 160 characters.
+2. Wire `CatalogRenderer` and `SourcePage.record` into the non-demo `ResearchRunner`, then run target
+   and full gates.
+3. Run T30 as separately recorded bounded live batches, respecting robots/rate/PII policy; publish the
+   measured numerator/denominator and false-positive count exactly as observed.
+4. Implement the narrowed T26 dated NewsEvent slice only after T29/T30 are verified. Commit the
+   `ai-team` configuration/evidence, secret-scan, push `ai/c2/integration`, and open a PR. Do not merge
+   protected main, deploy, buy a provider, or add secrets implicitly.
 
 ## 6. Gate status at last run (numbers, not adjectives)
 
@@ -422,3 +418,4 @@ host=github.com
 | 2026-09-07 11:28:28 UTC | codex | `e533d62` → `25f5954` | Audited the local GLM campaign, independently reran backend/frontend and ordinary E2E, preserved the original candidate as `audit/glm-c1-e533d62`, merged current `origin/main@7b1fce0`, and opened a fix-forward for the stale payment-reconcile commit defect already noted by GLM security. No push/deploy. |
 | 2026-09-07 12:00:10 UTC | codex | `25f5954` → `02d648c` + final handoff | Fixed and PostgreSQL-tested stale payment rollback, fixed two live NU discovery defects, ran all backend/frontend/E2E/auth/dependency gates, and field-ran the bounded NU canary. Audit verdict: useful partial campaign, not completed project. Baton released; no push/main/deploy. |
 | 2026-09-07 14:10:54 UTC | codex | `ab2e70a` → `96c1082` + final publication handoff | Owner explicitly authorized GitHub publication. Secret-scanned and committed all 133 ai-team evidence files plus the corrected audit, pushed `ai/c1/integration`, and opened PR #7. Release-gates started; no protected-main merge or application deploy. |
+| 2026-09-08 03:38:21 UTC | codex | `9b362c8` → in progress | Took the C2 baton after verifying `origin/main@4d2125c` is the merge-base. Owner authorized T29 wiring, bounded T30 batches, T26, committing campaign evidence, and GitHub publication; T31 remains blocked on provider/secrets/data-policy acknowledgement. |
