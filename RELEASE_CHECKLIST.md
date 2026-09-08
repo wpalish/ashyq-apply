@@ -11,12 +11,14 @@ needs a person, not another phase: an external deployment, a lawyer for the
 privacy policy and terms (gate 87), and a live ApiPay account before payments
 can be switched on (gate 94).
 
-**CI on `main` is red, and has been since 2026-09-04.** One end-to-end test —
-`e2e/profile-persistence.spec.ts:26`, where `getByText('Saved')` matches two
-elements — fails on every push, first on desktop and now on mobile, and it stops
-`npm run e2e:auth` from running at all. Backend on both databases, lint, types,
-build, `pip-audit`, `npm audit` and `docker compose build` are green on the same
-commit. Gate 2 is PARTIAL until that test is fixed.
+**CI on `main` is green, and has been since 2026-09-07.** Verified green runs:
+main run 34115345524 (2026-09-07), PR runs 34188244906 and 34188286259, and the
+post-merge main run 34189211422 (all 2026-09-08, the campaign-c2 merge). The
+end-to-end suite that had been red since 2026-09-04
+(`e2e/profile-persistence.spec.ts:26`, two elements matching 'Saved') was fixed
+before that merge; gate 2 records the history. Standing rule: this CI status is
+refreshed at every merge to `main`, and a red `main` is a hotfix that outranks
+every feature.
 
 **`docs/FIX_PLAN.md` is finished.** Phases 0–6 are done, including the optional
 sixth; gates 36–92 below record what each fix is held to. Two audit findings
@@ -28,8 +30,8 @@ Phase 6; gates 93-96 record what they are held to.
 
 | # | Gate | Status | Evidence / what is missing |
 |---|---|---|---|
-| 1 | Existing 240 + 39 + 42 tests kept or replaced by stricter ones | **PASS** | 1110 + 164 + 74 (desktop and mobile) + 6 auth E2E, measured on `2be6b55`. Nothing removed; Phase 1 added 14, Phase 2 added 65, Phase 3 added 50, and Phase 5 added 21 backend (metrics, dead jobs) and 8 frontend (the needs-attention line, the legal page) |
-| 2 | All new unit / integration / E2E / security tests green | **PARTIAL** | `pytest` 1110 passed on `2be6b55` — in CI on both databases (coverage 92.86%, floor 92) and again locally on Windows/SQLite, same count. `vitest` 164 passed. **`playwright` is red: 70 passed, 1 failed, 1 skipped of 74**, and `e2e:auth` never runs because the suite exits first. Historical note from the previous update: `pytest` 818 passed, **including the PostgreSQL branch** — `pgserver` does provision a cluster on this machine after all, so the 25 tests recorded as unrunnable here now run and pass (`test_jobs.py` and `test_social_models.py`, 50 tests, no skips). `vitest` 137, `playwright` 67 passed / 1 skipped (desktop + mobile). The authenticated E2E config was not re-run here: it starts its own dev server and port 5173 was held by another process on this machine |
+| 1 | Existing 240 + 39 + 42 tests kept or replaced by stricter ones | **PASS** | 1110 + 164 + 74 (desktop and mobile) + 6 auth E2E, measured on `2be6b55`. Nothing removed; Phase 1 added 14, Phase 2 added 65, Phase 3 added 50, and Phase 5 added 21 backend (metrics, dead jobs) and 8 frontend (the needs-attention line, the legal page); the c2/c3 counts superseding them are recorded in gate 2 (1358 on the c2 merge, 1402 at `810bb00`) |
+| 2 | All new unit / integration / E2E / security tests green | **PASS** | `pytest` 1358 passed on the c2 merge — CI on both databases (coverage 93.81%, floor 92); at the c3 integration head `810bb00`: 1402 passed / 0 skipped, coverage 94.04% (local, 2026-09-08). `vitest` 182 passed. Playwright: ordinary 75 passed + 1 intentional skip, `e2e:auth` 6/6 (local, 2026-09-08). History: red on `main` 2026-09-04 → 2026-09-07 (`e2e/profile-persistence.spec.ts:26`, which also blocked `e2e:auth`); green runs since: 34115345524, 34188244906, 34188286259, 34189211422. |
 | 3 | ruff, mypy, TypeScript, ESLint, production build clean | **PASS** | all clean; build 74.0 kB JS gzip |
 | 4 | PostgreSQL migrations work on fresh and upgraded databases | **PASS** | Alembic. Verified fresh, downgrade to base, re-upgrade, re-apply as a no-op, on PostgreSQL 16.2 and SQLite. `create_all()` removed from the production path; startup refuses a mismatched revision |
 | 5 | Worker survives a crash restart | **PASS** | `scripts/crash_test.py` SIGKILLs a real worker after 12 results are written; a second worker recovers the job and finishes with no duplicates. Stable over 3 runs. **PostgreSQL-backed queue, not Redis — see ADR 0001** |
@@ -49,13 +51,13 @@ Phase 6; gates 93-96 record what they are held to.
 | 19 | Approve / reject / maybe and document collection work | **PASS** | Covered by E2E |
 | 20 | CSV / JSON / XLSX exports carry provenance and data origin | **PASS** | 38 columns incl. source links, last-verified, data origin |
 | 21 | Accessibility audit passed | **PASS** | axe WCAG A/AA scans every reachable workflow screen on desktop and mobile; focused keyboard/progress/table/overflow checks also pass |
-| 22 | Docker Compose brings up a production-like stack | **PASS** | Run for real on 2026-09-06 against Docker Desktop 4.89.0 / Engine 29.7.2 under WSL2: images built, migrations exited 0, postgres/api/web healthy, and registration plus a demo research run through nginx on :8080 returned 20 results at `awaiting_user_decision`. Two defects the run itself found are fixed in `docker-compose.yml`: the `/app/data` tmpfs was root-owned so the API died creating its cache directory, and the worker inherited an HTTP healthcheck for a port it does not serve. Evidence: `docs/DOCKER_VERIFICATION.md`. CI additionally runs `docker compose build` on every push. Earlier finding, kept: one real defect fixed: the read-only `api` had no writable `/app/data`, and `ensure_dirs()` runs at import, so the container would have died with EROFS before serving a request. The audit's other two compose findings did not reproduce — the worker's `worker-cache:/app/data` matches `BACKEND_ROOT` for the image compose builds, and `backend/Dockerfile` already carries a `curl` HEALTHCHECK. `scripts/verify_compose.sh` drives the whole stack to a finished demo run. **WRITTEN, NOT RUN: Docker is not installed on this machine.** Requires a user checkpoint |
+| 22 | Docker Compose brings up a production-like stack | **PASS** | Run for real on 2026-09-06 against Docker Desktop 4.89.0 / Engine 29.7.2 under WSL2: images built, migrations exited 0, postgres/api/web healthy, and registration plus a demo research run through nginx on :8080 returned 20 results at `awaiting_user_decision`. Two defects the run itself found are fixed in `docker-compose.yml`: the `/app/data` tmpfs was root-owned so the API died creating its cache directory, and the worker inherited an HTTP healthcheck for a port it does not serve. Evidence: `docs/DOCKER_VERIFICATION.md`. CI additionally runs `docker compose build` on every push. Earlier finding, kept: one real defect fixed: the read-only `api` had no writable `/app/data`, and `ensure_dirs()` runs at import, so the container would have died with EROFS before serving a request. The audit's other two compose findings did not reproduce — the worker's `worker-cache:/app/data` matches `BACKEND_ROOT` for the image compose builds, and `backend/Dockerfile` already carries a `curl` HEALTHCHECK. `scripts/verify_compose.sh` drives the whole stack to a finished demo run. Requires a user checkpoint |
 | 23 | Backup / restore and crash recovery verified | **PASS** | Real SIGKILL recovery plus a PostgreSQL `pg_dump`/`pg_restore` scratch-database drill: 12 tables and a synthetic probe restored identically |
 | 24 | Documentation matches actual behaviour | **PASS** | Three README overstatements corrected; status banner added |
 | 25 | No TODO / FIXME in a production path | **PASS** | `grep -rn "TODO\|FIXME" backend/app frontend/src` → none |
 | 26 | No disabled or skipped tests without written justification | **PASS** | No xfails. 25 skips, all one justified case: the PostgreSQL fixture skips when `pgserver` cannot start a cluster (its `initdb.exe` fails on Windows). The reason is in the skip message and in `conftest.py`; Linux CI provisions the real server and runs them |
 | 27 | Demo data unmistakably synthetic | **PASS** | Fixture banner, `fixture://` scheme, UI badge, export column. Loads only on an explicit confirmed action |
-| 28 | Independent live truth audit across five canary universities | **PASS** | Ten official domains audited; 26/30 category pages, 0 zero-tolerance false positives. Programme recall remains honestly limited to 1/10; see `docs/LIVE_DISCOVERY_REPORT.md` |
+| 28 | Independent live truth audit across five canary universities | **PASS** | Ten official domains audited; 26/30 category pages, 0 zero-tolerance false positives. Programme recall 7/10, category recall 26/30, 0 material false positives (T30 canary, 2026-09-08); see `docs/LIVE_DISCOVERY_REPORT.md` |
 | 29 | Local release commit/tag after all gates pass | **BLOCKED** | Gates open |
 | 30 | Nothing pushed externally without permission | **PASS** | External publication occurs only after the user's explicit GitHub upload request |
 
@@ -127,7 +129,7 @@ Phase 6; gates 93-96 record what they are held to.
 | 76 | The repository can be contributed to | **PASS** | LICENSE (MIT), CONTRIBUTING.md, bug and feature issue templates; `LOOP_REPORT.md` moved under `docs/process/` |
 | 77 | Half an answer is never rounded up to a whole one | **PASS** | `hours_per_week` without `weeks_per_year` is named in `missing_fields` and in the explanation instead of being silently discarded; the score is unchanged, so answering cannot cost the applicant anything. The 40-weeks assumption was rejected and the reasoning is recorded in `docs/PROFILE_FIELDS.md`. 4 tests |
 | 78 | A conversion method is only offered where it applies | **PASS** | `uk_class_to_us4` is no longer offered for non-UK percentage scales; matched on word boundaries, so "Ukrainian" is not read as "UK". 3 tests |
-| 79 | Live mode says how far it reaches | **PASS** | PreferencesScreen shows the registry's own recall note and country list when demo mode is switched off — ten institutions across eight countries, not the open web. A contract test pins the API shape to the TypeScript type and was verified to fail on a renamed key. 3 unit tests + 1 contract test |
+| 79 | Live mode says how far it reaches | **PASS** | PreferencesScreen shows the registry's own recall note and country list when demo mode is switched off — the registry's institutions (ten then, nineteen since gate 89), not the open web. A contract test pins the API shape to the TypeScript type and was verified to fail on a renamed key. 3 unit tests + 1 contract test |
 | 80 | The authenticated path is exercised end to end | **PASS** | `npm run e2e:auth` — a second Playwright config with `UNIMATCH_AUTH_ENABLED=true` and `reuseExistingServer: false`, covering register → profile → run → sign out → sign in → data still there. 6 tests |
 | 81 | An expired session returns to sign-in | **PASS** | Found by writing gate 80: every 401 was rendered as a topbar banner on a screen the user could not leave. Guarded in the store's shared `fail`. Both the E2E case and the unit test were confirmed to fail with the guard removed. 2 tests |
 | 82 | The coverage floor means something | **PASS** | Raised from 80 to 92, the level actually measured on a green run (6010 statements, 504 uncovered) |
@@ -148,7 +150,7 @@ Phase 6; gates 93-96 record what they are held to.
 
 | # | Gate | Status | Evidence |
 |---|---|---|---|
-| 89 | Live mode reaches beyond ten Western universities | **PASS** | Nineteen institutions, the nine new ones chosen for where Kazakh applicants apply, including Nazarbayev University. Every seed fetched and classified by the product's own classifier before being written down; a category with no verifiable page has no seed. All 52 seeds resolve. Nine canaried the day they were added: nine reached, zero blocked, **zero false positives**, programme pages 2 of 9 |
+| 89 | Live mode reaches beyond ten Western universities | **PASS** | Nineteen institutions, the nine new ones chosen for where Kazakh applicants apply, including Nazarbayev University. Every seed fetched and classified by the product's own classifier before being written down; a category with no verifiable page has no seed. All 52 seeds resolve. Nine canaried the day they were added: nine reached, zero blocked, **zero false positives**, programme pages 2 of 9; superseded by the 2026-09-08 T30 canary: programme pages 7/10 (gate 28) |
 | 90 | The canary can actually run, and its verdict can be trusted | **PASS** | Three defects in the tool, none in the product: it died on a NOT NULL constraint from the `dev-org` default Phase 4 removed; `--only` narrowed the report but not the run; and the false-positive gate read a requirement's provenance from attributes a string does not have, so it could never pass and accused Charles University of a false positive it had not made. 4 tests now hold the gate to its own contract |
 | 91 | A transcript can be read instead of retyped | **PASS** | Grade average with its scale, and the graduation date, each quoted back with the line it came from and applied only per field on request. Refuses an average with no scale, an ambiguous numeric date, and a value above its own scale. PDFs only, 10 MB, authenticated, held in memory and discarded. 17 backend tests + 4 vitest |
 | 92 | Russian and Kazakh have a foundation that does not invent terms | **PARTIAL** | The shell reads from dictionaries with English as the visible fallback, and a language selector persists the choice. Deliberately incomplete: claim, shortlist, funding gap, conditional offer and the status vocabulary are listed in `docs/i18n/GLOSSARY.md` with the question each poses, and the strings containing them stay in English until a person who advises applicants in those languages decides. 7 vitest, including one that fails if a reserved term is quietly translated |
@@ -168,12 +170,13 @@ release gate document.
 
 ## Summary
 
-Counted on `2be6b55`, over gates 1-96.
+Counted on `2be6b55`; re-counted 2026-09-08 after the c2 merge moved gate 2 to
+PASS. Gates 1-96.
 
-- **PASS:** 91
-- **PARTIAL:** 3 — gate 2 (one red end-to-end test on `main`), gate 87 (the
-  privacy policy and terms are drafts no lawyer has read), gate 92 (the product
-  vocabulary is deliberately untranslated pending human review)
+- **PASS:** 92
+- **PARTIAL:** 2 — gate 87 (the privacy policy and terms are drafts no lawyer
+  has read), gate 92 (the product vocabulary is deliberately untranslated
+  pending human review)
 - **FAIL:** 0
 - **BLOCKED:** 2 — gate 29 (the release tag waits on the rest) and gate 94 (a
   real payment needs a merchant account)
@@ -181,7 +184,9 @@ Counted on `2be6b55`, over gates 1-96.
 Gate 22 moved from FAIL to PASS on work: the stack was actually run, and running
 it found two defects that no amount of reading the file would have shown. Gate 2
 moved the other way, from PASS to PARTIAL, on evidence: the end-to-end suite has
-been red on `main` since 2026-09-04 and the summary said nothing about it.
+been red on `main` since 2026-09-04 and the summary said nothing about it. Gate
+2 moved back to PASS at the c2 merge (2026-09-08): the failing spec was fixed
+and CI on `main` has been green since 2026-09-07.
 
 ## Order of work remaining
 
@@ -198,16 +203,16 @@ been red on `main` since 2026-09-04 and the summary said nothing about it.
 2. ~~**P2** — auth, organizations, cases, tenant isolation~~ **done**
 3. ~~**P3** — SSRF suite, headers, rate limiting, threat model~~ **done**
 4. ~~**P4** — full onboarding forms~~ **done**
-5. **Fix the red end-to-end test** — `e2e/profile-persistence.spec.ts`, two
-   elements reading "Saved". Nothing else can be called green while `main` is
-   red, and `e2e:auth` has not run since 2026-09-04 (gate 2)
+5. ~~**Fix the red end-to-end test**~~ **done** — fixed before the c2 merge;
+   `main` green since 2026-09-07 and `e2e:auth` 6/6 (gate 2)
 6. **P5–P6** — improve programme-page classifier recall and deepen funding/document extraction
 7. ~~**P7** — run the container stack~~ **done** (gate 22). An external
    deployment is still outstanding and needs the owner
 8. ~~**P8** — canary audit across ten institutions~~ **done**
-9. **Finish ru/kk** — 184 of 378 strings are translated and only seven
-   components read from the dictionary at all, so the interface is effectively
-   English for an audience that is not (gate 92)
+9. **Finish ru/kk** — 183 of 194 dictionary keys are translated into Russian
+   and Kazakh, and only the shell and the community screens read from the
+   dictionary, so the interface is effectively English for an audience that is
+   not (gate 92)
 
 ## Needs the user
 

@@ -439,3 +439,38 @@ days.
   R1 alone is a design system, a public landing page with consents, the profile
   as a wizard instead of ~80 fields on one screen, and a mobile shortlist of
   cards instead of a table.
+
+## Update — after campaigns c2 and c3 (2026-09-08)
+
+This section supersedes the "Still open" lists above. The dated sections are
+history and are left as written; the numbers here are the current measurements.
+
+**Campaign c2, measured.** Merged to `main`. CI is green on the merge commit:
+`pytest` 1358 passed on both databases, coverage 93.81% (floor 92) — post-merge
+main run 34189211422 (2026-09-08); `main` has been green since 2026-09-07 (run
+34115345524), and PR runs 34188244906 and 34188286259 are green too. Frontend,
+unchanged since c2: `vitest` 182 passed, Playwright ordinary 75 passed + 1
+intentional skip, `e2e:auth` 6/6 (local, 2026-09-08).
+
+**Campaign c3, measured (local, at `810bb00`, 2026-09-08).** Five tasks
+(T33 paywall integrity, T34 payments fail-closed, T35 SMTP TLS and scrypt
+rehash, T36 trusted proxy, T37 funding re-entry dedup) integrated locally —
+no push, no merge to `main`, no deploy. `pytest` 1402 passed / 0 skipped,
+coverage 94.04% (floor 92); ruff and mypy clean over 166 files. Frontend gates
+were not re-run: `810bb00` has zero frontend diffs against the c2 merge, so the
+frontend numbers above stay the c2 measurements — a reason to expect they hold,
+not a fresh pass.
+
+### What is open
+
+| What | Status | Source |
+|---|---|---|
+| Live registry expansion 19→60 | **PARTIAL** — the registry is still 19 institutions; the expansion is not claimed, because a new institution is admitted only after a canary confirms at least two of admissions / costs / scholarships / catalogue | `docs/LIVE_DISCOVERY_REPORT.md` (T30, 2026-09-08); ledger T30 PARTIAL_VERIFIED |
+| i18n core | 183 of 194 dictionary keys are translated into Russian and Kazakh — 11 keys per locale remain English, deliberately; only the shell and the community screens read from the dictionary | counted in `frontend/src/lib/i18n.ts` |
+| Privacy policy and terms | gate 87 PARTIAL — honest drafts no lawyer has read | `RELEASE_CHECKLIST.md` gate 87 |
+| Live ApiPay account | gate 94 BLOCKED — the adapter has never spoken to ApiPay; every payment claim rests on contract tests | `RELEASE_CHECKLIST.md` gate 94 |
+| External deployment | **NOT DONE** — nothing is deployed publicly; domain, TLS, secrets, a backup cron and monitoring are outstanding | `RELEASE_CHECKLIST.md` verdict |
+| T31 — LLM extraction in shadow mode | **BLOCKED** — owner decision on the LLM provider and keys pending; no silent paid API | `ai-team/ledger.json` (campaign c2 blocked) |
+| T26 — news layer | **BLOCKED_SCOPE_CONTRACT** — the frozen scope cannot deliver the user-visible promise; a contract decision is required before any code | `ai-team/outputs/c2-t26-a0/contract-audit.md` |
+| `scripts/verify_compose.sh` live run | **NOT_RUN** — Docker is absent in the c3 environments, so only the syntax check ran; NOT_RUN is not PASS, and the first real run is an owner gate | `ai-team/outputs/c3-integration-a1/integrator.md` (gate g) |
+| T33-F1 — free export vs `free_shortlist_rows` | owner decision — trim the free export to the free rows, or accept the wider free view | `ai-team/outputs/c3-t33-a1/reviews.md` |
