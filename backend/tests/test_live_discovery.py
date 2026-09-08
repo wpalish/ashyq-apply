@@ -1283,6 +1283,28 @@ def _letter_suffix(i: int) -> str:
 class TestCatalogWalkerContract:
     """T29 A1 scenarios R1-R10 (see the block comment above for RED modes)."""
 
+    def test_security_deep_catalog_json_never_raises(self):
+        """A hostile response can exceed Python's JSON recursion limit.
+
+        The parser contract is deliberately fail-closed: malformed or
+        pathological catalogue data yields no programme leads.
+        """
+        from app.adapters.discovery.catalog_walker import parse_catalog_json
+
+        deeply_nested = "[" * 10_000 + "]" * 10_000
+        assert parse_catalog_json(deeply_nested, "https://uni.edu/programmes") == []
+
+    def test_security_catalog_json_labels_are_bounded(self):
+        """JSON and HTML labels have the same 160-character trace bound."""
+        from app.adapters.discovery.catalog_walker import parse_catalog_json
+
+        [(label, url)] = parse_catalog_json(
+            json.dumps({"name": "Computer Science " * 20_000, "url": "/programmes/cs"}),
+            "https://uni.edu/catalogue",
+        )
+        assert len(label) == 160
+        assert url == "https://uni.edu/programmes/cs"
+
     @staticmethod
     def registry_file(tmp_path, entry: dict) -> Path:
         path = tmp_path / "registry.json"

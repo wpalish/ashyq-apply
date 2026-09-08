@@ -16,8 +16,8 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.adapters.base import Candidate, CandidateProgram, PageOutcome
-from app.adapters.browser import BrowserFetcher
 from app.adapters.cost.web_costs import WebCostAdapter
+from app.adapters.discovery.catalog_walker import CatalogRenderer
 from app.adapters.discovery.fixture_discovery import FixtureDiscoveryAdapter
 from app.adapters.discovery.live_discovery import LiveDiscoveryAdapter
 from app.adapters.documents.web_documents import WebDocumentsAdapter
@@ -50,7 +50,15 @@ from app.domain.funding import (
 from app.domain.ranking_v2 import rank_result
 from app.domain.scoring import admissions_fit_for, score_result
 from app.domain.validation import validate_profile
-from app.models import AuditEvent, ClaimRow, ConflictRow, ProgramResultRow, ResearchRun, new_id
+from app.models import (
+    AuditEvent,
+    ClaimRow,
+    ConflictRow,
+    ProgramResultRow,
+    ResearchRun,
+    SourcePage,
+    new_id,
+)
 from app.models.base import ensure_utc
 from app.pipeline.state import IN_PROGRESS_STAGES, RunState
 from app.schemas.claim import ClaimOut, UnresolvedQuestion
@@ -141,6 +149,24 @@ class ResearchRunner:
             timeout=self.settings.fetch_timeout_seconds,
             contact=self.settings.fetch_contact,
             corpus_dir=self.settings.corpus_dir if self.demo else None,
+        )
+
+    def _make_browser(self, fetcher: Fetcher) -> CatalogRenderer:
+        """The hardened browser tier with T29 catalogue JSON interception."""
+        return CatalogRenderer(
+            fetcher,
+            enabled=self.settings.enable_browser_tier and not self.demo,
+        )
+
+    def _make_discovery_adapter(
+        self, fetcher: Fetcher
+    ) -> FixtureDiscoveryAdapter | LiveDiscoveryAdapter:
+        """Build discovery with source-page recording only on the live path."""
+        if self.demo:
+            return FixtureDiscoveryAdapter(fetcher)
+        return LiveDiscoveryAdapter(
+            fetcher,
+            page_recorder=lambda **fields: SourcePage.record(self.session, **fields),
         )
 
     def _audit(self, action: str, entity_type: str, entity_id: str, **detail) -> None:
@@ -326,9 +352,7 @@ class ResearchRunner:
             "respect_robots": self.settings.respect_robots,
         }
         fetcher = self._make_fetcher()
-        browser = BrowserFetcher(
-            fetcher, enabled=self.settings.enable_browser_tier and not self.demo
-        )
+        browser = self._make_browser(fetcher)
         if browser.enabled:
             fetcher.attach_renderer(browser)
         try:
@@ -413,7 +437,7 @@ class ResearchRunner:
         self._transition(PipelineStage.CANDIDATE_DISCOVERY)
         self._save()
 
-        adapter = FixtureDiscoveryAdapter(fetcher) if self.demo else LiveDiscoveryAdapter(fetcher)
+        adapter = self._make_discovery_adapter(fetcher)
         self._candidates = await adapter.discover(self.profile, self.candidate_limit)
         # An adapter that over-delivers must not silently widen the run.
         if len(self._candidates) > self.candidate_limit:
@@ -894,9 +918,7 @@ class ResearchRunner:
             adapter = WebDocumentsAdapter(fetcher, self.settings.academic_year)
             by_key = {dedupe.university_key(c.name, c.country): c for c in self._candidates}
             if not by_key:
-                disc = (
-                    FixtureDiscoveryAdapter(fetcher) if self.demo else LiveDiscoveryAdapter(fetcher)
-                )
+                disc = self._make_discovery_adapter(fetcher)
                 self._candidates = await disc.discover(self.profile, self.candidate_limit)
                 by_key = {dedupe.university_key(c.name, c.country): c for c in self._candidates}
 

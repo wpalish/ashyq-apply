@@ -215,7 +215,7 @@ def parse_catalog_json(body: str, base_url: str = "") -> list[tuple[str, str]]:
     """
     try:
         data = json.loads(body)
-    except (TypeError, ValueError):
+    except (RecursionError, TypeError, ValueError):
         return []
     entries: list[tuple[str, str]] = []
     seen: set[str] = set()
@@ -240,7 +240,8 @@ def parse_catalog_json(body: str, base_url: str = "") -> list[tuple[str, str]]:
                 resolved = canonical_url(url)
                 if resolved not in seen and urlparse(resolved).scheme in ("http", "https"):
                     seen.add(resolved)
-                    entries.append((re.sub(r"\s+", " ", name.strip()), resolved))
+                    label = re.sub(r"\s+", " ", name.strip())[:160]
+                    entries.append((label, resolved))
             for value in node.values():
                 visit(value, depth + 1)
 
@@ -313,8 +314,8 @@ class CatalogRenderer(BrowserFetcher):
     render is handed to :meth:`_collect` and kept for the walker to parse.
     """
 
-    def __init__(self, fetcher: Fetcher) -> None:
-        super().__init__(fetcher)
+    def __init__(self, fetcher: Fetcher, *, enabled: bool = True) -> None:
+        super().__init__(fetcher, enabled=enabled)
         #: (response_url, content_type, body_text) per JSON response seen
         #: during the most recent render.
         self.catalog_payloads: list[tuple[str, str, str]] = []
