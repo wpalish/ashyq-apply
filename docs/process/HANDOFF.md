@@ -10,15 +10,15 @@ Write for a reader who has **zero** chat history — because that is exactly who
 |---|---|
 | Holder | **codex** |
 | Since (UTC) | 2026-09-08 03:38:21 UTC |
-| Branch | `ai/c2/integration`, pushed to `origin/ai/c2/integration`; PR creation is the next release action |
-| HEAD when written | `5c42934` (T16/T27/T28/T29/T32 + T29 wiring + T30 harness + catalogue-parser repair) |
-| Origin main when checked | `4d2125c`; PR #7 is merged and is the merge-base of this branch |
+| Branch | `main`, synchronized with `origin/main` after PR #8 |
+| HEAD when written | `04a3058` (merge commit for PR #8; C2 candidate `e4f5ee3`) |
+| Origin main when checked | `04a3058`; post-merge release-gates run `34189211422` succeeded |
 | Previous holder | GLM/ZCode dispatcher; it released after integrating T32 but left T29 production wiring explicitly deferred |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
 
-**Campaign `c2` continuation — T29 production wiring and the bounded T30 measurement are complete.** GLM integrated
+**Campaign `c2` publication is complete; remaining items are explicit product blockers.** GLM integrated
 T16 (browser/egress hardening), T27 (claim verifier), T28 (source pages), T29 (catalog walker at the
 adapter seam) and T32 (freshness/source scanning) onto this branch. Its own ledger and review correctly
 state that T29 remained dormant in production; `8d2fa10` closed that seam and the live smoke proved
@@ -28,7 +28,8 @@ The registry itself remains at 19 because no 41-entry, human-checked official ca
 or canaried; claiming 19→60 would violate T30's own admission rule. T26 is blocked on a contradictory
 scope contract: its promised source-to-UI News vertical slice cannot be built through the currently
 allowed model/domain/runner-only paths. T31 remains blocked on an owner-selected provider, secrets
-outside Git, and the required data-policy acknowledgement.
+outside Git, and the required data-policy acknowledgement. PR #8 merged the verified campaign into
+`main@04a3058`; both PR-triggered matrices and the post-merge release-gates are green.
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
@@ -218,17 +219,17 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-1. Commit the T30 report plus the `ai-team` campaign/evidence after a final secret scan.
-2. Push the final branch head and open a PR against protected `main`; wait for GitHub release gates.
-3. Resolve T26's contract before code: either authorize the API/frontend/ingestion paths needed for a
+1. Resolve T26's contract before code: either authorize the API/frontend/ingestion paths needed for a
    real News vertical slice, or explicitly reduce acceptance to a storage-only foundation.
-4. For T30 registry 19→60, supply/approve a 41-institution candidate list with official seeds and run
+2. For T30 registry 19→60, supply/approve a 41-institution candidate list with official seeds and run
    bounded validation batches. Do not add entries that fail the frozen ≥2/4-category rule.
-5. Keep T31 blocked. Do not merge protected main, deploy, buy a provider, or add secrets implicitly.
+3. Keep T31 blocked until a provider, secrets outside Git and data-policy acknowledgement exist.
+4. Update GitHub Actions dependencies away from Node-20-based action releases before GitHub removes
+   the compatibility shim. Do not buy a provider or deploy application infrastructure implicitly.
 
 ## 6. Gate status at last run (numbers, not adjectives)
 
-Latest independent run by codex, 2026-09-08, on `ai/c2/integration@5c42934`.
+Latest local and remote runs by codex, 2026-09-08, on `main@04a3058`.
 
 | Gate | Result |
 |---|---|
@@ -242,19 +243,15 @@ Latest independent run by codex, 2026-09-08, on `ai/c2/integration@5c42934`.
 | `ruff check app tests` | **pass** |
 | `ruff format --check app tests` | **pass** — 154 files |
 | `mypy app tests` | **pass** — 164 source files |
-| `pytest --cov=app --cov-fail-under=92` | **pass** — coverage **93.81%**, zero failures |
+| `pytest --cov=app --cov-fail-under=92` | **pass** — **1358 passed**, coverage **93.81%** |
 | frontend `tsc --noEmit` / `eslint src e2e` | **pass** |
 | frontend `vitest run` | **pass** — **182 passed** / 20 files |
 | frontend `vite build` | **pass** |
 | frontend Playwright | **pass** — ordinary **75 passed / 1 intentionally skipped**; auth **6/6 passed** |
 | dependency audit | **pass** — `pip-audit` and `npm audit --omit=dev`: **0 known vulnerabilities** |
-| frontend `playwright test` | **pass** — **75 passed, 1 skipped**; generated screenshot diffs restored |
-| frontend auth Playwright | **pass** — **6 passed**; generated auth screenshot diffs restored |
-| `alembic heads` | **pass** — sole head `e7c1a4d90b52` |
-| `pip-audit -r requirements.txt` | **pass** — 39 production dependencies, 0 known vulnerabilities |
-| `npm audit --omit=dev` | **pass** — 0 vulnerabilities at every severity |
-| bounded live canary, NU, browser off | **partial** — reached; 26/0 pages ok/fail; exact BSc CS; 1 claim; 0 false positives; 0% completeness |
-| migrations + `seed_demo.py`, browser off | **pass** — sole head applied; Groningen #1, UBC `OUT_OF_BUDGET` |
+| `alembic heads` | **pass** — sole head `d9c4e7a21b83` |
+| migrations + `seed_demo.py`, browser off | **pass** — 20 results / 96 pages / 414 claims; Groningen #1, UBC `OUT_OF_BUDGET` |
+| GitHub release-gates | **pass** — PR runs `34188244906`, `34188286259`; post-merge `main` run `34189211422` |
 
 The React unit suite still emits pre-existing `act(...)` warnings in payment tests; it has zero test
 failures. The e2e suite's crowded-default-database trap remains documented in §9; these runs avoided

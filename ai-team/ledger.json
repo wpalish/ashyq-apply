@@ -50,15 +50,15 @@
   "integration_slot_owner": null,
   "heavy_test_slot_owner": null,
   "campaign_c2_progress": {
-    "integration_head": "5c4293413f7c8f2732f57c3b48fdf0bfab629ee9 (ai/c2/integration; T16+T28+T27+T29+T32 + T29 production wiring + T30 measurable harness + HKU parser repair)",
+    "integration_head": "04a305846da26453027b92331d69ec5b05b11f9d (main; merge commit for PR #8, containing ai/c2/integration@e4f5ee3)",
     "sprint1_complete": "2026-09-08: T16, T28, T27 (A2 repair), T29/T29-R2, T32 (A2 security repair + A3 FE sync) integrated; T30 KPI measurement completed, registry expansion remains partial",
-    "combined_gates_final": "FULL pytest zero failures, cov 93.81% (threshold 92); mypy 0/164; ruff clean; FE typecheck/lint/vitest 182/build clean; Playwright ordinary 75 passed + 1 intentional skip and auth 6/6; pip-audit and npm audit --omit=dev found 0 known vulnerabilities; alembic single head d9c4e7a21b83; demo migration+seed 20 results / 96 pages / 414 claims",
+    "combined_gates_final": "LOCAL: 1358 pytest passed, cov 93.81% (threshold 92); mypy 0/164; ruff clean; FE typecheck/lint/vitest 182/build clean; Playwright ordinary 75 passed + 1 intentional skip and auth 6/6; pip-audit and npm audit --omit=dev found 0 known vulnerabilities; alembic single head d9c4e7a21b83; demo migration+seed 20 results / 96 pages / 414 claims. GITHUB: PR runs 34188244906 and 34188286259 all green; post-merge main run 34189211422 all green.",
     "next_up": [
       "T26 — BLOCKED_SCOPE_CONTRACT: promised News source-to-UI vertical slice cannot fit the current model/domain/runner-only allowed paths; authorize an expanded contract or explicitly reduce acceptance to storage-only",
       "T30 registry 19→60 — PARTIAL: KPI canary complete at 7/10 and 26/30 with 0 material FP; 41 additional institutions require an approved candidate list and per-batch validation",
       "T31 — BLOCKED ON OWNER: LLM provider/keys decision"
     ],
-    "publication": "BRANCH PUSHED by explicit owner authorization: origin/ai/c2/integration through 5c42934; PR pending final evidence commit; protected-main merge and application deploy NOT DONE"
+    "publication": "MERGED by explicit owner authorization: origin/ai/c2/integration@e4f5ee3 -> PR #8 -> main@04a3058 on 2026-09-08; all PR and post-merge release-gates green. Application infrastructure deployment NOT DONE because this repository has no selected production target/configuration in scope."
   },
   "heavy_test_slot_policy": "1 slot total: full pytest --cov suites are serialized by the dispatcher on request; target-scope runs may run in parallel",
   "worktrees": {
@@ -519,7 +519,7 @@
       "live_smoke": "PARTIALLY_BLOCKED only by robots policy; 2 catalogues walked, programme and scholarship leads found, 75 SourcePage outcomes recorded",
       "artifact": "outputs/c2-t29-wiring/live-smoke/canary-2026-09-08.json"
     },
-    "publication": "origin/ai/c2/integration pushed through 5c42934 by explicit owner authorization; protected-main merge and application deploy NOT DONE",
+    "publication": "MERGED via PR #8 into main@04a3058 by explicit owner authorization; post-merge release-gates green; application infrastructure deploy NOT DONE",
       "blockers": [],
       "followups": [
       "CLOSED 8d2fa10: R2 wiring, SourcePage recorder, RecursionError guard and 160-character JSON label cap",
