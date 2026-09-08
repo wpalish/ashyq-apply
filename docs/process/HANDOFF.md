@@ -8,22 +8,23 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 | | |
 |---|---|
-| Holder | **nobody** |
-| Since (UTC) | 2026-09-08 11:15:00 UTC |
+| Holder | **gpt-6-astra** |
+| Since (UTC) | 2026-09-08 14:48:00 UTC |
 | Branch | `task/design-system-llm-audit`, from synchronized `origin/main` |
-| HEAD when written | `62d941d` (complete design-system checkpoint; `wip:` only because of §7 backend baseline) |
+| HEAD when written | `b755326` (owner requested a visual design-system synthesis on top of the completed token audit) |
 | Origin main when checked | `edf546d`; branch contains only the owner-directed design-system work |
 | Previous holder | GLM/ZCode dispatcher; it released after integrating T32 but left T29 production wiring explicitly deferred |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
 
-**Owner-directed design-system audit and token migration is implementation-complete, pending review.** Scope: inventory every CSS/
-SCSS hardcoded visual value, formalize the existing design language as a three-layer `tokens.css`,
-write LLM-readable foundation/token/component specs, add a CI-ready token audit, migrate component CSS
-to project aliases only, update AI instructions, and finish with zero audit violations plus frontend gates.
-This direct owner request temporarily supersedes the queue in §10; the completed campaign state below
-remains historical context.
+**Owner-directed ASHYQ Apply visual design-system synthesis is in progress.** The owner supplied
+`photo-references/design_system.png`, `photo-references/hero_section_example.png`, brandbook v1.1, and
+`epics.md`. Build a living, mobile-first design-system catalogue that reconciles the brand's Open Chapter
+language with E00/E16 evidence, uncertainty, semantic-status, dark-theme, localization, and AA contracts.
+Preserve the completed three-layer token architecture and token audit; update its primitives and specs
+only where the supplied brand source requires it. This direct owner request temporarily supersedes the
+queue in §10; the completed campaign state below remains historical context.
 
 **Campaign `c2` publication is complete; remaining items are explicit product blockers.** GLM integrated
 T16 (browser/egress hardening), T27 (claim verifier), T28 (source pages), T29 (catalog walker at the
@@ -227,10 +228,12 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-1. Review the design-system diff and the historical audit at `specs/audit/hardcoded-values.md`.
-2. Keep the unrelated backend KZT extraction failure in §7 out of this frontend-only branch; investigate
-   it as a separate task if the owner wants the full backend gate green on current `main`.
-3. After approval, publish/merge this task branch through the normal PR workflow.
+1. Reconcile brandbook v1.1 with E00/E16 in `frontend/src/styles/tokens.css`, `specs/`, and
+   `frontend/.21st/design.json`; document the deliberate display-serif / brand-sans split.
+2. Build a standalone Vite design-system catalogue at `frontend/design-system.html` with responsive,
+   accessible specimens for foundations, trust registers, core controls, responsive data, and states.
+3. Add focused tests, run the token audit and all frontend gates, render 360/1440 screenshots, then
+   record exact evidence here. Keep the unrelated backend KZT extraction failure outside this step.
 
 ## 6. Gate status at last run (numbers, not adjectives)
 
