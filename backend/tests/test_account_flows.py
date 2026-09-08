@@ -667,3 +667,251 @@ class TestPasswordHashing:
         legacy = hash_password(PASSWORD, n=2**12)
         assert verify_password(PASSWORD, legacy) is True
         assert needs_rehash(legacy) is True
+
+
+def _send_through_recording_smtp(monkeypatch: pytest.MonkeyPatch, settings: Settings) -> dict:
+    """Deliver one message through SmtpSender over a fake smtplib.SMTP.
+
+    The double matches the constructor shape mail.py actually calls — host
+    and port positionally, ``timeout`` by keyword — and records how STARTTLS
+    was called. Returns the kwargs of that one call.
+    """
+    from app import mail as mail_module
+
+    starttls_calls: list[dict] = []
+
+    class RecordingSMTP:
+        def __init__(self, host: str, port: int, timeout: float | None = None) -> None:
+            self.host = host
+            self.port = port
+            self.timeout = timeout
+
+        def __enter__(self) -> RecordingSMTP:
+            return self
+
+        def __exit__(self, *exc_info: object) -> None:
+            return None
+
+        def starttls(self, **kwargs: object) -> None:
+            starttls_calls.append(kwargs)
+
+        def login(self, username: str, password: str) -> None:
+            pass
+
+        def send_message(self, message: object) -> None:
+            pass
+
+    monkeypatch.setattr(mail_module.smtplib, "SMTP", RecordingSMTP)
+    mail_module.SmtpSender(settings).send(
+        Message(to="person@example.test", subject="Reset your password", body="the link")
+    )
+    assert len(starttls_calls) == 1, (
+        f"STARTTLS was called {len(starttls_calls)} times, expected exactly once"
+    )
+    return starttls_calls[0]
+
+
+class TestStarttlsUsesAVerifiedTlsContext:
+    """S4: STARTTLS must be negotiated with a certificate-verifying context.
+
+    ``starttls()`` without a context makes smtplib build an unverified one:
+    the connection is encrypted, but nobody checked who is on the other end,
+    so a machine on the path can relay password-reset mail — reset links
+    included — through itself.
+    """
+
+    def test_starttls_gets_a_verifying_ssl_context(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        import ssl
+
+        settings = Settings(
+            demo_mode=True,
+            email_sender="smtp",
+            smtp_host="smtp.example.test",
+            smtp_from="no-reply@example.test",
+        )
+        starttls_kwargs = _send_through_recording_smtp(monkeypatch, settings)
+        context = starttls_kwargs.get("context")
+        assert context is not None, "STARTTLS was called without a context"
+        assert context.check_hostname is True
+        assert context.verify_mode == ssl.CERT_REQUIRED
+
+    def test_starttls_verification_can_be_disabled_for_a_self_hosted_relay(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        import ssl
+
+        settings = Settings(
+            demo_mode=True,
+            email_sender="smtp",
+            smtp_host="smtp.example.test",
+            smtp_from="no-reply@example.test",
+            # A relay on a trusted internal network may not present a name the
+            # public CA system can check. That is a deliberate, explicit opt
+            # out — the setting has to exist, and only it may turn this off.
+            smtp_tls_verify=False,
+        )
+        starttls_kwargs = _send_through_recording_smtp(monkeypatch, settings)
+        context = starttls_kwargs.get("context")
+        assert context is not None, "STARTTLS was called without a context"
+        assert context.check_hostname is False
+        assert context.verify_mode == ssl.CERT_NONE
+
+
+class TestLoginRehashesOldCostHashes:
+    """S5: a successful login must rewrite a weak-cost hash, and audit it once.
+
+    Old hashes still verify and ``needs_rehash`` exists, but login never
+    consults it: an account stored at an old scrypt cost stays there forever,
+    and nothing records the upgrade once it happens.
+    """
+
+    @staticmethod
+    def _store_legacy_hash(user_id: str) -> str:
+        from app.db import SessionLocal
+        from app.models import User
+        from app.security import hash_password
+
+        legacy = hash_password(PASSWORD, n=2**12)
+        with SessionLocal() as session:
+            stored = session.get(User, user_id)
+            assert stored is not None
+            stored.password_hash = legacy
+            session.commit()
+        return legacy
+
+    @staticmethod
+    def _stored_hash(user_id: str) -> str:
+        from app.db import SessionLocal
+        from app.models import User
+
+        with SessionLocal() as session:
+            user = session.get(User, user_id)
+            assert user is not None
+            return user.password_hash
+
+    @staticmethod
+    def _rehash_events(user_id: str) -> int:
+        from app.db import SessionLocal
+        from app.models import AuditEvent
+
+        with SessionLocal() as session:
+            return (
+                session.query(AuditEvent)
+                .filter(
+                    AuditEvent.action == "password_rehashed",
+                    AuditEvent.entity_id == user_id,
+                )
+                .count()
+            )
+
+    @staticmethod
+    def _login(client: TestClient, email: str, password: str = PASSWORD) -> int:
+        return client.post(
+            "/api/auth/login", json={"email": email, "password": password}
+        ).status_code
+
+    def test_login_upgrades_an_old_cost_hash_and_audits_it_once(self, auth_client) -> None:
+        from app.security import needs_rehash, verify_password
+
+        client, settings = auth_client
+        principal = register(client, "legacy")
+        legacy = self._store_legacy_hash(principal["user_id"])
+        client.post("/api/auth/logout")
+
+        assert self._login(client, "legacy@example.test") == 200
+
+        stored = self._stored_hash(principal["user_id"])
+        assert stored != legacy, "a successful login must rewrite a weak-cost hash"
+        assert stored.startswith(f"scrypt${2**settings.password_scrypt_log2}$")
+        assert verify_password(PASSWORD, stored)
+        assert needs_rehash(stored) is False
+        assert self._rehash_events(principal["user_id"]) == 1
+
+        client.post("/api/auth/logout")
+        assert self._login(client, "legacy@example.test") == 200
+        assert self._stored_hash(principal["user_id"]) == stored, (
+            "the second login must not rewrite the hash again"
+        )
+        assert self._rehash_events(principal["user_id"]) == 1, (
+            "the second login must not audit a second rehash"
+        )
+
+    def test_a_wrong_password_on_a_legacy_account_rehashes_nothing(self, auth_client) -> None:
+        """Only a successful verification earns the rewrite."""
+        client, _ = auth_client
+        principal = register(client, "guarded")
+        legacy = self._store_legacy_hash(principal["user_id"])
+        client.post("/api/auth/logout")
+
+        response = client.post(
+            "/api/auth/login",
+            json={"email": "guarded@example.test", "password": "a wrong passphrase here"},
+        )
+        assert response.status_code == 401
+        assert self._stored_hash(principal["user_id"]) == legacy
+        assert self._rehash_events(principal["user_id"]) == 0
+
+    def test_a_legacy_short_password_login_is_not_broken(self, auth_client) -> None:
+        """A pre-rule password under 12 characters must still log in.
+
+        ``hash_password`` refuses anything shorter than 12 characters, so an
+        upgrade attempt on such an account cannot succeed. The login itself
+        must go through — the stored hash is hand-built here precisely
+        because the helper refuses to build it — and no rehash is recorded.
+        """
+        import hashlib
+        import secrets
+
+        from app.db import SessionLocal
+        from app.models import User
+
+        client, _ = auth_client
+        principal = register(client, "shortlegacy")
+        short = "just-short"  # ten characters: verifiable, un-hashable today
+        salt = secrets.token_bytes(16)
+        digest = hashlib.scrypt(short.encode(), salt=salt, n=4096, r=8, p=1, dklen=32, maxmem=2**28)
+        legacy = f"scrypt$4096$8$1${salt.hex()}${digest.hex()}"
+
+        with SessionLocal() as session:
+            stored = session.get(User, principal["user_id"])
+            assert stored is not None
+            stored.password_hash = legacy
+            session.commit()
+        client.post("/api/auth/logout")
+
+        response = client.post(
+            "/api/auth/login", json={"email": "shortlegacy@example.test", "password": short}
+        )
+        assert response.status_code == 200, response.text
+        assert self._rehash_events(principal["user_id"]) == 0
+
+
+class TestProductionRefusesUnverifiedSmtp:
+    """Production must not start with STARTTLS certificate checking off.
+
+    A self-hosted relay that no public CA can vouch for is a trusted-network
+    arrangement; in production the switch that turns verification off is
+    exactly the one an interceptor needs, so startup refuses it.
+    """
+
+    def test_production_refuses_to_start_without_smtp_tls_verification(self) -> None:
+        from typing import Any
+
+        # The production base the metrics guard tests use: every other
+        # production requirement already satisfied, so the only variable
+        # under test is the TLS verification switch.
+        base: dict[str, Any] = {
+            "environment": "production",
+            "auth_enabled": True,
+            "cookie_secure": True,
+            "database_url": "postgresql+psycopg://u:p@db/unimatch",
+            "cors_origins": "https://apply.example.com",
+            "email_sender": "smtp",
+            "smtp_host": "smtp.example.com",
+            "public_base_url": "https://apply.example.com",
+            "metrics_enabled": True,
+            "metrics_token": "a-long-enough-token",
+        }
+        with pytest.raises(RuntimeError, match="UNIMATCH_SMTP_TLS_VERIFY"):
+            Settings(**base, smtp_tls_verify=False).validate_runtime()
+        Settings(**base, smtp_tls_verify=True).validate_runtime()
