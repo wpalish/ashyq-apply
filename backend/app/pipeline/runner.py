@@ -1114,7 +1114,23 @@ class ResearchRunner:
         row.funding_classification = result.best_funding_classification.value
         store_result(row, result, ranking_version=self.settings.ranking_version)
         self.session.add(row)
-        if extra_claims:
+        if extra_claims is not None:
+            # Funding re-entry owns the whole scholarship family: the stage
+            # re-read the same pages, so storing the fresh claims beside the
+            # previous pass's would double the stored evidence. Replace the
+            # family first, mirroring _replace_evidence: SUPERSEDED rows are
+            # the was/stale history of a reextract and are never destroyed.
+            # ConflictRow has no status column, so its funding conflicts go
+            # wholesale; every other claim family is not funding's to touch.
+            self.session.query(ClaimRow).filter(
+                ClaimRow.result_id == row.id,
+                ClaimRow.claim_type.in_(FUNDING_CLAIM_TYPES),
+                ClaimRow.status != ClaimStatus.SUPERSEDED.value,
+            ).delete(synchronize_session=False)
+            self.session.query(ConflictRow).filter(
+                ConflictRow.result_id == row.id,
+                ConflictRow.claim_type.in_(FUNDING_CLAIM_TYPES),
+            ).delete(synchronize_session=False)
             self._store_claims(row.id, extra_claims)
         if conflicts:
             self._store_conflicts(row.id, conflicts)
@@ -1313,6 +1329,19 @@ CORE_QUESTIONS: tuple[tuple[ClaimType, ...], ...] = (
     (ClaimType.TUITION, ClaimType.TOTAL_COST_OF_ATTENDANCE),
     (ClaimType.SCHOLARSHIP_EXISTS,),
     (ClaimType.SCHOLARSHIP_INTERNATIONAL_ELIGIBLE, ClaimType.SCHOLARSHIP_CITIZENSHIP_RESTRICTION),
+)
+
+
+#: The evidence family the funding stage owns. Re-entering funding_discovery
+#: replaces this family wholesale instead of appending to it (see
+#: ``_update_result``): every :class:`ClaimType` whose value carries the
+#: ``scholarship_`` prefix, derived from the enum at import time so a future
+#: scholarship claim cannot be forgotten here. Deliberately closed over the
+#: prefix rule: a future funding adapter that emits a claim type WITHOUT the
+#: prefix does NOT join this family automatically — re-opening this constant
+#: (and with it what a funding re-entry may delete) is a new contract session.
+FUNDING_CLAIM_TYPES: frozenset[ClaimType] = frozenset(
+    member for member in ClaimType if member.value.startswith("scholarship_")
 )
 
 
