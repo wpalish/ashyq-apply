@@ -220,8 +220,29 @@ async def reextract_page(
 
     fetcher = _fetcher_for(settings, demo=run.demo_mode)
     async with fetcher:
-        res = await fetcher.get(url)
-        if not res.ok or res.status_code == 304:
+        # A refresh must ask the origin, not the warm disk cache: within the
+        # cache TTL a cache-enabled, validator-less read answers with the OLD
+        # body, and superseding live claims with it would re-append stale
+        # content under a fresh read-time. The stored validators (T28) turn
+        # the read into a conditional GET — the same call _check_page makes;
+        # a row without validators fetches unconditionally, which is honest
+        # for a page nothing is known about.
+        res = await fetcher.get(
+            url,
+            use_cache=False,
+            etag=page.etag or None,
+            if_modified_since=page.last_modified_header or None,
+        )
+        if res.status_code == 304:
+            # The origin confirms the stored copy: an honest no-change. Touch
+            # fetched_at only — record() would overwrite the stored validators
+            # with the empty ones a 304 carries, and a wipe here would force
+            # every later scan into a full fetch.
+            page.fetched_at = datetime.now(UTC)
+            session.add(page)
+            log.info("reextract of %s for result %s: unchanged (304)", url[:80], result_id[:8])
+            return
+        if not res.ok:
             raise RuntimeError(f"reextract of {url}: the page could not be re-read ({res.error})")
         # The runner's own path for one page: classify, then extract. The
         # adapter's fetch lands on the just-filled cache, so the page is read
