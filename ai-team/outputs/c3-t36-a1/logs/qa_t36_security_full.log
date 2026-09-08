@@ -1,0 +1,70 @@
+........F................                                                [100%]
+=================================== FAILURES ===================================
+_ TestForwardedAddressSemantics.test_the_last_forwarded_hop_is_the_limiting_address _
+
+self = <tests.test_security.TestForwardedAddressSemantics object at 0x1086b5a00>
+auth_client = (<starlette.testclient.TestClient object at 0x109fe7fe0>, Settings(demo_mode=True, environment='development', auto_mig...SecretStr(''), apipay_timeout_seconds=20.0, case_unlock_price_kzt=4990, free_candidate_limit=5, free_shortlist_rows=5))
+
+    def test_the_last_forwarded_hop_is_the_limiting_address(self, auth_client):
+        client, settings = auth_client
+        spoofed = {"X-Forwarded-For": "1.2.3.4, 5.6.7.8"}
+    
+        for i in range(settings.auth_rate_limit_per_minute):
+            response = client.post(
+                "/api/auth/login",
+                json={"email": f"hop-{i}@example.test", "password": "wrong password here"},
+                headers=spoofed,
+            )
+            assert response.status_code == 401
+        exhausted = client.post(
+            "/api/auth/login",
+            json={"email": "hop-exhausted@example.test", "password": "wrong password here"},
+            headers=spoofed,
+        )
+        assert exhausted.status_code == 429
+        assert "Too many requests" in exhausted.json()["detail"]
+    
+        # The pair spent one bucket, and it is keyed on the LAST hop: arriving
+        # with only that hop is still limited, it is the same bucket.
+        last_hop = client.post(
+            "/api/auth/login",
+            json={"email": "hop-probe@example.test", "password": "wrong password here"},
+            headers={"X-Forwarded-For": "5.6.7.8"},
+        )
+>       assert last_hop.status_code == 429, (
+            "with trust_proxy_headers=true the limit must be charged to the last "
+            "XFF hop: 5.6.7.8 is already exhausted by the spoofed pair"
+        )
+E       AssertionError: with trust_proxy_headers=true the limit must be charged to the last XFF hop: 5.6.7.8 is already exhausted by the spoofed pair
+E       assert 401 == 429
+E        +  where 401 = <Response [401 Unauthorized]>.status_code
+
+tests/test_security.py:317: AssertionError
+---------------------------- Captured stderr setup -----------------------------
+INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+INFO  [alembic.runtime.migration] Running upgrade e7c1a4d90b52 -> b4e8a1c2f6d9, Source pages: the crawler's conditional-GET memory, and its retention.
+INFO  [alembic.runtime.migration] Running upgrade b4e8a1c2f6d9 -> d9c4e7a21b83, claims.source_page_id and research_runs.recheck_generation
+=============================== warnings summary ===============================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /Users/wpalish/ashyq-worktrees/c3-t36-qa/backend/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_security.py::TestForwardedAddressSemantics::test_the_last_forwarded_hop_is_the_limiting_address
+1 failed, 24 passed, 1 warning in 19.66s

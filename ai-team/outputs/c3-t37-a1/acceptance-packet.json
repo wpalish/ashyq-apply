@@ -1,0 +1,127 @@
+{
+  "task_id": "T37",
+  "finding_ids": [
+    "S7"
+  ],
+  "attempt_id": "A1",
+  "baseline_sha": "edf546de9f998c0909337d0abe6f8e1c9c4a0be5",
+  "qa_commit_sha": "25af8ff2ac4e41a73d4eb493a29a14c11bf9b2a0",
+  "candidate_sha": "2e8e6f9f784d03960562ca25e9b6b6c85d05eca2",
+  "integration_base_sha": "edf546de9f998c0909337d0abe6f8e1c9c4a0be5",
+  "participants": [
+    {
+      "role": "ashyq-planner",
+      "invocation_ref": "agent_84cbdac2-75be-458c-b6f2-01b4a88866e6",
+      "checked_sha": "edf546de9f998c0909337d0abe6f8e1c9c4a0be5",
+      "verdict": "PASS",
+      "evidence_file": "planner.md"
+    },
+    {
+      "role": "ashyq-qa",
+      "invocation_ref": "agent_848f505d-2de2-4cc7-b204-47cc3ef0a3ab",
+      "phase": "VERIFY_CANDIDATE",
+      "checked_sha": "2e8e6f9f784d03960562ca25e9b6b6c85d05eca2",
+      "verdict": "PASS",
+      "evidence_file": "qa-verify-candidate.md"
+    },
+    {
+      "role": "ashyq-developer",
+      "invocation_ref": "agent_5ddfef6b-6b87-4899-9c34-66e48c1b9f71",
+      "checked_sha": "2e8e6f9f784d03960562ca25e9b6b6c85d05eca2",
+      "verdict": "PASS",
+      "evidence_file": "developer.md"
+    },
+    {
+      "role": "ashyq-reviewer",
+      "invocation_ref": "agent_6426b7eb-e8ea-40cb-b586-297541ef637f",
+      "checked_sha": "2e8e6f9f784d03960562ca25e9b6b6c85d05eca2",
+      "verdict": "PASS",
+      "evidence_file": "reviews.md"
+    },
+    {
+      "role": "ashyq-integrator",
+      "invocation_ref": "agent_49118efb-78d8-453e-8354-0f0a5bcc8e49",
+      "checked_sha": "2e8e6f9f784d03960562ca25e9b6b6c85d05eca2",
+      "verdict": "PASS",
+      "evidence_file": "integrator-gate.md"
+    }
+  ],
+  "tests": [
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c3-t37-verify/backend && ./.venv/bin/python -m pytest tests/test_pipeline.py",
+      "checked_sha": "2e8e6f9f784d03960562ca25e9b6b6c85d05eca2",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate.md",
+      "summary": "32 passed — TestFundingReEntry all 5 assertion groups green (baseline: 1 failed «Groningen 40 -> 58», SCHOLARSHIP_* doubled on 14/20 results)"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c3-t37-verify/backend && ./.venv/bin/python -m pytest tests/test_source_scan.py tests/test_freshness_regressions.py",
+      "checked_sha": "2e8e6f9f784d03960562ca25e9b6b6c85d05eca2",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate.md",
+      "summary": "47 passed — T32 reextract/supersession gates green (explicit)"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c3-t37-verify/backend && ./.venv/bin/python -m pytest tests/test_api.py tests/test_worker.py",
+      "checked_sha": "2e8e6f9f784d03960562ca25e9b6b6c85d05eca2",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate.md",
+      "summary": "66 + 36 passed — TestRetry gate green; worker/pgserver sanity"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c3-t37-verify/backend && ./.venv/bin/python -m mypy app tests && ./.venv/bin/python -m ruff check app tests && ./.venv/bin/python -m ruff format --check app tests",
+      "checked_sha": "2e8e6f9f784d03960562ca25e9b6b6c85d05eca2",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate.md",
+      "summary": "mypy 0/164; ruff clean; FUNDING_CLAIM_TYPES derivation verified programmatically (14/51 members, prefix rule)"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c3-integration/backend && ./.venv/bin/python -m pytest --cov=app --cov-fail-under=92",
+      "checked_sha": "2e8e6f9f784d03960562ca25e9b6b6c85d05eca2",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "integrator-gate.md",
+      "summary": "[combined 810bb00] FULL suite 1402 passed / 0 skipped, cov 94.04%; T37 merged fourth, no conflicts"
+    }
+  ],
+  "acceptance_items": [
+    {
+      "criterion": "RED: повторный вход в funding удваивает claims по result_id",
+      "status": "PASS",
+      "evidence_file": "qa-test-author.md",
+      "note": "Baseline count table: SCHOLARSHIP_* doubled on 14/20 results via stage-retry path (routes_research stage_state reset; NOT recheck/full-retry which mask via _replace_evidence); runner log proves program_verification stayed done"
+    },
+    {
+      "criterion": "ровно один набор funding-claims; user_decision/notes сохранены",
+      "status": "PASS",
+      "evidence_file": "developer.md",
+      "note": "Targeted delete (NOT blanket — planner code-flow analysis: blanket would destroy verify-claims in both stage-retry and recheck paths): ClaimRow result_id+family+status!=SUPERSEDED, ConflictRow family, before _store_claims; gate `is not None` (honest replace on empty, mirrors reextract zero-page); post-fix table: 0 doubled, user_* preserved row+payload"
+    },
+    {
+      "criterion": "reextract_page (T32) и TestRetry зелёные",
+      "status": "PASS",
+      "evidence_file": "qa-verify-candidate.md",
+      "note": "47 passed (source_scan + freshness_regressions incl. SUPERSEDED survival assertion); TestRetry 66 passed"
+    },
+    {
+      "criterion": "Полный suite зелёный, coverage >= 92",
+      "status": "PASS",
+      "evidence_file": "integrator-gate.md",
+      "note": "combined 810bb00: 1402 passed / 0 skipped, cov 94.04%"
+    }
+  ],
+  "scope_check": "PASS",
+  "scope_check_command": "python3 ai-team/check_team.py scope --task T37 --base edf546de9f998c0909337d0abe6f8e1c9c4a0be5 --head 2e8e6f9f784d03960562ca25e9b6b6c85d05eca2 --repo /Users/wpalish/ashyq-worktrees/c3-t37-verify",
+  "scope_check_result": "changed: runner.py only (+30/-1: extra_claims branch + module constant FUNDING_CLAIM_TYPES near CORE_QUESTIONS), test_pipeline.py; outside_scope: []",
+  "blockers": [],
+  "notes": [
+    "Chain: edf546d -> 25af8ff (QA RED) -> 2e8e6f9 (candidate). QA TEST_AUTHOR ref: agent_7cb7e7e9-b292-478b-8ba3-74518a19e7c2.",
+    "Security review optional per master card — dispatcher ruling: not conducted (PK-scoped deletes, no cross-run data movement, minimal surface; reviewer independently confirmed).",
+    "Honest deviation: QA assertion (5) conflict-doubling is a guard, not RED — bundled corpus emits zero funding ConflictRows; conflict-delete branch corpus-uncovered (coverage residual accepted: all NEW lines executed; 92 floor is full-suite integrator gate).",
+    "Tickets: seed a funding-family ConflictRow before re-entry (contract session, pins delete + runner.py:1136); owner decision on cleaning existing prod duplicates (fix is prevention, not remediation); .value-style nit in in_()."
+  ]
+}

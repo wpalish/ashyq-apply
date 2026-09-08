@@ -1,0 +1,5 @@
+[PASS] expose-only api              flagged=no expected_flagged=no
+[PASS] api published 8099           flagged=yes expected_flagged=yes  ( published: "8099")
+[PASS] api loopback 8099            flagged=yes expected_flagged=yes  ( published: "8099")
+[PASS] web publishes 8080           flagged=no expected_flagged=no
+[PASS] host remap 9099->8099        flagged=no expected_flagged=no

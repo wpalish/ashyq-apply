@@ -1,0 +1,140 @@
+{
+  "task_id": "T34",
+  "finding_ids": [
+    "S3"
+  ],
+  "attempt_id": "A1",
+  "baseline_sha": "edf546de9f998c0909337d0abe6f8e1c9c4a0be5",
+  "qa_commit_sha": "dc04fc387c4ab605dbed4cacde915105384db1e8",
+  "candidate_sha": "b55a3b083558812079e7a2ff366cc9019e2d7393",
+  "integration_base_sha": "edf546de9f998c0909337d0abe6f8e1c9c4a0be5",
+  "participants": [
+    {
+      "role": "ashyq-planner",
+      "invocation_ref": "agent_fa833a7b-7147-4ee3-ad1f-e8c006d7340f",
+      "checked_sha": "edf546de9f998c0909337d0abe6f8e1c9c4a0be5",
+      "verdict": "PASS",
+      "evidence_file": "planner.md"
+    },
+    {
+      "role": "ashyq-qa",
+      "invocation_ref": "agent_7aa66d91-74c5-4321-8ddd-ae2bbf4f6b25",
+      "phase": "VERIFY_CANDIDATE",
+      "checked_sha": "b55a3b083558812079e7a2ff366cc9019e2d7393",
+      "verdict": "PASS",
+      "evidence_file": "qa-verify-candidate.md"
+    },
+    {
+      "role": "ashyq-developer",
+      "invocation_ref": "agent_b4fe329f-8196-4384-801b-ab5f81d91c36",
+      "checked_sha": "b55a3b083558812079e7a2ff366cc9019e2d7393",
+      "verdict": "PASS",
+      "evidence_file": "developer.md"
+    },
+    {
+      "role": "ashyq-reviewer",
+      "invocation_ref": "agent_cc2f693c-925e-45fe-87c3-1241059d98c1",
+      "checked_sha": "b55a3b083558812079e7a2ff366cc9019e2d7393",
+      "verdict": "PASS",
+      "evidence_file": "reviews.md"
+    },
+    {
+      "role": "ashyq-security",
+      "invocation_ref": "agent_ab896b3f-1b46-4787-8dbf-6cb21ac263b1",
+      "checked_sha": "b55a3b083558812079e7a2ff366cc9019e2d7393",
+      "verdict": "PASS",
+      "evidence_file": "reviews.md"
+    },
+    {
+      "role": "ashyq-integrator",
+      "invocation_ref": "agent_49118efb-78d8-453e-8354-0f0a5bcc8e49",
+      "checked_sha": "b55a3b083558812079e7a2ff366cc9019e2d7393",
+      "verdict": "PASS",
+      "evidence_file": "integrator-gate.md"
+    }
+  ],
+  "tests": [
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c3-t34-verify/backend && ./.venv/bin/python -m pytest tests/test_apipay_adapter.py tests/test_payments_config.py",
+      "checked_sha": "b55a3b083558812079e7a2ff366cc9019e2d7393",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate.md",
+      "summary": "28 passed — R1 exploit (b\"\"-secret forged signature) rejected; R2/R3 construction ValueErrors; R4-R6 startup RuntimeErrors; 2 valid-config guards green"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c3-t34-verify/backend && ./.venv/bin/python -m pytest tests/test_payment_webhook.py tests/test_payment_service.py tests/test_payment_reconcile.py tests/test_payment_provider.py",
+      "checked_sha": "b55a3b083558812079e7a2ff366cc9019e2d7393",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate.md",
+      "summary": "51 passed — existing payment/webhook/reconcile tests green unmodified"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c3-t34-verify/backend && ./.venv/bin/python -m pytest tests/test_security.py tests/test_metrics.py tests/test_api.py tests/test_billing_api.py tests/test_paywall.py",
+      "checked_sha": "b55a3b083558812079e7a2ff366cc9019e2d7393",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate.md",
+      "summary": "132 passed — validate_runtime neighbors; error-precedence verified live (auth-only configs still see auth message)"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c3-t34-verify/backend && ./.venv/bin/python -m mypy app tests && ./.venv/bin/python -m ruff check app tests && ./.venv/bin/python -m ruff format --check app tests",
+      "checked_sha": "b55a3b083558812079e7a2ff366cc9019e2d7393",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate.md",
+      "summary": "mypy 0/164; ruff clean"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c3-integration/backend && ./.venv/bin/python -m pytest --cov=app --cov-fail-under=92",
+      "checked_sha": "b55a3b083558812079e7a2ff366cc9019e2d7393",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "integrator-gate.md",
+      "summary": "[combined 810bb00] FULL suite 1402 passed / 0 failed / 0 skipped, coverage 94.04% (threshold 92); pgserver RAN; T34 merged first in frozen order, no conflicts"
+    }
+  ],
+  "acceptance_items": [
+    {
+      "criterion": "RED: подпись ключом b\"\" принимается вебхуком",
+      "status": "PASS",
+      "evidence_file": "qa-test-author.md",
+      "note": "R1 RED on baseline: forged hmac.new(b\"\") signature verified True (assert True is False); GREEN on candidate: verify_webhook returns False pre-HMAC (C3 apipay.py:170-171)"
+    },
+    {
+      "criterion": "пустой секрет -> отказ всегда; секрет >=32 симв. required при apipay",
+      "status": "PASS",
+      "evidence_file": "reviews.md",
+      "note": "C1 config.py:178-187 (raw get_secret_value, key>=20/secret>=32, frozen messages byte-verified); C2 __init__ ValueErrors (worker-process defense — worker never runs validate_runtime); security: no b\"\"-secret forgery path remains, single construction site provider.py:68, third-entrypoint grep clean"
+    },
+    {
+      "criterion": "typo провайдера и production+fake+enabled -> отказ старта",
+      "status": "PASS",
+      "evidence_file": "reviews.md",
+      "note": "R4 'apipy' -> RuntimeError UNIMATCH_PAYMENTS_PROVIDER; R6 prod+fake+enabled -> 'fake provider'; C4 get_provider RuntimeError (not assert, -O-safe) guards non-API processes"
+    },
+    {
+      "criterion": "существующие payment-тесты зелёные без ослабления",
+      "status": "PASS",
+      "evidence_file": "qa-verify-candidate.md",
+      "note": "51 passed unmodified (byte-identical to dc04fc3); fixtures run real lifespans green (no fixture uses apipay with short secrets — verified by grep)"
+    },
+    {
+      "criterion": "Полный suite зелёный, coverage >= 92",
+      "status": "PASS",
+      "evidence_file": "integrator-gate.md",
+      "note": "combined 810bb00: 1402 passed / 0 skipped, cov 94.04%"
+    }
+  ],
+  "scope_check": "PASS",
+  "scope_check_command": "python3 ai-team/check_team.py scope --task T34 --base edf546de9f998c0909337d0abe6f8e1c9c4a0be5 --head b55a3b083558812079e7a2ff366cc9019e2d7393 --repo /Users/wpalish/ashyq-worktrees/c3-t34-verify",
+  "scope_check_result": "changed: config.py (+19, validate_runtime TOP only, no fields), payments/apipay.py (+11), payments/provider.py (+6); outside_scope: []",
+  "blockers": [],
+  "notes": [
+    "Chain: edf546d -> dc04fc3 (QA RED 7) -> b55a3b0 (candidate). QA TEST_AUTHOR ref: agent_58c1eeaa-28ce-4855-94e9-6c0112ef92b8.",
+    "config.py serialization: T34 first (frozen); T35 disjoint hunks merged clean after; integrator confirmed final validate_runtime ordering (payments TOP, auth, smtp guard).",
+    "Operational consequence (release note): API refuses to start on typo'd provider / apipay without real credentials / prod billing via fake — intended fail-closed.",
+    "Tickets: webhook-replay LOW pre-existing (no timestamp/nonce; idempotency-bounded); worker boot-time validation follow-up; public 'test-secret' fallback INFO (unexploitable with payments disabled); C4 alerting note. Masked synthetic secrets only in evidence."
+  ]
+}
