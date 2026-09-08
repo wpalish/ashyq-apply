@@ -1,3 +1,4 @@
+import { navigate } from './navigation';
 import { expect, test, type Browser, type Page } from '@playwright/test';
 
 const SHOT_ROOT = '../docs/screenshots';
@@ -45,7 +46,7 @@ export async function waitForResults(page: Page, timeout = 120_000): Promise<voi
 }
 
 export async function runDemoResearch(page: Page): Promise<void> {
-  await page.goto('/');
+  await page.goto('/#/profile');
   await page.getByTestId('to-preferences').click();
   await expect(page.getByTestId('start-research')).toBeEnabled();
   await page.getByTestId('start-research').click();
@@ -53,7 +54,7 @@ export async function runDemoResearch(page: Page): Promise<void> {
 }
 
 export async function openShortlist(page: Page): Promise<void> {
-  await page.getByTestId('nav-shortlist').click();
+  await navigate(page, "shortlist");
   await expect(page.getByTestId('shortlist-table')).toBeVisible();
 
   // Out-of-budget, needs-clarification and excluded rows sit in sections that

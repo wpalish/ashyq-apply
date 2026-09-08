@@ -21,6 +21,7 @@ import '@fontsource/ibm-plex-mono/400.css';
 import '@fontsource/ibm-plex-mono/500.css';
 import './styles/global.css';
 import './styles/components.css';
+import './styles/redesign.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

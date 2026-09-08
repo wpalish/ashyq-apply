@@ -1,3 +1,4 @@
+import { navigate } from './navigation';
 /**
  * The messenger, from the one screen a person actually uses.
  *
@@ -13,7 +14,7 @@ test.describe.configure({ mode: 'serial' });
 
 test('messages has its own screen, reachable and empty until someone writes', async ({ page }) => {
   await page.goto('/');
-  await page.getByTestId('nav-messages').click();
+  await navigate(page, "messages");
 
   await expect(page.getByRole('heading', { name: 'Messages' })).toBeVisible();
   await expect(page.getByText('No conversations yet')).toBeVisible();
@@ -23,7 +24,7 @@ test('messages has its own screen, reachable and empty until someone writes', as
 
 test('the first-contact setting is on your own profile and saves', async ({ page }) => {
   await page.goto('/');
-  await page.getByTestId('nav-me').click();
+  await navigate(page, "me");
 
   const open = page.getByRole('button', { name: /^(Create profile|Edit profile)$/ });
   await expect(open).toBeVisible();
@@ -39,7 +40,7 @@ test('the first-contact setting is on your own profile and saves', async ({ page
     await save.click();
 
     await page.reload();
-    await page.getByTestId('nav-me').click();
+    await navigate(page, "me");
     await page.getByRole('button', { name: 'Edit profile' }).click();
     await expect(page.getByLabel('Who may write to you first')).toHaveValue(choice);
   }
@@ -47,7 +48,7 @@ test('the first-contact setting is on your own profile and saves', async ({ page
 
 test('the navigation carries no badge when nothing is unread', async ({ page }) => {
   await page.goto('/');
-  await page.getByTestId('nav-messages').click();
+  await navigate(page, "messages");
 
   await expect(page.getByTestId('nav-messages').locator('.nav__badge')).toHaveCount(0);
 });

@@ -9,7 +9,7 @@ Write for a reader who has **zero** chat history — because that is exactly who
 | | |
 |---|---|
 | Holder | **gpt-6-astra — frontend redesign** |
-| Since (UTC) | 2026-09-08 16:05:29 UTC |
+| Since (UTC) | 2026-09-08 16:26:31 UTC |
 | Branch | `task/frontend-redesign`, owner-directed continuation from design-system predecessor |
 | HEAD when written | `0468974` (visual design system release; first redesign slice in progress) |
 | Origin main when checked | `edf546d`; branch contains only the owner-directed design-system work |
@@ -236,6 +236,14 @@ primary menu with five sections and contextual navigation; add mobile BottomNav;
 gates and controls. Document AppShell and CaseScreen before editing; run frontend and token gates.
 
 ## 6. Gate status at last run (numbers, not adjectives)
+
+Frontend-redesign first slice, 2026-09-08 (current): typecheck/lint/build pass; 195 unit tests in
+22 files pass; token audit scans 5 files with 0 errors / 0 warnings. Four isolated Playwright tests
+pass (desktop/mobile x light/dark), including axe, overflow, touch targets, locale and history.
+Existing backend-dependent E2E navigation helpers updated but full ordinary/auth suites not rerun.
+Backend Ruff check/format and mypy pass (164 files); isolated KZT tuition test below still fails.
+Full backend coverage suite not rerun: previous 1357/1 result below is inherited, not a new run.
+Implementation checkpoint stays `wip:` because the repository-wide gates are not all green.
 
 Design-system branch, 2026-09-08:
 

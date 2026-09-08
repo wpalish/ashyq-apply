@@ -1,3 +1,4 @@
+import { navigate } from './navigation';
 /**
  * The community round trip: join, post, answer, and be findable.
  *
@@ -18,7 +19,7 @@ const RUN = `e2e${Date.now().toString().slice(-7)}`;
 /** Open the community profile, joining first if this database has no profile. */
 async function ensureJoined(page: Page): Promise<void> {
   await page.goto('/');
-  await page.getByTestId('nav-me').click();
+  await navigate(page, "me");
 
   // The screen loads before it knows which of the two it is showing, so wait
   // for either rather than racing the spinner.
@@ -38,7 +39,7 @@ async function ensureJoined(page: Page): Promise<void> {
 test('joining publishes a profile that Discover can find', async ({ page }) => {
   await ensureJoined(page);
 
-  await page.getByTestId('nav-discover').click();
+  await navigate(page, "discover");
   await page.getByLabel('City').fill('Astana');
   await page.getByLabel('University').click(); // blur commits the filter
 
@@ -47,7 +48,7 @@ test('joining publishes a profile that Discover can find', async ({ page }) => {
 
 test('a post shows the tags it will publish, then carries them into the feed', async ({ page }) => {
   await page.goto('/');
-  await page.getByTestId('nav-feed').click();
+  await navigate(page, "feed");
 
   const composer = page.getByPlaceholder('Ask something, or say where you are applying');
   await composer.fill(`Кто сдаёт IELTS в #${RUN}?`);
@@ -64,7 +65,7 @@ test('a post shows the tags it will publish, then carries them into the feed', a
 
 test('an answer opens in place under its post and is counted', async ({ page }) => {
   await page.goto('/');
-  await page.getByTestId('nav-feed').click();
+  await navigate(page, "feed");
 
   // Scoped to this run's own post: the database keeps earlier ones, and
   // "Answer" is a substring of another post's "1 answer".
@@ -98,7 +99,7 @@ test('every community screen is reachable on a phone', async ({ page }) => {
 
 test('an over-long post cannot be sent', async ({ page }) => {
   await page.goto('/');
-  await page.getByTestId('nav-feed').click();
+  await navigate(page, "feed");
 
   await page.getByPlaceholder('Ask something, or say where you are applying').fill('x'.repeat(501));
 
@@ -108,7 +109,7 @@ test('an over-long post cannot be sent', async ({ page }) => {
 
 test('a post can be taken back without leaving the community', async ({ page }) => {
   await page.goto('/');
-  await page.getByTestId('nav-feed').click();
+  await navigate(page, "feed");
 
   const body = `Сказал не подумав ${RUN}`;
   await page.getByPlaceholder('Ask something, or say where you are applying').fill(body);
@@ -137,6 +138,6 @@ test('leaving the community is reversible from the same screen', async ({ page }
 
   // Back to the join form, with the account still signed in.
   await expect(page.getByRole('heading', { name: 'Join the community' })).toBeVisible();
-  await page.getByTestId('nav-discover').click();
+  await navigate(page, "discover");
   await expect(page.getByText('Nobody has joined yet')).toBeVisible();
 });

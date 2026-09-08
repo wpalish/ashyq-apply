@@ -1,3 +1,4 @@
+import { navigate } from './navigation';
 /**
  * The critical path, end to end, plus a screenshot of each main state.
  *
@@ -22,7 +23,7 @@ test.afterAll(async () => {
 });
 
 test('profile screen states the cost of every gap', async () => {
-  await page.goto('/');
+  await page.goto('/#/profile');
   await expect(page.getByRole('heading', { name: 'Who is applying' })).toBeVisible();
   await expect(page.locator('.topbar').getByText('Demo data')).toBeVisible();
   await page.screenshot({ path: shot('01-profile.png'), fullPage: true });
@@ -36,7 +37,7 @@ test('profile screen states the cost of every gap', async () => {
 });
 
 test('preferences screen exposes the scoring weights and warns about live mode', async () => {
-  await page.goto('/');
+  await page.goto('/#/profile');
   await page.getByTestId('to-preferences').click();
   await expect(page.getByRole('heading', { name: 'What matters to you' })).toBeVisible();
   await expect(page.getByText('It is not a probability of admission')).toBeVisible();
@@ -48,7 +49,7 @@ test('preferences screen exposes the scoring weights and warns about live mode',
 });
 
 test('research runs to completion and reports what it could not read', async () => {
-  await page.getByTestId('nav-preferences').click();
+  await navigate(page, "preferences");
   await page.getByTestId('start-research').click();
 
   await expect(page.getByTestId('stage-list')).toBeVisible();
@@ -155,7 +156,7 @@ test('missing scholarship data reads as unknown, not as no funding', async () =>
 
 test('conflicting official sources are shown with a drafted question', async () => {
   await openShortlist(page);
-  await page.getByTestId('nav-sources').click();
+  await navigate(page, "sources");
 
   await expect(page.getByRole('heading', { name: 'What we could not settle' })).toBeVisible();
   await expect(page.getByTestId('conflict-list')).toContainText('minimum overall IELTS band');
@@ -168,7 +169,7 @@ test('conflicting official sources are shown with a drafted question', async () 
 
 test('funding comparison hatches what it cannot compare', async () => {
   await openShortlist(page);
-  await page.getByTestId('nav-funding').click();
+  await navigate(page, "funding");
 
   await expect(page.getByRole('heading', { name: 'What you would actually pay' })).toBeVisible();
   await expect(page.locator('.fund-bar__unknown').first()).toBeVisible();
@@ -184,7 +185,7 @@ test('approve, collect documents, and export', async () => {
   await rows.nth(1).locator('.decision-btn--approve').click();
   await expect(rows.nth(0).locator('.decision-btn--approve')).toHaveAttribute('aria-pressed', 'true');
 
-  await page.getByTestId('nav-approved').click();
+  await navigate(page, "approved");
   await expect(page.getByText('2 approved')).toBeVisible();
   await page.screenshot({ path: shot('10-approved.png'), fullPage: true });
 
@@ -197,7 +198,7 @@ test('approve, collect documents, and export', async () => {
   await expect(page.locator('.doc').first()).toContainText(/reference|transcript|diploma|statement/i);
   await page.screenshot({ path: shot('11-documents.png'), fullPage: true });
 
-  await page.getByTestId('nav-export').click();
+  await navigate(page, "export");
   await expect(page.getByRole('heading', { name: 'Take it with you, or erase it' })).toBeVisible();
   const download = page.waitForEvent('download');
   await page.getByTestId('export-csv').click();
@@ -224,7 +225,7 @@ test('rejection is remembered with the row kept', async () => {
   await expect(first).toHaveClass(/is-rejected/);
   await expect(first).toContainText('Rejected: no funding');
 
-  await page.getByTestId('nav-approved').click();
+  await navigate(page, "approved");
   await expect(page.getByText('Rejected (1)')).toBeVisible();
   await expect(page.getByText(name)).toBeVisible();
   await expect(page.getByText('no funding')).toBeVisible();
@@ -232,7 +233,7 @@ test('rejection is remembered with the row kept', async () => {
 
   // And it survives a reload: the reason lives on the server, not in the tab.
   await page.reload();
-  await page.getByTestId('nav-approved').click();
+  await navigate(page, "approved");
   await expect(page.getByText('no funding')).toBeVisible();
 });
 
@@ -240,7 +241,7 @@ test('screens have addresses: back, forward, reload and a gated link', async () 
   await openShortlist(page);
   await expect(page).toHaveURL(/#\/shortlist$/);
 
-  await page.getByTestId('nav-funding').click();
+  await navigate(page, "funding");
   await expect(page).toHaveURL(/#\/funding$/);
 
   await page.goBack();

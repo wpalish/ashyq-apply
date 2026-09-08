@@ -1,3 +1,4 @@
+import { navigate } from './navigation';
 /**
  * Accessibility and responsive behaviour.
  *
@@ -116,7 +117,7 @@ test('the whole workflow is reachable by keyboard', async () => {
 });
 
 test('progress is announced to assistive technology', async () => {
-  await page.getByTestId('nav-progress').click();
+  await navigate(page, "progress");
   const bar = page.getByRole('progressbar', { name: 'Research progress' });
   await expect(bar).toBeVisible();
   await expect(bar).toHaveAttribute('aria-valuemax', '100');
@@ -147,7 +148,7 @@ test('every reachable workflow screen has no serious axe violations', async () =
   const screens = ['profile', 'preferences', 'progress', 'shortlist', 'funding', 'sources', 'approved', 'export'];
 
   for (const screen of screens) {
-    await page.getByTestId(`nav-${screen}`).click();
+    await navigate(page, screen);
     const report = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
       .analyze();
@@ -178,9 +179,9 @@ test('both themes render with a painted background and readable text', async () 
 test('no console errors during the full journey', async () => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await openShortlist(page);
-  await page.getByTestId('nav-funding').click();
-  await page.getByTestId('nav-sources').click();
-  await page.getByTestId('nav-export').click();
+  await navigate(page, "funding");
+  await navigate(page, "sources");
+  await navigate(page, "export");
 
   expect(consoleErrors, `console errors: ${consoleErrors.join(' | ')}`).toHaveLength(0);
 });
