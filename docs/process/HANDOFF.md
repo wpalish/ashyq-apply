@@ -8,17 +8,17 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 | | |
 |---|---|
-| Holder | **gpt-6-astra** |
-| Since (UTC) | 2026-09-08 14:48:00 UTC |
+| Holder | **nobody — owner review** |
+| Since (UTC) | 2026-09-08 16:05:29 UTC |
 | Branch | `task/design-system-llm-audit`, from synchronized `origin/main` |
-| HEAD when written | `b755326` (owner requested a visual design-system synthesis on top of the completed token audit) |
+| HEAD when written | `65b6ffb` (visual design system implemented, verified, and pushed) |
 | Origin main when checked | `edf546d`; branch contains only the owner-directed design-system work |
 | Previous holder | GLM/ZCode dispatcher; it released after integrating T32 but left T29 production wiring explicitly deferred |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
 
-**Owner-directed ASHYQ Apply visual design-system synthesis is in progress.** The owner supplied
+**Owner-directed ASHYQ Apply visual design-system synthesis is complete and ready for review.** The owner supplied
 `photo-references/design_system.png`, `photo-references/hero_section_example.png`, brandbook v1.1, and
 `epics.md`. Build a living, mobile-first design-system catalogue that reconciles the brand's Open Chapter
 language with E00/E16 evidence, uncertainty, semantic-status, dark-theme, localization, and AA contracts.
@@ -71,6 +71,7 @@ manufacture compliant history. [0.4] was committed before [0.3].
 | T30 measurable harness | `388ae98` | Canary reports separate programme/category numerators, source-page and fetch-tier counts, walker metrics, timestamped outputs and explicit batch selection. |
 | T30 catalogue repair | `5c42934` | Malformed/PDF catalogue bytes can no longer abort the entire walk; lxml falls back to the stdlib parser and a minimal `<f/{>` regression pins the failure. |
 | design-system audit | `62d941d` | Three-layer tokens, complete pre-migration audit, 25 LLM-readable specs, Layer 3 migration, CI audit, and AI instructions; frontend gates green. |
+| visual design system | `65b6ffb` | Brandbook v1.1 foundations, responsive living catalogue, exact source photography, trust/status/state patterns, generated token reference, focused tests, accessibility evidence, and light/dark/mobile captures. |
 
 ## 4. Half-done / uncommitted at the moment of writing
 
@@ -228,12 +229,9 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-1. Reconcile brandbook v1.1 with E00/E16 in `frontend/src/styles/tokens.css`, `specs/`, and
-   `frontend/.21st/design.json`; document the deliberate display-serif / brand-sans split.
-2. Build a standalone Vite design-system catalogue at `frontend/design-system.html` with responsive,
-   accessible specimens for foundations, trust registers, core controls, responsive data, and states.
-3. Add focused tests, run the token audit and all frontend gates, render 360/1440 screenshots, then
-   record exact evidence here. Keep the unrelated backend KZT extraction failure outside this step.
+Review commit `65b6ffb` on `task/design-system-llm-audit`. The living catalogue entry point is
+`frontend/design-system.html`; the human source of truth is `specs/design-system.md`; reproducible
+verification evidence and captures are in `docs/design-system/`. Merge only after owner approval.
 
 ## 6. Gate status at last run (numbers, not adjectives)
 
@@ -241,9 +239,12 @@ Design-system branch, 2026-09-08:
 
 | Gate | Result |
 |---|---|
-| `npm run audit:tokens` | **pass** — 3 CSS/SCSS files, 0 errors, 0 warnings |
+| `npm run docs:tokens` | **pass** — 188 Layer 1 tokens, 190 Layer 2 aliases |
+| `npm run audit:tokens` | **pass** — 4 CSS/SCSS files, 0 errors, 0 warnings |
 | audit negative fixture | **pass** — exit 1; 2 errors (color/spacing), 2 warnings (duration/uncommon); fixture removed |
-| frontend typecheck / lint / unit / build | **pass** — 182/182 tests; production bundle built |
+| frontend typecheck / lint / unit / build | **pass** — 185/185 tests in 21 files; app and catalogue production bundles built |
+| catalogue browser audit | **pass** — 0 axe violations, no overflow, no visible target below 44 px at light 1440, light 360, and dark 1440 |
+| `git diff --check` | **pass** |
 | backend ruff / format / mypy | **pass** — 164 files/source files |
 | backend pytest + coverage | **baseline red outside branch scope** — 1357 passed, 1 failed; 93.80% coverage |
 
@@ -453,3 +454,4 @@ host=github.com
 | 2026-09-08 03:38:21 UTC | codex | `9b362c8` → in progress | Took the C2 baton after verifying `origin/main@4d2125c` is the merge-base. Owner authorized T29 wiring, bounded T30 batches, T26, committing campaign evidence, and GitHub publication; T31 remains blocked on provider/secrets/data-policy acknowledgement. |
 | 2026-09-08 13:31:09 UTC | gpt-6-astra | `edf546d` → in progress | Audited 3 stylesheets/303 hardcoded values, created the three-layer token contract and 25 LLM-readable specs, migrated Layer 3 to aliases, added CI enforcement, and passed all frontend/static gates; recorded one reproducible unrelated backend baseline failure. |
 | 2026-09-08 13:35:00 UTC | gpt-6-astra | `edf546d` → `62d941d` + release handoff | Completed the owner-directed design-system task. Scoped audit/typecheck/lint/182 tests/build are green; full backend gate remains reproducibly red only in the unchanged KZT extraction baseline named in §7. |
+| 2026-09-08 16:05:29 UTC | gpt-6-astra | `b755326` → `65b6ffb` + release handoff | Synthesized the supplied photo references, brandbook v1.1, and E00/E16 into a responsive living design system; verified tokens, 185 tests, production build, axe, overflow, target sizes, light/dark themes, and pushed the implementation. |
