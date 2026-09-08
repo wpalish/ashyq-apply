@@ -22,6 +22,10 @@ class so nobody mistakes a planned RED for a broken suite:
 - ``TestDemoRunIsByteIdentical`` — R6, GREEN on baseline by construction:
   the golden sha256 below was captured ON baseline 2ed4f51 from the demo
   corpus pipeline. It is the byte-identity guard for the developer's changes.
+  A3 amendment: the replay is run under the capture-date clock
+  (``frozen_clock``) because the baseline payload embeds the assessment day
+  as an unmasked date-only string (pre-campaign runner code); without the
+  freeze the golden breaks at every UTC date rollover with no real drift.
 - ``TestT32MigrationRoundTrip`` — R8, contract RED-pending (the revision is
   located dynamically by ``down_revision == "b4e8a1c2f6d9"`` so the test
   survives the developer choosing the revision id); the single-head check is
@@ -38,7 +42,7 @@ import hashlib
 import json
 import re
 import uuid
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 
 import pytest
@@ -473,6 +477,74 @@ class TestSupersededExcluded:
 #: byte-identical under the same masking.
 GOLDEN_DEMO_SHA256 = "aae8c595ab8f78c8a03a87eddde03a811b8986e4725817d05c65059327e4d702"
 
+#: The golden was captured with the real clock on 2026-09-07, and the baseline
+#: payload embeds that date: ``requirement_checks[*].applicant_value`` and
+#: ``scholarships[*].eligibility_checks[*].applicant_value`` carry the
+#: assessment day as a bare ``YYYY-MM-DD`` string (pre-campaign runner code,
+#: runner.py ``_stage_assess``; commit 9cfb20b, untouched by T32). The
+#: ``_mask_volatile`` patterns below do not match a date-only string, so
+#: without a frozen clock this golden fails at every UTC date rollover —
+#: proven on pristine baseline 2ed4f51 (A3 QA). The fix is to replay the
+#: pipeline under the capture-date clock, NOT to widen the mask: of the 112
+#: date-only strings in a demo dump, 96 are semantic corpus values
+#: (admission_deadline, scholarships[*].deadline, normalized_value,
+#: published_value) that byte-identity must keep guarding. Never re-capture
+#: the hash against a real clock — re-capture means re-deriving it from a new
+#: intended baseline, under this same frozen date.
+GOLDEN_CAPTURE_UTC = datetime(2026, 9, 7, 12, 0, 0, tzinfo=UTC)
+
+
+class _FrozenDatetime(datetime):
+    """A ``datetime`` whose wall clock is pinned to the golden capture moment.
+
+    Subclass (not a stub) so constructors, parsing and arithmetic behave
+    exactly like the real thing; only the *reading* of the clock is pinned.
+    """
+
+    @classmethod
+    def now(cls, tz=None):
+        if tz is not None:
+            return GOLDEN_CAPTURE_UTC.astimezone(tz)
+        return GOLDEN_CAPTURE_UTC.replace(tzinfo=None)
+
+    @classmethod
+    def today(cls):
+        return cls.now()
+
+    @classmethod
+    def utcnow(cls):
+        return GOLDEN_CAPTURE_UTC.replace(tzinfo=None)
+
+
+class _FrozenDate(date):
+    @classmethod
+    def today(cls):
+        return GOLDEN_CAPTURE_UTC.date()
+
+
+@pytest.fixture
+def frozen_clock(monkeypatch):
+    """Pin every wall clock the demo pipeline can read to the capture date.
+
+    These are all the ``datetime.now``/``date.today`` call sites under
+    app/pipeline and app/domain (runner._stage_assess feeds ``today`` into the
+    eligibility verdicts that land in the payloads; the rest are defaults,
+    heartbeat bookkeeping and masked timestamps). Only test modules are
+    patched — monkeypatch restores every name after each test.
+    """
+    import app.domain.claim_verifier as claim_verifier
+    import app.domain.currency as currency
+    import app.domain.eligibility as eligibility
+    import app.domain.freshness as freshness
+    import app.pipeline.runner as runner
+    import app.pipeline.state as state
+
+    for module in (runner, state, eligibility, freshness):
+        monkeypatch.setattr(module, "datetime", _FrozenDatetime)
+    for module in (claim_verifier, currency):
+        monkeypatch.setattr(module, "date", _FrozenDate)
+
+
 _UUID_HEX = re.compile(r"[0-9a-f]{32}(-[a-z]+[0-9]+)?$")
 _ISO_TS = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}")
 
@@ -513,10 +585,16 @@ def _canonical_demo_dump(session, run_id: str) -> str:
 class TestDemoRunIsByteIdentical:
     """R6: the demo pipeline's stored result payloads are part of the product.
     T32 touches runner.py (recheck advancement, _replace_evidence) and the
-    freshness rules; none of that may move a byte of the demo output."""
+    freshness rules; none of that may move a byte of the demo output.
+
+    The replay runs under the golden capture clock (``frozen_clock``): the
+    baseline payload embeds the assessment day as an unmasked date-only
+    string, so a real clock would break byte-identity at the first UTC
+    rollover after capture without any real drift. The asserted fact is
+    unchanged: payload byte-identical to the baseline golden."""
 
     @pytest.fixture
-    def demo_session(self, settings, profile):
+    def demo_session(self, frozen_clock, settings, profile):
         from app.models import ApplicantProfileRow, Base
         from app.pipeline.runner import ResearchRunner
         from app.pipeline.state import RunState
