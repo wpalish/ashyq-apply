@@ -11,7 +11,7 @@
 
 ## Rules
 
-Motion explains state change and must not delay work. Prefer animating color, border, opacity, and transform. Never animate evidence into existence or rely on motion as the only status signal. The global reduced-motion query replaces animation and transition durations with the reduced token.
+Motion explains state change and must not delay work. Interaction feedback stays at or below 200 ms; the spinner/pulse cycle is the only longer continuous exception. Prefer animating color, border, opacity, and transform. Never animate evidence into existence or rely on motion as the only status signal. The global reduced-motion query replaces animation and transition durations with the reduced token.
 
 ## Related
 

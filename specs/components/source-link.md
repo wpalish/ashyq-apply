@@ -16,7 +16,7 @@ Real-source anchor or fixture text, monospace URL, and optional demo Chip.
 
 ## 4. Tokens used
 
-`--color-link`, `--color-link-hover`, `--font-family-mono`, `--font-size-xs`, `--space-0-5`, plus Chip semantic tokens.
+`--color-link`, `--color-link-hover`, `--font-family-mono`, `--font-size-xs`, `--space-0-5`, `--size-touch-target`, plus Chip semantic tokens.
 
 ## 5. Props/API
 
@@ -24,7 +24,7 @@ Real-source anchor or fixture text, monospace URL, and optional demo Chip.
 
 ## 6. States
 
-Real links have default, hover, and global focus-visible states. Active follows native anchor behavior. Fixture text is non-interactive. Disabled/error are represented by surrounding evidence status, not this component.
+Real links have a minimum 44 px touch target plus default, hover, and global focus-visible states. Active follows native anchor behavior. Fixture text is non-interactive. Disabled/error are represented by surrounding evidence status, not this component.
 
 ## 7. Code example
 

@@ -16,7 +16,7 @@ Native button, base `.btn` class, optional size/tone modifier, label, and option
 
 ## 4. Tokens used
 
-`--space-button-block`, `--space-button-inline`, `--space-1`, `--space-button-compact-inline`, `--radius-md`, `--border-width-hairline`, `--color-surface`, `--color-border-strong`, `--color-text`, `--color-interactive`, `--color-interactive-hover`, `--color-text-inverse`, `--color-danger`, `--font-size-sm`, `--font-size-xs`, `--font-weight-medium`, `--font-weight-semibold`, `--motion-duration-fast`, `--shadow-sm`, `--shadow-none`, `--transform-pressed`.
+`--space-button-block`, `--space-button-inline`, `--space-1`, `--space-button-compact-inline`, `--size-touch-target`, `--radius-md`, `--border-width-hairline`, `--color-surface`, `--color-border-strong`, `--color-text`, `--color-interactive`, `--color-interactive-hover`, `--color-on-interactive`, `--color-danger`, `--font-family-brand`, `--font-size-sm`, `--font-size-xs`, `--font-weight-medium`, `--font-weight-semibold`, `--motion-duration-fast`, `--shadow-sm`, `--shadow-none`, `--transform-pressed`.
 
 ## 5. Props/API
 
@@ -24,7 +24,7 @@ CSS API: `.btn`; modifiers `.btn--primary`, `.btn--danger`, `.btn--ghost`, and `
 
 ## 6. States
 
-Default uses a bordered surface. Hover adds border emphasis/shadow; active shifts one tokenized pixel; focus uses the global focus ring; disabled lowers opacity and blocks pointer input; danger uses danger color; errors belong in a nearby Notice.
+Default uses a bordered surface and a minimum 44 px touch target. Hover adds border emphasis/shadow; active shifts one tokenized pixel; focus uses the global focus ring; disabled lowers opacity and blocks pointer input; danger uses danger color; errors belong in a nearby Notice.
 
 ## 7. Code example
 

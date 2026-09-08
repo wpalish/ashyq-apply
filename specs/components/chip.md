@@ -12,7 +12,7 @@ Use Chip for compact metadata and StatusChip for domain statuses with a human la
 
 ## 3. Anatomy
 
-Inline container, label, optional title, optional monospace treatment, and one semantic tone modifier.
+Inline container, label, optional title, optional monospace treatment, and one semantic tone modifier. `StatusChip` also carries a tone icon; the label remains the accessible meaning.
 
 ## 4. Tokens used
 
@@ -24,7 +24,7 @@ Inline container, label, optional title, optional monospace treatment, and one s
 
 ## 6. States
 
-Default is neutral. Semantic tones change border/background/text together. Hover/active/disabled/error are not interactive states; wrap an actual control when interaction is required. Focus is handled by that control.
+Default is neutral. Semantic tones change icon, border, background, and text together, so status never depends on color alone. Hover/active/disabled/error are not interactive states; wrap an actual control when interaction is required. Focus is handled by that control.
 
 ## 7. Code example
 

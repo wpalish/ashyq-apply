@@ -13,6 +13,16 @@ const TONE_CLASS: Record<Tone, string> = {
   neutral: '',
 };
 
+const TONE_ICON: Record<Tone, string> = {
+  ok: '✓',
+  info: 'i',
+  warn: '○',
+  risk: '!',
+  demo: 'D',
+  accent: '◆',
+  neutral: '?',
+};
+
 export function Chip({
   tone = 'neutral', children, title, mono = false,
 }: { tone?: Tone; children: ReactNode; title?: string; mono?: boolean }) {
@@ -33,6 +43,7 @@ export function Chip({
 export function StatusChip({ status, tone }: { status: string; tone: Tone }) {
   return (
     <Chip tone={tone} title={STATUS_MEANING[status] ?? status}>
+      <span className="chip__icon" data-icon={TONE_ICON[tone]} aria-hidden="true" />
       {STATUS_LABEL[status] ?? humanize(status)}
     </Chip>
   );
@@ -114,7 +125,7 @@ export function SourceLink({ url }: { url: string }) {
     );
   }
   return (
-    <a className="xs mono" href={url} target="_blank" rel="noopener noreferrer">
+    <a className="source-link xs mono" href={url} target="_blank" rel="noopener noreferrer">
       {url}
     </a>
   );
