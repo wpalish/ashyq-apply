@@ -8,17 +8,17 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 | | |
 |---|---|
-| Holder | **gpt-6-astra — frontend redesign** |
+| Holder | **nobody — first frontend redesign slice handed off** |
 | Since (UTC) | 2026-09-08 16:26:31 UTC |
 | Branch | `task/frontend-redesign`, owner-directed continuation from design-system predecessor |
-| HEAD when written | `0468974` (visual design system release; first redesign slice in progress) |
+| HEAD when written | `bf29056` (first frontend redesign slice pushed; repository-wide gates still incomplete) |
 | Origin main when checked | `edf546d`; branch contains only the owner-directed design-system work |
 | Previous holder | GLM/ZCode dispatcher; it released after integrating T32 but left T29 production wiring explicitly deferred |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
 
-**Owner-directed frontend redesign is in progress: first slice is the app shell and case dashboard, based on epics.md and the completed visual system.** The owner supplied
+**Owner-directed frontend redesign: first app-shell/case-dashboard slice implemented and pushed; next is E02.** See `docs/frontend-redesign.md` for exact scope and verification. This is not completion of all R1 epics. The owner supplied
 `photo-references/design_system.png`, `photo-references/hero_section_example.png`, brandbook v1.1, and
 `epics.md`. Build a living, mobile-first design-system catalogue that reconciles the brand's Open Chapter
 language with E00/E16 evidence, uncertainty, semantic-status, dark-theme, localization, and AA contracts.
@@ -41,6 +41,10 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+Frontend first slice: `bf29056` — CaseScreen, five-section AppShell/mobile navigation, three-language
+dashboard copy, specs, adapted E2E navigation, 10 unit tests and four isolated browser checks.
+WIP checkpoint because the unrelated KZT backend baseline remains red and full integration E2E is unrun.
 
 The original recovery entries below are historical provenance. Preserve their hashes and ancestry;
 the first seven predate `AGENTS.md` and lack the required `Agent:` trailer, so do not rewrite them to
@@ -229,11 +233,14 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-Owner requested the frontend redesign based on this design system and epics.md. Branch
-`task/frontend-redesign` from `task/design-system-llm-audit@0468974` (explicit predecessor exception).
-First slice: implement CaseScreen with real store state and next-step guidance; replace the long
-primary menu with five sections and contextual navigation; add mobile BottomNav; retain old hashes,
-gates and controls. Document AppShell and CaseScreen before editing; run frontend and token gates.
+Continue the owner-requested redesign on `task/frontend-redesign`, explicitly based on the unmerged
+design-system predecessor `0468974`. First slice `bf29056` is complete within its bounded scope.
+Read epics.md E02 and specs/components/field.md, panel.md and notice.md; create a ProfileScreen spec
+before implementing the six-section profile wizard in ProfileScreen.tsx. Preserve import, validation,
+saved/draft isolation and all billing/privacy contracts. Update the relevant spec before UI edits.
+Run full ordinary/auth E2E against isolated backend databases before proposing a release PR; helpers
+were adapted for the new primary/context navigation but those suites were not executed in this slice.
+The backend KZT failure in section 7 needs separate resolution; do not claim all gates green.
 
 ## 6. Gate status at last run (numbers, not adjectives)
 
@@ -465,3 +472,4 @@ host=github.com
 | 2026-09-08 13:31:09 UTC | gpt-6-astra | `edf546d` → in progress | Audited 3 stylesheets/303 hardcoded values, created the three-layer token contract and 25 LLM-readable specs, migrated Layer 3 to aliases, added CI enforcement, and passed all frontend/static gates; recorded one reproducible unrelated backend baseline failure. |
 | 2026-09-08 13:35:00 UTC | gpt-6-astra | `edf546d` → `62d941d` + release handoff | Completed the owner-directed design-system task. Scoped audit/typecheck/lint/182 tests/build are green; full backend gate remains reproducibly red only in the unchanged KZT extraction baseline named in §7. |
 | 2026-09-08 16:05:29 UTC | gpt-6-astra | `b755326` → `65b6ffb` + release handoff | Synthesized the supplied photo references, brandbook v1.1, and E00/E16 into a responsive living design system; verified tokens, 185 tests, production build, axe, overflow, target sizes, light/dark themes, and pushed the implementation. |
+| 2026-09-08 16:29 UTC | gpt-6-astra | `0468974` → `bf29056` + release handoff | First frontend redesign slice: real-state Case dashboard, five primary destinations, mobile BottomNav, translated new copy, token-only styles and browser evidence. 195 unit tests/4 isolated browser tests green; baseline KZT test still red. Next E02; no deploy or merge. |
