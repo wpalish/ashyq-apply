@@ -1955,7 +1955,8 @@
         "deploy",
         "first live docker run of verify_compose.sh",
         "T33-F1 free-export coverage decision"
-      ]
+      ],
+      "publication_status": "PREPARED, BLOCKED ON CREDENTIALS: evidence commit 13368b8 on ai/c3/integration (branch head; all gates green at d4908ae + evidence on top). Push attempt failed: git credential helper references a deleted temp gh binary (/tmp/ashyq-gh.*/bin/gh), gh CLI not installed, macOS keychain has no github.com entry, no SSH keys. Owner action required: (a) install gh + `gh auth login`, or (b) provide a PAT via keychain, or (c) switch origin to SSH with a key — then dispatcher pushes and opens PR #10 (authorized by master prompt §6). Alternative: owner pushes ai/c3/integration themselves and opens the PR."
     }
   }
 }
