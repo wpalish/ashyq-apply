@@ -8,15 +8,22 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 | | |
 |---|---|
-| Holder | **codex** |
-| Since (UTC) | 2026-09-08 03:38:21 UTC |
-| Branch | `main`, synchronized with `origin/main` after PR #8 |
-| HEAD when written | `04a3058` (merge commit for PR #8; C2 candidate `e4f5ee3`) |
-| Origin main when checked | `04a3058`; post-merge release-gates run `34189211422` succeeded |
+| Holder | **gpt-6-astra** |
+| Since (UTC) | 2026-09-08 11:15:00 UTC |
+| Branch | `task/design-system-llm-audit`, from synchronized `origin/main` |
+| HEAD when written | `edf546d` (branch point; implementation ready for checkpoint) |
+| Origin main when checked | `edf546d`; branch contains only the owner-directed design-system work |
 | Previous holder | GLM/ZCode dispatcher; it released after integrating T32 but left T29 production wiring explicitly deferred |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**Owner-directed design-system audit and token migration is implementation-complete, pending review.** Scope: inventory every CSS/
+SCSS hardcoded visual value, formalize the existing design language as a three-layer `tokens.css`,
+write LLM-readable foundation/token/component specs, add a CI-ready token audit, migrate component CSS
+to project aliases only, update AI instructions, and finish with zero audit violations plus frontend gates.
+This direct owner request temporarily supersedes the queue in §10; the completed campaign state below
+remains historical context.
 
 **Campaign `c2` publication is complete; remaining items are explicit product blockers.** GLM integrated
 T16 (browser/egress hardening), T27 (claim verifier), T28 (source pages), T29 (catalog walker at the
@@ -219,15 +226,22 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-1. Resolve T26's contract before code: either authorize the API/frontend/ingestion paths needed for a
-   real News vertical slice, or explicitly reduce acceptance to a storage-only foundation.
-2. For T30 registry 19→60, supply/approve a 41-institution candidate list with official seeds and run
-   bounded validation batches. Do not add entries that fail the frozen ≥2/4-category rule.
-3. Keep T31 blocked until a provider, secrets outside Git and data-policy acknowledgement exist.
-4. Update GitHub Actions dependencies away from Node-20-based action releases before GitHub removes
-   the compatibility shim. Do not buy a provider or deploy application infrastructure implicitly.
+1. Review the design-system diff and the historical audit at `specs/audit/hardcoded-values.md`.
+2. Keep the unrelated backend KZT extraction failure in §7 out of this frontend-only branch; investigate
+   it as a separate task if the owner wants the full backend gate green on current `main`.
+3. After approval, publish/merge this task branch through the normal PR workflow.
 
 ## 6. Gate status at last run (numbers, not adjectives)
+
+Design-system branch, 2026-09-08:
+
+| Gate | Result |
+|---|---|
+| `npm run audit:tokens` | **pass** — 3 CSS/SCSS files, 0 errors, 0 warnings |
+| audit negative fixture | **pass** — exit 1; 2 errors (color/spacing), 2 warnings (duration/uncommon); fixture removed |
+| frontend typecheck / lint / unit / build | **pass** — 182/182 tests; production bundle built |
+| backend ruff / format / mypy | **pass** — 164 files/source files |
+| backend pytest + coverage | **baseline red outside branch scope** — 1357 passed, 1 failed; 93.80% coverage |
 
 Latest local and remote runs by codex, 2026-09-08, on `main@04a3058`.
 
@@ -282,6 +296,11 @@ next agent does not reopen it.
   be stronger than the model it describes; leave the documents alone and read them through this note.
 
 ### Open
+
+- **Current-main backend baseline:** `tests/test_live_extraction.py::TestKztTuitionVocabulary::test_a_tenge_fees_page_yields_a_tuition_breakdown`
+  reproducibly fails to extract the fixture's `2 500 000 ₸` tuition value. The full run was 1357 passed,
+  1 failed at 93.80% coverage; the isolated rerun failed identically. This branch has no backend diff,
+  so the design-system task does not change or fix that unrelated contract.
 
 - **GLM completion claim is superseded.** Its code contribution is real and locally green, but only
   5/24 task cards were integrated. T18's declared T08/T13/T16/T17 dependencies are unmet; T25/T26 are
@@ -428,3 +447,4 @@ host=github.com
 | 2026-09-07 12:00:10 UTC | codex | `25f5954` → `02d648c` + final handoff | Fixed and PostgreSQL-tested stale payment rollback, fixed two live NU discovery defects, ran all backend/frontend/E2E/auth/dependency gates, and field-ran the bounded NU canary. Audit verdict: useful partial campaign, not completed project. Baton released; no push/main/deploy. |
 | 2026-09-07 14:10:54 UTC | codex | `ab2e70a` → `96c1082` + final publication handoff | Owner explicitly authorized GitHub publication. Secret-scanned and committed all 133 ai-team evidence files plus the corrected audit, pushed `ai/c1/integration`, and opened PR #7. Release-gates started; no protected-main merge or application deploy. |
 | 2026-09-08 03:38:21 UTC | codex | `9b362c8` → in progress | Took the C2 baton after verifying `origin/main@4d2125c` is the merge-base. Owner authorized T29 wiring, bounded T30 batches, T26, committing campaign evidence, and GitHub publication; T31 remains blocked on provider/secrets/data-policy acknowledgement. |
+| 2026-09-08 13:31:09 UTC | gpt-6-astra | `edf546d` → in progress | Audited 3 stylesheets/303 hardcoded values, created the three-layer token contract and 25 LLM-readable specs, migrated Layer 3 to aliases, added CI enforcement, and passed all frontend/static gates; recorded one reproducible unrelated backend baseline failure. |

@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src e2e --ext .ts,.tsx",
+    "audit:tokens": "node ../scripts/token-audit.js",
     "test": "vitest run",
     "test:watch": "vitest",
     "e2e": "playwright test",

@@ -103,6 +103,10 @@ must print the order in brief §5.7 (Groningen #1, UBC in OUT_OF_BUDGET).
 
 ## 6. Hard rules (brief §7.4 — not negotiable by either agent)
 
+### UI design-system contract
+
+Before writing or modifying any UI code, read the relevant spec file in specs/. Use only tokens from tokens.css. Run the token audit script before committing. Zero errors required.
+
 - Decisions D1–D12 and invariants I1–I10 are final. Contradiction → HANDOFF §7 + ask; do not guess.
 - `backend/app/domain/` imports nothing from `app.adapters.*` and does no I/O.
 - Do not weaken `Fetcher` (robots, rate limit, PII guard); no network outside it. Tests never call a real
