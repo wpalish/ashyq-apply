@@ -26,6 +26,7 @@ from __future__ import annotations
 import asyncio
 import re
 import uuid
+from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from typing import Any
 
@@ -1064,3 +1065,503 @@ class TestRefreshEndpoint:
                 "the double click must dedupe to one job set via the "
                 f"generation keys (baseline: route missing → {second.status_code})"
             )
+
+
+# --- T32 A2 — RC-1 / SEC-T32-01: a manual refresh must read origin truth -----
+
+
+class WarmCacheOriginFetcher:
+    """A stateful fake whose warm-cache/origin split the test controls.
+
+    Models the real ``Fetcher.get`` contract faithfully, so both mandated fix
+    shapes (validators + 304, or ``use_cache=False``) stay exercisable:
+
+    - ``use_cache=True`` with no validators -> the warm disk-cache copy,
+      answered with the cache entry's own fetched_at — exactly what
+      ``ResponseCache.get`` returns within the 86400s TTL;
+    - validators supplied -> a conditional GET against the ORIGIN: a 304
+      (CACHED outcome, status_code 304, empty body) when the origin still
+      matches the supplied validator, else 200 with the origin body;
+    - ``use_cache=False`` -> an unconditional origin fetch;
+    - a 200 always refreshes the warm cache (``Fetcher.get`` cache-puts every
+      OK), so the adapter's follow-up read sees what the handler's read left.
+    """
+
+    def __init__(self) -> None:
+        self.calls: list[dict[str, Any]] = []
+        self.cache: dict[str, FetchResult] = {}
+        self.origin: dict[str, FetchResult] = {}
+
+    def seed(
+        self,
+        url: str,
+        *,
+        body: str,
+        etag: str,
+        content_hash: str,
+        fetched_at: datetime,
+        last_modified: str = "",
+    ) -> None:
+        """The first read: one body lands on the origin and in the cache."""
+        result = FetchResult(
+            url=url,
+            outcome=FetchOutcome.OK,
+            status_code=200,
+            content=body.encode("utf-8"),
+            text=body,
+            content_type="text/html; charset=utf-8",
+            fetched_at=fetched_at,
+            final_url=url,
+            etag=etag,
+            last_modified=last_modified,
+            content_hash=content_hash,
+        )
+        self.origin[url] = result
+        self.cache[url] = result
+
+    def move_origin(
+        self, url: str, *, body: str, etag: str, content_hash: str, last_modified: str = ""
+    ) -> None:
+        """The origin publishes new content; the warm cache keeps the old body."""
+        current = self.origin[url]
+        self.origin[url] = replace(
+            current,
+            content=body.encode("utf-8"),
+            text=body,
+            etag=etag,
+            last_modified=last_modified,
+            content_hash=content_hash,
+        )
+
+    def _origin_200(self, url: str) -> FetchResult:
+        fresh = replace(self.origin[url], fetched_at=datetime.now(UTC))
+        self.cache[url] = fresh  # a 200 refills the cache, as Fetcher.get does
+        return fresh
+
+    async def fake_get(self, url, *, use_cache=True, etag=None, if_modified_since=None):
+        self.calls.append(
+            {
+                "url": url,
+                "use_cache": use_cache,
+                "etag": etag,
+                "if_modified_since": if_modified_since,
+            }
+        )
+        origin = self.origin.get(url)
+        if origin is None:
+            return FetchResult(url=url, outcome=FetchOutcome.HTTP_ERROR, status_code=404)
+        if etag is not None or if_modified_since is not None:
+            # RFC 7232: If-None-Match takes precedence when both are sent.
+            not_modified = (
+                etag == origin.etag
+                if etag is not None
+                else if_modified_since == origin.last_modified
+            )
+            if not_modified:
+                return FetchResult(
+                    url=url,
+                    outcome=FetchOutcome.CACHED,
+                    status_code=304,
+                    fetched_at=datetime.now(UTC),
+                    final_url=url,
+                )
+            return self._origin_200(url)
+        if not use_cache:
+            return self._origin_200(url)
+        cached = self.cache.get(url)
+        if cached is not None:
+            return replace(cached, outcome=FetchOutcome.CACHED)
+        return self._origin_200(url)
+
+    def install(self, monkeypatch) -> None:
+        monkeypatch.setattr(Fetcher, "get", self.fake_get)
+
+
+def _v2_body() -> str:
+    """The corpus page with the IELTS overall band raised 6.0 -> 7.5.
+
+    Same layout, same deadline — a different requirement value — so claims
+    extracted from v1 and from v2 are distinguishable by normalized_value.
+    """
+    return fake_page_body().replace("an overall band of 6.0", "an overall band of 7.5")
+
+
+def _seed_refresh_evidence(session, page: SourcePage, profile, *, value: float, accessed_at):
+    """A run, a result and one live claim whose value and read-time are the
+    scenario's to choose (the shared helper pins 6.5 / a day ago).
+
+    Returns (run, result_id, claim_rows)."""
+    org = profile_row(session, profile.model_dump(mode="json"))
+    run = ResearchRun(
+        profile_id=org.id,
+        stage="awaiting_user_decision",
+        demo_mode=True,
+        finished_at=datetime.now(UTC),
+    )
+    session.add(run)
+    session.flush()
+    result_id = uuid.uuid4().hex
+    session.add(
+        ProgramResultRow(
+            run_id=run.id,
+            dedupe_key="nl-tudelft-msc-cs",
+            university="TU Delft",
+            university_key="tudelft",
+            country="Netherlands",
+            program="MSc Computer Science",
+            eligibility="PENDING",
+            admissions_fit="PLAUSIBLE_FIT",
+            funding_fit="UNKNOWN",
+            funding_classification="UNKNOWN",
+            payload={"university": "TU Delft", "program": "MSc Computer Science"},
+        )
+    )
+    row = ClaimRow(
+        run_id=run.id,
+        result_id=result_id,
+        claim_type="ielts_min_overall",
+        status="VERIFIED_CURRENT",
+        source_url=page.url,
+        source_specificity="program_intake",
+        accessed_at=accessed_at,
+        payload={
+            "claim_type": "ielts_min_overall",
+            "status": "VERIFIED_CURRENT",
+            "source_url": page.url,
+            "normalized_value": value,
+        },
+    )
+    session.add(row)
+    session.flush()
+    page.active_claims = 1
+    session.flush()
+    return run, result_id, [row]
+
+
+class TestReextractMustNotLaunderTheWarmCache:
+    """RC-1 / SEC-T32-01: the reextract handler fetched its URL cache-enabled
+    and validator-less, so within the disk-cache TTL (86400s) a manual refresh
+    re-read the WARM-CACHE body — it superseded live claims and re-appended
+    stale content with a fresh read-time ("was X -> became X", evidence
+    traceability broken), while the refresh silently no-op'd against a page
+    the origin had already moved. The pinned contract:
+
+    - RC1-A: a refresh lands origin truth — never warm-cache content
+      re-dated as if it had just been read;
+    - RC1-B: stored validators that still match the origin (a 304) complete
+      the job as a clean no-change — nothing superseded, nothing appended;
+    - the positive path (a genuine, scan-observed change) keeps superseding
+      and appending.
+    """
+
+    def test_a_warm_cache_never_laundered_into_fresh_claims(
+        self, pg_worker_env, pg_factory, settings, profile, monkeypatch
+    ):
+        """RC1-A. The first read put v1 (IELTS 6.0) in the cache an hour ago;
+        the origin has since moved to v2 (IELTS 7.5, new validator); the live
+        claims still read v1. The reextract must consult the origin and land
+        v2 — it may never re-append the warm-cache v1 body as fresh evidence."""
+        url = "https://example.edu/programme"
+        first_read = datetime.now(UTC) - timedelta(hours=1)  # warm: within TTL
+        v1_accessed = datetime.now(UTC) - timedelta(days=1)
+        fetcher = WarmCacheOriginFetcher()
+        fetcher.seed(
+            url,
+            body=fake_page_body(),
+            etag='"etag-v1"',
+            last_modified="Wed, 07 Sep 2026 05:00:00 GMT",
+            content_hash="b1" * 32,
+            fetched_at=first_read,
+        )
+        fetcher.move_origin(
+            url,
+            body=_v2_body(),
+            etag='"etag-v2"',
+            last_modified="Wed, 07 Sep 2026 06:00:00 GMT",
+            content_hash="b2" * 32,
+        )
+        fetcher.install(monkeypatch)
+
+        session = pg_factory()
+        try:
+            page = _seed_page(
+                session,
+                url,
+                etag='"etag-v1"',
+                last_modified_header="Wed, 07 Sep 2026 05:00:00 GMT",
+                content_hash="b1" * 32,
+                fetched_at=first_read,
+            )
+            run, result_id, old_rows = _seed_refresh_evidence(
+                session, page, profile, value=6.0, accessed_at=v1_accessed
+            )
+            job_id = _enqueue_reextract(session, run, page, result_id)
+            page_id = page.id
+            run_id = run.id
+            old_claim_ids = [row.id for row in old_rows]
+            session.commit()
+        finally:
+            session.close()
+
+        assert _drain(settings) == 1
+
+        check = pg_factory()
+        try:
+            job = check.get(Job, job_id)
+            assert job.status == JobStatus.SUCCEEDED.value, (
+                f"the refresh must complete (last_error={job.last_error!r})"
+            )
+            live = (
+                check.query(ClaimRow)
+                .filter(
+                    ClaimRow.run_id == run_id,
+                    ClaimRow.result_id == result_id,
+                    ClaimRow.status == "VERIFIED_CURRENT",
+                )
+                .all()
+            )
+            live_ielts = [
+                (row.id, row.payload.get("normalized_value"), row.accessed_at)
+                for row in live
+                if row.claim_type == "ielts_min_overall"
+            ]
+            # RC-1 core: the warm cache's v1 body must never become live
+            # evidence again — neither re-dated (the bug) nor kept live while
+            # the origin says otherwise. The origin reads 7.5 now.
+            laundered = [
+                (row_id, value, accessed)
+                for row_id, value, accessed in live_ielts
+                if value == 6.0
+                and not (
+                    row_id in old_claim_ids
+                    and abs((ensure_utc_strict(accessed) - v1_accessed).total_seconds()) < 1
+                )
+            ]
+            assert not laundered, (
+                "RC-1 RED: the reextract re-appended the WARM-CACHE v1 body as live "
+                f"evidence (id, value, accessed_at)={laundered} although the origin had "
+                "moved to v2 — a refresh may only land origin truth or an honest "
+                "no-change completion, never stale content with a fresh read-time"
+            )
+            assert any(value == 7.5 for _, value, _ in live_ielts), (
+                f"the origin truth (v2, IELTS 7.5) must be the live evidence after the "
+                f"refresh; live ielts values={[(v, str(a)) for _, v, a in live_ielts]} — "
+                "the validators+304 (or use_cache=False) read must reach the origin"
+            )
+            for old in check.query(ClaimRow).filter(ClaimRow.id.in_(old_claim_ids)).all():
+                assert old.status == "SUPERSEDED" and old.payload["status"] == "SUPERSEDED", (
+                    "the superseded v1 rows are history and must say so"
+                )
+            fresh_page = check.get(SourcePage, page_id)
+            assert fresh_page.etag == '"etag-v2"', (
+                f"the page row must carry the origin's current validator "
+                f"(got {fresh_page.etag!r} — the fetch that fed _record_page was the "
+                "warm-cache copy, not the origin)"
+            )
+            handler_calls = [call for call in fetcher.calls if call["url"] == url]
+            assert handler_calls, "the handler must fetch the page"
+            first_handler_call = handler_calls[0]
+            assert (
+                first_handler_call["etag"] is not None
+                or first_handler_call["if_modified_since"] is not None
+                or first_handler_call["use_cache"] is False
+            ), (
+                f"RC-1 RED: the handler's own fetch answered from the warm cache "
+                f"(call={first_handler_call}) — the refresh must consult the origin "
+                "via the stored validators or an unconditional fetch"
+            )
+        finally:
+            check.close()
+
+    def test_a_validators_match_completes_as_no_change_without_superseding(
+        self, pg_worker_env, pg_factory, settings, profile, monkeypatch
+    ):
+        """RC1-B. The stored validators still match the origin: the conditional
+        GET answers 304 and the refresh must complete as a no-change — the job
+        succeeds, fetched_at is touched, and NOTHING is superseded or appended
+        (every unchanged-page refresh dead-lettering or churning "was X ->
+        became X" is the failure this pins)."""
+        url = "https://example.edu/programme"
+        started = datetime.now(UTC)
+        last_read = datetime.now(UTC) - timedelta(hours=1)
+        lm = "Wed, 07 Sep 2026 05:00:00 GMT"
+        original_accessed = datetime.now(UTC) - timedelta(days=1)
+        fetcher = WarmCacheOriginFetcher()
+        fetcher.seed(
+            url,
+            body=fake_page_body(),  # origin unchanged: v1 still rules
+            etag='"etag-same"',
+            last_modified=lm,
+            content_hash="c1" * 32,
+            fetched_at=last_read,
+        )
+        fetcher.install(monkeypatch)
+
+        session = pg_factory()
+        try:
+            page = _seed_page(
+                session,
+                url,
+                etag='"etag-same"',
+                last_modified_header=lm,
+                content_hash="c1" * 32,
+                fetched_at=last_read,
+            )
+            run, result_id, old_rows = _seed_refresh_evidence(
+                session, page, profile, value=6.0, accessed_at=original_accessed
+            )
+            job_id = _enqueue_reextract(session, run, page, result_id)
+            page_id = page.id
+            run_id = run.id
+            old_claim_ids = [row.id for row in old_rows]
+            session.commit()
+        finally:
+            session.close()
+
+        assert _drain(settings) == 1
+
+        check = pg_factory()
+        try:
+            job = check.get(Job, job_id)
+            assert job.status == JobStatus.SUCCEEDED.value, (
+                f"a 304 is a terminal success: the job must complete, not retry or "
+                f"dead-letter (status={job.status.value}, attempts={job.attempts}, "
+                f"last_error={job.last_error!r})"
+            )
+            assert job.attempts == 1 and not job.last_error, (
+                f"the no-change completion must succeed on its first attempt "
+                f"(attempts={job.attempts}, last_error={job.last_error!r})"
+            )
+            olds = check.query(ClaimRow).filter(ClaimRow.id.in_(old_claim_ids)).all()
+            assert olds, "the old rows must survive"
+            for old in olds:
+                assert old.status == "VERIFIED_CURRENT" and old.payload["status"] == (
+                    "VERIFIED_CURRENT"
+                ), (
+                    f"RC-1 RED: a 304-page refresh must not supersede anything "
+                    f"(old row flipped to {old.status})"
+                )
+                assert (
+                    abs((ensure_utc_strict(old.accessed_at) - original_accessed).total_seconds())
+                    < 1
+                ), (
+                    "the claim's read-time is evidence: unchanged content must not be "
+                    f"re-dated (got {old.accessed_at}, read at {original_accessed})"
+                )
+            total = (
+                check.query(ClaimRow)
+                .filter(ClaimRow.run_id == run_id, ClaimRow.result_id == result_id)
+                .count()
+            )
+            assert total == len(old_claim_ids), (
+                f"RC-1 RED: a no-change refresh must not append claims "
+                f"(found {total} rows for {len(old_claim_ids)} live claim(s) — "
+                'the "was X -> became X" churn)'
+            )
+            handler_calls = [call for call in fetcher.calls if call["url"] == url]
+            first_handler_call = handler_calls[0] if handler_calls else {}
+            assert (
+                first_handler_call.get("etag") is not None
+                or first_handler_call.get("if_modified_since") is not None
+                or first_handler_call.get("use_cache") is False
+            ), (
+                f"RC-1 RED: the refresh answered from the warm cache "
+                f"(call={first_handler_call}) instead of asking the origin with the "
+                "stored validators — the 304 path can never be reached this way"
+            )
+            fresh_page = check.get(SourcePage, page_id)
+            assert fresh_page.fetched_at is not None and ensure_utc_strict(
+                fresh_page.fetched_at
+            ) >= started - timedelta(seconds=1), (
+                f"the 304 must touch fetched_at (got {fresh_page.fetched_at} — the "
+                "cached copy's read-time was recorded instead of this fetch)"
+            )
+            assert fresh_page.etag == '"etag-same"' and fresh_page.content_hash == "c1" * 32, (
+                "a 304 confirms the stored copy: the row's validators and content hash "
+                f"must survive (got etag={fresh_page.etag!r}, "
+                f"content_hash={fresh_page.content_hash!r}) — wiping them would force "
+                "every future scan into full fetches"
+            )
+        finally:
+            check.close()
+
+    def test_a_real_change_seen_through_a_fresh_cache_still_supersedes_and_appends(
+        self, pg_worker_env, pg_factory, settings, profile, monkeypatch
+    ):
+        """The justified GREEN guard: when the origin content genuinely changed
+        (200, new content_hash) — here already reflected in the warm cache the
+        way the daily scan leaves it — the reextract must still supersede the
+        old claims and append the new ones. The RC-1 fix must not turn every
+        refresh into a no-op."""
+        url = "https://example.edu/programme"
+        scanned_at = datetime.now(UTC) - timedelta(minutes=30)
+        v1_accessed = datetime.now(UTC) - timedelta(days=1)
+        fetcher = WarmCacheOriginFetcher()
+        # The scan already refetched origin truth: cache AND origin hold v2;
+        # only the page row still carries the stale v1 validators.
+        fetcher.seed(
+            url,
+            body=_v2_body(),
+            etag='"etag-v2"',
+            last_modified="Wed, 07 Sep 2026 06:00:00 GMT",
+            content_hash="b2" * 32,
+            fetched_at=scanned_at,
+        )
+        fetcher.install(monkeypatch)
+
+        session = pg_factory()
+        try:
+            page = _seed_page(
+                session,
+                url,
+                etag='"etag-v1"',
+                last_modified_header="Wed, 07 Sep 2026 05:00:00 GMT",
+                content_hash="b1" * 32,
+                fetched_at=datetime.now(UTC) - timedelta(days=1),
+            )
+            run, result_id, old_rows = _seed_refresh_evidence(
+                session, page, profile, value=6.0, accessed_at=v1_accessed
+            )
+            job_id = _enqueue_reextract(session, run, page, result_id)
+            page_id = page.id
+            run_id = run.id
+            old_claim_ids = [row.id for row in old_rows]
+            session.commit()
+        finally:
+            session.close()
+
+        assert _drain(settings) == 1
+
+        check = pg_factory()
+        try:
+            job = check.get(Job, job_id)
+            assert job.status == JobStatus.SUCCEEDED.value, (
+                f"the genuine change must be applied (last_error={job.last_error!r})"
+            )
+            for old in check.query(ClaimRow).filter(ClaimRow.id.in_(old_claim_ids)).all():
+                assert old.status == "SUPERSEDED" and old.payload["status"] == "SUPERSEDED", (
+                    "the outdated claims must be superseded (column and payload)"
+                )
+            live = (
+                check.query(ClaimRow)
+                .filter(
+                    ClaimRow.run_id == run_id,
+                    ClaimRow.result_id == result_id,
+                    ClaimRow.status == "VERIFIED_CURRENT",
+                )
+                .all()
+            )
+            live_ielts = [
+                row.payload.get("normalized_value")
+                for row in live
+                if row.claim_type == "ielts_min_overall"
+            ]
+            assert 7.5 in live_ielts, (
+                f"the new requirement value must be appended (live ielts={live_ielts})"
+            )
+            fresh_page = check.get(SourcePage, page_id)
+            assert fresh_page.etag == '"etag-v2"', (
+                "the page row must carry the new validators after the change"
+            )
+        finally:
+            check.close()
