@@ -1,0 +1,11 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.12.13, pytest-9.1.1, pluggy-1.6.0
+rootdir: /Users/wpalish/ashyq-worktrees/c2-t28-verify/backend
+configfile: pytest.ini
+plugins: respx-0.22.0, cov-6.0.0, asyncio-1.4.0, anyio-4.15.1
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 8 items
+
+tests/test_source_pages.py ........                                      [100%]
+
+============================== 8 passed in 1.76s ===============================

@@ -1,0 +1,625 @@
+FFFFFFF..FFFFFFF.                                                        [100%]
+=================================== FAILURES ===================================
+_ TestPoisonedRedirectHops.test_a_credential_in_a_hop_query_is_refused_not_fetched _
+
+self = <tests.test_fetch_pii_hops.TestPoisonedRedirectHops object at 0x107d8bb30>
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-267/test_a_credential_in_a_hop_que0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109fc6de0>
+
+    async def test_a_credential_in_a_hop_query_is_refused_not_fetched(self, tmp_path, monkeypatch):
+        """A hop carrying ``?token=...`` must end the chain before a request."""
+        monkeypatch.setattr("app.adapters.fetching.check_url", allow_all)
+        hop = f"https://{SECOND_HOST}/jump?token=abc123"
+        counts = {FIRST_HOST: 0, SECOND_HOST: 0}
+
+        async with Fetcher(tmp_path / "c", delay_seconds=0.0, respect_robots=False) as fetcher:
+            fetcher._client = httpx.AsyncClient(
+                transport=httpx.MockTransport(counted_chain_handler(counts, hop)),
+                follow_redirects=False,
+            )
+            result = await fetcher.get(ENTRY_URL)
+
+>       assert result.outcome is FetchOutcome.REFUSED_PRIVACY
+E       AssertionError: assert <FetchOutcome.OK: 'ok'> is <FetchOutcome.REFUSED_PRIVACY: 'refused_privacy'>
+E        +  where <FetchOutcome.OK: 'ok'> = FetchResult(url='https://ok.example.com/start', outcome=<FetchOutcome.OK: 'ok'>, status_code=200, content=b'<html>leak....timezone.utc), from_cache=False, error='', final_url='https://other.example.com/jump?token=abc123', fetch_tier='http').outcome
+E        +  and   <FetchOutcome.REFUSED_PRIVACY: 'refused_privacy'> = FetchOutcome.REFUSED_PRIVACY
+
+tests/test_fetch_pii_hops.py:110: AssertionError
+----------------------------- Captured stderr call -----------------------------
+2026-09-08 00:08:51,542 INFO    [-] httpx: HTTP Request: GET https://93.184.216.34/start "HTTP/1.1 302 Found"
+2026-09-08 00:08:51,542 INFO    [-] httpx: HTTP Request: GET https://93.184.216.34/jump?token=abc123 "HTTP/1.1 200 OK"
+------------------------------ Captured log call -------------------------------
+INFO     httpx:_client.py:1740 HTTP Request: GET https://93.184.216.34/start "HTTP/1.1 302 Found"
+INFO     httpx:_client.py:1740 HTTP Request: GET https://93.184.216.34/jump?token=abc123 "HTTP/1.1 200 OK"
+_ TestPoisonedRedirectHops.test_a_long_digit_run_in_a_hop_query_is_refused_not_fetched _
+
+self = <tests.test_fetch_pii_hops.TestPoisonedRedirectHops object at 0x1086567b0>
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-267/test_a_long_digit_run_in_a_hop0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109fe5790>
+
+    async def test_a_long_digit_run_in_a_hop_query_is_refused_not_fetched(
+        self, tmp_path, monkeypatch
+    ):
+        """Nine or more digits in a hop's query string are treated exactly like
+        one on the entry URL: a passport/ID/card number must not travel."""
+        monkeypatch.setattr("app.adapters.fetching.check_url", allow_all)
+        hop = f"https://{SECOND_HOST}/lookup?id=123456789"
+        counts = {FIRST_HOST: 0, SECOND_HOST: 0}
+
+        async with Fetcher(tmp_path / "c", delay_seconds=0.0, respect_robots=False) as fetcher:
+            fetcher._client = httpx.AsyncClient(
+                transport=httpx.MockTransport(counted_chain_handler(counts, hop)),
+                follow_redirects=False,
+            )
+            result = await fetcher.get(ENTRY_URL)
+
+>       assert result.outcome is FetchOutcome.REFUSED_PRIVACY
+E       AssertionError: assert <FetchOutcome.OK: 'ok'> is <FetchOutcome.REFUSED_PRIVACY: 'refused_privacy'>
+E        +  where <FetchOutcome.OK: 'ok'> = FetchResult(url='https://ok.example.com/start', outcome=<FetchOutcome.OK: 'ok'>, status_code=200, content=b'<html>leak...imezone.utc), from_cache=False, error='', final_url='https://other.example.com/lookup?id=123456789', fetch_tier='http').outcome
+E        +  and   <FetchOutcome.REFUSED_PRIVACY: 'refused_privacy'> = FetchOutcome.REFUSED_PRIVACY
+
+tests/test_fetch_pii_hops.py:133: AssertionError
+----------------------------- Captured stderr call -----------------------------
+2026-09-08 00:08:51,566 INFO    [-] httpx: HTTP Request: GET https://93.184.216.34/start "HTTP/1.1 302 Found"
+2026-09-08 00:08:51,566 INFO    [-] httpx: HTTP Request: GET https://93.184.216.34/lookup?id=123456789 "HTTP/1.1 200 OK"
+------------------------------ Captured log call -------------------------------
+INFO     httpx:_client.py:1740 HTTP Request: GET https://93.184.216.34/start "HTTP/1.1 302 Found"
+INFO     httpx:_client.py:1740 HTTP Request: GET https://93.184.216.34/lookup?id=123456789 "HTTP/1.1 200 OK"
+_ TestPoisonedRedirectHops.test_a_poisoned_hop_never_reaches_the_url_policy_or_dns _
+
+self = <tests.test_fetch_pii_hops.TestPoisonedRedirectHops object at 0x108656f60>
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-267/test_a_poisoned_hop_never_reac0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109fe6090>
+
+    async def test_a_poisoned_hop_never_reaches_the_url_policy_or_dns(self, tmp_path, monkeypatch):
+        """The privacy refusal must happen before the hop is even validated.
+
+        ``check_url`` is the network stack's front door (it is where DNS
+        resolution happens); if a poisoned hop reaches it, the URL has already
+        been handed over. This pins the ordering seam: find_pii first, then
+        check_url.
+        """
+        hop = f"https://{SECOND_HOST}/jump?token=abc123"
+        seen: list[str] = []
+
+        def recording_check(url: str, **kwargs):
+            seen.append(url)
+            return allow_all(url, **kwargs)
+
+        monkeypatch.setattr("app.adapters.fetching.check_url", recording_check)
+        counts = {FIRST_HOST: 0, SECOND_HOST: 0}
+
+        async with Fetcher(tmp_path / "c", delay_seconds=0.0, respect_robots=False) as fetcher:
+            fetcher._client = httpx.AsyncClient(
+                transport=httpx.MockTransport(counted_chain_handler(counts, hop)),
+                follow_redirects=False,
+            )
+            result = await fetcher.get(ENTRY_URL)
+
+>       assert all("token=" not in url for url in seen), f"poisoned hop reached check_url: {seen}"
+E       AssertionError: poisoned hop reached check_url: ['https://ok.example.com/start', 'https://ok.example.com/start', 'https://other.example.com/jump?token=abc123']
+E       assert False
+E        +  where False = all(<generator object TestPoisonedRedirectHops.test_a_poisoned_hop_never_reaches_the_url_policy_or_dns.<locals>.<genexpr> at 0x109ff5cb0>)
+
+tests/test_fetch_pii_hops.py:163: AssertionError
+----------------------------- Captured stderr call -----------------------------
+2026-09-08 00:08:51,572 INFO    [-] httpx: HTTP Request: GET https://93.184.216.34/start "HTTP/1.1 302 Found"
+2026-09-08 00:08:51,573 INFO    [-] httpx: HTTP Request: GET https://93.184.216.34/jump?token=abc123 "HTTP/1.1 200 OK"
+------------------------------ Captured log call -------------------------------
+INFO     httpx:_client.py:1740 HTTP Request: GET https://93.184.216.34/start "HTTP/1.1 302 Found"
+INFO     httpx:_client.py:1740 HTTP Request: GET https://93.184.216.34/jump?token=abc123 "HTTP/1.1 200 OK"
+__ TestConditionalGet.test_a_validated_304_comes_back_as_cached_with_no_body ___
+
+self = <tests.test_fetch_pii_hops.TestConditionalGet object at 0x108656b40>
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-267/test_a_validated_304_comes_bac0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10a078050>
+
+    async def test_a_validated_304_comes_back_as_cached_with_no_body(self, tmp_path, monkeypatch):
+        monkeypatch.setattr("app.adapters.fetching.check_url", allow_all)
+        requests: list[httpx.Request] = []
+        url = "https://ok.example.com/page"
+
+        def handler(request: httpx.Request) -> httpx.Response:
+            requests.append(request)
+            if request.headers.get("if-none-match") == '"v1"':
+                return httpx.Response(304)
+            return httpx.Response(
+                200,
+                headers={"content-type": "text/html", "etag": '"v1"'},
+                text="<html>programme page</html>",
+            )
+
+        async with Fetcher(tmp_path / "c", delay_seconds=0.0, respect_robots=False) as fetcher:
+            fetcher._client = httpx.AsyncClient(
+                transport=httpx.MockTransport(handler), follow_redirects=False
+            )
+            first = await fetcher.get(url)
+>           second = await fetcher.get(url, etag=first.etag)
+                                                 ^^^^^^^^^^
+E           AttributeError: 'FetchResult' object has no attribute 'etag'
+
+tests/test_fetch_pii_hops.py:196: AttributeError
+----------------------------- Captured stderr call -----------------------------
+2026-09-08 00:08:51,578 INFO    [-] httpx: HTTP Request: GET https://93.184.216.34/page "HTTP/1.1 200 OK"
+------------------------------ Captured log call -------------------------------
+INFO     httpx:_client.py:1740 HTTP Request: GET https://93.184.216.34/page "HTTP/1.1 200 OK"
+_ TestConditionalPoliteness.test_a_conditional_request_still_pays_robots_and_spacing _
+
+self = <tests.test_fetch_pii_hops.TestConditionalPoliteness object at 0x108657110>
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-267/test_a_conditional_request_sti0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10a0798e0>
+
+    async def test_a_conditional_request_still_pays_robots_and_spacing(self, tmp_path, monkeypatch):
+        """A 304 is not free: robots.txt is consulted and requests stay spaced.
+
+        RED on baseline for the missing etag parameter; once the parameter
+        exists this guards that the conditional path runs through the same
+        robots gate and request spacing as an unconditional one.
+        """
+        slept: list[float] = []
+
+        async def fake_sleep(seconds):
+            slept.append(seconds)
+
+        monkeypatch.setattr(asyncio, "sleep", fake_sleep)
+        monkeypatch.setattr("app.adapters.fetching.check_url", allow_all)
+        url = "https://ok.example.com/page"
+        robots_requests = 0
+        page_requests = 0
+
+        def handler(request: httpx.Request) -> httpx.Response:
+            nonlocal robots_requests, page_requests
+            if request.url.path == "/robots.txt":
+                robots_requests += 1
+                return httpx.Response(200, text="User-agent: *\nCrawl-delay: 2.5\nAllow: /\n")
+            page_requests += 1
+            if request.headers.get("if-none-match") == '"v1"':
+                return httpx.Response(304)
+            return httpx.Response(
+                200, headers={"content-type": "text/html", "etag": '"v1"'}, text="<html>page</html>"
+            )
+
+        async with Fetcher(tmp_path / "c", delay_seconds=0.0, respect_robots=True) as fetcher:
+            fetcher._client = httpx.AsyncClient(
+                transport=httpx.MockTransport(handler), follow_redirects=False
+            )
+>           first = await fetcher.get(url, etag='"v1"')
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: Fetcher.get() got an unexpected keyword argument 'etag'
+
+tests/test_fetch_pii_hops.py:248: TypeError
+_ TestValidatorRecording.test_a_200_records_the_http_validators_and_the_content_hash _
+
+self = <tests.test_fetch_pii_hops.TestValidatorRecording object at 0x108657710>
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-267/test_a_200_records_the_http_va0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10a07aab0>
+
+    async def test_a_200_records_the_http_validators_and_the_content_hash(
+        self, tmp_path, monkeypatch
+    ):
+        """The values source_pages will store for the next conditional visit.
+
+        RED on baseline: FetchResult has no etag/last_modified/content_hash.
+        The content_hash assertion pins the documented formula over a fixed
+        body, so a silent change of normalization fails here.
+        """
+        monkeypatch.setattr("app.adapters.fetching.check_url", allow_all)
+
+        def handler(request: httpx.Request) -> httpx.Response:
+            return httpx.Response(
+                200,
+                headers={
+                    "content-type": "text/html; charset=utf-8",
+                    "etag": '"v1"',
+                    "last-modified": "Tue, 01 Sep 2026 00:00:00 GMT",
+                },
+                text=PROGRAMME_BODY,
+            )
+
+        async with Fetcher(tmp_path / "c", delay_seconds=0.0, respect_robots=False) as fetcher:
+            fetcher._client = httpx.AsyncClient(
+                transport=httpx.MockTransport(handler), follow_redirects=False
+            )
+            result = await fetcher.get("https://ok.example.com/page")
+
+>       assert result.etag == '"v1"'
+               ^^^^^^^^^^^
+E       AttributeError: 'FetchResult' object has no attribute 'etag'
+
+tests/test_fetch_pii_hops.py:310: AttributeError
+----------------------------- Captured stderr call -----------------------------
+2026-09-08 00:08:51,589 INFO    [-] httpx: HTTP Request: GET https://93.184.216.34/page "HTTP/1.1 200 OK"
+------------------------------ Captured log call -------------------------------
+INFO     httpx:_client.py:1740 HTTP Request: GET https://93.184.216.34/page "HTTP/1.1 200 OK"
+_ TestValidatorRecording.test_an_escalated_result_carries_no_stale_validators __
+
+self = <tests.test_fetch_pii_hops.TestValidatorRecording object at 0x108657b90>
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-267/test_an_escalated_result_carri0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10a07b5c0>
+
+    async def test_an_escalated_result_carries_no_stale_validators(self, tmp_path, monkeypatch):
+        """Browser output has no HTTP validators: whatever a renderer claims is
+        reset, and the content hash is recomputed from the rendered text.
+
+        RED on baseline (the renderer's FetchResult cannot even carry etag —
+        the failure surfaces as a contained browser-tier error, so the first
+        assertion below fails on outcome).
+        """
+        monkeypatch.setattr("app.adapters.fetching.check_url", allow_all)
+        thin_shell = (
+            '<html><head><title>Example</title></head><body><div id="root"></div></body></html>'
+        )
+        rendered_html = (
+            "<html><body><p>" + "Rendered programme details. " * 60 + "</p></body></html>"
+        )
+
+        def handler(request: httpx.Request) -> httpx.Response:
+            return httpx.Response(
+                200, headers={"content-type": "text/html", "etag": '"v1"'}, text=thin_shell
+            )
+
+        class StaleRenderingTier:
+            """A browser tier that (wrongly) echoes the HTTP tier's validators."""
+
+            async def render(self, url: str) -> FetchResult:
+                return FetchResult(
+                    url=url,
+                    outcome=FetchOutcome.OK,
+                    status_code=200,
+                    content=rendered_html.encode("utf-8"),
+                    text=rendered_html,
+                    content_type="text/html; charset=utf-8",
+                    final_url=url,
+                    etag='"stale-from-http"',
+                    last_modified="Tue, 01 Sep 2026 00:00:00 GMT",
+                )
+
+        async with Fetcher(tmp_path / "c", delay_seconds=0.0, respect_robots=False) as fetcher:
+            fetcher._client = httpx.AsyncClient(
+                transport=httpx.MockTransport(handler), follow_redirects=False
+            )
+            fetcher.attach_renderer(StaleRenderingTier())
+            result = await fetcher.get("https://ok.example.com/page")
+
+>       assert result.outcome is FetchOutcome.OK
+E       assert <FetchOutcome.UNPARSEABLE: 'unparseable'> is <FetchOutcome.OK: 'ok'>
+E        +  where <FetchOutcome.UNPARSEABLE: 'unparseable'> = FetchResult(url='https://ok.example.com/page', outcome=<FetchOutcome.UNPARSEABLE: 'unparseable'>, status_code=None, co...rowser tier failed: FetchResult.__init__() got an unexpected keyword argument 'etag'", final_url='', fetch_tier='http').outcome
+E        +  and   <FetchOutcome.OK: 'ok'> = FetchOutcome.OK
+
+tests/test_fetch_pii_hops.py:358: AssertionError
+----------------------------- Captured stderr call -----------------------------
+2026-09-08 00:08:51,595 INFO    [-] httpx: HTTP Request: GET https://93.184.216.34/page "HTTP/1.1 200 OK"
+2026-09-08 00:08:51,595 WARNING [-] unimatch.fetch: browser tier failed for https://ok.example.com/page: FetchResult.__init__() got an unexpected keyword argument 'etag'
+------------------------------ Captured log call -------------------------------
+INFO     httpx:_client.py:1740 HTTP Request: GET https://93.184.216.34/page "HTTP/1.1 200 OK"
+WARNING  unimatch.fetch:fetching.py:642 browser tier failed for https://ok.example.com/page: FetchResult.__init__() got an unexpected keyword argument 'etag'
+___ TestOneRowPerUrl.test_two_sessions_recording_the_same_url_write_one_row ____
+
+self = <tests.test_source_pages.TestOneRowPerUrl object at 0x108ff5160>
+pg_engine = Engine(postgresql+psycopg://postgres:***@/t60d2de14f7c7?host=%2Fprivate%2Fvar%2Ffolders%2Fqk%2Fr0pv0fn16q39866tygl11ttm0000gn%2FT%2Funimatch-pg-qcj5dp_k)
+
+    def test_two_sessions_recording_the_same_url_write_one_row(self, pg_engine):
+        """The upsert is atomic (insert .. on conflict), so two independent
+        sessions converge on one row instead of racing two inserts."""
+>       from app.models import SourcePage
+E       ImportError: cannot import name 'SourcePage' from 'app.models' (/Users/wpalish/ashyq-worktrees/c2-t28-qa/backend/app/models/__init__.py)
+
+tests/test_source_pages.py:64: ImportError
+---------------------------- Captured stderr setup -----------------------------
+2026-09-08 00:08:51,610 INFO    [-] pgserver: no PG_VERSION file found within /private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-pg-qcj5dp_k. Initializing pgdata
+2026-09-08 00:08:51,623 INFO    [-] pgserver: Running commandline:
+['/Users/wpalish/ashyq-worktrees/c2-t28-qa/backend/.venv/lib/python3.12/site-packages/pgserver/pginstall/bin/initdb', '-D', '/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-pg-qcj5dp_k', '--auth=trust', '--auth-local=trust', '--encoding=utf8', '-U', 'postgres']
+with kwargs: `{'user': None}`
+2026-09-08 00:08:51,933 INFO    [-] pgserver: Successful postgres command ['/Users/wpalish/ashyq-worktrees/c2-t28-qa/backend/.venv/lib/python3.12/site-packages/pgserver/pginstall/bin/initdb', '-D', '/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-pg-qcj5dp_k', '--auth=trust', '--auth-local=trust', '--encoding=utf8', '-U', 'postgres'] with kwargs: `{'user': None}`
+stdout:
+The files belonging to this database system will be owned by user "wpalish".
+This user must also own the server process.
+
+The database cluster will be initialized with locale "C.UTF-8".
+The default text search configuration will be set to "english".
+
+Data page checksums are disabled.
+
+fixing permissions on existing directory /private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-pg-qcj5dp_k ... ok
+creating subdirectories ... ok
+selecting dynamic shared memory implementation ... posix
+selecting default max_connections ... 100
+selecting default shared_buffers ... 128MB
+selecting default time zone ... Asia/Almaty
+creating configuration files ... ok
+running bootstrap script ... ok
+performing post-bootstrap initialization ... ok
+syncing data to disk ... ok
+
+Success. You can now start the database server using:
+
+    /Users/wpalish/ashyq-worktrees/c2-t28-qa/backend/.venv/lib/python3.12/site-packages/pgserver/pginstall/bin/pg_ctl -D /private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-pg-qcj5dp_k -l logfile start
+
+
+---
+stderr:
+
+---
+
+2026-09-08 00:08:51,933 INFO    [-] pgserver: no postmaster.pid file found in /private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-pg-qcj5dp_k
+2026-09-08 00:08:51,933 INFO    [-] pgserver: Using socket path: /private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-pg-qcj5dp_k
+2026-09-08 00:08:51,933 INFO    [-] pgserver: running pg_ctl... pg_ctl_args=['-w', '-o', '-h ""', '-o', '-k /private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-pg-qcj5dp_k', '-l', '/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-pg-qcj5dp_k/log', 'start']
+2026-09-08 00:08:51,933 INFO    [-] pgserver: Running commandline:
+['/Users/wpalish/ashyq-worktrees/c2-t28-qa/backend/.venv/lib/python3.12/site-packages/pgserver/pginstall/bin/pg_ctl', '-D', '/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-pg-qcj5dp_k', '-w', '-o', '-h ""', '-o', '-k /private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-pg-qcj5dp_k', '-l', '/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-pg-qcj5dp_k/log', 'start']
+with kwargs: `{'user': None, 'timeout': 10}`
+2026-09-08 00:08:52,084 INFO    [-] pgserver: Successful postgres command ['/Users/wpalish/ashyq-worktrees/c2-t28-qa/backend/.venv/lib/python3.12/site-packages/pgserver/pginstall/bin/pg_ctl', '-D', '/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-pg-qcj5dp_k', '-w', '-o', '-h ""', '-o', '-k /private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-pg-qcj5dp_k', '-l', '/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-pg-qcj5dp_k/log', 'start'] with kwargs: `{'user': None, 'timeout': 10}`
+stdout:
+waiting for server to start.... done
+server started
+
+---
+stderr:
+
+---
+
+2026-09-08 00:08:52,085 INFO    [-] pgserver: waiting for postmaster info to show a running process
+2026-09-08 00:08:52,085 INFO    [-] pgserver: running... checking if ready pinfo=PostmasterInfo(pid=53189, pgdata=/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-pg-qcj5dp_k, start_time=2026-09-08 00:08:51, hostname=None port=5432, socket_dir=/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-pg-qcj5dp_k status=ready, process=psutil.Process(pid=53189, name='postgres', status='sleeping'))
+2026-09-08 00:08:52,085 INFO    [-] pgserver: Now asserting server is running self._postmaster_info=PostmasterInfo(pid=53189, pgdata=/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-pg-qcj5dp_k, start_time=2026-09-08 00:08:51, hostname=None port=5432, socket_dir=/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-pg-qcj5dp_k status=ready, process=psutil.Process(pid=53189, name='postgres', status='sleeping'))
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+------------------------------ Captured log setup ------------------------------
+INFO     pgserver:postgres_server.py:113 no PG_VERSION file found within /private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-pg-qcj5dp_k. Initializing pgdata
+INFO     pgserver:_commands.py:36 Running commandline:
+['/Users/wpalish/ashyq-worktrees/c2-t28-qa/backend/.venv/lib/python3.12/site-packages/pgserver/pginstall/bin/initdb', '-D', '/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-pg-qcj5dp_k', '--auth=trust', '--auth-local=trust', '--encoding=utf8', '-U', 'postgres']
+with kwargs: `{'user': None}`
+INFO     pgserver:_commands.py:46 Successful postgres command ['/Users/wpalish/ashyq-worktrees/c2-t28-qa/backend/.venv/lib/python3.12/site-packages/pgserver/pginstall/bin/initdb', '-D', '/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-pg-qcj5dp_k', '--auth=trust', '--auth-local=trust', '--encoding=utf8', '-U', 'postgres'] with kwargs: `{'user': None}`
+stdout:
+The files belonging to this database system will be owned by user "wpalish".
+This user must also own the server process.
+
+The database cluster will be initialized with locale "C.UTF-8".
+The default text search configuration will be set to "english".
+
+Data page checksums are disabled.
+
+fixing permissions on existing directory /private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-pg-qcj5dp_k ... ok
+creating subdirectories ... ok
+selecting dynamic shared memory implementation ... posix
+selecting default max_connections ... 100
+selecting default shared_buffers ... 128MB
+selecting default time zone ... Asia/Almaty
+creating configuration files ... ok
+running bootstrap script ... ok
+performing post-bootstrap initialization ... ok
+syncing data to disk ... ok
+
+Success. You can now start the database server using:
+
+    /Users/wpalish/ashyq-worktrees/c2-t28-qa/backend/.venv/lib/python3.12/site-packages/pgserver/pginstall/bin/pg_ctl -D /private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-pg-qcj5dp_k -l logfile start
+
+
+---
+stderr:
+
+---
+
+INFO     pgserver:postgres_server.py:146 no postmaster.pid file found in /private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-pg-qcj5dp_k
+INFO     pgserver:utils.py:260 Using socket path: /private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-pg-qcj5dp_k
+INFO     pgserver:postgres_server.py:175 running pg_ctl... pg_ctl_args=['-w', '-o', '-h ""', '-o', '-k /private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-pg-qcj5dp_k', '-l', '/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-pg-qcj5dp_k/log', 'start']
+INFO     pgserver:_commands.py:36 Running commandline:
+['/Users/wpalish/ashyq-worktrees/c2-t28-qa/backend/.venv/lib/python3.12/site-packages/pgserver/pginstall/bin/pg_ctl', '-D', '/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-pg-qcj5dp_k', '-w', '-o', '-h ""', '-o', '-k /private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-pg-qcj5dp_k', '-l', '/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-pg-qcj5dp_k/log', 'start']
+with kwargs: `{'user': None, 'timeout': 10}`
+INFO     pgserver:_commands.py:46 Successful postgres command ['/Users/wpalish/ashyq-worktrees/c2-t28-qa/backend/.venv/lib/python3.12/site-packages/pgserver/pginstall/bin/pg_ctl', '-D', '/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-pg-qcj5dp_k', '-w', '-o', '-h ""', '-o', '-k /private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-pg-qcj5dp_k', '-l', '/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-pg-qcj5dp_k/log', 'start'] with kwargs: `{'user': None, 'timeout': 10}`
+stdout:
+waiting for server to start.... done
+server started
+
+---
+stderr:
+
+---
+
+INFO     pgserver:postgres_server.py:188 waiting for postmaster info to show a running process
+INFO     pgserver:postgres_server.py:190 running... checking if ready pinfo=PostmasterInfo(pid=53189, pgdata=/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-pg-qcj5dp_k, start_time=2026-09-08 00:08:51, hostname=None port=5432, socket_dir=/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-pg-qcj5dp_k status=ready, process=psutil.Process(pid=53189, name='postgres', status='sleeping'))
+INFO     pgserver:postgres_server.py:198 Now asserting server is running self._postmaster_info=PostmasterInfo(pid=53189, pgdata=/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-pg-qcj5dp_k, start_time=2026-09-08 00:08:51, hostname=None port=5432, socket_dir=/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/unimatch-pg-qcj5dp_k status=ready, process=psutil.Process(pid=53189, name='postgres', status='sleeping'))
+_______ TestOneRowPerUrl.test_a_duplicate_url_is_refused_by_the_database _______
+
+self = <tests.test_source_pages.TestOneRowPerUrl object at 0x108ff54c0>
+pg_session = <sqlalchemy.orm.session.Session object at 0x10a2dab70>
+
+    def test_a_duplicate_url_is_refused_by_the_database(self, pg_session):
+        """Beneath record() sits a unique index; a raw duplicate insert must
+        hit it, or the one-row-per-page design has no floor."""
+>       from app.models import SourcePage
+E       ImportError: cannot import name 'SourcePage' from 'app.models' (/Users/wpalish/ashyq-worktrees/c2-t28-qa/backend/app/models/__init__.py)
+
+tests/test_source_pages.py:104: ImportError
+---------------------------- Captured stderr setup -----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+_ TestRecordSemantics.test_the_upsert_coalesces_ownership_and_overwrites_fetch_metadata _
+
+self = <tests.test_source_pages.TestRecordSemantics object at 0x108ff5880>
+source_session = <sqlalchemy.orm.session.Session object at 0x10b96aa80>
+
+    def test_the_upsert_coalesces_ownership_and_overwrites_fetch_metadata(self, source_session):
+        """Fetch metadata (etag/status/page_type/fetched_at) always takes the
+        new value, even when it is None; ownership (institution_key,
+        lastmod_seen) coalesces — an existing value wins over None; and
+        active_claims is never touched by a fetch."""
+>       from app.models import SourcePage
+E       ImportError: cannot import name 'SourcePage' from 'app.models' (/Users/wpalish/ashyq-worktrees/c2-t28-qa/backend/app/models/__init__.py)
+
+tests/test_source_pages.py:124: ImportError
+---------------------------- Captured stderr setup -----------------------------
+INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+_ TestMigrationRoundTrip.test_the_migration_upgrades_and_downgrades_on_sqlite __
+
+self = <tests.test_source_pages.TestMigrationRoundTrip object at 0x108ff5c10>
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-267/test_the_migration_upgrades_an0')
+
+    def test_the_migration_upgrades_and_downgrades_on_sqlite(self, tmp_path):
+        import sqlalchemy as sa
+
+        from app.db import _alembic_config, migrate_to_head
+
+        url = f"sqlite:///{tmp_path / 'roundtrip.db'}"
+        migrate_to_head(url)
+        engine = sa.create_engine(url)
+        try:
+>           assert sa.inspect(engine).has_table("source_pages")
+E           AssertionError: assert False
+E            +  where False = has_table('source_pages')
+E            +    where has_table = <sqlalchemy.engine.reflection.Inspector object at 0x10bc401d0>.has_table
+E            +      where <sqlalchemy.engine.reflection.Inspector object at 0x10bc401d0> = <function inspect at 0x108850ea0>(Engine(sqlite:////private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-267/test_the_migration_upgrades_an0/roundtrip.db))
+E            +        where <function inspect at 0x108850ea0> = <module 'sqlalchemy' from '/Users/wpalish/ashyq-worktrees/c2-t28-qa/backend/.venv/lib/python3.12/site-packages/sqlalchemy/__init__.py'>.inspect
+
+tests/test_source_pages.py:179: AssertionError
+----------------------------- Captured stderr call -----------------------------
+INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+_ TestMigrationRoundTrip.test_the_migration_upgrades_and_downgrades_on_postgresql _
+
+self = <tests.test_source_pages.TestMigrationRoundTrip object at 0x108ff5820>
+pg_engine = Engine(postgresql+psycopg://postgres:***@/tfff52c0be14f?host=%2Fprivate%2Fvar%2Ffolders%2Fqk%2Fr0pv0fn16q39866tygl11ttm0000gn%2FT%2Funimatch-pg-qcj5dp_k)
+
+    def test_the_migration_upgrades_and_downgrades_on_postgresql(self, pg_engine):
+        """pg_engine's fixture has already migrated the throwaway database to
+        head; the same URL drives the downgrade and the re-upgrade."""
+        import sqlalchemy as sa
+        from alembic import command
+
+        from app.db import _alembic_config
+
+        url = str(pg_engine.url)
+>       assert sa.inspect(pg_engine).has_table("source_pages")
+E       AssertionError: assert False
+E        +  where False = has_table('source_pages')
+E        +    where has_table = <sqlalchemy.dialects.postgresql.base.PGInspector object at 0x10bbb9790>.has_table
+E        +      where <sqlalchemy.dialects.postgresql.base.PGInspector object at 0x10bbb9790> = <function inspect at 0x108850ea0>(Engine(postgresql+psycopg://postgres:***@/tfff52c0be14f?host=%2Fprivate%2Fvar%2Ffolders%2Fqk%2Fr0pv0fn16q39866tygl11ttm0000gn%2FT%2Funimatch-pg-qcj5dp_k))
+E        +        where <function inspect at 0x108850ea0> = <module 'sqlalchemy' from '/Users/wpalish/ashyq-worktrees/c2-t28-qa/backend/.venv/lib/python3.12/site-packages/sqlalchemy/__init__.py'>.inspect
+
+tests/test_source_pages.py:209: AssertionError
+---------------------------- Captured stderr setup -----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+__ TestRetentionContract.test_the_migration_and_the_model_agree_on_retention ___
+
+self = <tests.test_source_pages.TestRetentionContract object at 0x108ff4380>
+
+    def test_the_migration_and_the_model_agree_on_retention(self):
+        """SOURCE_PAGE_RETENTION_DAYS in the migration == RETENTION_DAYS in the
+        model == 180.
+
+        A migration must not import the application, so the constant is
+        written down twice; this is what stops the copies drifting. The
+        revision id is not knowable until the developer names the file, so the
+        migration is located by content: the one file under
+        migrations/versions that defines SOURCE_PAGE_RETENTION_DAYS.
+        """
+        import importlib.util
+
+        versions = Path(__file__).resolve().parent.parent / "migrations" / "versions"
+        matches = [
+            path
+            for path in sorted(versions.glob("*.py"))
+            if path.name != "__init__.py" and "SOURCE_PAGE_RETENTION_DAYS" in path.read_text()
+        ]
+>       assert matches != [], "no migration file defines SOURCE_PAGE_RETENTION_DAYS"
+E       AssertionError: no migration file defines SOURCE_PAGE_RETENTION_DAYS
+E       assert [] != []
+
+tests/test_source_pages.py:240: AssertionError
+_____________ TestRetentionContract.test_is_purgeable_truth_table ______________
+
+self = <tests.test_source_pages.TestRetentionContract object at 0x108ff5f10>
+
+    def test_is_purgeable_truth_table(self):
+        """Purgeable = nothing claims the page and it is strictly older than
+        the retention window (or never fetched, and the row itself is)."""
+>       from app.models.source_page import RETENTION_DAYS, is_purgeable
+E       ModuleNotFoundError: No module named 'app.models.source_page'
+
+tests/test_source_pages.py:255: ModuleNotFoundError
+=========================== short test summary info ============================
+FAILED tests/test_fetch_pii_hops.py::TestPoisonedRedirectHops::test_a_credential_in_a_hop_query_is_refused_not_fetched
+FAILED tests/test_fetch_pii_hops.py::TestPoisonedRedirectHops::test_a_long_digit_run_in_a_hop_query_is_refused_not_fetched
+FAILED tests/test_fetch_pii_hops.py::TestPoisonedRedirectHops::test_a_poisoned_hop_never_reaches_the_url_policy_or_dns
+FAILED tests/test_fetch_pii_hops.py::TestConditionalGet::test_a_validated_304_comes_back_as_cached_with_no_body
+FAILED tests/test_fetch_pii_hops.py::TestConditionalPoliteness::test_a_conditional_request_still_pays_robots_and_spacing
+FAILED tests/test_fetch_pii_hops.py::TestValidatorRecording::test_a_200_records_the_http_validators_and_the_content_hash
+FAILED tests/test_fetch_pii_hops.py::TestValidatorRecording::test_an_escalated_result_carries_no_stale_validators
+FAILED tests/test_source_pages.py::TestOneRowPerUrl::test_two_sessions_recording_the_same_url_write_one_row
+FAILED tests/test_source_pages.py::TestOneRowPerUrl::test_a_duplicate_url_is_refused_by_the_database
+FAILED tests/test_source_pages.py::TestRecordSemantics::test_the_upsert_coalesces_ownership_and_overwrites_fetch_metadata
+FAILED tests/test_source_pages.py::TestMigrationRoundTrip::test_the_migration_upgrades_and_downgrades_on_sqlite
+FAILED tests/test_source_pages.py::TestMigrationRoundTrip::test_the_migration_upgrades_and_downgrades_on_postgresql
+FAILED tests/test_source_pages.py::TestRetentionContract::test_the_migration_and_the_model_agree_on_retention
+FAILED tests/test_source_pages.py::TestRetentionContract::test_is_purgeable_truth_table
+14 failed, 3 passed in 1.76s

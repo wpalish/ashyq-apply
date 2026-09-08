@@ -1,5 +1,52 @@
 # Live discovery (P1.8) — what it finds, and what it does not
 
+## T30 programme-recall canary — 2026-09-08
+
+The owner authorized the two bounded live batches in the task that triggered
+this run. Both used the production `ResearchRunner`, a synthetic bachelor / CS
+profile, a temporary SQLite database, browser rendering enabled, and the real
+`Fetcher` policy (robots, PII, SSRF and per-host politeness unchanged).
+
+| Batch | Institutions | Program recall | Category recall | Material FP | Wall clock |
+|---|---:|---:|---:|---:|---:|
+| 1 | Groningen, Delft, Aalto, Vienna, Warsaw | 3/5 | 13/15 | 0 | 638.3 s |
+| 2 | UBC, Toronto, HKU, NTU, KAIST | 4/5 | 13/15 | 0 | 681.6 s |
+| **Combined** | **10** | **7/10** | **26/30** | **0** | **1,319.9 s** |
+
+The frozen T30 targets are therefore met exactly, not exceeded: programme
+recall is 7/10 and the historical category-recall floor remains 26/30. The two
+runs made 481 HTTP-tier reads, 14 browser-tier reads and one PDF-tier read;
+the walker traversed 15 catalogues, confirmed 20 programme leads and recorded
+239 source-page rows across the two isolated databases. Two institutions
+were partially blocked by their own robots rules; those URLs were refused.
+
+This canary also found a real repair. HKU's catalogue linked a PDF whose
+decoded bytes made BeautifulSoup's lxml builder raise `ValueError`; the walker
+caught it only at catalogue scope, losing the remaining leads. The minimal
+five-character shape `<f/{>` now has a deterministic regression. The
+classifier falls back to the stdlib parser and returns honest `UNKNOWN` rather
+than aborting the catalogue. A bounded post-fix HKU smoke completed with 22
+candidates, one confirmed programme and 52 recorded outcomes.
+
+**Registry status:** still 19 entries. The requested 19→60 expansion is not
+claimed: the contract permits a new institution only after a canary confirms
+at least two of admissions / costs / scholarships / programme catalogue, and
+no 41-entry candidate set with human-checked official seeds was supplied or
+validated in these two batches. Adding plausible names without that evidence
+would violate T30's own acceptance rule. Expansion remains staged work, not a
+reason to relabel this measurement as complete.
+
+**Latency finding:** the two cold batches took about 22 minutes combined for
+ten institutions. This is acceptable for a bounded/nightly canary, not an
+interactive applicant request. T32's background source scans and stored source
+metadata must be the primary production path; live crawling stays a bounded
+fallback.
+
+The machine-readable reports and per-institution diagnostics are retained in
+`ai-team/outputs/c2-t30-a1/live/batch-1/` and `batch-2/`.
+
+---
+
 **Branch:** `claude/live-discovery` (from `0fecc95`)
 **Access date for every live figure below:** 2026-08-28
 **Scope:** discovery only. Nothing in auth, tenancy, routing, jobs, migrations,

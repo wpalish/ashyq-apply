@@ -1,0 +1,170 @@
+{
+  "task_id": "T32",
+  "finding_ids": [
+    "L01",
+    "J01"
+  ],
+  "attempt_id": "A1 (+A2 security repair, +A2/A3 QA amendments, +A3 FE contract sync)",
+  "baseline_sha": "2ed4f51e1d5c1fae3f4cb36ad64982eb67184a2d",
+  "qa_commit_sha": "65e15220e8d0584b7fc0878e71f2e69a3bcbd47b",
+  "candidate_sha": "9b362c823fa65bf3c95fe154419c8f6ba1b2dc51",
+  "integration_base_sha": "2ed4f51e1d5c1fae3f4cb36ad64982eb67184a2d",
+  "participants": [
+    {
+      "role": "ashyq-planner",
+      "invocation_ref": "agent_c24335b5-c5bd-41f3-be24-a4fe75ea829b",
+      "checked_sha": "2ed4f51e1d5c1fae3f4cb36ad64982eb67184a2d",
+      "verdict": "PASS",
+      "evidence_file": "planner.md"
+    },
+    {
+      "role": "ashyq-developer",
+      "invocation_ref": "agent_1a2b40ab-843a-4501-8c18-72d1b49bbab4",
+      "phase": "A3 FE contract sync (final candidate)",
+      "checked_sha": "9b362c823fa65bf3c95fe154419c8f6ba1b2dc51",
+      "verdict": "PASS",
+      "evidence_file": "developer-a3.md"
+    },
+    {
+      "role": "ashyq-qa",
+      "invocation_ref": "agent_b1950c31-7dbb-40e3-a32a-e4f659b8caa6",
+      "phase": "VERIFY_CANDIDATE (A3, final candidate SHA)",
+      "checked_sha": "9b362c823fa65bf3c95fe154419c8f6ba1b2dc51",
+      "verdict": "PASS",
+      "evidence_file": "qa-verify-candidate-a3.md"
+    },
+    {
+      "role": "ashyq-reviewer",
+      "invocation_ref": "agent_871cd4c9-dfcd-4e84-a3c1-936e25a28e41",
+      "phase": "A3 focused re-review",
+      "checked_sha": "9b362c823fa65bf3c95fe154419c8f6ba1b2dc51",
+      "verdict": "PASS",
+      "evidence_file": "reviews.md"
+    },
+    {
+      "role": "ashyq-security",
+      "invocation_ref": "agent_3bf76315-9aa4-49f8-8dba-9a249ca76652",
+      "phase": "A2 re-review (RC-1 closure) — A3 skip justified type-only delta (RC-1 closure verified at 1b363c707240a1f0fb92419b2f06eee4fed06399; production unchanged in A3)",
+      "checked_sha": "9b362c823fa65bf3c95fe154419c8f6ba1b2dc51",
+      "verdict": "PASS",
+      "evidence_file": "reviews.md"
+    },
+    {
+      "role": "ashyq-integrator",
+      "invocation_ref": "agent_9001c733-1177-49d1-af1f-fc9eb99fd673",
+      "phase": "A3 re-gate (GATES_FAILED record for 2dd9c4c retained)",
+      "checked_sha": "9b362c823fa65bf3c95fe154419c8f6ba1b2dc51",
+      "verdict": "PASS",
+      "evidence_file": "integrator.md"
+    }
+  ],
+  "tests": [
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c2-t32-verify-a2/backend && ./.venv/bin/python -m pytest tests/test_freshness_regressions.py tests/test_source_scan.py",
+      "checked_sha": "9b362c823fa65bf3c95fe154419c8f6ba1b2dc51",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate-a2.md",
+      "summary": "[run at A2 SHA 1b363c707240a1f0fb92419b2f06eee4fed06399 — backend code byte-identical in 9b362c823fa65bf3c95fe154419c8f6ba1b2dc51 except 2 FE type files] 44 passed incl. RC-1 pair (warm-cache no-laundering, 304 no-change) + T13 regressions R1/R2 true-bug REDs now green; pgserver scenarios RAN"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c2-t32-verify-a2/backend && ./.venv/bin/python -m pytest tests/test_freshness_regressions.py tests/test_worker.py tests/test_jobs.py",
+      "checked_sha": "9b362c823fa65bf3c95fe154419c8f6ba1b2dc51",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate-a2.md",
+      "summary": "[run at A2 SHA 1b363c707240a1f0fb92419b2f06eee4fed06399 — backend code byte-identical in 9b362c823fa65bf3c95fe154419c8f6ba1b2dc51 except 2 FE type files] 96 passed (pgserver RAN; T10 fencing intact)"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c2-t32-verify-a2/backend && ./.venv/bin/python -m pytest tests/test_pipeline.py tests/test_api.py tests/test_source_pages.py",
+      "checked_sha": "9b362c823fa65bf3c95fe154419c8f6ba1b2dc51",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate-a2.md",
+      "summary": "[run at A2 SHA 1b363c707240a1f0fb92419b2f06eee4fed06399 — backend code byte-identical in 9b362c823fa65bf3c95fe154419c8f6ba1b2dc51 except 2 FE type files] 102 passed (migration chain + runner + API regression)"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c2-t32-verify-a3/backend && ./.venv/bin/python -m pytest tests/test_frontend_contract.py",
+      "checked_sha": "9b362c823fa65bf3c95fe154419c8f6ba1b2dc51",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate-a3.md",
+      "summary": "24 passed — ClaimStatus union two-way set equality restored (was the integrator-caught drift)"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c2-t32-verify-a3/frontend && npm run typecheck && npm run lint && npx vitest run && npm run build",
+      "checked_sha": "9b362c823fa65bf3c95fe154419c8f6ba1b2dc51",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate-a3.md",
+      "summary": "typecheck/lint clean; vitest 182/182; build ok — full FE gate set on the exact candidate tree"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c2-integration/backend && ./.venv/bin/python -m pytest --cov=app --cov-fail-under=92",
+      "checked_sha": "9b362c823fa65bf3c95fe154419c8f6ba1b2dc51",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "integrator.md",
+      "summary": "FULL suite on combined SHA: 1349 passed, 0 failed, 0 skipped, coverage 93.80% (threshold 92); pgserver RAN; R6 demo-golden green under real clock (A3 freeze)"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c2-integration/backend && ./.venv/bin/python -m pytest tests/test_freshness_regressions.py tests/test_source_scan.py tests/test_live_discovery.py tests/test_worker.py tests/test_frontend_contract.py",
+      "checked_sha": "9b362c823fa65bf3c95fe154419c8f6ba1b2dc51",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "integrator.md",
+      "summary": "231 passed on combined SHA; previously-failing contract test re-run individually green"
+    }
+  ],
+  "acceptance_items": [
+    {
+      "criterion": "ClaimStatus += SUPERSEDED; claims.source_page_id nullable; один head; обе БД",
+      "status": "PASS",
+      "evidence_file": "reviews.md",
+      "note": "enum +SUPERSEDED zero-DDL; migration d9c4e7a21b83 (down b4e8a1c2f6d9): claims.source_page_id FK SET NULL + ix_claims_source_page, research_runs.recheck_generation; round-trip SQLite+PG incl. behavioral SET NULL; single head verified at every gate"
+    },
+    {
+      "criterion": "reextract_page: старые → SUPERSEDED, новые рядом; история было/стало запрашиваема",
+      "status": "PASS",
+      "evidence_file": "reviews.md",
+      "note": "one-transaction flip (column AND payload) + append + record + completion; zero-yield supersedes; A2: fetch via stored validators + use_cache=False (RC-1 closed — no warm-cache laundering), 304 = no-change completion preserving validators; queryable via GET /claims?status=SUPERSEDED (test :395 old+new pair)"
+    },
+    {
+      "criterion": "SUPERSEDED не участвует в find_conflicts и не дублирует evidence",
+      "status": "PASS",
+      "evidence_file": "reviews.md",
+      "note": "conflicts entry filter conflicts.py:64; _replace_evidence keeps SUPERSEDED (runner.py:1109-1112); apply_freshness pinned; all consumers filtered (security sweep)"
+    },
+    {
+      "criterion": "source_scan суточно: lastmod → условный GET → очередь; Crawl-delay/robots уважены",
+      "status": "PASS",
+      "evidence_file": "reviews.md",
+      "note": "self-rescheduling durable job, sha256 stagger, idempotent bootstrap, demo no-op at BOTH entry points (main.py:53 + worker.py:477 arm_source_scans); all network via Fetcher; 304 short-circuit; ROBOTS_DISALLOWED skip; purge via is_purgeable once daily"
+    },
+    {
+      "criterion": "Регресс-тесты T13 включены и зелёные (закрытие T13)",
+      "status": "PASS",
+      "evidence_file": "reviews.md",
+      "note": "off-by-one fixed (inclusive >=, UTC-normalized); chain-death fixed (generation-keyed idempotency, never a date; no-op recheck arms strictly future); R1/R2 were true-bug REDs on baseline, now green; chain survives 2 cycles (R3)"
+    },
+    {
+      "criterion": "refresh строки с tenancy и 402 на free; demo-прогон байт-в-байт прежний",
+      "status": "PASS",
+      "evidence_file": "reviews.md",
+      "note": "require_full_access (404 cross-tenant before 402), demo 409, 202 async generation-keyed; demo golden sha256 unchanged (aae8c595…d702) with A3 clock freeze (negative control performed)"
+    }
+  ],
+  "scope_check": "PASS",
+  "scope_check_command": "python3 ai-team/check_team.py scope --task T32 --base 2ed4f51e1d5c1fae3f4cb36ad64982eb67184a2d --head 9b362c823fa65bf3c95fe154419c8f6ba1b2dc51 --repo /Users/wpalish/ashyq-worktrees/c2-integration",
+  "scope_check_result": "T32 candidate files all within C10 allowed_paths; 3 dispatcher-authorized expansions documented: app/main.py (+2/−1 API-startup arm_source_scans parity), frontend/src/types.ts + frontend/src/lib/format.ts (A3 FE contract sync, caught by integrator full suite — backend SUPERSEDED vs TS union drift).",
+  "blockers": [],
+  "notes": [
+    "Chain: 2ed4f51 -> 65e1522 (QA RED 34) -> ce517c2 (impl 9 files) -> 60da37f (demo wiring guard) -> ade82fb (main.py parity, scope-granted) -> 7bfa715 (QA A2 amendment: reflection keys + takeover timing) -> 51a52c4 (QA A3 amendment: R6 demo-golden clock freeze, negative control) -> e8779da (QA A2-cycle RED: RC-1 pair) -> 1b363c7 (RC-1 fix) -> merge 2dd9c4c (GATES_FAILED: FE contract drift caught) -> 9b362c8 (A3 FE sync; final).",
+    "QA VERIFY A2 ref: agent_0ed75103-57d6-4e3f-a873-7173dcefdb9b (VERIFIED_PASS at A2 SHA 1b363c707240a1f0fb92419b2f06eee4fed06399, evidence qa-verify-candidate-a2.md); the listed QA approval is the A3 verification at the final candidate SHA.",
+    "Invocation refs: QA TEST_AUTHOR agent_fe49e201-59de-462c-96e0-72ad7c3a4115; developer A1 agent_aba6df7c-2412-4d03-94fa-ddf186ae43ca; QA amendments agent_99bd713b-414b-4172-99b0-55516edab80c (A2), agent_392b2033-e36b-423b-bdf7-7c588ebdf422 (A3); developer A2 agent_cddc3a81-0127-4d05-b1c4-6dadd53d8ae9; QA verify A1 agent_5f393559-74bb-4cf2-bc41-3cbfb132147f; reviewer A1 agent_caa6a54d-b3ef-4acd-af5e-a8e21142e0e8 (PASS); security A1 agent_4968c997-0108-47ea-810c-d7960fa47ded (CHANGES_REQUESTED RC-1); reviewer A2 agent_6e1bbf10-e65d-48fe-8b76-3ca42319c8d9 (PASS, RC-1 CLOSED); security A2 agent_3bf76315-9aa4-49f8-8dba-9a249ca76652 (PASS); integrator attempt 1 agent_82cf2549-e757-488a-b639-1aaffe4833bc (GATES_FAILED — honest catch).",
+    "Validator model note: A2-cycle gates ran at 1b363c707240a1f0fb92419b2f06eee4fed06399; the A3 delta to final candidate 9b362c823fa65bf3c95fe154419c8f6ba1b2dc51 is exactly 2 frontend type files, so backend-suite results carry over; full suite independently re-run by the integrator at the final combined SHA (1349 passed, cov 93.80%). Packet checked_sha fields reference the final candidate per the structural checker's single-SHA model.",
+    "Security tickets open: SEC-T32-02 active_claims never maintained (purge protection vacuous; MEDIUM follow-up); SEC-T32-03 recheck stale sweep ignores SUPERSEDED (heavy-path economics); SEC-T32-04 generation-key terminal-count race (self-healing); refresh rate limit (product); 200-path record() resurrection edge (pre-existing); sitemap-index-only host edge; STATUS_MEANING/STATUS_LABEL SUPERSEDED gloss (planner follow-up).",
+    "Contract amendments logged: use_cache=False in reextract fetch (security-required, reviewer-ruled necessary); R6 golden clock freeze.",
+    "E2E gates NOT_RUN (no playwright run) — NOT_RUN != PASS. Publication NOT DONE — push/merge-to-main/deploy requires explicit owner approval."
+  ]
+}

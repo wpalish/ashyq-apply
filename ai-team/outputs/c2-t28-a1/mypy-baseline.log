@@ -1,0 +1,17 @@
+tests/test_ssrf.py:243: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+tests/test_ssrf.py:454: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+tests/test_fetch_pii_hops.py:147: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+tests/test_fetch_pii_hops.py:178: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+tests/test_fetch_pii_hops.py:221: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+tests/test_live_discovery.py:78: error: Incompatible types in assignment (expression has type "Callable[[str, DefaultNamedArg(bool, 'use_cache')], Coroutine[Any, Any, FetchResult]]", variable has type "Callable[[str, DefaultNamedArg(bool, 'use_cache'), DefaultNamedArg(str | None, 'etag'), DefaultNamedArg(str | None, 'if_modified_since')], Coroutine[Any, Any, FetchResult]]")  [assignment]
+tests/test_live_discovery.py:78: note: Error code "assignment" not covered by "type: ignore" comment
+tests/test_social_api.py:229: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+tests/test_api.py:701: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+tests/test_api.py:773: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+tests/test_worker.py:444: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+tests/test_worker.py:674: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+tests/test_security.py:263: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+tests/test_live_regressions.py:617: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+tests/test_live_regressions.py:651: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+tests/test_citizenship_and_dates.py:143: note: By default the bodies of untyped functions are not checked, consider using --check-untyped-defs  [annotation-unchecked]
+Found 1 error in 1 file (checked 158 source files)

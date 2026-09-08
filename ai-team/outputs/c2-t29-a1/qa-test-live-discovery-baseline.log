@@ -1,0 +1,430 @@
+........................................................................ [ 58%]
+........................................FFFFFFFFFF..                     [100%]
+=================================== FAILURES ===================================
+________ TestCatalogWalkerContract.test_r1_walker_extracts_scored_links ________
+
+self = <tests.test_live_discovery.TestCatalogWalkerContract object at 0x108668590>
+
+    def test_r1_walker_extracts_scored_links(self):
+        """R1 walker_extracts_scored_links: the catalogue's links come out
+        scored by the frozen weights, strongest first, and links that can
+        never be a programme lead are hard-rejected before any fetch.
+
+        ``score_link(url, label, degree, fields)`` follows the contract
+        surface; if the walker needs sibling context for the repeating-list
+        bonus it reaches it through walk_catalog, not through this call.
+        """
+>       from app.adapters.discovery.catalog_walker import WalkerLink, extract_links, score_link
+E       ModuleNotFoundError: No module named 'app.adapters.discovery.catalog_walker'
+
+tests/test_live_discovery.py:1303: ModuleNotFoundError
+_______ TestCatalogWalkerContract.test_r2_each_link_fetched_with_outcome _______
+
+self = <tests.test_live_discovery.TestCatalogWalkerContract object at 0x108668ef0>
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-330/test_r2_each_link_fetched_with0')
+profile_bachelor = ApplicantProfileIn(display_name='Test Applicant (synthetic)', context=ApplicationContext(level='bachelor', intended_fi...ad_fit=0.3, university_size_fit=0.3, campus_fit=0.3, career_outcomes=0.7, post_study_work=0.5), weights_override=False)
+
+    @pytest.mark.asyncio
+    async def test_r2_each_link_fetched_with_outcome(self, tmp_path, profile_bachelor):
+        """R2 each_link_fetched_with_outcome: the walker fetches a
+        catalogue's leads and records one outcome per link — a missing page
+        as the fetch vocabulary's ``http_error``, a news page as
+        ``reads_as_news``, a real programme as its page type — and the
+        confirmed programme reaches the candidate while the outcomes reach
+        both trace.walker and adapter.walker_outcomes.
+        """
+        catalogue = _catalogue_html(
+            ("/study/bsc-computer-science", "BSc Computer Science"),
+            ("/study/closed-course", "A programme that has been discontinued"),
+            ("/media/march-roundup", "University news and campus updates"),
+        )
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
+                "https://uni.edu/s.xml": sitemap_xml("https://uni.edu/en/programmes"),
+                "https://uni.edu/en/programmes": catalogue,
+                "https://uni.edu/study/bsc-computer-science": program_html(),
+                "https://uni.edu/media/march-roundup": _shape("news_page.html"),
+            }
+        )
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, _walker_entry()))
+            candidate = (await adapter.discover(profile_bachelor))[0]
+
+>       walker = adapter.traces[0].walker  # KeyError/AttributeError RED on baseline
+                 ^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'DiscoveryTrace' object has no attribute 'walker'
+
+tests/test_live_discovery.py:1379: AttributeError
+__________ TestCatalogWalkerContract.test_r3_profile_predicate_reused __________
+
+self = <tests.test_live_discovery.TestCatalogWalkerContract object at 0x10866a030>
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-330/test_r3_profile_predicate_reus0')
+profile_bachelor = ApplicantProfileIn(display_name='Test Applicant (synthetic)', context=ApplicationContext(level='bachelor', intended_fi...ad_fit=0.3, university_size_fit=0.3, campus_fit=0.3, career_outcomes=0.7, post_study_work=0.5), weights_override=False)
+
+    @pytest.mark.asyncio
+    async def test_r3_profile_predicate_reused(self, tmp_path, profile_bachelor):
+        """R3 profile_predicate_reused: the walker applies the same applicant
+        predicate as _confirm_programs — an MSc page reached through an
+        opaque URL ends as ``degree_level_mismatch``, never as the
+        applicant's programme, while the bachelor lead the link text names
+        is kept.
+        """
+        catalogue = _catalogue_html(
+            ("/study/data-computing", "BSc Computer Science"),
+            ("/study/advanced-computing", "Advanced Computing (MSc)"),
+        )
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
+                "https://uni.edu/s.xml": sitemap_xml("https://uni.edu/en/programmes"),
+                "https://uni.edu/en/programmes": catalogue,
+                "https://uni.edu/study/data-computing": program_html("BSc Computer Science"),
+                "https://uni.edu/study/advanced-computing": program_html("MSc Advanced Computing"),
+            }
+        )
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, _walker_entry()))
+            candidate = (await adapter.discover(profile_bachelor))[0]
+
+        assert [p.url for p in candidate.programs] == ["https://uni.edu/study/data-computing"]
+        # justified-GREEN pin: the confirm-stage rejection already holds on
+        # the baseline and must survive the walker unchanged.
+        assert any("degree level master" in reason for _u, reason in adapter.traces[0].rejected)
+
+>       walker = adapter.traces[0].walker  # KeyError RED on baseline
+                 ^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'DiscoveryTrace' object has no attribute 'walker'
+
+tests/test_live_discovery.py:1428: AttributeError
+__________ TestCatalogWalkerContract.test_r4_off_domain_never_fetched __________
+
+self = <tests.test_live_discovery.TestCatalogWalkerContract object at 0x10864fe90>
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-330/test_r4_off_domain_never_fetch0')
+profile_bachelor = ApplicantProfileIn(display_name='Test Applicant (synthetic)', context=ApplicationContext(level='bachelor', intended_fi...ad_fit=0.3, university_size_fit=0.3, campus_fit=0.3, career_outcomes=0.7, post_study_work=0.5), weights_override=False)
+
+    @pytest.mark.asyncio
+    async def test_r4_off_domain_never_fetched(self, tmp_path, profile_bachelor):
+        """R4 off_domain_never_fetched: a partner site's programme page is
+        never fetched and never offered; the walker records it under the
+        frozen ``off_domain`` outcome.
+        """
+        partner = "https://partner.example.com/study/computer-science"
+        catalogue = _catalogue_html(
+            ("/study/computer-science", "BSc Computer Science"),
+            (partner, "Computer Science at the partner campus"),
+        )
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
+                "https://uni.edu/s.xml": sitemap_xml("https://uni.edu/en/programmes"),
+                "https://uni.edu/en/programmes": catalogue,
+                "https://uni.edu/study/computer-science": program_html(),
+            }
+        )
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, _walker_entry()))
+            candidate = (await adapter.discover(profile_bachelor))[0]
+
+        # justified-GREEN pin: the same-domain boundary already holds on the
+        # baseline and must survive the walker unchanged.
+        assert partner not in site.requested
+        assert partner not in [p.url for p in candidate.programs]
+
+>       walker = adapter.traces[0].walker  # KeyError RED on baseline
+                 ^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'DiscoveryTrace' object has no attribute 'walker'
+
+tests/test_live_discovery.py:1464: AttributeError
+______ TestCatalogWalkerContract.test_r5_js_json_payload_yields_programs _______
+
+self = <tests.test_live_discovery.TestCatalogWalkerContract object at 0x10864e4e0>
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-330/test_r5_js_json_payload_yields0')
+profile_bachelor = ApplicantProfileIn(display_name='Test Applicant (synthetic)', context=ApplicationContext(level='bachelor', intended_fi...ad_fit=0.3, university_size_fit=0.3, campus_fit=0.3, career_outcomes=0.7, post_study_work=0.5), weights_override=False)
+
+    @pytest.mark.asyncio
+    async def test_r5_js_json_payload_yields_programs(self, tmp_path, profile_bachelor):
+        """R5 js_json_payload_yields_programs: a JS catalogue whose HTML is
+        an empty shell has its JSON payload intercepted and its {name, url}
+        entries fetched and confirmed — the URLs need not match any URL
+        pattern, because the payload is the university's own statement of
+        what its programmes are.
+        """
+        payload = _json_shape("js_catalog_payload.json")
+        page = WalkerFakePage(
+            content=_shape("js_catalog_shell.html"),
+            responses=[
+                FakeJsResponse(
+                    "https://uni.edu/api/catalogs/programmes.json", "application/json", payload
+                )
+            ],
+        )
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "User-agent: *\n",
+                "https://uni.edu/p/42": program_html("BSc Computer Science"),
+                "https://uni.edu/p/77": program_html("BSc Mathematics"),
+            }
+        )
+>       fetcher, _renderer = _js_catalog_renderer(tmp_path, page)  # ImportError RED on baseline
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_live_discovery.py:1493:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-330/test_r5_js_json_payload_yields0')
+page = <tests.test_live_discovery.WalkerFakePage object at 0x10a03b860>
+
+    def _js_catalog_renderer(tmp_path, page: WalkerFakePage):
+        """The contract's CatalogRenderer over the fake browser seam.
+
+        The renderer is attached to a Fetcher that is never entered as a context
+        manager (so ``_client`` stays None and no network happens) and whose
+        transport is the StubSite — the same shape test_browser_network.py uses.
+        """
+>       from app.adapters.discovery.catalog_walker import CatalogRenderer
+E       ModuleNotFoundError: No module named 'app.adapters.discovery.catalog_walker'
+
+tests/test_live_discovery.py:1254: ModuleNotFoundError
+______ TestCatalogWalkerContract.test_r6_js_unrelated_json_falls_through _______
+
+self = <tests.test_live_discovery.TestCatalogWalkerContract object at 0x10868c5f0>
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-330/test_r6_js_unrelated_json_fall0')
+profile_bachelor = ApplicantProfileIn(display_name='Test Applicant (synthetic)', context=ApplicationContext(level='bachelor', intended_fi...ad_fit=0.3, university_size_fit=0.3, campus_fit=0.3, career_outcomes=0.7, post_study_work=0.5), weights_override=False)
+
+    @pytest.mark.asyncio
+    async def test_r6_js_unrelated_json_falls_through(self, tmp_path, profile_bachelor):
+        """R6 js_unrelated_json_falls_through: JSON that carries no
+        {name, url} arrays is not a programme list — the catalogue's HTML
+        links drive the walk and nothing is invented from the JSON.
+
+        justified-GREEN sub-pin: on the baseline the plain HTML links are
+        already confirmed through the navigation fallback, and that must
+        survive the walker unchanged.
+        """
+        programme = "https://uni.edu/study/bsc-computer-science"
+        catalogue = _catalogue_html(
+            (programme, "BSc Computer Science"),
+            ("/study/physics", "BSc Physics"),
+        )
+        page = WalkerFakePage(
+            content=catalogue,
+            responses=[
+                FakeJsResponse(
+                    "https://uni.edu/api/analytics.json",
+                    "application/json",
+                    _json_shape("js_catalog_unrelated.json"),
+                )
+            ],
+        )
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "User-agent: *\n",
+                "https://uni.edu/en/programmes": catalogue,
+                programme: program_html(),
+            }
+        )
+>       fetcher, _renderer = _js_catalog_renderer(tmp_path, page)  # ImportError RED on baseline
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_live_discovery.py:1541:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-330/test_r6_js_unrelated_json_fall0')
+page = <tests.test_live_discovery.WalkerFakePage object at 0x10a13cfb0>
+
+    def _js_catalog_renderer(tmp_path, page: WalkerFakePage):
+        """The contract's CatalogRenderer over the fake browser seam.
+
+        The renderer is attached to a Fetcher that is never entered as a context
+        manager (so ``_client`` stays None and no network happens) and whose
+        transport is the StubSite — the same shape test_browser_network.py uses.
+        """
+>       from app.adapters.discovery.catalog_walker import CatalogRenderer
+E       ModuleNotFoundError: No module named 'app.adapters.discovery.catalog_walker'
+
+tests/test_live_discovery.py:1254: ModuleNotFoundError
+___ TestCatalogWalkerContract.test_r7_js_silent_shell_is_recorded_not_fatal ____
+
+self = <tests.test_live_discovery.TestCatalogWalkerContract object at 0x10868ca40>
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-330/test_r7_js_silent_shell_is_rec0')
+profile_bachelor = ApplicantProfileIn(display_name='Test Applicant (synthetic)', context=ApplicationContext(level='bachelor', intended_fi...ad_fit=0.3, university_size_fit=0.3, campus_fit=0.3, career_outcomes=0.7, post_study_work=0.5), weights_override=False)
+
+    @pytest.mark.asyncio
+    async def test_r7_js_silent_shell_is_recorded_not_fatal(self, tmp_path, profile_bachelor):
+        """R7 js_silent_shell_is_recorded_not_fatal: a shell with neither a
+        JSON programme list nor HTML links ends the walk with the frozen
+        ``js_no_program_list`` outcome — discovery completes, nothing
+        crashes, and the rest of the candidate is untouched.
+        """
+        page = WalkerFakePage(
+            content=_shape("js_catalog_shell.html"),
+            responses=[
+                FakeJsResponse(
+                    "https://uni.edu/api/analytics.json",
+                    "application/json",
+                    _json_shape("js_catalog_unrelated.json"),
+                )
+            ],
+        )
+        site = StubSite({"https://uni.edu/robots.txt": "User-agent: *\n"})
+>       fetcher, _renderer = _js_catalog_renderer(tmp_path, page)  # ImportError RED on baseline
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_live_discovery.py:1575:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-330/test_r7_js_silent_shell_is_rec0')
+page = <tests.test_live_discovery.WalkerFakePage object at 0x10a13dca0>
+
+    def _js_catalog_renderer(tmp_path, page: WalkerFakePage):
+        """The contract's CatalogRenderer over the fake browser seam.
+
+        The renderer is attached to a Fetcher that is never entered as a context
+        manager (so ``_client`` stays None and no network happens) and whose
+        transport is the StubSite — the same shape test_browser_network.py uses.
+        """
+>       from app.adapters.discovery.catalog_walker import CatalogRenderer
+E       ModuleNotFoundError: No module named 'app.adapters.discovery.catalog_walker'
+
+tests/test_live_discovery.py:1254: ModuleNotFoundError
+_________ TestCatalogWalkerContract.test_r8_source_pages_rows_recorded _________
+
+self = <tests.test_live_discovery.TestCatalogWalkerContract object at 0x10868cec0>
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-330/test_r8_source_pages_rows_reco0')
+profile_bachelor = ApplicantProfileIn(display_name='Test Applicant (synthetic)', context=ApplicationContext(level='bachelor', intended_fi...ad_fit=0.3, university_size_fit=0.3, campus_fit=0.3, career_outcomes=0.7, post_study_work=0.5), weights_override=False)
+walker_source_session = <sqlalchemy.orm.session.Session object at 0x10a479b20>
+
+    @pytest.mark.asyncio
+    async def test_r8_source_pages_rows_recorded(
+        self, tmp_path, profile_bachelor, walker_source_session
+    ):
+        """R8 source_pages_rows_recorded: with a page_recorder attached, every
+        walker-fetched link with an HTTP status writes one SourcePage row with
+        the frozen record kwargs — canonical url, registrable domain, the
+        classifier's page type, the status (definitive errors included) and
+        the fetch validators — and institution_key stays None because
+        discovery does not own the claim system's mapping.
+
+        RED on the baseline: TypeError, ``page_recorder`` is a new keyword.
+        """
+        from app.models import SourcePage
+
+        catalogue = _catalogue_html(
+            ("/study/bsc-computer-science", "BSc Computer Science"),
+            ("/study/closed-course", "A programme that has been discontinued"),
+            ("/media/march-roundup", "University news and campus updates"),
+            ("/study/quick-peek", "Peek"),
+        )
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
+                "https://uni.edu/s.xml": sitemap_xml("https://uni.edu/en/programmes"),
+                "https://uni.edu/en/programmes": catalogue,
+                "https://uni.edu/study/bsc-computer-science": program_html(),
+                "https://uni.edu/media/march-roundup": _shape("news_page.html"),
+            }
+        )
+        calls: list[dict] = []
+
+        def recorder(**kwargs):
+            calls.append(dict(kwargs))
+            return SourcePage.record(walker_source_session, **kwargs)
+
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+>           adapter = LiveDiscoveryAdapter(
+                fetcher,
+                self.registry_file(tmp_path, _walker_entry()),
+                page_recorder=recorder,  # TypeError RED on baseline
+            )
+E           TypeError: LiveDiscoveryAdapter.__init__() got an unexpected keyword argument 'page_recorder'
+
+tests/test_live_discovery.py:1646: TypeError
+---------------------------- Captured stderr setup -----------------------------
+INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> bb9a7d0ed5c3, Initial schema.
+INFO  [alembic.runtime.migration] Running upgrade bb9a7d0ed5c3 -> c3a1f4e9b2d7, authentication, organizations and tenant-scoped applicant cases
+INFO  [alembic.runtime.migration] Running upgrade c3a1f4e9b2d7 -> e2f7a41c9b83, client request key on research runs, so a replayed start returns its run
+INFO  [alembic.runtime.migration] Running upgrade e2f7a41c9b83 -> f13b9c5d2a44, when a run's evidence next ages out
+INFO  [alembic.runtime.migration] Running upgrade f13b9c5d2a44 -> a7c4e1f80b52, password reset tokens and a recorded email-verification flag
+INFO  [alembic.runtime.migration] Running upgrade a7c4e1f80b52 -> b8d2f6c103ae, diagnostics that are unknowns, kept apart from failures
+INFO  [alembic.runtime.migration] Running upgrade b8d2f6c103ae -> c9e05a71f4d8, JSON columns become JSONB on PostgreSQL
+INFO  [alembic.runtime.migration] Running upgrade c9e05a71f4d8 -> e7c4a91b6f20, social module: applicant profiles, posts, tags and threads
+INFO  [alembic.runtime.migration] Running upgrade e7c4a91b6f20 -> a4d1c7e58b92, which portfolio bucket a result landed in
+INFO  [alembic.runtime.migration] Running upgrade a4d1c7e58b92 -> f2a8c17d9e04, private conversations, and who may start one
+INFO  [alembic.runtime.migration] Running upgrade f2a8c17d9e04 -> a4d61c8e73b2, blocking, and a queue for what a person reports
+INFO  [alembic.runtime.migration] Running upgrade a4d61c8e73b2 -> c8f3b0d47a19, avatars, stored and served by us
+INFO  [alembic.runtime.migration] Running upgrade c8f3b0d47a19 -> d4b2c8f17a90, Orders, payment events, entitlements, and the tier a run was allowed.
+INFO  [alembic.runtime.migration] Running upgrade d4b2c8f17a90 -> e7c1a4d90b52, School subscriptions, and the retirement of the org-wide entitlement.
+INFO  [alembic.runtime.migration] Running upgrade e7c1a4d90b52 -> b4e8a1c2f6d9, Source pages: the crawler's conditional-GET memory, and its retention.
+________________ TestCatalogWalkerContract.test_r9_top_n_budget ________________
+
+self = <tests.test_live_discovery.TestCatalogWalkerContract object at 0x10868d310>
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-330/test_r9_top_n_budget0')
+profile_bachelor = ApplicantProfileIn(display_name='Test Applicant (synthetic)', context=ApplicationContext(level='bachelor', intended_fi...ad_fit=0.3, university_size_fit=0.3, campus_fit=0.3, career_outcomes=0.7, post_study_work=0.5), weights_override=False)
+
+    @pytest.mark.asyncio
+    async def test_r9_top_n_budget(self, tmp_path, profile_bachelor):
+        """R9 top_n_budget: thirty scored catalogue leads result in exactly
+        WALKER_TOP_N fetches — the strongest twenty, and none of the rest.
+        """
+>       from app.adapters.discovery.catalog_walker import WALKER_TOP_N
+E       ModuleNotFoundError: No module named 'app.adapters.discovery.catalog_walker'
+
+tests/test_live_discovery.py:1696: ModuleNotFoundError
+_________ TestCatalogWalkerContract.test_r10_no_catalog_byte_identical _________
+
+self = <tests.test_live_discovery.TestCatalogWalkerContract object at 0x10868d760>
+tmp_path = PosixPath('/private/var/folders/qk/r0pv0fn16q39866tygl11ttm0000gn/T/pytest-of-wpalish/pytest-330/test_r10_no_catalog_byte_ident0')
+profile_bachelor = ApplicantProfileIn(display_name='Test Applicant (synthetic)', context=ApplicationContext(level='bachelor', intended_fi...ad_fit=0.3, university_size_fit=0.3, campus_fit=0.3, career_outcomes=0.7, post_study_work=0.5), weights_override=False)
+
+    @pytest.mark.asyncio
+    async def test_r10_no_catalog_byte_identical(self, tmp_path, profile_bachelor):
+        """R10 no_catalog_byte_identical: with no catalogue anywhere the
+        walker is inactive — it fetches nothing, trace.walker reports zeros,
+        and every pre-existing trace key and the candidate keep exactly the
+        baseline values.
+        """
+        programme = "https://uni.edu/en/education/programmes/bachelors/computer-science"
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml\n",
+                "https://uni.edu/s.xml": sitemap_xml(programme),
+                programme: program_html(),
+            }
+        )
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, _walker_entry()))
+            candidate = (await adapter.discover(profile_bachelor))[0]
+
+        assert set(site.requested) == {
+            "https://uni.edu/robots.txt",
+            "https://uni.edu/s.xml",
+            programme,
+        }, "without a catalogue the walker must fetch nothing"
+        assert [p.url for p in candidate.programs] == [programme]
+
+        payload = adapter.traces[0].as_dict()
+>       walker = payload["walker"]  # KeyError RED on baseline
+                 ^^^^^^^^^^^^^^^^^
+E       KeyError: 'walker'
+
+tests/test_live_discovery.py:1765: KeyError
+=========================== short test summary info ============================
+FAILED tests/test_live_discovery.py::TestCatalogWalkerContract::test_r1_walker_extracts_scored_links
+FAILED tests/test_live_discovery.py::TestCatalogWalkerContract::test_r2_each_link_fetched_with_outcome
+FAILED tests/test_live_discovery.py::TestCatalogWalkerContract::test_r3_profile_predicate_reused
+FAILED tests/test_live_discovery.py::TestCatalogWalkerContract::test_r4_off_domain_never_fetched
+FAILED tests/test_live_discovery.py::TestCatalogWalkerContract::test_r5_js_json_payload_yields_programs
+FAILED tests/test_live_discovery.py::TestCatalogWalkerContract::test_r6_js_unrelated_json_falls_through
+FAILED tests/test_live_discovery.py::TestCatalogWalkerContract::test_r7_js_silent_shell_is_recorded_not_fatal
+FAILED tests/test_live_discovery.py::TestCatalogWalkerContract::test_r8_source_pages_rows_recorded
+FAILED tests/test_live_discovery.py::TestCatalogWalkerContract::test_r9_top_n_budget
+FAILED tests/test_live_discovery.py::TestCatalogWalkerContract::test_r10_no_catalog_byte_identical
+10 failed, 114 passed in 1.39s

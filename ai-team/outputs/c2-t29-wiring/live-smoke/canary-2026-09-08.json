@@ -1,0 +1,2214 @@
+{
+  "accessed_at": "2026-09-08T03:45:42.752798+00:00",
+  "duration_seconds": 323.2,
+  "run_error": "",
+  "institutions": [
+    {
+      "institution": "Nazarbayev University",
+      "country": "Kazakhstan",
+      "domain": "nu.edu.kz",
+      "access": "PARTIALLY_BLOCKED",
+      "robots_disallowed_requests": 1,
+      "pages_checked": 75,
+      "pages_failed": 3,
+      "failures": [
+        [
+          "https://ssh.nu.edu.kz/msclifesciences",
+          "http_error: HTTP 404"
+        ],
+        [
+          "http://venues.nu.edu.kz/",
+          "network_unavailable: All connection attempts failed"
+        ],
+        [
+          "https://regulations.nu.edu.kz/?locale=en",
+          "robots_disallowed: robots.txt disallows this path"
+        ]
+      ],
+      "outcomes": {
+        "ok": 53,
+        "cached": 19,
+        "http_error": 1,
+        "network_unavailable": 1,
+        "robots_disallowed": 1
+      },
+      "discovered": {
+        "program_catalog": [
+          "https://nu.edu.kz/admissions/programs",
+          "https://nu.edu.kz/news-en/discussing-it-nu-members-on-ashyq-alan-program",
+          "https://nu.edu.kz/news-en/nu-hosted-aua-students-for-the-asia-deep-dive-cultural-program"
+        ],
+        "program_page": [
+          "https://scai.nu.edu.kz/bsc-cs",
+          "https://scai.nu.edu.kz/bsc-rob",
+          "https://scai.nu.edu.kz/bsc-math"
+        ],
+        "admissions": [
+          "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions",
+          "https://nu.edu.kz/news-en/admission-to-nu-categories-and-important-dates",
+          "https://nu.edu.kz/news-ru/admission-to-nu-categories-and-important-dates-3"
+        ],
+        "scholarships": [
+          "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/financial-aid-end-scholarships"
+        ]
+      },
+      "discovery_trace": {
+        "institution": "Nazarbayev University",
+        "domain": "nu.edu.kz",
+        "sitemaps_declared": [
+          "https://nu.edu.kz/sitemap_index.xml"
+        ],
+        "sitemaps_read": [
+          "https://nu.edu.kz/sitemap_index.xml",
+          "https://nu.edu.kz/post-sitemap1.xml",
+          "https://nu.edu.kz/post-sitemap2.xml",
+          "https://nu.edu.kz/post-sitemap3.xml",
+          "https://nu.edu.kz/post-sitemap4.xml",
+          "https://nu.edu.kz/post-sitemap5.xml",
+          "https://nu.edu.kz/post-sitemap6.xml",
+          "https://nu.edu.kz/post-sitemap7.xml",
+          "https://nu.edu.kz/post-sitemap8.xml",
+          "https://nu.edu.kz/post-sitemap9.xml",
+          "https://nu.edu.kz/post-sitemap10.xml",
+          "https://nu.edu.kz/post-sitemap11.xml"
+        ],
+        "sitemap_urls_seen": 2200,
+        "sitemap_urls_kept": 13,
+        "manual_seeds": {
+          "program_catalog": "https://nu.edu.kz/admissions/programs/",
+          "admissions": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+          "scholarships": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/financial-aid-end-scholarships/"
+        },
+        "selected": {
+          "program_catalog": [
+            "https://nu.edu.kz/admissions/programs",
+            "https://nu.edu.kz/news-en/discussing-it-nu-members-on-ashyq-alan-program",
+            "https://nu.edu.kz/news-en/nu-hosted-aua-students-for-the-asia-deep-dive-cultural-program"
+          ],
+          "program_page": [
+            "https://scai.nu.edu.kz/bsc-cs",
+            "https://scai.nu.edu.kz/bsc-rob",
+            "https://scai.nu.edu.kz/bsc-math"
+          ],
+          "admissions": [
+            "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions",
+            "https://nu.edu.kz/news-en/admission-to-nu-categories-and-important-dates",
+            "https://nu.edu.kz/news-ru/admission-to-nu-categories-and-important-dates-3"
+          ],
+          "scholarships": [
+            "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/financial-aid-end-scholarships"
+          ]
+        },
+        "rejected_sample": [
+          [
+            "https://nu.edu.kz/news-en/nu-step-to-phd-elvira-abzhanova-nusom-graduate-with-a-doctor-of-medicine-degree",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://nu.edu.kz/news-en/nu-and-soas-university-of-london-launch-joint-masters-in-global-affairs-and-eurasian-studies",
+            "names a degree level other than bachelor"
+          ],
+          [
+            "https://soe.nu.edu.kz/msc_in_ece",
+            "page names degree level master, not bachelor"
+          ],
+          [
+            "https://scai.nu.edu.kz/bsc-math",
+            "page subject 'Bachelor of Science in Mathematics' does not match requested fields ['computer science']"
+          ]
+        ],
+        "rejected_total": 4,
+        "errors": [],
+        "used_navigation_fallback": true,
+        "kept_by_link_text": [
+          [
+            "https://scai.nu.edu.kz/phd-cs",
+            "Ph.D. in Computer Science"
+          ],
+          [
+            "https://soe.nu.edu.kz/msc_in_ece",
+            "Master of Science in Electrical and Computer Engineering"
+          ]
+        ],
+        "walker": {
+          "catalogs_walked": 2,
+          "candidates": [
+            {
+              "url": "https://scai.nu.edu.kz/bsc-cs",
+              "label": "Bachelor of Science in Computer Science",
+              "score": 23,
+              "source": "html"
+            },
+            {
+              "url": "https://scai.nu.edu.kz/bsc-rob",
+              "label": "Bachelor of Science in Robotics Engineering",
+              "score": 15,
+              "source": "html"
+            },
+            {
+              "url": "https://scai.nu.edu.kz/bsc-math",
+              "label": "Bachelor of Science in Mathematics",
+              "score": 15,
+              "source": "html"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/msc_in_ece",
+              "label": "Master of Science in Electrical and Computer Engineering",
+              "score": 14,
+              "source": "html"
+            },
+            {
+              "url": "https://ssh.nu.edu.kz/msclifesciences",
+              "label": "Master of Science in Life Sciences",
+              "score": 14,
+              "source": "html"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/msc_in_geosciences",
+              "label": "Master of Science in Geosciences",
+              "score": 14,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/sprogram/bachelor-of-arts-in-economics",
+              "label": "Bachelor of Arts in Economics",
+              "score": 13,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate",
+              "label": "Foundation & Undergraduate",
+              "score": 13,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions",
+              "label": "Foundation & Undergraduate\u2192",
+              "score": 13,
+              "source": "html"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/phd_in_geosciences",
+              "label": "Ph.D. in Geosciences",
+              "score": 10,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/financial-aid-end-scholarships",
+              "label": "Financial Aid & Scholarships",
+              "score": 9,
+              "source": "html"
+            },
+            {
+              "url": "https://gsb.nu.edu.kz/bba",
+              "label": "Bachelor of Business Administration",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/bn",
+              "label": "Bachelor in Nursing",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://ssh.nu.edu.kz/c_eas",
+              "label": "PhD in Eurasian Studies",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/msn",
+              "label": "Master of Science in Nursing",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/mph",
+              "label": "Master of Public Health",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://ssh.nu.edu.kz/bawll",
+              "label": "Bachelor of Arts in World Languages, Literature, and Culture",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://ssh.nu.edu.kz/baant",
+              "label": "Bachelor of Arts in Anthropology",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/ump",
+              "label": "6-year Undergraduate Medical Program",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/bbs",
+              "label": "Bachelor of Science in Biological Sciences",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://ssh.nu.edu.kz/nusoas",
+              "label": "Master of Arts in Global Affairs and Eurasian Studies (Joint Degree with SOAS)",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://ssh.nu.edu.kz/bapsir",
+              "label": "Bachelor of Arts in Political Science and International Relations",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://gsb.nu.edu.kz/bbaeabu",
+              "label": "Bachelor of Business Administration in Eurasian Business (Joint Degree with HKUST)",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://ssh.nu.edu.kz/mscchem",
+              "label": "Master of Science in Chemistry",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://ssh.nu.edu.kz/bscchem",
+              "label": "Bachelor of Science in Chemistry",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://gspp.nu.edu.kz/gsppmpa",
+              "label": "Master in Public Administration",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://gspp.nu.edu.kz/gsppmpp",
+              "label": "Master in Public Policy",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://ssh.nu.edu.kz/mapsirgr",
+              "label": "Master of Arts in Political Science and International Relations",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://gsb.nu.edu.kz/phd_in_ba",
+              "label": "PhD in Business Administration",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/phd_in_me",
+              "label": "PhD in Mining Engineering",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/phd_in_pe",
+              "label": "PhD in Petroleum Engineering",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://gse.nu.edu.kz/maprogram",
+              "label": "Master of Arts in Multilingual Education",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/msc_in_pe",
+              "label": "Master of Science in Petroleum Engineering",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/msc_in_me",
+              "label": "Master of Science in Mining Engineering",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/msc_in_be",
+              "label": "Master of Science in Biomedical Engineering",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://ssh.nu.edu.kz/bahistory",
+              "label": "Bachelor of Arts in History",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/phd_in_set",
+              "label": "PhD in Science, Engineering and Technology",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://ssh.nu.edu.kz/mscphysics",
+              "label": "Master of Science in Physics",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://ssh.nu.edu.kz/maeurasian",
+              "label": "Master of Arts in Eurasian Studies",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/msc_in_cee",
+              "label": "Master of Science in Civil and Environmental Engineering",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/msc_in_cme",
+              "label": "Master of Science in Chemical and Materials Engineering",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/msc_in_mae",
+              "label": "MSc in Mechanical and Aerospace Engineering",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://ssh.nu.edu.kz/bscphysics",
+              "label": "Bachelor of Science in Physics",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://gse.nu.edu.kz/mscprograms",
+              "label": "Master of Science in Educational Leadership",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://ssh.nu.edu.kz/basociology",
+              "label": "Bachelor of Arts in Sociology",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://gsb.nu.edu.kz/executivemba",
+              "label": "Executive Master of Business Administration",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/master_of_em",
+              "label": "Master of Engineering Management",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://gsb.nu.edu.kz/msc_in_finance",
+              "label": "Master of Science in Finance",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/bachelor_of_me",
+              "label": "Bachelor of Science in Mining and Minerals Engineering",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/bachelor_of_pe",
+              "label": "Bachelor of Science in Petroleum Engineering",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/bachelor_of_cme",
+              "label": "Bachelor of Engineering in Chemical and Materials Engineering",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/bachelor_of_ece",
+              "label": "Bachelor of Engineering in Electrical and Computer Engineering",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/bachelor_of_cee",
+              "label": "Bachelor of Engineering in Civil and Environmental Engineering",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/bachelor_of_mae",
+              "label": "Bachelor of Engineering in Mechanical and Aerospace Engineering",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/bachelor_of_geology",
+              "label": "Bachelor of Science in Geology",
+              "score": 6,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/how-to-apply/doctoral_institute",
+              "label": "Doctoral Institute",
+              "score": 4,
+              "source": "html"
+            },
+            {
+              "url": "https://cac.nu.edu.kz/",
+              "label": "Career and Advising Center",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://gsb.nu.edu.kz/dba",
+              "label": "Doctor of Business Administration",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nur.nu.edu.kz/home",
+              "label": "Institutional Repository",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://research.nu.edu.kz/",
+              "label": "Research Portal",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://ssh.nu.edu.kz/db_phd",
+              "label": "Ph.D. in Life Sciences",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/?s=calendar",
+              "label": "Event Calendar",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://ssh.nu.edu.kz/phd_chem",
+              "label": "Ph.D. in Chemistry",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://gspp.nu.edu.kz/gsppdpm",
+              "label": "Doctor of Public Management",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://gspp.nu.edu.kz/gsppphd",
+              "label": "Ph.D. in Public Policy",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/?s=admissions",
+              "label": "Admissions",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/phd_in_ee",
+              "label": "Ph.D. in Electrical Engineering",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/phd_in_ce",
+              "label": "Ph.D. in Civil Engineering",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://gse.nu.edu.kz/phdprogram",
+              "label": "Doctor of Philosophy in Education",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/phd_in_che",
+              "label": "Ph.D. in Chemical Engineering",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/phd_in_mae",
+              "label": "Ph.D. in Mechanical Engineering",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/programs",
+              "label": "Skip to content",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/?s=graduate+programs",
+              "label": "Graduate Programs",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/students/orientation",
+              "label": "Orientation",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/visitors/dormitories",
+              "label": "Student Housing",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/research/communities",
+              "label": "Communities",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/visitors/about-campus",
+              "label": "Campus Life",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/research/capabilities",
+              "label": "Capabilities",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/research/research-news",
+              "label": "Research Publications & News \u2192",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://regulations.nu.edu.kz/?locale=en",
+              "label": "Regulations",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/testimonials",
+              "label": "Testimonials",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/inf-media/faq-for-media",
+              "label": "FAQ for Media",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/announcements",
+              "label": "Announcements",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/doctor-of-medicine",
+              "label": "Doctor of Medicine",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/inf-media/media_resources",
+              "label": "For Media\u2192",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/inf-media/faculty_experts",
+              "label": "NU Experts",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/visitors/sports-facilities",
+              "label": "Sports Facilities",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/residency-in-urology",
+              "label": "Residency in Urology",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://ssh.nu.edu.kz/phys_graduate_programs",
+              "label": "Ph.D. in Physics",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/fees-and-funding",
+              "label": "Fees and Financial Support",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/visitors/student-facilities",
+              "label": "Campus Facilities",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/students/important-documents",
+              "label": "Important Documents",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/residency-in-radiology",
+              "label": "Residency in Radiology",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/research/research_newsletter",
+              "label": "Research Newsletter",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/residency-in-hematology",
+              "label": "Residency in Hematology",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/residency-in-psychiatry",
+              "label": "Residency in Psychiatry",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/residency-in-pediatrics",
+              "label": "Residency in Pediatrics",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/students/health-and-wellbeing",
+              "label": "Health and Wellbeing",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/research/research-administration",
+              "label": "Research Administration",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/residency-in-endocrinology",
+              "label": "Residency in Endocrinology",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/residency-in-ophthalmology",
+              "label": "Residency in Ophthalmology",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/residency-in-family-medicine",
+              "label": "Residency in Family Medicine",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/residency-in-general-surgery",
+              "label": "Residency in General Surgery",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/international-admission",
+              "label": "International Admission",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/inf-media/events-page?mode=timeline",
+              "label": "Conferences",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/students/student-support-and-rights",
+              "label": "Student Support and Rights",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/residency-in-medical-oncology",
+              "label": "Residency in Medical Oncology",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/residency-in-gastroenterology",
+              "label": "Residency in Gastroenterology",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/students/student-organization-clubs",
+              "label": "Student Organizations & Clubs",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/residency-in-pediatric-surgery",
+              "label": "Residency in Pediatric Surgery",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/residency-in-internal-medicine",
+              "label": "Residency in Internal Medicine",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/residency-in-anatomic-pathology",
+              "label": "Residency in Anatomic Pathology",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/students/academic-mobility-and-career",
+              "label": "Academic Mobility & Career",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/useful-information-and-contacts",
+              "label": "Useful Information and Contacts",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/residency-in-obstetrics-and-gynecology",
+              "label": "Residency in Obstetrics and Gynecology",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/residency-in-orthopaedics-and-traumatology",
+              "label": "Residency in Orthopaedics and Traumatology",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/about/governance-strategy/administration/leadership",
+              "label": "Administration \u2192",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/residency-in-anesthesiology-and-critical-care",
+              "label": "Residency in Anesthesiology and Critical Care",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/students/academic-mobility-and-career/summer-schools",
+              "label": "Summer Schools",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/students/disability-and-special-learning-needs-support",
+              "label": "Disability & Learning Needs",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/students/academic-mobility-and-career/academic_mobility",
+              "label": "Academic Mobility & Career\u2192",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/students/academic-mobility-and-career/outgoing-students",
+              "label": "Outgoing Students",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/students/academic-mobility-and-career/incoming-students",
+              "label": "Incoming Students",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/students/academic-mobility-and-career/jobs-and-mentoring",
+              "label": "Jobs and Mentoring",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/about/governance-strategy/administration/managing-council",
+              "label": "Managing Council",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/students/academic-mobility-and-career/students-testimonials",
+              "label": "Feedback from Exchange Students:",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/research/the-office-of-research-compliance-and-integrity-orci",
+              "label": "The Office of Research Compliance and Integrity",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/about/governance-strategy/administration/office-of-the-provost",
+              "label": "Office of the Provost",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/about/governance-strategy/administration/administrative-structure",
+              "label": "Administrative Structure",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/other/procurement",
+              "label": "Procurement",
+              "score": 0,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/about/affiliations",
+              "label": "Affiliations",
+              "score": 0,
+              "source": "html"
+            },
+            {
+              "url": "https://my.nu.edu.kz/wps/myportal/student",
+              "label": "Student Portal",
+              "score": 0,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/other/commercial-services",
+              "label": "Commercial Services",
+              "score": 0,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/academics/academic-programs",
+              "label": "Academic Programs",
+              "score": 0,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/academics/academic-services",
+              "label": "Academic Services",
+              "score": 0,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/about/work-at-nu/jobs-at-nu",
+              "label": "Jobs at NU",
+              "score": 0,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/about/university-achievements",
+              "label": "University Achievements",
+              "score": 0,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/about/history-of-the-university",
+              "label": "History of the University",
+              "score": 0,
+              "source": "html"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/ru/residency-in-neurology",
+              "label": "Residency in Neurology",
+              "score": 0,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/about/partners/strategic-partners",
+              "label": "\u0421ooperation \u2192",
+              "score": 0,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/academics/academic-quality-framework",
+              "label": "Quality Framework",
+              "score": 0,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/about/governance-strategy/governance",
+              "label": "Governance",
+              "score": 0,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/research/capabilities/core-facilities",
+              "label": "Capabilities \u2192",
+              "score": 0,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/research/communities/student-research",
+              "label": "Student Research",
+              "score": 0,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/research/capabilities/research-groups",
+              "label": "Research Groups",
+              "score": 0,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/research/communities/research-profiles",
+              "label": "Communities \u2192",
+              "score": 0,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/research/capabilities/research-centers",
+              "label": "Research Centers of Excellence",
+              "score": 0,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/research/capabilities/research-funding",
+              "label": "Funding Opportunities",
+              "score": 0,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/about/partners/for-prospective-partners",
+              "label": "Partners \u2192",
+              "score": 0,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/research/areas/interdisciplinary-research",
+              "label": "Interdisciplinary Research",
+              "score": 0,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/about/university-achievements/facts-figures",
+              "label": "Facts & Figures",
+              "score": 0,
+              "source": "html"
+            },
+            {
+              "url": "https://registrar.nu.edu.kz/quick-links/academic-year-2025-2026",
+              "label": "Academic Calendar",
+              "score": 0,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/students/student-organization-clubs/student-clubs",
+              "label": "Student Clubs",
+              "score": 0,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/other/frequently-asked-questions/student-mobility",
+              "label": "Frequently Asked Questions",
+              "score": 0,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/about/university-achievements/distinguished-guests",
+              "label": "Distinguished Guests",
+              "score": 0,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/about/university-achievements/ranking-accreditation",
+              "label": "University Achievements \u2192",
+              "score": 0,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/about/university-achievements/students-achievements",
+              "label": "Students\u2019 Achievements",
+              "score": 0,
+              "source": "html"
+            },
+            {
+              "url": "https://nur.nu.edu.kz/collections/fd2989d1-e4eb-4f6a-9e80-412a1a6ac720",
+              "label": "Institutional Repository",
+              "score": 0,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/students/student-organization-clubs/student_government",
+              "label": "Student Organizations & Clubs\u2192",
+              "score": 0,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/students/health-and-wellbeing/university-medical-center",
+              "label": "Medical Services on Campus",
+              "score": 0,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/about/governance-strategy/strategic-goals-vision-mission",
+              "label": "Strategy & Reports",
+              "score": 0,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/students/health-and-wellbeing/psychologist_consultations",
+              "label": "Health and Wellbeing\u2192",
+              "score": 0,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/international-admission/moving-and-adaptation",
+              "label": "Moving and Adaptation",
+              "score": 0,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/international-admission/visa-and-accommodation",
+              "label": "Visa and Documents",
+              "score": 0,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/useful-information-and-contacts/statistics-faq",
+              "label": "Statistics",
+              "score": 0,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/useful-information-and-contacts/useful-information",
+              "label": "Useful Information",
+              "score": 0,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/international-admission/international-admission_general",
+              "label": "International Admission \u2192",
+              "score": 0,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/useful-information-and-contacts/applicants-support-center",
+              "label": "Useful Information and Contacts\u2192",
+              "score": 0,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate",
+              "label": "Foundation & Undergraduate",
+              "score": 13,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions",
+              "label": "Foundation & Undergraduate\u2192",
+              "score": 13,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/financial-aid-end-scholarships",
+              "label": "Financial Aid & Scholarships",
+              "score": 9,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/how-to-apply/doctoral_institute",
+              "label": "Doctoral Institute",
+              "score": 4,
+              "source": "html"
+            },
+            {
+              "url": "https://cac.nu.edu.kz/",
+              "label": "Career and Advising Center",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://open.nu.edu.kz/",
+              "label": "open.nu.edu.kz",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "http://venues.nu.edu.kz/",
+              "label": "Venue Rental",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nur.nu.edu.kz/home",
+              "label": "Institutional Repository",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://research.nu.edu.kz/",
+              "label": "Research Portal",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/?s=calendar",
+              "label": "Event Calendar",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/?s=admissions",
+              "label": "Admissions",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/programs",
+              "label": "All Programs (A-Z)",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/?s=graduate+programs",
+              "label": "Graduate Programs",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/students/orientation",
+              "label": "Orientation",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/visitors/dormitories",
+              "label": "Student Housing",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/research/communities",
+              "label": "Communities",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/visitors/about-campus",
+              "label": "Campus Life",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/research/capabilities",
+              "label": "Capabilities",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/research/research-news",
+              "label": "Research Publications & News \u2192",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://regulations.nu.edu.kz/?locale=en",
+              "label": "Regulations",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/testimonials",
+              "label": "Testimonials",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/inf-media/faq-for-media",
+              "label": "FAQ for Media",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/announcements",
+              "label": "Announcements",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/inf-media/media_resources",
+              "label": "For Media\u2192",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/inf-media/faculty_experts",
+              "label": "NU Experts",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://regulations.nu.edu.kz/?locale=en%20",
+              "label": "Regulations",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/visitors/sports-facilities",
+              "label": "Sports Facilities",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/fees-and-funding",
+              "label": "Fees and Financial Support",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/visitors/student-facilities",
+              "label": "Campus Facilities",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/students/important-documents",
+              "label": "Important Documents",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/research/research_newsletter",
+              "label": "Research Newsletter",
+              "score": 2,
+              "source": "html"
+            },
+            {
+              "url": "https://nu.edu.kz/students/health-and-wellbeing",
+              "label": "Health and Wellbeing",
+              "score": 2,
+              "source": "html"
+            }
+          ],
+          "programs_confirmed": 9,
+          "outcomes": [
+            {
+              "url": "https://www.instagram.com/nuedukz",
+              "outcome": "off_domain"
+            },
+            {
+              "url": "https://www.facebook.com/nuedukz",
+              "outcome": "off_domain"
+            },
+            {
+              "url": "https://t.me/nu_edu_kz",
+              "outcome": "off_domain"
+            },
+            {
+              "url": "https://www.youtube.com/user/NazarbayevUniversity",
+              "outcome": "off_domain"
+            },
+            {
+              "url": "https://www.linkedin.com/company/aoe-nazarbayev-university/posts?feedView=all",
+              "outcome": "off_domain"
+            },
+            {
+              "url": "https://twitter.com/nuedukz",
+              "outcome": "off_domain"
+            },
+            {
+              "url": "https://wa.me/77470940230?text=\u0417\u0434\u0440\u0430\u0432\u0441\u0442\u0432\u0443\u0439\u0442\u0435!%20\u0425\u043e\u0447\u0443%20\u0443\u0437\u043d\u0430\u0442\u044c%20\u043f\u043e\u0434\u0440\u043e\u0431\u043d\u0435\u0435.",
+              "outcome": "off_domain"
+            },
+            {
+              "url": "https://www.tiktok.com/discover/%D0%BD%D0%B0%D0%B7%D0%B0%D1%80%D0%B1%D0%B0%D0%B5%D0%B2-%D1%83%D0%BD%D0%B8%D0%B2%D0%B5%D1%80",
+              "outcome": "off_domain"
+            },
+            {
+              "url": "https://www.instagram.com/nuedukz",
+              "outcome": "off_domain"
+            },
+            {
+              "url": "https://www.facebook.com/nuedukz",
+              "outcome": "off_domain"
+            },
+            {
+              "url": "https://t.me/nu_edu_kz",
+              "outcome": "off_domain"
+            },
+            {
+              "url": "https://www.youtube.com/user/NazarbayevUniversity",
+              "outcome": "off_domain"
+            },
+            {
+              "url": "https://www.linkedin.com/company/aoe-nazarbayev-university/posts?feedView=all",
+              "outcome": "off_domain"
+            },
+            {
+              "url": "https://twitter.com/nuedukz",
+              "outcome": "off_domain"
+            },
+            {
+              "url": "https://wa.me/77470940230?text=\u0417\u0434\u0440\u0430\u0432\u0441\u0442\u0432\u0443\u0439\u0442\u0435!%20\u0425\u043e\u0447\u0443%20\u0443\u0437\u043d\u0430\u0442\u044c%20\u043f\u043e\u0434\u0440\u043e\u0431\u043d\u0435\u0435.",
+              "outcome": "off_domain"
+            },
+            {
+              "url": "https://www.tiktok.com/discover/%D0%BD%D0%B0%D0%B7%D0%B0%D1%80%D0%B1%D0%B0%D0%B5%D0%B2-%D1%83%D0%BD%D0%B8%D0%B2%D0%B5%D1%80",
+              "outcome": "off_domain"
+            },
+            {
+              "url": "https://nu.edu.kz/",
+              "outcome": "short_label"
+            },
+            {
+              "url": "https://nu.edu.kz/qabyldau/barlyq-baghdarlamar",
+              "outcome": "short_label"
+            },
+            {
+              "url": "https://nu.edu.kz/postuplenie-2/vse-programmy",
+              "outcome": "short_label"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/how-to-apply/masters/regular-admissions-masters",
+              "outcome": "short_label"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/how-to-apply/doctoral_institute/regular-admissions-phd",
+              "outcome": "degree_level_mismatch"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/how-to-apply/residency/admissions-residency",
+              "outcome": "short_label"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/why-nu",
+              "outcome": "short_label"
+            },
+            {
+              "url": "https://nu.edu.kz/academics/schools",
+              "outcome": "short_label"
+            },
+            {
+              "url": "https://nu.edu.kz/research/areas/research-priorities",
+              "outcome": "short_label"
+            },
+            {
+              "url": "https://nu.edu.kz/about/contacts",
+              "outcome": "short_label"
+            },
+            {
+              "url": "https://nu.edu.kz/inf-media/nu-news",
+              "outcome": "short_label"
+            },
+            {
+              "url": "https://nu.edu.kz/inf-media/events-page",
+              "outcome": "short_label"
+            },
+            {
+              "url": "https://nu.edu.kz/visitors/eateries",
+              "outcome": "short_label"
+            },
+            {
+              "url": "https://nu.edu.kz/information-for-alumni",
+              "outcome": "short_label"
+            },
+            {
+              "url": "https://admissions.nu.edu.kz/",
+              "outcome": "short_label"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/how-to-apply/phd/regular-admissions-phd",
+              "outcome": "short_label"
+            },
+            {
+              "url": "https://scai.nu.edu.kz/phd-math",
+              "outcome": "degree_level_mismatch"
+            },
+            {
+              "url": "https://scai.nu.edu.kz/phd-cs",
+              "outcome": "degree_level_mismatch"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/phd-in-global-health",
+              "outcome": "degree_level_mismatch"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/phd-in-biomedical-sciences",
+              "outcome": "degree_level_mismatch"
+            },
+            {
+              "url": "https://scai.nu.edu.kz/phd-rob",
+              "outcome": "degree_level_mismatch"
+            },
+            {
+              "url": "https://scai.nu.edu.kz/msc-math",
+              "outcome": "degree_level_mismatch"
+            },
+            {
+              "url": "https://scai.nu.edu.kz/msc-ai",
+              "outcome": "degree_level_mismatch"
+            },
+            {
+              "url": "https://scai.nu.edu.kz/msc-ds",
+              "outcome": "degree_level_mismatch"
+            },
+            {
+              "url": "https://scai.nu.edu.kz/msc-cs",
+              "outcome": "degree_level_mismatch"
+            },
+            {
+              "url": "https://gsb.nu.edu.kz/mba",
+              "outcome": "degree_level_mismatch"
+            },
+            {
+              "url": "https://nu.edu.kz/sprogram/master-of-arts-in-economics",
+              "outcome": "degree_level_mismatch"
+            },
+            {
+              "url": "https://scai.nu.edu.kz/msc-rob",
+              "outcome": "degree_level_mismatch"
+            },
+            {
+              "url": "https://cps.nu.edu.kz/foundation",
+              "outcome": "degree_level_mismatch"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/how-to-apply/masters",
+              "outcome": "short_label"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/how-to-apply/masters/financial-aid-end-scholarships-masters",
+              "outcome": "degree_level_mismatch"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/how-to-apply/doctoral_institute/financial-aid-scholarships-phd",
+              "outcome": "degree_level_mismatch"
+            },
+            {
+              "url": "https://nu.edu.kz/research/areas",
+              "outcome": "short_label"
+            },
+            {
+              "url": "https://nu.edu.kz/about/governance-strategy/administration/president",
+              "outcome": "short_label"
+            },
+            {
+              "url": "https://registrar.nu.edu.kz/",
+              "outcome": "short_label"
+            },
+            {
+              "url": "https://library.nu.edu.kz/",
+              "outcome": "short_label"
+            },
+            {
+              "url": "https://my.nu.edu.kz/wps/portal/hidden/login/!ut/p/b1/04_Sj9CPykssy0xPLMnMz0vMAfGjzOKd3R09TMx9DAwsfNxNDTwdPUKDLAONjQ1czYEKIoEKDHAARwNC-sP1o_AqCTSBKsBjhZ9Hfm6qfkFuhEGWiaMiAFWLnI8!/dl4/d5/L2dBISEvZ0FBIS9nQSEh",
+              "outcome": "excluded_url"
+            },
+            {
+              "url": "https://ssh.nu.edu.kz/nusoas",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://ssh.nu.edu.kz/bapsir",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://gsb.nu.edu.kz/bbaeabu",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://ssh.nu.edu.kz/mscchem",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://ssh.nu.edu.kz/bscchem",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://gspp.nu.edu.kz/gsppmpa",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://gspp.nu.edu.kz/gsppmpp",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://ssh.nu.edu.kz/mapsirgr",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://gsb.nu.edu.kz/phd_in_ba",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/phd_in_me",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/phd_in_pe",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://gse.nu.edu.kz/maprogram",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/msc_in_pe",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/msc_in_me",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/msc_in_be",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://ssh.nu.edu.kz/bahistory",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/phd_in_set",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://ssh.nu.edu.kz/mscphysics",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://ssh.nu.edu.kz/maeurasian",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/msc_in_cee",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/msc_in_cme",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/msc_in_mae",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://ssh.nu.edu.kz/bscphysics",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://gse.nu.edu.kz/mscprograms",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://ssh.nu.edu.kz/basociology",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://gsb.nu.edu.kz/executivemba",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/master_of_em",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://gsb.nu.edu.kz/msc_in_finance",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/bachelor_of_me",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/bachelor_of_pe",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/bachelor_of_cme",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/bachelor_of_ece",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/bachelor_of_cee",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/bachelor_of_mae",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/bachelor_of_geology",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/how-to-apply/doctoral_institute",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://cac.nu.edu.kz/",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://gsb.nu.edu.kz/dba",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nur.nu.edu.kz/home",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://research.nu.edu.kz/",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://ssh.nu.edu.kz/db_phd",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/?s=calendar",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://ssh.nu.edu.kz/phd_chem",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://gspp.nu.edu.kz/gsppdpm",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://gspp.nu.edu.kz/gsppphd",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/?s=admissions",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/phd_in_ee",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/phd_in_ce",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://gse.nu.edu.kz/phdprogram",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/phd_in_che",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://soe.nu.edu.kz/phd_in_mae",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/programs",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/?s=graduate+programs",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/students/orientation",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/visitors/dormitories",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/research/communities",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/visitors/about-campus",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/research/capabilities",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/research/research-news",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://regulations.nu.edu.kz/?locale=en",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/testimonials",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/inf-media/faq-for-media",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/announcements",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/doctor-of-medicine",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/inf-media/media_resources",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/inf-media/faculty_experts",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/visitors/sports-facilities",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/residency-in-urology",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://ssh.nu.edu.kz/phys_graduate_programs",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/fees-and-funding",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/visitors/student-facilities",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/students/important-documents",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/residency-in-radiology",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/research/research_newsletter",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/residency-in-hematology",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/residency-in-psychiatry",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/residency-in-pediatrics",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/students/health-and-wellbeing",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/research/research-administration",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/residency-in-endocrinology",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/residency-in-ophthalmology",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/residency-in-family-medicine",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/residency-in-general-surgery",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/international-admission",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/inf-media/events-page?mode=timeline",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/students/student-support-and-rights",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/residency-in-medical-oncology",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/residency-in-gastroenterology",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/students/student-organization-clubs",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/residency-in-pediatric-surgery",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/residency-in-internal-medicine",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/residency-in-anatomic-pathology",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/students/academic-mobility-and-career",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/useful-information-and-contacts",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/residency-in-obstetrics-and-gynecology",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/residency-in-orthopaedics-and-traumatology",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/about/governance-strategy/administration/leadership",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/residency-in-anesthesiology-and-critical-care",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/students/academic-mobility-and-career/summer-schools",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/students/disability-and-special-learning-needs-support",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/students/academic-mobility-and-career/academic_mobility",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/students/academic-mobility-and-career/outgoing-students",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/students/academic-mobility-and-career/incoming-students",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/students/academic-mobility-and-career/jobs-and-mentoring",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/about/governance-strategy/administration/managing-council",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/students/academic-mobility-and-career/students-testimonials",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/research/the-office-of-research-compliance-and-integrity-orci",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/about/governance-strategy/administration/office-of-the-provost",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/about/governance-strategy/administration/administrative-structure",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/other/procurement",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/about/affiliations",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://my.nu.edu.kz/wps/myportal/student",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/other/commercial-services",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/academics/academic-programs",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/academics/academic-services",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/about/work-at-nu/jobs-at-nu",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/about/university-achievements",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/about/history-of-the-university",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nusom.nu.edu.kz/ru/residency-in-neurology",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/about/partners/strategic-partners",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/academics/academic-quality-framework",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/about/governance-strategy/governance",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/research/capabilities/core-facilities",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/research/communities/student-research",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/research/capabilities/research-groups",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/research/communities/research-profiles",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/research/capabilities/research-centers",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/research/capabilities/research-funding",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/about/partners/for-prospective-partners",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/research/areas/interdisciplinary-research",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/about/university-achievements/facts-figures",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://registrar.nu.edu.kz/quick-links/academic-year-2025-2026",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/students/student-organization-clubs/student-clubs",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/other/frequently-asked-questions/student-mobility",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/about/university-achievements/distinguished-guests",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/about/university-achievements/ranking-accreditation",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/about/university-achievements/students-achievements",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nur.nu.edu.kz/collections/fd2989d1-e4eb-4f6a-9e80-412a1a6ac720",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/students/student-organization-clubs/student_government",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/students/health-and-wellbeing/university-medical-center",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/about/governance-strategy/strategic-goals-vision-mission",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/students/health-and-wellbeing/psychologist_consultations",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/international-admission/moving-and-adaptation",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/international-admission/visa-and-accommodation",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/useful-information-and-contacts/statistics-faq",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/useful-information-and-contacts/useful-information",
+              "outcome": "walker_budget_exhausted"
+            },
+            {
+              "url": "https://nu.edu.kz/admissions/international-admission/international-admission_general",
+              "outcome": "walker_budget_exhausted"
+            }
+          ]
+        }
+      },
+      "programs": [
+        "https://scai.nu.edu.kz/bsc-cs",
+        "https://scai.nu.edu.kz/bsc-rob",
+        "https://scai.nu.edu.kz/bsc-math"
+      ],
+      "program_page_found": true,
+      "scholarship_page_found": true,
+      "discovery_notes": "Sitemap-first discovery found: program_catalog, program_page, admissions, scholarships. Not found: costs, documents.",
+      "claims": 0,
+      "claims_verified": 0,
+      "completeness": 0.0,
+      "eligibility": "NEEDS_OFFICIAL_CLARIFICATION",
+      "funding_fit": "UNKNOWN",
+      "scholarships_found": 0,
+      "false_positives": [],
+      "page_outcomes": {
+        "fetched-ok": 1,
+        "no-pattern-match": 3
+      },
+      "page_types": {
+        "program_detail": 2,
+        "general_admissions": 2
+      },
+      "page_diagnostics": [
+        {
+          "category": "fetched-ok",
+          "url": "https://scai.nu.edu.kz/bsc-cs",
+          "page_type": "program_detail",
+          "characters": "89374",
+          "detail": "1 claims read from this page"
+        },
+        {
+          "category": "no-pattern-match",
+          "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions",
+          "page_type": "general_admissions",
+          "characters": "42",
+          "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed"
+        },
+        {
+          "category": "no-pattern-match",
+          "url": "https://scai.nu.edu.kz/bsc-rob",
+          "page_type": "program_detail",
+          "characters": "47736",
+          "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed"
+        },
+        {
+          "category": "no-pattern-match",
+          "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions",
+          "page_type": "general_admissions",
+          "characters": "42",
+          "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed"
+        }
+      ]
+    }
+  ],
+  "totals": {
+    "institutions": 1,
+    "reached": 0,
+    "blocked": 1,
+    "program_pages_found": 1,
+    "scholarship_pages_found": 1,
+    "claims": 0,
+    "false_positives": 0,
+    "page_outcomes": {
+      "fetched-ok": 1,
+      "no-pattern-match": 3
+    },
+    "page_types": {
+      "program_detail": 2,
+      "general_admissions": 2
+    }
+  }
+}

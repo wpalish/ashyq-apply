@@ -46,20 +46,20 @@
       "one heavy-test slot; integrator single; shared files serialized"
     ]
   },
-  "active_reservations": {
-    "financial-contract": "T04/A1",
-    "costs": "T04/A1",
-    "shared-types": "T04/A1",
-    "frontend-store": "T09/A1",
-    "profile-ui": "T09/A1",
-    "frontend-e2e": "T09/A1",
-    "runner": "T10/A1",
-    "job-store": "T10/A1",
-    "worker": "T10/A1",
-    "worker-tests": "T10/A1"
-  },
+  "active_reservations": {},
   "integration_slot_owner": null,
   "heavy_test_slot_owner": null,
+  "campaign_c2_progress": {
+    "integration_head": "5c4293413f7c8f2732f57c3b48fdf0bfab629ee9 (ai/c2/integration; T16+T28+T27+T29+T32 + T29 production wiring + T30 measurable harness + HKU parser repair)",
+    "sprint1_complete": "2026-09-08: T16, T28, T27 (A2 repair), T29/T29-R2, T32 (A2 security repair + A3 FE sync) integrated; T30 KPI measurement completed, registry expansion remains partial",
+    "combined_gates_final": "FULL pytest zero failures, cov 93.81% (threshold 92); mypy 0/164; ruff clean; FE typecheck/lint/vitest 182/build clean; Playwright ordinary 75 passed + 1 intentional skip and auth 6/6; pip-audit and npm audit --omit=dev found 0 known vulnerabilities; alembic single head d9c4e7a21b83; demo migration+seed 20 results / 96 pages / 414 claims",
+    "next_up": [
+      "T26 — BLOCKED_SCOPE_CONTRACT: promised News source-to-UI vertical slice cannot fit the current model/domain/runner-only allowed paths; authorize an expanded contract or explicitly reduce acceptance to storage-only",
+      "T30 registry 19→60 — PARTIAL: KPI canary complete at 7/10 and 26/30 with 0 material FP; 41 additional institutions require an approved candidate list and per-batch validation",
+      "T31 — BLOCKED ON OWNER: LLM provider/keys decision"
+    ],
+    "publication": "BRANCH PUSHED by explicit owner authorization: origin/ai/c2/integration through 5c42934; PR pending final evidence commit; protected-main merge and application deploy NOT DONE"
+  },
   "heavy_test_slot_policy": "1 slot total: full pytest --cov suites are serialized by the dispatcher on request; target-scope runs may run in parallel",
   "worktrees": {
     "c1-t01-qa": "branch ai/c1/t01/qa @ 7083f17ce9ff6b198461fdf1cf9f5f973bcb13f2 (QA TEST_AUTHOR)",
@@ -81,7 +81,7 @@
   },
   "tasks": {
     "T25": {
-      "status": "BACKLOG",
+      "status": "BLOCKED",
       "title": "search_web adapter + capability config (BLOCKED without key)",
       "findings": ["L01"],
       "priority": "P1",
@@ -89,18 +89,628 @@
       "allowed_paths": ["backend/app/adapters/**", "backend/app/config.py", "backend/tests/test_search*.py"],
       "required_roles": ["ashyq-planner", "ashyq-developer", "ashyq-qa", "ashyq-reviewer", "ashyq-security"],
       "dependencies": ["T16", "T18"],
-      "reason_added": "master prompt sections 6/8: replaceable search provider adapter; BLOCKED-not-silent without API key; after T18 to avoid adapters write conflict"
+      "reason_added": "master prompt sections 6/8: replaceable search provider adapter; BLOCKED-not-silent without API key; after T18 to avoid adapters write conflict",
+      "disposition_2026_09_07": "ЗАМОРОЖЕНА решением владельца (ключей нет): SEARCH2 (T29 catalog_walker) даёт recall без поискового провайдера. Вернуться, только если каталоговый путь не достигнет цели; тихий переход на платный API запрещён"
     },
     "T26": {
-      "status": "BACKLOG",
-      "title": "News/SourceChange layer (master prompt stage 3)",
+      "status": "BLOCKED_SCOPE_CONTRACT",
+      "title": "News-слой (сужено 2026-09-07; SourceChange/SUPERSEDED перенесён в T32)",
       "findings": ["L01"],
       "priority": "P1",
-      "locks": ["runner", "migrations", "news-corpus"],
-      "allowed_paths": ["backend/app/models/**", "backend/app/pipeline/runner.py", "backend/app/domain/**", "backend/migrations/versions/*.py", "backend/tests/test_news*.py"],
+      "locks": ["news-models", "migrations", "runner"],
+      "allowed_paths": ["backend/app/models/**", "backend/app/domain/**", "backend/app/pipeline/runner.py", "backend/migrations/versions/*.py", "backend/tests/test_news*.py"],
       "required_roles": ["ashyq-planner", "ashyq-developer", "ashyq-qa", "ashyq-reviewer", "ashyq-security"],
-      "dependencies": ["T11", "T13", "T18"],
-      "reason_added": "master prompt sections 4/19: dated NewsEvent/SourceChange with applicability/conflicts/source-diff; no existing card covers it"
+      "dependencies": ["T28", "T32"],
+      "reason_added": "master prompt sections 4/19; scope narrowed per SEARCH2_REVIEW: SourceChange-контур забирает T32, здесь только dated NewsEvent",
+      "contract_audit_2026_09_08": "BLOCKED: acceptance promises a source-to-user News layer, but allowed_paths contain no ingestion adapter, API schema/route, or frontend. Implementing only an empty NewsEvent table would be misleading. Required owner/product choice: expand the frozen scope for a vertical slice, or explicitly accept a storage-only foundation.",
+      "artifact": "outputs/c2-t26-a0/contract-audit.md"
+    },
+    "T30": {
+      "status": "PARTIAL_VERIFIED",
+      "title": "Канар program-recall + реестр 19→60 (внешние прогоны только с разрешения владельца)",
+      "findings": ["L01"],
+      "priority": "P1",
+      "locks": ["live-corpus", "discovery-tests"],
+      "allowed_paths": ["backend/scripts/canary_discovery.py", "backend/app/adapters/discovery/institution_registry.json", "docs/LIVE_DISCOVERY_REPORT.md", "backend/tests/test_canary_checks.py"],
+      "required_roles": ["ashyq-planner", "ashyq-developer", "ashyq-qa", "ashyq-reviewer", "ashyq-security"],
+      "dependencies": ["T27", "T28", "T29"],
+      "reason_added": "SEARCH2_DESIGN §2.1/§6.1: измеримый результат спринта 1 (цель ≥7/10 program recall, 0 FP); каждый батч живых прогонов требует явного разрешения владельца (одобрен один bounded NU-run)",
+      "authorization_2026_09_08": "Owner instructed Codex to perform what GLM requested; recorded as authorization for two bounded batches only: Groningen/Delft/Aalto/Vienna/Warsaw and UBC/Toronto/HKU/NTU/KAIST. No further live batch is authorized.",
+      "implementation": {
+        "t29_wiring_sha": "8d2fa1051c1ee8afdbb627d9cffd2056c8a2c78c",
+        "harness_sha": "388ae9816da719426f43253836009900bd3ac903",
+        "catalogue_repair_sha": "5c4293413f7c8f2732f57c3b48fdf0bfab629ee9",
+        "red_green": "T29 wiring 4 failed/1 passed -> 5 passed; T30 harness 3 RED -> 3 passed; malformed catalogue minimal regression RED -> related suite 205 passed"
+      },
+      "live_batches": [
+        {
+          "id": "batch-1",
+          "institutions": ["Groningen", "Delft", "Aalto", "Vienna", "Warsaw"],
+          "program_recall": "3/5",
+          "category_recall": "13/15",
+          "material_false_positives": 0,
+          "duration_seconds": 638.3,
+          "artifact": "outputs/c2-t30-a1/live/batch-1/canary-2026-09-08T035539Z.json"
+        },
+        {
+          "id": "batch-2",
+          "institutions": ["UBC", "Toronto", "HKU", "NTU", "KAIST"],
+          "program_recall": "4/5",
+          "category_recall": "13/15",
+          "material_false_positives": 0,
+          "duration_seconds": 681.6,
+          "artifact": "outputs/c2-t30-a1/live/batch-2/canary-2026-09-08T040644Z.json"
+        }
+      ],
+      "measured_total": "program recall 7/10; category recall 26/30; 0 material FP; 481 HTTP + 14 browser + 1 PDF reads; 15 catalogues walked; 20 programme leads confirmed; 239 SourcePage rows; 1319.9 seconds",
+      "registry_status": "PARTIAL: institution_registry.json remains at 19. No 41-entry human-checked official candidate set was supplied or validated, and T30 forbids adding an institution until a canary proves at least 2/4 categories. 19→60 is not claimed.",
+      "process_note": "Executed directly by Codex under the current no-subagent system constraint; no role invocation IDs or acceptance packet were fabricated. Evidence is the committed tests, raw reports, full gates and live artifacts."
+    },
+    "T31": {
+      "status": "BLOCKED",
+      "title": "T2: LLM-экстракция в shadow-режиме (Спринт 2 SEARCH2) — BLOCKED на провайдера/ключи/ack",
+      "findings": ["L01"],
+      "priority": "P1",
+      "locks": ["extraction-llm", "prompts"],
+      "allowed_paths": ["backend/app/adapters/extraction_llm.py", "backend/prompts/**", "backend/app/config.py", "backend/tests/test_extraction_llm.py"],
+      "required_roles": ["ashyq-planner", "ashyq-developer", "ashyq-qa", "ashyq-reviewer", "ashyq-security"],
+      "dependencies": ["T27", "T28"],
+      "reason_added": "SEARCH2_DESIGN §3.3 sprint 2: ClaimExtractor + промпт v1 + shadow; разблокировка — решение владельца о провайдере и секретах вне Git; DATA_POLICY_ACK гейт обязателен"
+    },
+    "T27": {
+      "status": "DONE_LOCAL_INTEGRATION",
+      "findings": ["L01"],
+      "priority": "P1",
+      "campaign": "c2",
+      "attempt": "A2 (repair cycle after A1 CHANGES_REQUESTED)",
+      "baseline_sha": "28d729ca76cdf8d52344517a8316e2e805099d11",
+      "qa_commit_sha": "d8553e19cf7d5d5236c5f74b7ffc55f436d66a00 (A1) + c823d728179c59d5c1dbb235db517c181b8a6b8f (A2)",
+      "candidate_sha": "da836a20167a0186e8681e58a3ec29356bfc040b",
+      "combined_sha": "2ed4f51e1d5c1fae3f4cb36ad64982eb67184a2d (no-ff merge of da836a2 onto b087b9d; dispatcher-authorized, c1 precedent; zero conflicts)",
+      "locks": ["extraction", "domain-contract"],
+      "allowed_paths": ["backend/app/domain/claim_verifier.py", "backend/app/adapters/extraction.py", "backend/app/adapters/requirements/web_requirements.py", "backend/tests/test_claim_verifier.py", "backend/tests/test_live_regressions.py", "backend/tests/fixtures/live_shapes/**"],
+      "required_roles": ["ashyq-planner", "ashyq-developer", "ashyq-qa", "ashyq-reviewer", "ashyq-security"],
+      "worktree_qa": "/Users/wpalish/ashyq-worktrees/c2-t27-qa (ai/c2/t27/qa)",
+      "worktree_dev": "/Users/wpalish/ashyq-worktrees/c2-t27-dev (ai/c2/t27/dev)",
+      "worktree_qa_a2": "/Users/wpalish/ashyq-worktrees/c2-t27-qa-a2 (ai/c2/t27/qa-a2)",
+      "worktree_dev_a2": "/Users/wpalish/ashyq-worktrees/c2-t27-dev-a2 (ai/c2/t27/dev-a2)",
+      "worktree_verify": "/Users/wpalish/ashyq-worktrees/c2-t27-verify + c2-t27-verify-a2",
+      "outputs_dir": "ai-team/outputs/c2-t27-a1",
+      "chain": "28d729c -> d8553e1 (QA A1 RED 7+ImportError) -> 51f211d (A1 cand) -> c823d72 (QA A2 RED x6) -> da836a2 (A2 cand) -> merge 2ed4f51",
+      "repair_history": "A1 reviewer CHANGES_REQUESTED: blocking F1 multi-part public suffix table divergence -> sibling-institution spoof (pw.edu.pl matched uw.edu.pl). A2: table widened 13->59 + discovery-subset guard + E2E pin; reviewer F1 CLOSED; security monotonicity argument (no entry loosens a correct rejection); corpus blast radius exactly 3 domains all fix-direction",
+      "invocations": {
+        "planner": {
+          "ref": "agent_9ed8a437-0b1e-451e-a333-be7a353a486b",
+          "status": "PLANNED",
+          "artifact": "outputs/c2-t27-a1/planner.md",
+          "contract_frozen": true
+        },
+        "qa_test_author_a1": {
+          "ref": "agent_8222ea98-9055-4a1c-8f85-3e6c8796f3a6",
+          "phase": "TEST_AUTHOR",
+          "status": "TESTS_READY",
+          "artifact": "outputs/c2-t27-a1/qa-test-author.md",
+          "qa_commit_sha": "d8553e19cf7d5d5236c5f74b7ffc55f436d66a00",
+          "red": "7 assertion-RED + ImportError contract tests (fee-waiver negation x2, $50 tuition trap x2, domain spoof x3)"
+        },
+        "developer_a1": {
+          "ref": "agent_2b1fb56c-be2c-4a9e-9bfe-a7e2a4aa7dcc",
+          "status": "IMPLEMENTED",
+          "artifact": "outputs/c2-t27-a1/developer.md",
+          "candidate_sha": "51f211d9d1159f0e255f307dc707872ddd3a1f30"
+        },
+        "qa_verify_a1": {
+          "ref": "agent_e6aeb542-4cd7-498e-ad27-68aac7ac537b",
+          "phase": "VERIFY_CANDIDATE",
+          "status": "VERIFIED_PASS",
+          "artifact": "outputs/c2-t27-a1/qa-verify-candidate.md",
+          "checked_sha": "51f211d9d1159f0e255f307dc707872ddd3a1f30",
+          "adjudication": "casefold seam deviation ACCEPT (frozen test pair provably in tension; letter-identity-only folding; HANDOFF §8 entry required)"
+        },
+        "reviewer_a1": {
+          "ref": "agent_dd798f31-fb3f-41ca-8f4e-d238fc2dc6ea",
+          "verdict": "CHANGES_REQUESTED",
+          "artifact": "outputs/c2-t27-a1/reviews.md",
+          "blocking": "F1 suffix table divergence -> sibling-institution VERIFIED_CURRENT"
+        },
+        "security_a1": {
+          "ref": "agent_7e363309-baff-4dc3-abcb-bd6d0d7446cb",
+          "verdict": "PASS",
+          "artifact": "outputs/c2-t27-a1/reviews.md",
+          "new_findings": "F1 redirect provenance final_url ignored (MEDIUM, pre-existing, ticket); F2 fee-window 100-999; F3 clause-scoped negation; F4 \\bnone\\b; F5 T31 contract requirements"
+        },
+        "qa_test_author_a2": {
+          "ref": "agent_5a86f6dc-2ab3-42bb-ae4a-48e09e09106a",
+          "phase": "TEST_AUTHOR_A2",
+          "status": "TESTS_READY",
+          "artifact": "outputs/c2-t27-a1/qa-test-author-a2.md",
+          "qa_commit_sha": "c823d728179c59d5c1dbb235db517c181b8a6b8f",
+          "red": "6 RED (sibling edu.pl/edu.kz, registrable pins, subset guard 46 missing, E2E cross-institution VERIFIED_CURRENT reproduction)"
+        },
+        "developer_a2": {
+          "ref": "agent_794c5819-764b-4241-ac0f-8d765080ce8c",
+          "status": "IMPLEMENTED",
+          "artifact": "outputs/c2-t27-a1/developer-a2.md",
+          "candidate_sha": "da836a20167a0186e8681e58a3ec29356bfc040b",
+          "scope": "claim_verifier.py only (table 13->59 + 8 comment lines)"
+        },
+        "qa_verify_a2": {
+          "ref": "agent_46119160-97fd-424d-a140-38505c0d3856",
+          "phase": "VERIFY_CANDIDATE",
+          "status": "VERIFIED_PASS",
+          "artifact": "outputs/c2-t27-a1/qa-verify-candidate-a2.md",
+          "checked_sha": "da836a20167a0186e8681e58a3ec29356bfc040b",
+          "gates": "93 claim_verifier passed; module cov 100%; 180 slice; mypy/ruff clean; corpus outcome diff exactly 3 all fix-direction"
+        },
+        "reviewer_a2": {
+          "ref": "agent_14d208ca-d6ba-4ea8-934c-9166ae25c12b",
+          "verdict": "PASS",
+          "artifact": "outputs/c2-t27-a1/reviews.md",
+          "f1_closure": "CLOSED — entry-by-entry verification, guard tests present, blast radius confirmed"
+        },
+        "security_a2": {
+          "ref": "agent_711e0f22-2bfc-40bb-b4ed-aad585e4a664",
+          "verdict": "PASS",
+          "artifact": "outputs/c2-t27-a1/reviews.md",
+          "note": "monotonicity argument verified; A1 findings carried open unchanged"
+        },
+        "integrator": {
+          "ref": "agent_38875ec8-a9fd-45b1-8d38-6b16526d0aab",
+          "status": "INTEGRATED",
+          "artifact": "outputs/c2-t27-a1/integrator.md",
+          "merge_mode": "no-ff real merge (ff impossible: branches diverged at 28d729c; dispatcher-authorized option A per c1 T09/T10/T18 precedent)",
+          "combined_gates": "FULL pytest 1290 passed / 0 failed / 0 skipped, cov 93.87%; pgserver RAN; mypy 0/160; ruff clean; targets 164+17 passed; single head b4e8a1c2f6d9"
+        }
+      },
+      "packet_check": "STRUCTURE OK (outputs/c2-t27-a1/acceptance-packet.json; acceptance_items verbatim from crew.json manifest; combined-merge SHA note recorded)",
+      "publication": "NOT DONE — push/merge-to-main/deploy requires explicit owner approval",
+      "blockers": [],
+      "followups": [
+        "redirect provenance: official_domain computed on pre-redirect URL, final_url ignored (security F1 MEDIUM, coordinate with T31 contract)",
+        "fee-window class: 100-999 fees inside tuition label window; word-boundary labels; MANDATORY_FEES floor",
+        "clause-scoped negation; \\bnone\\b vocabulary",
+        "SCHOLARSHIP_AMOUNT value-shape unification",
+        "T31 contract requirements: allowed_domains + redirect-resolved URL; CLAIM_TYPE_PAGE_TYPES extension for out-of-table claim types; non-empty excerpts required",
+        "freeze reverse divergence {gov.au, govt.nz}; domain-level shared suffix source (endgame)",
+        "HANDOFF §8: casefold seam clarification; today-optional clarification"
+      ]
+    },
+    "T32": {
+      "status": "DONE_LOCAL_INTEGRATION",
+      "findings": ["L01", "J01"],
+      "priority": "P1",
+      "campaign": "c2",
+      "attempt": "A1 (+A2 security repair, +A2/A3 QA amendments, +A3 FE contract sync)",
+      "baseline_sha": "2ed4f51e1d5c1fae3f4cb36ad64982eb67184a2d",
+      "qa_commit_sha": "65e15220e8d0584b7fc0878e71f2e69a3bcbd47b",
+      "candidate_sha": "9b362c823fa65bf3c95fe154419c8f6ba1b2dc51",
+      "combined_sha": "9b362c823fa65bf3c95fe154419c8f6ba1b2dc51 (no-ff merge 2dd9c4c then ff; ai/c2/integration head)",
+      "locks": ["migrations", "runner", "jobs", "freshness"],
+      "allowed_paths": ["backend/app/domain/freshness.py", "backend/app/domain/enums.py", "backend/app/domain/conflicts.py", "backend/app/models/research.py", "backend/migrations/versions/*.py", "backend/app/jobs/source_scanner.py", "backend/app/jobs/store.py", "backend/app/jobs/worker.py", "backend/app/pipeline/runner.py", "backend/app/api/routes_results.py", "backend/tests/test_freshness*.py", "backend/tests/test_worker.py"],
+      "scope_expansions_authorized": [
+        "app/main.py +2/-1 — arm_source_scans API-startup parity (C3 demo guard completeness)",
+        "frontend/src/types.ts + frontend/src/lib/format.ts — A3 FE contract sync (integrator full-suite caught ClaimStatus union drift; SUPERSEDED union member + neutral tone)",
+        "QA amendments A2 (reflection keys + takeover timing) and A3 (R6 demo-golden clock freeze, negative control) — facts-only, c1 amendment precedent"
+      ],
+      "required_roles": ["ashyq-planner", "ashyq-developer", "ashyq-qa", "ashyq-reviewer", "ashyq-security"],
+      "worktree_qa": "/Users/wpalish/ashyq-worktrees/c2-t32-qa (ai/c2/t32/qa)",
+      "worktree_dev": "/Users/wpalish/ashyq-worktrees/c2-t32-dev (ai/c2/t32/dev)",
+      "worktree_qa_a2": "/Users/wpalish/ashyq-worktrees/c2-t32-qa-a2 + c2-t32-qa-a3 + c2-t32-qa-a4",
+      "worktree_dev_a2": "/Users/wpalish/ashyq-worktrees/c2-t32-dev-a2 (ai/c2/t32/dev-a2)",
+      "worktree_dev_a3": "/Users/wpalish/ashyq-worktrees/c2-t32-dev-a3 (ai/c2/t32/dev-a3)",
+      "worktree_verify": "/Users/wpalish/ashyq-worktrees/c2-t32-verify + c2-t32-verify-a2 + c2-t32-verify-a3",
+      "outputs_dir": "ai-team/outputs/c2-t32-a1",
+      "chain": "2ed4f51 -> 65e1522 (QA RED 34) -> ce517c2 -> 60da37f -> ade82fb -> 7bfa715 -> 51a52c4 -> e8779da (RC-1 RED) -> 1b363c7 (fix) -> merge 2dd9c4c (GATES_FAILED: FE drift) -> 9b362c8 (final)",
+      "migration": "d9c4e7a21b83 (down b4e8a1c2f6d9); single head at every gate",
+      "repair_history": "A1 security CHANGES_REQUESTED RC-1: reextract warm-cache laundering (old body re-appended with fresh accessed_at). A2: validators + use_cache=False + 304-as-no-change (contract amendment logged). Integration GATES_FAILED: FE ClaimStatus union drift caught by contract test — A3 synced union + tone. Both repairs RED-first, re-verified, re-reviewed.",
+      "invocations": {
+        "planner": {
+          "ref": "agent_c24335b5-c5bd-41f3-be24-a4fe75ea829b",
+          "status": "PLANNED",
+          "artifact": "outputs/c2-t32-a1/planner.md",
+          "contract_frozen": true
+        },
+        "qa_test_author": {
+          "ref": "agent_fe49e201-59de-462c-96e0-72ad7c3a4115",
+          "phase": "TEST_AUTHOR",
+          "status": "TESTS_READY",
+          "artifact": "outputs/c2-t32-a1/qa-test-author.md",
+          "qa_commit_sha": "65e15220e8d0584b7fc0878e71f2e69a3bcbd47b",
+          "red": "34 failed / 10 passed (R1/R2 true-bug REDs incl. literal chain-death moment; rest contract RED-pending; R6 golden captured on baseline)"
+        },
+        "developer_a1": {
+          "ref": "agent_aba6df7c-2412-4d03-94fa-ddf186ae43ca",
+          "status": "IMPLEMENTED",
+          "artifact": "outputs/c2-t32-a1/developer.md",
+          "final_commit": "ade82fb1873c8b2de5ba7d9a69aaa6545a5b9697",
+          "scope": "9 files +916/-31 incl. migration d9c4e7a21b83 NEW, source_scanner.py NEW +575"
+        },
+        "qa_amendments": {
+          "a2": {"ref": "agent_99bd713b-414b-4172-99b0-55516edab80c", "commit": "7bfa715a994e973a5a8216b1713324ee74cf1fe3", "note": "reflection keys + _take_over timing; facts unchanged; 44/44"},
+          "a3": {"ref": "agent_392b2033-e36b-423b-bdf7-7c588ebdf422", "commit": "51a52c4b39381f873bdfabac8c3aaff2fbc02de3", "note": "R6 demo-golden clock freeze to capture date (date-bound defect proven pre-existing on pristine baseline); negative control performed; golden hash NOT re-captured"}
+        },
+        "qa_verify_a1": {
+          "ref": "agent_5f393559-74bb-4cf2-bc41-3cbfb132147f",
+          "phase": "VERIFY_CANDIDATE",
+          "status": "VERIFIED_PASS",
+          "artifact": "outputs/c2-t32-a1/qa-verify-candidate.md",
+          "checked_sha": "7bfa715a994e973a5a8216b1713324ee74cf1fe3",
+          "gates": "44/66/132 passed (pg RAN); mypy 0/163; ruff clean; single head; R6 date-bound golden diagnosed as pre-existing test defect -> A3 amendment"
+        },
+        "reviewer_a1": {
+          "ref": "agent_caa6a54d-b3ef-4acd-af5e-a8e21142e0e8",
+          "verdict": "PASS",
+          "artifact": "outputs/c2-t32-a1/reviews.md",
+          "nonblocking": "recheck_stale SUPERSEDED-inclusive sweep (heavy-path economics); multi-result supersession order hazard; manual-recheck sibling-cancel; J01 FIX VERDICT: FIXED"
+        },
+        "security_a1": {
+          "ref": "agent_4968c997-0108-47ea-810c-d7960fa47ded",
+          "verdict": "CHANGES_REQUESTED",
+          "artifact": "outputs/c2-t32-a1/reviews.md",
+          "blocking": "RC-1 warm-cache laundering in reextract fetch (evidence-traceability violation)",
+          "tickets": "SEC-T32-02 active_claims vacuous (MEDIUM); SEC-T32-03 stale sweep; SEC-T32-04 generation-key race; refresh rate limit; 200-path resurrection edge"
+        },
+        "qa_test_author_a2": {
+          "ref": "agent_56badf3e-57bc-496d-ba01-21ae5e2c6b76",
+          "phase": "TEST_AUTHOR_A2",
+          "status": "TESTS_READY",
+          "artifact": "outputs/c2-t32-a1/qa-test-author-a2.md",
+          "qa_commit_sha": "e8779dab56806793d1adcc5d71042fbd7ba059ba",
+          "red": "RC1-A v1-laundering + RC1-B supersede-on-304 RED; positive guard green"
+        },
+        "developer_a2": {
+          "ref": "agent_cddc3a81-0127-4d05-b1c4-6dadd53d8ae9",
+          "status": "IMPLEMENTED",
+          "artifact": "outputs/c2-t32-a1/developer-a2.md",
+          "candidate_sha": "1b363c707240a1f0fb92419b2f06eee4fed06399",
+          "scope": "source_scanner.py +23/-2 (reextract only); use_cache=False deviation ruled necessary by reviewer/security"
+        },
+        "qa_verify_a2": {
+          "ref": "agent_0ed75103-57d6-4e3f-a873-7173dcefdb9b",
+          "phase": "VERIFY_CANDIDATE",
+          "status": "VERIFIED_PASS",
+          "artifact": "outputs/c2-t32-a1/qa-verify-candidate-a2.md",
+          "checked_sha": "1b363c707240a1f0fb92419b2f06eee4fed06399",
+          "gates": "17/96/102 passed (pg RAN); mypy 0; ruff clean; single head; adversarial 13/13 on real ephemeral PG"
+        },
+        "reviewer_a2": {
+          "ref": "agent_6e1bbf10-e65d-48fe-8b76-3ca42319c8d9",
+          "verdict": "PASS",
+          "artifact": "outputs/c2-t32-a1/reviews.md",
+          "rc1_closure": "CLOSED"
+        },
+        "security_a2": {
+          "ref": "agent_3bf76315-9aa4-49f8-8dba-9a249ca76652",
+          "verdict": "PASS",
+          "artifact": "outputs/c2-t32-a1/reviews.md",
+          "rc1_closure": "CLOSED"
+        },
+        "developer_a3": {
+          "ref": "agent_1a2b40ab-843a-4501-8c18-72d1b49bbab4",
+          "status": "IMPLEMENTED",
+          "artifact": "outputs/c2-t32-a1/developer-a3.md",
+          "candidate_sha": "9b362c823fa65bf3c95fe154419c8f6ba1b2dc51",
+          "scope": "frontend/src/types.ts +3/-1, frontend/src/lib/format.ts +2 (scope-granted; correct stop at exhaustive Record)"
+        },
+        "qa_verify_a3": {
+          "ref": "agent_b1950c31-7dbb-40e3-a32a-e4f659b8caa6",
+          "phase": "VERIFY_CANDIDATE",
+          "status": "VERIFIED_PASS",
+          "artifact": "outputs/c2-t32-a1/qa-verify-candidate-a3.md",
+          "checked_sha": "9b362c823fa65bf3c95fe154419c8f6ba1b2dc51",
+          "gates": "contract 24; typecheck/lint clean; vitest 182/182; build ok; api+pipeline 94"
+        },
+        "reviewer_a3": {
+          "ref": "agent_871cd4c9-dfcd-4e84-a3c1-936e25a28e41",
+          "verdict": "PASS",
+          "artifact": "outputs/c2-t32-a1/reviews.md",
+          "note": "security skip for A3 justified type-only delta (confirmed by QA and reviewer)"
+        },
+        "integrator": {
+          "ref": "agent_9001c733-1177-49d1-af1f-fc9eb99fd673",
+          "status": "INTEGRATED",
+          "artifact": "outputs/c2-t32-a1/integrator.md",
+          "merge_mode": "no-ff merge (authorized) then ff of A3; GATES_FAILED record for 2dd9c4c retained — honest full-suite catch",
+          "combined_gates": "FULL pytest 1349 passed / 0 failed / 0 skipped, cov 93.80%; pgserver RAN; mypy 0/164; ruff clean; targets 231 passed; single head d9c4e7a21b83"
+        }
+      },
+      "packet_check": "STRUCTURE OK (outputs/c2-t32-a1/acceptance-packet.json)",
+      "publication": "NOT DONE — push/merge-to-main/deploy requires explicit owner approval",
+      "blockers": [],
+      "followups": [
+        "SEC-T32-02: maintain active_claims counter or EXISTS(claims) liveness in purge (MEDIUM)",
+        "SEC-T32-03: recheck_stale stale-sweep SUPERSEDED filter (heavy-path economics)",
+        "SEC-T32-04: generation-key terminal-count race; recheck 60s loop economics; refresh rate limit (product)",
+        "multi-result supersession order hazard (reviewer A1 #2); manual-recheck sibling-cancel (A1 #3)",
+        "200-path record() resurrection edge; sitemap-index-only host edge",
+        "STATUS_MEANING/STATUS_LABEL SUPERSEDED gloss (planner follow-up)",
+        "QA extra tests: concurrent reextract same page; deleted-row retry leg; hostile validator values; refresh amplification bound"
+      ]
+    },
+    "T29": {
+      "status": "DONE_LOCAL_INTEGRATION",
+      "findings": ["L01"],
+      "priority": "P1",
+      "campaign": "c2",
+      "attempt": "A1 (+A2 QA amendment)",
+      "baseline_sha": "2ed4f51e1d5c1fae3f4cb36ad64982eb67184a2d",
+      "qa_commit_sha": "7585b575e76e9887b3294d8a03ad0506131d4b86",
+      "candidate_sha": "ff6a90e3330c6040bfce02c63c6f8c163398d914",
+      "combined_sha": "ff6a90e3330c6040bfce02c63c6f8c163398d914 (ff-only onto ai/c2/integration)",
+      "locks": ["discovery", "network-adapters"],
+      "allowed_paths": ["backend/app/adapters/discovery/catalog_walker.py", "backend/app/adapters/discovery/live_discovery.py", "backend/app/adapters/page_classifier.py", "backend/tests/test_live_discovery.py", "backend/tests/fixtures/live_shapes/**"],
+      "scope_expansions_authorized": [
+        "R1 backend/app/adapters/browser.py — additive response_listener kwarg + networkidle settle (required for JS acceptance item; T16 controls byte-identical, full-file compare + negative controls)",
+        "R2 runner.py wiring DEFERRED to post-T32 micro-attempt (T32 held the runner lock): CatalogRenderer construction + page_recorder pass; recording dormant (page_recorder=None) in A1"
+      ],
+      "required_roles": ["ashyq-planner", "ashyq-developer", "ashyq-qa", "ashyq-reviewer", "ashyq-security"],
+      "worktree_qa": "/Users/wpalish/ashyq-worktrees/c2-t29-qa (ai/c2/t29/qa)",
+      "worktree_dev": "/Users/wpalish/ashyq-worktrees/c2-t29-dev (ai/c2/t29/dev)",
+      "worktree_qa_a2": "/Users/wpalish/ashyq-worktrees/c2-t29-qa-a2 (ai/c2/t29/qa-a2)",
+      "worktree_verify": "/Users/wpalish/ashyq-worktrees/c2-t29-verify (ai/c2/t29/verify)",
+      "outputs_dir": "ai-team/outputs/c2-t29-a1",
+      "chain": "2ed4f51 -> 7585b57 (QA RED 10) -> 6ae2799 (dev impl) -> ff6a90e (QA amendment; candidate)",
+      "invocations": {
+        "planner": {
+          "ref": "agent_035586ea-880e-47db-905b-22c10e074d00",
+          "status": "PLANNED",
+          "artifact": "outputs/c2-t29-a1/planner.md",
+          "contract_frozen": true
+        },
+        "qa_test_author": {
+          "ref": "agent_4cd5eb11-0433-490d-93af-f6c5ebc3de12",
+          "phase": "TEST_AUTHOR",
+          "status": "TESTS_READY",
+          "artifact": "outputs/c2-t29-a1/qa-test-author.md",
+          "qa_commit_sha": "7585b575e76e9887b3294d8a03ad0506131d4b86",
+          "red": "10 RED / 114 passed on baseline (R1-R10; ImportError/AttributeError new-module pattern + no-interception REDs)"
+        },
+        "developer": {
+          "ref": "agent_fd70e6ac-a0e1-48b9-bf3f-3de45f17286e",
+          "status": "IMPLEMENTED",
+          "artifact": "outputs/c2-t29-a1/developer.md",
+          "candidate_sha": "6ae2799b77a7a0fb6a863249d3a79bee013ef83b",
+          "scope": "catalog_walker.py NEW +531; live_discovery.py +155/-21; browser.py +76/-2 (R1); page_classifier untouched (justified-GREEN pin)"
+        },
+        "qa_contract_amendment": {
+          "ref": "agent_f890d641-f793-4d73-973e-c576ad8ea6f2",
+          "phase": "TEST_CONTRACT_AMENDMENT",
+          "status": "AMENDED",
+          "artifact": "outputs/c2-t29-a1/qa-contract-amendment.md",
+          "amend_commit_sha": "ff6a90e3330c6040bfce02c63c6f8c163398d914",
+          "note": "_catalogue_html signature +1/-1 annotation-only (3 pre-existing mypy errors in QA file); mypy 3->0; 124 count unchanged"
+        },
+        "qa_verify": {
+          "ref": "agent_369d01da-c641-4aa4-9616-2031627cfeae",
+          "phase": "VERIFY_CANDIDATE",
+          "status": "VERIFIED_PASS",
+          "artifact": "outputs/c2-t29-a1/qa-verify-candidate.md",
+          "checked_sha": "ff6a90e3330c6040bfce02c63c6f8c163398d914",
+          "gates": "124 target; 98 T16 guards; 194 slice; mypy 0/161; ruff clean; adversarial notes 7 non-blocking"
+        },
+        "reviewer": {
+          "ref": "agent_5834a789-8c92-4bf9-970d-4863ef39fe11",
+          "verdict": "PASS",
+          "artifact": "outputs/c2-t29-a1/reviews.md",
+          "nonblocking": "js_no_program_list duplication on failed catalogue fetch; _NOT_CATALOGUE_TYPES asymmetry; real-Chromium listener-vs-close race (validate at wiring/T30); AttributeError arm in settle; duplicate off-domain drops",
+          "condition": "acceptance item 5 (source_pages recording) adapter-level only until R2 wiring lands; T30 gated on wiring"
+        },
+        "security": {
+          "ref": "agent_898c1190-250b-47e8-b7a0-ff7aaa654119",
+          "verdict": "PASS",
+          "artifact": "outputs/c2-t29-a1/reviews.md",
+          "new_findings": "S-29-01 LOW RecursionError escapes parse_catalog_json (contained; fix at wiring); S-29-02 LOW JSON label length unbounded vs 160-cap (truncate before T30); S-29-03 INFO render counts in T30 canary; amplification bounded <=40 polite fetches/institution"
+        },
+        "integrator": {
+          "ref": "agent_60477ab8-ae97-44a7-92e6-3b40af67eb67",
+          "status": "INTEGRATED",
+          "artifact": "outputs/c2-t29-a1/integrator.md",
+          "merge_mode": "ff-only onto ai/c2/integration",
+          "combined_gates": "FULL pytest 1302 passed / 0 failed / 0 skipped, cov 93.81%; pgserver RAN; mypy 0/161; ruff clean; targets 222 passed; single head b4e8a1c2f6d9"
+        }
+      },
+    "packet_check": "STRUCTURE OK (outputs/c2-t29-a1/acceptance-packet.json; acceptance_items verbatim from crew.json; R1 expansion documented)",
+    "post_integration_wiring": {
+      "status": "VERIFIED_AND_PUSHED",
+      "sha": "8d2fa1051c1ee8afdbb627d9cffd2056c8a2c78c",
+      "scope": "ResearchRunner constructs CatalogRenderer for non-demo live runs and passes SourcePage.record as LiveDiscoveryAdapter page_recorder; browser enable flag follows enable_browser_tier; demo remains isolated",
+      "security_followups_closed": "S-29-01 RecursionError fails closed; S-29-02 JSON labels capped at 160 characters",
+      "red_green": "4 failed / 1 passed -> 5 passed; focused T29/T16/T28/T32 suite 310 passed; full suite and static gates green",
+      "live_smoke": "PARTIALLY_BLOCKED only by robots policy; 2 catalogues walked, programme and scholarship leads found, 75 SourcePage outcomes recorded",
+      "artifact": "outputs/c2-t29-wiring/live-smoke/canary-2026-09-08.json"
+    },
+    "publication": "origin/ai/c2/integration pushed through 5c42934 by explicit owner authorization; protected-main merge and application deploy NOT DONE",
+      "blockers": [],
+      "followups": [
+      "CLOSED 8d2fa10: R2 wiring, SourcePage recorder, RecursionError guard and 160-character JSON label cap",
+      "CLOSED 388ae98: T30 separate recall numerators, walker/source/fetch metrics and wall-clock",
+      "CLOSED 5c42934: malformed/PDF catalogue parser isolation found by live HKU batch",
+      "field_mismatch walker-level subject filtering decision (T30 wiring)"
+      ]
+    },
+    "T28": {
+      "status": "DONE_LOCAL_INTEGRATION",
+      "findings": ["L01"],
+      "priority": "P1",
+      "campaign": "c2",
+      "attempt": "A1 (+A2 test-contract amendment)",
+      "baseline_sha": "28d729ca76cdf8d52344517a8316e2e805099d11",
+      "qa_commit_sha": "0ce3e67b34fffa203f32b7ff4140d62ca9d2b680",
+      "candidate_sha": "b087b9dcc0bae57d3c0b678ba3a4679869da1037",
+      "combined_sha": "b087b9dcc0bae57d3c0b678ba3a4679869da1037 (ff-only onto ai/c2/integration)",
+      "locks": ["fetching", "models", "migrations"],
+      "allowed_paths": ["backend/app/adapters/fetching.py", "backend/app/models/**", "backend/migrations/versions/*.py", "backend/tests/test_fetch*.py", "backend/tests/test_source_pages.py"],
+      "required_roles": ["ashyq-planner", "ashyq-developer", "ashyq-qa", "ashyq-reviewer", "ashyq-security"],
+      "worktree_qa": "/Users/wpalish/ashyq-worktrees/c2-t28-qa (ai/c2/t28/qa)",
+      "worktree_dev": "/Users/wpalish/ashyq-worktrees/c2-t28-dev (ai/c2/t28/dev)",
+      "worktree_qa_a2": "/Users/wpalish/ashyq-worktrees/c2-t28-qa-a2 (ai/c2/t28/qa-a2)",
+      "worktree_verify": "/Users/wpalish/ashyq-worktrees/c2-t28-verify (ai/c2/t28/verify)",
+      "outputs_dir": "ai-team/outputs/c2-t28-a1",
+      "chain": "28d729c -> 0ce3e67 (QA RED 14) -> 498428b (impl) -> 57a1cb0 (db.py %-escape) -> b087b9d (QA stub amendment; candidate)",
+      "migration": "b4e8a1c2f6d9 (down e7c1a4d90b52); single head pre/post",
+      "scope_expansions_authorized": [
+        "backend/app/db.py one-line % escape in _alembic_config (latent production bug; blocks PG up/down acceptance criterion; no other active task touches db.py)",
+        "backend/tests/test_live_discovery.py StubSite.fake_get signature mirror (QA contract-amendment invocation, +7/-1, zero assertion changes)"
+      ],
+      "invocations": {
+        "planner": {
+          "ref": "agent_a194d558-739d-4be6-8321-35f940c4cdf4",
+          "status": "PLANNED",
+          "artifact": "outputs/c2-t28-a1/planner.md",
+          "contract_frozen": true,
+          "note": "contract C1-C7; dispatcher correction recorded: planner read pre-T16 fetching.py — hop-stream closure already done by T16 (justified-GREEN pin), hop-PII gap confirmed real"
+        },
+        "qa_test_author": {
+          "ref": "agent_040f48ce-7f99-47f9-8806-ae1485e1d599",
+          "phase": "TEST_AUTHOR",
+          "status": "TESTS_READY",
+          "artifact": "outputs/c2-t28-a1/qa-test-author.md",
+          "qa_commit_sha": "0ce3e67b34fffa203f32b7ff4140d62ca9d2b680",
+          "red": "14 RED / 3 justified GREEN on baseline (hop PII assertion-RED; 304/validators/source_pages missing-API or ImportError-RED; politeness tripwire + stream pin + head check green)"
+        },
+        "developer": {
+          "ref": "agent_4d644227-22e5-41fa-b980-9973cfe2c083",
+          "status": "IMPLEMENTED",
+          "artifact": "outputs/c2-t28-a1/developer.md",
+          "final_commit": "57a1cb03005b9c136d9b9778f00620f6f6957690",
+          "scope": "fetching.py +212/-13; models/source_page.py NEW 170 lines; models/__init__.py +2; migration b4e8a1c2f6d9 NEW; db.py +4/-1 (authorized)",
+          "selfrun_gates": "17 target passed (pg ran); 199 slice; full no-cov 1187 passed; mypy app 0; ruff clean; single head"
+        },
+        "qa_contract_amendment": {
+          "ref": "agent_3438781f-6216-484e-a41d-6c1f1668373c",
+          "phase": "TEST_CONTRACT_AMENDMENT",
+          "status": "AMENDED",
+          "artifact": "outputs/c2-t28-a1/qa-contract-amendment.md",
+          "amend_commit_sha": "b087b9dcc0bae57d3c0b678ba3a4679869da1037",
+          "note": "StubSite.fake_get signature mirror of extended Fetcher.get; mypy 0 after; 112 live_discovery tests unchanged"
+        },
+        "qa_verify": {
+          "ref": "agent_3e9b6b22-a36f-438c-b417-eefab84e1498",
+          "phase": "VERIFY_CANDIDATE",
+          "status": "VERIFIED_PASS",
+          "artifact": "outputs/c2-t28-a1/qa-verify-candidate.md",
+          "checked_sha": "b087b9dcc0bae57d3c0b678ba3a4679869da1037",
+          "gates": "17 target (pg RAN, 0 skipped); 199 slice; 112 live_discovery; mypy 0/158; ruff clean; single head; per-commit scope + anti-weakening clean; adversarial notes 6 non-blocking"
+        },
+        "reviewer": {
+          "ref": "agent_161cff5b-ba84-464e-9984-47f0c640a24b",
+          "verdict": "PASS",
+          "artifact": "outputs/c2-t28-a1/reviews.md",
+          "nonblocking": "N1 _FractionalCrawlDelayParser does not strictly lengthen delays (REP-correct, artifact claim corrected); N2 unsolicited-304 caller contract -> document in T29/T32; N3 record() identity-map staleness guidance; N4 registrable_domain insert-only -> flag before T32; N5 13-vs-14 columns report miscount"
+        },
+        "security": {
+          "ref": "agent_1d597d0c-5444-4193-a1b4-087afdf3e11a",
+          "verdict": "PASS",
+          "artifact": "outputs/c2-t28-a1/reviews.md",
+          "new_findings": "SEC-T28-1 PII matcher percent/unicode-evasive (Low, decode+NFKC follow-up, contract amendment first); SEC-T28-2 truncate origin-controlled etag/url/page_type at T29/T32 call sites (Info); SEC-T28-3 robots/crawl-delay entry-host-only, cross-host hops unpoliced (fold into T32 walker design); SEC-T28-4 db.py:67 script_location %-escape sibling (Info); ResponseCache unbounded (pre-existing)",
+          "guards_not_weakened": "politeness constants byte-identical, robots gate, spacing, semaphore, backoff, T16 hop aclose + escalation containment, network_policy full, FetchOutcome unchanged, QA tests unchanged, amendment signature-only"
+        },
+        "integrator": {
+          "ref": "agent_ae632301-949e-4fbd-8430-c52ad1a70eed",
+          "status": "INTEGRATED",
+          "artifact": "outputs/c2-t28-a1/integrator.md",
+          "merge_mode": "ff-only onto ai/c2/integration",
+          "combined_gates": "FULL pytest 1187 passed / 0 failed / 0 skipped, cov 93.81%; pgserver RAN; mypy 0/158; ruff clean; target 17 passed; single head b4e8a1c2f6d9"
+        }
+      },
+      "packet_check": "STRUCTURE OK (outputs/c2-t28-a1/acceptance-packet.json; acceptance_items recorded verbatim from crew.json manifest; 2 authorized scope expansions documented)",
+      "publication": "NOT DONE — push/merge-to-main/deploy requires explicit owner approval",
+      "blockers": [],
+      "followups": [
+        "SEC-T28-1: decode+NFKC before find_pii (entry+hops), false-positive review, test-contract amendment first",
+        "SEC-T28-2: truncate etag/url/page_type at T29/T32 record() call sites",
+        "SEC-T28-3: cross-host redirect hops unpoliced for new host robots/crawl-delay -> T32 walker design",
+        "SEC-T28-4: db.py:67 script_location %-escape sibling",
+        "T29/T32 caller contract: unsolicited 304 semantics (CACHED+304 = keep your copy); re-fetch/expunge record() return; registrable_domain insert-only",
+        "ResponseCache unbounded growth (pre-existing audit gap, retention ticket)",
+        "QA extra pins: 304-with-body ignored; hop requests carry no validators; If-None-Match echo byte-exact"
+      ]
+    },
+    "T16": {
+      "status": "DONE_LOCAL_INTEGRATION",
+      "findings": ["H02"],
+      "priority": "P1",
+      "campaign": "c2",
+      "attempt": "A1",
+      "baseline_sha": "4d2125c00e2a320d6f6c31a79600bf97237ce218",
+      "qa_commit_sha": "65e63ec69dda5b06b2bcdc9754cdf8fcf2f53f24",
+      "candidate_sha": "28d729ca76cdf8d52344517a8316e2e805099d11",
+      "combined_sha": "28d729ca76cdf8d52344517a8316e2e805099d11 (ff-only onto ai/c2/integration)",
+      "locks": ["network-adapters", "ssrf-tests", "proxy-deploy"],
+      "allowed_paths": ["backend/app/adapters/browser.py", "backend/app/adapters/fetching.py", "backend/app/adapters/network_policy.py", "backend/tests/test_ssrf.py", "backend/tests/test_fetch*.py", "backend/tests/test_browser*.py", "SECURITY.md"],
+      "required_roles": ["ashyq-planner", "ashyq-developer", "ashyq-qa", "ashyq-reviewer", "ashyq-security"],
+      "worktree_qa": "/Users/wpalish/ashyq-worktrees/c2-t16-qa (ai/c2/t16/qa)",
+      "worktree_dev": "/Users/wpalish/ashyq-worktrees/c2-t16-dev (ai/c2/t16/dev)",
+      "worktree_verify": "/Users/wpalish/ashyq-worktrees/c2-t16-verify (ai/c2/t16/verify)",
+      "outputs_dir": "ai-team/outputs/c2-t16-a1",
+      "chain": "4d2125c -> 65e63ec (QA RED 12) -> 28d729c (candidate)",
+      "invocations": {
+        "planner": {
+          "ref": "agent_355f9f0a-100f-4732-aa1a-b590c01b885b",
+          "status": "PLANNED",
+          "artifact": "outputs/c2-t16-a1/planner.md",
+          "contract_frozen": true,
+          "facts": "S1 browser DNS TOCTOU still open; S2 mostly fixed (6to4/AS112 gaps); S3 fail-open status mapping + infra exceptions escape; S4 redirect-hop stream leak; S5 error pages -> VERIFIED claims (strongest defect); find_pii-on-hops deferred to T28"
+        },
+        "qa_test_author": {
+          "ref": "agent_0e1ba5ba-30b9-4aad-9707-d7e2744894b7",
+          "phase": "TEST_AUTHOR",
+          "status": "TESTS_READY",
+          "artifact": "outputs/c2-t16-a1/qa-test-author.md",
+          "qa_commit_sha": "65e63ec69dda5b06b2bcdc9754cdf8fcf2f53f24",
+          "red": "12 RED / 86 passed on baseline (R1a,R1b,R2,R3,R4a,R4b,R5x4 + URL-level); R6 + 3 ssrf status pins justified GREEN; ruff/mypy clean on test files"
+        },
+        "developer": {
+          "ref": "agent_acb649de-d90c-4745-a52b-2de529d87995",
+          "status": "IMPLEMENTED",
+          "artifact": "outputs/c2-t16-a1/developer.md",
+          "candidate_sha": "28d729ca76cdf8d52344517a8316e2e805099d11",
+          "scope": "browser.py +56/-24, fetching.py +30/-1, network_policy.py +4, SECURITY.md +23/-6; QA test files untouched",
+          "selfrun_gates": "98 target passed; 296 regression slice; mypy 0; ruff clean"
+        },
+        "qa_verify": {
+          "ref": "agent_85a3ca87-b327-416a-a68d-77b8f4308fbd",
+          "phase": "VERIFY_CANDIDATE",
+          "status": "VERIFIED_PASS",
+          "artifact": "outputs/c2-t16-a1/qa-verify-candidate.md",
+          "checked_sha": "28d729ca76cdf8d52344517a8316e2e805099d11",
+          "gates": "98 target; 296 slice + 97 broader pg-free sweep; mypy 0; ruff clean; collection 1170/0; tests byte-identical (git diff 65e63ec..HEAD -- backend/tests/ empty); adversarial notes 5 (non-blocking)"
+        },
+        "reviewer": {
+          "ref": "agent_5aa9a2ad-75b3-45b7-bc34-9e54b15e1f36",
+          "verdict": "PASS",
+          "artifact": "outputs/c2-t16-a1/reviews.md",
+          "nonblocking": "escalation guard single-layer vs OK+status_code=None; final 3xx nav -> OK (unreachable); context leak on mid-setup raise; final_url=requested URL (pre-existing); mid-stream read exception leaves response open (pre-existing); except Exception mislabels html_to_text failures; metric double-count"
+        },
+        "security": {
+          "ref": "agent_087dd386-e4de-413f-8d2a-52f28b6c1636",
+          "verdict": "PASS",
+          "artifact": "outputs/c2-t16-a1/reviews.md",
+          "new_findings": "#1 pre-existing ValueError/UnicodeError escape from malformed URLs -> run FAILED (Medium-low, needs test-contract decision); #2 stale baseline-era disk cache OK-cached error pages until TTL 86400s (Low; recommend cache-dir flush on deploy); #3 Teredo/NAT64 ranges not blocked (info); #4 sync DNS on event loop (documented)",
+          "guards_not_weakened": "robots, rate-limit/politeness, PII guard (hop-gap -> T28), redirect revalidation (strengthened), network_policy additive-only, cache/escalation strengthened, FetchOutcome unchanged, QA tests byte-identical"
+        },
+        "integrator": {
+          "ref": "agent_fde87fd9-b1ef-4f4f-9ae1-a52395957740",
+          "status": "INTEGRATED",
+          "artifact": "outputs/c2-t16-a1/integrator.md",
+          "merge_mode": "ff-only onto ai/c2/integration",
+          "combined_gates": "FULL pytest 1170 passed / 0 failed / 0 skipped, cov 93.46% (threshold 92); pg suites ran via pgserver; mypy 0; ruff clean; target 98 passed on combined"
+        }
+      },
+      "scope_check": "PASS (changed: SECURITY.md, browser.py, fetching.py, network_policy.py, test_browser_network.py, test_ssrf.py; outside_scope: [])",
+      "packet_check": "STRUCTURE OK (outputs/c2-t16-a1/acceptance-packet.json)",
+      "publication": "NOT DONE — push/merge-to-main/deploy requires explicit owner approval",
+      "blockers": [],
+      "followups": [
+        "escalation guard hardening vs OK+status_code=None renderer shape",
+        "final_url=page.url (landing URL) + SECURITY.md documentation",
+        "close context on mid-setup route/new_page/page.on failure",
+        "aclose response on mid-stream read exceptions in _read_response",
+        "SECURITY.md :153-155 restore scripts in ruff/mypy verification commands",
+        "deploy note: flush stale baseline-era disk cache dir (OK-cached error pages)",
+        "ValueError/UnicodeError malformed-URL containment ticket (needs planner test-contract decision)",
+        "resource-type abort tests (websocket/media/font/manifest) for route gate"
+      ]
     },
     "T18": {
       "status": "DONE_LOCAL_INTEGRATION",
@@ -678,5 +1288,40 @@
       "protected_main_merge": "NOT DONE",
       "application_deployment": "NOT DONE"
     }
+  },
+  "campaign_c2": {
+    "name": "SEARCH2",
+    "opened_at_local": "2026-09-07",
+    "baseline_sha": "4d2125c00e2a320d6f6c31a79600bf97237ce218 (main @ PR #7 merge of c1)",
+    "kickoff": "ai-team/prompts/KICKOFF_SEARCH2.md",
+    "design_refs": [
+      "ai-team/reference/SEARCH2_DESIGN.md",
+      "ai-team/reference/SEARCH2_REVIEW_2026-09-07.md"
+    ],
+    "profile": "safe for T16 full cycle; balanced (T27 ∥ T28) only after T16 DONE",
+    "order": [
+      "1. T16 (egress/browser hardening) — first, full cycle 4+security",
+      "2. after T16 DONE: T27 ∥ T28 (disjoint files, each full cycle from full baseline)",
+      "3. T32 after T28 (migrations serial); T29 after T16 (may run parallel with T32)",
+      "4. T30 only after T27+T28+T29 and only with per-batch owner approval for live runs",
+      "5. T26 after T28+T32; T31 waits for owner (planner prep allowed after T27/T28, no code)"
+    ],
+    "supersessions": {
+      "T13": "closed by T32 (T13 regression tests are part of T32); TASKS.md is historical"
+    },
+    "blocked": {
+      "T25": "frozen by owner (no keys); catalog-walker path covers recall without provider",
+      "T31": "owner decision on LLM provider/keys pending; no silent paid API"
+    },
+    "preflight_c2": {
+      "head_verified": "4d2125c00e2a320d6f6c31a79600bf97237ce218",
+      "git_status": "ai-team/ crew.json+ledger.json modified; KICKOFF_SEARCH2.md, SEARCH2_DESIGN.md, SEARCH2_REVIEW_2026-09-07.md, tasks T26–T32 untracked — NOT committed (owner permission required)",
+      "backend_venv": "backend/.venv python 3.12.13; pip install -r requirements-dev.txt exit 0",
+      "pytest_collect": "clean, no collection errors (per-file counts listed)",
+      "smoke": "tests/test_pipeline.py passed, exit 0",
+      "check_team_plan": "PLAN OK: 31 tasks; 4 independent roles minimum",
+      "full_suite_baseline": "NOT run per kickoff (1153 passed / cov 93.00% independently confirmed by codex audit at this code state)"
+    },
+    "c1_reservations_released": "active_reservations from c1 (T04/T09/T10) released: all three tasks DONE_LOCAL_INTEGRATION; worktrees under /Users/wpalish/ashyq-worktrees/* and ai/c1/* branches retained pending owner cleanup decision"
   }
 }
