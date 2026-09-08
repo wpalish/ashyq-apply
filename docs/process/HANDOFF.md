@@ -8,10 +8,10 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 | | |
 |---|---|
-| Holder | **gpt-6-astra** |
+| Holder | **nobody** |
 | Since (UTC) | 2026-09-08 11:15:00 UTC |
 | Branch | `task/design-system-llm-audit`, from synchronized `origin/main` |
-| HEAD when written | `edf546d` (branch point; implementation ready for checkpoint) |
+| HEAD when written | `62d941d` (complete design-system checkpoint; `wip:` only because of §7 backend baseline) |
 | Origin main when checked | `edf546d`; branch contains only the owner-directed design-system work |
 | Previous holder | GLM/ZCode dispatcher; it released after integrating T32 but left T29 production wiring explicitly deferred |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
@@ -69,6 +69,7 @@ manufacture compliant history. [0.4] was committed before [0.3].
 | T29 production wiring | `8d2fa10` | Live runs now use the hardened `CatalogRenderer` and persist walker fetch metadata through `SourcePage.record`; decoder recursion and oversized JSON labels fail closed/bounded. |
 | T30 measurable harness | `388ae98` | Canary reports separate programme/category numerators, source-page and fetch-tier counts, walker metrics, timestamped outputs and explicit batch selection. |
 | T30 catalogue repair | `5c42934` | Malformed/PDF catalogue bytes can no longer abort the entire walk; lxml falls back to the stdlib parser and a minimal `<f/{>` regression pins the failure. |
+| design-system audit | `62d941d` | Three-layer tokens, complete pre-migration audit, 25 LLM-readable specs, Layer 3 migration, CI audit, and AI instructions; frontend gates green. |
 
 ## 4. Half-done / uncommitted at the moment of writing
 
@@ -448,3 +449,4 @@ host=github.com
 | 2026-09-07 14:10:54 UTC | codex | `ab2e70a` → `96c1082` + final publication handoff | Owner explicitly authorized GitHub publication. Secret-scanned and committed all 133 ai-team evidence files plus the corrected audit, pushed `ai/c1/integration`, and opened PR #7. Release-gates started; no protected-main merge or application deploy. |
 | 2026-09-08 03:38:21 UTC | codex | `9b362c8` → in progress | Took the C2 baton after verifying `origin/main@4d2125c` is the merge-base. Owner authorized T29 wiring, bounded T30 batches, T26, committing campaign evidence, and GitHub publication; T31 remains blocked on provider/secrets/data-policy acknowledgement. |
 | 2026-09-08 13:31:09 UTC | gpt-6-astra | `edf546d` → in progress | Audited 3 stylesheets/303 hardcoded values, created the three-layer token contract and 25 LLM-readable specs, migrated Layer 3 to aliases, added CI enforcement, and passed all frontend/static gates; recorded one reproducible unrelated backend baseline failure. |
+| 2026-09-08 13:35:00 UTC | gpt-6-astra | `edf546d` → `62d941d` + release handoff | Completed the owner-directed design-system task. Scoped audit/typecheck/lint/182 tests/build are green; full backend gate remains reproducibly red only in the unchanged KZT extraction baseline named in §7. |
