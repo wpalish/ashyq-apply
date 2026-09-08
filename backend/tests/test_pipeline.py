@@ -439,3 +439,148 @@ class TestRankingV2InThePipeline:
         best = max(rows, key=lambda r: r.score_total)
         assert best.university == "University of British Columbia"
         assert all(r.bucket == "" for r in rows)
+
+
+class TestFundingReEntry:
+    """T37/S7: re-entering funding_discovery must not duplicate stored evidence.
+
+    POST /runs/{id}/retry?stage=funding_discovery resets exactly
+    funding_discovery and assessment (routes_research.py:429-439), so the run
+    re-enters _stage_funding, which hands _update_result the freshly read
+    claims for every row. That helper stored the new claims and conflicts
+    without clearing what the previous pass had written, so a funding stage
+    retry doubled every SCHOLARSHIP_* ClaimRow (and would double every funding
+    ConflictRow) the run already held. The safe behaviour: funding re-owns its
+    claim family — a targeted replace that leaves the verification-family
+    evidence, the SUPERSEDED history and the applicant's decision untouched.
+    """
+
+    @pytest.mark.asyncio
+    async def test_reentering_funding_duplicates_nothing_and_keeps_the_applicant(
+        self, session, completed_run, settings, profile
+    ):
+        from collections import Counter
+        from datetime import UTC, datetime, timedelta
+
+        from app.domain.enums import STAGE_ORDER
+        from app.models import ConflictRow
+
+        _, run = completed_run
+        rows = (
+            session.query(ProgramResultRow)
+            .filter(ProgramResultRow.run_id == run.id)
+            .order_by(ProgramResultRow.id)
+            .all()
+        )
+
+        def evidence_counts():
+            claims = session.query(ClaimRow).filter(ClaimRow.run_id == run.id).all()
+            conflicts = session.query(ConflictRow).filter(ConflictRow.run_id == run.id).all()
+            return (
+                Counter(c.result_id for c in claims),
+                Counter(c.result_id for c in claims if c.claim_type.startswith("scholarship_")),
+                Counter(c.result_id for c in claims if not c.claim_type.startswith("scholarship_")),
+                Counter(c.result_id for c in conflicts),
+            )
+
+        # The applicant decided on Groningen before pressing the stage retry;
+        # the row and its payload carry the decision exactly as the decision
+        # route writes it (routes_results.py:276-286).
+        decided = next(r for r in rows if r.university == "University of Groningen")
+        result = ProgramResult.model_validate(decided.payload)
+        result.user_decision = UserDecision.APPROVED
+        result.user_decision_reason = "shortlisted"
+        result.user_notes = "call the office"
+        result.decided_at = datetime.now(UTC)
+        decided.user_decision = result.user_decision.value
+        decided.user_decision_reason = result.user_decision_reason
+        decided.user_notes = result.user_notes
+        decided.decided_at = result.decided_at
+        decided.payload = result.model_dump(mode="json")
+
+        # A reextract has already flipped one old funding value to SUPERSEDED;
+        # the was/stale history must survive a funding re-entry untouched.
+        delft = next(r for r in rows if r.university == "Delft University of Technology")
+        session.add(
+            ClaimRow(
+                run_id=run.id,
+                result_id=delft.id,
+                claim_type="scholarship_amount",
+                status="SUPERSEDED",
+                source_url="https://delft.example/scholarships-2025",
+                source_specificity="scholarship_administrator",
+                accessed_at=datetime.now(UTC) - timedelta(days=400),
+                payload={
+                    "claim_type": "scholarship_amount",
+                    "status": "SUPERSEDED",
+                    "source_url": "https://delft.example/scholarships-2025",
+                    "normalized_value": 5000,
+                },
+            )
+        )
+        session.commit()
+
+        totals_before, scholarship_before, verify_before, conflicts_before = evidence_counts()
+
+        # What POST /retry?stage=funding_discovery does to the stage state
+        # (routes_research.py:429-439): the named stage and everything after it
+        # in STAGE_ORDER goes back to "pending"; earlier stages keep their work,
+        # so program_verification is left done and its evidence stays.
+        state = RunState.load(run.stage_state)
+        order = [s.value for s in STAGE_ORDER]
+        from_index = order.index(PipelineStage.FUNDING_DISCOVERY.value)
+        for name, st in state.stages.items():
+            after_entry_point = name in order and order.index(name) >= from_index
+            if after_entry_point or st.status in ("failed", "running"):
+                st.status = "pending"
+                st.error = ""
+        run.stage_state = state.dump()
+        run.stage = PipelineStage.QUEUED.value
+        run.cancelled = False
+        session.commit()
+
+        # The worker builds a fresh runner for the new attempt.
+        await ResearchRunner(session, run, profile, settings).run_to_decision()
+
+        totals_after, scholarship_after, verify_after, conflicts_after = evidence_counts()
+
+        # (1) Funding re-entry must not append a second copy of the evidence it
+        # already stored: per-result claim totals are unchanged, scholarship
+        # family included. RED on the baseline: every funded result doubled.
+        assert totals_after == totals_before, (
+            "re-entering funding_discovery changed the stored claim totals; "
+            f"Groningen {totals_before[decided.id]} -> {totals_after[decided.id]}"
+        )
+        assert scholarship_after == scholarship_before, (
+            "re-entering funding_discovery duplicated SCHOLARSHIP_* claims; "
+            f"Groningen {scholarship_before[decided.id]} -> {scholarship_after[decided.id]}"
+        )
+        # (2) The verification family is not funding's to touch: a blanket
+        # replace of all evidence for the row would fail here.
+        assert verify_after == verify_before, (
+            "funding re-entry must leave the verification-family claims alone"
+        )
+        # (3) The applicant's decision survives the re-run, on the row and in
+        # the document the API serves from.
+        refreshed = ProgramResult.model_validate(decided.payload)
+        assert decided.user_decision == UserDecision.APPROVED.value
+        assert decided.user_decision_reason == "shortlisted"
+        assert decided.user_notes == "call the office"
+        assert decided.decided_at is not None
+        assert refreshed.user_decision is UserDecision.APPROVED
+        assert refreshed.user_decision_reason == "shortlisted"
+        assert refreshed.user_notes == "call the office"
+        assert refreshed.decided_at is not None
+        # (4) SUPERSEDED history is not live evidence and is never destroyed.
+        kept = (
+            session.query(ClaimRow)
+            .filter(ClaimRow.result_id == delft.id, ClaimRow.status == "SUPERSEDED")
+            .all()
+        )
+        assert len(kept) == 1, "the was/stale row must survive the funding re-entry"
+        assert kept[0].payload["status"] == "SUPERSEDED"
+        # (5) Funding conflicts are re-stored per pass too; they must be
+        # replaced, not accumulated.
+        assert conflicts_after == conflicts_before, (
+            "re-entering funding_discovery duplicated stored conflicts"
+        )
