@@ -50,6 +50,11 @@ class ClaimStatus(StrEnum):
     UNVERIFIED = "UNVERIFIED"
     NOT_FOUND = "NOT_FOUND"
     NEEDS_OFFICIAL_CLARIFICATION = "NEEDS_OFFICIAL_CLARIFICATION"
+    #: Historical record: the page has been re-read and no longer says this.
+    #: Kept — never deleted — so the applicant can see what changed and when
+    #: (было/стало). Invisible to conflict detection and to freshness, which
+    #: move live evidence only.
+    SUPERSEDED = "SUPERSEDED"
 
 
 class SourceSpecificity(StrEnum):

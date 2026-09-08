@@ -55,12 +55,17 @@ def find_conflicts(
     Returns the conflicts plus the claim list with contradicting members
     re-stamped as CONFLICTING, so a disputed value can never later be read as
     verified.
+
+    SUPERSEDED claims are dropped at the entry, before any grouping: they are
+    the "was" half of a was/became pair — history, not live evidence — so an
+    old value can never resurrect as a conflict against its own successor.
     """
     ids = claim_ids or {}
+    live = [c for c in claims if c.status != ClaimStatus.SUPERSEDED]
     by_type: dict[tuple[ClaimType, str | None, str | None, str | None], list[Claim]] = defaultdict(
         list
     )
-    for c in claims:
+    for c in live:
         by_type[(c.claim_type, c.program, c.intake, c.subject_key)].append(c)
 
     conflicts: list[Conflict] = []
@@ -105,7 +110,7 @@ def find_conflicts(
 
     updated = [
         c.model_copy(update={"status": ClaimStatus.CONFLICTING}) if id(c) in conflicted else c
-        for c in claims
+        for c in live
     ]
     return conflicts, updated
 

@@ -16,10 +16,18 @@ from app.api.paywall import access_for_run, require_full_access
 from app.api.tenancy import owned_run
 from app.config import get_settings
 from app.db import get_session
-from app.domain.enums import Bucket, UserDecision
+from app.domain.enums import Bucket, ClaimStatus, UserDecision
 from app.domain.ranking_v2 import Quotas, ShortlistCandidate, build_shortlist, rank_result
 from app.export import calendar, tabular
-from app.models import ApplicantProfileRow, AuditEvent, ClaimRow, ConflictRow, ProgramResultRow
+from app.jobs.source_scanner import enqueue_reextract
+from app.models import (
+    ApplicantProfileRow,
+    AuditEvent,
+    ClaimRow,
+    ConflictRow,
+    ProgramResultRow,
+    SourcePage,
+)
 from app.payments.entitlements import free_view, truncate_shortlist
 from app.pipeline.runner import apply_fit_labels, store_result
 from app.schemas.profile import (
@@ -167,6 +175,82 @@ def get_result(
     if row is None or row.run_id != run_id:
         raise HTTPException(404, "Result not found")
     return ProgramResult.model_validate(row.payload)
+
+
+class RefreshOut(BaseModel):
+    status: str
+    pages: int
+    job_ids: list[str]
+    skipped_urls: list[str]
+
+
+@router.post("/results/{result_id}/refresh", response_model=RefreshOut, status_code=202)
+def refresh_result(
+    run_id: str,
+    result_id: str,
+    principal: Principal = Depends(get_principal),
+    session: Session = Depends(get_session),
+) -> RefreshOut:
+    """Schedule a re-read of the pages behind one result's live evidence.
+
+    Nothing is fetched here — the request only resolves the result's live
+    claims to their tracked source pages and enqueues one ``reextract_page``
+    job per (page, result) under a generation key, so a double click costs
+    one job set. A claim over a URL no source-page row tracks is reported in
+    ``skipped_urls`` rather than silently dropped; a result with no live
+    claims is a valid no-op.
+    """
+    # Ownership first (404 across tenants, never a leak), then the paywall.
+    require_full_access(session, run_id, principal)
+    run = owned_run(session, run_id, principal)
+    if run.demo_mode:
+        # A demo run is a bundled rehearsal, not a fetchable one.
+        raise HTTPException(409, "demo runs are read-only")
+
+    live_urls = (
+        session.query(ClaimRow.source_url)
+        .filter(
+            ClaimRow.run_id == run_id,
+            ClaimRow.result_id == result_id,
+            ClaimRow.status != ClaimStatus.SUPERSEDED.value,
+        )
+        .distinct()
+        .all()
+    )
+    job_ids: list[str] = []
+    skipped: list[str] = []
+    for (url,) in sorted(live_urls):
+        page = session.query(SourcePage).filter(SourcePage.url == url).first()
+        if page is None:
+            skipped.append(url)
+            continue
+        job_ids.append(
+            enqueue_reextract(
+                session,
+                source_page_id=page.id,
+                url=url,
+                reason="manual",
+                run_id=run_id,
+                result_id=result_id,
+            )
+        )
+    session.add(
+        AuditEvent(
+            organization_id=principal.organization_id,
+            actor=f"user:{principal.user_id[:8]}",
+            action="refresh_requested",
+            entity_type="result",
+            entity_id=result_id,
+            detail={"pages": len(job_ids), "skipped_urls": len(skipped)},
+        )
+    )
+    session.commit()
+    return RefreshOut(
+        status="refresh_scheduled",
+        pages=len(job_ids),
+        job_ids=job_ids,
+        skipped_urls=skipped,
+    )
 
 
 @router.post("/results/{result_id}/decision", response_model=ProgramResult)
