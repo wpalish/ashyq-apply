@@ -8,17 +8,17 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 | | |
 |---|---|
-| Holder | **nobody — owner review** |
+| Holder | **gpt-6-astra — frontend redesign** |
 | Since (UTC) | 2026-09-08 16:05:29 UTC |
-| Branch | `task/design-system-llm-audit`, from synchronized `origin/main` |
-| HEAD when written | `65b6ffb` (visual design system implemented, verified, and pushed) |
+| Branch | `task/frontend-redesign`, owner-directed continuation from design-system predecessor |
+| HEAD when written | `0468974` (visual design system release; first redesign slice in progress) |
 | Origin main when checked | `edf546d`; branch contains only the owner-directed design-system work |
 | Previous holder | GLM/ZCode dispatcher; it released after integrating T32 but left T29 production wiring explicitly deferred |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
 
-**Owner-directed ASHYQ Apply visual design-system synthesis is complete and ready for review.** The owner supplied
+**Owner-directed frontend redesign is in progress: first slice is the app shell and case dashboard, based on epics.md and the completed visual system.** The owner supplied
 `photo-references/design_system.png`, `photo-references/hero_section_example.png`, brandbook v1.1, and
 `epics.md`. Build a living, mobile-first design-system catalogue that reconciles the brand's Open Chapter
 language with E00/E16 evidence, uncertainty, semantic-status, dark-theme, localization, and AA contracts.
@@ -229,9 +229,11 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-Review commit `65b6ffb` on `task/design-system-llm-audit`. The living catalogue entry point is
-`frontend/design-system.html`; the human source of truth is `specs/design-system.md`; reproducible
-verification evidence and captures are in `docs/design-system/`. Merge only after owner approval.
+Owner requested the frontend redesign based on this design system and epics.md. Branch
+`task/frontend-redesign` from `task/design-system-llm-audit@0468974` (explicit predecessor exception).
+First slice: implement CaseScreen with real store state and next-step guidance; replace the long
+primary menu with five sections and contextual navigation; add mobile BottomNav; retain old hashes,
+gates and controls. Document AppShell and CaseScreen before editing; run frontend and token gates.
 
 ## 6. Gate status at last run (numbers, not adjectives)
 
