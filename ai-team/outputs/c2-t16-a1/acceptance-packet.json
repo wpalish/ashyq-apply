@@ -1,0 +1,134 @@
+{
+  "task_id": "T16",
+  "finding_ids": ["H02"],
+  "attempt_id": "A1",
+  "baseline_sha": "4d2125c00e2a320d6f6c31a79600bf97237ce218",
+  "qa_commit_sha": "65e63ec69dda5b06b2bcdc9754cdf8fcf2f53f24",
+  "candidate_sha": "28d729ca76cdf8d52344517a8316e2e805099d11",
+  "integration_base_sha": "4d2125c00e2a320d6f6c31a79600bf97237ce218",
+  "participants": [
+    {
+      "role": "ashyq-planner",
+      "invocation_ref": "agent_355f9f0a-100f-4732-aa1a-b590c01b885b",
+      "checked_sha": "4d2125c00e2a320d6f6c31a79600bf97237ce218",
+      "verdict": "PASS",
+      "evidence_file": "planner.md"
+    },
+    {
+      "role": "ashyq-qa",
+      "invocation_ref": "agent_85a3ca87-b327-416a-a68d-77b8f4308fbd",
+      "phase": "VERIFY_CANDIDATE",
+      "checked_sha": "28d729ca76cdf8d52344517a8316e2e805099d11",
+      "verdict": "PASS",
+      "evidence_file": "qa-verify-candidate.md"
+    },
+    {
+      "role": "ashyq-developer",
+      "invocation_ref": "agent_acb649de-d90c-4745-a52b-2de529d87995",
+      "checked_sha": "28d729ca76cdf8d52344517a8316e2e805099d11",
+      "verdict": "PASS",
+      "evidence_file": "developer.md"
+    },
+    {
+      "role": "ashyq-reviewer",
+      "invocation_ref": "agent_5aa9a2ad-75b3-45b7-bc34-9e54b15e1f36",
+      "checked_sha": "28d729ca76cdf8d52344517a8316e2e805099d11",
+      "verdict": "PASS",
+      "evidence_file": "reviews.md"
+    },
+    {
+      "role": "ashyq-security",
+      "invocation_ref": "agent_087dd386-e4de-413f-8d2a-52f28b6c1636",
+      "checked_sha": "28d729ca76cdf8d52344517a8316e2e805099d11",
+      "verdict": "PASS",
+      "evidence_file": "reviews.md"
+    },
+    {
+      "role": "ashyq-integrator",
+      "invocation_ref": "agent_fde87fd9-b1ef-4f4f-9ae1-a52395957740",
+      "checked_sha": "28d729ca76cdf8d52344517a8316e2e805099d11",
+      "verdict": "PASS",
+      "evidence_file": "integrator.md"
+    }
+  ],
+  "tests": [
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c2-t16-verify/backend && ./.venv/bin/python -m pytest tests/test_browser_network.py tests/test_ssrf.py -q",
+      "checked_sha": "28d729ca76cdf8d52344517a8316e2e805099d11",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate.md",
+      "summary": "98 passed (14 new browser_network incl. 12 former REDs + 84 ssrf incl. 3 new justified-GREEN status pins); all 12 REDs verified green individually by node id"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c2-t16-verify/backend && ./.venv/bin/python -m pytest tests/test_adapters.py tests/test_security.py tests/test_live_regressions.py tests/test_live_discovery.py tests/test_live_extraction.py tests/test_metrics.py -q",
+      "checked_sha": "28d729ca76cdf8d52344517a8316e2e805099d11",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate.md",
+      "summary": "296 passed, pg-free regression slice; broader pg-free sweep 97 passed (claims/logging/apipay/frontend_contract/pipeline); collection 1170/0 errors"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c2-t16-verify/backend && ./.venv/bin/python -m mypy app tests",
+      "checked_sha": "28d729ca76cdf8d52344517a8316e2e805099d11",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate.md",
+      "summary": "Success: no issues found in 155 source files"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c2-t16-verify/backend && ./.venv/bin/python -m ruff check app tests && ./.venv/bin/python -m ruff format --check app tests",
+      "checked_sha": "28d729ca76cdf8d52344517a8316e2e805099d11",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate.md",
+      "summary": "All checks passed; 155 files already formatted"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c2-integration/backend && ./.venv/bin/python -m pytest --cov=app --cov-fail-under=92",
+      "checked_sha": "28d729ca76cdf8d52344517a8316e2e805099d11",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "integrator.md",
+      "summary": "FULL suite on combined SHA: 1170 passed, 0 failed, 0 skipped, coverage 93.46% (threshold 92); pg-dependent suites ran via pgserver, not skipped"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c2-integration/backend && ./.venv/bin/python -m pytest tests/test_browser_network.py tests/test_ssrf.py -q",
+      "checked_sha": "28d729ca76cdf8d52344517a8316e2e805099d11",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "integrator.md",
+      "summary": "98 passed on combined SHA (target re-run)"
+    }
+  ],
+  "acceptance_items": [
+    {
+      "criterion": "Controlled forbidden destinations не достигаются",
+      "status": "PASS",
+      "evidence_file": "reviews.md",
+      "note": "Offline-proven: _EXTRA_BLOCKED += 6to4 192.88.99.0/24 + AS112 ranges (network_policy.py:27-41); per-hop check_url (fetching.py:349); browser route gate aborts blocked requests (browser.py:60-71,129); pre-nav check_url (:83-87); R5/R6 tests + existing ssrf suite; infra-level enforcement honestly NOT claimed (SECURITY.md:125-140)"
+    },
+    {
+      "criterion": "404/403/429/redirect/body limits корректны",
+      "status": "PASS",
+      "evidence_file": "reviews.md",
+      "note": "HTTP tier pins kept + new explicit 403/404/429 tests (retry 3x, backoff [2,4]); browser tier: nav >=400 -> HTTP_ERROR empty text (browser.py:163-171), resp None -> UNPARSEABLE diagnostic (:156-162), only successful final nav -> OK; escalation guard refuses >=400 regardless of outcome, cache.put only under rendered.ok (fetching.py:468-479); hop streams aclose()d on ALL paths incl. MAX_REDIRECTS exhaustion; body limits/allowlist unchanged + covered"
+    },
+    {
+      "criterion": "Browser residual risks и infrastructure boundary честно указаны",
+      "status": "PASS",
+      "evidence_file": "reviews.md",
+      "note": "SECURITY.md:28-36,125-140 verified accurate by both reviewers: rebinding TOCTOU documented, unbounded browser-internal redirects, short hostname blocklist, 'guarantees stop at the application boundary', firewall recommendation, internal PostgreSQL/API unaffected; no 'fully SSRF-proof' phrasing (grep-verified)"
+    }
+  ],
+  "scope_check": "PASS",
+  "scope_check_command": "python3 ai-team/check_team.py scope --task T16 --base 4d2125c00e2a320d6f6c31a79600bf97237ce218 --head 28d729ca76cdf8d52344517a8316e2e805099d11 --repo /Users/wpalish/ashyq-worktrees/c2-integration",
+  "scope_check_result": "changed: SECURITY.md, backend/app/adapters/browser.py, backend/app/adapters/fetching.py, backend/app/adapters/network_policy.py, backend/tests/test_browser_network.py, backend/tests/test_ssrf.py; outside_scope: []",
+  "blockers": [],
+  "notes": [
+    "Chain: 4d2125c (baseline) -> 65e63ec (QA TEST_AUTHOR, 12 RED reproduced) -> 28d729c (candidate; ff-only onto ai/c2/integration).",
+    "QA TEST_AUTHOR invocation ref: agent_0e1ba5ba-30b9-4aad-9707-d7e2744894b7 (RED evidence qa-test-author.md); final QA approval above is the independent VERIFY_CANDIDATE invocation.",
+    "Residual risks / tickets (non-blocking): DNS-rebinding TOCTOU remains (network-level egress needed for guarantee); browser-internal redirects unbounded; final_url=requested not landing URL; stale baseline-era disk-cache OK-cached error pages until TTL 86400s (recommend cache-dir flush on deploy); pre-existing ValueError/UnicodeError escape from malformed URLs -> run FAILED (needs test-contract decision); Teredo/NAT64 ranges info; E2E/FE gates not run (no frontend files touched) — NOT_RUN != PASS.",
+    "Publication NOT DONE — push/merge-to-main/deploy requires explicit owner approval."
+  ]
+}

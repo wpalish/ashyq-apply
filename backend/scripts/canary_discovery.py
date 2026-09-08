@@ -76,6 +76,7 @@ from app.models.research import (
     ProgramResultRow,
     ResearchRun,
 )
+from app.models.source_page import SourcePage
 from app.pipeline import runner as runner_module
 from app.pipeline.runner import ResearchRunner
 from app.pipeline.state import RunState
@@ -97,6 +98,12 @@ PROGRAMME_SPECIFIC = {SourceSpecificity.PROGRAM_INTAKE, SourceSpecificity.PROGRA
 
 #: Claim types whose value is only meaningful against a specific programme.
 DEADLINE_CLAIMS = {"application_deadline", "scholarship_deadline"}
+
+# Historical category KPI: the three evidence categories measured by the
+# original 26/30 canary. Programme pages are deliberately a separate KPI.
+CANARY_CATEGORIES = ("admissions", "costs", "scholarships")
+PROGRAM_RECALL_TARGET = 0.7
+CATEGORY_RECALL_TARGET = 26 / 30
 
 
 def canary_profile() -> ApplicantProfileIn:
@@ -146,8 +153,8 @@ class FetchAudit:
     def install(self, fetcher: Fetcher) -> Fetcher:
         original = fetcher.get
 
-        async def audited(url: str, *, use_cache: bool = True):
-            result = await original(url, use_cache=use_cache)
+        async def audited(url: str, **kwargs):
+            result = await original(url, **kwargs)
             domain = registrable_domain(url)
             self.by_domain.setdefault(domain, Counter())[result.outcome.value] += 1
             if not result.ok:
@@ -338,17 +345,59 @@ def false_positives(result: ProgramResult, claims: list[dict]) -> list[dict]:
 CANARY_ORGANIZATION_ID = "00000000000000000000000000000c0d"
 
 
-async def run_canary(only: str | None, verbose: bool) -> dict:
+def select_registry_entries(registry: list[dict], selectors: list[str] | None) -> list[dict]:
+    """Select one explicit live batch without changing registry order."""
+    if not selectors:
+        return list(registry)
+    normalized = [selector.strip().lower() for selector in selectors if selector.strip()]
+    selected = [
+        entry
+        for entry in registry
+        if any(
+            selector in entry["homepage"].lower() or selector in entry["name"].lower()
+            for selector in normalized
+        )
+    ]
+    if not selected:
+        raise SystemExit(f"no institution in the registry matches {selectors!r}")
+    return selected
+
+
+def recall_metrics(rows: list[dict]) -> dict[str, dict[str, float | int]]:
+    """Publish recall as honest numerators and denominators, never a slogan."""
+    program_numerator = sum(bool(row.get("program_page_found")) for row in rows)
+    category_numerator = sum(
+        bool((row.get("discovered") or {}).get(category))
+        for row in rows
+        for category in CANARY_CATEGORIES
+    )
+    return {
+        "program": {
+            "numerator": program_numerator,
+            "denominator": len(rows),
+            "target": PROGRAM_RECALL_TARGET,
+        },
+        "category": {
+            "numerator": category_numerator,
+            "denominator": len(rows) * len(CANARY_CATEGORIES),
+            "target": CATEGORY_RECALL_TARGET,
+        },
+    }
+
+
+async def run_canary(
+    only: str | None,
+    verbose: bool,
+    batch: list[str] | None = None,
+) -> dict:
     registry = json.loads(REGISTRY_PATH.read_text())
-    if only:
-        registry = [e for e in registry if only in e["homepage"]]
-        if not registry:
-            raise SystemExit(f"no institution in the registry matches {only!r}")
+    selectors = batch or ([only] if only else None)
+    registry = select_registry_entries(registry, selectors)
 
     profile = canary_profile()
     workdir = Path(tempfile.mkdtemp(prefix="canary-"))
 
-    if only:
+    if selectors:
         # --only used to narrow the report and nothing else: discovery still
         # read the whole registry, so asking about one institution ran the
         # first N in file order and then reported the one you asked about as
@@ -521,16 +570,20 @@ async def run_canary(only: str | None, verbose: bool) -> dict:
                 flush=True,
             )
 
+    source_pages_recorded = session.query(SourcePage).count()
+    fetch_tiers = dict(run.fetch_tiers or {})
     session.close()
     totals_outcomes: Counter = Counter()
     totals_types: Counter = Counter()
     for reported in rows:
         totals_outcomes.update(reported["page_outcomes"])
         totals_types.update(reported["page_types"])
+    recall = recall_metrics(rows)
     return {
         "accessed_at": started.isoformat(),
         "duration_seconds": round((finished - started).total_seconds(), 1),
         "run_error": error,
+        "batch": [entry["name"] for entry in registry],
         "institutions": rows,
         "totals": {
             "institutions": len(rows),
@@ -542,6 +595,19 @@ async def run_canary(only: str | None, verbose: bool) -> dict:
             "false_positives": sum(len(r["false_positives"]) for r in rows),
             "page_outcomes": dict(totals_outcomes),
             "page_types": dict(totals_types),
+            "recall": recall,
+            "catalogs_walked": sum(
+                ((row.get("discovery_trace") or {}).get("walker") or {}).get("catalogs_walked", 0)
+                for row in rows
+            ),
+            "walker_programs_confirmed": sum(
+                ((row.get("discovery_trace") or {}).get("walker") or {}).get(
+                    "programs_confirmed", 0
+                )
+                for row in rows
+            ),
+            "source_pages_recorded": source_pages_recorded,
+            "fetch_tiers": fetch_tiers,
         },
     }
 
@@ -563,6 +629,25 @@ def markdown_table(report: dict) -> str:
             f"{r['completeness']:.0%} | {len(r['false_positives'])} |"
         )
     return head + "\n".join(lines)
+
+
+def markdown_report(report: dict) -> str:
+    totals = report["totals"]
+    program = totals["recall"]["program"]
+    category = totals["recall"]["category"]
+    summary = (
+        f"Accessed: {report['accessed_at']}\n\n"
+        f"- Program recall: **{program['numerator']}/{program['denominator']}** "
+        f"(target {PROGRAM_RECALL_TARGET:.0%})\n"
+        f"- Category recall: **{category['numerator']}/{category['denominator']}** "
+        f"(target {CATEGORY_RECALL_TARGET:.1%})\n"
+        f"- False positives: **{totals['false_positives']}**\n"
+        f"- Catalogs walked / programmes confirmed: **{totals['catalogs_walked']} / "
+        f"{totals['walker_programs_confirmed']}**\n"
+        f"- Source pages recorded: **{totals['source_pages_recorded']}**\n"
+        f"- Fetch tiers: `{json.dumps(totals['fetch_tiers'], sort_keys=True)}`\n\n"
+    )
+    return summary + markdown_table(report) + "\n"
 
 
 async def check_seeds() -> int:
@@ -598,6 +683,10 @@ async def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--out", type=Path, help="directory for the JSON and Markdown output")
     parser.add_argument("--only", help="substring of one institution's homepage")
+    parser.add_argument(
+        "--batch",
+        help="comma-separated homepage/name substrings for one explicitly approved live batch",
+    )
     parser.add_argument("--verbose", action="store_true")
     parser.add_argument(
         "--check-seeds",
@@ -606,11 +695,15 @@ async def main() -> int:
     )
     args = parser.parse_args()
 
+    if args.only and args.batch:
+        parser.error("--only and --batch are mutually exclusive")
+
     if args.check_seeds:
         return await check_seeds()
 
     print("Live canary — real network, real sites, robots.txt respected.", flush=True)
-    report = await run_canary(args.only, args.verbose)
+    batch = [item.strip() for item in args.batch.split(",")] if args.batch else None
+    report = await run_canary(args.only, args.verbose, batch=batch)
 
     print()
     print(markdown_table(report))
@@ -623,6 +716,19 @@ async def main() -> int:
         f"scholarship pages {totals['scholarship_pages_found']}, "
         f"claims {totals['claims']}, "
         f"false positives {totals['false_positives']}"
+    )
+    program = totals["recall"]["program"]
+    category = totals["recall"]["category"]
+    print(
+        f"program recall {program['numerator']}/{program['denominator']} "
+        f"(target {PROGRAM_RECALL_TARGET:.0%}); category recall "
+        f"{category['numerator']}/{category['denominator']} "
+        f"(target {CATEGORY_RECALL_TARGET:.1%})"
+    )
+    print(
+        f"catalogs walked {totals['catalogs_walked']}, walker programmes confirmed "
+        f"{totals['walker_programs_confirmed']}, source pages recorded "
+        f"{totals['source_pages_recorded']}, fetch tiers {totals['fetch_tiers']}"
     )
     outcomes = totals.get("page_outcomes") or {}
     if outcomes:
@@ -641,9 +747,9 @@ async def main() -> int:
 
     if args.out:
         args.out.mkdir(parents=True, exist_ok=True)
-        stamp = report["accessed_at"][:10]
+        stamp = datetime.fromisoformat(report["accessed_at"]).strftime("%Y-%m-%dT%H%M%SZ")
         (args.out / f"canary-{stamp}.json").write_text(json.dumps(report, indent=2))
-        (args.out / f"canary-{stamp}.md").write_text(markdown_table(report) + "\n")
+        (args.out / f"canary-{stamp}.md").write_text(markdown_report(report))
         print(f"\nwrote {args.out}/canary-{stamp}.json")
 
     return 1 if totals["false_positives"] else 0

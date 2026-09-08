@@ -35,14 +35,19 @@ import re
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import TypedDict
 from urllib.parse import urljoin, urlparse, urlunparse
 from xml.etree import ElementTree
 
 from bs4 import BeautifulSoup
 
-from app.adapters.base import Candidate, CandidateProgram
+from app.adapters.base import Candidate, CandidateProgram, PageOutcome
 from app.adapters.fetching import Fetcher
-from app.adapters.page_classifier import PageType, classify_page
+from app.adapters.page_classifier import (
+    PageClassification,
+    PageType,
+    classify_page,
+)
 from app.schemas.profile import ApplicantProfileIn
 from app.schemas.result import RankingEntry
 
@@ -453,6 +458,25 @@ def names_other_degree_level(url: str, degree: str) -> bool:
     return named is not None and named != str(degree)
 
 
+def profile_rejects(
+    page: PageClassification, requested_level: str, fields: list[str]
+) -> str | None:
+    """Why a fetched page is not this applicant's programme page, or ``None``.
+
+    One predicate, shared by the confirm stage and the catalogue walker: the
+    page has to read as a single programme, at the level the applicant asked
+    for, in a subject they asked for. The strings are trace copy and are
+    pinned by tests — change them only together with the tests.
+    """
+    if page.page_type not in (PageType.PROGRAM_DETAIL, PageType.INTAKE_SPECIFIC_PROGRAM):
+        return f"reads as {page.page_type.value}, not a programme page"
+    if page.degree_level and page.degree_level != requested_level:
+        return f"page names degree level {page.degree_level}, not {requested_level}"
+    if fields and not matches_field_text(page.subject or "", fields):
+        return f"page subject {page.subject!r} does not match requested fields {fields!r}"
+    return None
+
+
 @dataclass
 class DiscoveredUrl:
     url: str
@@ -461,6 +485,31 @@ class DiscoveredUrl:
     #: "manual_seed" | "sitemap" | "navigation"
     provenance: str
     note: str = ""
+
+
+class WalkerTrace(TypedDict):
+    """What the catalogue-walker stage did, as the trace reports it.
+
+    Keys are frozen (T29 contract; T30 reads this): zeros when the walker was
+    not triggered, so a report can distinguish "walked and found nothing" from
+    "never walked".
+    """
+
+    catalogs_walked: int
+    candidates: list[dict[str, object]]
+    programs_confirmed: int
+    outcomes: list[dict[str, str]]
+
+
+def _walker_trace() -> WalkerTrace:
+    return {"catalogs_walked": 0, "candidates": [], "programs_confirmed": 0, "outcomes": []}
+
+
+#: Records one fetched page's metadata — the SourcePage.record field set, as
+#: keyword arguments. Discovery never touches the database itself: it calls
+#: this when a recorder is wired in, and what the recorder does with a page is
+#: the runner's business (T32 reads these rows for freshness).
+type PageRecorder = Callable[..., object]
 
 
 @dataclass
@@ -485,6 +534,9 @@ class DiscoveryTrace:
     #: (url, link text) for leads found by a catalogue's own wording rather
     #: than by the URL, so the report can show what the wording was.
     kept_by_link_text: list[tuple[str, str]] = field(default_factory=list)
+    #: The catalogue-walker stage's report. Zeros until (and unless) the stage
+    #: runs, so "inactive" and "ran and found nothing" stay distinguishable.
+    walker: WalkerTrace = field(default_factory=_walker_trace)
 
     def reject(self, url: str, reason: str) -> None:
         # Bounded: a large sitemap would otherwise produce a huge trace.
@@ -506,6 +558,7 @@ class DiscoveryTrace:
             "errors": self.errors,
             "used_navigation_fallback": self.used_navigation_fallback,
             "kept_by_link_text": self.kept_by_link_text,
+            "walker": dict(self.walker),
         }
 
 
@@ -653,12 +706,23 @@ class LiveDiscoveryAdapter:
 
     name = "live-sitemap-discovery"
 
-    def __init__(self, fetcher: Fetcher, registry_path: Path | None = None) -> None:
+    def __init__(
+        self,
+        fetcher: Fetcher,
+        registry_path: Path | None = None,
+        *,
+        page_recorder: PageRecorder | None = None,
+    ) -> None:
         self.fetcher = fetcher
         self.registry_path = registry_path or REGISTRY_PATH
         self.sitemaps = SitemapReader(fetcher)
         #: Populated per run, so a caller can report why discovery found what it did.
         self.traces: list[DiscoveryTrace] = []
+        #: Wired by the runner when fetched pages should feed source_pages
+        #: (dormant while None — discovery runs byte-identically without it).
+        self.page_recorder = page_recorder
+        #: One outcome per walker-touched page, for the run's persisted report.
+        self.walker_outcomes: list[PageOutcome] = []
 
     def registry(self) -> list[dict]:
         if not self.registry_path.exists():
@@ -676,6 +740,7 @@ class LiveDiscoveryAdapter:
         entries = entries[:limit]
 
         self.traces = []
+        self.walker_outcomes = []
         out: list[Candidate] = []
         for entry in entries:
             candidate, trace = await self._discover_one(entry, profile)
@@ -771,6 +836,7 @@ class LiveDiscoveryAdapter:
         #    path as the real programmes. The classifier already knows the
         #    difference, so discovery asks it rather than guessing harder.
         await self._confirm_programs(selected, ranked, trace, profile)
+        await self._walk_catalogs(entry, selected, trace, profile)
 
         trace.selected = {k: list(v) for k, v in selected.items() if v}
         self._apply(candidate, selected, profile, trace)
@@ -791,6 +857,8 @@ class LiveDiscoveryAdapter:
                 queued.append(url)
 
         confirmed: list[str] = []
+        requested_level = str(profile.context.level)
+        fields = list(profile.context.intended_fields)
         for url in queued[:MAX_PROGRAM_CANDIDATES_CHECKED]:
             if len(confirmed) >= MAX_PAGES_PER_CATEGORY:
                 break
@@ -799,29 +867,95 @@ class LiveDiscoveryAdapter:
                 trace.reject(url, f"could not be read ({result.outcome.value})")
                 continue
             page = classify_page(url=url, html=result.text)
-            if page.page_type in (PageType.PROGRAM_DETAIL, PageType.INTAKE_SPECIFIC_PROGRAM):
-                requested_level = str(profile.context.level)
-                if page.degree_level and page.degree_level != requested_level:
-                    trace.reject(
-                        url,
-                        f"page names degree level {page.degree_level}, not {requested_level}",
-                    )
-                    continue
-                fields = list(profile.context.intended_fields)
-                if fields and not matches_field_text(page.subject or "", fields):
-                    trace.reject(
-                        url,
-                        f"page subject {page.subject!r} does not match requested fields {fields!r}",
-                    )
-                    continue
-                confirmed.append(url)
-            else:
-                trace.reject(url, f"reads as {page.page_type.value}, not a programme page")
+            reason = profile_rejects(page, requested_level, fields)
+            if reason is not None:
+                trace.reject(url, reason)
+                continue
+            confirmed.append(url)
 
         if confirmed or selected[PageCategory.PROGRAM_PAGE]:
             # Only replace the list when something was actually checked; an
             # unreachable site keeps its leads rather than losing them silently.
             selected[PageCategory.PROGRAM_PAGE] = confirmed
+
+    async def _walk_catalogs(
+        self,
+        entry: dict,
+        selected: dict[str, list[str]],
+        trace: DiscoveryTrace,
+        profile: ApplicantProfileIn,
+    ) -> None:
+        """Read the catalogue itself for the programmes the earlier stages missed.
+
+        The navigation fallback only reaches a few links on a catalogue, and a
+        JS-rendered catalogue has no links in its HTTP body at all. The walker
+        scores every link the page offers (and the JSON its page fetches, when
+        a catalogue renderer is attached) and reads the strongest ones — but
+        only when the confirm stage left room, and never beyond the per-category
+        cap, so `_apply` sees at most what it always saw.
+        """
+        # Deferred: catalog_walker imports this module's URL helpers, so the
+        # dependency points one way at import time (walker -> discovery).
+        from app.adapters.discovery.catalog_walker import (
+            TRACE_CANDIDATE_CAP,
+            TRACE_OUTCOME_CAP,
+            WALKER_MAX_CATALOGS,
+            CatalogWalker,
+        )
+
+        if len(selected[PageCategory.PROGRAM_PAGE]) >= MAX_PAGES_PER_CATEGORY:
+            return
+        catalogues = list(selected[PageCategory.PROGRAM_CATALOG][:WALKER_MAX_CATALOGS])
+        if not catalogues and trace.used_navigation_fallback:
+            # The navigation fallback owns the homepage: when it ran and found
+            # no catalogue anywhere, the homepage is the walk's last root.
+            # When the fallback never ran, something was already found and the
+            # walk would only repeat its work.
+            homepage = entry.get("homepage")
+            if homepage:
+                catalogues = [homepage]
+        if not catalogues:
+            return
+
+        walker = CatalogWalker(
+            fetcher=self.fetcher,
+            domain=trace.domain,
+            degree=str(profile.context.level),
+            fields=list(profile.context.intended_fields),
+            page_recorder=self.page_recorder,
+        )
+        try:
+            walks = await walker.walk(catalogues[:WALKER_MAX_CATALOGS])
+        except Exception as exc:  # a walker failure must not end discovery
+            trace.errors.append(f"catalog walker failed: {type(exc).__name__}: {exc}"[:300])
+            return
+
+        for walk in walks:
+            trace.walker["catalogs_walked"] += 1
+            trace.walker["programs_confirmed"] += len(walk.confirmed)
+            for link in walk.candidates:
+                if len(trace.walker["candidates"]) >= TRACE_CANDIDATE_CAP:
+                    break
+                trace.walker["candidates"].append(
+                    {
+                        "url": link.url,
+                        "label": link.label,
+                        "score": link.score,
+                        "source": link.source,
+                    }
+                )
+            for url, outcome in walk.outcomes:
+                if len(trace.walker["outcomes"]) >= TRACE_OUTCOME_CAP:
+                    break
+                trace.walker["outcomes"].append({"url": url, "outcome": outcome})
+                self.walker_outcomes.append(
+                    PageOutcome(url=url, category="catalog-walker", detail=outcome)
+                )
+            for url in walk.confirmed:
+                if len(selected[PageCategory.PROGRAM_PAGE]) >= MAX_PAGES_PER_CATEGORY:
+                    break
+                if url not in selected[PageCategory.PROGRAM_PAGE]:
+                    selected[PageCategory.PROGRAM_PAGE].append(url)
 
     def _apply(
         self,

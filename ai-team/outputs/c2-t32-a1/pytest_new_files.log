@@ -1,0 +1,43 @@
+..FFFFFFFFFF....FFFFFF....FFFFFFFFFFFFFFFFFF                             [100%]
+=============================== warnings summary ===============================
+tests/test_source_scan.py::TestRefreshEndpoint::test_a_free_tenant_is_refused_with_the_standard_402
+  /Users/wpalish/ashyq-worktrees/c2-t32-qa/backend/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_freshness_regressions.py::TestStaleAtExactTtlBoundary::test_exactly_at_ttl_is_stale[admission_deadline]
+FAILED tests/test_freshness_regressions.py::TestStaleAtExactTtlBoundary::test_exactly_at_ttl_is_stale[tuition]
+FAILED tests/test_freshness_regressions.py::TestStaleAtExactTtlBoundary::test_ttl_plus_two_minutes_is_stale[admission_deadline]
+FAILED tests/test_freshness_regressions.py::TestStaleAtExactTtlBoundary::test_ttl_plus_two_minutes_is_stale[tuition]
+FAILED tests/test_freshness_regressions.py::TestStaleAtExactTtlBoundary::test_naive_accessed_at_agrees_with_aware[admission_deadline]
+FAILED tests/test_freshness_regressions.py::TestStaleAtExactTtlBoundary::test_naive_accessed_at_agrees_with_aware[tuition]
+FAILED tests/test_freshness_regressions.py::TestStaleAtExactTtlBoundary::test_naive_now_does_not_crash_and_agrees_with_aware_now[admission_deadline]
+FAILED tests/test_freshness_regressions.py::TestStaleAtExactTtlBoundary::test_naive_now_does_not_crash_and_agrees_with_aware_now[tuition]
+FAILED tests/test_freshness_regressions.py::TestStaleAtExactTtlBoundary::test_apply_freshness_downgrades_at_the_boundary[admission_deadline]
+FAILED tests/test_freshness_regressions.py::TestStaleAtExactTtlBoundary::test_apply_freshness_downgrades_at_the_boundary[tuition]
+FAILED tests/test_freshness_regressions.py::TestNoOpRecheckAdvancesTheChain::test_a_noop_recheck_leaves_a_new_queued_recheck_with_a_fresh_key
+FAILED tests/test_freshness_regressions.py::TestNoOpRecheckAdvancesTheChain::test_a_recheck_fired_at_the_deadline_rearms_strictly_into_the_future
+FAILED tests/test_freshness_regressions.py::TestRecheckChainSurvivesTwoCycles::test_two_noop_cycles_each_produce_a_new_generation
+FAILED tests/test_freshness_regressions.py::TestSupersededExcluded::test_the_enum_has_a_superseded_member
+FAILED tests/test_freshness_regressions.py::TestSupersededExcluded::test_apply_freshness_never_touches_superseded
+FAILED tests/test_freshness_regressions.py::TestSupersededExcluded::test_a_superseded_value_does_not_conflict_with_its_successor
+FAILED tests/test_freshness_regressions.py::TestT32MigrationRoundTrip::test_exactly_one_migration_hangs_off_the_baseline_head
+FAILED tests/test_freshness_regressions.py::TestT32MigrationRoundTrip::test_upgrade_then_downgrade_on_sqlite
+FAILED tests/test_freshness_regressions.py::TestT32MigrationRoundTrip::test_upgrade_then_downgrade_on_postgresql
+FAILED tests/test_freshness_regressions.py::TestT32MigrationRoundTrip::test_deleting_a_source_page_nulls_the_claims_reference
+FAILED tests/test_source_scan.py::TestReextractSupersedesAndAppendsAtomically::test_a_forced_page_change_supersedes_old_and_appends_new_in_one_commit
+FAILED tests/test_source_scan.py::TestReextractSupersedesAndAppendsAtomically::test_a_fenced_or_crashed_attempt_writes_neither_side
+FAILED tests/test_source_scan.py::TestSourceScanSkeleton::test_sitemap_lastmod_triggers_conditional_get_and_reextract_enqueue
+FAILED tests/test_source_scan.py::TestSourceScanSkeleton::test_a_304_short_circuits_without_extraction
+FAILED tests/test_source_scan.py::TestSourceScanSkeleton::test_robots_disallowed_skips_and_records_nothing
+FAILED tests/test_source_scan.py::TestSourceScanBootstrapRaces::test_double_bootstrap_enqueues_one_scan_per_institution
+FAILED tests/test_source_scan.py::TestSourceScanBootstrapRaces::test_a_lease_takeover_does_not_duplicate_reextract_enqueues
+FAILED tests/test_source_scan.py::TestRetentionPurge::test_purge_removes_only_purgeable_rows
+FAILED tests/test_source_scan.py::TestRefreshEndpoint::test_a_free_tenant_is_refused_with_the_standard_402
+FAILED tests/test_source_scan.py::TestRefreshEndpoint::test_another_tenants_run_is_404_not_a_leak
+FAILED tests/test_source_scan.py::TestRefreshEndpoint::test_a_demo_run_is_409_read_only
+FAILED tests/test_source_scan.py::TestRefreshEndpoint::test_a_paid_refresh_schedules_one_reextract_per_page_and_result
+FAILED tests/test_source_scan.py::TestRefreshEndpoint::test_zero_live_claims_is_a_valid_noop
+FAILED tests/test_source_scan.py::TestRefreshEndpoint::test_a_double_click_still_costs_one_job_set
+PYTEST_EXIT=1

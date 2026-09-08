@@ -91,3 +91,50 @@ class TestRequirementProvenance:
         for status in decided:
             flagged = canary.false_positives(result_with(requirement(status, [])), [])
             assert flagged, f"{status} asserts something and must name a source"
+
+
+class TestRecallMetrics:
+    def test_program_and_category_recall_publish_separate_fractions(self, canary):
+        rows = [
+            {
+                "program_page_found": True,
+                "discovered": {
+                    "admissions": ["a"],
+                    "costs": ["c"],
+                    "scholarships": [],
+                },
+            },
+            {
+                "program_page_found": False,
+                "discovered": {
+                    "admissions": ["a"],
+                    "costs": [],
+                    "scholarships": ["s"],
+                },
+            },
+        ]
+
+        metrics = canary.recall_metrics(rows)
+
+        assert metrics["program"] == {"numerator": 1, "denominator": 2, "target": 0.7}
+        assert metrics["category"] == {"numerator": 4, "denominator": 6, "target": 26 / 30}
+
+    def test_empty_batch_never_divides_by_zero_or_claims_success(self, canary):
+        metrics = canary.recall_metrics([])
+
+        assert metrics["program"]["numerator"] == 0
+        assert metrics["program"]["denominator"] == 0
+        assert metrics["category"]["denominator"] == 0
+
+    def test_batch_filter_is_explicit_and_preserves_registry_order(self, canary):
+        registry = [
+            {"homepage": "https://a.edu", "name": "A"},
+            {"homepage": "https://b.edu", "name": "B"},
+            {"homepage": "https://c.edu", "name": "C"},
+        ]
+
+        selected = canary.select_registry_entries(registry, ["c.edu", "a.edu"])
+
+        assert [entry["name"] for entry in selected] == ["A", "C"]
+        with pytest.raises(SystemExit, match="no institution"):
+            canary.select_registry_entries(registry, ["missing.edu"])

@@ -34,6 +34,10 @@ _EXTRA_BLOCKED = (
     ipaddress.ip_network("::ffff:0:0/96"),  # IPv4-mapped IPv6
     ipaddress.ip_network("64:ff9b::/96"),  # NAT64
     ipaddress.ip_network("2002::/16"),  # 6to4
+    ipaddress.ip_network("192.88.99.0/24"),  # 6to4 relay anycast (retired, RFC 7526)
+    ipaddress.ip_network("192.31.196.0/24"),  # AS112 anycast blackhole
+    ipaddress.ip_network("192.52.193.0/24"),  # AS112 anycast blackhole
+    ipaddress.ip_network("192.175.48.0/24"),  # AS112 anycast blackhole
 )
 
 #: Hostnames that resolve to the host itself on most systems, blocked by name

@@ -18,7 +18,14 @@ from app.domain.enums import (
     PipelineStage,
     UserDecision,
 )
-from app.models import ApplicantProfileRow, Base, ClaimRow, ProgramResultRow, ResearchRun
+from app.models import (
+    ApplicantProfileRow,
+    Base,
+    ClaimRow,
+    ProgramResultRow,
+    ResearchRun,
+    SourcePage,
+)
 from app.pipeline.runner import ResearchRunner, RunCancelled
 from app.pipeline.state import RunState
 from app.schemas.result import ProgramResult
@@ -60,6 +67,77 @@ async def completed_run(session, settings, profile):
 def results_of(session, run) -> dict[str, ProgramResult]:
     rows = session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run.id).all()
     return {r.university: ProgramResult.model_validate(r.payload) for r in rows}
+
+
+class TestLiveDiscoveryWiring:
+    """Production runner wiring for the T29 catalogue and T28 recorder seams."""
+
+    def test_live_runner_builds_the_catalog_renderer(self, session, settings, profile, tmp_path):
+        from app.adapters.discovery.catalog_walker import CatalogRenderer
+
+        row = profile_row(session, profile)
+        run = ResearchRun(
+            profile_id=row.id,
+            stage=PipelineStage.QUEUED.value,
+            demo_mode=False,
+            stage_state=RunState.load(None).dump(),
+        )
+        session.add(run)
+        session.flush()
+        runner = ResearchRunner(session, run, profile, settings)
+        fetcher = runner._make_fetcher()
+
+        renderer = runner._make_browser(fetcher)
+
+        assert isinstance(renderer, CatalogRenderer)
+        assert renderer.enabled is settings.enable_browser_tier
+
+    def test_live_runner_wires_source_page_recording(self, session, settings, profile):
+        from app.adapters.discovery.live_discovery import LiveDiscoveryAdapter
+
+        row = profile_row(session, profile)
+        run = ResearchRun(
+            profile_id=row.id,
+            stage=PipelineStage.QUEUED.value,
+            demo_mode=False,
+            stage_state=RunState.load(None).dump(),
+        )
+        session.add(run)
+        session.flush()
+        runner = ResearchRunner(session, run, profile, settings)
+        adapter = runner._make_discovery_adapter(runner._make_fetcher())
+
+        assert isinstance(adapter, LiveDiscoveryAdapter)
+        assert adapter.page_recorder is not None
+        adapter.page_recorder(
+            url="https://uni.edu/programmes/cs",
+            registrable_domain="uni.edu",
+            http_status=200,
+            page_type="program_detail",
+        )
+        recorded = session.query(SourcePage).one()
+        assert recorded.url == "https://uni.edu/programmes/cs"
+        assert recorded.page_type == "program_detail"
+
+    def test_demo_runner_keeps_the_fixture_adapter_and_disabled_browser(
+        self, session, settings, profile
+    ):
+        from app.adapters.discovery.fixture_discovery import FixtureDiscoveryAdapter
+
+        row = profile_row(session, profile)
+        run = ResearchRun(
+            profile_id=row.id,
+            stage=PipelineStage.QUEUED.value,
+            demo_mode=True,
+            stage_state=RunState.load(None).dump(),
+        )
+        session.add(run)
+        session.flush()
+        runner = ResearchRunner(session, run, profile, settings)
+        fetcher = runner._make_fetcher()
+
+        assert isinstance(runner._make_discovery_adapter(fetcher), FixtureDiscoveryAdapter)
+        assert not runner._make_browser(fetcher).enabled
 
 
 class TestPipelineShape:

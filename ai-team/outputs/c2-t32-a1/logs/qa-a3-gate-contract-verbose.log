@@ -1,0 +1,35 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.12.13, pytest-9.1.1, pluggy-1.6.0 -- /Users/wpalish/ashyq-worktrees/c2-t32-verify-a3/backend/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/wpalish/ashyq-worktrees/c2-t32-verify-a3/backend
+configfile: pytest.ini
+plugins: respx-0.22.0, cov-6.0.0, asyncio-1.4.0, anyio-4.15.1
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 24 items
+
+tests/test_frontend_contract.py::test_the_typescript_union_matches_the_backend_enum[EligibilityStatus-EligibilityStatus] PASSED [  4%]
+tests/test_frontend_contract.py::test_the_typescript_union_matches_the_backend_enum[AdmissionsFit-AdmissionsFit] PASSED [  8%]
+tests/test_frontend_contract.py::test_the_typescript_union_matches_the_backend_enum[Bucket-Bucket] PASSED [ 12%]
+tests/test_frontend_contract.py::test_the_typescript_union_matches_the_backend_enum[FundingFit-FundingFit] PASSED [ 16%]
+tests/test_frontend_contract.py::test_the_typescript_union_matches_the_backend_enum[FundingClassification-FundingClassification] PASSED [ 20%]
+tests/test_frontend_contract.py::test_the_typescript_union_matches_the_backend_enum[ClaimStatus-ClaimStatus] PASSED [ 25%]
+tests/test_frontend_contract.py::test_the_typescript_union_matches_the_backend_enum[SourceSpecificity-SourceSpecificity] PASSED [ 29%]
+tests/test_frontend_contract.py::test_the_typescript_union_matches_the_backend_enum[UserDecision-UserDecision] PASSED [ 33%]
+tests/test_frontend_contract.py::test_the_typescript_union_matches_the_backend_enum[PipelineStage-PipelineStage] PASSED [ 37%]
+tests/test_frontend_contract.py::test_the_typescript_union_matches_the_backend_enum[CostCategory-CostCategory] PASSED [ 41%]
+tests/test_frontend_contract.py::test_the_typescript_union_matches_the_backend_enum[ScholarshipType-ScholarshipType] PASSED [ 45%]
+tests/test_frontend_contract.py::test_the_typescript_union_matches_the_backend_enum[ApplicationMode-ApplicationMode] PASSED [ 50%]
+tests/test_frontend_contract.py::test_the_typescript_union_matches_the_backend_enum[DocumentOwner-DocumentOwner] PASSED [ 54%]
+tests/test_frontend_contract.py::test_the_typescript_union_matches_the_backend_enum[DegreeLevel-DegreeLevel] PASSED [ 58%]
+tests/test_frontend_contract.py::test_the_typescript_union_matches_the_backend_enum[ApplicantStatus-ApplicantStatus] PASSED [ 62%]
+tests/test_frontend_contract.py::test_the_typescript_union_matches_the_backend_enum[DirectMessagePolicy-DirectMessagePolicy] PASSED [ 66%]
+tests/test_frontend_contract.py::test_the_union_parser_is_not_fooled_by_comments PASSED [ 70%]
+tests/test_frontend_contract.py::test_every_status_the_ui_colours_is_a_real_backend_value PASSED [ 75%]
+tests/test_frontend_contract.py::test_every_shortened_label_refers_to_a_real_status PASSED [ 79%]
+tests/test_frontend_contract.py::test_the_vocabulary_endpoint_covers_every_contracted_type PASSED [ 83%]
+tests/test_frontend_contract.py::test_the_job_status_union_matches_the_backend PASSED [ 87%]
+tests/test_frontend_contract.py::test_the_scholarship_interface_carries_every_decomposed_state PASSED [ 91%]
+tests/test_frontend_contract.py::test_the_composer_enforces_the_same_limits_as_the_database PASSED [ 95%]
+tests/test_frontend_contract.py::test_live_coverage_reaches_the_frontend_with_the_shape_it_declares PASSED [100%]
+
+============================== 24 passed in 0.52s ==============================

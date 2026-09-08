@@ -8,32 +8,27 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 | | |
 |---|---|
-| Holder | **nobody** |
-| Since (UTC) | released 2026-09-07 14:10:54 UTC |
-| Branch | `ai/c1/integration`, local-only; synchronized by merge with `origin/main@7b1fce0` |
-| HEAD when written | `96c1082` (final publication handoff commit follows) |
-| Origin main when checked | `7b1fce0`; campaign published as GitHub PR #7, not merged into main |
-| Previous holder | gpt-6-astra on the now-merged shortlist fix; a separate ZCode/GLM campaign then produced five local task candidates without updating this baton |
+| Holder | **codex** |
+| Since (UTC) | 2026-09-08 03:38:21 UTC |
+| Branch | `ai/c2/integration`, pushed to `origin/ai/c2/integration`; PR creation is the next release action |
+| HEAD when written | `5c42934` (T16/T27/T28/T29/T32 + T29 wiring + T30 harness + catalogue-parser repair) |
+| Origin main when checked | `4d2125c`; PR #7 is merged and is the merge-base of this branch |
+| Previous holder | GLM/ZCode dispatcher; it released after integrating T32 but left T29 production wiring explicitly deferred |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
 
-**GLM campaign `c1` audit and release hardening — ready for review in GitHub PR #7.** The campaign
-integrated T01, T04, T09, T10 and a deliberately limited T18 slice: five of the 24 task cards, not the
-whole project. `25f5954` merged current `origin/main`; the original GLM candidate is preserved at
-`audit/glm-c1-e533d62`. The audit fixed stale payment journal writes (`7f364cf`), Kazakhstan academic
-domain handling (`135138a`) and wrong-level/subject live programme selection (`02d648c`).
-
-All local gates now pass: backend 1153 tests / 93.00% coverage plus Ruff/format/mypy; frontend 182
-unit tests plus typecheck/lint/build; ordinary E2E 75 passed/1 skipped; auth E2E 6/6; production
-dependency audits report zero known vulnerabilities. A bounded NU live canary improved from 0 to 1
-claim after the selection fix, with zero false positives, but remains at 0% verification completeness
-because the plain fetch sees only a 42-character admissions shell. Provider-backed search/LLM,
-browser-tier hardening, most of the 24-task backlog, publication and deployment remain unfinished.
-The owner subsequently authorized publishing everything to GitHub. `origin/ai/c1/integration` and
-PR #7 now contain the code, full evidence bundle and corrected audit. GitHub release-gates were in
-progress when this handoff was written. Protected-main merge and application deployment remain
-separate operations.
+**Campaign `c2` continuation — T29 production wiring and the bounded T30 measurement are complete.** GLM integrated
+T16 (browser/egress hardening), T27 (claim verifier), T28 (source pages), T29 (catalog walker at the
+adapter seam) and T32 (freshness/source scanning) onto this branch. Its own ledger and review correctly
+state that T29 remained dormant in production; `8d2fa10` closed that seam and the live smoke proved
+catalogue traversal plus `SourcePage` recording. The owner explicitly authorized the two bounded T30
+batches. They measured programme recall 7/10, category recall 26/30 and zero material false positives.
+The registry itself remains at 19 because no 41-entry, human-checked official candidate set was supplied
+or canaried; claiming 19→60 would violate T30's own admission rule. T26 is blocked on a contradictory
+scope contract: its promised source-to-UI News vertical slice cannot be built through the currently
+allowed model/domain/runner-only paths. T31 remains blocked on an owner-selected provider, secrets
+outside Git, and the required data-policy acknowledgement.
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
@@ -63,6 +58,9 @@ manufacture compliant history. [0.4] was committed before [0.3].
 | T10 follow-up | `7f364cf` | PostgreSQL regression proved a stale payment poll committed a provider journal entry; `worker.py` now turns a failed fenced retry transition into `LeaseLost`, rolling back the whole payment transaction. |
 | T18 Kazakhstan domains | `135138a` | Treats `edu.kz` as a multipart public suffix, so `admissions.nu.edu.kz` belongs to `nu.edu.kz`; regression test included. |
 | T18 live programme fit | `02d648c` | Fetched programme pages must match the applicant's level and subject; prevents MSc/unrelated BSc leads consuming the verification limit ahead of BSc Computer Science. |
+| T29 production wiring | `8d2fa10` | Live runs now use the hardened `CatalogRenderer` and persist walker fetch metadata through `SourcePage.record`; decoder recursion and oversized JSON labels fail closed/bounded. |
+| T30 measurable harness | `388ae98` | Canary reports separate programme/category numerators, source-page and fetch-tier counts, walker metrics, timestamped outputs and explicit batch selection. |
+| T30 catalogue repair | `5c42934` | Malformed/PDF catalogue bytes can no longer abort the entire walk; lxml falls back to the stdlib parser and a minimal `<f/{>` regression pins the failure. |
 
 ## 4. Half-done / uncommitted at the moment of writing
 
@@ -220,26 +218,36 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-1. Wait for and inspect all release-gates on https://github.com/wpalish/ashyq-apply/pull/7.
-2. Owner reviews PR #7 and chooses whether to merge it into protected `main`.
-3. For real live research, choose a search provider and optional LLM provider, provision their secrets
-   outside Git, then implement T16/T25 and the remaining T18 dependencies before calling it release-ready.
-4. Do not merge protected main, deploy, buy a provider, add secrets or touch production data implicitly.
+1. Commit the T30 report plus the `ai-team` campaign/evidence after a final secret scan.
+2. Push the final branch head and open a PR against protected `main`; wait for GitHub release gates.
+3. Resolve T26's contract before code: either authorize the API/frontend/ingestion paths needed for a
+   real News vertical slice, or explicitly reduce acceptance to a storage-only foundation.
+4. For T30 registry 19→60, supply/approve a 41-institution candidate list with official seeds and run
+   bounded validation batches. Do not add entries that fail the frozen ≥2/4-category rule.
+5. Keep T31 blocked. Do not merge protected main, deploy, buy a provider, or add secrets implicitly.
 
 ## 6. Gate status at last run (numbers, not adjectives)
 
-Run by codex, 2026-09-07, on `ai/c1/integration@02d648c`, which includes
-`origin/main@7b1fce0` and the audited GLM campaign. Python gates used the worktree's Python 3.12 venv.
+Latest independent run by codex, 2026-09-08, on `ai/c2/integration@5c42934`.
 
 | Gate | Result |
 |---|---|
+| T29/T16/T28/T32 focused pytest | **pass** — **310 passed**, 1 deprecation warning |
+| T29 wiring + security RED→GREEN | **pass** — **5 passed**; initial RED was 4 failed / 1 passed |
+| T30 report tests RED→GREEN | **pass** — **3 passed** after initial RED |
+| live T29 smoke | **partially blocked** — robots refusal preserved; 2 catalogues walked, programme and scholarship leads found, 75 source-page outcomes recorded |
+| live T30 batches | **pass at the exact floor** — programme **7/10**, categories **26/30**, material FP **0**; 15 catalogues and 239 source-page rows |
+| malformed HKU catalogue repair | **pass** — 205 related tests; post-fix HKU smoke 22 candidates / 1 confirmed programme / 52 outcomes |
+| current Ruff / format / mypy | **pass** — 164 source files |
 | `ruff check app tests` | **pass** |
 | `ruff format --check app tests` | **pass** — 154 files |
-| `mypy app tests` | **pass** — 154 source files |
-| `pytest --cov=app --cov-fail-under=92` | **pass** — **1153 passed**, coverage **93.00%** |
+| `mypy app tests` | **pass** — 164 source files |
+| `pytest --cov=app --cov-fail-under=92` | **pass** — coverage **93.81%**, zero failures |
 | frontend `tsc --noEmit` / `eslint src e2e` | **pass** |
 | frontend `vitest run` | **pass** — **182 passed** / 20 files |
 | frontend `vite build` | **pass** |
+| frontend Playwright | **pass** — ordinary **75 passed / 1 intentionally skipped**; auth **6/6 passed** |
+| dependency audit | **pass** — `pip-audit` and `npm audit --omit=dev`: **0 known vulnerabilities** |
 | frontend `playwright test` | **pass** — **75 passed, 1 skipped**; generated screenshot diffs restored |
 | frontend auth Playwright | **pass** — **6 passed**; generated auth screenshot diffs restored |
 | `alembic heads` | **pass** — sole head `e7c1a4d90b52` |
@@ -422,3 +430,4 @@ host=github.com
 | 2026-09-07 11:28:28 UTC | codex | `e533d62` → `25f5954` | Audited the local GLM campaign, independently reran backend/frontend and ordinary E2E, preserved the original candidate as `audit/glm-c1-e533d62`, merged current `origin/main@7b1fce0`, and opened a fix-forward for the stale payment-reconcile commit defect already noted by GLM security. No push/deploy. |
 | 2026-09-07 12:00:10 UTC | codex | `25f5954` → `02d648c` + final handoff | Fixed and PostgreSQL-tested stale payment rollback, fixed two live NU discovery defects, ran all backend/frontend/E2E/auth/dependency gates, and field-ran the bounded NU canary. Audit verdict: useful partial campaign, not completed project. Baton released; no push/main/deploy. |
 | 2026-09-07 14:10:54 UTC | codex | `ab2e70a` → `96c1082` + final publication handoff | Owner explicitly authorized GitHub publication. Secret-scanned and committed all 133 ai-team evidence files plus the corrected audit, pushed `ai/c1/integration`, and opened PR #7. Release-gates started; no protected-main merge or application deploy. |
+| 2026-09-08 03:38:21 UTC | codex | `9b362c8` → in progress | Took the C2 baton after verifying `origin/main@4d2125c` is the merge-base. Owner authorized T29 wiring, bounded T30 batches, T26, committing campaign evidence, and GitHub publication; T31 remains blocked on provider/secrets/data-policy acknowledgement. |

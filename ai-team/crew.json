@@ -957,6 +957,135 @@
         "Fresh/upgrade migrations и scratch restore",
         "Все gates на final SHA; human approval для публикации"
       ]
+    },
+    {
+      "id": "T26",
+      "findings": ["L01"],
+      "title": "News-слой (сужено; SourceChange/SUPERSEDED перенесён в T32)",
+      "priority": "P1",
+      "dependencies": ["T28", "T32"],
+      "locks": ["news-models", "migrations", "runner"],
+      "allowed_paths": ["backend/app/models/**", "backend/app/domain/**", "backend/app/pipeline/runner.py", "backend/migrations/versions/*.py", "backend/tests/test_news*.py"],
+      "required_roles": ["ashyq-planner", "ashyq-developer", "ashyq-qa", "ashyq-reviewer", "ashyq-security"],
+      "status": "BLOCKED_SCOPE_CONTRACT",
+      "acceptance": [
+        "NewsEvent датирован, с источником и окном применимости; не смешивается с claims",
+        "Событие не меняет материальные значения без верификатора",
+        "Freshness-интеграция с окнами и SUPERSEDED-историей T32",
+        "Миграция только добавляет; апгрейд/даунгрейд проверены"
+      ]
+    },
+    {
+      "id": "T27",
+      "findings": ["L01"],
+      "title": "claim_verifier + фиксы T1-экстракции (Спринт 1 SEARCH2, без LLM)",
+      "priority": "P1",
+      "dependencies": [],
+      "locks": ["extraction", "domain-contract"],
+      "allowed_paths": ["backend/app/domain/claim_verifier.py", "backend/app/adapters/extraction.py", "backend/app/adapters/requirements/web_requirements.py", "backend/tests/test_claim_verifier.py", "backend/tests/test_live_regressions.py", "backend/tests/fixtures/live_shapes/**"],
+      "required_roles": ["ashyq-planner", "ashyq-developer", "ashyq-qa", "ashyq-reviewer", "ashyq-security"],
+      "status": "BACKLOG",
+      "acceptance": [
+        "excerpt — дословная подстрока после нормализации (NFKC, пробелы); иначе отклонение",
+        "value соответствует диапазону claim_type; таблица диапазонов в данных",
+        "source_url — суффикс-матч домена, не подстрока URL (регрессия ?u=narxoz.kz)",
+        "page_type допускает claim_type по ACCEPTS-матрице",
+        "FEE_WAIVER с отрицанием не даёт True; 2-значные суммы не становятся tuition",
+        "Каждый FP — фикстура в live_shapes; coverage ≥ 92; верификатор без I/O, unit 100%"
+      ]
+    },
+    {
+      "id": "T28",
+      "findings": ["L01"],
+      "title": "source_pages + условные GET + PII на redirect-хопах (Спринт 1 SEARCH2)",
+      "priority": "P1",
+      "dependencies": ["T16"],
+      "locks": ["fetching", "models", "migrations"],
+      "allowed_paths": ["backend/app/adapters/fetching.py", "backend/app/models/**", "backend/migrations/versions/*.py", "backend/tests/test_fetch*.py", "backend/tests/test_source_pages.py"],
+      "required_roles": ["ashyq-planner", "ashyq-developer", "ashyq-qa", "ashyq-reviewer", "ashyq-security"],
+      "status": "BACKLOG",
+      "acceptance": [
+        "Миграция source_pages; единственный новый head alembic",
+        "Fetcher хранит ETag/Last-Modified/content_hash; If-None-Match → 304",
+        "find_pii на каждом redirect-хопе (регрессия из аудита)",
+        "Политeness (robots/Crawl-delay/2 на хост) не ослаблена",
+        "Retention-политика source_pages зафиксирована",
+        "Две PG-сессии: нет дубля source_page; апгрейд/даунгрейд на обеих БД"
+      ]
+    },
+    {
+      "id": "T29",
+      "findings": ["L01"],
+      "title": "catalog_walker + JS-каталоги (Спринт 1 SEARCH2, удар по recall 1/10)",
+      "priority": "P1",
+      "dependencies": ["T16", "T28"],
+      "locks": ["discovery", "network-adapters"],
+      "allowed_paths": ["backend/app/adapters/discovery/catalog_walker.py", "backend/app/adapters/discovery/live_discovery.py", "backend/app/adapters/page_classifier.py", "backend/tests/test_live_discovery.py", "backend/tests/fixtures/live_shapes/**"],
+      "required_roles": ["ashyq-planner", "ashyq-developer", "ashyq-qa", "ashyq-reviewer", "ashyq-security"],
+      "status": "BACKLOG",
+      "acceptance": [
+        "PROGRAM_CATALOG → ссылки-кандидаты, top-N=verify_limit, тот же домен",
+        "Каждая ссылка через Fetcher; исходы в page_outcomes с причиной",
+        "Профильный фильтр переиспользует предикат 02d648c",
+        "JS: сетевой покой + перехват JSON {name,url}; 3 JS-фикстуры офлайн",
+        "Найденные URL пишутся в source_pages; demo без walker байт-в-байт прежний",
+        "Harness замера program recall готов (живой замер — T30)"
+      ]
+    },
+    {
+      "id": "T30",
+      "findings": ["L01"],
+      "title": "Канар program-recall + реестр 19→60 (внешние прогоны только с разрешения владельца)",
+      "priority": "P1",
+      "dependencies": ["T27", "T28", "T29"],
+      "locks": ["live-corpus", "discovery-tests"],
+      "allowed_paths": ["backend/scripts/canary_discovery.py", "backend/app/adapters/discovery/institution_registry.json", "docs/LIVE_DISCOVERY_REPORT.md", "backend/tests/test_canary_checks.py"],
+      "required_roles": ["ashyq-planner", "ashyq-developer", "ashyq-qa", "ashyq-reviewer", "ashyq-security"],
+      "status": "PARTIAL_VERIFIED",
+      "acceptance": [
+        "program recall: числитель и знаменатель раздельно; факт как есть",
+        "Замер на 10 канарных вузах: цель ≥ 7/10; результат записан честно",
+        "Category recall ≥ 26/30 не деградировал; 0 материальных FP",
+        "Реестр: запись только после ≥2/4 категорий на канаре, с canary_status",
+        "Разрешение владельца на каждый батч живых прогонов записано в ledger"
+      ]
+    },
+    {
+      "id": "T31",
+      "findings": ["L01"],
+      "title": "T2: LLM-экстракция в shadow-режиме — BLOCKED на провайдера/ключи/ack владельца",
+      "priority": "P1",
+      "dependencies": ["T27", "T28"],
+      "locks": ["extraction-llm", "prompts"],
+      "allowed_paths": ["backend/app/adapters/extraction_llm.py", "backend/prompts/**", "backend/app/config.py", "backend/tests/test_extraction_llm.py"],
+      "required_roles": ["ashyq-planner", "ashyq-developer", "ashyq-qa", "ashyq-reviewer", "ashyq-security"],
+      "status": "BLOCKED",
+      "acceptance": [
+        "Без UNIMATCH_LLM_DATA_POLICY_ACK=true приложение не стартует с LLM-тиром",
+        "Shadow по умолчанию: кандидаты → верификатор → rejects; в claims не попадают",
+        "Промпт: дословная цитата, null вместо выдумки; A1 PII-тест",
+        "Ключ кэша (content_hash, prompt_version); стоимость страницы измерена",
+        "Тесты только против FakeExtractor; живой провайдер в CI запрещён"
+      ]
+    },
+    {
+      "id": "T32",
+      "findings": ["L01", "J01"],
+      "title": "Freshness 2.0: SUPERSEDED, source_scan, reextract_page, refresh строки (закрывает T13 и SourceChange T26)",
+      "priority": "P1",
+      "dependencies": ["T28"],
+      "locks": ["migrations", "runner", "jobs", "freshness"],
+      "allowed_paths": ["backend/app/domain/freshness.py", "backend/app/models/**", "backend/migrations/versions/*.py", "backend/app/jobs/source_scanner.py", "backend/app/jobs/store.py", "backend/app/api/routes_results.py", "backend/tests/test_freshness*.py", "backend/tests/test_worker.py"],
+      "required_roles": ["ashyq-planner", "ashyq-developer", "ashyq-qa", "ashyq-reviewer", "ashyq-security"],
+      "status": "BACKLOG",
+      "acceptance": [
+        "ClaimStatus += SUPERSEDED; claims.source_page_id nullable; один head; обе БД",
+        "reextract_page: старые → SUPERSEDED, новые рядом; история было/стало запрашиваема",
+        "SUPERSEDED не участвует в find_conflicts и не дублирует evidence",
+        "source_scan суточно: lastmod → условный GET → очередь; Crawl-delay/robots уважены",
+        "Регресс-тесты T13 включены и зелёные (закрытие T13)",
+        "refresh строки с tenancy и 402 на free; demo-прогон байт-в-байт прежний"
+      ]
     }
   ]
 }

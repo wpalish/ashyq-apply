@@ -1,0 +1,163 @@
+{
+  "task_id": "T27",
+  "finding_ids": [
+    "L01"
+  ],
+  "attempt_id": "A2 (repair cycle after A1 CHANGES_REQUESTED)",
+  "baseline_sha": "28d729ca76cdf8d52344517a8316e2e805099d11",
+  "qa_commit_sha": "d8553e19cf7d5d5236c5f74b7ffc55f436d66a00 (A1) + c823d728179c59d5c1dbb235db517c181b8a6b8f (A2)",
+  "candidate_sha": "da836a20167a0186e8681e58a3ec29356bfc040b",
+  "integration_base_sha": "28d729ca76cdf8d52344517a8316e2e805099d11",
+  "participants": [
+    {
+      "role": "ashyq-planner",
+      "invocation_ref": "agent_9ed8a437-0b1e-451e-a333-be7a353a486b",
+      "checked_sha": "28d729ca76cdf8d52344517a8316e2e805099d11",
+      "verdict": "PASS",
+      "evidence_file": "planner.md"
+    },
+    {
+      "role": "ashyq-qa",
+      "invocation_ref": "agent_46119160-97fd-424d-a140-38505c0d3856",
+      "phase": "VERIFY_CANDIDATE",
+      "checked_sha": "da836a20167a0186e8681e58a3ec29356bfc040b",
+      "verdict": "PASS",
+      "evidence_file": "qa-verify-candidate-a2.md"
+    },
+    {
+      "role": "ashyq-developer",
+      "invocation_ref": "agent_794c5819-764b-4241-ac0f-8d765080ce8c",
+      "phase": "A2",
+      "checked_sha": "da836a20167a0186e8681e58a3ec29356bfc040b",
+      "verdict": "PASS",
+      "evidence_file": "developer-a2.md"
+    },
+    {
+      "role": "ashyq-reviewer",
+      "invocation_ref": "agent_14d208ca-d6ba-4ea8-934c-9166ae25c12b",
+      "phase": "A2 re-review",
+      "checked_sha": "da836a20167a0186e8681e58a3ec29356bfc040b",
+      "verdict": "PASS",
+      "evidence_file": "reviews.md"
+    },
+    {
+      "role": "ashyq-security",
+      "invocation_ref": "agent_711e0f22-2bfc-40bb-b4ed-aad585e4a664",
+      "phase": "A2 re-review",
+      "checked_sha": "da836a20167a0186e8681e58a3ec29356bfc040b",
+      "verdict": "PASS",
+      "evidence_file": "reviews.md"
+    },
+    {
+      "role": "ashyq-integrator",
+      "invocation_ref": "agent_38875ec8-a9fd-45b1-8d38-6b16526d0aab",
+      "checked_sha": "da836a20167a0186e8681e58a3ec29356bfc040b",
+      "verdict": "PASS",
+      "evidence_file": "integrator.md",
+      "phase": "A2 integration (combined merge 2ed4f51e1d5c1fae3f4cb36ad64982eb67184a2d, candidate tree byte-unchanged)"
+    }
+  ],
+  "tests": [
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c2-t27-verify-a2/backend && ./.venv/bin/python -m pytest tests/test_claim_verifier.py",
+      "checked_sha": "da836a20167a0186e8681e58a3ec29356bfc040b",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate-a2.md",
+      "summary": "93 passed (incl. 6 A2 REDs green: sibling-domain pw.edu.pl/uw.edu.pl, iab.edu.kz/kbtu.edu.kz, registrable_domain pins, discovery-subset guard, E2E cross-institution)"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c2-t27-verify-a2/backend && ./.venv/bin/python -m pytest tests/test_claim_verifier.py --cov=app.domain.claim_verifier --cov-fail-under=100",
+      "checked_sha": "da836a20167a0186e8681e58a3ec29356bfc040b",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate-a2.md",
+      "summary": "93 stmts, 0 miss, 100% coverage of the verifier module"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c2-t27-verify-a2/backend && ./.venv/bin/python -m pytest tests/test_live_regressions.py tests/test_adapters.py tests/test_live_extraction.py tests/test_security.py",
+      "checked_sha": "da836a20167a0186e8681e58a3ec29356bfc040b",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate-a2.md",
+      "summary": "180 passed; A1 REDs (fee-waiver negation, $50 tuition trap, ?u=narxoz.kz spoof) green"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c2-t27-verify-a2/backend && ./.venv/bin/python -m mypy app tests && ./.venv/bin/python -m ruff check app tests && ./.venv/bin/python -m ruff format --check app tests",
+      "checked_sha": "da836a20167a0186e8681e58a3ec29356bfc040b",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate-a2.md",
+      "summary": "mypy 0 in 157 files; ruff clean; 157 files formatted"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c2-integration/backend && ./.venv/bin/python -m pytest --cov=app --cov-fail-under=92",
+      "checked_sha": "da836a20167a0186e8681e58a3ec29356bfc040b",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "integrator.md",
+      "summary": "[combined merge 2ed4f51e1d5c1fae3f4cb36ad64982eb67184a2d — contains candidate da836a2 byte-unchanged + T28 side] FULL suite on combined merge SHA (T28+T27): 1290 passed, 0 failed, 0 skipped, coverage 93.87%; pgserver RAN (no importorskip skips)"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c2-integration/backend && ./.venv/bin/python -m pytest tests/test_claim_verifier.py tests/test_live_regressions.py",
+      "checked_sha": "da836a20167a0186e8681e58a3ec29356bfc040b",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "integrator.md",
+      "summary": "[combined merge 2ed4f51e1d5c1fae3f4cb36ad64982eb67184a2d — contains candidate da836a2 byte-unchanged + T28 side] 164 passed on combined SHA"
+    }
+  ],
+  "acceptance_items": [
+    {
+      "criterion": "excerpt — дословная подстрока после нормализации (NFKC, пробелы); иначе отклонение",
+      "status": "PASS",
+      "evidence_file": "reviews.md",
+      "note": "claim_verifier.py normalize_text (NFKC + whitespace-run collapse + strip) :111-121; is_verbatim_excerpt case-sensitive (pinned test :102-103); verify_claim seam casefolds — adjudicated ACCEPT by QA+reviewer (frozen test pair provably in tension; letter-identity-only folding; documented, HANDOFF-entry condition); near-miss/paraphrase rejected"
+    },
+    {
+      "criterion": "value соответствует диапазону claim_type; таблица диапазонов в данных",
+      "status": "PASS",
+      "evidence_file": "reviews.md",
+      "note": "VALUE_RANGE_RULES frozen MappingProxyType :165-182 (IELTS 0-9 step 0.5, TOEFL 0-120, Duolingo 0-160, SAT 0-1600, money >0, deadline ISO format-only, bare-year >= today.year); step/injected-today boundary tests"
+    },
+    {
+      "criterion": "source_url — суффикс-матч домена, не подстрока URL (регрессия ?u=narxoz.kz)",
+      "status": "PASS",
+      "evidence_file": "reviews.md",
+      "note": "Host-only via urlparse hostname; query/path/userinfo/nested-subdomain spoofs blocked; R3 REDs green; A2 additionally closed sibling-institution spoof under shared multi-part suffixes (pw.edu.pl vs uw.edu.pl, iab.edu.kz vs kbtu.edu.kz) — table widened 13→59 with discovery-subset guard"
+    },
+    {
+      "criterion": "page_type допускает claim_type по ACCEPTS-матрице",
+      "status": "PASS",
+      "evidence_file": "reviews.md",
+      "note": "CLAIM_TYPE_PAGE_TYPES table mirroring ACCEPTS families; two-sided consistency test (6 families × 14 PageType values); domain/ imports no adapters (AGENTS.md §6)"
+    },
+    {
+      "criterion": "FEE_WAIVER с отрицанием не даёт True; 2-значные суммы не становятся tuition",
+      "status": "PASS",
+      "evidence_file": "reviews.md",
+      "note": "_claim_fees: negation→False, indeterminate→no claim, affirmation→True (REDs R1a/R1b green); TUITION_FLOOR_AMOUNT=100.0 applied to TUITION+TOTAL before builder.add, APPLICATION_FEE preserved (R2a/R2b green + genuine-4500 guard); residual: 100-999 fees in window still pass (ticketed F4)"
+    },
+    {
+      "criterion": "Каждый FP — фикстура в live_shapes; coverage ≥ 92; верификатор без I/O, unit 100%",
+      "status": "PASS",
+      "evidence_file": "reviews.md",
+      "note": "3 fixtures (fee_waiver_negation, application_fee_trap, attacker_spoofed_domain) + A2 sibling scenarios; module coverage 100% (93/93 stmts); global 92 floor untouched — combined suite 93.87%; verifier pure, imports only domain+stdlib"
+    }
+  ],
+  "scope_check": "PASS",
+  "scope_check_command": "python3 ai-team/check_team.py scope --task T27 --base 28d729ca76cdf8d52344517a8316e2e805099d11 --head da836a20167a0186e8681e58a3ec29356bfc040b --repo /Users/wpalish/ashyq-worktrees/c2-t27-dev-a2",
+  "scope_check_result": "changed: extraction.py, web_requirements.py, claim_verifier.py, 3 live_shapes fixtures, test_claim_verifier.py, test_live_regressions.py; outside_scope: []",
+  "blockers": [],
+  "notes": [
+    "A1 chain: 28d729c -> d8553e1 (QA RED: 7 assertion + ImportError contract tests) -> 51f211d (A1 candidate) — reviewer CHANGES_REQUESTED (blocking F1: multi-part public suffix table divergence -> sibling-institution spoof), security PASS.",
+    "A2 repair chain: 51f211d -> c823d72 (QA A2 RED x6 incl. E2E cross-institution) -> da836a2 (A2 candidate: suffix table 13->59 + comments, nothing else) — QA VERIFIED_PASS, reviewer PASS (F1 CLOSED), security PASS (monotonicity argument: no entry loosens a correct rejection).",
+    "Validator model note: integrator + full-suite gates ran on combined merge 2ed4f51e1d5c1fae3f4cb36ad64982eb67184a2d (no-ff merge of candidate into integration); packet checked_sha fields reference the candidate per the structural checker's single-SHA model; merge evidence in integrator.md.",
+    "Integration: no-ff real merge (dispatcher-authorized, c1 precedent) of da836a2 onto b087b9d; zero conflicts; COMBINED_SHA 2ed4f51e1d5c1fae3f4cb36ad64982eb67184a2d; full gates green (1290 passed, cov 93.87%); candidate verdicts bound to da836a2.",
+    "QA TEST_AUTHOR refs: A1 agent_8222ea98-9055-4a1c-8f85-3e6c8796f3a6; A2 agent_5a86f6dc-2ab3-42bb-ae4a-48e09e09106a (A1 developer agent_2b1fb56c-be2c-4a9e-9bfe-a7e2a4aa7dcc).",
+    "Contract clarifications for HANDOFF §8: verify_claim excerpt seam casefolds (is_verbatim_excerpt stays strict); VerificationInput.today optional with date.today() fallback (adapters always inject).",
+    "Open tickets (non-blocking): redirect provenance final_url (security F1 MEDIUM, coordinate T28/T31); fee-window 100-999 class + word-boundary labels; clause-scoped negation; \\bnone\\b vocabulary; SCHOLARSHIP_AMOUNT unification; T31 contract requirements (allowed_domains + redirect-resolved URL, CLAIM_TYPE_PAGE_TYPES extension, non-empty excerpts); reverse divergence {gov.au, govt.nz} freeze test; domain-level shared suffix source.",
+    "E2E/frontend gates not run (zero frontend files in diff) — NOT_RUN != PASS.",
+    "Publication NOT DONE — push/merge-to-main/deploy requires explicit owner approval."
+  ]
+}

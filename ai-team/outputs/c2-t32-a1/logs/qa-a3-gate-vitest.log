@@ -1,0 +1,165 @@
+
+ RUN  v3.2.7 /Users/wpalish/ashyq-worktrees/c2-t32-verify-a3/frontend
+
+ ✓ src/lib/format.test.ts (22 tests) 36ms
+ ✓ src/screens/LegalScreen.test.tsx (9 tests) 83ms
+ ✓ src/lib/polling.test.tsx (5 tests) 150ms
+ ✓ src/screens/ProgressScreen.test.tsx (16 tests) 190ms
+ ✓ src/lib/store.test.tsx (18 tests) 189ms
+ ✓ src/components/social.test.tsx (17 tests) 160ms
+ ✓ src/lib/drafts.test.tsx (16 tests) 207ms
+ ✓ src/screens/ShortlistScreen.test.tsx (13 tests) 252ms
+ ✓ src/screens/ProfileScreen.test.tsx (7 tests) 532ms
+stderr | src/components/PaymentModal.test.tsx > PaymentModal > opens an order and polls until it is paid
+Warning: An update to PaymentModal inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PaymentModal (/Users/wpalish/ashyq-worktrees/c2-t32-verify-a3/frontend/src/components/PaymentModal.tsx:8:25)
+
+stderr | src/components/PaymentModal.test.tsx > PaymentModal > opens an order and polls until it is paid
+Warning: An update to PaymentModal inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at PaymentModal (/Users/wpalish/ashyq-worktrees/c2-t32-verify-a3/frontend/src/components/PaymentModal.tsx:8:25)
+
+ ✓ src/components/PaymentModal.test.tsx (6 tests) 230ms
+ ✓ src/lib/i18n.test.ts (8 tests) 12ms
+ ✓ src/api/client.billing.test.ts (6 tests) 14ms
+ ✓ src/components/AccountMenu.test.tsx (5 tests) 95ms
+ ✓ src/lib/hydrationErrors.test.tsx (2 tests) 88ms
+ ✓ src/components/primitives.test.tsx (7 tests) 94ms
+ ✓ src/components/moderation.test.tsx (4 tests) 86ms
+ ✓ src/screens/PreferencesScreen.test.tsx (3 tests) 95ms
+ ✓ src/lib/immutable.test.ts (11 tests) 2ms
+stderr | src/components/PaywallNotice.test.tsx > PaywallNotice > offers the price when there is no subscription
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/ashyq-worktrees/c2-t32-verify-a3/frontend/src/lib/store.tsx:82:26)
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/ashyq-worktrees/c2-t32-verify-a3/frontend/src/lib/store.tsx:82:26)
+
+stderr | src/components/PaywallNotice.test.tsx > PaywallNotice > offers the price when there is no subscription
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/ashyq-worktrees/c2-t32-verify-a3/frontend/src/lib/store.tsx:82:26)
+
+stderr | src/components/PaywallNotice.test.tsx > PaywallNotice > offers the subscription first when cases remain
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/ashyq-worktrees/c2-t32-verify-a3/frontend/src/lib/store.tsx:82:26)
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/ashyq-worktrees/c2-t32-verify-a3/frontend/src/lib/store.tsx:82:26)
+
+stderr | src/components/PaywallNotice.test.tsx > PaywallNotice > offers the subscription first when cases remain
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/ashyq-worktrees/c2-t32-verify-a3/frontend/src/lib/store.tsx:82:26)
+
+stderr | src/components/PaywallNotice.test.tsx > PaywallNotice > falls back to the price when the quota is exhausted
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/ashyq-worktrees/c2-t32-verify-a3/frontend/src/lib/store.tsx:82:26)
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/ashyq-worktrees/c2-t32-verify-a3/frontend/src/lib/store.tsx:82:26)
+
+stderr | src/components/PaywallNotice.test.tsx > PaywallNotice > falls back to the price when the quota is exhausted
+Warning: An update to StoreProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StoreProvider (/Users/wpalish/ashyq-worktrees/c2-t32-verify-a3/frontend/src/lib/store.tsx:82:26)
+
+ ✓ src/components/PaywallNotice.test.tsx (4 tests) 74ms
+ ✓ src/components/ErrorBoundary.test.tsx (3 tests) 40ms
+
+ Test Files  20 passed (20)
+      Tests  182 passed (182)
+   Start at  07:03:31
+   Duration  2.44s (transform 680ms, setup 1.29s, collect 2.86s, tests 2.63s, environment 7.84s, prepare 1.38s)

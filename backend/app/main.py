@@ -49,7 +49,8 @@ async def lifespan(_: FastAPI):
     """
     settings.validate_runtime()
     init_db()
-    summary = reconcile_startup()
+    # Demo deployments never arm source scans: there is nothing real to scan (C3).
+    summary = reconcile_startup(arm_source_scans=not settings.demo_mode)
     if any(summary.values()):
         log.warning("startup reconciliation: %s", summary)
     log.info(

@@ -1,0 +1,25 @@
+.F                                                                       [100%]
+=================================== FAILURES ===================================
+_ TestDemoRunIsByteIdentical.test_the_demo_pipeline_payload_is_byte_identical_to_baseline _
+
+self = <tests.test_freshness_regressions.TestDemoRunIsByteIdentical object at 0x108e7dd30>
+demo_session = (<sqlalchemy.orm.session.Session object at 0x109bfc5f0>, '973674527895469893f378ff9ebd85da')
+
+    def test_the_demo_pipeline_payload_is_byte_identical_to_baseline(self, demo_session):
+        session, run_id = demo_session
+        dump = _canonical_demo_dump(session, run_id)
+>       assert hashlib.sha256(dump.encode("utf-8")).hexdigest() == GOLDEN_DEMO_SHA256, (
+            "the demo pipeline output drifted from the baseline golden. If (and only if) "
+            "the drift is intended and confined to documented masking shapes, re-capture "
+            "GOLDEN_DEMO_SHA256 from the new baseline; otherwise fix the regression."
+        )
+E       AssertionError: the demo pipeline output drifted from the baseline golden. If (and only if) the drift is intended and confined to documented masking shapes, re-capture GOLDEN_DEMO_SHA256 from the new baseline; otherwise fix the regression.
+E       assert 'f738705e4579...93c4a759a4579' == 'aae8c595ab8f...5059327e4d702'
+E
+E         - aae8c595ab8f78c8a03a87eddde03a811b8986e4725817d05c65059327e4d702
+E         + f738705e457985809913ae4236245eeb12c9c984c294f72539893c4a759a4579
+
+tests/test_freshness_regressions.py:556: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_freshness_regressions.py::TestDemoRunIsByteIdentical::test_the_demo_pipeline_payload_is_byte_identical_to_baseline
+1 failed, 1 passed in 1.61s

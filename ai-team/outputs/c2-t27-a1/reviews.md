@@ -1,0 +1,34 @@
+# T27 A1 — Reviews (both on frozen candidate 51f211d9d1159f0e255f307dc707872ddd3a1f30)
+
+## Reviewer (agent_dd798f31-fb3f-41ca-8f4e-d238fc2dc6ea) — VERDICT: CHANGES_REQUESTED
+
+### BLOCKING F1 (HIGH): multi-part public suffix table divergence → sibling-institution spoof
+claim_verifier.py:202-218 `_MULTIPART_PUBLIC_SUFFIXES` (13 entries) diverges from live_discovery.py:91-139 MULTIPART_SUFFIXES (40+ incl. edu.kz :111, edu.pl :115, edu.cn, edu.tr, ac.kr, ac.jp, ac.il, com.br). For unlisted multi-part suffixes registrable_domain returns the public suffix itself: registrable_domain("uw.edu.pl") → "edu.pl" (keep=2). Trigger: candidate.domain=uw.edu.pl (shipped corpus data.py:829-833) + page from https://pw.edu.pl/... → url_matches_domains True → is_official_domain True (all 4 adapters pass [candidate.domain]) → VERIFIED_CURRENT from a different institution. For *.edu.kz (home market) the check is vacuous. Passes frozen tests because no test crosses two universities under one public suffix. Required: regression pins (pw.edu.pl vs uw.edu.pl → False; iab.edu.kz vs kbtu.edu.kz → False), widen table to agree with discovery list (or single shared domain-level source), new QA cycle, new candidate SHA.
+
+Non-blocking: F2 (MEDIUM) line-scoped negation can flip affirming line to False via unrelated "no" clause — clause-scope followup; F3 (LOW) sub-floor TUITION dropped before builder.rejected — no telemetry for T29; F4 (LOW) 100-999 fees in window still misread as tuition (same class as "board"/"university board"); F5 (LOW) value rules assume producer shapes — T31 must shape-check; F6 (INFO) today: date | None + date.today() fallback — fold into §8; F7 nothing smuggled in extraction.py.
+
+Casefold deviation ruling: CONCUR (ACCEPT) — frozen tests provably in tension (test_claim_verifier.py:102-103 vs :414-423); casefold changes letter identity only; condition: HANDOFF §8 entry.
+
+Test adequacy: adequate; blind spot exactly F1 (no cross-institution same-suffix test). Scope PASS (3 production files; tests byte-identical).
+
+NEXT (reviewer): do not merge 51f211d as PASS; new QA cycle → dev patch (widen _MULTIPART_PUBLIC_SUFFIXES, allowed path) → new candidate → re-review.
+
+## Security (agent_7e363309-baff-4dc3-abcb-bd6d0d7446cb) — VERDICT: PASS (on this SHA)
+
+Attack scenarios: query/path/userinfo/nested-subdomain/IDN/IP-literal/trailing-dot spoofs all BLOCKED (fail-closed); empty-label narxoz..kz matches but theoretical only; verbatim bypass: no truth-bearing slip (digits/punctuation/negation words survive folding; zero-width/RTL fail closed; residual = letter-case + NFKC equivalence only — acceptable for T31); 3-digit fee window still passes (known F2); negation matrix: no wrong True constructible, wrong False constructible on mixed lines ("Fee waivers are available; no separate form…" → False) (F3); "Fee Waivers: None" → silence not False (F4); VERIFIED_CURRENT closed on fetched-host hop; no crash shapes reachable (SCHOLARSHIP_AMOUNT exclusion correct).
+
+NEW FINDINGS (tickets, none blocking): F1 MEDIUM pre-existing redirect provenance — official_domain computed on pre-redirect URL; final_url ignored (web_requirements.py:171, web_costs.py:88-89); open-redirect/domain-takeover yields VERIFIED_CURRENT from off-domain content; ticket: use/record final host (coordinate with T28 scope). F2 MEDIUM fee-window class (scrub fee labels, word boundaries, MANDATORY_FEES floor). F3 LOW-MEDIUM clause-scoped negation. F4 LOW add \bnone\b to negation vocabulary. F5 NOTE T31 contract requirements: pass allowed_domains + redirect-resolved URL; extend CLAIM_TYPE_PAGE_TYPES for out-of-table claim types (else they reject); require non-empty excerpts; unify scholarship value shapes.
+
+Guards not weakened: fetching untouched; is_official_domain strictly narrower; coverage not lowered; QA tests byte-identical. PASS is static-analysis verdict on frozen SHA, no live validation.
+
+REQUIRED_EXTRA_TESTS: redirect→attacker host no-VERIFIED_CURRENT (drives F1); verbatim adversarial Unicode table; negation 8-sentence table; is_official_domain IDN/homoglyph/IPv6/userinfo table; $150-window + board-in-board probes; builder.add crash-shape fuzz (T31 producer contract).
+
+## Reviewer A2 (agent_14d208ca-d6ba-4ea8-934c-9166ae25c12b) — VERDICT: PASS (on frozen candidate da836a20167a0186e8681e58a3ec29356bfc040b)
+
+F1 CLOSED: table 13→59 verified entry-by-entry against live_discovery.MULTIPART_SUFFIXES (57; union holds, no old entry dropped, extras only gov.au/govt.nz, documented at claim_verifier.py:202-209). Sibling-spoof semantics re-derived from code: pw.edu.pl vs uw.edu.pl False, iab.edu.kz vs kbtu.edu.kz False, narxoz pins intact; subset guard + offline E2E present in test_claim_verifier.py:463-573. Diff c823d72..da836a2 verified by full file comparison: only the suffix table + 8 comment lines; tests untouched (identical inventories/line numbers, verbatim new class). Blast radius: exactly 3 corpus domain flips (u-tokyo.ac.jp, univie.ac.at, uw.edu.pl), all fix-direction; seed_demo.py has no dependency on them; widening cannot create spoofable outcomes nor new OFFICIAL_PUBLIC_TLDS matches. F2-F7 + security tickets carried forward untouched.
+Carried planner tickets: (a) reverse divergence {gov.au, govt.nz} unguarded; (b) one-directional duplicate-table guard — shared domain-level source remains cleaner endgame.
+Untested on this SHA: full suite + 92% global coverage, frontend gates (integration gate must run them), live network (prohibited).
+
+## Security A2 (agent_711e0f22-2bfc-40bb-b4ed-aad585e4a664) — VERDICT: PASS (on da836a2 only)
+
+Monotonicity argument verified: adding entry E changes registrable_domain(H) only when last2(H)==E, result strictly longer (E → last3(H)); match→non-match = fix direction; non-match→match requires last3(host)==registrable(allowed) i.e. attacker control inside the legitimate zone (same trust boundary as A1, DNS/subdomain compromise not registration). NO entry loosens a previously-correct rejection. Commercial-SLD and restricted-registry entries analyzed; all 16 corpus domains independently recomputed: exactly 3 flips (univie.ac.at, u-tokyo.ac.jp, uw.edu.pl) all fix-direction, 13 unchanged incl. old-table entries; positive pins hold. Delta byte-verified line-by-line vs A1: only table + 8 comments; logic byte-unchanged. A1 findings (F1 redirect provenance MEDIUM — still live at web_requirements.py:170-171/web_costs.py:88-89; F2 fee-window; F3/F4 negation; F5 T31 contract reqs) confirmed open, nothing silently worsened. Guards not weakened (coverage 100% held, FetchOutcome/VERIFIED_CURRENT gate unchanged, is_official_domain strictly narrower, domain/ adapter-import rule respected). Required extra tests: freeze reverse divergence {gov.au,govt.nz}; commercial-SLD pins; permanent no-loosening property test; carried A1 tickets separate.

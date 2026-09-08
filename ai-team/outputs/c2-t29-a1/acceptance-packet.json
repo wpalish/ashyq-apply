@@ -1,0 +1,159 @@
+{
+  "task_id": "T29",
+  "finding_ids": [
+    "L01"
+  ],
+  "attempt_id": "A1 (+A2 QA amendment)",
+  "baseline_sha": "2ed4f51e1d5c1fae3f4cb36ad64982eb67184a2d",
+  "qa_commit_sha": "7585b575e76e9887b3294d8a03ad0506131d4b86",
+  "candidate_sha": "ff6a90e3330c6040bfce02c63c6f8c163398d914",
+  "integration_base_sha": "2ed4f51e1d5c1fae3f4cb36ad64982eb67184a2d",
+  "participants": [
+    {
+      "role": "ashyq-planner",
+      "invocation_ref": "agent_035586ea-880e-47db-905b-22c10e074d00",
+      "checked_sha": "2ed4f51e1d5c1fae3f4cb36ad64982eb67184a2d",
+      "verdict": "PASS",
+      "evidence_file": "planner.md"
+    },
+    {
+      "role": "ashyq-qa",
+      "invocation_ref": "agent_369d01da-c641-4aa4-9616-2031627cfeae",
+      "phase": "VERIFY_CANDIDATE",
+      "checked_sha": "ff6a90e3330c6040bfce02c63c6f8c163398d914",
+      "verdict": "PASS",
+      "evidence_file": "qa-verify-candidate.md"
+    },
+    {
+      "role": "ashyq-developer",
+      "invocation_ref": "agent_fd70e6ac-a0e1-48b9-bf3f-3de45f17286e",
+      "checked_sha": "ff6a90e3330c6040bfce02c63c6f8c163398d914",
+      "verdict": "PASS",
+      "evidence_file": "developer.md"
+    },
+    {
+      "role": "ashyq-reviewer",
+      "invocation_ref": "agent_5834a789-8c92-4bf9-970d-4863ef39fe11",
+      "checked_sha": "ff6a90e3330c6040bfce02c63c6f8c163398d914",
+      "verdict": "PASS",
+      "evidence_file": "reviews.md"
+    },
+    {
+      "role": "ashyq-security",
+      "invocation_ref": "agent_898c1190-250b-47e8-b7a0-ff7aaa654119",
+      "checked_sha": "ff6a90e3330c6040bfce02c63c6f8c163398d914",
+      "verdict": "PASS",
+      "evidence_file": "reviews.md"
+    },
+    {
+      "role": "ashyq-integrator",
+      "invocation_ref": "agent_60477ab8-ae97-44a7-92e6-3b40af67eb67",
+      "checked_sha": "ff6a90e3330c6040bfce02c63c6f8c163398d914",
+      "verdict": "PASS",
+      "evidence_file": "integrator.md"
+    }
+  ],
+  "tests": [
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c2-t29-verify/backend && ./.venv/bin/python -m pytest tests/test_live_discovery.py",
+      "checked_sha": "ff6a90e3330c6040bfce02c63c6f8c163398d914",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate.md",
+      "summary": "124 passed (10 former REDs green incl. walker scoring/outcomes/JS tier/source_pages recording/budget; justified-GREEN pins)"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c2-t29-verify/backend && ./.venv/bin/python -m pytest tests/test_browser_network.py tests/test_ssrf.py",
+      "checked_sha": "ff6a90e3330c6040bfce02c63c6f8c163398d914",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate.md",
+      "summary": "98 passed — all T16 gates byte-identical after R1 additive change"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c2-t29-verify/backend && ./.venv/bin/python -m pytest tests/test_adapters.py tests/test_live_extraction.py tests/test_live_regressions.py tests/test_source_pages.py tests/test_pipeline.py",
+      "checked_sha": "ff6a90e3330c6040bfce02c63c6f8c163398d914",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate.md",
+      "summary": "194 passed — demo byte-identity + recording dormancy"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c2-t29-verify/backend && ./.venv/bin/python -m mypy app tests && ./.venv/bin/python -m ruff check app tests && ./.venv/bin/python -m ruff format --check app tests",
+      "checked_sha": "ff6a90e3330c6040bfce02c63c6f8c163398d914",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate.md",
+      "summary": "mypy 0 in 161 files; ruff clean; 161 formatted (post-amendment)"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c2-integration/backend && ./.venv/bin/python -m pytest --cov=app --cov-fail-under=92",
+      "checked_sha": "ff6a90e3330c6040bfce02c63c6f8c163398d914",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "integrator.md",
+      "summary": "FULL suite on combined SHA (ff-only == candidate): 1302 passed, 0 failed, 0 skipped, coverage 93.81%; pgserver RAN"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c2-integration/backend && ./.venv/bin/python -m pytest tests/test_live_discovery.py tests/test_browser_network.py tests/test_ssrf.py",
+      "checked_sha": "ff6a90e3330c6040bfce02c63c6f8c163398d914",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "integrator.md",
+      "summary": "222 passed on combined SHA"
+    }
+  ],
+  "acceptance_items": [
+    {
+      "criterion": "PROGRAM_CATALOG → ссылки-кандидаты, top-N=verify_limit, тот же домен",
+      "status": "PASS",
+      "evidence_file": "reviews.md",
+      "note": "catalog_walker.py extract_links + score_link (DATA tables, +5/+4/+8/+2, hard rejects); same_institution boundary; WALKER_TOP_N=20 (= current verify_limit default; settings change deferred per planner D1 until T30 data); trigger only when direct discovery under-delivers, top-2 catalogues; R1/R4/R9 green"
+    },
+    {
+      "criterion": "Каждая ссылка через Fetcher; исходы в page_outcomes с причиной",
+      "status": "PASS",
+      "evidence_file": "reviews.md",
+      "note": "_read_lead fetch only via fetcher.get (robots/PII/politeness inside); outcome per link: fetch vocabulary verbatim + frozen walker strings (degree_level_mismatch, reads_as_*, off_domain, short_label, excluded_url, walker_budget_exhausted, js_no_program_list); trace.walker + adapter.walker_outcomes (category catalog-walker); R2 green"
+    },
+    {
+      "criterion": "Профильный фильтр переиспользует предикат 02d648c",
+      "status": "PASS",
+      "evidence_file": "reviews.md",
+      "note": "profile_rejects factored line-by-line-identical from live_discovery :802-819, shared by _confirm_programs :870 and walker :455; existing confirm-stage pins green unmodified; R3 green. Deviation adjudicated: walker confirms with fields=[] (R5 requires JSON BSc Mathematics to confirm for CS applicant); field_mismatch unreachable in A1, vocabulary kept for T30"
+    },
+    {
+      "criterion": "JS: сетевой покой + перехват JSON {name,url}; 3 JS-фикстуры офлайн",
+      "status": "PASS",
+      "evidence_file": "reviews.md",
+      "note": "R1-approved additive browser.py response_listener (cap 20x1MB, reads in-handler before close, failures swallowed) + networkidle settle w/ 1200ms fallback; ALL T16 gates byte-identical; CatalogRenderer(BrowserFetcher) + parse_catalog_json (depth<=4, never raises); JSON+HTML merged dedup, JSON-without-array falls through; 3 fixtures offline via FakeBrowser seam; R5/R6/R7 green"
+    },
+    {
+      "criterion": "Найденные URL пишутся в source_pages; demo без walker байт-в-байт прежний",
+      "status": "PASS",
+      "evidence_file": "reviews.md",
+      "note": "Recording implemented at adapter level (exactly 9 frozen record kwargs; robots/PII/timeout refusals -> no row), DORMANT in production per dispatcher R2 ruling (runner lock held by T32; page_recorder default None; no CatalogRenderer construction in app/) — production activation is the dispatcher-tracked post-T32 wiring attempt; T30 gated on it. Demo byte-identity: FixtureDiscoveryAdapter branch + runner untouched; R10 green. Reviewer ruled A1 acceptance of item 5 acceptable under this condition"
+    },
+    {
+      "criterion": "Harness замера program recall готов (живой замер — T30)",
+      "status": "PASS",
+      "evidence_file": "reviews.md",
+      "note": "trace.walker TypedDict + as_dict 'walker' key (zeros distinguish never-walked; caps 200/200) + walker_outcomes; canary_discovery.py untouched (T30 extends it)"
+    }
+  ],
+  "scope_check": "PASS",
+  "scope_check_command": "python3 ai-team/check_team.py scope --task T29 --base 2ed4f51e1d5c1fae3f4cb36ad64982eb67184a2d --head ff6a90e3330c6040bfce02c63c6f8c163398d914 --repo /Users/wpalish/ashyq-worktrees/c2-t29-verify",
+  "scope_check_result": "checker output: changed=[browser.py, catalog_walker.py, live_discovery.py, 3 js fixtures, test_live_discovery.py]; outside_scope=[backend/app/adapters/browser.py] — dispatcher-authorized expansion R1 BEFORE implementation (additive response_listener kwarg + networkidle settle; required for acceptance item 4 'JS: перехват JSON'; T16 controls byte-identical, proven by full-file compare + negative-control tests). All other files within allowed_paths; no undeclared deviations.",
+  "blockers": [],
+  "notes": [
+    "Chain: 2ed4f51 -> 7585b57 (QA RED 10) -> 6ae2799 (dev impl) -> ff6a90e (QA amendment: _catalogue_html signature, +1/-1 annotation-only; mypy 3->0).",
+    "QA contract-amendment ref: agent_f890d641-f793-4d73-973e-c576ad8ea6f2 (phase TEST_CONTRACT_AMENDMENT, checked 6ae2799b77a7a0fb6a863249d3a79bee013ef83b — annotation-only signature fix +1/-1; its commit ff6a90e IS the candidate head).",
+    "QA TEST_AUTHOR ref: agent_4cd5eb11-0433-490d-93af-f6c5ebc3de12 (RED: 10 failed / 114 passed).",
+    "Dispatcher rulings frozen in planner.md: R1 browser.py APPROVED; R2 runner.py DEFERRED (T32 held the runner lock; wiring = post-T32 micro-attempt: CatalogRenderer construction ~runner:290 + page_recorder pass ~runner:377); WALKER_TOP_N=20 module constant until T30 canary data.",
+    "Combined integration: ff-only (linear), COMBINED_SHA == candidate ff6a90e; full suite 1302 passed cov 93.81%.",
+    "Security tickets: S-29-01 LOW RecursionError escapes parse_catalog_json 'never raises' (contained; fix at wiring); S-29-02 LOW JSON label length unbounded vs 160-char HTML cap (truncate before T30); S-29-03 INFO record render counts in T30 canary. Reviewer: js_no_program_list duplication on failed catalogue fetch; _NOT_CATALOGUE_TYPES annotation asymmetry; real-Chromium listener-vs-close race + networkidle settle — validate at wiring/T30 live smoke.",
+    "T30 HARD GATE: must not run before the R2 wiring attempt lands + live smoke.",
+    "E2E gates not run (zero frontend files in diff) — NOT_RUN != PASS.",
+    "Publication NOT DONE — push/merge-to-main/deploy requires explicit owner approval."
+  ]
+}
