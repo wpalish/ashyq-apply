@@ -22,7 +22,9 @@ export type FundingClassification =
 
 export type ClaimStatus =
   | 'VERIFIED_CURRENT' | 'POSSIBLY_STALE' | 'CONFLICTING' | 'UNVERIFIED'
-  | 'NOT_FOUND' | 'NEEDS_OFFICIAL_CLARIFICATION';
+  | 'NOT_FOUND' | 'NEEDS_OFFICIAL_CLARIFICATION'
+  /** Historical record, kept forever: the page no longer says this (see backend enum). */
+  | 'SUPERSEDED';
 
 export type SourceSpecificity =
   | 'program_intake' | 'program' | 'university_admissions' | 'application_portal'

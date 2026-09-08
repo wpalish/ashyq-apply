@@ -115,6 +115,8 @@ export const claimStatusTone: Record<ClaimStatus, Tone> = {
   UNVERIFIED: 'neutral',
   NOT_FOUND: 'neutral',
   NEEDS_OFFICIAL_CLARIFICATION: 'warn',
+  /** Historical record: same informational family as NOT_FOUND/UNVERIFIED. */
+  SUPERSEDED: 'neutral',
 };
 
 /**
