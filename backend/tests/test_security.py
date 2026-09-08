@@ -278,6 +278,124 @@ class TestAbuseLimits:
         assert len(calls) == 1, "a password check must run even when the account does not exist"
 
 
+class TestForwardedAddressSemantics:
+    """Which hop of X-Forwarded-For owns the limit bucket (S6).
+
+    The compose stack has exactly one trusted proxy (nginx), which rewrites
+    the header. Everything left of the last hop travelled through the client's
+    hands first, so only the right-most entry may be charged: keying on the
+    first hop lets a script name a fresh address per request and never fill a
+    bucket at all.
+    """
+
+    def test_the_last_forwarded_hop_is_the_limiting_address(self, auth_client):
+        client, settings = auth_client
+        spoofed = {"X-Forwarded-For": "1.2.3.4, 5.6.7.8"}
+
+        for i in range(settings.auth_rate_limit_per_minute):
+            response = client.post(
+                "/api/auth/login",
+                json={"email": f"hop-{i}@example.test", "password": "wrong password here"},
+                headers=spoofed,
+            )
+            assert response.status_code == 401
+        exhausted = client.post(
+            "/api/auth/login",
+            json={"email": "hop-exhausted@example.test", "password": "wrong password here"},
+            headers=spoofed,
+        )
+        assert exhausted.status_code == 429
+        assert "Too many requests" in exhausted.json()["detail"]
+
+        # The pair spent one bucket, and it is keyed on the LAST hop: arriving
+        # with only that hop is still limited, it is the same bucket.
+        last_hop = client.post(
+            "/api/auth/login",
+            json={"email": "hop-probe@example.test", "password": "wrong password here"},
+            headers={"X-Forwarded-For": "5.6.7.8"},
+        )
+        assert last_hop.status_code == 429, (
+            "with trust_proxy_headers=true the limit must be charged to the last "
+            "XFF hop: 5.6.7.8 is already exhausted by the spoofed pair"
+        )
+
+        # The spoofed left hop owns nothing: a bare request naming only
+        # 1.2.3.4 has a bucket of its own and must not inherit the pair's
+        # spent budget.
+        first_hop = client.post(
+            "/api/auth/login",
+            json={"email": "hop-first@example.test", "password": "wrong password here"},
+            headers={"X-Forwarded-For": "1.2.3.4"},
+        )
+        assert first_hop.status_code == 401, (
+            "the first XFF hop is the client-controlled spoof and must not be "
+            "the bucket the two-hop requests charged"
+        )
+
+    def test_xff_is_ignored_when_proxy_headers_are_not_trusted(self, auth_client, monkeypatch):
+        """Untrusted deployments must charge the socket peer: otherwise every
+        request names a fresh X-Forwarded-For and no limit ever binds."""
+        client, settings = auth_client
+        monkeypatch.setattr(settings, "trust_proxy_headers", False)
+
+        for i in range(settings.auth_rate_limit_per_minute):
+            response = client.post(
+                "/api/auth/login",
+                json={
+                    "email": f"untrusted-{i}@example.test",
+                    "password": "wrong password here",
+                },
+                headers={"X-Forwarded-For": f"198.51.100.{i + 1}"},
+            )
+            assert response.status_code == 401
+        rotated = client.post(
+            "/api/auth/login",
+            json={
+                "email": "untrusted-rotated@example.test",
+                "password": "wrong password here",
+            },
+            headers={"X-Forwarded-For": "203.0.113.77"},
+        )
+        assert rotated.status_code == 429, "untrusted XFF must not open a fresh bucket"
+        plain = client.post(
+            "/api/auth/login",
+            json={
+                "email": "untrusted-plain@example.test",
+                "password": "wrong password here",
+            },
+        )
+        assert plain.status_code == 429, "with trust off the socket peer owns the bucket"
+
+    def test_empty_or_absent_forwarded_for_charges_the_socket_peer(self, auth_client):
+        """An empty or blank X-Forwarded-For is not an address: empty, blank
+        and absent headers must all land in the socket peer's one bucket."""
+        client, settings = auth_client
+        headers_cycle: list[dict[str, str]] = [
+            {"X-Forwarded-For": ""},
+            {"X-Forwarded-For": "   "},
+            {},
+        ]
+
+        for i in range(settings.auth_rate_limit_per_minute):
+            response = client.post(
+                "/api/auth/login",
+                json={"email": f"blank-{i}@example.test", "password": "wrong password here"},
+                headers=headers_cycle[i % 3],
+            )
+            assert response.status_code == 401
+        blank = client.post(
+            "/api/auth/login",
+            json={"email": "blank-probe@example.test", "password": "wrong password here"},
+            headers={"X-Forwarded-For": " "},
+        )
+        assert blank.status_code == 429, "a blank X-Forwarded-For must charge the peer"
+        absent = client.post(
+            "/api/auth/login",
+            json={"email": "blank-absent@example.test", "password": "wrong password here"},
+        )
+        assert absent.status_code == 429, "a missing header must share the peer's bucket"
+
+
 class TestResetRequestSafety:
     """The reset-request answer is public: the token travels only by mail."""
 

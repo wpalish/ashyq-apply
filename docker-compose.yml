@@ -72,8 +72,17 @@ services:
     build:
       context: ./backend
     environment: *backend-env
-    ports:
-      - "${API_PORT:-8099}:8099"
+    # Not published to the host. This stack sets UNIMATCH_TRUST_PROXY_HEADERS,
+    # so the API believes X-Forwarded-For — on a directly reachable port that
+    # header is client-controlled and every per-address abuse limit resets per
+    # request. web (nginx) reaches the API over the compose network instead.
+    # For local /docs inspection, uncomment the loopback-only mapping below
+    # (verify_compose.sh still refuses any host publication of 8099, so this
+    # is for ad-hoc debugging, not a state to release):
+    # ports:
+    #   - "127.0.0.1:8099:8099"
+    expose:
+      - "8099"
     depends_on:
       postgres:
         condition: service_healthy
