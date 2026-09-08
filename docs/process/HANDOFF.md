@@ -55,6 +55,7 @@ manufacture compliant history. [0.4] was committed before [0.3].
 | T10 follow-up | `7f364cf` | PostgreSQL regression proved a stale payment poll committed a provider journal entry; `worker.py` now turns a failed fenced retry transition into `LeaseLost`, rolling back the whole payment transaction. |
 | T18 Kazakhstan domains | `135138a` | Treats `edu.kz` as a multipart public suffix, so `admissions.nu.edu.kz` belongs to `nu.edu.kz`; regression test included. |
 | T18 live programme fit | `02d648c` | Fetched programme pages must match the applicant's level and subject; prevents MSc/unrelated BSc leads consuming the verification limit ahead of BSc Computer Science. |
+| T29 production wiring | `8d2fa10` | Live runs now use the hardened `CatalogRenderer` and persist walker fetch metadata through `SourcePage.record`; decoder recursion and oversized JSON labels fail closed/bounded. |
 
 ## 4. Half-done / uncommitted at the moment of writing
 
@@ -212,10 +213,8 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-1. Add RED-first tests for the T29 runner wiring and the two Low review findings: deeply nested JSON
-   never raises and JSON programme labels are bounded to 160 characters.
-2. Wire `CatalogRenderer` and `SourcePage.record` into the non-demo `ResearchRunner`, then run target
-   and full gates.
+1. Run one bounded T29 live-Chromium smoke and inspect renderer/listener/source-page evidence.
+2. Run the full backend/frontend gates on `8d2fa10` before treating the wiring as integrated.
 3. Run T30 as separately recorded bounded live batches, respecting robots/rate/PII policy; publish the
    measured numerator/denominator and false-positive count exactly as observed.
 4. Implement the narrowed T26 dated NewsEvent slice only after T29/T30 are verified. Commit the
@@ -224,11 +223,14 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 6. Gate status at last run (numbers, not adjectives)
 
-Run by codex, 2026-09-07, on `ai/c1/integration@02d648c`, which includes
-`origin/main@7b1fce0` and the audited GLM campaign. Python gates used the worktree's Python 3.12 venv.
+Latest focused run by codex, 2026-09-08, on `ai/c2/integration@8d2fa10`. Full-suite rows below remain
+the last c1 baseline until the next step completes; the T29 target rows are current.
 
 | Gate | Result |
 |---|---|
+| T29/T16/T28/T32 focused pytest | **pass** — **310 passed**, 1 deprecation warning |
+| T29 wiring + security RED→GREEN | **pass** — **5 passed**; initial RED was 4 failed / 1 passed |
+| current Ruff / format / mypy | **pass** — 164 source files |
 | `ruff check app tests` | **pass** |
 | `ruff format --check app tests` | **pass** — 154 files |
 | `mypy app tests` | **pass** — 154 source files |
