@@ -168,6 +168,25 @@ class Settings(BaseSettings):
 
     def validate_runtime(self) -> None:
         """Reject configurations that would expose applicant data unsafely."""
+        # Payments fail closed (T34): an unknown provider name must not fall
+        # through to the silent fake, apipay without real credentials must not
+        # start a billing-less client, and production must never charge real
+        # money through the fake. Runs first so a misconfigured payment stack
+        # is reported even when something else is also wrong.
+        if self.payments_provider not in ("fake", "apipay"):
+            raise RuntimeError("UNIMATCH_PAYMENTS_PROVIDER must be 'fake' or 'apipay'.")
+        if self.payments_provider == "apipay":
+            if len(self.apipay_api_key.get_secret_value()) < 20:
+                raise RuntimeError(
+                    "UNIMATCH_APIPAY_API_KEY is required (>=20 chars) when provider is apipay."
+                )
+            if len(self.apipay_webhook_secret.get_secret_value()) < 32:
+                raise RuntimeError(
+                    "UNIMATCH_APIPAY_WEBHOOK_SECRET is required (>=32 chars) "
+                    "when provider is apipay."
+                )
+        if self.is_production and self.payments_enabled and self.payments_provider == "fake":
+            raise RuntimeError("Production cannot take payments through the fake provider.")
         if self.is_production and not self.auth_enabled:
             raise RuntimeError(
                 "UNIMATCH_AUTH_ENABLED must be true in production; refusing to expose "
