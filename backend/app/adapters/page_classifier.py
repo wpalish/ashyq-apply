@@ -219,6 +219,24 @@ _CHROME_HINT = re.compile(
 )
 
 
+def _parse_markup(markup: str) -> BeautifulSoup | None:
+    """Parse hostile/mislabeled input without violating ``classify_page``'s
+    never-raises contract.
+
+    Fetchers can legitimately return a PDF for a catalogue link. Its decoded
+    bytes are not HTML and malformed tag-like fragments can crash lxml's
+    BeautifulSoup builder. The stdlib parser is a conservative fallback; if
+    both reject the input the classifier proceeds with no DOM and returns an
+    honest UNKNOWN unless URL/text signals prove something else.
+    """
+    for parser in ("lxml", "html.parser"):
+        try:
+            return BeautifulSoup(markup, parser)
+        except Exception:
+            continue
+    return None
+
+
 def main_content(soup: BeautifulSoup) -> BeautifulSoup:
     """The page's own content, with the site's navigation removed.
 
@@ -227,7 +245,9 @@ def main_content(soup: BeautifulSoup) -> BeautifulSoup:
     the site, not the page: a single award page linked to six other awards from
     its menu and was classified as an index.
     """
-    working = BeautifulSoup(str(soup), "lxml")
+    working = _parse_markup(str(soup))
+    if working is None:
+        return soup
     for tag in working(["script", "style", "noscript", "svg", "iframe", "form"]):
         tag.decompose()
 
@@ -249,7 +269,7 @@ def main_content(soup: BeautifulSoup) -> BeautifulSoup:
 
 def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassification:
     """Classify a fetched page. Never raises; unknown is a valid answer."""
-    full = BeautifulSoup(html, "lxml") if html else None
+    full = _parse_markup(html) if html else None
     soup = main_content(full) if full is not None else None
     title = _title(full) if full is not None else ""
     headings = _headings(soup) if soup else []
@@ -440,9 +460,12 @@ def _headings(soup: BeautifulSoup) -> list[str]:
 
 
 def _text(soup: BeautifulSoup) -> str:
-    from app.adapters.extraction import html_to_text
-
-    return html_to_text(str(soup))
+    # ``soup`` is already parsed and stripped by ``main_content``. Re-parsing
+    # its serialization with lxml reintroduced the exact malformed-attribute
+    # crash that the safe parser above recovered from.
+    text = soup.get_text("\n")
+    text = re.sub(r"[ \t ]+", " ", text)
+    return re.sub(r"\n{3,}", "\n\n", text).strip()
 
 
 def _degree_level(text: str) -> str | None:

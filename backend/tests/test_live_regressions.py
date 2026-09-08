@@ -51,6 +51,15 @@ class TestProgramExistence:
     """Observed: `PROGRAM_EXISTS: computer science (bachelor)` from a page
     titled "Check admission requirements | BSc Dutch diploma"."""
 
+    def test_malformed_pdf_text_never_crashes_the_classifier(self):
+        """A live HKU catalogue linked a PDF whose decoded bytes contain a
+        five-character malformed tag that makes BeautifulSoup's lxml builder
+        raise ValueError. UNKNOWN is safer than dropping the whole catalogue.
+        """
+        page = classify_page(url="https://uni.edu/programme-brochure.pdf", html="<f/{>")
+
+        assert page.page_type is PageType.UNKNOWN
+
     def test_a_general_admissions_page_is_classified_as_such(self):
         page = classify_page(
             url="https://www.tudelft.nl/en/education/admission-and-application/bsc-dutch-diploma",
