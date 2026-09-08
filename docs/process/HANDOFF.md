@@ -8,7 +8,7 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 | | |
 |---|---|
-| Holder | **nobody — first frontend redesign slice handed off** |
+| Holder | **gpt-6-astra — requested typography correction and E02** |
 | Since (UTC) | 2026-09-08 16:26:31 UTC |
 | Branch | `task/frontend-redesign`, owner-directed continuation from design-system predecessor |
 | HEAD when written | `bf29056` (first frontend redesign slice pushed; repository-wide gates still incomplete) |
@@ -232,6 +232,12 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+Current owner instruction: restore the proposed brandbook typography (Manrope headings, Inter text,
+IBM Plex Mono evidence; remove Fraunces), synchronize tokens/catalogue/specs and continue E02.
+Implement six-step profile navigation using existing validated form panels, preserving transcript and
+conversion flows, draft storage and explicit server save. Add wizard tests and browser/font checks.
+This bounded E02 slice does not silently add server autosave or new test-planning API contracts.
 
 Continue the owner-requested redesign on `task/frontend-redesign`, explicitly based on the unmerged
 design-system predecessor `0468974`. First slice `bf29056` is complete within its bounded scope.
