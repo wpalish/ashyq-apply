@@ -42,7 +42,7 @@ $COMPOSE ps migrate | grep -q "Exit 0\|exited (0)" || fail "the migrate job did 
 
 echo "==> waiting for the API to report healthy"
 for _ in $(seq 1 60); do
-  body=$(curl -fsS "$API/api/health" 2>/dev/null || true)
+  body=$(curl -fsS "$API/health" 2>/dev/null || true)
   case "$body" in *'"status"'*) break ;; esac
   sleep 2
 done
