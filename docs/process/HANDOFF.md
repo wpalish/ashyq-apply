@@ -8,10 +8,10 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 | | |
 |---|---|
-| Holder | **nobody — E02 case-scoped wizard restoration pushed** |
-| Since (UTC) | 2026-09-08 16:26:31 UTC |
+| Holder | **gpt-6-astra — redesign integration regressions** |
+| Since (UTC) | 2026-09-09 19:07:07 UTC |
 | Branch | `task/frontend-redesign`, owner-directed continuation from design-system predecessor |
-| HEAD when written | `139221f` (step restoration verified and pushed) |
+| HEAD when written | `1eaa5d5` (Draft PR #10 published) |
 | Origin main when checked | `edf546d`; branch contains only the owner-directed design-system work |
 | Previous holder | GLM/ZCode dispatcher; it released after integrating T32 but left T29 production wiring explicitly deferred |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
@@ -251,6 +251,14 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+Current write-ahead: fix PR #10 ordinary E2E regressions before expanding E02.
+Inspect/fix shortlist Bucket chip geometry and mobile bottom-nav hit testing in
+frontend/src/styles/{components,redesign}.css; update community.spec.ts to test
+the documented horizontal context navigation rather than the old wrapped menu.
+Keep true pointer reachability and non-overlap assertions. Use isolated test databases,
+run ordinary/auth E2E plus frontend gates/token audit, update specs and gate evidence.
+Evidence-link rows below resume only after this regression slice.
+
 Next slice: replace comma-separated activity/achievement evidence links with independent editable
 rows. Read profile-screen/field specs and the existing evidence_links schema. Preserve string-array
 payloads and existing URLs verbatim; removing a row must not affect other rows. Validate URLs without
@@ -310,6 +318,12 @@ were adapted for the new primary/context navigation but those suites were not ex
 The backend KZT failure in section 7 needs separate resolution; do not claim all gates green.
 
 ## 6. Gate status at last run (numbers, not adjectives)
+
+PR run 34391685446 at 1eaa5d5: SQLite/PostgreSQL backend and security/container jobs
+pass; frontend static/unit/build steps pass, ordinary E2E fails (4 failed, 46 passed,
+1 skipped, 25 not run): Bucket geometry on both projects, obsolete mobile community
+wrap expectation, and mobile journey bottom-nav interception. Auth suite skipped.
+Historical local KZT failure below is not reproduced by this CI backend run.
 
 Step restoration final: 232 unit tests/25 files and 14 mocked browser scenarios pass. Typecheck,
 lint, build, token audit 0/0, Ruff/format, mypy 164 files and 43 focused profile backend tests pass.
@@ -556,6 +570,9 @@ host=github.com
 `[0.8]` → `[1.1]` → `[1.2]` → `[1.3]` → `[1.4]` → `[2.1]` → `[2.2]` → `[2.3]` → `[3.1]` → `[3.2]` → `[4.1]` → `[4.2]` → `[5]`
 
 ## 11. Session log (one line per session, newest last)
+
+2026-09-09 19:07 UTC gpt-6-astra: takes baton at `1eaa5d5`; repair PR #10 integration
+regressions before continuing evidence-link rows. Clean task branch; other branches untouched.
 
 2026-09-09 gpt-6-astra: `98e0eb4` → `139221f` plus release handoff. Owner requested an immediate
 all-changes commit; pushed 2785d82 before finishing mobile verification, then pushed 139221f.
