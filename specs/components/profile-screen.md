@@ -30,8 +30,12 @@ Profile-owned copy uses a typed RU/KK/EN dictionary. Locale changes must not res
 selected enum value or field ids. Translated options always retain explicit API values. User-entered
 names, transcript excerpts and server-authored messages remain verbatim, never machine-translated.
 
-`ProfileScreen({ onNext })`. Existing store/API unchanged. Wizard position is local UI state;
-existing case-scoped draft persistence stays in StoreProvider. No new server autosave in this slice.
+`ProfileScreen({ onNext })`. Store exposes activeCaseKey, profileStep and setProfileStep. Step 0–5
+persists in per-tab sessionStorage under a versioned per-case key, after hydration only. New cases
+start at 0; first save migrates the local-case step to the server id. Clear/demo reset to 0; deletion
+removes that case's step. An unidentified pre-case draft has ephemeral navigation only. Invalid or
+unavailable storage falls back safely. Review mode is not persisted and resets on case change.
+Existing case-scoped draft persistence stays in StoreProvider. No server autosave is added.
 
 ## 6. States
 
