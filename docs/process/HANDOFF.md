@@ -8,10 +8,10 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 | | |
 |---|---|
-| Holder | **gpt-6-astra — E02 profile localization** |
+| Holder | **nobody — E02 profile localization pushed** |
 | Since (UTC) | 2026-09-08 16:26:31 UTC |
 | Branch | `task/frontend-redesign`, owner-directed continuation from design-system predecessor |
-| HEAD when written | `3daa302` (clean and synchronized) |
+| HEAD when written | `0d8f505` (profile localization verified and pushed) |
 | Origin main when checked | `edf546d`; branch contains only the owner-directed design-system work |
 | Previous holder | GLM/ZCode dispatcher; it released after integrating T32 but left T29 production wiring explicitly deferred |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
@@ -41,6 +41,9 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+E02 `0d8f505`: RU/KK/EN profile labels, hints, actions, options and exam score labels; immutable API
+values on locale switch; improved Field hint contrast. 217 unit/12 mocked browser scenarios pass.
 
 E02 `25a4655`: race-safe current-draft validation, localized server eligibility/error/retry feedback;
 215 unit/10 mocked browser tests; no new backend gate. Full integration remains pending.
@@ -239,6 +242,13 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+Next executable slice: implement case-scoped ProfileScreen wizard-step restoration. Inspect existing
+caseDrafts/store identity and hydration first; expose a stable case key if necessary, do not infer it
+from display names. Restore only validated step indices per case, handle new/cleared profiles, preserve
+show-all as temporary review state, and test reload/case switch/isolation without server autosave.
+
+Completed localization write-ahead below is historical (0d8f505):
 
 Current write-ahead: extract ProfileScreen-owned labels/headings/hints/actions into a typed RU/KK/EN
 dictionary; translate enum labels with explicit unchanged option values. Preserve server-authored
@@ -516,6 +526,9 @@ host=github.com
 `[0.8]` → `[1.1]` → `[1.2]` → `[1.3]` → `[1.4]` → `[2.1]` → `[2.2]` → `[2.3]` → `[3.1]` → `[3.2]` → `[4.1]` → `[4.2]` → `[5]`
 
 ## 11. Session log (one line per session, newest last)
+
+2026-09-09 gpt-6-astra: `3daa302` → `0d8f505` plus release handoff. Profile localization and
+contrast fix pushed; 217 unit/12 browser scenarios pass; full integration still pending. Baton released.
 
 2026-09-09, gpt-6-astra: `149c6fa` → `25a4655` plus release handoff. Fresh validation and localized
 status pushed; 215 unit/10 browser checks green; inherited integration caveats preserved. Baton released.
