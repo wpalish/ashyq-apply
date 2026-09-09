@@ -233,8 +233,9 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-Current owner instruction: restore the proposed brandbook typography (Manrope headings, Inter text,
-IBM Plex Mono evidence; remove Fraunces), synchronize tokens/catalogue/specs and continue E02.
+Current owner clarification supersedes the brandbook typography: Prata headings, Onest UI/body,
+IBM Plex Mono evidence. The prior Manrope/Inter assumption was incorrect; synchronize tokens,
+catalogue/specs, verify and push this exact font set, then continue E02.
 Implement six-step profile navigation using existing validated form panels, preserving transcript and
 conversion flows, draft storage and explicit server save. Add wizard tests and browser/font checks.
 This bounded E02 slice does not silently add server autosave or new test-planning API contracts.

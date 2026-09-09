@@ -2,9 +2,9 @@
 
 ## Families
 
-- `--font-family-brand`: Manrope for the wordmark, controls, navigation, and short product headings.
-- `--font-family-display`: Fraunces for editorial page titles and narrative section openings only.
-- `--font-family-ui`: Inter/system UI for controls and body copy.
+- `--font-family-brand`: Onest for the wordmark, controls, navigation, and short product headings.
+- `--font-family-display`: Prata for editorial page titles and narrative section openings only.
+- `--font-family-ui`: Onest/system UI for controls and body copy.
 - `--font-family-mono`: IBM Plex Mono/system monospace for sources, identifiers, timestamps, and numeric evidence.
 
 ## Scale and hierarchy
@@ -17,7 +17,7 @@ Weights are limited to `--font-weight-medium`, `--font-weight-semibold`, and `--
 
 - Component CSS uses `--font-*`, `--line-height-*`, and `--letter-spacing-*` aliases only.
 - Display type provides structure; do not use it for long paragraphs or dense tables.
-- Brand type and display type are deliberately separate: Manrope keeps actions modern and direct, while Fraunces preserves the editorial strength required by E00.
+- Owner's explicit font selection (2026-09-09) overrides the brandbook: Prata display headings, Onest brand/actions/body, IBM Plex Mono evidence. Prata is loaded at its native 400 weight; use `--font-weight-display` to avoid synthetic bold.
 - Monospace indicates machine-originated or source-like content, not emphasis.
 - Keep responsive heading behavior inside the upstream fluid size primitives.
 - Test every loaded weight with Kazakh letters `Ә Ғ Қ Ң Ө Ұ Ү Һ І` before release.

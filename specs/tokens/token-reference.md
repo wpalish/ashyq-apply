@@ -54,9 +54,10 @@
 | `--ds-color-on-accent` | `#ffffff` | `var(--ds-color-brand-ink)` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
 | `--ds-color-transparent` | `transparent` | — | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
 | `--ds-color-inherit` | `inherit` | — | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
-| `--ds-font-family-brand` | `'Manrope', 'Inter', system-ui, sans-serif` | — | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
-| `--ds-font-family-display` | `'Fraunces', 'Iowan Old Style', Georgia, serif` | — | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
-| `--ds-font-family-ui` | `'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif` | — | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
+| `--ds-font-family-brand` | `'Onest', system-ui, sans-serif` | — | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
+| `--ds-font-family-display` | `'Prata', Georgia, serif` | — | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
+| `--ds-font-weight-display` | `400` | — | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
+| `--ds-font-family-ui` | `'Onest', system-ui, -apple-system, 'Segoe UI', sans-serif` | — | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
 | `--ds-font-family-mono` | `'IBM Plex Mono', 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace` | — | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
 | `--ds-font-size-2xs` | `0.75rem` | — | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
 | `--ds-font-size-micro` | `0.75rem` | — | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
@@ -249,8 +250,9 @@
 | `--color-on-interactive` | `var(--ds-color-on-accent, #ffffff)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
 | `--color-transparent` | `var(--ds-color-transparent, transparent)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
 | `--color-inherit` | `var(--ds-color-inherit, inherit)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
-| `--font-family-brand` | `var(--ds-font-family-brand, 'Manrope', system-ui, sans-serif)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
-| `--font-family-display` | `var(--ds-font-family-display, Georgia, serif)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
+| `--font-family-brand` | `var(--ds-font-family-brand, 'Onest', system-ui, sans-serif)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
+| `--font-family-display` | `var(--ds-font-family-display, 'Prata', Georgia, serif)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
+| `--font-weight-display` | `var(--ds-font-weight-display, 400)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
 | `--font-family-ui` | `var(--ds-font-family-ui, system-ui, sans-serif)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
 | `--font-family-mono` | `var(--ds-font-family-mono, ui-monospace, monospace)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
 | `--font-size-2xs` | `var(--ds-font-size-2xs, 0.75rem)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |

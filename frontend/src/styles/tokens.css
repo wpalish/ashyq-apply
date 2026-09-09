@@ -63,9 +63,10 @@
   --ds-color-inherit: inherit;
 
   /* Layer 1: upstream typography primitives */
-  --ds-font-family-brand: 'Manrope', 'Inter', system-ui, sans-serif;
-  --ds-font-family-display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
-  --ds-font-family-ui: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --ds-font-family-brand: 'Onest', system-ui, sans-serif;
+  --ds-font-family-display: 'Prata', Georgia, serif;
+  --ds-font-weight-display: 400;
+  --ds-font-family-ui: 'Onest', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --ds-font-family-mono: 'IBM Plex Mono', 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
   --ds-font-size-2xs: 0.75rem;
   --ds-font-size-micro: 0.75rem;
@@ -265,8 +266,9 @@
   --color-inherit: var(--ds-color-inherit, inherit);
 
   /* Layer 2: project typography aliases */
-  --font-family-brand: var(--ds-font-family-brand, 'Manrope', system-ui, sans-serif);
-  --font-family-display: var(--ds-font-family-display, Georgia, serif);
+  --font-family-brand: var(--ds-font-family-brand, 'Onest', system-ui, sans-serif);
+  --font-family-display: var(--ds-font-family-display, 'Prata', Georgia, serif);
+  --font-weight-display: var(--ds-font-weight-display, 400);
   --font-family-ui: var(--ds-font-family-ui, system-ui, sans-serif);
   --font-family-mono: var(--ds-font-family-mono, ui-monospace, monospace);
   --font-size-2xs: var(--ds-font-size-2xs, 0.75rem);

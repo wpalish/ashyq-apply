@@ -180,13 +180,13 @@ export function DesignSystem() {
               <article className="ds-specimen ds-type">
                 <p className="ds-card-label">Typography</p>
                 <p className="ds-type__display">Твой путь открыт</p>
-                <p className="ds-type__brand">Manrope — бренд и действия</p>
-                <p className="ds-type__body">Inter сохраняет ясность в длинных объяснениях, формах и инструкциях.</p>
+                <p className="ds-type__brand">Onest — бренд и действия</p>
+                <p className="ds-type__body">Onest сохраняет ясность в длинных объяснениях, формах и инструкциях.</p>
                 <p className="ds-type__mono">₸ 1 850 000 · 15 ЯНВ 2027</p>
                 <dl className="ds-token-list">
-                  <div><dt>Display</dt><dd>Fraunces 48/55</dd></div>
-                  <div><dt>Action</dt><dd>Manrope 16/24</dd></div>
-                  <div><dt>Body</dt><dd>Inter 16/26</dd></div>
+                  <div><dt>Display</dt><dd>Prata 48/55</dd></div>
+                  <div><dt>Action</dt><dd>Onest 16/24</dd></div>
+                  <div><dt>Body</dt><dd>Onest 16/26</dd></div>
                   <div><dt>Evidence</dt><dd>IBM Plex Mono 14/20</dd></div>
                 </dl>
               </article>

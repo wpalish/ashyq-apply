@@ -23,6 +23,10 @@ for (const theme of ['light', 'dark'] as const) {
     await page.goto('/');
     await expect(page).toHaveURL(/#\/case$/);
     await expect(page.getByRole('heading', { level: 1 })).toContainText('Большой путь');
+    await page.evaluate(() => document.fonts.ready);
+    await expect(page.getByRole('heading', { level: 1 })).toHaveCSS('font-family', /Prata/);
+    await expect(page.getByRole('heading', { level: 1 })).toHaveCSS('font-weight', '400');
+    await expect(page.locator('body')).toHaveCSS('font-family', /Onest/);
     await expect(page.getByTestId('section-shortlist')).toBeDisabled();
     await expect(page.getByTestId('section-plan')).toBeDisabled();
     await expect(page.locator('#case-switcher')).toHaveCount(0);

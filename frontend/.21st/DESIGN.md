@@ -13,7 +13,7 @@ This project uses a calm editorial system for evidence-backed admissions decisio
 ## Visual decisions
 
 - Exact brand primitives: Ink `#111827`, Paper `#F7F3EA`, Academic Blue `#526DA6`, Library Burgundy `#8E3F4C`, Scholar Teal `#437A78`, Parchment Gold `#C5A66B`, Deadline Coral `#E47A6A`.
-- Manrope is the geometric brand/action face. Fraunces is restricted to editorial page titles and narrative moments. Inter carries UI/body copy. IBM Plex Mono carries evidence, sums, dates, scores, identifiers, and freshness.
+- Owner-confirmed typography (2026-09-09, overrides brandbook): Prata 400 for display headings; Onest for brand/actions/UI/body; IBM Plex Mono for evidence, sums, dates, scores, identifiers and freshness.
 - Product radius scale is 4 / 8 / 12 px. The 24 px radius is reserved for large editorial page/image containers.
 - Product motion stays at or below 200 ms and has a reduced-motion path. Continuous spinner cycles are the only longer repeating motion.
 - Light and dark themes preserve the same meanings. Exact accent swatches are not used for small text when they miss 4.5:1; accessible semantic derivatives are used instead.
