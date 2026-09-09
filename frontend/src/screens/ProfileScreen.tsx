@@ -42,18 +42,21 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
   const copy = profileWizardCopy[locale];
   const tr = (key: ProfileCopyKey) => translateProfile(locale, key);
   const validationCopy = profileValidationCopy[locale];
-  const [step, setStep] = useState(0);
-  const [showAll, setShowAll] = useState(false);
+  const {
+    profileDraft, setProfileDraft, validation, validationStatus, retryValidation, saveProfile, loading,
+    savedProfile, restored, loadDemoProfile, clearProfile, draftRestored, discardDraft,
+    activeCaseKey, profileStep: step, setProfileStep: setStep,
+  } = useStore();
+  const [review, setReview] = useState<{ key: string | null; enabled: boolean } | null>(null);
+  if (review !== null && review.key !== activeCaseKey) setReview(null);
+  const showAll = review?.key === activeCaseKey && review.enabled;
+  const setShowAll = (enabled: boolean) => setReview({ key: activeCaseKey, enabled });
   const sectionRef = useRef<HTMLDivElement>(null);
   const moveStep = (next: number) => {
     setStep(next);
     setShowAll(false);
     sectionRef.current?.focus();
   };
-  const {
-    profileDraft, setProfileDraft, validation, validationStatus, retryValidation, saveProfile, loading,
-    savedProfile, restored, loadDemoProfile, clearProfile, draftRestored, discardDraft,
-  } = useStore();
   const [saved, setSaved] = useState(false);
   const updateExam = (updater: (draft: Record<string, unknown>) => Record<string, unknown>) => {
     setProfileDraft(updater);

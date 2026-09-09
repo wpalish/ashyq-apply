@@ -1,6 +1,27 @@
 import { expect, test } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
+test('local case restores its step on reload and does not restore review mode', async ({ page }) => {
+  await page.goto('/#/profile');
+  await page.getByRole('button', { name: 'New case', exact: true }).click();
+  await page.getByLabel('Гражданство', { exact: true }).fill('Canada');
+  await expect.poll(() => page.evaluate(() => {
+    const key = sessionStorage.getItem('ashyq.activeProfile');
+    return key ? localStorage.getItem(`ashyq.draft.${key}`) : null;
+  })).toContain('Canada');
+  await page.getByTestId('profile-step-4').click();
+  await page.getByTestId('profile-show-all').click();
+  await page.reload();
+  await expect(page.getByTestId('profile-step-4')).toHaveAttribute('aria-current', 'step');
+  await expect(page.getByTestId('profile-show-all')).toHaveAttribute('aria-pressed', 'false');
+  await page.getByTestId('profile-step-0').click();
+  await expect(page.getByLabel('Гражданство', { exact: true })).toHaveValue('Canada');
+  await page.getByTestId('profile-step-3').click();
+  page.once('dialog', dialog => dialog.accept());
+  await page.getByRole('button', { name: 'New case', exact: true }).click();
+  await expect(page.getByTestId('profile-step-0')).toHaveAttribute('aria-current', 'step');
+});
+
 test('profile locale switch preserves data, selections and responsive layout', async ({ page }, info) => {
   await page.emulateMedia({ reducedMotion: 'reduce', colorScheme: 'light' });
   await page.goto('/#/profile');

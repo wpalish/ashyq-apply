@@ -9,6 +9,7 @@
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ProfileScreen } from './ProfileScreen';
+import { useState } from 'react';
 import { ApiError, api } from '@/api/client';
 import { setLocale } from '@/lib/i18n';
 import { profileCopy } from '@/lib/profileCopy';
@@ -21,7 +22,10 @@ const setProfileDraft = vi.fn((update: (d: unknown) => unknown) => {
 });
 
 vi.mock('@/lib/store', () => ({
-  useStore: () => ({
+  useStore: () => {
+    const [profileStep, setProfileStep] = useState(0);
+    return {
+    activeCaseKey: null, profileStep, setProfileStep,
     profileDraft: draft,
     setProfileDraft,
     saveProfile: vi.fn(),
@@ -29,7 +33,7 @@ vi.mock('@/lib/store', () => ({
     capabilities: null,
     savedProfile: null,
     loading: false,
-  }),
+  }; },
 }));
 
 beforeEach(() => {

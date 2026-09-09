@@ -295,6 +295,11 @@ The backend KZT failure in section 7 needs separate resolution; do not claim all
 
 ## 6. Gate status at last run (numbers, not adjectives)
 
+Owner-requested checkpoint: step restoration passes 232 unit tests, typecheck, build, token audit 0/0,
+Ruff/format/mypy and 43 focused backend tests. Browser run unfinished at checkpoint; desktop reload
+passed, mobile new-case test must open More before using the hidden account action. Full integration
+and inherited KZT caveats remain. Commit current changes first, then correct the mobile scenario.
+
 2026-09-09 profile localization: 217 unit tests/24 files, 12 mocked desktop/mobile browser scenarios,
 typecheck/lint/build and token audit 0 errors/0 warnings pass. Ruff check/format, mypy 164 files and
 43 focused backend profile tests pass. Full backend coverage/ordinary-auth integration not rerun.
