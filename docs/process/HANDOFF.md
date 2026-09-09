@@ -8,12 +8,12 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 | | |
 |---|---|
-| Holder | **gpt-6-astra — redesign integration regressions** |
-| Since (UTC) | 2026-09-09 19:07:07 UTC |
+| Holder | **gpt-6-astra — PR #10 integration regression repair** |
+| Since (UTC) | 2026-09-09 19:29:02 UTC |
 | Branch | `task/frontend-redesign`, owner-directed continuation from design-system predecessor |
-| HEAD when written | `1eaa5d5` (Draft PR #10 published) |
+| HEAD when written | `d1e4fe9` (previous writer accepted the same regression slice) |
 | Origin main when checked | `edf546d`; branch contains only the owner-directed design-system work |
-| Previous holder | GLM/ZCode dispatcher; it released after integrating T32 but left T29 production wiring explicitly deferred |
+| Previous holder | gpt-6-astra; its session stopped after accepting the regression slice, before implementation |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
@@ -251,12 +251,24 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-Current write-ahead: fix PR #10 ordinary E2E regressions before expanding E02.
-Inspect/fix shortlist Bucket chip geometry and mobile bottom-nav hit testing in
-frontend/src/styles/{components,redesign}.css; update community.spec.ts to test
-the documented horizontal context navigation rather than the old wrapped menu.
-Keep true pointer reachability and non-overlap assertions. Use isolated test databases,
-run ordinary/auth E2E plus frontend gates/token audit, update specs and gate evidence.
+Accepted write-ahead: repair PR #10's four ordinary-E2E failures before expanding E02.
+
+1. Reproduce the two-project Bucket failure plus the mobile community and journey failures against a
+   fresh isolated SQLite database; retain the real pointer-interception and bounding-box evidence.
+2. Update `specs/components/chip.md` and `specs/components/app-shell.md` before UI edits: the longest
+   ranked Bucket chip must remain inside its cell and before the pinned Decision cell; mobile context
+   navigation is one discoverable horizontal strip whose items remain keyboard/pointer reachable;
+   fixed BottomNav must own the bottom hit area above screen content with a 44 px minimum target.
+3. Make the smallest token-only changes in `frontend/src/styles/components.css` and
+   `frontend/src/styles/redesign.css`; do not alter Prata + Onest + IBM Plex Mono, component/API
+   contracts, ranking, privacy, payments, or application data. Update `frontend/e2e/community.spec.ts`
+   to exercise documented horizontal navigation by scrolling real controls into view, while preserving
+   true pointer reachability, non-overlap, no-page-overflow, keyboard and accessibility assertions.
+4. Run focused desktop/mobile regressions, full ordinary and auth E2E against isolated databases,
+   frontend typecheck/lint/unit/build and token audit; then run backend Ruff/format, mypy and full
+   coverage per `AGENTS.md`. Record exact results here. Acceptance is all four CI regressions green,
+   ordinary/auth suites complete, token audit at zero, and no undocumented gate failure.
+
 Evidence-link rows below resume only after this regression slice.
 
 Next slice: replace comma-separated activity/achievement evidence links with independent editable
@@ -570,6 +582,9 @@ host=github.com
 `[0.8]` → `[1.1]` → `[1.2]` → `[1.3]` → `[1.4]` → `[2.1]` → `[2.2]` → `[2.3]` → `[3.1]` → `[3.2]` → `[4.1]` → `[4.2]` → `[5]`
 
 ## 11. Session log (one line per session, newest last)
+
+2026-09-09 19:29 UTC gpt-6-astra: accepted PR #10 integration regression repair at `d1e4fe9` after
+clean fetch/handoff audit and documentation/code reconciliation; exact CSS/spec/E2E plan is in §5.
 
 2026-09-09 19:07 UTC gpt-6-astra: takes baton at `1eaa5d5`; repair PR #10 integration
 regressions before continuing evidence-link rows. Clean task branch; other branches untouched.
