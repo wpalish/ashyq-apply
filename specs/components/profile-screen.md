@@ -26,6 +26,10 @@ Reuse Panel, Field, Notice and Button contracts. Display headings use Prata 400;
 
 ## 5. Props/API
 
+Profile-owned copy uses a typed RU/KK/EN dictionary. Locale changes must not reset step, draft,
+selected enum value or field ids. Translated options always retain explicit API values. User-entered
+names, transcript excerpts and server-authored messages remain verbatim, never machine-translated.
+
 `ProfileScreen({ onNext })`. Existing store/API unchanged. Wizard position is local UI state;
 existing case-scoped draft persistence stays in StoreProvider. No new server autosave in this slice.
 

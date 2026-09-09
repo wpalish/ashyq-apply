@@ -8,10 +8,10 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 | | |
 |---|---|
-| Holder | **nobody — E02 fresh profile validation pushed** |
+| Holder | **gpt-6-astra — E02 profile localization** |
 | Since (UTC) | 2026-09-08 16:26:31 UTC |
 | Branch | `task/frontend-redesign`, owner-directed continuation from design-system predecessor |
-| HEAD when written | `25a4655` (fresh validation verified and pushed) |
+| HEAD when written | `3daa302` (clean and synchronized) |
 | Origin main when checked | `edf546d`; branch contains only the owner-directed design-system work |
 | Previous holder | GLM/ZCode dispatcher; it released after integrating T32 but left T29 production wiring explicitly deferred |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
@@ -239,6 +239,10 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+Current write-ahead: extract ProfileScreen-owned labels/headings/hints/actions into a typed RU/KK/EN
+dictionary; translate enum labels with explicit unchanged option values. Preserve server-authored
+details and draft values; test live locale switching, payload invariance and mobile accessibility.
 
 Next executable slice: localize remaining ProfileScreen field labels, panel headings and severity
 labels in RU/KK/EN. Read profile-screen/field/panel/notice specs first; preserve API field keys,
