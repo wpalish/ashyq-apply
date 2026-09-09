@@ -18,6 +18,11 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 2. Current task
 
+Published owner-requested **Draft PR #10**: https://github.com/wpalish/ashyq-apply/pull/10
+Base main; head task/frontend-redesign. Available for download/review and continued implementation,
+not merge-ready. Remaining epics and full integration verification are explicit in the PR body.
+AGENTS.md still defines single-writer relay; no parallel implementation policy was silently enabled.
+
 **Owner-directed frontend redesign: app shell, exact Prata/Onest/IBM Plex Mono typography and first six-step E02 slice pushed. E02 remains partial.** See `docs/frontend-redesign.md` for exact scope and verification. This is not completion of all R1 epics. The owner supplied
 `photo-references/design_system.png`, `photo-references/hero_section_example.png`, brandbook v1.1, and
 `epics.md`. Build a living, mobile-first design-system catalogue that reconciles the brand's Open Chapter
