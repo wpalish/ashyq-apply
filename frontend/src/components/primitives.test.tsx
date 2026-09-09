@@ -8,7 +8,7 @@
 
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { Chip, Notice, SourceLink, StatusChip } from './primitives';
+import { Chip, Notice, SourceLink, StatusChip, isSafeHref } from './primitives';
 import { STATUS_MEANING, fundingClassTone } from '@/lib/format';
 
 describe('StatusChip', () => {
@@ -46,6 +46,36 @@ describe('SourceLink', () => {
     render(<SourceLink url="fixture://u-groningen/costs.html" />);
     expect(screen.queryByRole('link')).toBeNull();
     expect(screen.getByText('demo fixture')).toBeInTheDocument();
+  });
+
+  /**
+   * Every URL here was read off a third-party page by the crawler, and React
+   * does not refuse a `javascript:` href - it warns in development and renders
+   * it anyway. A source that is not a web address is shown as text.
+   */
+  it.each([
+    'javascript:alert(document.cookie)',
+    'JavaScript:alert(1)',
+    'data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==',
+    'vbscript:msgbox(1)',
+  ])('never renders %s as a link', (url) => {
+    render(<SourceLink url={url} />);
+    expect(screen.queryByRole('link')).toBeNull();
+    expect(screen.getByText('not a web link')).toBeInTheDocument();
+  });
+});
+
+describe('isSafeHref', () => {
+  it('accepts the two schemes a published source can have', () => {
+    expect(isSafeHref('https://www.rug.nl/education')).toBe(true);
+    expect(isSafeHref('http://www.rug.nl/education')).toBe(true);
+  });
+
+  it('rejects script-bearing and unparseable URLs', () => {
+    expect(isSafeHref('javascript:alert(1)')).toBe(false);
+    expect(isSafeHref('data:text/html,<script>alert(1)</script>')).toBe(false);
+    expect(isSafeHref('fixture://demo/page.html')).toBe(false);
+    expect(isSafeHref('')).toBe(false);
   });
 });
 

@@ -101,15 +101,37 @@ export function Field({
 }
 
 /**
+ * Whether a URL is safe to put in an `href`.
+ *
+ * React does not block `javascript:` in an href - it warns in development and
+ * renders it anyway - and every URL on this screen was read off a third-party
+ * page by the crawler, so none of them is ours. Only the two schemes a source
+ * link can legitimately have get to be links; anything else is shown as text.
+ */
+export function isSafeHref(url: string): boolean {
+  try {
+    // No base: a source link is always absolute, so a relative string is not
+    // one either, and resolving it against our own origin would invent a link
+    // to ourselves out of whatever the crawler happened to store.
+    const scheme = new URL(url).protocol;
+    return scheme === 'http:' || scheme === 'https:';
+  } catch {
+    return false;
+  }
+}
+
+/**
  * A source link. Fixture URLs are rendered as text with a demo badge, because
  * a link that cannot be opened would imply an external source that isn't there.
+ * Anything that is not plain http(s) is rendered as text for the same reason:
+ * it is not a source anyone can open.
  */
 export function SourceLink({ url }: { url: string }) {
-  if (url.startsWith('fixture://')) {
+  if (url.startsWith('fixture://') || !isSafeHref(url)) {
     return (
       <span className="row row--tight" style={{ display: 'inline-flex' }}>
         <code className="xs">{url}</code>
-        <Chip tone="demo">demo fixture</Chip>
+        <Chip tone="demo">{url.startsWith('fixture://') ? 'demo fixture' : 'not a web link'}</Chip>
       </span>
     );
   }
