@@ -8,17 +8,17 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 | | |
 |---|---|
-| Holder | **gpt-6-astra — requested typography correction and E02** |
+| Holder | **nobody — typography and first E02 slice pushed** |
 | Since (UTC) | 2026-09-08 16:26:31 UTC |
 | Branch | `task/frontend-redesign`, owner-directed continuation from design-system predecessor |
-| HEAD when written | `bf29056` (first frontend redesign slice pushed; repository-wide gates still incomplete) |
+| HEAD when written | `6acfc12` (typography and profile wizard pushed; repository-wide gates still incomplete) |
 | Origin main when checked | `edf546d`; branch contains only the owner-directed design-system work |
 | Previous holder | GLM/ZCode dispatcher; it released after integrating T32 but left T29 production wiring explicitly deferred |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
 
-**Owner-directed frontend redesign: first app-shell/case-dashboard slice implemented and pushed; next is E02.** See `docs/frontend-redesign.md` for exact scope and verification. This is not completion of all R1 epics. The owner supplied
+**Owner-directed frontend redesign: app shell, exact Prata/Onest/IBM Plex Mono typography and first six-step E02 slice pushed. E02 remains partial.** See `docs/frontend-redesign.md` for exact scope and verification. This is not completion of all R1 epics. The owner supplied
 `photo-references/design_system.png`, `photo-references/hero_section_example.png`, brandbook v1.1, and
 `epics.md`. Build a living, mobile-first design-system catalogue that reconciles the brand's Open Chapter
 language with E00/E16 evidence, uncertainty, semantic-status, dark-theme, localization, and AA contracts.
@@ -45,6 +45,8 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 Frontend first slice: `bf29056` — CaseScreen, five-section AppShell/mobile navigation, three-language
 dashboard copy, specs, adapted E2E navigation, 10 unit tests and four isolated browser checks.
 WIP checkpoint because the unrelated KZT backend baseline remains red and full integration E2E is unrun.
+Typography `64826f6`: exact owner-selected Prata/Onest/IBM Plex Mono, native display weight and docs.
+E02 `6acfc12`: six navigable profile sections, review mode, preserved edits, 198 unit/6 browser checks.
 
 The original recovery entries below are historical provenance. Preserve their hashes and ancestry;
 the first seven predate `AGENTS.md` and lack the required `Agent:` trailer, so do not rewrite them to
@@ -232,6 +234,15 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+Next executable slice: read specs/components/profile-screen.md and epics.md E02, then implement
+an explicit exam picker in ProfileScreen.tsx that reveals only selected existing test fields without
+clearing hidden scores. Group TOEFL/Duolingo with English, keep SAT/ACT/curriculum in Tests, preserve
+API shape and planned-retake dates. Add visibility/retained-score tests, then completeness feedback
+only from authoritative validation rules. Do not label E02 complete before the remaining items in
+the spec are implemented. Exact selected fonts are Prata + Onest + IBM Plex Mono; do not revert them.
+
+Historical write-ahead for this completed slice:
 
 Current owner clarification supersedes the brandbook typography: Prata headings, Onest UI/body,
 IBM Plex Mono evidence. The prior Manrope/Inter assumption was incorrect; synchronize tokens,
