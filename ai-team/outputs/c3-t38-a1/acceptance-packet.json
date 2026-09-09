@@ -1,0 +1,121 @@
+{
+  "task_id": "T38",
+  "finding_ids": [
+    "S8"
+  ],
+  "attempt_id": "A1",
+  "baseline_sha": "810bb0064f45045f5f657ac89e653d2e551e140f",
+  "qa_commit_sha": "n/a (docs task: no RED suite; QA method = number-by-number source cross-check per frozen contract)",
+  "candidate_sha": "d4908ae6111d007903e45b550f82fdb975a3d92b",
+  "integration_base_sha": "810bb0064f45045f5f657ac89e653d2e551e140f",
+  "participants": [
+    {
+      "role": "ashyq-planner",
+      "invocation_ref": "agent_36b11deb-26e8-42d7-a858-c2452baf1943",
+      "checked_sha": "810bb0064f45045f5f657ac89e653d2e551e140f",
+      "verdict": "PASS",
+      "evidence_file": "planner.md"
+    },
+    {
+      "role": "ashyq-qa",
+      "invocation_ref": "agent_51cddb63-5f6a-4d37-849f-9b81cbaa89c0",
+      "phase": "VERIFY_CANDIDATE",
+      "checked_sha": "d4908ae6111d007903e45b550f82fdb975a3d92b",
+      "verdict": "PASS",
+      "evidence_file": "qa-verify-candidate.md"
+    },
+    {
+      "role": "ashyq-developer",
+      "invocation_ref": "agent_9b01939a-6b29-4381-a511-81f6efbde8b4",
+      "checked_sha": "d4908ae6111d007903e45b550f82fdb975a3d92b",
+      "verdict": "PASS",
+      "evidence_file": "developer.md"
+    },
+    {
+      "role": "ashyq-reviewer",
+      "invocation_ref": "agent_9cd6db06-6b0e-49b3-a13e-84ee39040321",
+      "checked_sha": "d4908ae6111d007903e45b550f82fdb975a3d92b",
+      "verdict": "PASS",
+      "evidence_file": "reviews.md"
+    },
+    {
+      "role": "ashyq-integrator",
+      "invocation_ref": "agent_346a6841-c7ff-42ad-85e5-6307cb7a19fa",
+      "checked_sha": "d4908ae6111d007903e45b550f82fdb975a3d92b",
+      "verdict": "PASS",
+      "evidence_file": "integrator.md"
+    }
+  ],
+  "tests": [
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c3-t38-qa && git diff 810bb00..d4908ae --stat",
+      "checked_sha": "d4908ae6111d007903e45b550f82fdb975a3d92b",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate.md",
+      "summary": "exactly README.md + RELEASE_CHECKLIST.md + docs/CURRENT_STATE.md (94+/44-); no code/CI/HANDOFF/sources touched"
+    },
+    {
+      "command": "number-by-number source cross-check (60+ tokens) + own recounts",
+      "checked_sha": "d4908ae6111d007903e45b550f82fdb975a3d92b",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate.md",
+      "summary": "every numeric token mapped to LIVE_DISCOVERY_REPORT/ledger/integrator artifact; own counts match: registry 19, i18n EN194/RU183/KK183, Playwright 38x2=76 + 6 auth, checklist summary 92 PASS/2 PARTIAL/2 BLOCKED"
+    },
+    {
+      "command": "stale-token sweep + wording-stability",
+      "checked_sha": "d4908ae6111d007903e45b550f82fdb975a3d92b",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate.md",
+      "summary": "zero stale tokens outside contracted historical contexts; zero 'latest'/'not yet pushed'/'unpublished'"
+    },
+    {
+      "command": "python3 scripts/handoff_check.py",
+      "checked_sha": "d4908ae6111d007903e45b550f82fdb975a3d92b",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "integrator.md",
+      "summary": "exit 0 (run by QA and integrator)"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c3-integration/backend && ./.venv/bin/python -m pytest --cov=app --cov-fail-under=92",
+      "checked_sha": "d4908ae6111d007903e45b550f82fdb975a3d92b",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "integrator.md",
+      "summary": "[final combined == candidate via ff] FULL suite 1402 passed / 0 skipped / 1 pre-existing warning, coverage 94.05% (floor 92); ruff/mypy clean 166 files; targets 166 passed"
+    }
+  ],
+  "acceptance_items": [
+    {
+      "criterion": "ни одно число в README/RELEASE_CHECKLIST не противоречит пакетам c2/c3",
+      "status": "PASS",
+      "evidence_file": "qa-verify-candidate.md",
+      "note": "60+ числовых токенов добавленных строк сверены по-токенно с LIVE_DISCOVERY_REPORT, ledger (c2 runs 34188244906/34188286259/34189211422 + 34115345524), integrator-артефактом (1402/0 skipped/94.04-94.05%/166); собственные пересчёты registry/i18n/playwright совпали"
+    },
+    {
+      "criterion": "каждое изменённое утверждение имеет ссылку на источник",
+      "status": "PASS",
+      "evidence_file": "reviews.md",
+      "note": "23/23 контрактованных правок, extras нет; honesty-констрейнты соблюдены (c3 = LOCAL+SHA+дата; FE = c2-метки; verify_compose NOT_RUN != PASS; 'green since 2026-09-07' стабильно до/после PR); reviewer findings F1-F4 LOW/INFO некритичны"
+    },
+    {
+      "criterion": "handoff_check.py зелёный",
+      "status": "PASS",
+      "evidence_file": "integrator.md",
+      "note": "exit 0 на финальном SHA (QA + интегратор)"
+    }
+  ],
+  "scope_check": "PASS",
+  "scope_check_command": "git -C /Users/wpalish/ashyq-worktrees/c3-t38-dev diff 810bb00..d4908ae --name-only",
+  "scope_check_result": "README.md, RELEASE_CHECKLIST.md, docs/CURRENT_STATE.md — exactly allowed_paths; LIVE_DISCOVERY_REPORT.md and DOCKER_VERIFICATION.md byte-identical (sources untouchable)",
+  "blockers": [],
+  "notes": [
+    "Chain: 810bb00 -> d4908ae (docs only, ff onto ai/c3/integration; FINAL campaign head).",
+    "Historical preservation: CURRENT_STATE append-only (1-442 untouched); RELEASE_CHECKLIST history notes + supersession pointers (gates 1/2/22/89); red-CI history kept as past tense.",
+    "Followups (non-blocking): F1 README:311 local-метка в комментарии (при следующем касании); F2 захват CI-run summary в артефакт для атрибуции 'in CI'; F3 потеряна старая зелёная сноска gate 2 (счётчики живы в gate 1); F4 gate 3 '74.0 kB' fix-plan-era (pre-existing).",
+    "Docs-only задача: RED-фаза неприменима (замороженный контракт предписал QA-метод сверки вместо RED-сьюты; QA выполнил его полностью и независимо)."
+  ]
+}

@@ -11,7 +11,7 @@ from sqlalchemy.orm import Session
 
 from app.config import get_settings
 from app.db import get_session
-from app.models import AuthSession, Organization, OrganizationMembership, User
+from app.models import AuditEvent, AuthSession, Organization, OrganizationMembership, User
 from app.security import (
     Principal,
     clear_session_cookie,
@@ -19,6 +19,7 @@ from app.security import (
     get_optional_principal,
     get_principal,
     hash_password,
+    needs_rehash,
     normalize_email,
     token_hash,
     verify_password,
@@ -165,6 +166,28 @@ def login(
     )
     if membership is None:
         raise HTTPException(403, "This account has no active workspace.")
+    # A hash written under an older scrypt cost still verifies, so the login
+    # succeeds — and then the hash is rewritten at today's cost, once: the new
+    # hash fails needs_rehash, so the next login finds nothing to do.
+    if needs_rehash(user.password_hash):
+        try:
+            user.password_hash = hash_password(payload.password)
+        except ValueError:
+            # A pre-rule password shorter than today's minimum verifies but
+            # cannot be re-hashed; the login itself must still go through.
+            pass
+        else:
+            session.add(
+                AuditEvent(
+                    organization_id=membership.organization_id,
+                    actor="system",
+                    action="password_rehashed",
+                    entity_type="user",
+                    entity_id=user.id,
+                    detail={},
+                )
+            )
+            session.commit()
     create_session(session, user, membership.organization_id, response)
     principal = Principal(
         user_id=user.id,

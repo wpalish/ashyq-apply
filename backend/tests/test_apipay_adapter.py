@@ -212,3 +212,50 @@ def test_the_adapter_satisfies_the_provider_protocol() -> None:
     from app.payments.provider import PaymentProvider
 
     assert isinstance(provider_with(lambda _r: httpx.Response(200, json={})), PaymentProvider)
+
+
+# -- T34 A1 (security campaign c3): payments must fail closed ----------------
+# RED on baseline edf546d: verify_webhook guards only an empty *signature*, so
+# a provider configured with an empty secret still verifies a deterministic
+# hmac.new(b"", ...) signature that anyone can forge, and empty credentials
+# are accepted silently at construction (the worker never runs
+# validate_runtime, so construction is its only line of defence).
+
+
+def test_webhook_signature_computed_with_an_empty_secret_is_rejected() -> None:
+    """An empty webhook secret must reject every signature (fail closed).
+
+    The provider is built with a valid secret and the empty secret is forced
+    afterwards, so this test stays valid once construction itself refuses
+    empty credentials. Baseline: the forged empty-key signature verifies
+    as True on the only unauthenticated write endpoint.
+    """
+    import hashlib
+    import hmac
+
+    provider = provider_with(lambda _r: httpx.Response(200, json={}))
+    assert provider._secret == b"whsec"
+    provider._secret = b""
+    body = b'{"event":"invoice.status_changed"}'
+    forged = "sha256=" + hmac.new(b"", body, hashlib.sha256).hexdigest()
+    assert provider.verify_webhook(body, forged) is False
+
+
+def test_an_empty_api_key_is_rejected_at_construction() -> None:
+    """A missing api key must fail loudly, not start a billing-less client."""
+    with pytest.raises(ValueError, match="non-empty api_key"):
+        ApiPayProvider(
+            base_url="https://api.apipay.test/api/v1",
+            api_key="",
+            webhook_secret="whsec-synthetic-placeholder",
+        )
+
+
+def test_an_empty_webhook_secret_is_rejected_at_construction() -> None:
+    """A missing webhook secret must fail loudly, never sign with b""."""
+    with pytest.raises(ValueError, match="non-empty webhook_secret"):
+        ApiPayProvider(
+            base_url="https://api.apipay.test/api/v1",
+            api_key="key-123",
+            webhook_secret="",
+        )

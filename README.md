@@ -19,10 +19,13 @@ material value on screen traces back to the page it was read from.
 > community module, and payments — payments are **off by default** and the
 > adapter has never spoken to a live ApiPay account.
 >
-> The remaining release blockers are an external deployment, a lawyer for the
-> privacy policy and terms, live programme-page recall (2 of 9 canary
-> institutions), and one red end-to-end test that has kept CI on `main` failing
-> since 2026-09-04. See [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md) for the
+> The remaining release blockers need a person, not another phase: an external
+> deployment, a lawyer for the privacy policy and terms, and a live ApiPay
+> account before payments can be switched on. Live programme-page recall stands
+> at 7 of 10 canary institutions (2026-09-08,
+> [`docs/LIVE_DISCOVERY_REPORT.md`](docs/LIVE_DISCOVERY_REPORT.md)), and CI on
+> `main` has been green since 2026-09-07 (post-merge run 34189211422). See
+> [`docs/CURRENT_STATE.md`](docs/CURRENT_STATE.md) for the
 > honest position and [`RELEASE_CHECKLIST.md`](RELEASE_CHECKLIST.md) for what is
 > left.
 
@@ -149,7 +152,7 @@ backend/
 │   ├── export/          CSV / JSON / XLSX, provenance included
 │   ├── models/          SQLAlchemy + Alembic (PostgreSQL production, SQLite local)
 │   └── corpus/          The bundled synthetic demo corpus + its generator
-└── tests/               1110 tests
+└── tests/               1402 tests (810bb00, 2026-09-08)
 frontend/
 ├── src/
 │   ├── screens/         The workflow screens, plus community and legal
@@ -157,7 +160,7 @@ frontend/
 │   ├── lib/             Store, formatting, i18n, immutable helpers
 │   ├── api/             Typed client
 │   └── styles/          Design tokens + component styles
-└── e2e/                 74 Playwright tests (desktop + mobile, including axe)
+└── e2e/                 76 Playwright specs (desktop + mobile, incl. axe) + 6 auth specs
 ```
 
 ### The claim is the unit of truth
@@ -285,8 +288,9 @@ read and marks the rest as not found.
 A **live truth audit** against ten official university domains is recorded in
 [`docs/LIVE_DISCOVERY_REPORT.md`](docs/LIVE_DISCOVERY_REPORT.md). Sitemap-first
 discovery reaches 26 of 30 admissions/cost/scholarship categories and produces
-zero audited material false positives, but confirms an individual programme
-page on only one institution in ten. That limitation is visible here because
+zero audited material false positives, and confirms an individual programme
+page on 7 of 10 institutions (T30 canary, 2026-09-08). That limitation is
+visible here because
 finding a category page is not the same as building a useful shortlist.
 
 ---
@@ -303,8 +307,8 @@ cd backend
 python scripts/pg.py --print-uri              # a local PostgreSQL, no install needed
 python scripts/pg.py .venv/bin/pytest         # run the suite against PostgreSQL
 python scripts/pg.py .venv/bin/python scripts/crash_test.py   # SIGKILL recovery proof
-./.venv/bin/python -m pytest                  # 1110 tests
-./.venv/bin/python -m pytest --cov=app        # with coverage (93%)
+./.venv/bin/python -m pytest                  # 1402 tests (810bb00, 2026-09-08)
+./.venv/bin/python -m pytest --cov=app        # with coverage (94%; CI floor 92)
 ./.venv/bin/python -m ruff check app tests    # lint
 ./.venv/bin/python -m mypy app                # type check
 ./.venv/bin/python seed_demo.py --approve     # run the whole pipeline on the CLI
@@ -315,8 +319,8 @@ npm run dev            # Vite on :5173, proxies /api to :8099
 npm run build          # production build
 npm run typecheck      # tsc --noEmit
 npm run lint           # eslint
-npm test               # 47 Vitest unit tests
-npm run e2e            # 50 Playwright tests, desktop + mobile (starts both servers itself)
+npm test               # 182 unit tests
+npm run e2e            # 75 passed + 1 intentional skip, desktop + mobile (starts both servers itself); e2e:auth adds 6
 npm run e2e:report     # open the last Playwright report
 ```
 
@@ -328,23 +332,27 @@ Or from the repository root: `make setup`, `make dev`, `make test`, `make check`
 
 | Check | Result |
 |---|---|
-| Backend tests | 547 passed (SQLite **and** PostgreSQL 16.2) |
-| Backend coverage | 89% (`app/`); jobs/store 91%, jobs/worker 83%, pipeline/runner 91% |
+| Backend tests | 1358 passed in CI on the merge commit, SQLite and PostgreSQL (post-merge main run 34189211422, 2026-09-08); 1402 passed / 0 skipped at the c3 integration head `810bb00` (local, 2026-09-08) |
+| Backend coverage | 93.81% in CI (floor 92); 94.04% at `810bb00` |
 | Backend lint (ruff) | clean |
-| Python dependency audit (pip-audit) | clean (36 advisories found and fixed at baseline) |
-| Backend types (mypy) | clean, 92 files |
-| Frontend unit tests | 47 passed |
+| Python dependency audit (pip-audit) | 0 known vulnerabilities (2026-09-08); 36 advisories were found and fixed at the original baseline |
+| Backend types (mypy) | clean — 164 files (c2 CI), 166 files at `810bb00` |
+| Frontend unit tests | 182 passed (frontend unchanged by c3 — zero frontend diffs at `810bb00`) |
 | Frontend typecheck | clean |
 | Frontend lint (eslint) | clean |
-| E2E (Playwright) | 50 passed — desktop 1440×900 and Pixel 7 |
+| E2E (Playwright) | ordinary 75 passed + 1 intentional skip, desktop 1440×900 and Pixel 7; authenticated 6/6 (local, 2026-09-08) |
 | Accessibility | axe WCAG A/AA: no serious or critical violations on reachable screens |
 | Console errors during the full journey | 0 |
 | Horizontal overflow at 320/768/1024/1440 | none |
 | Production bundle | 74.0 kB JS gzipped, 5.3 kB CSS |
 
+The axe, console-error, overflow and bundle-size rows are fix-plan-era
+measurements retained unchanged; the 2026-09-08 runs cited above did not
+re-measure them.
+
 | Crash recovery | verified: real SIGKILL, job recovered, 0 duplicate results |
 | Migrations | verified: fresh, downgrade, re-upgrade, re-apply, both backends |
-| Container stack | **written, never run** — Docker is not installed here |
+| Container stack | run for real on 2026-09-06 — migrations exited 0, postgres/api/web healthy, a demo run returned 20 results through nginx; see [`docs/DOCKER_VERIFICATION.md`](docs/DOCKER_VERIFICATION.md) (gate 22) |
 
 Screenshots of every main state are in [`docs/screenshots/`](docs/screenshots/)
 (desktop) and `docs/screenshots/mobile/`.
@@ -463,7 +471,9 @@ These are real, and the UI states them rather than hiding them.
    evaluation, which this tool does not replace.
 5. **Live discovery is deliberately conservative.** It uses a curated registry,
    official seeds and sitemaps rather than sending applicant context to a search
-   engine. The canary confirms programme pages on only 1 of 10 institutions.
+   engine. The canary confirms programme pages on 7 of 10 institutions
+   (2026-09-08); the registry remains nineteen institutions, and nothing
+   establishes behaviour on sites unlike them.
 6. **Cost pages behind a fee calculator** yield no figures. TU Delft's tuition
    page is a real example: the page is readable, the numbers are not on it, and
    the result is an honest "no cost figures could be extracted".

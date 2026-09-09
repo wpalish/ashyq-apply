@@ -94,6 +94,10 @@ class Settings(BaseSettings):
     smtp_username: str = ""
     smtp_password: str = ""
     smtp_from: str = "no-reply@ashyq.example"
+    #: Verify the relay's certificate before sending. False is for a self-hosted
+    #: relay on a trusted network whose name no public CA can check; production
+    #: refuses to start without it (env: UNIMATCH_SMTP_TLS_VERIFY).
+    smtp_tls_verify: bool = True
     #: Recorded on the user, never enforced while this is false: there is no
     #: verification flow yet, and pretending otherwise would be theatre.
     auth_require_verified_email: bool = False
@@ -168,6 +172,25 @@ class Settings(BaseSettings):
 
     def validate_runtime(self) -> None:
         """Reject configurations that would expose applicant data unsafely."""
+        # Payments fail closed (T34): an unknown provider name must not fall
+        # through to the silent fake, apipay without real credentials must not
+        # start a billing-less client, and production must never charge real
+        # money through the fake. Runs first so a misconfigured payment stack
+        # is reported even when something else is also wrong.
+        if self.payments_provider not in ("fake", "apipay"):
+            raise RuntimeError("UNIMATCH_PAYMENTS_PROVIDER must be 'fake' or 'apipay'.")
+        if self.payments_provider == "apipay":
+            if len(self.apipay_api_key.get_secret_value()) < 20:
+                raise RuntimeError(
+                    "UNIMATCH_APIPAY_API_KEY is required (>=20 chars) when provider is apipay."
+                )
+            if len(self.apipay_webhook_secret.get_secret_value()) < 32:
+                raise RuntimeError(
+                    "UNIMATCH_APIPAY_WEBHOOK_SECRET is required (>=32 chars) "
+                    "when provider is apipay."
+                )
+        if self.is_production and self.payments_enabled and self.payments_provider == "fake":
+            raise RuntimeError("Production cannot take payments through the fake provider.")
         if self.is_production and not self.auth_enabled:
             raise RuntimeError(
                 "UNIMATCH_AUTH_ENABLED must be true in production; refusing to expose "
@@ -199,6 +222,12 @@ class Settings(BaseSettings):
             )
         if self.email_sender == "smtp" and not self.smtp_host:
             raise RuntimeError("UNIMATCH_SMTP_HOST is required when the sender is smtp.")
+        if self.is_production and not self.smtp_tls_verify:
+            raise RuntimeError(
+                "UNIMATCH_SMTP_TLS_VERIFY must be true in production; STARTTLS without "
+                "certificate verification would deliver password-reset mail through anyone "
+                "on the path."
+            )
         if self.is_production and not self.public_base_url.startswith("https://"):
             raise RuntimeError("UNIMATCH_PUBLIC_BASE_URL must be an HTTPS origin in production.")
         if self.is_production and self.password_scrypt_log2 < 17:

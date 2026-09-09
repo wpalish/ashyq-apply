@@ -1,0 +1,41 @@
+[PASS] trailing comma+blanks: got='5.6.7.8' want='5.6.7.8'
+[PASS] only blanks and commas: got='203.0.113.7' want='203.0.113.7'
+[PASS] spaces around hops: got='9.8.7.6' want='9.8.7.6'
+[PASS] spoof+appended real client: got='203.0.113.7' want='203.0.113.7'
+[PASS] multi-spoof+appended real: got='203.0.113.7' want='203.0.113.7'
+[PASS] ipv6 last hop: got='2001:db8::1' want='2001:db8::1'
+[PASS] ipv6 alone: got='::1' want='::1'
+[PASS] ipv6 bracket-port form: got='[2001:db8::2]:443' want='[2001:db8::2]:443'
+[PASS] trust=false ignores XFF: got='203.0.113.7' want='203.0.113.7'
+[PASS] trust=false ignores spoofed last hop: got='203.0.113.7' want='203.0.113.7'
+[PASS] absent header: got='203.0.113.7' want='203.0.113.7'
+[PASS] empty header: got='203.0.113.7' want='203.0.113.7'
+[PASS] no client, no xff: got='unknown' want='unknown'
+[PASS] no client, blank xff: got='unknown' want='unknown'
+
+ADVERSARIAL_PROBES: ALL PASS
+route /api/health registered: False
+route /api/api/health registered: False
+line45 URL: http://localhost:8080/api/api/health
+line49 message URL: http://localhost:8080/api/health
+health routes: []
+total route paths: 6
+sample: ['', '/', '/docs', '/docs/oauth2-redirect', '/openapi.json', '/redoc']
+total flattened paths: 5
+/api/health present: False
+/api/api/health present: False
+auth login present: False
+api-prefixed sample: []
+======================== 6 passed, 1 warning in 12.30s =========================
+.venv/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /Users/wpalish/ashyq-worktrees/c3-t36-verify/backend/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+PASSED tests/test_security.py::TestForwardedAddressSemantics::test_the_last_forwarded_hop_is_the_limiting_address
+PASSED tests/test_security.py::TestForwardedAddressSemantics::test_xff_is_ignored_when_proxy_headers_are_not_trusted
+PASSED tests/test_security.py::TestForwardedAddressSemantics::test_empty_or_absent_forwarded_for_charges_the_socket_peer
+PASSED tests/test_compose_publishes_no_api_port.py::test_the_api_service_does_not_publish_its_port_to_the_host
+PASSED tests/test_compose_publishes_no_api_port.py::test_the_api_port_stays_reachable_on_the_compose_network
+PASSED tests/test_compose_publishes_no_api_port.py::test_verify_compose_script_is_present_for_release_gating

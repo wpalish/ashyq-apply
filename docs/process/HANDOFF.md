@@ -8,28 +8,30 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 | | |
 |---|---|
-| Holder | **codex** |
-| Since (UTC) | 2026-09-08 03:38:21 UTC |
-| Branch | `main`, synchronized with `origin/main` after PR #8 |
-| HEAD when written | `04a3058` (merge commit for PR #8; C2 candidate `e4f5ee3`) |
-| Origin main when checked | `04a3058`; post-merge release-gates run `34189211422` succeeded |
-| Previous holder | GLM/ZCode dispatcher; it released after integrating T32 but left T29 production wiring explicitly deferred |
+| Holder | **GLM/ZCode dispatcher (campaign c3)** |
+| Since (UTC) | 2026-09-09 02:05:00 UTC |
+| Branch | `ai/c3/integration` (local; push blocked — see §5) |
+| HEAD when written | `0236a19` (= T38 docs `d4908ae` + c3 evidence commits) |
+| Origin main when checked | `edf546d` (PR #9 merge); c3 branch is NOT pushed yet |
+| Previous holder | codex; it released after the c2 publication (PR #8 → `main@04a3058`) |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
 
-**Campaign `c2` publication is complete; remaining items are explicit product blockers.** GLM integrated
-T16 (browser/egress hardening), T27 (claim verifier), T28 (source pages), T29 (catalog walker at the
-adapter seam) and T32 (freshness/source scanning) onto this branch. Its own ledger and review correctly
-state that T29 remained dormant in production; `8d2fa10` closed that seam and the live smoke proved
-catalogue traversal plus `SourcePage` recording. The owner explicitly authorized the two bounded T30
-batches. They measured programme recall 7/10, category recall 26/30 and zero material false positives.
-The registry itself remains at 19 because no 41-entry, human-checked official candidate set was supplied
-or canaried; claiming 19→60 would violate T30's own admission rule. T26 is blocked on a contradictory
-scope contract: its promised source-to-UI News vertical slice cannot be built through the currently
-allowed model/domain/runner-only paths. T31 remains blocked on an owner-selected provider, secrets
-outside Git, and the required data-policy acknowledgement. PR #8 merged the verified campaign into
-`main@04a3058`; both PR-triggered matrices and the post-merge release-gates are green.
+**Campaign `c3` (security, owner master prompt `ai-team/reference/MASTER_C3_PROMPT_RU.md`) is
+complete and locally integrated; only publication is pending and it is blocked on missing GitHub
+credentials, not on work.** All findings S1–S8 of the 2026-09-08 external audit were closed with
+full RED-first role cycles: T33 paywall integrity (decision/notes/export projections + a 17-route
+surface scan), T34 payments fail-closed (startup validation, empty-secret webhook exploit closed),
+T35 SMTP TLS verification + scrypt rehash at login, T36 last-hop XFF + compose port un-publication
+(including an honest VERIFIED_FAIL → one-line repair of `verify_compose.sh`), T37 funding-stage
+duplicate claims, T38 truthful docs (23 sourced edits; QA re-counted registry/i18n/e2e itself).
+Final local gates on the campaign head: **1402 tests passed / 0 skipped / coverage 94.05%**, mypy
+0/166, ruff clean, `handoff_check.py` green, no migrations and no frontend changes. Six acceptance
+packets are STRUCTURE OK under `ai-team/outputs/c3-*-a1/`. The push itself failed because the
+temporary `gh` binary used during the c2 publication was deleted and no credential remains (no gh
+CLI, empty keychain, no SSH keys) — the exact owner action is §5 step 1. Merge into protected
+`main` and deployment remain owner gates after PR #10's two CI matrices run green.
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
@@ -219,34 +221,38 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-1. Resolve T26's contract before code: either authorize the API/frontend/ingestion paths needed for a
+1. **Owner restores GitHub credentials** (any one): `brew install gh && gh auth login`, or place a
+   PAT in the macOS keychain for github.com, or switch `origin` to SSH with a key. Then push
+   `ai/c3/integration` (`git push -u origin ai/c3/integration`) and open PR #10 into `main`
+   (base `edf546d`) — the c3 master prompt §6 already authorizes exactly this. Wait for both PR CI
+   matrices; the protected-main merge decision stays with the owner.
+2. Resolve T26's contract before code: either authorize the API/frontend/ingestion paths needed for a
    real News vertical slice, or explicitly reduce acceptance to a storage-only foundation.
-2. For T30 registry 19→60, supply/approve a 41-institution candidate list with official seeds and run
+3. For T30 registry 19→60, supply/approve a 41-institution candidate list with official seeds and run
    bounded validation batches. Do not add entries that fail the frozen ≥2/4-category rule.
-3. Keep T31 blocked until a provider, secrets outside Git and data-policy acknowledgement exist.
-4. Update GitHub Actions dependencies away from Node-20-based action releases before GitHub removes
+4. Keep T31 blocked until a provider, secrets outside Git and data-policy acknowledgement exist.
+5. Owner release-gate: first live docker run of `scripts/verify_compose.sh` (offline-validated in c3,
+   never executed for real). Follow-up security tickets from c3 reviews live in the ledger (uvicorn
+   `--forwarded-allow-ips`, webhook replay window, T33-F1 free-export coverage decision).
+6. Update GitHub Actions dependencies away from Node-20-based action releases before GitHub removes
    the compatibility shim. Do not buy a provider or deploy application infrastructure implicitly.
 
 ## 6. Gate status at last run (numbers, not adjectives)
 
-Latest local and remote runs by codex, 2026-09-08, on `main@04a3058`.
+Latest local runs by the c3 dispatcher, 2026-09-09, on `ai/c3/integration@0236a19` (docs-only delta
+from `d4908ae`; the c2 numbers below remain the last frontend/remote measurements — c3 changed no
+frontend file and was not pushed).
 
 | Gate | Result |
 |---|---|
-| T29/T16/T28/T32 focused pytest | **pass** — **310 passed**, 1 deprecation warning |
-| T29 wiring + security RED→GREEN | **pass** — **5 passed**; initial RED was 4 failed / 1 passed |
-| T30 report tests RED→GREEN | **pass** — **3 passed** after initial RED |
-| live T29 smoke | **partially blocked** — robots refusal preserved; 2 catalogues walked, programme and scholarship leads found, 75 source-page outcomes recorded |
-| live T30 batches | **pass at the exact floor** — programme **7/10**, categories **26/30**, material FP **0**; 15 catalogues and 239 source-page rows |
-| malformed HKU catalogue repair | **pass** — 205 related tests; post-fix HKU smoke 22 candidates / 1 confirmed programme / 52 outcomes |
-| current Ruff / format / mypy | **pass** — 164 source files |
-| `ruff check app tests` | **pass** |
-| `ruff format --check app tests` | **pass** — 154 files |
-| `mypy app tests` | **pass** — 164 source files |
-| `pytest --cov=app --cov-fail-under=92` | **pass** — **1358 passed**, coverage **93.81%** |
-| frontend `tsc --noEmit` / `eslint src e2e` | **pass** |
-| frontend `vitest run` | **pass** — **182 passed** / 20 files |
-| frontend `vite build` | **pass** |
+| c3 task-target pytest (paywall+surface, apipay, payments_config, account_flows, security, compose, pipeline) | **pass** — **166 passed**, 0 skipped |
+| `ruff check app tests` / `ruff format --check` | **pass** — 166 files formatted |
+| `mypy app tests` | **pass** — 0 issues, 166 source files |
+| `pytest --cov=app --cov-fail-under=92` | **pass** — **1402 passed / 0 skipped**, coverage **94.05%** |
+| `scripts/handoff_check.py` | **pass** — exit 0 |
+| `scripts/verify_compose.sh` | **NOT_RUN live** (no docker) — awk gate + probe paths offline-validated; first real run is an owner release-gate |
+| frontend gates | **NOT re-run in c3** (zero frontend diffs); last c2 measurements: tsc/eslint pass, **vitest 182 passed**, build pass, Playwright ordinary **75 passed + 1 intentional skip**, `e2e:auth` **6/6** |
+| remote CI | c2 runs 34188244906 / 34188286259 / post-merge main 34189211422 **green**; c3 not pushed yet |
 | frontend Playwright | **pass** — ordinary **75 passed / 1 intentionally skipped**; auth **6/6 passed** |
 | dependency audit | **pass** — `pip-audit` and `npm audit --omit=dev`: **0 known vulnerabilities** |
 | `alembic heads` | **pass** — sole head `d9c4e7a21b83` |
@@ -332,9 +338,18 @@ next agent does not reopen it.
 | 2026-09-05 | recovery | Historical setup row above is retained append-only, not revalidated as current test counts/line anchors; [0.8] frontend contracts are uncommitted and under separate audit | Keeps history without upgrading old claims to acceptance. |
 | 2026-09-07 | T10 audit | `worker.py`: failed fenced retry after a non-terminal payment poll raises `LeaseLost`; provider journal/order changes roll back with the transaction | A stale worker must commit no money-adjacent writes. |
 | 2026-09-07 | T18 audit | `live_discovery.py`: `edu.kz` multipart suffix; `_confirm_programs(..., profile)` filters fetched pages by requested level and subject | Live NU run otherwise selected an MSc and Mathematics ahead of BSc Computer Science. |
+| 2026-09-09 | c3 T33 | `POST .../decision` and `PATCH .../notes` return `free_view(result)` for a free organization (persisted payload stays full); `export_profile` gates claims/conflicts/full payloads behind `has_full_access` and marks withheld rows `paid_content_withheld`; `free_view` also clears `costs.source_urls` | Free tier keeps decisions/notes (top of funnel) but never receives paid material; surface-scan inventory test fails on any new ungated route |
+| 2026-09-09 | c3 T34 | `validate_runtime` payments block (provider enum; ApiPay key ≥20 / webhook secret ≥32; production+enabled+fake refused) runs FIRST; `ApiPayProvider.__init__` raises on empty secrets; `verify_webhook` returns False on empty secret; `get_provider` RuntimeError guard | Multi-violation configs now report the payments message first — intended; worker processes are protected at first provider use, not at boot |
+| 2026-09-09 | c3 T35 | `Settings.smtp_tls_verify: bool = True` (`UNIMATCH_SMTP_TLS_VERIFY`; production refuses false); `SmtpSender` STARTTLS with `ssl.create_default_context()`; login upgrades legacy-cost hashes once, audit action `password_rehashed` (actor `system`, `detail={}`) | Self-hosted relays without CA-verifiable certs need the explicit opt-out (non-production) — release-note item |
+| 2026-09-09 | c3 T36 | `client_address` takes the LAST X-Forwarded-For hop; compose `api` is expose-only (commented loopback variant documented as ad-hoc debug); `verify_compose.sh` probes via the web proxy and fails on any api host publication of 8099 | nginx `$proxy_add_x_forwarded_for` append semantics are load-bearing — a pass-through rewrite would reintroduce spoofing |
+| 2026-09-09 | c3 T37 | `_update_result` extra_claims gate is `is not None`; targeted delete of `scholarship_*` ClaimRows (`status != SUPERSEDED`) + ConflictRows before re-store; module constant `FUNDING_CLAIM_TYPES` (enum-prefix derived, 14 members) | Funding re-entry owns the whole scholarship family; empty re-entry honestly replaces (mirrors reextract zero-page semantics) |
 
 ## 9. Traps and lessons (things that cost a session; keep them)
 
+- **The c2 publication used a temp `gh` binary under `/tmp/ashyq-gh.*/bin/gh` that later vanished.**
+  Git's credential helper still references it, so pushes fail with "could not read Username" long
+  after the session that set it up. Fix once: install `gh` properly + `gh auth login`, or a PAT in
+  the keychain, or an SSH remote. Do not assume publish credentials persist between machines/sessions.
 - `seed_demo.py` raises `SchemaOutOfDate` until `UNIMATCH_DEMO_MODE=true alembic upgrade head` has run.
 - `Fetcher(...)` takes `(cache_dir, *, delay_seconds, respect_robots, offline, cache_ttl_seconds, timeout, contact, corpus_dir)`; it has no `close()`, only `__aexit__`.
 - `backend/setup.sh` needs `uv`; plain `python -m venv` + `pip install -r requirements-dev.txt` works. Without Playwright installed, run with `UNIMATCH_ENABLE_BROWSER_TIER=false`.
@@ -428,3 +443,4 @@ host=github.com
 | 2026-09-07 12:00:10 UTC | codex | `25f5954` → `02d648c` + final handoff | Fixed and PostgreSQL-tested stale payment rollback, fixed two live NU discovery defects, ran all backend/frontend/E2E/auth/dependency gates, and field-ran the bounded NU canary. Audit verdict: useful partial campaign, not completed project. Baton released; no push/main/deploy. |
 | 2026-09-07 14:10:54 UTC | codex | `ab2e70a` → `96c1082` + final publication handoff | Owner explicitly authorized GitHub publication. Secret-scanned and committed all 133 ai-team evidence files plus the corrected audit, pushed `ai/c1/integration`, and opened PR #7. Release-gates started; no protected-main merge or application deploy. |
 | 2026-09-08 03:38:21 UTC | codex | `9b362c8` → in progress | Took the C2 baton after verifying `origin/main@4d2125c` is the merge-base. Owner authorized T29 wiring, bounded T30 batches, T26, committing campaign evidence, and GitHub publication; T31 remains blocked on provider/secrets/data-policy acknowledgement. |
+| 2026-09-09 02:05:00 UTC | GLM/ZCode dispatcher | `edf546d` → `0236a19` (+ this handoff) | Ran campaign c3 end-to-end from the owner master prompt: T33–T38 full RED-first cycles with QA/reviewer/security, five-way integration + T38 docs + evidence commits, final gates 1402 passed / 0 skipped / cov 94.05%, handoff_check green, 6/6 acceptance packets OK. Push attempted and blocked on missing credentials (§5.1); no push, no main merge, no deploy. |

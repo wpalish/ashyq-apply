@@ -1,0 +1,154 @@
+{
+  "task_id": "T33",
+  "finding_ids": [
+    "S1",
+    "S2"
+  ],
+  "attempt_id": "A1",
+  "baseline_sha": "edf546de9f998c0909337d0abe6f8e1c9c4a0be5",
+  "qa_commit_sha": "2d00f4522004df273a8efac383b3fe70963c190f",
+  "candidate_sha": "540e3567f78e0bbe4be1da3cd3319ae086e3ca8c",
+  "integration_base_sha": "edf546de9f998c0909337d0abe6f8e1c9c4a0be5",
+  "participants": [
+    {
+      "role": "ashyq-planner",
+      "invocation_ref": "agent_c65bf3c3-4cc7-4357-b107-ab3ba1ad53d1",
+      "checked_sha": "edf546de9f998c0909337d0abe6f8e1c9c4a0be5",
+      "verdict": "PASS",
+      "evidence_file": "planner.md"
+    },
+    {
+      "role": "ashyq-qa",
+      "invocation_ref": "agent_76c373bd-f69e-4e23-acae-a2557a02b8ba",
+      "phase": "VERIFY_CANDIDATE",
+      "checked_sha": "540e3567f78e0bbe4be1da3cd3319ae086e3ca8c",
+      "verdict": "PASS",
+      "evidence_file": "qa-verify-candidate.md"
+    },
+    {
+      "role": "ashyq-developer",
+      "invocation_ref": "agent_890d6ebe-4cf1-4251-bb87-954c85d0a588",
+      "checked_sha": "540e3567f78e0bbe4be1da3cd3319ae086e3ca8c",
+      "verdict": "PASS",
+      "evidence_file": "developer.md"
+    },
+    {
+      "role": "ashyq-reviewer",
+      "invocation_ref": "agent_89d41721-89ab-43a1-9f0d-856101b9bb37",
+      "checked_sha": "540e3567f78e0bbe4be1da3cd3319ae086e3ca8c",
+      "verdict": "PASS",
+      "evidence_file": "reviews.md"
+    },
+    {
+      "role": "ashyq-security",
+      "invocation_ref": "agent_be7d52d2-401b-4790-89de-3088a6907595",
+      "checked_sha": "540e3567f78e0bbe4be1da3cd3319ae086e3ca8c",
+      "verdict": "PASS",
+      "evidence_file": "reviews.md"
+    },
+    {
+      "role": "ashyq-integrator",
+      "invocation_ref": "agent_49118efb-78d8-453e-8354-0f0a5bcc8e49",
+      "checked_sha": "540e3567f78e0bbe4be1da3cd3319ae086e3ca8c",
+      "verdict": "PASS",
+      "evidence_file": "integrator-gate.md"
+    }
+  ],
+  "tests": [
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c3-t33-verify/backend && ./.venv/bin/python -m pytest tests/test_paywall.py tests/test_paywall_surface.py",
+      "checked_sha": "540e3567f78e0bbe4be1da3cd3319ae086e3ca8c",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate.md",
+      "summary": "42 passed — RED-1/2/3 (decision/notes/export projections) + 4th scan param (nested costs.source_urls) green; 17-route inventory scan green; GREEN-guard paying-flow green"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c3-t33-verify/backend && ./.venv/bin/python -m pytest tests/test_billing_api.py tests/test_frontend_contract.py tests/test_entitlements.py",
+      "checked_sha": "540e3567f78e0bbe4be1da3cd3319ae086e3ca8c",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate.md",
+      "summary": "44 passed — purchase flow + FE contract + entitlements unit tests green unmodified"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c3-t33-verify/backend && ./.venv/bin/python -m pytest tests/test_api.py tests/test_payment_webhook.py tests/test_payment_service.py",
+      "checked_sha": "540e3567f78e0bbe4be1da3cd3319ae086e3ca8c",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate.md",
+      "summary": "99 passed"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c3-t33-verify/backend && ./.venv/bin/python -m mypy app tests && ./.venv/bin/python -m ruff check app tests && ./.venv/bin/python -m ruff format --check app tests",
+      "checked_sha": "540e3567f78e0bbe4be1da3cd3319ae086e3ca8c",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate.md",
+      "summary": "mypy 0/165; ruff clean"
+    },
+    {
+      "command": "payload-aliasing runtime probe (34/34)",
+      "checked_sha": "540e3567f78e0bbe4be1da3cd3319ae086e3ca8c",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate.md",
+      "summary": "after free decision AND notes, stored row.payload remains FULL (claims/source_urls/funding_gap etc.) — trim operates on deep copy, no aliasing"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c3-integration/backend && ./.venv/bin/python -m pytest --cov=app --cov-fail-under=92",
+      "checked_sha": "540e3567f78e0bbe4be1da3cd3319ae086e3ca8c",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "integrator-gate.md",
+      "summary": "[combined 810bb00] FULL suite 1402 passed / 0 skipped, cov 94.04%; T33 merged third, no conflicts"
+    }
+  ],
+  "acceptance_items": [
+    {
+      "criterion": "RED на edf546d: free-орг получает claims/scholarships/funding_gap через три эндпоинта",
+      "status": "PASS",
+      "evidence_file": "qa-test-author.md",
+      "note": "7 failed on baseline: RED-1/2/3 + surface scan flagged exactly 4 params (3 contracted + escalated 4th: GET /results nested costs.source_urls)"
+    },
+    {
+      "criterion": "set_decision/set_notes на видимой строке -> 200, payload = проекция free_view",
+      "status": "PASS",
+      "evidence_file": "reviews.md",
+      "note": "access_for_run (tenancy preserved) + persist-full-before-project + `return result if allowed else free_view(result)` routes_results.py:303,347; canonical-JSON byte-identity vs free_view(model_validate(stored.payload)); payments_enabled=False byte-identical"
+    },
+    {
+      "criterion": "export_profile без entitlement: профиль/решения/audit есть, claims/conflicts/checklist нет; с entitlement — полный",
+      "status": "PASS",
+      "evidence_file": "reviews.md",
+      "note": "has_full_access branch (PD-4); free rows = free_view dump + paid_content_withheld:True; claims []/conflicts []; counts live queries (PD-2); allowed branch byte-identical to baseline (verified mechanically); honest note wording both branches"
+    },
+    {
+      "criterion": "Surface-scan всех маршрутов не находит новых утечек paid-контента",
+      "status": "PASS",
+      "evidence_file": "reviews.md",
+      "note": "17-route inventory-equality + recursive material dictionary; security exhaustive sweep of ALL 13 route modules: no material route outside the two prefixes; residual RunView gap ticketed (F2)"
+    },
+    {
+      "criterion": "Покупка кейса открывает полные ответы — регрессии оплаты нет",
+      "status": "PASS",
+      "evidence_file": "qa-verify-candidate.md",
+      "note": "GREEN-guard test_paying_opens_full_decision_notes_and_export passed on baseline AND candidate; mixed-runs export probed"
+    },
+    {
+      "criterion": "Полный suite зелёный, coverage >= 92",
+      "status": "PASS",
+      "evidence_file": "integrator-gate.md",
+      "note": "combined 810bb00: 1402 passed / 0 skipped, cov 94.04%"
+    }
+  ],
+  "scope_check": "PASS",
+  "scope_check_command": "python3 ai-team/check_team.py scope --task T33 --base edf546de9f998c0909337d0abe6f8e1c9c4a0be5 --head 540e3567f78e0bbe4be1da3cd3319ae086e3ca8c --repo /Users/wpalish/ashyq-worktrees/c3-t33-verify",
+  "scope_check_result": "changed: routes_results.py, routes_profile.py, entitlements.py (dispatcher-authorized expansion: free_view nested costs.source_urls — the escalated 4th scan param, real leak), test_paywall.py, test_paywall_surface.py; outside_scope: []",
+  "blockers": [],
+  "notes": [
+    "Chain: edf546d -> 2d00f45 (QA RED 7) -> 540e356 (candidate). QA TEST_AUTHOR ref: agent_d5d5e0ed-eac4-49ec-9a0f-d6034dca0d41.",
+    "Dispatcher rulings implemented: PD-1 200+trim (not 402 — would break top-of-funnel via PaymentModal); PD-2 counts kept; PD-3 decisions beyond cut allowed; PD-4 one entitlement opens whole profile (existing keying).",
+    "Tickets (owner decisions/backlog): T33-F1 MEDIUM free-export bypasses free_shortlist_rows=5 (product decision); T33-F2 scan RunView gap; T33-F3 material-dictionary amendment (Money.source_url/RankingEntry.url/program_url — pre-existing, outside frozen dictionary); T33-F4 /recheck /retry un-gated+un-limited (pre-existing ops)."
+  ]
+}

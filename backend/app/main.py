@@ -151,14 +151,19 @@ def client_address(request: Request) -> str:
 
     Behind a reverse proxy every request arrives from the proxy, so keying on
     the socket peer makes one limit for the whole world: a single script would
-    lock every user out of login. The first hop of X-Forwarded-For is the
-    caller, but only when we put the proxy there ourselves — hence the setting.
+    lock every user out of login. X-Forwarded-For carries the caller, but only
+    when we put the proxy there ourselves — hence the setting. The stack has
+    exactly one trusted proxy (nginx), which appends the real client to the
+    end of the header, so the LAST hop is the caller and everything to its
+    left arrived inside the client's own spoofed prefix: charging the first
+    hop would let a script name a fresh address per request and never fill a
+    bucket at all.
     """
     if settings.trust_proxy_headers:
         forwarded = request.headers.get("x-forwarded-for", "")
-        first_hop = forwarded.split(",")[0].strip()
-        if first_hop:
-            return first_hop
+        hops = [hop.strip() for hop in forwarded.split(",") if hop.strip()]
+        if hops:
+            return hops[-1]
     return request.client.host if request.client else "unknown"
 
 

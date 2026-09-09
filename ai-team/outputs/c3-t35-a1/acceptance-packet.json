@@ -1,0 +1,135 @@
+{
+  "task_id": "T35",
+  "finding_ids": [
+    "S4",
+    "S5"
+  ],
+  "attempt_id": "A1",
+  "baseline_sha": "edf546de9f998c0909337d0abe6f8e1c9c4a0be5",
+  "qa_commit_sha": "be9f2daf2eb4077632bb4db99e9293655c464cb7",
+  "candidate_sha": "8bf1f5d08fe3d389e4ab6bb9c2d485932fd12e4f",
+  "integration_base_sha": "edf546de9f998c0909337d0abe6f8e1c9c4a0be5",
+  "participants": [
+    {
+      "role": "ashyq-planner",
+      "invocation_ref": "agent_549d9b71-13e6-4c8d-8157-e30d287d7140",
+      "checked_sha": "edf546de9f998c0909337d0abe6f8e1c9c4a0be5",
+      "verdict": "PASS",
+      "evidence_file": "planner.md"
+    },
+    {
+      "role": "ashyq-qa",
+      "invocation_ref": "agent_6cee0511-5366-4e12-bbf3-b8204437130a",
+      "phase": "VERIFY_CANDIDATE",
+      "checked_sha": "8bf1f5d08fe3d389e4ab6bb9c2d485932fd12e4f",
+      "verdict": "PASS",
+      "evidence_file": "qa-verify-candidate.md"
+    },
+    {
+      "role": "ashyq-developer",
+      "invocation_ref": "agent_347d1858-bb6f-4e42-951e-c18526399a69",
+      "checked_sha": "8bf1f5d08fe3d389e4ab6bb9c2d485932fd12e4f",
+      "verdict": "PASS",
+      "evidence_file": "developer.md"
+    },
+    {
+      "role": "ashyq-reviewer",
+      "invocation_ref": "agent_96fe2888-9d75-4ae4-9ed5-9675f76883d8",
+      "checked_sha": "8bf1f5d08fe3d389e4ab6bb9c2d485932fd12e4f",
+      "verdict": "PASS",
+      "evidence_file": "reviews.md"
+    },
+    {
+      "role": "ashyq-security",
+      "invocation_ref": "agent_99feb3f2-a7ba-40af-879a-f03d66f260a8",
+      "checked_sha": "8bf1f5d08fe3d389e4ab6bb9c2d485932fd12e4f",
+      "verdict": "PASS",
+      "evidence_file": "reviews.md"
+    },
+    {
+      "role": "ashyq-integrator",
+      "invocation_ref": "agent_49118efb-78d8-453e-8354-0f0a5bcc8e49",
+      "checked_sha": "8bf1f5d08fe3d389e4ab6bb9c2d485932fd12e4f",
+      "verdict": "PASS",
+      "evidence_file": "integrator-gate.md"
+    }
+  ],
+  "tests": [
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c3-t35-verify/backend && ./.venv/bin/python -m pytest tests/test_account_flows.py",
+      "checked_sha": "8bf1f5d08fe3d389e4ab6bb9c2d485932fd12e4f",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate.md",
+      "summary": "36 passed — RED-1/2 (verifying context + explicit opt-out), RED-3 (scrypt$4096$ upgraded to settings-cost + exactly 1 password_rehashed audit), wrong-password negative, short-legacy-password guard, production refusal"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c3-t35-verify/backend && ./.venv/bin/python -m pytest tests/test_security.py tests/test_metrics.py tests/test_logging_and_correlation.py",
+      "checked_sha": "8bf1f5d08fe3d389e4ab6bb9c2d485932fd12e4f",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate.md",
+      "summary": "48 passed — validate_runtime neighbors green"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c3-t35-verify/backend && ./.venv/bin/python -m pytest tests/test_api.py",
+      "checked_sha": "8bf1f5d08fe3d389e4ab6bb9c2d485932fd12e4f",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate.md",
+      "summary": "66 passed — auth routes regression"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c3-t35-verify/backend && ./.venv/bin/python -m mypy app tests && ./.venv/bin/python -m ruff check app tests && ./.venv/bin/python -m ruff format --check app tests",
+      "checked_sha": "8bf1f5d08fe3d389e4ab6bb9c2d485932fd12e4f",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate.md",
+      "summary": "mypy 0/164; ruff clean; frozen production message byte-exact at runtime"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c3-integration/backend && ./.venv/bin/python -m pytest --cov=app --cov-fail-under=92",
+      "checked_sha": "8bf1f5d08fe3d389e4ab6bb9c2d485932fd12e4f",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "integrator-gate.md",
+      "summary": "[combined 810bb00] FULL suite 1402 passed / 0 skipped, cov 94.04%; T35 merged second, config.py auto-merge clean (disjoint anchored hunks)"
+    }
+  ],
+  "acceptance_items": [
+    {
+      "criterion": "RED: starttls без SSL-контекста",
+      "status": "PASS",
+      "evidence_file": "qa-test-author.md",
+      "note": "RED-1 baseline: starttls() called with no kwargs (RecordingSMTP double); RED-2 baseline: Settings extra=ignore silently drops smtp_tls_verify — honest classification"
+    },
+    {
+      "criterion": "контекст строгий по умолчанию; production отказ при smtp_tls_verify=False",
+      "status": "PASS",
+      "evidence_file": "reviews.md",
+      "note": "ssl.create_default_context() + starttls(context=ctx) mail.py:68-72; smtp_tls_verify: bool = True (config.py:100); production RuntimeError frozen message (config.py:206-211, lifespan main.py:50); security stdlib verdict: STARTTLS-strip → SMTPNotSupportedError (smtplib never sends STARTTLS unconditionally) — no plaintext path exists in either branch"
+    },
+    {
+      "criterion": "логин со старым scrypt-хешем апгрейдит и пишет audit ровно один раз; RED на baseline",
+      "status": "PASS",
+      "evidence_file": "reviews.md",
+      "note": "rehash after verify_password success, between membership-403 and create_session (routes_auth.py:172-190); needs_rehash strict < (no downgrade); exactly-once by state; second login byte-identical + still 1 event; master-prompt sketch corrected on evidence (n=2**12 keyword-only; prefix from settings = scrypt$16384$ under fixtures; ValueError-guard for short legacy passwords; actor=system)"
+    },
+    {
+      "criterion": "Полный suite зелёный, coverage >= 92",
+      "status": "PASS",
+      "evidence_file": "integrator-gate.md",
+      "note": "combined 810bb00: 1402 passed / 0 skipped, cov 94.04%"
+    }
+  ],
+  "scope_check": "PASS",
+  "scope_check_command": "python3 ai-team/check_team.py scope --task T35 --base edf546de9f998c0909337d0abe6f8e1c9c4a0be5 --head 8bf1f5d08fe3d389e4ab6bb9c2d485932fd12e4f --repo /Users/wpalish/ashyq-worktrees/c3-t35-verify",
+  "scope_check_result": "changed: mail.py (+9/-1: import ssl + SmtpSender.send only), config.py (+10: smtp_tls_verify field + production guard — disjoint from T34 hunks), routes_auth.py (+24/-1: imports + rehash block), test_account_flows.py; outside_scope: []",
+  "blockers": [],
+  "notes": [
+    "Chain: edf546d -> be9f2da (QA RED 4) -> 8bf1f5d (candidate). QA TEST_AUTHOR ref: agent_c0c1d063-d122-4d23-91f6-98eca461f54b.",
+    "Reviewer transactional ruling: explicit commit required (autocommit=False; get_session has no commit); UPDATE+INSERT atomic; create_session own commit unaffected (mirrors register pattern).",
+    "Tickets: T-f1 P2 legacy short-password accounts never upgradeable (ops scan + notify/force reset + observability on except-branch); T-f2 P3 pre-existing reset-request 500-vs-202 differential on relay failure (keep fail-loud); T-f3 P3 release note (self-hosted relay friction).",
+    "Extra tests (QA backlog): concurrent double-login on PG; real-socket SMTP double (self-signed sink → SSLCertVerificationError; no-STARTTLS sink → SMTPNotSupportedError)."
+  ]
+}

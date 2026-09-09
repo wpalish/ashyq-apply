@@ -1,0 +1,133 @@
+{
+  "task_id": "T36",
+  "finding_ids": [
+    "S6"
+  ],
+  "attempt_id": "A1 (incl. repair R1)",
+  "baseline_sha": "edf546de9f998c0909337d0abe6f8e1c9c4a0be5",
+  "qa_commit_sha": "054331fa50a8069e0ff7d9d9b43ed6096b1169b7",
+  "candidate_sha": "f9c90bf90f057d35c6ef72fcf70bdd14afc8bd80",
+  "integration_base_sha": "edf546de9f998c0909337d0abe6f8e1c9c4a0be5",
+  "participants": [
+    {
+      "role": "ashyq-planner",
+      "invocation_ref": "not-invoked (contract frozen by owner master card §5-T36; process deviation recorded in ledger)",
+      "checked_sha": "edf546de9f998c0909337d0abe6f8e1c9c4a0be5",
+      "verdict": "PASS",
+      "evidence_file": "planner-contract-note.md"
+    },
+    {
+      "role": "ashyq-qa",
+      "invocation_ref": "agent_1e27cb84-425d-419c-a995-a8a579a63c8f",
+      "phase": "VERIFY_CANDIDATE (R1)",
+      "checked_sha": "f9c90bf90f057d35c6ef72fcf70bdd14afc8bd80",
+      "verdict": "PASS",
+      "evidence_file": "qa-verify-candidate-r1.md"
+    },
+    {
+      "role": "ashyq-developer",
+      "invocation_ref": "agent_c2c60ced-e441-41c7-a2f0-b17e591b7371",
+      "checked_sha": "f9c90bf90f057d35c6ef72fcf70bdd14afc8bd80",
+      "verdict": "PASS",
+      "evidence_file": "developer.md"
+    },
+    {
+      "role": "ashyq-reviewer",
+      "invocation_ref": "agent_307cd666-ba71-45dc-af5f-634d39dfacd9",
+      "checked_sha": "f9c90bf90f057d35c6ef72fcf70bdd14afc8bd80",
+      "verdict": "PASS",
+      "evidence_file": "reviews.md"
+    },
+    {
+      "role": "ashyq-security",
+      "invocation_ref": "agent_b90a566c-2543-4459-99cc-19eb7e654a97",
+      "checked_sha": "f9c90bf90f057d35c6ef72fcf70bdd14afc8bd80",
+      "verdict": "PASS",
+      "evidence_file": "reviews.md"
+    },
+    {
+      "role": "ashyq-integrator",
+      "invocation_ref": "agent_49118efb-78d8-453e-8354-0f0a5bcc8e49",
+      "checked_sha": "f9c90bf90f057d35c6ef72fcf70bdd14afc8bd80",
+      "verdict": "PASS",
+      "evidence_file": "integrator-gate.md"
+    }
+  ],
+  "tests": [
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c3-t36-verify/backend && ./.venv/bin/python -m pytest tests/test_security.py tests/test_compose_publishes_no_api_port.py",
+      "checked_sha": "f9c90bf90f057d35c6ef72fcf70bdd14afc8bd80",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate-r1.md",
+      "summary": "28 passed — RED-A last-hop (both guards engaged), RED-B/C trust=False+empty XFF, compose RED-1/2 flipped; TestAbuseLimits untouched green"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c3-t36-verify/backend && ./.venv/bin/python -m pytest tests/test_api.py tests/test_metrics.py",
+      "checked_sha": "f9c90bf90f057d35c6ef72fcf70bdd14afc8bd80",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate-r1.md",
+      "summary": "80 passed"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c3-t36-verify/backend && ./.venv/bin/python -m mypy app tests && ./.venv/bin/python -m ruff check app tests && bash -n scripts/verify_compose.sh",
+      "checked_sha": "f9c90bf90f057d35c6ef72fcf70bdd14afc8bd80",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "qa-verify-candidate-r1.md",
+      "summary": "mypy 0/165; ruff clean; script syntax OK; 6-probe URL inventory verified against real router prefixes (api/api structurally impossible)"
+    },
+    {
+      "command": "cd /Users/wpalish/ashyq-worktrees/c3-integration/backend && ./.venv/bin/python -m pytest --cov=app --cov-fail-under=92",
+      "checked_sha": "f9c90bf90f057d35c6ef72fcf70bdd14afc8bd80",
+      "status": "PASS",
+      "exit_code": 0,
+      "log_file": "integrator-gate.md",
+      "summary": "[combined 810bb00] FULL suite 1402 passed / 0 skipped, cov 94.04%; T36 merged last, no conflicts"
+    }
+  ],
+  "acceptance_items": [
+    {
+      "criterion": "RED: спуфнутый первый hop получает собственный лимит-бакет",
+      "status": "PASS",
+      "evidence_file": "qa-test-author.md",
+      "note": "RED-A baseline: assert 401 == 429 (spoofed pair charged first hop; fresh bucket for real last hop); compose RED-1 ['${API_PORT:-8099}:8099'] published; RED-2 expose empty"
+    },
+    {
+      "criterion": "после фикса: последний hop; один nginx в цепи — адрес клиента корректен",
+      "status": "PASS",
+      "evidence_file": "reviews.md",
+      "note": "hops[-1] with empty-hop filtering main.py:162-167 (single XFF handling point; all limiter groups delegate); security: nginx $proxy_add_x_forwarded_for appends socket peer at END, emits ONE header — spoof injection only LEFT of real client; multi-header/folding normalized by nginx"
+    },
+    {
+      "criterion": "compose не публикует 8099 наружу; verify_compose.sh проверяет",
+      "status": "PASS",
+      "evidence_file": "reviews.md",
+      "note": "api expose-only; web 8080 sole publication; docs//openapi//redoc NOT under /api/ → nginx serves SPA (no public docs); awk gate post-interpolation api-block scoped, loopback-stricter (accepted fail-closed); ${API_PORT} zero references; live docker run NOT_RUN (owner gate)"
+    },
+    {
+      "criterion": "abuse-limit тесты зелёные без ослабления",
+      "status": "PASS",
+      "evidence_file": "qa-verify-candidate-r1.md",
+      "note": "TestAbuseLimits byte-identical, green; thresholds unchanged (10/20/30 per-min)"
+    },
+    {
+      "criterion": "Полный suite зелёный, coverage >= 92",
+      "status": "PASS",
+      "evidence_file": "integrator-gate.md",
+      "note": "combined 810bb00: 1402 passed / 0 skipped, cov 94.04%"
+    }
+  ],
+  "scope_check": "PASS",
+  "scope_check_command": "python3 ai-team/check_team.py scope --task T36 --base edf546de9f998c0909337d0abe6f8e1c9c4a0be5 --head f9c90bf90f057d35c6ef72fcf70bdd14afc8bd80 --repo /Users/wpalish/ashyq-worktrees/c3-t36-verify",
+  "scope_check_result": "changed: main.py (client_address only), docker-compose.yml (api ports→expose + commented loopback variant), scripts/verify_compose.sh (awk gate + probes via $WEB/api), test_security.py + test_compose_publishes_no_api_port.py; outside_scope: []",
+  "blockers": [],
+  "notes": [
+    "NOT_RUN (recorded, not a gate pass): verify_compose.sh live docker run — docker absent in all c3 environments; awk gate offline-validated on fixtures 3 independent rounds; first live run = owner release-gate responsibility (NOT_RUN != PASS).",
+    "Chain: edf546d -> 054331f (QA RED) -> b7cdc81 (A1; QA VERIFIED_FAIL — verify_compose L45 double /api/api, honest catch) -> f9c90bf (repair R1 +1/-1; full re-verify VERIFIED_PASS). QA TEST_AUTHOR ref: agent_4600643d-f52e-4fe3-a719-8739ffde2325.",
+    "Process deviation (recorded): no separate planner invocation — contract frozen by owner master card §5-T36; QA/dev/reviewer/security full and independent.",
+    "config.py untouched (no trusted_proxy_hops generalization) — serialization trivial; internal-network XFF trust accepted residual (single-tenant trusted zone).",
+    "Tickets: F1 P2 pre-existing uvicorn --proxy-headers --forwarded-allow-ips=* (Dockerfile:56, fly.toml:34) rewrites scope[client] to FIRST hop — own task with Dockerfile scope; F2 P3 awk tightening (any published in api-block + network_mode); F3 P3 retry/recheck/collect-documents un-gated (= T33-F4); nginx.conf append-semantics guard suggestion."
+  ]
+}
