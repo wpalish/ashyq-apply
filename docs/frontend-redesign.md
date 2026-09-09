@@ -66,3 +66,18 @@ shared documentation image, which must not fail otherwise valid UI assertions.
 Readiness follow-up must distinguish the current API's `can_proceed` from the stronger proposed E02
 threshold: current validation blocks only a missing subject area. Planned-only Duolingo is not yet
 accepted by the schema. Do not invent a stronger frontend gate or claim planned scores are achieved.
+
+## E02 current-draft validation
+
+StoreProvider now uses a debounced, race-safe validation hook: draft edits immediately hide the
+previous report; cancelled requests cannot overwrite a newer success or failure. Hydration and retry
+invalidate readiness. ProfileScreen uses the existing Notice styling for RU/KK/EN checking, invalid
+input, unavailable/retry, blocked count and server-eligible feedback. Eligibility is explicitly not
+completeness. No backend gate or schema changed; detailed server gap text remains server-provided.
+
+Verified: 215 unit tests (24 files), 10 mocked desktop/mobile browser scenarios, typecheck, lint,
+build, token audit (0 errors/0 warnings), Ruff check/format, mypy (164 files), and 43 focused profile
+backend tests. Full backend coverage and ordinary/auth integration E2E were not rerun. Existing
+KZT baseline and dev dependency caveats remain. 21st CLI unavailable; reused project Notice/token
+contracts and inspected the mobile browser capture instead. Next: localize the remaining profile
+labels and gap presentation without changing backend field keys or server validation rules.

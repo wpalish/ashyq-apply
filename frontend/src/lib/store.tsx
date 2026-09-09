@@ -12,6 +12,7 @@ import {
 } from 'react';
 import { ApiError, api, isPaymentRequired } from '@/api/client';
 import { DEFAULT_PROFILE } from '@/lib/defaultProfile';
+import { useProfileValidation, type ValidationStatus } from '@/lib/useProfileValidation';
 import {
   adoptPointer, clearDraftSlot, isLocalCaseKey, migrateLegacyDraft, newLocalCaseKey,
   readDraftEnvelope, writeDraftEnvelope, writePointer,
@@ -59,6 +60,8 @@ export interface Store {
   loadDemoProfile: () => void;
   clearProfile: () => void;
   validation: ProfileValidationReport | null;
+  validationStatus: ValidationStatus;
+  retryValidation: () => void;
   run: RunView | null;
   results: ProgramResult[];
   summary: ShortlistSummary | null;
@@ -146,7 +149,6 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   );
   const [savedProfile, setSavedProfile] = useState<StoredProfile | null>(null);
   const [cases, setCases] = useState<ApplicantCase[]>([]);
-  const [validation, setValidation] = useState<ProfileValidationReport | null>(null);
   const [run, setRun] = useState<RunView | null>(null);
   const [results, setResults] = useState<ProgramResult[]>([]);
   const [shortlist, setShortlist] = useState<BalancedShortlist | null>(null);
@@ -159,6 +161,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   >(null);
   const [draftRestored, setDraftRestored] = useState(false);
   const [hydrated, setHydrated] = useState(false);
+  const { validation, validationStatus, retryValidation } = useProfileValidation(profileDraft, hydrated);
   //: What the draft looked like when it was last saved or loaded. Comparing
   //: against this is what makes "unsaved changes" a fact rather than a guess.
   const [baseline, setBaseline] = useState<string>('');
@@ -240,13 +243,6 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     if (savedProfile) setDraft(toDraft(savedProfile));
   }, [activeCaseKey, savedProfile]);
 
-  // Validation follows the draft, debounced so typing does not flood the API.
-  useEffect(() => {
-    const timer = window.setTimeout(() => {
-      api.validateProfile(profileDraft).then(setValidation).catch(() => setValidation(null));
-    }, 400);
-    return () => window.clearTimeout(timer);
-  }, [profileDraft]);
 
   const saveNotes = useCallback(async (resultId: string, notes: string) => {
     if (!run) return;
@@ -577,7 +573,6 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setRun(null);
     setResults([]);
     setSummary(null);
-    setValidation(null);
     writePointer('profile', localId);
     writePointer('run', null);
   }, []);
@@ -762,7 +757,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     () => ({
       capabilities, profileDraft, setProfileDraft, savedProfile, cases, switchCase, newCase, restored,
       dirty, draftRestored, discardDraft, hydrated,
-      loadDemoProfile, clearProfile, validation, run, results,
+      loadDemoProfile, clearProfile, validation, validationStatus, retryValidation, run, results,
       summary, loading, error, saveProfile, startRun, cancelRun, retryRun, recheckNow, collectDocuments,
       exportShortlist, decide, saveNotes, refreshResults, rerank, shortlist, deleteEverything,
       clearError: () => setError(null),
@@ -770,7 +765,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     }),
     [capabilities, profileDraft, setProfileDraft, savedProfile, cases, switchCase, newCase,
      restored, dirty, draftRestored, discardDraft, hydrated, loadDemoProfile,
-     clearProfile, validation, run, results, summary, loading, error, saveProfile, startRun,
+     clearProfile, validation, validationStatus, retryValidation, run, results, summary, loading, error, saveProfile, startRun,
      cancelRun, retryRun, recheckNow, collectDocuments, exportShortlist, decide, saveNotes,
      refreshResults, rerank, shortlist, deleteEverything, paywall, unlockFromSubscription],
   );

@@ -1,6 +1,33 @@
 import { expect, test } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
+test('profile validation shows current server eligibility and recovers from unavailable checks', async ({ page }, info) => {
+  let response: 'blocked' | 'ready' | 'error' = 'blocked';
+  await page.route('**/api/profiles/validate', async (route) => {
+    await route.fulfill({ status: response === 'error' ? 503 : 200, contentType: 'application/json',
+      body: JSON.stringify(response === 'error' ? { detail: 'Unavailable' } : {
+        gaps: [], summary: 'Server fixture', can_proceed: response === 'ready', blocking_count: response === 'blocked' ? 1 : 0,
+      }) });
+  });
+  await page.goto('/#/profile');
+  const status = page.getByTestId('profile-validation-status');
+  await expect(status).toContainText('блокирующие пункты: 1');
+  response = 'ready';
+  await page.getByLabel('Citizenship', { exact: true }).fill('Canada');
+  await expect(status).toContainText('Проверяем');
+  await expect(status).toContainText('не означает, что анкета заполнена полностью');
+  response = 'error';
+  await page.getByLabel('Citizenship', { exact: true }).fill('KZ');
+  await expect(status).toContainText('Проверка недоступна');
+  response = 'ready';
+  await status.getByRole('button', { name: 'Повторить проверку' }).click();
+  await expect(status).toContainText('исследование можно запускать');
+  expect((await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze()).violations).toEqual([]);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await status.scrollIntoViewIfNeeded();
+  await page.screenshot({ path: info.outputPath('profile-validation.png') });
+});
+
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => { localStorage.setItem('ashyq.locale', 'ru'); });
   await page.route('**/api/**', async (route) => {

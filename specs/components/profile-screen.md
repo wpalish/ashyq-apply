@@ -31,6 +31,12 @@ existing case-scoped draft persistence stays in StoreProvider. No new server aut
 
 ## 6. States
 
+Validation belongs to the exact current draft only. While hydration or debounced validation is pending,
+hide previous reports. Ignore late successes and failures after draft replacement or unmount.
+Show localized checking, invalid input, unavailable, blocked, or eligible feedback with a retry action
+for unavailable checks. Eligibility uses server can_proceed and blocking_count; it is not completeness.
+Validation never adds a new client-side save or research gate.
+
 One active step or all fields; next/back; empty/partial draft; loading/save; conversion error;
 transcript read/review/apply. Focus moves to the section container after next/back. Step navigation
 is keyboard-operable with native buttons and aria-current. No false completion rings.

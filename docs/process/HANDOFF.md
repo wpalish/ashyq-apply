@@ -271,6 +271,12 @@ The backend KZT failure in section 7 needs separate resolution; do not claim all
 
 ## 6. Gate status at last run (numbers, not adjectives)
 
+2026-09-09 current-draft validation: 215 unit tests/24 files, 10 mocked browser scenarios,
+typecheck/lint/build and audit (0 errors/0 warnings) pass. Ruff check/format, mypy (164 files),
+43 focused profile backend tests pass. Full backend coverage and ordinary/auth E2E not rerun;
+prior KZT/dev-dependency caveats remain. First new browser attempt used an unchanged fixture value;
+corrected to a real edit, both desktop/mobile scenarios pass. No backend change.
+
 2026-09-09 exam-picker slice: typecheck/lint/build, 208 unit tests (23 files), 8 mocked browser
 scenarios and token audit (5 CSS/SCSS, 0 errors/0 warnings) pass. Ruff check/format and mypy pass
 (164 source files); focused `tests/test_scoring_and_profile.py` passes. No backend code changed.

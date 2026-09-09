@@ -14,6 +14,7 @@ import { useStore } from '@/lib/store';
 import type { TranscriptSuggestion } from '@/types';
 import { useTranslation } from '@/lib/useTranslation';
 import { profileWizardCopy } from '@/lib/profileWizardCopy';
+import { profileValidationCopy } from '@/lib/profileValidationCopy';
 import { ExamPicker } from '@/components/ExamPicker';
 
 /** "4.82 out of 5", not "[object Object]". */
@@ -38,6 +39,7 @@ const SEVERITY_LABEL: Record<string, string> = {
 export function ProfileScreen({ onNext }: { onNext: () => void }) {
   const { locale } = useTranslation();
   const copy = profileWizardCopy[locale];
+  const validationCopy = profileValidationCopy[locale];
   const [step, setStep] = useState(0);
   const [showAll, setShowAll] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -47,7 +49,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
     sectionRef.current?.focus();
   };
   const {
-    profileDraft, setProfileDraft, validation, saveProfile, loading,
+    profileDraft, setProfileDraft, validation, validationStatus, retryValidation, saveProfile, loading,
     savedProfile, restored, loadDemoProfile, clearProfile, draftRestored, discardDraft,
   } = useStore();
   const [saved, setSaved] = useState(false);
@@ -564,13 +566,22 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
         </Panel>
         </div>
 
+        <div role="status" aria-live="polite" data-testid="profile-validation-status">
+          <Notice kind={validationStatus === 'invalid' || (validation && !validation.can_proceed) ? 'risk' : validationStatus === 'error' ? 'warn' : 'info'}>
+            {validationStatus === 'error' || validationStatus === 'invalid' ? validationCopy[validationStatus]
+              : validation ? (validation.can_proceed ? validationCopy.eligible : `${validationCopy.blocked} ${validation.blocking_count}`)
+                : validationCopy.pending}
+            {validationStatus === 'error' && <button type="button" className="btn" onClick={retryValidation}>{validationCopy.retry}</button>}
+          </Notice>
+        </div>
+
         {validation && (
           <Panel
             title="What is missing, and what it costs you"
             hint={validation.summary}
           >
             {validation.gaps.length === 0 ? (
-              <p className="muted small">No gaps found. Every field that affects the result is present.</p>
+              <p className="muted small">No gaps found by the current server checks.</p>
             ) : (
               <div className="stack stack--tight" data-testid="gap-list">
                 {validation.gaps.map((g) => (
@@ -580,9 +591,9 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
                     </Chip>
                     <div>
                       <div className="gap-item__path">{g.field_path}</div>
-                      <p className="small" style={{ margin: '2px 0 0' }}>{g.impact}</p>
+                      <p className="small" style={{ margin: 'var(--space-0-5) var(--space-0) var(--space-0)' }}>{g.impact}</p>
                       {g.suggested_action && (
-                        <p className="xs muted" style={{ margin: '4px 0 0' }}>→ {g.suggested_action}</p>
+                        <p className="xs muted" style={{ margin: 'var(--space-1) var(--space-0) var(--space-0)' }}>→ {g.suggested_action}</p>
                       )}
                     </div>
                   </div>
