@@ -8,10 +8,10 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 | | |
 |---|---|
-| Holder | **nobody — E02 exam picker pushed** |
+| Holder | **gpt-6-astra — E02 fresh profile validation** |
 | Since (UTC) | 2026-09-08 16:26:31 UTC |
 | Branch | `task/frontend-redesign`, owner-directed continuation from design-system predecessor |
-| HEAD when written | `3ca6c5f` (exam picker verified and pushed) |
+| HEAD when written | `149c6fa` (clean and synchronized at continuation) |
 | Origin main when checked | `edf546d`; branch contains only the owner-directed design-system work |
 | Previous holder | GLM/ZCode dispatcher; it released after integrating T32 but left T29 production wiring explicitly deferred |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
@@ -236,6 +236,11 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+Current write-ahead: extract race-safe draft validation into a tested hook; expose pending/error/ready
+state through StoreProvider, render localized status in ProfileScreen using Notice tokens, and test
+out-of-order success/failure responses. Keep server eligibility distinct from completeness. Run
+frontend gates and focused backend checks, then push a WIP checkpoint with inherited gate caveats.
 
 Next executable slice: inspect backend/app/domain/validation.py and StoreProvider's debounced
 validation effect, then prevent stale responses from labelling a newer draft. Present fresh
