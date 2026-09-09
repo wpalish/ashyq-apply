@@ -8,15 +8,33 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 | | |
 |---|---|
-| Holder | **codex** |
-| Since (UTC) | 2026-09-08 03:38:21 UTC |
-| Branch | `main`, synchronized with `origin/main` after PR #8 |
-| HEAD when written | `04a3058` (merge commit for PR #8; C2 candidate `e4f5ee3`) |
-| Origin main when checked | `04a3058`; post-merge release-gates run `34189211422` succeeded |
-| Previous holder | GLM/ZCode dispatcher; it released after integrating T32 but left T29 production wiring explicitly deferred |
+| Holder | **nobody** |
+| Since (UTC) | 2026-09-09 19:20 UTC (released by claude-opus-5) |
+| Branch | `task/security-audit-hardening`, branched from `main@edf546d` |
+| HEAD when written | `b96845f` |
+| Origin main when checked | `edf546d` (PR #9 merge); the branch is 9 commits ahead of it and touches nothing else |
+| Previous holder | codex; it released after the C2 publication record on `main` |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**Security audit of the whole repository, and the fixes it produced — `ready-for-review`.**
+
+Unplanned work: the owner asked for a security review of `main` rather than the next brief task. The
+queue in §10 is untouched and the C2 items in the previous §2 stand exactly as codex left them; nothing
+in this branch changes the pipeline, the ranking, the discovery adapters or a migration.
+
+Nine findings were fixed on `task/security-audit-hardening`, three of them proved with a
+proof-of-concept test that fails against `main` and passes here. The most serious is a forgeable payment
+webhook: with payments enabled and the shipped default provider (`fake`), the signing secret fell back
+to the string `test-secret` written in `app/payments/provider.py`, so any customer could sign a `paid`
+event for their own order id and unlock every case for nothing. `validate_runtime` did not stop a
+production deployment from being in that state.
+
+Findings deliberately **not** changed are listed in §7, so the next holder does not re-discover them and
+assume they were missed.
+
+### Carried forward unchanged — codex's C2 status, still true
 
 **Campaign `c2` publication is complete; remaining items are explicit product blockers.** GLM integrated
 T16 (browser/egress hardening), T27 (claim verifier), T28 (source pages), T29 (catalog walker at the
@@ -30,6 +48,7 @@ scope contract: its promised source-to-UI News vertical slice cannot be built th
 allowed model/domain/runner-only paths. T31 remains blocked on an owner-selected provider, secrets
 outside Git, and the required data-policy acknowledgement. PR #8 merged the verified campaign into
 `main@04a3058`; both PR-triggered matrices and the post-merge release-gates are green.
+
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
@@ -62,6 +81,21 @@ manufacture compliant history. [0.4] was committed before [0.3].
 | T29 production wiring | `8d2fa10` | Live runs now use the hardened `CatalogRenderer` and persist walker fetch metadata through `SourcePage.record`; decoder recursion and oversized JSON labels fail closed/bounded. |
 | T30 measurable harness | `388ae98` | Canary reports separate programme/category numerators, source-page and fetch-tier counts, walker metrics, timestamped outputs and explicit batch selection. |
 | T30 catalogue repair | `5c42934` | Malformed/PDF catalogue bytes can no longer abort the entire walk; lxml falls back to the stdlib parser and a minimal `<f/{>` regression pins the failure. |
+
+
+### Security audit, 2026-09-09 (branch `task/security-audit-hardening`)
+
+| Finding | Severity | Hash | Change |
+|---|---|---|---|
+| Forgeable payment webhook (hardcoded `test-secret` / empty-key HMAC) | Critical | `885abfd` | Both providers refuse to verify with no secret; no fallback secret; `validate_runtime` refuses payments without one, refuses `fake` in production, and requires ≥16 chars plus an API key there. |
+| Transcript parse blocked the event loop; endpoint unlimited | High | `016da44` | `run_in_threadpool` + a new `upload` limiter group; the two `conversions/*` routes now require a principal. |
+| SMTP STARTTLS with `CERT_NONE` | High | `c840dd9` | `ssl.create_default_context()`; `smtp_password` becomes `SecretStr`. |
+| `needs_rehash` never called; reset token survived a password change; scrypt `maxmem` capped the cost schedule | Medium | `03ad016` | Rehash on login, burn live reset tokens on change, size `maxmem` from the parameters. |
+| CSV/XLSX formula injection | Medium | `77e877e` | `export.tabular.neutralize` on every cell of all three sheets. |
+| Block bypass on `GET /api/social/people/{user_id}` | Medium | `1a2ee72` | Symmetric block check, 404 like a stranger's. |
+| `/metrics` 500 on a non-ASCII bearer token | Low | `0610e17` | Compare bytes; plus a test locking the whole header policy across every response shape. |
+| `SourceLink` rendered an unvalidated `href` | Low | `84f0b43` | `isSafeHref`; non-http(s) sources render as text. |
+| SECURITY.md described intent, not the controls | — | `b96845f` | Payments, accounts and mail, exports sections rewritten to what holds. |
 
 ## 4. Half-done / uncommitted at the moment of writing
 
@@ -219,6 +253,20 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+1. **Review and merge PR for `task/security-audit-hardening`.** Nine commits, backend + frontend +
+   SECURITY.md. Reproduce the three proofs by checking out `main` and running the new tests there:
+   `tests/test_payment_webhook.py::TestAnUnconfiguredSecretIsNotASecret`,
+   `tests/test_transcript_import.py::TestTheUploadCannotStallTheService::test_a_slow_parse_does_not_block_an_unrelated_request`,
+   `tests/test_social_moderation.py::TestBlocking::test_a_block_hides_the_card_from_the_direct_route_too`.
+   All three fail on `main` and pass on the branch.
+2. **Operational, before any deployment that takes money:** set `UNIMATCH_APIPAY_WEBHOOK_SECRET` (≥16
+   characters, outside Git) and `UNIMATCH_PAYMENTS_PROVIDER=apipay`. The API now refuses to start
+   otherwise, which is the intended behaviour, not a regression.
+3. Then return to the queue in §10 as codex left it: T26's contract, T30's registry 19→60, T31 blocked
+   on a provider. Nothing in this branch touches them.
+
+The steps codex left, unchanged and still next after this review:
+
 1. Resolve T26's contract before code: either authorize the API/frontend/ingestion paths needed for a
    real News vertical slice, or explicitly reduce acceptance to a storage-only foundation.
 2. For T30 registry 19→60, supply/approve a 41-institution candidate list with official seeds and run
@@ -229,35 +277,50 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 6. Gate status at last run (numbers, not adjectives)
 
-Latest local and remote runs by codex, 2026-09-08, on `main@04a3058`.
+Local runs by claude-opus-5, 2026-09-09, on `task/security-audit-hardening`.
+Codex's C2 gate numbers for `main@04a3058` are in git history at `edf546d`; this table is the
+latest run, as this section requires.
 
 | Gate | Result |
 |---|---|
-| T29/T16/T28/T32 focused pytest | **pass** — **310 passed**, 1 deprecation warning |
-| T29 wiring + security RED→GREEN | **pass** — **5 passed**; initial RED was 4 failed / 1 passed |
-| T30 report tests RED→GREEN | **pass** — **3 passed** after initial RED |
-| live T29 smoke | **partially blocked** — robots refusal preserved; 2 catalogues walked, programme and scholarship leads found, 75 source-page outcomes recorded |
-| live T30 batches | **pass at the exact floor** — programme **7/10**, categories **26/30**, material FP **0**; 15 catalogues and 239 source-page rows |
-| malformed HKU catalogue repair | **pass** — 205 related tests; post-fix HKU smoke 22 candidates / 1 confirmed programme / 52 outcomes |
-| current Ruff / format / mypy | **pass** — 164 source files |
 | `ruff check app tests` | **pass** |
-| `ruff format --check app tests` | **pass** — 154 files |
-| `mypy app tests` | **pass** — 164 source files |
-| `pytest --cov=app --cov-fail-under=92` | **pass** — **1358 passed**, coverage **93.81%** |
-| frontend `tsc --noEmit` / `eslint src e2e` | **pass** |
-| frontend `vitest run` | **pass** — **182 passed** / 20 files |
-| frontend `vite build` | **pass** |
-| frontend Playwright | **pass** — ordinary **75 passed / 1 intentionally skipped**; auth **6/6 passed** |
-| dependency audit | **pass** — `pip-audit` and `npm audit --omit=dev`: **0 known vulnerabilities** |
-| `alembic heads` | **pass** — sole head `d9c4e7a21b83` |
-| migrations + `seed_demo.py`, browser off | **pass** — 20 results / 96 pages / 414 claims; Groningen #1, UBC `OUT_OF_BUDGET` |
-| GitHub release-gates | **pass** — PR runs `34188244906`, `34188286259`; post-merge `main` run `34189211422` |
+| `ruff format --check app tests` | **pass** — 166 files |
+| `mypy app tests` | **pass** — 166 source files |
+| `pytest --cov=app --cov-fail-under=92` | **pass** — **1395 passed**, coverage **93.96%** |
+| `npm run typecheck` | **pass** |
+| `npm run lint` | **pass** |
+| `npm test -- --run` | **pass** — 188 tests, 20 files |
+| `npm run build` | **pass** — 366.79 kB js / 66.11 kB css |
+| `pip-audit -r requirements.txt` | **pass** — no known vulnerabilities |
+| demo oracle (`seed_demo.py`, throwaway database) | **pass** — Groningen #1, UBC present; ordering unchanged |
 
-The React unit suite still emits pre-existing `act(...)` warnings in payment tests; it has zero test
-failures. The e2e suite's crowded-default-database trap remains documented in §9; these runs avoided
-it with explicitly isolated SQLite databases rather than changing user data.
+E2E (`npm run e2e`, `npm run e2e:auth`) was **not** run locally — ports 5173/8099 and a browser install;
+CI runs both on the PR.
 
 ## 7. Blockers / questions for the owner
+
+### OPEN — residual security risks found and deliberately left alone (2026-09-09, claude-opus-5)
+
+Listed so the next holder does not rediscover them and assume they were missed. None is a defect in
+this branch; each is a judgement the owner may want to revisit.
+
+1. **`job.last_error` is shown verbatim** to a workspace owner through `/api/admin/jobs`. Capped at
+   4000 characters, scoped to that tenant's own runs, and the route argues for it explicitly — but a
+   driver exception can carry connection detail. Low.
+2. **`--forwarded-allow-ips=*` on Fly** (`fly.toml`, `Dockerfile.fly`) with
+   `UNIMATCH_TRUST_PROXY_HEADERS=true`. Correct behind the edge; anything that reaches the app port
+   directly on the private network can invent an `X-Forwarded-For` and walk around the per-address
+   limiter. Pre-existing and documented as a trade-off.
+3. **`GET /api/social/messages/{user_id}` writes** (marks the thread read) and the session cookie is
+   `SameSite=Lax`, so a top-level navigation carries it. Impact is a read receipt; noted, not fixed.
+4. **`fly.toml` sets no `UNIMATCH_EMAIL_SENDER`.** Production refuses to start on `console`, so the
+   deploy fails until SMTP is configured as a secret. The guard working, not a bug — but it will look
+   like one at 3am.
+5. **Session cookie could use the `__Host-` prefix** (it already satisfies every condition). Not done:
+   renaming the cookie invalidates every live session and the name is configurable.
+6. Egress residuals (Chromium's own DNS resolution, browser-internal redirects) were already recorded
+   in `SECURITY.md` §Known residual risks and still stand.
+
 
 ### RESOLVED — I4 / T3 wording vs the approved formula (2026-09-06, owner-delegated)
 
@@ -332,6 +395,11 @@ next agent does not reopen it.
 | 2026-09-05 | recovery | Historical setup row above is retained append-only, not revalidated as current test counts/line anchors; [0.8] frontend contracts are uncommitted and under separate audit | Keeps history without upgrading old claims to acceptance. |
 | 2026-09-07 | T10 audit | `worker.py`: failed fenced retry after a non-terminal payment poll raises `LeaseLost`; provider journal/order changes roll back with the transaction | A stale worker must commit no money-adjacent writes. |
 | 2026-09-07 | T18 audit | `live_discovery.py`: `edu.kz` multipart suffix; `_confirm_programs(..., profile)` filters fetched pages by requested level and subject | Live NU run otherwise selected an MSc and Mathematics ahead of BSc Computer Science. |
+| 2026-09-09 | security audit | `config.py`: new `upload_rate_limit_per_minute=6`; `smtp_password` is now `SecretStr` (call sites need `.get_secret_value()`); `validate_runtime` gains `_validate_payments`, and `MIN_WEBHOOK_SECRET_CHARS=16` is module-level | New limiter group and payment startup guards. |
+| 2026-09-09 | security audit | `export/tabular.py`: new public `neutralize(value)`, applied to every exported cell | Formula injection. |
+| 2026-09-09 | security audit | `payments/errors.py`: new `UnconfiguredWebhookSecret`; `get_provider()` no longer defaults the fake's secret | A missing secret is now an error, not a default. |
+| 2026-09-09 | security audit | `frontend/src/components/primitives.tsx`: new exported `isSafeHref(url)` | Non-http(s) sources render as text. |
+| 2026-09-09 | security audit | `security.py`: `SCRYPT_R`, `SCRYPT_P`, `_maxmem(n, r)`; `routes_metrics` compares bytes | scrypt cost schedule and the 500-on-non-ASCII bearer. |
 
 ## 9. Traps and lessons (things that cost a session; keep them)
 
@@ -428,3 +496,4 @@ host=github.com
 | 2026-09-07 12:00:10 UTC | codex | `25f5954` → `02d648c` + final handoff | Fixed and PostgreSQL-tested stale payment rollback, fixed two live NU discovery defects, ran all backend/frontend/E2E/auth/dependency gates, and field-ran the bounded NU canary. Audit verdict: useful partial campaign, not completed project. Baton released; no push/main/deploy. |
 | 2026-09-07 14:10:54 UTC | codex | `ab2e70a` → `96c1082` + final publication handoff | Owner explicitly authorized GitHub publication. Secret-scanned and committed all 133 ai-team evidence files plus the corrected audit, pushed `ai/c1/integration`, and opened PR #7. Release-gates started; no protected-main merge or application deploy. |
 | 2026-09-08 03:38:21 UTC | codex | `9b362c8` → in progress | Took the C2 baton after verifying `origin/main@4d2125c` is the merge-base. Owner authorized T29 wiring, bounded T30 batches, T26, committing campaign evidence, and GitHub publication; T31 remains blocked on provider/secrets/data-policy acknowledgement. |
+| 2026-09-09 19:20 UTC | claude-opus-5 | `edf546d` → `task/security-audit-hardening` | Owner asked for a security review of the repository instead of the next brief task. Audited auth, tenancy, payments, egress, uploads, exports, mail, crypto, headers and the frontend; proved three findings with tests that fail on `main`; fixed nine across 9 commits. Full gates green (1395 backend / 93.96% / 188 frontend / build / pip-audit). Residuals recorded in §7. Baton released; nothing merged to `main`, no deploy.
