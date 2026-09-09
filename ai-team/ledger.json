@@ -1944,7 +1944,7 @@
       "T36 ran QA-first без отдельного planner-вызова: контракт заморожен master-карточкой владельца §5-T36 (эквивалент planner-контракта); QA/dev/reviewer/security полные и независимы. Отклонение зафиксировано интегратором; ретро-планер не назначен (контракт не изменился относительно карточки). TEAM_RULES '4 роли' соблюдены (planner — единственное исключение, по источнику контракта)."
     ],
     "campaign_result": {
-      "final_head": "d4908ae6111d007903e45b550f82fdb975a3d92b (ai/c3/integration)",
+      "final_head": "ed9fd42 (d4908ae + evidence 13368b8 + ledger status 0236a19 + DoD gates/HANDOFF ed9fd42)",
       "tasks": "T33 T34 T35 T36 T37 T38 all DONE_LOCAL_INTEGRATION; full cycles (QA RED-first everywhere except docs-only T38 per frozen contract; dev; QA verify — T36 via honest VERIFIED_FAIL->R1; reviewer; security mandatory on T33/T34/T35/T36, optional-T37 not conducted ruling)",
       "final_gates": "FULL pytest 1402 passed / 0 skipped / 1 pre-existing warning, cov 94.05% (floor 92; c2 baseline 93.81%); mypy 0/166; ruff clean; handoff_check exit 0; targets 166; FE skipped (0 frontend diffs whole campaign)",
       "acceptance_packets": "6/6 STRUCTURE OK (outputs/c3-t*-a1/acceptance-packet.json)",
@@ -1956,7 +1956,8 @@
         "first live docker run of verify_compose.sh",
         "T33-F1 free-export coverage decision"
       ],
-      "publication_status": "PREPARED, BLOCKED ON CREDENTIALS: evidence commit 13368b8 on ai/c3/integration (branch head; all gates green at d4908ae + evidence on top). Push attempt failed: git credential helper references a deleted temp gh binary (/tmp/ashyq-gh.*/bin/gh), gh CLI not installed, macOS keychain has no github.com entry, no SSH keys. Owner action required: (a) install gh + `gh auth login`, or (b) provide a PAT via keychain, or (c) switch origin to SSH with a key — then dispatcher pushes and opens PR #10 (authorized by master prompt §6). Alternative: owner pushes ai/c3/integration themselves and opens the PR."
+      "publication_status": "PREPARED, BLOCKED ON CREDENTIALS: evidence commit branch head ed9fd42 (evidence commit 13368b8 + DoD commit) on ai/c3/integration (branch head; all gates green at d4908ae + evidence on top). Push attempt failed: git credential helper references a deleted temp gh binary (/tmp/ashyq-gh.*/bin/gh), gh CLI not installed, macOS keychain has no github.com entry, no SSH keys. Owner action required: (a) install gh + `gh auth login`, or (b) provide a PAT via keychain, or (c) switch origin to SSH with a key — then dispatcher pushes and opens PR #10 (authorized by master prompt §6). Alternative: owner pushes ai/c3/integration themselves and opens the PR.",
+      "dod_item6": "DONE: RELEASE_CHECKLIST gates 97-102 added (summary re-count PASS 98 / PARTIAL 2 / FAIL 0 / BLOCKED 2 of 102); HANDOFF.md baton/§2/§5/§6/§8/§9/§11 updated for c3; handoff_check exit 0"
     }
   }
 }
