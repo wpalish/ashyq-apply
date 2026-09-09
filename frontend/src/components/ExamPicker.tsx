@@ -6,6 +6,25 @@ import type { Locale } from '@/lib/i18n';
 
 type ExamId = 'ielts' | 'toefl' | 'duolingo' | 'sat' | 'act';
 type ScoreField = { key: string; label: string; id: string };
+const SCORE_LABELS: Record<string, { ru: string; kk: string }> = {
+  overall: { ru: 'общий балл', kk: 'жалпы балл' },
+  total: { ru: 'общий балл', kk: 'жалпы балл' },
+  composite: { ru: 'сводный балл', kk: 'жиынтық балл' },
+  listening: { ru: 'аудирование', kk: 'тыңдалым' },
+  reading: { ru: 'чтение', kk: 'оқылым' },
+  writing: { ru: 'письмо', kk: 'жазылым' },
+  speaking: { ru: 'говорение', kk: 'айтылым' },
+  math: { ru: 'математика', kk: 'математика' },
+  reading_writing: { ru: 'чтение и письмо', kk: 'оқылым және жазылым' },
+  english: { ru: 'английский', kk: 'ағылшын тілі' },
+  science: { ru: 'естественные науки', kk: 'жаратылыстану' },
+  score: { ru: 'балл', kk: 'балл' },
+};
+const AUX_LABELS = {
+  en: { type: 'Test type', maximum: 'Duolingo maximum' },
+  ru: { type: 'Тип экзамена', maximum: 'Максимальный балл Duolingo' },
+  kk: { type: 'Емтихан түрі', maximum: 'Duolingo ең жоғары балы' },
+};
 const EXAMS: Record<ExamId, { name: string; fields: ScoreField[] }> = {
   ielts: { name: 'IELTS', fields: ['overall', 'listening', 'reading', 'writing', 'speaking'].map(key => ({ key, label: `IELTS ${key}`, id: `ielts-${key}` })) },
   toefl: { name: 'TOEFL', fields: [
@@ -82,7 +101,7 @@ export function ExamPicker({ group, draft, update, showAll = false }: {
       <fieldset className="exam-block" id={`${id}-${exam}`} hidden={!expanded(exam)}>
         <legend>{EXAMS[exam].name}</legend>
         <div className="grid-3">
-          {EXAMS[exam].fields.map(field => <Field key={field.key} label={field.label} htmlFor={field.id}>
+          {EXAMS[exam].fields.map(field => <Field key={field.key} label={locale === 'en' ? field.label : `${EXAMS[exam].name}: ${SCORE_LABELS[field.key]?.[locale] ?? field.label}`} htmlFor={field.id}>
             <input id={field.id} data-testid={field.id} type="number" inputMode="decimal"
               aria-invalid={exam === 'duolingo' && incompleteDuolingo ? true : undefined}
               aria-describedby={exam === 'duolingo' && incompleteDuolingo ? `${id}-duolingo-error` : undefined}
@@ -90,13 +109,13 @@ export function ExamPicker({ group, draft, update, showAll = false }: {
               min={exam === 'ielts' ? 0 : undefined} max={exam === 'ielts' ? 9 : undefined}
               {...bind(exam, [field.key], exam === 'ielts' || exam === 'duolingo' ? 'float' : 'number')} />
           </Field>)}
-          {exam === 'ielts' && <Field label="Test type" htmlFor="ielts-type">
+          {exam === 'ielts' && <Field label={AUX_LABELS[locale].type} htmlFor="ielts-type">
             <select id="ielts-type" {...bind(exam, ['test_type'])}>
               <option value="academic">Academic</option><option value="general_training">General Training</option>
               <option value="ukvi_academic">UKVI Academic</option><option value="one_skill_retake">One Skill Retake</option>
             </select>
           </Field>}
-          {exam === 'duolingo' && <Field label="Duolingo maximum" htmlFor="duolingo-max">
+          {exam === 'duolingo' && <Field label={AUX_LABELS[locale].maximum} htmlFor="duolingo-max">
             <input id="duolingo-max" type="number" {...bind(exam, ['max_score'], 'float')} />
           </Field>}
           <Field label={`${EXAMS[exam].name} ${copy.date}`} htmlFor={`${exam}-taken`}>

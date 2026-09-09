@@ -22,6 +22,9 @@ Existing Button/Field/Panel aliases plus `--space-3`, `--space-4`, `--space-5`, 
 
 ## 5. Props/API
 
+Score labels and auxiliary controls follow RU/KK/EN locale. Official exam and test-type names
+stay recognizable; locale changes never alter stored scores, test_type values, ids or visibility.
+
 `ExamPicker({ group, draft, update, showAll })`. Data stays in the existing academics schema.
 Initial visibility derives from any numeric score (including zero) or date, but not default max-score
 or IELTS test-type metadata. Late hydration also reveals entered exams unless manually collapsed.

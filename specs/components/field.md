@@ -24,6 +24,8 @@ Field stack, label, native control child, and optional hint.
 
 ## 6. States
 
+Hints use `--color-text-muted` to remain AA-readable on both normal and sunken panel surfaces.
+
 Default uses the strong border; hover increases border contrast; focus uses interactive border plus focus-ring shadow; disabled is native-control behavior; error must add an accessible message/Notice and `aria-invalid` at the call site.
 
 ## 7. Code example

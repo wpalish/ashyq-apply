@@ -243,6 +243,8 @@ No branch, commit, push or stash has been performed by this writer.
 Current write-ahead: extract ProfileScreen-owned labels/headings/hints/actions into a typed RU/KK/EN
 dictionary; translate enum labels with explicit unchanged option values. Preserve server-authored
 details and draft values; test live locale switching, payload invariance and mobile accessibility.
+Follow-up within this slice: localize ExamPicker score labels and change Field hint to existing muted
+token: new all-fields axe check exposed subtle-on-sunken contrast 4.45 below AA 4.5. No raw colors.
 
 Next executable slice: localize remaining ProfileScreen field labels, panel headings and severity
 labels in RU/KK/EN. Read profile-screen/field/panel/notice specs first; preserve API field keys,
@@ -277,6 +279,12 @@ were adapted for the new primary/context navigation but those suites were not ex
 The backend KZT failure in section 7 needs separate resolution; do not claim all gates green.
 
 ## 6. Gate status at last run (numbers, not adjectives)
+
+2026-09-09 profile localization: 217 unit tests/24 files, 12 mocked desktop/mobile browser scenarios,
+typecheck/lint/build and token audit 0 errors/0 warnings pass. Ruff check/format, mypy 164 files and
+43 focused backend profile tests pass. Full backend coverage/ordinary-auth integration not rerun.
+All-fields axe found hint-on-sunken contrast 4.45: fixed using existing muted token. Dark checks now
+wait for finite theme transitions and pass; no assertions weakened. 21st CLI unavailable.
 
 2026-09-09 current-draft validation: 215 unit tests/24 files, 10 mocked browser scenarios,
 typecheck/lint/build and audit (0 errors/0 warnings) pass. Ruff check/format, mypy (164 files),

@@ -1,6 +1,39 @@
 import { expect, test } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
+test('profile locale switch preserves data, selections and responsive layout', async ({ page }, info) => {
+  await page.emulateMedia({ reducedMotion: 'reduce', colorScheme: 'light' });
+  await page.goto('/#/profile');
+  await page.getByLabel('Гражданство', { exact: true }).fill('Canada');
+  await page.locator('#level').selectOption({ label: 'Магистратура' });
+  await page.getByTestId('section-more').click();
+  await page.locator('#locale').selectOption('kk');
+  await page.goto('/#/profile');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Талапкер профилі');
+  await expect(page.getByLabel('Азаматтық', { exact: true })).toHaveValue('Canada');
+  await expect(page.locator('#level')).toHaveValue('master');
+  await expect(page.locator('#level option:checked')).toHaveText('Магистратура');
+  await page.getByTestId('profile-show-all').click();
+  await expect(page.getByLabel('IELTS: жалпы балл', { exact: true })).toBeVisible();
+  expect((await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze()).violations).toEqual([]);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.screenshot({ path: info.outputPath('profile-kazakh.png'), fullPage: true });
+  await page.emulateMedia({ colorScheme: 'dark' });
+  // Measure the settled theme, not intermediate colors during a CSS transition.
+  await page.evaluate(async () => {
+    await new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+    await Promise.all(document.getAnimations().filter(animation => animation.effect?.getTiming().iterations !== Infinity).map(animation => animation.finished.catch(() => {})));
+  });
+  expect((await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze()).violations).toEqual([]);
+  await page.emulateMedia({ colorScheme: 'light' });
+  await page.getByTestId('section-more').click();
+  await page.locator('#locale').selectOption('en');
+  await page.goto('/#/profile');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Who is applying');
+  await expect(page.getByLabel('Citizenship', { exact: true })).toHaveValue('Canada');
+  await expect(page.locator('#level')).toHaveValue('master');
+});
+
 test('profile validation shows current server eligibility and recovers from unavailable checks', async ({ page }, info) => {
   let response: 'blocked' | 'ready' | 'error' = 'blocked';
   await page.route('**/api/profiles/validate', async (route) => {
@@ -13,11 +46,11 @@ test('profile validation shows current server eligibility and recovers from unav
   const status = page.getByTestId('profile-validation-status');
   await expect(status).toContainText('блокирующие пункты: 1');
   response = 'ready';
-  await page.getByLabel('Citizenship', { exact: true }).fill('Canada');
+  await page.getByLabel('Гражданство', { exact: true }).fill('Canada');
   await expect(status).toContainText('Проверяем');
   await expect(status).toContainText('не означает, что анкета заполнена полностью');
   response = 'error';
-  await page.getByLabel('Citizenship', { exact: true }).fill('KZ');
+  await page.getByLabel('Гражданство', { exact: true }).fill('KZ');
   await expect(status).toContainText('Проверка недоступна');
   response = 'ready';
   await status.getByRole('button', { name: 'Повторить проверку' }).click();
@@ -89,22 +122,22 @@ for (const theme of ['light', 'dark'] as const) {
 test('profile wizard keeps edits across sections and supports review mode', async ({ page }, info) => {
   await page.goto('/#/profile');
   await expect(page.getByTestId('profile-step-0')).toHaveAttribute('aria-current', 'step');
-  await page.getByLabel('Citizenship', { exact: true }).fill('Kazakhstan');
-  await expect(page.getByLabel('GPA / average')).toBeHidden();
+  await page.getByLabel('Гражданство', { exact: true }).fill('Kazakhstan');
+  await expect(page.getByLabel('GPA / средний балл')).toBeHidden();
   await page.getByTestId('profile-next-step').click();
-  await page.getByLabel('GPA / average').fill('4.8');
+  await page.getByLabel('GPA / средний балл').fill('4.8');
   await page.getByTestId('profile-step-2').click();
   await page.getByTestId('ielts-overall').fill('7');
   await page.getByTestId('profile-step-0').click();
-  await expect(page.getByLabel('Citizenship', { exact: true })).toHaveValue('Kazakhstan');
+  await expect(page.getByLabel('Гражданство', { exact: true })).toHaveValue('Kazakhstan');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   const violations = (await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze()).violations;
   expect(violations).toEqual([]);
   await page.screenshot({ path: `../docs/screenshots/profile-wizard-${info.project.name}.png`, fullPage: true });
   await page.getByTestId('profile-show-all').click();
-  await expect(page.getByLabel('GPA / average')).toHaveValue('4.8');
+  await expect(page.getByLabel('GPA / средний балл')).toHaveValue('4.8');
   await expect(page.getByTestId('ielts-overall')).toHaveValue('7');
-  await expect(page.getByLabel('SAT total')).toBeVisible();
+  await expect(page.getByLabel('SAT: общий балл')).toBeVisible();
 });
 
 test('exam picker hides empty grids and retains scores across keyboard toggles', async ({ page }, info) => {

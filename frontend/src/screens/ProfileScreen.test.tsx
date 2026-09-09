@@ -6,10 +6,12 @@
  * refused conversion silently destroyed the applicant's grades.
  */
 
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ProfileScreen } from './ProfileScreen';
 import { ApiError, api } from '@/api/client';
+import { setLocale } from '@/lib/i18n';
+import { profileCopy } from '@/lib/profileCopy';
 
 const GPA = { raw_value: 4.8, raw_scale_max: 5, raw_scale_label: 'KZ 5-point' };
 
@@ -31,6 +33,7 @@ vi.mock('@/lib/store', () => ({
 }));
 
 beforeEach(() => {
+  setLocale('en');
   draft = { academics: { gpa: { ...GPA } }, activities: [], achievements: [] };
   setProfileDraft.mockClear();
   vi.restoreAllMocks();
@@ -46,6 +49,30 @@ beforeEach(() => {
     ],
     note: '',
   });
+});
+
+it('provides non-empty copy in every supported locale', () => {
+  for (const copy of Object.values(profileCopy)) {
+    for (const locale of ['en', 'ru', 'kk'] as const) expect(copy[locale].trim()).not.toBe('');
+  }
+});
+
+it('switches labels without translating stored enum values or resetting the current step', async () => {
+  render(<ProfileScreen onNext={() => {}} />);
+  await screen.findByTestId('convert-kz5_to_us4');
+  fireEvent.change(screen.getByLabelText('Level', { exact: true }), { target: { value: 'master' } });
+  fireEvent.change(screen.getByLabelText('Citizenship', { exact: true }), { target: { value: 'Kazakhstan' } });
+  const snapshot = structuredClone(draft);
+  act(() => setLocale('ru'));
+  expect(screen.getByLabelText('Гражданство')).toHaveValue('Kazakhstan');
+  expect(screen.getAllByLabelText('Уровень')[0]).toHaveValue('master');
+  expect(draft).toEqual(snapshot);
+  fireEvent.click(screen.getByTestId('profile-step-1'));
+  act(() => setLocale('kk'));
+  expect(screen.getByLabelText('GPA / орташа балл')).toBeVisible();
+  expect(screen.getByTestId('profile-step-1')).toHaveAttribute('aria-current', 'step');
+  expect(draft).toEqual(snapshot);
+  act(() => setLocale('en'));
 });
 
 describe('applying a grade conversion', () => {

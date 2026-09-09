@@ -81,3 +81,19 @@ backend tests. Full backend coverage and ordinary/auth integration E2E were not 
 KZT baseline and dev dependency caveats remain. 21st CLI unavailable; reused project Notice/token
 contracts and inspected the mobile browser capture instead. Next: localize the remaining profile
 labels and gap presentation without changing backend field keys or server validation rules.
+
+## E02 profile localization
+
+ProfileScreen-owned headings, labels, hints, actions, options and gap severity now have typed RU/KK/EN
+copy. ExamPicker score/auxiliary labels follow the locale while official exam variant names remain
+recognizable. Locale switching preserves draft data, API enum values, field ids and the mounted step.
+Server-authored validation/conversion messages, transcript quotes and user content stay verbatim.
+This is profile localization, not a claim that the surrounding shell or all other screens are translated.
+
+All-fields browser coverage exposed hint contrast 4.45 on sunken panels; Field now uses the existing
+muted token. Light and settled dark axe checks pass. The theme test waits for finite animations before
+measuring contrast, avoiding intermediate transition colors. Prata/Onest/IBM Plex Mono unchanged.
+Checks: 217 unit/24 files, 12 mocked browser scenarios, typecheck/lint/build, token audit 0/0,
+Ruff check/format, mypy 164 files and 43 focused backend profile tests. Full backend coverage and
+ordinary/auth integration suites not rerun; inherited KZT/dev dependency caveats remain.
+Next E02 slice: restore wizard step per case without leaking navigation between profiles.
