@@ -6,12 +6,14 @@
  * decide which blanks are worth filling.
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ApiError, api } from '@/api/client';
 import { Chip, Field, Notice, Panel } from '@/components/primitives';
 import { castInput, get, setIn, type Path } from '@/lib/immutable';
 import { useStore } from '@/lib/store';
 import type { TranscriptSuggestion } from '@/types';
+import { useTranslation } from '@/lib/useTranslation';
+import { profileWizardCopy } from '@/lib/profileWizardCopy';
 
 /** "4.82 out of 5", not "[object Object]". */
 function describe(value: unknown): string {
@@ -33,6 +35,16 @@ const SEVERITY_LABEL: Record<string, string> = {
 };
 
 export function ProfileScreen({ onNext }: { onNext: () => void }) {
+  const { locale } = useTranslation();
+  const copy = profileWizardCopy[locale];
+  const [step, setStep] = useState(0);
+  const [showAll, setShowAll] = useState(false);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const moveStep = (next: number) => {
+    setStep(next);
+    setShowAll(false);
+    sectionRef.current?.focus();
+  };
   const {
     profileDraft, setProfileDraft, validation, saveProfile, loading,
     savedProfile, restored, loadDemoProfile, clearProfile, draftRestored, discardDraft,
@@ -144,7 +156,18 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
         </p>
       </div>
 
-      <div className="stack stack--loose">
+      <nav className="profile-steps" aria-label={copy.navigation}>
+        {copy.steps.map((name, index) => <button type="button" key={name}
+          className="profile-steps__item" data-testid={`profile-step-${index}`}
+          aria-current={!showAll && step === index ? 'step' : undefined}
+          onClick={() => moveStep(index)}><span className="mono">0{index + 1}</span>{name}</button>)}
+      </nav>
+      <div className="profile-wizard-toolbar">
+        <p className="small muted">{copy.hint}</p>
+        <button type="button" className="btn btn--sm" data-testid="profile-show-all"
+          aria-pressed={showAll} onClick={() => setShowAll(!showAll)}>{showAll ? copy.wizard : copy.all}</button>
+      </div>
+      <div className="stack stack--loose" ref={sectionRef} tabIndex={-1} aria-label={showAll ? copy.all : `${copy.step} ${step + 1}: ${copy.steps[step]}`}>
         {draftRestored && (
           <Notice kind="warn">
             <div className="stack stack--tight" data-testid="draft-restored">
@@ -170,6 +193,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
           </Notice>
         )}
 
+        <div hidden={!showAll && step !== 0}>
         <Panel
           title="Start from"
           hint="Demo data is never loaded on your behalf. Choose it explicitly, and it is clearly labelled everywhere it appears."
@@ -218,7 +242,9 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
             </Notice>
           )}
         </Panel>
+        </div>
 
+        <div hidden={!showAll && step !== 0}>
         <Panel title="Application context" hint="What you are applying for, and from where.">
           <div className="grid-2">
             <Field label="Level" htmlFor="level">
@@ -280,7 +306,9 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
             </Field>
           </div>
         </Panel>
+        </div>
 
+        <div hidden={!showAll && step !== 1}>
         <Panel
           title="Read it off your transcript"
           hint="Optional. The file is read and discarded — it is never saved, and nothing is filled in until you say so."
@@ -319,7 +347,9 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
             ))}
           </div>
         </Panel>
+        </div>
 
+        <div hidden={!showAll && step !== 1}>
         <Panel
           title="Grades"
           hint="Enter the grade exactly as it appears on your transcript. ASHYQ Apply does not convert it silently."
@@ -384,7 +414,9 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
             </div>
           )}
         </Panel>
+        </div>
 
+        <div hidden={!showAll && step !== 2}>
         <Panel
           title="English language"
           hint="Subscores matter: many programmes publish a per-section minimum on top of the overall band."
@@ -410,7 +442,9 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
             </Field>
           </div>
         </Panel>
+        </div>
 
+        <div hidden={!showAll && step !== 3}>
         <Panel title="Standardised tests" hint="Leave blank if not taken — test-optional programmes are unaffected.">
           <div className="grid-3">
             <Field label="SAT total" htmlFor="sat"><input id="sat" type="number" {...bind(['academics', 'sat', 'total'], 'number')} /></Field>
@@ -468,7 +502,9 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
             })}>+ Add another test</button>
           </div>
         </Panel>
+        </div>
 
+        <div hidden={!showAll && step !== 1}>
         <Panel title="Subject grades" hint="Keep the original transcript scale for every subject.">
           <div className="stack stack--tight">
             {subjectGrades.map((_, index) => (
@@ -487,7 +523,9 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
             })}>+ Add subject grade</button>
           </div>
         </Panel>
+        </div>
 
+        <div hidden={!showAll && step !== 3}>
         <Panel title="AP, IB and A-Level results" hint="Add achieved and predicted curriculum results exactly as reported.">
           <div className="stack stack--tight">
             {curriculumResults.map((item, index) => (
@@ -509,7 +547,9 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
             })}>+ Add curriculum result</button>
           </div>
         </Panel>
+        </div>
 
+        <div hidden={!showAll && step !== 4}>
         <Panel title="Extracurricular activities" hint="Depth, responsibility and measurable impact matter more than a long list.">
           <div className="stack stack--tight">
             {activities.map((_, index) => (
@@ -544,7 +584,9 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
             })}>+ Add activity</button>
           </div>
         </Panel>
+        </div>
 
+        <div hidden={!showAll && step !== 5}>
         <Panel title="Achievements" hint="Include level, placement and how recipients were selected.">
           <div className="stack stack--tight">
             {achievements.map((_, index) => (
@@ -572,6 +614,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
             })}>+ Add achievement</button>
           </div>
         </Panel>
+        </div>
 
         {validation && (
           <Panel
@@ -602,6 +645,11 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
         )}
 
         <div className="row">
+          {!showAll && <>
+            <button type="button" className="btn" disabled={step === 0} onClick={() => moveStep(step - 1)}>{copy.back}</button>
+            <span className="mono small">{copy.step} {step + 1} / {copy.steps.length}</span>
+            {step < copy.steps.length - 1 && <button type="button" className="btn btn--primary" data-testid="profile-next-step" onClick={() => moveStep(step + 1)}>{copy.next} →</button>}
+          </>}
           <button
             className="btn"
             disabled={loading}
@@ -614,7 +662,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
             {loading ? 'Saving…' : 'Save profile'}
           </button>
           {saved && <Chip tone="ok">Saved</Chip>}
-          <button className="btn btn--primary" onClick={onNext} data-testid="to-preferences">
+          <button className={`btn${showAll || step === copy.steps.length - 1 ? ' btn--primary' : ''}`} onClick={onNext} data-testid="to-preferences">
             Next: preferences &amp; budget →
           </button>
         </div>

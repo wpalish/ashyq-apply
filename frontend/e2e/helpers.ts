@@ -47,6 +47,7 @@ export async function waitForResults(page: Page, timeout = 120_000): Promise<voi
 
 export async function runDemoResearch(page: Page): Promise<void> {
   await page.goto('/#/profile');
+  await page.getByTestId('profile-show-all').click();
   await page.getByTestId('to-preferences').click();
   await expect(page.getByTestId('start-research')).toBeEnabled();
   await page.getByTestId('start-research').click();

@@ -24,6 +24,7 @@ test.afterAll(async () => {
 
 test('profile screen states the cost of every gap', async () => {
   await page.goto('/#/profile');
+  await page.getByTestId('profile-show-all').click();
   await expect(page.getByRole('heading', { name: 'Who is applying' })).toBeVisible();
   await expect(page.locator('.topbar').getByText('Demo data')).toBeVisible();
   await page.screenshot({ path: shot('01-profile.png'), fullPage: true });
@@ -38,6 +39,7 @@ test('profile screen states the cost of every gap', async () => {
 
 test('preferences screen exposes the scoring weights and warns about live mode', async () => {
   await page.goto('/#/profile');
+  await page.getByTestId('profile-show-all').click();
   await page.getByTestId('to-preferences').click();
   await expect(page.getByRole('heading', { name: 'What matters to you' })).toBeVisible();
   await expect(page.getByText('It is not a probability of admission')).toBeVisible();

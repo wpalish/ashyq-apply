@@ -24,9 +24,26 @@ Basis: `epics.md` section 5, E00/E04/E16; `specs/design-system.md`; brandbook v1
 
 ## Next slices
 
-1. E02 profile wizard: six sections, sufficiency feedback and persistence; retain import/validation and unsaved-change guarantees.
+1. E02 remaining: sufficiency feedback, test picker, step-position restore, evidence-link rows, localization and server autosave; retain import/validation and unsaved-change guarantees.
 2. E03 preferences and budget in plain language; preserve ranking and privacy contracts.
 3. Shortlist/programme detail, source/freshness presentation, then Plan/documents.
 4. Community and More screen interiors; finish shared localization and end-to-end integration gates.
 
 This slice does not claim that deadlines, readiness scoring, a full document timeline, or all R1 epics have been implemented.
+
+## 2026-09-09 continuation
+
+Owner clarified the exact font set: **Prata + Onest + IBM Plex Mono**. This overrides the earlier
+brandbook/synthesis font mapping. `64826f6` uses self-hosted fonts, Prata native 400 weight, and
+synchronized tokens/specs/catalogue. Four light/dark desktop/mobile checks assert font families.
+
+E02 now has six-step navigation, previous/next, and Show all fields review mode. Existing panels,
+transcript suggestions, explicit grade conversions, draft storage and server-save behavior remain.
+Three unit tests verify visibility, retained edits and review mode; two additional mocked browser
+tests verify those interactions, accessibility and mobile overflow. Total: 198 unit / 6 browser tests.
+The internal form's existing English copy is not fully localized yet; new navigation has RU/KK/EN.
+No backend/schema or server-autosave change. No completed-E02 claim.
+
+Dependency check: production npm audit is clean. Full npm audit reports two moderate entries for
+the existing Vitest/mocker development dependency (GHSA-82fw-gwwq-j7x9); a major test-tool upgrade
+was not forced into this UI change. Repository-wide integration and KZT limitations above remain.

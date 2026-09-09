@@ -87,6 +87,33 @@ describe('applying a grade conversion', () => {
   });
 });
 
+describe('six-section profile wizard', () => {
+  it('shows application first and only reveals grades on the next step', () => {
+    render(<ProfileScreen onNext={() => {}} />);
+    expect(screen.getByLabelText('Citizenship')).toBeVisible();
+    expect(screen.getByLabelText('GPA / average')).not.toBeVisible();
+    fireEvent.click(screen.getByTestId('profile-next-step'));
+    expect(screen.getByLabelText('GPA / average')).toBeVisible();
+    expect(screen.getByLabelText('Citizenship')).not.toBeVisible();
+    expect(screen.getByTestId('profile-step-1')).toHaveAttribute('aria-current', 'step');
+  });
+  it('keeps typed values when moving between sections', () => {
+    render(<ProfileScreen onNext={() => {}} />);
+    fireEvent.change(screen.getByLabelText('Citizenship'), { target: { value: 'Kazakhstan' } });
+    fireEvent.click(screen.getByTestId('profile-step-4'));
+    fireEvent.click(screen.getByTestId('profile-step-0'));
+    expect(screen.getByLabelText('Citizenship')).toHaveValue('Kazakhstan');
+  });
+  it('can expose every existing field without changing the draft', () => {
+    render(<ProfileScreen onNext={() => {}} />);
+    fireEvent.click(screen.getByTestId('profile-show-all'));
+    expect(screen.getByLabelText('GPA / average')).toBeVisible();
+    expect(screen.getByLabelText('IELTS overall')).toBeVisible();
+    expect(screen.getByLabelText('SAT total')).toBeVisible();
+    expect(setProfileDraft).not.toHaveBeenCalled();
+  });
+});
+
 describe('reading a transcript', () => {
   const pdf = () => new File([new Uint8Array([37, 80, 68, 70])], 'attestat.pdf', {
     type: 'application/pdf',

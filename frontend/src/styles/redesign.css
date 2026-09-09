@@ -1,4 +1,12 @@
 /* AppShell and CaseScreen: project aliases only. See specs/components/app-shell.md. */
+.profile-steps { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--space-2); margin-bottom: var(--space-4); }
+.profile-steps__item { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-2); padding: var(--space-3); min-height: var(--size-touch-target); border: var(--border-width-hairline) solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface); color: var(--color-text-muted); font-family: var(--font-family-ui); font-size: var(--font-size-sm); cursor: pointer; }
+.profile-steps__item[aria-current='step'] { background: var(--color-interactive-soft); color: var(--color-interactive-hover); border-color: var(--color-interactive-border); }
+.profile-steps__item:hover { border-color: var(--color-interactive); }
+.profile-wizard-toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space-3); margin-bottom: var(--space-5); }
+.profile-wizard-toolbar p { margin: var(--space-0); }
+@media (max-width: 900px) { .profile-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .profile-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .app--redesign .sidebar { background: var(--color-background); padding: var(--space-7) var(--space-4); gap: var(--space-6); }
 .app--redesign .brand { padding: var(--space-0) var(--space-3); }
 .app--redesign .brand__mark { font-size: var(--font-size-lg); }

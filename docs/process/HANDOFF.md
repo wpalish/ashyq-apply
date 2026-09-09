@@ -251,6 +251,14 @@ The backend KZT failure in section 7 needs separate resolution; do not claim all
 
 ## 6. Gate status at last run (numbers, not adjectives)
 
+2026-09-09 typography/E02 continuation: 198 unit tests in 22 files, 6 mocked Playwright checks,
+typecheck/lint/build and token audit pass (5 files / 0 errors / 0 warnings). Prata/Onest font assertions
+pass; production npm audit 0 vulnerabilities. Full npm audit reports 2 moderate dev-only entries
+for existing Vitest/mocker GHSA-82fw-gwwq-j7x9; no forced major upgrade. Full ordinary/auth E2E and
+backend coverage not rerun; prior repository-wide limitations remain explicit.
+Backend Ruff check/format and mypy rerun successfully (164 files). Isolated KZT tuition extraction
+rerun again fails identically; no backend diff. Do not infer a fresh full-coverage run from these checks.
+
 Frontend-redesign first slice, 2026-09-08 (current): typecheck/lint/build pass; 195 unit tests in
 22 files pass; token audit scans 5 files with 0 errors / 0 warnings. Four isolated Playwright tests
 pass (desktop/mobile x light/dark), including axe, overflow, touch targets, locale and history.

@@ -8,4 +8,6 @@ export async function navigate(page: Page, screen: string): Promise<void> {
     : ['feed', 'discover', 'messages', 'person'].includes(screen) ? 'community' : 'more';
   await page.getByTestId(`section-${section}`).click();
   await page.getByTestId(`nav-${screen}`).click();
+  // Legacy integration scenarios exercise fields across sections in review mode.
+  if (screen === 'profile') await page.getByTestId('profile-show-all').click();
 }

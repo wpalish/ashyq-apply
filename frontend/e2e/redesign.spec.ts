@@ -12,6 +12,8 @@ test.beforeEach(async ({ page }) => {
       '/api/social/me': { joined: false, profile: null },
       '/api/social/messages/unread': { unread: 0 },
       '/api/social/discover': [],
+      '/api/profiles/validate': { gaps: [], summary: 'Fixture validation', can_start: true },
+      '/api/profiles/conversions/methods': { methods: [], note: '' },
     };
     await route.fulfill({ status: path in bodies ? 200 : 404, contentType: 'application/json', body: JSON.stringify(bodies[path] ?? { detail: 'Not found in fixture' }) });
   });
@@ -56,3 +58,24 @@ for (const theme of ['light', 'dark'] as const) {
     await expect(page.getByTestId('section-more')).toHaveAttribute('aria-current', 'page');
   });
 }
+
+test('profile wizard keeps edits across sections and supports review mode', async ({ page }, info) => {
+  await page.goto('/#/profile');
+  await expect(page.getByTestId('profile-step-0')).toHaveAttribute('aria-current', 'step');
+  await page.getByLabel('Citizenship', { exact: true }).fill('Kazakhstan');
+  await expect(page.getByLabel('GPA / average')).toBeHidden();
+  await page.getByTestId('profile-next-step').click();
+  await page.getByLabel('GPA / average').fill('4.8');
+  await page.getByTestId('profile-step-2').click();
+  await page.getByTestId('ielts-overall').fill('7');
+  await page.getByTestId('profile-step-0').click();
+  await expect(page.getByLabel('Citizenship', { exact: true })).toHaveValue('Kazakhstan');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  const violations = (await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze()).violations;
+  expect(violations).toEqual([]);
+  await page.screenshot({ path: `../docs/screenshots/profile-wizard-${info.project.name}.png`, fullPage: true });
+  await page.getByTestId('profile-show-all').click();
+  await expect(page.getByLabel('GPA / average')).toHaveValue('4.8');
+  await expect(page.getByTestId('ielts-overall')).toHaveValue('7');
+  await expect(page.getByLabel('SAT total')).toBeVisible();
+});
