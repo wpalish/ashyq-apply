@@ -8,10 +8,10 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 | | |
 |---|---|
-| Holder | **gpt-6-astra — E02 case-scoped wizard restoration** |
+| Holder | **nobody — E02 case-scoped wizard restoration pushed** |
 | Since (UTC) | 2026-09-08 16:26:31 UTC |
 | Branch | `task/frontend-redesign`, owner-directed continuation from design-system predecessor |
-| HEAD when written | `98e0eb4` (clean and synchronized) |
+| HEAD when written | `139221f` (step restoration verified and pushed) |
 | Origin main when checked | `edf546d`; branch contains only the owner-directed design-system work |
 | Previous holder | GLM/ZCode dispatcher; it released after integrating T32 but left T29 production wiring explicitly deferred |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
@@ -245,6 +245,14 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+Next slice: replace comma-separated activity/achievement evidence links with independent editable
+rows. Read profile-screen/field specs and the existing evidence_links schema. Preserve string-array
+payloads and existing URLs verbatim; removing a row must not affect other rows. Validate URLs without
+fetching them, do not invent source verification. Add RU/KK/EN copy, keyboard/retained-data tests and
+mobile overflow/axe coverage. Keep autosave and stricter completeness as separate contract work.
+
+Completed step-restoration write-ahead below is historical (2785d82, 139221f):
 
 Write-ahead: sessionStorage wizard step per real activeCaseKey; StoreProvider exposes step setter
 and key, migrates step on first save/startRun, clears it on delete and resets it on explicit clear/demo.
@@ -543,6 +551,10 @@ host=github.com
 `[0.8]` → `[1.1]` → `[1.2]` → `[1.3]` → `[1.4]` → `[2.1]` → `[2.2]` → `[2.3]` → `[3.1]` → `[3.2]` → `[4.1]` → `[4.2]` → `[5]`
 
 ## 11. Session log (one line per session, newest last)
+
+2026-09-09 gpt-6-astra: `98e0eb4` → `139221f` plus release handoff. Owner requested an immediate
+all-changes commit; pushed 2785d82 before finishing mobile verification, then pushed 139221f.
+232 unit/14 browser checks pass; no full integration claim. Baton released.
 
 2026-09-09 gpt-6-astra: `3daa302` → `0d8f505` plus release handoff. Profile localization and
 contrast fix pushed; 217 unit/12 browser scenarios pass; full integration still pending. Baton released.
