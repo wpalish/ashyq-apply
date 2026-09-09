@@ -97,3 +97,18 @@ Checks: 217 unit/24 files, 12 mocked browser scenarios, typecheck/lint/build, to
 Ruff check/format, mypy 164 files and 43 focused backend profile tests. Full backend coverage and
 ordinary/auth integration suites not rerun; inherited KZT/dev dependency caveats remain.
 Next E02 slice: restore wizard step per case without leaking navigation between profiles.
+
+## E02 case-scoped step restoration
+
+`2785d82` adds per-tab, per-case step storage (validated indices 0–5), gated by hydration. Local-case
+steps migrate to the server id on first save/start; a save uses the latest step even if navigation
+changed during the request. Stale saves cannot migrate onto a newer case. New cases start at 0;
+clear/demo resets the current step, deletion removes its slot. Before a case has an identity navigation
+is ephemeral. Review mode remains temporary and clears on case change. No profile API change.
+
+Checks: 232 unit tests/25 files, 14 mocked browser scenarios including reload/review reset/new-case
+isolation on desktop/mobile, typecheck/lint/build and token audit 0/0. Ruff/format/mypy and 43 focused
+backend tests pass. Full backend coverage and ordinary/auth integration are not rerun; inherited
+KZT and dev dependency caveats remain. The mobile test uses More to access the existing New case
+action; it does not force-click hidden controls. Next: separate evidence-link rows for activities and
+achievements while preserving the existing string-array API and user-entered links.

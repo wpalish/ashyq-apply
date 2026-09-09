@@ -42,6 +42,9 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+E02 `2785d82`: per-tab case-scoped wizard step, save migration/stale-response guard, reset behavior,
+232 unit tests. Follow-up browser run: 14 pass after mobile test opens More for New case.
+
 E02 `0d8f505`: RU/KK/EN profile labels, hints, actions, options and exam score labels; immutable API
 values on locale switch; improved Field hint contrast. 217 unit/12 mocked browser scenarios pass.
 
@@ -294,6 +297,10 @@ were adapted for the new primary/context navigation but those suites were not ex
 The backend KZT failure in section 7 needs separate resolution; do not claim all gates green.
 
 ## 6. Gate status at last run (numbers, not adjectives)
+
+Step restoration final: 232 unit tests/25 files and 14 mocked browser scenarios pass. Typecheck,
+lint, build, token audit 0/0, Ruff/format, mypy 164 files and 43 focused profile backend tests pass.
+No full backend coverage or ordinary/auth integration rerun; inherited KZT/dev dependency caveats remain.
 
 Owner-requested checkpoint: step restoration passes 232 unit tests, typecheck, build, token audit 0/0,
 Ruff/format/mypy and 43 focused backend tests. Browser run unfinished at checkpoint; desktop reload

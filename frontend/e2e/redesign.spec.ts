@@ -3,6 +3,7 @@ import AxeBuilder from '@axe-core/playwright';
 
 test('local case restores its step on reload and does not restore review mode', async ({ page }) => {
   await page.goto('/#/profile');
+  await page.getByTestId('section-more').click();
   await page.getByRole('button', { name: 'New case', exact: true }).click();
   await page.getByLabel('Гражданство', { exact: true }).fill('Canada');
   await expect.poll(() => page.evaluate(() => {
@@ -17,6 +18,7 @@ test('local case restores its step on reload and does not restore review mode', 
   await page.getByTestId('profile-step-0').click();
   await expect(page.getByLabel('Гражданство', { exact: true })).toHaveValue('Canada');
   await page.getByTestId('profile-step-3').click();
+  await page.getByTestId('section-more').click();
   page.once('dialog', dialog => dialog.accept());
   await page.getByRole('button', { name: 'New case', exact: true }).click();
   await expect(page.getByTestId('profile-step-0')).toHaveAttribute('aria-current', 'step');
