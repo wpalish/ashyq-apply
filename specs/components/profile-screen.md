@@ -14,6 +14,8 @@ Do not equate visiting a step with data completeness or admission readiness.
 
 Page heading, step navigation, existing draft/source notices, active section panels, validation gaps,
 previous/next controls, explicit save and preferences action. Hidden steps stay mounted to preserve inputs.
+English groups IELTS/TOEFL/Duolingo; Tests groups SAT/ACT plus existing other/curriculum forms.
+ExamPicker controls visibility only. Collapsing an exam never clears scores or excludes them from research.
 
 ## 4. Tokens
 
@@ -42,5 +44,5 @@ is keyboard-operable with native buttons and aria-current. No false completion r
 ## 8. Cross-references
 
 [Field](field.md), [Panel](panel.md), [Notice](notice.md), [AppShell](app-shell.md).
-Remaining E02: score picker, completeness rule including planned English, per-field errors, step restore,
+Remaining E02 after exam picker: completeness rule including planned English, per-field errors, step restore,
 evidence-link rows and server autosave. These require separate tested follow-up, not a completed-epic label.

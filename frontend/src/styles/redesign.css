@@ -1,4 +1,8 @@
 /* AppShell and CaseScreen: project aliases only. See specs/components/app-shell.md. */
+.exam-picker { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-bottom: var(--space-4); }
+.exam-picker button[aria-expanded='true'] { background: var(--color-interactive-soft); color: var(--color-interactive-hover); border-color: var(--color-interactive-border); }
+.exam-block { min-width: 0; margin: var(--space-4) var(--space-0); padding: var(--space-4); border: var(--border-width-hairline) solid var(--color-border); border-radius: var(--radius-md); }
+.exam-block legend { padding: var(--space-0) var(--space-2); font-family: var(--font-family-brand); font-weight: var(--font-weight-semibold); }
 .profile-steps { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--space-2); margin-bottom: var(--space-4); }
 .profile-steps__item { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-2); padding: var(--space-3); min-height: var(--size-touch-target); border: var(--border-width-hairline) solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface); color: var(--color-text-muted); font-family: var(--font-family-ui); font-size: var(--font-size-sm); cursor: pointer; }
 .profile-steps__item[aria-current='step'] { background: var(--color-interactive-soft); color: var(--color-interactive-hover); border-color: var(--color-interactive-border); }

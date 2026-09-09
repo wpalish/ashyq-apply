@@ -47,3 +47,22 @@ No backend/schema or server-autosave change. No completed-E02 claim.
 Dependency check: production npm audit is clean. Full npm audit reports two moderate entries for
 the existing Vitest/mocker development dependency (GHSA-82fw-gwwq-j7x9); a major test-tool upgrade
 was not forced into this UI change. Repository-wide integration and KZT limitations above remain.
+
+## E02 exam picker
+
+English now owns IELTS/TOEFL/Duolingo; standardised Tests owns SAT/ACT. Score/date data reveals
+existing exams automatically; empty metadata does not. Manual collapse and review mode never alter
+scores. Clearing the last score leaves its block open, preserving keyboard focus. Duolingo dates
+survive score editing, with an explicit incomplete-draft warning because the API requires a score.
+A separate confirmed removal clears the entire Duolingo result; no API/schema change was made.
+
+Verification: 208 unit tests / 8 mocked browser scenarios pass, including keyboard toggles, retained
+scores/dates, axe and overflow; typecheck/lint/build/token audit pass (0 errors, 0 warnings). Backend
+Ruff/format/mypy and `tests/test_scoring_and_profile.py` pass. Full backend coverage/ordinary-auth E2E
+not rerun. Screenshots: `docs/screenshots/exam-picker-{desktop,mobile}.png`.
+Dashboard browser screenshots now use per-test output paths: an open Windows preview can lock a
+shared documentation image, which must not fail otherwise valid UI assertions.
+
+Readiness follow-up must distinguish the current API's `can_proceed` from the stronger proposed E02
+threshold: current validation blocks only a missing subject area. Planned-only Duolingo is not yet
+accepted by the schema. Do not invent a stronger frontend gate or claim planned scores are achieved.

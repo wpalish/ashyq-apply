@@ -14,6 +14,7 @@ import { useStore } from '@/lib/store';
 import type { TranscriptSuggestion } from '@/types';
 import { useTranslation } from '@/lib/useTranslation';
 import { profileWizardCopy } from '@/lib/profileWizardCopy';
+import { ExamPicker } from '@/components/ExamPicker';
 
 /** "4.82 out of 5", not "[object Object]". */
 function describe(value: unknown): string {
@@ -50,6 +51,10 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
     savedProfile, restored, loadDemoProfile, clearProfile, draftRestored, discardDraft,
   } = useStore();
   const [saved, setSaved] = useState(false);
+  const updateExam = (updater: (draft: Record<string, unknown>) => Record<string, unknown>) => {
+    setProfileDraft(updater);
+    setSaved(false);
+  };
   const [confirmingReplace, setConfirmingReplace] = useState<'demo' | 'clear' | null>(null);
   const [methods, setMethods] = useState<
     { key: string; description: string; source: string; caveat: string; to_scale: string }[]
@@ -417,69 +422,12 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
         </div>
 
         <div hidden={!showAll && step !== 2}>
-        <Panel
-          title="English language"
-          hint="Subscores matter: many programmes publish a per-section minimum on top of the overall band."
-        >
-          <div className="grid-3">
-            {(['overall', 'listening', 'reading', 'writing', 'speaking'] as const).map((band) => (
-              <Field key={band} label={`IELTS ${band}`} htmlFor={`ielts-${band}`}>
-                <input
-                  id={`ielts-${band}`}
-                  data-testid={`ielts-${band}`}
-                  type="number" step="0.5" min={0} max={9}
-                  {...bind(['academics', 'ielts', band], 'float')}
-                />
-              </Field>
-            ))}
-            <Field label="Test type" htmlFor="ielts-type">
-              <select id="ielts-type" {...bind(['academics', 'ielts', 'test_type'])}>
-                <option value="academic">Academic</option>
-                <option value="general_training">General Training</option>
-                <option value="ukvi_academic">UKVI Academic</option>
-                <option value="one_skill_retake">One Skill Retake</option>
-              </select>
-            </Field>
-          </div>
-        </Panel>
+          <ExamPicker key={`english-${savedProfile?.id ?? 'draft'}`} group="english" draft={profileDraft} update={updateExam} showAll={showAll} />
         </div>
-
         <div hidden={!showAll && step !== 3}>
-        <Panel title="Standardised tests" hint="Leave blank if not taken — test-optional programmes are unaffected.">
+          <ExamPicker key={`standard-${savedProfile?.id ?? 'draft'}`} group="standard" draft={profileDraft} update={updateExam} showAll={showAll} />
+          <Panel title="Other tests and planned retakes" hint="Optional. Keep achieved and planned results separate.">
           <div className="grid-3">
-            <Field label="SAT total" htmlFor="sat"><input id="sat" type="number" {...bind(['academics', 'sat', 'total'], 'number')} /></Field>
-            <Field label="SAT Math" htmlFor="satm"><input id="satm" type="number" {...bind(['academics', 'sat', 'math'], 'number')} /></Field>
-            <Field label="SAT Reading &amp; Writing" htmlFor="satr"><input id="satr" type="number" {...bind(['academics', 'sat', 'reading_writing'], 'number')} /></Field>
-            <Field label="TOEFL total" htmlFor="toefl"><input id="toefl" type="number" {...bind(['academics', 'toefl', 'total'], 'number')} /></Field>
-            <Field label="ACT composite" htmlFor="act"><input id="act" type="number" {...bind(['academics', 'act', 'composite'], 'number')} /></Field>
-            <Field label="ACT English" htmlFor="act-en"><input id="act-en" type="number" {...bind(['academics', 'act', 'english'], 'number')} /></Field>
-            <Field label="ACT Math" htmlFor="act-math"><input id="act-math" type="number" {...bind(['academics', 'act', 'math'], 'number')} /></Field>
-            <Field label="ACT Reading" htmlFor="act-read"><input id="act-read" type="number" {...bind(['academics', 'act', 'reading'], 'number')} /></Field>
-            <Field label="ACT Science" htmlFor="act-sci"><input id="act-sci" type="number" {...bind(['academics', 'act', 'science'], 'number')} /></Field>
-            <Field label="TOEFL Reading" htmlFor="toefl-r"><input id="toefl-r" type="number" {...bind(['academics', 'toefl', 'reading'], 'number')} /></Field>
-            <Field label="TOEFL Listening" htmlFor="toefl-l"><input id="toefl-l" type="number" {...bind(['academics', 'toefl', 'listening'], 'number')} /></Field>
-            <Field label="TOEFL Speaking" htmlFor="toefl-s"><input id="toefl-s" type="number" {...bind(['academics', 'toefl', 'speaking'], 'number')} /></Field>
-            <Field label="TOEFL Writing" htmlFor="toefl-w"><input id="toefl-w" type="number" {...bind(['academics', 'toefl', 'writing'], 'number')} /></Field>
-            {(['sat', 'act', 'ielts', 'toefl'] as const).flatMap((test) => [
-              <Field key={`${test}-taken`} label={`${test.toUpperCase()} test date`} htmlFor={`${test}-taken`}>
-                <input id={`${test}-taken`} type="date" {...bind(['academics', test, 'dates', 'taken_on'])} />
-              </Field>,
-              <Field key={`${test}-retake`} label={`${test.toUpperCase()} planned retake`} htmlFor={`${test}-retake`}>
-                <input id={`${test}-retake`} type="date" {...bind(['academics', test, 'dates', 'planned_retake_on'])} />
-              </Field>,
-            ])}
-            <Field label="Duolingo English Test" htmlFor="duolingo-score">
-              <input id="duolingo-score" type="number"
-                value={String(get(profileDraft, ['academics', 'duolingo', 'score']) ?? '')}
-                onChange={(event) => setProfileDraft((draft) => setIn(draft, ['academics', 'duolingo'], event.target.value === '' ? null : {
-                  name: 'Duolingo English Test', score: Number.parseFloat(event.target.value),
-                  max_score: get(profileDraft, ['academics', 'duolingo', 'max_score']) ?? 160,
-                  dates: get(profileDraft, ['academics', 'duolingo', 'dates']) ?? { taken_on: null, planned_retake_on: null },
-                }))} />
-            </Field>
-            <Field label="Duolingo maximum" htmlFor="duolingo-max">
-              <input id="duolingo-max" type="number" {...bind(['academics', 'duolingo', 'max_score'], 'float')} />
-            </Field>
             <Field label="Planned retakes" htmlFor="planned-retakes" hint="Comma-separated.">
               <input id="planned-retakes"
                 value={((get(profileDraft, ['academics', 'planned_retakes']) as string[]) ?? []).join(', ')}

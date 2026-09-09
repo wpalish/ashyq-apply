@@ -262,6 +262,11 @@ The backend KZT failure in section 7 needs separate resolution; do not claim all
 
 ## 6. Gate status at last run (numbers, not adjectives)
 
+2026-09-09 exam-picker slice: typecheck/lint/build, 208 unit tests (23 files), 8 mocked browser
+scenarios and token audit (5 CSS/SCSS, 0 errors/0 warnings) pass. Ruff check/format and mypy pass
+(164 source files); focused `tests/test_scoring_and_profile.py` passes. No backend code changed.
+Full backend coverage and ordinary/auth E2E were not rerun; earlier KZT and dev-audit caveats remain.
+
 2026-09-09 typography/E02 continuation: 198 unit tests in 22 files, 6 mocked Playwright checks,
 typecheck/lint/build and token audit pass (5 files / 0 errors / 0 warnings). Prata/Onest font assertions
 pass; production npm audit 0 vulnerabilities. Full npm audit reports 2 moderate dev-only entries

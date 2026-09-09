@@ -12,7 +12,7 @@ test.beforeEach(async ({ page }) => {
       '/api/social/me': { joined: false, profile: null },
       '/api/social/messages/unread': { unread: 0 },
       '/api/social/discover': [],
-      '/api/profiles/validate': { gaps: [], summary: 'Fixture validation', can_start: true },
+      '/api/profiles/validate': { gaps: [], summary: 'Fixture validation', can_proceed: true, blocking_count: 0 },
       '/api/profiles/conversions/methods': { methods: [], note: '' },
     };
     await route.fulfill({ status: path in bodies ? 200 : 404, contentType: 'application/json', body: JSON.stringify(bodies[path] ?? { detail: 'Not found in fixture' }) });
@@ -41,9 +41,9 @@ for (const theme of ['light', 'dark'] as const) {
       expect(box!.height).toBeGreaterThanOrEqual(44);
       expect(box!.width).toBeGreaterThanOrEqual(44);
     }
-    await page.screenshot({ path: `../docs/screenshots/redesign-${info.project.name}-${theme}.png`, fullPage: true });
+    await page.screenshot({ path: info.outputPath(`dashboard-${theme}.png`), fullPage: true });
     if (info.project.name === 'mobile') {
-      await page.screenshot({ path: `../docs/screenshots/redesign-mobile-${theme}-viewport.png` });
+      await page.screenshot({ path: info.outputPath(`dashboard-${theme}-viewport.png`) });
     }
     await page.getByRole('button', { name: 'Заполнить профиль' }).click();
     await expect(page).toHaveURL(/#\/profile$/);
@@ -78,4 +78,33 @@ test('profile wizard keeps edits across sections and supports review mode', asyn
   await expect(page.getByLabel('GPA / average')).toHaveValue('4.8');
   await expect(page.getByTestId('ielts-overall')).toHaveValue('7');
   await expect(page.getByLabel('SAT total')).toBeVisible();
+});
+
+test('exam picker hides empty grids and retains scores across keyboard toggles', async ({ page }, info) => {
+  await page.goto('/#/profile');
+  await page.getByTestId('clear-profile').click();
+  await page.getByTestId('profile-step-2').click();
+  await expect(page.getByTestId('ielts-overall')).toBeHidden();
+  await expect(page.locator('#toefl')).toBeHidden();
+  await page.getByTestId('exam-toggle-toefl').focus();
+  await page.keyboard.press('Space');
+  await page.locator('#toefl').fill('105');
+  await page.locator('#toefl-retake').fill('2027-03-01');
+  await page.getByTestId('exam-toggle-toefl').click();
+  await expect(page.locator('#toefl')).toBeHidden();
+  await page.getByTestId('exam-toggle-toefl').click();
+  await expect(page.locator('#toefl')).toHaveValue('105');
+  await expect(page.locator('#toefl-retake')).toHaveValue('2027-03-01');
+  await page.getByTestId('exam-toggle-duolingo').click();
+  await page.locator('#duolingo-score').fill('130');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  expect((await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze()).violations).toEqual([]);
+  await page.screenshot({ path: `../docs/screenshots/exam-picker-${info.project.name}.png`, fullPage: true });
+  await page.getByTestId('profile-step-3').click();
+  await expect(page.getByTestId('exam-toggle-toefl')).toBeHidden();
+  await page.getByTestId('exam-toggle-sat').click();
+  await page.locator('#sat').fill('1450');
+  await page.getByTestId('profile-show-all').click();
+  await expect(page.locator('#toefl')).toHaveValue('105');
+  await expect(page.locator('#sat')).toHaveValue('1450');
 });
