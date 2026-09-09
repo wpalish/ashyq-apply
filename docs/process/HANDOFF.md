@@ -8,10 +8,10 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 | | |
 |---|---|
-| Holder | **gpt-6-astra — E02 exam picker** |
+| Holder | **nobody — E02 exam picker pushed** |
 | Since (UTC) | 2026-09-08 16:26:31 UTC |
 | Branch | `task/frontend-redesign`, owner-directed continuation from design-system predecessor |
-| HEAD when written | `f34f55d` (clean, synchronized; exam picker starting) |
+| HEAD when written | `3ca6c5f` (exam picker verified and pushed) |
 | Origin main when checked | `edf546d`; branch contains only the owner-directed design-system work |
 | Previous holder | GLM/ZCode dispatcher; it released after integrating T32 but left T29 production wiring explicitly deferred |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
@@ -47,6 +47,8 @@ dashboard copy, specs, adapted E2E navigation, 10 unit tests and four isolated b
 WIP checkpoint because the unrelated KZT backend baseline remains red and full integration E2E is unrun.
 Typography `64826f6`: exact owner-selected Prata/Onest/IBM Plex Mono, native display weight and docs.
 E02 `6acfc12`: six navigable profile sections, review mode, preserved edits, 198 unit/6 browser checks.
+E02 `3ca6c5f`: non-destructive IELTS/TOEFL/Duolingo/SAT/ACT picker; 208 unit/8 browser checks,
+native keyboard/ARIA states, explicit incomplete Duolingo draft feedback and confirmed removal.
 
 The original recovery entries below are historical provenance. Preserve their hashes and ancestry;
 the first seven predate `AGENTS.md` and lack the required `Agent:` trailer, so do not rewrite them to
@@ -235,12 +237,14 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-Next executable slice: read specs/components/profile-screen.md and epics.md E02, then implement
-an explicit exam picker in ProfileScreen.tsx that reveals only selected existing test fields without
-clearing hidden scores. Group TOEFL/Duolingo with English, keep SAT/ACT/curriculum in Tests, preserve
-API shape and planned-retake dates. Add visibility/retained-score tests, then completeness feedback
-only from authoritative validation rules. Do not label E02 complete before the remaining items in
-the spec are implemented. Exact selected fonts are Prata + Onest + IBM Plex Mono; do not revert them.
+Next executable slice: inspect backend/app/domain/validation.py and StoreProvider's debounced
+validation effect, then prevent stale responses from labelling a newer draft. Present fresh
+`can_proceed` / `blocking_count` and gaps in ProfileScreen without inventing a frontend gate.
+The existing backend blocks only a missing subject area, not E02's proposed full threshold; distinguish
+research eligibility from completeness. Planned-only Duolingo is unsupported by the current schema.
+Read specs/components/profile-screen.md and exam-picker.md; update specs before UI edits.
+Do not label E02 complete: localization, step restore, evidence-link rows and autosave remain.
+Exact selected fonts are Prata + Onest + IBM Plex Mono; do not revert them.
 
 Historical write-ahead for this completed slice:
 
