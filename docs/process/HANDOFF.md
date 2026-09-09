@@ -8,10 +8,10 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 | | |
 |---|---|
-| Holder | **gpt-6-astra — E02 fresh profile validation** |
+| Holder | **nobody — E02 fresh profile validation pushed** |
 | Since (UTC) | 2026-09-08 16:26:31 UTC |
 | Branch | `task/frontend-redesign`, owner-directed continuation from design-system predecessor |
-| HEAD when written | `149c6fa` (clean and synchronized at continuation) |
+| HEAD when written | `25a4655` (fresh validation verified and pushed) |
 | Origin main when checked | `edf546d`; branch contains only the owner-directed design-system work |
 | Previous holder | GLM/ZCode dispatcher; it released after integrating T32 but left T29 production wiring explicitly deferred |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
@@ -41,6 +41,9 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+E02 `25a4655`: race-safe current-draft validation, localized server eligibility/error/retry feedback;
+215 unit/10 mocked browser tests; no new backend gate. Full integration remains pending.
 
 Frontend first slice: `bf29056` — CaseScreen, five-section AppShell/mobile navigation, three-language
 dashboard copy, specs, adapted E2E navigation, 10 unit tests and four isolated browser checks.
@@ -237,12 +240,12 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-Current write-ahead: extract race-safe draft validation into a tested hook; expose pending/error/ready
-state through StoreProvider, render localized status in ProfileScreen using Notice tokens, and test
-out-of-order success/failure responses. Keep server eligibility distinct from completeness. Run
-frontend gates and focused backend checks, then push a WIP checkpoint with inherited gate caveats.
+Next executable slice: localize remaining ProfileScreen field labels, panel headings and severity
+labels in RU/KK/EN. Read profile-screen/field/panel/notice specs first; preserve API field keys,
+native label associations and server-authored gap details. Add locale tests and mobile overflow
+coverage. Do not change eligibility, autosave or planned-only Duolingo contracts.
 
-Next executable slice: inspect backend/app/domain/validation.py and StoreProvider's debounced
+Completed write-ahead (25a4655): inspect backend/app/domain/validation.py and StoreProvider's debounced
 validation effect, then prevent stale responses from labelling a newer draft. Present fresh
 `can_proceed` / `blocking_count` and gaps in ProfileScreen without inventing a frontend gate.
 The existing backend blocks only a missing subject area, not E02's proposed full threshold; distinguish
@@ -501,6 +504,9 @@ host=github.com
 `[0.8]` → `[1.1]` → `[1.2]` → `[1.3]` → `[1.4]` → `[2.1]` → `[2.2]` → `[2.3]` → `[3.1]` → `[3.2]` → `[4.1]` → `[4.2]` → `[5]`
 
 ## 11. Session log (one line per session, newest last)
+
+2026-09-09, gpt-6-astra: `149c6fa` → `25a4655` plus release handoff. Fresh validation and localized
+status pushed; 215 unit/10 browser checks green; inherited integration caveats preserved. Baton released.
 
 | Session (UTC) | Agent | From → to | Summary |
 |---|---|---|---|
