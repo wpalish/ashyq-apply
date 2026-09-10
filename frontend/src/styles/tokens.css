@@ -1,210 +1,506 @@
 /*
- * Design tokens.
+ * ASHYQ Apply design tokens.
  *
- * Direction: an editorial research dossier. This is a tool whose product is
- * evidence, so the surface reads like a case file - a serif display face for
- * structure, a grotesque for dense data, a mono for anything quoted from a
- * source. Warm paper in light, deep ink in dark, and status carried by colour
- * that means something rather than decorates.
+ * Layer 1 (`--ds-*`) is the upstream design-system contract. It contains the
+ * only raw visual values in the frontend styles. Layer 2 exposes stable,
+ * project-semantic aliases with fallbacks. Layer 3 lives in global.css and
+ * components.css and may consume only Layer 2 aliases.
  */
 
 :root {
   color-scheme: light;
 
-  /* --- surfaces: warm paper, layered rather than shadowed --- */
-  --paper:            oklch(97.8% 0.008 85);
-  --surface:          oklch(100% 0 0);
-  --surface-sunken:   oklch(95.4% 0.010 85);
-  --surface-raised:   oklch(99.2% 0.005 85);
-  --surface-inverted: oklch(24% 0.020 265);
+  /* Layer 1: exact brandbook v1.1 palette */
+  --ds-color-brand-ink: #111827;
+  --ds-color-brand-paper: #f7f3ea;
+  --ds-color-brand-academic-blue: #526da6;
+  --ds-color-brand-library-burgundy: #8e3f4c;
+  --ds-color-brand-scholar-teal: #437a78;
+  --ds-color-brand-parchment-gold: #c5a66b;
+  --ds-color-brand-deadline-coral: #e47a6a;
 
-  --ink:              oklch(23% 0.018 265);
-  --ink-muted:        oklch(45% 0.016 265);
-  --ink-faint:        oklch(45% 0.012 265);
-  --ink-inverted:     oklch(96% 0.006 85);
+  /* Layer 1: surfaces and accessible semantic colors */
+  --ds-color-paper: var(--ds-color-brand-paper);
+  --ds-color-surface: #fffcf6;
+  --ds-color-surface-sunken: #efe9de;
+  --ds-color-surface-raised: #ffffff;
+  --ds-color-surface-inverse: var(--ds-color-brand-ink);
+  --ds-color-ink: var(--ds-color-brand-ink);
+  --ds-color-ink-muted: #5d6470;
+  --ds-color-ink-subtle: #636b77;
+  --ds-color-ink-inverse: var(--ds-color-brand-paper);
+  --ds-color-rule: #ded6c8;
+  --ds-color-rule-strong: #c7bdae;
+  --ds-color-accent: var(--ds-color-brand-academic-blue);
+  --ds-color-accent-hover: #3f5885;
+  --ds-color-accent-soft: #e8ecf5;
+  --ds-color-accent-border: #aab8d9;
+  --ds-color-success: #376b69;
+  --ds-color-success-soft: #e5efec;
+  --ds-color-success-border: var(--ds-color-brand-scholar-teal);
+  --ds-color-info: #4b6599;
+  --ds-color-info-soft: #e8ecf5;
+  --ds-color-info-border: #aab8d9;
+  --ds-color-warning: #725a2a;
+  --ds-color-warning-soft: #f4ebd7;
+  --ds-color-warning-border: var(--ds-color-brand-parchment-gold);
+  --ds-color-danger: var(--ds-color-brand-library-burgundy);
+  --ds-color-danger-soft: #f4e6e8;
+  --ds-color-danger-border: #c8919a;
+  --ds-color-deadline: #8b4338;
+  --ds-color-deadline-soft: #f8e4df;
+  --ds-color-deadline-border: var(--ds-color-brand-deadline-coral);
+  --ds-color-neutral: #5f6673;
+  --ds-color-neutral-soft: #ebe8e2;
+  --ds-color-neutral-border: #c9c4ba;
+  --ds-color-demo: var(--ds-color-brand-library-burgundy);
+  --ds-color-demo-soft: #f4e6e8;
+  --ds-color-demo-border: #c8919a;
+  --ds-color-overlay: rgb(0 0 0 / 60%);
+  --ds-color-white: oklch(99% 0 0);
+  --ds-color-on-accent: #ffffff;
+  --ds-color-transparent: transparent;
+  --ds-color-inherit: inherit;
 
-  --rule:             oklch(89% 0.010 85);
-  --rule-strong:      oklch(80% 0.014 85);
+  /* Layer 1: upstream typography primitives */
+  --ds-font-family-brand: 'Onest', system-ui, sans-serif;
+  --ds-font-family-display: 'Prata', Georgia, serif;
+  --ds-font-weight-display: 400;
+  --ds-font-family-ui: 'Onest', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --ds-font-family-mono: 'IBM Plex Mono', 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --ds-font-size-2xs: 0.75rem;
+  --ds-font-size-micro: 0.75rem;
+  --ds-font-size-xs: 0.875rem;
+  --ds-font-size-sm: 0.875rem;
+  --ds-font-size-base: 1rem;
+  --ds-font-size-md: 1.125rem;
+  --ds-font-size-lg: clamp(1.125rem, 1rem + 0.5vw, 1.375rem);
+  --ds-font-size-xl: clamp(1.5rem, 1.25rem + 1vw, 1.75rem);
+  --ds-font-size-display: clamp(2.25rem, 1.6rem + 2.5vw, 3rem);
+  --ds-font-size-brand: 1.75rem;
+  --ds-font-size-stat: 2.25rem;
+  --ds-font-size-code: 0.875em;
+  --ds-font-weight-medium: 500;
+  --ds-font-weight-semibold: 600;
+  --ds-font-weight-bold: 700;
+  --ds-line-height-flat: 1;
+  --ds-line-height-tight: 1.15;
+  --ds-line-height-caption: 1.3;
+  --ds-line-height-snug: 1.35;
+  --ds-line-height-compact: 1.55;
+  --ds-line-height-normal: 1.6;
+  --ds-letter-spacing-tight: -0.015em;
+  --ds-letter-spacing-display: -0.03em;
+  --ds-letter-spacing-avatar: 0.02em;
+  --ds-letter-spacing-label: 0.05em;
+  --ds-letter-spacing-medium: 0.07em;
+  --ds-letter-spacing-wide: 0.08em;
+  --ds-letter-spacing-wider: 0.09em;
+  --ds-letter-spacing-widest: 0.12em;
 
-  /* --- accent: ink blue, used for action and focus only --- */
-  --accent:           oklch(42% 0.135 258);
-  --accent-hover:     oklch(39% 0.140 258);
-  --accent-soft:      oklch(94% 0.030 258);
-  --accent-border:    oklch(78% 0.070 258);
+  /* Layer 1: upstream spacing primitives (eight-step core plus optical steps) */
+  --ds-space-0: 0;
+  --ds-space-auto: auto;
+  --ds-space-negative-hairline: -1px;
+  --ds-space-hairline: 1px;
+  --ds-space-0-5: 2px;
+  --ds-space-0-75: 3px;
+  --ds-space-1: 0.25rem;
+  --ds-space-1-25: 5px;
+  --ds-space-1-5: 0.375rem;
+  --ds-space-2: 0.5rem;
+  --ds-space-2-5: 0.625rem;
+  --ds-space-3: 0.75rem;
+  --ds-space-4: 1rem;
+  --ds-space-5: 1.25rem;
+  --ds-space-6: 1.5rem;
+  --ds-space-7: 2rem;
+  --ds-space-8: 3rem;
+  --ds-space-9: clamp(3rem, 2rem + 4vw, 5.5rem);
+  --ds-space-control-block: 0.42rem;
+  --ds-space-control-inline: 0.6rem;
+  --ds-space-control-compact: 0.35rem;
+  --ds-space-dot-offset: 0.42rem;
+  --ds-space-checkbox-offset: 0.2rem;
+  --ds-space-panel-inset: 0.18rem;
+  --ds-space-button-block: 0.44rem;
+  --ds-space-button-inline: 0.9rem;
+  --ds-space-button-compact-inline: 0.6rem;
+  --ds-space-table-block: 0.45rem;
+  --ds-space-table-inline: 0.3rem;
+  --ds-space-table-wide-inline: 0.5rem;
+  --ds-space-stage-dot: 0.7rem;
+  --ds-space-check: 0.1rem;
 
-  /* --- semantic status: each maps to one product meaning --- */
-  --ok:               oklch(40% 0.115 152);   /* MET, FULL_RIDE_CONFIRMED */
-  --ok-soft:          oklch(94.5% 0.038 152);
-  --ok-border:        oklch(80% 0.070 152);
+  /* Layer 1: upstream geometry primitives */
+  --ds-border-width-hairline: 1px;
+  --ds-border-width-medium: 2px;
+  --ds-border-width-strong: 3px;
+  --ds-border-width-accent: 4px;
+  --ds-radius-sm: 4px;
+  --ds-radius-xs: 4px;
+  --ds-radius-none: 0;
+  --ds-radius-md: 8px;
+  --ds-radius-lg: 12px;
+  --ds-radius-xl: 16px;
+  --ds-radius-page: 24px;
+  --ds-radius-full: 999px;
+  --ds-radius-round: 50%;
+  --ds-shadow-none: none;
+  --ds-shadow-sm: 0 1px 2px oklch(23% 0.018 265 / 0.06);
+  --ds-shadow-md: 0 2px 6px oklch(23% 0.018 265 / 0.08), 0 1px 2px oklch(23% 0.018 265 / 0.05);
+  --ds-shadow-lg: 0 12px 32px oklch(23% 0.018 265 / 0.13), 0 2px 8px oklch(23% 0.018 265 / 0.07);
+  --ds-shadow-focus: 0 0 0 3px var(--ds-color-accent-soft);
+  --ds-shadow-nav-active: inset 3px 0 0 var(--ds-color-accent);
+  --ds-shadow-nav-active-mobile: inset 0 -2px 0 var(--ds-color-accent);
 
-  --info:             oklch(40% 0.115 245);   /* FULL_TUITION, PLAUSIBLE */
-  --info-soft:        oklch(94.5% 0.035 245);
-  --info-border:      oklch(80% 0.062 245);
+  /* Layer 1: upstream stacking and motion primitives */
+  --ds-z-base: 1;
+  --ds-z-sticky-cell: 2;
+  --ds-z-sticky-edge: 3;
+  --ds-z-header: 20;
+  --ds-z-modal: 50;
+  --ds-duration-reduced: 0.01ms;
+  --ds-duration-fast: 120ms;
+  --ds-duration-normal: 180ms;
+  --ds-duration-pulse: 1.4s;
+  --ds-duration-spin: 0.8s;
+  --ds-ease-standard: ease;
+  --ds-ease-linear: linear;
+  --ds-ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 
-  --warn:             oklch(39% 0.125 72);    /* PENDING, LARGE_GRANT */
-  --warn-soft:        oklch(95% 0.045 72);
-  --warn-border:      oklch(82% 0.080 72);
+  /* Layer 1: upstream layout and effect primitives */
+  --ds-size-sidebar: 15.5rem;
+  --ds-size-measure: 68ch;
+  --ds-size-auth-card: 30rem;
+  --ds-size-content: 52rem;
+  --ds-size-reading-column: 46rem;
+  --ds-size-profile-bio: 62ch;
+  --ds-size-table-default: 64.25rem;
+  --ds-size-table-ranked: 69.75rem;
+  --ds-size-column-xs: 4.5rem;
+  --ds-size-column-sm: 6rem;
+  --ds-size-column-md: 6.5rem;
+  --ds-size-column-lg: 6.75rem;
+  --ds-size-column-xl: 7.5rem;
+  --ds-size-badge-min: 1.1rem;
+  --ds-size-stage-track: 1.5rem;
+  --ds-size-control-min: 9.5rem;
+  --ds-size-grid-sm: 9rem;
+  --ds-size-grid-md: 11rem;
+  --ds-size-grid-lg: 13rem;
+  --ds-size-person-card: 19rem;
+  --ds-size-university-min: 10rem;
+  --ds-size-university-max: 18rem;
+  --ds-size-bubble-max: 34rem;
+  --ds-size-icon: 1rem;
+  --ds-size-touch-target: 2.75rem;
+  --ds-size-content-wide: 90rem;
+  --ds-size-swatch-lg: 7.5rem;
+  --ds-size-open-page: 4rem;
+  --ds-size-status-icon: 1.5rem;
+  --ds-size-avatar: 2rem;
+  --ds-size-avatar-lg: 3rem;
+  --ds-size-fund-bar: 1.4rem;
+  --ds-size-stage-dot: 0.7rem;
+  --ds-size-meter: 6px;
+  --ds-size-swatch: 10px;
+  --ds-size-visually-hidden: 1px;
+  --ds-blur-header: 8px;
+  --ds-translate-pressed: 1px;
+  --ds-background-none: none;
+  --ds-background-app-texture: none;
+  --ds-background-meter: var(--ds-color-accent);
+  --ds-background-unknown-pattern: var(--ds-color-neutral-soft);
 
-  --risk:             oklch(42% 0.165 27);    /* GAP, NOT_ELIGIBLE, passed */
-  --risk-soft:        oklch(95% 0.040 27);
-  --risk-border:      oklch(82% 0.075 27);
+  /* Layer 2: project color aliases */
+  --color-brand-ink: var(--ds-color-brand-ink, #111827);
+  --color-brand-paper: var(--ds-color-brand-paper, #f7f3ea);
+  --color-brand-academic-blue: var(--ds-color-brand-academic-blue, #526da6);
+  --color-brand-library-burgundy: var(--ds-color-brand-library-burgundy, #8e3f4c);
+  --color-brand-scholar-teal: var(--ds-color-brand-scholar-teal, #437a78);
+  --color-brand-parchment-gold: var(--ds-color-brand-parchment-gold, #c5a66b);
+  --color-brand-deadline-coral: var(--ds-color-brand-deadline-coral, #e47a6a);
+  --color-background: var(--ds-color-paper, #f7f3ea);
+  --color-surface: var(--ds-color-surface, #fffcf6);
+  --color-surface-sunken: var(--ds-color-surface-sunken, #efe9de);
+  --color-surface-raised: var(--ds-color-surface-raised, #ffffff);
+  --color-surface-inverse: var(--ds-color-surface-inverse, #111827);
+  --color-text: var(--ds-color-ink, #111827);
+  --color-text-muted: var(--ds-color-ink-muted, #5d6470);
+  --color-text-subtle: var(--ds-color-ink-subtle, #636b77);
+  --color-text-inverse: var(--ds-color-ink-inverse, #f7f3ea);
+  --color-border: var(--ds-color-rule, #ded6c8);
+  --color-border-strong: var(--ds-color-rule-strong, #c7bdae);
+  --color-link: var(--ds-color-accent, #526da6);
+  --color-link-hover: var(--ds-color-accent-hover, #3f5885);
+  --color-interactive: var(--ds-color-accent, #526da6);
+  --color-interactive-hover: var(--ds-color-accent-hover, #3f5885);
+  --color-interactive-soft: var(--ds-color-accent-soft, #e8ecf5);
+  --color-interactive-border: var(--ds-color-accent-border, #aab8d9);
+  --color-focus-ring: var(--ds-color-accent, #526da6);
+  --color-success: var(--ds-color-success, #376b69);
+  --color-success-soft: var(--ds-color-success-soft, #e5efec);
+  --color-success-border: var(--ds-color-success-border, #437a78);
+  --color-info: var(--ds-color-info, #4b6599);
+  --color-info-soft: var(--ds-color-info-soft, #e8ecf5);
+  --color-info-border: var(--ds-color-info-border, #aab8d9);
+  --color-warning: var(--ds-color-warning, #725a2a);
+  --color-warning-soft: var(--ds-color-warning-soft, #f4ebd7);
+  --color-warning-border: var(--ds-color-warning-border, #c5a66b);
+  --color-danger: var(--ds-color-danger, #8e3f4c);
+  --color-danger-soft: var(--ds-color-danger-soft, #f4e6e8);
+  --color-danger-border: var(--ds-color-danger-border, #c8919a);
+  --color-deadline: var(--ds-color-deadline, #8b4338);
+  --color-deadline-soft: var(--ds-color-deadline-soft, #f8e4df);
+  --color-deadline-border: var(--ds-color-deadline-border, #e47a6a);
+  --color-neutral: var(--ds-color-neutral, #5f6673);
+  --color-neutral-soft: var(--ds-color-neutral-soft, #ebe8e2);
+  --color-neutral-border: var(--ds-color-neutral-border, #c9c4ba);
+  --color-demo: var(--ds-color-demo, #8e3f4c);
+  --color-demo-soft: var(--ds-color-demo-soft, #f4e6e8);
+  --color-demo-border: var(--ds-color-demo-border, #c8919a);
+  --color-overlay: var(--ds-color-overlay, rgb(0 0 0 / 60%));
+  --color-on-interactive: var(--ds-color-on-accent, #ffffff);
+  --color-transparent: var(--ds-color-transparent, transparent);
+  --color-inherit: var(--ds-color-inherit, inherit);
 
-  --unknown:          oklch(42% 0.008 265);   /* UNKNOWN, INSUFFICIENT_DATA */
-  --unknown-soft:     oklch(94% 0.005 265);
-  --unknown-border:   oklch(84% 0.006 265);
+  /* Layer 2: project typography aliases */
+  --font-family-brand: var(--ds-font-family-brand, 'Onest', system-ui, sans-serif);
+  --font-family-display: var(--ds-font-family-display, 'Prata', Georgia, serif);
+  --font-weight-display: var(--ds-font-weight-display, 400);
+  --font-family-ui: var(--ds-font-family-ui, system-ui, sans-serif);
+  --font-family-mono: var(--ds-font-family-mono, ui-monospace, monospace);
+  --font-size-2xs: var(--ds-font-size-2xs, 0.75rem);
+  --font-size-micro: var(--ds-font-size-micro, 0.75rem);
+  --font-size-xs: var(--ds-font-size-xs, 0.875rem);
+  --font-size-sm: var(--ds-font-size-sm, 0.875rem);
+  --font-size-base: var(--ds-font-size-base, 1rem);
+  --font-size-md: var(--ds-font-size-md, 1.125rem);
+  --font-size-lg: var(--ds-font-size-lg, 1.375rem);
+  --font-size-xl: var(--ds-font-size-xl, 1.75rem);
+  --font-size-display: var(--ds-font-size-display, 3rem);
+  --font-size-brand: var(--ds-font-size-brand, 1.75rem);
+  --font-size-stat: var(--ds-font-size-stat, 2.25rem);
+  --font-size-code: var(--ds-font-size-code, 0.875em);
+  --font-weight-medium: var(--ds-font-weight-medium, 500);
+  --font-weight-semibold: var(--ds-font-weight-semibold, 600);
+  --font-weight-bold: var(--ds-font-weight-bold, 700);
+  --line-height-flat: var(--ds-line-height-flat, 1);
+  --line-height-tight: var(--ds-line-height-tight, 1.15);
+  --line-height-caption: var(--ds-line-height-caption, 1.3);
+  --line-height-snug: var(--ds-line-height-snug, 1.35);
+  --line-height-compact: var(--ds-line-height-compact, 1.55);
+  --line-height-normal: var(--ds-line-height-normal, 1.6);
+  --letter-spacing-tight: var(--ds-letter-spacing-tight, -0.015em);
+  --letter-spacing-display: var(--ds-letter-spacing-display, -0.03em);
+  --letter-spacing-avatar: var(--ds-letter-spacing-avatar, 0.02em);
+  --letter-spacing-label: var(--ds-letter-spacing-label, 0.05em);
+  --letter-spacing-medium: var(--ds-letter-spacing-medium, 0.07em);
+  --letter-spacing-wide: var(--ds-letter-spacing-wide, 0.08em);
+  --letter-spacing-wider: var(--ds-letter-spacing-wider, 0.09em);
+  --letter-spacing-widest: var(--ds-letter-spacing-widest, 0.12em);
 
-  --demo:             oklch(40% 0.115 320);   /* synthetic-fixture marker */
-  --demo-soft:        oklch(95% 0.035 320);
-  --demo-border:      oklch(83% 0.070 320);
+  /* Layer 2: project spacing aliases */
+  --space-0: var(--ds-space-0, 0);
+  --space-auto: var(--ds-space-auto, auto);
+  --space-negative-hairline: var(--ds-space-negative-hairline, -1px);
+  --space-hairline: var(--ds-space-hairline, 1px);
+  --space-0-5: var(--ds-space-0-5, 2px);
+  --space-0-75: var(--ds-space-0-75, 3px);
+  --space-1: var(--ds-space-1, 0.25rem);
+  --space-1-25: var(--ds-space-1-25, 5px);
+  --space-1-5: var(--ds-space-1-5, 0.375rem);
+  --space-2: var(--ds-space-2, 0.5rem);
+  --space-2-5: var(--ds-space-2-5, 0.625rem);
+  --space-3: var(--ds-space-3, 0.75rem);
+  --space-4: var(--ds-space-4, 1rem);
+  --space-5: var(--ds-space-5, 1.25rem);
+  --space-6: var(--ds-space-6, 1.5rem);
+  --space-7: var(--ds-space-7, 2rem);
+  --space-8: var(--ds-space-8, 3rem);
+  --space-9: var(--ds-space-9, 5.5rem);
+  --space-control-block: var(--ds-space-control-block, 0.42rem);
+  --space-control-inline: var(--ds-space-control-inline, 0.6rem);
+  --space-control-compact: var(--ds-space-control-compact, 0.35rem);
+  --space-dot-offset: var(--ds-space-dot-offset, 0.42rem);
+  --space-checkbox-offset: var(--ds-space-checkbox-offset, 0.2rem);
+  --space-panel-inset: var(--ds-space-panel-inset, 0.18rem);
+  --space-button-block: var(--ds-space-button-block, 0.44rem);
+  --space-button-inline: var(--ds-space-button-inline, 0.9rem);
+  --space-button-compact-inline: var(--ds-space-button-compact-inline, 0.6rem);
+  --space-table-block: var(--ds-space-table-block, 0.45rem);
+  --space-table-inline: var(--ds-space-table-inline, 0.3rem);
+  --space-table-wide-inline: var(--ds-space-table-wide-inline, 0.5rem);
+  --space-stage-dot: var(--ds-space-stage-dot, 0.7rem);
+  --space-check: var(--ds-space-check, 0.1rem);
 
-  /* --- type --- */
-  --font-display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
-  --font-ui: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  /* Layer 2: project geometry, elevation, stack, and motion aliases */
+  --border-width-hairline: var(--ds-border-width-hairline, 1px);
+  --border-width-medium: var(--ds-border-width-medium, 2px);
+  --border-width-strong: var(--ds-border-width-strong, 3px);
+  --border-width-accent: var(--ds-border-width-accent, 4px);
+  --radius-sm: var(--ds-radius-sm, 4px);
+  --radius-xs: var(--ds-radius-xs, 4px);
+  --radius-none: var(--ds-radius-none, 0);
+  --radius-md: var(--ds-radius-md, 8px);
+  --radius-lg: var(--ds-radius-lg, 12px);
+  --radius-xl: var(--ds-radius-xl, 16px);
+  --radius-page: var(--ds-radius-page, 24px);
+  --radius-full: var(--ds-radius-full, 999px);
+  --radius-round: var(--ds-radius-round, 50%);
+  --shadow-none: var(--ds-shadow-none, none);
+  --shadow-sm: var(--ds-shadow-sm, none);
+  --shadow-md: var(--ds-shadow-md, none);
+  --shadow-lg: var(--ds-shadow-lg, none);
+  --shadow-focus-ring: var(--ds-shadow-focus, 0 0 0 3px var(--color-interactive-soft));
+  --shadow-nav-active: var(--ds-shadow-nav-active, inset 3px 0 0 var(--color-interactive));
+  --shadow-nav-active-mobile: var(--ds-shadow-nav-active-mobile, inset 0 -2px 0 var(--color-interactive));
+  --z-base: var(--ds-z-base, 1);
+  --z-sticky-cell: var(--ds-z-sticky-cell, 2);
+  --z-sticky-edge: var(--ds-z-sticky-edge, 3);
+  --z-header: var(--ds-z-header, 20);
+  --z-modal: var(--ds-z-modal, 50);
+  --motion-duration-reduced: var(--ds-duration-reduced, 0.01ms);
+  --motion-duration-fast: var(--ds-duration-fast, 120ms);
+  --motion-duration-normal: var(--ds-duration-normal, 180ms);
+  --motion-duration-pulse: var(--ds-duration-pulse, 1.4s);
+  --motion-duration-spin: var(--ds-duration-spin, 0.8s);
+  --motion-ease-standard: var(--ds-ease-standard, ease);
+  --motion-ease-linear: var(--ds-ease-linear, linear);
+  --motion-ease-out-expo: var(--ds-ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1));
 
-  --text-xs:   0.75rem;
-  --text-sm:   0.8125rem;
-  --text-base: 0.9375rem;
-  --text-md:   1.0625rem;
-  --text-lg:   clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
-  --text-xl:   clamp(1.6rem, 1.3rem + 1.2vw, 2.25rem);
-  --text-display: clamp(2.1rem, 1.4rem + 3vw, 3.5rem);
-
-  --leading-tight: 1.15;
-  --leading-snug: 1.35;
-  --leading-normal: 1.6;
-
-  /* --- rhythm: deliberately uneven, not one padding everywhere --- */
-  --space-1: 0.25rem;
-  --space-2: 0.5rem;
-  --space-3: 0.75rem;
-  --space-4: 1rem;
-  --space-5: 1.5rem;
-  --space-6: 2rem;
-  --space-7: 3rem;
-  --space-8: clamp(3rem, 2rem + 4vw, 5.5rem);
-
-  --radius-sm: 3px;
-  --radius: 6px;
-  --radius-lg: 10px;
-
-  --shadow-sm: 0 1px 2px oklch(23% 0.018 265 / 0.06);
-  --shadow: 0 2px 6px oklch(23% 0.018 265 / 0.08), 0 1px 2px oklch(23% 0.018 265 / 0.05);
-  --shadow-lg: 0 12px 32px oklch(23% 0.018 265 / 0.13), 0 2px 8px oklch(23% 0.018 265 / 0.07);
-
-  --duration-fast: 120ms;
-  --duration-normal: 220ms;
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-
-  --sidebar-width: 15.5rem;
-  --measure: 68ch;
-}
-
-:root[data-theme='dark'],
-:root:not([data-theme='light']) {
-  /* Default follows the system; an explicit choice wins via data-theme. */
+  /* Layer 2: project layout and effect aliases */
+  --size-sidebar: var(--ds-size-sidebar, 15.5rem);
+  --size-measure: var(--ds-size-measure, 68ch);
+  --size-auth-card: var(--ds-size-auth-card, 30rem);
+  --size-content: var(--ds-size-content, 52rem);
+  --size-reading-column: var(--ds-size-reading-column, 46rem);
+  --size-profile-bio: var(--ds-size-profile-bio, 62ch);
+  --size-table-default: var(--ds-size-table-default, 64.25rem);
+  --size-table-ranked: var(--ds-size-table-ranked, 69.75rem);
+  --size-column-xs: var(--ds-size-column-xs, 4.5rem);
+  --size-column-sm: var(--ds-size-column-sm, 6rem);
+  --size-column-md: var(--ds-size-column-md, 6.5rem);
+  --size-column-lg: var(--ds-size-column-lg, 6.75rem);
+  --size-column-xl: var(--ds-size-column-xl, 7.5rem);
+  --size-badge-min: var(--ds-size-badge-min, 1.1rem);
+  --size-stage-track: var(--ds-size-stage-track, 1.5rem);
+  --size-control-min: var(--ds-size-control-min, 9.5rem);
+  --size-grid-sm: var(--ds-size-grid-sm, 9rem);
+  --size-grid-md: var(--ds-size-grid-md, 11rem);
+  --size-grid-lg: var(--ds-size-grid-lg, 13rem);
+  --size-person-card: var(--ds-size-person-card, 19rem);
+  --size-university-min: var(--ds-size-university-min, 10rem);
+  --size-university-max: var(--ds-size-university-max, 18rem);
+  --size-bubble-max: var(--ds-size-bubble-max, 34rem);
+  --size-icon: var(--ds-size-icon, 1rem);
+  --size-touch-target: var(--ds-size-touch-target, 2.75rem);
+  --size-content-wide: var(--ds-size-content-wide, 90rem);
+  --size-swatch-lg: var(--ds-size-swatch-lg, 7.5rem);
+  --size-open-page: var(--ds-size-open-page, 4rem);
+  --size-status-icon: var(--ds-size-status-icon, 1.5rem);
+  --size-avatar: var(--ds-size-avatar, 2rem);
+  --size-avatar-lg: var(--ds-size-avatar-lg, 3rem);
+  --size-fund-bar: var(--ds-size-fund-bar, 1.4rem);
+  --size-stage-dot: var(--ds-size-stage-dot, 0.7rem);
+  --size-meter: var(--ds-size-meter, 6px);
+  --size-swatch: var(--ds-size-swatch, 10px);
+  --size-visually-hidden: var(--ds-size-visually-hidden, 1px);
+  --effect-header-blur: var(--ds-blur-header, 8px);
+  --transform-pressed: var(--ds-translate-pressed, 1px);
+  --background-none: var(--ds-background-none, none);
+  --background-app-texture: var(--ds-background-app-texture, none);
+  --background-meter: var(--ds-background-meter, var(--color-interactive));
+  --background-unknown-pattern: var(--ds-background-unknown-pattern, var(--color-neutral-soft));
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
     color-scheme: dark;
-
-    --paper:            oklch(17.5% 0.018 265);
-    --surface:          oklch(21% 0.020 265);
-    --surface-sunken:   oklch(14.5% 0.016 265);
-    --surface-raised:   oklch(25% 0.022 265);
-    --surface-inverted: oklch(93% 0.008 85);
-
-    --ink:              oklch(93% 0.010 85);
-    --ink-muted:        oklch(74% 0.012 265);
-    --ink-faint:        oklch(72% 0.012 265);
-    --ink-inverted:     oklch(18% 0.018 265);
-
-    --rule:             oklch(30% 0.018 265);
-    --rule-strong:      oklch(40% 0.020 265);
-
-    --accent:           oklch(76% 0.115 250);
-    --accent-hover:     oklch(84% 0.110 250);
-    --accent-soft:      oklch(28% 0.055 255);
-    --accent-border:    oklch(45% 0.080 255);
-
-    --ok:               oklch(78% 0.120 152);
-    --ok-soft:          oklch(27% 0.050 152);
-    --ok-border:        oklch(42% 0.070 152);
-
-    --info:             oklch(78% 0.100 245);
-    --info-soft:        oklch(27% 0.045 245);
-    --info-border:      oklch(42% 0.065 245);
-
-    --warn:             oklch(81% 0.115 78);
-    --warn-soft:        oklch(29% 0.055 70);
-    --warn-border:      oklch(45% 0.080 72);
-
-    --risk:             oklch(74% 0.140 27);
-    --risk-soft:        oklch(28% 0.060 27);
-    --risk-border:      oklch(45% 0.090 27);
-
-    --unknown:          oklch(70% 0.008 265);
-    --unknown-soft:     oklch(26% 0.010 265);
-    --unknown-border:   oklch(38% 0.010 265);
-
-    --demo:             oklch(80% 0.105 320);
-    --demo-soft:        oklch(28% 0.055 320);
-    --demo-border:      oklch(45% 0.080 320);
-
-    --shadow-sm: 0 1px 2px oklch(0% 0 0 / 0.30);
-    --shadow: 0 2px 8px oklch(0% 0 0 / 0.38), 0 1px 2px oklch(0% 0 0 / 0.25);
-    --shadow-lg: 0 14px 38px oklch(0% 0 0 / 0.48), 0 2px 8px oklch(0% 0 0 / 0.30);
+    --ds-color-paper: #0b1220;
+    --ds-color-surface: var(--ds-color-brand-ink);
+    --ds-color-surface-sunken: #080e19;
+    --ds-color-surface-raised: #1b2535;
+    --ds-color-surface-inverse: var(--ds-color-brand-paper);
+    --ds-color-ink: var(--ds-color-brand-paper);
+    --ds-color-ink-muted: #c4cbd6;
+    --ds-color-ink-subtle: #aeb7c5;
+    --ds-color-ink-inverse: var(--ds-color-brand-ink);
+    --ds-color-rule: #2e3a4d;
+    --ds-color-rule-strong: #46566d;
+    --ds-color-accent: #9cb2e1;
+    --ds-color-accent-hover: #b9c8e8;
+    --ds-color-accent-soft: #1e2c46;
+    --ds-color-accent-border: var(--ds-color-brand-academic-blue);
+    --ds-color-success: #8fc7c4;
+    --ds-color-success-soft: #173331;
+    --ds-color-success-border: var(--ds-color-brand-scholar-teal);
+    --ds-color-info: #9cb2e1;
+    --ds-color-info-soft: #1e2c46;
+    --ds-color-info-border: var(--ds-color-brand-academic-blue);
+    --ds-color-warning: #e1c88f;
+    --ds-color-warning-soft: #372f20;
+    --ds-color-warning-border: var(--ds-color-brand-parchment-gold);
+    --ds-color-danger: #f0b5bd;
+    --ds-color-danger-soft: #3d242b;
+    --ds-color-danger-border: var(--ds-color-brand-library-burgundy);
+    --ds-color-deadline: #f2a79d;
+    --ds-color-deadline-soft: #402722;
+    --ds-color-deadline-border: var(--ds-color-brand-deadline-coral);
+    --ds-color-neutral: #c5cbd5;
+    --ds-color-neutral-soft: #273142;
+    --ds-color-neutral-border: #475569;
+    --ds-color-demo: #d7a7b0;
+    --ds-color-demo-soft: #3b2530;
+    --ds-color-demo-border: var(--ds-color-brand-library-burgundy);
+    --ds-color-on-accent: var(--ds-color-brand-ink);
+    --ds-shadow-sm: 0 1px 2px oklch(0% 0 0 / 0.30);
+    --ds-shadow-md: 0 2px 8px oklch(0% 0 0 / 0.38), 0 1px 2px oklch(0% 0 0 / 0.25);
+    --ds-shadow-lg: 0 14px 38px oklch(0% 0 0 / 0.48), 0 2px 8px oklch(0% 0 0 / 0.30);
   }
 }
 
 :root[data-theme='dark'] {
   color-scheme: dark;
-
-  --paper:            oklch(17.5% 0.018 265);
-  --surface:          oklch(21% 0.020 265);
-  --surface-sunken:   oklch(14.5% 0.016 265);
-  --surface-raised:   oklch(25% 0.022 265);
-  --surface-inverted: oklch(93% 0.008 85);
-
-  --ink:              oklch(93% 0.010 85);
-  --ink-muted:        oklch(74% 0.012 265);
-  --ink-faint:        oklch(72% 0.012 265);
-  --ink-inverted:     oklch(18% 0.018 265);
-
-  --rule:             oklch(30% 0.018 265);
-  --rule-strong:      oklch(40% 0.020 265);
-
-  --accent:           oklch(76% 0.115 250);
-  --accent-hover:     oklch(84% 0.110 250);
-  --accent-soft:      oklch(28% 0.055 255);
-  --accent-border:    oklch(45% 0.080 255);
-
-  --ok:               oklch(78% 0.120 152);
-  --ok-soft:          oklch(27% 0.050 152);
-  --ok-border:        oklch(42% 0.070 152);
-
-  --info:             oklch(78% 0.100 245);
-  --info-soft:        oklch(27% 0.045 245);
-  --info-border:      oklch(42% 0.065 245);
-
-  --warn:             oklch(81% 0.115 78);
-  --warn-soft:        oklch(29% 0.055 70);
-  --warn-border:      oklch(45% 0.080 72);
-
-  --risk:             oklch(74% 0.140 27);
-  --risk-soft:        oklch(28% 0.060 27);
-  --risk-border:      oklch(45% 0.090 27);
-
-  --unknown:          oklch(70% 0.008 265);
-  --unknown-soft:     oklch(26% 0.010 265);
-  --unknown-border:   oklch(38% 0.010 265);
-
-  --demo:             oklch(80% 0.105 320);
-  --demo-soft:        oklch(28% 0.055 320);
-  --demo-border:      oklch(45% 0.080 320);
-
-  --shadow-sm: 0 1px 2px oklch(0% 0 0 / 0.30);
-  --shadow: 0 2px 8px oklch(0% 0 0 / 0.38), 0 1px 2px oklch(0% 0 0 / 0.25);
-  --shadow-lg: 0 14px 38px oklch(0% 0 0 / 0.48), 0 2px 8px oklch(0% 0 0 / 0.30);
+  --ds-color-paper: #0b1220;
+  --ds-color-surface: var(--ds-color-brand-ink);
+  --ds-color-surface-sunken: #080e19;
+  --ds-color-surface-raised: #1b2535;
+  --ds-color-surface-inverse: var(--ds-color-brand-paper);
+  --ds-color-ink: var(--ds-color-brand-paper);
+  --ds-color-ink-muted: #c4cbd6;
+  --ds-color-ink-subtle: #aeb7c5;
+  --ds-color-ink-inverse: var(--ds-color-brand-ink);
+  --ds-color-rule: #2e3a4d;
+  --ds-color-rule-strong: #46566d;
+  --ds-color-accent: #9cb2e1;
+  --ds-color-accent-hover: #b9c8e8;
+  --ds-color-accent-soft: #1e2c46;
+  --ds-color-accent-border: var(--ds-color-brand-academic-blue);
+  --ds-color-success: #8fc7c4;
+  --ds-color-success-soft: #173331;
+  --ds-color-success-border: var(--ds-color-brand-scholar-teal);
+  --ds-color-info: #9cb2e1;
+  --ds-color-info-soft: #1e2c46;
+  --ds-color-info-border: var(--ds-color-brand-academic-blue);
+  --ds-color-warning: #e1c88f;
+  --ds-color-warning-soft: #372f20;
+  --ds-color-warning-border: var(--ds-color-brand-parchment-gold);
+  --ds-color-danger: #f0b5bd;
+  --ds-color-danger-soft: #3d242b;
+  --ds-color-danger-border: var(--ds-color-brand-library-burgundy);
+  --ds-color-deadline: #f2a79d;
+  --ds-color-deadline-soft: #402722;
+  --ds-color-deadline-border: var(--ds-color-brand-deadline-coral);
+  --ds-color-neutral: #c5cbd5;
+  --ds-color-neutral-soft: #273142;
+  --ds-color-neutral-border: #475569;
+  --ds-color-demo: #d7a7b0;
+  --ds-color-demo-soft: #3b2530;
+  --ds-color-demo-border: var(--ds-color-brand-library-burgundy);
+  --ds-color-on-accent: var(--ds-color-brand-ink);
+  --ds-shadow-sm: 0 1px 2px oklch(0% 0 0 / 0.30);
+  --ds-shadow-md: 0 2px 8px oklch(0% 0 0 / 0.38), 0 1px 2px oklch(0% 0 0 / 0.25);
+  --ds-shadow-lg: 0 14px 38px oklch(0% 0 0 / 0.48), 0 2px 8px oklch(0% 0 0 / 0.30);
 }

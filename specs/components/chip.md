@@ -1,0 +1,42 @@
+# Chip and StatusChip
+
+## 1. Metadata
+
+- Name: Chip / StatusChip
+- Category: Status and metadata
+- Status: Stable
+
+## 2. Overview
+
+Use Chip for compact metadata and StatusChip for domain statuses with a human label and explanatory tooltip. Do not use chips as unlabeled buttons or as the only carrier of state.
+
+## 3. Anatomy
+
+Inline container, label, optional title, optional monospace treatment, and one semantic tone modifier. `StatusChip` also carries a tone icon; the label remains the accessible meaning.
+
+## 4. Tokens used
+
+`--space-check`, `--space-table-block`, `--radius-sm`, `--border-width-hairline`, `--font-size-xs`, `--font-weight-semibold`, `--font-family-mono`, and all `--color-*-soft`, `--color-*-border`, and semantic foreground aliases.
+
+## 5. Props/API
+
+`Chip({ tone?, children, title?, mono? })`. Tones: neutral, ok, info, warn, risk, demo, accent. `StatusChip({ status, tone })` maps domain status to readable label and tooltip.
+
+## 6. States
+
+Default is neutral. Semantic tones change icon, border, background, and text together, so status never depends on color alone. Hover/active/disabled/error are not interactive states; wrap an actual control when interaction is required. Focus is handled by that control. A chip inside a constrained data-table cell may wrap at word boundaries, but it must remain inside that cell; the longest ranked Bucket label must end before the pinned Decision cell.
+
+In shortlist cells, labels wrap within the available column width. Never clip a
+status label or let it overlap the pinned Decision column, including with Onest.
+Accent labels use `--color-interactive-hover` on the soft accent background for
+AA small-text contrast, including monospace evidence values.
+
+## 7. Code example
+
+```tsx
+<StatusChip status={result.eligibility} tone={eligibilityTone[result.eligibility]} />
+```
+
+## 8. Cross-references
+
+[Notice](notice.md), [ResultDetail](result-detail.md), [Post](post.md).

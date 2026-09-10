@@ -1,0 +1,119 @@
+{
+  "version": 1,
+  "project": {
+    "name": "ASHYQ Apply",
+    "productType": "evidence-backed university admissions platform",
+    "stack": ["react", "vite", "css-custom-properties"]
+  },
+  "sources": {
+    "tokens": ["src/styles/tokens.css"],
+    "components": ["src/components/primitives.tsx", "src/design-system/DesignSystem.tsx"],
+    "assets": [
+      "../../photo-references/design_system.png",
+      "../../photo-references/hero_section_example.png"
+    ],
+    "instructions": [
+      "../epics.md",
+      "../../ashyq_brand/ashyq_brandbook_v1-1.md",
+      "../specs/design-system.md"
+    ]
+  },
+  "design": {
+    "colorMode": "light-and-dark",
+    "colors": {
+      "ink": "#111827",
+      "paper": "#F7F3EA",
+      "academicBlue": "#526DA6",
+      "libraryBurgundy": "#8E3F4C",
+      "scholarTeal": "#437A78",
+      "parchmentGold": "#C5A66B",
+      "deadlineCoral": "#E47A6A"
+    },
+    "typography": {
+      "brandAndActions": "Onest",
+      "editorialDisplay": "Prata",
+      "uiAndBody": "Onest",
+      "evidenceAndNumbers": "IBM Plex Mono",
+      "scalePx": [12, 14, 16, 18, 22, 28, 36, 48]
+    },
+    "spacing": { "basePx": 4, "scalePx": [4, 8, 12, 16, 24, 32, 48] },
+    "radius": { "productPx": [4, 8, 12], "editorialPagePx": 24 },
+    "shadows": { "levels": 3, "usage": "sparse; borders and paper tones first" },
+    "motion": { "interactionMaxMs": 200, "reducedMotion": true },
+    "density": "calm-editorial"
+  },
+  "components": {
+    "installed": [],
+    "preferredPrimitives": [
+      "Button",
+      "StatusChip",
+      "EvidenceLink",
+      "FreshnessBadge",
+      "UnknownValue",
+      "ModeBadge",
+      "OriginMark",
+      "Disclaimer",
+      "DataTable/CardList"
+    ],
+    "patterns": [
+      "fact-assessment-ai registers",
+      "source beside material value",
+      "unknown value with next action",
+      "desktop table to mobile card list",
+      "global demo/live mode"
+    ]
+  },
+  "constraints": {
+    "must": [
+      "Start every screen at 360px and expand",
+      "Keep source and freshness within one action of every material value",
+      "Pair every semantic color with icon and text",
+      "Use the same component contract in ru, kk, and en with 30 percent expansion tolerance",
+      "Meet WCAG AA, 44px targets, visible focus, and prefers-reduced-motion",
+      "Keep light and dark semantic roles equivalent"
+    ],
+    "avoid": [
+      "admission probability, chance percentages, or traffic-light chance metaphors",
+      "lime, neon, gradients, 3D, glass effects, and crypto-game styling",
+      "coats of arms, shields, laurels, globes, literal doors, and literal books",
+      "more than three chips in one row",
+      "unknown values rendered as a dash or zero",
+      "claims of guaranteed admission or guaranteed funding"
+    ]
+  },
+  "decisions": [
+    {
+      "id": "DS-001",
+      "decision": "Brandbook v1.1 supersedes v1.0; lime is removed everywhere.",
+      "reason": "The v1.1 change log explicitly replaces the former Open Portal direction."
+    },
+    {
+      "id": "DS-002",
+      "decision": "Prata 400 for display headings; Onest for wordmark, controls and body; IBM Plex Mono for evidence.",
+      "reason": "Explicit owner clarification on 2026-09-09 supersedes the brandbook and previous synthesized font choices."
+    },
+    {
+      "id": "DS-003",
+      "decision": "Keep exact brand colors as primitives, but use darker semantic text colors where an exact swatch fails 4.5:1 on Paper.",
+      "reason": "Scholar Teal, Parchment Gold, and Deadline Coral are valid brand accents but not all are accessible as small text."
+    },
+    {
+      "id": "DS-004",
+      "decision": "Use the Open Page as a cropped corner and two-page negative-space motif, not a literal book illustration.",
+      "reason": "The motif must express an opening and forward path at small sizes."
+    },
+    {
+      "id": "DS-005",
+      "decision": "Trust is structural: fact, assessment, and AI opinion have distinct forms, labels, and backgrounds.",
+      "reason": "E16 requires users to classify origin without relying on color alone."
+    }
+  ],
+  "evidence": [
+    { "fact": "brandbook.version:v1.1", "source": "../../ashyq_brand/ashyq_brandbook_v1-1.md" },
+    { "fact": "product.epics:E00,E16", "source": "../epics.md" },
+    { "fact": "reference.visual:editorial-warm-global", "source": "../../photo-references/design_system.png" },
+    { "fact": "reference.visual:open-air-hero", "source": "../../photo-references/hero_section_example.png" },
+    { "fact": "project.tokens:three-layer", "source": "src/styles/tokens.css" }
+  ],
+  "generatedAt": "2026-09-08T14:44:05.795Z"
+}

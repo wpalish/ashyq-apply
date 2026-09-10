@@ -12,6 +12,8 @@ import { PaywallNotice } from '@/components/PaywallNotice';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { AccountMenu } from '@/components/AccountMenu';
 import { ProfileScreen } from '@/screens/ProfileScreen';
+import { CaseScreen } from '@/screens/CaseScreen';
+import { redesignCopy } from '@/lib/redesignCopy';
 import { PreferencesScreen } from '@/screens/PreferencesScreen';
 import { ProgressScreen } from '@/screens/ProgressScreen';
 import { ShortlistScreen } from '@/screens/ShortlistScreen';
@@ -33,7 +35,7 @@ import { useTranslation } from '@/lib/useTranslation';
 import type { PersonCard } from '@/types';
 
 export type ScreenId =
-  | 'profile' | 'preferences' | 'progress' | 'shortlist' | 'funding'
+  | 'case' | 'profile' | 'preferences' | 'progress' | 'shortlist' | 'funding'
   | 'approved' | 'documents' | 'sources' | 'export'
   | 'feed' | 'discover' | 'messages' | 'me' | 'person' | 'moderation' | 'legal';
 
@@ -65,6 +67,7 @@ const SCREENS: { id: ScreenId; num?: string; label: MessageKey; group: MessageKe
 /** The screen named by `#/…`, if it names one at all. */
 function screenFromHash(): ScreenId | null {
   const id = window.location.hash.replace(/^#\/?/, '').split('?')[0];
+  if (id === 'case') return 'case';
   return SCREENS.some((s) => s.id === id) ? (id as ScreenId) : null;
 }
 
@@ -81,12 +84,18 @@ function label(id: ScreenId): string {
   return entry ? translate(entry.label) : id;
 }
 
-/** "1 conflict", not "1 conflicts". */
-function plural(n: number, noun: string): string {
-  return `${n} ${noun}${n === 1 ? '' : 's'}`;
-}
+/** Five stable destinations; detailed tools stay in contextual navigation. */
+type SectionId = 'case' | 'shortlist' | 'plan' | 'community' | 'more';
+const SECTIONS: { id: SectionId; icon: string; screens: ScreenId[] }[] = [
+  { id: 'case', icon: '⌂', screens: ['case', 'profile', 'preferences', 'progress'] },
+  { id: 'shortlist', icon: '◇', screens: ['shortlist', 'funding', 'sources'] },
+  { id: 'plan', icon: '☷', screens: ['approved', 'documents'] },
+  { id: 'community', icon: '◎', screens: ['feed', 'discover', 'messages', 'person'] },
+  { id: 'more', icon: '···', screens: ['export', 'me', 'moderation', 'legal'] },
+];
 
 const THEME_KEY = 'ashyq.theme';
+const MOBILE_SHELL_QUERY = '(max-width: 900px)';
 type Theme = 'system' | 'light' | 'dark';
 
 export default function App() {
@@ -95,7 +104,9 @@ export default function App() {
     cases, savedProfile, switchCase, newCase, dirty, hydrated,
   } = useStore();
   const { t, locale, setLocale } = useTranslation();
-  const [screen, setScreenState] = useState<ScreenId>(() => screenFromHash() ?? 'profile');
+  const [screen, setScreenState] = useState<ScreenId>(() => screenFromHash() ?? 'case');
+  const [section, setSection] = useState<SectionId>(() => SECTIONS.find((s) => s.screens.includes(screenFromHash() ?? 'case'))?.id ?? 'case');
+  const copy = redesignCopy[locale];
   const [redirected, setRedirected] = useState<string | null>(null);
   /** Ask before throwing away typing the applicant has not saved. */
   const confirmDiscard = () =>
@@ -118,6 +129,20 @@ export default function App() {
       return 'system';
     }
   });
+  const [mobileShell, setMobileShell] = useState(
+    () => typeof window !== 'undefined'
+      && typeof window.matchMedia === 'function'
+      && window.matchMedia(MOBILE_SHELL_QUERY).matches,
+  );
+
+  useEffect(() => {
+    if (typeof window.matchMedia !== 'function') return undefined;
+    const query = window.matchMedia(MOBILE_SHELL_QUERY);
+    const update = () => setMobileShell(query.matches);
+    update();
+    query.addEventListener('change', update);
+    return () => query.removeEventListener('change', update);
+  }, []);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -173,6 +198,7 @@ export default function App() {
   );
 
   const gate: Record<ScreenId, string | null> = {
+    case: null,
     profile: null,
     preferences: null,
     progress: run ? null : 'Start research first',
@@ -205,6 +231,7 @@ export default function App() {
   // before there were any results redirects to progress and says why.
   const setScreen = useCallback((next: ScreenId) => {
     setScreenState(next);
+    setSection(SECTIONS.find((s) => s.screens.includes(next))?.id ?? 'case');
     const target = `#/${next}`;
     if (window.location.hash !== target) window.location.hash = target;
   }, []);
@@ -227,6 +254,7 @@ export default function App() {
     const blocked = gateRef.current[requested];
     if (!blocked) {
       setScreenState(requested);
+      setSection(SECTIONS.find((s) => s.screens.includes(requested))?.id ?? 'case');
       return;
     }
     const fallback: ScreenId = runRef.current ? 'progress' : 'profile';
@@ -272,10 +300,25 @@ export default function App() {
     messages: unread || undefined,
   };
 
-  let groupSeen = '';
+  const activeSection = SECTIONS.find((s) => s.id === section)!;
+  const primaryNav = <nav className="primary-nav" aria-label={copy.navigation}>
+    {SECTIONS.map((item) => <button key={item.id} type="button" className="primary-nav__item"
+      data-testid={`section-${item.id}`}
+      aria-current={section === item.id ? 'page' : undefined}
+      disabled={item.screens.every((id) => Boolean(gate[id]))}
+      title={item.screens.every((id) => Boolean(gate[id])) ? gate[item.screens[0]!] ?? undefined : undefined}
+      onClick={() => {
+        const target = item.screens.find((id) => !gate[id]);
+        if (target) setScreen(target);
+        setSection(item.id);
+      }}>
+      <span className="primary-nav__icon" aria-hidden="true">{item.icon}</span><span>{copy[item.id]}</span>
+    </button>)}
+  </nav>;
 
   return (
-    <div className="app">
+    <div className="app app--redesign">
+      <a className="skip-link" href="#main-content">{copy.skip}</a>
       <aside className="sidebar">
         <div className="brand">
           <span className="brand__mark">ASHYQ Apply</span>
@@ -284,13 +327,13 @@ export default function App() {
           </span>
         </div>
 
-        <nav className="nav" aria-label="Workflow">
-          {SCREENS.map((s) => {
-            const header = s.group !== groupSeen ? ((groupSeen = s.group), s.group) : null;
+        {!mobileShell && primaryNav}
+        <nav className={`nav context-nav${screen === 'case' ? ' context-nav--home' : ''}`} aria-label={copy.sections}>
+          <div className="nav__group-label">{copy[section]}</div>
+          {SCREENS.filter((s) => activeSection.screens.includes(s.id)).map((s) => {
             const blocked = gate[s.id];
             return (
               <div key={s.id}>
-                {header && <div className="nav__group-label">{t(header)}</div>}
                 <button
                   type="button"
                   className="nav__item"
@@ -313,7 +356,7 @@ export default function App() {
           })}
         </nav>
 
-        <div className="stack stack--tight" style={{ marginTop: 'auto' }}>
+        <div className={`stack stack--tight shell-settings${section === 'more' ? ' shell-settings--open' : ''}`}>
           <div className="field">
             <label className="field__label xs" htmlFor="theme">{t('appearance.label')}</label>
             <select
@@ -348,22 +391,17 @@ export default function App() {
         </div>
       </aside>
 
+      {mobileShell && primaryNav}
+
       <div className="main">
         <header className="topbar">
-          <Chip tone={capabilities?.demo_mode ? 'demo' : 'accent'}>
-            {capabilities ? (capabilities.demo_mode ? 'Demo data' : 'Live sources') : 'connecting…'}
+          <span className="topbar__title">{copy[section]}</span>
+          <Chip tone={(run?.demo_mode ?? capabilities?.demo_mode) ? 'demo' : 'accent'}>
+            {capabilities ? ((run?.demo_mode ?? capabilities.demo_mode) ? copy.modeDemo : copy.modeLive) : copy.connecting}
           </Chip>
-          {run && (
-            <>
-              <Chip tone="neutral" mono>run {run.id.slice(0, 8)}</Chip>
-              <Chip tone={run.stage === 'failed' ? 'risk' : 'neutral'}>
-                {run.stage.replace(/_/g, ' ')}
-              </Chip>
-            </>
-          )}
           <div className="topbar__spacer" />
-          <label className="row row--tight xs muted" htmlFor="case-switcher">
-            Applicant
+          {cases.length > 1 && <label className="row row--tight xs muted" htmlFor="case-switcher">
+            {copy.applicant}
             <select
               id="case-switcher"
               value={savedProfile?.id ?? ''}
@@ -385,22 +423,20 @@ export default function App() {
                 </option>
               ))}
             </select>
-          </label>
+          </label>}
+          <div className={`row row--tight shell-account${section === 'more' ? ' shell-account--open' : ''}`}>
           <button className="btn btn--sm" type="button" onClick={() => {
             if (!confirmDiscard()) return;
             newCase(); setScreen('profile');
           }}>{t('topbar.newCase')}</button>
-          {summary && (
-            <span className="xs muted">
-              {plural(summary.total, 'programme')} · {plural(summary.with_conflicts, 'conflict')} ·{' '}
-              {plural(summary.with_open_questions, 'open question')}
-            </span>
-          )}
           <AccountMenu onSignedOut={() => window.location.reload()} />
           <button className="btn btn--sm btn--ghost" data-testid="sign-out" type="button" onClick={async () => {
             await api.logout(); window.location.reload();
           }}>{t('topbar.signOut')}</button>
+          </div>
         </header>
+        {(run?.job_running || run?.job_status === 'queued' || run?.job_status === 'running') && screen !== 'progress' &&
+          <div className="shell-run" role="status"><span>{copy.working}</span><button className="btn btn--sm" onClick={() => setScreen('progress')}>{copy.progress} →</button></div>}
 
         {redirected && (
           <div style={{ padding: 'var(--space-4) var(--space-6) 0' }}>
@@ -431,10 +467,11 @@ export default function App() {
             screen asked for locked material. */}
         <PaywallNotice />
 
-        <main className="screen">
+        <main className="screen" id="main-content" tabIndex={-1}>
           {/* Scoped to the screen, so one broken screen cannot take the
               sidebar and the case switcher down with it. */}
           <ErrorBoundary label={`the ${screen} screen`} key={screen}>
+          {screen === 'case' && <CaseScreen onNavigate={setScreen} />}
           {screen === 'profile' && <ProfileScreen onNext={() => setScreen('preferences')} />}
           {screen === 'preferences' && <PreferencesScreen onStarted={() => setScreen('progress')} />}
           {screen === 'progress' && <ProgressScreen onDone={() => setScreen('shortlist')} />}

@@ -22,6 +22,10 @@ to Codex when you run out, and a half-finished pipeline step is the most expensi
 `university-admissions-research`, `loop-engineering` (run it, don't declare it). They match the brief's
 invariants; use them.
 
+## UI design-system contract
+
+Before writing or modifying any UI code, read the relevant spec file in specs/. Use only tokens from tokens.css. Run the token audit script before committing. Zero errors required.
+
 ## Where you are strongest — use it
 Pipeline changes with the demo order as the oracle: after touching `runner.py` or `scoring.py`, always run
 `seed_demo.py` and compare against brief §5.7 before writing tests. When porting

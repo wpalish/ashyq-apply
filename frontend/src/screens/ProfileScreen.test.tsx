@@ -6,10 +6,13 @@
  * refused conversion silently destroyed the applicant's grades.
  */
 
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ProfileScreen } from './ProfileScreen';
+import { useState } from 'react';
 import { ApiError, api } from '@/api/client';
+import { setLocale } from '@/lib/i18n';
+import { profileCopy } from '@/lib/profileCopy';
 
 const GPA = { raw_value: 4.8, raw_scale_max: 5, raw_scale_label: 'KZ 5-point' };
 
@@ -19,7 +22,10 @@ const setProfileDraft = vi.fn((update: (d: unknown) => unknown) => {
 });
 
 vi.mock('@/lib/store', () => ({
-  useStore: () => ({
+  useStore: () => {
+    const [profileStep, setProfileStep] = useState(0);
+    return {
+    activeCaseKey: null, profileStep, setProfileStep,
     profileDraft: draft,
     setProfileDraft,
     saveProfile: vi.fn(),
@@ -27,10 +33,11 @@ vi.mock('@/lib/store', () => ({
     capabilities: null,
     savedProfile: null,
     loading: false,
-  }),
+  }; },
 }));
 
 beforeEach(() => {
+  setLocale('en');
   draft = { academics: { gpa: { ...GPA } }, activities: [], achievements: [] };
   setProfileDraft.mockClear();
   vi.restoreAllMocks();
@@ -46,6 +53,30 @@ beforeEach(() => {
     ],
     note: '',
   });
+});
+
+it('provides non-empty copy in every supported locale', () => {
+  for (const copy of Object.values(profileCopy)) {
+    for (const locale of ['en', 'ru', 'kk'] as const) expect(copy[locale].trim()).not.toBe('');
+  }
+});
+
+it('switches labels without translating stored enum values or resetting the current step', async () => {
+  render(<ProfileScreen onNext={() => {}} />);
+  await screen.findByTestId('convert-kz5_to_us4');
+  fireEvent.change(screen.getByLabelText('Level', { exact: true }), { target: { value: 'master' } });
+  fireEvent.change(screen.getByLabelText('Citizenship', { exact: true }), { target: { value: 'Kazakhstan' } });
+  const snapshot = structuredClone(draft);
+  act(() => setLocale('ru'));
+  expect(screen.getByLabelText('Гражданство')).toHaveValue('Kazakhstan');
+  expect(screen.getAllByLabelText('Уровень')[0]).toHaveValue('master');
+  expect(draft).toEqual(snapshot);
+  fireEvent.click(screen.getByTestId('profile-step-1'));
+  act(() => setLocale('kk'));
+  expect(screen.getByLabelText('GPA / орташа балл')).toBeVisible();
+  expect(screen.getByTestId('profile-step-1')).toHaveAttribute('aria-current', 'step');
+  expect(draft).toEqual(snapshot);
+  act(() => setLocale('en'));
 });
 
 describe('applying a grade conversion', () => {
@@ -84,6 +115,33 @@ describe('applying a grade conversion', () => {
 
     await waitFor(() => expect(api.previewConversion).toHaveBeenCalled());
     expect(validate).not.toHaveBeenCalled();
+  });
+});
+
+describe('six-section profile wizard', () => {
+  it('shows application first and only reveals grades on the next step', () => {
+    render(<ProfileScreen onNext={() => {}} />);
+    expect(screen.getByLabelText('Citizenship')).toBeVisible();
+    expect(screen.getByLabelText('GPA / average')).not.toBeVisible();
+    fireEvent.click(screen.getByTestId('profile-next-step'));
+    expect(screen.getByLabelText('GPA / average')).toBeVisible();
+    expect(screen.getByLabelText('Citizenship')).not.toBeVisible();
+    expect(screen.getByTestId('profile-step-1')).toHaveAttribute('aria-current', 'step');
+  });
+  it('keeps typed values when moving between sections', () => {
+    render(<ProfileScreen onNext={() => {}} />);
+    fireEvent.change(screen.getByLabelText('Citizenship'), { target: { value: 'Kazakhstan' } });
+    fireEvent.click(screen.getByTestId('profile-step-4'));
+    fireEvent.click(screen.getByTestId('profile-step-0'));
+    expect(screen.getByLabelText('Citizenship')).toHaveValue('Kazakhstan');
+  });
+  it('can expose every existing field without changing the draft', () => {
+    render(<ProfileScreen onNext={() => {}} />);
+    fireEvent.click(screen.getByTestId('profile-show-all'));
+    expect(screen.getByLabelText('GPA / average')).toBeVisible();
+    expect(screen.getByLabelText('IELTS overall')).toBeVisible();
+    expect(screen.getByLabelText('SAT total')).toBeVisible();
+    expect(setProfileDraft).not.toHaveBeenCalled();
   });
 });
 
