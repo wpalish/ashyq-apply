@@ -12,7 +12,7 @@ Write for a reader who has **zero** chat history — because that is exactly who
 | Since (UTC) | Released 2026-09-10 03:20:01 UTC |
 | Branch | `task/frontend-redesign`, owner-directed continuation from design-system predecessor |
 | HEAD when written | `fc1fdc2` (combined implementation and concurrent WIP ancestry, pushed) |
-| Origin main when checked | `edf546d`; branch contains only the owner-directed design-system work |
+| Origin main when checked | `b267b33`; observed after final CI, not merged into this PR branch |
 | Previous holder | gpt-6-astra; completed and released the bounded regression slice |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
