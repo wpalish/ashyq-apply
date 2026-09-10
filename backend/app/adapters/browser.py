@@ -20,6 +20,7 @@ from typing import Any
 
 from app.adapters.fetching import Fetcher, FetchResult, assert_no_pii
 from app.adapters.network_policy import BlockedRequest, check_url, is_allowed
+from app.adapters.offload import off_loop
 from app.domain.enums import FetchOutcome
 
 try:  # the real exception class when playwright is installed...
@@ -116,7 +117,8 @@ class BrowserFetcher:
     @staticmethod
     async def _gate_request(route, request) -> None:
         """Allow or abort one request the rendered page is making."""
-        allowed, reason = is_allowed(request.url)
+        # Resolves DNS, so it blocks; a rendered page makes many of these.
+        allowed, reason = await off_loop(is_allowed, request.url)
         if not allowed:
             log.info("browser blocked %s: %s", request.url[:100], reason)
             await route.abort("blockedbyclient")
@@ -140,7 +142,7 @@ class BrowserFetcher:
     ) -> FetchResult:
         assert_no_pii(url)
         try:
-            check_url(url)
+            await off_loop(check_url, url)
         except BlockedRequest as exc:
             log.warning("browser tier blocked by network policy: %s", exc)
             return FetchResult(url=url, outcome=FetchOutcome.BLOCKED, error=str(exc))

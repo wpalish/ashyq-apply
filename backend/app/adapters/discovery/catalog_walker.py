@@ -49,6 +49,7 @@ from app.adapters.discovery.live_discovery import (
     same_institution,
 )
 from app.adapters.fetching import Fetcher, FetchResult
+from app.adapters.offload import off_loop
 from app.adapters.page_classifier import (
     PageClassification,
     PageType,
@@ -387,7 +388,9 @@ class CatalogWalker:
             walk.outcomes.append((catalogue_url, catalogue_outcome))
 
         drops: list[tuple[str, str]] = []
-        links = extract_links(html, catalogue_url, self.domain, drops) if html else []
+        links = (
+            await off_loop(extract_links, html, catalogue_url, self.domain, drops) if html else []
+        )
         for url, outcome in drops:
             walk.outcomes.append((url, outcome))
 

@@ -29,6 +29,7 @@ from app.adapters.extraction import (
 )
 from app.adapters.fetching import Fetcher
 from app.adapters.matching import program_matches
+from app.adapters.offload import off_loop
 from app.adapters.page_classifier import PageType, classify_page
 from app.domain.enums import ClaimType, FetchOutcome, SourceSpecificity
 
@@ -117,7 +118,12 @@ class WebRequirementsAdapter:
                     out.retry_urls.append(target.url)
                 continue
 
-            text = pdf_to_text(res.content) if res.is_pdf else readable_text(res.text)
+            # Both branches parse a third party's document; neither may hold the loop.
+            text = (
+                await off_loop(pdf_to_text, res.content)
+                if res.is_pdf
+                else await off_loop(readable_text, res.text)
+            )
             if not text.strip():
                 out.pages_failed += 1
                 out.errors.append(

@@ -12,6 +12,7 @@ from app.adapters.extraction import (
     readable_text,
 )
 from app.adapters.fetching import Fetcher
+from app.adapters.offload import off_loop
 from app.adapters.page_classifier import classify_page
 from app.domain.enums import ClaimType, CostCategory, SourceSpecificity
 from app.schemas.money import Money
@@ -58,7 +59,12 @@ class WebCostAdapter:
             out.retry_urls.append(candidate.costs_url)
             return breakdown, out
 
-        text = pdf_to_text(res.content) if res.is_pdf else readable_text(res.text)
+        # Both branches parse a third party's document; neither may hold the loop.
+        text = (
+            await off_loop(pdf_to_text, res.content)
+            if res.is_pdf
+            else await off_loop(readable_text, res.text)
+        )
         if not text.strip():
             out.pages_failed += 1
             out.errors.append(

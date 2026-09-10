@@ -43,6 +43,7 @@ from app.adapters.network_policy import (
     ResolvedTarget,
     check_url,
 )
+from app.adapters.offload import off_loop
 from app.domain.enums import FetchOutcome
 
 log = logging.getLogger("unimatch.fetch")
@@ -307,7 +308,7 @@ class RobotsPolicy:
         try:
             # robots.txt is fetched from a host the crawler was pointed at, so
             # it is exactly as attacker-influenced as any other URL.
-            target = check_url(robots_url)
+            target = await off_loop(check_url, robots_url)
         except BlockedRequest as exc:
             log.warning("refusing robots.txt for %s: %s", host, exc)
             return None
@@ -468,7 +469,7 @@ class Fetcher:
         current = url
         validators = dict(validators) if validators else None
         for _hop in range(MAX_REDIRECTS + 1):
-            target = check_url(current)
+            target = await off_loop(check_url, current)
             # ``get()`` buffers the entire body before returning, which would
             # make the byte cap below cosmetic (and lets an endless response
             # exhaust memory). Keep the response streaming from the socket.
@@ -794,7 +795,7 @@ class Fetcher:
             raise RuntimeError("Fetcher must be used as an async context manager")
 
         try:
-            target = check_url(url)
+            target = await off_loop(check_url, url)
         except BlockedRequest as exc:
             log.warning("blocked by network policy: %s", exc)
             self.stats[FetchOutcome.BLOCKED.value] += 1

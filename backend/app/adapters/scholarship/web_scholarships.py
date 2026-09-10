@@ -29,6 +29,7 @@ from app.adapters.extraction import (
     readable_text,
 )
 from app.adapters.fetching import Fetcher
+from app.adapters.offload import off_loop
 from app.adapters.page_classifier import PageType, classify_page
 from app.domain.enums import (
     ApplicationMode,
@@ -140,8 +141,16 @@ class WebScholarshipAdapter:
                 )
                 continue
 
-            sch, claims = self._parse_award(
-                candidate, program, url, page.text, page.fetched_at, classification, index=i
+            # _parse_award soups the whole page; off the loop with the rest.
+            sch, claims = await off_loop(
+                self._parse_award,
+                candidate,
+                program,
+                url,
+                page.text,
+                page.fetched_at,
+                classification,
+                index=i,
             )
             scholarships.append(sch)
             out.claims.extend(claims)
