@@ -8,12 +8,12 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 | | |
 |---|---|
-| Holder | **gpt-6-astra — implementing the E02 evidence-link row slice** |
-| Since (UTC) | 2026-09-10 04:20:57 UTC |
+| Holder | **gpt-6-astra — completing verification for the E02 evidence-link row slice** |
+| Since (UTC) | 2026-09-10 10:09:09 UTC |
 | Branch | `task/frontend-redesign`, owner-directed continuation from design-system predecessor |
-| HEAD when written | `3e7dc27` (clean and synchronized with `origin/task/frontend-redesign`) |
+| HEAD when written | `21d31c8` (clean and synchronized with `origin/task/frontend-redesign`; previous executor's WIP preserved) |
 | Origin main when checked | `b267b33`; observed after final CI, not merged into this PR branch |
-| Previous holder | gpt-6-astra; completed and released the bounded regression slice, then the owner requested continuation |
+| Previous holder | gpt-6-astra; pushed the bounded evidence-link implementation as WIP, then stopped before full verification and release |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
@@ -272,26 +272,19 @@ No branch, commit, push or stash has been performed by this writer.
 
 Only this block is current; every write-ahead below it is historical context.
 
-Accepted 2026-09-10 04:20:57 UTC by gpt-6-astra. Implement the evidence-link row slice only:
+Accepted 2026-09-10 10:09:09 UTC by gpt-6-astra. Complete the already-pushed evidence-link WIP at
+`21d31c8` without widening its scope:
 
-1. Update `specs/components/profile-screen.md` and `specs/components/field.md` with the row, validation,
-   focus and API-preservation contract; add a focused `EvidenceLinksField` spec if the extracted component
-   needs its own reusable contract.
-2. Add `frontend/src/components/EvidenceLinksField.tsx` and use it from both activity and achievement
-   cards in `ProfileScreen.tsx`. Mirror the existing `string[]` in independent, stable rows; keep a newly
-   added empty row as UI-only state until it contains text; never trim, normalize, reorder, fetch or label
-   a URL verified. Removing one row may remove only that value. Respect the existing five-item/200-character
-   schema without changing the API.
-3. Add typed RU/KK/EN row labels, hints, add/remove actions and local HTTP(S)-shape feedback. Use native
-   labels, `aria-invalid`/described-by feedback, predictable add/remove focus, existing Button/Field patterns,
-   semantic tokens and the current Prata + Onest + IBM Plex Mono typography.
-4. Add unit coverage for verbatim saved-array round trips, UI-only empty rows, sibling isolation, URL
-   feedback, locale switching and keyboard focus. Extend `frontend/e2e/redesign.spec.ts` for activity and
-   achievement interaction at 320 px, horizontal-overflow protection and axe A/AA coverage.
-5. Run token audit, typecheck, lint, unit tests, build, ordinary/auth E2E, manual desktop/mobile browser
-   checks, backend Ruff/format/mypy/full coverage and Alembic heads. Commit/push the bounded implementation
-   with an `Agent:` trailer, then record exact results here and release the baton. Autosave, completeness,
-   API, ranking, privacy and payment changes are explicitly out of scope.
+1. Review the real component, ProfileScreen integration, RU/KK/EN copy, CSS, specs, unit tests and both
+   E2E paths against `list[Str200]` with `max_length=5`; preserve every stored string verbatim and keep the
+   Prata + Onest + IBM Plex Mono/token-only visual contract.
+2. Fix only reproducible evidence-link defects. Do not add autosave, stricter completeness, URL fetching,
+   API changes, ranking changes, privacy behavior or payment behavior.
+3. Rerun token audit, typecheck, lint, unit tests, production build, ordinary/auth E2E, desktop/mobile
+   browser and axe/overflow checks, backend Ruff/format/mypy/full coverage, and Alembic heads. Reconcile
+   local results with the four green GitHub release-gates for `21d31c8`.
+4. Commit and push any scoped correction with an `Agent:` trailer. Then update §3/§4/§6/§7/§11 with exact
+   evidence, nominate one executable E02 next slice, release the baton to nobody, commit and push the handoff.
 
 Next slice: replace the comma-separated activity/achievement evidence-link inputs with independent
 editable rows. Before implementation, inspect the real `evidence_links` schema and read
@@ -663,6 +656,10 @@ host=github.com
 `[0.8]` → `[1.1]` → `[1.2]` → `[1.3]` → `[1.4]` → `[2.1]` → `[2.2]` → `[2.3]` → `[3.1]` → `[3.2]` → `[4.1]` → `[4.2]` → `[5]`
 
 ## 11. Session log (one line per session, newest last)
+
+2026-09-10 10:09:09 UTC gpt-6-astra: continued the stopped sequential handoff at `21d31c8`; fetched and
+fast-forwarded without rewriting predecessor work, confirmed a clean synchronized branch, accepted final
+verification of the evidence-link WIP, and kept all API/ranking/privacy/payment work out of scope.
 
 2026-09-10 01:57 UTC gpt-6-astra: owner explicitly transferred continuation here; accepted
 remote planning-only 44dfa2a without losing local implementation. Full verification next.
