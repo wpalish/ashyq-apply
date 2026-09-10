@@ -10,6 +10,10 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BACKEND_ROOT = Path(__file__).resolve().parent.parent
 
+#: A webhook secret shorter than this is not a secret. ApiPay issues long
+#: ones; a short value is a placeholder somebody meant to replace.
+MIN_WEBHOOK_SECRET_CHARS = 16
+
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="UNIMATCH_", env_file=".env", extra="ignore")
@@ -92,13 +96,19 @@ class Settings(BaseSettings):
     smtp_host: str = ""
     smtp_port: int = 587
     smtp_username: str = ""
-    smtp_password: str = ""
+    #: SecretStr like every other credential here: a plain str renders itself
+    #: in any settings dump, repr or traceback frame that carries the object.
+    smtp_password: SecretStr = SecretStr("")
     smtp_from: str = "no-reply@ashyq.example"
     #: Recorded on the user, never enforced while this is false: there is no
     #: verification flow yet, and pretending otherwise would be theatre.
     auth_require_verified_email: bool = False
     auth_rate_limit_per_minute: int = 10
     run_rate_limit_per_minute: int = 20
+    #: Parsing a transcript is the most expensive thing an authenticated caller
+    #: can ask for: ten megabytes of PDF through pypdf, on a worker thread.
+    #: Nobody uploads their transcript six times a minute by hand.
+    upload_rate_limit_per_minute: int = 6
     #: Posting writes content other people read, so it gets its own bound.
     #: Generous enough for a real conversation, narrow enough that a script
     #: cannot fill the feed.
@@ -208,6 +218,52 @@ class Settings(BaseSettings):
                 "UNIMATCH_METRICS_TOKEN must be set in production, or set "
                 "UNIMATCH_METRICS_ENABLED=false. An open /metrics publishes traffic volumes "
                 "and queue depth to anyone who asks."
+            )
+        if self.payments_enabled:
+            self._validate_payments()
+
+    def _validate_payments(self) -> None:
+        """Refuse to take money through a provider that cannot verify a callback.
+
+        The webhook is the only unauthenticated write endpoint in the service
+        and the only thing that unlocks a paid case, so its signature is the
+        whole boundary. Two ways it used to be no boundary at all:
+
+        * ``payments_provider`` still on its default ``fake`` in production —
+          the test double, which invents invoices nobody paid for;
+        * ``apipay_webhook_secret`` unset — verification against an empty key,
+          which anybody can reproduce.
+
+        Both now stop the process at startup rather than at the first forged
+        callback.
+        """
+        secret = self.apipay_webhook_secret.get_secret_value()
+        if self.payments_provider not in ("apipay", "fake"):
+            raise RuntimeError(
+                f"UNIMATCH_PAYMENTS_PROVIDER={self.payments_provider!r} is not a payment "
+                "provider this build knows. Use 'apipay', or 'fake' outside production."
+            )
+        if self.is_production and self.payments_provider != "apipay":
+            raise RuntimeError(
+                "UNIMATCH_PAYMENTS_PROVIDER must be 'apipay' when payments are enabled in "
+                "production. The 'fake' provider is a test double: it issues invoices nobody "
+                "paid and would unlock every case."
+            )
+        if not secret:
+            raise RuntimeError(
+                "UNIMATCH_APIPAY_WEBHOOK_SECRET must be set when payments are enabled. "
+                "Without it the payment callback cannot be verified, and anyone who can "
+                "reach /webhooks/apipay can mark an order paid."
+            )
+        if self.is_production and len(secret) < MIN_WEBHOOK_SECRET_CHARS:
+            raise RuntimeError(
+                "UNIMATCH_APIPAY_WEBHOOK_SECRET must be at least "
+                f"{MIN_WEBHOOK_SECRET_CHARS} characters. It is the only thing standing "
+                "between a stranger and a free unlock."
+            )
+        if self.is_production and not self.apipay_api_key.get_secret_value():
+            raise RuntimeError(
+                "UNIMATCH_APIPAY_API_KEY must be set when payments are enabled in production."
             )
 
 

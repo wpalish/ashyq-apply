@@ -74,4 +74,9 @@ def get_provider() -> PaymentProvider:
 
     from app.payments.fake import get_shared_fake
 
-    return get_shared_fake(settings.apipay_webhook_secret.get_secret_value() or "test-secret")
+    # No fallback secret. It used to default to a constant written three lines
+    # above this one, so a deployment that enabled payments without setting
+    # UNIMATCH_APIPAY_WEBHOOK_SECRET accepted a forged "paid" callback from
+    # anyone who had read the source. The fake now signs and verifies only
+    # when a secret was actually configured.
+    return get_shared_fake(settings.apipay_webhook_secret.get_secret_value())

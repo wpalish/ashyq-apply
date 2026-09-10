@@ -46,6 +46,20 @@ def normalize_email(value: str) -> str:
 #: Hashes written at the old 2**14 still verify - the parameters travel in the
 #: encoded string - and are rewritten at the next successful login.
 SCRYPT_N = 2**17
+SCRYPT_R = 8
+SCRYPT_P = 1
+
+
+def _maxmem(n: int, r: int) -> int:
+    """The memory ceiling to hand OpenSSL, sized from the cost itself.
+
+    scrypt needs about ``128 * n * r`` bytes. A fixed ``2**28`` happened to sit
+    exactly on the requirement at 2**18, so raising the cost one step - the
+    thing this whole scheme is designed to allow - would have made every hash
+    and every verification raise instead of getting slower. Doubling the
+    computed figure leaves the headroom OpenSSL wants.
+    """
+    return max(2**25, 128 * n * r * 2)
 
 
 def hash_password(password: str, *, n: int | None = None) -> str:
@@ -55,8 +69,16 @@ def hash_password(password: str, *, n: int | None = None) -> str:
         raise ValueError("Password must contain at most 128 characters.")
     n = n or 2 ** get_settings().password_scrypt_log2
     salt = secrets.token_bytes(16)
-    digest = hashlib.scrypt(password.encode(), salt=salt, n=n, r=8, p=1, dklen=32, maxmem=2**28)
-    return f"scrypt${n}$8$1${salt.hex()}${digest.hex()}"
+    digest = hashlib.scrypt(
+        password.encode(),
+        salt=salt,
+        n=n,
+        r=SCRYPT_R,
+        p=SCRYPT_P,
+        dklen=32,
+        maxmem=_maxmem(n, SCRYPT_R),
+    )
+    return f"scrypt${n}${SCRYPT_R}${SCRYPT_P}${salt.hex()}${digest.hex()}"
 
 
 def needs_rehash(encoded: str) -> bool:
@@ -80,7 +102,7 @@ def verify_password(password: str, encoded: str) -> bool:
             r=int(r),
             p=int(p),
             dklen=32,
-            maxmem=2**28,
+            maxmem=_maxmem(int(n), int(r)),
         )
         return hmac.compare_digest(actual, bytes.fromhex(expected))
     except (ValueError, TypeError):

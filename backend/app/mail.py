@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import logging
 import smtplib
+import ssl
 from dataclasses import dataclass
 from email.message import EmailMessage
 
@@ -51,6 +52,16 @@ class ConsoleSender(EmailSender):
 
 
 class SmtpSender(EmailSender):
+    """Delivers over STARTTLS, with the server's certificate actually checked.
+
+    ``smtplib.SMTP.starttls()`` called with no context builds one through
+    ``ssl._create_stdlib_context()``, which sets ``verify_mode=CERT_NONE`` and
+    ``check_hostname=False`` — an encrypted channel to whoever answered. Anyone
+    on the path could have presented their own certificate and read both the
+    SMTP password and the password-reset links travelling through it. The
+    default context below verifies the chain and the hostname.
+    """
+
     def __init__(self, settings: Settings) -> None:
         self.settings = settings
 
@@ -60,10 +71,14 @@ class SmtpSender(EmailSender):
         mail["To"] = message.to
         mail["Subject"] = message.subject
         mail.set_content(message.body)
+        context = ssl.create_default_context()
         with smtplib.SMTP(self.settings.smtp_host, self.settings.smtp_port, timeout=20) as smtp:
-            smtp.starttls()
+            smtp.starttls(context=context)
             if self.settings.smtp_username:
-                smtp.login(self.settings.smtp_username, self.settings.smtp_password)
+                smtp.login(
+                    self.settings.smtp_username,
+                    self.settings.smtp_password.get_secret_value(),
+                )
             smtp.send_message(mail)
 
 

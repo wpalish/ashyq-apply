@@ -353,6 +353,17 @@ def person(
     principal: Principal = Depends(get_principal),
     session: Session = Depends(get_session),
 ) -> PersonCard:
+    """One card, by id.
+
+    A block hides the person here exactly as it hides them from Discover, from
+    the feed and from their picture. Without this the card was the one door
+    left open: someone who had been blocked could still read the bio, the city
+    and the universities of the person who blocked them, by asking for the id
+    the feed had already shown them. The 404 is the same answer a stranger with
+    no profile gets, so it confirms nothing either way.
+    """
+    if _blocked_either_way(session, principal.user_id, user_id):
+        raise HTTPException(404, "This applicant has no social profile.")
     profile = (
         session.query(SocialProfile)
         .options(joinedload(SocialProfile.user), selectinload(SocialProfile.universities))

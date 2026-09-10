@@ -120,6 +120,18 @@ def change_password(
         .filter(AuthSession.user_id == user.id, AuthSession.token_hash != kept)
         .delete(synchronize_session=False)
     )
+    # And any reset link still in flight. Changing a password because someone
+    # else may have it, while an unspent reset token sits in a mailbox that
+    # someone else may also have, revokes the sessions and leaves the way back
+    # in wide open for the next hour.
+    burned = (
+        session.query(PasswordResetToken)
+        .filter(
+            PasswordResetToken.user_id == user.id,
+            PasswordResetToken.used_at.is_(None),
+        )
+        .delete(synchronize_session=False)
+    )
     session.add(
         AuditEvent(
             organization_id=principal.organization_id,
@@ -127,7 +139,7 @@ def change_password(
             action="password_changed",
             entity_type="user",
             entity_id=user.id,
-            detail={"sessions_revoked": revoked},
+            detail={"sessions_revoked": revoked, "reset_tokens_revoked": burned},
         )
     )
     session.commit()

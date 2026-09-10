@@ -204,6 +204,11 @@ async def security_middleware(request: Request, call_next):
     elif request.method == "POST" and path == "/api/runs":
         limit = settings.run_rate_limit_per_minute
         group = "research"
+    elif request.method == "POST" and path == "/api/profiles/transcript":
+        # A PDF parse costs a worker thread and seconds of CPU. Unbounded, it
+        # was the cheapest way for one account to exhaust the pool.
+        limit = settings.upload_rate_limit_per_minute
+        group = "upload"
     elif unsafe and path.startswith("/api/social/"):
         limit = settings.social_rate_limit_per_minute
         group = "social"

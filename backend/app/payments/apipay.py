@@ -156,7 +156,14 @@ class ApiPayProvider:
 
     # -- webhooks ------------------------------------------------------
     def verify_webhook(self, raw_body: bytes, signature: str) -> bool:
-        if not signature:
+        """Reject everything while no secret is configured.
+
+        HMAC with an empty key is a perfectly valid HMAC over a key an
+        attacker also has, so an unset ``UNIMATCH_APIPAY_WEBHOOK_SECRET``
+        would turn this check into a formality anyone could satisfy. An
+        unverifiable callback is a visible outage; a forgeable one is not.
+        """
+        if not signature or not self._secret:
             return False
         expected = "sha256=" + hmac.new(self._secret, raw_body, hashlib.sha256).hexdigest()
         return hmac.compare_digest(expected, signature)
