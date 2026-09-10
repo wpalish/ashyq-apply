@@ -16,6 +16,10 @@ Desktop sidebar / mobile bottom navigation; horizontally scrollable contextual l
 
 Use existing color, space, font-family, font-size, border-width, radius, size-touch-target and z-header aliases. All styling is in redesign.css and imports after global/components CSS. No raw visual literals in declarations.
 
+Context badges use `--color-interactive-hover` on `--color-interactive-soft` for
+AA small-text contrast. Primary navigation stays inside the visible mobile viewport;
+context controls scroll within their own strip and remain keyboard/pointer reachable.
+
 ## 5. Props/API
 
 CaseScreen receives onNavigate(screen). Store supplies hydration, savedProfile, run, results, dirty, summary. App retains existing screen hashes and gates. #/case is the new default. Primary destinations stay visible but are disabled with the existing gate explanation when no child screen is available. Case switcher appears only for multiple cases; new-case action remains available. On mobile, theme and language controls are in More.

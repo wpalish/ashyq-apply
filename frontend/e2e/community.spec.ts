@@ -81,20 +81,27 @@ test('an answer opens in place under its post and is counted', async ({ page }) 
 test('every community screen is reachable on a phone', async ({ page }) => {
   test.skip(
     (page.viewportSize()?.width ?? 0) >= 900,
-    'the wrapped navigation only applies below 900px',
+    'the bottom and contextual navigation apply below 900px',
   );
   await page.goto('/');
 
-  // The navigation used to be a 2223px strip in 343px of room: one item
-  // visible, and Community 1660px along it with nothing saying so.
-  const overflow = await page
-    .locator('.nav')
-    .evaluate((nav) => nav.scrollWidth - nav.clientWidth);
-  expect(overflow, 'the navigation must wrap, not hide items in a scroller').toBeLessThanOrEqual(1);
-
-  for (const label of ['Feed', 'Find applicants', 'My community profile']) {
-    await expect(page.getByRole('button', { name: label, exact: true })).toBeInViewport();
+  for (const button of await page.locator('.primary-nav button').all()) {
+    await expect(button).toBeInViewport();
   }
+  await page.getByTestId('section-community').click();
+  // Only this section's destinations scroll; normal activation must reveal
+  // each control and reach its real route, without force-clicking hidden UI.
+  for (const screen of ['feed', 'discover', 'messages', 'me']) {
+    if (screen === 'me') await page.getByTestId('section-more').click();
+    const button = page.getByTestId(`nav-${screen}`);
+    await button.scrollIntoViewIfNeeded();
+    await expect(button).toBeInViewport();
+    await button.click();
+    await expect(page).toHaveURL(new RegExp(`/#/${screen}$`));
+    await expect(button).toHaveAttribute('aria-current', 'page');
+  }
+  expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth))
+    .toBeLessThanOrEqual(1);
 });
 
 test('an over-long post cannot be sent', async ({ page }) => {

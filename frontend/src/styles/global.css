@@ -145,7 +145,7 @@ button { font: inherit; color: inherit; }
   padding: var(--space-hairline) var(--space-1-25);
   border-radius: var(--radius-full);
   background: var(--color-interactive-soft);
-  color: var(--color-interactive);
+  color: var(--color-interactive-hover);
   border: var(--border-width-hairline) solid var(--color-interactive-border);
 }
 
@@ -251,7 +251,7 @@ button { font: inherit; color: inherit; }
 .chip--warn    { background: var(--color-warning-soft);    color: var(--color-warning);    border-color: var(--color-warning-border); }
 .chip--risk    { background: var(--color-danger-soft);    color: var(--color-danger);    border-color: var(--color-danger-border); }
 .chip--demo    { background: var(--color-demo-soft);    color: var(--color-demo);    border-color: var(--color-demo-border); }
-.chip--accent  { background: var(--color-interactive-soft);  color: var(--color-interactive);  border-color: var(--color-interactive-border); }
+.chip--accent  { background: var(--color-interactive-soft);  color: var(--color-interactive-hover);  border-color: var(--color-interactive-border); }
 .chip--mono    { font-family: var(--font-family-mono); font-weight: var(--font-weight-medium); }
 .chip__icon { min-width: var(--size-icon); font-family: var(--font-family-mono); text-align: center; }
 .chip__icon::before { content: attr(data-icon); }

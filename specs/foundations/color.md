@@ -14,6 +14,8 @@ ASHYQ Apply uses brandbook v1.1's Open Chapter palette: Paper and Ashyq Ink form
 - Exact brand swatches remain primitive tokens. When an exact accent fails 4.5:1 as small text on Paper, use its darker semantic text alias and keep the exact swatch for the border, icon, or large surface.
 - Deadline Coral is reserved for time-sensitive information; Parchment Gold is an accent, never body text on Paper.
 - Never communicate a status by color alone; pair it with text, shape, or an accessible name.
+- Do not reduce opacity on completed research stages: it weakens text and status-chip contrast. Use the named Done status and success dot without fading their container.
+- Use muted rather than subtle text on sunken university cards and colored validation gaps; verify the actual surface pair, not only text on Paper. Accent chips/badges use the darker interactive-hover foreground.
 
 ## Theme behavior
 

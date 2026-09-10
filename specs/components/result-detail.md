@@ -26,6 +26,11 @@ Tab spacing/borders/interactive colors and motion; claim surface/border/status c
 
 Default requirements tab; hover/focus/active tab states; verified/stale/conflicting/unverified claim states; incomplete-data notices; empty lists; ranking-v2 and legacy-score branches. Disabled does not apply to tabs.
 
+Expanded panels must fit the mobile viewport, including long evidence URLs and
+monospace values. Grid tracks may shrink and text may wrap; do not hide overflow.
+The bottom navigation must remain visible and accept normal pointer activation
+while a funding or cost panel is expanded.
+
 ## 7. Code example
 
 ```tsx

@@ -112,3 +112,28 @@ backend tests pass. Full backend coverage and ordinary/auth integration are not 
 KZT and dev dependency caveats remain. The mobile test uses More to access the existing New case
 action; it does not force-click hidden controls. Next: separate evidence-link rows for activities and
 achievements while preserving the existing string-array API and user-entered links.
+
+## PR #10 integration regression repair
+
+The remote continuation `44dfa2a` published only a handoff plan. The owner transferred
+implementation back to the Windows session, preserving the local CSS/spec/test work.
+
+Shortlist chips wrap inside their columns and Decision has enough room for Onest controls.
+Expanded funding details and validation messages use shrinkable grid tracks and wrap long
+URLs/API keys without truncation. This removes page expansion that displaced mobile BottomNav;
+no forced clicks or navigation-position workaround remain. Community tests follow the real
+primary/context destinations, including My community profile under More.
+
+Completed progress stages no longer fade their text/chips. Accent badges and chips use the
+existing darker interactive foreground; inset university metadata and validation captions use
+muted text. Prata + Onest + IBM Plex Mono and all API contracts are unchanged.
+
+Fresh verification: ordinary integration E2E **75 passed / 1 intentional desktop skip**;
+auth integration **6 passed**; typecheck/lint/build and **232 unit tests / 25 files** pass;
+token audit **5 CSS/SCSS files, 0 errors / 0 warnings**. Ordinary tests used an isolated
+temporary SQLite database plus real API/worker. Auth used the same committed test suite and
+auth settings with a temporary local runner selecting bundled Python and a separate temporary
+database; the local runner was removed afterward. Application data was not deleted or changed.
+Generated workflow screenshots are refreshed. Backend Ruff/format and mypy (164 files) pass;
+the full local coverage run is still in progress and already contains a failure. This checkpoint
+is deliberately WIP, not an all-gates-green or completed-E02 claim.

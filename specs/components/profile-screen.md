@@ -45,6 +45,9 @@ Show localized checking, invalid input, unavailable, blocked, or eligible feedba
 for unavailable checks. Eligibility uses server can_proceed and blocking_count; it is not completeness.
 Validation never adds a new client-side save or research gate.
 
+Validation paths and messages wrap without truncation in narrow layouts. Review mode
+must not expand the page viewport or displace the fixed primary navigation.
+
 One active step or all fields; next/back; empty/partial draft; loading/save; conversion error;
 transcript read/review/apply. Focus moves to the section container after next/back. Step navigation
 is keyboard-operable with native buttons and aria-current. No false completion rings.

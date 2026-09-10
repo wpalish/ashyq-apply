@@ -149,6 +149,13 @@ test('every reachable workflow screen has no serious axe violations', async () =
 
   for (const screen of screens) {
     await navigate(page, screen);
+    if (screen === 'profile') {
+      await expect(page.getByTestId('gap-list')).toContainText('academics.gpa.converted_value');
+      expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth))
+        .toBeLessThanOrEqual(1);
+      await expect(page.getByTestId('section-case')).toBeInViewport();
+      await page.getByTestId('section-case').click({ trial: true });
+    }
     const report = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
       .analyze();

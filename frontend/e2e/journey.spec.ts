@@ -115,6 +115,12 @@ test('a citizenship-restricted award is shown as not eligible', async () => {
   const flemish = page.locator('.panel').filter({ hasText: 'Flemish Community Tuition Grant' }).first();
   await expect(flemish).toContainText('Not eligible');
   await expect(flemish).toContainText('European Economic Area');
+  if ((page.viewportSize()?.width ?? 0) < 700) {
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth))
+      .toBeLessThanOrEqual(1);
+    await expect(page.getByTestId('section-shortlist')).toBeInViewport();
+    await page.getByTestId('section-shortlist').click({ trial: true });
+  }
   await page.screenshot({ path: shot('06-university-detail-funding.png'), fullPage: true });
 });
 

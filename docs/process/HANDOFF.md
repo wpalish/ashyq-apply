@@ -258,6 +258,10 @@ changed only this plan; local CSS/spec/E2E repairs and generated screenshots are
 Bucket and Decision now fit; expanded funding detail no longer expands the mobile viewport.
 Follow-up from the unblocked full suite: remove completed-stage opacity that fails AA,
 then investigate mobile review-mode overflow/navigation exposed by the accessibility walk.
+Diagnosis: gap-item's auto-minimum grid track expands for an unbroken API field path.
+Use a shrinkable track and wrapping without truncation; assert viewport/nav reachability
+after profile review. Use interactive-hover for nav badge text and muted for university
+metadata, since the old foreground aliases fail AA on their inset surfaces.
 Run full ordinary/auth suites and record results before publishing; no claim of green gates yet.
 
 1. Reproduce the two-project Bucket failure plus the mobile community and journey failures against a
@@ -337,6 +341,13 @@ were adapted for the new primary/context navigation but those suites were not ex
 The backend KZT failure in section 7 needs separate resolution; do not claim all gates green.
 
 ## 6. Gate status at last run (numbers, not adjectives)
+
+2026-09-10 integration-repair checkpoint: ordinary real-API/worker E2E 75 pass / 1
+intentional desktop skip; auth E2E 6 pass with bundled-Python temporary launcher,
+isolated DB and unchanged auth settings/tests. Temporary launcher config removed.
+Typecheck/lint/build, 232 unit tests/25 files and token audit 5 files, 0 errors/0 warnings
+pass. Ruff/format and mypy 164 files pass. Full local coverage still running, one failure
+already observed; final test name/count and mocked redesign rerun to be recorded next.
 
 PR run 34391685446 at 1eaa5d5: SQLite/PostgreSQL backend and security/container jobs
 pass; frontend static/unit/build steps pass, ordinary E2E fails (4 failed, 46 passed,
