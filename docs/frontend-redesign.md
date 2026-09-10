@@ -112,3 +112,30 @@ backend tests pass. Full backend coverage and ordinary/auth integration are not 
 KZT and dev dependency caveats remain. The mobile test uses More to access the existing New case
 action; it does not force-click hidden controls. Next: separate evidence-link rows for activities and
 achievements while preserving the existing string-array API and user-entered links.
+
+## PR #10 integration regression repair
+
+The concurrent WIP checkpoint `49c961b` and the follow-up implementation were reconciled
+without dropping either change set. This remains one bounded PR-repair slice, not E02 completion.
+
+Shortlist chips wrap inside their columns and Decision has enough room for Onest controls.
+Expanded funding details and validation messages use shrinkable grid tracks and wrap long
+URLs/API keys without truncation. Mobile BottomNav is a direct AppShell child, owns its fixed
+hit area above long content and keeps focused controls clear of it. Community tests follow the
+documented horizontal context strip and the real primary/context destinations, including My
+community profile under More; no forced clicks remain.
+
+Completed progress stages no longer fade their text/chips. Accent badges and chips use the
+existing darker interactive foreground; inset university metadata and validation captions use
+muted text. Prata + Onest + IBM Plex Mono and all API contracts are unchanged.
+
+Fresh verification: ordinary integration E2E **77 passed / 1 intentional desktop skip**;
+auth integration **6 passed**; typecheck/lint/build and **232 unit tests / 25 files** pass;
+token audit **5 CSS/SCSS files, 0 errors / 0 warnings**. Ordinary tests used an isolated
+temporary SQLite database plus real API/worker. Auth used the same committed test suite and
+auth settings with bundled Python and a separate temporary database. Application data was not
+deleted or changed. Generated workflow screenshots are refreshed. Backend Ruff/format and mypy
+(164 files) pass; **1358 backend tests pass at 93.80% coverage** against the 92% threshold, and
+the single Alembic head is `d9c4e7a21b83`. Existing React `act(...)` and Starlette/httpx
+deprecation warnings remain visible. The integration regressions are repaired; E02 and the wider
+redesign remain partial.

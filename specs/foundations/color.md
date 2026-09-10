@@ -15,6 +15,8 @@ ASHYQ Apply uses brandbook v1.1's Open Chapter palette: Paper and Ashyq Ink form
 - Do not lower opacity on a container that holds readable status text. Completed state stays explicit through its label, icon, and semantic color without weakening descendant contrast.
 - Deadline Coral is reserved for time-sensitive information; Parchment Gold is an accent, never body text on Paper.
 - Never communicate a status by color alone; pair it with text, shape, or an accessible name.
+- Do not reduce opacity on completed research stages: it weakens text and status-chip contrast. Use the named Done status and success dot without fading their container.
+- Use muted rather than subtle text on sunken university cards and colored validation gaps; verify the actual surface pair, not only text on Paper. Accent chips/badges use the darker interactive-hover foreground.
 
 ## Theme behavior
 

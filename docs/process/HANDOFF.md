@@ -9,9 +9,9 @@ Write for a reader who has **zero** chat history — because that is exactly who
 | | |
 |---|---|
 | Holder | **gpt-6-astra — PR #10 integration regression repair** |
-| Since (UTC) | 2026-09-09 19:29:02 UTC |
+| Since (UTC) | 2026-09-10 01:57:36 UTC |
 | Branch | `task/frontend-redesign`, owner-directed continuation from design-system predecessor |
-| HEAD when written | `d1e4fe9` (previous writer accepted the same regression slice) |
+| HEAD when written | `44dfa2a` (remote planning handoff fast-forwarded; owner transferred continuation here) |
 | Origin main when checked | `edf546d`; branch contains only the owner-directed design-system work |
 | Previous holder | gpt-6-astra; its session stopped after accepting the regression slice, before implementation |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
@@ -253,6 +253,17 @@ No branch, commit, push or stash has been performed by this writer.
 
 Accepted write-ahead: repair PR #10's four ordinary-E2E failures before expanding E02.
 
+Owner transferred continuation to this Windows session on 2026-09-10. Remote 44dfa2a
+changed only this plan; local CSS/spec/E2E repairs and generated screenshots are preserved.
+Bucket and Decision now fit; expanded funding detail no longer expands the mobile viewport.
+Follow-up from the unblocked full suite: remove completed-stage opacity that fails AA,
+then investigate mobile review-mode overflow/navigation exposed by the accessibility walk.
+Diagnosis: gap-item's auto-minimum grid track expands for an unbroken API field path.
+Use a shrinkable track and wrapping without truncation; assert viewport/nav reachability
+after profile review. Use interactive-hover for nav badge text and muted for university
+metadata, since the old foreground aliases fail AA on their inset surfaces.
+Run full ordinary/auth suites and record results before publishing; no claim of green gates yet.
+
 1. Reproduce the two-project Bucket failure plus the mobile community and journey failures against a
    fresh isolated SQLite database; retain the real pointer-interception and bounding-box evidence.
 2. Update `specs/components/chip.md` and `specs/components/app-shell.md` before UI edits: the longest
@@ -330,6 +341,13 @@ were adapted for the new primary/context navigation but those suites were not ex
 The backend KZT failure in section 7 needs separate resolution; do not claim all gates green.
 
 ## 6. Gate status at last run (numbers, not adjectives)
+
+2026-09-10 integration-repair checkpoint: ordinary real-API/worker E2E 75 pass / 1
+intentional desktop skip; auth E2E 6 pass with bundled-Python temporary launcher,
+isolated DB and unchanged auth settings/tests. Temporary launcher config removed.
+Typecheck/lint/build, 232 unit tests/25 files and token audit 5 files, 0 errors/0 warnings
+pass. Ruff/format and mypy 164 files pass. Full local coverage still running, one failure
+already observed; final test name/count and mocked redesign rerun to be recorded next.
 
 PR run 34391685446 at 1eaa5d5: SQLite/PostgreSQL backend and security/container jobs
 pass; frontend static/unit/build steps pass, ordinary E2E fails (4 failed, 46 passed,
@@ -582,6 +600,9 @@ host=github.com
 `[0.8]` → `[1.1]` → `[1.2]` → `[1.3]` → `[1.4]` → `[2.1]` → `[2.2]` → `[2.3]` → `[3.1]` → `[3.2]` → `[4.1]` → `[4.2]` → `[5]`
 
 ## 11. Session log (one line per session, newest last)
+
+2026-09-10 01:57 UTC gpt-6-astra: owner explicitly transferred continuation here; accepted
+remote planning-only 44dfa2a without losing local implementation. Full verification next.
 
 2026-09-09 19:29 UTC gpt-6-astra: accepted PR #10 integration regression repair at `d1e4fe9` after
 clean fetch/handoff audit and documentation/code reconciliation; exact CSS/spec/E2E plan is in §5.

@@ -26,6 +26,11 @@ Inline container, label, optional title, optional monospace treatment, and one s
 
 Default is neutral. Semantic tones change icon, border, background, and text together, so status never depends on color alone. Hover/active/disabled/error are not interactive states; wrap an actual control when interaction is required. Focus is handled by that control. A chip inside a constrained data-table cell may wrap at word boundaries, but it must remain inside that cell; the longest ranked Bucket label must end before the pinned Decision cell.
 
+In shortlist cells, labels wrap within the available column width. Never clip a
+status label or let it overlap the pinned Decision column, including with Onest.
+Accent labels use `--color-interactive-hover` on the soft accent background for
+AA small-text contrast, including monospace evidence values.
+
 ## 7. Code example
 
 ```tsx

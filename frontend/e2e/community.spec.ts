@@ -81,11 +81,15 @@ test('an answer opens in place under its post and is counted', async ({ page }) 
 test('every community screen is reachable on a phone', async ({ page }) => {
   test.skip(
     (page.viewportSize()?.width ?? 0) >= 900,
-    'the horizontal context navigation only applies below 900px',
+    'the bottom and contextual navigation apply below 900px',
   );
   await page.setViewportSize({ width: 320, height: 720 });
   await page.goto('/');
   await navigate(page, 'feed');
+
+  for (const section of ['case', 'shortlist', 'plan', 'community', 'more']) {
+    await expect(page.getByTestId(`section-${section}`)).toBeInViewport();
+  }
 
   const contextNavigation = page.locator('.context-nav');
   const layout = await contextNavigation.evaluate((nav) => ({
@@ -95,18 +99,24 @@ test('every community screen is reachable on a phone', async ({ page }) => {
   expect(layout.overflowX).toBe('auto');
   expect(layout.wrap).toBe('nowrap');
 
-  for (const label of ['Feed', 'Find applicants', 'Messages']) {
-    const destination = page.getByRole('button', { name: label, exact: true });
-    await destination.scrollIntoViewIfNeeded();
-    await expect(destination).toBeInViewport();
-    await destination.click();
-    await expect(destination).toHaveAttribute('aria-current', 'page');
+  // Only this section's destinations scroll; normal activation must reveal
+  // each control and reach its real route, without force-clicking hidden UI.
+  for (const screen of ['feed', 'discover', 'messages']) {
+    const button = page.getByTestId(`nav-${screen}`);
+    await button.scrollIntoViewIfNeeded();
+    await expect(button).toBeInViewport();
+    await button.click();
+    await expect(page).toHaveURL(new RegExp(`/#/${screen}$`));
+    await expect(button).toHaveAttribute('aria-current', 'page');
   }
 
   // The profile is account-adjacent in the redesigned shell and therefore
   // lives under More, rather than being a hidden fourth item in Community.
   await navigate(page, 'me');
+  await expect(page).toHaveURL(/\/#\/me$/);
   await expect(page.getByTestId('nav-me')).toHaveAttribute('aria-current', 'page');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth))
+    .toBeLessThanOrEqual(1);
 });
 
 test('an over-long post cannot be sent', async ({ page }) => {

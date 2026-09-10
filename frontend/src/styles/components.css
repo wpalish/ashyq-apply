@@ -65,6 +65,7 @@
 }
 .shortlist-table--with-bucket { min-width: var(--size-table-ranked); }
 .shortlist-table th { white-space: normal; }
+.shortlist-table .chip { max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
 .shortlist-col--university { width: var(--size-grid-md); }
 .shortlist-col--eligibility { width: var(--size-column-sm); }
 .shortlist-col--fit { width: var(--size-column-lg); }
@@ -74,11 +75,9 @@
 .shortlist-col--match { width: var(--size-column-xs); }
 .shortlist-col--confirmed { width: var(--size-column-sm); }
 .shortlist-col--bucket { width: var(--size-column-sm); }
-.shortlist-col--decision { width: var(--size-grid-sm); }
+.shortlist-col--decision { width: var(--size-grid-md); }
 .shortlist-table td[data-label='Bucket'] .chip {
   width: 100%;
-  max-width: 100%;
-  white-space: normal;
 }
 
 /*
@@ -143,7 +142,9 @@
 .detail {
   padding: var(--space-5);
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-4);
+  overflow-wrap: anywhere;
 }
 .tabs { display: flex; gap: var(--space-0-5); border-bottom: var(--border-width-hairline) solid var(--color-border); flex-wrap: wrap; }
 .tab {
@@ -289,7 +290,8 @@
 
 .gap-item {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto minmax(0, 1fr);
+  overflow-wrap: anywhere;
   gap: var(--space-3);
   padding: var(--space-3);
   border-left: var(--border-width-strong) solid var(--color-border-strong);
@@ -297,11 +299,11 @@
   border-radius: 0 var(--radius-md) var(--radius-md) 0;
 }
 .gap-item--blocking { border-left-color: var(--color-danger); background: var(--color-danger-soft); }
-.gap-item--blocking .faint { color: var(--color-text-muted); }
+.gap-item .faint { color: var(--color-text-muted); }
 .gap-item--high { border-left-color: var(--color-warning); }
 .gap-item--medium { border-left-color: var(--color-info); }
 .gap-item--low { border-left-color: var(--color-neutral); }
-.gap-item__path { font-family: var(--font-family-mono); font-size: var(--font-size-xs); color: var(--color-text-muted); }
+.gap-item__path { font-family: var(--font-family-mono); font-size: var(--font-size-xs); color: var(--color-text-muted); overflow-wrap: anywhere; }
 
 /* --- documents ------------------------------------------------------------ */
 
@@ -411,7 +413,8 @@
   .dtable tbody tr:not(.detail-row) td:last-child { border-bottom: 0; }
   .dtable .detail-row { display: block; margin: calc(-1 * var(--space-4)) 0 var(--space-4); }
   .dtable .detail-row td { display: block; width: 100%; }
-  .kv { grid-template-columns: 1fr; gap: var(--space-1) 0; }
+  .kv { grid-template-columns: minmax(0, 1fr); gap: var(--space-1) 0; }
+  .detail .num { white-space: normal; }
   .kv dt { margin-top: var(--space-2); }
   .fund-row { grid-template-columns: 1fr; }
   .timeline__item { grid-template-columns: 1fr; gap: var(--space-1); }
