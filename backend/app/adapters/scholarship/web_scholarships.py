@@ -112,7 +112,8 @@ class WebScholarshipAdapter:
             out.retry_urls.append(candidate.scholarships_url)
             return [], out
 
-        links = _award_links(index.text, candidate.scholarships_url)
+        # The index page is a third party's HTML too; soup it off the loop.
+        links = await off_loop(_award_links, index.text, candidate.scholarships_url)
         if not links:
             out.errors.append(
                 f"{candidate.scholarships_url}: no individual award pages were linked, so no award "
@@ -129,7 +130,7 @@ class WebScholarshipAdapter:
                 out.retry_urls.append(url)
                 continue
 
-            classification = classify_page(url=url, html=page.text)
+            classification = await off_loop(classify_page, url=url, html=page.text)
             out.page_types.append((url, classification.page_type.value))
             if classification.page_type is not PageType.SCHOLARSHIP_AWARD:
                 # An index, an FAQ or a navigation page is not an award. This is

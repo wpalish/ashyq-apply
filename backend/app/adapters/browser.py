@@ -116,15 +116,21 @@ class BrowserFetcher:
 
     @staticmethod
     async def _gate_request(route, request) -> None:
-        """Allow or abort one request the rendered page is making."""
-        # Resolves DNS, so it blocks; a rendered page makes many of these.
+        """Allow or abort one request the rendered page is making.
+
+        The cheap refusal comes first. The policy check resolves DNS, which
+        costs a thread from the shared pool, and a rendered page can ask for
+        dozens of subresources at once — enough of them queued there would
+        stall the document parsing that shares the pool. A resource type we
+        refuse outright never needs its name looked up.
+        """
+        # Trackers, ads and media are neither needed nor wanted.
+        if request.resource_type in ("media", "font", "websocket", "manifest"):
+            await route.abort("blockedbyclient")
+            return
         allowed, reason = await off_loop(is_allowed, request.url)
         if not allowed:
             log.info("browser blocked %s: %s", request.url[:100], reason)
-            await route.abort("blockedbyclient")
-            return
-        # Trackers, ads and media are neither needed nor wanted.
-        if request.resource_type in ("media", "font", "websocket", "manifest"):
             await route.abort("blockedbyclient")
             return
         await route.continue_()

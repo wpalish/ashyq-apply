@@ -867,7 +867,7 @@ class LiveDiscoveryAdapter:
             if not result.ok:
                 trace.reject(url, f"could not be read ({result.outcome.value})")
                 continue
-            page = classify_page(url=url, html=result.text)
+            page = await off_loop(classify_page, url=url, html=result.text)
             reason = profile_rejects(page, requested_level, fields)
             if reason is not None:
                 trace.reject(url, reason)

@@ -19,6 +19,7 @@ from app.adapters.extraction import (
     is_official_domain,
 )
 from app.adapters.fetching import Fetcher
+from app.adapters.offload import off_loop
 from app.domain.enums import ClaimType, DocumentOwner, DocumentPurpose, SourceSpecificity
 from app.schemas.claim import UnresolvedQuestion
 from app.schemas.result import DocumentChecklist, DocumentItem, Scholarship
@@ -182,10 +183,10 @@ class WebDocumentsAdapter:
             out.retry_urls.append(url)
             return []
 
-        text = html_to_text(res.text)
+        text = await off_loop(html_to_text, res.text)
         builder = ClaimBuilder(
             source_url=url,
-            page_title=html_title(res.text),
+            page_title=await off_loop(html_title, res.text),
             specificity=SourceSpecificity.PROGRAM_INTAKE,
             program=program.name,
             academic_year=self.academic_year,

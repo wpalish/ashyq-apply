@@ -5,6 +5,7 @@ from __future__ import annotations
 from app.adapters.base import AdapterResult
 from app.adapters.extraction import ClaimBuilder, html_title, html_to_text
 from app.adapters.fetching import Fetcher
+from app.adapters.offload import off_loop
 from app.domain.enums import ClaimType, SourceSpecificity
 
 
@@ -32,10 +33,10 @@ class WebGovernmentAdapter:
             )
             return out
 
-        text = html_to_text(res.text)
+        text = await off_loop(html_to_text, res.text)
         builder = ClaimBuilder(
             source_url=url,
-            page_title=html_title(res.text),
+            page_title=await off_loop(html_title, res.text),
             specificity=SourceSpecificity.GOVERNMENT,
             official_domain=True,
             extraction_method="fixture" if url.startswith("fixture://") else "html_rule",

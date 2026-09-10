@@ -16,8 +16,10 @@ coroutine — standing in for the heartbeat — still got to run while it worked
 
 from __future__ import annotations
 
+import ast
 import asyncio
 import time
+from pathlib import Path
 
 import pytest
 
@@ -163,42 +165,111 @@ class TestTheCrawlerCallSites:
 
 
 class TestNoBlockingParseSurvivesInAnAsyncPath:
-    """A source-level backstop, so a new call site cannot reintroduce the stall.
+    """A source-level backstop that works out for itself what is expensive.
 
-    Reads the adapters and asserts that the expensive parsers are only ever
-    reached through ``off_loop``. Deliberately narrow: it names the functions
-    whose cost is unbounded in a third party's input, not every function call.
+    The first version of this test named the call sites by hand, and promptly
+    proved why that is not enough: it did not name ``classify_page``, which
+    soups the same page a line below two calls the fix had already moved, in
+    six different coroutines. So this one derives the set instead.
+
+    A function is *expensive* when its own body builds a ``BeautifulSoup`` or a
+    ``PdfReader``, or when it calls a function that is — closed transitively —
+    plus the two network-policy entry points, which resolve a name and so block
+    on a socket. Any of those called directly from an ``async def`` in the
+    adapters is a stall; passing one to ``off_loop`` is not a call, so the
+    fixed form is invisible to this check by construction.
     """
 
-    #: (module path, the call that must not appear bare in an async path)
-    GUARDED = (
-        ("app/adapters/cost/web_costs.py", "pdf_to_text("),
-        ("app/adapters/cost/web_costs.py", "readable_text("),
-        ("app/adapters/requirements/web_requirements.py", "pdf_to_text("),
-        ("app/adapters/requirements/web_requirements.py", "readable_text("),
-        ("app/adapters/discovery/catalog_walker.py", "extract_links("),
-        ("app/adapters/browser.py", "is_allowed("),
-        ("app/adapters/browser.py", "check_url("),
-    )
+    #: Blocking for a reason no parse tree shows: these resolve a hostname.
+    RESOLVERS = frozenset({"check_url", "is_allowed", "resolve_target"})
+    #: The primitives whose cost is unbounded in a third party's input.
+    PRIMITIVES = ("BeautifulSoup(", "PdfReader(")
 
-    def test_expensive_parsers_are_only_reached_through_off_loop(self) -> None:
-        from pathlib import Path
+    @staticmethod
+    def _adapter_sources() -> dict:
+        root = Path(__file__).resolve().parent.parent / "app" / "adapters"
+        return {
+            path: path.read_text(encoding="utf-8")
+            for path in sorted(root.rglob("*.py"))
+            if "__pycache__" not in str(path)
+        }
 
-        root = Path(__file__).resolve().parent.parent
+    def _expensive_names(self, sources: dict) -> set:
+        """Every function that ends up parsing, however many hops away."""
+        # Sync functions only. An `async def` yields to the loop by
+        # definition, so awaiting one is never the stall — whatever it does
+        # inside is that function's own problem, and it is checked separately
+        # when this walk reaches it.
+        bodies: dict[str, str] = {}
+        calls: dict[str, set] = {}
+        for path, text in sources.items():
+            tree = ast.parse(text, filename=str(path))
+            for node in ast.walk(tree):
+                if not isinstance(node, ast.FunctionDef):
+                    continue
+                segment = ast.get_source_segment(text, node) or ""
+                bodies[node.name] = segment
+                named = set()
+                for inner in ast.walk(node):
+                    if isinstance(inner, ast.Call):
+                        target = inner.func
+                        if isinstance(target, ast.Name):
+                            named.add(target.id)
+                        elif isinstance(target, ast.Attribute):
+                            named.add(target.attr)
+                calls[node.name] = named
+
+        expensive = {
+            name
+            for name, segment in bodies.items()
+            if any(primitive in segment for primitive in self.PRIMITIVES)
+        } | set(self.RESOLVERS)
+
+        # Closure: calling something expensive makes you expensive.
+        changed = True
+        while changed:
+            changed = False
+            for name, named in calls.items():
+                if name not in expensive and named & expensive:
+                    expensive.add(name)
+                    changed = True
+        return expensive
+
+    def test_no_async_adapter_parses_or_resolves_on_the_loop(self) -> None:
+        sources = self._adapter_sources()
+        expensive = self._expensive_names(sources)
+        # The set is derived, so this is a canary on the derivation itself: the
+        # page classifier soups its input, and a version of this test that could
+        # not see that is the version that let the stall through.
+        assert {"classify_page", "readable_text", "_award_links"} <= expensive
+
         offenders: list[str] = []
-        for relative, call in self.GUARDED:
-            for number, line in enumerate(
-                (root / relative).read_text(encoding="utf-8").splitlines(), start=1
-            ):
-                stripped = line.strip()
-                if call not in stripped:
+        for path, text in sources.items():
+            tree = ast.parse(text, filename=str(path))
+            for node in ast.walk(tree):
+                if not isinstance(node, ast.AsyncFunctionDef):
                     continue
-                if stripped.startswith(("#", "def ", "async def ", "from ", "import ")):
-                    continue
-                if "off_loop" in stripped or "off_loop" in line:
-                    continue
-                offenders.append(f"{relative}:{number}: {stripped}")
+                for inner in ast.walk(node):
+                    # A nested sync helper is somebody else's problem; it is
+                    # only a stall once something awaits it on this loop.
+                    if isinstance(inner, ast.FunctionDef) and inner is not node:
+                        continue
+                    if not isinstance(inner, ast.Call):
+                        continue
+                    target = inner.func
+                    name = (
+                        target.id
+                        if isinstance(target, ast.Name)
+                        else target.attr
+                        if isinstance(target, ast.Attribute)
+                        else ""
+                    )
+                    if name in expensive:
+                        offenders.append(
+                            f"{path.name}:{inner.lineno}: {node.name}() calls {name}() directly"
+                        )
 
         assert not offenders, (
-            "these parse a third party's document on the event loop:\n" + "\n".join(offenders)
+            "these block the event loop — hand them to app.adapters.offload.off_loop:\n"
+            + "\n".join(sorted(offenders))
         )

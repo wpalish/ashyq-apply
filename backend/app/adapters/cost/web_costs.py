@@ -81,14 +81,19 @@ class WebCostAdapter:
 
         # Classified for the record only: a fees page read as a navigation
         # shell still yields no figures, and the run should be able to say why.
-        page = classify_page(
-            url=candidate.costs_url, html="" if res.is_pdf else res.text, text=text
+        page = await off_loop(
+            classify_page,
+            url=candidate.costs_url,
+            html="" if res.is_pdf else res.text,
+            text=text,
         )
         out.page_types.append((candidate.costs_url, page.page_type.value))
         year = _detect_year(text) or self.academic_year
         builder = ClaimBuilder(
             source_url=candidate.costs_url,
-            page_title=html_title(res.text) if not res.is_pdf else "Fee schedule (PDF)",
+            page_title=(
+                await off_loop(html_title, res.text) if not res.is_pdf else "Fee schedule (PDF)"
+            ),
             specificity=SourceSpecificity.UNIVERSITY_ADMISSIONS,
             academic_year=year,
             official_domain=candidate.costs_url.startswith("fixture://")

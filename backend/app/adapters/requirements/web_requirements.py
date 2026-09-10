@@ -138,7 +138,9 @@ class WebRequirementsAdapter:
                 )
                 continue
 
-            page = classify_page(url=target.url, html="" if res.is_pdf else res.text, text=text)
+            page = await off_loop(
+                classify_page, url=target.url, html="" if res.is_pdf else res.text, text=text
+            )
             out.page_types.append((target.url, page.page_type.value))
 
             if not page.accepts("requirements"):
@@ -162,7 +164,7 @@ class WebRequirementsAdapter:
 
             builder = ClaimBuilder(
                 source_url=target.url,
-                page_title=html_title(res.text)
+                page_title=await off_loop(html_title, res.text)
                 if not res.is_pdf
                 else target.url.rsplit("/", 1)[-1],
                 specificity=(

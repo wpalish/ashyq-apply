@@ -447,7 +447,7 @@ class CatalogWalker:
         result = await self.fetcher.get(link.url)
         page: PageClassification | None = None
         if result.ok:
-            page = classify_page(url=result.final_url or link.url, html=result.text)
+            page = await off_loop(classify_page, url=result.final_url or link.url, html=result.text)
         self._record(link.url, result, page)
         if not result.ok:
             walk.outcomes.append((link.url, result.outcome.value))
@@ -495,7 +495,7 @@ class CatalogWalker:
         if not result.ok:
             return "", [], result.outcome.value
         html = result.text
-        page = classify_page(url=result.final_url or catalogue_url, html=html)
+        page = await off_loop(classify_page, url=result.final_url or catalogue_url, html=html)
         if page.page_type in _NOT_CATALOGUE_TYPES:
             # The page the site offers as a catalogue reads as something else.
             # The walk still reads its links — the cap bounds the cost — but
