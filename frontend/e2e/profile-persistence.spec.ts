@@ -42,6 +42,10 @@ test('a saved profile is restored into the form after a reload', async ({ page }
   await expect(page.getByText('Saved', { exact: true })).toBeVisible();
 
   await page.reload();
+  // Hydration changes the activeCaseKey from its initial null value to the
+  // saved profile id. Wait for that handoff before enabling temporary review
+  // mode; otherwise the case-key guard correctly clears the early click.
+  await expect(page.getByText('Loaded saved profile:', { exact: false })).toBeVisible();
   await page.getByTestId('profile-show-all').click();
 
   await expect(page.getByLabel('Citizenship')).toHaveValue('Uzbekistan', { timeout: 15_000 });
