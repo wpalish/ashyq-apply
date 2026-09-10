@@ -112,6 +112,7 @@ manufacture compliant history. [0.4] was committed before [0.3].
 
 | Finding | Severity | Hash | Change |
 |---|---|---|---|
+| An adversarial review of `fec1673` found it half-done: `classify_page` still souped the same page in six coroutines, two of them ones that commit had edited. Eleven further stalls, incl. `_content_hash` and `_maybe_render` on the hot path of every fetch | High, live mode only | `b1f6e07` | The source guard now derives what is expensive from the call graph instead of a hand-written list, and fails on any of it called from an `async def`. Every site it named is offloaded; the browser gate refuses a media/font/websocket/manifest subresource before spending a thread on DNS. |
 | The crawler parses hostile PDFs and HTML, and resolves DNS, on the worker's event loop — stalling the job heartbeat until the lease expires and the job is reaped and redone | High, live mode only | `fec1673` | New `app/adapters/offload.py::off_loop`; applied at both `pdf_to_text` sites, `readable_text`, `_parse_award`, `extract_links`, `_harvest_links`, and the `check_url`/`is_allowed` resolver calls in `fetching.py` and `browser.py`. Tests drive real coroutines against a slow parser and assert a stand-in heartbeat still ticked, plus a source-level backstop against a new bare call site. |
 
 ## 4. Half-done / uncommitted at the moment of writing
@@ -270,9 +271,11 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-1. **Review and merge the PR for `task/crawler-event-loop`.** One commit. To see the defect it fixes,
-   check out `main` and run `pytest tests/test_event_loop_not_blocked.py` — every test in
-   `TestTheCrawlerCallSites` and the source-level backstop fail there and pass on the branch.
+1. **Review and merge the PR for `task/crawler-event-loop`.** Two fix commits. To see the defect,
+   check out `main` and run `pytest tests/test_event_loop_not_blocked.py` — the call-site tests and the
+   source guard both fail there and pass on the branch. Read `b1f6e07` before `fec1673`: the second
+   commit exists because an adversarial review found the first one had fixed one parse in a coroutine
+   and left another beside it, and the lesson is in how the guard is written, not in the diff.
 2. The audit's own operational item still stands: before any deployment that takes money, set
    `UNIMATCH_APIPAY_WEBHOOK_SECRET` (≥16 characters, outside Git) and
    `UNIMATCH_PAYMENTS_PROVIDER=apipay`. The API refuses to start otherwise, by design.
@@ -304,7 +307,7 @@ Local runs by claude-opus-5, 2026-09-10, on `task/crawler-event-loop`.
 | `ruff check app tests` | **pass** |
 | `ruff format --check app tests` | **pass** — 168 files |
 | `mypy app tests` | **pass** — 168 source files |
-| `pytest --cov=app --cov-fail-under=92` | **pass** — **1402 passed**, coverage **94.05%** |
+| `pytest --cov=app --cov-fail-under=92` | **pass** — **1402 passed**, coverage **94.04%** |
 | `seed_demo.py` (throwaway database) | **pass** — Groningen #1, 20 results / 96 pages / 414 claims, identical to before the change |
 | `alembic heads` | **one head**, `d9c4e7a21b83`; no migration added |
 | frontend | **not touched** by this branch; CI runs it on the PR |
