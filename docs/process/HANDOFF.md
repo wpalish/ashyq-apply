@@ -8,12 +8,12 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 | | |
 |---|---|
-| Holder | **gpt-6-astra — PR #10 integration regression repair** |
-| Since (UTC) | 2026-09-10 01:57:36 UTC |
+| Holder | **Nobody — baton released after PR #10 integration regression repair** |
+| Since (UTC) | Released 2026-09-10 03:20:01 UTC |
 | Branch | `task/frontend-redesign`, owner-directed continuation from design-system predecessor |
-| HEAD when written | `44dfa2a` (remote planning handoff fast-forwarded; owner transferred continuation here) |
+| HEAD when written | `fc1fdc2` (combined implementation and concurrent WIP ancestry, pushed) |
 | Origin main when checked | `edf546d`; branch contains only the owner-directed design-system work |
-| Previous holder | gpt-6-astra; its session stopped after accepting the regression slice, before implementation |
+| Previous holder | gpt-6-astra; completed and released the bounded regression slice |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
@@ -22,6 +22,12 @@ Published owner-requested **Draft PR #10**: https://github.com/wpalish/ashyq-app
 Base main; head task/frontend-redesign. Available for download/review and continued implementation,
 not merge-ready. Remaining epics and full integration verification are explicit in the PR body.
 AGENTS.md still defines single-writer relay; no parallel implementation policy was silently enabled.
+
+The four inherited ordinary-E2E regressions are repaired at `fc1fdc2`: ranked Bucket/Decision
+geometry, mobile BottomNav hit ownership, long detail/validation overflow, and the documented
+horizontal Community context navigation all pass on desktop/mobile. Full ordinary/auth, frontend and
+backend gates are green as recorded in §6. This closes only the integration-repair slice; E02 and the
+wider redesign remain partial. The sole current next step is the evidence-link row slice in §5.
 
 **Owner-directed frontend redesign: app shell, exact Prata/Onest/IBM Plex Mono typography and first six-step E02 slice pushed. E02 remains partial.** See `docs/frontend-redesign.md` for exact scope and verification. This is not completion of all R1 epics. The owner supplied
 `photo-references/design_system.png`, `photo-references/hero_section_example.png`, brandbook v1.1, and
@@ -46,6 +52,13 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+E02 integration repair `32d6264` + merge `fc1fdc2` (preserving concurrent WIP `49c961b`): BottomNav
+is a direct mobile AppShell child with reserved focus/scroll clearance; ranked chips and Decision
+controls stay inside their cells; detail and validation grids shrink around long evidence values;
+status surfaces retain AA contrast; Community E2E follows the horizontal context strip and More.
+Specs and refreshed workflow screenshots are included. No API, ranking, privacy or payment contract
+changed; Prata + Onest + IBM Plex Mono are preserved.
 
 E02 `2785d82`: per-tab case-scoped wizard step, save migration/stale-response guard, reset behavior,
 232 unit tests. Follow-up browser run: 14 pass after mobile test opens More for New case.
@@ -96,6 +109,9 @@ manufacture compliant history. [0.4] was committed before [0.3].
 | visual design system | `65b6ffb` | Brandbook v1.1 foundations, responsive living catalogue, exact source photography, trust/status/state patterns, generated token reference, focused tests, accessibility evidence, and light/dark/mobile captures. |
 
 ## 4. Half-done / uncommitted at the moment of writing
+
+Current release state: no uncommitted implementation work. `fc1fdc2` is pushed; the remaining content
+of this section is historical recovery provenance, not present dirty work.
 
 ### Prompt C recovery audit — gpt-6-astra, 2026-09-06 10:54 UTC
 
@@ -251,42 +267,24 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-Accepted write-ahead: repair PR #10's four ordinary-E2E failures before expanding E02.
+Only this block is current; every write-ahead below it is historical context.
 
-Owner transferred continuation to this Windows session on 2026-09-10. Remote 44dfa2a
-changed only this plan; local CSS/spec/E2E repairs and generated screenshots are preserved.
-Bucket and Decision now fit; expanded funding detail no longer expands the mobile viewport.
-Follow-up from the unblocked full suite: remove completed-stage opacity that fails AA,
-then investigate mobile review-mode overflow/navigation exposed by the accessibility walk.
-Diagnosis: gap-item's auto-minimum grid track expands for an unbroken API field path.
-Use a shrinkable track and wrapping without truncation; assert viewport/nav reachability
-after profile review. Use interactive-hover for nav badge text and muted for university
-metadata, since the old foreground aliases fail AA on their inset surfaces.
-Run full ordinary/auth suites and record results before publishing; no claim of green gates yet.
+Next slice: replace the comma-separated activity/achievement evidence-link inputs with independent
+editable rows. Before implementation, inspect the real `evidence_links` schema and read
+`specs/components/profile-screen.md` plus `specs/components/field.md`; update those specs with the row
+contract. Preserve the existing string-array API and every stored URL verbatim. Adding or removing one
+row must not mutate its siblings. Validate URL shape locally without fetching it and never label a link
+verified. Add RU/KK/EN copy, retained-data and keyboard tests, then mobile overflow and axe coverage.
+Keep autosave and stricter profile-completeness rules out of this slice.
 
-1. Reproduce the two-project Bucket failure plus the mobile community and journey failures against a
-   fresh isolated SQLite database; retain the real pointer-interception and bounding-box evidence.
-2. Update `specs/components/chip.md` and `specs/components/app-shell.md` before UI edits: the longest
-   ranked Bucket chip must remain inside its cell and before the pinned Decision cell; mobile context
-   navigation is one discoverable horizontal strip whose items remain keyboard/pointer reachable;
-   fixed BottomNav must own the bottom hit area above screen content with a 44 px minimum target.
-3. Make the smallest token-only changes in `frontend/src/styles/components.css` and
-   `frontend/src/styles/redesign.css`; do not alter Prata + Onest + IBM Plex Mono, component/API
-   contracts, ranking, privacy, payments, or application data. Update `frontend/e2e/community.spec.ts`
-   to exercise documented horizontal navigation by scrolling real controls into view, while preserving
-   true pointer reachability, non-overlap, no-page-overflow, keyboard and accessibility assertions.
-4. Run focused desktop/mobile regressions, full ordinary and auth E2E against isolated databases,
-   frontend typecheck/lint/unit/build and token audit; then run backend Ruff/format, mypy and full
-   coverage per `AGENTS.md`. Record exact results here. Acceptance is all four CI regressions green,
-   ordinary/auth suites complete, token audit at zero, and no undocumented gate failure.
+Acceptance: existing saved arrays round-trip unchanged; empty new rows are non-destructive; add/remove
+and keyboard focus order work in RU/KK/EN at 320 px without page overflow or serious axe violations;
+frontend gates and token audit pass, ordinary/auth E2E are rerun, and backend gates follow `AGENTS.md`.
+Commit and push the bounded slice with an `Agent:` trailer, then update and release this baton. Do not
+declare E02 or the whole redesign complete.
 
-Evidence-link rows below resume only after this regression slice.
-
-Next slice: replace comma-separated activity/achievement evidence links with independent editable
-rows. Read profile-screen/field specs and the existing evidence_links schema. Preserve string-array
-payloads and existing URLs verbatim; removing a row must not affect other rows. Validate URLs without
-fetching them, do not invent source verification. Add RU/KK/EN copy, keyboard/retained-data tests and
-mobile overflow/axe coverage. Keep autosave and stricter completeness as separate contract work.
+Completed integration-repair write-ahead: `44dfa2a` → `32d6264` + `fc1fdc2`, preserving `49c961b`.
+Its final checks are in §6.
 
 Completed step-restoration write-ahead below is historical (2785d82, 139221f):
 
@@ -341,6 +339,27 @@ were adapted for the new primary/context navigation but those suites were not ex
 The backend KZT failure in section 7 needs separate resolution; do not claim all gates green.
 
 ## 6. Gate status at last run (numbers, not adjectives)
+
+2026-09-10 final integration repair at `fc1fdc2`:
+
+- frontend: typecheck pass; lint pass; 232/232 unit tests in 25 files pass; production build pass;
+  token audit scanned 5 CSS/SCSS files with 0 errors and 0 warnings. Build output contains Prata,
+  Onest and IBM Plex Mono assets. Existing React `act(...)` warnings remain in PaymentModal,
+  PaywallNotice/StoreProvider and ProfileScreen tests; they do not fail the suite.
+- ordinary real-API/worker E2E on fresh isolated SQLite: 77 passed, 1 intentional desktop skip;
+  both Playwright projects pass Bucket/Decision geometry, long-detail/profile overflow, fixed-nav hit
+  ownership, keyboard flow, and all-screen WCAG 2 A/AA + 2.1 A/AA axe scans. Auth E2E: 6/6 pass.
+- backend (no backend diff in this slice): Ruff check pass; Ruff format check pass; mypy pass for 164
+  source files; Alembic reports one head, `d9c4e7a21b83`; pytest 1358 passed with 93.80% total coverage
+  against the 92% threshold. One Starlette/httpx deprecation warning remains visible.
+- in-app browser: 412×915 and 320×720 mobile checks pass. At the end of the long shortlist all five
+  BottomNav targets are hit-testable, at least 80.79×70.09 px, and the nav is a direct AppShell child;
+  page overflow is 0 px; Bucket chips and Decision groups remain inside their cells. At 320 px the
+  Community strip is `nowrap`/`overflow-x:auto` (347 px content in 288 px), scrolls to Messages and
+  activates `#/messages`. Computed families are Prata, Onest and IBM Plex Mono; console errors: 0.
+- local setup caveat: the available package index lacks repository requirement `starlette>=1.3.1`,
+  so backend gates and E2E used the already installed, known-working Python 3.12 dependency set via
+  `PYTHONPATH`; commands, application code, APIs and test expectations were unchanged.
 
 2026-09-10 integration-repair checkpoint: ordinary real-API/worker E2E 75 pass / 1
 intentional desktop skip; auth E2E 6 pass with bundled-Python temporary launcher,
@@ -464,10 +483,11 @@ next agent does not reopen it.
 
 ### Open
 
-- **Current-main backend baseline:** `tests/test_live_extraction.py::TestKztTuitionVocabulary::test_a_tenge_fees_page_yields_a_tuition_breakdown`
-  reproducibly fails to extract the fixture's `2 500 000 ₸` tuition value. The full run was 1357 passed,
-  1 failed at 93.80% coverage; the isolated rerun failed identically. This branch has no backend diff,
-  so the design-system task does not change or fix that unrelated contract.
+- **No blocker for the completed integration-repair slice.** The historical KZT extraction failure
+  (`TestKztTuitionVocabulary::test_a_tenge_fees_page_yields_a_tuition_breakdown`) did not reproduce in
+  the final Python 3.12 run: all 1358 backend tests passed at 93.80% coverage. No backend code or
+  extraction contract changed in this slice; retain the earlier failure below as environment history,
+  not as a current red gate.
 
 - **GLM completion claim is superseded.** Its code contribution is real and locally green, but only
   5/24 task cards were integrated. T18's declared T08/T13/T16/T17 dependencies are unmet; T25/T26 are
@@ -525,6 +545,16 @@ next agent does not reopen it.
 - `Fetcher(...)` takes `(cache_dir, *, delay_seconds, respect_robots, offline, cache_ttl_seconds, timeout, contact, corpus_dir)`; it has no `close()`, only `__aexit__`.
 - `backend/setup.sh` needs `uv`; plain `python -m venv` + `pip install -r requirements-dev.txt` works. Without Playwright installed, run with `UNIMATCH_ENABLE_BROWSER_TIER=false`.
 - E2E uses fixed ports 5173/8099 with `reuseExistingServer: true` — never two e2e runs on one machine.
+- On this macOS host, the configured package index currently exposes Starlette only through 0.49,
+  while the repository requires `starlette>=1.3.1`. A fresh install therefore fails. The verified
+  fallback for this session was bundled Python 3.12 plus the known-working dependency directory from
+  the 2026-09-06 checkout on `PYTHONPATH`; record that fact rather than presenting it as a fresh install.
+- Before local browser/E2E work, identify listeners on 5173/8099. Stale servers from another checkout
+  can make valid code appear unchanged, and an undrained long-lived PTY can stall a test run. Stop only
+  the confirmed server parents gracefully; do not touch their worktree files.
+- Fetch again before committing a long verification pass. During this slice the same-agent remote WIP
+  advanced by two commits after acceptance; `32d6264` preserved the local work and merge `fc1fdc2`
+  combined both ancestries, including the other writer's specs, tests and screenshots.
 - NU's normal admissions fetch currently yields only 42 readable characters and requires a safely
   hardened rendering/provider path for useful extraction. A `REACHED` canary is not a verified result;
   on 2026-09-07 it produced one programme-existence claim and 0% core completeness.
@@ -637,3 +667,4 @@ status pushed; 215 unit/10 browser checks green; inherited integration caveats p
 | 2026-09-08 13:35:00 UTC | gpt-6-astra | `edf546d` → `62d941d` + release handoff | Completed the owner-directed design-system task. Scoped audit/typecheck/lint/182 tests/build are green; full backend gate remains reproducibly red only in the unchanged KZT extraction baseline named in §7. |
 | 2026-09-08 16:05:29 UTC | gpt-6-astra | `b755326` → `65b6ffb` + release handoff | Synthesized the supplied photo references, brandbook v1.1, and E00/E16 into a responsive living design system; verified tokens, 185 tests, production build, axe, overflow, target sizes, light/dark themes, and pushed the implementation. |
 | 2026-09-08 16:29 UTC | gpt-6-astra | `0468974` → `bf29056` + release handoff | First frontend redesign slice: real-state Case dashboard, five primary destinations, mobile BottomNav, translated new copy, token-only styles and browser evidence. 195 unit tests/4 isolated browser tests green; baseline KZT test still red. Next E02; no deploy or merge. |
+| 2026-09-10 03:20:01 UTC | gpt-6-astra | `d1e4fe9` → `32d6264` + merge `fc1fdc2` + release handoff | Accepted the PR #10 regression slice in `44dfa2a`, repaired Bucket/Decision geometry, BottomNav hit ownership, context navigation and AA contrast, then preserved and merged concurrent WIP `49c961b` with its long-detail/profile overflow fixes and refreshed screenshots. Frontend 232/232, ordinary E2E 77/1 skip, auth 6/6, token audit 0/0 and backend 1358 at 93.80% pass. Browser checked 412×915 and 320×720. No API/ranking/privacy/payment change; E02 remains partial. Baton released; evidence-link rows are the one current next step. |
