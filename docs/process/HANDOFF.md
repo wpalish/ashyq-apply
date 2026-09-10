@@ -8,12 +8,12 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 | | |
 |---|---|
-| Holder | **Nobody — baton released after PR #10 integration regression repair** |
-| Since (UTC) | Released 2026-09-10 03:20:01 UTC |
+| Holder | **gpt-6-astra — implementing the E02 evidence-link row slice** |
+| Since (UTC) | 2026-09-10 04:20:57 UTC |
 | Branch | `task/frontend-redesign`, owner-directed continuation from design-system predecessor |
-| HEAD when written | `fc1fdc2` (combined implementation and concurrent WIP ancestry, pushed) |
+| HEAD when written | `3e7dc27` (clean and synchronized with `origin/task/frontend-redesign`) |
 | Origin main when checked | `b267b33`; observed after final CI, not merged into this PR branch |
-| Previous holder | gpt-6-astra; completed and released the bounded regression slice |
+| Previous holder | gpt-6-astra; completed and released the bounded regression slice, then the owner requested continuation |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
@@ -268,6 +268,27 @@ No branch, commit, push or stash has been performed by this writer.
 ## 5. NEXT STEP — exact and executable
 
 Only this block is current; every write-ahead below it is historical context.
+
+Accepted 2026-09-10 04:20:57 UTC by gpt-6-astra. Implement the evidence-link row slice only:
+
+1. Update `specs/components/profile-screen.md` and `specs/components/field.md` with the row, validation,
+   focus and API-preservation contract; add a focused `EvidenceLinksField` spec if the extracted component
+   needs its own reusable contract.
+2. Add `frontend/src/components/EvidenceLinksField.tsx` and use it from both activity and achievement
+   cards in `ProfileScreen.tsx`. Mirror the existing `string[]` in independent, stable rows; keep a newly
+   added empty row as UI-only state until it contains text; never trim, normalize, reorder, fetch or label
+   a URL verified. Removing one row may remove only that value. Respect the existing five-item/200-character
+   schema without changing the API.
+3. Add typed RU/KK/EN row labels, hints, add/remove actions and local HTTP(S)-shape feedback. Use native
+   labels, `aria-invalid`/described-by feedback, predictable add/remove focus, existing Button/Field patterns,
+   semantic tokens and the current Prata + Onest + IBM Plex Mono typography.
+4. Add unit coverage for verbatim saved-array round trips, UI-only empty rows, sibling isolation, URL
+   feedback, locale switching and keyboard focus. Extend `frontend/e2e/redesign.spec.ts` for activity and
+   achievement interaction at 320 px, horizontal-overflow protection and axe A/AA coverage.
+5. Run token audit, typecheck, lint, unit tests, build, ordinary/auth E2E, manual desktop/mobile browser
+   checks, backend Ruff/format/mypy/full coverage and Alembic heads. Commit/push the bounded implementation
+   with an `Agent:` trailer, then record exact results here and release the baton. Autosave, completeness,
+   API, ranking, privacy and payment changes are explicitly out of scope.
 
 Next slice: replace the comma-separated activity/achievement evidence-link inputs with independent
 editable rows. Before implementation, inspect the real `evidence_links` schema and read
@@ -668,3 +689,4 @@ status pushed; 215 unit/10 browser checks green; inherited integration caveats p
 | 2026-09-08 16:05:29 UTC | gpt-6-astra | `b755326` → `65b6ffb` + release handoff | Synthesized the supplied photo references, brandbook v1.1, and E00/E16 into a responsive living design system; verified tokens, 185 tests, production build, axe, overflow, target sizes, light/dark themes, and pushed the implementation. |
 | 2026-09-08 16:29 UTC | gpt-6-astra | `0468974` → `bf29056` + release handoff | First frontend redesign slice: real-state Case dashboard, five primary destinations, mobile BottomNav, translated new copy, token-only styles and browser evidence. 195 unit tests/4 isolated browser tests green; baseline KZT test still red. Next E02; no deploy or merge. |
 | 2026-09-10 03:20:01 UTC | gpt-6-astra | `d1e4fe9` → `32d6264` + merge `fc1fdc2` + release handoff | Accepted the PR #10 regression slice in `44dfa2a`, repaired Bucket/Decision geometry, BottomNav hit ownership, context navigation and AA contrast, then preserved and merged concurrent WIP `49c961b` with its long-detail/profile overflow fixes and refreshed screenshots. Frontend 232/232, ordinary E2E 77/1 skip, auth 6/6, token audit 0/0 and backend 1358 at 93.80% pass. Browser checked 412×915 and 320×720. No API/ranking/privacy/payment change; E02 remains partial. Baton released; evidence-link rows are the one current next step. |
+| 2026-09-10 04:20:57 UTC | gpt-6-astra | `3e7dc27` → in progress | Owner requested continuation. Fetched a clean synchronized branch, confirmed the real `list[Str200]`/five-link schema and accepted the bounded E02 evidence-link row slice; exact write-ahead is in §5. |
