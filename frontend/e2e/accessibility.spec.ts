@@ -24,6 +24,7 @@ const consoleErrors: string[] = [];
 
 test.beforeAll(async ({ browser }) => {
   page = await newSession(browser);
+  await page.emulateMedia({ reducedMotion: 'reduce' });
   // Collected across the whole session, so a late error cannot slip past a
   // listener attached only for one test.
   page.on('console', (m) => {
@@ -94,7 +95,12 @@ test('the mobile shortlist becomes cards without an inner horizontal scroller', 
   const wrappers = page.locator('.table-wrap');
   const count = await wrappers.count();
   expect(count).toBeGreaterThan(0);
+  await expect(wrappers.first().locator('table')).toHaveCSS('display', 'block');
   for (let i = 0; i < count; i += 1) {
+    await expect.poll(
+      () => wrappers.nth(i).evaluate((el) => el.scrollWidth - el.clientWidth),
+      { message: `table ${i} must settle into the mobile card width` },
+    ).toBeLessThanOrEqual(1);
     const layout = await wrappers.nth(i).evaluate((el) => ({
       overflow: getComputedStyle(el).overflowX,
       overflowPixels: el.scrollWidth - el.clientWidth,
@@ -102,6 +108,31 @@ test('the mobile shortlist becomes cards without an inner horizontal scroller', 
     expect(layout.overflow, `table ${i} still scrolls sideways`).toBe('visible');
     expect(layout.overflowPixels).toBeLessThanOrEqual(1);
   }
+});
+
+test('the mobile bottom navigation owns its hit area above long content', async () => {
+  await openShortlist(page);
+  await page.setViewportSize({ width: 412, height: 915 });
+  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+
+  const caseDestination = page.getByTestId('section-case');
+  await expect.poll(
+    () => caseDestination.evaluate((button) => (
+      button.closest('nav')?.parentElement?.classList.contains('app--redesign')
+    )),
+    { message: 'BottomNav must be a direct shell child, outside the off-screen sidebar stack' },
+  ).toBe(true);
+  const box = await caseDestination.boundingBox();
+  expect(box, 'the fixed Case destination must remain visible').not.toBeNull();
+  const hitTarget = await page.evaluate(({ x, y }) => (
+    document.elementFromPoint(x, y)?.closest('button')?.getAttribute('data-testid')
+  ), { x: box!.x + box!.width / 2, y: box!.y + box!.height / 2 });
+  expect(hitTarget, 'screen content must not intercept the BottomNav target').toBe('section-case');
+
+  await caseDestination.click();
+  await expect(page).toHaveURL(/#\/case$/);
+  await page.getByTestId('section-shortlist').click();
+  await expect(page.getByTestId('nav-shortlist')).toBeVisible();
 });
 
 test('the whole workflow is reachable by keyboard', async () => {

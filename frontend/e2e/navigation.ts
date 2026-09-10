@@ -6,8 +6,11 @@ export async function navigate(page: Page, screen: string): Promise<void> {
     : ['shortlist', 'funding', 'sources'].includes(screen) ? 'shortlist'
     : ['approved', 'documents'].includes(screen) ? 'plan'
     : ['feed', 'discover', 'messages', 'person'].includes(screen) ? 'community' : 'more';
-  await page.getByTestId(`section-${section}`).click();
-  await page.getByTestId(`nav-${screen}`).click();
+  const destination = page.getByTestId(`nav-${screen}`);
+  if (!(await destination.isVisible())) {
+    await page.getByTestId(`section-${section}`).click();
+  }
+  await destination.click();
   // Legacy integration scenarios exercise fields across sections in review mode.
   if (screen === 'profile') await page.getByTestId('profile-show-all').click();
 }

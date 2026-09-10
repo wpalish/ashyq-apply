@@ -24,7 +24,7 @@ Inline container, label, optional title, optional monospace treatment, and one s
 
 ## 6. States
 
-Default is neutral. Semantic tones change icon, border, background, and text together, so status never depends on color alone. Hover/active/disabled/error are not interactive states; wrap an actual control when interaction is required. Focus is handled by that control.
+Default is neutral. Semantic tones change icon, border, background, and text together, so status never depends on color alone. Hover/active/disabled/error are not interactive states; wrap an actual control when interaction is required. Focus is handled by that control. A chip inside a constrained data-table cell may wrap at word boundaries, but it must remain inside that cell; the longest ranked Bucket label must end before the pinned Decision cell.
 
 ## 7. Code example
 

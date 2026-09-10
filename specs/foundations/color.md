@@ -12,6 +12,7 @@ ASHYQ Apply uses brandbook v1.1's Open Chapter palette: Paper and Ashyq Ink form
 - Use `--color-link` for links and `--color-interactive` for controls/focus. Use their hover, soft, and border partners for states.
 - Success means verified/met, info means explanatory/plausible, warning means pending/stale, danger means failure/blocking, neutral means unknown, and demo marks synthetic fixtures.
 - Exact brand swatches remain primitive tokens. When an exact accent fails 4.5:1 as small text on Paper, use its darker semantic text alias and keep the exact swatch for the border, icon, or large surface.
+- Do not lower opacity on a container that holds readable status text. Completed state stays explicit through its label, icon, and semantic color without weakening descendant contrast.
 - Deadline Coral is reserved for time-sensitive information; Parchment Gold is an accent, never body text on Paper.
 - Never communicate a status by color alone; pair it with text, shape, or an accessible name.
 

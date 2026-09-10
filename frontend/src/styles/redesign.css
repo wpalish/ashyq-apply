@@ -11,6 +11,7 @@
 .profile-wizard-toolbar p { margin: var(--space-0); }
 @media (max-width: 900px) { .profile-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @media (max-width: 560px) { .profile-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.app--redesign { isolation: isolate; }
 .app--redesign .sidebar { background: var(--color-background); padding: var(--space-7) var(--space-4); gap: var(--space-6); }
 .app--redesign .brand { padding: var(--space-0) var(--space-3); }
 .app--redesign .brand__mark { font-size: var(--font-size-lg); }
@@ -59,12 +60,14 @@
 .case-evidence h2 { font-family: var(--font-family-brand); font-size: var(--font-size-sm); margin-bottom: var(--space-2); }
 .case-evidence p { font-size: var(--font-size-sm); }
 @media (max-width: 900px) {
+  html { scroll-padding-bottom: calc(var(--space-9) + var(--space-7) + env(safe-area-inset-bottom)); }
   .app--redesign { grid-template-columns: minmax(0, 1fr); }
   .app--redesign .sidebar { position: static; height: auto; overflow: visible; padding: var(--space-4); gap: var(--space-3); border-right: none; }
   .app--redesign .brand { padding: var(--space-0); }
   .app--redesign .brand__tag { display: none; }
   .primary-nav { position: fixed; inset: auto 0 0; z-index: var(--z-header); display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--space-0); padding: var(--space-2) var(--space-1); padding-bottom: max(var(--space-2), env(safe-area-inset-bottom)); background: var(--color-surface); border-top: var(--border-width-hairline) solid var(--color-border); }
   .primary-nav__item { flex-direction: column; justify-content: center; gap: var(--space-1); padding: var(--space-2) var(--space-0); font-size: var(--font-size-micro); text-align: center; overflow-wrap: anywhere; }
+  .app--redesign :where(button, a, input, select, textarea, [tabindex]) { scroll-margin-bottom: calc(var(--space-9) + var(--space-7) + env(safe-area-inset-bottom)); }
   .app--redesign .context-nav { flex-direction: row; flex-wrap: nowrap; overflow-x: auto; padding: var(--space-2) var(--space-1); }
   .app--redesign .context-nav > div { flex-shrink: 0; }
   .app--redesign .context-nav .nav__group-label { display: none; }

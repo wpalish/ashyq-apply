@@ -95,6 +95,7 @@ const SECTIONS: { id: SectionId; icon: string; screens: ScreenId[] }[] = [
 ];
 
 const THEME_KEY = 'ashyq.theme';
+const MOBILE_SHELL_QUERY = '(max-width: 900px)';
 type Theme = 'system' | 'light' | 'dark';
 
 export default function App() {
@@ -128,6 +129,20 @@ export default function App() {
       return 'system';
     }
   });
+  const [mobileShell, setMobileShell] = useState(
+    () => typeof window !== 'undefined'
+      && typeof window.matchMedia === 'function'
+      && window.matchMedia(MOBILE_SHELL_QUERY).matches,
+  );
+
+  useEffect(() => {
+    if (typeof window.matchMedia !== 'function') return undefined;
+    const query = window.matchMedia(MOBILE_SHELL_QUERY);
+    const update = () => setMobileShell(query.matches);
+    update();
+    query.addEventListener('change', update);
+    return () => query.removeEventListener('change', update);
+  }, []);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -312,7 +327,7 @@ export default function App() {
           </span>
         </div>
 
-        {primaryNav}
+        {!mobileShell && primaryNav}
         <nav className={`nav context-nav${screen === 'case' ? ' context-nav--home' : ''}`} aria-label={copy.sections}>
           <div className="nav__group-label">{copy[section]}</div>
           {SCREENS.filter((s) => activeSection.screens.includes(s.id)).map((s) => {
@@ -375,6 +390,8 @@ export default function App() {
           </p>
         </div>
       </aside>
+
+      {mobileShell && primaryNav}
 
       <div className="main">
         <header className="topbar">

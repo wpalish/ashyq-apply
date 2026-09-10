@@ -48,7 +48,7 @@ test('joining publishes a profile that Discover can find', async ({ page }) => {
 
 test('a post shows the tags it will publish, then carries them into the feed', async ({ page }) => {
   await page.goto('/');
-  await navigate(page, "feed");
+  await navigate(page, 'feed');
 
   const composer = page.getByPlaceholder('Ask something, or say where you are applying');
   await composer.fill(`Кто сдаёт IELTS в #${RUN}?`);
@@ -81,20 +81,32 @@ test('an answer opens in place under its post and is counted', async ({ page }) 
 test('every community screen is reachable on a phone', async ({ page }) => {
   test.skip(
     (page.viewportSize()?.width ?? 0) >= 900,
-    'the wrapped navigation only applies below 900px',
+    'the horizontal context navigation only applies below 900px',
   );
+  await page.setViewportSize({ width: 320, height: 720 });
   await page.goto('/');
+  await navigate(page, 'feed');
 
-  // The navigation used to be a 2223px strip in 343px of room: one item
-  // visible, and Community 1660px along it with nothing saying so.
-  const overflow = await page
-    .locator('.nav')
-    .evaluate((nav) => nav.scrollWidth - nav.clientWidth);
-  expect(overflow, 'the navigation must wrap, not hide items in a scroller').toBeLessThanOrEqual(1);
+  const contextNavigation = page.locator('.context-nav');
+  const layout = await contextNavigation.evaluate((nav) => ({
+    overflowX: getComputedStyle(nav).overflowX,
+    wrap: getComputedStyle(nav).flexWrap,
+  }));
+  expect(layout.overflowX).toBe('auto');
+  expect(layout.wrap).toBe('nowrap');
 
-  for (const label of ['Feed', 'Find applicants', 'My community profile']) {
-    await expect(page.getByRole('button', { name: label, exact: true })).toBeInViewport();
+  for (const label of ['Feed', 'Find applicants', 'Messages']) {
+    const destination = page.getByRole('button', { name: label, exact: true });
+    await destination.scrollIntoViewIfNeeded();
+    await expect(destination).toBeInViewport();
+    await destination.click();
+    await expect(destination).toHaveAttribute('aria-current', 'page');
   }
+
+  // The profile is account-adjacent in the redesigned shell and therefore
+  // lives under More, rather than being a hidden fourth item in Community.
+  await navigate(page, 'me');
+  await expect(page.getByTestId('nav-me')).toHaveAttribute('aria-current', 'page');
 });
 
 test('an over-long post cannot be sent', async ({ page }) => {

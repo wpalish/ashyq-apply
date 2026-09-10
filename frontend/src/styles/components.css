@@ -75,6 +75,11 @@
 .shortlist-col--confirmed { width: var(--size-column-sm); }
 .shortlist-col--bucket { width: var(--size-column-sm); }
 .shortlist-col--decision { width: var(--size-grid-sm); }
+.shortlist-table td[data-label='Bucket'] .chip {
+  width: 100%;
+  max-width: 100%;
+  white-space: normal;
+}
 
 /*
  * The decision column is the primary action, so it is pinned to the right edge
@@ -106,12 +111,13 @@
   transition: text-decoration-color var(--motion-duration-fast);
 }
 .uni-cell__name:hover { text-decoration-color: var(--color-interactive); color: var(--color-interactive); }
-.uni-cell__meta { font-size: var(--font-size-xs); color: var(--color-text-subtle); }
+.uni-cell__meta { font-size: var(--font-size-xs); color: var(--color-text-muted); }
 .uni-cell__prog { font-size: var(--font-size-xs); color: var(--color-text-muted); }
 
 .num { font-family: var(--font-family-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
 
 .decision-group { display: inline-flex; gap: var(--space-0-5); }
+.shortlist-table .decision-group { display: flex; width: 100%; }
 .decision-btn {
   border: var(--border-width-hairline) solid var(--color-border-strong);
   background: var(--color-surface);
@@ -121,6 +127,7 @@
   cursor: pointer;
   transition: all var(--motion-duration-fast);
 }
+.shortlist-table .decision-btn { flex: 1 1 0; min-width: 0; padding-inline: var(--space-1); }
 .decision-btn:first-child { border-radius: var(--radius-md) 0 0 var(--radius-md); }
 .decision-btn:last-child { border-radius: 0 var(--radius-md) var(--radius-md) 0; }
 .decision-btn:hover { background: var(--color-surface-sunken); }
@@ -202,7 +209,6 @@
   background: var(--color-surface);
 }
 .stage--running { border-color: var(--color-interactive-border); background: var(--color-interactive-soft); }
-.stage--done { opacity: 0.82; }
 .stage--failed { border-color: var(--color-danger-border); background: var(--color-danger-soft); }
 .stage__dot {
   width: var(--size-stage-dot); height: var(--size-stage-dot); border-radius: var(--radius-round);
@@ -291,6 +297,7 @@
   border-radius: 0 var(--radius-md) var(--radius-md) 0;
 }
 .gap-item--blocking { border-left-color: var(--color-danger); background: var(--color-danger-soft); }
+.gap-item--blocking .faint { color: var(--color-text-muted); }
 .gap-item--high { border-left-color: var(--color-warning); }
 .gap-item--medium { border-left-color: var(--color-info); }
 .gap-item--low { border-left-color: var(--color-neutral); }
