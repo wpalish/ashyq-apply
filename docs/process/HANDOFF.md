@@ -18,7 +18,7 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 2. Current task
 
-**Security audit of the whole repository, and the fixes it produced — `ready-for-review`.**
+**Security audit of the whole repository, and the fixes it produced — `ready-for-review (PR #12)`.**
 
 Unplanned work: the owner asked for a security review of `main` rather than the next brief task. The
 queue in §10 is untouched and the C2 items in the previous §2 stand exactly as codex left them; nothing
