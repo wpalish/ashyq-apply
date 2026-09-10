@@ -191,3 +191,52 @@ test('exam picker hides empty grids and retains scores across keyboard toggles',
   await expect(page.locator('#toefl')).toHaveValue('105');
   await expect(page.locator('#sat')).toHaveValue('1450');
 });
+
+test('evidence links are independent, retained and accessible at 320px', async ({ page }, info) => {
+  test.skip(info.project.name !== 'mobile', '320px mobile-specific contract');
+  await page.setViewportSize({ width: 320, height: 720 });
+  await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'reduce' });
+  await page.goto('/#/profile');
+  await page.getByTestId('section-more').click();
+  await page.getByRole('button', { name: 'New case', exact: true }).click();
+  await page.getByTestId('clear-profile').click();
+
+  await page.getByTestId('profile-step-4').click();
+  await page.getByRole('button', { name: '+ Добавить занятие' }).click();
+  const activityLinks = page.getByTestId('activity-0-evidence');
+  await activityLinks.getByRole('button', { name: '+ Добавить ссылку' }).click();
+  const firstActivityLink = activityLinks.getByRole('textbox', { name: 'Ссылка на подтверждение 1', exact: true });
+  await expect(firstActivityLink).toBeFocused();
+  await firstActivityLink.fill('https://example.org/activity?awards=one,two');
+
+  await activityLinks.getByRole('button', { name: '+ Добавить ссылку' }).click();
+  const secondActivityLink = activityLinks.getByRole('textbox', { name: 'Ссылка на подтверждение 2', exact: true });
+  await expect(secondActivityLink).toBeFocused();
+  await secondActivityLink.fill('example.org/missing-scheme');
+  await expect(secondActivityLink).toHaveAttribute('aria-invalid', 'true');
+  await expect(activityLinks.getByText('Введите полную ссылку с HTTP или HTTPS.')).toBeVisible();
+  await secondActivityLink.fill('https://school.example/activity');
+  await expect(secondActivityLink).not.toHaveAttribute('aria-invalid', 'true');
+  await activityLinks.getByRole('button', { name: 'Удалить ссылку: Ссылка на подтверждение 1' }).click();
+  await expect(activityLinks.getByRole('textbox', { name: 'Ссылка на подтверждение 1', exact: true })).toHaveValue('https://school.example/activity');
+  await expect(activityLinks.getByRole('textbox', { name: 'Ссылка на подтверждение 1', exact: true })).toBeFocused();
+
+  await page.getByTestId('profile-step-5').click();
+  await page.getByRole('button', { name: '+ Добавить достижение' }).click();
+  const achievementLinks = page.getByTestId('achievement-0-evidence');
+  await achievementLinks.getByRole('button', { name: '+ Добавить ссылку' }).click();
+  await achievementLinks.getByRole('textbox', { name: 'Ссылка на подтверждение 1', exact: true }).fill('https://example.org/achievement#gold');
+  await expect.poll(() => page.evaluate(() => [...Array(localStorage.length)].map((_, index) => localStorage.getItem(localStorage.key(index)!)).join('\n')))
+    .toContain('https://example.org/achievement#gold');
+
+  await page.getByTestId('section-more').click();
+  await page.locator('#locale').selectOption('kk');
+  await page.goto('/#/profile');
+  await expect(page.getByTestId('profile-step-5')).toHaveAttribute('aria-current', 'step');
+  await expect(page.getByTestId('achievement-0-evidence').getByRole('textbox', { name: 'Растайтын сілтеме 1', exact: true }))
+    .toHaveValue('https://example.org/achievement#gold');
+
+  expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
+  expect((await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze()).violations).toEqual([]);
+  await page.screenshot({ path: info.outputPath('evidence-links-320.png'), fullPage: true });
+});

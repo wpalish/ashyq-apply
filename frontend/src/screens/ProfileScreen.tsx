@@ -17,6 +17,7 @@ import { profileCopy, translateProfile, type ProfileCopyKey } from '@/lib/profil
 import { profileWizardCopy } from '@/lib/profileWizardCopy';
 import { profileValidationCopy } from '@/lib/profileValidationCopy';
 import { ExamPicker } from '@/components/ExamPicker';
+import { EvidenceLinksField } from '@/components/EvidenceLinksField';
 
 /** "4.82 out of 5", not "[object Object]". */
 function describe(value: unknown, separator: string): string {
@@ -36,6 +37,8 @@ const SEVERITY_LABEL = {
   medium: 'Noticeable effect',
   low: 'Minor effect',
 } as const;
+
+const EMPTY_EVIDENCE_LINKS: string[] = [];
 
 export function ProfileScreen({ onNext }: { onNext: () => void }) {
   const { locale } = useTranslation();
@@ -147,6 +150,15 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
   const otherTests = (get(profileDraft, ['academics', 'other_tests']) as Record<string, unknown>[]) ?? [];
   const activities = (get(profileDraft, ['activities']) as Record<string, unknown>[]) ?? [];
   const achievements = (get(profileDraft, ['achievements']) as Record<string, unknown>[]) ?? [];
+  const evidenceCopy = {
+    label: tr('Evidence links'),
+    hint: tr('Add up to five full HTTP or HTTPS URLs. Format is checked locally; links are not verified.'),
+    rowLabel: tr('Evidence link'),
+    add: tr('+ Add evidence link'),
+    remove: tr('Remove link'),
+    invalid: tr('Enter a full HTTP or HTTPS URL.'),
+    limit: tr('Five link limit reached.'),
+  };
 
   const append = (path: Path, item: Record<string, unknown>) => {
     const current = (get(profileDraft, path) as Record<string, unknown>[]) ?? [];
@@ -517,11 +529,16 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
                   <Field label={tr("Weeks / year")} htmlFor={`activity-weeks-${index}`}><input id={`activity-weeks-${index}`} type="number" {...bind(['activities', index, 'weeks_per_year'], 'number')} /></Field>
                   <Field label={tr("Measurable outcome")} htmlFor={`activity-outcome-${index}`}><textarea id={`activity-outcome-${index}`} {...bind(['activities', index, 'measurable_outcome'])} /></Field>
                   <Field label={tr("Impact on others")} htmlFor={`activity-impact-${index}`}><textarea id={`activity-impact-${index}`} {...bind(['activities', index, 'impact_on_others'])} /></Field>
-                  <Field label={tr("Evidence links")} htmlFor={`activity-links-${index}`} hint={tr("Comma-separated URLs.")}>
-                    <input id={`activity-links-${index}`}
-                      value={((get(profileDraft, ['activities', index, 'evidence_links']) as string[]) ?? []).join(', ')}
-                      onChange={(event) => setProfileDraft((draft) => setIn(draft, ['activities', index, 'evidence_links'], event.target.value.split(',').map((value) => value.trim()).filter(Boolean)))} />
-                  </Field>
+                  <EvidenceLinksField
+                    idPrefix={`activity-${index}-evidence`}
+                    scopeKey={`${activeCaseKey ?? 'local'}:activity:${index}`}
+                    value={(get(profileDraft, ['activities', index, 'evidence_links']) as string[]) ?? EMPTY_EVIDENCE_LINKS}
+                    onChange={(links) => {
+                      setProfileDraft((draft) => setIn(draft, ['activities', index, 'evidence_links'], links));
+                      setSaved(false);
+                    }}
+                    copy={evidenceCopy}
+                  />
                 </div>
                 <button className="btn btn--sm btn--danger" type="button" onClick={() => remove(['activities'], index)}>{tr("Remove activity")}</button>
               </div>
@@ -549,11 +566,16 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
                 <Field label={tr("Year")} htmlFor={`achievement-year-${index}`}><input id={`achievement-year-${index}`} type="number" {...bind(['achievements', index, 'year'], 'number')} /></Field>
                 <Field label={tr("Placement")} htmlFor={`achievement-place-${index}`}><input id={`achievement-place-${index}`} {...bind(['achievements', index, 'placement'])} /></Field>
                 <Field label={tr("Selection criterion")} htmlFor={`achievement-select-${index}`}><textarea id={`achievement-select-${index}`} {...bind(['achievements', index, 'selection_criterion'])} /></Field>
-                <Field label={tr("Evidence links")} htmlFor={`achievement-links-${index}`} hint={tr("Comma-separated URLs.")}>
-                  <input id={`achievement-links-${index}`}
-                    value={((get(profileDraft, ['achievements', index, 'evidence_links']) as string[]) ?? []).join(', ')}
-                    onChange={(event) => setProfileDraft((draft) => setIn(draft, ['achievements', index, 'evidence_links'], event.target.value.split(',').map((value) => value.trim()).filter(Boolean)))} />
-                </Field>
+                <EvidenceLinksField
+                  idPrefix={`achievement-${index}-evidence`}
+                  scopeKey={`${activeCaseKey ?? 'local'}:achievement:${index}`}
+                  value={(get(profileDraft, ['achievements', index, 'evidence_links']) as string[]) ?? EMPTY_EVIDENCE_LINKS}
+                  onChange={(links) => {
+                    setProfileDraft((draft) => setIn(draft, ['achievements', index, 'evidence_links'], links));
+                    setSaved(false);
+                  }}
+                  copy={evidenceCopy}
+                />
                 <button className="btn btn--sm btn--danger" type="button" onClick={() => remove(['achievements'], index)}>{tr("Remove")}</button>
               </div>
             ))}

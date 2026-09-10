@@ -28,14 +28,29 @@ test('a saved profile is restored into the form after a reload', async ({ page }
   await page.getByLabel('Citizenship').fill('Uzbekistan');
   await page.getByLabel('Field of study').fill('civil engineering');
   await page.getByTestId('ielts-overall').fill('7');
+  await page.getByRole('button', { name: '+ Add activity' }).click();
+  const activityLinks = page.getByTestId('activity-0-evidence');
+  await activityLinks.getByRole('button', { name: '+ Add evidence link' }).click();
+  await activityLinks.getByRole('textbox', { name: 'Evidence link 1', exact: true })
+    .fill('https://example.org/activity?awards=one,two');
+  await page.getByRole('button', { name: '+ Add achievement' }).click();
+  const achievementLinks = page.getByTestId('achievement-0-evidence');
+  await achievementLinks.getByRole('button', { name: '+ Add evidence link' }).click();
+  await achievementLinks.getByRole('textbox', { name: 'Evidence link 1', exact: true })
+    .fill('https://example.org/achievement#gold');
   await page.getByTestId('save-profile').click();
   await expect(page.getByText('Saved', { exact: true })).toBeVisible();
 
   await page.reload();
+  await page.getByTestId('profile-show-all').click();
 
   await expect(page.getByLabel('Citizenship')).toHaveValue('Uzbekistan', { timeout: 15_000 });
   await expect(page.getByLabel('Field of study')).toHaveValue('civil engineering');
   await expect(page.getByTestId('ielts-overall')).toHaveValue('7');
+  await expect(page.getByTestId('activity-0-evidence').getByRole('textbox', { name: 'Evidence link 1', exact: true }))
+    .toHaveValue('https://example.org/activity?awards=one,two');
+  await expect(page.getByTestId('achievement-0-evidence').getByRole('textbox', { name: 'Evidence link 1', exact: true }))
+    .toHaveValue('https://example.org/achievement#gold');
 });
 
 test('demo data is only ever loaded on request, and is labelled when it is', async ({ page }) => {

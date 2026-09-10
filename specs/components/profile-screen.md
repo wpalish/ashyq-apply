@@ -16,6 +16,8 @@ Page heading, step navigation, existing draft/source notices, active section pan
 previous/next controls, explicit save and preferences action. Hidden steps stay mounted to preserve inputs.
 English groups IELTS/TOEFL/Duolingo; Tests groups SAT/ACT plus existing other/curriculum forms.
 ExamPicker controls visibility only. Collapsing an exam never clears scores or excludes them from research.
+Activity and achievement cards use EvidenceLinksField: one independently labelled URL per row, with add
+and remove actions. A blank row created in the UI is not profile data until the applicant types into it.
 
 ## 4. Tokens
 
@@ -37,6 +39,12 @@ removes that case's step. An unidentified pre-case draft has ephemeral navigatio
 unavailable storage falls back safely. Review mode is not persisted and resets on case change.
 Existing case-scoped draft persistence stays in StoreProvider. No server autosave is added.
 
+Activity and achievement evidence remains the existing `evidence_links: string[]` API, with at most five
+200-character values. Existing arrays render in their original order and are never split, trimmed,
+normalized or fetched by the frontend. Adding a blank row leaves the draft unchanged; editing or removing
+one row preserves every sibling value verbatim. Local feedback accepts complete HTTP(S) URL shapes only,
+but describes format rather than verification and does not create a new save or research gate.
+
 ## 6. States
 
 Validation belongs to the exact current draft only. While hydration or debounced validation is pending,
@@ -52,6 +60,11 @@ One active step or all fields; next/back; empty/partial draft; loading/save; con
 transcript read/review/apply. Focus moves to the section container after next/back. Step navigation
 is keyboard-operable with native buttons and aria-current. No false completion rings.
 
+Evidence-link add moves focus into the new row. Remove moves focus to the following row, then the previous
+row, or the add action when none remain. Each input has a native label, local format feedback is associated
+with `aria-describedby`, and invalid non-empty values use `aria-invalid`. At 320 px rows collapse to one
+column without horizontal page overflow. Locale switching changes copy only and keeps rows and values.
+
 ## 7. Example
 
 ```tsx
@@ -60,6 +73,6 @@ is keyboard-operable with native buttons and aria-current. No false completion r
 
 ## 8. Cross-references
 
-[Field](field.md), [Panel](panel.md), [Notice](notice.md), [AppShell](app-shell.md).
+[Field](field.md), [EvidenceLinksField](evidence-links-field.md), [Panel](panel.md), [Notice](notice.md), [AppShell](app-shell.md).
 Remaining E02 after exam picker: completeness rule including planned English, per-field errors, step restore,
 evidence-link rows and server autosave. These require separate tested follow-up, not a completed-epic label.

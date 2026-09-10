@@ -6,7 +6,7 @@
  * refused conversion silently destroyed the applicant's grades.
  */
 
-import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ProfileScreen } from './ProfileScreen';
 import { useState } from 'react';
@@ -142,6 +142,55 @@ describe('six-section profile wizard', () => {
     expect(screen.getByLabelText('IELTS overall')).toBeVisible();
     expect(screen.getByLabelText('SAT total')).toBeVisible();
     expect(setProfileDraft).not.toHaveBeenCalled();
+  });
+});
+
+describe('activity and achievement evidence links', () => {
+  beforeEach(() => {
+    draft = {
+      academics: { gpa: { ...GPA } },
+      activities: [{
+        name: 'Debate club', category: 'community', role: 'Captain',
+        responsibility_level: 'leader', evidence_links: [
+          'https://example.org/activity?a=one,two',
+          'https://school.example/activity',
+        ],
+      }],
+      achievements: [{
+        name: 'Debate final', level: 'national', year: 2026,
+        evidence_links: ['https://example.org/achievement'],
+      }],
+    };
+  });
+
+  it('keeps activity rows and API values intact across locale changes', async () => {
+    render(<ProfileScreen onNext={() => {}} />);
+    fireEvent.click(screen.getByTestId('profile-step-4'));
+    const activityLinks = within(screen.getByTestId('activity-0-evidence'));
+    expect(activityLinks.getByLabelText('Evidence link 1')).toHaveValue('https://example.org/activity?a=one,two');
+
+    act(() => setLocale('ru'));
+    expect(activityLinks.getByLabelText('Ссылка на подтверждение 1')).toHaveValue('https://example.org/activity?a=one,two');
+    expect((draft.activities as { evidence_links: string[] }[])[0]?.evidence_links).toEqual([
+      'https://example.org/activity?a=one,two',
+      'https://school.example/activity',
+    ]);
+
+    fireEvent.click(activityLinks.getByRole('button', { name: '+ Добавить ссылку' }));
+    await waitFor(() => expect(activityLinks.getByLabelText('Ссылка на подтверждение 3')).toHaveFocus());
+    expect(setProfileDraft).not.toHaveBeenCalled();
+  });
+
+  it('uses the same independent-row contract for achievements', () => {
+    render(<ProfileScreen onNext={() => {}} />);
+    fireEvent.click(screen.getByTestId('profile-step-5'));
+    const input = within(screen.getByTestId('achievement-0-evidence')).getByLabelText('Evidence link 1');
+
+    fireEvent.change(input, { target: { value: 'https://example.org/achievement?result=gold,silver' } });
+
+    expect((draft.achievements as { evidence_links: string[] }[])[0]?.evidence_links).toEqual([
+      'https://example.org/achievement?result=gold,silver',
+    ]);
   });
 });
 

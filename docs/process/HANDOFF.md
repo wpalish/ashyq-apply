@@ -110,8 +110,11 @@ manufacture compliant history. [0.4] was committed before [0.3].
 
 ## 4. Half-done / uncommitted at the moment of writing
 
-Current release state: no uncommitted implementation work. `fc1fdc2` is pushed; the remaining content
-of this section is historical recovery provenance, not present dirty work.
+Current WIP state: the evidence-link component, ProfileScreen integration, RU/KK/EN copy, semantic-token
+styles, component/ProfileScreen tests, mocked 320 px browser coverage, real-API persistence coverage and
+three component specs are ready for a preserving checkpoint. Frontend static/unit/build/token gates and
+the two targeted browser paths pass. Full ordinary/auth E2E and backend gates have not yet been rerun, so
+the checkpoint must remain `wip:`. The remaining content of this section is historical recovery provenance.
 
 ### Prompt C recovery audit — gpt-6-astra, 2026-09-06 10:54 UTC
 
@@ -360,6 +363,15 @@ were adapted for the new primary/context navigation but those suites were not ex
 The backend KZT failure in section 7 needs separate resolution; do not claim all gates green.
 
 ## 6. Gate status at last run (numbers, not adjectives)
+
+2026-09-10 evidence-link WIP checkpoint (before full repository gates): frontend typecheck, lint and
+production build pass; 245/245 unit tests in 26 files pass; token audit scans 5 CSS/SCSS files with
+0 errors/0 warnings. Targeted mocked Playwright at 320 px: 1/1 pass with add/remove focus, RU→KK
+retention, invalid URL feedback, zero horizontal overflow and zero axe A/AA violations. Targeted
+real-API save/reload on a fresh isolated SQLite database: desktop + mobile 2/2 pass, including commas
+inside one URL and activity/achievement arrays. The first real-API attempt did not start because the
+local `.venv` lacks Alembic; the documented Python 3.12 `PYTHONPATH` fallback started the unchanged
+suite. Full ordinary/auth E2E and backend gates remain pending, so this is not a green release claim.
 
 2026-09-10 final integration repair at `fc1fdc2`:
 
