@@ -18,7 +18,7 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 2. Current task
 
-**Security audit follow-up: the crawler's event loop — `ready-for-review`.**
+**Security audit follow-up: the crawler's event loop — `ready-for-review (PR #13)`.**
 
 PR #12 (the twelve security fixes) is **`merged`** into `main@b267b33`; all eight CI checks and the
 post-merge run on `main` were green. This branch is what a sweep afterwards turned up.
