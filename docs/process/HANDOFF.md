@@ -9,16 +9,26 @@ Write for a reader who has **zero** chat history — because that is exactly who
 | | |
 |---|---|
 | Holder | **nobody** |
-| Since (UTC) | 2026-09-09 19:20 UTC (released by claude-opus-5) |
-| Branch | `task/security-audit-hardening`, branched from `main@edf546d` |
-| HEAD when written | `b96845f` |
-| Origin main when checked | `edf546d` (PR #9 merge); the branch is 9 commits ahead of it and touches nothing else |
-| Previous holder | codex; it released after the C2 publication record on `main` |
+| Since (UTC) | 2026-09-10 04:10 UTC (released by claude-opus-5) |
+| Branch | `task/crawler-event-loop`, branched from `main@b267b33` |
+| HEAD when written | `fec1673` |
+| Origin main when checked | `b267b33` — the PR #12 merge; the post-merge release-gates run on `main` was green |
+| Previous holder | claude-opus-5; PR #12 (security audit) is **merged**, not merely ready for review |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
 
-**Security audit of the whole repository, and the fixes it produced — `ready-for-review (PR #12)`.**
+**Security audit follow-up: the crawler's event loop — `ready-for-review (PR #13)`.**
+
+PR #12 (the twelve security fixes) is **`merged`** into `main@b267b33`; all eight CI checks and the
+post-merge run on `main` were green. This branch is what a sweep afterwards turned up.
+
+Sweeping every `async def` for synchronous work found the same defect class as the transcript upload
+(F-02), but on the crawler side: eight call sites parse a third party's PDF or HTML, or resolve DNS,
+directly on the worker's event loop. The worker's heartbeat is a coroutine on that same loop, so a
+document slower than the lease stops the heartbeat, the lease expires, another worker reaps the job and
+redoes it, and the first attempt's writes are fenced off as LeaseLost. Fixed through a new
+`app.adapters.offload.off_loop`. `seed_demo.py` returns the identical order and counts.
 
 Unplanned work: the owner asked for a security review of `main` rather than the next brief task. The
 queue in §10 is untouched and the C2 items in the previous §2 stand exactly as codex left them; nothing
@@ -96,6 +106,14 @@ manufacture compliant history. [0.4] was committed before [0.3].
 | `/metrics` 500 on a non-ASCII bearer token | Low | `0610e17` | Compare bytes; plus a test locking the whole header policy across every response shape. |
 | `SourceLink` rendered an unvalidated `href` | Low | `84f0b43` | `isSafeHref`; non-http(s) sources render as text. |
 | SECURITY.md described intent, not the controls | — | `b96845f` | Payments, accounts and mail, exports sections rewritten to what holds. |
+
+
+### Crawler event loop, 2026-09-10 (branch `task/crawler-event-loop`)
+
+| Finding | Severity | Hash | Change |
+|---|---|---|---|
+| An adversarial review of `fec1673` found it half-done: `classify_page` still souped the same page in six coroutines, two of them ones that commit had edited. Eleven further stalls, incl. `_content_hash` and `_maybe_render` on the hot path of every fetch | High, live mode only | `b1f6e07` | The source guard now derives what is expensive from the call graph instead of a hand-written list, and fails on any of it called from an `async def`. Every site it named is offloaded; the browser gate refuses a media/font/websocket/manifest subresource before spending a thread on DNS. |
+| The crawler parses hostile PDFs and HTML, and resolves DNS, on the worker's event loop — stalling the job heartbeat until the lease expires and the job is reaped and redone | High, live mode only | `fec1673` | New `app/adapters/offload.py::off_loop`; applied at both `pdf_to_text` sites, `readable_text`, `_parse_award`, `extract_links`, `_harvest_links`, and the `check_url`/`is_allowed` resolver calls in `fetching.py` and `browser.py`. Tests drive real coroutines against a slow parser and assert a stand-in heartbeat still ticked, plus a source-level backstop against a new bare call site. |
 
 ## 4. Half-done / uncommitted at the moment of writing
 
@@ -253,17 +271,22 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-1. **Review and merge PR for `task/security-audit-hardening`.** Nine commits, backend + frontend +
-   SECURITY.md. Reproduce the three proofs by checking out `main` and running the new tests there:
-   `tests/test_payment_webhook.py::TestAnUnconfiguredSecretIsNotASecret`,
-   `tests/test_transcript_import.py::TestTheUploadCannotStallTheService::test_a_slow_parse_does_not_block_an_unrelated_request`,
-   `tests/test_social_moderation.py::TestBlocking::test_a_block_hides_the_card_from_the_direct_route_too`.
-   All three fail on `main` and pass on the branch.
-2. **Operational, before any deployment that takes money:** set `UNIMATCH_APIPAY_WEBHOOK_SECRET` (≥16
-   characters, outside Git) and `UNIMATCH_PAYMENTS_PROVIDER=apipay`. The API now refuses to start
-   otherwise, which is the intended behaviour, not a regression.
-3. Then return to the queue in §10 as codex left it: T26's contract, T30's registry 19→60, T31 blocked
-   on a provider. Nothing in this branch touches them.
+1. **Review and merge the PR for `task/crawler-event-loop`.** Two fix commits. To see the defect,
+   check out `main` and run `pytest tests/test_event_loop_not_blocked.py` — the call-site tests and the
+   source guard both fail there and pass on the branch. Read `b1f6e07` before `fec1673`: the second
+   commit exists because an adversarial review found the first one had fixed one parse in a coroutine
+   and left another beside it, and the lesson is in how the guard is written, not in the diff.
+2. The audit's own operational item still stands: before any deployment that takes money, set
+   `UNIMATCH_APIPAY_WEBHOOK_SECRET` (≥16 characters, outside Git) and
+   `UNIMATCH_PAYMENTS_PROVIDER=apipay`. The API refuses to start otherwise, by design.
+   `fly.toml` also sets no `UNIMATCH_EMAIL_SENDER`, so a production deploy refuses to start until SMTP
+   is configured as a secret — the existing guard working, but it will read like a broken deploy.
+3. An independent multi-agent re-audit of the areas this pass did not sweep (parsing/ReDoS, PII in logs,
+   the social module, the job queue, schema and migrations, config and crypto, frontend, infrastructure)
+   was attempted twice and failed both times on a session usage limit, with nothing recoverable. If it
+   is worth another attempt, run it in small waves with narrow per-agent file lists — broad briefs made
+   each agent read ~160k tokens and die before returning anything.
+4. Then back to the queue in §10, unchanged.
 
 The steps codex left, unchanged and still next after this review:
 
@@ -277,25 +300,20 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run (numbers, not adjectives)
 
-Local runs by claude-opus-5, 2026-09-09, on `task/security-audit-hardening`.
-Codex's C2 gate numbers for `main@04a3058` are in git history at `edf546d`; this table is the
-latest run, as this section requires.
+Local runs by claude-opus-5, 2026-09-10, on `task/crawler-event-loop`.
 
 | Gate | Result |
 |---|---|
 | `ruff check app tests` | **pass** |
-| `ruff format --check app tests` | **pass** — 166 files |
-| `mypy app tests` | **pass** — 166 source files |
-| `pytest --cov=app --cov-fail-under=92` | **pass** — **1395 passed**, coverage **93.96%** |
-| `npm run typecheck` | **pass** |
-| `npm run lint` | **pass** |
-| `npm test -- --run` | **pass** — 188 tests, 20 files |
-| `npm run build` | **pass** — 366.79 kB js / 66.11 kB css |
-| `pip-audit -r requirements.txt` | **pass** — no known vulnerabilities |
-| demo oracle (`seed_demo.py`, throwaway database) | **pass** — Groningen #1, UBC present; ordering unchanged |
+| `ruff format --check app tests` | **pass** — 168 files |
+| `mypy app tests` | **pass** — 168 source files |
+| `pytest --cov=app --cov-fail-under=92` | **pass** — **1402 passed**, coverage **94.04%** |
+| `seed_demo.py` (throwaway database) | **pass** — Groningen #1, 20 results / 96 pages / 414 claims, identical to before the change |
+| `alembic heads` | **one head**, `d9c4e7a21b83`; no migration added |
+| frontend | **not touched** by this branch; CI runs it on the PR |
 
-E2E (`npm run e2e`, `npm run e2e:auth`) was **not** run locally — ports 5173/8099 and a browser install;
-CI runs both on the PR.
+The previous branch's numbers, for `main@b267b33` (PR #12): 1395 backend passed, coverage 93.96%,
+188 frontend tests, `pip-audit` clean, all eight CI checks and the post-merge run green.
 
 ## 7. Blockers / questions for the owner
 
@@ -400,9 +418,16 @@ next agent does not reopen it.
 | 2026-09-09 | security audit | `payments/errors.py`: new `UnconfiguredWebhookSecret`; `get_provider()` no longer defaults the fake's secret | A missing secret is now an error, not a default. |
 | 2026-09-09 | security audit | `frontend/src/components/primitives.tsx`: new exported `isSafeHref(url)` | Non-http(s) sources render as text. |
 | 2026-09-09 | security audit | `security.py`: `SCRYPT_R`, `SCRYPT_P`, `_maxmem(n, r)`; `routes_metrics` compares bytes | scrypt cost schedule and the 500-on-non-ASCII bearer. |
+| 2026-09-10 | crawler event loop | New module `app/adapters/offload.py::off_loop(fn, *args, **kwargs)` — `asyncio.to_thread` with the reasoning written down. Any new call that parses a fetched document or resolves a name from an `async def` must go through it; `tests/test_event_loop_not_blocked.py::TestNoBlockingParseSurvivesInAnAsyncPath` fails the build otherwise. | The worker heartbeat shares that loop. |
 
 ## 9. Traps and lessons (things that cost a session; keep them)
 
+- **A fleet of broad-brief audit agents will burn the session limit and return nothing.** Two runs,
+  19 and 8 agents, ~2.4M subagent tokens between them, every agent killed by the usage limit before
+  it emitted its structured result — so the journal held only `started`/`failed` and nothing was
+  recoverable. The cause was the brief, not the tooling: "audit every route" makes one agent read
+  ~160k tokens. If you run one, give each agent three to six named files and a specific question,
+  bank each wave before starting the next, and expect a wave of eight broad agents to fail.
 - `seed_demo.py` raises `SchemaOutOfDate` until `UNIMATCH_DEMO_MODE=true alembic upgrade head` has run.
 - `Fetcher(...)` takes `(cache_dir, *, delay_seconds, respect_robots, offline, cache_ttl_seconds, timeout, contact, corpus_dir)`; it has no `close()`, only `__aexit__`.
 - `backend/setup.sh` needs `uv`; plain `python -m venv` + `pip install -r requirements-dev.txt` works. Without Playwright installed, run with `UNIMATCH_ENABLE_BROWSER_TIER=false`.
@@ -497,3 +522,4 @@ host=github.com
 | 2026-09-07 14:10:54 UTC | codex | `ab2e70a` → `96c1082` + final publication handoff | Owner explicitly authorized GitHub publication. Secret-scanned and committed all 133 ai-team evidence files plus the corrected audit, pushed `ai/c1/integration`, and opened PR #7. Release-gates started; no protected-main merge or application deploy. |
 | 2026-09-08 03:38:21 UTC | codex | `9b362c8` → in progress | Took the C2 baton after verifying `origin/main@4d2125c` is the merge-base. Owner authorized T29 wiring, bounded T30 batches, T26, committing campaign evidence, and GitHub publication; T31 remains blocked on provider/secrets/data-policy acknowledgement. |
 | 2026-09-09 19:20 UTC | claude-opus-5 | `edf546d` → `task/security-audit-hardening` | Owner asked for a security review of the repository instead of the next brief task. Audited auth, tenancy, payments, egress, uploads, exports, mail, crypto, headers and the frontend; proved three findings with tests that fail on `main`; fixed nine across 9 commits. Full gates green (1395 backend / 93.96% / 188 frontend / build / pip-audit). Residuals recorded in §7. Baton released; nothing merged to `main`, no deploy.
+| 2026-09-10 04:10 UTC | claude-opus-5 | `b267b33` → `task/crawler-event-loop` | PR #12 merged by the owner with all gates green. Swept every `async def` for synchronous work and found the F-02 class across the crawler: hostile PDFs, HTML and DNS parsed on the worker's event loop, stalling the job heartbeat past the lease. Fixed via `off_loop` at eight sites, with tests that drive real coroutines. Two attempts at a multi-agent re-audit of the remaining areas died on the session limit — see §5.3 and §9. Baton released; nothing merged to `main`, no deploy.

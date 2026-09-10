@@ -20,6 +20,7 @@ from typing import Any
 
 from app.adapters.fetching import Fetcher, FetchResult, assert_no_pii
 from app.adapters.network_policy import BlockedRequest, check_url, is_allowed
+from app.adapters.offload import off_loop
 from app.domain.enums import FetchOutcome
 
 try:  # the real exception class when playwright is installed...
@@ -115,14 +116,21 @@ class BrowserFetcher:
 
     @staticmethod
     async def _gate_request(route, request) -> None:
-        """Allow or abort one request the rendered page is making."""
-        allowed, reason = is_allowed(request.url)
-        if not allowed:
-            log.info("browser blocked %s: %s", request.url[:100], reason)
-            await route.abort("blockedbyclient")
-            return
+        """Allow or abort one request the rendered page is making.
+
+        The cheap refusal comes first. The policy check resolves DNS, which
+        costs a thread from the shared pool, and a rendered page can ask for
+        dozens of subresources at once — enough of them queued there would
+        stall the document parsing that shares the pool. A resource type we
+        refuse outright never needs its name looked up.
+        """
         # Trackers, ads and media are neither needed nor wanted.
         if request.resource_type in ("media", "font", "websocket", "manifest"):
+            await route.abort("blockedbyclient")
+            return
+        allowed, reason = await off_loop(is_allowed, request.url)
+        if not allowed:
+            log.info("browser blocked %s: %s", request.url[:100], reason)
             await route.abort("blockedbyclient")
             return
         await route.continue_()
@@ -140,7 +148,7 @@ class BrowserFetcher:
     ) -> FetchResult:
         assert_no_pii(url)
         try:
-            check_url(url)
+            await off_loop(check_url, url)
         except BlockedRequest as exc:
             log.warning("browser tier blocked by network policy: %s", exc)
             return FetchResult(url=url, outcome=FetchOutcome.BLOCKED, error=str(exc))

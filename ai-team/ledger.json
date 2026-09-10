@@ -83,24 +83,63 @@
     "T25": {
       "status": "BLOCKED",
       "title": "search_web adapter + capability config (BLOCKED without key)",
-      "findings": ["L01"],
+      "findings": [
+        "L01"
+      ],
       "priority": "P1",
-      "locks": ["network-adapters", "search-provider"],
-      "allowed_paths": ["backend/app/adapters/**", "backend/app/config.py", "backend/tests/test_search*.py"],
-      "required_roles": ["ashyq-planner", "ashyq-developer", "ashyq-qa", "ashyq-reviewer", "ashyq-security"],
-      "dependencies": ["T16", "T18"],
+      "locks": [
+        "network-adapters",
+        "search-provider"
+      ],
+      "allowed_paths": [
+        "backend/app/adapters/**",
+        "backend/app/config.py",
+        "backend/tests/test_search*.py"
+      ],
+      "required_roles": [
+        "ashyq-planner",
+        "ashyq-developer",
+        "ashyq-qa",
+        "ashyq-reviewer",
+        "ashyq-security"
+      ],
+      "dependencies": [
+        "T16",
+        "T18"
+      ],
       "reason_added": "master prompt sections 6/8: replaceable search provider adapter; BLOCKED-not-silent without API key; after T18 to avoid adapters write conflict",
       "disposition_2026_09_07": "ЗАМОРОЖЕНА решением владельца (ключей нет): SEARCH2 (T29 catalog_walker) даёт recall без поискового провайдера. Вернуться, только если каталоговый путь не достигнет цели; тихий переход на платный API запрещён"
     },
     "T26": {
       "status": "BLOCKED_SCOPE_CONTRACT",
       "title": "News-слой (сужено 2026-09-07; SourceChange/SUPERSEDED перенесён в T32)",
-      "findings": ["L01"],
+      "findings": [
+        "L01"
+      ],
       "priority": "P1",
-      "locks": ["news-models", "migrations", "runner"],
-      "allowed_paths": ["backend/app/models/**", "backend/app/domain/**", "backend/app/pipeline/runner.py", "backend/migrations/versions/*.py", "backend/tests/test_news*.py"],
-      "required_roles": ["ashyq-planner", "ashyq-developer", "ashyq-qa", "ashyq-reviewer", "ashyq-security"],
-      "dependencies": ["T28", "T32"],
+      "locks": [
+        "news-models",
+        "migrations",
+        "runner"
+      ],
+      "allowed_paths": [
+        "backend/app/models/**",
+        "backend/app/domain/**",
+        "backend/app/pipeline/runner.py",
+        "backend/migrations/versions/*.py",
+        "backend/tests/test_news*.py"
+      ],
+      "required_roles": [
+        "ashyq-planner",
+        "ashyq-developer",
+        "ashyq-qa",
+        "ashyq-reviewer",
+        "ashyq-security"
+      ],
+      "dependencies": [
+        "T28",
+        "T32"
+      ],
       "reason_added": "master prompt sections 4/19; scope narrowed per SEARCH2_REVIEW: SourceChange-контур забирает T32, здесь только dated NewsEvent",
       "contract_audit_2026_09_08": "BLOCKED: acceptance promises a source-to-user News layer, but allowed_paths contain no ingestion adapter, API schema/route, or frontend. Implementing only an empty NewsEvent table would be misleading. Required owner/product choice: expand the frozen scope for a vertical slice, or explicitly accept a storage-only foundation.",
       "artifact": "outputs/c2-t26-a0/contract-audit.md"
@@ -108,12 +147,32 @@
     "T30": {
       "status": "PARTIAL_VERIFIED",
       "title": "Канар program-recall + реестр 19→60 (внешние прогоны только с разрешения владельца)",
-      "findings": ["L01"],
+      "findings": [
+        "L01"
+      ],
       "priority": "P1",
-      "locks": ["live-corpus", "discovery-tests"],
-      "allowed_paths": ["backend/scripts/canary_discovery.py", "backend/app/adapters/discovery/institution_registry.json", "docs/LIVE_DISCOVERY_REPORT.md", "backend/tests/test_canary_checks.py"],
-      "required_roles": ["ashyq-planner", "ashyq-developer", "ashyq-qa", "ashyq-reviewer", "ashyq-security"],
-      "dependencies": ["T27", "T28", "T29"],
+      "locks": [
+        "live-corpus",
+        "discovery-tests"
+      ],
+      "allowed_paths": [
+        "backend/scripts/canary_discovery.py",
+        "backend/app/adapters/discovery/institution_registry.json",
+        "docs/LIVE_DISCOVERY_REPORT.md",
+        "backend/tests/test_canary_checks.py"
+      ],
+      "required_roles": [
+        "ashyq-planner",
+        "ashyq-developer",
+        "ashyq-qa",
+        "ashyq-reviewer",
+        "ashyq-security"
+      ],
+      "dependencies": [
+        "T27",
+        "T28",
+        "T29"
+      ],
       "reason_added": "SEARCH2_DESIGN §2.1/§6.1: измеримый результат спринта 1 (цель ≥7/10 program recall, 0 FP); каждый батч живых прогонов требует явного разрешения владельца (одобрен один bounded NU-run)",
       "authorization_2026_09_08": "Owner instructed Codex to perform what GLM requested; recorded as authorization for two bounded batches only: Groningen/Delft/Aalto/Vienna/Warsaw and UBC/Toronto/HKU/NTU/KAIST. No further live batch is authorized.",
       "implementation": {
@@ -125,7 +184,13 @@
       "live_batches": [
         {
           "id": "batch-1",
-          "institutions": ["Groningen", "Delft", "Aalto", "Vienna", "Warsaw"],
+          "institutions": [
+            "Groningen",
+            "Delft",
+            "Aalto",
+            "Vienna",
+            "Warsaw"
+          ],
           "program_recall": "3/5",
           "category_recall": "13/15",
           "material_false_positives": 0,
@@ -134,7 +199,13 @@
         },
         {
           "id": "batch-2",
-          "institutions": ["UBC", "Toronto", "HKU", "NTU", "KAIST"],
+          "institutions": [
+            "UBC",
+            "Toronto",
+            "HKU",
+            "NTU",
+            "KAIST"
+          ],
           "program_recall": "4/5",
           "category_recall": "13/15",
           "material_false_positives": 0,
@@ -149,17 +220,38 @@
     "T31": {
       "status": "BLOCKED",
       "title": "T2: LLM-экстракция в shadow-режиме (Спринт 2 SEARCH2) — BLOCKED на провайдера/ключи/ack",
-      "findings": ["L01"],
+      "findings": [
+        "L01"
+      ],
       "priority": "P1",
-      "locks": ["extraction-llm", "prompts"],
-      "allowed_paths": ["backend/app/adapters/extraction_llm.py", "backend/prompts/**", "backend/app/config.py", "backend/tests/test_extraction_llm.py"],
-      "required_roles": ["ashyq-planner", "ashyq-developer", "ashyq-qa", "ashyq-reviewer", "ashyq-security"],
-      "dependencies": ["T27", "T28"],
+      "locks": [
+        "extraction-llm",
+        "prompts"
+      ],
+      "allowed_paths": [
+        "backend/app/adapters/extraction_llm.py",
+        "backend/prompts/**",
+        "backend/app/config.py",
+        "backend/tests/test_extraction_llm.py"
+      ],
+      "required_roles": [
+        "ashyq-planner",
+        "ashyq-developer",
+        "ashyq-qa",
+        "ashyq-reviewer",
+        "ashyq-security"
+      ],
+      "dependencies": [
+        "T27",
+        "T28"
+      ],
       "reason_added": "SEARCH2_DESIGN §3.3 sprint 2: ClaimExtractor + промпт v1 + shadow; разблокировка — решение владельца о провайдере и секретах вне Git; DATA_POLICY_ACK гейт обязателен"
     },
     "T27": {
       "status": "DONE_LOCAL_INTEGRATION",
-      "findings": ["L01"],
+      "findings": [
+        "L01"
+      ],
       "priority": "P1",
       "campaign": "c2",
       "attempt": "A2 (repair cycle after A1 CHANGES_REQUESTED)",
@@ -167,9 +259,25 @@
       "qa_commit_sha": "d8553e19cf7d5d5236c5f74b7ffc55f436d66a00 (A1) + c823d728179c59d5c1dbb235db517c181b8a6b8f (A2)",
       "candidate_sha": "da836a20167a0186e8681e58a3ec29356bfc040b",
       "combined_sha": "2ed4f51e1d5c1fae3f4cb36ad64982eb67184a2d (no-ff merge of da836a2 onto b087b9d; dispatcher-authorized, c1 precedent; zero conflicts)",
-      "locks": ["extraction", "domain-contract"],
-      "allowed_paths": ["backend/app/domain/claim_verifier.py", "backend/app/adapters/extraction.py", "backend/app/adapters/requirements/web_requirements.py", "backend/tests/test_claim_verifier.py", "backend/tests/test_live_regressions.py", "backend/tests/fixtures/live_shapes/**"],
-      "required_roles": ["ashyq-planner", "ashyq-developer", "ashyq-qa", "ashyq-reviewer", "ashyq-security"],
+      "locks": [
+        "extraction",
+        "domain-contract"
+      ],
+      "allowed_paths": [
+        "backend/app/domain/claim_verifier.py",
+        "backend/app/adapters/extraction.py",
+        "backend/app/adapters/requirements/web_requirements.py",
+        "backend/tests/test_claim_verifier.py",
+        "backend/tests/test_live_regressions.py",
+        "backend/tests/fixtures/live_shapes/**"
+      ],
+      "required_roles": [
+        "ashyq-planner",
+        "ashyq-developer",
+        "ashyq-qa",
+        "ashyq-reviewer",
+        "ashyq-security"
+      ],
       "worktree_qa": "/Users/wpalish/ashyq-worktrees/c2-t27-qa (ai/c2/t27/qa)",
       "worktree_dev": "/Users/wpalish/ashyq-worktrees/c2-t27-dev (ai/c2/t27/dev)",
       "worktree_qa_a2": "/Users/wpalish/ashyq-worktrees/c2-t27-qa-a2 (ai/c2/t27/qa-a2)",
@@ -277,7 +385,10 @@
     },
     "T32": {
       "status": "DONE_LOCAL_INTEGRATION",
-      "findings": ["L01", "J01"],
+      "findings": [
+        "L01",
+        "J01"
+      ],
       "priority": "P1",
       "campaign": "c2",
       "attempt": "A1 (+A2 security repair, +A2/A3 QA amendments, +A3 FE contract sync)",
@@ -285,14 +396,38 @@
       "qa_commit_sha": "65e15220e8d0584b7fc0878e71f2e69a3bcbd47b",
       "candidate_sha": "9b362c823fa65bf3c95fe154419c8f6ba1b2dc51",
       "combined_sha": "9b362c823fa65bf3c95fe154419c8f6ba1b2dc51 (no-ff merge 2dd9c4c then ff; ai/c2/integration head)",
-      "locks": ["migrations", "runner", "jobs", "freshness"],
-      "allowed_paths": ["backend/app/domain/freshness.py", "backend/app/domain/enums.py", "backend/app/domain/conflicts.py", "backend/app/models/research.py", "backend/migrations/versions/*.py", "backend/app/jobs/source_scanner.py", "backend/app/jobs/store.py", "backend/app/jobs/worker.py", "backend/app/pipeline/runner.py", "backend/app/api/routes_results.py", "backend/tests/test_freshness*.py", "backend/tests/test_worker.py"],
+      "locks": [
+        "migrations",
+        "runner",
+        "jobs",
+        "freshness"
+      ],
+      "allowed_paths": [
+        "backend/app/domain/freshness.py",
+        "backend/app/domain/enums.py",
+        "backend/app/domain/conflicts.py",
+        "backend/app/models/research.py",
+        "backend/migrations/versions/*.py",
+        "backend/app/jobs/source_scanner.py",
+        "backend/app/jobs/store.py",
+        "backend/app/jobs/worker.py",
+        "backend/app/pipeline/runner.py",
+        "backend/app/api/routes_results.py",
+        "backend/tests/test_freshness*.py",
+        "backend/tests/test_worker.py"
+      ],
       "scope_expansions_authorized": [
         "app/main.py +2/-1 — arm_source_scans API-startup parity (C3 demo guard completeness)",
         "frontend/src/types.ts + frontend/src/lib/format.ts — A3 FE contract sync (integrator full-suite caught ClaimStatus union drift; SUPERSEDED union member + neutral tone)",
         "QA amendments A2 (reflection keys + takeover timing) and A3 (R6 demo-golden clock freeze, negative control) — facts-only, c1 amendment precedent"
       ],
-      "required_roles": ["ashyq-planner", "ashyq-developer", "ashyq-qa", "ashyq-reviewer", "ashyq-security"],
+      "required_roles": [
+        "ashyq-planner",
+        "ashyq-developer",
+        "ashyq-qa",
+        "ashyq-reviewer",
+        "ashyq-security"
+      ],
       "worktree_qa": "/Users/wpalish/ashyq-worktrees/c2-t32-qa (ai/c2/t32/qa)",
       "worktree_dev": "/Users/wpalish/ashyq-worktrees/c2-t32-dev (ai/c2/t32/dev)",
       "worktree_qa_a2": "/Users/wpalish/ashyq-worktrees/c2-t32-qa-a2 + c2-t32-qa-a3 + c2-t32-qa-a4",
@@ -326,8 +461,16 @@
           "scope": "9 files +916/-31 incl. migration d9c4e7a21b83 NEW, source_scanner.py NEW +575"
         },
         "qa_amendments": {
-          "a2": {"ref": "agent_99bd713b-414b-4172-99b0-55516edab80c", "commit": "7bfa715a994e973a5a8216b1713324ee74cf1fe3", "note": "reflection keys + _take_over timing; facts unchanged; 44/44"},
-          "a3": {"ref": "agent_392b2033-e36b-423b-bdf7-7c588ebdf422", "commit": "51a52c4b39381f873bdfabac8c3aaff2fbc02de3", "note": "R6 demo-golden clock freeze to capture date (date-bound defect proven pre-existing on pristine baseline); negative control performed; golden hash NOT re-captured"}
+          "a2": {
+            "ref": "agent_99bd713b-414b-4172-99b0-55516edab80c",
+            "commit": "7bfa715a994e973a5a8216b1713324ee74cf1fe3",
+            "note": "reflection keys + _take_over timing; facts unchanged; 44/44"
+          },
+          "a3": {
+            "ref": "agent_392b2033-e36b-423b-bdf7-7c588ebdf422",
+            "commit": "51a52c4b39381f873bdfabac8c3aaff2fbc02de3",
+            "note": "R6 demo-golden clock freeze to capture date (date-bound defect proven pre-existing on pristine baseline); negative control performed; golden hash NOT re-captured"
+          }
         },
         "qa_verify_a1": {
           "ref": "agent_5f393559-74bb-4cf2-bc41-3cbfb132147f",
@@ -429,7 +572,9 @@
     },
     "T29": {
       "status": "DONE_LOCAL_INTEGRATION",
-      "findings": ["L01"],
+      "findings": [
+        "L01"
+      ],
       "priority": "P1",
       "campaign": "c2",
       "attempt": "A1 (+A2 QA amendment)",
@@ -437,13 +582,28 @@
       "qa_commit_sha": "7585b575e76e9887b3294d8a03ad0506131d4b86",
       "candidate_sha": "ff6a90e3330c6040bfce02c63c6f8c163398d914",
       "combined_sha": "ff6a90e3330c6040bfce02c63c6f8c163398d914 (ff-only onto ai/c2/integration)",
-      "locks": ["discovery", "network-adapters"],
-      "allowed_paths": ["backend/app/adapters/discovery/catalog_walker.py", "backend/app/adapters/discovery/live_discovery.py", "backend/app/adapters/page_classifier.py", "backend/tests/test_live_discovery.py", "backend/tests/fixtures/live_shapes/**"],
+      "locks": [
+        "discovery",
+        "network-adapters"
+      ],
+      "allowed_paths": [
+        "backend/app/adapters/discovery/catalog_walker.py",
+        "backend/app/adapters/discovery/live_discovery.py",
+        "backend/app/adapters/page_classifier.py",
+        "backend/tests/test_live_discovery.py",
+        "backend/tests/fixtures/live_shapes/**"
+      ],
       "scope_expansions_authorized": [
         "R1 backend/app/adapters/browser.py — additive response_listener kwarg + networkidle settle (required for JS acceptance item; T16 controls byte-identical, full-file compare + negative controls)",
         "R2 runner.py wiring DEFERRED to post-T32 micro-attempt (T32 held the runner lock): CatalogRenderer construction + page_recorder pass; recording dormant (page_recorder=None) in A1"
       ],
-      "required_roles": ["ashyq-planner", "ashyq-developer", "ashyq-qa", "ashyq-reviewer", "ashyq-security"],
+      "required_roles": [
+        "ashyq-planner",
+        "ashyq-developer",
+        "ashyq-qa",
+        "ashyq-reviewer",
+        "ashyq-security"
+      ],
       "worktree_qa": "/Users/wpalish/ashyq-worktrees/c2-t29-qa (ai/c2/t29/qa)",
       "worktree_dev": "/Users/wpalish/ashyq-worktrees/c2-t29-dev (ai/c2/t29/dev)",
       "worktree_qa_a2": "/Users/wpalish/ashyq-worktrees/c2-t29-qa-a2 (ai/c2/t29/qa-a2)",
@@ -509,28 +669,30 @@
           "combined_gates": "FULL pytest 1302 passed / 0 failed / 0 skipped, cov 93.81%; pgserver RAN; mypy 0/161; ruff clean; targets 222 passed; single head b4e8a1c2f6d9"
         }
       },
-    "packet_check": "STRUCTURE OK (outputs/c2-t29-a1/acceptance-packet.json; acceptance_items verbatim from crew.json; R1 expansion documented)",
-    "post_integration_wiring": {
-      "status": "VERIFIED_AND_PUSHED",
-      "sha": "8d2fa1051c1ee8afdbb627d9cffd2056c8a2c78c",
-      "scope": "ResearchRunner constructs CatalogRenderer for non-demo live runs and passes SourcePage.record as LiveDiscoveryAdapter page_recorder; browser enable flag follows enable_browser_tier; demo remains isolated",
-      "security_followups_closed": "S-29-01 RecursionError fails closed; S-29-02 JSON labels capped at 160 characters",
-      "red_green": "4 failed / 1 passed -> 5 passed; focused T29/T16/T28/T32 suite 310 passed; full suite and static gates green",
-      "live_smoke": "PARTIALLY_BLOCKED only by robots policy; 2 catalogues walked, programme and scholarship leads found, 75 SourcePage outcomes recorded",
-      "artifact": "outputs/c2-t29-wiring/live-smoke/canary-2026-09-08.json"
-    },
-    "publication": "MERGED via PR #8 into main@04a3058 by explicit owner authorization; post-merge release-gates green; application infrastructure deploy NOT DONE",
+      "packet_check": "STRUCTURE OK (outputs/c2-t29-a1/acceptance-packet.json; acceptance_items verbatim from crew.json; R1 expansion documented)",
+      "post_integration_wiring": {
+        "status": "VERIFIED_AND_PUSHED",
+        "sha": "8d2fa1051c1ee8afdbb627d9cffd2056c8a2c78c",
+        "scope": "ResearchRunner constructs CatalogRenderer for non-demo live runs and passes SourcePage.record as LiveDiscoveryAdapter page_recorder; browser enable flag follows enable_browser_tier; demo remains isolated",
+        "security_followups_closed": "S-29-01 RecursionError fails closed; S-29-02 JSON labels capped at 160 characters",
+        "red_green": "4 failed / 1 passed -> 5 passed; focused T29/T16/T28/T32 suite 310 passed; full suite and static gates green",
+        "live_smoke": "PARTIALLY_BLOCKED only by robots policy; 2 catalogues walked, programme and scholarship leads found, 75 SourcePage outcomes recorded",
+        "artifact": "outputs/c2-t29-wiring/live-smoke/canary-2026-09-08.json"
+      },
+      "publication": "MERGED via PR #8 into main@04a3058 by explicit owner authorization; post-merge release-gates green; application infrastructure deploy NOT DONE",
       "blockers": [],
       "followups": [
-      "CLOSED 8d2fa10: R2 wiring, SourcePage recorder, RecursionError guard and 160-character JSON label cap",
-      "CLOSED 388ae98: T30 separate recall numerators, walker/source/fetch metrics and wall-clock",
-      "CLOSED 5c42934: malformed/PDF catalogue parser isolation found by live HKU batch",
-      "field_mismatch walker-level subject filtering decision (T30 wiring)"
+        "CLOSED 8d2fa10: R2 wiring, SourcePage recorder, RecursionError guard and 160-character JSON label cap",
+        "CLOSED 388ae98: T30 separate recall numerators, walker/source/fetch metrics and wall-clock",
+        "CLOSED 5c42934: malformed/PDF catalogue parser isolation found by live HKU batch",
+        "field_mismatch walker-level subject filtering decision (T30 wiring)"
       ]
     },
     "T28": {
       "status": "DONE_LOCAL_INTEGRATION",
-      "findings": ["L01"],
+      "findings": [
+        "L01"
+      ],
       "priority": "P1",
       "campaign": "c2",
       "attempt": "A1 (+A2 test-contract amendment)",
@@ -538,9 +700,25 @@
       "qa_commit_sha": "0ce3e67b34fffa203f32b7ff4140d62ca9d2b680",
       "candidate_sha": "b087b9dcc0bae57d3c0b678ba3a4679869da1037",
       "combined_sha": "b087b9dcc0bae57d3c0b678ba3a4679869da1037 (ff-only onto ai/c2/integration)",
-      "locks": ["fetching", "models", "migrations"],
-      "allowed_paths": ["backend/app/adapters/fetching.py", "backend/app/models/**", "backend/migrations/versions/*.py", "backend/tests/test_fetch*.py", "backend/tests/test_source_pages.py"],
-      "required_roles": ["ashyq-planner", "ashyq-developer", "ashyq-qa", "ashyq-reviewer", "ashyq-security"],
+      "locks": [
+        "fetching",
+        "models",
+        "migrations"
+      ],
+      "allowed_paths": [
+        "backend/app/adapters/fetching.py",
+        "backend/app/models/**",
+        "backend/migrations/versions/*.py",
+        "backend/tests/test_fetch*.py",
+        "backend/tests/test_source_pages.py"
+      ],
+      "required_roles": [
+        "ashyq-planner",
+        "ashyq-developer",
+        "ashyq-qa",
+        "ashyq-reviewer",
+        "ashyq-security"
+      ],
       "worktree_qa": "/Users/wpalish/ashyq-worktrees/c2-t28-qa (ai/c2/t28/qa)",
       "worktree_dev": "/Users/wpalish/ashyq-worktrees/c2-t28-dev (ai/c2/t28/dev)",
       "worktree_qa_a2": "/Users/wpalish/ashyq-worktrees/c2-t28-qa-a2 (ai/c2/t28/qa-a2)",
@@ -628,7 +806,9 @@
     },
     "T16": {
       "status": "DONE_LOCAL_INTEGRATION",
-      "findings": ["H02"],
+      "findings": [
+        "H02"
+      ],
       "priority": "P1",
       "campaign": "c2",
       "attempt": "A1",
@@ -636,9 +816,27 @@
       "qa_commit_sha": "65e63ec69dda5b06b2bcdc9754cdf8fcf2f53f24",
       "candidate_sha": "28d729ca76cdf8d52344517a8316e2e805099d11",
       "combined_sha": "28d729ca76cdf8d52344517a8316e2e805099d11 (ff-only onto ai/c2/integration)",
-      "locks": ["network-adapters", "ssrf-tests", "proxy-deploy"],
-      "allowed_paths": ["backend/app/adapters/browser.py", "backend/app/adapters/fetching.py", "backend/app/adapters/network_policy.py", "backend/tests/test_ssrf.py", "backend/tests/test_fetch*.py", "backend/tests/test_browser*.py", "SECURITY.md"],
-      "required_roles": ["ashyq-planner", "ashyq-developer", "ashyq-qa", "ashyq-reviewer", "ashyq-security"],
+      "locks": [
+        "network-adapters",
+        "ssrf-tests",
+        "proxy-deploy"
+      ],
+      "allowed_paths": [
+        "backend/app/adapters/browser.py",
+        "backend/app/adapters/fetching.py",
+        "backend/app/adapters/network_policy.py",
+        "backend/tests/test_ssrf.py",
+        "backend/tests/test_fetch*.py",
+        "backend/tests/test_browser*.py",
+        "SECURITY.md"
+      ],
+      "required_roles": [
+        "ashyq-planner",
+        "ashyq-developer",
+        "ashyq-qa",
+        "ashyq-reviewer",
+        "ashyq-security"
+      ],
       "worktree_qa": "/Users/wpalish/ashyq-worktrees/c2-t16-qa (ai/c2/t16/qa)",
       "worktree_dev": "/Users/wpalish/ashyq-worktrees/c2-t16-dev (ai/c2/t16/dev)",
       "worktree_verify": "/Users/wpalish/ashyq-worktrees/c2-t16-verify (ai/c2/t16/verify)",
@@ -714,7 +912,9 @@
     },
     "T18": {
       "status": "DONE_LOCAL_INTEGRATION",
-      "findings": ["L01"],
+      "findings": [
+        "L01"
+      ],
       "priority": "P1",
       "attempt": "A3",
       "baseline_sha": "1e9f841ba686d27fc28271f9592ad449c0b35004",
@@ -1192,6 +1392,373 @@
       "candidate_sha_frozen": "df1ad1194abcd7812eb9bf7d66e417b3d211c157 (dispatcher-verified: parent=e47cfd2, 3 prod files in scope, models/jobs.py untouched, tree clean)",
       "packet_check": "STRUCTURE OK (outputs/c1-t10-a1/acceptance-packet.json)",
       "combined_sha": "9a401f6317701aa47d3c35d72761528c64282796 (merge commit 9a401f63 onto 3bdc0702; real merge, no conflicts)"
+    },
+    "T33": {
+      "status": "DONE_LOCAL_INTEGRATION",
+      "findings": [
+        "S1",
+        "S2"
+      ],
+      "priority": "P0",
+      "campaign": "c3",
+      "attempt": "A1",
+      "baseline_sha": "edf546de9f998c0909337d0abe6f8e1c9c4a0be5",
+      "qa_commit_sha": "2d00f4522004df273a8efac383b3fe70963c190f",
+      "candidate_sha": "540e3567f78e0bbe4be1da3cd3319ae086e3ca8c",
+      "combined_sha": "810bb0064f45045f5f657ac89e653d2e551e140f (merged 3rd, no conflicts)",
+      "locks": [
+        "paywall-contract"
+      ],
+      "outputs_dir": "ai-team/outputs/c3-t33-a1",
+      "chain": "edf546d -> 2d00f45 (QA RED 7: 3 endpoints + 4th scan param) -> 540e356",
+      "scope_expansions_authorized": [
+        "backend/app/payments/entitlements.py free_view: nested costs.source_urls (escalated 4th scan param — real leak; T34 hands-off recorded)"
+      ],
+      "invocations": {
+        "planner": {
+          "ref": "agent_c65bf3c3-4cc7-4357-b107-ab3ba1ad53d1",
+          "status": "PLANNED",
+          "artifact": "outputs/c3-t33-a1/planner.md"
+        },
+        "qa_test_author": {
+          "ref": "agent_d5d5e0ed-eac4-49ec-9a0f-d6034dca0d41",
+          "status": "TESTS_READY",
+          "qa_commit_sha": "2d00f4522004df273a8efac383b3fe70963c190f",
+          "artifact": "outputs/c3-t33-a1/qa-test-author.md",
+          "escalation": "4th scan param GET /results nested costs.source_urls — dispatcher ruled REAL leak, scope expanded"
+        },
+        "developer": {
+          "ref": "agent_890d6ebe-4cf1-4251-bb87-954c85d0a588",
+          "status": "IMPLEMENTED",
+          "candidate_sha": "540e3567f78e0bbe4be1da3cd3319ae086e3ca8c",
+          "artifact": "outputs/c3-t33-a1/developer.md"
+        },
+        "qa_verify": {
+          "ref": "agent_76c373bd-f69e-4e23-acae-a2557a02b8ba",
+          "status": "VERIFIED_PASS",
+          "artifact": "outputs/c3-t33-a1/qa-verify-candidate.md",
+          "gates": "42/44/99/53 passed; mypy 0/165; ruff clean; aliasing probe 34/34"
+        },
+        "reviewer": {
+          "ref": "agent_89d41721-89ab-43a1-9f0d-856101b9bb37",
+          "verdict": "PASS",
+          "artifact": "outputs/c3-t33-a1/reviews.md"
+        },
+        "security": {
+          "ref": "agent_be7d52d2-401b-4790-89de-3088a6907595",
+          "verdict": "PASS",
+          "artifact": "outputs/c3-t33-a1/reviews.md",
+          "tickets": "T33-F1 MEDIUM free-export bypasses free_shortlist_rows (owner decision); F2 scan RunView gap; F3 dictionary amendment; F4 /recheck /retry un-gated (pre-existing)"
+        }
+      },
+      "packet_check": "STRUCTURE OK",
+      "publication": "NOT DONE — push authorized by master prompt §6 (pending T38 + final gates); main merge = owner gate",
+      "blockers": [],
+      "followups": [
+        "T33-F1 owner decision (free export row coverage)",
+        "T33-F2 scan RunView routes",
+        "T33-F3 material dictionary amendment (Money.source_url/RankingEntry.url/program_url)",
+        "T33-F4 rate-limit retry/recheck/collect-documents (= T36-F3)"
+      ]
+    },
+    "T34": {
+      "status": "DONE_LOCAL_INTEGRATION",
+      "findings": [
+        "S3"
+      ],
+      "priority": "P0",
+      "campaign": "c3",
+      "attempt": "A1",
+      "baseline_sha": "edf546de9f998c0909337d0abe6f8e1c9c4a0be5",
+      "qa_commit_sha": "dc04fc387c4ab605dbed4cacde915105384db1e8",
+      "candidate_sha": "b55a3b083558812079e7a2ff366cc9019e2d7393",
+      "combined_sha": "810bb0064f45045f5f657ac89e653d2e551e140f (merged 1st per config.py serialization; no conflicts)",
+      "locks": [
+        "payments-contract"
+      ],
+      "outputs_dir": "ai-team/outputs/c3-t34-a1",
+      "chain": "edf546d -> dc04fc3 (QA RED 7) -> b55a3b0",
+      "invocations": {
+        "planner": {
+          "ref": "agent_fa833a7b-7147-4ee3-ad1f-e8c006d7340f",
+          "status": "PLANNED",
+          "artifact": "outputs/c3-t34-a1/planner.md"
+        },
+        "qa_test_author": {
+          "ref": "agent_58c1eeaa-28ce-4855-94e9-6c0112ef92b8",
+          "status": "TESTS_READY",
+          "qa_commit_sha": "dc04fc387c4ab605dbed4cacde915105384db1e8",
+          "artifact": "outputs/c3-t34-a1/qa-test-author.md"
+        },
+        "developer": {
+          "ref": "agent_b4fe329f-8196-4384-801b-ab5f81d91c36",
+          "status": "IMPLEMENTED",
+          "candidate_sha": "b55a3b083558812079e7a2ff366cc9019e2d7393",
+          "artifact": "outputs/c3-t34-a1/developer.md"
+        },
+        "qa_verify": {
+          "ref": "agent_7aa66d91-74c5-4321-8ddd-ae2bbf4f6b25",
+          "status": "VERIFIED_PASS",
+          "artifact": "outputs/c3-t34-a1/qa-verify-candidate.md",
+          "gates": "28/51/132/30 passed; 4 messages byte-verified; worker-path live probe; error-precedence checked"
+        },
+        "reviewer": {
+          "ref": "agent_cc2f693c-925e-45fe-87c3-1241059d98c1",
+          "verdict": "PASS",
+          "artifact": "outputs/c3-t34-a1/reviews.md"
+        },
+        "security": {
+          "ref": "agent_ab896b3f-1b46-4787-8dbf-6cb21ac263b1",
+          "verdict": "PASS",
+          "artifact": "outputs/c3-t34-a1/reviews.md",
+          "tickets": "webhook-replay LOW pre-existing; worker boot-time validation; test-secret fallback INFO; C4 alerting"
+        }
+      },
+      "packet_check": "STRUCTURE OK",
+      "publication": "NOT DONE (as above)",
+      "blockers": [],
+      "followups": [
+        "webhook timestamp/nonce hardening (LOW)",
+        "worker boot-time validate_runtime (Dockerfile/worker scope)",
+        "C4 coverage test (QA backlog)"
+      ]
+    },
+    "T35": {
+      "status": "DONE_LOCAL_INTEGRATION",
+      "findings": [
+        "S4",
+        "S5"
+      ],
+      "priority": "P0",
+      "campaign": "c3",
+      "attempt": "A1",
+      "baseline_sha": "edf546de9f998c0909337d0abe6f8e1c9c4a0be5",
+      "qa_commit_sha": "be9f2daf2eb4077632bb4db99e9293655c464cb7",
+      "candidate_sha": "8bf1f5d08fe3d389e4ab6bb9c2d485932fd12e4f",
+      "combined_sha": "810bb0064f45045f5f657ac89e653d2e551e140f (merged 2nd; config.py auto-merge clean — disjoint anchored hunks)",
+      "locks": [
+        "auth-flows"
+      ],
+      "outputs_dir": "ai-team/outputs/c3-t35-a1",
+      "chain": "edf546d -> be9f2da (QA RED 4) -> 8bf1f5d",
+      "invocations": {
+        "planner": {
+          "ref": "agent_549d9b71-13e6-4c8d-8157-e30d287d7140",
+          "status": "PLANNED",
+          "artifact": "outputs/c3-t35-a1/planner.md",
+          "note": "master-prompt sketch corrected on evidence (n=2**12; settings-derived prefix; ValueError guard; actor=system)"
+        },
+        "qa_test_author": {
+          "ref": "agent_c0c1d063-d122-4d23-91f6-98eca461f54b",
+          "status": "TESTS_READY",
+          "qa_commit_sha": "be9f2daf2eb4077632bb4db99e9293655c464cb7",
+          "artifact": "outputs/c3-t35-a1/qa-test-author.md"
+        },
+        "developer": {
+          "ref": "agent_347d1858-bb6f-4e42-951e-c18526399a69",
+          "status": "IMPLEMENTED",
+          "candidate_sha": "8bf1f5d08fe3d389e4ab6bb9c2d485932fd12e4f",
+          "artifact": "outputs/c3-t35-a1/developer.md"
+        },
+        "qa_verify": {
+          "ref": "agent_6cee0511-5366-4e12-bbf3-b8204437130a",
+          "status": "VERIFIED_PASS",
+          "artifact": "outputs/c3-t35-a1/qa-verify-candidate.md",
+          "gates": "36/48/66 passed; mypy 0/164; ruff clean; frozen message byte-exact at runtime"
+        },
+        "reviewer": {
+          "ref": "agent_96fe2888-9d75-4ae4-9ed5-9675f76883d8",
+          "verdict": "PASS",
+          "artifact": "outputs/c3-t35-a1/reviews.md",
+          "note": "transactional ruling: explicit commit required + atomic pair"
+        },
+        "security": {
+          "ref": "agent_99feb3f2-a7ba-40af-879a-f03d66f260a8",
+          "verdict": "PASS",
+          "artifact": "outputs/c3-t35-a1/reviews.md",
+          "note": "stdlib STARTTLS-strip verdict: fail-closed (smtplib never sends STARTTLS unconditionally); no plaintext path; tickets T-f1..T-f3"
+        }
+      },
+      "packet_check": "STRUCTURE OK",
+      "publication": "NOT DONE (as above)",
+      "blockers": [],
+      "followups": [
+        "T-f1 P2 legacy short-password accounts (ops scan + observability)",
+        "T-f2 P3 reset 500/202 differential (keep fail-loud)",
+        "T-f3 release note relay friction",
+        "QA extra: concurrent double-login; real-socket SMTP double"
+      ]
+    },
+    "T36": {
+      "status": "DONE_LOCAL_INTEGRATION",
+      "findings": [
+        "S6"
+      ],
+      "priority": "P0",
+      "campaign": "c3",
+      "attempt": "A1 (+repair R1)",
+      "baseline_sha": "edf546de9f998c0909337d0abe6f8e1c9c4a0be5",
+      "qa_commit_sha": "054331fa50a8069e0ff7d9d9b43ed6096b1169b7",
+      "candidate_sha": "f9c90bf90f057d35c6ef72fcf70bdd14afc8bd80",
+      "combined_sha": "810bb0064f45045f5f657ac89e653d2e551e140f (merged last; no conflicts; config.py untouched by T36)",
+      "locks": [
+        "runtime-config"
+      ],
+      "outputs_dir": "ai-team/outputs/c3-t36-a1",
+      "chain": "edf546d -> 054331f (QA RED) -> b7cdc81 (A1; QA VERIFIED_FAIL: verify_compose L45) -> f9c90bf (R1 +1/-1)",
+      "process_deviation": "no separate planner invocation — contract frozen by owner master card §5-T36; recorded in planner-contract-note.md",
+      "invocations": {
+        "qa_test_author": {
+          "ref": "agent_4600643d-f52e-4fe3-a719-8739ffde2325",
+          "status": "TESTS_READY",
+          "qa_commit_sha": "054331fa50a8069e0ff7d9d9b43ed6096b1169b7",
+          "artifact": "outputs/c3-t36-a1/qa-test-author.md"
+        },
+        "developer": {
+          "ref": "agent_c2c60ced-e441-41c7-a2f0-b17e591b7371",
+          "status": "IMPLEMENTED (+R1 repair)",
+          "candidate_sha": "f9c90bf90f057d35c6ef72fcf70bdd14afc8bd80",
+          "artifact": "outputs/c3-t36-a1/developer.md"
+        },
+        "qa_verify_a1": {
+          "ref": "agent_b59bfbcd-9ccc-415e-ab41-3750b474eb65",
+          "status": "VERIFIED_FAIL",
+          "artifact": "outputs/c3-t36-a1/qa-verify-candidate.md",
+          "fail": "verify_compose.sh:45 double /api/api/health — release-gate always fails; main.py+compose verified sound"
+        },
+        "qa_verify_r1": {
+          "ref": "agent_1e27cb84-425d-419c-a995-a8a579a63c8f",
+          "status": "VERIFIED_PASS",
+          "artifact": "outputs/c3-t36-a1/qa-verify-candidate-r1.md",
+          "gates": "28/80 passed; mypy 0/165; ruff clean; 6-probe URL inventory vs real routers; awk re-validated"
+        },
+        "reviewer": {
+          "ref": "agent_307cd666-ba71-45dc-af5f-634d39dfacd9",
+          "verdict": "PASS",
+          "artifact": "outputs/c3-t36-a1/reviews.md"
+        },
+        "security": {
+          "ref": "agent_b90a566c-2543-4459-99cc-19eb7e654a97",
+          "verdict": "PASS",
+          "artifact": "outputs/c3-t36-a1/reviews.md",
+          "tickets": "F1 P2 pre-existing uvicorn --forwarded-allow-ips=* (Dockerfile:56, fly.toml:34); F2 P3 awk tightening; F3 = T33-F4; F4 internal XFF accepted"
+        }
+      },
+      "packet_check": "STRUCTURE OK",
+      "publication": "NOT DONE (as above)",
+      "blockers": [],
+      "followups": [
+        "F1 uvicorn forwarded-allow-ips (own task, Dockerfile scope)",
+        "F2 awk: any published in api-block + network_mode ban",
+        "nginx.conf append-semantics static guard",
+        "first live docker run of verify_compose.sh = owner release-gate"
+      ]
+    },
+    "T37": {
+      "status": "DONE_LOCAL_INTEGRATION",
+      "findings": [
+        "S7"
+      ],
+      "priority": "P1",
+      "campaign": "c3",
+      "attempt": "A1",
+      "baseline_sha": "edf546de9f998c0909337d0abe6f8e1c9c4a0be5",
+      "qa_commit_sha": "25af8ff2ac4e41a73d4eb493a29a14c11bf9b2a0",
+      "candidate_sha": "2e8e6f9f784d03960562ca25e9b6b6c85d05eca2",
+      "combined_sha": "810bb0064f45045f5f657ac89e653d2e551e140f (merged 4th; no conflicts)",
+      "locks": [
+        "pipeline-runner"
+      ],
+      "outputs_dir": "ai-team/outputs/c3-t37-a1",
+      "chain": "edf546d -> 25af8ff (QA RED; SCHOLARSHIP_* doubled 14/20) -> 2e8e6f9",
+      "invocations": {
+        "planner": {
+          "ref": "agent_84cbdac2-75be-458c-b6f2-01b4a88866e6",
+          "status": "PLANNED",
+          "artifact": "outputs/c3-t37-a1/planner.md",
+          "note": "targeted delete chosen over blanket (code-flow: blanket destroys verify-claims in stage-retry AND recheck paths)"
+        },
+        "qa_test_author": {
+          "ref": "agent_7cb7e7e9-b292-478b-8ba3-74518a19e7c2",
+          "status": "TESTS_READY",
+          "qa_commit_sha": "25af8ff2ac4e41a73d4eb493a29a14c11bf9b2a0",
+          "artifact": "outputs/c3-t37-a1/qa-test-author.md",
+          "honest_deviation": "assertion 5 guard-only (corpus emits zero funding ConflictRows)"
+        },
+        "developer": {
+          "ref": "agent_5ddfef6b-6b87-4899-9c34-66e48c1b9f71",
+          "status": "IMPLEMENTED",
+          "candidate_sha": "2e8e6f9f784d03960562ca25e9b6b6c85d05eca2",
+          "artifact": "outputs/c3-t37-a1/developer.md"
+        },
+        "qa_verify": {
+          "ref": "agent_848f505d-2de2-4cc7-b204-47cc3ef0a3ab",
+          "status": "VERIFIED_PASS",
+          "artifact": "outputs/c3-t37-a1/qa-verify-candidate.md",
+          "gates": "32/47/66/36 passed (T32 + TestRetry gates green); mypy 0/164; ruff clean; enum derivation 14 members verified"
+        },
+        "reviewer": {
+          "ref": "agent_6426b7eb-e8ea-40cb-b586-297541ef637f",
+          "verdict": "PASS",
+          "artifact": "outputs/c3-t37-a1/reviews.md",
+          "note": "security optional per card — not conducted (dispatcher ruling, minimal surface)"
+        }
+      },
+      "packet_check": "STRUCTURE OK",
+      "publication": "NOT DONE (as above)",
+      "blockers": [],
+      "followups": [
+        "seed funding ConflictRow before re-entry (contract session; pins conflict-delete + :1136)",
+        "owner decision on cleaning existing prod duplicates",
+        ".value-style nit in in_()"
+      ]
+    },
+    "T38": {
+      "status": "DONE_LOCAL_INTEGRATION",
+      "findings": [
+        "S8"
+      ],
+      "priority": "P2",
+      "campaign": "c3",
+      "attempt": "A1",
+      "baseline_sha": "810bb0064f45045f5f657ac89e653d2e551e140f",
+      "candidate_sha": "d4908ae6111d007903e45b550f82fdb975a3d92b",
+      "combined_sha": "d4908ae6111d007903e45b550f82fdb975a3d92b (ff onto ai/c3/integration; FINAL c3 head)",
+      "locks": [
+        "docs-truth"
+      ],
+      "outputs_dir": "ai-team/outputs/c3-t38-a1",
+      "chain": "810bb00 -> d4908ae (docs only; 23 contract edits, sources cited)",
+      "invocations": {
+        "planner": {
+          "ref": "agent_36b11deb-26e8-42d7-a858-c2452baf1943",
+          "status": "PLANNED",
+          "artifact": "outputs/c3-t38-a1/planner.md",
+          "note": "23-edit contract + honesty constraints + stale-number sweep beyond the card"
+        },
+        "developer": {
+          "ref": "agent_9b01939a-6b29-4381-a511-81f6efbde8b4",
+          "status": "IMPLEMENTED",
+          "candidate_sha": "d4908ae6111d007903e45b550f82fdb975a3d92b",
+          "artifact": "outputs/c3-t38-a1/developer.md",
+          "interpretations": "1-3 disclosed, ACCEPT by QA+reviewer"
+        },
+        "qa_verify": {
+          "ref": "agent_51cddb63-5f6a-4d37-849f-9b81cbaa89c0",
+          "status": "VERIFIED_PASS",
+          "artifact": "outputs/c3-t38-a1/qa-verify-candidate.md",
+          "gates": "60+ tokens cross-checked; own recounts registry 19 / i18n 194-183-183 / playwright 76+6; stale-sweep clean; handoff_check exit 0"
+        },
+        "reviewer": {
+          "ref": "agent_9cd6db06-6b0e-49b3-a13e-84ee39040321",
+          "verdict": "PASS",
+          "artifact": "outputs/c3-t38-a1/reviews.md",
+          "nonblocking": "F1 local-метка в комментарии; F2 CI-атрибуция 1358; F3 потеряна старая зелёная сноска gate 2; F4 gate 3 fix-plan-era"
+        }
+      },
+      "packet_check": "STRUCTURE OK",
+      "publication": "NOT DONE at packet time — push+PR #10 authorized by master prompt §6 (executed by dispatcher after this entry)",
+      "blockers": []
     }
   },
   "campaign_c1_summary": {
@@ -1323,5 +1890,74 @@
       "full_suite_baseline": "NOT run per kickoff (1153 passed / cov 93.00% independently confirmed by codex audit at this code state)"
     },
     "c1_reservations_released": "active_reservations from c1 (T04/T09/T10) released: all three tasks DONE_LOCAL_INTEGRATION; worktrees under /Users/wpalish/ashyq-worktrees/* and ai/c1/* branches retained pending owner cleanup decision"
+  },
+  "campaign_c3": {
+    "name": "SECURITY",
+    "opened_at_local": "2026-09-08",
+    "baseline_sha": "edf546de9f998c0909337d0abe6f8e1c9c4a0be5 (main @ PR #9 merge; frozen for all c3 worktrees)",
+    "master_prompt": "ai-team/reference/MASTER_C3_PROMPT_RU.md (owner-supplied 2026-09-08; copied to reference)",
+    "findings_source": "external audit findings S1-S8 confirmed on edf546d; dispatcher personally spot-verified S1 (set_decision response_model=ProgramResult), S3 (hmac over possibly-empty secret), S4 (starttls() без контекста), S5 (needs_rehash defined security.py:62, zero callers), S6 (first XFF hop); S2/S7/S8 verification delegated to planners with instruction to verify line-level",
+    "baseline_gates": "FULL pytest 1358 passed / 0 failed, cov 93.81% — dispatcher-run on frozen SHA 2026-09-08",
+    "profile": "master-prompt-sanctioned parallel set of 4 writer tasks (T33/T34/T35/T37; files disjoint); T36 serialized strictly after T34 (shared config.py — block-split option rejected to avoid same-file parallel branches); T38 last; ONE integration slot",
+    "config_py_ownership": "T34 owns payments-block of config.py; T36 owns proxy-block; tasks serialized T34 -> T36 (recorded here per master prompt requirement BEFORE both start)",
+    "order": [
+      "wave1 parallel: T33 + T34 + T35 + T37 (planners, then QA RED, then dev)",
+      "T36 after T34 DONE",
+      "T38 after T33-T37 (numbers from acceptance packets)",
+      "single integrator: ai/c3/integration -> PR #10, both CI matrices"
+    ],
+    "nonnegotiable": [
+      "no paywall disabling in tests: payments_enabled=True fixture + absent Entitlement (pattern test_paywall.py)",
+      "RED-first for every fix (commit RED before implementation)",
+      "no new dependencies (smtplib/ssl are stdlib)",
+      "secrets never in git: generated test keys, SecretStr paths unlogged, masked values in packets",
+      "coverage floor 92; auth/CSRF/CORS/CSP/SSRF/scrypt/tenancy/job-idempotency not weakened",
+      "main untouched; worktrees ai/c3/<task>/{qa,dev} from frozen baseline"
+    ],
+    "task38_roles_deviation": "master prompt said QA 'optional' for T38; added ashyq-qa anyway — TEAM_RULES mandate 4 roles minimum, and QA cross-checking doc numbers against acceptance packets is meaningful verification (strengthening, not scope creep)",
+    "reservations": {
+      "paywall-contract": "T33/A1 (c3)",
+      "payments-contract": "T34/A1 (c3)",
+      "auth-flows": "T35/A1 (c3)",
+      "pipeline-runner": "T37/A1 (c3)",
+      "runtime-config": "T36 (c3) — reserved, not started (waits T34)"
+    },
+    "wave1_status_2026_09_08": {
+      "T33": "DONE_PENDING_INTEGRATION: cand 540e3567f78e0bbe4be1da3cd3319ae086e3ca8c (QA VERIFIED_PASS; reviewer PASS agent_89d41721; security PASS agent_be7d52d2; dispatcher expansion entitlements.py free_view costs.source_urls; tickets T33-F1..F4)",
+      "T34": "DONE_PENDING_INTEGRATION: cand b55a3b083558812079e7a2ff366cc9019e2d7393 (QA VERIFIED_PASS; reviewer PASS agent_cc2f693c; security PASS agent_ab896b3f; tickets: webhook-replay LOW pre-existing, worker boot-time, test-secret fallback info)",
+      "T35": "DONE_PENDING_INTEGRATION: cand 8bf1f5d08fe3d389e4ab6bb9c2d485932fd12e4f (QA VERIFIED_PASS; reviewer PASS agent_96fe2888; security PASS agent_99feb3f2 incl. stdlib STARTTLS-strip fail-closed verdict; tickets T-f1 short-passwords P2, T-f2/T-f3 P3)",
+      "T37": "DONE_PENDING_INTEGRATION: cand 2e8e6f9f784d03960562ca25e9b6b6c85d05eca2 (QA VERIFIED_PASS; reviewer PASS agent_6426b7eb; security optional per card — ruling: not conducted, PK-scoped deletes, minimal surface)",
+      "T36": "DONE_PENDING_INTEGRATION: final cand f9c90bf90f057d35c6ef72fcf70bdd14afc8bd80 (A1 b7cdc81 VERIFIED_FAIL — honest catch verify_compose L45; repair R1 +1/-1; QA re-verify VERIFIED_PASS agent_1e27cb84; reviewer PASS agent_307cd666; security PASS agent_b90a566c; tickets F1 uvicorn-forwarded-allow-ips P2 pre-existing, F2 awk-tightening, F3/F4)",
+      "INTEGRATED": "all five tasks DONE_LOCAL_INTEGRATION @ 810bb00; T38 next (docs, real numbers available); then final gates + push ai/c3/integration + PR #10 (authorized §6; main merge = owner gate)"
+    },
+    "dispatcher_rulings_2026_09_08": [
+      "T33 4th scan param (GET /results nested costs.source_urls) = REAL leak: scope expanded to entitlements.py free_view (T34 hands-off recorded); scan authored expecting 4 RED -> 0",
+      "T33 security tickets: T33-F1 MEDIUM free-export bypasses free_shortlist_rows (owner decision); F2 scan RunView gap; F3 dictionary amendment (Money.source_url etc.); F4 /recheck /retry un-gated+un-limited (pre-existing)",
+      "T35 master-prompt corrections accepted on evidence: legacy hash n=2**12 (not 2**14); prefix from settings (scrypt$16384$ under fixtures); ValueError-guard; actor=system",
+      "T37 targeted delete (not blanket) per planner code-flow analysis; QA assertion-5 honest deviation accepted (corpus has no funding conflicts)",
+      "config.py merge order frozen: T34 (validate_runtime TOP) -> T35 (field :96 + guard :201+) -> T36 (proxy block untouched in final impl)",
+      "PR #10 push authorization: master prompt §6 explicitly prescribes ai/c3/integration -> PR #10 -> both CI matrices; treated as owner authorization to PUSH THE BRANCH and OPEN THE PR; protected-main merge remains a separate owner gate"
+    ],
+    "integration_plan": "order: T34 (b55a3b0) -> T35 (8bf1f5d) -> T33 (540e356) -> T37 (2e8e6f9) -> T36 (f9c90bf) onto ai/c3/integration from edf546d; then acceptance packets; then T38 docs with real numbers; then T38 integration + final gates; then push ai/c3/integration + PR #10 (authorized by master prompt §6; main merge = owner gate)",
+    "integration_result": "COMBINED_SHA 810bb0064f45045f5f657ac89e653d2e551e140f (integrator agent_49118efb; 5x no-ff merges в порядке T34->T35->T33->T37->T36, zero conflicts; FULL pytest 1402 passed / 0 skipped, cov 94.04% (baseline 93.81%); mypy 0/166; ruff clean; targets 166; cross 102; FE skipped (0 frontend diffs); verify_compose live NOT_RUN (no docker) — owner release-gate)",
+    "process_deviations": [
+      "T36 ran QA-first без отдельного planner-вызова: контракт заморожен master-карточкой владельца §5-T36 (эквивалент planner-контракта); QA/dev/reviewer/security полные и независимы. Отклонение зафиксировано интегратором; ретро-планер не назначен (контракт не изменился относительно карточки). TEAM_RULES '4 роли' соблюдены (planner — единственное исключение, по источнику контракта)."
+    ],
+    "campaign_result": {
+      "final_head": "ed9fd42 (d4908ae + evidence 13368b8 + ledger status 0236a19 + DoD gates/HANDOFF ed9fd42)",
+      "tasks": "T33 T34 T35 T36 T37 T38 all DONE_LOCAL_INTEGRATION; full cycles (QA RED-first everywhere except docs-only T38 per frozen contract; dev; QA verify — T36 via honest VERIFIED_FAIL->R1; reviewer; security mandatory on T33/T34/T35/T36, optional-T37 not conducted ruling)",
+      "final_gates": "FULL pytest 1402 passed / 0 skipped / 1 pre-existing warning, cov 94.05% (floor 92; c2 baseline 93.81%); mypy 0/166; ruff clean; handoff_check exit 0; targets 166; FE skipped (0 frontend diffs whole campaign)",
+      "acceptance_packets": "6/6 STRUCTURE OK (outputs/c3-t*-a1/acceptance-packet.json)",
+      "owner_gates_remaining": [
+        "push ai/c3/integration + PR #10 — authorized by master prompt §6, dispatcher executes",
+        "PR #10 both CI matrices green",
+        "protected-main merge",
+        "deploy",
+        "first live docker run of verify_compose.sh",
+        "T33-F1 free-export coverage decision"
+      ],
+      "publication_status": "PREPARED, BLOCKED ON CREDENTIALS: evidence commit branch head ed9fd42 (evidence commit 13368b8 + DoD commit) on ai/c3/integration (branch head; all gates green at d4908ae + evidence on top). Push attempt failed: git credential helper references a deleted temp gh binary (/tmp/ashyq-gh.*/bin/gh), gh CLI not installed, macOS keychain has no github.com entry, no SSH keys. Owner action required: (a) install gh + `gh auth login`, or (b) provide a PAT via keychain, or (c) switch origin to SSH with a key — then dispatcher pushes and opens PR #10 (authorized by master prompt §6). Alternative: owner pushes ai/c3/integration themselves and opens the PR.",
+      "dod_item6": "DONE: RELEASE_CHECKLIST gates 97-102 added (summary re-count PASS 98 / PARTIAL 2 / FAIL 0 / BLOCKED 2 of 102); HANDOFF.md baton/§2/§5/§6/§8/§9/§11 updated for c3; handoff_check exit 0"
+    }
   }
 }

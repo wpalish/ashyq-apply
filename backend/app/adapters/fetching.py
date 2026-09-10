@@ -43,6 +43,7 @@ from app.adapters.network_policy import (
     ResolvedTarget,
     check_url,
 )
+from app.adapters.offload import off_loop
 from app.domain.enums import FetchOutcome
 
 log = logging.getLogger("unimatch.fetch")
@@ -307,7 +308,7 @@ class RobotsPolicy:
         try:
             # robots.txt is fetched from a host the crawler was pointed at, so
             # it is exactly as attacker-influenced as any other URL.
-            target = check_url(robots_url)
+            target = await off_loop(check_url, robots_url)
         except BlockedRequest as exc:
             log.warning("refusing robots.txt for %s: %s", host, exc)
             return None
@@ -468,7 +469,7 @@ class Fetcher:
         current = url
         validators = dict(validators) if validators else None
         for _hop in range(MAX_REDIRECTS + 1):
-            target = check_url(current)
+            target = await off_loop(check_url, current)
             # ``get()`` buffers the entire body before returning, which would
             # make the byte cap below cosmetic (and lets an endless response
             # exhaust memory). Keep the response streaming from the socket.
@@ -616,7 +617,9 @@ class Fetcher:
             # Record what the next visit needs to ask "has this changed?".
             etag=response.headers.get("etag", ""),
             last_modified=response.headers.get("last-modified", ""),
-            content_hash=_content_hash(text),
+            # _content_hash extracts the text before hashing it, so it soups
+            # the whole document — on the hot path of every single fetch.
+            content_hash=await off_loop(_content_hash, text),
         )
 
     async def _maybe_render(self, result: FetchResult) -> FetchResult:
@@ -625,7 +628,8 @@ class Fetcher:
             return result
         from app.adapters.extraction import html_to_text
 
-        if len(html_to_text(result.text)) >= MIN_USEFUL_TEXT:
+        plain_length = len(await off_loop(html_to_text, result.text))
+        if plain_length >= MIN_USEFUL_TEXT:
             return result
 
         rendered = await self._renderer.render(result.url)  # type: ignore[attr-defined]
@@ -640,14 +644,17 @@ class Fetcher:
                 result.url[:120],
             )
             return result
-        if rendered.ok and len(html_to_text(rendered.text)) > len(html_to_text(result.text)):
+        # Reuses the length measured above rather than souping the plain
+        # result a second time.
+        rendered_length = len(await off_loop(html_to_text, rendered.text)) if rendered.ok else 0
+        if rendered.ok and rendered_length > plain_length:
             rendered.fetch_tier = "browser"
             # Browser output has no HTTP validators: whatever a renderer claims
             # to carry over from the HTTP tier is dropped here, and the content
             # hash is recomputed from the rendered text.
             rendered.etag = ""
             rendered.last_modified = ""
-            rendered.content_hash = _content_hash(rendered.text)
+            rendered.content_hash = await off_loop(_content_hash, rendered.text)
             self.tier_counts["browser"] += 1
             log.info("escalated %s to the browser tier", result.url[:120])
             self.cache.put(rendered)
@@ -794,7 +801,7 @@ class Fetcher:
             raise RuntimeError("Fetcher must be used as an async context manager")
 
         try:
-            target = check_url(url)
+            target = await off_loop(check_url, url)
         except BlockedRequest as exc:
             log.warning("blocked by network policy: %s", exc)
             self.stats[FetchOutcome.BLOCKED.value] += 1

@@ -1086,6 +1086,111 @@
         "Регресс-тесты T13 включены и зелёные (закрытие T13)",
         "refresh строки с tenancy и 402 на free; demo-прогон байт-в-байт прежний"
       ]
+    },
+    {
+      "id": "T33",
+      "findings": ["S1", "S2"],
+      "title": "Целостность paywall: три обходных эндпоинта (set_decision/set_notes/export_profile)",
+      "priority": "P0",
+      "dependencies": [],
+      "locks": ["paywall-contract"],
+      "allowed_paths": ["backend/app/api/routes_results.py", "backend/app/api/routes_profile.py", "backend/tests/test_paywall.py", "backend/tests/test_billing_api.py", "backend/tests/test_frontend_contract.py"],
+      "required_roles": ["ashyq-planner", "ashyq-developer", "ashyq-qa", "ashyq-reviewer", "ashyq-security"],
+      "status": "BACKLOG",
+      "acceptance": [
+        "RED на edf546d: free-орг получает claims/scholarships/funding_gap через три эндпоинта",
+        "set_decision/set_notes на видимой строке -> 200, payload = проекция free_view",
+        "export_profile без entitlement: профиль/решения/audit есть, claims/conflicts/checklist нет; с entitlement — полный",
+        "Surface-scan всех маршрутов не находит новых утечек paid-контента",
+        "Покупка кейса открывает полные ответы — регрессии оплаты нет",
+        "Полный suite зелёный, coverage >= 92"
+      ]
+    },
+    {
+      "id": "T34",
+      "findings": ["S3"],
+      "title": "Payments fail-closed: секреты, провайдер, webhook",
+      "priority": "P0",
+      "dependencies": [],
+      "locks": ["payments-contract"],
+      "allowed_paths": ["backend/app/config.py", "backend/app/payments/provider.py", "backend/app/payments/apipay.py", "backend/app/payments/fake.py", "backend/tests/test_payments_config.py", "backend/tests/test_payment_webhook.py", "backend/tests/test_apipay_adapter.py"],
+      "required_roles": ["ashyq-planner", "ashyq-developer", "ashyq-qa", "ashyq-reviewer", "ashyq-security"],
+      "status": "BACKLOG",
+      "acceptance": [
+        "RED: подпись ключом b\"\" принимается вебхуком",
+        "пустой секрет -> отказ всегда; секрет >=32 симв. required при apipay",
+        "typo провайдера и production+fake+enabled -> отказ старта",
+        "существующие payment-тесты зелёные без ослабления",
+        "Полный suite зелёный, coverage >= 92"
+      ]
+    },
+    {
+      "id": "T35",
+      "findings": ["S4", "S5"],
+      "title": "SMTP TLS-верификация + scrypt-рехеширование при логине",
+      "priority": "P0",
+      "dependencies": [],
+      "locks": ["auth-flows"],
+      "allowed_paths": ["backend/app/mail.py", "backend/app/config.py", "backend/app/api/routes_auth.py", "backend/app/security.py", "backend/tests/test_account_flows.py", "backend/tests/test_logging_and_correlation.py"],
+      "required_roles": ["ashyq-planner", "ashyq-developer", "ashyq-qa", "ashyq-reviewer", "ashyq-security"],
+      "status": "BACKLOG",
+      "acceptance": [
+        "RED: starttls без SSL-контекста",
+        "контекст строгий по умолчанию; production отказ при smtp_tls_verify=False",
+        "логин со старым scrypt-хешем апгрейдит и пишет audit ровно один раз; RED на baseline",
+        "Полный suite зелёный, coverage >= 92"
+      ]
+    },
+    {
+      "id": "T36",
+      "findings": ["S6"],
+      "title": "Доверенный прокси: последний hop + непубликованный API-порт",
+      "priority": "P0",
+      "dependencies": ["T34"],
+      "locks": ["runtime-config"],
+      "allowed_paths": ["backend/app/main.py", "backend/app/config.py", "docker-compose.yml", "scripts/verify_compose.sh", "backend/tests/test_security.py"],
+      "required_roles": ["ashyq-planner", "ashyq-developer", "ashyq-qa", "ashyq-reviewer", "ashyq-security"],
+      "status": "BACKLOG",
+      "acceptance": [
+        "RED: спуфнутый первый hop получает собственный лимит-бакет",
+        "после фикса: последний hop; один nginx в цепи — адрес клиента корректен",
+        "compose не публикует 8099 наружу; verify_compose.sh проверяет",
+        "abuse-limit тесты зелёные без ослабления",
+        "Полный suite зелёный, coverage >= 92"
+      ]
+    },
+    {
+      "id": "T37",
+      "findings": ["S7"],
+      "title": "Дубли claims при повторном входе в funding-стадию",
+      "priority": "P1",
+      "dependencies": [],
+      "locks": ["pipeline-runner"],
+      "allowed_paths": ["backend/app/pipeline/runner.py", "backend/tests/test_pipeline.py"],
+      "required_roles": ["ashyq-planner", "ashyq-developer", "ashyq-qa", "ashyq-reviewer"],
+      "status": "BACKLOG",
+      "acceptance": [
+        "RED: повторный вход в funding удваивает claims по result_id",
+        "ровно один набор funding-claims; user_decision/notes сохранены",
+        "reextract_page (T32) и TestRetry зелёные",
+        "Полный suite зелёный, coverage >= 92"
+      ]
+    },
+    {
+      "id": "T38",
+      "findings": ["S8"],
+      "title": "Правдивые документы после c2 (recall 7/10, CI зелёный)",
+      "priority": "P2",
+      "dependencies": ["T33", "T34", "T35", "T36", "T37"],
+      "locks": ["docs-truth"],
+      "allowed_paths": ["README.md", "RELEASE_CHECKLIST.md", "docs/CURRENT_STATE.md"],
+      "required_roles": ["ashyq-planner", "ashyq-developer", "ashyq-qa", "ashyq-reviewer"],
+      "status": "BACKLOG",
+      "acceptance": [
+        "ни одно число в README/RELEASE_CHECKLIST не противоречит пакетам c2/c3",
+        "каждое изменённое утверждение имеет ссылку на источник",
+        "handoff_check.py зелёный"
+      ]
     }
   ]
 }

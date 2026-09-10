@@ -43,6 +43,7 @@ from bs4 import BeautifulSoup
 
 from app.adapters.base import Candidate, CandidateProgram, PageOutcome
 from app.adapters.fetching import Fetcher
+from app.adapters.offload import off_loop
 from app.adapters.page_classifier import (
     PageClassification,
     PageType,
@@ -866,7 +867,7 @@ class LiveDiscoveryAdapter:
             if not result.ok:
                 trace.reject(url, f"could not be read ({result.outcome.value})")
                 continue
-            page = classify_page(url=url, html=result.text)
+            page = await off_loop(classify_page, url=url, html=result.text)
             reason = profile_rejects(page, requested_level, fields)
             if reason is not None:
                 trace.reject(url, reason)
@@ -1036,7 +1037,10 @@ class LiveDiscoveryAdapter:
                 )
                 continue
             from_catalogue = start in selected[PageCategory.PROGRAM_CATALOG]
-            for url, label in _harvest_links(result.text, result.final_url or start, domain):
+            harvested = await off_loop(
+                _harvest_links, result.text, result.final_url or start, domain
+            )
+            for url, label in harvested:
                 category, score = categorise_url(url)
                 if category is None:
                     # On a catalogue page, a link whose own text names the
