@@ -9,9 +9,9 @@ Write for a reader who has **zero** chat history — because that is exactly who
 | | |
 |---|---|
 | Holder | **gpt-6-astra — PR #10 integration regression repair** |
-| Since (UTC) | 2026-09-09 19:29:02 UTC |
+| Since (UTC) | 2026-09-10 01:57:36 UTC |
 | Branch | `task/frontend-redesign`, owner-directed continuation from design-system predecessor |
-| HEAD when written | `d1e4fe9` (previous writer accepted the same regression slice) |
+| HEAD when written | `44dfa2a` (remote planning handoff fast-forwarded; owner transferred continuation here) |
 | Origin main when checked | `edf546d`; branch contains only the owner-directed design-system work |
 | Previous holder | gpt-6-astra; its session stopped after accepting the regression slice, before implementation |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
@@ -252,6 +252,13 @@ No branch, commit, push or stash has been performed by this writer.
 ## 5. NEXT STEP — exact and executable
 
 Accepted write-ahead: repair PR #10's four ordinary-E2E failures before expanding E02.
+
+Owner transferred continuation to this Windows session on 2026-09-10. Remote 44dfa2a
+changed only this plan; local CSS/spec/E2E repairs and generated screenshots are preserved.
+Bucket and Decision now fit; expanded funding detail no longer expands the mobile viewport.
+Follow-up from the unblocked full suite: remove completed-stage opacity that fails AA,
+then investigate mobile review-mode overflow/navigation exposed by the accessibility walk.
+Run full ordinary/auth suites and record results before publishing; no claim of green gates yet.
 
 1. Reproduce the two-project Bucket failure plus the mobile community and journey failures against a
    fresh isolated SQLite database; retain the real pointer-interception and bounding-box evidence.
@@ -582,6 +589,9 @@ host=github.com
 `[0.8]` → `[1.1]` → `[1.2]` → `[1.3]` → `[1.4]` → `[2.1]` → `[2.2]` → `[2.3]` → `[3.1]` → `[3.2]` → `[4.1]` → `[4.2]` → `[5]`
 
 ## 11. Session log (one line per session, newest last)
+
+2026-09-10 01:57 UTC gpt-6-astra: owner explicitly transferred continuation here; accepted
+remote planning-only 44dfa2a without losing local implementation. Full verification next.
 
 2026-09-09 19:29 UTC gpt-6-astra: accepted PR #10 integration regression repair at `d1e4fe9` after
 clean fetch/handoff audit and documentation/code reconciliation; exact CSS/spec/E2E plan is in §5.
