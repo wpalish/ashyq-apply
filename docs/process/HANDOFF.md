@@ -6,6 +6,9 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+Current holder: **gpt-6-astra**, 2026-09-20 UTC. Branch: `task/v2-00-execution-pack`; base/HEAD: `b267b337`. Prior baton table below is historical.
+
+
 | | |
 |---|---|
 | Holder | **nobody** |
@@ -17,6 +20,10 @@ Write for a reader who has **zero** chat history — because that is exactly who
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**V2-00 — integrate the Evidence & Discovery execution pack (in-progress).**
+Owner explicitly prioritizes the new workstream. V2-01 follows this documentation commit in a task branch from this predecessor (explicit branch exception). Goal: measure current research/discovery quality before architecture changes.
+
 
 **Security audit of the whole repository, and the fixes it produced — `ready-for-review (PR #12)`.**
 
@@ -253,6 +260,9 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+Current write-ahead: integrate all execution-pack Markdown into `analysis/v2/`, add navigation and a task card in the existing `analysis/AI_TASK_BRIEF.md`. Run baseline gates, commit/push documentation, then branch `task/v2-01-research-benchmark` from this documentation predecessor. First code: `backend/evaluation/research/schema.py` and `backend/tests/test_research_benchmark.py`. Older steps below are historical.
+
+
 1. **Review and merge PR for `task/security-audit-hardening`.** Nine commits, backend + frontend +
    SECURITY.md. Reproduce the three proofs by checking out `main` and running the new tests there:
    `tests/test_payment_webhook.py::TestAnUnconfiguredSecretIsNotASecret`,
@@ -298,6 +308,14 @@ E2E (`npm run e2e`, `npm run e2e:auth`) was **not** run locally — ports 5173/8
 CI runs both on the PR.
 
 ## 7. Blockers / questions for the owner
+
+### V2 reconciliation, 2026-09-20
+- HEAD and origin/main both b267b337. PR #13 is OPEN (crawler offload); no merge or overlapping production edits. PRs #11/#10/#1 also remain open.
+- Original checkout has modified HANDOFF, untracked research schemas/tests and package-lock.json; preserved untouched in `task/1.1-research-contracts`. Its 2026-09-17 local notes report 51 schema tests and a KZT test failure; these are not merged baseline facts.
+- Isolated V2 worktree starts from main. Five unpushed payment commits in sibling worktree are outside scope.
+- Future pack country-name queries conflict with preferences_only I3; retain current privacy contract pending owner decision. Future field ontology treats software engineering as related whereas existing spec lists it under CS; no ontology change here.
+- Human review cannot be impersonated by an AI. Prepare evidence-backed draft cases; acceptance needs an actual human reviewer. This blocks final dataset certification, not harness work.
+
 
 ### OPEN — residual security risks found and deliberately left alone (2026-09-09, claude-opus-5)
 
@@ -497,3 +515,8 @@ host=github.com
 | 2026-09-07 14:10:54 UTC | codex | `ab2e70a` → `96c1082` + final publication handoff | Owner explicitly authorized GitHub publication. Secret-scanned and committed all 133 ai-team evidence files plus the corrected audit, pushed `ai/c1/integration`, and opened PR #7. Release-gates started; no protected-main merge or application deploy. |
 | 2026-09-08 03:38:21 UTC | codex | `9b362c8` → in progress | Took the C2 baton after verifying `origin/main@4d2125c` is the merge-base. Owner authorized T29 wiring, bounded T30 batches, T26, committing campaign evidence, and GitHub publication; T31 remains blocked on provider/secrets/data-policy acknowledgement. |
 | 2026-09-09 19:20 UTC | claude-opus-5 | `edf546d` → `task/security-audit-hardening` | Owner asked for a security review of the repository instead of the next brief task. Audited auth, tenancy, payments, egress, uploads, exports, mail, crypto, headers and the frontend; proved three findings with tests that fail on `main`; fixed nine across 9 commits. Full gates green (1395 backend / 93.96% / 188 frontend / build / pip-audit). Residuals recorded in §7. Baton released; nothing merged to `main`, no deploy.
+
+| 2026-09-20 | gpt-6-astra | b267b337 → V2-00 in progress | Startup/recovery, PR inventory, all pack files read; isolated worktree preserves existing dirty research work. |
+
+V2-00 gates: Ruff lint/format pass (166 files); mypy pass (166 files). Full backend/frontend gates running; checkpoint is wip until their results are known. Alembic source graph: one head d9c4e7a21b83.
+
