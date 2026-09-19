@@ -6,7 +6,7 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-Current holder: **gpt-6-astra**, 2026-09-20 UTC. Branch: `task/v2-00-execution-pack`; base/HEAD: `b267b337`. Prior baton table below is historical.
+Current holder: **gpt-6-astra**, 2026-09-20 UTC. Branch: `task/v2-01-research-benchmark`; base: `b267b337`; HEAD when written: `d917259`. Prior baton table below is historical.
 
 
 | | |
@@ -21,7 +21,7 @@ Current holder: **gpt-6-astra**, 2026-09-20 UTC. Branch: `task/v2-00-execution-p
 
 ## 2. Current task
 
-**V2-00 — integrate the Evidence & Discovery execution pack (in-progress).**
+**V2-01 — reproducible university research benchmark (in-progress).**
 Owner explicitly prioritizes the new workstream. V2-01 follows this documentation commit in a task branch from this predecessor (explicit branch exception). Goal: measure current research/discovery quality before architecture changes.
 
 
@@ -260,7 +260,7 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-Current write-ahead: integrate all execution-pack Markdown into `analysis/v2/`, add navigation and a task card in the existing `analysis/AI_TASK_BRIEF.md`. Run baseline gates, commit/push documentation, then branch `task/v2-01-research-benchmark` from this documentation predecessor. First code: `backend/evaluation/research/schema.py` and `backend/tests/test_research_benchmark.py`. Older steps below are historical.
+Documentation checkpoint d917259 pushed. Current write-ahead: create `backend/evaluation/research/schema.py`, `metrics.py`, offline CLI, separate bounded canary capture, and `backend/tests/test_research_benchmark.py`. First tests cover all-UNKNOWN, wrong scope, duplicates, absent denominators, and production isolation. Next collect official-source draft cases and run baseline. Historical integration plan: integrate all execution-pack Markdown into `analysis/v2/`, add navigation and a task card in the existing `analysis/AI_TASK_BRIEF.md`. Run baseline gates, commit/push documentation, then branch `task/v2-01-research-benchmark` from this documentation predecessor. First code: `backend/evaluation/research/schema.py` and `backend/tests/test_research_benchmark.py`. Older steps below are historical.
 
 
 1. **Review and merge PR for `task/security-audit-hardening`.** Nine commits, backend + frontend +
