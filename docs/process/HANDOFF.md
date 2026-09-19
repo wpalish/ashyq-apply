@@ -60,6 +60,9 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+V2: `d917259` integrated all 15 Markdown documents plus original manifest and navigation/task card; pushed. `5d2a3ed` write-ahead V2-01 baton; pushed. All 16 archive entries verified byte-for-byte after transfer; original untracked ZIP removed. Current implementation checkpoint includes schema, offline scoring, bounded live capture, 10 draft cases, 14 tests and container isolation; human certification remains outstanding.
+
+
 The original recovery entries below are historical provenance. Preserve their hashes and ancestry;
 the first seven predate `AGENTS.md` and lack the required `Agent:` trailer, so do not rewrite them to
 manufacture compliant history. [0.4] was committed before [0.3].
@@ -285,7 +288,10 @@ The steps codex left, unchanged and still next after this review:
 4. Update GitHub Actions dependencies away from Node-20-based action releases before GitHub removes
    the compatibility shim. Do not buy a provider or deploy application infrastructure implicitly.
 
-## 6. Gate status at last run (numbers, not adjectives)
+## 6. Gate status at last run
+
+V2-01 current: Ruff lint/format pass (173 files); mypy pass (173); 14 focused benchmark tests pass. Frontend typecheck/lint/188 unit/build pass. pip-audit: no known vulnerabilities. npm audit: 2 moderate vulnerabilities, below high gate. SQLite full baseline running; KZT fixture fails under default Windows codepage and passes with PYTHONUTF8=1 (same test, no production changes). PostgreSQL local server starts; full matrix pending. Demo migrated in isolated database; Groningen first. One Alembic head d9c4e7a21b83. E2E initial launcher failed on CRLF run.sh; retry with local LF checkout. No green full-suite claim yet.
+ (numbers, not adjectives)
 
 Local runs by claude-opus-5, 2026-09-09, on `task/security-audit-hardening`.
 Codex's C2 gate numbers for `main@04a3058` are in git history at `edf546d`; this table is the

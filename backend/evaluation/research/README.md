@@ -1,0 +1,116 @@
+# V2-01 research benchmark
+
+This is evaluation tooling, excluded from production containers. The live runner
+uses the existing production registry, Fetcher and ResearchRunner. It never loads
+ground truth. Ranking, discovery, verification and network policy are unchanged.
+
+## Current acceptance status
+
+**IN PROGRESS.** The initial ten cases are AI-prepared drafts from official pages
+read on 2026-09-20 (local date). They are **not human verified**. Some exact programme
+URLs, most requirement labels, all award-level labels and site-architecture strata
+still need review. Do not describe this corpus as a complete admissions benchmark.
+The strict scorer refuses it unless `--allow-drafts` is explicit. No final overall
+quality score or production readiness claim is made.
+
+The source pack is in `analysis/v2`; its original `00_START_HERE.md` became README.md.
+The manifest preserves original archive names. AGENTS, the original task brief,
+and the single `docs/process/HANDOFF.md` remain the relay system.
+
+## Offline output replay
+
+From `backend`, with the project Python environment:
+
+```sh
+python -m evaluation.research --dataset evaluation/research/data/ground_truth.json --capture ../artifacts/research-benchmark/baseline/capture.json --out ../artifacts/research-benchmark/baseline/metrics.json --allow-drafts
+python -m pytest tests/test_research_benchmark.py
+```
+
+This deterministically scores captured **pipeline outputs**. It does not replay
+HTML through discovery; it cannot estimate how a new discovery algorithm would
+perform from old output alone. New implementations need fresh bounded captures
+or a separately assembled source-response replay corpus. Tests prevent socket use
+in offline scoring. No web tools, paid provider or LLM are used by the offline CLI.
+
+## Live capture
+
+```sh
+python -m evaluation.research.live --live --seconds-per-case 90 --max-pages 60 --out ../artifacts/research-benchmark
+```
+
+Ten institutions, sequentially, one fresh subprocess and temporary database/cache
+per institution. Optional `--case groningen` selects one. HTTP-only baseline:
+browser disabled explicitly, production robots/PII/egress protections retained.
+No applicant records are read: the existing canary creates a synthetic profile.
+Budgets bound Fetcher.get calls (including cache hits), **not actual wire requests**;
+each call may include robots, redirects/retries. A hard subprocess timeout bounds
+the whole case, including blocking parsers in main while PR #13 remains open.
+Timeouts are failures, remain in recall denominators and do not count as abstention
+success. Missing telemetry remains null. Raw canary records preserve Fetcher outcome
+counts; these are not mislabeled as HTTP wire counts. Output persists after each case.
+
+Capture does not receive expected URLs, labels or evidence. The cohort contains
+only IDs and registry domain selectors. No university-specific fixes are introduced.
+Read the per-case errors before interpreting metrics; truncated runs are not
+unrestricted pipeline quality. The budget and HTTP-only setting must match when
+comparing future runs. No provider fees are incurred by this harness.
+
+## Label and review procedure
+
+1. Choose university × degree × field × intake and assign a stable case ID.
+2. Read current official pages, including the exact programme and population.
+   A search snippet, homepage or related programme is not an exact-match label.
+3. Enter only minimal evidence, URL, scope and access date. Unknown scope stays null.
+   `labels[].key` identifies independent facts: `country_credential`, `ielts.overall`,
+   `ielts.subscores`, `sat.policy`, `sat.minimum`, `deadline`, `tuition`, `mandatory_fees`,
+   `intake`, `documents.admission.<document>`, `documents.programme.<document>` and
+   `documents.scholarship.<document>`. Values are normalized JSON; money includes
+   currency, period/year in evidence scope. Never conflate a 2026 quote with 2027.
+4. For each award use stable `scholarships.<award>.exists`, `.applicability.<dimension>`
+   (nationality, international, degree, programme, intake, offer, need, nomination,
+   application mode), `.coverage.<category>` (tuition, fees, living, housing, travel,
+   insurance), `.amount`, `.deadline`, `.duration`, `.renewal`. No one match boolean.
+5. `unknown` is not a negative; `not_applicable` requires an explanatory note.
+6. A real human opens the evidence, checks values/scope and signs `reviewer` and
+   `verified_on`, then changes status to `human_verified`. AI preparation is recorded
+   in `prepared_by`; do not fabricate a human signoff. Increment dataset version in
+   the dataset and every case. Commit a review note explaining changed evidence.
+7. Preserve old artifacts with their dataset hash. Do not edit a label to improve
+   pipeline scores. Grow to 50 development and a separately versioned 100+ held-out
+   validation set. Validation errors are not tuning data during final evaluation.
+
+## Metric definitions and limits
+
+Every rate includes numerator/denominator. Empty denominator is null. There is no
+combined accuracy score. Exact duplicate predictions/URLs cannot inflate credit.
+Queries and path case are preserved in URL identity; fragments/trailing slash removed.
+
+Programme recall is cases with an exact accepted URL / cases with known programme
+URLs. Precision is accepted distinct returned URLs / adjudicable returned URLs.
+Unknown exact-URL cases are unadjudicated. `recall_at_5/10/20` requires an actual
+ranked candidate list; it is null when the current canary does not expose one.
+
+Claims require exact normalized value, compatible evidence scope and supporting
+official evidence. Human-adjudicated `supported` can establish support; otherwise
+the same source URL and an excerpt contained in the label evidence are required.
+Evidence comparison is conservative and exact, not semantic equivalence. Missing
+scope fails precision and contributes to the conservative scope-failure rate.
+Claim recall counts distinct correct labelled keys; precision includes only known
+labels. `claim_adjudication_rate` exposes unlabelled predictions. Unsupported rate
+excludes unadjudicated support, with `support_adjudication_rate` alongside it.
+Never advertise subset precision without these adjudication rates.
+
+Critical coverage counts answered applicable fields even if answers are wrong;
+recall separately counts correct answerable fields. UNKNOWN does not count answered.
+Scholarship metrics use the independent key dimensions above. Freshness/conflict
+metrics require explicit adjudication and remain null otherwise. Per-case country
+and site-type records expose subgroup errors. Operations preserve missing measurements
+and show measured-case counts; latency p50/p95 use nearest rank. Budget timeout latency
+is time-to-failure, not time-to-useful-result.
+
+## Next work
+
+Finish human review, detailed labels, raw-to-label claim mapping and missing telemetry/
+rank-list capture before accepting V2-01. The next roadmap task **after acceptance**
+is V2-10: provider-neutral SearchProvider with a fake adapter and benchmark comparison.
+No Jev or discovery improvement belongs in this task.

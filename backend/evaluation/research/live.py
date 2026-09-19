@@ -1,0 +1,204 @@
+"""Explicit bounded capture of the unmodified pipeline; never reads ground truth.
+
+Run from backend: python -m evaluation.research.live --live --out <directory>
+Each institution runs in its own process with a hard wall-clock budget.
+"""
+
+import argparse
+import asyncio
+import json
+import os
+import subprocess
+import sys
+import time
+from datetime import UTC, datetime
+from pathlib import Path
+from typing import Any
+from unittest.mock import patch
+
+from .schema import Capture, Evidence, Observation, Prediction, Scope, Telemetry
+
+# Evaluation cohort IDs, not expected URLs/values. Registry remains production's input.
+COHORT = {
+    "groningen": "rug.nl",
+    "delft": "tudelft.nl",
+    "aalto": "aalto.fi",
+    "vienna": "univie.ac.at",
+    "warsaw": "uw.edu.pl",
+    "ubc": "ubc.ca",
+    "toronto": "utoronto.ca",
+    "hku": "hku.hk",
+    "ntu": "ntu.edu.sg",
+    "kaist": "kaist.ac.kr",
+}
+CLAIM_KEYS = {
+    "ielts_min_overall": "ielts.overall",
+    "sat_min_total": "sat.minimum",
+    "application_deadline": "deadline",
+    "tuition": "tuition",
+}
+
+
+async def capture_one(case_id: str, output: Path, max_pages: int) -> None:
+    # Delayed imports keep ordinary offline evaluation entirely independent of I/O.
+    from app.models.research import ClaimRow
+    from scripts import canary_discovery as canary
+
+    predictions: list[Prediction] = []
+    raw_claims: list[dict[str, Any]] = []
+
+    class ObservedRunner(canary.CanaryRunner):
+        def _make_fetcher(self):
+            fetcher = super()._make_fetcher()
+            original = fetcher.get
+            requests = 0
+
+            async def bounded(url, **kwargs):
+                nonlocal requests
+                requests += 1
+                if requests > max_pages:
+                    raise RuntimeError("BENCHMARK_PAGE_BUDGET_EXHAUSTED")
+                return await original(url, **kwargs)
+
+            fetcher.get = bounded
+            return fetcher
+
+        async def run_to_decision(self):
+            try:
+                return await super().run_to_decision()
+            finally:
+                for row in self.session.query(ClaimRow).filter(ClaimRow.run_id == self.run.id):
+                    raw = row.payload
+                    raw_claims.append(raw)
+                    excerpt = raw.get("original_text_excerpt")
+                    evidence = None
+                    if excerpt and str(row.source_url).startswith(("http://", "https://")):
+                        evidence = Evidence(
+                            url=row.source_url,
+                            excerpt=excerpt,
+                            scope=Scope(
+                                university=next(iter(self._candidates)).name
+                                if self._candidates
+                                else case_id,
+                                programme=raw.get("program"),
+                                intake=raw.get("intake"),
+                                academic_year=raw.get("academic_year"),
+                            ),
+                            accessed_on=row.accessed_at.date(),
+                            source_type="official" if raw.get("official_domain") else "unknown",
+                        )
+                    predictions.append(
+                        Prediction(
+                            key=CLAIM_KEYS.get(row.claim_type, "unmapped." + row.claim_type),
+                            value=raw.get("normalized_value"),
+                            evidence=evidence,
+                        )
+                    )
+
+    started = time.monotonic()
+    with patch.object(canary, "CanaryRunner", ObservedRunner):
+        report = await canary.run_canary(COHORT[case_id], False)
+    rows = report["institutions"]
+    observation = Observation(
+        case_id=case_id,
+        programme_urls=[url for r in rows for url in r["programs"]],
+        predictions=predictions,
+        error=report["run_error"] or None,
+        telemetry=Telemetry(
+            latency_seconds=time.monotonic() - started,
+            search_calls=0,
+            model_input_tokens=0,
+            jev_input_tokens=0,
+        ),
+    )
+    # Preserve raw output for mapping/adjudication; do not invent unsupported counters.
+    output.write_text(observation.model_dump_json(indent=2), encoding="utf-8")
+    output.with_suffix(".raw.json").write_text(
+        json.dumps({"canary": report, "claims": raw_claims}, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--live", action="store_true", required=True)
+    parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument("--case", choices=list(COHORT))
+    parser.add_argument("--seconds-per-case", type=int, default=120)
+    parser.add_argument("--max-pages", type=int, default=40)
+    parser.add_argument("--child", action="store_true", help=argparse.SUPPRESS)
+    args = parser.parse_args()
+    if not 1 <= args.seconds_per_case <= 600 or not 1 <= args.max_pages <= 100:
+        parser.error("Budget must be 1..600 seconds and 1..100 Fetcher.get calls per university")
+    if args.child:
+        asyncio.run(capture_one(args.case, args.out, args.max_pages))
+        return
+    stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
+    directory = args.out / stamp
+    directory.mkdir(parents=True)
+    sha = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+    observations = []
+    for case_id in [args.case] if args.case else list(COHORT):
+        output = directory / f"{case_id}.json"
+        started = time.monotonic()
+        environment = dict(
+            os.environ,
+            UNIMATCH_DEMO_MODE="false",
+            UNIMATCH_ENABLE_BROWSER_TIER="false",
+            UNIMATCH_FETCH_CONTACT="https://github.com/wpalish/ashyq-apply",
+            PYTHONIOENCODING="utf-8",
+        )
+        with (directory / f"{case_id}.log").open("w", encoding="utf-8") as log:
+            try:
+                completed = subprocess.run(
+                    [
+                        sys.executable,
+                        "-m",
+                        "evaluation.research.live",
+                        "--live",
+                        "--child",
+                        "--case",
+                        case_id,
+                        "--out",
+                        str(output),
+                        "--max-pages",
+                        str(args.max_pages),
+                    ],
+                    env=environment,
+                    stdout=log,
+                    stderr=log,
+                    timeout=args.seconds_per_case,
+                    check=False,
+                )
+                error = f"PROCESS_EXIT_{completed.returncode}" if completed.returncode else None
+            except subprocess.TimeoutExpired:
+                error = "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"
+        if output.exists():
+            observation = Observation.model_validate_json(output.read_text(encoding="utf-8"))
+        else:
+            observation = Observation(
+                case_id=case_id,
+                error=error or "MISSING_OUTPUT",
+                telemetry=Telemetry(latency_seconds=time.monotonic() - started),
+            )
+        observations.append(observation)
+        capture = Capture(
+            pipeline_sha=sha,
+            captured_at=stamp,
+            mode="live",
+            config={
+                "seconds_per_case": args.seconds_per_case,
+                "max_fetcher_calls_per_case": args.max_pages,
+                "browser_enabled": False,
+                "cohort": list(COHORT),
+                "scope": "current production pipeline; HTTP-only bounded cold run",
+            },
+            observations=observations,
+        )
+        (directory / "capture.json").write_text(capture.model_dump_json(indent=2), encoding="utf-8")
+        print(f"{case_id}: {observation.error or 'complete'}", flush=True)
+    print(directory / "capture.json", flush=True)
+
+
+if __name__ == "__main__":
+    main()
