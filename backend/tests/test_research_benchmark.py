@@ -318,7 +318,7 @@ def test_live_budget_limits_and_explicit_opt_in(monkeypatch):
         main()
 
 
-@pytest.mark.parametrize("suffix", ["", ".draft2", ".draft3", ".draft4", ".draft5"])
+@pytest.mark.parametrize("suffix", ["", ".draft2", ".draft3", ".draft4", ".draft5", ".draft6"])
 def test_draft_dataset_has_ten_cases_without_fabricated_human_signoff(suffix):
     root = Path(__file__).resolve().parents[1]
     dataset = Dataset.model_validate_json(
@@ -328,7 +328,7 @@ def test_draft_dataset_has_ten_cases_without_fabricated_human_signoff(suffix):
     assert all(c.review.reviewer is None for c in dataset.cases if c.review.status == "draft")
 
 
-@pytest.mark.parametrize("suffix", ["", ".draft2", ".draft3", ".draft4", ".draft5"])
+@pytest.mark.parametrize("suffix", ["", ".draft2", ".draft3", ".draft4", ".draft5", ".draft6"])
 def test_published_baseline_replays_exactly_without_network(monkeypatch, suffix):
     import json
     import socket

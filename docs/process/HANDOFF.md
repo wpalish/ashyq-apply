@@ -60,7 +60,7 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
-V2: draft5 is published in `a4cd5b3` (gpt-6-astra) — 61/219 known/total fields, 9 programme identities, 0 human signoffs, NTU qualification and conditional `english_evidence.*` minima plus the Toronto Kazakhstan credential, with separate report/worksheet/VERSIONS row and the replay test parametrised over `.draft5`. It was committed `wip:` because its gates had not finished; claude-opus-5 ran them on 2026-09-20 and they are green (§6), so draft5 is released. Its content is recovered gpt-6-astra work, not a second implementation. `3f7e467` publishes draft4 with exact Aalto CS identity/primary Finnish teaching language and Groningen NIS qualification equivalence/CS mathematics requirement: 56/215 known/total fields, 9 programme identities, 0 human signoffs. Separate metrics and complete human-review worksheet; 57 focused tests. `2f56a46` publishes lossless draft3 document projection (52/212 known/total fields), reversible manifest, separate report and review worksheet; 55 focused tests. `5403630` adds explicit offline award/document identity mapping and replay; `00e107f` keeps unknown policies unanswered, adds the human review worksheet and brings focused coverage to 51 tests. `7356d9e` published draft2: 46/206 known labels, 8/10 exact programme URLs, 0/10 human signoffs; separate replay report with programme precision/recall 1/8 and 27 benchmark tests. Frozen draft1/capture are unchanged. `d917259` integrated all 15 Markdown documents plus original manifest and navigation/task card; pushed. `5d2a3ed` write-ahead V2-01 baton; pushed. All 16 archive entries verified byte-for-byte after transfer; original untracked ZIP removed. 51f9512 pushed schema, offline scoring, bounded live capture, 10 draft cases, 14 tests and container isolation. `a243a46` pushed checkpointed HTTP/PDF counters, candidate ranks and evidence validation. `1187cd0` published direct claim mapping, compact baseline capture/metrics/report and human review queue. `d0a2fb4` fixes JSON type equality; 25 benchmark tests and both full CI matrices pass. Draft PR: https://github.com/wpalish/ashyq-apply/pull/14. Human certification remains outstanding.
+V2: draft6 resolves the Delft exact programme identity from the official tudelft.nl page — the last `unknown` of ten, carried since draft2 — taking programme identities to **10/10** at 61/219 known fields and 0/10 human signoffs. One field changes; no label, no frozen artifact and no production file is touched. Its two programme numbers *fall* (precision 1/8→1/9, recall 1/9→1/10) because a tenth answerable case and a ninth judgeable prediction enter the denominators against the same frozen capture: arithmetic, not a retrieval regression, and REVIEW_DRAFT6.md says so in those words. Draft5 is published in `a4cd5b3` (gpt-6-astra) — 61/219 known/total fields, 9 programme identities, 0 human signoffs, NTU qualification and conditional `english_evidence.*` minima plus the Toronto Kazakhstan credential, with separate report/worksheet/VERSIONS row and the replay test parametrised over `.draft5`. It was committed `wip:` because its gates had not finished; claude-opus-5 ran them on 2026-09-20 and they are green (§6), so draft5 is released. Its content is recovered gpt-6-astra work, not a second implementation. `3f7e467` publishes draft4 with exact Aalto CS identity/primary Finnish teaching language and Groningen NIS qualification equivalence/CS mathematics requirement: 56/215 known/total fields, 9 programme identities, 0 human signoffs. Separate metrics and complete human-review worksheet; 57 focused tests. `2f56a46` publishes lossless draft3 document projection (52/212 known/total fields), reversible manifest, separate report and review worksheet; 55 focused tests. `5403630` adds explicit offline award/document identity mapping and replay; `00e107f` keeps unknown policies unanswered, adds the human review worksheet and brings focused coverage to 51 tests. `7356d9e` published draft2: 46/206 known labels, 8/10 exact programme URLs, 0/10 human signoffs; separate replay report with programme precision/recall 1/8 and 27 benchmark tests. Frozen draft1/capture are unchanged. `d917259` integrated all 15 Markdown documents plus original manifest and navigation/task card; pushed. `5d2a3ed` write-ahead V2-01 baton; pushed. All 16 archive entries verified byte-for-byte after transfer; original untracked ZIP removed. 51f9512 pushed schema, offline scoring, bounded live capture, 10 draft cases, 14 tests and container isolation. `a243a46` pushed checkpointed HTTP/PDF counters, candidate ranks and evidence validation. `1187cd0` published direct claim mapping, compact baseline capture/metrics/report and human review queue. `d0a2fb4` fixes JSON type equality; 25 benchmark tests and both full CI matrices pass. Draft PR: https://github.com/wpalish/ashyq-apply/pull/14. Human certification remains outstanding.
 
 
 The original recovery entries below are historical provenance. Preserve their hashes and ancestry;
@@ -263,7 +263,27 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-Write-ahead (claude-opus-5, 2026-09-20, draft6): draft5 is released and green (§6). The single
+Draft6 is published and green (§6): `delft.programme_urls` / `programme_status` now carry
+`https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering`,
+and all ten programme identities are resolved.
+
+**NEXT, exact and executable.** Two independent tracks; neither needs the other.
+
+1. *Evidence (AI-doable now).* Resolve, in a NEW `draft7` dataset built the same way draft6 was:
+   the Kazakhstan fall-2027 intake date, the tuition/mandatory-fee figures, and the general SAT/IELTS
+   policy for the cases still holding those UNKNOWN. Take **only** values whose page states the
+   requested scope; a 2026-exercise deadline or an unscoped numerus-fixus rule must stay UNKNOWN, as
+   draft6 refused Delft's 15 January. Copy `ground_truth.draft6.json` → `.draft7`, bump
+   `version`/`dataset_version`, regenerate metrics through the documented CLI, add `REVIEW_DRAFT7.md`
+   and `REVIEW_WORKSHEET_DRAFT7.md`, add the VERSIONS row, repoint the README, and extend both
+   `@pytest.mark.parametrize` lists in `backend/tests/test_research_benchmark.py` (lines 321 and 331)
+   with `".draft7"`.
+2. *Acceptance (owner-blocking, cannot be AI-done).* V2-01 cannot be accepted until **ten real human
+   reviewer names and dates** sit in the worksheet and strict scoring runs without `--allow-drafts`.
+   Verification is 0/10 and has been through six drafts. No amount of further AI annotation moves it.
+   Until then no version of this corpus may be called a benchmark result, and V2-10 does not start.
+
+Previous write-ahead (claude-opus-5, 2026-09-20, draft6): draft5 is released and green (§6). The single
 blocker §5 has named since draft2 is the Delft exact programme identity, the last `unknown` of ten.
 The OCW alias gpt-6-astra kept hitting is not the programme page; the official one is
 `https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering`,
@@ -327,6 +347,17 @@ The steps codex left, unchanged and still next after this review:
    the compatibility shim. Do not buy a provider or deploy application infrastructure implicitly.
 
 ## 6. Gate status at last run
+
+Draft6, gates run by claude-opus-5 on 2026-09-20, Linux / CPython 3.12.3 / SQLite. All green:
+`ruff check` pass; `ruff format --check` pass (169 files); `mypy` pass (169 source files);
+`pytest --cov=app --cov-fail-under=92` exit 0, **1456 collected**, 0 failed, coverage **93.96%**;
+**61** focused V2-01 tests pass. Frontend is untouched by draft6 and its gates were green the same day
+(188 unit tests, build 366.79 kB js / 66.11 kB css). One Alembic head, `d9c4e7a21b83`.
+Draft6 measures 61/219 known/total fields, **10/10** programme identities, **0/10 human signoffs**;
+programme precision 1/9, recall 1/10; claim precision 0/5, recall 0/61; critical coverage 0/210.
+`test_published_baseline_replays_exactly_without_network[.draft6]` reproduces `metrics.draft6.json`
+exactly with sockets blocked, and strict scoring still refuses the corpus. PostgreSQL and E2E were not
+run locally — CI runs both on PR #14.
 
 Draft5 at `a4cd5b3`, gates run by claude-opus-5 on 2026-09-20 (the run gpt-6-astra was cut off during).
 All green, Linux / CPython 3.12.3 / SQLite:
@@ -610,6 +641,7 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 | 2026-09-08 03:38:21 UTC | codex | `9b362c8` → in progress | Took the C2 baton after verifying `origin/main@4d2125c` is the merge-base. Owner authorized T29 wiring, bounded T30 batches, T26, committing campaign evidence, and GitHub publication; T31 remains blocked on provider/secrets/data-policy acknowledgement. |
 | 2026-09-09 19:20 UTC | claude-opus-5 | `edf546d` → `task/security-audit-hardening` | Owner asked for a security review of the repository instead of the next brief task. Audited auth, tenancy, payments, egress, uploads, exports, mail, crypto, headers and the frontend; proved three findings with tests that fail on `main`; fixed nine across 9 commits. Full gates green (1395 backend / 93.96% / 188 frontend / build / pip-audit). Residuals recorded in §7. Baton released; nothing merged to `main`, no deploy.
 | 2026-09-20 UTC | claude-opus-5 | `a4cd5b3` → `a4cd5b3` + this release commit | Recovery after gpt-6-astra's token cut-off. The baton on `main` was 22 commits stale: the live task is V2-01, not the merged security audit. Tree was clean and `a4cd5b3` was one coherent draft5 commit, so nothing was re-done. Rebuilt `backend/.venv` on Python 3.12 (see §9), ran every gate gpt-6-astra could not finish — all green, 1454 backend tests at 93.96%, 59 focused, 188 frontend — and released draft5. Draft5 itself is gpt-6-astra's work, recovered from the previous session, not this writer's. V2-01 remains unaccepted at 0/10 human signoffs.
+| 2026-09-20 UTC | claude-opus-5 | `a4cd5b3` → draft6 | Published draft6: resolved the Delft programme identity from the official tudelft.nl page, the last unresolved identity of ten, and took nothing else from that page because its deadline and numerus-fixus rules are unscoped to the requested fall 2027 intake. All gates green (1456 backend at 93.96%, 61 focused). V2-01 acceptance is now blocked on human signatures alone, not on more annotation.
 
 | 2026-09-20 | gpt-6-astra | b267b337 → V2-00 in progress | Startup/recovery, PR inventory, all pack files read; isolated worktree preserves existing dirty research work. |
 

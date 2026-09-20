@@ -10,6 +10,7 @@ label inventories, not changes to the production pipeline or retrieval quality.
 | [draft3](data/ground_truth.draft3.json) | 52/212 | 8/10 | 1/8 / 1/8 | 0/5 / 0/52 | 0/203 |
 | [draft4](data/ground_truth.draft4.json) | 56/215 | 9/10 | 1/8 / 1/9 | 0/5 / 0/56 | 0/206 |
 | [draft5](data/ground_truth.draft5.json) | 61/219 | 9/10 | 1/8 / 1/9 | 0/5 / 0/61 | 0/210 |
+| [draft6](data/ground_truth.draft6.json) | 61/219 | 10/10 | 1/9 / 1/10 | 0/5 / 0/61 | 0/210 |
 
 - Draft1 freezes the initial source annotation and captured pipeline outputs.
 - Draft2 adds official-source annotations, resolves Toronto/KAIST programme identity
@@ -19,7 +20,7 @@ label inventories, not changes to the production pipeline or retrieval quality.
   new source facts. The [projection manifest](data/document_projection.draft3.json)
   permits reconstruction of every original value, including conditions and JSON types.
 
-Claim adjudication stays 5/13 and support adjudication stays 0/13 in all five
+Claim adjudication stays 5/13 and support adjudication stays 0/13 in all six
 reports. No unsupported-claim rate can be inferred from an empty support denominator.
 All ten cases remain drafts in every version; strict scoring refuses them without
 the explicit provisional-results flag. A human review worksheet is not a signature.
@@ -39,4 +40,10 @@ See [source decisions](REVIEW_DRAFT4.md) and [draft4 worksheet](REVIEW_WORKSHEET
 
 Draft5 adds NTU qualification/conditional English-evidence facts and the Toronto
 Kazakhstan credential. See [source notes](REVIEW_DRAFT5.md) and
-[current worksheet](REVIEW_WORKSHEET_DRAFT5.md).
+[draft5 worksheet](REVIEW_WORKSHEET_DRAFT5.md).
+
+Draft6 resolves the Delft programme identity from the official tudelft.nl page,
+completing 10/10 identities and changing no label. Its two programme numbers fall
+because both denominators grow against the same frozen capture; that is the
+arithmetic of a tenth answerable case, not a retrieval regression. See
+[source notes](REVIEW_DRAFT6.md) and [current worksheet](REVIEW_WORKSHEET_DRAFT6.md).
