@@ -6,15 +6,15 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-Current holder: **gpt-6-astra**, 2026-09-20 UTC. Branch: `task/v2-01-research-benchmark`; base: `b267b337`; HEAD when written: `27b5593` + draft2 checkpoint. V2-01 is not accepted; see review blockers below.
+Current holder: **nobody**, 2026-09-20 UTC. Branch: `task/v2-01-research-benchmark`; base: `b267b337`; HEAD when written: `7356d9e` + this documentation handoff. V2-01 is not accepted; see review blockers below.
 
 
 | | |
 |---|---|
-| Holder | **gpt-6-astra** |
+| Holder | **nobody** |
 | Since (UTC) | 2026-09-20 |
 | Branch | `task/v2-01-research-benchmark`, via V2-00 from `main@b267b337` |
-| HEAD when written | `27b5593` + draft2 checkpoint |
+| HEAD when written | `7356d9e` + this documentation handoff |
 | Origin main when checked | `b267b337` (fetched again 2026-09-20) |
 | Previous holder | claude-opus-5; security PR #12 is now merged |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
@@ -60,7 +60,7 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
-V2: `d917259` integrated all 15 Markdown documents plus original manifest and navigation/task card; pushed. `5d2a3ed` write-ahead V2-01 baton; pushed. All 16 archive entries verified byte-for-byte after transfer; original untracked ZIP removed. 51f9512 pushed schema, offline scoring, bounded live capture, 10 draft cases, 14 tests and container isolation. `a243a46` pushed checkpointed HTTP/PDF counters, candidate ranks and evidence validation. `1187cd0` published direct claim mapping, compact baseline capture/metrics/report and human review queue. `d0a2fb4` fixes JSON type equality; 25 benchmark tests and both full CI matrices pass. Draft PR: https://github.com/wpalish/ashyq-apply/pull/14. Human certification remains outstanding.
+V2: `7356d9e` published draft2: 46/206 known labels, 8/10 exact programme URLs, 0/10 human signoffs; separate replay report with programme precision/recall 1/8 and 27 benchmark tests. Frozen draft1/capture are unchanged. `d917259` integrated all 15 Markdown documents plus original manifest and navigation/task card; pushed. `5d2a3ed` write-ahead V2-01 baton; pushed. All 16 archive entries verified byte-for-byte after transfer; original untracked ZIP removed. 51f9512 pushed schema, offline scoring, bounded live capture, 10 draft cases, 14 tests and container isolation. `a243a46` pushed checkpointed HTTP/PDF counters, candidate ranks and evidence validation. `1187cd0` published direct claim mapping, compact baseline capture/metrics/report and human review queue. `d0a2fb4` fixes JSON type equality; 25 benchmark tests and both full CI matrices pass. Draft PR: https://github.com/wpalish/ashyq-apply/pull/14. Human certification remains outstanding.
 
 
 The original recovery entries below are historical provenance. Preserve their hashes and ancestry;
@@ -290,7 +290,7 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
-Draft2 checkpoint: Ruff lint/format and mypy pass (174 files); 27 focused benchmark tests pass including replay of both immutable reports. Frontend typecheck/lint/build and 188 unit tests pass. Full local backend coverage run is still running (artifacts/draft2-pytest.log); this checkpoint uses wip until that result is known. Production app tree remains identical to origin/main.
+Draft2 at 7356d9e: both complete CI runs SUCCESS, push 35503487143 and PR 35503488677. SQLite 1422 passed, 93.96% app coverage; PostgreSQL 1422 passed; frontend 188 unit tests, 75 E2E passed/1 skipped and 6 auth E2E passed; security/container gates pass. Local Ruff lint/format and mypy pass (174 files), 27 focused benchmark tests pass, and frontend typecheck/lint/build/188 tests pass. A diagnostic adapters run passed 71 tests. The redundant local full backend run was deliberately stopped after both full CI matrices passed (at >75%, no observed failures); it is not claimed as a completed local gate. Strict scoring rejects draft2 without human certification. Production app tree remains identical to origin/main. This final handoff changes documentation only.
 
 V2-01: both CI runs at d0a2fb4 SUCCESS: push 35488937175 and PR 35488963787. SQLite 1420 passed, 93.97% app coverage; PostgreSQL 1420 passed; security/containers and frontend jobs passed. This final handoff changes documentation only. Local publication step: 25 benchmark tests pass, Ruff check/format and mypy pass (174 files). All 25 focused benchmark tests also pass with the PostgreSQL harness. No failing code gate remains. Frontend typecheck/lint/188 unit/build pass. pip-audit: no known vulnerabilities. npm audit: 2 moderate vulnerabilities, below high gate. Local initial SQLite run: 1394 passed, one KZT fixture encoding failure, 93.33%; same test passes with PYTHONUTF8=1, no production edits. Linux CI above passes both full matrices. Demo migrated in isolated database; Groningen first, UBC OUT_OF_BUDGET verified in stored results. One Alembic head d9c4e7a21b83. Local E2E: 75 passed, one skipped; auth E2E: 6 passed. Temporary LF launcher and generated screenshots restored. Prior numbers below are historical.
  (numbers, not adjectives)
@@ -539,3 +539,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 
 | 2026-09-20 | gpt-6-astra | b267b337 → d0a2fb4 + documentation handoff | Integrated V2 pack, isolated benchmark/capture, 25 focused tests, 1420 tests per DB and 93.97% coverage, committed provisional baseline; draft PR #14. Baton released. Human-verified cases 0/10; finish label/adjudication review before V2-10. |
 | 2026-09-20 | gpt-6-astra | 3618a52 -> draft2 in progress | Resumed official-source annotation; preserve frozen draft1 baseline, no production changes. |
+
+| 2026-09-20 | gpt-6-astra | 3618a52 -> 7356d9e + documentation handoff | Draft2 official-source annotation, separate offline replay, 27 benchmark tests, both full CI matrices green (1422 per DB, 93.96% coverage). Released baton; 0/10 human verified, V2-01 remains in progress. |
