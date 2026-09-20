@@ -4,17 +4,23 @@ This is evaluation tooling, excluded from production containers. The live runner
 uses the existing production registry, Fetcher and ResearchRunner. It never loads
 ground truth. Ranking, discovery, verification and network policy are unchanged.
 
-Latest source annotations: [draft7](REVIEW_DRAFT7.md), [version comparison](VERSIONS.md),
+Certified corpus: [acceptance record](ACCEPTANCE.md). Latest source annotations:
+[draft7](REVIEW_DRAFT7.md), [version comparison](VERSIONS.md),
 [human review worksheet](REVIEW_WORKSHEET_DRAFT7.md).
 
 ## Current acceptance status
 
-**IN PROGRESS.** The initial ten cases are AI-prepared drafts from official pages
-read on 2026-09-20 (local date). They are **not human verified**. Some exact programme
-URLs, most requirement labels, all award-level labels and site-architecture strata
-still need review. Do not describe this corpus as a complete admissions benchmark.
-The strict scorer refuses it unless `--allow-drafts` is explicit. No final overall
-quality score or production readiness claim is made.
+**ACCEPTED.** `ground_truth.reviewed.json` was signed by Диас on 2026-09-21: 10/10
+cases `human_verified`, and it scores under the strict command with no `--allow-drafts`
+and `provisional: false`. See the [acceptance record](ACCEPTANCE.md).
+
+What is certified is the *source annotation* — 62 known labels of 220 and ten programme
+identities — not the 158 fields that remain UNKNOWN and not the pipeline's output. The
+baseline it produces is deliberately unflattering: programme-page recall **1/10**, claim
+precision **0/5**, every produced claim out of scope, critical-field coverage **0/210**.
+That is the "before" number architecture work must beat; it is not a product result and
+must not be quoted as one. Every `draft*` version remains provisional and the strict
+scorer still refuses it.
 
 The source pack is in `analysis/v2`; its original `00_START_HERE.md` became README.md.
 The manifest preserves original archive names. AGENTS, the original task brief,

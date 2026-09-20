@@ -331,7 +331,8 @@ def test_draft_dataset_has_ten_cases_without_fabricated_human_signoff(suffix):
 
 
 @pytest.mark.parametrize(
-    "suffix", ["", ".draft2", ".draft3", ".draft4", ".draft5", ".draft6", ".draft7"]
+    "suffix",
+    ["", ".draft2", ".draft3", ".draft4", ".draft5", ".draft6", ".draft7", ".reviewed"],
 )
 def test_published_baseline_replays_exactly_without_network(monkeypatch, suffix):
     import json
@@ -352,6 +353,42 @@ def test_published_baseline_replays_exactly_without_network(monkeypatch, suffix)
     assert score(dataset, capture, allow_drafts=True) == json.loads(
         (root / f"baseline/metrics{suffix}.json").read_text(encoding="utf-8")
     )
+
+
+def test_the_reviewed_corpus_is_signed_and_scores_strictly():
+    """The V2-01 acceptance gate: a named human signed every case, so no flag is needed."""
+    import json
+
+    root = Path(__file__).resolve().parents[1] / "evaluation/research"
+    dataset = Dataset.model_validate_json(
+        (root / "data/ground_truth.reviewed.json").read_text(encoding="utf-8")
+    )
+    capture = Capture.model_validate_json(
+        (root / "baseline/capture.json").read_text(encoding="utf-8")
+    )
+
+    assert len(dataset.cases) == 10
+    for case in dataset.cases:
+        assert case.review.status == "human_verified", case.id
+        assert case.review.reviewer, case.id
+        assert case.review.verified_on, case.id
+
+    report = score(dataset, capture)
+    assert report["provisional"] is False
+    assert report == json.loads(
+        (root / "baseline/metrics.reviewed.json").read_text(encoding="utf-8")
+    )
+
+
+def test_certification_changes_no_measured_value():
+    """Signing a corpus says who vouches for it; it may never move a number."""
+    import json
+
+    root = Path(__file__).resolve().parents[1] / "evaluation/research"
+    reviewed = json.loads((root / "baseline/metrics.reviewed.json").read_text(encoding="utf-8"))
+    draft7 = json.loads((root / "baseline/metrics.draft7.json").read_text(encoding="utf-8"))
+    assert reviewed["metrics"] == draft7["metrics"]
+    assert reviewed["fields"] == draft7["fields"]
 
 
 def test_scholarship_dimensions_freshness_and_review_have_separate_metrics():

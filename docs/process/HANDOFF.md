@@ -21,7 +21,7 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
-**V2-01 — reproducible university research benchmark (in-progress; draft PR #14).**
+**V2-01 — reproducible university research benchmark (ACCEPTED 2026-09-21; PR #14).**
 Owner explicitly prioritizes the new workstream. V2-01 follows this documentation commit in a task branch from this predecessor (explicit branch exception). Goal: measure current research/discovery quality before architecture changes.
 
 
@@ -60,7 +60,7 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
-V2: draft7 applies the **owner's first human review of the corpus** — 62/220 known fields, 10/10 identities, two cases changed. Aalto's identity moves from the Finnish tietotekniikka page to the English-taught Computer Engineering major, because the requested scope is an international applicant and the Finnish route is not open to one in English; whether Computer Engineering satisfies a *computer science* request is left open for the reviewer, not asserted, on the same grounds draft2 refused Data Science. HKU gains `programme.faculty = "School of Computing and Data Science"` and its exact degree title, Bachelor of Engineering in Computer Science. Programme precision/recall are unchanged at 1/9 and 1/10 — the Aalto URL move neither gained nor lost a match against the frozen capture. Still 0/10 `human_verified`, because the schema requires a reviewer name and date and no AI may invent either. Draft6 resolves the Delft exact programme identity from the official tudelft.nl page — the last `unknown` of ten, carried since draft2 — taking programme identities to **10/10** at 61/219 known fields and 0/10 human signoffs. One field changes; no label, no frozen artifact and no production file is touched. Its two programme numbers *fall* (precision 1/8→1/9, recall 1/9→1/10) because a tenth answerable case and a ninth judgeable prediction enter the denominators against the same frozen capture: arithmetic, not a retrieval regression, and REVIEW_DRAFT6.md says so in those words. Draft5 is published in `a4cd5b3` (gpt-6-astra) — 61/219 known/total fields, 9 programme identities, 0 human signoffs, NTU qualification and conditional `english_evidence.*` minima plus the Toronto Kazakhstan credential, with separate report/worksheet/VERSIONS row and the replay test parametrised over `.draft5`. It was committed `wip:` because its gates had not finished; claude-opus-5 ran them on 2026-09-20 and they are green (§6), so draft5 is released. Its content is recovered gpt-6-astra work, not a second implementation. `3f7e467` publishes draft4 with exact Aalto CS identity/primary Finnish teaching language and Groningen NIS qualification equivalence/CS mathematics requirement: 56/215 known/total fields, 9 programme identities, 0 human signoffs. Separate metrics and complete human-review worksheet; 57 focused tests. `2f56a46` publishes lossless draft3 document projection (52/212 known/total fields), reversible manifest, separate report and review worksheet; 55 focused tests. `5403630` adds explicit offline award/document identity mapping and replay; `00e107f` keeps unknown policies unanswered, adds the human review worksheet and brings focused coverage to 51 tests. `7356d9e` published draft2: 46/206 known labels, 8/10 exact programme URLs, 0/10 human signoffs; separate replay report with programme precision/recall 1/8 and 27 benchmark tests. Frozen draft1/capture are unchanged. `d917259` integrated all 15 Markdown documents plus original manifest and navigation/task card; pushed. `5d2a3ed` write-ahead V2-01 baton; pushed. All 16 archive entries verified byte-for-byte after transfer; original untracked ZIP removed. 51f9512 pushed schema, offline scoring, bounded live capture, 10 draft cases, 14 tests and container isolation. `a243a46` pushed checkpointed HTTP/PDF counters, candidate ranks and evidence validation. `1187cd0` published direct claim mapping, compact baseline capture/metrics/report and human review queue. `d0a2fb4` fixes JSON type equality; 25 benchmark tests and both full CI matrices pass. Draft PR: https://github.com/wpalish/ashyq-apply/pull/14. Human certification remains outstanding.
+V2: **the corpus is certified.** `ground_truth.reviewed.json` (`2026-09-21.reviewed`) carries `human_verified` + reviewer **Диас** + `2026-09-21` on 10/10 cases, and `metrics.reviewed.json` is the first report in this project produced **without `--allow-drafts`**, `provisional: false`. Acceptance record in `backend/evaluation/research/ACCEPTANCE.md`; two new tests pin the gate (`test_the_reviewed_corpus_is_signed_and_scores_strictly`, and `test_certification_changes_no_measured_value`, which forbids a signature from ever moving a number). The owner's answer also settled the Aalto adjudication in the affirmative; it is recorded as a decision in that case's notes with the reasoning it overrides preserved. Draft7 applies the **owner's first human review of the corpus** — 62/220 known fields, 10/10 identities, two cases changed. Aalto's identity moves from the Finnish tietotekniikka page to the English-taught Computer Engineering major, because the requested scope is an international applicant and the Finnish route is not open to one in English; whether Computer Engineering satisfies a *computer science* request is left open for the reviewer, not asserted, on the same grounds draft2 refused Data Science. HKU gains `programme.faculty = "School of Computing and Data Science"` and its exact degree title, Bachelor of Engineering in Computer Science. Programme precision/recall are unchanged at 1/9 and 1/10 — the Aalto URL move neither gained nor lost a match against the frozen capture. Still 0/10 `human_verified`, because the schema requires a reviewer name and date and no AI may invent either. Draft6 resolves the Delft exact programme identity from the official tudelft.nl page — the last `unknown` of ten, carried since draft2 — taking programme identities to **10/10** at 61/219 known fields and 0/10 human signoffs. One field changes; no label, no frozen artifact and no production file is touched. Its two programme numbers *fall* (precision 1/8→1/9, recall 1/9→1/10) because a tenth answerable case and a ninth judgeable prediction enter the denominators against the same frozen capture: arithmetic, not a retrieval regression, and REVIEW_DRAFT6.md says so in those words. Draft5 is published in `a4cd5b3` (gpt-6-astra) — 61/219 known/total fields, 9 programme identities, 0 human signoffs, NTU qualification and conditional `english_evidence.*` minima plus the Toronto Kazakhstan credential, with separate report/worksheet/VERSIONS row and the replay test parametrised over `.draft5`. It was committed `wip:` because its gates had not finished; claude-opus-5 ran them on 2026-09-20 and they are green (§6), so draft5 is released. Its content is recovered gpt-6-astra work, not a second implementation. `3f7e467` publishes draft4 with exact Aalto CS identity/primary Finnish teaching language and Groningen NIS qualification equivalence/CS mathematics requirement: 56/215 known/total fields, 9 programme identities, 0 human signoffs. Separate metrics and complete human-review worksheet; 57 focused tests. `2f56a46` publishes lossless draft3 document projection (52/212 known/total fields), reversible manifest, separate report and review worksheet; 55 focused tests. `5403630` adds explicit offline award/document identity mapping and replay; `00e107f` keeps unknown policies unanswered, adds the human review worksheet and brings focused coverage to 51 tests. `7356d9e` published draft2: 46/206 known labels, 8/10 exact programme URLs, 0/10 human signoffs; separate replay report with programme precision/recall 1/8 and 27 benchmark tests. Frozen draft1/capture are unchanged. `d917259` integrated all 15 Markdown documents plus original manifest and navigation/task card; pushed. `5d2a3ed` write-ahead V2-01 baton; pushed. All 16 archive entries verified byte-for-byte after transfer; original untracked ZIP removed. 51f9512 pushed schema, offline scoring, bounded live capture, 10 draft cases, 14 tests and container isolation. `a243a46` pushed checkpointed HTTP/PDF counters, candidate ranks and evidence validation. `1187cd0` published direct claim mapping, compact baseline capture/metrics/report and human review queue. `d0a2fb4` fixes JSON type equality; 25 benchmark tests and both full CI matrices pass. Draft PR: https://github.com/wpalish/ashyq-apply/pull/14. Human certification remains outstanding.
 
 
 The original recovery entries below are historical provenance. Preserve their hashes and ancestry;
@@ -263,7 +263,27 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-Write-ahead (claude-opus-5, 2026-09-20, certification): **the owner has signed the corpus.** They
+V2-01 is accepted. The baseline it establishes is deliberately unflattering and is the point of the
+whole exercise: **programme-page recall 1/10, claim precision 0/5, claim recall 0/62, wrong-scope claim
+rate 5/5, critical-field coverage 0/210.** The current pipeline finds the right programme page for one
+university in ten and every claim it produces is the right fact about the wrong population, year or
+programme. Never quote these as a product result.
+
+**NEXT, exact and executable.**
+
+1. **V2-10 is now unblocked** — it was gated on V2-01 acceptance and nothing else. It is the
+   provider-neutral `SearchProvider` with a fake adapter; its card is `analysis/v2/04_PHASE_1_DISCOVERY_ENGINE.md`
+   and the execution order is `analysis/v2/02_EXECUTION_PLAN.md`. Read both before writing code, and
+   branch per AGENTS.md §4.
+2. **Beat 1/10, and prove it against this baseline.** Any discovery change must be scored with the same
+   frozen capture or a fresh bounded capture, against `ground_truth.reviewed.json`, strictly. The
+   `wrong_scope_claim_rate` of 5/5 is the most actionable signal in the report: the pipeline is not
+   failing to read pages, it is failing to check that what it read applies to the requested scope.
+3. **Certification is of a version, not of the corpus.** 158 fields are still UNKNOWN — the Kazakhstan
+   fall-2027 intake, fees, general SAT/IELTS policy. A draft that adds them needs its own signature from
+   a named human on a dated worksheet; do not extend the reviewed dataset in place.
+
+Previous write-ahead (claude-opus-5, 2026-09-20, certification): **the owner has signed the corpus.** They
 reviewed draft7, answered "всё правильно" to the two open questions in §7 — which settles the Aalto
 adjudication in the affirmative, accepting the English-taught Computer Engineering major as satisfying
 the requested computer science — and supplied the reviewer identity: **Диас, 2026-09-21**.
@@ -411,6 +431,20 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+Certified corpus, gates run by claude-opus-5 on 2026-09-20, Linux / CPython 3.12.3 / SQLite. All green:
+ruff check and format (169 files); mypy (169 source files);
+`pytest --cov=app --cov-fail-under=92` exit 0, **1461 collected**, 0 failed, coverage **93.97%**;
+**66** focused V2-01 tests. Frontend untouched by this step. One Alembic head, `d9c4e7a21b83`.
+The strict command — `python -m evaluation.research --dataset .../ground_truth.reviewed.json
+--capture .../capture.json --out .../metrics.reviewed.json`, **no `--allow-drafts`** — exits 0 and
+writes `provisional: false`. Every `draft*` dataset still raises under the same command, pinned by
+`test_drafts_cannot_be_reported_as_human_verified`.
+Baseline: programme precision 1/9, recall 1/10; claim precision 0/5, recall 0/62; wrong-scope claim
+rate 5/5; critical coverage 0/210; primary-source rate 13/13; claim adjudication 5/13; support
+adjudication 0/13. `metrics.reviewed.json` and `metrics.draft7.json` agree on every metric and field,
+pinned by `test_certification_changes_no_measured_value`.
+PostgreSQL and E2E not run locally — CI runs both on PR #14.
+
 Draft7, gates run by claude-opus-5 on 2026-09-20, Linux / CPython 3.12.3 / SQLite. All green:
 ruff check and format (169 files); mypy (169 source files);
 `pytest --cov=app --cov-fail-under=92` exit 0, **1458 collected**, 0 failed, coverage **93.97%**;
@@ -490,7 +524,15 @@ CI runs both on the PR.
 
 ## 7. Blockers / questions for the owner
 
-### OPEN — two questions from the owner's draft6 review (2026-09-20, claude-opus-5)
+### RESOLVED — both questions from the draft6/draft7 review (owner, 2026-09-21)
+
+The owner answered "всё правильно" to both and supplied the reviewer identity **Диас / 2026-09-21**.
+That accepts Aalto's English-taught Computer Engineering major as satisfying the computer-science
+request, and certifies all ten cases. The Aalto decision is the one place in this corpus where a human
+overrode the conservative reading; it is recorded as such in the case notes, and revisiting it returns
+that case to `unknown`. The questions as they were put:
+
+### (historical) OPEN — two questions from the owner's draft6 review (2026-09-20, claude-opus-5)
 
 1. **Does Aalto's English-taught Computer Engineering major satisfy a request for *computer science*?**
    Aalto describes it as combining information technology and electrical engineering. Draft2 refused to
@@ -729,6 +771,7 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 | 2026-09-20 UTC | claude-opus-5 | `a4cd5b3` → `a4cd5b3` + this release commit | Recovery after gpt-6-astra's token cut-off. The baton on `main` was 22 commits stale: the live task is V2-01, not the merged security audit. Tree was clean and `a4cd5b3` was one coherent draft5 commit, so nothing was re-done. Rebuilt `backend/.venv` on Python 3.12 (see §9), ran every gate gpt-6-astra could not finish — all green, 1454 backend tests at 93.96%, 59 focused, 188 frontend — and released draft5. Draft5 itself is gpt-6-astra's work, recovered from the previous session, not this writer's. V2-01 remains unaccepted at 0/10 human signoffs.
 | 2026-09-20 UTC | claude-opus-5 | `a4cd5b3` → draft6 | Published draft6: resolved the Delft programme identity from the official tudelft.nl page, the last unresolved identity of ten, and took nothing else from that page because its deadline and numerus-fixus rules are unscoped to the requested fall 2027 intake. All gates green (1456 backend at 93.96%, 61 focused). V2-01 acceptance is now blocked on human signatures alone, not on more annotation.
 | 2026-09-20 UTC | claude-opus-5 | draft6 → draft7 | Applied the owner's first human review. Verified both corrections against primary sources and both held: Aalto's identity was the wrong programme for an international applicant, and HKU was missing its school and exact degree title. Recorded them without asserting the Computer Engineering / computer science equivalence the owner's correction does not settle. Gates green (1458 backend at 93.97%, 63 focused). Acceptance now waits on a reviewer name and date, not on more annotation.
+| 2026-09-20 UTC | claude-opus-5 | draft7 → reviewed | **V2-01 accepted.** The owner signed all ten cases (Диас, 2026-09-21) and settled the Aalto adjudication, so the corpus was certified and scored strictly for the first time: `provisional: false`. Recorded the acceptance, pinned the gate with two tests, and wrote down the baseline the pipeline must beat — programme recall 1/10, claim precision 0/5, every claim out of scope. Gates green (1461 backend at 93.97%, 66 focused). V2-10 is unblocked.
 
 | 2026-09-20 | gpt-6-astra | b267b337 → V2-00 in progress | Startup/recovery, PR inventory, all pack files read; isolated worktree preserves existing dirty research work. |
 

@@ -12,6 +12,7 @@ label inventories, not changes to the production pipeline or retrieval quality.
 | [draft5](data/ground_truth.draft5.json) | 61/219 | 9/10 | 1/8 / 1/9 | 0/5 / 0/61 | 0/210 |
 | [draft6](data/ground_truth.draft6.json) | 61/219 | 10/10 | 1/9 / 1/10 | 0/5 / 0/61 | 0/210 |
 | [draft7](data/ground_truth.draft7.json) | 62/220 | 10/10 | 1/9 / 1/10 | 0/5 / 0/62 | 0/210 |
+| **[reviewed](data/ground_truth.reviewed.json)** | 62/220 | 10/10 | 1/9 / 1/10 | 0/5 / 0/62 | 0/210 |
 
 - Draft1 freezes the initial source annotation and captured pipeline outputs.
 - Draft2 adds official-source annotations, resolves Toronto/KAIST programme identity
@@ -23,8 +24,11 @@ label inventories, not changes to the production pipeline or retrieval quality.
 
 Claim adjudication stays 5/13 and support adjudication stays 0/13 in all seven
 reports. No unsupported-claim rate can be inferred from an empty support denominator.
-All ten cases remain drafts in every version; strict scoring refuses them without
-the explicit provisional-results flag. A human review worksheet is not a signature.
+Every **draft** version refuses strict scoring without the explicit provisional-results flag; a review
+worksheet is not a signature. The `reviewed` row is the exception and the point of the exercise: it is
+signed by Диас on 2026-09-21 and scores strictly, with `provisional: false`. Its metrics are identical
+to draft7's — certification changes who vouches for the corpus, never a measured value. See
+[the acceptance record](ACCEPTANCE.md).
 
 Between draft2 and draft3, the only changed aggregate metrics are the denominators
 of claim recall and critical-field coverage. All operational measurements are
