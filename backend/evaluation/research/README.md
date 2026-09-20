@@ -4,8 +4,8 @@ This is evaluation tooling, excluded from production containers. The live runner
 uses the existing production registry, Fetcher and ResearchRunner. It never loads
 ground truth. Ranking, discovery, verification and network policy are unchanged.
 
-Latest source annotations: [draft6](REVIEW_DRAFT6.md), [version comparison](VERSIONS.md),
-[human review worksheet](REVIEW_WORKSHEET_DRAFT6.md).
+Latest source annotations: [draft7](REVIEW_DRAFT7.md), [version comparison](VERSIONS.md),
+[human review worksheet](REVIEW_WORKSHEET_DRAFT7.md).
 
 ## Current acceptance status
 
