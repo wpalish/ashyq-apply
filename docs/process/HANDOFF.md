@@ -263,6 +263,21 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+Write-ahead (claude-opus-5, 2026-09-20, certification): **the owner has signed the corpus.** They
+reviewed draft7, answered "всё правильно" to the two open questions in §7 — which settles the Aalto
+adjudication in the affirmative, accepting the English-taught Computer Engineering major as satisfying
+the requested computer science — and supplied the reviewer identity: **Диас, 2026-09-21**.
+
+This step therefore does what six drafts could not: copies draft7 to `ground_truth.reviewed.json`,
+sets `review.status: "human_verified"`, `reviewer: "Диас"`, `verified_on: "2026-09-21"` on all ten
+cases, and runs the scorer **without `--allow-drafts`** — the strict gate at `metrics.py:37` that has
+refused every version so far. Adds `metrics.reviewed.json` from that strict run, an `ACCEPTANCE.md`
+recording who signed what and when, the VERSIONS row, the README status change from IN PROGRESS, both
+`parametrize` extensions, and a new test asserting strict scoring now *succeeds* on the reviewed
+dataset while still refusing every draft. Frozen draft1–draft7, the capture and production code stay
+untouched. The Aalto decision is recorded in that case's notes as the owner's call, with the reasoning
+it overrides, so a later reader can see it was decided rather than assumed.
+
 Draft7 is published and green (§6).
 
 **NEXT, exact and executable.** Three items; (1) is the only one that can unblock acceptance.
