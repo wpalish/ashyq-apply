@@ -6,22 +6,22 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-Current holder: **gpt-6-astra**, 2026-09-20 UTC. Branch: `task/v2-01-research-benchmark`; base: `b267b337`; HEAD when written: `a243a46`. V2-01 is not accepted; see review blockers below.
+Current holder: **nobody**, 2026-09-20 UTC. Branch: `task/v2-01-research-benchmark`; base: `b267b337`; HEAD when written: `d0a2fb4` + this documentation handoff. V2-01 is not accepted; see review blockers below.
 
 
 | | |
 |---|---|
-| Holder | **gpt-6-astra** |
+| Holder | **nobody** |
 | Since (UTC) | 2026-09-20 |
 | Branch | `task/v2-01-research-benchmark`, via V2-00 from `main@b267b337` |
-| HEAD when written | `a243a46` |
+| HEAD when written | `d0a2fb4` + this documentation handoff |
 | Origin main when checked | `b267b337` (fetched again 2026-09-20) |
 | Previous holder | claude-opus-5; security PR #12 is now merged |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
 
-**V2-01 — reproducible university research benchmark (in-progress).**
+**V2-01 — reproducible university research benchmark (in-progress; draft PR #14).**
 Owner explicitly prioritizes the new workstream. V2-01 follows this documentation commit in a task branch from this predecessor (explicit branch exception). Goal: measure current research/discovery quality before architecture changes.
 
 
@@ -60,7 +60,7 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
-V2: `d917259` integrated all 15 Markdown documents plus original manifest and navigation/task card; pushed. `5d2a3ed` write-ahead V2-01 baton; pushed. All 16 archive entries verified byte-for-byte after transfer; original untracked ZIP removed. 51f9512 pushed schema, offline scoring, bounded live capture, 10 draft cases, 14 tests and container isolation. `a243a46` pushed checkpointed HTTP/PDF counters, candidate ranks and evidence validation. Current publication step adds 25 tests, direct claim mapping, compact baseline capture/metrics/report, and human review queue. Human certification remains outstanding.
+V2: `d917259` integrated all 15 Markdown documents plus original manifest and navigation/task card; pushed. `5d2a3ed` write-ahead V2-01 baton; pushed. All 16 archive entries verified byte-for-byte after transfer; original untracked ZIP removed. 51f9512 pushed schema, offline scoring, bounded live capture, 10 draft cases, 14 tests and container isolation. `a243a46` pushed checkpointed HTTP/PDF counters, candidate ranks and evidence validation. `1187cd0` published direct claim mapping, compact baseline capture/metrics/report and human review queue. `d0a2fb4` fixes JSON type equality; 25 benchmark tests and both full CI matrices pass. Draft PR: https://github.com/wpalish/ashyq-apply/pull/14. Human certification remains outstanding.
 
 
 The original recovery entries below are historical provenance. Preserve their hashes and ancestry;
@@ -263,7 +263,7 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-Current step: publish backend/evaluation/research/baseline/ and REVIEW.md, run new-SHA CI, open a draft PR. Next executable task: follow the review queue to finish official-source labels for all ten cases; resolve four exact programme URLs and award/document identity; obtain actual human reviewer/date, increment dataset version, then run from backend: python -m evaluation.research --dataset evaluation/research/data/ground_truth.json --capture evaluation/research/baseline/capture.json --out ../artifacts/reviewed-metrics.json (strict, no --allow-drafts; refresh capture/adjudication where required). Do not infer human acceptance from this AI-prepared draft. After V2-01 acceptance only: V2-10 provider-neutral SearchProvider with a fake adapter. Older steps below are historical.
+Publication and code validation complete in draft PR #14. V2-01 remains incomplete. Next executable task: follow the review queue to finish official-source labels for all ten cases; resolve four exact programme URLs and award/document identity; obtain actual human reviewer/date, increment dataset version, then run from backend: python -m evaluation.research --dataset evaluation/research/data/ground_truth.json --capture evaluation/research/baseline/capture.json --out ../artifacts/reviewed-metrics.json (strict, no --allow-drafts; refresh capture/adjudication where required). Do not infer human acceptance from this AI-prepared draft. After V2-01 acceptance only: V2-10 provider-neutral SearchProvider with a fake adapter. Older steps below are historical.
 
 
 1. **Review and merge PR for `task/security-audit-hardening`.** Nine commits, backend + frontend +
@@ -290,7 +290,7 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
-V2-01: CI run 35474954319 at 51f9512 SUCCESS: SQLite 1409 passed, 93.96% coverage; PostgreSQL 1409 passed; security and frontend jobs passed. Local publication step: 25 benchmark tests pass, Ruff check/format and mypy pass (174 files). Full new-SHA CI pending; 51f9512 remains the latest verified full-matrix result recorded here. Frontend typecheck/lint/188 unit/build pass. pip-audit: no known vulnerabilities. npm audit: 2 moderate vulnerabilities, below high gate. Local initial SQLite run: 1394 passed, one KZT fixture encoding failure, 93.33%; same test passes with PYTHONUTF8=1, no production edits. Linux CI above passes both full matrices. Demo migrated in isolated database; Groningen first, UBC OUT_OF_BUDGET verified in stored results. One Alembic head d9c4e7a21b83. Local E2E: 75 passed, one skipped; auth E2E: 6 passed. Temporary LF launcher and generated screenshots restored. Prior numbers below are historical.
+V2-01: both CI runs at d0a2fb4 SUCCESS: push 35488937175 and PR 35488963787. SQLite 1420 passed, 93.97% app coverage; PostgreSQL 1420 passed; security/containers and frontend jobs passed. This final handoff changes documentation only. Local publication step: 25 benchmark tests pass, Ruff check/format and mypy pass (174 files). All 25 focused benchmark tests also pass with the PostgreSQL harness. No failing code gate remains. Frontend typecheck/lint/188 unit/build pass. pip-audit: no known vulnerabilities. npm audit: 2 moderate vulnerabilities, below high gate. Local initial SQLite run: 1394 passed, one KZT fixture encoding failure, 93.33%; same test passes with PYTHONUTF8=1, no production edits. Linux CI above passes both full matrices. Demo migrated in isolated database; Groningen first, UBC OUT_OF_BUDGET verified in stored results. One Alembic head d9c4e7a21b83. Local E2E: 75 passed, one skipped; auth E2E: 6 passed. Temporary LF launcher and generated screenshots restored. Prior numbers below are historical.
  (numbers, not adjectives)
 
 Local runs by claude-opus-5, 2026-09-09, on `task/security-audit-hardening`.
@@ -315,7 +315,7 @@ CI runs both on the PR.
 
 ## 7. Blockers / questions for the owner
 
-### V2 reconciliation, 2026-09-20
+### V2 reconciliation, 2026-09-20 (acceptance still incomplete)
 - HEAD and origin/main both b267b337. PR #13 is OPEN (crawler offload); no merge or overlapping production edits. PRs #11/#10/#1 also remain open.
 - Original checkout has modified HANDOFF, untracked research schemas/tests and package-lock.json; preserved untouched in `task/1.1-research-contracts`. Its 2026-09-17 local notes report 51 schema tests and a KZT test failure; these are not merged baseline facts.
 - Isolated V2 worktree starts from main. Five unpushed payment commits in sibling worktree are outside scope.
@@ -534,3 +534,5 @@ V2-00 historical checkpoint: Ruff lint/format and mypy passed (166 files); subse
 
 
 V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recall @5/10/20 1/6; claim adjudication 5/13, support adjudication 0/13; critical coverage 0/150. Ten bounded runs, 520 HTTP attempts, 2 PDFs; three wall-clock and two page-budget failures. Full results and limitations: backend/evaluation/research/baseline/README.md. Human verification 0/10; no acceptance claim.
+
+| 2026-09-20 | gpt-6-astra | b267b337 → d0a2fb4 + documentation handoff | Integrated V2 pack, isolated benchmark/capture, 25 focused tests, 1420 tests per DB and 93.97% coverage, committed provisional baseline; draft PR #14. Baton released. Human-verified cases 0/10; finish label/adjudication review before V2-10. |

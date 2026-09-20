@@ -43,3 +43,23 @@ Only after V2-01 acceptance proceed to V2-10 (provider-neutral SearchProvider).
 These preparation notes were checked on 2026-09-20 and are not human signoffs or
 additional scored labels. They explain why an apparently relevant page is not
 enough to populate the requested scope.
+
+## Candidates for the next reviewed dataset version
+
+These additional sources were found after freezing draft1's baseline. They are
+review inputs, not retroactive changes to its denominator.
+
+- Toronto: the official [Computer Science programme page](https://future.utoronto.ca/program/computer-science)
+  lists BCS majors/specialists at Mississauga, Scarborough and St. George, with
+  different OUAC codes and default Ontario qualifications. The departmental
+  [BCS announcement](https://web.cs.toronto.edu/bachelor-of-computer-science)
+  should be checked alongside it for the September 2027 transition. Select and
+  record campus/programme scope before accepting interchangeable programme URLs.
+- KAIST: the [undergraduate roadmap](https://cs.kaist.ac.kr/content?menu=320)
+  provides a Computing major curriculum and distinguishes major/double-major/minor
+  credits. Its note dates the roadmap to 2025. It is not a fall 2027 international
+  admissions or scholarship policy; use the linked admissions source for those.
+- Delft: the main bachelor programme URL could not be read with the research
+  browser in this session. The OCW page establishes curriculum context but should
+  not be substituted for an admissions page. Resolve it using an accessible
+  official source and record the final canonical URL.

@@ -425,7 +425,7 @@ D1–D12 / I1–I10 and the existing AGENTS/HANDOFF relay remain authoritative.
 Roadmap: [README](v2/README.md), [execution plan](v2/02_EXECUTION_PLAN.md).
 
 ### V2-01 — reproducible university research benchmark
-Status: in-progress after V2-00 documentation checkpoint.
+Status: in-progress, draft PR #14; harness and provisional baseline published, human-reviewed dataset acceptance outstanding.
 Dependency: main@b267b337 plus V2-00 documentation; PR #13 remains open and is not merged implicitly.
 Goal: measure current ASHYQ Apply research/discovery quality before changing architecture.
 Specification: [first task](v2/14_RECOMMENDED_FIRST_TASK.md), [Phase 0](v2/03_PHASE_0_BENCHMARK.md).
