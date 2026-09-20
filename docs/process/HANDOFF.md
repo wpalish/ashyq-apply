@@ -263,6 +263,34 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+Write-ahead (claude-opus-5, 2026-09-20, draft7): **the owner performed the first real human review of
+draft6 and returned two corrections plus an approval of everything else.** Both corrections were checked
+against the primary sources and both are right:
+
+1. **Aalto — wrong programme for the requested scope.** The Finnish `tietotekniikka` page is a real page
+   and its "Finnish" teaching language is a true fact about it, but the requested scope is an
+   *international* bachelor applicant, and that route is not open in English. Aalto's English-taught
+   bachelor route is the **Aalto Bachelor's Programme in Science and Technology**, whose CS-adjacent major
+   is **Computer Engineering** (`https://www.aalto.fi/en/study-options/computer-engineering-bachelor-of-science-and-master-of-science-technology`,
+   heading "Computer Engineering, Bachelor of Science and Master of Science (Technology)", instruction
+   English, €12 000/year for non-EU/EEA, next English application period 7–22 January 2027).
+   Draft7 moves the identity there. It does **not** silently assert that Computer Engineering equals the
+   requested "computer science": that page says the major combines information technology and electrical
+   engineering, and draft2 already refused the same equivalence move for Data Science. The equivalence is
+   recorded as an open question for the reviewer, and the Finnish route is kept as the separate thing it
+   is.
+2. **HKU — missing faculty, and the programme title was approximate.** The owner gives
+   "School of Computing and Data Science", and the page confirms it: the school offers
+   **Bachelor of Engineering in Computer Science**, not a programme titled bare "Computer Science".
+   Draft7 adds `programme.faculty` and tightens the recorded title.
+
+Draft7 is built exactly as draft6 was (copy, bump version, regenerate metrics through the documented
+CLI, new REVIEW_DRAFT7.md and REVIEW_WORKSHEET_DRAFT7.md, VERSIONS row, README repoint, both
+`parametrize` lists extended). It touches only the Aalto and HKU cases; frozen draft1–draft6, the
+capture and production code stay untouched. The owner approved the other eight cases, but **no case is
+marked `human_verified` in this commit**: the schema needs a reviewer name and a date, and inventing
+either is the one thing this corpus exists to prevent. The name is being asked for separately.
+
 Draft6 is published and green (§6): `delft.programme_urls` / `programme_status` now carry
 `https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering`,
 and all ten programme identities are resolved.
