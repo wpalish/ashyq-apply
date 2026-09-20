@@ -82,6 +82,7 @@ def score(dataset: Dataset, capture: Capture, *, allow_drafts: bool = False) -> 
             exact_evidence = bool(
                 label
                 and evidence
+                and not evidence.excerpt_truncated
                 and any(
                     canonical_url(e.url) == canonical_url(evidence.url)
                     and evidence.excerpt in e.excerpt

@@ -101,6 +101,21 @@ def test_explicit_rejection_overrides_automatic_excerpt_match():
     assert result["metrics"]["unsupported_claim_rate"]["value"] == 1
 
 
+def test_published_short_excerpt_does_not_create_automatic_support():
+    dataset, capture, evidence = inputs()
+    evidence["excerpt_truncated"] = True
+    raw = capture.model_dump()
+    raw["observations"] = [
+        {
+            "case_id": "example",
+            "predictions": [{"key": "ielts.overall", "value": 6.5, "evidence": evidence}],
+        }
+    ]
+    result = score(dataset, Capture.model_validate(raw), allow_drafts=True)
+    assert result["metrics"]["claim_precision"]["value"] == 0
+    assert result["metrics"]["support_adjudication_rate"]["value"] == 0
+
+
 def test_ground_truth_rejects_secondary_sources_and_unexplained_na():
     from pydantic import ValidationError
 
@@ -293,6 +308,27 @@ def test_draft_dataset_has_ten_cases_without_fabricated_human_signoff():
     )
     assert len(dataset.cases) == 10
     assert all(c.review.reviewer is None for c in dataset.cases if c.review.status == "draft")
+
+
+def test_published_baseline_replays_exactly_without_network(monkeypatch):
+    import json
+    import socket
+
+    root = Path(__file__).resolve().parents[1] / "evaluation/research"
+    dataset = Dataset.model_validate_json(
+        (root / "data/ground_truth.json").read_text(encoding="utf-8")
+    )
+    capture = Capture.model_validate_json(
+        (root / "baseline/capture.json").read_text(encoding="utf-8")
+    )
+
+    def no_network(*args, **kwargs):
+        raise AssertionError("Published baseline attempted network")
+
+    monkeypatch.setattr(socket, "socket", no_network)
+    assert score(dataset, capture, allow_drafts=True) == json.loads(
+        (root / "baseline/metrics.json").read_text(encoding="utf-8")
+    )
 
 
 def test_scholarship_dimensions_freshness_and_review_have_separate_metrics():

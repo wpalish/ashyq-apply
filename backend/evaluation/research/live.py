@@ -19,6 +19,7 @@ from unittest.mock import patch
 
 from pydantic import HttpUrl
 
+from .mapping import normalize_claim
 from .schema import Capture, Evidence, Observation, Prediction, Scope, Telemetry
 
 # Evaluation cohort IDs, not expected URLs/values. Registry remains production's input.
@@ -33,12 +34,6 @@ COHORT = {
     "hku": "hku.hk",
     "ntu": "ntu.edu.sg",
     "kaist": "kaist.ac.kr",
-}
-CLAIM_KEYS = {
-    "ielts_min_overall": "ielts.overall",
-    "sat_min_total": "sat.minimum",
-    "application_deadline": "deadline",
-    "tuition": "tuition",
 }
 
 
@@ -116,6 +111,7 @@ async def capture_one(case_id: str, output: Path, max_pages: int) -> None:
                 for row in self.session.query(ClaimRow).filter(ClaimRow.run_id == self.run.id):
                     raw = row.payload
                     raw_claims.append(raw)
+                    key, value, programme, degree = normalize_claim(row.claim_type, raw)
                     excerpt = raw.get("original_text_excerpt")
                     evidence = None
                     if excerpt and str(row.source_url).startswith(("http://", "https://")):
@@ -126,7 +122,8 @@ async def capture_one(case_id: str, output: Path, max_pages: int) -> None:
                                 university=next(iter(self._candidates)).name
                                 if self._candidates
                                 else case_id,
-                                programme=raw.get("program"),
+                                programme=programme,
+                                degree=degree,
                                 intake=raw.get("intake"),
                                 academic_year=raw.get("academic_year"),
                             ),
@@ -135,8 +132,8 @@ async def capture_one(case_id: str, output: Path, max_pages: int) -> None:
                         )
                     predictions.append(
                         Prediction(
-                            key=CLAIM_KEYS.get(row.claim_type, "unmapped." + row.claim_type),
-                            value=raw.get("normalized_value"),
+                            key=key,
+                            value=value,
                             evidence=evidence,
                         )
                     )
@@ -238,6 +235,9 @@ def main() -> None:
                 "scope": "current production pipeline; HTTP-only bounded cold run",
                 "rank_stage": "programme confirmation queue before catalogue walking",
                 "harness_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+                "mapping_sha256": hashlib.sha256(
+                    Path(__file__).with_name("mapping.py").read_bytes()
+                ).hexdigest(),
             },
             observations=observations,
         )

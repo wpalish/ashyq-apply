@@ -22,7 +22,7 @@ and the single `docs/process/HANDOFF.md` remain the relay system.
 From `backend`, with the project Python environment:
 
 ```sh
-python -m evaluation.research --dataset evaluation/research/data/ground_truth.json --capture ../artifacts/research-benchmark/baseline/capture.json --out ../artifacts/research-benchmark/baseline/metrics.json --allow-drafts
+python -m evaluation.research --dataset evaluation/research/data/ground_truth.json --capture evaluation/research/baseline/capture.json --out ../artifacts/replayed-metrics.json --allow-drafts
 python -m pytest tests/test_research_benchmark.py
 ```
 
@@ -31,6 +31,12 @@ HTML through discovery; it cannot estimate how a new discovery algorithm would
 perform from old output alone. New implementations need fresh bounded captures
 or a separately assembled source-response replay corpus. Tests prevent socket use
 in offline scoring. No web tools, paid provider or LLM are used by the offline CLI.
+
+The committed baseline includes compact observations, metrics and a limitations
+report. Published excerpts are deliberately shortened and flagged; they cannot
+automatically establish claim support. Full raw captures remain in the local,
+ignored `artifacts/` directory. Read official sources for new evidence adjudication.
+The [review queue](REVIEW.md) lists the unfinished cases.
 
 ## Live capture
 

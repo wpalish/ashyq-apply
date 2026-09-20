@@ -27,6 +27,7 @@ class Evidence(Strict):
     scope: Scope
     accessed_on: date
     source_type: Literal["official", "government", "aggregator", "unknown"]
+    excerpt_truncated: bool = False
 
 
 class Review(Strict):

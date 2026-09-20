@@ -6,17 +6,17 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-Current holder: **gpt-6-astra**, 2026-09-20 UTC. Branch: `task/v2-01-research-benchmark`; base: `b267b337`; HEAD when written: `d917259`. Prior baton table below is historical.
+Current holder: **gpt-6-astra**, 2026-09-20 UTC. Branch: `task/v2-01-research-benchmark`; base: `b267b337`; HEAD when written: `a243a46`. V2-01 is not accepted; see review blockers below.
 
 
 | | |
 |---|---|
-| Holder | **nobody** |
-| Since (UTC) | 2026-09-09 19:20 UTC (released by claude-opus-5) |
-| Branch | `task/security-audit-hardening`, branched from `main@edf546d` |
-| HEAD when written | `b96845f` |
-| Origin main when checked | `edf546d` (PR #9 merge); the branch is 9 commits ahead of it and touches nothing else |
-| Previous holder | codex; it released after the C2 publication record on `main` |
+| Holder | **gpt-6-astra** |
+| Since (UTC) | 2026-09-20 |
+| Branch | `task/v2-01-research-benchmark`, via V2-00 from `main@b267b337` |
+| HEAD when written | `a243a46` |
+| Origin main when checked | `b267b337` (fetched again 2026-09-20) |
+| Previous holder | claude-opus-5; security PR #12 is now merged |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
@@ -25,7 +25,7 @@ Current holder: **gpt-6-astra**, 2026-09-20 UTC. Branch: `task/v2-01-research-be
 Owner explicitly prioritizes the new workstream. V2-01 follows this documentation commit in a task branch from this predecessor (explicit branch exception). Goal: measure current research/discovery quality before architecture changes.
 
 
-**Security audit of the whole repository, and the fixes it produced — `ready-for-review (PR #12)`.**
+**Historical security audit — PR #12 merged; retained below for provenance.**
 
 Unplanned work: the owner asked for a security review of `main` rather than the next brief task. The
 queue in §10 is untouched and the C2 items in the previous §2 stand exactly as codex left them; nothing
@@ -41,7 +41,7 @@ production deployment from being in that state.
 Findings deliberately **not** changed are listed in §7, so the next holder does not re-discover them and
 assume they were missed.
 
-### Carried forward unchanged — codex's C2 status, still true
+### Historical C2 publication and outstanding product decisions
 
 **Campaign `c2` publication is complete; remaining items are explicit product blockers.** GLM integrated
 T16 (browser/egress hardening), T27 (claim verifier), T28 (source pages), T29 (catalog walker at the
@@ -60,7 +60,7 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
-V2: `d917259` integrated all 15 Markdown documents plus original manifest and navigation/task card; pushed. `5d2a3ed` write-ahead V2-01 baton; pushed. All 16 archive entries verified byte-for-byte after transfer; original untracked ZIP removed. 51f9512 pushed schema, offline scoring, bounded live capture, 10 draft cases, 14 tests and container isolation. Follow-up adds checkpointed HTTP/PDF counters, candidate ranks, stricter evidence validation and 22 adversarial tests. Human certification remains outstanding.
+V2: `d917259` integrated all 15 Markdown documents plus original manifest and navigation/task card; pushed. `5d2a3ed` write-ahead V2-01 baton; pushed. All 16 archive entries verified byte-for-byte after transfer; original untracked ZIP removed. 51f9512 pushed schema, offline scoring, bounded live capture, 10 draft cases, 14 tests and container isolation. `a243a46` pushed checkpointed HTTP/PDF counters, candidate ranks and evidence validation. Current publication step adds 24 tests, direct claim mapping, compact baseline capture/metrics/report, and human review queue. Human certification remains outstanding.
 
 
 The original recovery entries below are historical provenance. Preserve their hashes and ancestry;
@@ -263,7 +263,7 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-Current write-ahead after 51f9512: instrument HTTP/PDF counts and candidate ranks in evaluation only; test timeout checkpoint preservation; publish bounded baseline with explicit draft/mapping limits; rerun gates and push. Next fix direct ClaimType-to-label names, without fabricating programme/award identity. Historical implementation plan: create `backend/evaluation/research/schema.py`, `metrics.py`, offline CLI, separate bounded canary capture, and `backend/tests/test_research_benchmark.py`. First tests cover all-UNKNOWN, wrong scope, duplicates, absent denominators, and production isolation. Next collect official-source draft cases and run baseline. Historical integration plan: integrate all execution-pack Markdown into `analysis/v2/`, add navigation and a task card in the existing `analysis/AI_TASK_BRIEF.md`. Run baseline gates, commit/push documentation, then branch `task/v2-01-research-benchmark` from this documentation predecessor. First code: `backend/evaluation/research/schema.py` and `backend/tests/test_research_benchmark.py`. Older steps below are historical.
+Current step: publish ackend/evaluation/research/baseline/ and REVIEW.md, run new-SHA CI, open a draft PR. Next executable task: follow the review queue to finish official-source labels for all ten cases; resolve four exact programme URLs and award/document identity; obtain actual human reviewer/date, increment dataset version, then run from backend: python -m evaluation.research --dataset evaluation/research/data/ground_truth.json --capture evaluation/research/baseline/capture.json --out ../artifacts/reviewed-metrics.json (strict, no --allow-drafts; refresh capture/adjudication where required). Do not infer human acceptance from this AI-prepared draft. After V2-01 acceptance only: V2-10 provider-neutral SearchProvider with a fake adapter. Older steps below are historical.
 
 
 1. **Review and merge PR for `task/security-audit-hardening`.** Nine commits, backend + frontend +
@@ -290,12 +290,12 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
-V2-01: CI run 35474954319 at 51f9512 SUCCESS: SQLite 1409 passed, 93.96% coverage; PostgreSQL 1409 passed; security and frontend jobs passed. Local follow-up: 22 benchmark tests pass; final lint/typecheck and new-SHA CI pending. Frontend typecheck/lint/188 unit/build pass. pip-audit: no known vulnerabilities. npm audit: 2 moderate vulnerabilities, below high gate. Local initial SQLite run: 1394 passed, one KZT fixture encoding failure, 93.33%; same test passes with PYTHONUTF8=1, no production edits. Linux CI above passes both full matrices. Demo migrated in isolated database; Groningen first. One Alembic head d9c4e7a21b83. Local E2E: 75 passed, one skipped; auth E2E: 6 passed. Temporary LF launcher and generated screenshots restored. Prior numbers below are historical.
+V2-01: CI run 35474954319 at 51f9512 SUCCESS: SQLite 1409 passed, 93.96% coverage; PostgreSQL 1409 passed; security and frontend jobs passed. Local publication step: 24 benchmark tests pass, Ruff check/format and mypy pass (174 files). Full new-SHA CI pending; 51f9512 remains the latest verified full-matrix result recorded here. Frontend typecheck/lint/188 unit/build pass. pip-audit: no known vulnerabilities. npm audit: 2 moderate vulnerabilities, below high gate. Local initial SQLite run: 1394 passed, one KZT fixture encoding failure, 93.33%; same test passes with PYTHONUTF8=1, no production edits. Linux CI above passes both full matrices. Demo migrated in isolated database; Groningen first, UBC OUT_OF_BUDGET verified in stored results. One Alembic head d9c4e7a21b83. Local E2E: 75 passed, one skipped; auth E2E: 6 passed. Temporary LF launcher and generated screenshots restored. Prior numbers below are historical.
  (numbers, not adjectives)
 
 Local runs by claude-opus-5, 2026-09-09, on `task/security-audit-hardening`.
 Codex's C2 gate numbers for `main@04a3058` are in git history at `edf546d`; this table is the
-latest run, as this section requires.
+historical security-audit run; current V2 evidence is above.
 
 | Gate | Result |
 |---|---|
@@ -399,6 +399,8 @@ next agent does not reopen it.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
 
+V2-01: evaluation-only Pydantic schema and JSON corpus/capture/metric contracts under backend/evaluation/research; separate offline scorer and opt-in bounded live CLI. Evidence excerpt_truncated prevents shortened publication snippets from creating automatic support. Production models/API/domain unchanged; app tree hash 5c98f59a1f56eaa22e6cd76546ef3039e2e2eee5 matches b267b337. No migration; head d9c4e7a21b83.
+
 | Date | Task | Change (path · field/signature) | Why |
 |---|---|---|---|
 | 2026-09-05 | setup | Brief §1 counts are stale: main now has **818** backend tests (not 785), **19** institutions in `institution_registry.json` (not 10), `domain/transcript.py`, i18n scaffolding in `frontend/src/lib/i18n.ts`, and `types.ts` grew. Anchors in the brief (`_stage_verify` L344, `_stage_assess` L722, `_update_result` L973, `ExplainableScore` L166, `UnresolvedQuestion` L96) are still correct. | keeps the brief honest without rewriting it |
@@ -426,6 +428,8 @@ next agent does not reopen it.
 | 2026-09-09 | security audit | `security.py`: `SCRYPT_R`, `SCRYPT_P`, `_maxmem(n, r)`; `routes_metrics` compares bytes | scrypt cost schedule and the 500-on-non-ASCII bearer. |
 
 ## 9. Traps and lessons (things that cost a session; keep them)
+
+V2-01: set PYTHONUTF8=1 on Windows for text fixtures; do not modify evaluation schemas while a live batch is running (parent and child processes can import different versions). Instrumented baseline segments and restart are recorded in baseline/README.md. Scope matching is deliberately literal; missing/different names count as conservative match failures, not human-confirmed wrong facts.
 
 - `seed_demo.py` raises `SchemaOutOfDate` until `UNIMATCH_DEMO_MODE=true alembic upgrade head` has run.
 - `Fetcher(...)` takes `(cache_dir, *, delay_seconds, respect_robots, offline, cache_ttl_seconds, timeout, contact, corpus_dir)`; it has no `close()`, only `__aexit__`.
@@ -499,6 +503,8 @@ host=github.com
 
 ## 10. Queue (brief §6 order; do not reorder without the owner)
 
+Owner-prioritized workstream: finish V2-01 labels, human review and baseline acceptance, then V2-10 provider-neutral SearchProvider with a fake adapter. Do not begin the rest of the roadmap or connect Jev. The older queue below remains historical context.
+
 **Now: GitHub review of PR #7 after all release-gates complete.** PR #6 is already merged on
 `origin/main@7b1fce0`. The separate brief queue below remains the repository sequence; the GLM
 24-card campaign did not replace it and is not fully completed.
@@ -524,5 +530,7 @@ host=github.com
 
 | 2026-09-20 | gpt-6-astra | b267b337 → V2-00 in progress | Startup/recovery, PR inventory, all pack files read; isolated worktree preserves existing dirty research work. |
 
-V2-00 gates: Ruff lint/format pass (166 files); mypy pass (166 files). Full backend/frontend gates running; checkpoint is wip until their results are known. Alembic source graph: one head d9c4e7a21b83.
+V2-00 historical checkpoint: Ruff lint/format and mypy passed (166 files); subsequent full CI results are recorded in section 6. Alembic source graph: one head d9c4e7a21b83.
 
+
+V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recall @5/10/20 1/6; claim adjudication 5/13, support adjudication 0/13; critical coverage 0/150. Ten bounded runs, 520 HTTP attempts, 2 PDFs; three wall-clock and two page-budget failures. Full results and limitations: backend/evaluation/research/baseline/README.md. Human verification 0/10; no acceptance claim.
