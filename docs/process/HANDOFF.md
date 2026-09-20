@@ -6,12 +6,12 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-Current holder: **nobody**, 2026-09-20 UTC. Branch: `task/v2-01-research-benchmark`; base: `b267b337`; HEAD when written: `d0a2fb4` + this documentation handoff. V2-01 is not accepted; see review blockers below.
+Current holder: **gpt-6-astra**, 2026-09-20 UTC. Branch: `task/v2-01-research-benchmark`; base: `b267b337`; HEAD when written: `d0a2fb4` + this documentation handoff. V2-01 is not accepted; see review blockers below.
 
 
 | | |
 |---|---|
-| Holder | **nobody** |
+| Holder | **gpt-6-astra** |
 | Since (UTC) | 2026-09-20 |
 | Branch | `task/v2-01-research-benchmark`, via V2-00 from `main@b267b337` |
 | HEAD when written | `d0a2fb4` + this documentation handoff |
@@ -263,7 +263,7 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-Publication and code validation complete in draft PR #14. V2-01 remains incomplete. Next executable task: follow the review queue to finish official-source labels for all ten cases; resolve four exact programme URLs and award/document identity; obtain actual human reviewer/date, increment dataset version, then run from backend: python -m evaluation.research --dataset evaluation/research/data/ground_truth.json --capture evaluation/research/baseline/capture.json --out ../artifacts/reviewed-metrics.json (strict, no --allow-drafts; refresh capture/adjudication where required). Do not infer human acceptance from this AI-prepared draft. After V2-01 acceptance only: V2-10 provider-neutral SearchProvider with a fake adapter. Older steps below are historical.
+Write-ahead: prepare data/ground_truth.draft2.json from fresh official sources, preserving draft1 and its baseline. Resolve programme scope and add independent requirements/award/document facts, then score the same frozen capture into a separate draft2 report. All cases remain draft until actual human review. Publication and code validation complete in draft PR #14. Next acceptance task: follow the review queue to finish official-source labels for all ten cases; resolve four exact programme URLs and award/document identity; obtain actual human reviewer/date, increment dataset version, then run from backend: python -m evaluation.research --dataset evaluation/research/data/ground_truth.json --capture evaluation/research/baseline/capture.json --out ../artifacts/reviewed-metrics.json (strict, no --allow-drafts; refresh capture/adjudication where required). Do not infer human acceptance from this AI-prepared draft. After V2-01 acceptance only: V2-10 provider-neutral SearchProvider with a fake adapter. Older steps below are historical.
 
 
 1. **Review and merge PR for `task/security-audit-hardening`.** Nine commits, backend + frontend +
@@ -536,3 +536,4 @@ V2-00 historical checkpoint: Ruff lint/format and mypy passed (166 files); subse
 V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recall @5/10/20 1/6; claim adjudication 5/13, support adjudication 0/13; critical coverage 0/150. Ten bounded runs, 520 HTTP attempts, 2 PDFs; three wall-clock and two page-budget failures. Full results and limitations: backend/evaluation/research/baseline/README.md. Human verification 0/10; no acceptance claim.
 
 | 2026-09-20 | gpt-6-astra | b267b337 → d0a2fb4 + documentation handoff | Integrated V2 pack, isolated benchmark/capture, 25 focused tests, 1420 tests per DB and 93.97% coverage, committed provisional baseline; draft PR #14. Baton released. Human-verified cases 0/10; finish label/adjudication review before V2-10. |
+| 2026-09-20 | gpt-6-astra | 3618a52 -> draft2 in progress | Resumed official-source annotation; preserve frozen draft1 baseline, no production changes. |
