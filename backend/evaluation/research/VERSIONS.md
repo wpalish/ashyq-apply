@@ -8,6 +8,7 @@ label inventories, not changes to the production pipeline or retrieval quality.
 | [draft1](data/ground_truth.json) | 12/160 | 6/10 | 1/7 / 1/6 | 0/5 / 0/12 | 0/150 |
 | [draft2](data/ground_truth.draft2.json) | 46/206 | 8/10 | 1/8 / 1/8 | 0/5 / 0/46 | 0/197 |
 | [draft3](data/ground_truth.draft3.json) | 52/212 | 8/10 | 1/8 / 1/8 | 0/5 / 0/52 | 0/203 |
+| [draft4](data/ground_truth.draft4.json) | 56/215 | 9/10 | 1/8 / 1/9 | 0/5 / 0/56 | 0/206 |
 
 - Draft1 freezes the initial source annotation and captured pipeline outputs.
 - Draft2 adds official-source annotations, resolves Toronto/KAIST programme identity
@@ -17,7 +18,7 @@ label inventories, not changes to the production pipeline or retrieval quality.
   new source facts. The [projection manifest](data/document_projection.draft3.json)
   permits reconstruction of every original value, including conditions and JSON types.
 
-Claim adjudication stays 5/13 and support adjudication stays 0/13 in all three
+Claim adjudication stays 5/13 and support adjudication stays 0/13 in all four
 reports. No unsupported-claim rate can be inferred from an empty support denominator.
 All ten cases remain drafts in every version; strict scoring refuses them without
 the explicit provisional-results flag. A human review worksheet is not a signature.
@@ -31,3 +32,6 @@ Compare future pipeline runs on the same accepted dataset version, capture budge
 scope and mapping conventions. Do not compare percentages across these versions as
 an improvement or regression. Generic unresolved family placeholders remain; the
 applicable field inventory still requires review.
+
+Draft4 adds exact Aalto identity/language and qualification-scoped Groningen facts.
+See [source decisions](REVIEW_DRAFT4.md) and [current worksheet](REVIEW_WORKSHEET_DRAFT4.md).
