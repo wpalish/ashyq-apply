@@ -6,15 +6,15 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-Current holder: **gpt-6-astra**, 2026-09-20 UTC. Branch: `task/v2-01-research-benchmark`; base: `b267b337`; HEAD when written: `232ca1f` + draft3 write-ahead. V2-01 is not accepted; see review blockers below.
+Current holder: **nobody**, 2026-09-20 UTC. Branch: `task/v2-01-research-benchmark`; base: `b267b337`; HEAD when written: `2f56a46` + this documentation handoff. V2-01 is not accepted; see review blockers below.
 
 
 | | |
 |---|---|
-| Holder | **gpt-6-astra** |
+| Holder | **nobody** |
 | Since (UTC) | 2026-09-20 |
 | Branch | `task/v2-01-research-benchmark`, via V2-00 from `main@b267b337` |
-| HEAD when written | `232ca1f` + draft3 write-ahead |
+| HEAD when written | `2f56a46` + this documentation handoff |
 | Origin main when checked | `b267b337` (fetched again 2026-09-20) |
 | Previous holder | claude-opus-5; security PR #12 is now merged |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
@@ -60,7 +60,7 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
-V2: `5403630` adds explicit offline award/document identity mapping and replay; `00e107f` keeps unknown policies unanswered, adds the human review worksheet and brings focused coverage to 51 tests. `7356d9e` published draft2: 46/206 known labels, 8/10 exact programme URLs, 0/10 human signoffs; separate replay report with programme precision/recall 1/8 and 27 benchmark tests. Frozen draft1/capture are unchanged. `d917259` integrated all 15 Markdown documents plus original manifest and navigation/task card; pushed. `5d2a3ed` write-ahead V2-01 baton; pushed. All 16 archive entries verified byte-for-byte after transfer; original untracked ZIP removed. 51f9512 pushed schema, offline scoring, bounded live capture, 10 draft cases, 14 tests and container isolation. `a243a46` pushed checkpointed HTTP/PDF counters, candidate ranks and evidence validation. `1187cd0` published direct claim mapping, compact baseline capture/metrics/report and human review queue. `d0a2fb4` fixes JSON type equality; 25 benchmark tests and both full CI matrices pass. Draft PR: https://github.com/wpalish/ashyq-apply/pull/14. Human certification remains outstanding.
+V2: `2f56a46` publishes lossless draft3 document projection (52/212 known/total fields), reversible manifest, separate report and review worksheet; 55 focused tests. `5403630` adds explicit offline award/document identity mapping and replay; `00e107f` keeps unknown policies unanswered, adds the human review worksheet and brings focused coverage to 51 tests. `7356d9e` published draft2: 46/206 known labels, 8/10 exact programme URLs, 0/10 human signoffs; separate replay report with programme precision/recall 1/8 and 27 benchmark tests. Frozen draft1/capture are unchanged. `d917259` integrated all 15 Markdown documents plus original manifest and navigation/task card; pushed. `5d2a3ed` write-ahead V2-01 baton; pushed. All 16 archive entries verified byte-for-byte after transfer; original untracked ZIP removed. 51f9512 pushed schema, offline scoring, bounded live capture, 10 draft cases, 14 tests and container isolation. `a243a46` pushed checkpointed HTTP/PDF counters, candidate ranks and evidence validation. `1187cd0` published direct claim mapping, compact baseline capture/metrics/report and human review queue. `d0a2fb4` fixes JSON type equality; 25 benchmark tests and both full CI matrices pass. Draft PR: https://github.com/wpalish/ashyq-apply/pull/14. Human certification remains outstanding.
 
 
 The original recovery entries below are historical provenance. Preserve their hashes and ancestry;
@@ -263,9 +263,9 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-Write-ahead: derive separate ground_truth.draft3.json by losslessly projecting the seven known document records into explicit fields; keep conditions, evidence, UNKNOWNs and all non-document labels unchanged. Publish a source/target projection manifest, separate frozen-capture metrics and review notes. Add round-trip preservation, mapper compatibility and offline replay checks; run gates, push and release baton. No production changes or human certification.
+Draft3 document projection is published in 2f56a46: seven records -> thirteen fields, with lossless manifest and separate metrics. Next: resolve Delft/Aalto exact programme identity and Kazakhstan qualification/intake/fee/SAT gaps from primary sources into a NEW dataset version; use REVIEW_WORKSHEET_DRAFT3.md as the current 52-field review packet. Review real award/document identity aliases, finalize applicable field inventory and independently adjudicate support/currentness/conflicts. Obtain ten actual human reviewer/date signoffs before strict benchmark acceptance. No V2-10 until V2-01 is accepted.
 
-Explicit offline identity mapping shipped in 5403630 and UNKNOWN handling in 00e107f. Next: use backend/evaluation/research/REVIEW_WORKSHEET_DRAFT2.md and MAPPING.md to prepare a new version with reviewed atomic document labels matching .required/.maximum_words; retain all conditional alternatives and missing expense categories. Review the three draft identity bindings and add aliases only after exact source/name checks; FAQs/Tuition Grants must not map to Nanyang Global. Resolve the remaining official-source gaps below, adjudicate full evidence and obtain actual human signoffs. Frozen draft1/draft2 and capture remain immutable. V2-10 still follows V2-01 acceptance only.
+Explicit offline identity mapping shipped in 5403630 and UNKNOWN handling in 00e107f; draft3 now aligns explicit .required/.maximum_words labels while retaining conditional alternatives. REVIEW_WORKSHEET_DRAFT2.md remains a frozen historical packet; use draft3 for current review. Review the three draft identity bindings and add aliases only after exact source/name checks; FAQs/Tuition Grants must not map to Nanyang Global. Resolve the remaining official-source gaps below, adjudicate full evidence and obtain actual human signoffs. Frozen draft1/draft2 and capture remain immutable. V2-10 still follows V2-01 acceptance only.
 
 Draft2 annotation and separate offline report are prepared in backend/evaluation/research/REVIEW_DRAFT2.md. Next: resolve Delft/Aalto exact programme identity; complete Kazakhstan qualification, SAT, deadline/fee and document labels without transferring other-year/programme policies; replace generic unresolved families with a reviewed field inventory; review the implemented award/document identity bindings and align atomic label/value conventions; adjudicate full support/currentness/conflicts. Preserve frozen draft1 and capture. Obtain actual human reviewer/date for all ten cases, publish a newly versioned reviewed dataset, then run from backend: python -m evaluation.research --dataset <reviewed-dataset.json> --capture evaluation/research/baseline/capture.json --out ../artifacts/reviewed-metrics.json (strict, no --allow-drafts; refresh capture/adjudication where required). Human verification is 0/10. Only after V2-01 acceptance: V2-10 provider-neutral SearchProvider with a fake adapter. Older steps below are historical.
 
@@ -294,7 +294,7 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
-Draft3 checkpoint: 55 focused benchmark/mapping/projection tests pass; Ruff check/format and mypy pass (178 files). Seven document records losslessly project into 13 fields; 52/212 labels known, 0/10 human verified. Separate frozen-capture report: programme precision/recall 1/8, claim precision 0/5, recall 0/52, coverage 0/203. Full CI pending, hence wip. No production or frozen-artifact changes.
+Draft3 at 2f56a46: both full CI runs SUCCESS, push 35519935738 and PR 35519937454. SQLite 1450 passed, 93.97% app coverage; PostgreSQL 1450 passed. Frontend 188 unit tests, 75 E2E passed/1 skipped and 6 auth E2E passed; security/container gates pass. Ruff lint/format and mypy pass (178 files); 55 local focused benchmark/mapping/projection tests pass. Seven document records losslessly project into 13 fields; 52/212 labels known, 0/10 human verified. Separate frozen-capture report: programme precision/recall 1/8, claim precision 0/5, recall 0/52, coverage 0/203. Only the last two aggregate denominators change from draft2; operations are identical. Strict scoring rejects draft3 without human certification. Production and frozen draft1/draft2 artifacts remain unchanged. Final handoff changes documentation only.
 
 Identity mapping at 00e107f: both full CI runs SUCCESS (push 35518890037, PR 35518891993). SQLite 1446 passed, 93.96% app coverage; PostgreSQL 1446 passed; frontend 188 unit tests, 75 E2E passed/1 skipped and 6 auth E2E passed; security/containers passed. Ruff lint/format and mypy pass (177 files); 51 local focused benchmark/mapping tests pass. Actual saved NTU sidecar maps 10 raw claims to 10 predictions with 6 explicitly unmapped scholarship claims; final separate replay metrics and operations exactly match draft2. Earlier runs 35518736322/35518738766 were superseded and deliberately cancelled. Frozen corpora/captures/reports and production code unchanged. Final handoff changes documentation only and completes the 46-fact worksheet with conditions, source links and ten blank signatures.
 
@@ -557,3 +557,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 | 2026-09-20 | gpt-6-astra | 4ffa042 -> 00e107f + documentation handoff | Explicit source/subject mapping, separate replay CLI, UNKNOWN protection, 51 focused tests and both full CI matrices green (1446 per DB, 93.96% coverage). Human review worksheet published; 0/10 human certified, V2-01 in progress. Baton released. |
 
 | 2026-09-20 | gpt-6-astra | 232ca1f -> draft3 in progress | Clean synchronized start, one Alembic head; lossless document-field projection and mapper alignment next. |
+
+| 2026-09-20 20:12 UTC | gpt-6-astra | 232ca1f -> 2f56a46 + documentation handoff | Published lossless draft3 document projection, manifest, 52-field review worksheet and version comparison. Both full CI matrices pass (1450 tests per DB, 93.97% coverage); 55 focused tests. Baton released; human certification 0/10 and V2-01 still in progress. |

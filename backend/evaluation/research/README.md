@@ -129,6 +129,7 @@ The latest annotation candidate is [draft3](REVIEW_DRAFT3.md): 52 known fields a
 eight exact programme identities, with no human signoffs. Seven draft2 document
 records were losslessly projected into thirteen fields; no new source facts are
 claimed. It has a separate report over the frozen capture; older versions remain unchanged.
+See [the version comparison](VERSIONS.md) for the changing denominators.
 
 Finish human review, detailed labels, award/document identity mapping and evidence
 adjudication before accepting V2-01. The next roadmap task **after acceptance**
