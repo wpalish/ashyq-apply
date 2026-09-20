@@ -62,6 +62,9 @@ def normalize_subject_claims(
     """
     fallback = normalize_claim(claim_type, raw)
     _, value, programme, degree = fallback
+    if isinstance(value, str) and value.upper() == "UNKNOWN":
+        value = None
+        fallback = (fallback[0], value, programme, degree)
     source = raw.get("source_url", "")
     if claim_type.startswith("scholarship_"):
         subject = raw.get("subject_key")

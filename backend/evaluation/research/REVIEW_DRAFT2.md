@@ -6,6 +6,10 @@ human-verified cases. It preserves draft1 and scores the same frozen capture in
 made for this report. Source URLs, access dates, minimal quotations and explicit
 scope are stored with each label. Review the full linked page, not just the quote.
 
+Use the [human review worksheet](REVIEW_WORKSHEET_DRAFT2.md) for all 46 known
+facts, their scopes/sources and the unresolved fields. Signatures are blank;
+the worksheet does not change dataset verification status.
+
 ## Annotation changes
 
 | Case | Known / all labels | Exact programme URL | Changes and review limits |

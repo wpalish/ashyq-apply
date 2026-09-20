@@ -22,6 +22,8 @@ For a separately saved, directly scoreable replay, also supply
 new output path. The raw canary institution must match the supplied name and any
 existing evidence scope for that case. Only that observation's predictions change.
 Other cases, errors, operation counters, pipeline SHA and capture time are retained.
+Support/currentness/conflict verdicts on the replaced predictions return to
+unadjudicated; previous human verdicts are not transferred to newly mapped facts.
 Replay metadata records raw/binding/mapper/parent hashes and mapping counts. The
 mapper refuses to overwrite an input. Hashes identify inputs; they do not certify
 their correctness. Do not publish full quotations from private raw artifacts.

@@ -328,3 +328,10 @@ def test_mapped_unknown_never_increases_critical_coverage():
         "denominator": 1,
         "value": 0.0,
     }
+
+
+@pytest.mark.parametrize("value", ["unknown", "UNKNOWN"])
+def test_direct_policy_unknown_is_also_unanswered(value):
+    result = map_predictions([claim("sat_policy", value)], identities(), "Example")
+    assert result[0].key == "sat.policy"
+    assert result[0].value is None
