@@ -263,6 +263,30 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+Write-ahead (claude-opus-5, 2026-09-20, V2-10): **starting V2-10 — the search provider interface**,
+per `analysis/v2/02_EXECUTION_PLAN.md` (Phase 1) and `analysis/v2/04_PHASE_1_DISCOVERY_ENGINE.md` §1.
+Its whole point is "no provider lock-in", so this task is a seam, not a retrieval feature: nothing is
+wired into discovery here, because fusion is V2-13 and query generation is V2-11.
+
+Scope, exactly:
+- `backend/app/adapters/search/base.py` — frozen `SearchResult` (url, title, snippet, provider, rank,
+  retrieved_at) and `SearchResponse`, a `SearchProvider` Protocol with the spec's
+  `async def search(*, query, domains=(), max_results=10)`, and the error types.
+- `backend/app/adapters/search/fake.py` — `FakeSearchProvider`, offline and deterministic, built from
+  an explicit caller-supplied corpus. It never invents a result and stamps `provider="fake"` on every
+  one, so a fake row can never be mistaken for a real retrieval.
+- `backend/app/adapters/search/__init__.py` — `get_search_provider()`, the only way to obtain one.
+- `backend/app/config.py` — `search_provider` defaulting to `"none"`, validated like payments is:
+  an unknown name is refused at startup, and `"fake"` is refused in production.
+- `backend/tests/test_search_provider.py` — new.
+
+Three rules from `12_AGENT_DO_AND_DONT.md` are enforced structurally rather than by comment, and each
+gets a test: search results are **discovery hints, never evidence**; `app.domain` may not import the
+search package (the seam holds only if the ban is checked); and with no provider configured
+`get_search_provider()` **raises** rather than returning something empty, because a silent "no results"
+is exactly the hidden fallback that file forbids. The signature also takes a `query: str` and no
+profile, so applicant PII cannot structurally reach a provider — V2-11 will build the query itself.
+
 V2-01 is accepted. The baseline it establishes is deliberately unflattering and is the point of the
 whole exercise: **programme-page recall 1/10, claim precision 0/5, claim recall 0/62, wrong-scope claim
 rate 5/5, critical-field coverage 0/210.** The current pipeline finds the right programme page for one
