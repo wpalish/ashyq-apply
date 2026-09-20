@@ -6,15 +6,15 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-Current holder: **nobody**. Branch: `task/v2-01-research-benchmark`; base: `b267b337`; HEAD when written: `3f7e467` + documentation handoff. V2-01 is not accepted; see review blockers below.
+Current holder: **gpt-6-astra**, 2026-09-20 UTC. Branch: `task/v2-01-research-benchmark`; base: `b267b337`; HEAD when written: `fd07e87` + source-review write-ahead. V2-01 is not accepted; see review blockers below.
 
 
 | | |
 |---|---|
-| Holder | **nobody** |
+| Holder | **gpt-6-astra** |
 | Since (UTC) | 2026-09-20 |
 | Branch | `task/v2-01-research-benchmark`, via V2-00 from `main@b267b337` |
-| HEAD when written | `3f7e467` + documentation handoff |
+| HEAD when written | `fd07e87` + source-review write-ahead |
 | Origin main when checked | `b267b337` (fetched again 2026-09-20) |
 | Previous holder | claude-opus-5; security PR #12 is now merged |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
@@ -262,6 +262,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+Write-ahead: investigate exact Delft programme links and remaining primary-source international qualification/admission requirements. Publish only verified scope-specific additions in a separate draft5 dataset/report/review worksheet; preserve all frozen artifacts and human-signature blanks. Update replay cases and run gates before releasing. No production changes.
 
 Draft4 is published in 3f7e467; current review packet is backend/evaluation/research/REVIEW_WORKSHEET_DRAFT4.md (56 known fields). Next: resolve exact Delft programme URL and remaining Kazakhstan qualification, fall 2027 intake, fee and SAT evidence in a NEW dataset version. Keep Aalto Finnish-route identity distinct from English Data Science; preserve generic Attestat UNKNOWN despite the scoped Groningen NIS labels. Review exact award/document aliases, finalize applicable field inventory, and independently adjudicate support/currentness/conflicts. Obtain ten real reviewer/date signoffs, then run strict scoring without --allow-drafts. No V2-10 until V2-01 acceptance. Older steps below are historical.
 
@@ -567,3 +569,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 | 2026-09-20 20:15 UTC | gpt-6-astra | 952f71a -> source review in progress | Clean synchronized start, one Alembic head; exact programme and qualification evidence next. |
 
 | 2026-09-20 UTC | gpt-6-astra | 952f71a -> 3f7e467 + documentation handoff | Published draft4 primary-source annotations and 56-field review worksheet; prior labels/capture immutable, production unchanged, human certification 0/10. Baton released. |
+
+| 2026-09-20 UTC | gpt-6-astra | fd07e87 -> source review in progress | Clean synchronized start; one Alembic head. Continue remaining primary-source evidence after explaining V2-01 status to owner. |
