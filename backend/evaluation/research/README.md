@@ -121,6 +121,10 @@ is time-to-failure, not time-to-useful-result.
 
 ## Next work
 
+The latest annotation candidate is [draft2](REVIEW_DRAFT2.md): 46 known labels and
+eight exact programme identities, with no human signoffs. It has a separate metric
+report over the frozen capture; draft1 and its original report remain unchanged.
+
 Finish human review, detailed labels, award/document identity mapping and evidence
 adjudication before accepting V2-01. The next roadmap task **after acceptance**
 is V2-10: provider-neutral SearchProvider with a fake adapter and benchmark comparison.

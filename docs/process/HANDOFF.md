@@ -6,7 +6,7 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-Current holder: **gpt-6-astra**, 2026-09-20 UTC. Branch: `task/v2-01-research-benchmark`; base: `b267b337`; HEAD when written: `d0a2fb4` + this documentation handoff. V2-01 is not accepted; see review blockers below.
+Current holder: **gpt-6-astra**, 2026-09-20 UTC. Branch: `task/v2-01-research-benchmark`; base: `b267b337`; HEAD when written: `27b5593` + draft2 checkpoint. V2-01 is not accepted; see review blockers below.
 
 
 | | |
@@ -14,7 +14,7 @@ Current holder: **gpt-6-astra**, 2026-09-20 UTC. Branch: `task/v2-01-research-be
 | Holder | **gpt-6-astra** |
 | Since (UTC) | 2026-09-20 |
 | Branch | `task/v2-01-research-benchmark`, via V2-00 from `main@b267b337` |
-| HEAD when written | `d0a2fb4` + this documentation handoff |
+| HEAD when written | `27b5593` + draft2 checkpoint |
 | Origin main when checked | `b267b337` (fetched again 2026-09-20) |
 | Previous holder | claude-opus-5; security PR #12 is now merged |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
@@ -263,7 +263,7 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-Write-ahead: prepare data/ground_truth.draft2.json from fresh official sources, preserving draft1 and its baseline. Resolve programme scope and add independent requirements/award/document facts, then score the same frozen capture into a separate draft2 report. All cases remain draft until actual human review. Publication and code validation complete in draft PR #14. Next acceptance task: follow the review queue to finish official-source labels for all ten cases; resolve four exact programme URLs and award/document identity; obtain actual human reviewer/date, increment dataset version, then run from backend: python -m evaluation.research --dataset evaluation/research/data/ground_truth.json --capture evaluation/research/baseline/capture.json --out ../artifacts/reviewed-metrics.json (strict, no --allow-drafts; refresh capture/adjudication where required). Do not infer human acceptance from this AI-prepared draft. After V2-01 acceptance only: V2-10 provider-neutral SearchProvider with a fake adapter. Older steps below are historical.
+Draft2 annotation and separate offline report are prepared in backend/evaluation/research/REVIEW_DRAFT2.md. Next: resolve Delft/Aalto exact programme identity; complete Kazakhstan qualification, SAT, deadline/fee and document labels without transferring other-year/programme policies; replace generic unresolved families with a reviewed field inventory; implement explicit award/document identity mapping and adjudicate full support/currentness/conflicts. Preserve frozen draft1 and capture. Obtain actual human reviewer/date for all ten cases, publish a newly versioned reviewed dataset, then run from backend: python -m evaluation.research --dataset <reviewed-dataset.json> --capture evaluation/research/baseline/capture.json --out ../artifacts/reviewed-metrics.json (strict, no --allow-drafts; refresh capture/adjudication where required). Human verification is 0/10. Only after V2-01 acceptance: V2-10 provider-neutral SearchProvider with a fake adapter. Older steps below are historical.
 
 
 1. **Review and merge PR for `task/security-audit-hardening`.** Nine commits, backend + frontend +
@@ -289,6 +289,8 @@ The steps codex left, unchanged and still next after this review:
    the compatibility shim. Do not buy a provider or deploy application infrastructure implicitly.
 
 ## 6. Gate status at last run
+
+Draft2 checkpoint: Ruff lint/format and mypy pass (174 files); 27 focused benchmark tests pass including replay of both immutable reports. Frontend typecheck/lint/build and 188 unit tests pass. Full local backend coverage run is still running (artifacts/draft2-pytest.log); this checkpoint uses wip until that result is known. Production app tree remains identical to origin/main.
 
 V2-01: both CI runs at d0a2fb4 SUCCESS: push 35488937175 and PR 35488963787. SQLite 1420 passed, 93.97% app coverage; PostgreSQL 1420 passed; security/containers and frontend jobs passed. This final handoff changes documentation only. Local publication step: 25 benchmark tests pass, Ruff check/format and mypy pass (174 files). All 25 focused benchmark tests also pass with the PostgreSQL harness. No failing code gate remains. Frontend typecheck/lint/188 unit/build pass. pip-audit: no known vulnerabilities. npm audit: 2 moderate vulnerabilities, below high gate. Local initial SQLite run: 1394 passed, one KZT fixture encoding failure, 93.33%; same test passes with PYTHONUTF8=1, no production edits. Linux CI above passes both full matrices. Demo migrated in isolated database; Groningen first, UBC OUT_OF_BUDGET verified in stored results. One Alembic head d9c4e7a21b83. Local E2E: 75 passed, one skipped; auth E2E: 6 passed. Temporary LF launcher and generated screenshots restored. Prior numbers below are historical.
  (numbers, not adjectives)
@@ -316,7 +318,7 @@ CI runs both on the PR.
 ## 7. Blockers / questions for the owner
 
 ### V2 reconciliation, 2026-09-20 (acceptance still incomplete)
-- HEAD and origin/main both b267b337. PR #13 is OPEN (crawler offload); no merge or overlapping production edits. PRs #11/#10/#1 also remain open.
+- Startup base and origin/main were b267b337; task HEAD is recorded in section 1. PR #13 is OPEN (crawler offload); no merge or overlapping production edits. PRs #11/#10/#1 also remain open.
 - Original checkout has modified HANDOFF, untracked research schemas/tests and package-lock.json; preserved untouched in `task/1.1-research-contracts`. Its 2026-09-17 local notes report 51 schema tests and a KZT test failure; these are not merged baseline facts.
 - Isolated V2 worktree starts from main. Five unpushed payment commits in sibling worktree are outside scope.
 - Future pack country-name queries conflict with preferences_only I3; retain current privacy contract pending owner decision. Future field ontology treats software engineering as related whereas existing spec lists it under CS; no ontology change here.

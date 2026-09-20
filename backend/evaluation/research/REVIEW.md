@@ -46,6 +46,10 @@ enough to populate the requested scope.
 
 ## Candidates for the next reviewed dataset version
 
+These inputs have now been incorporated into the separate AI-prepared
+[draft2 candidate](REVIEW_DRAFT2.md), with remaining scope gaps kept UNKNOWN.
+Draft1 remains frozen; neither candidate has human certification.
+
 These additional sources were found after freezing draft1's baseline. They are
 review inputs, not retroactive changes to its denominator.
 

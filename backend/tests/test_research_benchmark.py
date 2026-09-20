@@ -318,22 +318,24 @@ def test_live_budget_limits_and_explicit_opt_in(monkeypatch):
         main()
 
 
-def test_draft_dataset_has_ten_cases_without_fabricated_human_signoff():
+@pytest.mark.parametrize("suffix", ["", ".draft2"])
+def test_draft_dataset_has_ten_cases_without_fabricated_human_signoff(suffix):
     root = Path(__file__).resolve().parents[1]
     dataset = Dataset.model_validate_json(
-        (root / "evaluation/research/data/ground_truth.json").read_text(encoding="utf-8")
+        (root / f"evaluation/research/data/ground_truth{suffix}.json").read_text(encoding="utf-8")
     )
     assert len(dataset.cases) == 10
     assert all(c.review.reviewer is None for c in dataset.cases if c.review.status == "draft")
 
 
-def test_published_baseline_replays_exactly_without_network(monkeypatch):
+@pytest.mark.parametrize("suffix", ["", ".draft2"])
+def test_published_baseline_replays_exactly_without_network(monkeypatch, suffix):
     import json
     import socket
 
     root = Path(__file__).resolve().parents[1] / "evaluation/research"
     dataset = Dataset.model_validate_json(
-        (root / "data/ground_truth.json").read_text(encoding="utf-8")
+        (root / f"data/ground_truth{suffix}.json").read_text(encoding="utf-8")
     )
     capture = Capture.model_validate_json(
         (root / "baseline/capture.json").read_text(encoding="utf-8")
@@ -344,7 +346,7 @@ def test_published_baseline_replays_exactly_without_network(monkeypatch):
 
     monkeypatch.setattr(socket, "socket", no_network)
     assert score(dataset, capture, allow_drafts=True) == json.loads(
-        (root / "baseline/metrics.json").read_text(encoding="utf-8")
+        (root / f"baseline/metrics{suffix}.json").read_text(encoding="utf-8")
     )
 
 
