@@ -6,17 +6,17 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-Current holder: **gpt-6-astra**, 2026-09-20 UTC. Branch: `task/v2-01-research-benchmark`; base: `b267b337`; HEAD when written: `fd07e87` + source-review write-ahead. V2-01 is not accepted; see review blockers below.
+Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj2z`, branched from `task/v2-01-research-benchmark@a4cd5b3`; base: `b267b337`. V2-01 is not accepted; see review blockers below.
 
 
 | | |
 |---|---|
-| Holder | **gpt-6-astra** |
+| Holder | **claude-opus-5** |
 | Since (UTC) | 2026-09-20 |
-| Branch | `task/v2-01-research-benchmark`, via V2-00 from `main@b267b337` |
-| HEAD when written | `fd07e87` + source-review write-ahead |
-| Origin main when checked | `b267b337` (fetched again 2026-09-20) |
-| Previous holder | claude-opus-5; security PR #12 is now merged |
+| Branch | `claude/greeting-16wj2z`, from `task/v2-01-research-benchmark@a4cd5b3` (owner-assigned branch for this session), which came via V2-00 from `main@b267b337` |
+| HEAD when written | `a4cd5b3` (gpt-6-astra's draft5 `wip:`, now validated — see §6) |
+| Origin main when checked | `b267b337` (fetched 2026-09-20; the branch is 22 commits ahead and 0 behind) |
+| Previous holder | gpt-6-astra; cut off by its token limit during the draft5 gate run |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
@@ -60,7 +60,7 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
-V2: `3f7e467` publishes draft4 with exact Aalto CS identity/primary Finnish teaching language and Groningen NIS qualification equivalence/CS mathematics requirement: 56/215 known/total fields, 9 programme identities, 0 human signoffs. Separate metrics and complete human-review worksheet; 57 focused tests. `2f56a46` publishes lossless draft3 document projection (52/212 known/total fields), reversible manifest, separate report and review worksheet; 55 focused tests. `5403630` adds explicit offline award/document identity mapping and replay; `00e107f` keeps unknown policies unanswered, adds the human review worksheet and brings focused coverage to 51 tests. `7356d9e` published draft2: 46/206 known labels, 8/10 exact programme URLs, 0/10 human signoffs; separate replay report with programme precision/recall 1/8 and 27 benchmark tests. Frozen draft1/capture are unchanged. `d917259` integrated all 15 Markdown documents plus original manifest and navigation/task card; pushed. `5d2a3ed` write-ahead V2-01 baton; pushed. All 16 archive entries verified byte-for-byte after transfer; original untracked ZIP removed. 51f9512 pushed schema, offline scoring, bounded live capture, 10 draft cases, 14 tests and container isolation. `a243a46` pushed checkpointed HTTP/PDF counters, candidate ranks and evidence validation. `1187cd0` published direct claim mapping, compact baseline capture/metrics/report and human review queue. `d0a2fb4` fixes JSON type equality; 25 benchmark tests and both full CI matrices pass. Draft PR: https://github.com/wpalish/ashyq-apply/pull/14. Human certification remains outstanding.
+V2: draft5 is published in `a4cd5b3` (gpt-6-astra) — 61/219 known/total fields, 9 programme identities, 0 human signoffs, NTU qualification and conditional `english_evidence.*` minima plus the Toronto Kazakhstan credential, with separate report/worksheet/VERSIONS row and the replay test parametrised over `.draft5`. It was committed `wip:` because its gates had not finished; claude-opus-5 ran them on 2026-09-20 and they are green (§6), so draft5 is released. Its content is recovered gpt-6-astra work, not a second implementation. `3f7e467` publishes draft4 with exact Aalto CS identity/primary Finnish teaching language and Groningen NIS qualification equivalence/CS mathematics requirement: 56/215 known/total fields, 9 programme identities, 0 human signoffs. Separate metrics and complete human-review worksheet; 57 focused tests. `2f56a46` publishes lossless draft3 document projection (52/212 known/total fields), reversible manifest, separate report and review worksheet; 55 focused tests. `5403630` adds explicit offline award/document identity mapping and replay; `00e107f` keeps unknown policies unanswered, adds the human review worksheet and brings focused coverage to 51 tests. `7356d9e` published draft2: 46/206 known labels, 8/10 exact programme URLs, 0/10 human signoffs; separate replay report with programme precision/recall 1/8 and 27 benchmark tests. Frozen draft1/capture are unchanged. `d917259` integrated all 15 Markdown documents plus original manifest and navigation/task card; pushed. `5d2a3ed` write-ahead V2-01 baton; pushed. All 16 archive entries verified byte-for-byte after transfer; original untracked ZIP removed. 51f9512 pushed schema, offline scoring, bounded live capture, 10 draft cases, 14 tests and container isolation. `a243a46` pushed checkpointed HTTP/PDF counters, candidate ranks and evidence validation. `1187cd0` published direct claim mapping, compact baseline capture/metrics/report and human review queue. `d0a2fb4` fixes JSON type equality; 25 benchmark tests and both full CI matrices pass. Draft PR: https://github.com/wpalish/ashyq-apply/pull/14. Human certification remains outstanding.
 
 
 The original recovery entries below are historical provenance. Preserve their hashes and ancestry;
@@ -263,7 +263,22 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-Write-ahead: investigate exact Delft programme links and remaining primary-source international qualification/admission requirements. Publish only verified scope-specific additions in a separate draft5 dataset/report/review worksheet; preserve all frozen artifacts and human-signature blanks. Update replay cases and run gates before releasing. No production changes.
+Write-ahead (claude-opus-5, 2026-09-20): gpt-6-astra published draft5 in `a4cd5b3` and was cut off
+before its gates finished, so the commit is still marked `wip:`. This session runs the gates gpt-6-astra
+could not, records the numbers in §6, and releases draft5 — it writes **no** new dataset, report or
+worksheet and changes no production code. Recovery found nothing half-written: the tree was clean, the
+index empty, nothing stashed, and `a4cd5b3` is one coherent commit whose every claim is pinned by a
+passing test. Draft5 is therefore continued, not re-done.
+
+Next after this release — unchanged from what gpt-6-astra left, and still the blocking step:
+resolve the exact Delft programme URL (its OCW-linked official alias has now errored twice) and the
+remaining Kazakhstan fall-2027 intake, fee and general SAT/IELTS evidence, in a NEW dataset version.
+Keep conditional `english_evidence.*` minima separate from academic entry requirements; keep the Aalto
+Finnish-route identity distinct from English Data Science; preserve the generic Attestat UNKNOWN.
+Then review the award/document aliases, finalize the applicable field inventory, adjudicate
+support/currentness/conflicts independently, obtain **ten real reviewer/date signoffs** — the worksheet
+is not a signature — and only then run strict scoring without `--allow-drafts`. No V2-10 until V2-01 is
+accepted. Human verification is 0/10 and no version of this corpus may be called a benchmark result.
 
 Draft4 is published in 3f7e467; current review packet is backend/evaluation/research/REVIEW_WORKSHEET_DRAFT4.md (56 known fields). Next: resolve exact Delft programme URL and remaining Kazakhstan qualification, fall 2027 intake, fee and SAT evidence in a NEW dataset version. Keep Aalto Finnish-route identity distinct from English Data Science; preserve generic Attestat UNKNOWN despite the scoped Groningen NIS labels. Review exact award/document aliases, finalize applicable field inventory, and independently adjudicate support/currentness/conflicts. Obtain ten real reviewer/date signoffs, then run strict scoring without --allow-drafts. No V2-10 until V2-01 acceptance. Older steps below are historical.
 
@@ -298,7 +313,29 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
-Draft5 qualification/conditional English evidence prepared: 61/219 known fields, 9 programme identities, 0 human signoffs. Local validation and full CI pending; checkpoint is wip until green.
+Draft5 at `a4cd5b3`, gates run by claude-opus-5 on 2026-09-20 (the run gpt-6-astra was cut off during).
+All green, Linux / CPython 3.12.3 / SQLite:
+
+| Gate | Result |
+|---|---|
+| `ruff check app tests` | **pass** |
+| `ruff format --check app tests` | **pass** — 169 files |
+| `mypy app tests` | **pass** — 169 source files |
+| `pytest --cov=app --cov-fail-under=92` | **pass** — exit 0, 1454 collected, 0 failed, coverage **93.96%** |
+| focused V2-01 suites (benchmark + mapping + projection) | **pass** — **59** tests |
+| `npm run typecheck` / `npm run lint` | **pass** |
+| `npm test -- --run` | **pass** — 188 tests, 20 files |
+| `npm run build` | **pass** — 366.79 kB js / 66.11 kB css |
+| `alembic heads` | one head, `d9c4e7a21b83` |
+
+Draft5 measures 61/219 known/total fields, 9/10 programme identities, **0/10 human signoffs**.
+Programme precision 1/8, recall 1/9; claim precision 0/5, recall 0/61; critical coverage 0/210 — only
+the last two denominators move from draft4, because the capture is the frozen one and this is an
+annotation change, not a pipeline run. `test_published_baseline_replays_exactly_without_network[.draft5]`
+reproduces `metrics.draft5.json` exactly with sockets blocked, and
+`test_drafts_cannot_be_reported_as_human_verified` still refuses draft5 under strict scoring. The
+frontend tree is byte-identical to green draft4 (`git diff 3f7e467 a4cd5b3 -- frontend/` is empty); its
+gates were re-run anyway and pass. PostgreSQL and E2E were not run locally — CI runs both on PR #14.
 
 Draft4 at 3f7e467: both complete CI runs SUCCESS (push 35535269941, PR 35535272542). SQLite/PostgreSQL 1452 passed each; SQLite app coverage 93.96%. Frontend 188 unit tests, 75 E2E passed/1 skipped and 6 auth E2E passed; security/containers green. Local Ruff lint/format and mypy pass (178 files); 57 focused tests pass. Exact offline replay passes and strict scoring rejects unverified cases. Programme precision 1/8, recall 1/9; claim precision 0/5, recall 0/56; critical coverage 0/206. Prior datasets/capture and other labels remain unchanged; operations identical. Production tree matches origin/main. Initial focused command had a nonexistent filename and was corrected before the successful run. Final handoff edits documentation only.
 
@@ -451,6 +488,16 @@ V2-01: evaluation-only Pydantic schema and JSON corpus/capture/metric contracts 
 
 V2-01: set PYTHONUTF8=1 on Windows for text fixtures; do not modify evaluation schemas while a live batch is running (parent and child processes can import different versions). Instrumented baseline segments and restart are recorded in baseline/README.md. Scope matching is deliberately literal; missing/different names count as conservative match failures, not human-confirmed wrong facts.
 
+- **`backend/.venv` must be Python 3.12, and a fresh sandbox will not give you one.** On a cloud
+  container the repo ships no venv and the default `python3` is 3.11; under it the *entire* backend
+  suite errors at collection with `SyntaxError` on
+  `app/adapters/discovery/live_discovery.py:512` (`type PageRecorder = ...`, a 3.12 statement) reached
+  through `catalog_walker.py:38`. It looks like 1400 broken tests and is an interpreter mismatch.
+  `/usr/bin/python3.12` exists: `rm -rf backend/.venv && python3.12 -m venv backend/.venv &&
+  backend/.venv/bin/pip install -r backend/requirements-dev.txt`.
+- **`pytest --cov` prints its coverage table after the pass/fail line**, so piping it through `tail -15`
+  loses the test count. Redirect the whole run to a file, or count with
+  `pytest --collect-only -q` (which prints `tests/<file>: <n>` per file, not a total — sum it).
 - `seed_demo.py` raises `SchemaOutOfDate` until `UNIMATCH_DEMO_MODE=true alembic upgrade head` has run.
 - `Fetcher(...)` takes `(cache_dir, *, delay_seconds, respect_robots, offline, cache_ttl_seconds, timeout, contact, corpus_dir)`; it has no `close()`, only `__aexit__`.
 - `backend/setup.sh` needs `uv`; plain `python -m venv` + `pip install -r requirements-dev.txt` works. Without Playwright installed, run with `UNIMATCH_ENABLE_BROWSER_TIER=false`.
@@ -547,6 +594,7 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 | 2026-09-07 14:10:54 UTC | codex | `ab2e70a` → `96c1082` + final publication handoff | Owner explicitly authorized GitHub publication. Secret-scanned and committed all 133 ai-team evidence files plus the corrected audit, pushed `ai/c1/integration`, and opened PR #7. Release-gates started; no protected-main merge or application deploy. |
 | 2026-09-08 03:38:21 UTC | codex | `9b362c8` → in progress | Took the C2 baton after verifying `origin/main@4d2125c` is the merge-base. Owner authorized T29 wiring, bounded T30 batches, T26, committing campaign evidence, and GitHub publication; T31 remains blocked on provider/secrets/data-policy acknowledgement. |
 | 2026-09-09 19:20 UTC | claude-opus-5 | `edf546d` → `task/security-audit-hardening` | Owner asked for a security review of the repository instead of the next brief task. Audited auth, tenancy, payments, egress, uploads, exports, mail, crypto, headers and the frontend; proved three findings with tests that fail on `main`; fixed nine across 9 commits. Full gates green (1395 backend / 93.96% / 188 frontend / build / pip-audit). Residuals recorded in §7. Baton released; nothing merged to `main`, no deploy.
+| 2026-09-20 UTC | claude-opus-5 | `a4cd5b3` → `a4cd5b3` + this release commit | Recovery after gpt-6-astra's token cut-off. The baton on `main` was 22 commits stale: the live task is V2-01, not the merged security audit. Tree was clean and `a4cd5b3` was one coherent draft5 commit, so nothing was re-done. Rebuilt `backend/.venv` on Python 3.12 (see §9), ran every gate gpt-6-astra could not finish — all green, 1454 backend tests at 93.96%, 59 focused, 188 frontend — and released draft5. Draft5 itself is gpt-6-astra's work, recovered from the previous session, not this writer's. V2-01 remains unaccepted at 0/10 human signoffs.
 
 | 2026-09-20 | gpt-6-astra | b267b337 → V2-00 in progress | Startup/recovery, PR inventory, all pack files read; isolated worktree preserves existing dirty research work. |
 
