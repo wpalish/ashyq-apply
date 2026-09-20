@@ -6,15 +6,15 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-Current holder: **nobody**, 2026-09-20 UTC. Branch: `task/v2-01-research-benchmark`; base: `b267b337`; HEAD when written: `7356d9e` + this documentation handoff. V2-01 is not accepted; see review blockers below.
+Current holder: **gpt-6-astra**, 2026-09-20 UTC. Branch: `task/v2-01-research-benchmark`; base: `b267b337`; HEAD when written: `4ffa042` + identity-mapping write-ahead. V2-01 is not accepted; see review blockers below.
 
 
 | | |
 |---|---|
-| Holder | **nobody** |
+| Holder | **gpt-6-astra** |
 | Since (UTC) | 2026-09-20 |
 | Branch | `task/v2-01-research-benchmark`, via V2-00 from `main@b267b337` |
-| HEAD when written | `7356d9e` + this documentation handoff |
+| HEAD when written | `4ffa042` + identity-mapping write-ahead |
 | Origin main when checked | `b267b337` (fetched again 2026-09-20) |
 | Previous holder | claude-opus-5; security PR #12 is now merged |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
@@ -262,6 +262,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+Write-ahead: implement evaluation-only explicit source/subject identity bindings and one-to-many scholarship/document normalization in mapping.py, with an offline raw-claim mapping CLI and adversarial tests. Preserve all frozen corpora/captures/reports, no automatic support or human-signoff inference, no production edits. Ambiguous identities and unsupported value shapes stay unmapped. Run Ruff/mypy/pytest and full CI, document mapping limitations, push and release baton.
 
 Draft2 annotation and separate offline report are prepared in backend/evaluation/research/REVIEW_DRAFT2.md. Next: resolve Delft/Aalto exact programme identity; complete Kazakhstan qualification, SAT, deadline/fee and document labels without transferring other-year/programme policies; replace generic unresolved families with a reviewed field inventory; implement explicit award/document identity mapping and adjudicate full support/currentness/conflicts. Preserve frozen draft1 and capture. Obtain actual human reviewer/date for all ten cases, publish a newly versioned reviewed dataset, then run from backend: python -m evaluation.research --dataset <reviewed-dataset.json> --capture evaluation/research/baseline/capture.json --out ../artifacts/reviewed-metrics.json (strict, no --allow-drafts; refresh capture/adjudication where required). Human verification is 0/10. Only after V2-01 acceptance: V2-10 provider-neutral SearchProvider with a fake adapter. Older steps below are historical.
 
@@ -541,3 +543,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 | 2026-09-20 | gpt-6-astra | 3618a52 -> draft2 in progress | Resumed official-source annotation; preserve frozen draft1 baseline, no production changes. |
 
 | 2026-09-20 | gpt-6-astra | 3618a52 -> 7356d9e + documentation handoff | Draft2 official-source annotation, separate offline replay, 27 benchmark tests, both full CI matrices green (1422 per DB, 93.96% coverage). Released baton; 0/10 human verified, V2-01 remains in progress. |
+
+| 2026-09-20 | gpt-6-astra | 4ffa042 -> identity mapping in progress | Resumed V2-01; fetched clean synchronized branch, one Alembic head; explicit evaluation-only award/document mapping next. |
