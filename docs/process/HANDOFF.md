@@ -263,7 +263,22 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-Write-ahead (claude-opus-5, 2026-09-20): gpt-6-astra published draft5 in `a4cd5b3` and was cut off
+Write-ahead (claude-opus-5, 2026-09-20, draft6): draft5 is released and green (§6). The single
+blocker §5 has named since draft2 is the Delft exact programme identity, the last `unknown` of ten.
+The OCW alias gpt-6-astra kept hitting is not the programme page; the official one is
+`https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering`,
+heading "Bachelor of Computer Science and Engineering", reachable and read 2026-09-20. Draft6 will do
+exactly one thing: resolve `delft.programme_urls` / `programme_status` with that primary source, taking
+programme identities to 10/10. It copies draft5 to `ground_truth.draft6.json`, regenerates
+`metrics.draft6.json` through the documented offline CLI, adds `REVIEW_DRAFT6.md` and
+`REVIEW_WORKSHEET_DRAFT6.md`, adds the VERSIONS row, repoints the README, and parametrises the replay
+tests over `.draft6`. It copies **no** admission requirement, deadline, fee or language label: the
+deadline on that page is a selection deadline of an academic year the requested fall-2027 scope does not
+establish, and the numerus fixus/Maths B statements are unscoped to the requested intake. Frozen
+draft1–draft5, the capture and production code stay untouched, all ten signature blanks stay blank, and
+strict scoring must still refuse the corpus. Human verification stays 0/10.
+
+Previous write-ahead (claude-opus-5, 2026-09-20): gpt-6-astra published draft5 in `a4cd5b3` and was cut off
 before its gates finished, so the commit is still marked `wip:`. This session runs the gates gpt-6-astra
 could not, records the numbers in §6, and releases draft5 — it writes **no** new dataset, report or
 worksheet and changes no production code. Recovery found nothing half-written: the tree was clean, the
