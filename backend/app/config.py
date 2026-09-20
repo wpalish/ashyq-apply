@@ -143,6 +143,11 @@ class Settings(BaseSettings):
     payments_enabled: bool = False
     #: "fake" drives the tests and local development; "apipay" talks to Kaspi.
     payments_provider: str = "fake"
+
+    #: Web search layer for discovery. ``none`` means this deployment has no
+    #: search provider at all, which is a supported configuration: the registry,
+    #: sitemaps and the catalogue walker do not need one.
+    search_provider: str = "none"
     apipay_base_url: str = "https://api.apipay.kz/api/v1"
     apipay_api_key: SecretStr = SecretStr("")
     apipay_webhook_secret: SecretStr = SecretStr("")
@@ -221,6 +226,31 @@ class Settings(BaseSettings):
             )
         if self.payments_enabled:
             self._validate_payments()
+        self._validate_search()
+
+    def _validate_search(self) -> None:
+        """Refuse a search provider this build does not have, and the fake in production.
+
+        A typo in ``UNIMATCH_SEARCH_PROVIDER`` would otherwise fall through to
+        "no search configured" and cost a deployment its whole search layer
+        silently. The fake answers only from a corpus handed to it in process,
+        so in production it is a provider that can never find anything.
+        """
+        # Imported here, not at module scope: config is the lowest layer and
+        # must not grow an import edge to the adapters above it.
+        from app.adapters.search import KNOWN_SEARCH_PROVIDERS
+
+        if self.search_provider not in KNOWN_SEARCH_PROVIDERS:
+            raise RuntimeError(
+                f"UNIMATCH_SEARCH_PROVIDER={self.search_provider!r} is not a search provider "
+                f"this build knows. Use one of {sorted(KNOWN_SEARCH_PROVIDERS)}."
+            )
+        if self.is_production and self.search_provider == "fake":
+            raise RuntimeError(
+                "UNIMATCH_SEARCH_PROVIDER must not be 'fake' in production. It is an offline "
+                "test double that answers only from an in-process corpus, so it would report "
+                "every search as finding nothing."
+            )
 
     def _validate_payments(self) -> None:
         """Refuse to take money through a provider that cannot verify a callback.
