@@ -60,7 +60,7 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
-V2: `d917259` integrated all 15 Markdown documents plus original manifest and navigation/task card; pushed. `5d2a3ed` write-ahead V2-01 baton; pushed. All 16 archive entries verified byte-for-byte after transfer; original untracked ZIP removed. 51f9512 pushed schema, offline scoring, bounded live capture, 10 draft cases, 14 tests and container isolation. `a243a46` pushed checkpointed HTTP/PDF counters, candidate ranks and evidence validation. Current publication step adds 24 tests, direct claim mapping, compact baseline capture/metrics/report, and human review queue. Human certification remains outstanding.
+V2: `d917259` integrated all 15 Markdown documents plus original manifest and navigation/task card; pushed. `5d2a3ed` write-ahead V2-01 baton; pushed. All 16 archive entries verified byte-for-byte after transfer; original untracked ZIP removed. 51f9512 pushed schema, offline scoring, bounded live capture, 10 draft cases, 14 tests and container isolation. `a243a46` pushed checkpointed HTTP/PDF counters, candidate ranks and evidence validation. Current publication step adds 25 tests, direct claim mapping, compact baseline capture/metrics/report, and human review queue. Human certification remains outstanding.
 
 
 The original recovery entries below are historical provenance. Preserve their hashes and ancestry;
@@ -263,7 +263,7 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-Current step: publish ackend/evaluation/research/baseline/ and REVIEW.md, run new-SHA CI, open a draft PR. Next executable task: follow the review queue to finish official-source labels for all ten cases; resolve four exact programme URLs and award/document identity; obtain actual human reviewer/date, increment dataset version, then run from backend: python -m evaluation.research --dataset evaluation/research/data/ground_truth.json --capture evaluation/research/baseline/capture.json --out ../artifacts/reviewed-metrics.json (strict, no --allow-drafts; refresh capture/adjudication where required). Do not infer human acceptance from this AI-prepared draft. After V2-01 acceptance only: V2-10 provider-neutral SearchProvider with a fake adapter. Older steps below are historical.
+Current step: publish backend/evaluation/research/baseline/ and REVIEW.md, run new-SHA CI, open a draft PR. Next executable task: follow the review queue to finish official-source labels for all ten cases; resolve four exact programme URLs and award/document identity; obtain actual human reviewer/date, increment dataset version, then run from backend: python -m evaluation.research --dataset evaluation/research/data/ground_truth.json --capture evaluation/research/baseline/capture.json --out ../artifacts/reviewed-metrics.json (strict, no --allow-drafts; refresh capture/adjudication where required). Do not infer human acceptance from this AI-prepared draft. After V2-01 acceptance only: V2-10 provider-neutral SearchProvider with a fake adapter. Older steps below are historical.
 
 
 1. **Review and merge PR for `task/security-audit-hardening`.** Nine commits, backend + frontend +
@@ -290,7 +290,7 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
-V2-01: CI run 35474954319 at 51f9512 SUCCESS: SQLite 1409 passed, 93.96% coverage; PostgreSQL 1409 passed; security and frontend jobs passed. Local publication step: 24 benchmark tests pass, Ruff check/format and mypy pass (174 files). Full new-SHA CI pending; 51f9512 remains the latest verified full-matrix result recorded here. Frontend typecheck/lint/188 unit/build pass. pip-audit: no known vulnerabilities. npm audit: 2 moderate vulnerabilities, below high gate. Local initial SQLite run: 1394 passed, one KZT fixture encoding failure, 93.33%; same test passes with PYTHONUTF8=1, no production edits. Linux CI above passes both full matrices. Demo migrated in isolated database; Groningen first, UBC OUT_OF_BUDGET verified in stored results. One Alembic head d9c4e7a21b83. Local E2E: 75 passed, one skipped; auth E2E: 6 passed. Temporary LF launcher and generated screenshots restored. Prior numbers below are historical.
+V2-01: CI run 35474954319 at 51f9512 SUCCESS: SQLite 1409 passed, 93.96% coverage; PostgreSQL 1409 passed; security and frontend jobs passed. Local publication step: 25 benchmark tests pass, Ruff check/format and mypy pass (174 files). Full new-SHA CI pending; 51f9512 remains the latest verified full-matrix result recorded here. Frontend typecheck/lint/188 unit/build pass. pip-audit: no known vulnerabilities. npm audit: 2 moderate vulnerabilities, below high gate. Local initial SQLite run: 1394 passed, one KZT fixture encoding failure, 93.33%; same test passes with PYTHONUTF8=1, no production edits. Linux CI above passes both full matrices. Demo migrated in isolated database; Groningen first, UBC OUT_OF_BUDGET verified in stored results. One Alembic head d9c4e7a21b83. Local E2E: 75 passed, one skipped; auth E2E: 6 passed. Temporary LF launcher and generated screenshots restored. Prior numbers below are historical.
  (numbers, not adjectives)
 
 Local runs by claude-opus-5, 2026-09-09, on `task/security-audit-hardening`.
@@ -444,7 +444,7 @@ V2-01: set PYTHONUTF8=1 on Windows for text fixtures; do not modify evaluation s
 
 
 - `gh` is installed per-user via `winget install --id GitHub.cli --scope user`; it lands in
-  `%LOCALAPPDATA%\Microsoft\WinGet\Packages\GitHub.cli_*in\gh.exe` and needs a new shell to be on
+  `%LOCALAPPDATA%\Microsoft\WinGet\Packages\GitHub.cli_*bin\gh.exe` and needs a new shell to be on
   PATH. `gh auth login --with-token` **rejects** the token Git Credential Manager stores, because it
   validates `read:org` which that token lacks; the same token works as `GH_TOKEN` for `gh api` / `gh pr`.
   Load it without ever printing it:
@@ -483,7 +483,7 @@ host=github.com
   the delete with "Device or resource busy". Worth a real fix: restore should resolve a profile by the
   id this browser stored, never by "latest".
 - `gh` is installed per-user via `winget install --id GitHub.cli --scope user`, landing in
-  `%LOCALAPPDATA%\Microsoft\WinGet\Packages\GitHub.cli_*in\gh.exe`. `gh auth login --with-token`
+  `%LOCALAPPDATA%\Microsoft\WinGet\Packages\GitHub.cli_*bin\gh.exe`. `gh auth login --with-token`
   **rejects** the token Git Credential Manager stores (it validates `read:org`, which that token lacks);
   the same token works as `GH_TOKEN` for `gh api` / `gh pr`. Load it without printing it:
   `export GH_TOKEN=$(printf 'protocol=https

@@ -77,6 +77,9 @@ def score(dataset: Dataset, capture: Capture, *, allow_drafts: bool = False) -> 
         adjudicated = 0
         for p in predictions.values():
             label = labels.get(p.key)
+            value_matches = label is not None and json.dumps(p.value, sort_keys=True) == json.dumps(
+                label.value, sort_keys=True
+            )
             evidence = p.evidence
             provenance = bool(evidence and evidence.source_type in {"official", "government"})
             exact_evidence = bool(
@@ -91,12 +94,7 @@ def score(dataset: Dataset, capture: Capture, *, allow_drafts: bool = False) -> 
             )
             supported = provenance and (
                 p.supported is True
-                or (
-                    p.supported is None
-                    and exact_evidence
-                    and label is not None
-                    and p.value == label.value
-                )
+                or (p.supported is None and exact_evidence and label is not None and value_matches)
             )
             support_known = not provenance or p.supported is not None or exact_evidence
             if support_known:
@@ -115,7 +113,7 @@ def score(dataset: Dataset, capture: Capture, *, allow_drafts: bool = False) -> 
                     evidence and any(scope_matches(e.scope, evidence.scope) for e in label.evidence)
                 )
                 add("wrong_scope_claim_rate", int(not valid_scope), 1)
-                correct = p.value == label.value and valid_scope and supported
+                correct = value_matches and valid_scope and supported
                 correct_predictions += int(correct)
                 adjudicated += 1
                 if correct:

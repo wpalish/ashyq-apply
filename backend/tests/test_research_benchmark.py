@@ -101,6 +101,23 @@ def test_explicit_rejection_overrides_automatic_excerpt_match():
     assert result["metrics"]["unsupported_claim_rate"]["value"] == 1
 
 
+def test_boolean_is_not_equal_to_numeric_one_in_json_claims():
+    dataset, capture, evidence = inputs()
+    data = dataset.model_dump()
+    data["cases"][0]["labels"][0]["value"] = True
+    raw = capture.model_dump()
+    raw["observations"] = [
+        {
+            "case_id": "example",
+            "predictions": [
+                {"key": "ielts.overall", "value": 1, "evidence": evidence, "supported": True}
+            ],
+        }
+    ]
+    result = score(Dataset.model_validate(data), Capture.model_validate(raw), allow_drafts=True)
+    assert result["metrics"]["claim_precision"]["value"] == 0
+
+
 def test_published_short_excerpt_does_not_create_automatic_support():
     dataset, capture, evidence = inputs()
     evidence["excerpt_truncated"] = True
