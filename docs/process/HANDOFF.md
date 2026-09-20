@@ -6,15 +6,15 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-Current holder: **nobody**, 2026-09-20 UTC. Branch: `task/v2-01-research-benchmark`; base: `b267b337`; HEAD when written: `2f56a46` + this documentation handoff. V2-01 is not accepted; see review blockers below.
+Current holder: **gpt-6-astra**, 2026-09-20 UTC. Branch: `task/v2-01-research-benchmark`; base: `b267b337`; HEAD when written: `952f71a` + source-review write-ahead. V2-01 is not accepted; see review blockers below.
 
 
 | | |
 |---|---|
-| Holder | **nobody** |
+| Holder | **gpt-6-astra** |
 | Since (UTC) | 2026-09-20 |
 | Branch | `task/v2-01-research-benchmark`, via V2-00 from `main@b267b337` |
-| HEAD when written | `2f56a46` + this documentation handoff |
+| HEAD when written | `952f71a` + source-review write-ahead |
 | Origin main when checked | `b267b337` (fetched again 2026-09-20) |
 | Previous holder | claude-opus-5; security PR #12 is now merged |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
@@ -262,6 +262,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+Write-ahead: research remaining exact programme identities and Kazakhstan qualification requirements using primary university sources; publish only source-supported scope-specific changes in a separate draft4 corpus/report and review notes. Preserve all frozen versions, UNKNOWN where programme/intake/qualification applicability is unestablished. Run schema/replay checks and full gates; no production change or fabricated human review.
 
 Draft3 document projection is published in 2f56a46: seven records -> thirteen fields, with lossless manifest and separate metrics. Next: resolve Delft/Aalto exact programme identity and Kazakhstan qualification/intake/fee/SAT gaps from primary sources into a NEW dataset version; use REVIEW_WORKSHEET_DRAFT3.md as the current 52-field review packet. Review real award/document identity aliases, finalize applicable field inventory and independently adjudicate support/currentness/conflicts. Obtain ten actual human reviewer/date signoffs before strict benchmark acceptance. No V2-10 until V2-01 is accepted.
 
@@ -559,3 +561,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 | 2026-09-20 | gpt-6-astra | 232ca1f -> draft3 in progress | Clean synchronized start, one Alembic head; lossless document-field projection and mapper alignment next. |
 
 | 2026-09-20 20:12 UTC | gpt-6-astra | 232ca1f -> 2f56a46 + documentation handoff | Published lossless draft3 document projection, manifest, 52-field review worksheet and version comparison. Both full CI matrices pass (1450 tests per DB, 93.97% coverage); 55 focused tests. Baton released; human certification 0/10 and V2-01 still in progress. |
+
+| 2026-09-20 20:15 UTC | gpt-6-astra | 952f71a -> source review in progress | Clean synchronized start, one Alembic head; exact programme and qualification evidence next. |
