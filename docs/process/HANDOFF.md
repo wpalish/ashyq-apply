@@ -21,7 +21,7 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
-**V2-10 — search provider interface (in-progress).** V2-01 was accepted 2026-09-21 and its record is below.
+**V2-11 — privacy-safe discovery query generator (in-progress).** V2-10's seam is committed. V2-01 was accepted 2026-09-21 and its record is below.
 Owner explicitly prioritizes the new workstream. V2-01 follows this documentation commit in a task branch from this predecessor (explicit branch exception). Goal: measure current research/discovery quality before architecture changes.
 
 
@@ -286,6 +286,31 @@ search package (the seam holds only if the ban is checked); and with no provider
 `get_search_provider()` **raises** rather than returning something empty, because a silent "no results"
 is exactly the hidden fallback that file forbids. The signature also takes a `query: str` and no
 profile, so applicant PII cannot structurally reach a provider — V2-11 will build the query itself.
+
+Write-ahead (claude-opus-5, 2026-09-20, V2-11): **starting V2-11 — the query generator**, per
+`analysis/v2/04_PHASE_1_DISCOVERY_ENGINE.md` §2 and §4. The task is "no unnecessary applicant PII", so
+the deliverable is a narrow type plus the proof that nothing else can get through it.
+
+Scope, exactly, all in `backend/app/adapters/search/intent.py` and `tests/test_discovery_intent.py`:
+- `DiscoveryIntent` — frozen, and it holds only the dimensions §2 permits: institution, domain, degree,
+  field, optional intake, and an optional generic `international` / country marker used only for a
+  country-specific public requirements page. There is no field for anything else, so a caller cannot
+  smuggle data by populating one.
+- Validation that rejects a value which *looks like* applicant data even in an allowed field — an `@`,
+  a run of digits long enough to be a score or a phone number, a currency marker. The V2-10 signature
+  stops a profile object reaching a vendor; this stops somebody formatting one into a string, which is
+  the failure the structural guarantee cannot catch.
+- `DiscoveryIntent.from_profile(...)` as the single sanctioned conversion, copying an explicit allowlist
+  and dropping everything else, so callers do not each invent their own.
+- `queries_for(intent, *, budget)` rendering the §4 families (`site:<domain> "<field>" "<degree>"`,
+  programmes, courses, undergraduate, admissions, scholarships, country requirements) into a **bounded**
+  list — §4 says do not explode aliases into unlimited queries — each carrying its family name.
+- `redacted_audit_record(...)`, because §2 ends with "log a redacted query audit record".
+
+Tests: one per forbidden item from the spec's list — name, exact scores, GPA, budget, family
+contribution, email, phone, transcript content — each feeding a fully populated profile through
+`from_profile` and asserting the rendered queries contain none of it. Plus budget enforcement and audit
+redaction. No provider is called; V2-11 produces strings, V2-13 consumes them.
 
 V2-10 is implemented and green (§6); the seam exists, nothing consumes it yet.
 
