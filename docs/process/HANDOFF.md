@@ -6,15 +6,15 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-Current holder: **nobody**, 2026-09-20 UTC. Branch: `task/v2-01-research-benchmark`; base: `b267b337`; HEAD when written: `00e107f` + this documentation handoff. V2-01 is not accepted; see review blockers below.
+Current holder: **gpt-6-astra**, 2026-09-20 UTC. Branch: `task/v2-01-research-benchmark`; base: `b267b337`; HEAD when written: `232ca1f` + draft3 write-ahead. V2-01 is not accepted; see review blockers below.
 
 
 | | |
 |---|---|
-| Holder | **nobody** |
+| Holder | **gpt-6-astra** |
 | Since (UTC) | 2026-09-20 |
 | Branch | `task/v2-01-research-benchmark`, via V2-00 from `main@b267b337` |
-| HEAD when written | `00e107f` + this documentation handoff |
+| HEAD when written | `232ca1f` + draft3 write-ahead |
 | Origin main when checked | `b267b337` (fetched again 2026-09-20) |
 | Previous holder | claude-opus-5; security PR #12 is now merged |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
@@ -262,6 +262,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+Write-ahead: derive separate ground_truth.draft3.json by losslessly projecting the seven known document records into explicit fields; keep conditions, evidence, UNKNOWNs and all non-document labels unchanged. Publish a source/target projection manifest, separate frozen-capture metrics and review notes. Add round-trip preservation, mapper compatibility and offline replay checks; run gates, push and release baton. No production changes or human certification.
 
 Explicit offline identity mapping shipped in 5403630 and UNKNOWN handling in 00e107f. Next: use backend/evaluation/research/REVIEW_WORKSHEET_DRAFT2.md and MAPPING.md to prepare a new version with reviewed atomic document labels matching .required/.maximum_words; retain all conditional alternatives and missing expense categories. Review the three draft identity bindings and add aliases only after exact source/name checks; FAQs/Tuition Grants must not map to Nanyang Global. Resolve the remaining official-source gaps below, adjudicate full evidence and obtain actual human signoffs. Frozen draft1/draft2 and capture remain immutable. V2-10 still follows V2-01 acceptance only.
 
@@ -551,3 +553,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 | 2026-09-20 | gpt-6-astra | 4ffa042 -> identity mapping in progress | Resumed V2-01; fetched clean synchronized branch, one Alembic head; explicit evaluation-only award/document mapping next. |
 
 | 2026-09-20 | gpt-6-astra | 4ffa042 -> 00e107f + documentation handoff | Explicit source/subject mapping, separate replay CLI, UNKNOWN protection, 51 focused tests and both full CI matrices green (1446 per DB, 93.96% coverage). Human review worksheet published; 0/10 human certified, V2-01 in progress. Baton released. |
+
+| 2026-09-20 | gpt-6-astra | 232ca1f -> draft3 in progress | Clean synchronized start, one Alembic head; lossless document-field projection and mapper alignment next. |
