@@ -53,6 +53,10 @@ npm-debug.log*
 yarn-error.log*
 
 # Test artefacts
+/artifacts/
+/backend/baseline-pytest.log
+/backend/benchmark-*.log
+/frontend/benchmark-*.log
 playwright-report/
 playwright-report-auth/
 test-results/

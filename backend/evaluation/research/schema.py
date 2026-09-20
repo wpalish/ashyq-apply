@@ -57,8 +57,14 @@ class Label(Strict):
     def supported_label(self) -> Self:
         if self.status == "known" and (self.value is None or not self.evidence):
             raise ValueError("Known labels require a value and evidence")
+        if self.status == "known" and any(
+            e.source_type not in {"official", "government"} for e in self.evidence
+        ):
+            raise ValueError("Ground truth must use primary official evidence")
         if self.status != "known" and self.value is not None:
             raise ValueError("Unknown/N-A cannot contain a guessed value")
+        if self.status == "not_applicable" and not self.notes.strip():
+            raise ValueError("Not-applicable labels require a reason")
         return self
 
 
@@ -84,6 +90,8 @@ class Case(Strict):
             not self.programme_urls or not self.programme_evidence
         ):
             raise ValueError("Known programme needs URLs and evidence")
+        if any(e.source_type not in {"official", "government"} for e in self.programme_evidence):
+            raise ValueError("Programme ground truth must use primary official evidence")
         return self
 
 

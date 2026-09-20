@@ -6,6 +6,7 @@ Each institution runs in its own process with a hard wall-clock budget.
 
 import argparse
 import asyncio
+import hashlib
 import json
 import os
 import subprocess
@@ -15,6 +16,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 from unittest.mock import patch
+
+from pydantic import HttpUrl
 
 from .schema import Capture, Evidence, Observation, Prediction, Scope, Telemetry
 
@@ -41,11 +44,50 @@ CLAIM_KEYS = {
 
 async def capture_one(case_id: str, output: Path, max_pages: int) -> None:
     # Delayed imports keep ordinary offline evaluation entirely independent of I/O.
+    from app.adapters import fetching
+    from app.adapters.discovery.live_discovery import LiveDiscoveryAdapter, PageCategory
     from app.models.research import ClaimRow
     from scripts import canary_discovery as canary
 
     predictions: list[Prediction] = []
     raw_claims: list[dict[str, Any]] = []
+    started = time.monotonic()
+    observation = Observation(
+        case_id=case_id,
+        error="CAPTURE_IN_PROGRESS",
+        telemetry=Telemetry(
+            http_fetches=0,
+            browser_fetches=0,
+            pdf_fetches=0,
+            search_calls=0,
+            model_input_tokens=0,
+            jev_input_tokens=0,
+        ),
+    )
+
+    def checkpoint() -> None:
+        observation.telemetry.latency_seconds = time.monotonic() - started
+        temporary = output.with_suffix(".pending")
+        temporary.write_text(observation.model_dump_json(indent=2), encoding="utf-8")
+        temporary.replace(output)
+
+    checkpoint()
+    original_request = fetching._pinned_request
+    original_confirm = LiveDiscoveryAdapter._confirm_programs
+
+    def counted_request(*args, **kwargs):
+        observation.telemetry.http_fetches = (observation.telemetry.http_fetches or 0) + 1
+        checkpoint()
+        return original_request(*args, **kwargs)
+
+    async def observed_confirm(adapter, selected, ranked, trace, profile):
+        queued = list(selected[PageCategory.PROGRAM_PAGE])
+        for _score, url in sorted(ranked[PageCategory.PROGRAM_PAGE], reverse=True):
+            if url not in queued:
+                queued.append(url)
+        observation.ranked_urls = [HttpUrl(url) for url in queued]
+        checkpoint()
+        return await original_confirm(adapter, selected, ranked, trace, profile)
 
     class ObservedRunner(canary.CanaryRunner):
         def _make_fetcher(self):
@@ -58,7 +100,11 @@ async def capture_one(case_id: str, output: Path, max_pages: int) -> None:
                 requests += 1
                 if requests > max_pages:
                     raise RuntimeError("BENCHMARK_PAGE_BUDGET_EXHAUSTED")
-                return await original(url, **kwargs)
+                result = await original(url, **kwargs)
+                if result.ok and result.is_pdf and not result.from_cache:
+                    observation.telemetry.pdf_fetches = (observation.telemetry.pdf_fetches or 0) + 1
+                checkpoint()
+                return result
 
             fetcher.get = bounded
             return fetcher
@@ -95,22 +141,17 @@ async def capture_one(case_id: str, output: Path, max_pages: int) -> None:
                         )
                     )
 
-    started = time.monotonic()
-    with patch.object(canary, "CanaryRunner", ObservedRunner):
+    with (
+        patch.object(canary, "CanaryRunner", ObservedRunner),
+        patch.object(fetching, "_pinned_request", counted_request),
+        patch.object(LiveDiscoveryAdapter, "_confirm_programs", observed_confirm),
+    ):
         report = await canary.run_canary(COHORT[case_id], False)
     rows = report["institutions"]
-    observation = Observation(
-        case_id=case_id,
-        programme_urls=[url for r in rows for url in r["programs"]],
-        predictions=predictions,
-        error=report["run_error"] or None,
-        telemetry=Telemetry(
-            latency_seconds=time.monotonic() - started,
-            search_calls=0,
-            model_input_tokens=0,
-            jev_input_tokens=0,
-        ),
-    )
+    observation.programme_urls = [HttpUrl(url) for r in rows for url in r["programs"]]
+    observation.predictions = predictions
+    observation.error = report["run_error"] or None
+    checkpoint()
     # Preserve raw output for mapping/adjudication; do not invent unsupported counters.
     output.write_text(observation.model_dump_json(indent=2), encoding="utf-8")
     output.with_suffix(".raw.json").write_text(
@@ -175,6 +216,9 @@ def main() -> None:
                 error = "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"
         if output.exists():
             observation = Observation.model_validate_json(output.read_text(encoding="utf-8"))
+            if error:
+                observation.error = error
+                observation.telemetry.latency_seconds = time.monotonic() - started
         else:
             observation = Observation(
                 case_id=case_id,
@@ -192,6 +236,8 @@ def main() -> None:
                 "browser_enabled": False,
                 "cohort": list(COHORT),
                 "scope": "current production pipeline; HTTP-only bounded cold run",
+                "rank_stage": "programme confirmation queue before catalogue walking",
+                "harness_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
             },
             observations=observations,
         )

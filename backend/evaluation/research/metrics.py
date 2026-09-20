@@ -90,7 +90,12 @@ def score(dataset: Dataset, capture: Capture, *, allow_drafts: bool = False) -> 
             )
             supported = provenance and (
                 p.supported is True
-                or (exact_evidence and label is not None and p.value == label.value)
+                or (
+                    p.supported is None
+                    and exact_evidence
+                    and label is not None
+                    and p.value == label.value
+                )
             )
             support_known = not provenance or p.supported is not None or exact_evidence
             if support_known:
@@ -155,7 +160,7 @@ def score(dataset: Dataset, capture: Capture, *, allow_drafts: bool = False) -> 
                 "error": observation.error,
             }
         )
-    names = (
+    names: tuple[str, ...] = (
         "programme_page_recall",
         "programme_page_precision",
         "recall_at_5",
@@ -208,6 +213,13 @@ def score(dataset: Dataset, capture: Capture, *, allow_drafts: bool = False) -> 
         f"p{p}": times[max(0, math.ceil(len(times) * p / 100) - 1)] if times else None
         for p in (50, 95)
     }
+    review_values = [
+        o.telemetry.human_review_required
+        for o in capture.observations
+        if o.telemetry.human_review_required is not None
+    ]
+    counts["human_review_rate"] = [sum(review_values), len(review_values)]
+    names = (*names, "human_review_rate")
     digest = hashlib.sha256(dataset.model_dump_json().encode()).hexdigest()
     return {
         "dataset_version": dataset.version,

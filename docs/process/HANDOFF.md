@@ -60,7 +60,7 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
-V2: `d917259` integrated all 15 Markdown documents plus original manifest and navigation/task card; pushed. `5d2a3ed` write-ahead V2-01 baton; pushed. All 16 archive entries verified byte-for-byte after transfer; original untracked ZIP removed. Current implementation checkpoint includes schema, offline scoring, bounded live capture, 10 draft cases, 14 tests and container isolation; human certification remains outstanding.
+V2: `d917259` integrated all 15 Markdown documents plus original manifest and navigation/task card; pushed. `5d2a3ed` write-ahead V2-01 baton; pushed. All 16 archive entries verified byte-for-byte after transfer; original untracked ZIP removed. 51f9512 pushed schema, offline scoring, bounded live capture, 10 draft cases, 14 tests and container isolation. Follow-up adds checkpointed HTTP/PDF counters, candidate ranks, stricter evidence validation and 22 adversarial tests. Human certification remains outstanding.
 
 
 The original recovery entries below are historical provenance. Preserve their hashes and ancestry;
@@ -263,7 +263,7 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-Documentation checkpoint d917259 pushed. Current write-ahead: create `backend/evaluation/research/schema.py`, `metrics.py`, offline CLI, separate bounded canary capture, and `backend/tests/test_research_benchmark.py`. First tests cover all-UNKNOWN, wrong scope, duplicates, absent denominators, and production isolation. Next collect official-source draft cases and run baseline. Historical integration plan: integrate all execution-pack Markdown into `analysis/v2/`, add navigation and a task card in the existing `analysis/AI_TASK_BRIEF.md`. Run baseline gates, commit/push documentation, then branch `task/v2-01-research-benchmark` from this documentation predecessor. First code: `backend/evaluation/research/schema.py` and `backend/tests/test_research_benchmark.py`. Older steps below are historical.
+Current write-ahead after 51f9512: instrument HTTP/PDF counts and candidate ranks in evaluation only; test timeout checkpoint preservation; publish bounded baseline with explicit draft/mapping limits; rerun gates and push. Next fix direct ClaimType-to-label names, without fabricating programme/award identity. Historical implementation plan: create `backend/evaluation/research/schema.py`, `metrics.py`, offline CLI, separate bounded canary capture, and `backend/tests/test_research_benchmark.py`. First tests cover all-UNKNOWN, wrong scope, duplicates, absent denominators, and production isolation. Next collect official-source draft cases and run baseline. Historical integration plan: integrate all execution-pack Markdown into `analysis/v2/`, add navigation and a task card in the existing `analysis/AI_TASK_BRIEF.md`. Run baseline gates, commit/push documentation, then branch `task/v2-01-research-benchmark` from this documentation predecessor. First code: `backend/evaluation/research/schema.py` and `backend/tests/test_research_benchmark.py`. Older steps below are historical.
 
 
 1. **Review and merge PR for `task/security-audit-hardening`.** Nine commits, backend + frontend +
@@ -290,7 +290,7 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
-V2-01 current: Ruff lint/format pass (173 files); mypy pass (173); 14 focused benchmark tests pass. Frontend typecheck/lint/188 unit/build pass. pip-audit: no known vulnerabilities. npm audit: 2 moderate vulnerabilities, below high gate. SQLite full baseline running; KZT fixture fails under default Windows codepage and passes with PYTHONUTF8=1 (same test, no production changes). PostgreSQL local server starts; full matrix pending. Demo migrated in isolated database; Groningen first. One Alembic head d9c4e7a21b83. E2E initial launcher failed on CRLF run.sh; retry with local LF checkout. No green full-suite claim yet.
+V2-01: CI run 35474954319 at 51f9512 SUCCESS: SQLite 1409 passed, 93.96% coverage; PostgreSQL 1409 passed; security and frontend jobs passed. Local follow-up: 22 benchmark tests pass; final lint/typecheck and new-SHA CI pending. Frontend typecheck/lint/188 unit/build pass. pip-audit: no known vulnerabilities. npm audit: 2 moderate vulnerabilities, below high gate. Local initial SQLite run: 1394 passed, one KZT fixture encoding failure, 93.33%; same test passes with PYTHONUTF8=1, no production edits. Linux CI above passes both full matrices. Demo migrated in isolated database; Groningen first. One Alembic head d9c4e7a21b83. Local E2E: 75 passed, one skipped; auth E2E: 6 passed. Temporary LF launcher and generated screenshots restored. Prior numbers below are historical.
  (numbers, not adjectives)
 
 Local runs by claude-opus-5, 2026-09-09, on `task/security-audit-hardening`.

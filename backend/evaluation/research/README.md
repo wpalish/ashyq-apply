@@ -46,8 +46,10 @@ Budgets bound Fetcher.get calls (including cache hits), **not actual wire reques
 each call may include robots, redirects/retries. A hard subprocess timeout bounds
 the whole case, including blocking parsers in main while PR #13 remains open.
 Timeouts are failures, remain in recall denominators and do not count as abstention
-success. Missing telemetry remains null. Raw canary records preserve Fetcher outcome
-counts; these are not mislabeled as HTTP wire counts. Output persists after each case.
+success. Missing telemetry remains null. Instrumented captures count HTTP request
+attempts at Fetcher's pinned request constructor (including robots and retries),
+and successful uncached PDF responses separately. Checkpoints preserve counts at
+timeouts. These count attempts, not proven server receipts. Output persists per case.
 
 Capture does not receive expected URLs, labels or evidence. The cohort contains
 only IDs and registry domain selectors. No university-specific fixes are introduced.
@@ -88,7 +90,10 @@ Queries and path case are preserved in URL identity; fragments/trailing slash re
 Programme recall is cases with an exact accepted URL / cases with known programme
 URLs. Precision is accepted distinct returned URLs / adjudicable returned URLs.
 Unknown exact-URL cases are unadjudicated. `recall_at_5/10/20` requires an actual
-ranked candidate list; it is null when the current canary does not expose one.
+ranked candidate list; it is null when unavailable. Instrumented captures observe
+the programme confirmation queue before catalogue walking. These ranks are not
+final result ranks or a measure of all retrieval stages. Report their measured
+denominator; a timeout before this stage leaves the rank list unmeasured.
 
 Claims require exact normalized value, compatible evidence scope and supporting
 official evidence. Human-adjudicated `supported` can establish support; otherwise
@@ -110,7 +115,7 @@ is time-to-failure, not time-to-useful-result.
 
 ## Next work
 
-Finish human review, detailed labels, raw-to-label claim mapping and missing telemetry/
-rank-list capture before accepting V2-01. The next roadmap task **after acceptance**
+Finish human review, detailed labels, award/document identity mapping and evidence
+adjudication before accepting V2-01. The next roadmap task **after acceptance**
 is V2-10: provider-neutral SearchProvider with a fake adapter and benchmark comparison.
 No Jev or discovery improvement belongs in this task.

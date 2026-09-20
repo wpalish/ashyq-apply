@@ -68,6 +68,52 @@ def test_drafts_cannot_be_reported_as_human_verified():
         score(dataset, capture)
 
 
+def test_claim_mapping_preserves_programme_scope_and_does_not_guess_award_identity():
+    from evaluation.research.mapping import normalize_claim
+
+    assert normalize_claim("admission_deadline", {"normalized_value": "2027-01-15"})[:2] == (
+        "deadline",
+        "2027-01-15",
+    )
+    assert normalize_claim(
+        "program_exists",
+        {"normalized_value": {"program": "Unrelated engineering", "degree": "master"}},
+    ) == ("programme.exists", True, "Unrelated engineering", "master")
+    assert normalize_claim("scholarship_exists", {"normalized_value": "Tuition Grant"})[:2] == (
+        "unmapped.scholarship_exists",
+        "Tuition Grant",
+    )
+
+
+def test_explicit_rejection_overrides_automatic_excerpt_match():
+    dataset, capture, evidence = inputs()
+    raw = capture.model_dump()
+    raw["observations"] = [
+        {
+            "case_id": "example",
+            "predictions": [
+                {"key": "ielts.overall", "value": 6.5, "evidence": evidence, "supported": False}
+            ],
+        }
+    ]
+    result = score(dataset, Capture.model_validate(raw), allow_drafts=True)
+    assert result["metrics"]["claim_precision"]["value"] == 0
+    assert result["metrics"]["unsupported_claim_rate"]["value"] == 1
+
+
+def test_ground_truth_rejects_secondary_sources_and_unexplained_na():
+    from pydantic import ValidationError
+
+    from evaluation.research.schema import Label
+
+    _, _, evidence = inputs()
+    evidence["source_type"] = "aggregator"
+    with pytest.raises(ValidationError, match="primary official"):
+        Label(key="ielts.overall", status="known", value=6.5, evidence=[evidence])
+    with pytest.raises(ValidationError, match="reason"):
+        Label(key="sat.minimum", status="not_applicable")
+
+
 def test_wrong_scope_and_duplicate_answers_do_not_raise_recall():
     dataset, capture, evidence = inputs()
     evidence["scope"]["degree"] = "master"
@@ -246,4 +292,119 @@ def test_draft_dataset_has_ten_cases_without_fabricated_human_signoff():
         (root / "evaluation/research/data/ground_truth.json").read_text(encoding="utf-8")
     )
     assert len(dataset.cases) == 10
-    assert all(c.review.status == "draft" and c.review.reviewer is None for c in dataset.cases)
+    assert all(c.review.reviewer is None for c in dataset.cases if c.review.status == "draft")
+
+
+def test_scholarship_dimensions_freshness_and_review_have_separate_metrics():
+    dataset, capture, evidence = inputs()
+    raw_data = dataset.model_dump(mode="json")
+    keys = [
+        "scholarships.award.exists",
+        "scholarships.award.applicability.degree",
+        "scholarships.award.coverage.tuition",
+    ]
+    raw_data["cases"][0]["labels"] = [
+        {"key": key, "status": "known", "value": True, "evidence": [evidence]} for key in keys
+    ]
+    raw_capture = capture.model_dump()
+    raw_capture["observations"] = [
+        {
+            "case_id": "example",
+            "predictions": [
+                {
+                    "key": key,
+                    "value": True,
+                    "evidence": evidence,
+                    "current": False,
+                    "conflict_visible": True,
+                }
+                for key in keys
+            ],
+            "telemetry": {"human_review_required": True, "latency_seconds": 3.5},
+        }
+    ]
+    result = score(
+        Dataset.model_validate(raw_data), Capture.model_validate(raw_capture), allow_drafts=True
+    )
+    for key in (
+        "scholarship_discovery_recall",
+        "scholarship_applicability_precision",
+        "scholarship_applicability_recall",
+        "scholarship_coverage_precision",
+        "human_review_rate",
+    ):
+        assert result["metrics"][key]["value"] == 1
+    assert result["metrics"]["current_evidence_rate"]["value"] == 0
+    assert result["metrics"]["conflict_visibility_rate"]["value"] == 1
+    assert result["operations"]["latency_percentiles"]["p95"] == 3.5
+
+
+def test_non_applicable_does_not_reduce_coverage():
+    dataset, capture, _ = inputs()
+    raw = dataset.model_dump()
+    raw["cases"][0]["labels"] = [
+        {"key": "sat.minimum", "status": "not_applicable", "notes": "Synthetic"}
+    ]
+    result = score(Dataset.model_validate(raw), capture, allow_drafts=True)
+    assert result["metrics"]["critical_field_coverage"]["denominator"] == 0
+
+
+@pytest.mark.parametrize("partial", [False, True])
+def test_live_parent_records_timeout_without_calling_real_network(tmp_path, monkeypatch, partial):
+    import subprocess
+    import sys
+
+    from evaluation.research import live
+
+    monkeypatch.setattr(
+        sys, "argv", ["live", "--live", "--case", "groningen", "--out", str(tmp_path)]
+    )
+    monkeypatch.setattr(subprocess, "check_output", lambda *args, **kwargs: "synthetic-sha")
+
+    def timeout(*args, **kwargs):
+        assert kwargs["env"]["UNIMATCH_ENABLE_BROWSER_TIER"] == "false"
+        assert kwargs["env"]["UNIMATCH_DEMO_MODE"] == "false"
+        if partial:
+            from evaluation.research.schema import Observation, Telemetry
+
+            command = args[0]
+            output = Path(command[command.index("--out") + 1])
+            output.write_text(
+                Observation(
+                    case_id="groningen",
+                    telemetry=Telemetry(http_fetches=7),
+                    ranked_urls=["https://example.edu/cs"],
+                ).model_dump_json(),
+                encoding="utf-8",
+            )
+        raise subprocess.TimeoutExpired(args[0], kwargs["timeout"])
+
+    monkeypatch.setattr(subprocess, "run", timeout)
+    live.main()
+    capture = Capture.model_validate_json(next(tmp_path.rglob("capture.json")).read_text())
+    assert capture.observations[0].error == "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"
+    assert capture.observations[0].telemetry.http_fetches == (7 if partial else None)
+    assert bool(capture.observations[0].ranked_urls) == partial
+
+
+@pytest.mark.asyncio
+async def test_capture_reads_canary_output_without_loading_ground_truth(tmp_path, monkeypatch):
+    from evaluation.research.live import capture_one
+    from scripts import canary_discovery as canary
+
+    original = canary.CanaryRunner
+
+    async def fake_canary(selector, verbose):
+        assert selector == "rug.nl"
+        assert canary.CanaryRunner is not original
+        return {"institutions": [{"programs": ["https://example.edu/programme"]}], "run_error": ""}
+
+    monkeypatch.setattr(canary, "run_canary", fake_canary)
+    output = tmp_path / "observation.json"
+    await capture_one("groningen", output, 4)
+    from evaluation.research.schema import Observation
+
+    observation = Observation.model_validate_json(output.read_text())
+    assert str(observation.programme_urls[0]) == "https://example.edu/programme"
+    assert observation.predictions == []
+    assert canary.CanaryRunner is original
