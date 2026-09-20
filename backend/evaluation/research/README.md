@@ -121,6 +121,10 @@ is time-to-failure, not time-to-useful-result.
 
 ## Next work
 
+Explicit offline award/document identity mapping is documented in [MAPPING.md](MAPPING.md).
+It produces separate replay artifacts and never injects registry identities into
+production or the live runner. Compound-to-atomic label alignment remains review work.
+
 The latest annotation candidate is [draft2](REVIEW_DRAFT2.md): 46 known labels and
 eight exact programme identities, with no human signoffs. It has a separate metric
 report over the frozen capture; draft1 and its original report remain unchanged.
