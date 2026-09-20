@@ -51,9 +51,10 @@ their correctness. Do not publish full quotations from private raw artifacts.
   600-character cap are conservatively marked truncated.
 
 The frozen draft1/draft2 labels contain some compound document values, while this
-mapper emits atomic document fields. A new reviewed dataset must explicitly adopt
-the same atomic field inventory and value conventions before those fields become
-adjudicable. Do not overwrite old artifacts or add expected conditions to outputs
+mapper emits atomic document fields. [Draft3](REVIEW_DRAFT3.md) aligns explicit
+document requirements and word limits without discarding conditional alternatives.
+It is not human reviewed; the applicable field inventory still needs acceptance.
+Do not overwrite old artifacts or add expected conditions to outputs
 to make scores improve. Unmapped and unmatched predictions remain visible through
 the mapping report and scorer's adjudication rate.
 
