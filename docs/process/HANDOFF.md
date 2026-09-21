@@ -513,6 +513,33 @@ proves it end to end (128 of 173 claims scoped, 45 honestly empty).
    likeliest win: eligibility prose states populations more often than requirements prose does.
 3. Open items unchanged: KAIST's registry seed (owner data task, §7); page-kind as a prefilter concern.
 
+Write-ahead (claude-opus-5, 2026-09-21, V2-23): **make the assessment refuse a claim whose page says
+it is about something else.** This is §5 step 2 — where the 5/5 actually lives. V2-22 records a scope;
+nothing yet *acts* on one, so an out-of-scope fact is still stated as the answer.
+
+The rule, in `app/domain/eligibility.py`, applied where a claim is chosen (`_first`) rather than at each
+of the dozen call sites, so no requirement type can be forgotten:
+
+- `ClaimScope.covers(requested) is NO` — the page states a different intake or year than the one asked
+  about — **the claim is not used for that requirement at all.** It stays persisted and visible as
+  evidence; it just stops being the answer to a question it was not about.
+- `UNKNOWN` (the page did not say) — the claim **is** used, because refusing it would throw away almost
+  every real page, but it **may not be a hard filter**: it cannot eliminate a candidate. An unscoped
+  page is not strong enough to end someone's application.
+- `YES` outranks `UNKNOWN` in `_first`'s existing ordering, ahead of specificity, so a page that says
+  who it is for beats one that does not.
+- A claim with no recorded scope at all (`scope is None`, everything written before V2-22) behaves
+  exactly as it does today. This is the same bug-compatible seam as V2-22b, for the same reason.
+
+`RequestedScope` is built from what the run actually asked: the claim's own request-side `intake` and
+`academic_year` meta. Population is **not** derived — the applicant's citizenship plus a university's
+country would give it, but `evaluate_program` is not told the university's country, and inventing the
+applicant's status at an institution is the exact move this whole phase exists to stop.
+
+Expect the demo golden to move again, and this time **not additively**: a refused claim changes a
+result. If it moves, look at the diff case by case before re-capturing, and record what changed and why
+— the guard's wording (V2-22) now requires exactly that.
+
 Write-ahead (claude-opus-5, 2026-09-21, V2-22b): **stop the benchmark capture from recording the
 question as the page's answer.**
 
