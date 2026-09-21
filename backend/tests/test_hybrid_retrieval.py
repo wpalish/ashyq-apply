@@ -22,6 +22,7 @@ from app.adapters.search.prefilter import (
 )
 from app.adapters.search.retrieval import (
     SIGNAL_WEIGHTS,
+    RankedCandidate,
     discover_candidates,
     rank_candidates,
     tokenize,
@@ -299,3 +300,132 @@ class TestTheRemainingSignals:
         from app.adapters.search.retrieval import _Bm25
 
         assert _Bm25([[], ["computer", "science"]]).score(0, ["computer"]) == 0.0
+
+
+class TestTheNavigationHopIsCoverageNotReordering:
+    async def _report(self, rows, html, **kw):
+        intent = an_intent()
+        provider = FakeSearchProvider(
+            {q.text: rows for q in queries_for(intent, budget=99)}, now=NOW
+        )
+
+        async def fetch(url: str) -> str:
+            return html
+
+        return await discover_candidates(provider, intent, fetch=fetch, **kw)
+
+    async def test_the_hop_adds_pages_search_never_found(self):
+        """The whole point: a page with no words in its URL, found from a root."""
+        report = await self._report(
+            [("https://nu.edu.kz/programmes/cs", "Computer Science", "")],
+            '<a href="/content?menu=188">Computer Science programme</a>',
+        )
+
+        urls = [c.url for c in report.candidates]
+
+        assert "https://nu.edu.kz/content?menu=188" in urls
+        assert report.hop_candidates >= 1
+
+    async def test_a_hop_candidate_never_displaces_a_search_result(self):
+        """Fusing them as equals was measured and cost a whole case."""
+        rows = [
+            (f"https://nu.edu.kz/p/computer-science-{i}", f"Computer Science {i}", "")
+            for i in range(5)
+        ]
+        html = '<a href="/content?menu=188">Computer Science programme</a>'
+
+        report = await self._report(rows, html, top_k=5)
+
+        assert [c.url for c in report.candidates[:5]] == [
+            c.url for c in (await self._report(rows, "", top_k=5)).candidates
+        ]
+
+    async def test_coverage_is_additive_rather_than_competing_for_the_budget(self):
+        """Truncating both together let search fill every slot and cut the hop.
+
+        Three consecutive live runs showed the hop contributing exactly
+        nothing because of it.
+        """
+        rows = [
+            (f"https://nu.edu.kz/p/computer-science-{i}", f"Computer Science {i}", "")
+            for i in range(5)
+        ]
+
+        report = await self._report(
+            rows, '<a href="/content?menu=188">Computer Science programme</a>', top_k=5
+        )
+
+        assert len(report.candidates) > 5
+
+    async def test_a_page_both_generators_found_keeps_its_place_and_gains_a_signal(self):
+        report = await self._report(
+            [("https://nu.edu.kz/programmes/cs", "Computer Science", "")],
+            '<a href="/programmes/cs">Computer Science</a>',
+        )
+
+        top = report.candidates[0]
+        assert top.url == "https://nu.edu.kz/programmes/cs"
+        assert "also_found_by_hop" in top.signals
+
+    async def test_the_hop_is_off_unless_a_reader_is_supplied(self):
+        """Production must pass a Fetcher-backed one; nothing calls out by default."""
+        intent = an_intent()
+        provider = FakeSearchProvider(
+            {
+                q.text: [("https://nu.edu.kz/programmes/cs", "Computer Science", "")]
+                for q in queries_for(intent, budget=99)
+            },
+            now=NOW,
+        )
+
+        report = await discover_candidates(provider, intent)
+
+        assert report.hop_candidates == 0
+        assert report.hop_entry_points == ()
+
+    async def test_a_reader_failure_drops_that_entry_point_rather_than_the_run(self):
+        intent = an_intent()
+        provider = FakeSearchProvider(
+            {
+                q.text: [("https://nu.edu.kz/programmes/cs", "Computer Science", "")]
+                for q in queries_for(intent, budget=99)
+            },
+            now=NOW,
+        )
+
+        async def fetch(url: str) -> str:
+            raise RuntimeError("the site refused")
+
+        report = await discover_candidates(provider, intent, fetch=fetch)
+
+        assert report.candidates
+        assert report.hop_entry_points == ()
+
+
+class TestChoosingWhichDoorToOpen:
+    def test_a_host_naming_the_field_outranks_one_search_liked_more(self):
+        """Search rank says which host it liked, not which host runs degrees."""
+        from app.adapters.search.retrieval import _entry_points
+
+        ranked = (
+            RankedCandidate(url="https://pure.kaist.ac.kr/x", title="", score=9, provider="exa"),
+            RankedCandidate(
+                url="https://sociology.kaist.ac.kr/y", title="", score=8, provider="exa"
+            ),
+            RankedCandidate(url="https://cs.kaist.ac.kr/z", title="", score=1, provider="exa"),
+        )
+
+        roots = _entry_points(ranked, 2, an_intent(domain="kaist.ac.kr"))
+
+        assert roots[0] == "https://cs.kaist.ac.kr/"
+
+    def test_a_lab_or_repository_host_is_not_opened_at_all(self):
+        """KAIST's publication repository and a graphics lab were opened first."""
+        from app.adapters.search.retrieval import _host_priority
+
+        intent = an_intent(domain="kaist.ac.kr")
+
+        assert _host_priority("pure.kaist.ac.kr", intent) < 0
+        assert _host_priority("www.vclab.kaist.ac.kr", intent) < 0
+        assert _host_priority("cs.kaist.ac.kr", intent) > 0
+        assert _host_priority("admission.kaist.ac.kr", intent) > 0

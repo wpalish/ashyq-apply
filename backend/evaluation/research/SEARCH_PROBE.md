@@ -150,3 +150,57 @@ alone picks the wrong door.
    distinguishes them and the retrieval path does not consult it.
 3. Only then consider giving the hop a weight in fusion, and only if a
    measurement asks for it.
+
+---
+
+# Resolved: coverage must be additive, and the ceiling reaches 10/10
+
+Measured 2026-09-21, same corpus, 50 queries, `--hop` enabled, after three
+failed attempts. Committed as `baseline/search_probe.exa.hop.json`.
+
+| | Search only | Hop as an equal | **Hop as additive coverage** |
+|---|---|---|---|
+| Retrieval ceiling | 9/10 | 8/10 | **10/10** |
+| KAIST | not found | not found | **#30** |
+| Cases moved down by the hop | — | 6 | **0** |
+
+## The three failures, because each taught something
+
+**1. Fused as an equal generator → 8/10.** Recorded above. A navigation list is
+layout, not relevance.
+
+**2. Appended, entry points chosen by search rank → 9/10, hop contributes
+nothing visible.** KAIST's top results are `pure.kaist.ac.kr` research
+profiles, a graphics lab and the sociology department. `cs.kaist.ac.kr` — whose
+navigation demonstrably holds the answer — sat sixth among candidate hosts and
+was never opened. Search rank says which host search liked; it does not say
+which host runs degrees. Entry points are now scored: a host naming the
+requested field wins, an admissions host next, and a lab or publication
+repository is not opened at all.
+
+**3. Appended *inside* the same budget → still nothing.** This one was
+invisible for three runs. Search returned exactly `top_k` candidates, the hop
+appended after them, and the final truncation cut every appended row off again.
+**"Never displace" and "must add" cannot both hold inside one fixed budget.**
+The search list is now truncated first and coverage extends it, so the hop
+competes for nothing.
+
+## The one case that looks worse, and why it is not
+
+HKU reads 5 → 6 in every hop run. Its record shows `hop_candidates: 0` and
+`hop_entry_points: 0` — the hop fetched nothing and contributed nothing, so
+HKU's list is search-only and mechanically identical to the baseline. The
+difference is Exa's own run-to-run variation.
+
+Worth stating as a method rule: **this provider is not deterministic, so a
+single run cannot detect a one-position change.** Compare ceilings and
+large moves; treat ±1 as noise unless two runs agree.
+
+## Still open
+
+- KAIST is reachable at #30, which is *reachable*, not *good*. The ranking work
+  (entity resolution for wrong-campus misses, consulting `page_classifier`) is
+  unchanged and is what would move it up.
+- HKU opened no entry point at all. Worth a look: either every candidate host
+  scored below zero, or the fetches failed.
+- None of this touches `wrong_scope_claim_rate` 5/5.

@@ -22,10 +22,11 @@ import math
 import re
 from collections.abc import Awaitable, Callable, Sequence
 from dataclasses import dataclass, field
+from urllib.parse import urlsplit
 
 from app.adapters.discovery.live_discovery import looks_like_catalogue
 from app.adapters.search.base import SearchProvider, SearchResult, SearchUnavailable
-from app.adapters.search.fusion import Generator, SourcedCandidate, fuse
+from app.adapters.search.fusion import SourcedCandidate, fuse
 from app.adapters.search.intent import DiscoveryIntent, DiscoveryQuery, queries_for
 from app.adapters.search.navigation import navigation_candidates
 from app.adapters.search.ontology import degree_aliases, ontology_version, retrieval_candidates
@@ -72,6 +73,17 @@ class RankedCandidate:
     @property
     def explanation(self) -> str:
         return ", ".join(self.signals) if self.signals else "lexical match only"
+
+    def _replace_signals(self, signals: tuple[str, ...]) -> RankedCandidate:
+        """A copy carrying different signals. Frozen, so this is the only way."""
+        return RankedCandidate(
+            url=self.url,
+            title=self.title,
+            score=self.score,
+            provider=self.provider,
+            signals=signals,
+            is_pdf=self.is_pdf,
+        )
 
 
 class _Bm25:
@@ -193,6 +205,71 @@ def rank_candidates(
 FetchPage = Callable[[str], Awaitable[str]]
 
 
+#: Host labels that mean "a research output lives here", not "a programme".
+#: A lab, a group and a publication repository each have navigation, and none
+#: of it leads to an admissions page.
+_RESEARCH_HOST = re.compile(
+    r"^(pure|research|lab|scholar|repository|eprints|dspace)$|lab$|^.{0,6}(lab|rg)$"
+)
+
+#: Host labels that mean "applications happen here".
+_ADMISSIONS_HOST = frozenset({"admission", "admissions", "apply", "study", "studies", "future"})
+
+
+def _host_priority(host: str, intent: DiscoveryIntent) -> int:
+    """How likely this host's front page is to lead to a programme.
+
+    Opening the top three hosts by search rank sent the hop to KAIST's
+    publication repository, a graphics lab and the sociology department, while
+    ``cs.kaist.ac.kr`` — whose navigation demonstrably holds the answer — sat
+    sixth and was never opened. Rank says which host search liked; it does not
+    say which host runs degrees.
+    """
+    label = host.lower().removeprefix("www.").split(".", 1)[0]
+    if _RESEARCH_HOST.search(label):
+        return -1
+    if any(
+        _names_host(candidate.term, label)
+        for candidate in retrieval_candidates(intent.field)
+        if candidate.is_match
+    ):
+        return 3
+    if label in _ADMISSIONS_HOST:
+        return 2
+    return 0
+
+
+def _names_host(term: str, label: str) -> bool:
+    """``cs`` names computer science; ``sociology`` does not."""
+    words = {w for w in re.split(r"[^a-z]+", term.lower()) if w}
+    return label in words or (
+        len(words) > 1 and label == "".join(w[0] for w in term.lower().split())
+    )
+
+
+def _entry_points(
+    ranked: Sequence[RankedCandidate], limit: int, intent: DiscoveryIntent
+) -> tuple[str, ...]:
+    """Roots of the hosts most likely to run the requested programme.
+
+    Search rank breaks ties, so a host search liked wins among equals.
+    """
+    scored: list[tuple[int, int, str]] = []
+    seen: set[str] = set()
+    for position, candidate in enumerate(ranked):
+        parts = urlsplit(candidate.url)
+        host = parts.hostname or ""
+        if not host or host in seen:
+            continue
+        seen.add(host)
+        priority = _host_priority(host, intent)
+        if priority < 0:
+            continue
+        scored.append((-priority, position, f"{parts.scheme}://{host}/"))
+    scored.sort()
+    return tuple(root for _p, _r, root in scored[:limit])
+
+
 async def discover_candidates(
     provider: SearchProvider,
     intent: DiscoveryIntent,
@@ -233,46 +310,69 @@ async def discover_candidates(
     outcome = prefilter(results, domain=intent.domain, degree=intent.degree)
     ranked = rank_candidates(outcome, intent)
 
+    # Truncate the ranked search list *before* the hop appends to it. With
+    # both truncated together, search fills every slot and the appended
+    # coverage candidates are cut off again — which is why three consecutive
+    # measured runs showed the hop contributing exactly nothing. "Never
+    # displace" and "must add" cannot both hold inside one fixed budget, so
+    # coverage is additive: the hop extends the list rather than competing
+    # for it.
+    ranked = ranked[:top_k]
+
     opened: list[str] = []
     hopped: list[SourcedCandidate] = []
     if fetch is not None and hop_entry_points > 0:
         # Search finds entry points reliably; a page with no words in its URL
         # is found from one, not by a better query. See navigation.py.
-        for candidate in ranked[:hop_entry_points]:
+        #
+        # **Open host roots, not the top results.** Choosing entry points by
+        # search rank opened KAIST's `pure.kaist.ac.kr` research profiles and
+        # never `cs.kaist.ac.kr/`, whose navigation demonstrably holds the
+        # answer. A site's navigation lives at its root, so the root of each
+        # distinct host among the candidates is the door worth trying — in
+        # the order search ranked that host, which keeps the budget honest.
+        for candidate in _entry_points(ranked, hop_entry_points, intent):
             try:
-                html = await fetch(candidate.url)
+                html = await fetch(candidate)
             except Exception:
                 html = ""
             if not html:
                 continue
-            opened.append(candidate.url)
-            hopped.extend(navigation_candidates(html, candidate.url, intent))
+            opened.append(candidate)
+            hopped.extend(navigation_candidates(html, candidate, intent))
 
     if hopped:
-        # Fused by rank, so a page both generators found keeps both
-        # attributions — the agreement signal is the reason to have two.
-        from_search = [
-            SourcedCandidate(url=c.url, generator=Generator.WEB_SEARCH, rank=index, title=c.title)
-            for index, c in enumerate(ranked, start=1)
-        ]
-        merged = fuse([*from_search, *hopped], top_k=top_k)
-        by_url = {c.url: c for c in ranked}
-        ranked = tuple(
-            by_url.get(
-                row.url,
+        # **Coverage, not reordering.** Fusing the hop as an equal generator
+        # was measured and cost a whole case: thirty navigation candidates,
+        # each restarting at rank 1 on its own page, outscored search results
+        # ranked tenth or twentieth and pushed six correct pages down
+        # (SEARCH_PROBE.md). A navigation list is layout, not relevance.
+        #
+        # So the hop may add pages search never found, and may never displace
+        # one search placed. Agreement is still kept: a page both generators
+        # found keeps its search position and gains the hop's attribution.
+        placed = {c.url for c in ranked}
+        agreed = {c.url for c in hopped if c.url in placed}
+        appended: list[RankedCandidate] = []
+        for row in fuse([c for c in hopped if c.url not in placed], top_k=top_k):
+            appended.append(
                 RankedCandidate(
                     url=row.url,
                     title=row.title,
-                    score=row.score,
+                    # Zero, deliberately: these are ordered after every scored
+                    # candidate and their score is not comparable with BM25's.
+                    score=0.0,
                     provider="navigation",
                     signals=("found_by_navigation_hop",),
-                ),
+                )
             )
-            for row in merged
-        )
+        ranked = tuple(
+            c._replace_signals((*c.signals, "also_found_by_hop")) if c.url in agreed else c
+            for c in ranked
+        ) + tuple(appended)
 
     return RetrievalReport(
-        candidates=ranked[:top_k],
+        candidates=ranked,
         queries_run=tuple(q.family for q in queries),
         provider=getattr(provider, "name", "unknown"),
         ontology_version=ontology_version(),
