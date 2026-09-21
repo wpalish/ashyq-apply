@@ -537,6 +537,39 @@ and the log says so rather than letting the numbers look comparable.
 Plan items still open in Phase 2: **V2-20 (SourceSnapshot / ClaimVersion)**, **V2-22 (entity
 resolution)**, **V2-24 (change detection)**. From here I use the plan's numbers.
 
+Write-ahead (claude-opus-5, 2026-09-21, **V2-22a**): **institution identity by evidence, not by
+resemblance.** Plan item V2-22 (entity resolution), first half.
+
+Today an institution's identity is `dedupe.university_key(name, country)`: normalise, drop noise words,
+**sort the remaining tokens into a set**, join. That is a fuzzy matcher wearing a deterministic coat.
+Two consequences, both of them the thing the phase guide forbids:
+
+- *"Technische Universiteit Delft"* and *"Delft University of Technology"* are the same institution and
+  get different keys, so the same university can enter a run twice.
+- Any two names that reduce to the same token set in the same country merge **silently**, because a
+  sorted set has no order and no evidence behind it. The guide's words: do not merge because names are
+  merely similar.
+
+Scope, exactly, in a new `app/domain/entity_resolution.py`:
+- `InstitutionIdentity` — canonical key, canonical name, country, the domains that are evidence for it,
+  and recorded `aliases` / `former_names` (both may be empty).
+- `resolve_institution(...) -> Resolution` with the evidence ladder, strongest first: a **registrable
+  domain** we already hold and have verified; then an **exactly recorded alias**; then nothing.
+  Never a similarity score, never a token-set collision.
+- `Resolution` carries `identity | None`, a `basis` (`domain` / `alias` / `unresolved`) and the exact
+  evidence string, because the guide requires entity resolution to be **auditable** — a merge nobody
+  can explain is the failure, not the merge itself.
+- `dedupe.university_key` stays exactly as it is, and nothing is rewired in this step. A resolver that
+  no caller trusts yet is the right size for one step; replacing the key everywhere is V2-22b, after
+  this one is measured against the registry.
+
+**The alias data is an owner task, not mine.** The registry holds `name`, `homepage` and verified
+`seeds` — no aliases at all. I will read domains from what is already verified and leave `aliases` /
+`former_names` empty, exactly as `seeds_verified_on` is left to a human. Filling them with names I
+believe to be right would be the same forged signature as writing a KAIST seed myself.
+
+Demo effect: **none**. Nothing calls the resolver yet.
+
 Write-ahead (claude-opus-5, 2026-09-21, **V2-20b**): **a superseded claim says when it stopped being
 current and what replaced it.**
 
