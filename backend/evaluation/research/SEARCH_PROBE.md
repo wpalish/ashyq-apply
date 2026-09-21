@@ -303,3 +303,41 @@ That is right whatever it does to a rank, and the full suite is green.
 Do not compare against a baseline older than a few runs. Re-measure the
 baseline in the same session as the change, or the drift in the provider's
 index will be attributed to the code.
+
+---
+
+# One query phrased like a person: ceiling back to 10/10, and Toronto pays for it
+
+Measured 2026-09-21, twice, results all but identical. Committed as
+`baseline/search_probe.exa.hop.json`.
+
+| | Previous baseline | With a natural-language family |
+|---|---|---|
+| Retrieval ceiling | 9/10 | **10/10** |
+| Correct page at rank 1 | 1 | **2** |
+| Warsaw | not found | **found** |
+| Vienna | #6 | #5 |
+| KAIST | #30 | #26–30 |
+| Delft | #2 | #3 |
+| Aalto | #19 | #21 |
+| **Toronto** | **#8** | **#19** |
+| Queries per run | 50 | **60** |
+
+Five of the six families were one shape — a `site:` operator with quoted
+terms. That is keyword syntax, and against a neural index five variations of
+one shape are one query asked five times. The new family states the request as
+a sentence: institution, the degree in words *including its cycle wording*,
+the field. Naming "first cycle" is what reaches the Bologna catalogues a slug
+reader cannot see, and it is what brought Warsaw back.
+
+**The cost is real and is not hidden.** Toronto drops eleven places, Aalto two,
+Delft one, and a run costs 20% more queries because the sixth family now fits
+inside the budget where a fifth used to. Shipped because the ceiling is the
+metric that dominates: a page never retrieved can never be used, whereas a page
+at #19 is reachable by a deeper fetch. If the fetch budget is ever tightened,
+revisit this trade.
+
+Note this is **not** the earlier rejected experiment. Dropping `site:` from
+every family cost Aalto six places and took rank-1 cases from two to zero.
+Adding *one* plain-language family alongside the operator ones is the narrow
+version, and it measures better.

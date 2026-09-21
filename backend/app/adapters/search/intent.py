@@ -172,6 +172,20 @@ class DiscoveryQuery:
     family: str
 
 
+def _degree_in_words(degree: DegreeLevel) -> str:
+    """How a person names this level out loud, including the cycle wording.
+
+    ``first cycle`` is what the Bologna catalogues that defeat a slug reader
+    call a bachelor, and naming it is what reached Warsaw's page.
+    """
+    return {
+        DegreeLevel.FOUNDATION: "foundation year",
+        DegreeLevel.BACHELOR: "bachelor undergraduate first cycle",
+        DegreeLevel.MASTER: "master second cycle",
+        DegreeLevel.PHD: "doctoral PhD",
+    }[degree]
+
+
 def _degree_aliases(degree: DegreeLevel) -> str:
     return {
         DegreeLevel.FOUNDATION: "foundation",
@@ -208,6 +222,17 @@ def queries_for(
     year = f" {intent.intake_year}" if intent.intake_year else ""
     candidates: list[DiscoveryQuery] = [
         DiscoveryQuery(f'{site} "{intent.field}" "{degree}"{year}', "field_and_degree"),
+        # Phrased the way a person would ask, with no search operators and no
+        # quoting. The other families are five variations of one shape —
+        # ``site:`` plus quoted terms — which is keyword syntax; a neural index
+        # reads a query for meaning, so five variations of one shape are one
+        # query asked five times. Measured: this shape returns Warsaw's
+        # bachelor page first where the operator shape never returns it at all.
+        DiscoveryQuery(
+            f"{intent.institution} {_degree_in_words(intent.degree)} "
+            f"{intent.field} programme{year}",
+            "natural_language",
+        ),
         DiscoveryQuery(f'{site} programmes "{intent.field}"{year}', "programmes"),
         DiscoveryQuery(f'{site} courses "{intent.field}"{year}', "courses"),
         DiscoveryQuery(f'{site} undergraduate "{intent.field}"', "undergraduate"),
