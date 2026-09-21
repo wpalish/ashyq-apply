@@ -548,6 +548,13 @@ and the log says so rather than letting the numbers look comparable.
 Plan items still open in Phase 2: **V2-20 (SourceSnapshot / ClaimVersion)**, **V2-22 (entity
 resolution)**, **V2-24 (change detection)**. From here I use the plan's numbers.
 
+**Budget exhaustion is part of every one of these numbers.** On the *frozen* capture, 5 of 10 cases
+ran out of budget (Aalto and Toronto on pages, Warsaw/UBC/KAIST on wall clock), and NTU — one of the
+two "wrong programme name" cases — is also the only case that produced 10 claims. A recall number from
+a run where half the cohort stopped early is a floor, not a measurement of the pipeline's ceiling. The
+capture workflow now prints this table **last**, because the metrics JSON pushed the per-case lines out
+of run 35655438326's log tail and I could not read them afterwards.
+
 **MEASURED 2026-09-21, live, run 35655438326** (branch, Exa, 60 fetches / 90s per case, the frozen
 baseline's own budgets). Honest reading, headline first:
 

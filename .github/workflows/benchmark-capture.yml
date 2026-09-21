@@ -142,6 +142,31 @@ jobs:
               print(f"{key:45} {before:>14} {after:>14}{flag}")
           PY
 
+      - name: Per-case outcomes
+        # Last, deliberately. The capture prints these as it goes, but the
+        # metrics JSON in between pushes them out of the log's tail, and a
+        # budget exhaustion is exactly what a reader needs when a recall
+        # number looks low: it says the pipeline never finished looking.
+        run: |
+          set -o pipefail
+          .venv/bin/python - <<'PY'
+          import json, pathlib, os
+          capture = json.loads(pathlib.Path(os.environ["CAPTURE_JSON"]).read_text())
+          print(f"{'case':12} {'outcome':45} {'pages':>6} {'claims':>7}")
+          budget = 0
+          for observation in capture["observations"]:
+              error = observation.get("error") or "complete"
+              if "BUDGET" in error:
+                  budget += 1
+              telemetry = observation.get("telemetry") or {}
+              print(
+                  f"{observation['case_id']:12} {error:45} "
+                  f"{telemetry.get('http_fetches', 0):>6} "
+                  f"{len(observation.get('predictions') or []):>7}"
+              )
+          print(f"\n{budget} of {len(capture['observations'])} cases ran out of budget")
+          PY
+
       - uses: actions/upload-artifact@v4
         if: always()
         with:
