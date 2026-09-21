@@ -1,5 +1,14 @@
 # No reranker can help yet, and here is the proof
 
+> **SUPERSEDED FOR THE NEW RETRIEVAL PATH, 2026-09-21.** Everything below is
+> still true of the frozen capture and of the pipeline as it stands. It is no
+> longer true of Phase 1's retrieval path: with a web-search generator the
+> correct page reaches the candidate set in **9/10** cases and the current
+> ranking puts it first in **2**, so a reranker now has **seven** cases of
+> headroom where it had none. See [SEARCH_PROBE.md](SEARCH_PROBE.md). The
+> conclusion here was right for the evidence it had, and the evidence changed.
+
+
 Measured 2026-09-21 by claude-opus-5 against the certified corpus
 `ground_truth.reviewed.json` (`2026-09-21.reviewed`, signed by Диас) and the
 frozen `baseline/capture.json`. Reproduce with:

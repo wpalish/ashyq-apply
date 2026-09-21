@@ -4,7 +4,8 @@ This is evaluation tooling, excluded from production containers. The live runner
 uses the existing production registry, Fetcher and ResearchRunner. It never loads
 ground truth. Ranking, discovery, verification and network policy are unchanged.
 
-Certified corpus: [acceptance record](ACCEPTANCE.md). Latest source annotations:
+Certified corpus: [acceptance record](ACCEPTANCE.md). Retrieval measurements:
+[reranking ceiling](RERANKER_CEILING.md) and [web search probe](SEARCH_PROBE.md). Latest source annotations:
 [draft7](REVIEW_DRAFT7.md), [version comparison](VERSIONS.md),
 [human review worksheet](REVIEW_WORKSHEET_DRAFT7.md).
 
