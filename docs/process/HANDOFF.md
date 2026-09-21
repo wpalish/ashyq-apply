@@ -21,7 +21,7 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
-**V2-13b — rank with the page classifier (in-progress).** Phase 1 so far is `ready-for-review (PR #15)`, which supersedes draft PR #14. Phase 1 retrieval was measured live: The owner approved the §6 exception and authorised the live probe; the Exa adapter works and the retrieval ceiling moved **1/10 → 9/10**. V2-01 was accepted 2026-09-21 and its record is below.
+**V2-13c — read the degree level a catalogue actually writes (in-progress).** Phase 1 so far is `ready-for-review (PR #15)`, which supersedes draft PR #14. Phase 1 retrieval was measured live: The owner approved the §6 exception and authorised the live probe; the Exa adapter works and the retrieval ceiling moved **1/10 → 9/10**. V2-01 was accepted 2026-09-21 and its record is below.
 Owner explicitly prioritizes the new workstream. V2-01 follows this documentation commit in a task branch from this predecessor (explicit branch exception). Goal: measure current research/discovery quality before architecture changes.
 
 
@@ -494,6 +494,28 @@ Scope:
 
 The key is never read by this session, never written to a file, and never logged — only
 `EXA_API_KEY` / `UNIMATCH_EXA_API_KEY` at runtime.
+
+Write-ahead (claude-opus-5, 2026-09-21, V2-13c): **teaching `degree_level_named` the cycle
+conventions European catalogues actually use.**
+
+Found while diagnosing V2-13b: Warsaw's catalogue writes the bachelor as `IN/S1-INF` and the master as
+`IN/S2-INF`. `_DEGREE_SLUGS` lists `msc`, `master`, `graduate` and their kin, sees neither, and the
+prefilter let a **master's page reach the top of a bachelor search**. This is the same class of error
+as `wrong_scope_claim_rate` — the right fact about the wrong population — and the prefilter is exactly
+where it should have been stopped, because a wrong degree level is already a rejection there.
+
+`S1`/`S2` is not a Warsaw quirk. It is the Bologna cycle numbering, written as `S1`/`S2` in Polish
+catalogues (`studia pierwszego/drugiego stopnia`), as `I stopnia` / `II stopnia` in prose, and as
+"first cycle" / "second cycle" in English. A numeric convention defeats a word list everywhere it is
+used.
+
+Scope — `app/adapters/discovery/live_discovery.py`, the shared reader every generator uses:
+- extend `_DEGREE_SLUGS` with the cycle forms, keeping the existing word slugs untouched;
+- require a path-segment boundary as the existing matcher already does, so `s1` inside an unrelated
+  token cannot fire — a two-character slug is exactly where a loose match would do damage.
+
+Risk stated plainly: this widens a rule the live pipeline already depends on, so the whole suite is
+the acceptance test, and the probe is re-run to check Warsaw.
 
 V2-13b is **measured and not enabled**, and the honest state of ranking is: one clear win available
 (Toronto +11) that currently costs a case, and a defect found underneath it.
