@@ -1,7 +1,9 @@
-"""V2-20a — the versions of a page we have observed.
+"""V2-20 — evidence history: the versions of a page, and of a claim.
 
-``SourcePage`` answers "has this changed?". These tests are about the question
-it cannot answer: what did the page say when we claimed something from it.
+``SourcePage`` answers "has this changed?". V2-20a is about the question it
+cannot answer — what did the page say when we claimed something from it — and
+V2-20b's migration is checked here beside it, since both exist for the same
+reason: history that survives the overwrite.
 """
 
 from __future__ import annotations
@@ -143,5 +145,79 @@ class TestTheMigration:
             session.delete(page)
             session.commit()
             assert session.query(SourceSnapshot).count() == 0
+        finally:
+            session.close()
+
+
+class TestTheSupersessionMigration:
+    """V2-20b — `claims.superseded_at` / `superseded_by_id` on PostgreSQL."""
+
+    def test_upgrade_then_downgrade_on_postgresql(self, pg_engine):
+        from alembic import command
+
+        from app.db import _alembic_config
+
+        url = str(pg_engine.url)
+        command.downgrade(_alembic_config(url), "a1f3c8d75e29")
+        columns = {c["name"] for c in sa.inspect(pg_engine).get_columns("claims")}
+        assert "superseded_at" not in columns
+        assert "superseded_by_id" not in columns
+
+        command.upgrade(_alembic_config(url), "head")
+        columns = {c["name"] for c in sa.inspect(pg_engine).get_columns("claims")}
+        assert {"superseded_at", "superseded_by_id"} <= columns
+        keys = sa.inspect(pg_engine).get_foreign_keys("claims")
+        by_name = {k["name"]: k for k in keys}
+        assert by_name["fk_claims_superseded_by"]["referred_table"] == "claims"
+        assert by_name["fk_claims_superseded_by"]["options"]["ondelete"] == "SET NULL"
+
+    def test_deleting_a_successor_leaves_the_history_row(self, pg_engine):
+        """SET NULL, and why: a purge must never take a history row with it."""
+        from alembic import command
+
+        from app.db import _alembic_config
+        from app.models import ClaimRow
+
+        command.upgrade(_alembic_config(str(pg_engine.url)), "head")
+        session = sessionmaker(bind=pg_engine)()
+        try:
+            from app.models import ResearchRun
+            from tests.conftest import profile_row
+
+            owner = profile_row(session, {"display_name": "t"})
+            run = ResearchRun(profile_id=owner.id, stage="awaiting_user_decision", demo_mode=True)
+            session.add(run)
+            session.flush()
+            successor = ClaimRow(
+                run_id=run.id,
+                claim_type="ielts_min_overall",
+                status="VERIFIED_CURRENT",
+                source_url="https://example.edu/entry",
+                source_specificity="program",
+                accessed_at=T0,
+                payload={"normalized_value": 7.0},
+            )
+            session.add(successor)
+            session.flush()
+            old = ClaimRow(
+                run_id=run.id,
+                claim_type="ielts_min_overall",
+                status="SUPERSEDED",
+                source_url="https://example.edu/entry",
+                source_specificity="program",
+                accessed_at=T0,
+                payload={"normalized_value": 6.5},
+                superseded_at=T0,
+                superseded_by_id=successor.id,
+            )
+            session.add(old)
+            session.commit()
+
+            session.delete(successor)
+            session.commit()
+            session.refresh(old)
+            assert old.superseded_at is not None, "the history row survives"
+            assert old.superseded_by_id is None, "its successor link is cleared, not cascaded"
+            assert old.payload["normalized_value"] == 6.5
         finally:
             session.close()
