@@ -543,12 +543,30 @@ def _identity(soup: BeautifulSoup | None, title: str) -> str:
     return title.split("|")[0].strip()
 
 
+#: Headings that contain a degree word and are still not a programme. Every
+#: entry is a title a live run actually read and claimed a programme from:
+#: Groningen's "Bachelor's Open Day" and Delft's "Preparing for a bachelor"
+#: became `programme.exists` claims, and the benchmark scored them as wrong
+#: -scope claims about Computing Science and Computer Science and Engineering.
+#: A degree word in a heading says the page is *about* degrees, not that the
+#: page *is* one.
+_NOT_A_PROGRAMME_HEADING = re.compile(
+    r"\b(open|information|info|orientation|taster|experience)\s+(day|days|evening|session|week)\b"
+    r"|\b(webinar|fair|expo|roadshow|campus\s+tour)\b"
+    r"|\b(preparing|prepare|getting\s+ready)\s+for\b"
+    r"|\bmeet\s+(us|the)\b",
+    re.IGNORECASE,
+)
+
+
 def _program_name(identity: str) -> str | None:
     """The programme a page is about, if it is about exactly one."""
     name = identity
     if not name or len(name) > 120:
         return None
     if _PLURAL_PROGRAM_HEADING.match(name):
+        return None
+    if _NOT_A_PROGRAMME_HEADING.search(name):
         return None
     if not _degree_level(name):
         return None
