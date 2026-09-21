@@ -683,3 +683,69 @@ class TestDiscoveryUsesSearchOnlyWhenOneIsConfigured:
         )
 
         assert selected[PageCategory.PROGRAM_PAGE] == ["https://nu.edu.kz/found-by-sitemap"]
+
+
+class TestRejectingKindsThatAreNotProgrammes:
+    """V2-30 — available, measured, and off until it is measured again.
+
+    The live probe kept finding publication and profile pages outranking the
+    programme page they competed with. Dropping them is one line; shipping
+    that drop unmeasured is the silent recall loss §12 forbids, so the switch
+    exists and the default does not move.
+    """
+
+    def _results(self):
+        from datetime import UTC, datetime
+
+        from app.adapters.search.base import SearchResult
+
+        now = datetime(2026, 9, 21, tzinfo=UTC)
+        return [
+            SearchResult(
+                url="https://research.aalto.fi/en/publications/a-paper",
+                title="A paper",
+                snippet="",
+                provider="fake",
+                rank=1,
+                retrieved_at=now,
+            ),
+            SearchResult(
+                url="https://www.aalto.fi/en/study-options/bachelor-computer-science",
+                title="Computer Science",
+                snippet="",
+                provider="fake",
+                rank=2,
+                retrieved_at=now,
+            ),
+        ]
+
+    def test_by_default_an_irrelevant_kind_is_kept(self):
+        from app.adapters.search.prefilter import prefilter
+
+        outcome = prefilter(self._results(), domain="aalto.fi", degree=DegreeLevel.BACHELOR)
+        assert len(outcome.kept) == 2, "the default must not change silently"
+
+    def test_when_asked_it_is_dropped_with_its_reason(self):
+        from app.adapters.search.prefilter import Rejection, prefilter
+
+        outcome = prefilter(
+            self._results(),
+            domain="aalto.fi",
+            degree=DegreeLevel.BACHELOR,
+            reject_irrelevant_kinds=True,
+        )
+        assert [c.url for c in outcome.kept] == [
+            "https://www.aalto.fi/en/study-options/bachelor-computer-science"
+        ]
+        assert outcome.rejected[0].reason is Rejection.NOT_A_PROGRAMME_PAGE
+
+    def test_a_programme_page_is_never_dropped_by_this(self):
+        from app.adapters.search.prefilter import prefilter
+
+        outcome = prefilter(
+            self._results()[1:],
+            domain="aalto.fi",
+            degree=DegreeLevel.BACHELOR,
+            reject_irrelevant_kinds=True,
+        )
+        assert len(outcome.kept) == 1
