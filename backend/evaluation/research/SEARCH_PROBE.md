@@ -387,3 +387,49 @@ the shape to avoid.
 
 **No fix is shipped here.** The measurement exists, the cause is named, and
 the fix needs data this repository does not yet hold.
+
+---
+
+# The registry already knew which host publishes programmes
+
+Measured 2026-09-21, twice, results agreeing. The best single change of this
+session, and it needed no new data: `institution_registry.json` records each
+institution's homepage and seed URLs with a `seeds_verified_on` date, which is
+exactly the *verified registry metadata* §12 sanctions for institution-specific
+knowledge. Toronto's seeds name `future.utoronto.ca`; `utm.` and `utsc.` are
+other campuses and are not named.
+
+A candidate on a host the institution's own verified seeds name now scores
+above one on a sibling host they never mention.
+
+| Case | Before | After |
+|---|---|---|
+| **Toronto** | #19 | **#4** |
+| **Warsaw** | #5 | **#1** |
+| **HKU** | #6 | **#1** |
+| **UBC** | #2 | **#1** |
+| Groningen | #3 | #2 |
+| Delft | #3 | #2 |
+| Aalto | #21 | #17–20 |
+| Vienna | #5 | #6 |
+| KAIST | #26 | #26–30 |
+| **Cases with the correct page first** | **2** | **4** |
+| Retrieval ceiling | 10/10 | 10/10 |
+
+Vienna's −1 is inside the provider's own variance. KAIST loses relative ground
+because its correct page is on `cs.kaist.ac.kr`, which the seeds do not name —
+honest and expected: a signal that rewards named hosts costs the pages that
+are not on one. It is a **signal, never a rejection**, precisely so those pages
+are not lost.
+
+## Why this was not done three attempts earlier
+
+It should have been. The previous entry concluded the campus fix "needs data
+this repository does not yet hold" and put it to the owner. That was wrong: the
+data was already committed, already verified, and already loaded by the
+discovery code. The lesson is the plain one — **look for the data before
+declaring it missing**, especially when the guide names the exact place it
+would live.
+
+The three rejected ranking experiments before it were all attempts to infer
+from a URL what a verified record already stated.

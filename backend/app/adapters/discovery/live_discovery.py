@@ -34,6 +34,7 @@ import logging
 import re
 from collections.abc import Callable
 from dataclasses import dataclass, field
+from functools import lru_cache
 from pathlib import Path
 from typing import TypedDict
 from urllib.parse import urljoin, urlparse, urlunparse
@@ -457,6 +458,52 @@ def degree_level_named(url: str) -> str | None:
 _CATALOGUE_PATH = re.compile(
     r"/[a-z0-9-]*(programmes?|programs?|degrees?|courses?|studies)/?$", re.IGNORECASE
 )
+
+
+@lru_cache(maxsize=1)
+def _registry_hosts_by_domain() -> dict[str, frozenset[str]]:
+    """Registrable domain to the hosts this institution's verified seeds name.
+
+    The registry records a homepage and seed URLs per institution, each
+    carrying a ``seeds_verified_on`` date: human-checked data about a real
+    university. That makes it the sanctioned place for institution-specific
+    knowledge — the phase guide allows exactly this and forbids the
+    alternative, a rule in code that knows something about one university.
+
+    It answers a question nothing else in the pipeline could: which of an
+    institution's many hosts actually publishes its programmes. Toronto's
+    seeds name ``future.utoronto.ca``; ``utm.utoronto.ca`` and
+    ``utsc.utoronto.ca`` are other campuses and are not named.
+    """
+    try:
+        entries = json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
+    except (OSError, ValueError):  # pragma: no cover - a broken registry is a deploy problem
+        return {}
+
+    by_domain: dict[str, set[str]] = {}
+    for entry in entries:
+        urls = [entry.get("homepage") or ""]
+        urls += [u for u in (entry.get("seeds") or {}).values() if u]
+        hosts = {h for h in (urlparse(u).hostname or "" for u in urls) if h}
+        if not hosts:
+            continue
+        domain = registrable_domain(next(iter(hosts)))
+        if domain:
+            by_domain.setdefault(domain, set()).update(hosts)
+    return {domain: frozenset(hosts) for domain, hosts in by_domain.items()}
+
+
+def is_seed_host(url: str) -> bool:
+    """Whether this URL sits on a host the institution's verified seeds name.
+
+    ``www.`` is ignored on both sides: a registry that records ``www.rug.nl``
+    is naming the same host as a search result on ``rug.nl``.
+    """
+    host = (urlparse(url).hostname or "").lower().removeprefix("www.")
+    if not host:
+        return False
+    named = _registry_hosts_by_domain().get(registrable_domain(host), frozenset())
+    return any(host == h.lower().removeprefix("www.") for h in named)
 
 
 def is_excluded_path(url: str) -> bool:

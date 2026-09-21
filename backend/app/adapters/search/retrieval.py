@@ -24,7 +24,11 @@ from collections.abc import Awaitable, Callable, Mapping, Sequence
 from dataclasses import dataclass, field
 from urllib.parse import urlsplit
 
-from app.adapters.discovery.live_discovery import canonical_url, looks_like_catalogue
+from app.adapters.discovery.live_discovery import (
+    canonical_url,
+    is_seed_host,
+    looks_like_catalogue,
+)
 from app.adapters.page_classifier import PageType, classify_url
 from app.adapters.search.base import SearchProvider, SearchResult, SearchUnavailable
 from app.adapters.search.fusion import SourcedCandidate, fuse
@@ -53,6 +57,7 @@ SIGNAL_WEIGHTS = {
     "top_ranked_by_provider": 1.0,
     "related_field_only": -2.0,
     "pdf": -0.5,
+    "registry_seed_host": 3.0,
     "programme_page": 2.5,
     "not_a_programme_page": -4.0,
 }
@@ -210,6 +215,13 @@ def rank_candidates(
             signals.append("catalogue_path")
         if candidate.rank == 1:
             signals.append("top_ranked_by_provider")
+        if is_seed_host(candidate.url):
+            # The institution's own verified seeds name this host as where its
+            # programmes and admissions live. A sibling host is often another
+            # campus — a different place to apply to — and nothing else in the
+            # pipeline can tell the two apart.
+            signals.append("registry_seed_host")
+
         if candidate.is_pdf:
             signals.append("pdf")
 

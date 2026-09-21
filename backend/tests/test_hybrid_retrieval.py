@@ -543,3 +543,59 @@ class TestEveryCandidateRemembersWhichQueryFoundIt:
         hopped = next(c for c in report.candidates if "menu=188" in c.url)
         assert hopped.found_by == ()
         assert "found_by_navigation_hop" in hopped.signals
+
+
+class TestTheRegistryKnowsWhichHostPublishesProgrammes:
+    """Campus disambiguation from data the repository already holds.
+
+    Toronto's verified seeds name future.utoronto.ca. utm. and utsc. are
+    other campuses — a different place to apply to — and nothing else in the
+    pipeline could tell them apart.
+    """
+
+    def test_a_seed_host_is_recognised_and_a_sibling_campus_is_not(self):
+        from app.adapters.discovery.live_discovery import is_seed_host
+
+        assert is_seed_host("https://future.utoronto.ca/program/computer-science")
+        assert not is_seed_host("https://www.utm.utoronto.ca/programs/cs")
+        assert not is_seed_host("https://utsc.calendar.utoronto.ca/Bachelor")
+
+    def test_www_is_ignored_on_both_sides(self):
+        """A registry recording www.rug.nl names the same host as rug.nl."""
+        from app.adapters.discovery.live_discovery import is_seed_host
+
+        assert is_seed_host("https://www.rug.nl/bachelors/computing-science")
+        assert is_seed_host("https://rug.nl/bachelors/computing-science")
+
+    def test_an_unknown_institution_is_simply_not_a_seed_host(self):
+        """Absence from the registry is not a verdict about the page."""
+        from app.adapters.discovery.live_discovery import is_seed_host
+
+        assert not is_seed_host("https://elsewhere.test/programmes/cs")
+        assert not is_seed_host("not a url")
+
+    def test_the_seed_host_outranks_a_sibling_campus_with_the_same_words(self):
+        outcome = run(
+            [
+                result("https://www.utm.utoronto.ca/programs/computer-science", "Computer Science"),
+                result("https://future.utoronto.ca/program/computer-science", "Computer Science"),
+            ],
+            domain="utoronto.ca",
+        )
+
+        ranked = rank_candidates(outcome, an_intent(domain="utoronto.ca"))
+
+        assert ranked[0].url.startswith("https://future.utoronto.ca/")
+        assert "registry_seed_host" in ranked[0].signals
+
+    def test_it_is_a_signal_and_never_a_rejection(self):
+        """A correct page often lives on a host the seeds never named."""
+        outcome = run(
+            [result("https://www.utm.utoronto.ca/programs/computer-science", "Computer Science")],
+            domain="utoronto.ca",
+        )
+
+        ranked = rank_candidates(outcome, an_intent(domain="utoronto.ca"))
+
+        assert len(ranked) == 1
+        assert "registry_seed_host" not in ranked[0].signals
