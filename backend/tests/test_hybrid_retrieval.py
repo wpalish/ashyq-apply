@@ -483,3 +483,63 @@ class TestTheDegreeLevelACatalogueActuallyWrites:
         from app.adapters.discovery.live_discovery import degree_level_named
 
         assert degree_level_named(url) is None
+
+
+class TestEveryCandidateRemembersWhichQueryFoundIt:
+    """§11: keep the query behind each candidate.
+
+    Written because a ranking change was mis-attributed to a query change for
+    want of exactly this, twice in one session.
+    """
+
+    async def test_a_candidate_names_the_families_that_surfaced_it(self):
+        intent = an_intent()
+        url = "https://nu.edu.kz/programmes/cs"
+        corpus = {
+            q.text: (
+                [(url, "Computer Science", "")] if q.family in ("programmes", "courses") else []
+            )
+            for q in queries_for(intent, budget=99)
+        }
+
+        report = await discover_candidates(
+            FakeSearchProvider(corpus, now=NOW), intent, query_budget=99
+        )
+
+        found = next(c for c in report.candidates if c.url == url)
+        assert set(found.found_by) == {"programmes", "courses"}
+
+    async def test_one_family_returning_a_url_twice_names_it_once(self):
+        intent = an_intent()
+        url = "https://nu.edu.kz/programmes/cs"
+        corpus = {
+            q.text: [(url, "Computer Science", ""), (f"{url}?utm_source=x", "Computer Science", "")]
+            for q in queries_for(intent, budget=99)
+        }
+
+        report = await discover_candidates(
+            FakeSearchProvider(corpus, now=NOW), intent, query_budget=1
+        )
+
+        found = next(c for c in report.candidates if c.url == url)
+        assert found.found_by == ("field_and_degree",)
+
+    async def test_a_hop_candidate_is_not_attributed_to_a_query(self):
+        """It came from a page, not from a search; §11 keeps a parent for those."""
+        intent = an_intent()
+        provider = FakeSearchProvider(
+            {
+                q.text: [("https://nu.edu.kz/programmes/cs", "Computer Science", "")]
+                for q in queries_for(intent, budget=99)
+            },
+            now=NOW,
+        )
+
+        async def fetch(url: str) -> str:
+            return '<a href="/content?menu=188">Computer Science programme</a>'
+
+        report = await discover_candidates(provider, intent, fetch=fetch)
+
+        hopped = next(c for c in report.candidates if "menu=188" in c.url)
+        assert hopped.found_by == ()
+        assert "found_by_navigation_hop" in hopped.signals

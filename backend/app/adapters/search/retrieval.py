@@ -20,11 +20,11 @@ from __future__ import annotations
 
 import math
 import re
-from collections.abc import Awaitable, Callable, Sequence
+from collections.abc import Awaitable, Callable, Mapping, Sequence
 from dataclasses import dataclass, field
 from urllib.parse import urlsplit
 
-from app.adapters.discovery.live_discovery import looks_like_catalogue
+from app.adapters.discovery.live_discovery import canonical_url, looks_like_catalogue
 from app.adapters.page_classifier import PageType, classify_url
 from app.adapters.search.base import SearchProvider, SearchResult, SearchUnavailable
 from app.adapters.search.fusion import SourcedCandidate, fuse
@@ -85,6 +85,11 @@ class RankedCandidate:
     #: Named reasons, best first. This is what makes a ranking reviewable.
     signals: tuple[str, ...] = ()
     is_pdf: bool = False
+    #: Which query families surfaced this URL. §11 asks every candidate to keep
+    #: the query that found it; without it a ranking change cannot be
+    #: attributed to the query that caused it, and this session has already
+    #: mis-attributed one improvement for want of exactly this.
+    found_by: tuple[str, ...] = ()
 
     @property
     def explanation(self) -> str:
@@ -99,6 +104,7 @@ class RankedCandidate:
             provider=self.provider,
             signals=signals,
             is_pdf=self.is_pdf,
+            found_by=self.found_by,
         )
 
 
@@ -165,6 +171,7 @@ def rank_candidates(
     intent: DiscoveryIntent,
     *,
     rank_by_page_kind: bool = False,
+    found_by: Mapping[str, tuple[str, ...]] | None = None,
 ) -> tuple[RankedCandidate, ...]:
     """Score surviving candidates, best first.
 
@@ -233,6 +240,7 @@ def rank_candidates(
                 provider=candidate.provider,
                 signals=tuple(signals),
                 is_pdf=candidate.is_pdf,
+                found_by=(found_by or {}).get(candidate.url, ()),
             )
         )
 
@@ -346,6 +354,10 @@ async def discover_candidates(
 
     results: list[SearchResult] = []
     failed: list[str] = []
+    # URL to the families that returned it. Kept here rather than on
+    # SearchResult: a provider reports what it returned, and which of our
+    # queries asked for it is our bookkeeping, not part of its contract.
+    families: dict[str, list[str]] = {}
     for query in queries:
         try:
             response = await provider.search(
@@ -357,9 +369,15 @@ async def discover_candidates(
             failed.append(query.family)
             continue
         results.extend(response.results)
+        for result in response.results:
+            seen_families = families.setdefault(canonical_url(result.url), [])
+            if query.family not in seen_families:
+                seen_families.append(query.family)
 
     outcome = prefilter(results, domain=intent.domain, degree=intent.degree)
-    ranked = rank_candidates(outcome, intent)
+    ranked = rank_candidates(
+        outcome, intent, found_by={url: tuple(f) for url, f in families.items()}
+    )
 
     # Truncate the ranked search list *before* the hop appends to it. With
     # both truncated together, search fills every slot and the appended

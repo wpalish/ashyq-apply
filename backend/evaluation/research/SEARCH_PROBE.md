@@ -341,3 +341,49 @@ Note this is **not** the earlier rejected experiment. Dropping `site:` from
 every family cost Aalto six places and took rank-1 cases from two to zero.
 Adding *one* plain-language family alongside the operator ones is the narrow
 version, and it measures better.
+
+---
+
+# Toronto diagnosed: it is the wrong campus, not the new query
+
+Measured 2026-09-21 with per-candidate query provenance (§11), one targeted
+run on Toronto alone.
+
+The natural-language family was blamed for Toronto's #8 → #19. **It is not the
+cause — that family is one of the two that *found* the correct page.** What
+sits above it:
+
+| # | Host | What it is |
+|---|---|---|
+| 1, 3 | `utm.utoronto.ca` | Mississauga campus |
+| 7, 8, 9 | `utm.calendar`, `utsc.calendar`, `utsc.` | Mississauga and Scarborough |
+| 4 | `future.utoronto.ca/data-computer-science` | a neighbouring field |
+| 5 | `governingcouncil.utoronto.ca` | governance minutes |
+
+The correct page, `future.utoronto.ca/program/computer-science` (St George),
+sits at #18 with a single signal. Five of the seven candidates above it are
+**other campuses of the same university**, which the prefilter correctly keeps
+— they share a registrable domain — and which the ranking has no reason to
+push down, because nothing in the pipeline knows a campus is a different
+place to apply to.
+
+This is the third time this session that a plausible attribution was wrong,
+and the first time the evidence was available to catch it immediately.
+Provenance earns its keep.
+
+## What it does not tell us
+
+Which campus was requested. The corpus's Toronto case is St George — its
+identity notes say so and warn against transferring to UTM or UTSC — but the
+*request* names only "University of Toronto". A request that names no campus
+should not be answered with one campus's page, and the pipeline currently has
+no way to express that.
+
+That is V2-22 entity resolution, and §12 sanctions the data it needs:
+university-specific knowledge is allowed when it is *verified registry
+metadata*, not code. A campus list per institution in the registry is the
+shape; inventing a "if host starts with utm, penalise" rule in the ranking is
+the shape to avoid.
+
+**No fix is shipped here.** The measurement exists, the cause is named, and
+the fix needs data this repository does not yet hold.
