@@ -514,6 +514,28 @@ proves it end to end (128 of 173 claims scoped, 45 honestly empty).
    likeliest win: eligibility prose states populations more often than requirements prose does.
 3. Open items unchanged: KAIST's registry seed (owner data task, §7); page-kind as a prefilter concern.
 
+Write-ahead (claude-opus-5, 2026-09-21, V2-25): **the other four claim-producing adapters read scope
+too.** §5 step 4. `web_requirements` has done so since V2-22; `web_scholarships`, `web_costs`,
+`web_documents` and `web_government` still produce claims with no scope at all, which V2-23 then treats
+as pre-V2-22 and judges exactly as before. Half the pipeline is honest and half is grandfathered.
+
+Scope, exactly: `scope=read_scope(text, title=...)` on each of the four builders, using each adapter's
+own already-extracted page text and title. No new reader logic — if a dimension needs a phrase family
+these pages use and requirements pages do not, that is a separate, measured change.
+
+Expectations, stated before running:
+- **Scholarships should gain the most.** Eligibility prose names populations ("open to international
+  students", "for EU/EEA applicants") far more often than requirements prose does, and a scholarship
+  claimed for the wrong population is the most expensive wrong answer this product can give.
+- **Government pages should gain nothing, and that is correct.** A post-study-work rule is a national
+  rule; it has no intake and no programme, and the reader will rightly return an empty scope.
+- **Costs pages may gain a residency** ("home fee status" / "overseas fee status"), which is exactly
+  the dimension a fee figure needs and the one place `residency` was built for.
+
+Demo effect: unknown, and this time it may legitimately move — a scholarship claim that gains a scope
+the request cannot match stops being a hard filter. Look at the dump case by case before re-capturing,
+per the guard's wording, and report what moved rather than only the hash.
+
 Write-ahead (claude-opus-5, 2026-09-21, V2-24): **tell the applicant when an answer was withheld for
 scope.** §5 step 3, and the first part of this phase a person can see.
 
