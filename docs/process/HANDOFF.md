@@ -516,6 +516,28 @@ proves it end to end (128 of 173 claims scoped, 45 honestly empty).
    likeliest win: eligibility prose states populations more often than requirements prose does.
 3. Open items unchanged: KAIST's registry seed (owner data task, §7); page-kind as a prefilter concern.
 
+Write-ahead (claude-opus-5, 2026-09-21, V2-24): **tell the applicant when an answer was withheld for
+scope.** §5 step 3, and the first part of this phase a person can see.
+
+V2-23 refuses a claim whose page is about another intake. Right now that refusal is *silent*: the claim
+stays in the evidence list, the requirement simply goes unanswered, and nothing says why. Silence about
+a refusal is its own version of the failure this phase is about — the applicant cannot act on a gap
+they cannot see.
+
+Scope, exactly:
+- `app/domain/eligibility.py`: a frozen `OutOfScopeClaim` (claim type, source url, the reason in
+  `ClaimScope.explain`'s words, and whether anything else answered that requirement), collected once per
+  evaluation and carried on `EligibilityOutcome`.
+- `app/pipeline/runner.py`: each one becomes an `UnresolvedQuestion` on the result — the existing
+  channel, so the API, the export and the frontend need no new field. `blocking=True` only when nothing
+  else answered that requirement, because a requirement answered by another page is not a blocker.
+- The question is a question, not a verdict: it names the page, the intake it is about, and the intake
+  that was asked, and it is phrased so the applicant can send it to an admissions office as is.
+
+Expected demo effect: **none**. Every demo page states the requested intake, so nothing is declined and
+no question is produced. If the golden moves, something declined a claim it should not have — look
+before re-capturing.
+
 Write-ahead (claude-opus-5, 2026-09-21, V2-23): **make the assessment refuse a claim whose page says
 it is about something else.** This is §5 step 2 — where the 5/5 actually lives. V2-22 records a scope;
 nothing yet *acts* on one, so an out-of-scope fact is still stated as the answer.
