@@ -21,7 +21,7 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
-**V2-13 — hybrid candidate retrieval (in-progress).** V2-10, V2-11 and V2-12 are committed. V2-01 was accepted 2026-09-21 and its record is below.
+**V2-14 — reranker benchmark (in-progress).** V2-10 … V2-13 are committed. V2-01 was accepted 2026-09-21 and its record is below.
 Owner explicitly prioritizes the new workstream. V2-01 follows this documentation commit in a task branch from this predecessor (explicit branch exception). Goal: measure current research/discovery quality before architecture changes.
 
 
@@ -366,6 +366,28 @@ Scope:
 Per §6, **only the deterministic layer and BM25 ship here.** Embeddings, a cross-encoder, Jev and an LLM
 are left as a documented seam: §6 says not to deploy them all automatically, and each needs its own
 benchmark run to justify its cost. Alias expansion stays inside `DEFAULT_QUERY_BUDGET` (§4).
+
+Write-ahead (claude-opus-5, 2026-09-21, V2-14): **V2-14 is "reranker benchmark: current scorer vs
+cross-encoder vs optional Jev/LLM". Before building any of that, I measured whether a reranker could
+help at all — and it cannot.**
+
+The frozen capture records `ranked_urls`, the real candidate set the current pipeline produced on the
+bounded canary. The certified corpus records the correct `programme_urls`. Intersecting them answers
+the only question that matters before spending money on a cross-encoder: *is the right page anywhere in
+the set a reranker would reorder?*
+
+Measured, canonicalising both sides: **1/10.** Only NTU's correct page appears in its candidate set, and
+it is already at **position 1**. Four cases (warsaw, ubc, kaist, and toronto's set of one) retrieved
+nothing usable at all.
+
+So the current ranking is already perfect on what it retrieves, the 1/10 recall is **entirely a
+retrieval failure**, and no reranker — BM25, cross-encoder, Jev or LLM — can move a single case. Buying
+or deploying one now would be measurable waste.
+
+This step therefore delivers the measurement rather than the rerankers: a reproducible
+`evaluation/research/ceiling.py` with a CLI, a `RERANKER_CEILING.md` recording the numbers and what
+they license, tests, and a §5/§7 redirect of the roadmap. That is what a benchmark is *for* — V2-01
+spent seven drafts and a human signature making exactly this kind of answer trustworthy.
 
 V2-13 is implemented and green (§6). Phase 1's retrieval path now exists end to end behind the fake
 provider: intent → bounded queries → provider → prefilter → BM25 + signals → ranked candidates, with
