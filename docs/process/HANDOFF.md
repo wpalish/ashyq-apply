@@ -21,7 +21,7 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
-**V2-13e — wire discovery to the search path (in-progress).** This is the step that makes Phase 1 visible in the product; nothing before it changed any behaviour. Phase 1 so far is `ready-for-review (PR #15)`, which supersedes draft PR #14. Phase 1 retrieval was measured live: The owner approved the §6 exception and authorised the live probe; the Exa adapter works and the retrieval ceiling moved **1/10 → 9/10**. V2-01 was accepted 2026-09-21 and its record is below.
+**V2-21 — the scope model (in-progress).** Phase 1 is complete, measured and wired (PR #15); this starts Phase 2 on the failure Phase 1 never touched. Phase 1 so far is `ready-for-review (PR #15)`, which supersedes draft PR #14. Phase 1 retrieval was measured live: The owner approved the §6 exception and authorised the live probe; the Exa adapter works and the retrieval ceiling moved **1/10 → 9/10**. V2-01 was accepted 2026-09-21 and its record is below.
 Owner explicitly prioritizes the new workstream. V2-01 follows this documentation commit in a task branch from this predecessor (explicit branch exception). Goal: measure current research/discovery quality before architecture changes.
 
 
@@ -494,6 +494,33 @@ Scope:
 
 The key is never read by this session, never written to a file, and never logged — only
 `EXA_API_KEY` / `UNIMATCH_EXA_API_KEY` at runtime.
+
+Write-ahead (claude-opus-5, 2026-09-21, V2-21): **making a claim's scope a first-class thing**, per
+`05_PHASE_2_EVIDENCE_GRAPH.md` "Claim scope". This is the direct attack on `wrong_scope_claim_rate`
+**5/5** — the corpus's other headline failure and the one Phase 1 could never fix, because retrieval
+and scope are independent holes.
+
+What the benchmark actually measured: every claim the pipeline produced was the right fact about the
+**wrong population, year or programme**. A requirement published for non-EU/EEA applicants in the
+2026 cycle was stated as the answer for fall 2027.
+
+Why it happens today: `Claim` carries `program`, `intake`, `academic_year`, `subject_key` and a
+`SourceSpecificity`, and everything else about *who a rule applies to* lives in free text `notes`.
+The spec says that in as many words: **do not encode critical scope only inside free-text notes.**
+And an unstated dimension is currently treated as "applies to everyone", which is exactly backwards.
+
+Scope — `backend/app/domain/claim_scope.py` (pure, no I/O, the rule belongs in domain):
+- `ClaimScope` with the nine dimensions the spec lists — university, faculty, programme, degree,
+  intake, academic year, population, nationality, residency — each explicitly `None` for UNKNOWN.
+- `RequestedScope`: what was actually asked for.
+- `ClaimScope.covers(requested) -> Verdict`, reusing V2-17's `Verdict`: **YES** only when every
+  dimension the claim states matches the request, **NO** when any stated dimension contradicts it, and
+  **UNKNOWN** when the claim is silent on something the request names. Silence is not agreement.
+- `narrower_than` so conflict resolution can prefer the more specific claim, aligned with the existing
+  `SourceSpecificity` order rather than replacing it.
+
+Nothing is wired into extraction or ranking in this step. The type and its rule come first, exactly as
+V2-17 did; wiring a rule nobody has agreed on is how the last two sessions lost runs.
 
 V2-13e is done: **the owner can now see this working**, which was not true of anything before it.
 
