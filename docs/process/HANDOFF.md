@@ -21,7 +21,7 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
-**V2-11 — privacy-safe discovery query generator (in-progress).** V2-10's seam is committed. V2-01 was accepted 2026-09-21 and its record is below.
+**V2-12 — field and degree ontology (in-progress).** V2-10's seam and V2-11's query generator are committed. V2-01 was accepted 2026-09-21 and its record is below.
 Owner explicitly prioritizes the new workstream. V2-01 follows this documentation commit in a task branch from this predecessor (explicit branch exception). Goal: measure current research/discovery quality before architecture changes.
 
 
@@ -311,6 +311,32 @@ Tests: one per forbidden item from the spec's list — name, exact scores, GPA, 
 contribution, email, phone, transcript content — each feeding a fully populated profile through
 `from_profile` and asserting the rendered queries contain none of it. Plus budget enforcement and audit
 redaction. No provider is called; V2-11 produces strings, V2-13 consumes them.
+
+Write-ahead (claude-opus-5, 2026-09-21, V2-12): **starting V2-12 — the field and degree ontology**,
+per `analysis/v2/04_PHASE_1_DISCOVERY_ENGINE.md` §3.
+
+The whole value of this task is one distinction the spec states and this repository has already paid
+for twice by hand: **`strong_aliases` are the same thing; `related_not_equivalent` are retrieval
+candidates and never automatic matches.** Draft2 refused Data Science as Aalto's computer science on
+exactly that ground, and draft7 left Computer Engineering open rather than asserting it. The ontology
+must make the wrong call hard to write, not just discouraged — so equivalence and retrieval-expansion
+are different functions returning different things, and a related concept can never be returned from
+the equivalence one.
+
+Scope:
+- `backend/app/adapters/search/ontology.json` — the data, versioned, mirroring the
+  `institution_registry.json` precedent. Concepts carry `strong_aliases`, `related_not_equivalent` and
+  optional non-English aliases with a language tag, so the multilingual shape exists from day one even
+  where only English is populated.
+- `backend/app/adapters/search/ontology.py` — loader plus `canonical_field`, `is_equivalent`,
+  `retrieval_candidates`, `degree_aliases`, and the ontology version. It lives in adapters, not domain,
+  because reading a file is I/O and `app/domain/` does none (AGENTS.md §6).
+- `backend/tests/test_ontology.py`.
+
+It is deliberately not wired into `queries_for`: bounded alias expansion is V2-13's decision, and §4
+warns against exploding aliases into unlimited queries. Non-English aliases are kept to ones that are
+not in doubt; a guessed alias silently matches the wrong programme, which is the same class of error as
+a guessed fact.
 
 V2-11 is implemented and green (§6). V2-10's seam and V2-11's queries both exist; nothing calls either
 yet, which is correct — V2-13 is the consumer.
