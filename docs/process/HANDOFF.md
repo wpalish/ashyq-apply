@@ -2075,6 +2075,15 @@ V2-01: evaluation-only Pydantic schema and JSON corpus/capture/metric contracts 
 
 V2-01: set PYTHONUTF8=1 on Windows for text fixtures; do not modify evaluation schemas while a live batch is running (parent and child processes can import different versions). Instrumented baseline segments and restart are recorded in baseline/README.md. Scope matching is deliberately literal; missing/different names count as conservative match failures, not human-confirmed wrong facts.
 
+- **A measurement that cannot fail loudly is worse than no measurement.** The first live capture run
+  (Actions run 35651884644) printed a full metrics table that was **not the measurement**: the scoring
+  step had died with `FileNotFoundError` (the capture writes into a timestamped subdirectory, which the
+  workflow did not read back), `| tee` returned 0 so the step went green, and the comparison globbed
+  `metrics.*.json` and picked a **committed draft report** to print under the heading "this run". Three
+  separate mistakes, each harmless alone, together producing confident nonsense. The fix: `pipefail`,
+  `test -f` before use, the capture's own printed path, and the new report named exactly rather than
+  globbed. **Generalise the `| tail -1` lesson below: never let a pipe or a glob stand between a result
+  and the thing that reports it.**
 - **Never read a gate through `| tail -1`.** `ruff format --check` prints `Would reformat: <file>`
   *above* its summary line, so a one-line tail shows "208 files already formatted" while the command
   exits 1. I shipped an unformatted file and CI caught it on PR #16. The gate's exit code is the

@@ -23,9 +23,13 @@ on:
         required: false
         default: ''
       seconds_per_case:
-        description: 'Wall-clock budget per university, in seconds'
+        description: 'Wall-clock budget per university, in seconds (90 matches the frozen baseline)'
         required: false
-        default: '120'
+        default: '90'
+      max_pages:
+        description: 'Fetcher calls per university (60 matches the frozen baseline)'
+        required: false
+        default: '60'
 
 permissions:
   contents: read
@@ -65,20 +69,39 @@ jobs:
           fi
 
       - name: Capture
+        # The bounds are printed, not assumed: a capture taken under different
+        # budgets is a different measurement, and the frozen baseline's are 60
+        # Fetcher calls and 90 seconds per university.
         run: |
+          set -o pipefail
+          echo "budgets: ${{ inputs.max_pages }} fetches / ${{ inputs.seconds_per_case }}s per case"
           .venv/bin/python -m evaluation.research.live \
             --live \
             --out evaluation/research/baseline/capture.${{ github.run_id }} \
             --seconds-per-case ${{ inputs.seconds_per_case }} \
-            ${{ inputs.case && format('--case {0}', inputs.case) || '' }}
+            --max-pages ${{ inputs.max_pages }} \
+            ${{ inputs.case && format('--case {0}', inputs.case) || '' }} \
+            | tee capture.log
+          # The capture writes into a timestamped subdirectory and prints that
+          # path as its last line. Reading it back is the only way to name the
+          # file; guessing it is what made run #1 score nothing at all.
+          echo "CAPTURE_JSON=$(tail -n 1 capture.log)" >> "$GITHUB_ENV"
 
       - name: Score it strictly against the certified corpus
         # Strict: no --allow-drafts. The corpus is human-signed, so a
         # provisional score would be a step backwards from V2-01.
+        #
+        # pipefail, and the file is checked before it is used: run #1 failed
+        # here with FileNotFoundError, `tee` returned 0, the step went green
+        # and the comparison below printed a committed draft report as if it
+        # were the measurement. A measurement that cannot fail loudly is worse
+        # than no measurement.
         run: |
+          set -o pipefail
+          test -f "$CAPTURE_JSON" || { echo "no capture at $CAPTURE_JSON"; exit 1; }
           .venv/bin/python -m evaluation.research \
             --dataset evaluation/research/data/ground_truth.reviewed.json \
-            --capture evaluation/research/baseline/capture.${{ github.run_id }}/capture.json \
+            --capture "$CAPTURE_JSON" \
             --out evaluation/research/baseline/metrics.${{ github.run_id }}.json \
             | tee capture-metrics.txt
 
@@ -86,11 +109,16 @@ jobs:
         # Printed in the log so the numbers are readable without downloading
         # anything. The comparison a human actually wants is against
         # metrics.reviewed.json, which is committed.
+        #
+        # The new report is named exactly, never globbed: run #1 globbed
+        # `metrics.*.json`, took the last one, and printed a committed draft
+        # report under the heading "this run".
         run: |
+          set -o pipefail
           .venv/bin/python - <<'PY'
           import json, pathlib
           old = json.loads(pathlib.Path("evaluation/research/baseline/metrics.reviewed.json").read_text())["metrics"]
-          new = json.loads(list(pathlib.Path("evaluation/research/baseline").glob("metrics.*.json"))[-1].read_text())["metrics"]
+          new = json.loads(pathlib.Path("evaluation/research/baseline/metrics.${{ github.run_id }}.json").read_text())["metrics"]
           print(f"{'metric':45} {'certified':>14} {'this run':>14}")
           for key in sorted(set(old) | set(new)):
               def show(report):
@@ -111,4 +139,5 @@ jobs:
             backend/evaluation/research/baseline/capture.${{ github.run_id }}
             backend/evaluation/research/baseline/metrics.${{ github.run_id }}.json
             backend/capture-metrics.txt
+            backend/capture.log
           retention-days: 14

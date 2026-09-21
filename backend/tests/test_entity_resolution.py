@@ -7,6 +7,7 @@ because their names reduce to the same tokens.
 
 from __future__ import annotations
 
+from app.adapters.discovery.registry_identities import institution_identities
 from app.domain.dedupe import university_key
 from app.domain.entity_resolution import (
     Basis,
@@ -119,3 +120,56 @@ class TestWhatIsRecordedAndWhatIsNot:
         assert GRONINGEN.aliases == ()
         assert GRONINGEN.names() == ("University of Groningen",)
         assert resolve_institution(REGISTRY, name="Rijksuniversiteit Groningen").identity is None
+
+
+class TestTheRegistryResolvesItself:
+    """V2-22b — the registry is the identity data, so it must be consistent.
+
+    These are data tests as much as code tests: they fail when the registry
+    gains a bad entry, which is the only way that kind of error surfaces
+    before a run does something strange with it.
+    """
+
+    def test_every_institution_resolves_from_its_own_homepage_and_seeds(self):
+        from urllib.parse import urlparse
+
+        identities = list(institution_identities())
+        assert len(identities) >= 19
+        for identity in identities:
+            for url in identity.source_urls:
+                answer = resolve_institution(identities, url=url)
+                assert answer.identity is not None, f"{url} resolves to nothing"
+                assert answer.identity.key == identity.key, (
+                    f"{urlparse(url).hostname} resolves to {answer.identity.name!r}, "
+                    f"not to {identity.name!r}"
+                )
+
+    def test_no_two_institutions_share_a_domain(self):
+        """Two entries on one domain are one university recorded twice, or a
+        typo. Either way a run would treat them as two places to apply."""
+        seen: dict[str, str] = {}
+        for identity in institution_identities():
+            for domain in identity.domains:
+                assert domain not in seen or seen[domain] == identity.name, (
+                    f"{domain} is claimed by both {seen.get(domain)!r} and {identity.name!r}"
+                )
+                seen[domain] = identity.name
+
+    def test_every_institution_resolves_from_its_own_name(self):
+        identities = list(institution_identities())
+        for identity in identities:
+            answer = resolve_institution(identities, name=identity.name, country=identity.country)
+            assert answer.identity is not None, f"{identity.name!r} does not resolve by name"
+
+    def test_kaist_is_reachable_through_its_school_host(self):
+        """The owner's 2026-09-22 seeds put cs.kaist.ac.kr on the registry.
+
+        Before them, KAIST's own programme pages were served by a host the
+        pipeline could not attribute to KAIST at all.
+        """
+        answer = resolve_institution(
+            list(institution_identities()), url="https://cs.kaist.ac.kr/content?menu=318"
+        )
+        assert answer.identity is not None
+        assert answer.identity.name == "KAIST"
+        assert answer.evidence == "kaist.ac.kr"
