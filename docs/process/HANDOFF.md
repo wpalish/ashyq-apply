@@ -21,7 +21,7 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
-**V2-13c — read the degree level a catalogue actually writes (in-progress).** Phase 1 so far is `ready-for-review (PR #15)`, which supersedes draft PR #14. Phase 1 retrieval was measured live: The owner approved the §6 exception and authorised the live probe; the Exa adapter works and the retrieval ceiling moved **1/10 → 9/10**. V2-01 was accepted 2026-09-21 and its record is below.
+**V2-11b — a natural-language query family (in-progress).** Phase 1 so far is `ready-for-review (PR #15)`, which supersedes draft PR #14. Phase 1 retrieval was measured live: The owner approved the §6 exception and authorised the live probe; the Exa adapter works and the retrieval ceiling moved **1/10 → 9/10**. V2-01 was accepted 2026-09-21 and its record is below.
 Owner explicitly prioritizes the new workstream. V2-01 follows this documentation commit in a task branch from this predecessor (explicit branch exception). Goal: measure current research/discovery quality before architecture changes.
 
 
@@ -494,6 +494,27 @@ Scope:
 
 The key is never read by this session, never written to a file, and never logged — only
 `EXA_API_KEY` / `UNIMATCH_EXA_API_KEY` at runtime.
+
+Write-ahead (claude-opus-5, 2026-09-21, V2-11b): **adding one query family phrased as a person would
+phrase it**, following the only concrete lead left from V2-13c.
+
+The evidence: Exa returns Warsaw's `IN/S1-INF` at **rank 1** for
+`University of Warsaw computer science first cycle programme S1-INF` and **not at all** for our
+`site:uw.edu.pl "computer science" "bachelor"`. All five current families share one shape — a `site:`
+operator plus quoted terms — which is keyword-search syntax. A neural index reads a query for meaning,
+and five variations of one shape are one query asked five times.
+
+Scope — `app/adapters/search/intent.py`: a `natural_language` family rendering the intent as a plain
+sentence (institution, degree in words, field, and the cycle wording the ontology knows). The existing
+families are untouched, `site_prefix` is untouched, and the budget is untouched — this **replaces
+nothing**, it adds one shape inside the same `DEFAULT_QUERY_BUDGET`, so the cost per case does not
+move.
+
+Acceptance, stated first, and per §9 **two runs before believing any small move**:
+- the ceiling must be ≥ 9/10 and Warsaw should return; and
+- cases-at-rank-1 must not fall below the current 1.
+Dropping `site:` wholesale was already measured and rejected; this is the narrower version of the same
+hypothesis, which is why it is worth one more measurement rather than an argument.
 
 V2-13c shipped the cycle slugs. Two other changes were measured and rejected, and **two earlier
 statements in this file were wrong and are corrected**:
