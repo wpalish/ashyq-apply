@@ -21,7 +21,7 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
-**V2-16 — discovery fusion and provenance (in-progress).** V2-10 … V2-15 are committed. V2-01 was accepted 2026-09-21 and its record is below.
+**V2-17 — programme identity verification (in-progress).** V2-10 … V2-16 are committed. The owner is registering with a search provider in parallel; V2-17 needs neither key nor authorisation. V2-01 was accepted 2026-09-21 and its record is below.
 Owner explicitly prioritizes the new workstream. V2-01 follows this documentation commit in a task branch from this predecessor (explicit branch exception). Goal: measure current research/discovery quality before architecture changes.
 
 
@@ -440,6 +440,33 @@ Scope — `backend/app/adapters/search/fusion.py` and `tests/test_fusion.py`:
 
 No generator is invented: fusion consumes what already exists and what V2-13/V2-15 produce. Nothing is
 wired into `runner.py` in this step.
+
+Write-ahead (claude-opus-5, 2026-09-21, V2-17): **starting V2-17 — programme identity verification**,
+per `04_PHASE_1_DISCOVERY_ENGINE.md` §10. Chosen because it attacks the corpus's *other* headline
+failure — `wrong_scope_claim_rate` **5/5** against `primary_source_rate` **13/13**, i.e. the pipeline
+reads official pages correctly and then applies them to the wrong population, year or programme — and
+because it needs no provider key and no live authorisation.
+
+§10's instruction is blunt: **"Do not collapse identity into one fuzzy score."** Six dimensions, each
+`YES` / `NO` / `UNKNOWN`: does the page establish a programme exists, is it the right university, the
+right degree level, does the field match, is the programme active, is the requested intake supported.
+
+The design decision this step turns on: **identity and scope are separated, and `UNKNOWN` never
+becomes a match.**
+
+- The four *identity* dimensions (exists, university, degree, field) decide whether this is the right
+  programme at all.
+- The two *scope* dimensions (active, intake) decide whether a claim read from that page may be applied
+  to the requested intake. They are exactly where `wrong_scope_claim_rate` 5/5 comes from.
+- `applies_to()` returns a `Verdict`, **not a bool**. A bool would force `UNKNOWN` into `True` or
+  `False`, and both are wrong: an unverified dimension is not a failed one (brief invariant I4) and
+  must not silently become a pass either. This is the same rule §7 already resolved for ranking, applied
+  to discovery.
+
+Scope — `backend/app/domain/programme_identity.py` (the rule, pure, no I/O, as §10 requires it to live
+in domain code) and `backend/app/adapters/search/identity.py` (reading the dimensions from what a
+candidate actually shows), plus `tests/test_programme_identity.py`. A dimension the page does not state
+is `UNKNOWN`; nothing is inferred to fill a gap.
 
 V2-16 is implemented and green (§6). **Phase 1's parts are now all built and none is wired in.**
 V2-10 (provider seam), V2-11 (queries), V2-12 (ontology), V2-13 (retrieval), V2-15 (site search) and
