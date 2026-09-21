@@ -439,3 +439,61 @@ class TestRankingV2InThePipeline:
         best = max(rows, key=lambda r: r.score_total)
         assert best.university == "University of British Columbia"
         assert all(r.bucket == "" for r in rows)
+
+
+class TestAScopeRefusalIsSaidOutLoud:
+    """V2-24 — a claim the assessment declined must not disappear quietly."""
+
+    @pytest.mark.asyncio
+    async def test_a_claim_about_another_intake_becomes_a_question_for_admissions(
+        self, session, settings, profile
+    ):
+        row = profile_row(session, profile)
+        run = ResearchRun(
+            profile_id=row.id,
+            stage=PipelineStage.QUEUED.value,
+            demo_mode=True,
+            stage_state=RunState.load(None).dump(),
+        )
+        session.add(run)
+        session.commit()
+        runner = ResearchRunner(session, run, profile, settings)
+        await runner.run_to_decision()
+
+        # Rewrite one persisted result's deadline claim so its page states an
+        # intake nobody asked about, then re-assess exactly as the pipeline does.
+        target = (
+            session.query(ProgramResultRow)
+            .filter(ProgramResultRow.run_id == run.id)
+            .order_by(ProgramResultRow.id)
+            .first()
+        )
+        assert target is not None
+        payload = dict(target.payload)
+        claims = [dict(c) for c in payload["claims"]]
+        deadlines = [c for c in claims if c["claim_type"] == "admission_deadline"]
+        assert deadlines, "the demo result should carry a deadline claim"
+        for claim in deadlines:
+            claim["scope"] = {"intake": "Spring 2019"}
+        payload["claims"] = claims
+        payload["unresolved"] = []
+        target.payload = payload
+        session.commit()
+
+        from app.adapters.fetching import Fetcher
+
+        async with Fetcher(settings.cache_dir, offline=True) as fetcher:
+            await runner._stage_assess(fetcher)
+        session.commit()
+
+        session.refresh(target)
+        result = ProgramResult.model_validate(target.payload)
+        asked = [q for q in result.unresolved if q.topic == "admission deadline"]
+        assert asked, "a declined claim produced no question"
+        question = asked[0]
+        assert "does not apply" in question.question
+        assert question.suggested_contact == "admissions office"
+        # Nothing else published a deadline, so this one blocks a decision.
+        assert question.blocking is True
+        # And the refused claim is still there as evidence, not deleted.
+        assert any(c.claim_type.value == "admission_deadline" for c in result.claims)

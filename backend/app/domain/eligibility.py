@@ -29,12 +29,34 @@ from app.schemas.result import RequirementCheck
 IELTS_SUBSKILLS = ("listening", "reading", "writing", "speaking")
 
 
+@dataclass(frozen=True, slots=True)
+class OutOfScopeClaim:
+    """Evidence the assessment declined because its page is about something else.
+
+    V2-23 stopped using such a claim as the answer. On its own that is a silent
+    refusal: the requirement simply goes unanswered and the applicant is never
+    told a page was set aside, or why. This carries the refusal out so it can be
+    said out loud.
+    """
+
+    claim_type: ClaimType
+    source_url: str
+    #: In :meth:`ClaimScope.explain`'s words — which dimensions differ.
+    reason: str
+    #: True when nothing else answered this requirement. A requirement another
+    #: page answered is not a blocker; this one is.
+    unanswered: bool
+
+
 @dataclass
 class EligibilityOutcome:
     status: EligibilityStatus
     checks: list[RequirementCheck] = field(default_factory=list)
     hard_filter_failures: list[str] = field(default_factory=list)
     missing_prerequisites: list[str] = field(default_factory=list)
+    #: Claims set aside for scope, with the reason. Never a verdict about the
+    #: university — only about what this run is entitled to say.
+    out_of_scope: list[OutOfScopeClaim] = field(default_factory=list)
 
 
 def requested_scope(claims: list[Claim]) -> RequestedScope:
@@ -67,6 +89,28 @@ def _scope_verdict(claim: Claim, requested: RequestedScope) -> Verdict:
     if claim.scope is None:
         return Verdict.UNKNOWN
     return claim.scope.covers(requested)
+
+
+def out_of_scope_claims(claims: list[Claim], requested: RequestedScope) -> list[OutOfScopeClaim]:
+    """Which claims the assessment declined, and whether anything replaced them."""
+    declined: list[OutOfScopeClaim] = []
+    for claim in claims:
+        if claim.scope is None or claim.scope.covers(requested) is not Verdict.NO:
+            continue
+        usable = any(
+            other.claim_type == claim.claim_type
+            and (other.scope is None or other.scope.covers(requested) is not Verdict.NO)
+            for other in claims
+        )
+        declined.append(
+            OutOfScopeClaim(
+                claim_type=claim.claim_type,
+                source_url=claim.source_url,
+                reason=claim.scope.explain(requested),
+                unanswered=not usable,
+            )
+        )
+    return declined
 
 
 def _confirmed(claim: Claim | None, requested: RequestedScope | None = None) -> bool:
@@ -348,7 +392,9 @@ def evaluate_program(
             )
         )
 
-    return _summarise(checks)
+    outcome = _summarise(checks)
+    outcome.out_of_scope = out_of_scope_claims(claims, requested)
+    return outcome
 
 
 def _english_checks(claims: list[Claim], profile: ApplicantProfileIn) -> list[RequirementCheck]:

@@ -266,3 +266,58 @@ class TestScopeGovernsWhatMayAnswer:
             C("ielts_min_overall", 6.5, intake="spring 2028"),
         ]
         assert requested_scope(claims).intake is None
+
+
+class TestARefusalIsCarriedOut:
+    """V2-24 — the assessment says which evidence it declined, and why."""
+
+    def test_a_declined_claim_is_reported_with_its_page_and_reason(self, profile):
+        outcome = evaluate_program(
+            profile,
+            [
+                C(
+                    "admission_deadline",
+                    "2026-01-15",
+                    intake="fall 2027",
+                    url="https://example.edu/2026-deadlines",
+                    scope=ClaimScope(intake="Fall 2026"),
+                )
+            ],
+            today=TODAY,
+        )
+        assert len(outcome.out_of_scope) == 1
+        declined = outcome.out_of_scope[0]
+        assert declined.source_url == "https://example.edu/2026-deadlines"
+        assert "does not apply" in declined.reason
+        # Nothing else published a deadline, so the requirement is unanswered.
+        assert declined.unanswered is True
+
+    def test_a_requirement_another_page_answered_is_not_left_unanswered(self, profile):
+        outcome = evaluate_program(
+            profile,
+            [
+                C(
+                    "admission_deadline",
+                    "2026-01-15",
+                    intake="fall 2027",
+                    scope=ClaimScope(intake="Fall 2026"),
+                ),
+                C(
+                    "admission_deadline",
+                    "2027-01-15",
+                    intake="fall 2027",
+                    url="https://example.edu/2027-deadlines",
+                    scope=ClaimScope(intake="fall 2027"),
+                ),
+            ],
+            today=TODAY,
+        )
+        assert [d.unanswered for d in outcome.out_of_scope] == [False]
+
+    def test_nothing_is_reported_when_nothing_was_declined(self, profile):
+        outcome = evaluate_program(
+            profile,
+            [C("ielts_min_overall", 6.5, intake="fall 2027", scope=ClaimScope(intake="fall 2027"))],
+            today=TODAY,
+        )
+        assert outcome.out_of_scope == []
