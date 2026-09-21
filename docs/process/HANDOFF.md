@@ -21,7 +21,7 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
-**V2-15 — university internal search detection (in-progress).** V2-10 … V2-14 are committed. V2-01 was accepted 2026-09-21 and its record is below.
+**V2-16 — discovery fusion and provenance (in-progress).** V2-10 … V2-15 are committed. V2-01 was accepted 2026-09-21 and its record is below.
 Owner explicitly prioritizes the new workstream. V2-01 follows this documentation commit in a task branch from this predecessor (explicit branch exception). Goal: measure current research/discovery quality before architecture changes.
 
 
@@ -416,6 +416,30 @@ Scope — `backend/app/adapters/search/site_search.py` and `tests/test_site_sear
 Detection returns candidates. Fetching them stays with `Fetcher`, so robots, rate limits, the PII guard
 and SSRF protection are untouched. Fixtures are synthetic and labelled as such — no captured page from
 a real university is committed pretending to be one.
+
+Write-ahead (claude-opus-5, 2026-09-21, V2-16): **starting V2-16 — fusion and provenance**, per
+`02_EXECUTION_PLAN.md` Phase 1: "merge search/sitemap/registry/site-search results with source
+attribution". This is the piece that makes the previous five useful.
+
+The design decision worth recording: **fusion is by rank, not by score.** A BM25 score, a sitemap
+position and a registry entry's confidence are not on one scale, and adding or averaging them produces
+a number with no meaning that would nonetheless order the list. Reciprocal Rank Fusion uses only each
+generator's own ordering, needs no calibration between sources, and degrades sensibly when one
+generator is missing — which matters here, because `web_search` is absent until the owner picks a
+provider and `site_search` is absent for any site that has no search.
+
+Scope — `backend/app/adapters/search/fusion.py` and `tests/test_fusion.py`:
+- `Generator` (registry, manual seed, cache, sitemap, catalogue walker, site search, web search) with an
+  explicit weight table: a curated registry entry is better evidence than a web result, and saying so
+  in a named constant is better than burying it in an ordering.
+- `SourcedCandidate` / `FusedCandidate`, where the fused row keeps **every** generator that found it and
+  the rank each gave it. Agreement between independent generators is the most useful signal fusion
+  produces and it must survive into the output, not be collapsed into one number.
+- `fuse(streams, *, top_k)`, deduplicating on `canonical_url` so the same page from three generators is
+  one row with three attributions.
+
+No generator is invented: fusion consumes what already exists and what V2-13/V2-15 produce. Nothing is
+wired into `runner.py` in this step.
 
 V2-15 is implemented and green (§6). Detection only: nothing fetches a detected surface yet, and
 `Fetcher` remains the only thing that touches the network.
