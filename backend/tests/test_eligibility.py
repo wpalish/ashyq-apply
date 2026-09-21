@@ -321,3 +321,61 @@ class TestARefusalIsCarriedOut:
             today=TODAY,
         )
         assert outcome.out_of_scope == []
+
+
+class TestARequirementSaysWhoItIsFor:
+    """Plan V2-30 — the visible half of scope.
+
+    Phase 3's question in one line: does this exact rule apply to this exact
+    applicant. A number alone cannot answer it; a number with "published for
+    international applicants, Fall 2027" beside it can.
+    """
+
+    def test_a_scoped_requirement_says_so_in_the_page_s_own_terms(self, profile):
+        outcome = evaluate_program(
+            profile,
+            [
+                C(
+                    "ielts_min_overall",
+                    9.0,
+                    intake="fall 2027",
+                    scope=ClaimScope(population="international", intake="fall 2027"),
+                )
+            ],
+            today=TODAY,
+        )
+        check = next(c for c in outcome.checks if c.requirement == "IELTS overall")
+        assert check.published_scope == "published for intake fall 2027, population international"
+
+    def test_a_page_that_said_nothing_says_nothing_here(self, profile):
+        """Silence is not a phrase to invent; the evidence carries the detail."""
+        outcome = evaluate_program(
+            profile,
+            [C("ielts_min_overall", 9.0, intake="fall 2027", scope=ClaimScope())],
+            today=TODAY,
+        )
+        check = next(c for c in outcome.checks if c.requirement == "IELTS overall")
+        assert check.published_scope == ""
+
+    def test_a_claim_predating_scope_says_nothing_rather_than_guessing(self, profile):
+        outcome = evaluate_program(
+            profile, [C("ielts_min_overall", 9.0, intake="fall 2027")], today=TODAY
+        )
+        check = next(c for c in outcome.checks if c.requirement == "IELTS overall")
+        assert check.published_scope == ""
+
+    def test_a_deadline_carries_its_scope_too(self, profile):
+        outcome = evaluate_program(
+            profile,
+            [
+                C(
+                    "admission_deadline",
+                    "2027-01-15",
+                    intake="fall 2027",
+                    scope=ClaimScope(intake="fall 2027"),
+                )
+            ],
+            today=TODAY,
+        )
+        check = next(c for c in outcome.checks if c.requirement == "Admission deadline")
+        assert check.published_scope == "published for intake fall 2027"

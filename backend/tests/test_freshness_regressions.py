@@ -475,6 +475,11 @@ class TestSupersededExcluded:
 #: ``_canonical_demo_dump`` machinery below. GREEN on baseline by
 #: construction; the developer's T32 changes must keep the demo pipeline
 #: byte-identical under the same masking.
+#: Re-captured a fifth time, for plan V2-30: additive again, 121 added lines
+#: and 0 removed, every one of them a `published_scope` on a requirement check
+#: (74 "published for intake Fall 2027", 6 of those also naming international
+#: applicants, the rest empty because the page said nothing).
+#:
 #: Re-captured a fourth time, for plan V2-23's missing kind. **Not additive**,
 #: and the first re-capture that is not: three fields change on the demo's one
 #: conflict — `kind` (true_conflict -> more_specific_source), the drafted
@@ -501,7 +506,7 @@ class TestSupersededExcluded:
 #: changed). That is the whole of the intended change — a claim now records
 #: what its page stated about who it covers — and it is the only reason this
 #: constant has a second value. Anything else that moves it is a regression.
-GOLDEN_DEMO_SHA256 = "cf5be2ec98e8f777e3bc751648fea2c481cbf581191e2cbb23aaef0446aa16d6"
+GOLDEN_DEMO_SHA256 = "d1d7b1768fed37a700a525bd28f70320943af194bf2969bf81452be90a8de880"
 
 #: The golden was captured with the real clock on 2026-09-07, and the baseline
 #: payload embeds that date: ``requirement_checks[*].applicant_value`` and

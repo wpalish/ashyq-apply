@@ -53,6 +53,13 @@ class RequirementCheck(Base):
     is_hard_filter: bool = False
     explanation: str = ""
     claim_ids: list[str] = Field(default_factory=list)
+    #: Who the page publishing this requirement said it is for, in its own
+    #: terms ("published for international applicants, Fall 2027"). Empty when
+    #: the page said nothing and when no scope was read at all — those are
+    #: different facts, and the difference belongs in the evidence, not here:
+    #: this line exists so an applicant can see *whether* a rule is about them
+    #: without opening the source.
+    published_scope: str = ""
 
 
 class CoverageBreakdown(Base):

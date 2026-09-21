@@ -91,6 +91,24 @@ def _scope_verdict(claim: Claim, requested: RequestedScope) -> Verdict:
     return claim.scope.covers(requested)
 
 
+def _published_scope(claim: Claim | None) -> str:
+    """What the claim's page said about who its rule is for, for display.
+
+    Empty for a claim with no recorded scope and for one whose page stated
+    nothing: both mean "this line can tell you nothing", and inventing a
+    phrase for either would be the product asserting where it should show.
+    """
+    if claim is None or claim.scope is None:
+        return ""
+    stated = claim.scope.stated()
+    if not stated:
+        return ""
+    parts = [
+        f"{dimension.replace('_', ' ')} {getattr(claim.scope, dimension)}" for dimension in stated
+    ]
+    return "published for " + ", ".join(parts)
+
+
 def out_of_scope_claims(claims: list[Claim], requested: RequestedScope) -> list[OutOfScopeClaim]:
     """Which claims the assessment declined, and whether anything replaced them."""
     declined: list[OutOfScopeClaim] = []
@@ -192,6 +210,7 @@ def _check_numeric_minimum(
             status=EligibilityStatus.NEEDS_OFFICIAL_CLARIFICATION,
             explanation=f"The published {label} could not be read as a number.",
             claim_ids=[claim.source_url],
+            published_scope=_published_scope(claim),
         )
     if applicant_value is None:
         return RequirementCheck(
@@ -203,6 +222,7 @@ def _check_numeric_minimum(
                 f"{label} value yet. Add it to resolve this check."
             ),
             claim_ids=[claim.source_url],
+            published_scope=_published_scope(claim),
         )
     ok = applicant_value >= published if higher_is_better else applicant_value <= published
     return RequirementCheck(
@@ -210,6 +230,7 @@ def _check_numeric_minimum(
         published_value=published,
         applicant_value=applicant_value,
         status=EligibilityStatus.MET if ok else EligibilityStatus.GAP,
+        published_scope=_published_scope(claim),
         is_hard_filter=hard and _confirmed(claim, requested) and not ok,
         explanation=(
             f"Published minimum {published:g}; applicant {applicant_value:g}."
@@ -249,6 +270,7 @@ def evaluate_program(
                 is_hard_filter=True,
                 explanation="The programme officially states it is not accepting applications for this intake.",
                 claim_ids=[intake_claim.source_url],
+                published_scope=_published_scope(intake_claim),
             )
         )
 
@@ -264,6 +286,7 @@ def evaluate_program(
                     status=EligibilityStatus.NEEDS_OFFICIAL_CLARIFICATION,
                     explanation="A deadline was published but could not be parsed into a date.",
                     claim_ids=[deadline_claim.source_url],
+                    published_scope=_published_scope(deadline_claim),
                 )
             )
         else:
@@ -275,6 +298,7 @@ def evaluate_program(
                     applicant_value=today.isoformat(),
                     status=EligibilityStatus.GAP if passed else EligibilityStatus.MET,
                     is_hard_filter=passed and _confirmed(deadline_claim, requested),
+                    published_scope=_published_scope(deadline_claim),
                     explanation=(
                         f"The published deadline {parsed.isoformat()} has passed."
                         if passed
