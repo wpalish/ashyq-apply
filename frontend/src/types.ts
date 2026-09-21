@@ -149,6 +149,11 @@ export interface Scholarship {
   renewal_requirements: string[];
   min_test_scores: Record<string, number>;
   stackable: Tristate;
+  /** Whether an admission offer must be held before applying. "unknown" is
+   *  the common answer: most award pages never say. */
+  offer_required: Tristate;
+  /** Whether the award is decided on demonstrated financial need. */
+  financial_need_required: Tristate;
   published_count: number | null;
 
   // Availability, decomposed. A missing deadline is not availability.
