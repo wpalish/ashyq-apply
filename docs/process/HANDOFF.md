@@ -21,7 +21,7 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
-**V2-16c — fuse the hop into retrieval and re-measure (in-progress).** Phase 1 retrieval was measured live: The owner approved the §6 exception and authorised the live probe; the Exa adapter works and the retrieval ceiling moved **1/10 → 9/10**. V2-01 was accepted 2026-09-21 and its record is below.
+**V2-16d — hop as coverage, appended not interleaved (in-progress).** Phase 1 so far is `ready-for-review (PR #15)`, which supersedes draft PR #14. Phase 1 retrieval was measured live: The owner approved the §6 exception and authorised the live probe; the Exa adapter works and the retrieval ceiling moved **1/10 → 9/10**. V2-01 was accepted 2026-09-21 and its record is below.
 Owner explicitly prioritizes the new workstream. V2-01 follows this documentation commit in a task branch from this predecessor (explicit branch exception). Goal: measure current research/discovery quality before architecture changes.
 
 
@@ -494,6 +494,23 @@ Scope:
 
 The key is never read by this session, never written to a file, and never logged — only
 `EXA_API_KEY` / `UNIMATCH_EXA_API_KEY` at runtime.
+
+Write-ahead (claude-opus-5, 2026-09-21, V2-16d): **PR #15 is open** for everything up to here
+(https://github.com/wpalish/ashyq-apply/pull/15). It supersedes draft #14, which this branch contains.
+
+Now step 1 of the three V2-16c left: **hop candidates are appended after the search list, never
+interleaved with it.** The measured reason is in `SEARCH_PROBE.md`: fusing them as equals cost a whole
+case and pushed six correct pages down, because a navigation list is layout, not relevance.
+
+The rule this encodes: a **coverage** generator may add pages a ranked generator never found, and may
+never displace one it placed. Agreement is still kept — a page both generators found keeps both
+attributions and its search position.
+
+Acceptance, stated before the run so it cannot be rationalised afterwards:
+- the ceiling must reach **10/10**, or at minimum rise above 9/10; and
+- **no case may move down** from its search-only position (NTU #1, Vienna #1, Delft #2, UBC #2,
+  Groningen #3, HKU #5, Warsaw #1, Aalto #19, Toronto #19).
+If either fails, this does not ship either, exactly as V2-16c did not.
 
 V2-16c is **measured and deliberately not shipped**: the hop as an equal generator makes the benchmark
 worse. The mechanism is committed, tested and off by default; the reason it is off is written down with
