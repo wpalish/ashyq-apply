@@ -173,3 +173,11 @@ class TestTheRegistryResolvesItself:
         assert answer.identity is not None
         assert answer.identity.name == "KAIST"
         assert answer.evidence == "kaist.ac.kr"
+
+
+def test_a_registry_entry_with_no_url_identifies_nothing() -> None:
+    """A key invented from a name would hide the data error, not fix it."""
+    from app.adapters.discovery.registry_identities import _identities
+
+    assert _identities([{"name": "Somewhere", "country": "Nowhere"}]) == []
+    assert len(_identities([{"name": "S", "homepage": "https://s.example/"}])) == 1
