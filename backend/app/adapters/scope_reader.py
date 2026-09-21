@@ -59,6 +59,16 @@ _NEGATION = re.compile(
 )
 
 _ACADEMIC_YEAR = re.compile(r"\b(20\d{2})\s*[/–—-]\s*(20\d{2}|\d{2})\b")
+#: A year range scopes the page only when something says it is *the* year.
+#: A bare one is usually attached to a single figure — Toronto's demo award
+#: says it is "worth CAD 89,000 per year for 2024/25" on a 2026/27 page, and
+#: without this the deadline, the coverage and the renewal rules on that page
+#: all came back scoped to 2024/25. The same mistake as a deadline read as an
+#: intake, one dimension over.
+_YEAR_MARKER = re.compile(
+    r"\b(?:academic\s+(?:year|session)|study\s+year|year\s+of\s+entry|entry|intake|admission)\b",
+    re.IGNORECASE,
+)
 
 _SEASONS = {
     "fall": "Fall",
@@ -183,7 +193,7 @@ def _single(values: Iterable[str]) -> str | None:
 def _academic_years(text: str) -> list[str]:
     found = []
     for m in _ACADEMIC_YEAR.finditer(text):
-        if _negated(text, m.start()):
+        if _negated(text, m.start()) or not _has_marker(text, m.start(), m.end(), _YEAR_MARKER):
             continue
         start, end = m.group(1), m.group(2)
         found.append(f"{start}/{end[-2:]}")
@@ -207,10 +217,12 @@ def _intakes(text: str) -> list[str]:
     return found
 
 
-def _has_marker(text: str, start: int, end: int) -> bool:
-    """Whether an intake word stands beside this month-and-year."""
+def _has_marker(
+    text: str, start: int, end: int, marker: re.Pattern[str] = _INTAKE_MARKER
+) -> bool:
+    """Whether a scoping word stands beside this match."""
     window = text[max(0, start - _MARKER_RADIUS) : end + _MARKER_RADIUS]
-    return bool(_INTAKE_MARKER.search(window))
+    return bool(marker.search(window))
 
 
 def _term(word: str) -> str:

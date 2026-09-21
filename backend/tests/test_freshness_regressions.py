@@ -475,6 +475,11 @@ class TestSupersededExcluded:
 #: ``_canonical_demo_dump`` machinery below. GREEN on baseline by
 #: construction; the developer's T32 changes must keep the demo pipeline
 #: byte-identical under the same masking.
+#: Re-captured a second time for V2-25, under the same proof: 0 removed lines
+#: of 2651 changed, every addition a key inside a claim's `scope`, on the four
+#: adapters that did not read scope until then. No result, bucket, check or
+#: value moved — only evidence gained a statement of who it is about.
+#:
 #: Re-captured once, for V2-22, from the same frozen clock and the same
 #: masking. The drift was proven additive before the hash moved: every line of
 #: `diff old new` is an addition, every addition is a key inside a claim's new
@@ -482,7 +487,7 @@ class TestSupersededExcluded:
 #: changed). That is the whole of the intended change — a claim now records
 #: what its page stated about who it covers — and it is the only reason this
 #: constant has a second value. Anything else that moves it is a regression.
-GOLDEN_DEMO_SHA256 = "54f7d7fa3f777d244bddeb17371eb9834c36ba37be1084dffe0c34dec850c01a"
+GOLDEN_DEMO_SHA256 = "0e99e155d98d462b7d48fe695049c2fd450d1410a83d949447142a197e3d488f"
 
 #: The golden was captured with the real clock on 2026-09-07, and the baseline
 #: payload embeds that date: ``requirement_checks[*].applicant_value`` and

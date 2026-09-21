@@ -13,6 +13,7 @@ from app.adapters.extraction import (
 )
 from app.adapters.fetching import Fetcher
 from app.adapters.page_classifier import classify_page
+from app.adapters.scope_reader import read_scope
 from app.domain.enums import ClaimType, CostCategory, SourceSpecificity
 from app.schemas.money import Money
 from app.schemas.result import CostBreakdown
@@ -91,6 +92,9 @@ class WebCostAdapter:
             if candidate.costs_url.startswith("fixture://")
             else ("pdf_rule" if res.is_pdf else "html_rule"),
             accessed_at=res.fetched_at,
+            # A fee figure's scope is usually its fee status: "home" and
+            # "overseas" are different numbers on the same page.
+            scope=read_scope(text, title=html_title(res.text) if not res.is_pdf else ""),
         )
         claims = extract_costs(text, builder)
         out.claims.extend(claims)

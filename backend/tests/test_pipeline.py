@@ -462,17 +462,20 @@ class TestAScopeRefusalIsSaidOutLoud:
 
         # Rewrite one persisted result's deadline claim so its page states an
         # intake nobody asked about, then re-assess exactly as the pipeline does.
-        target = (
-            session.query(ProgramResultRow)
-            .filter(ProgramResultRow.run_id == run.id)
-            .order_by(ProgramResultRow.id)
-            .first()
-        )
-        assert target is not None
+        # Deliberately not "the first row": ids are random, and not every demo
+        # result carries a deadline claim, so picking arbitrarily made this
+        # test pass alone and fail in the full suite.
+        rows = session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run.id).all()
+        candidates = [
+            row
+            for row in rows
+            if any(c["claim_type"] == "admission_deadline" for c in row.payload["claims"])
+        ]
+        assert candidates, "no demo result carries a deadline claim"
+        target = min(candidates, key=lambda row: row.payload["university"])
         payload = dict(target.payload)
         claims = [dict(c) for c in payload["claims"]]
         deadlines = [c for c in claims if c["claim_type"] == "admission_deadline"]
-        assert deadlines, "the demo result should carry a deadline claim"
         for claim in deadlines:
             claim["scope"] = {"intake": "Spring 2019"}
         payload["claims"] = claims

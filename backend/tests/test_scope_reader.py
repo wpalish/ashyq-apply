@@ -136,3 +136,16 @@ def test_negation_governs_every_dimension_not_just_population() -> None:
     assert read_scope("Admission is not open for Fall 2026.").intake is None
     assert read_scope("The programme does not start in September 2026.").intake is None
     assert read_scope("Not applicable to the 2027 Spring intake.").intake is None
+
+
+def test_a_year_beside_a_figure_is_not_the_page_s_year() -> None:
+    """Toronto's demo award, in its own words.
+
+    The page is a 2026/27 one that happens to quote a 2024/25 value. Reading a
+    bare year range as the page's scope put the deadline, the coverage and the
+    renewal rules of that award under 2024/25 — the deadline-as-intake mistake,
+    one dimension over.
+    """
+    assert read_scope("The award is worth CAD 89,000 per year for 2024/25.").academic_year is None
+    assert read_scope("Fees for the academic year 2026/27.").academic_year == "2026/27"
+    assert read_scope("Entry in 2026/27 follows these rules.").academic_year == "2026/27"
