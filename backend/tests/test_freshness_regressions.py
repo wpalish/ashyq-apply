@@ -475,6 +475,12 @@ class TestSupersededExcluded:
 #: ``_canonical_demo_dump`` machinery below. GREEN on baseline by
 #: construction; the developer's T32 changes must keep the demo pipeline
 #: byte-identical under the same masking.
+#: Re-captured a sixth time, for Phase 3 §6's offer/need decisions: additive,
+#: 0 removed. Every award gains two "unknown" fields, and **one real claim
+#: appears** — NUS's Financial Aid page says the award "depends on an
+#: assessment of demonstrated financial need", so `scholarship_need_based` is
+#: recorded for it. A fact the product previously dropped.
+#:
 #: Re-captured a fifth time, for plan V2-30: additive again, 121 added lines
 #: and 0 removed, every one of them a `published_scope` on a requirement check
 #: (74 "published for intake Fall 2027", 6 of those also naming international
@@ -506,7 +512,7 @@ class TestSupersededExcluded:
 #: changed). That is the whole of the intended change — a claim now records
 #: what its page stated about who it covers — and it is the only reason this
 #: constant has a second value. Anything else that moves it is a regression.
-GOLDEN_DEMO_SHA256 = "d1d7b1768fed37a700a525bd28f70320943af194bf2969bf81452be90a8de880"
+GOLDEN_DEMO_SHA256 = "b14c5943cb9f2fee9cc09ae4293dd2c4592611f359a9c61e6562f47273446c10"
 
 #: The golden was captured with the real clock on 2026-09-07, and the baseline
 #: payload embeds that date: ``requirement_checks[*].applicant_value`` and

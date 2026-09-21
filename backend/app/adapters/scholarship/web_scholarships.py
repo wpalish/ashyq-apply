@@ -84,6 +84,36 @@ _TYPE_HINTS = (
 )
 
 
+#: "You must hold an offer" in the shapes award pages actually write it.
+_OFFER_REQUIRED = re.compile(
+    r"(must|need to|required to)\s+(hold|have|have received|have been given)\s+an?\s+"
+    r"(offer|admission offer|letter of (admission|offer))"
+    r"|only\s+(admitted|offer[- ]holding)\s+(students|applicants)"
+    r"|open only to (admitted|offer[- ]holding)",
+    re.IGNORECASE,
+)
+#: And the explicit denial, which is just as decisive and much rarer.
+_OFFER_NOT_REQUIRED = re.compile(
+    r"(no|without an?)\s+(admission\s+)?offer\s+(is\s+)?(required|needed)"
+    r"|you do not need an? (admission )?offer"
+    r"|apply before (you receive|receiving) an offer",
+    re.IGNORECASE,
+)
+_NEED_BASED = re.compile(
+    r"\bneed[- ]based\b|\bdemonstrated financial need\b|\bmeans[- ]tested\b"
+    r"|awarded on the basis of financial need",
+    re.IGNORECASE,
+)
+#: Only an explicit "merit only" denial. A page that says "merit-based" and
+#: nothing else has not said need is irrelevant — many awards are both.
+_MERIT_ONLY = re.compile(
+    r"regardless of (financial need|income)"
+    r"|financial need is not (considered|taken into account)"
+    r"|no (proof|evidence) of financial need",
+    re.IGNORECASE,
+)
+
+
 class WebScholarshipAdapter:
     name = "web-scholarships"
 
@@ -373,6 +403,33 @@ class WebScholarshipAdapter:
                 ClaimType.SCHOLARSHIP_STACKABLE,
                 sch.stackable,
                 _line_with(text, "combined") or _line_with(text, "held together"),
+            )
+
+        # --- offer required, and need-based ------------------------------
+        # Both are decisions the guide lists separately, and both are refused
+        # unless the page says so outright: an applicant who assumes an offer
+        # is needed applies too late, and one who assumes it is not may never
+        # apply at all.
+        if _OFFER_REQUIRED.search(low):
+            sch.offer_required = "yes"
+        elif _OFFER_NOT_REQUIRED.search(low):
+            sch.offer_required = "no"
+        if sch.offer_required != "unknown":
+            builder.add(
+                ClaimType.SCHOLARSHIP_OFFER_REQUIRED,
+                sch.offer_required,
+                _line_with(text, "offer") or _line_with(text, "admitted"),
+            )
+
+        if _NEED_BASED.search(low):
+            sch.financial_need_required = "yes"
+        elif _MERIT_ONLY.search(low):
+            sch.financial_need_required = "no"
+        if sch.financial_need_required != "unknown":
+            builder.add(
+                ClaimType.SCHOLARSHIP_NEED_BASED,
+                sch.financial_need_required,
+                _line_with(text, "need") or _line_with(text, "merit"),
             )
 
         cnt = re.search(r"(\d+)\s+awards? are offered", low)

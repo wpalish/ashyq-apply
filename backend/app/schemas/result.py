@@ -110,6 +110,12 @@ class Scholarship(Base):
     renewal_requirements: list[str] = Field(default_factory=list)
     min_test_scores: dict[str, float] = Field(default_factory=dict)
     stackable: Tristate = "unknown"
+    #: Whether an admission offer must be held first. "unknown" is the honest
+    #: default: most award pages never say, and assuming either answer sends
+    #: an applicant to the wrong queue at the wrong time.
+    offer_required: Tristate = "unknown"
+    #: Whether the award is decided on demonstrated financial need.
+    financial_need_required: Tristate = "unknown"
     published_count: int | None = Field(
         default=None, description="Only set when officially published"
     )

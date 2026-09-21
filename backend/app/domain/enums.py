@@ -157,6 +157,12 @@ class ClaimType(StrEnum):
     SCHOLARSHIP_RENEWAL_REQUIREMENT = "scholarship_renewal_requirement"
     SCHOLARSHIP_MIN_TEST_SCORE = "scholarship_min_test_score"
     SCHOLARSHIP_STACKABLE = "scholarship_stackable"
+    #: An admission offer must be held before the award can be applied for or
+    #: received. Practically decisive: it changes the order of an applicant's
+    #: year, and the phase guide lists it as its own decision.
+    SCHOLARSHIP_OFFER_REQUIRED = "scholarship_offer_required"
+    #: The award is decided on demonstrated financial need.
+    SCHOLARSHIP_NEED_BASED = "scholarship_need_based"
     SCHOLARSHIP_COUNT = "scholarship_count"
     SCHOLARSHIP_DURATION_YEARS = "scholarship_duration_years"
 
