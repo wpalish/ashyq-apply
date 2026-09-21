@@ -537,6 +537,35 @@ and the log says so rather than letting the numbers look comparable.
 Plan items still open in Phase 2: **V2-20 (SourceSnapshot / ClaimVersion)**, **V2-22 (entity
 resolution)**, **V2-24 (change detection)**. From here I use the plan's numbers.
 
+**MEASURED 2026-09-21, live, run 35655438326** (branch, Exa, 60 fetches / 90s per case, the frozen
+baseline's own budgets). Honest reading, headline first:
+
+| metric | certified capture | this run |
+|---|---|---|
+| `wrong_scope_claim_rate` | 5/5 | **3/3 — unchanged at 100%** |
+| `programme_page_recall` | 1/10 | **3/10** |
+| `programme_page_precision` | 1/9 | 3/18 |
+| `recall_at_5/10/20` | 1/10 | 1/9 |
+| `primary_source_rate` | 13/13 | 11/11 |
+| `claim_adjudication_rate` | 5/13 | 3/11 |
+
+**The metric all of Phase 2 was built for did not improve.** Not one claim scored a matching scope. The
+denominator shrank; the rate is still 1.0. Retrieval did improve — 1 → 3 exact programme pages — and
+that is Phase 1's effect, invisible on the frozen capture.
+
+A hypothesis, stated as one: `scope_matches` needs the recorded scope to **equal** the label's. V2-22b
+replaced a request-side value that could match by luck (`intake: "fall 2027"` on every claim) with what
+the page actually says, which is usually nothing. That makes the measurement honest and can only leave
+the match rate flat or lower it. Before acting on that, the next step measures *which dimension* fails.
+
+Write-ahead (claude-opus-5, 2026-09-21, **V2-27**): **say which dimension of which claim is wrong.**
+`wrong_scope_claim_rate` has reported a number and never a reason, so every attempt to move it is a
+guess. A new `evaluation/research/scope_report.py` walks the same adjudicable predictions the scorer
+walks and prints, per mismatch: the case, the claim key, the dimension, the label's value, the recorded
+value, and which of three shapes it is — **silent** (the page did not say), **differs** (it said
+something else), or **unrecorded** (nobody read a scope at all). Evaluation-side only; production never
+reads it. The capture workflow runs it after scoring, so a run explains itself in its own log.
+
 Write-ahead (claude-opus-5, 2026-09-21, **V2-22a**): **institution identity by evidence, not by
 resemblance.** Plan item V2-22 (entity resolution), first half.
 
