@@ -515,6 +515,15 @@ proves it end to end (128 of 173 claims scoped, 45 honestly empty).
    likeliest win: eligibility prose states populations more often than requirements prose does.
 3. Open items unchanged: KAIST's registry seed (owner data task, §7); page-kind as a prefilter concern.
 
+**The live capture now has a button (claude-opus-5, 2026-09-21).** The owner asked whether I could run
+it on his machine; I cannot — this session has no access to it, and `Fetcher` has no network here. So
+the run moved to CI: `.github/workflows/benchmark-capture.yml`, `workflow_dispatch` only, never on push
+(it fetches live university pages). It captures, scores **strictly** against `ground_truth.reviewed.json`,
+prints a certified-vs-this-run table in the log and uploads capture + metrics as an artifact. **It
+commits nothing** — a new baseline is a human decision. Needs one repository secret,
+`UNIMATCH_EXA_API_KEY`; without it the run still completes but measures discovery *without* web search,
+and the log says so rather than letting the numbers look comparable.
+
 **Numbering note (read before the write-aheads below).** My task labels after V2-21 drifted from
 `analysis/v2/02_EXECUTION_PLAN.md`. Mapping, so the plan stays the source of truth:
 
