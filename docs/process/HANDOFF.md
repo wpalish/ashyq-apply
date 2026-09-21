@@ -552,6 +552,21 @@ and the log says so rather than letting the numbers look comparable.
 | V2-23, V2-24 | *(no plan item — use of V2-21)* | acting on scope, and telling the applicant |
 | V2-26 | **V2-23 Conflict model v2** | separating contradiction from different scope |
 
+**Second correction, 2026-09-21 (mine, again).** After reconciling once, I drifted a second time and
+labelled non-plan work `V2-27`…`V2-30` — and the plan's own **V2-30 is "Requirements scope
+verification"** in Phase 3, which I have not touched. To stop this recurring: **work that is not a plan
+item is labelled `EXTRA-n` from here on.** The commits keep the labels they were pushed with (history
+is not rewritten); this table is the map.
+
+| My label | Really | What it was |
+|---|---|---|
+| V2-27 | EXTRA-1 | scope diagnostic: which dimension failed, and why |
+| V2-28 | EXTRA-2 | a programme title read as a title, not a term |
+| V2-29 | EXTRA-3 | an event heading is not a programme |
+| V2-30 | EXTRA-4 | optional prefilter rejection of irrelevant page kinds |
+| V2-24a | **plan V2-24**, first half | material-change classification |
+| V2-20a/b, V2-22a/b | **plan V2-20 / V2-22** | as the plan names them |
+
 Plan items still open in Phase 2: **V2-20 (SourceSnapshot / ClaimVersion)**, **V2-22 (entity
 resolution)**, **V2-24 (change detection)**. From here I use the plan's numbers.
 
