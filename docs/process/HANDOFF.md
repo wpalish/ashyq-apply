@@ -515,6 +515,29 @@ proves it end to end (128 of 173 claims scoped, 45 honestly empty).
    likeliest win: eligibility prose states populations more often than requirements prose does.
 3. Open items unchanged: KAIST's registry seed (owner data task, §7); page-kind as a prefilter concern.
 
+Write-ahead (claude-opus-5, 2026-09-21, V2-26): **a conflict now says what kind of conflict it is.**
+This is a Phase 2 exit criterion in the guide's own words — "conflict reasons distinguish true conflict
+from different scope" — and it is the first thing `ClaimScope` makes possible that nothing else could.
+
+Today two different values of the same claim type are a contradiction, full stop. Often they are not:
+one page publishes the fee for home students and another for overseas students, one is the 2026 cycle
+and one the 2027. Calling that a contradiction teaches the applicant to distrust a correct answer, and
+it is the same mistake as treating silence as agreement — a scope difference read as a disagreement.
+
+Scope, exactly:
+- `ConflictKind` in `app/domain/enums.py`: `TRUE_CONFLICT` plus one `DIFFERENT_<dimension>` per scope
+  dimension the guide names (population, intake, academic year, residency, degree).
+- `app/domain/conflicts.py`: classify each group by comparing the claims' **recorded** scopes. Two
+  claims that both state a dimension and state it differently are not contradicting; they are rules for
+  different people or different years.
+- A non-true conflict **does not stamp its claims `CONFLICTING`**. They are both correct. It stays
+  visible, with its kind and a question worded for what it actually is.
+- Claims with no recorded scope keep today's behaviour exactly: `TRUE_CONFLICT`, stamped as now.
+
+`Conflict.kind` is a new field, so the demo payload gains a key — the demo has exactly one conflict
+(Delft's programme page vs its admissions page, both stating the same intake), so it should classify as
+`TRUE_CONFLICT` and nothing else should move. Additive proof before the hash, as always.
+
 Write-ahead (claude-opus-5, 2026-09-21, V2-25): **the other four claim-producing adapters read scope
 too.** §5 step 4. `web_requirements` has done so since V2-22; `web_scholarships`, `web_costs`,
 `web_documents` and `web_government` still produce claims with no scope at all, which V2-23 then treats
