@@ -606,6 +606,23 @@ value, and which of three shapes it is — **silent** (the page did not say), **
 something else), or **unrecorded** (nobody read a scope at all). Evaluation-side only; production never
 reads it. The capture workflow runs it after scoring, so a run explains itself in its own log.
 
+Write-ahead (claude-opus-5, 2026-09-21, **plan V2-20, exit criterion**): **the evidence questions the
+phase guide says the product must answer.** The guide lists them outright — which evidence supports a
+requirement for a programme and intake; which claims are stale; which are conflicting; which facts are
+still unknown; which claims changed. Every one of them is answerable today only by reading rows by
+hand.
+
+Scope, exactly, in a new `app/domain/evidence_queries.py`: pure functions over a list of claims —
+`supporting`, `stale`, `conflicting`, `unknown_for`, `superseded_history`, `scoped_to` — each returning
+claims, never booleans, so a caller can show the evidence rather than a verdict.
+
+**Deliberately no SQL and no migration.** The obvious alternative is indexed scope columns on
+`claims`, and it would be premature twice over: nothing queries by scope in production yet, and the
+phase guide's own answer to persistent scoped knowledge is the SourceSnapshot/ClaimVersion model that
+V2-20 has only half-built. A pure function over the claims a run already loads answers the guide's
+questions now and prejudges nothing; if a query ever needs an index, these functions say exactly which
+one.
+
 Write-ahead (claude-opus-5, 2026-09-21, **V2-24a**): **tell a real change from a re-render.**
 Plan item V2-24, first half.
 
