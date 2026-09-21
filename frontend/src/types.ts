@@ -108,6 +108,10 @@ export interface RequirementCheck {
   is_hard_filter: boolean;
   explanation: string;
   claim_ids: string[];
+  /** Who the publishing page said the rule is for, in its own terms. Empty
+   *  when the page did not say — which is not the same as "everyone", and is
+   *  why this is shown as a quiet line rather than a badge. */
+  published_scope: string;
 }
 
 export interface CoverageBreakdown {

@@ -97,6 +97,9 @@ function Requirements({ result }: { result: ProgramResult }) {
                 )}
               </div>
               <p className="xs muted" style={{ margin: '3px 0 0' }}>{c.explanation}</p>
+              {c.published_scope && (
+                <p className="xs faint" style={{ margin: '2px 0 0' }}>{c.published_scope}</p>
+              )}
             </dd>
           </div>
         ))}
