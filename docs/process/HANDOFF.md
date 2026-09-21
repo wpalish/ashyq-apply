@@ -21,7 +21,7 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
-**V2-14 — reranker benchmark (in-progress).** V2-10 … V2-13 are committed. V2-01 was accepted 2026-09-21 and its record is below.
+**V2-15 — university internal search detection (in-progress).** V2-10 … V2-14 are committed. V2-01 was accepted 2026-09-21 and its record is below.
 Owner explicitly prioritizes the new workstream. V2-01 follows this documentation commit in a task branch from this predecessor (explicit branch exception). Goal: measure current research/discovery quality before architecture changes.
 
 
@@ -388,6 +388,34 @@ This step therefore delivers the measurement rather than the rerankers: a reprod
 `evaluation/research/ceiling.py` with a CLI, a `RERANKER_CEILING.md` recording the numbers and what
 they license, tests, and a §5/§7 redirect of the roadmap. That is what a benchmark is *for* — V2-01
 spent seven drafts and a human signature making exactly this kind of answer trustworthy.
+
+Write-ahead (claude-opus-5, 2026-09-21, V2-15): **starting V2-15 — detection of a university's own
+public search or catalogue surface**, per `analysis/v2/04_PHASE_1_DISCOVERY_ENGINE.md` §7. Chosen
+because V2-14 proved the gap is retrieval and this is the only retrieval work that needs **no paid
+key**: three cases in the capture retrieved nothing, and several of those sites expose a search their
+own visitors use.
+
+Scope — `backend/app/adapters/search/site_search.py` and `tests/test_site_search.py`:
+- `SiteSearchSurface` (kind, endpoint, query parameter, provenance, evidence, detected-at) and
+  `detect_surfaces(html, base_url, *, network_urls=())` for the §7 families: plain HTML form, JSON
+  endpoint, WordPress REST, Drupal views, Algolia, Elastic/OpenSearch, Solr, GraphQL, custom catalogue.
+- `search_url(surface, query, page)` that builds a request URL with **bounded pagination**.
+
+§7's rules are enforced, not commented:
+- **Passive before active.** A surface seen in a browser network log outranks one inferred from HTML,
+  and detection never probes — it reads what is already in front of it.
+- **Only the site's own endpoints.** An endpoint on another registrable domain is discarded, reusing
+  `same_institution` rather than a second copy.
+- **No credential is ever extracted.** Algolia and Elastic put a search key in page JavaScript. Even
+  though it is a public search-only key, this records `requires_credentials=True` and stores *nothing*,
+  because a key in a repository is a key in a repository. A human decides whether to use those.
+- **No authenticated or administrative surface**, whatever it looks like.
+- Caps for body size and pagination live as named constants, so the bound is visible rather than
+  implicit.
+
+Detection returns candidates. Fetching them stays with `Fetcher`, so robots, rate limits, the PII guard
+and SSRF protection are untouched. Fixtures are synthetic and labelled as such — no captured page from
+a real university is committed pretending to be one.
 
 V2-14 is answered and green (§6), and it **redirects the roadmap**: ranking is not the problem.
 
