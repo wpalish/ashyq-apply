@@ -125,6 +125,26 @@ def scope_mismatches(dataset: Dataset, capture: Capture) -> list[Mismatch]:
     return found
 
 
+def same_programme_under_another_name(mismatches: list[Mismatch]) -> list[Mismatch]:
+    """Programme mismatches where both titles name one programme.
+
+    Reported **beside** the rate, never folded into it. Whether the scorer
+    should compare programme identity instead of programme strings is a change
+    to what the benchmark means, and that is the owner's call — so this
+    produces the evidence for that decision and changes no number.
+    """
+    from app.adapters.search.ontology import titles_name_same_programme
+    from app.domain.programme_identity import Verdict
+
+    return [
+        m
+        for m in mismatches
+        if m.dimension == "programme"
+        and m.recorded is not None
+        and titles_name_same_programme(m.recorded, m.expected) is Verdict.YES
+    ]
+
+
 def summarise(mismatches: list[Mismatch]) -> str:
     if not mismatches:
         return "no scope mismatches: every adjudicable claim matched a label's scope"
@@ -134,6 +154,18 @@ def summarise(mismatches: list[Mismatch]) -> str:
     lines.append("")
     lines.append("by shape:     " + ", ".join(f"{k}={v}" for k, v in sorted(by_shape.items())))
     lines.append("by dimension: " + ", ".join(f"{k}={v}" for k, v in sorted(by_dimension.items())))
+    renamed = same_programme_under_another_name(mismatches)
+    if renamed:
+        lines.append("")
+        lines.append(
+            f"of those, {len(renamed)} name the same programme as the label under a "
+            "different title, by the ontology's own strong aliases:"
+        )
+        lines.extend(f"  {m.case_id}: {m.recorded!r} vs {m.expected!r}" for m in renamed)
+        lines.append(
+            "  (reported, not counted - whether the scorer should compare programme "
+            "identity instead of strings changes what the benchmark means; HANDOFF S7)"
+        )
     return "\n".join(lines)
 
 

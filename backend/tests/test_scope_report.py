@@ -134,3 +134,38 @@ def test_an_unlabelled_prediction_is_not_judged() -> None:
     """The rate only counts known labels; so does this, or it would explain
     a different population of claims than the number describes."""
     assert scope_mismatches(_dataset(SCOPE), _capture(dict(SCOPE), key="tuition")) == []
+
+
+def test_the_same_programme_under_two_titles_is_reported_but_not_counted() -> None:
+    """The distinction that keeps a diagnostic from becoming a thumb on the scale.
+
+    A rename is still a mismatch by the rate's own definition, which compares
+    strings. Saying so beside the number is evidence for a decision; folding
+    it in would be quietly changing what the benchmark measures.
+    """
+    from evaluation.research.scope_report import same_programme_under_another_name
+
+    found = scope_mismatches(
+        _dataset({"university": "Example University", "programme": "Computer Science"}),
+        _capture(
+            {
+                "university": "Example University",
+                "programme": "Bachelor of Computing (Hons) in Computer Science",
+            }
+        ),
+    )
+    assert [m.shape for m in found] == ["differs"], "it is still a mismatch"
+    renamed = same_programme_under_another_name(found)
+    assert len(renamed) == 1
+    text = summarise(found)
+    assert "reported, not counted" in text
+
+
+def test_a_different_field_is_not_reported_as_a_rename() -> None:
+    from evaluation.research.scope_report import same_programme_under_another_name
+
+    found = scope_mismatches(
+        _dataset({"university": "Example University", "programme": "Computer Science"}),
+        _capture({"university": "Example University", "programme": "BSc Data Science"}),
+    )
+    assert same_programme_under_another_name(found) == []

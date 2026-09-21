@@ -30,6 +30,7 @@ from functools import lru_cache
 from pathlib import Path
 
 from app.domain.enums import DegreeLevel
+from app.domain.programme_identity import Verdict
 
 ONTOLOGY_PATH = Path(__file__).resolve().parent / "ontology.json"
 
@@ -129,6 +130,49 @@ def is_equivalent(left: str, right: str) -> bool:
         return True
     left_key, right_key = canonical_field(left), canonical_field(right)
     return left_key is not None and left_key == right_key
+
+
+def fields_named_in(title: str) -> frozenset[str]:
+    """Which canonical fields a programme *title* states outright.
+
+    A title is not a term: "Bachelor of Computing (Hons) in Computer Science"
+    names a field inside a sentence about a degree. Matching is still exact —
+    a strong or localized alias found as a whole phrase — so nothing is
+    inferred from a title merely looking like a field's name.
+
+    Related terms stay out, for the reason ``_alias_index`` gives: resolving
+    through them would let "data science" name computer science.
+    """
+    haystack = f" {_normalize(title)} "
+    return frozenset(key for alias, key in _alias_index().items() if f" {alias} " in haystack)
+
+
+def titles_name_same_programme(left: str, right: str) -> Verdict:
+    """Whether two programme titles name one programme, as far as evidence says.
+
+    Exists because the benchmark compares a label's short name against the
+    full official title a page publishes, and scores them as a wrong-scope
+    claim: NTU's "Bachelor of Computing (Hons) in Computer Science" against a
+    label reading "Computer Science" is the same programme written two ways,
+    while "Bachelor of Science in Mathematical and Computer Sciences" may well
+    be a different degree.
+
+    ``UNKNOWN`` is therefore common and correct. A title naming no field in
+    the vocabulary resolves to nothing rather than to a guess, and two titles
+    naming different fields are refused outright.
+    """
+    if _normalize(left) == _normalize(right):
+        return Verdict.YES
+    left_fields, right_fields = fields_named_in(left), fields_named_in(right)
+    if not left_fields or not right_fields:
+        return Verdict.UNKNOWN
+    if left_fields == right_fields:
+        return Verdict.YES
+    if left_fields.isdisjoint(right_fields):
+        return Verdict.NO
+    # Overlapping but not equal: one title names a field the other does not,
+    # e.g. a joint degree. That is a question for a human, not a match.
+    return Verdict.UNKNOWN
 
 
 def retrieval_candidates(
