@@ -9,8 +9,8 @@ from typing import Any
 from pydantic import JsonValue
 
 from .identities import IdentityMap
-from .mapping import normalize_subject_claims
-from .schema import Capture, Evidence, Prediction, Scope
+from .mapping import evidence_scope, normalize_subject_claims
+from .schema import Capture, Evidence, Prediction
 
 
 def map_predictions(
@@ -32,12 +32,8 @@ def map_predictions(
                 evidence = Evidence(
                     url=source,
                     excerpt=excerpt,
-                    scope=Scope(
-                        university=university,
-                        programme=programme,
-                        degree=degree,
-                        intake=raw.get("intake"),
-                        academic_year=raw.get("academic_year"),
+                    scope=evidence_scope(
+                        raw, university=university, programme=programme, degree=degree
                     ),
                     accessed_on=accessed[:10],
                     source_type="official" if raw.get("official_domain") is True else "unknown",

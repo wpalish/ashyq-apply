@@ -1,0 +1,114 @@
+# A live benchmark capture, on demand.
+#
+# The strict score compares a *frozen snapshot* of one real pipeline run
+# against the certified corpus. Everything Phase 2 built — a claim's scope,
+# refusing a claim about another intake, the questions that refusal produces —
+# landed after the current snapshot was taken, so the numbers cannot move
+# until a new one exists. Taking one needs ordinary internet access, which the
+# agent's container does not have: `Fetcher` pins its own IPs and refuses the
+# proxy, by design.
+#
+# This is that run, on a machine that does have internet. It is manual only:
+# it fetches live university pages, so nobody should trigger it by pushing.
+#
+# It never commits anything. The capture and the metrics come back as an
+# artifact, for a human to read and decide about.
+name: benchmark-capture
+
+on:
+  workflow_dispatch:
+    inputs:
+      case:
+        description: 'One cohort id (groningen, delft, aalto, vienna, warsaw, ubc, toronto, hku, ntu, kaist), or blank for all ten'
+        required: false
+        default: ''
+      seconds_per_case:
+        description: 'Wall-clock budget per university, in seconds'
+        required: false
+        default: '120'
+
+permissions:
+  contents: read
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    # Ten universities at a two-minute budget each, plus install and scoring.
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      # The search provider is part of the pipeline under measurement. With no
+      # key the run still completes — discovery falls back to sitemaps and the
+      # catalogue walker — but it measures a different pipeline, so the step
+      # below says which one it measured.
+      UNIMATCH_SEARCH_PROVIDER: ${{ secrets.UNIMATCH_EXA_API_KEY != '' && 'exa' || 'none' }}
+      UNIMATCH_EXA_API_KEY: ${{ secrets.UNIMATCH_EXA_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: backend/requirements*.txt
+      - run: python -m venv .venv
+      - run: .venv/bin/pip install -r requirements-dev.txt
+
+      - name: Say which pipeline is being measured
+        run: |
+          if [ -n "${{ secrets.UNIMATCH_EXA_API_KEY }}" ]; then
+            echo "search provider: exa (the shipped Phase 1 path)"
+          else
+            echo "search provider: none — no UNIMATCH_EXA_API_KEY secret is set."
+            echo "The capture still runs, but it measures discovery without web search."
+          fi
+
+      - name: Capture
+        run: |
+          .venv/bin/python -m evaluation.research.live \
+            --live \
+            --out evaluation/research/baseline/capture.${{ github.run_id }} \
+            --seconds-per-case ${{ inputs.seconds_per_case }} \
+            ${{ inputs.case && format('--case {0}', inputs.case) || '' }}
+
+      - name: Score it strictly against the certified corpus
+        # Strict: no --allow-drafts. The corpus is human-signed, so a
+        # provisional score would be a step backwards from V2-01.
+        run: |
+          .venv/bin/python -m evaluation.research \
+            --dataset evaluation/research/data/ground_truth.reviewed.json \
+            --capture evaluation/research/baseline/capture.${{ github.run_id }}/capture.json \
+            --out evaluation/research/baseline/metrics.${{ github.run_id }}.json \
+            | tee capture-metrics.txt
+
+      - name: Show what moved
+        # Printed in the log so the numbers are readable without downloading
+        # anything. The comparison a human actually wants is against
+        # metrics.reviewed.json, which is committed.
+        run: |
+          .venv/bin/python - <<'PY'
+          import json, pathlib
+          old = json.loads(pathlib.Path("evaluation/research/baseline/metrics.reviewed.json").read_text())["metrics"]
+          new = json.loads(list(pathlib.Path("evaluation/research/baseline").glob("metrics.*.json"))[-1].read_text())["metrics"]
+          print(f"{'metric':45} {'certified':>14} {'this run':>14}")
+          for key in sorted(set(old) | set(new)):
+              def show(report):
+                  entry = report.get(key)
+                  if not entry:
+                      return "-"
+                  return f"{entry['numerator']}/{entry['denominator']}"
+              before, after = show(old), show(new)
+              flag = "" if before == after else "   <-- moved"
+              print(f"{key:45} {before:>14} {after:>14}{flag}")
+          PY
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: benchmark-capture-${{ github.run_id }}
+          path: |
+            backend/evaluation/research/baseline/capture.${{ github.run_id }}
+            backend/evaluation/research/baseline/metrics.${{ github.run_id }}.json
+            backend/capture-metrics.txt
+          retention-days: 14

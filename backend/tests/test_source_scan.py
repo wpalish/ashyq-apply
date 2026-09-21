@@ -296,6 +296,112 @@ class TestReextractSupersedesAndAppendsAtomically:
         finally:
             check.close()
 
+    def test_a_superseded_claim_records_when_and_by_what(
+        self, pg_worker_env, pg_factory, settings, profile, monkeypatch
+    ):
+        """V2-20b — the two questions history could not answer before.
+
+        Supersession already kept the old row. What it could not say was when
+        the value stopped being current and which value took over.
+        """
+        changed = FetchResult(
+            url="https://example.edu/programme",
+            outcome=FetchOutcome.OK,
+            status_code=200,
+            text=fake_page_body(),
+            content_type="text/html; charset=utf-8",
+            etag='"v2"',
+            content_hash="ab" * 32,
+        )
+        ScriptedFetcher({"https://example.edu/programme": changed}).install(monkeypatch)
+
+        session = pg_factory()
+        try:
+            page = _seed_page(
+                session,
+                "https://example.edu/programme",
+                etag='"v1"',
+                content_hash="cd" * 32,
+                fetched_at=datetime.now(UTC) - timedelta(days=1),
+            )
+            run, result_id, old_claim_rows = _seed_run_result_claims(session, page, profile)
+            _enqueue_reextract(session, run, page, result_id)
+            old_claim_ids = [c.id for c in old_claim_rows]
+            session.commit()
+        finally:
+            session.close()
+
+        assert _drain(settings) == 1
+
+        check = pg_factory()
+        try:
+            olds = check.query(ClaimRow).filter(ClaimRow.id.in_(old_claim_ids)).all()
+            assert olds
+            for old in olds:
+                assert old.superseded_at is not None, "a row that stopped being live must say when"
+                successor = check.get(ClaimRow, old.superseded_by_id)
+                assert successor is not None, "the ielts claim is re-read, so it has a successor"
+                assert successor.claim_type == old.claim_type
+                assert successor.status != "SUPERSEDED"
+                assert successor.id != old.id
+        finally:
+            check.close()
+
+    def test_a_page_that_no_longer_says_it_leaves_no_successor(
+        self, pg_worker_env, pg_factory, settings, profile, monkeypatch
+    ):
+        """V2-20b — an empty successor link is a finding, not a gap.
+
+        The re-extract docstring already calls this the one case that must
+        never be lost: the page was read and no longer states the thing. The
+        old row is superseded with a time and **no** successor, because there
+        is none to point at and inventing one would erase the finding.
+        """
+        emptied = FetchResult(
+            url="https://example.edu/programme",
+            outcome=FetchOutcome.OK,
+            status_code=200,
+            text=(
+                "<html><head><title>Programme</title></head><body><main>"
+                "<h1>MSc Computer Science</h1>"
+                "<p>Entry requirements are being revised and will be "
+                "published later this year.</p>"
+                "</main></body></html>"
+            ),
+            content_type="text/html; charset=utf-8",
+            etag='"v2"',
+            content_hash="ef" * 32,
+        )
+        ScriptedFetcher({"https://example.edu/programme": emptied}).install(monkeypatch)
+
+        session = pg_factory()
+        try:
+            page = _seed_page(
+                session,
+                "https://example.edu/programme",
+                etag='"v1"',
+                content_hash="cd" * 32,
+                fetched_at=datetime.now(UTC) - timedelta(days=1),
+            )
+            run, result_id, old_claim_rows = _seed_run_result_claims(session, page, profile)
+            _enqueue_reextract(session, run, page, result_id)
+            old_claim_ids = [c.id for c in old_claim_rows]
+            session.commit()
+        finally:
+            session.close()
+
+        assert _drain(settings) == 1
+
+        check = pg_factory()
+        try:
+            for old in check.query(ClaimRow).filter(ClaimRow.id.in_(old_claim_ids)).all():
+                assert old.status == "SUPERSEDED"
+                assert old.superseded_at is not None
+                assert old.superseded_by_id is None
+                assert old.payload["normalized_value"] == 6.5, "the old value is still history"
+        finally:
+            check.close()
+
     def test_a_fenced_or_crashed_attempt_writes_neither_side(
         self, pg_worker_env, pg_factory, settings, profile, monkeypatch
     ):

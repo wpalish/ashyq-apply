@@ -21,7 +21,7 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
-**V2-16d — hop as coverage, appended not interleaved (in-progress).** Phase 1 so far is `ready-for-review (PR #15)`, which supersedes draft PR #14. Phase 1 retrieval was measured live: The owner approved the §6 exception and authorised the live probe; the Exa adapter works and the retrieval ceiling moved **1/10 → 9/10**. V2-01 was accepted 2026-09-21 and its record is below.
+**Phase 2 is `ready-for-review (PR #16)`.** PR #15 was merged by the owner on 2026-09-21 at `cba911a`; a merged PR cannot track new work, so everything since is PR #16 from the same branch. **V2-20 (plan numbering) — evidence history: page versions and claim supersession lineage (done).** V2-20a shipped `SourceSnapshot`; V2-20b closes the claim half. See the numbering note in §5. Previously: **conflict model v2 (plan V2-23).** Previously: **V2-25 — all five claim-producing adapters read scope.** Previously: **V2-24 — a scope refusal is said out loud to the applicant.** Previously: **V2-23 — the assessment refuses a claim whose page is about something else.** Previously: **V2-22 — fill a claim's scope from what its page states.** V2-21/V2-21b gave scope a shape and put it on the claim; this fills it, from the page's own words only. Previously: **V2-21b — carry the scope on a claim.** Phase 1 is complete, measured and wired (PR #15); this starts Phase 2 on the failure Phase 1 never touched. Phase 1 so far is `ready-for-review (PR #15)`, which supersedes draft PR #14. Phase 1 retrieval was measured live: The owner approved the §6 exception and authorised the live probe; the Exa adapter works and the retrieval ceiling moved **1/10 → 9/10**. V2-01 was accepted 2026-09-21 and its record is below.
 Owner explicitly prioritizes the new workstream. V2-01 follows this documentation commit in a task branch from this predecessor (explicit branch exception). Goal: measure current research/discovery quality before architecture changes.
 
 
@@ -60,7 +60,7 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
-V2-16c: `discover_candidates` gains an injected `fetch: FetchPage | None` (default `None`, so the hop is **off**) and `hop_entry_points`; the report carries `hop_entry_points` / `hop_candidates`; the probe gains `--hop`. **Measured and not shipped:** fusing the hop as an equal generator moved the ceiling 9/10 → **8/10** and pushed NTU from #1 to #12, UBC #2 → #16, Aalto out of the top 25 entirely. §12 says a discovery change is good only if the benchmark improves, so it stays off. The negative result and the three things to try next are in `SEARCH_PROBE.md`. V2-16b: `app/adapters/search/navigation.py` — `links_from`, `navigation_candidates`, `NavigationLink`, `MAX_LINKS_PER_PAGE`, `DEFAULT_HOP_LIMIT`. One hop through a site's own navigation, emitted as `Generator.CATALOGUE_WALKER` for fusion. **Validated against KAIST's real front page: `content?menu=188` went from unreachable to rank 3.** 21 tests, module at 100%. **MEASURED 2026-09-21, live, 50 queries:** the Phase 1 retrieval path with Exa reaches the signed correct programme page in **9/10** cases, up from **1/10** on the frozen capture. Zero cases retrieve nothing (was 3). Our ranking puts the correct page first in **2**, so a reranker now has **7** cases of headroom where V2-14 measured none — `RERANKER_CEILING.md` is marked superseded for this path and `SEARCH_PROBE.md` carries the new numbers, the per-case table and the two failure shapes. `evaluation/research/search_probe.py` (+ `baseline/search_probe.exa.json`) reproduces it; 14 tests, 100%, none touching the network. V2-10b: `app/adapters/search/exa.py` — `ExaSearchProvider` behind the V2-10 seam. POST `api.exa.ai/search` with `type=auto`, `numResults` (capped at 25), `includeDomains`, `contents.highlights`; every failure becomes `SearchUnavailable`; no retries; response body capped at 1 MiB; the endpoint goes through `network_policy.check_url`. `config.py` gains `exa_api_key: SecretStr` and refuses to start with `exa` selected and no key. 27 tests in `tests/test_exa_provider.py`, module at 100%, none touching the network. **Default is still `UNIMATCH_SEARCH_PROVIDER=none`** pending the §7 decision. V2-17: `app/domain/programme_identity.py` (the rule — `Verdict`, `ProgrammeIdentity`, `IdentityState`, `ScopeState`, `identity_state`, `scope_state`, `applies_to_requested_intake`, `unresolved`, `refuted`, `explain`) and `app/adapters/search/identity.py` (`verify_candidate`, reading the six dimensions from stated evidence only). Identity and scope are separate; `UNKNOWN` is never a match and never a failure; `applies_to_requested_intake` returns a `Verdict`, not a bool. 32 tests in `tests/test_programme_identity.py`, both modules at 100%. V2-16: `app/adapters/search/fusion.py` — `Generator` (seven sources), `GENERATOR_WEIGHTS`, `SourcedCandidate`, `Attribution`, `FusedCandidate` (`agreement`, `best_rank`, `provenance`), `fuse(streams, *, top_k, weights)`. Reciprocal Rank Fusion, so nothing incomparable is ever added; every attribution survives into the output; a candidate filed under the wrong generator is refused. 23 tests in `tests/test_fusion.py`, module at 100%. V2-15: `app/adapters/search/site_search.py` — `detect_surfaces` for the nine §7 families, `SiteSearchSurface` (kind, endpoint, query parameter, provenance, evidence, detected-at), `search_url` with bounded pagination, `MAX_PAGES = 5`, `MAX_RESPONSE_BYTES = 2 MiB`, `NEEDS_CREDENTIALS`. Passive network-log evidence outranks markup inference, off-domain and administrative surfaces are discarded, and a key-bearing surface is flagged with its key deliberately unread. 36 tests in `tests/test_site_search.py`, module at 100%. V2-14: **the reranker comparison was not built, because the measurement says it would measure nothing.** `evaluation/research/ceiling.py` (+ CLI), `baseline/ceiling.reviewed.json` and `RERANKER_CEILING.md` record it: against the certified corpus and the frozen capture, the correct programme page is in the candidate set for **1/10** cases, the current ranking already has that one at position 1, so **headroom for any reranker is 0**. Three cases retrieved nothing at all. 13 tests in `tests/test_reranker_ceiling.py`, module at 100%. V2-13: `app/adapters/search/prefilter.py` (§5 chain over `SearchResult`s, every rejection recorded with its reason) and `retrieval.py` (self-contained BM25, named deterministic signals, `rank_candidates`, `discover_candidates`, `RetrievalReport`). It **reuses** `live_discovery`'s `canonical_url` / `same_institution` / `names_other_degree_level` / `looks_like_catalogue` rather than writing a second copy; one public `is_excluded_path` was added there for the same reason. 29 tests in `tests/test_hybrid_retrieval.py`; package at 100% across all seven modules. V2-12: `app/adapters/search/ontology.json` (versioned `2026-09-21.1`, six field concepts and all four degree levels) and `ontology.py` — `canonical_field`, `is_equivalent`, `retrieval_candidates`, `degree_aliases`, `ontology_version`, `Relation`, `RetrievalCandidate`. Equivalence and retrieval expansion are separate functions returning different things, so a related concept can never come back from the equivalence one. 29 tests in `tests/test_ontology.py`; package still 100%. V2-11: `app/adapters/search/intent.py` — `DiscoveryIntent` (six fields, none of them about the applicant), `from_profile` as the single sanctioned conversion, `queries_for` rendering the §4 families under a bounded `DEFAULT_QUERY_BUDGET = 6`, `QueryPrivacyError`, and `redacted_audit_record`. 27 tests in `tests/test_discovery_intent.py`, one per forbidden item in the spec's list; `app/adapters/search/` is at 100%. Also made `test_a_slow_parse_does_not_block_an_unrelated_request` deterministic — see §9. V2-10: the search seam ships in `backend/app/adapters/search/` — `base.py` (`SearchResult`, `SearchResponse`, the `SearchProvider` Protocol, `SearchError`/`SearchProviderNotConfigured`/`SearchUnavailable`), `fake.py` (offline, corpus-driven, stamps `provider="fake"`), `__init__.py` (`get_search_provider`, `KNOWN_SEARCH_PROVIDERS`), plus `Settings.search_provider` defaulting to `none` with `_validate_search`. 22 tests in `tests/test_search_provider.py`, 100% coverage of the new package. Nothing is wired into discovery: query generation is V2-11 and fusion is V2-16. V2-01: **the corpus is certified.** `ground_truth.reviewed.json` (`2026-09-21.reviewed`) carries `human_verified` + reviewer **Диас** + `2026-09-21` on 10/10 cases, and `metrics.reviewed.json` is the first report in this project produced **without `--allow-drafts`**, `provisional: false`. Acceptance record in `backend/evaluation/research/ACCEPTANCE.md`; two new tests pin the gate (`test_the_reviewed_corpus_is_signed_and_scores_strictly`, and `test_certification_changes_no_measured_value`, which forbids a signature from ever moving a number). The owner's answer also settled the Aalto adjudication in the affirmative; it is recorded as a decision in that case's notes with the reasoning it overrides preserved. Draft7 applies the **owner's first human review of the corpus** — 62/220 known fields, 10/10 identities, two cases changed. Aalto's identity moves from the Finnish tietotekniikka page to the English-taught Computer Engineering major, because the requested scope is an international applicant and the Finnish route is not open to one in English; whether Computer Engineering satisfies a *computer science* request is left open for the reviewer, not asserted, on the same grounds draft2 refused Data Science. HKU gains `programme.faculty = "School of Computing and Data Science"` and its exact degree title, Bachelor of Engineering in Computer Science. Programme precision/recall are unchanged at 1/9 and 1/10 — the Aalto URL move neither gained nor lost a match against the frozen capture. Still 0/10 `human_verified`, because the schema requires a reviewer name and date and no AI may invent either. Draft6 resolves the Delft exact programme identity from the official tudelft.nl page — the last `unknown` of ten, carried since draft2 — taking programme identities to **10/10** at 61/219 known fields and 0/10 human signoffs. One field changes; no label, no frozen artifact and no production file is touched. Its two programme numbers *fall* (precision 1/8→1/9, recall 1/9→1/10) because a tenth answerable case and a ninth judgeable prediction enter the denominators against the same frozen capture: arithmetic, not a retrieval regression, and REVIEW_DRAFT6.md says so in those words. Draft5 is published in `a4cd5b3` (gpt-6-astra) — 61/219 known/total fields, 9 programme identities, 0 human signoffs, NTU qualification and conditional `english_evidence.*` minima plus the Toronto Kazakhstan credential, with separate report/worksheet/VERSIONS row and the replay test parametrised over `.draft5`. It was committed `wip:` because its gates had not finished; claude-opus-5 ran them on 2026-09-20 and they are green (§6), so draft5 is released. Its content is recovered gpt-6-astra work, not a second implementation. `3f7e467` publishes draft4 with exact Aalto CS identity/primary Finnish teaching language and Groningen NIS qualification equivalence/CS mathematics requirement: 56/215 known/total fields, 9 programme identities, 0 human signoffs. Separate metrics and complete human-review worksheet; 57 focused tests. `2f56a46` publishes lossless draft3 document projection (52/212 known/total fields), reversible manifest, separate report and review worksheet; 55 focused tests. `5403630` adds explicit offline award/document identity mapping and replay; `00e107f` keeps unknown policies unanswered, adds the human review worksheet and brings focused coverage to 51 tests. `7356d9e` published draft2: 46/206 known labels, 8/10 exact programme URLs, 0/10 human signoffs; separate replay report with programme precision/recall 1/8 and 27 benchmark tests. Frozen draft1/capture are unchanged. `d917259` integrated all 15 Markdown documents plus original manifest and navigation/task card; pushed. `5d2a3ed` write-ahead V2-01 baton; pushed. All 16 archive entries verified byte-for-byte after transfer; original untracked ZIP removed. 51f9512 pushed schema, offline scoring, bounded live capture, 10 draft cases, 14 tests and container isolation. `a243a46` pushed checkpointed HTTP/PDF counters, candidate ranks and evidence validation. `1187cd0` published direct claim mapping, compact baseline capture/metrics/report and human review queue. `d0a2fb4` fixes JSON type equality; 25 benchmark tests and both full CI matrices pass. Draft PR: https://github.com/wpalish/ashyq-apply/pull/14. Human certification remains outstanding.
+V2-20b: `claims.superseded_at` and `claims.superseded_by_id` (migration `c5d01b7e4f83`). Supersession already kept the old row; what history could not answer was **when** a value stopped being current and **which** value took over. `reextract_page` now writes both, in the same transaction as the status flip — the time is recorded, never inferred later from `updated_at`, which moves for unrelated reasons. The successor is matched on `(claim_type, subject_key)`. **A superseded row with no successor is a finding, not a gap**: it means the page no longer states this at all — the one case the re-extract path exists to preserve — and it is pinned by its own test with a page whose requirements are "being revised". `ON DELETE SET NULL` on the successor link, so a purge can never take a history row with it, verified on PostgreSQL. Deliberately **not** built: a separate `ClaimVersion` table — a claim row already is its version, with `accessed_at` as its start and `superseded_at` as its end, and splitting that would migrate all existing evidence for a query nobody makes yet. V2-20a: `SourceSnapshot` — one row per (page, content hash) with the validators seen alongside it and `first_seen_at` / `last_seen_at`, written by `SourcePage.record` in the same flush so no caller can update a page and forget the version it saw. Metadata only, never a body. A page that reverts to earlier content is **the same content seen again**, not a third version — documented decision, pinned by a test; the intermediate version keeps its own row, so the order of events survives. Migration `a1f3c8d75e29` on `d9c4e7a21b83`: one head before, one head after, exact-inverse downgrade, round-trip and CASCADE verified on **PostgreSQL**. Demo golden unchanged, as predicted — the demo's discovery adapter has no page recorder at all. 9 tests in `tests/test_source_snapshots.py`. V2-26: **a Phase 2 exit criterion is met** — "conflict reasons distinguish true conflict from different scope". `ConflictKind` (true conflict + one per scope dimension: population, residency, intake, academic year, degree) on `Conflict.kind`; `classify_conflict` compares the claims' recorded scopes. Two pages that both state a dimension and state it differently are **not contradicting** — a home fee and an overseas fee are two correct numbers — so such a conflict stays visible with its kind and its claims are **not** stamped `CONFLICTING`, which would have stopped either from ever being used. **Unknown is never rounded into "different"**: a scope nobody recorded stays a true conflict, because a wrongly-dismissed conflict costs the applicant a decision while a wrongly-kept one costs a question. Demo: exactly one added line, `"kind": "true_conflict"` on Delft's programme-vs-admissions disagreement — right answer, both pages state the same intake. 4 tests. V2-25: `web_scholarships`, `web_costs`, `web_documents` and `web_government` read scope too, so no adapter is grandfathered any more. Demo: **127 claims now say `population: international`** — the scholarship gain the write-ahead predicted, and the most expensive wrong answer this product can give is now the one it records a scope for. Government pages come back empty, as predicted and as they should: a post-study-work rule is national. The run **also found a reader bug**: Toronto's award says it is "worth CAD 89,000 per year for 2024/25" on a 2026/27 page, and a bare year range was read as the page's year — putting that award's deadline, coverage and renewal rules under 2024/25. A year now needs a marker beside it (`academic year`, `entry`, `intake`, …), exactly as a month does. Golden re-captured with the same proof: **0 removed lines of 2651 changed**, every addition inside a `scope`; no result, bucket, check or value moved. V2-24: a declined claim becomes a **question the applicant can send to an admissions office**. `OutOfScopeClaim` (type, page, `ClaimScope.explain`'s reason, and whether anything else answered that requirement) rides on `EligibilityOutcome`; `runner._stage_assess` turns each into an `UnresolvedQuestion` on the result — the existing channel, so API, export and frontend needed no new field. `blocking` is true only when nothing else answered that requirement. The refused claim stays in the evidence list; it is set aside, not deleted. Demo byte-identical (nothing is declined there). 4 tests, one of them end to end through `_stage_assess` on a real demo run. V2-23: `app/domain/eligibility.py` **acts** on scope. `requested_scope(claims)` builds what the run asked (the intake only — the academic year on a claim is the *server's* default, not a request, and demanding it made every real page fall to UNKNOWN). Applied inside `_first`/`_confirmed`, so no requirement type can skip it: a page stating a **different** intake is not used as the answer at all (it stays persisted as evidence), a page **silent** on it may inform the assessment but **may not be a hard filter** — an unscoped page is not strong enough to end someone's application — and a page that **says** who it is for outranks one that does not, ahead of specificity. Claims with `scope is None` (pre-V2-22) behave exactly as before, same seam as V2-22b. **Demo: byte-identical**, and that is the result, not luck — every demo page states the requested intake, so the rule bites only where a page says something else or says nothing. 6 tests in `tests/test_eligibility.py`. V2-22b: `evaluation/research/mapping.evidence_scope(raw, ...)` — the capture's evidence scope now comes from the **page**, via the claim's recorded `scope`, with `None` for a dimension the page was silent on. Before this, `live.py` and `map_claims.py` built it from the **request**: `intake` was `"fall 2027"` on all ten cases of the frozen capture because that is what the profile asked, and `academic_year` was the runner's default. The benchmark was comparing a label against our own question — which is why the baseline README could say a scope-match failure is "not five human-confirmed errors" without knowing why. The request-side fallback is kept for a claim with **no** `scope` key (pre-V2-22, which every frozen capture is full of), and re-scoring `baseline/capture.json` is byte-identical — checked. **The measured rate is still 5/5 and cannot move here:** that needs a fresh live capture, and `Fetcher` has no network in this container (§7 owner/CI task). 3 tests in `tests/test_research_mapping.py`. V2-22: `app/adapters/scope_reader.py` — `read_scope(text, *, title="")`, the only thing that fills `Claim.scope`, wired into `web_requirements` and carried by `ClaimBuilder(scope=...)`. It reads five of the nine dimensions (degree, intake, academic_year, population, residency) and **refuses the other four in writing**: university/faculty/programme have a stronger answer in V2-17's identity work, and nationality has no phrase family that can tell "applicants from Kazakhstan" from "applicants from partner universities". Two refusals do the work: silence stays silent, and **ambiguity is silence too** — a page naming both EU/EEA and international applicants is scoped to neither. Demo effect, measured: 128 of 173 demo claims now carry a real scope (`Fall 2027`, 11 of them also `international`), 45 honestly empty. 18 tests in `tests/test_scope_reader.py`, module at **100%**. The golden demo hash was re-captured once, after proving the drift additive (0 removed lines of 1903 changed; every addition a key inside a claim's new `scope`) — see §8 and §9. V2-21b: `Claim.scope: ClaimScope | None`, **no migration** — `ClaimRow.payload` is a JSON column holding the claim whole, so the field lands there by itself; `alembic heads` stays the single `d9c4e7a21b83`. A `@model_serializer` omits the key entirely when no scope was recorded, so every claim written before this field keeps a byte-identical payload — which a golden-hash regression test checks and which caught the change when the field was first added. V2-21: `app/domain/claim_scope.py` — `ClaimScope` and `RequestedScope` over the nine dimensions the spec names, `covers() -> Verdict`, `contradictions`, `gaps`, `narrower_than`, `explain`, `from_mapping`. **Silence is not agreement**: a page that never says who it is for returns `UNKNOWN`, not `YES` — the move that `wrong_scope_claim_rate` 5/5 is made of. 28 tests, module at 100%. V2-13e: **Phase 1 is wired into the live pipeline.** `LiveDiscoveryAdapter._add_search_results` appends web-search programme pages to `selected[PageCategory.PROGRAM_PAGE]` after whatever the sitemap and walker found, using the adapter's own `Fetcher` for the hop. **Dormant unless `UNIMATCH_SEARCH_PROVIDER` is set** — the factory raises on `none` and that is caught, so a deployment without a key runs byte-identically. Proof: the whole pre-existing suite passes unchanged. A guard test caught a docstring naming the benchmark path from production and it was reworded, not weakened. V2-22a: `live_discovery.is_seed_host(url)` + a `registry_seed_host` ranking signal. The registry already records each institution's homepage and seed URLs with a `seeds_verified_on` date — the verified metadata §12 sanctions — and it names `future.utoronto.ca` while never naming `utm.` or `utsc.`. **Best single change of the session:** cases-at-rank-1 **2 → 4**, Toronto #19 → **#4**, Warsaw #5 → **#1**, HKU #6 → **#1**, UBC #2 → **#1**, Groningen and Delft each up one, ceiling still 10/10, two runs agreeing. A signal, never a rejection. V2-13d: `RankedCandidate.found_by` — which query families surfaced each URL (§11, never built until now). Used immediately: **Toronto's regression is not the new query family** — that family is one of the two that *found* the correct page. Five of the seven candidates above it are **other campuses of the same university** (UTM, UTSC), which the prefilter rightly keeps and the ranking has no reason to demote, because nothing in the pipeline knows a campus is a different place to apply to. Third mis-attribution this session, first one caught immediately. V2-11b: one `natural_language` query family — the request as a sentence, with the degree named in words *including its cycle wording* and no search operators. **Ceiling 9/10 → 10/10**, Warsaw returns, cases-at-rank-1 1 → 2, confirmed by two near-identical runs. Cost, stated not hidden: Toronto #8 → #19, Aalto −2, Delft −1, and 60 queries per run instead of 50. V2-13c: `_DEGREE_SLUGS` learns the Bologna cycle forms (`s1`/`s2`/`s3`, `first-cycle`, `i-stopnia`, `licence`, `magister`, …), so Warsaw's `IN/S2-INF` is read as a **master's** page and rejected by the bachelor prefilter — eight such rejections per run. A correctness fix, not a ranking one. Also **re-baselined**: the shipped configuration measures **9/10** today, not the 10/10 of a few runs earlier, and the difference is provider-side (see below). V2-13b: `page_classifier.classify_url(url)` — what a URL alone says a page is, added beside `classify_page` so the retrieval code does not grow a second copy of those patterns. The ranking signal that uses it is **measured and not enabled** (`rank_candidates(..., rank_by_page_kind=False)`): two runs gave Toronto **+11** and KAIST +2 and cost Warsaw its place, ceiling 10/10 → 9/10. `RetrievalReport.hop_entry_points_unreachable` now separates *no host qualified* from *the host refused the connection* — HKU's zero was the second. V2-16d: **the retrieval ceiling reaches 10/10.** The hop ships as *additive coverage*: the search list is truncated first and hop candidates extend it, entry points are host roots scored by what runs degrees (a host naming the field, then an admissions host; a lab or publication repository is never opened), and a page both generators found keeps its search position and gains `also_found_by_hop`. KAIST goes from unreachable to #30. Three earlier designs were measured and rejected first; all four runs and what each taught are in `SEARCH_PROBE.md`, with the hop result committed as `baseline/search_probe.exa.hop.json`. V2-16c: `discover_candidates` gains an injected `fetch: FetchPage | None` (default `None`, so the hop is **off**) and `hop_entry_points`; the report carries `hop_entry_points` / `hop_candidates`; the probe gains `--hop`. **Measured and not shipped:** fusing the hop as an equal generator moved the ceiling 9/10 → **8/10** and pushed NTU from #1 to #12, UBC #2 → #16, Aalto out of the top 25 entirely. §12 says a discovery change is good only if the benchmark improves, so it stays off. The negative result and the three things to try next are in `SEARCH_PROBE.md`. V2-16b: `app/adapters/search/navigation.py` — `links_from`, `navigation_candidates`, `NavigationLink`, `MAX_LINKS_PER_PAGE`, `DEFAULT_HOP_LIMIT`. One hop through a site's own navigation, emitted as `Generator.CATALOGUE_WALKER` for fusion. **Validated against KAIST's real front page: `content?menu=188` went from unreachable to rank 3.** 21 tests, module at 100%. **MEASURED 2026-09-21, live, 50 queries:** the Phase 1 retrieval path with Exa reaches the signed correct programme page in **9/10** cases, up from **1/10** on the frozen capture. Zero cases retrieve nothing (was 3). Our ranking puts the correct page first in **2**, so a reranker now has **7** cases of headroom where V2-14 measured none — `RERANKER_CEILING.md` is marked superseded for this path and `SEARCH_PROBE.md` carries the new numbers, the per-case table and the two failure shapes. `evaluation/research/search_probe.py` (+ `baseline/search_probe.exa.json`) reproduces it; 14 tests, 100%, none touching the network. V2-10b: `app/adapters/search/exa.py` — `ExaSearchProvider` behind the V2-10 seam. POST `api.exa.ai/search` with `type=auto`, `numResults` (capped at 25), `includeDomains`, `contents.highlights`; every failure becomes `SearchUnavailable`; no retries; response body capped at 1 MiB; the endpoint goes through `network_policy.check_url`. `config.py` gains `exa_api_key: SecretStr` and refuses to start with `exa` selected and no key. 27 tests in `tests/test_exa_provider.py`, module at 100%, none touching the network. **Default is still `UNIMATCH_SEARCH_PROVIDER=none`** pending the §7 decision. V2-17: `app/domain/programme_identity.py` (the rule — `Verdict`, `ProgrammeIdentity`, `IdentityState`, `ScopeState`, `identity_state`, `scope_state`, `applies_to_requested_intake`, `unresolved`, `refuted`, `explain`) and `app/adapters/search/identity.py` (`verify_candidate`, reading the six dimensions from stated evidence only). Identity and scope are separate; `UNKNOWN` is never a match and never a failure; `applies_to_requested_intake` returns a `Verdict`, not a bool. 32 tests in `tests/test_programme_identity.py`, both modules at 100%. V2-16: `app/adapters/search/fusion.py` — `Generator` (seven sources), `GENERATOR_WEIGHTS`, `SourcedCandidate`, `Attribution`, `FusedCandidate` (`agreement`, `best_rank`, `provenance`), `fuse(streams, *, top_k, weights)`. Reciprocal Rank Fusion, so nothing incomparable is ever added; every attribution survives into the output; a candidate filed under the wrong generator is refused. 23 tests in `tests/test_fusion.py`, module at 100%. V2-15: `app/adapters/search/site_search.py` — `detect_surfaces` for the nine §7 families, `SiteSearchSurface` (kind, endpoint, query parameter, provenance, evidence, detected-at), `search_url` with bounded pagination, `MAX_PAGES = 5`, `MAX_RESPONSE_BYTES = 2 MiB`, `NEEDS_CREDENTIALS`. Passive network-log evidence outranks markup inference, off-domain and administrative surfaces are discarded, and a key-bearing surface is flagged with its key deliberately unread. 36 tests in `tests/test_site_search.py`, module at 100%. V2-14: **the reranker comparison was not built, because the measurement says it would measure nothing.** `evaluation/research/ceiling.py` (+ CLI), `baseline/ceiling.reviewed.json` and `RERANKER_CEILING.md` record it: against the certified corpus and the frozen capture, the correct programme page is in the candidate set for **1/10** cases, the current ranking already has that one at position 1, so **headroom for any reranker is 0**. Three cases retrieved nothing at all. 13 tests in `tests/test_reranker_ceiling.py`, module at 100%. V2-13: `app/adapters/search/prefilter.py` (§5 chain over `SearchResult`s, every rejection recorded with its reason) and `retrieval.py` (self-contained BM25, named deterministic signals, `rank_candidates`, `discover_candidates`, `RetrievalReport`). It **reuses** `live_discovery`'s `canonical_url` / `same_institution` / `names_other_degree_level` / `looks_like_catalogue` rather than writing a second copy; one public `is_excluded_path` was added there for the same reason. 29 tests in `tests/test_hybrid_retrieval.py`; package at 100% across all seven modules. V2-12: `app/adapters/search/ontology.json` (versioned `2026-09-21.1`, six field concepts and all four degree levels) and `ontology.py` — `canonical_field`, `is_equivalent`, `retrieval_candidates`, `degree_aliases`, `ontology_version`, `Relation`, `RetrievalCandidate`. Equivalence and retrieval expansion are separate functions returning different things, so a related concept can never come back from the equivalence one. 29 tests in `tests/test_ontology.py`; package still 100%. V2-11: `app/adapters/search/intent.py` — `DiscoveryIntent` (six fields, none of them about the applicant), `from_profile` as the single sanctioned conversion, `queries_for` rendering the §4 families under a bounded `DEFAULT_QUERY_BUDGET = 6`, `QueryPrivacyError`, and `redacted_audit_record`. 27 tests in `tests/test_discovery_intent.py`, one per forbidden item in the spec's list; `app/adapters/search/` is at 100%. Also made `test_a_slow_parse_does_not_block_an_unrelated_request` deterministic — see §9. V2-10: the search seam ships in `backend/app/adapters/search/` — `base.py` (`SearchResult`, `SearchResponse`, the `SearchProvider` Protocol, `SearchError`/`SearchProviderNotConfigured`/`SearchUnavailable`), `fake.py` (offline, corpus-driven, stamps `provider="fake"`), `__init__.py` (`get_search_provider`, `KNOWN_SEARCH_PROVIDERS`), plus `Settings.search_provider` defaulting to `none` with `_validate_search`. 22 tests in `tests/test_search_provider.py`, 100% coverage of the new package. Nothing is wired into discovery: query generation is V2-11 and fusion is V2-16. V2-01: **the corpus is certified.** `ground_truth.reviewed.json` (`2026-09-21.reviewed`) carries `human_verified` + reviewer **Диас** + `2026-09-21` on 10/10 cases, and `metrics.reviewed.json` is the first report in this project produced **without `--allow-drafts`**, `provisional: false`. Acceptance record in `backend/evaluation/research/ACCEPTANCE.md`; two new tests pin the gate (`test_the_reviewed_corpus_is_signed_and_scores_strictly`, and `test_certification_changes_no_measured_value`, which forbids a signature from ever moving a number). The owner's answer also settled the Aalto adjudication in the affirmative; it is recorded as a decision in that case's notes with the reasoning it overrides preserved. Draft7 applies the **owner's first human review of the corpus** — 62/220 known fields, 10/10 identities, two cases changed. Aalto's identity moves from the Finnish tietotekniikka page to the English-taught Computer Engineering major, because the requested scope is an international applicant and the Finnish route is not open to one in English; whether Computer Engineering satisfies a *computer science* request is left open for the reviewer, not asserted, on the same grounds draft2 refused Data Science. HKU gains `programme.faculty = "School of Computing and Data Science"` and its exact degree title, Bachelor of Engineering in Computer Science. Programme precision/recall are unchanged at 1/9 and 1/10 — the Aalto URL move neither gained nor lost a match against the frozen capture. Still 0/10 `human_verified`, because the schema requires a reviewer name and date and no AI may invent either. Draft6 resolves the Delft exact programme identity from the official tudelft.nl page — the last `unknown` of ten, carried since draft2 — taking programme identities to **10/10** at 61/219 known fields and 0/10 human signoffs. One field changes; no label, no frozen artifact and no production file is touched. Its two programme numbers *fall* (precision 1/8→1/9, recall 1/9→1/10) because a tenth answerable case and a ninth judgeable prediction enter the denominators against the same frozen capture: arithmetic, not a retrieval regression, and REVIEW_DRAFT6.md says so in those words. Draft5 is published in `a4cd5b3` (gpt-6-astra) — 61/219 known/total fields, 9 programme identities, 0 human signoffs, NTU qualification and conditional `english_evidence.*` minima plus the Toronto Kazakhstan credential, with separate report/worksheet/VERSIONS row and the replay test parametrised over `.draft5`. It was committed `wip:` because its gates had not finished; claude-opus-5 ran them on 2026-09-20 and they are green (§6), so draft5 is released. Its content is recovered gpt-6-astra work, not a second implementation. `3f7e467` publishes draft4 with exact Aalto CS identity/primary Finnish teaching language and Groningen NIS qualification equivalence/CS mathematics requirement: 56/215 known/total fields, 9 programme identities, 0 human signoffs. Separate metrics and complete human-review worksheet; 57 focused tests. `2f56a46` publishes lossless draft3 document projection (52/212 known/total fields), reversible manifest, separate report and review worksheet; 55 focused tests. `5403630` adds explicit offline award/document identity mapping and replay; `00e107f` keeps unknown policies unanswered, adds the human review worksheet and brings focused coverage to 51 tests. `7356d9e` published draft2: 46/206 known labels, 8/10 exact programme URLs, 0/10 human signoffs; separate replay report with programme precision/recall 1/8 and 27 benchmark tests. Frozen draft1/capture are unchanged. `d917259` integrated all 15 Markdown documents plus original manifest and navigation/task card; pushed. `5d2a3ed` write-ahead V2-01 baton; pushed. All 16 archive entries verified byte-for-byte after transfer; original untracked ZIP removed. 51f9512 pushed schema, offline scoring, bounded live capture, 10 draft cases, 14 tests and container isolation. `a243a46` pushed checkpointed HTTP/PDF counters, candidate ranks and evidence validation. `1187cd0` published direct claim mapping, compact baseline capture/metrics/report and human review queue. `d0a2fb4` fixes JSON type equality; 25 benchmark tests and both full CI matrices pass. Draft PR: https://github.com/wpalish/ashyq-apply/pull/14. Human certification remains outstanding.
 
 
 The original recovery entries below are historical provenance. Preserve their hashes and ancestry;
@@ -495,7 +495,532 @@ Scope:
 The key is never read by this session, never written to a file, and never logged — only
 `EXA_API_KEY` / `UNIMATCH_EXA_API_KEY` at runtime.
 
-Write-ahead (claude-opus-5, 2026-09-21, V2-16d): **PR #15 is open** for everything up to here
+V2-22 is done: requirement claims now record what their page stated about who it covers, and the demo
+proves it end to end (128 of 173 claims scoped, 45 honestly empty).
+
+**NEXT, exact and executable.**
+
+1. ~~Re-measure.~~ **Done: 5/5, unchanged, and structurally unable to change** — the strict score runs
+   against a capture frozen on 2026-09-20, before a claim could carry a scope. Reading that capture is
+   what found V2-22b (the capture recorded the request as the page's answer). **The number cannot move
+   until someone re-runs the live capture with network**, which this container does not have; that is an
+   owner/CI task, listed in §7.
+2. ~~Make the assessment consult `covers()`.~~ **Done (V2-23).** It refuses an out-of-scope claim and
+   disarms an unscoped one. The 5/5 still cannot be re-measured without a live capture (see 1).
+3. ~~Surface it to the applicant.~~ **Done (V2-24)**: each refusal is an `UnresolvedQuestion` naming the
+   page, the reason and a contact, blocking only when nothing else answered.
+4. ~~Extend the reader to the other four adapters.~~ **Done (V2-25).** Old item text for reference:
+   extend the reader to the other four claim-producing adapters (`web_scholarships`, `web_costs`,
+   `web_documents`, `web_government`) once (1) says what the first one was worth. Scholarships are the
+   likeliest win: eligibility prose states populations more often than requirements prose does.
+3. Open items unchanged: KAIST's registry seed (owner data task, §7); page-kind as a prefilter concern.
+
+**The live capture now has a button (claude-opus-5, 2026-09-21).** The owner asked whether I could run
+it on his machine; I cannot — this session has no access to it, and `Fetcher` has no network here. So
+the run moved to CI: `.github/workflows/benchmark-capture.yml`, `workflow_dispatch` only, never on push
+(it fetches live university pages). It captures, scores **strictly** against `ground_truth.reviewed.json`,
+prints a certified-vs-this-run table in the log and uploads capture + metrics as an artifact. **It
+commits nothing** — a new baseline is a human decision. Needs one repository secret,
+`UNIMATCH_EXA_API_KEY`; without it the run still completes but measures discovery *without* web search,
+and the log says so rather than letting the numbers look comparable.
+
+**Numbering note (read before the write-aheads below).** My task labels after V2-21 drifted from
+`analysis/v2/02_EXECUTION_PLAN.md`. Mapping, so the plan stays the source of truth:
+
+| My label | Plan item | What it was |
+|---|---|---|
+| V2-21, V2-21b | **V2-21 Scope model** | `ClaimScope` and carrying it on a claim |
+| V2-22, V2-22b, V2-25 | *(no plan item — implementation of V2-21)* | filling the scope from pages; fixing the capture |
+| V2-23, V2-24 | *(no plan item — use of V2-21)* | acting on scope, and telling the applicant |
+| V2-26 | **V2-23 Conflict model v2** | separating contradiction from different scope |
+
+Plan items still open in Phase 2: **V2-20 (SourceSnapshot / ClaimVersion)**, **V2-22 (entity
+resolution)**, **V2-24 (change detection)**. From here I use the plan's numbers.
+
+Write-ahead (claude-opus-5, 2026-09-21, **V2-20b**): **a superseded claim says when it stopped being
+current and what replaced it.**
+
+Supersession already exists and works: `jobs/source_scanner.reextract_page` flips every live claim over
+a re-read URL to `SUPERSEDED` and appends the fresh ones beside them, in one transaction. What the
+history cannot answer is the two questions the guide's `ClaimVersion` is for — *when* did this stop
+being true, and *which* value took over. Today a superseded row carries only its old `accessed_at`,
+and the only link between the was and the became is that they share a URL.
+
+Scope, exactly, in `app/models/research.py` + one migration:
+- `claims.superseded_at` — when this row stopped being live. Set in the same transaction that flips the
+  status, never guessed afterwards from `updated_at`.
+- `claims.superseded_by_id` — the claim row that took over, FK to `claims.id`, **ON DELETE SET NULL**
+  for the same reason `source_page_id` is: a purge must never take a history row with it.
+- The successor is matched on `(claim_type, subject_key)` within the page being re-read. **A superseded
+  claim with no successor is not a bug and must not be filled in with a guess**: it means the page no
+  longer says this at all, which is exactly the case the re-extract docstring already calls the one
+  thing that must never be lost.
+- `reextract_page` sets both.
+
+Not in scope, deliberately: `valid_from`/`valid_to` as a separate interval, and a `ClaimVersion` table
+of its own. A claim row already *is* its version — it has `accessed_at` as its start and now
+`superseded_at` as its end — and splitting that into a second table would be a migration of all
+existing evidence for no query anyone makes yet. If a query does appear, the columns are already the
+shape that table would need.
+
+Demo effect: **none** expected — nothing supersedes in a demo run, which never re-reads a page.
+
+Write-ahead (claude-opus-5, 2026-09-21, **V2-20a**): **SourceSnapshot — what a page said, and when.**
+
+`SourcePage` already exists and is deliberately one mutable row per URL: the page's *current* state,
+with the ETag, Last-Modified and content hash that let the next visit ask "changed?" without
+downloading. What does not exist is the other half the phase guide names: a record of the versions a
+page has actually been observed at. Today a page that changes overwrites its own hash and the previous
+observation is gone, so "what did this page say when we claimed that?" has no answer.
+
+Scope, exactly:
+- `app/models/source_page.py`: `SourceSnapshot` — page id, content hash, the validators seen with it,
+  http status, `first_seen_at` / `last_seen_at`.
+- One row per (page, content hash), upserted: re-observing the same content updates `last_seen_at`
+  rather than adding a row. **Decision, stated because it is arguable:** a page that reverts to earlier
+  content is the same content seen again, not a third version. The order of events survives in each
+  row's `last_seen_at`, and the intermediate version keeps its own row.
+- `SourcePage.record` writes the snapshot in the same flush, so no caller can record a page's metadata
+  and forget the version it saw. Metadata only — never a body, exactly as the page table's policy says.
+- One Alembic revision on `d9c4e7a21b83`; one head before, one head after; an exact-inverse downgrade;
+  round-trip tested on SQLite **and** PostgreSQL, as `TestT32MigrationRoundTrip` already does.
+
+Demo effect: **none**. Snapshots are written on the live path only (the demo's discovery adapter has no
+page recorder at all), so the golden must not move. If it does, something is recording on the demo
+path that should not be.
+
+Write-ahead (claude-opus-5, 2026-09-21, V2-26): **a conflict now says what kind of conflict it is.**
+This is a Phase 2 exit criterion in the guide's own words — "conflict reasons distinguish true conflict
+from different scope" — and it is the first thing `ClaimScope` makes possible that nothing else could.
+
+Today two different values of the same claim type are a contradiction, full stop. Often they are not:
+one page publishes the fee for home students and another for overseas students, one is the 2026 cycle
+and one the 2027. Calling that a contradiction teaches the applicant to distrust a correct answer, and
+it is the same mistake as treating silence as agreement — a scope difference read as a disagreement.
+
+Scope, exactly:
+- `ConflictKind` in `app/domain/enums.py`: `TRUE_CONFLICT` plus one `DIFFERENT_<dimension>` per scope
+  dimension the guide names (population, intake, academic year, residency, degree).
+- `app/domain/conflicts.py`: classify each group by comparing the claims' **recorded** scopes. Two
+  claims that both state a dimension and state it differently are not contradicting; they are rules for
+  different people or different years.
+- A non-true conflict **does not stamp its claims `CONFLICTING`**. They are both correct. It stays
+  visible, with its kind and a question worded for what it actually is.
+- Claims with no recorded scope keep today's behaviour exactly: `TRUE_CONFLICT`, stamped as now.
+
+`Conflict.kind` is a new field, so the demo payload gains a key — the demo has exactly one conflict
+(Delft's programme page vs its admissions page, both stating the same intake), so it should classify as
+`TRUE_CONFLICT` and nothing else should move. Additive proof before the hash, as always.
+
+Write-ahead (claude-opus-5, 2026-09-21, V2-25): **the other four claim-producing adapters read scope
+too.** §5 step 4. `web_requirements` has done so since V2-22; `web_scholarships`, `web_costs`,
+`web_documents` and `web_government` still produce claims with no scope at all, which V2-23 then treats
+as pre-V2-22 and judges exactly as before. Half the pipeline is honest and half is grandfathered.
+
+Scope, exactly: `scope=read_scope(text, title=...)` on each of the four builders, using each adapter's
+own already-extracted page text and title. No new reader logic — if a dimension needs a phrase family
+these pages use and requirements pages do not, that is a separate, measured change.
+
+Expectations, stated before running:
+- **Scholarships should gain the most.** Eligibility prose names populations ("open to international
+  students", "for EU/EEA applicants") far more often than requirements prose does, and a scholarship
+  claimed for the wrong population is the most expensive wrong answer this product can give.
+- **Government pages should gain nothing, and that is correct.** A post-study-work rule is a national
+  rule; it has no intake and no programme, and the reader will rightly return an empty scope.
+- **Costs pages may gain a residency** ("home fee status" / "overseas fee status"), which is exactly
+  the dimension a fee figure needs and the one place `residency` was built for.
+
+Demo effect: unknown, and this time it may legitimately move — a scholarship claim that gains a scope
+the request cannot match stops being a hard filter. Look at the dump case by case before re-capturing,
+per the guard's wording, and report what moved rather than only the hash.
+
+Write-ahead (claude-opus-5, 2026-09-21, V2-24): **tell the applicant when an answer was withheld for
+scope.** §5 step 3, and the first part of this phase a person can see.
+
+V2-23 refuses a claim whose page is about another intake. Right now that refusal is *silent*: the claim
+stays in the evidence list, the requirement simply goes unanswered, and nothing says why. Silence about
+a refusal is its own version of the failure this phase is about — the applicant cannot act on a gap
+they cannot see.
+
+Scope, exactly:
+- `app/domain/eligibility.py`: a frozen `OutOfScopeClaim` (claim type, source url, the reason in
+  `ClaimScope.explain`'s words, and whether anything else answered that requirement), collected once per
+  evaluation and carried on `EligibilityOutcome`.
+- `app/pipeline/runner.py`: each one becomes an `UnresolvedQuestion` on the result — the existing
+  channel, so the API, the export and the frontend need no new field. `blocking=True` only when nothing
+  else answered that requirement, because a requirement answered by another page is not a blocker.
+- The question is a question, not a verdict: it names the page, the intake it is about, and the intake
+  that was asked, and it is phrased so the applicant can send it to an admissions office as is.
+
+Expected demo effect: **none**. Every demo page states the requested intake, so nothing is declined and
+no question is produced. If the golden moves, something declined a claim it should not have — look
+before re-capturing.
+
+Write-ahead (claude-opus-5, 2026-09-21, V2-23): **make the assessment refuse a claim whose page says
+it is about something else.** This is §5 step 2 — where the 5/5 actually lives. V2-22 records a scope;
+nothing yet *acts* on one, so an out-of-scope fact is still stated as the answer.
+
+The rule, in `app/domain/eligibility.py`, applied where a claim is chosen (`_first`) rather than at each
+of the dozen call sites, so no requirement type can be forgotten:
+
+- `ClaimScope.covers(requested) is NO` — the page states a different intake or year than the one asked
+  about — **the claim is not used for that requirement at all.** It stays persisted and visible as
+  evidence; it just stops being the answer to a question it was not about.
+- `UNKNOWN` (the page did not say) — the claim **is** used, because refusing it would throw away almost
+  every real page, but it **may not be a hard filter**: it cannot eliminate a candidate. An unscoped
+  page is not strong enough to end someone's application.
+- `YES` outranks `UNKNOWN` in `_first`'s existing ordering, ahead of specificity, so a page that says
+  who it is for beats one that does not.
+- A claim with no recorded scope at all (`scope is None`, everything written before V2-22) behaves
+  exactly as it does today. This is the same bug-compatible seam as V2-22b, for the same reason.
+
+`RequestedScope` is built from what the run actually asked: the claim's own request-side `intake` and
+`academic_year` meta. Population is **not** derived — the applicant's citizenship plus a university's
+country would give it, but `evaluate_program` is not told the university's country, and inventing the
+applicant's status at an institution is the exact move this whole phase exists to stop.
+
+Expect the demo golden to move again, and this time **not additively**: a refused claim changes a
+result. If it moves, look at the diff case by case before re-capturing, and record what changed and why
+— the guard's wording (V2-22) now requires exactly that.
+
+Write-ahead (claude-opus-5, 2026-09-21, V2-22b): **stop the benchmark capture from recording the
+question as the page's answer.**
+
+Re-measuring first, as §5 said to (step 1, done): `wrong_scope_claim_rate` is **5/5**, byte-identical to
+`metrics.reviewed.json`, and it *could not* have moved — the strict score runs against a frozen capture
+taken on 2026-09-20, before a claim could carry a scope at all.
+
+Reading that capture found the same bug on the measurement side, which is worth more than the number.
+Every prediction's `evidence.scope` is built in `evaluation/research/live.py` (and `map_claims.py`) from
+the **request**: `intake` is `"fall 2027"` on all ten cases because that is what the profile asked for,
+`university` is the candidate's name, `academic_year` is the runner's default. None of it was read from
+the page. So the benchmark has been comparing a label against our own question, and a scope-match
+failure there never meant a human-confirmed wrong fact — the baseline README says as much in its own
+row, without knowing why.
+
+Scope, exactly:
+- one helper in `evaluation/research/mapping.py` that builds an `Evidence` scope from a raw claim;
+- it prefers the claim's recorded `scope` (V2-22) for every dimension it states, and emits `None` for a
+  dimension the page was silent on — a gap, not the requested value;
+- it falls back to the request-side `intake` / `academic_year` fields **only when the claim carries no
+  `scope` key at all**, i.e. was written before V2-22. That fallback is bug-compatible on purpose, so a
+  re-score of the frozen capture stays exactly reproducible, and it is documented as such.
+- `live.py` and `map_claims.py` both call it, so the two paths cannot drift again.
+
+What this cannot do: **move the measured rate**. That needs a fresh live capture, and `Fetcher` has no
+network in this container (§9). The capture re-run is an owner/CI task; until it happens the honest
+statement is that 5/5 describes a capture taken before any of this existed.
+
+Previous write-ahead (claude-opus-5, 2026-09-21, V2-21b): **putting `ClaimScope` on `Claim`.**
+
+**No migration is needed, and that is a finding rather than a shortcut.** `ClaimRow.payload` is a JSON
+column holding the serialised claim whole; a new optional field on the pydantic model lands there by
+itself. `alembic heads` is one (`d9c4e7a21b83`) and stays one because nothing is added to it.
+
+Deliberately *not* adding a queryable `scope` column: nothing queries by scope yet, and the phase
+guide's own answer to persistent scoped knowledge is the V2-20 SourceSnapshot / ClaimVersion model,
+which is a design decision of its own. Adding a column now would prejudge it.
+
+Scope — `app/schemas/claim.py`: an optional `scope: ClaimScope | None`, defaulting to `None`, which
+means *nobody recorded the scope* and is distinct from a `ClaimScope()` that recorded it as empty. The
+existing `program` / `intake` / `academic_year` fields stay exactly as they are: nothing reads the new
+field yet, so nothing may depend on it, and removing them would break every extractor at once.
+
+Acceptance: the full suite passes untouched, and a round-trip through the payload JSON preserves the
+scope — a field that does not survive persistence is a field that does not exist.
+
+V2-21 ships the type and its rule; nothing consults it yet, deliberately.
+
+**NEXT, exact and executable.**
+
+1. **Carry a `ClaimScope` on `Claim`.** Today scope lives in `program` / `intake` / `academic_year`
+   and in free-text `notes`, which the spec forbids. The migration is additive — a nullable scope
+   alongside the existing fields — and the existing fields stay until something reads the new one, so
+   no extractor breaks. One Alembic revision, and §6 requires exactly one head before and after.
+2. **Then make the extractor fill it** from what a page actually states, refusing to infer: the same
+   discipline as `verify_candidate`, which is already written and tested next door.
+3. **Then re-measure `wrong_scope_claim_rate`**, which is the only thing that proves any of this. It
+   has been 5/5 since the corpus was certified and nothing has moved it.
+4. Open items unchanged: KAIST's registry seed (owner data task, §7); page-kind as a prefilter concern.
+
+**The honest shape of the remaining work:** Phase 1 made the pipeline find the right page. Phase 2 is
+what stops it saying something untrue about that page. Neither is visible to an applicant until both
+are done — a correct requirement for the wrong year is still wrong.
+
+Previous write-ahead (claude-opus-5, 2026-09-21, V2-21): **making a claim's scope a first-class thing**, per
+`05_PHASE_2_EVIDENCE_GRAPH.md` "Claim scope". This is the direct attack on `wrong_scope_claim_rate`
+**5/5** — the corpus's other headline failure and the one Phase 1 could never fix, because retrieval
+and scope are independent holes.
+
+What the benchmark actually measured: every claim the pipeline produced was the right fact about the
+**wrong population, year or programme**. A requirement published for non-EU/EEA applicants in the
+2026 cycle was stated as the answer for fall 2027.
+
+Why it happens today: `Claim` carries `program`, `intake`, `academic_year`, `subject_key` and a
+`SourceSpecificity`, and everything else about *who a rule applies to* lives in free text `notes`.
+The spec says that in as many words: **do not encode critical scope only inside free-text notes.**
+And an unstated dimension is currently treated as "applies to everyone", which is exactly backwards.
+
+Scope — `backend/app/domain/claim_scope.py` (pure, no I/O, the rule belongs in domain):
+- `ClaimScope` with the nine dimensions the spec lists — university, faculty, programme, degree,
+  intake, academic year, population, nationality, residency — each explicitly `None` for UNKNOWN.
+- `RequestedScope`: what was actually asked for.
+- `ClaimScope.covers(requested) -> Verdict`, reusing V2-17's `Verdict`: **YES** only when every
+  dimension the claim states matches the request, **NO** when any stated dimension contradicts it, and
+  **UNKNOWN** when the claim is silent on something the request names. Silence is not agreement.
+- `narrower_than` so conflict resolution can prefer the more specific claim, aligned with the existing
+  `SourceSpecificity` order rather than replacing it.
+
+Nothing is wired into extraction or ranking in this step. The type and its rule come first, exactly as
+V2-17 did; wiring a rule nobody has agreed on is how the last two sessions lost runs.
+
+V2-13e is done: **the owner can now see this working**, which was not true of anything before it.
+
+**How to see it — the exact steps, for the owner.**
+
+1. Pull the branch of PR #15 (`claude/greeting-16wj2z`).
+2. Set two environment variables — never in Git:
+   `UNIMATCH_SEARCH_PROVIDER=exa` and `UNIMATCH_EXA_API_KEY=<key>`.
+3. Run the app as usual. Discovery now consults web search in addition to the sitemap and catalogue
+   walker, and the run's trace says per institution how many programme pages search added.
+4. Leave the variables unset and everything behaves exactly as it does on `main` today.
+
+**A caveat that must be said before it disappoints anyone.** Retrieval improves; the *claims* built
+from those pages do not, because `wrong_scope_claim_rate` is still 5/5 and Phase 2 has not started.
+Better pages in, same scope errors out. Expect to see discovery finding the right programme pages more
+often — not correct requirements for fall 2027.
+
+**NEXT, exact and executable.**
+
+1. **Phase 2, and specifically V2-21 (scope model).** Phase 1 is complete and measured; the corpus's
+   other headline failure has never been touched, and it is now the whole remaining gap between "finds
+   the right page" and "tells an applicant something true".
+2. KAIST's registry seed (a small owner data task, §7).
+3. Retry page-kind as a prefilter concern against the new baseline.
+
+Previous write-ahead (claude-opus-5, 2026-09-21, V2-13e): **connecting `discover_candidates` to
+`LiveDiscoveryAdapter`.** The owner asked when they can see this working; the answer is that they
+cannot yet, because every Phase 1 module is measured on a bench and called by nothing. This is the
+wiring.
+
+Also worth recording: the owner was told by another tool that task "2.18" makes it visible. **There is
+no V2-18.** `02_EXECUTION_PLAN.md` numbers V2-00…V2-17 and then V2-20…V2-46, and no numbered task in
+it is the wiring — the plan assumes it and never names it. Hence this one.
+
+Design, following what was measured rather than what seems sensible:
+- search results are **appended** to `selected[PageCategory.PROGRAM_PAGE]`, never interleaved. V2-16d
+  measured the alternative: a coverage generator that competes with a ranked one costs cases.
+- **off unless configured.** `get_search_provider()` raises `SearchProviderNotConfigured` on the
+  default `none`, and that is caught and treated as "no search layer", so a deployment without a key
+  runs byte-identically to today. That is the same dormant-seam pattern `page_recorder` uses two
+  attributes above.
+- the hop's page reader is the adapter's own `Fetcher`, so robots, rate limits, the PII guard and SSRF
+  protection all apply exactly as before. The §6 exception covers the provider call only.
+- a provider failure degrades the run, never ends it: discovery keeps whatever the sitemap and walker
+  found.
+
+Acceptance: the existing suite must stay green **unchanged** with no provider configured — that is the
+proof this is dormant — and `seed_demo.py`'s order must still match brief §5.7, because this is the
+first change on the branch that touches the live pipeline at all.
+
+**Correction, and it matters more than the change itself.** The previous entry said the campus fix
+"needs data this repository does not hold" and put it to the owner. **That was wrong.** The data was
+already committed, already human-verified, and already loaded by the discovery code. Three ranking
+experiments were rejected before this one, and all three were attempts to *infer from a URL* what a
+verified record already *stated*. The rule: **look for the data before declaring it missing**,
+especially when the guide names the place it would live.
+
+**NEXT, exact and executable.**
+
+1. **KAIST is the one case the seed signal costs** (#26 → #26–30): its correct page is on
+   `cs.kaist.ac.kr`, which Toronto-style seeds do not name. Adding a verified `cs.` seed to KAIST's
+   registry entry is the *data* answer and needs a human check of that URL, exactly as
+   `seeds_verified_on` implies. That is a small, well-defined owner task, not a code change.
+2. **Six cases are still not first.** Aalto (#17–20) and KAIST are the deep ones; both are
+   not-a-programme-page problems the rejected page-kind experiment aimed at. Retry it **as a prefilter
+   concern**, now that the seed signal has changed the baseline it would be measured against.
+3. Untouched by all of Phase 1: `wrong_scope_claim_rate` 5/5.
+
+V2-13d shipped provenance and used it: **Toronto is a wrong-campus problem, not a query problem.**
+No fix is shipped — the cause is named and the fix needs data this repository does not hold.
+
+**NEXT, exact and executable.**
+
+1. **V2-22 — campus entity resolution, and it needs registry data.** A request naming
+   "University of Toronto" should not be answered with UTM's or UTSC's page, and the pipeline has no
+   way to express that: `verify_candidate`'s `university` dimension says YES to any host on the
+   registrable domain. §12 sanctions exactly the data needed — university-specific knowledge is allowed
+   as **verified registry metadata**, never as code. The shape is a campus list per institution in
+   `institution_registry.json`, with the main/central host marked; the shape to avoid is a rule in the
+   ranking that says "if the host starts with `utm`, penalise".
+   **This needs the owner**: a campus list is human-checked data about real institutions, and the same
+   standard that governs the corpus governs it — no invented entries.
+2. **Then re-measure**, both numbers, two runs.
+3. Untouched by all of Phase 1: `wrong_scope_claim_rate` 5/5.
+
+Previous write-ahead (claude-opus-5, 2026-09-21, V2-13d): **recording which query family found each candidate**,
+because Toronto's #8 → #19 regression cannot be diagnosed without it and guessing at it would be the
+third time this session that a plausible story turned out to be wrong.
+
+`04_PHASE_1_DISCOVERY_ENGINE.md` §11 asks for exactly this and it was never built: every candidate
+should keep `discovered_by`, `provider`, `query_or_parent_url` and `rank`. The report names which
+families *ran*; nothing says which family produced which row.
+
+Scope — `app/adapters/search/retrieval.py`: `RankedCandidate.found_by`, the families that surfaced
+that URL, filled while the query loop runs and carried through the prefilter and the ranking. The
+`SearchResult` contract is untouched: a provider reports what it returned, and which of our queries
+asked for it is our bookkeeping, not theirs.
+
+Then use it: one targeted run on Toronto to see which family surfaced its correct page at #8 and what
+the new family displaced. No fix is written before that answer exists.
+
+V2-11b shipped and the ceiling is back to **10/10**, this time with the cause understood rather than
+observed: five of six query families were one shape, and a neural index reads a query for meaning, so
+five variations of an operator query are one query asked five times.
+
+**NEXT, exact and executable.**
+
+1. **Toronto is the open regression.** It dropped #8 → #19 when the sixth family joined, consistently
+   across both runs. Diagnose before adding anything else: which family surfaced it at #8, and what the
+   new one displaced. `RetrievalReport.queries_run` already names every family, so a per-family record
+   of which query found each candidate is the missing telemetry and is worth adding first.
+2. **Query cost rose 20%** (50 → 60 per run) because the sixth family now fits the budget where a fifth
+   used to. If a fetch or spend budget ever tightens, `DEFAULT_QUERY_BUDGET` is the dial and this trade
+   is the thing to revisit.
+3. **Entity resolution (V2-22)** for wrong-campus misses, unchanged and still untried.
+4. Untouched: `wrong_scope_claim_rate` 5/5.
+
+Previous write-ahead (claude-opus-5, 2026-09-21, V2-11b): **adding one query family phrased as a person would
+phrase it**, following the only concrete lead left from V2-13c.
+
+The evidence: Exa returns Warsaw's `IN/S1-INF` at **rank 1** for
+`University of Warsaw computer science first cycle programme S1-INF` and **not at all** for our
+`site:uw.edu.pl "computer science" "bachelor"`. All five current families share one shape — a `site:`
+operator plus quoted terms — which is keyword-search syntax. A neural index reads a query for meaning,
+and five variations of one shape are one query asked five times.
+
+Scope — `app/adapters/search/intent.py`: a `natural_language` family rendering the intent as a plain
+sentence (institution, degree in words, field, and the cycle wording the ontology knows). The existing
+families are untouched, `site_prefix` is untouched, and the budget is untouched — this **replaces
+nothing**, it adds one shape inside the same `DEFAULT_QUERY_BUDGET`, so the cost per case does not
+move.
+
+Acceptance, stated first, and per §9 **two runs before believing any small move**:
+- the ceiling must be ≥ 9/10 and Warsaw should return; and
+- cases-at-rank-1 must not fall below the current 1.
+Dropping `site:` wholesale was already measured and rejected; this is the narrower version of the same
+hypothesis, which is why it is worth one more measurement rather than an argument.
+
+V2-13c shipped the cycle slugs. Two other changes were measured and rejected, and **two earlier
+statements in this file were wrong and are corrected**:
+
+- **Toronto's +11 was not the page-kind signal.** With that signal explicitly off, Toronto still
+  returns at #8 in three consecutive runs. It moved between runs and stayed; the cause is unknown.
+- **The 10/10 ceiling is not currently reproducible, and no code change explains it.** Warsaw's
+  `IN/S1-INF` is absent from what our queries retrieve in *every* configuration tried, including ones
+  that do not touch its URLs. A direct probe settles it: Exa returns that exact page at **rank 1** for
+  a natural-language query naming the cycle, and not at all for `site:uw.edu.pl "computer science"
+  "bachelor"`. The page is indexed; our query shape does not reach it.
+
+**A benchmark against a live third-party index measures that index too.** Do not compare against a
+baseline older than a few runs — re-measure it in the same session as the change, or drift gets
+attributed to code. This is now §9.
+
+**NEXT, exact and executable.**
+
+1. **Warsaw is a query-shape problem and is the most concrete lead left.** The winning query named the
+   cycle in plain language. `queries_for` already has a `site_prefix` switch and its families are
+   fixed; a family that states the degree in natural language ("first cycle", "undergraduate degree")
+   is worth measuring. Dropping `site:` wholesale was already tried and cost more than it gained.
+2. **Entity resolution (V2-22)** for the wrong-campus misses, unchanged and untried.
+3. **Page-kind as a prefilter concern**, not a ranking one, unchanged.
+4. Untouched: `wrong_scope_claim_rate` 5/5.
+
+Previous write-ahead (claude-opus-5, 2026-09-21, V2-13c): **teaching `degree_level_named` the cycle
+conventions European catalogues actually use.**
+
+Found while diagnosing V2-13b: Warsaw's catalogue writes the bachelor as `IN/S1-INF` and the master as
+`IN/S2-INF`. `_DEGREE_SLUGS` lists `msc`, `master`, `graduate` and their kin, sees neither, and the
+prefilter let a **master's page reach the top of a bachelor search**. This is the same class of error
+as `wrong_scope_claim_rate` — the right fact about the wrong population — and the prefilter is exactly
+where it should have been stopped, because a wrong degree level is already a rejection there.
+
+`S1`/`S2` is not a Warsaw quirk. It is the Bologna cycle numbering, written as `S1`/`S2` in Polish
+catalogues (`studia pierwszego/drugiego stopnia`), as `I stopnia` / `II stopnia` in prose, and as
+"first cycle" / "second cycle" in English. A numeric convention defeats a word list everywhere it is
+used.
+
+Scope — `app/adapters/discovery/live_discovery.py`, the shared reader every generator uses:
+- extend `_DEGREE_SLUGS` with the cycle forms, keeping the existing word slugs untouched;
+- require a path-segment boundary as the existing matcher already does, so `s1` inside an unrelated
+  token cannot fire — a two-character slug is exactly where a loose match would do damage.
+
+Risk stated plainly: this widens a rule the live pipeline already depends on, so the whole suite is
+the acceptance test, and the probe is re-run to check Warsaw.
+
+V2-13b is **measured and not enabled**, and the honest state of ranking is: one clear win available
+(Toronto +11) that currently costs a case, and a defect found underneath it.
+
+**NEXT, exact and executable.**
+
+1. **The real finding from this step, worth more than the signal:** Warsaw's top result became
+   `.../IN/S2-INF` — the **master's** programme — and the prefilter did not reject it, because that URL
+   names no recognisable degree level. `names_other_degree_level` reads slugs like `msc`/`master`; a
+   catalogue that encodes the cycle as `S1`/`S2` defeats it. That is a wrong-degree-level candidate
+   reaching the top of a bachelor search, which is the same class of error as
+   `wrong_scope_claim_rate`. Fix the degree reader first; it may also explain why Warsaw lost its
+   place.
+2. **Then retry page-kind as a *prefilter* concern, not a ranking one.** A research-output page is not
+   a weak candidate, it is the wrong kind of page, and rejections are counted and explained where a
+   score adjustment is not. Re-enable only with a run holding the ceiling at 10/10.
+3. **Entity resolution (V2-22)** for the wrong-campus misses, unchanged.
+4. Untouched: `wrong_scope_claim_rate` 5/5.
+
+Previous write-ahead (claude-opus-5, 2026-09-21, V2-13b): **teaching the ranking what kind of page it is
+looking at.** Retrieval is done — ten of ten reachable — and ranking is the only retrieval problem
+left: two cases at rank 1, Aalto's correct page at #19 behind *a research publication*, KAIST's at #30
+behind an organisation profile.
+
+`app/adapters/page_classifier.py` already distinguishes `PROGRAM_DETAIL`, `PROGRAM_CATALOG`, `NEWS`,
+`NAVIGATION` and `IRRELEVANT`, and the retrieval path has never consulted it. That is the gap: the
+ranking scores words and ignores what the page *is*.
+
+Scope — `app/adapters/search/retrieval.py`:
+- a `page_kind` signal from `classify_page(url=...)`, positive for a programme detail or catalogue page,
+  negative for news, navigation and irrelevant, neutral for unknown;
+- classification from the URL alone, because ranking happens before anything is fetched. A URL-only
+  verdict is weaker than one made on the page body, which is why it adjusts a score rather than
+  rejecting a candidate — the prefilter is where rejections belong.
+
+Also, one honest telemetry fix from the last run: `hop_entry_points` cannot currently tell *no host
+qualified* from *the host refused the connection*. HKU shows 0 and the cause is the second — its hosts
+score correctly and `admissions.hku.hk` resets the connection from this container. Two different facts
+deserve two different counters.
+
+Acceptance, stated before the run: Aalto and KAIST must move **up**, and no case may move down by more
+than the ±1 the provider's own variance explains (§9).
+
+V2-16d is **shipped, and it is the first change on this branch that improved the benchmark**:
+retrieval ceiling **9/10 → 10/10**, no case moved down by the hop. Still off by default —
+`discover_candidates(fetch=None)` — because production must pass a `Fetcher`-backed reader and
+`Fetcher` cannot reach the network in this container (§9).
+
+**NEXT, exact and executable.**
+
+1. **Ranking, which is now the only retrieval problem left.** Ten cases reachable, two at rank 1.
+   Two named causes from `SEARCH_PROBE.md`: wrong campus or faculty (UBC Okanagan for Vancouver,
+   Toronto Mississauga for St George) → V2-22 entity resolution and a `university` dimension finer than
+   "same registrable domain"; and not-a-programme-page (Aalto #19, KAIST #30) → the retrieval path
+   never consults `page_classifier`.
+2. **Two loose ends from the run**, both cheap: HKU opened **no** entry point at all
+   (`hop_entry_points: 0`) — either every candidate host scored below zero or the fetches failed; and
+   the probe should run twice per configuration, because Exa is not deterministic and ±1 position is
+   noise (§9).
+3. **Wire it into `runner.py`** — still the step that turns all of this into product behaviour, and
+   still needs a `Fetcher` that works plus owner authorisation for a live pipeline run.
+4. Untouched by any of this: `wrong_scope_claim_rate` 5/5.
+
+Previous write-ahead (claude-opus-5, 2026-09-21, V2-16d): **PR #15 is open** for everything up to here
 (https://github.com/wpalish/ashyq-apply/pull/15). It supersedes draft #14, which this branch contains.
 
 Now step 1 of the three V2-16c left: **hop candidates are appended after the search list, never
@@ -965,6 +1490,121 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+V2-20b, gates run by claude-opus-5 on 2026-09-21. All green: ruff check and format; mypy over `app` and
+`evaluation`; `pytest --cov=app --cov-fail-under=92` exit 0, **1852 collected**, 0 failed, coverage
+**94.58%**. `alembic heads`: one, now **`c5d01b7e4f83`**. Both new behaviours (lineage recorded; no
+successor when the page stopped saying it) are covered by tests that drain the real job queue against
+PostgreSQL, not by unit stubs. Demo golden unchanged — a demo run never re-reads a page.
+
+V2-20a, gates run by claude-opus-5 on 2026-09-21. All green: ruff check and format; mypy over `app` and
+`evaluation`; `pytest --cov=app --cov-fail-under=92` exit 0, **1848 collected**, 0 failed, coverage
+**94.56%**. `alembic heads`: one, now **`a1f3c8d75e29`** (was `d9c4e7a21b83`) — the first migration this
+session. PostgreSQL round-trip and the CASCADE behaviour are covered by tests that run against the real
+database, not SQLite standing in for it. Demo golden hash unchanged.
+
+V2-26, gates run by claude-opus-5 on 2026-09-21. All green: ruff check and format; mypy over `app` and
+`evaluation`; `pytest --cov=app --cov-fail-under=92` exit 0, **1839 collected**, 0 failed, coverage
+**94.55%**. `GOLDEN_DEMO_SHA256` re-captured a third time: **one added line, zero removed**, the proof
+recorded beside the constant.
+
+V2-25, gates run by claude-opus-5 on 2026-09-21. All green: ruff check and format; mypy over `app` and
+`evaluation`; `pytest --cov=app --cov-fail-under=92` exit 0, **1835 collected**, 0 failed, coverage
+**94.53%**. `GOLDEN_DEMO_SHA256` re-captured a second time, with the additive proof recorded beside it.
+One of my own V2-24 tests failed **only in the full suite** and passed alone — it picked "the first
+result row" and result ids are random, so it sometimes chose a result with no deadline claim. Fixed by
+selecting deterministically; see §9.
+
+V2-24, gates run by claude-opus-5 on 2026-09-21. All green: ruff check and format; mypy over `app` and
+`evaluation`; `pytest --cov=app --cov-fail-under=92` exit 0, **1833 collected**, 0 failed, coverage
+**94.53%**. Demo golden hash unchanged, as predicted in the write-ahead: nothing in the demo corpus is
+declined, so no question is produced there.
+
+V2-23, gates run by claude-opus-5 on 2026-09-21. All green: ruff check and format; mypy over `app` and
+`evaluation`; `pytest --cov=app --cov-fail-under=92` exit 0, **1829 collected**, 0 failed, coverage
+**94.52%**. The demo golden hash is **unchanged** — the rule is a no-op where a page states the intake
+that was asked for, which is every page in the demo corpus.
+
+V2-22b, gates run by claude-opus-5 on 2026-09-21. All green: ruff check and format; mypy over `app` and
+`evaluation`; `pytest --cov=app --cov-fail-under=92` exit 0, **1823 collected**, 0 failed, coverage
+**94.51%**. Re-scoring the frozen `baseline/capture.json` against `ground_truth.reviewed.json` produces a
+report identical to `metrics.reviewed.json` — `wrong_scope_claim_rate` **5/5**, as it must be until a new
+capture exists.
+
+V2-22, gates run by claude-opus-5 on 2026-09-21. All green: ruff check and format; mypy;
+`pytest --cov=app --cov-fail-under=92` exit 0, **1820 collected**, 0 failed, coverage **94.51%**;
+**18** tests in `tests/test_scope_reader.py`; `app/adapters/scope_reader.py` at **100%**.
+`alembic heads`: one, `d9c4e7a21b83`, unchanged — still no migration; the scope rides in the JSON payload.
+`GOLDEN_DEMO_SHA256` moved once, deliberately, with the additive proof recorded beside it (§8, §9).
+No benchmark number changed yet, and none should have: this step *records* scope, it does not yet use it.
+PostgreSQL and E2E not run locally — CI runs both on the PR.
+
+V2-21b, gates run by claude-opus-5 on 2026-09-21. All green: ruff check and format; mypy;
+`pytest --cov=app --cov-fail-under=92` exit 0, **1804 collected**, 0 failed, coverage **94.48%**.
+`alembic heads`: one, `d9c4e7a21b83`, unchanged — no migration was needed.
+The demo golden-hash guard failed on the first attempt and is green now without re-capturing it.
+
+V2-21, gates run by claude-opus-5 on 2026-09-21. All green: ruff check and format; mypy;
+`pytest --cov=app --cov-fail-under=92` exit 0, **1798 collected**, 0 failed, coverage **94.46%**;
+**28** tests in `tests/test_claim_scope.py`; `app/domain/claim_scope.py` at **100%**.
+No benchmark number changed and none could: nothing reads the new type yet.
+PostgreSQL and E2E not run locally — CI runs both on the PR.
+
+V2-13e, gates run by claude-opus-5 on 2026-09-21. All green: ruff check and format; mypy;
+`pytest --cov=app --cov-fail-under=92` exit 0, **1770 collected**, 0 failed, coverage **94.44%**.
+**The acceptance here is that nothing changed**: every pre-existing test passes untouched with no
+provider configured, which is what "dormant" has to mean. `seed_demo.py` was not re-run — it needs a
+migrated database and this container has no working `Fetcher`; the demo path does not reach
+`_add_search_results` without a provider, and CI runs the demo oracle on the PR.
+Baseline unchanged: ceiling **10/10**, correct-at-rank-1 **4**.
+
+V2-22a, gates run by claude-opus-5 on 2026-09-21. All green: ruff check and format; mypy;
+`pytest --cov=app --cov-fail-under=92` exit 0, **1767 collected**, 0 failed, coverage **94.51%**.
+**Fifteen live runs this session.** New baseline, two agreeing runs: ceiling **10/10**,
+correct-at-rank-1 **4** (was 2), committed as `baseline/search_probe.exa.hop.json`.
+PostgreSQL and E2E not run locally — CI runs both on the PR.
+
+V2-13d, gates run by claude-opus-5 on 2026-09-21. All green: ruff check and format; mypy;
+`pytest --cov=app --cov-fail-under=92` exit 0, **1762 collected**, 0 failed, coverage **94.49%**.
+**Thirteen live runs this session**; the last was one targeted Toronto run (6 queries) rather than a
+full probe, because provenance made a full run unnecessary. Baseline unchanged: ceiling **10/10**,
+correct-at-rank-1 **2**.
+PostgreSQL and E2E not run locally — CI runs both on the PR.
+
+V2-11b, gates run by claude-opus-5 on 2026-09-21. All green: ruff check and format; mypy;
+`pytest --cov=app --cov-fail-under=92` exit 0, **1759 collected**, 0 failed, coverage **94.49%**.
+**Twelve live runs this session.** Current baseline, shipped configuration, two near-identical runs:
+ceiling **10/10**, correct-at-rank-1 **2**, 60 queries per run. Committed as
+`baseline/search_probe.exa.hop.json`.
+PostgreSQL and E2E not run locally — CI runs both on the PR.
+
+V2-13c, gates run by claude-opus-5 on 2026-09-21. All green: ruff check and format (193 files);
+mypy (193 source files); `pytest --cov=app --cov-fail-under=92` exit 0, **1758 collected**, 0 failed,
+coverage **94.49%**. The whole suite is the acceptance test here, because the cycle slugs widen a rule
+the live pipeline already depends on.
+**Ten live runs this session**, 50 queries each. Current baseline, shipped configuration:
+ceiling **9/10**, correct-at-rank-1 **1**, committed as `baseline/search_probe.exa.hop.json`.
+Rejected by measurement: page-kind ranking (ceiling 9/10, Warsaw lost) and dropping the `site:` prefix
+(Aalto −6, three cases −1, rank-1 count 2 → 0).
+PostgreSQL and E2E not run locally — CI runs both on the PR.
+
+V2-13b, gates run by claude-opus-5 on 2026-09-21. All green: ruff check and format; mypy;
+`pytest --cov=app --cov-fail-under=92` exit 0, **1746 collected**, 0 failed, coverage **94.49%**.
+**Three more live runs, 50 queries each** (eight in total this session). Page-kind ranking with
+positive hints: ceiling 9/10, four cases down. Negative hints only, twice, identical both times:
+ceiling **9/10**, Toronto **#19 → #8**, everything else unchanged, Warsaw lost. Not enabled.
+HKU's `hop_entry_points: 0` diagnosed: its hosts score correctly (`admissions.hku.hk` = 2) and the
+site resets the connection from this container.
+PostgreSQL and E2E not run locally — CI runs both on the PR.
+
+V2-16d, gates run by claude-opus-5 on 2026-09-21. All green: ruff check and format (193 files);
+mypy (193 source files); `pytest --cov=app --cov-fail-under=92` exit 0, **1742 collected**, 0 failed,
+coverage **94.54%**.
+**Four live runs, 50 queries each.** Search only **9/10**; hop fused as an equal **8/10**; hop appended
+inside the same budget **9/10** (contributing nothing); hop as additive coverage with scored entry
+points **10/10**, KAIST #30, nothing moved down by the hop. HKU reads 5 → 6 in every hop run with
+`hop_candidates: 0`, i.e. provider variance, not the hop.
+PostgreSQL and E2E not run locally — CI runs both on the PR.
+
 V2-16c, gates run by claude-opus-5 on 2026-09-21. All green: ruff check and format;
 mypy; `pytest --cov=app --cov-fail-under=92` exit 0, **1734 collected**, 0 failed, coverage **94.39%**.
 **Two live runs, 50 queries each.** Search only: ceiling **9/10**, correct-at-rank-1 **2** — this is the
@@ -1354,6 +1994,22 @@ V2-01: evaluation-only Pydantic schema and JSON corpus/capture/metric contracts 
 | 2026-09-09 | security audit | `export/tabular.py`: new public `neutralize(value)`, applied to every exported cell | Formula injection. |
 | 2026-09-09 | security audit | `payments/errors.py`: new `UnconfiguredWebhookSecret`; `get_provider()` no longer defaults the fake's secret | A missing secret is now an error, not a default. |
 | 2026-09-09 | security audit | `frontend/src/components/primitives.tsx`: new exported `isSafeHref(url)` | Non-http(s) sources render as text. |
+| 2026-09-21 | V2-20b | `claims.superseded_at`, `claims.superseded_by_id` (FK to `claims.id`, ON DELETE SET NULL); `alembic heads` moves to `c5d01b7e4f83` | Additive: both nullable, both empty on every existing row. A NULL successor on a superseded row means the page no longer says it — do not backfill it. |
+| 2026-09-21 | V2-20a | New table `source_snapshots`; `alembic heads` moves to `a1f3c8d75e29`; `SourcePage.record` also writes a snapshot when it has a content hash | Additive. No existing row, column or payload changes. A fetch with no content hash records no version. |
+| 2026-09-21 | V2-26 | `ConflictKind` in `app/domain/enums.py`; `Conflict.kind` (defaults to `TRUE_CONFLICT`); a non-true conflict no longer stamps its claims `CONFLICTING` | Additive on the payload (one key). Behaviour change only where two claims state differing scopes — previously both were poisoned. |
+| 2026-09-21 | V2-25 | All five claim-producing adapters set `scope`; `GOLDEN_DEMO_SHA256` re-captured (second time) | Additive again — proven before the hash moved. A bare year range no longer scopes a page; it needs a marker beside it. |
+| 2026-09-21 | V2-24 | `EligibilityOutcome.out_of_scope: list[OutOfScopeClaim]`; results gain `UnresolvedQuestion`s for declined evidence | Additive on both. No new API or frontend field — the questions ride the existing `unresolved` channel. |
+| 2026-09-21 | V2-23 | `eligibility._first` / `_confirmed` take a `RequestedScope`; a claim whose recorded scope contradicts the request is not used, and one silent on it cannot be a hard filter | Behaviour change for claims that have a recorded scope only. `scope is None` is untouched. The requested scope holds the intake and nothing else: the academic year on a claim is a server default. |
+| 2026-09-21 | V2-22b | `evaluation/research/mapping.evidence_scope`; `live.py` and `map_claims.py` build an evidence scope through it | A capture taken from now on records what the page stated, not what the run asked for. Claims with no `scope` key keep the old request-side behaviour on purpose, so frozen captures re-score identically. |
+| 2026-09-21 | V2-22 | `ClaimBuilder(scope=...)`; `web_requirements` claims now carry a `scope` object in their persisted payload; `GOLDEN_DEMO_SHA256` re-captured once | The drift was proven additive before the hash moved (0 removed lines, every addition inside a claim's `scope`), and that proof is recorded beside the constant. A claim without a scope still serialises byte-identically. |
+| 2026-09-21 | V2-21b | `app/schemas/claim.py`: `Claim.scope: ClaimScope | None = None`, omitted from serialisation when `None` | No migration: `ClaimRow.payload` is JSON. `None` (nobody recorded one) and `ClaimScope()` (a page that stated none) are different facts — do not collapse them. |
+| 2026-09-21 | V2-21 | `app/domain/claim_scope.py`: `ClaimScope`, `RequestedScope`, `SCOPE_DIMENSIONS` (nine), `covers() -> Verdict`, `contradictions`, `gaps`, `narrower_than`, `explain`, `from_mapping` | `covers()` returns a `Verdict`; coercing it to a bool at a call site reintroduces the wrong-scope failure. Nothing reads it yet. |
+| 2026-09-21 | V2-13e | `LiveDiscoveryAdapter._add_search_results(...)`; programme pages from search are appended to `selected[PageCategory.PROGRAM_PAGE]` | **The first change on this branch that touches live pipeline behaviour.** Dormant unless `UNIMATCH_SEARCH_PROVIDER` is set. |
+| 2026-09-21 | V2-22a | `live_discovery.is_seed_host(url)`; `SIGNAL_WEIGHTS["registry_seed_host"]` | Reads `institution_registry.json`'s homepage and seeds. Adding a verified host to an entry changes ranking — it is data with a `seeds_verified_on` date, so it needs a human check like the corpus. |
+| 2026-09-21 | V2-13d | `RankedCandidate.found_by: tuple[str, ...]`; `rank_candidates(..., found_by=...)` | Discovery provenance per §11. A hop candidate has an empty `found_by` and carries `found_by_navigation_hop` in its signals instead. |
+| 2026-09-21 | V2-11b | `intent.py`: new `natural_language` family and `_degree_in_words`; the family list is now six | Adds a shape, replaces nothing. Costs one more query per case — check `DEFAULT_QUERY_BUDGET` before adding a seventh. |
+| 2026-09-21 | V2-13c | `live_discovery._DEGREE_SLUGS`: Bologna cycle forms added to every level; `queries_for(..., site_prefix=True)` | A shared rule every generator reads. `site_prefix=False` was measured and is worse — the switch stays for the next provider. |
+| 2026-09-21 | V2-13b | `page_classifier.classify_url(url) -> PageType`; `rank_candidates(..., rank_by_page_kind=False)`; `RetrievalReport.hop_entry_points_unreachable` | `classify_url` is URL-only and deliberately negative-only. The ranking signal is off; re-enable only with a run holding the ceiling at 10/10. |
 | 2026-09-21 | V2-16c | `retrieval.py`: `discover_candidates(..., fetch=None, hop_entry_points=3)`, `FetchPage`; `RetrievalReport.hop_entry_points` / `.hop_candidates` | The hop is **off** unless a caller passes `fetch`. Production must pass a `Fetcher`-backed reader. |
 | 2026-09-21 | V2-16b | `app/adapters/search/navigation.py`: `links_from`, `navigation_candidates`, `NavigationLink`, `MAX_LINKS_PER_PAGE`, `DEFAULT_HOP_LIMIT` | Reads HTML it is handed; fetches nothing. Emits `Generator.CATALOGUE_WALKER` candidates for `fuse`. |
 | 2026-09-21 | probe | `evaluation/research/search_probe.py`: `probe_case`, `run`, CLI `python -m evaluation.research.search_probe --live` | Evaluation tooling; refuses to run without `--live` and a key. Re-run after any retrieval or ranking change. |
@@ -1373,6 +2029,81 @@ V2-01: evaluation-only Pydantic schema and JSON corpus/capture/metric contracts 
 
 V2-01: set PYTHONUTF8=1 on Windows for text fixtures; do not modify evaluation schemas while a live batch is running (parent and child processes can import different versions). Instrumented baseline segments and restart are recorded in baseline/README.md. Scope matching is deliberately literal; missing/different names count as conservative match failures, not human-confirmed wrong facts.
 
+- **Never read a gate through `| tail -1`.** `ruff format --check` prints `Would reformat: <file>`
+  *above* its summary line, so a one-line tail shows "208 files already formatted" while the command
+  exits 1. I shipped an unformatted file and CI caught it on PR #16. The gate's exit code is the
+  result; the summary line is not. Read the whole output, or check `$?`.
+- **"The first row" is not a selection when ids are random.** A V2-25 gate run failed on a test I wrote
+  in V2-24, which passed on its own every time: it took `.order_by(id).first()` of the demo's results
+  and assumed that row had a deadline claim. Ids are random hex, so which row that is varies with the
+  run. **A test that picks a row must pick it by something the test actually needs.**
+- **Rigour that disarms the product is not rigour.** V2-23's first cut required a page to match the
+  requested intake *and* academic year. Every demo page states the intake and none states the year, so
+  every hard filter in the demo silently disappeared — a university stopped being excluded by a minimum
+  it genuinely fails. The year was never requested by anyone: it is `settings.academic_year`. **Check
+  what a new rule does to the demo before believing it is strict rather than broken.**
+- **A measurement can carry the same bug it is measuring.** `wrong_scope_claim_rate` sat at 5/5 through
+  the whole of Phase 1, and the capture that produced it recorded the *requested* intake as the evidence's
+  scope on every claim of every case. The rate was partly measuring our own question. **When a number will
+  not move, read the artefact it is computed from before changing the code it is meant to grade.**
+- **A month and a year are a date, not an intake.** The first draft of `scope_reader` matched any
+  "September 2026", and the demo dump showed the result: 39 claims whose recorded intake was a
+  *deadline* ("15 January 2027"). It was caught only because the golden-hash guard forced a look at the
+  actual diff. A month now counts as an intake only with no day number in front of it and an intake
+  word beside it; seasons ("Fall 2026") still count alone. **Look at what a new extractor produced, not
+  just at whether the tests pass** — both readings passed every test written up to that point.
+- **Re-capturing a golden hash is allowed only after proving the drift additive.** V2-22 legitimately
+  changes the demo payload, which the guard's old wording did not permit at all. The answer was not to
+  weaken the guard but to raise its bar: diff the two dumps, show 0 removed lines and every addition
+  confined to the intended shape, and record that proof beside the constant. The wording now demands it.
+- **A new optional field still changes the persisted payload, and a golden-hash test will say so.**
+  Adding `Claim.scope` broke `test_the_demo_pipeline_payload_is_byte_identical_to_baseline` on the
+  first try. That test permits re-capturing its hash only for documented masking shapes, which a new
+  field is not, so the answer was to make the change genuinely additive: a `@model_serializer` omits
+  the key when nothing recorded a scope. **Absent in the JSON now means exactly what `None` means in
+  the model.** Re-capture a golden only when the test's own wording allows it.
+- **The benchmark-path guard reads docstrings too.**
+  `test_production_does_not_import_or_read_evaluation_answers` rejects any string constant under `app/`
+  that names the benchmark directory — a comment citing a write-up there trips it. That bluntness is
+  the point: production must not know where the answers live. Reword the comment; never relax the test.
+- **Look for the data before declaring it missing.** Campus disambiguation was written off as needing
+  data the repository did not hold. It held it: `institution_registry.json` records verified seed URLs
+  per institution and names the host that publishes programmes. Three ranking experiments were rejected
+  first, each trying to infer from a URL what a verified record already stated. When the guide names a
+  place where institution-specific knowledge belongs, read that place first.
+- **Without per-candidate provenance, every ranking story is a guess.** Three attributions this
+  session were wrong — a gain credited to the wrong change, a loss credited to a signal that never
+  touched the case, and a regression blamed on a query family that had actually *found* the answer.
+  §11 asked for `discovered_by` / `query_or_parent_url` from the start; it was skipped, and the cost
+  was several live runs spent testing stories instead of code.
+- **Five variations of one query shape are one query.** Five of six families were `site:` plus quoted
+  terms. Against a neural index that is a single question asked five times; adding one family phrased
+  as a sentence — naming the degree in words, cycle wording included — reached a page the operator
+  shape never returned. Vary the *shape*, not only the words.
+- **A benchmark against a live third-party index measures that index too.** The retrieval ceiling read
+  10/10 and, a few runs later, 9/10, with no code change between them that touches the case that
+  moved — the provider simply stopped returning Warsaw's bachelor page for our queries. Re-measure the
+  baseline in the same session as the change; anything older attributes drift to code. Two runs of a
+  configuration before believing a small move, per the variance note below.
+- **A URL says reliably what a page is *not*, and unreliably what it is.** Scoring `/programmes/` and
+  `/admissions/` as positive hints promoted catalogue *index* pages over the specific programme asked
+  for and cost four cases. Recognising research outputs, news and vacancies cost nothing and gained a
+  case eleven places. Keep URL heuristics negative.
+- **A degree level encoded as `S1`/`S2` defeats the degree reader.** Warsaw's catalogue writes the
+  bachelor as `IN/S1-INF` and the master as `IN/S2-INF`; `names_other_degree_level` looks for
+  `msc`/`master`-shaped slugs and sees neither, so a master's page passed the prefilter into a bachelor
+  search. Any numeric cycle convention does this.
+- **"Never displace" and "must add" cannot both hold inside one fixed budget.** The append-only hop
+  looked correct and contributed *exactly nothing* for three consecutive live runs: search returned
+  `top_k` candidates, the hop appended after them, and the final truncation cut every appended row off
+  again. Truncate the ranked list first and let coverage extend it. Invisible in a unit test where the
+  search list is short.
+- **Search rank says which host search liked, not which host runs degrees.** Choosing hop entry points
+  by rank opened KAIST's publication repository, a graphics lab and the sociology department, while
+  `cs.kaist.ac.kr` sat sixth and was never opened. Score hosts by what they are.
+- **Exa is not deterministic: one run cannot detect a one-position change.** HKU read 5 → 6 in four
+  consecutive runs whose records show the hop contributed nothing to it. Compare ceilings and large
+  moves; treat ±1 as noise unless two runs agree.
 - **A navigation list is not a ranking, and fusing it as one loses measured ground.** Reciprocal Rank
   Fusion assumes each input orders its results by relevance. Link order on a page is layout. Fusing
   twenty navigation links — each restarting at rank 1 on its own page, at the same generator weight as
@@ -1530,6 +2261,23 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 | 2026-09-21 UTC | claude-opus-5 | V2-10b → live probe | Owner approved the §6 exception and authorised the key. Smoke-tested the adapter against the real API, then probed all ten benchmark cases: **retrieval ceiling 1/10 → 9/10**, zero cases now retrieve nothing, and a reranker went from zero headroom to seven cases. Wrote up the two remaining failure shapes (wrong campus, not-a-programme-page), marked RERANKER_CEILING superseded for this path, and reordered §5 to attack ranking instead of retrieval. 50 queries. Gates green (1713 backend at 94.46%).
 | 2026-09-21 UTC | claude-opus-5 | live probe → V2-16b | Investigated KAIST before deciding anything: search finds its department root reliably and the programme is one navigation hop away, so the answer is a hop, not better queries or a per-university hack. Built it, and it failed on the real page three ways the fixture hid — attribute-as-text, substring-as-word, and http/https double counting. Fixed each, pinned each as a test, and `content?menu=188` went from unreachable to rank 3. Gates green (1734 backend at 94.50%).
 | 2026-09-21 UTC | claude-opus-5 | V2-16b → V2-16c | Fused the hop into retrieval, measured it live, and **did not ship it**: the ceiling fell 9/10 → 8/10 and six correct pages moved down. Kept the mechanism behind an injected fetch that defaults to off, restored the search-only baseline, and wrote up why — a navigation list is layout, not relevance, so it must supplement a ranked generator rather than interleave with it. Gates green (1734 backend at 94.39%).
+| 2026-09-21 UTC | claude-opus-5 | V2-16c → V2-16d | Opened **PR #15**. Then got the hop to pay: ceiling **9/10 → 10/10**, KAIST from unreachable to #30, nothing moved down. Took four measured runs and three rejected designs — fusing as an equal cost a case, entry points by search rank opened a lab and a repository, and appending inside the same budget was silently cut off every time. Each lesson is in §9 and SEARCH_PROBE.md.
+| 2026-09-21 UTC | claude-opus-5 | V2-16d → V2-13b | Taught the ranking to ask what kind of page it is looking at. Toronto **+11**, KAIST +2, everything else unchanged — and Warsaw lost, twice, so **not enabled**. Kept `classify_url` as a capability and wrote down why the signal is off. The diagnosis found a better bug underneath: Warsaw's catalogue encodes the master's as `S2-INF`, which the degree reader cannot see, so a master's page reached the top of a bachelor search. Gates green (1746 backend at 94.49%).
+| 2026-09-21 UTC | claude-opus-5 | V2-13b → V2-13c | Fixed the degree reader: Bologna cycle numbering (`S1`/`S2`) is now a degree level, so a master's page stops passing a bachelor prefilter. Measured and rejected two more changes, and **corrected two earlier claims of my own** — Toronto's +11 was not the page-kind signal, and the 10/10 ceiling is not reproducible because the provider stopped returning Warsaw's page, not because of any code. Re-baselined at 9/10. Gates green (1758 backend at 94.49%).
+| 2026-09-21 UTC | claude-opus-5 | V2-13c → V2-11b | Added one query phrased like a person, following the Warsaw evidence. Ceiling **9/10 → 10/10**, Warsaw back, rank-1 cases 1 → 2, two runs agreeing. Toronto pays eleven places and a run costs 20% more queries — both written down rather than buried. Gates green (1759 backend at 94.49%).
+| 2026-09-21 UTC | claude-opus-5 | V2-11b → V2-13d | Built the per-candidate query provenance §11 asked for and never got, then used it to diagnose Toronto in one 6-query run: the new query family was blamed and is in fact one of the two that found the correct page — five of seven candidates above it are other campuses of the same university. Named the cause, shipped no fix, and put the campus registry data to the owner. Gates green (1762 backend at 94.49%).
+| 2026-09-21 UTC | claude-opus-5 | V2-13d → V2-22a | The owner asked why no fix was shipped. Correct question: the data was already in the repository. The registry's verified seeds name the host that publishes programmes, so a candidate there now outranks a sibling campus. Cases-at-rank-1 **2 → 4**, Toronto #19 → #4, Warsaw and HKU and UBC to #1, ceiling still 10/10, two runs agreeing. Best change of the session and available three attempts earlier. Gates green (1767 at 94.51%).
+| 2026-09-21 UTC | claude-opus-5 | V2-22a → V2-13e | Wired Phase 1 into live discovery so the owner can actually see it: search results are appended after the sitemap and walker, the hop reads through the adapter's own Fetcher, and the whole thing is dormant without a provider — proved by the entire pre-existing suite passing untouched. Also told the owner plainly that there is no V2-18 and that better retrieval does not fix scope. Gates green (1770 at 94.44%).
+| 2026-09-21 UTC | claude-opus-5 | V2-13e → V2-21 | Started Phase 2 on the failure Phase 1 could never fix. A claim's scope is now a first-class thing over the spec's nine dimensions, and a page that does not say who it is for answers UNKNOWN rather than yes — silence is not agreement. 28 tests, module at 100%, nothing wired yet on purpose. Gates green (1798 at 94.46%).
+| 2026-09-21 UTC | claude-opus-5 | V2-20b | Closed the claim half of plan V2-20: a superseded claim now says when it stopped being current and what replaced it, and says nothing when nothing replaced it. Refused to build a separate ClaimVersion table for a query nobody makes yet, and wrote down why. Gates green (1852 at 94.58%), one alembic head. |
+| 2026-09-21 UTC | claude-opus-5 | V2-20a | First plan-numbered Phase 2 entity task: a page's observed versions now survive the page's own update. Reconciled my drifted task numbering with the execution plan in §5 first, so the plan stays the source of truth. Gates green (1848 at 94.56%), one alembic head. |
+| 2026-09-21 UTC | claude-opus-5 | V2-26 | Classified conflicts by scope, meeting a Phase 2 exit criterion. Deliberately asymmetric: a difference must be *stated* to explain a disagreement away, because dismissing a real conflict is the expensive direction. Demo gained one line and nothing else. Gates green (1839 at 94.55%). |
+| 2026-09-21 UTC | claude-opus-5 | V2-25 | Scope on the remaining four adapters. 127 claims gained `population: international`; government pages correctly gained nothing. Found and fixed a reader bug the demo exposed (a bare year range read as the page's year, from a figure's year on Toronto's award). Also fixed an order-dependent test of my own. Gates green (1835 at 94.53%). |
+| 2026-09-21 UTC | claude-opus-5 | V2-24 | Made the refusal visible: a claim set aside for scope now produces a question naming the page and the reason, blocking only when nothing else answered. Tested end to end through `_stage_assess` on a real demo run, not just in the domain. Gates green (1833 at 94.53%). |
+| 2026-09-21 UTC | claude-opus-5 | V2-23 | Made the assessment act on scope: refuse a claim whose page is about another intake, and never let a page silent on it eliminate a candidate. The first cut also demanded the academic year and quietly removed every hard filter in the demo; the demo dump is what caught it. Final rule is a no-op on the demo and byte-identical there. Gates green (1829 at 94.52%). |
+| 2026-09-21 UTC | claude-opus-5 | V2-22b | Re-measured as instructed: 5/5, unchanged. Found why while reading the capture — its evidence scope was built from the request, so the benchmark compared labels against our own question. Fixed both capture paths through one helper, kept the pre-V2-22 fallback so frozen captures re-score identically (verified), and left the number where it is: it needs a live re-capture with network, which this container lacks. Gates green (1823 at 94.51%). |
+| 2026-09-21 UTC | claude-opus-5 | V2-22 | Filled the scope from the page's own words. The reader refuses four of the nine dimensions in writing and treats ambiguity as silence. Its first draft read deadline dates as intakes in 39 demo claims; the golden-hash guard forced the look that caught it. The golden was re-captured once, after proving the drift additive, and the guard's wording now demands that proof. Gates green (1820 at 94.51%). The rate itself is unmoved and expected to be — using the scope is the next step. |
+| 2026-09-21 UTC | claude-opus-5 | V2-21 → V2-21b | Put the scope on the claim. Found no migration was needed — the payload column is JSON — and kept `alembic heads` at one. A golden-hash guard caught the payload drift immediately; rather than re-capture a hash the test does not permit re-capturing, the field is now omitted when unrecorded, so absent in JSON means exactly what None means in the model. Gates green (1804 at 94.48%).
 
 | 2026-09-20 | gpt-6-astra | b267b337 → V2-00 in progress | Startup/recovery, PR inventory, all pack files read; isolated worktree preserves existing dirty research work. |
 

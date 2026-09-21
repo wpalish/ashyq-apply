@@ -160,9 +160,29 @@ class TestQueriesAreBoundedAndOrdered:
         with pytest.raises(ValueError, match="Unknown query families"):
             queries_for(an_intent(), families=["addmissions"])
 
-    def test_every_query_is_restricted_to_the_institutions_domain(self):
+    def test_every_operator_query_names_the_domain_and_the_plain_one_names_the_institution(self):
+        """The restriction itself is enforced by the provider's domain filter.
+
+        `discover_candidates` always passes `domains=[intent.domain]`, and a
+        test in `test_hybrid_retrieval` pins that. This one checks that no
+        query wanders off to some *other* institution in its text: an operator
+        query says the domain, and the natural-language one says the
+        institution by name.
+        """
         for query in queries_for(an_intent(population_marker="international"), budget=99):
-            assert query.text.startswith("site:nu.edu.kz ")
+            if query.family == "natural_language":
+                assert query.text.startswith("Nazarbayev University ")
+            else:
+                assert query.text.startswith("site:nu.edu.kz ")
+
+    def test_the_plain_query_carries_no_search_operators(self):
+        """Its whole reason to exist: a neural index reads meaning, not syntax."""
+        plain = next(
+            q for q in queries_for(an_intent(), budget=99) if q.family == "natural_language"
+        )
+
+        assert "site:" not in plain.text
+        assert '"' not in plain.text
 
     def test_the_intake_year_appears_only_when_asked_for(self):
         assert "2027" in rendered(an_intent(intake_year=2027))

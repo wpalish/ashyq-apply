@@ -172,6 +172,20 @@ class DiscoveryQuery:
     family: str
 
 
+def _degree_in_words(degree: DegreeLevel) -> str:
+    """How a person names this level out loud, including the cycle wording.
+
+    ``first cycle`` is what the Bologna catalogues that defeat a slug reader
+    call a bachelor, and naming it is what reached Warsaw's page.
+    """
+    return {
+        DegreeLevel.FOUNDATION: "foundation year",
+        DegreeLevel.BACHELOR: "bachelor undergraduate first cycle",
+        DegreeLevel.MASTER: "master second cycle",
+        DegreeLevel.PHD: "doctoral PhD",
+    }[degree]
+
+
 def _degree_aliases(degree: DegreeLevel) -> str:
     return {
         DegreeLevel.FOUNDATION: "foundation",
@@ -186,6 +200,7 @@ def queries_for(
     *,
     budget: int = DEFAULT_QUERY_BUDGET,
     families: Sequence[str] = (),
+    site_prefix: bool = True,
 ) -> tuple[DiscoveryQuery, ...]:
     """Render an intent into at most ``budget`` queries, best first.
 
@@ -196,11 +211,28 @@ def queries_for(
     if budget < 1:
         raise ValueError(f"A query budget must be at least 1, got {budget}")
 
-    site = f"site:{intent.domain}"
+    # ``site:`` is keyword-search syntax. A provider that takes a domain filter
+    # is already being told the domain, and repeating it inside the query text
+    # is noise — on a neural index it skews the query's meaning rather than
+    # narrowing it. Measured: with ``site:`` our queries never retrieved
+    # Warsaw's bachelor page; without it, a query naming the cycle in plain
+    # language returned it first.
+    site = f"site:{intent.domain}" if site_prefix else intent.institution
     degree = _degree_aliases(intent.degree)
     year = f" {intent.intake_year}" if intent.intake_year else ""
     candidates: list[DiscoveryQuery] = [
         DiscoveryQuery(f'{site} "{intent.field}" "{degree}"{year}', "field_and_degree"),
+        # Phrased the way a person would ask, with no search operators and no
+        # quoting. The other families are five variations of one shape —
+        # ``site:`` plus quoted terms — which is keyword syntax; a neural index
+        # reads a query for meaning, so five variations of one shape are one
+        # query asked five times. Measured: this shape returns Warsaw's
+        # bachelor page first where the operator shape never returns it at all.
+        DiscoveryQuery(
+            f"{intent.institution} {_degree_in_words(intent.degree)} "
+            f"{intent.field} programme{year}",
+            "natural_language",
+        ),
         DiscoveryQuery(f'{site} programmes "{intent.field}"{year}', "programmes"),
         DiscoveryQuery(f'{site} courses "{intent.field}"{year}', "courses"),
         DiscoveryQuery(f'{site} undergraduate "{intent.field}"', "undergraduate"),

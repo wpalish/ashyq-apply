@@ -19,6 +19,7 @@ from app.adapters.extraction import (
     is_official_domain,
 )
 from app.adapters.fetching import Fetcher
+from app.adapters.scope_reader import read_scope
 from app.domain.enums import ClaimType, DocumentOwner, DocumentPurpose, SourceSpecificity
 from app.schemas.claim import UnresolvedQuestion
 from app.schemas.result import DocumentChecklist, DocumentItem, Scholarship
@@ -193,6 +194,7 @@ class WebDocumentsAdapter:
             or is_official_domain(url, [candidate.domain]),
             extraction_method="fixture" if url.startswith("fixture://") else "html_rule",
             accessed_at=res.fetched_at,
+            scope=read_scope(text, title=html_title(res.text)),
         )
 
         items: list[DocumentItem] = []

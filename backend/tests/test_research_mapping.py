@@ -335,3 +335,64 @@ def test_direct_policy_unknown_is_also_unanswered(value):
     result = map_predictions([claim("sat_policy", value)], identities(), "Example")
     assert result[0].key == "sat.policy"
     assert result[0].value is None
+
+
+# --- V2-22b: the capture records the page, not the question -------------------
+
+
+def a_raw_claim(**over):
+    raw = {
+        "claim_type": "ielts_min_overall",
+        "normalized_value": 6.5,
+        "original_text_excerpt": "IELTS overall 6.5",
+        "source_url": "https://example.edu/entry",
+        "accessed_at": "2026-09-21T00:00:00+00:00",
+        "official_domain": True,
+        "program": "Computer Science",
+        "intake": "fall 2027",
+        "academic_year": "2026/27",
+    }
+    raw.update(over)
+    return raw
+
+
+def test_a_claim_that_states_its_scope_is_captured_with_the_page_s_words():
+    from evaluation.research.mapping import evidence_scope
+
+    scope = evidence_scope(
+        a_raw_claim(scope={"intake": "Fall 2026", "population": "international"}),
+        university="Example University",
+        programme="Computer Science",
+        degree="bachelor",
+    )
+    assert scope.intake == "Fall 2026"
+    assert scope.population == "international"
+
+
+def test_a_dimension_the_page_was_silent_on_is_a_gap_not_the_request():
+    """The 5/5 wrong-scope rate is made of this exact substitution."""
+    from evaluation.research.mapping import evidence_scope
+
+    scope = evidence_scope(
+        a_raw_claim(scope={"population": "international"}),
+        university="Example University",
+        programme="Computer Science",
+        degree="bachelor",
+    )
+    assert scope.intake is None
+    assert scope.academic_year is None
+
+
+def test_a_claim_written_before_scope_existed_is_captured_exactly_as_before():
+    """Frozen captures are full of these; re-scoring one must not change."""
+    from evaluation.research.mapping import evidence_scope
+
+    scope = evidence_scope(
+        a_raw_claim(),
+        university="Example University",
+        programme="Computer Science",
+        degree="bachelor",
+    )
+    assert scope.intake == "fall 2027"
+    assert scope.academic_year == "2026/27"
+    assert scope.population is None

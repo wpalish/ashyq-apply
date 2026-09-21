@@ -22,6 +22,7 @@ from app.adapters.search.prefilter import (
 )
 from app.adapters.search.retrieval import (
     SIGNAL_WEIGHTS,
+    RankedCandidate,
     discover_candidates,
     rank_candidates,
     tokenize,
@@ -49,8 +50,8 @@ def an_intent(**kw) -> DiscoveryIntent:
     )
 
 
-def run(results, **kw):
-    return prefilter(results, domain="nu.edu.kz", degree=DegreeLevel.BACHELOR, **kw)
+def run(results, *, domain="nu.edu.kz", **kw):
+    return prefilter(results, domain=domain, degree=DegreeLevel.BACHELOR, **kw)
 
 
 class TestThePrefilterDropsWhatIsCheapToKnowIsWrong:
@@ -299,3 +300,386 @@ class TestTheRemainingSignals:
         from app.adapters.search.retrieval import _Bm25
 
         assert _Bm25([[], ["computer", "science"]]).score(0, ["computer"]) == 0.0
+
+
+class TestTheNavigationHopIsCoverageNotReordering:
+    async def _report(self, rows, html, **kw):
+        intent = an_intent()
+        provider = FakeSearchProvider(
+            {q.text: rows for q in queries_for(intent, budget=99)}, now=NOW
+        )
+
+        async def fetch(url: str) -> str:
+            return html
+
+        return await discover_candidates(provider, intent, fetch=fetch, **kw)
+
+    async def test_the_hop_adds_pages_search_never_found(self):
+        """The whole point: a page with no words in its URL, found from a root."""
+        report = await self._report(
+            [("https://nu.edu.kz/programmes/cs", "Computer Science", "")],
+            '<a href="/content?menu=188">Computer Science programme</a>',
+        )
+
+        urls = [c.url for c in report.candidates]
+
+        assert "https://nu.edu.kz/content?menu=188" in urls
+        assert report.hop_candidates >= 1
+
+    async def test_a_hop_candidate_never_displaces_a_search_result(self):
+        """Fusing them as equals was measured and cost a whole case."""
+        rows = [
+            (f"https://nu.edu.kz/p/computer-science-{i}", f"Computer Science {i}", "")
+            for i in range(5)
+        ]
+        html = '<a href="/content?menu=188">Computer Science programme</a>'
+
+        report = await self._report(rows, html, top_k=5)
+
+        assert [c.url for c in report.candidates[:5]] == [
+            c.url for c in (await self._report(rows, "", top_k=5)).candidates
+        ]
+
+    async def test_coverage_is_additive_rather_than_competing_for_the_budget(self):
+        """Truncating both together let search fill every slot and cut the hop.
+
+        Three consecutive live runs showed the hop contributing exactly
+        nothing because of it.
+        """
+        rows = [
+            (f"https://nu.edu.kz/p/computer-science-{i}", f"Computer Science {i}", "")
+            for i in range(5)
+        ]
+
+        report = await self._report(
+            rows, '<a href="/content?menu=188">Computer Science programme</a>', top_k=5
+        )
+
+        assert len(report.candidates) > 5
+
+    async def test_a_page_both_generators_found_keeps_its_place_and_gains_a_signal(self):
+        report = await self._report(
+            [("https://nu.edu.kz/programmes/cs", "Computer Science", "")],
+            '<a href="/programmes/cs">Computer Science</a>',
+        )
+
+        top = report.candidates[0]
+        assert top.url == "https://nu.edu.kz/programmes/cs"
+        assert "also_found_by_hop" in top.signals
+
+    async def test_the_hop_is_off_unless_a_reader_is_supplied(self):
+        """Production must pass a Fetcher-backed one; nothing calls out by default."""
+        intent = an_intent()
+        provider = FakeSearchProvider(
+            {
+                q.text: [("https://nu.edu.kz/programmes/cs", "Computer Science", "")]
+                for q in queries_for(intent, budget=99)
+            },
+            now=NOW,
+        )
+
+        report = await discover_candidates(provider, intent)
+
+        assert report.hop_candidates == 0
+        assert report.hop_entry_points == ()
+
+    async def test_a_reader_failure_drops_that_entry_point_rather_than_the_run(self):
+        intent = an_intent()
+        provider = FakeSearchProvider(
+            {
+                q.text: [("https://nu.edu.kz/programmes/cs", "Computer Science", "")]
+                for q in queries_for(intent, budget=99)
+            },
+            now=NOW,
+        )
+
+        async def fetch(url: str) -> str:
+            raise RuntimeError("the site refused")
+
+        report = await discover_candidates(provider, intent, fetch=fetch)
+
+        assert report.candidates
+        assert report.hop_entry_points == ()
+
+
+class TestChoosingWhichDoorToOpen:
+    def test_a_host_naming_the_field_outranks_one_search_liked_more(self):
+        """Search rank says which host it liked, not which host runs degrees."""
+        from app.adapters.search.retrieval import _entry_points
+
+        ranked = (
+            RankedCandidate(url="https://pure.kaist.ac.kr/x", title="", score=9, provider="exa"),
+            RankedCandidate(
+                url="https://sociology.kaist.ac.kr/y", title="", score=8, provider="exa"
+            ),
+            RankedCandidate(url="https://cs.kaist.ac.kr/z", title="", score=1, provider="exa"),
+        )
+
+        roots = _entry_points(ranked, 2, an_intent(domain="kaist.ac.kr"))
+
+        assert roots[0] == "https://cs.kaist.ac.kr/"
+
+    def test_a_lab_or_repository_host_is_not_opened_at_all(self):
+        """KAIST's publication repository and a graphics lab were opened first."""
+        from app.adapters.search.retrieval import _host_priority
+
+        intent = an_intent(domain="kaist.ac.kr")
+
+        assert _host_priority("pure.kaist.ac.kr", intent) < 0
+        assert _host_priority("www.vclab.kaist.ac.kr", intent) < 0
+        assert _host_priority("cs.kaist.ac.kr", intent) > 0
+        assert _host_priority("admission.kaist.ac.kr", intent) > 0
+
+
+class TestTheDegreeLevelACatalogueActuallyWrites:
+    """Found in production data: a word list does not see a numeric cycle."""
+
+    @pytest.mark.parametrize(
+        ("url", "level"),
+        [
+            # Warsaw's real catalogue: this is what sent a master's page to the
+            # top of a bachelor search.
+            ("https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF/", "bachelor"),
+            ("https://informatorects.uw.edu.pl/en/programmes-all/IN/S2-INF", "master"),
+            ("https://x.edu/studia/i-stopnia/informatyka", "bachelor"),
+            ("https://x.edu/studia/ii-stopnia/informatyka", "master"),
+            ("https://x.edu/programmes/first-cycle/cs", "bachelor"),
+            ("https://x.edu/programmes/second-cycle/cs", "master"),
+            ("https://x.edu/formations/licence/informatique", "bachelor"),
+        ],
+    )
+    def test_bologna_cycle_numbering_is_read_as_a_degree_level(self, url, level):
+        from app.adapters.discovery.live_discovery import degree_level_named
+
+        assert degree_level_named(url) == level
+
+    def test_the_wrong_cycle_is_rejected_by_the_prefilter(self):
+        """A master's page is not a weak bachelor lead, however it is spelt."""
+        outcome = run(
+            [result("https://informatorects.uw.edu.pl/en/programmes-all/IN/S2-INF", "Informatyka")],
+            domain="uw.edu.pl",
+        )
+
+        assert outcome.rejection_counts == {Rejection.WRONG_DEGREE_LEVEL: 1}
+
+    def test_the_right_cycle_survives(self):
+        outcome = run(
+            [result("https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF", "Informatyka")],
+            domain="uw.edu.pl",
+        )
+
+        assert len(outcome.kept) == 1
+
+    @pytest.mark.parametrize(
+        "url",
+        [
+            "https://x.edu/news/s1000-report",
+            "https://x.edu/rooms/s2000",
+            "https://x.edu/about/s1x",
+        ],
+    )
+    def test_a_short_slug_inside_another_token_does_not_fire(self, url):
+        """``s1`` is two characters — exactly where a loose match would hurt."""
+        from app.adapters.discovery.live_discovery import degree_level_named
+
+        assert degree_level_named(url) is None
+
+
+class TestEveryCandidateRemembersWhichQueryFoundIt:
+    """§11: keep the query behind each candidate.
+
+    Written because a ranking change was mis-attributed to a query change for
+    want of exactly this, twice in one session.
+    """
+
+    async def test_a_candidate_names_the_families_that_surfaced_it(self):
+        intent = an_intent()
+        url = "https://nu.edu.kz/programmes/cs"
+        corpus = {
+            q.text: (
+                [(url, "Computer Science", "")] if q.family in ("programmes", "courses") else []
+            )
+            for q in queries_for(intent, budget=99)
+        }
+
+        report = await discover_candidates(
+            FakeSearchProvider(corpus, now=NOW), intent, query_budget=99
+        )
+
+        found = next(c for c in report.candidates if c.url == url)
+        assert set(found.found_by) == {"programmes", "courses"}
+
+    async def test_one_family_returning_a_url_twice_names_it_once(self):
+        intent = an_intent()
+        url = "https://nu.edu.kz/programmes/cs"
+        corpus = {
+            q.text: [(url, "Computer Science", ""), (f"{url}?utm_source=x", "Computer Science", "")]
+            for q in queries_for(intent, budget=99)
+        }
+
+        report = await discover_candidates(
+            FakeSearchProvider(corpus, now=NOW), intent, query_budget=1
+        )
+
+        found = next(c for c in report.candidates if c.url == url)
+        assert found.found_by == ("field_and_degree",)
+
+    async def test_a_hop_candidate_is_not_attributed_to_a_query(self):
+        """It came from a page, not from a search; §11 keeps a parent for those."""
+        intent = an_intent()
+        provider = FakeSearchProvider(
+            {
+                q.text: [("https://nu.edu.kz/programmes/cs", "Computer Science", "")]
+                for q in queries_for(intent, budget=99)
+            },
+            now=NOW,
+        )
+
+        async def fetch(url: str) -> str:
+            return '<a href="/content?menu=188">Computer Science programme</a>'
+
+        report = await discover_candidates(provider, intent, fetch=fetch)
+
+        hopped = next(c for c in report.candidates if "menu=188" in c.url)
+        assert hopped.found_by == ()
+        assert "found_by_navigation_hop" in hopped.signals
+
+
+class TestTheRegistryKnowsWhichHostPublishesProgrammes:
+    """Campus disambiguation from data the repository already holds.
+
+    Toronto's verified seeds name future.utoronto.ca. utm. and utsc. are
+    other campuses — a different place to apply to — and nothing else in the
+    pipeline could tell them apart.
+    """
+
+    def test_a_seed_host_is_recognised_and_a_sibling_campus_is_not(self):
+        from app.adapters.discovery.live_discovery import is_seed_host
+
+        assert is_seed_host("https://future.utoronto.ca/program/computer-science")
+        assert not is_seed_host("https://www.utm.utoronto.ca/programs/cs")
+        assert not is_seed_host("https://utsc.calendar.utoronto.ca/Bachelor")
+
+    def test_www_is_ignored_on_both_sides(self):
+        """A registry recording www.rug.nl names the same host as rug.nl."""
+        from app.adapters.discovery.live_discovery import is_seed_host
+
+        assert is_seed_host("https://www.rug.nl/bachelors/computing-science")
+        assert is_seed_host("https://rug.nl/bachelors/computing-science")
+
+    def test_an_unknown_institution_is_simply_not_a_seed_host(self):
+        """Absence from the registry is not a verdict about the page."""
+        from app.adapters.discovery.live_discovery import is_seed_host
+
+        assert not is_seed_host("https://elsewhere.test/programmes/cs")
+        assert not is_seed_host("not a url")
+
+    def test_the_seed_host_outranks_a_sibling_campus_with_the_same_words(self):
+        outcome = run(
+            [
+                result("https://www.utm.utoronto.ca/programs/computer-science", "Computer Science"),
+                result("https://future.utoronto.ca/program/computer-science", "Computer Science"),
+            ],
+            domain="utoronto.ca",
+        )
+
+        ranked = rank_candidates(outcome, an_intent(domain="utoronto.ca"))
+
+        assert ranked[0].url.startswith("https://future.utoronto.ca/")
+        assert "registry_seed_host" in ranked[0].signals
+
+    def test_it_is_a_signal_and_never_a_rejection(self):
+        """A correct page often lives on a host the seeds never named."""
+        outcome = run(
+            [result("https://www.utm.utoronto.ca/programs/computer-science", "Computer Science")],
+            domain="utoronto.ca",
+        )
+
+        ranked = rank_candidates(outcome, an_intent(domain="utoronto.ca"))
+
+        assert len(ranked) == 1
+        assert "registry_seed_host" not in ranked[0].signals
+
+
+class TestDiscoveryUsesSearchOnlyWhenOneIsConfigured:
+    """The wiring: dormant by default, additive when switched on."""
+
+    def _adapter(self, tmp_path):
+        from app.adapters.discovery.live_discovery import LiveDiscoveryAdapter
+
+        class _Fetcher:
+            async def get(self, url):
+                return None
+
+        return LiveDiscoveryAdapter(_Fetcher(), registry_path=tmp_path / "missing.json")
+
+    async def test_no_provider_means_nothing_happens(self, tmp_path, profile, monkeypatch):
+        """A deployment without a key must behave exactly as before."""
+        from app.adapters.discovery.live_discovery import DiscoveryTrace, PageCategory
+        from app.config import get_settings
+
+        get_settings.cache_clear()
+        monkeypatch.setenv("UNIMATCH_SEARCH_PROVIDER", "none")
+        try:
+            selected = {c: [] for c in vars(PageCategory).values() if isinstance(c, str)}
+            selected[PageCategory.PROGRAM_PAGE] = ["https://nu.edu.kz/existing"]
+            trace = DiscoveryTrace(institution="NU", domain="nu.edu.kz")
+
+            await self._adapter(tmp_path)._add_search_results(
+                {"name": "NU"}, "nu.edu.kz", selected, trace, profile
+            )
+
+            assert selected[PageCategory.PROGRAM_PAGE] == ["https://nu.edu.kz/existing"]
+            assert trace.errors == []
+        finally:
+            get_settings.cache_clear()
+
+    async def test_search_pages_are_appended_after_what_was_already_found(
+        self, tmp_path, profile, monkeypatch
+    ):
+        """Never interleaved: the measured alternative cost whole cases."""
+        import app.adapters.search as search_pkg
+        from app.adapters.discovery.live_discovery import DiscoveryTrace, PageCategory
+
+        intent = an_intent()
+        provider = FakeSearchProvider(
+            {
+                q.text: [("https://nu.edu.kz/programmes/found-by-search", "Computer Science", "")]
+                for q in queries_for(intent, budget=99)
+            },
+            now=NOW,
+        )
+        monkeypatch.setattr(search_pkg, "get_search_provider", lambda: provider)
+
+        selected = {c: [] for c in vars(PageCategory).values() if isinstance(c, str)}
+        selected[PageCategory.PROGRAM_PAGE] = ["https://nu.edu.kz/found-by-sitemap"]
+        trace = DiscoveryTrace(institution="NU", domain="nu.edu.kz")
+
+        await self._adapter(tmp_path)._add_search_results(
+            {"name": "Nazarbayev University"}, "nu.edu.kz", selected, trace, profile
+        )
+
+        pages = selected[PageCategory.PROGRAM_PAGE]
+        assert pages[0] == "https://nu.edu.kz/found-by-sitemap"
+        assert any("found-by-search" in u for u in pages[1:])
+        assert any("search added" in e for e in trace.errors)
+
+    async def test_a_provider_outage_degrades_the_run_rather_than_ending_it(
+        self, tmp_path, profile, monkeypatch
+    ):
+        import app.adapters.search as search_pkg
+        from app.adapters.discovery.live_discovery import DiscoveryTrace, PageCategory
+
+        monkeypatch.setattr(
+            search_pkg, "get_search_provider", lambda: FakeSearchProvider({}, fail_with="quota")
+        )
+
+        selected = {c: [] for c in vars(PageCategory).values() if isinstance(c, str)}
+        selected[PageCategory.PROGRAM_PAGE] = ["https://nu.edu.kz/found-by-sitemap"]
+        trace = DiscoveryTrace(institution="NU", domain="nu.edu.kz")
+
+        await self._adapter(tmp_path)._add_search_results(
+            {"name": "Nazarbayev University"}, "nu.edu.kz", selected, trace, profile
+        )
+
+        assert selected[PageCategory.PROGRAM_PAGE] == ["https://nu.edu.kz/found-by-sitemap"]

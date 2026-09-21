@@ -4,8 +4,9 @@ from __future__ import annotations
 
 from datetime import UTC, datetime, timedelta
 
+from app.domain.claim_scope import ClaimScope
 from app.domain.conflicts import enforce_source_hierarchy, find_conflicts
-from app.domain.enums import ClaimStatus, ClaimType
+from app.domain.enums import ClaimStatus, ClaimType, ConflictKind
 from app.domain.freshness import apply_freshness, is_stale, max_age_days, next_recheck_at
 from app.schemas.claim import MAX_EXCERPT_CHARS, Claim
 from tests.conftest import make_claim as C
@@ -182,3 +183,79 @@ class TestClaimShape:
             accessed_at=NOW,
         )
         assert claim.source_url.startswith("fixture://")
+
+
+class TestAConflictSaysWhatKindItIs:
+    """V2-26 — a scope difference is not a contradiction.
+
+    Phase 2's exit criterion in its own words: conflict reasons must
+    distinguish a true conflict from a difference of scope.
+    """
+
+    def test_two_fees_for_two_fee_statuses_are_both_correct(self):
+        from app.domain.conflicts import find_conflicts
+
+        claims = [
+            C("tuition", 9250.0, scope=ClaimScope(residency="home")),
+            C(
+                "tuition",
+                38000.0,
+                url="https://example.edu/overseas",
+                scope=ClaimScope(residency="overseas"),
+            ),
+        ]
+        conflicts, updated = find_conflicts(claims)
+        assert len(conflicts) == 1
+        assert conflicts[0].kind is ConflictKind.DIFFERENT_RESIDENCY
+        assert "both values can be correct" in conflicts[0].resolution_rule
+        # Neither claim is poisoned: stamping them CONFLICTING would stop
+        # either from ever being used, and both are right.
+        assert [c.status for c in updated] == [ClaimStatus.VERIFIED_CURRENT] * 2
+
+    def test_two_populations_are_named_as_the_reason(self):
+        from app.domain.conflicts import find_conflicts
+
+        conflicts, _ = find_conflicts(
+            [
+                C("ielts_min_overall", 6.5, scope=ClaimScope(population="international")),
+                C(
+                    "ielts_min_overall",
+                    6.0,
+                    url="https://example.edu/eu",
+                    scope=ClaimScope(population="EU/EEA"),
+                ),
+            ]
+        )
+        assert conflicts[0].kind is ConflictKind.DIFFERENT_POPULATION
+        assert "different populations" in conflicts[0].question_for_admissions
+
+    def test_a_real_contradiction_is_still_a_real_contradiction(self):
+        """Same stated scope, two values. Nothing explains it away."""
+        from app.domain.conflicts import find_conflicts
+
+        conflicts, updated = find_conflicts(
+            [
+                C("ielts_min_overall", 6.5, scope=ClaimScope(intake="Fall 2027")),
+                C(
+                    "ielts_min_overall",
+                    7.0,
+                    url="https://example.edu/other",
+                    scope=ClaimScope(intake="Fall 2027"),
+                ),
+            ]
+        )
+        assert conflicts[0].kind is ConflictKind.TRUE_CONFLICT
+        assert all(c.status is ClaimStatus.CONFLICTING for c in updated)
+
+    def test_an_unrecorded_scope_is_never_rounded_into_a_difference(self):
+        """Unknown must not explain away a conflict: that is the costly error."""
+        from app.domain.enums import ClaimStatus, ConflictKind
+
+        conflicts, updated = find_conflicts(
+            [
+                C("ielts_min_overall", 6.5),
+                C("ielts_min_overall", 7.0, url="https://example.edu/other"),
+            ]
+        )
+        assert conflicts[0].kind is ConflictKind.TRUE_CONFLICT
+        assert all(c.status is ClaimStatus.CONFLICTING for c in updated)

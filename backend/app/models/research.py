@@ -172,6 +172,21 @@ class ClaimRow(TimestampedBase):
     )
     claim_type: Mapped[str] = mapped_column(String(60), index=True)
     status: Mapped[str] = mapped_column(String(40), index=True)
+    #: When this row stopped being live evidence. Written in the same
+    #: transaction that flips the status to SUPERSEDED, never inferred later
+    #: from ``updated_at`` — that column moves for reasons that have nothing
+    #: to do with a claim ceasing to be true.
+    superseded_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    #: The claim that took over, when one did. ``None`` on a superseded row is
+    #: not a gap to be filled in: it means the page no longer states this at
+    #: all, which is precisely the case the re-extract path exists to record.
+    #: ON DELETE SET NULL, like ``source_page_id`` and for the same reason —
+    #: a purge must never take a history row with it.
+    superseded_by_id: Mapped[str | None] = mapped_column(
+        String(32),
+        ForeignKey("claims.id", ondelete="SET NULL", name="fk_claims_superseded_by"),
+        nullable=True,
+    )
     source_url: Mapped[str] = mapped_column(Text)
     source_specificity: Mapped[str] = mapped_column(String(40))
     accessed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)

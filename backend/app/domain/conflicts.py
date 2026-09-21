@@ -10,12 +10,14 @@ from __future__ import annotations
 from collections import defaultdict
 from typing import Any
 
+from app.domain.claim_scope import SCOPE_DIMENSIONS
 from app.domain.enums import (
     DECISION_GRADE_CLAIMS,
     DISCOVERY_ONLY_SPECIFICITY,
     SPECIFICITY_RANK,
     ClaimStatus,
     ClaimType,
+    ConflictKind,
 )
 from app.schemas.claim import Claim, Conflict, UnresolvedQuestion
 
@@ -32,6 +34,44 @@ _LABELS: dict[ClaimType, str] = {
     ClaimType.SCHOLARSHIP_AMOUNT: "the award amount",
     ClaimType.SCHOLARSHIP_INTERNATIONAL_ELIGIBLE: "eligibility for international students",
 }
+
+
+#: Which dimension of a differing scope explains a disagreement, in the order
+#: the guide reads them. Only dimensions a page can state about *who or when*
+#: a rule applies: a differing programme is a grouping error, not a conflict
+#: kind, and university/faculty differences are handled by identity.
+_KIND_BY_DIMENSION: dict[str, ConflictKind] = {
+    "population": ConflictKind.DIFFERENT_POPULATION,
+    "residency": ConflictKind.DIFFERENT_RESIDENCY,
+    "intake": ConflictKind.DIFFERENT_INTAKE,
+    "academic_year": ConflictKind.DIFFERENT_ACADEMIC_YEAR,
+    "degree": ConflictKind.DIFFERENT_DEGREE,
+}
+
+
+def classify_conflict(pool: list[Claim]) -> ConflictKind:
+    """Why these pages disagree, as far as what they *state* can say.
+
+    Two claims that both state a dimension and state it differently are not
+    contradicting each other: they are rules for different people, years or
+    degrees. Anything else — including a scope nobody recorded — stays a true
+    conflict. Unknown is never rounded into "different", because that would
+    explain away a real disagreement, which is the more dangerous error of the
+    two: a wrongly-kept conflict costs a question, a wrongly-dismissed one
+    costs the applicant a decision.
+    """
+    for dimension in SCOPE_DIMENSIONS:
+        kind = _KIND_BY_DIMENSION.get(dimension)
+        if kind is None:
+            continue
+        stated = {
+            getattr(c.scope, dimension).strip().casefold()
+            for c in pool
+            if c.scope is not None and getattr(c.scope, dimension)
+        }
+        if len(stated) > 1:
+            return kind
+    return ConflictKind.TRUE_CONFLICT
 
 
 def _comparable(value: Any) -> str:
@@ -88,12 +128,18 @@ def find_conflicts(
             + (f" ({program})" if program else "")
         )
 
-        for c in pool:
-            conflicted.add(id(c))
+        kind = classify_conflict(pool)
+        if kind is ConflictKind.TRUE_CONFLICT:
+            # Only a real contradiction may poison the claims. Two rules for
+            # two different populations are both correct, and stamping them
+            # CONFLICTING would stop either from ever being used.
+            for c in pool:
+                conflicted.add(id(c))
 
         conflicts.append(
             Conflict(
                 claim_type=ctype,
+                kind=kind,
                 subject=subject,
                 claim_ids=[ids.get(id(c), c.source_url) for c in pool],
                 values=[c.normalized_value for c in pool],
@@ -102,8 +148,14 @@ def find_conflicts(
                 resolution_rule=(
                     f"Preferring the more specific source ({preferred.source_specificity.value}); "
                     "the disagreement is shown rather than resolved."
+                    if kind is ConflictKind.TRUE_CONFLICT
+                    else (
+                        "Not a contradiction: the pages state different "
+                        f"{kind.value.removeprefix('different_').replace('_', ' ')}s, so both "
+                        "values can be correct. Neither is discarded."
+                    )
                 ),
-                question_for_admissions=_draft_question(subject, pool, context, intake),
+                question_for_admissions=_draft_question(subject, pool, context, intake, kind),
                 unresolved=True,
             )
         )
@@ -115,7 +167,13 @@ def find_conflicts(
     return conflicts, updated
 
 
-def _draft_question(subject: str, pool: list[Claim], context: str, intake: str | None) -> str:
+def _draft_question(
+    subject: str,
+    pool: list[Claim],
+    context: str,
+    intake: str | None,
+    kind: ConflictKind = ConflictKind.TRUE_CONFLICT,
+) -> str:
     lines = [
         "Dear Admissions Office,",
         "",
@@ -127,7 +185,13 @@ def _draft_question(subject: str, pool: list[Claim], context: str, intake: str |
         lines.append(f"  - {c.normalized_value}  ({c.source_url})")
     lines += [
         "",
-        "Could you confirm which value applies to my application cycle?",
+        "Could you confirm which value applies to my application cycle?"
+        if kind is ConflictKind.TRUE_CONFLICT
+        else (
+            "These appear to be published for different "
+            f"{kind.value.removeprefix('different_').replace('_', ' ')}s. Could you confirm "
+            "which one applies to me?"
+        ),
         "",
         "Thank you for your time.",
     ]

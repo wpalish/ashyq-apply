@@ -3,6 +3,7 @@
 from typing import Any
 
 from .identities import IdentityMap
+from .schema import Scope
 
 CLAIM_KEYS = {
     "ielts_min_overall": "ielts.overall",
@@ -18,6 +19,49 @@ CLAIM_KEYS = {
     "intake_open": "intake.open",
     "program_exists": "programme.exists",
 }
+
+
+def evidence_scope(
+    raw: dict[str, Any],
+    *,
+    university: str,
+    programme: str | None,
+    degree: str | None,
+) -> Scope:
+    """The scope of the evidence, taken from the page wherever the page spoke.
+
+    Before V2-22 this was built from the *request*: ``intake`` was whatever the
+    applicant profile asked for, on every claim of every case, and the same
+    went for the academic year. Scoring then compared a label against our own
+    question, which is why a scope-match failure never meant a human-confirmed
+    wrong fact — the baseline README says so in its own words.
+
+    Now a claim carries what its page stated (``raw["scope"]``). Where the page
+    stated a dimension, that is what goes in. Where it was silent, the value is
+    ``None``: a gap the scorer can see, never the value we hoped for.
+
+    The request-side fallback survives for one case only — a claim with **no**
+    ``scope`` key, i.e. written before V2-22. Frozen captures are full of those
+    and re-scoring one must stay exactly reproducible, so the old behaviour is
+    kept deliberately, and only there.
+    """
+    recorded = raw.get("scope")
+    if not isinstance(recorded, dict):
+        return Scope(
+            university=university,
+            programme=programme,
+            degree=degree,
+            intake=raw.get("intake"),
+            academic_year=raw.get("academic_year"),
+        )
+    return Scope(
+        university=recorded.get("university") or university,
+        programme=recorded.get("programme") or programme,
+        degree=recorded.get("degree") or degree,
+        intake=recorded.get("intake"),
+        academic_year=recorded.get("academic_year"),
+        population=recorded.get("population"),
+    )
 
 
 def normalize_claim(

@@ -551,3 +551,28 @@ class TestTimezoneParsing:
         from app.adapters.extraction import parse_timezone
 
         assert parse_timezone(text) is None
+
+
+class TestScholarshipClaimsCarryTheirScope:
+    """V2-25 — eligibility prose names a population; the claim must record it."""
+
+    @pytest.mark.asyncio
+    async def test_an_award_open_to_international_students_says_so_on_its_claims(
+        self, settings, corpus_dir
+    ):
+        candidate = Candidate(
+            name="University of Toronto",
+            country="Canada",
+            city="Toronto",
+            domain="utoronto.ca",
+            scholarships_url="fixture://u-toronto/scholarships.html",
+        )
+        program = CandidateProgram(name="BS CS", field="cs", degree="bachelor")
+        async with Fetcher(settings.cache_dir, offline=True, corpus_dir=corpus_dir) as f:
+            _, result = await WebScholarshipAdapter(f, "2026/27").find(candidate, program, None)
+        scoped = [c for c in result.claims if c.scope is not None]
+        assert scoped, "scholarship claims carried no scope at all"
+        assert {c.scope.population for c in scoped} == {"international"}
+        # The award quotes a 2024/25 figure on a 2026/27 page; neither becomes
+        # the page's year, because the page never says which one it is about.
+        assert {c.scope.academic_year for c in scoped} == {None}

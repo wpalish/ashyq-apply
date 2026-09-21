@@ -10,9 +10,10 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_serializer
 
-from app.domain.enums import ClaimStatus, ClaimType, SourceSpecificity
+from app.domain.claim_scope import ClaimScope
+from app.domain.enums import ClaimStatus, ClaimType, ConflictKind, SourceSpecificity
 
 #: Excerpts exist to prove a value was read, not to reproduce the page.
 MAX_EXCERPT_CHARS = 600
@@ -41,6 +42,23 @@ class Claim(Base):
     intake: str | None = None
     academic_year: str | None = Field(default=None, description="e.g. '2026/27'")
     accessed_at: datetime
+    #: Who and what the source says this claim is about, across the nine
+    #: dimensions in ``app.domain.claim_scope``.
+    #:
+    #: ``None`` means **nobody recorded a scope**, which is not the same as
+    #: ``ClaimScope()`` — an empty scope recorded deliberately after reading a
+    #: page that stated none. The distinction matters: the first is a gap in
+    #: our own pipeline, the second is a fact about the page.
+    #:
+    #: The flat ``program`` / ``intake`` / ``academic_year`` fields above stay
+    #: as they are. Nothing reads this one yet, so nothing may depend on it,
+    #: and removing them would break every extractor at once.
+    #:
+    #: When it is ``None`` the key is left out of the serialised claim
+    #: entirely — see :meth:`_omit_unrecorded_scope`. Absent in the JSON means
+    #: exactly what ``None`` means in the model, and every claim written
+    #: before this field existed keeps its byte-identical payload.
+    scope: ClaimScope | None = None
     source_specificity: SourceSpecificity = SourceSpecificity.UNKNOWN
     confidence: float = Field(default=0.5, ge=0.0, le=1.0)
     status: ClaimStatus = ClaimStatus.UNVERIFIED
@@ -48,6 +66,22 @@ class Claim(Base):
         "html_rule"
     )
     notes: str = ""
+
+    @model_serializer(mode="wrap")
+    def _omit_unrecorded_scope(self, handler):
+        """Leave ``scope`` out of the JSON when nobody recorded one.
+
+        ``None`` here means *no scope was recorded*, and a key whose value is
+        "we never looked" is worse than no key: it invites a reader to treat
+        the absence as a finding. Omitting it also keeps every claim written
+        before this field existed byte-identical, which a regression test in
+        the suite checks against a golden hash — so this is load-bearing, not
+        tidiness.
+        """
+        data = handler(self)
+        if isinstance(data, dict) and data.get("scope") is None:
+            data.pop("scope", None)
+        return data
 
     @field_validator("original_text_excerpt", mode="before")
     @classmethod
@@ -78,6 +112,10 @@ class Conflict(Base):
     """Two official sources disagreeing. Never resolved silently."""
 
     claim_type: ClaimType
+    #: What kind of disagreement this is. ``TRUE_CONFLICT`` unless the pages
+    #: state scopes that differ, in which case both values are correct and the
+    #: difference is who or when they are about — see :class:`ConflictKind`.
+    kind: ConflictKind = ConflictKind.TRUE_CONFLICT
     subject: str = Field(description="What the conflict is about, e.g. 'IELTS overall minimum'")
     claim_ids: list[str]
     values: list[Any]

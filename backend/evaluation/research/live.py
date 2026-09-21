@@ -19,8 +19,8 @@ from unittest.mock import patch
 
 from pydantic import HttpUrl
 
-from .mapping import normalize_claim
-from .schema import Capture, Evidence, Observation, Prediction, Scope, Telemetry
+from .mapping import evidence_scope, normalize_claim
+from .schema import Capture, Evidence, Observation, Prediction, Telemetry
 
 # Evaluation cohort IDs, not expected URLs/values. Registry remains production's input.
 COHORT = {
@@ -118,14 +118,13 @@ async def capture_one(case_id: str, output: Path, max_pages: int) -> None:
                         evidence = Evidence(
                             url=row.source_url,
                             excerpt=excerpt,
-                            scope=Scope(
+                            scope=evidence_scope(
+                                raw,
                                 university=next(iter(self._candidates)).name
                                 if self._candidates
                                 else case_id,
                                 programme=programme,
                                 degree=degree,
-                                intake=raw.get("intake"),
-                                academic_year=raw.get("academic_year"),
                             ),
                             accessed_on=row.accessed_at.date(),
                             source_type="official" if raw.get("official_domain") else "unknown",

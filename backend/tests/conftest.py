@@ -17,6 +17,7 @@ from pathlib import Path
 import pytest
 
 from app.config import Settings
+from app.domain.claim_scope import ClaimScope
 from app.domain.enums import ClaimStatus, ClaimType, SourceSpecificity
 from app.schemas.claim import Claim
 from app.schemas.profile import (
@@ -183,6 +184,9 @@ def make_claim(
     subject_key: str | None = None,
     accessed_at: datetime | None = None,
     confidence: float = 0.8,
+    intake: str | None = None,
+    academic_year: str | None = None,
+    scope: ClaimScope | None = None,
 ) -> Claim:
     return Claim(
         claim_type=ClaimType(claim_type),
@@ -194,6 +198,9 @@ def make_claim(
         program=program,
         subject_key=subject_key,
         confidence=confidence,
+        intake=intake,
+        academic_year=academic_year,
+        scope=scope,
     )
 
 
