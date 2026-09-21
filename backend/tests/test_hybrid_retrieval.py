@@ -599,3 +599,87 @@ class TestTheRegistryKnowsWhichHostPublishesProgrammes:
 
         assert len(ranked) == 1
         assert "registry_seed_host" not in ranked[0].signals
+
+
+class TestDiscoveryUsesSearchOnlyWhenOneIsConfigured:
+    """The wiring: dormant by default, additive when switched on."""
+
+    def _adapter(self, tmp_path):
+        from app.adapters.discovery.live_discovery import LiveDiscoveryAdapter
+
+        class _Fetcher:
+            async def get(self, url):
+                return None
+
+        return LiveDiscoveryAdapter(_Fetcher(), registry_path=tmp_path / "missing.json")
+
+    async def test_no_provider_means_nothing_happens(self, tmp_path, profile, monkeypatch):
+        """A deployment without a key must behave exactly as before."""
+        from app.adapters.discovery.live_discovery import DiscoveryTrace, PageCategory
+        from app.config import get_settings
+
+        get_settings.cache_clear()
+        monkeypatch.setenv("UNIMATCH_SEARCH_PROVIDER", "none")
+        try:
+            selected = {c: [] for c in vars(PageCategory).values() if isinstance(c, str)}
+            selected[PageCategory.PROGRAM_PAGE] = ["https://nu.edu.kz/existing"]
+            trace = DiscoveryTrace(institution="NU", domain="nu.edu.kz")
+
+            await self._adapter(tmp_path)._add_search_results(
+                {"name": "NU"}, "nu.edu.kz", selected, trace, profile
+            )
+
+            assert selected[PageCategory.PROGRAM_PAGE] == ["https://nu.edu.kz/existing"]
+            assert trace.errors == []
+        finally:
+            get_settings.cache_clear()
+
+    async def test_search_pages_are_appended_after_what_was_already_found(
+        self, tmp_path, profile, monkeypatch
+    ):
+        """Never interleaved: the measured alternative cost whole cases."""
+        import app.adapters.search as search_pkg
+        from app.adapters.discovery.live_discovery import DiscoveryTrace, PageCategory
+
+        intent = an_intent()
+        provider = FakeSearchProvider(
+            {
+                q.text: [("https://nu.edu.kz/programmes/found-by-search", "Computer Science", "")]
+                for q in queries_for(intent, budget=99)
+            },
+            now=NOW,
+        )
+        monkeypatch.setattr(search_pkg, "get_search_provider", lambda: provider)
+
+        selected = {c: [] for c in vars(PageCategory).values() if isinstance(c, str)}
+        selected[PageCategory.PROGRAM_PAGE] = ["https://nu.edu.kz/found-by-sitemap"]
+        trace = DiscoveryTrace(institution="NU", domain="nu.edu.kz")
+
+        await self._adapter(tmp_path)._add_search_results(
+            {"name": "Nazarbayev University"}, "nu.edu.kz", selected, trace, profile
+        )
+
+        pages = selected[PageCategory.PROGRAM_PAGE]
+        assert pages[0] == "https://nu.edu.kz/found-by-sitemap"
+        assert any("found-by-search" in u for u in pages[1:])
+        assert any("search added" in e for e in trace.errors)
+
+    async def test_a_provider_outage_degrades_the_run_rather_than_ending_it(
+        self, tmp_path, profile, monkeypatch
+    ):
+        import app.adapters.search as search_pkg
+        from app.adapters.discovery.live_discovery import DiscoveryTrace, PageCategory
+
+        monkeypatch.setattr(
+            search_pkg, "get_search_provider", lambda: FakeSearchProvider({}, fail_with="quota")
+        )
+
+        selected = {c: [] for c in vars(PageCategory).values() if isinstance(c, str)}
+        selected[PageCategory.PROGRAM_PAGE] = ["https://nu.edu.kz/found-by-sitemap"]
+        trace = DiscoveryTrace(institution="NU", domain="nu.edu.kz")
+
+        await self._adapter(tmp_path)._add_search_results(
+            {"name": "Nazarbayev University"}, "nu.edu.kz", selected, trace, profile
+        )
+
+        assert selected[PageCategory.PROGRAM_PAGE] == ["https://nu.edu.kz/found-by-sitemap"]

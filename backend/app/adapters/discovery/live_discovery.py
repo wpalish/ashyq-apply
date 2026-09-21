@@ -941,6 +941,8 @@ class LiveDiscoveryAdapter:
         await self._confirm_programs(selected, ranked, trace, profile)
         await self._walk_catalogs(entry, selected, trace, profile)
 
+        await self._add_search_results(entry, domain, selected, trace, profile)
+
         trace.selected = {k: list(v) for k, v in selected.items() if v}
         self._apply(candidate, selected, profile, trace)
         return candidate, trace
@@ -1059,6 +1061,85 @@ class LiveDiscoveryAdapter:
                     break
                 if url not in selected[PageCategory.PROGRAM_PAGE]:
                     selected[PageCategory.PROGRAM_PAGE].append(url)
+
+    async def _add_search_results(
+        self,
+        entry: dict,
+        domain: str,
+        selected: dict[str, list[str]],
+        trace: DiscoveryTrace,
+        profile: ApplicantProfileIn,
+    ) -> None:
+        """Add programme pages a web search found, if one is configured.
+
+        **Dormant unless a provider is set.** `UNIMATCH_SEARCH_PROVIDER`
+        defaults to `none`, the factory raises, and this returns having done
+        nothing — so a deployment without a key behaves byte-identically to
+        before. Same pattern as ``page_recorder`` above.
+
+        **Appended, never interleaved.** Whatever the sitemap and the walker
+        found keeps its place; search only adds pages they missed. The
+        alternative was measured and cost whole cases; the write-up lives with
+        the benchmark tooling, which production deliberately cannot name — a
+        guard test rejects any path to it from this package, docstrings
+        included.
+
+        A provider failure degrades this run rather than ending it: discovery
+        keeps everything the other generators produced.
+        """
+        from app.adapters.search import SearchError, get_search_provider
+        from app.adapters.search.intent import DiscoveryIntent
+        from app.adapters.search.retrieval import discover_candidates
+
+        try:
+            provider = get_search_provider()
+        except SearchError:
+            return
+
+        fields = list(profile.context.intended_fields)
+        if not fields:
+            return
+
+        try:
+            intent = DiscoveryIntent(
+                institution=entry["name"],
+                domain=domain,
+                degree=profile.context.level,
+                field=fields[0],
+            )
+        except ValueError as exc:
+            # A registry entry or a field the intent refuses — for instance one
+            # carrying something that looks like applicant data. Skip search for
+            # this institution rather than sending it.
+            trace.errors.append(f"search skipped: {exc}")
+            return
+
+        async def read(url: str) -> str:
+            # The adapter's own Fetcher, so robots, rate limits, the PII guard
+            # and the SSRF protections apply exactly as they do everywhere else.
+            result = await self.fetcher.get(url)
+            return result.text if result else ""
+
+        try:
+            report = await discover_candidates(provider, intent, fetch=read, top_k=10)
+        except SearchError as exc:
+            trace.errors.append(f"search unavailable: {exc}")
+            return
+
+        pages = selected[PageCategory.PROGRAM_PAGE]
+        added = 0
+        for found in report.candidates:
+            if len(pages) >= MAX_PAGES_PER_CATEGORY:
+                break
+            if found.url in pages:
+                continue
+            pages.append(found.url)
+            added += 1
+        trace.errors.append(
+            f"search added {added} programme page(s) via {report.provider}"
+            if added
+            else f"search added nothing via {report.provider}"
+        )
 
     def _apply(
         self,
