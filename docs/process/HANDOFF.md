@@ -515,6 +515,43 @@ proves it end to end (128 of 173 claims scoped, 45 honestly empty).
    likeliest win: eligibility prose states populations more often than requirements prose does.
 3. Open items unchanged: KAIST's registry seed (owner data task, §7); page-kind as a prefilter concern.
 
+**Numbering note (read before the write-aheads below).** My task labels after V2-21 drifted from
+`analysis/v2/02_EXECUTION_PLAN.md`. Mapping, so the plan stays the source of truth:
+
+| My label | Plan item | What it was |
+|---|---|---|
+| V2-21, V2-21b | **V2-21 Scope model** | `ClaimScope` and carrying it on a claim |
+| V2-22, V2-22b, V2-25 | *(no plan item — implementation of V2-21)* | filling the scope from pages; fixing the capture |
+| V2-23, V2-24 | *(no plan item — use of V2-21)* | acting on scope, and telling the applicant |
+| V2-26 | **V2-23 Conflict model v2** | separating contradiction from different scope |
+
+Plan items still open in Phase 2: **V2-20 (SourceSnapshot / ClaimVersion)**, **V2-22 (entity
+resolution)**, **V2-24 (change detection)**. From here I use the plan's numbers.
+
+Write-ahead (claude-opus-5, 2026-09-21, **V2-20a**): **SourceSnapshot — what a page said, and when.**
+
+`SourcePage` already exists and is deliberately one mutable row per URL: the page's *current* state,
+with the ETag, Last-Modified and content hash that let the next visit ask "changed?" without
+downloading. What does not exist is the other half the phase guide names: a record of the versions a
+page has actually been observed at. Today a page that changes overwrites its own hash and the previous
+observation is gone, so "what did this page say when we claimed that?" has no answer.
+
+Scope, exactly:
+- `app/models/source_page.py`: `SourceSnapshot` — page id, content hash, the validators seen with it,
+  http status, `first_seen_at` / `last_seen_at`.
+- One row per (page, content hash), upserted: re-observing the same content updates `last_seen_at`
+  rather than adding a row. **Decision, stated because it is arguable:** a page that reverts to earlier
+  content is the same content seen again, not a third version. The order of events survives in each
+  row's `last_seen_at`, and the intermediate version keeps its own row.
+- `SourcePage.record` writes the snapshot in the same flush, so no caller can record a page's metadata
+  and forget the version it saw. Metadata only — never a body, exactly as the page table's policy says.
+- One Alembic revision on `d9c4e7a21b83`; one head before, one head after; an exact-inverse downgrade;
+  round-trip tested on SQLite **and** PostgreSQL, as `TestT32MigrationRoundTrip` already does.
+
+Demo effect: **none**. Snapshots are written on the live path only (the demo's discovery adapter has no
+page recorder at all), so the golden must not move. If it does, something is recording on the demo
+path that should not be.
+
 Write-ahead (claude-opus-5, 2026-09-21, V2-26): **a conflict now says what kind of conflict it is.**
 This is a Phase 2 exit criterion in the guide's own words — "conflict reasons distinguish true conflict
 from different scope" — and it is the first thing `ClaimScope` makes possible that nothing else could.
