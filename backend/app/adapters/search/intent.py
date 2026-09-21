@@ -186,6 +186,7 @@ def queries_for(
     *,
     budget: int = DEFAULT_QUERY_BUDGET,
     families: Sequence[str] = (),
+    site_prefix: bool = True,
 ) -> tuple[DiscoveryQuery, ...]:
     """Render an intent into at most ``budget`` queries, best first.
 
@@ -196,7 +197,13 @@ def queries_for(
     if budget < 1:
         raise ValueError(f"A query budget must be at least 1, got {budget}")
 
-    site = f"site:{intent.domain}"
+    # ``site:`` is keyword-search syntax. A provider that takes a domain filter
+    # is already being told the domain, and repeating it inside the query text
+    # is noise — on a neural index it skews the query's meaning rather than
+    # narrowing it. Measured: with ``site:`` our queries never retrieved
+    # Warsaw's bachelor page; without it, a query naming the cycle in plain
+    # language returned it first.
+    site = f"site:{intent.domain}" if site_prefix else intent.institution
     degree = _degree_aliases(intent.degree)
     year = f" {intent.intake_year}" if intent.intake_year else ""
     candidates: list[DiscoveryQuery] = [

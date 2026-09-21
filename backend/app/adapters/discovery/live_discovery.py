@@ -245,10 +245,56 @@ _URL_EXCLUSIONS = re.compile(
 )
 
 #: A programme page for the wrong level is not a match for this applicant.
+#: How a catalogue writes a degree level in a URL.
+#:
+#: The cycle forms matter as much as the words. Warsaw's catalogue writes its
+#: bachelor as ``IN/S1-INF`` and its master as ``IN/S2-INF``, and with only the
+#: word list a master's page reached the top of a bachelor search — the right
+#: fact about the wrong population, which is exactly what the prefilter exists
+#: to stop. ``S1``/``S2`` is Bologna cycle numbering, not a Warsaw quirk: it is
+#: ``studia pierwszego/drugiego stopnia`` in Polish, ``I``/``II stopnia`` in
+#: prose, "first cycle"/"second cycle" in English. A numeric convention defeats
+#: a word list wherever it is used.
+#:
+#: Every slug here is matched on a path-segment boundary by
+#: :func:`degree_level_named`, which is what makes a two-character slug like
+#: ``s1`` safe to list.
 _DEGREE_SLUGS: dict[str, tuple[str, ...]] = {
-    "bachelor": ("bsc", "ba", "beng", "llb", "bachelor", "bachelors", "undergraduate"),
-    "master": ("msc", "ma", "meng", "llm", "mba", "master", "masters", "graduate", "postgraduate"),
-    "phd": ("phd", "doctoral", "doctorate", "dphil"),
+    "bachelor": (
+        "bsc",
+        "ba",
+        "beng",
+        "llb",
+        "bachelor",
+        "bachelors",
+        "undergraduate",
+        # Bologna first cycle
+        "s1",
+        "1st-cycle",
+        "first-cycle",
+        "i-stopnia",
+        "licence",
+        "licenciatura",
+    ),
+    "master": (
+        "msc",
+        "ma",
+        "meng",
+        "llm",
+        "mba",
+        "master",
+        "masters",
+        "graduate",
+        "postgraduate",
+        # Bologna second cycle
+        "s2",
+        "2nd-cycle",
+        "second-cycle",
+        "ii-stopnia",
+        "magister",
+        "mastere",
+    ),
+    "phd": ("phd", "doctoral", "doctorate", "dphil", "s3", "3rd-cycle", "third-cycle"),
     "foundation": ("foundation", "pre-bachelor", "preparatory"),
 }
 

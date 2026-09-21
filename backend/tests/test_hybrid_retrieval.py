@@ -50,8 +50,8 @@ def an_intent(**kw) -> DiscoveryIntent:
     )
 
 
-def run(results, **kw):
-    return prefilter(results, domain="nu.edu.kz", degree=DegreeLevel.BACHELOR, **kw)
+def run(results, *, domain="nu.edu.kz", **kw):
+    return prefilter(results, domain=domain, degree=DegreeLevel.BACHELOR, **kw)
 
 
 class TestThePrefilterDropsWhatIsCheapToKnowIsWrong:
@@ -429,3 +429,57 @@ class TestChoosingWhichDoorToOpen:
         assert _host_priority("www.vclab.kaist.ac.kr", intent) < 0
         assert _host_priority("cs.kaist.ac.kr", intent) > 0
         assert _host_priority("admission.kaist.ac.kr", intent) > 0
+
+
+class TestTheDegreeLevelACatalogueActuallyWrites:
+    """Found in production data: a word list does not see a numeric cycle."""
+
+    @pytest.mark.parametrize(
+        ("url", "level"),
+        [
+            # Warsaw's real catalogue: this is what sent a master's page to the
+            # top of a bachelor search.
+            ("https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF/", "bachelor"),
+            ("https://informatorects.uw.edu.pl/en/programmes-all/IN/S2-INF", "master"),
+            ("https://x.edu/studia/i-stopnia/informatyka", "bachelor"),
+            ("https://x.edu/studia/ii-stopnia/informatyka", "master"),
+            ("https://x.edu/programmes/first-cycle/cs", "bachelor"),
+            ("https://x.edu/programmes/second-cycle/cs", "master"),
+            ("https://x.edu/formations/licence/informatique", "bachelor"),
+        ],
+    )
+    def test_bologna_cycle_numbering_is_read_as_a_degree_level(self, url, level):
+        from app.adapters.discovery.live_discovery import degree_level_named
+
+        assert degree_level_named(url) == level
+
+    def test_the_wrong_cycle_is_rejected_by_the_prefilter(self):
+        """A master's page is not a weak bachelor lead, however it is spelt."""
+        outcome = run(
+            [result("https://informatorects.uw.edu.pl/en/programmes-all/IN/S2-INF", "Informatyka")],
+            domain="uw.edu.pl",
+        )
+
+        assert outcome.rejection_counts == {Rejection.WRONG_DEGREE_LEVEL: 1}
+
+    def test_the_right_cycle_survives(self):
+        outcome = run(
+            [result("https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF", "Informatyka")],
+            domain="uw.edu.pl",
+        )
+
+        assert len(outcome.kept) == 1
+
+    @pytest.mark.parametrize(
+        "url",
+        [
+            "https://x.edu/news/s1000-report",
+            "https://x.edu/rooms/s2000",
+            "https://x.edu/about/s1x",
+        ],
+    )
+    def test_a_short_slug_inside_another_token_does_not_fire(self, url):
+        """``s1`` is two characters — exactly where a loose match would hurt."""
+        from app.adapters.discovery.live_discovery import degree_level_named
+
+        assert degree_level_named(url) is None

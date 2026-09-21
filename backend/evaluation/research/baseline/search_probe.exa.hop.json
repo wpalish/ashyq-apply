@@ -29,7 +29,7 @@
       "queries_run": 5,
       "rejection_counts": {
         "duplicate": 17,
-        "wrong_degree_level": 3
+        "wrong_degree_level": 2
       },
       "top_applies_to_intake": "unknown",
       "top_identity": "exact",
@@ -52,20 +52,21 @@
       },
       "top_applies_to_intake": "unknown",
       "top_identity": "needs_review",
-      "top_url": "https://www.aalto.fi/en/programmes/aalto-bachelors-programme-in-science-and-technology/curriculum-2026-2028",
+      "top_url": "https://research.aalto.fi/en/publications/arguments-for-and-approaches-to-computing-education-in-undergradu",
       "university": "Aalto University"
     },
     {
       "candidates": 41,
       "case_id": "vienna",
-      "correct_position": 5,
+      "correct_position": 6,
       "domain": "univie.ac.at",
       "failed_queries": 0,
       "hop_candidates": 16,
-      "hop_entry_points": 3,
+      "hop_entry_points": 2,
       "queries_run": 5,
       "rejection_counts": {
-        "duplicate": 4,
+        "duplicate": 3,
+        "not_a_programme_page": 1,
         "wrong_degree_level": 7
       },
       "top_applies_to_intake": "unknown",
@@ -74,20 +75,21 @@
       "university": "University of Vienna"
     },
     {
-      "candidates": 37,
+      "candidates": 45,
       "case_id": "warsaw",
-      "correct_position": 1,
+      "correct_position": null,
       "domain": "uw.edu.pl",
       "failed_queries": 0,
-      "hop_candidates": 12,
+      "hop_candidates": 20,
       "hop_entry_points": 3,
       "queries_run": 5,
       "rejection_counts": {
-        "duplicate": 12
+        "duplicate": 11,
+        "wrong_degree_level": 8
       },
       "top_applies_to_intake": "unknown",
       "top_identity": "needs_review",
-      "top_url": "https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF",
+      "top_url": "https://informatorects.uw.edu.pl/en/faculties/10000000/courses?page=1",
       "university": "University of Warsaw"
     },
     {
@@ -100,8 +102,8 @@
       "hop_entry_points": 3,
       "queries_run": 5,
       "rejection_counts": {
-        "duplicate": 11,
-        "wrong_degree_level": 3
+        "duplicate": 9,
+        "wrong_degree_level": 6
       },
       "top_applies_to_intake": "unknown",
       "top_identity": "needs_review",
@@ -111,7 +113,7 @@
     {
       "candidates": 49,
       "case_id": "toronto",
-      "correct_position": 19,
+      "correct_position": 8,
       "domain": "utoronto.ca",
       "failed_queries": 0,
       "hop_candidates": 25,
@@ -126,18 +128,18 @@
       "university": "University of Toronto"
     },
     {
-      "candidates": 25,
+      "candidates": 34,
       "case_id": "hku",
       "correct_position": 6,
       "domain": "hku.hk",
       "failed_queries": 0,
-      "hop_candidates": 0,
-      "hop_entry_points": 0,
+      "hop_candidates": 10,
+      "hop_entry_points": 1,
       "queries_run": 5,
       "rejection_counts": {
         "duplicate": 12,
         "not_a_programme_page": 1,
-        "wrong_degree_level": 1
+        "wrong_degree_level": 2
       },
       "top_applies_to_intake": "unknown",
       "top_identity": "needs_review",
@@ -145,7 +147,7 @@
       "university": "University of Hong Kong"
     },
     {
-      "candidates": 31,
+      "candidates": 32,
       "case_id": "ntu",
       "correct_position": 1,
       "domain": "ntu.edu.sg",
@@ -154,7 +156,7 @@
       "hop_entry_points": 2,
       "queries_run": 5,
       "rejection_counts": {
-        "duplicate": 16,
+        "duplicate": 15,
         "wrong_degree_level": 1
       },
       "top_applies_to_intake": "unknown",
@@ -172,8 +174,8 @@
       "hop_entry_points": 3,
       "queries_run": 5,
       "rejection_counts": {
-        "duplicate": 8,
-        "not_a_programme_page": 4,
+        "duplicate": 9,
+        "not_a_programme_page": 5,
         "wrong_degree_level": 1
       },
       "top_applies_to_intake": "unknown",
@@ -183,12 +185,12 @@
     }
   ],
   "cases_with_no_candidates": 0,
-  "correct_at_rank_one": 2,
+  "correct_at_rank_one": 1,
   "dataset_version": "2026-09-21.reviewed",
   "navigation_hop": true,
-  "probed_at": "2026-09-21T10:12:42.746638+00:00",
+  "probed_at": "2026-09-21T11:18:26.696285+00:00",
   "provider": "exa",
   "queries_issued": 50,
-  "retrieval_ceiling": 10,
+  "retrieval_ceiling": 9,
   "scored_cases": 10
 }

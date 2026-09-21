@@ -251,3 +251,55 @@ the ranking signal only with a run that holds the ceiling at 10/10. The
 likeliest route is to make it a *prefilter* concern rather than a ranking one:
 a research-output page is not a weak candidate, it is the wrong kind of page,
 and rejections are counted and explained where ranking adjustments are not.
+
+---
+
+# Re-baselined, with two corrections to what this file said before
+
+Ten live runs later, the shipped configuration (hop on, page-kind ranking off,
+Bologna cycle slugs on, `site:` prefix kept) measures **9/10** with one case at
+rank 1. `baseline/search_probe.exa.hop.json` now holds that run.
+
+**Correction 1: Toronto's +11 was not caused by the page-kind signal.** It was
+credited to it here. With the signal explicitly disabled Toronto still comes
+back at #8 in three consecutive runs, so the improvement is not attributable to
+that change. The honest statement is that Toronto moved from 19 to 8 at some
+point between runs and stayed there.
+
+**Correction 2: the 10/10 is not currently reproducible, and the cause is
+outside this repository.** Warsaw's `IN/S1-INF` is absent from the results our
+generated queries produce, in every configuration tried — including the cycle
+fix, which *actively rejects* the master's pages that had displaced it, and
+including configurations that do not touch Warsaw's URLs at all. A direct
+probe settles it: Exa returns that exact page at **rank 1** for
+`University of Warsaw computer science first cycle programme S1-INF`, and not
+at all for `site:uw.edu.pl "computer science" "bachelor"`. The page is in the
+index; our query shape does not reach it.
+
+So the ceiling is **9/10 today and was 10/10 a few runs ago with no code
+change between them that explains the difference.** A benchmark against a live
+third-party index measures that index too.
+
+## Two more measured rejections
+
+**Dropping the `site:` prefix** — arguably right, since the provider is already
+told the domain through `includeDomains` and a keyword operator is noise to a
+neural index — cost Aalto six places, three other cases one each, and took
+cases-at-rank-1 from two to zero. Not shipped; `queries_for(site_prefix=...)`
+keeps the switch so the next provider can be measured rather than argued about.
+
+**Ranking by page kind** is covered above and stays off.
+
+## What did ship from all of this
+
+The **Bologna cycle slugs**, and they are a correctness fix rather than a
+ranking one: Warsaw's catalogue writes the bachelor as `IN/S1-INF` and the
+master as `IN/S2-INF`, and the degree reader saw neither, so a master's page
+passed a bachelor prefilter. Eight such pages are now rejected per Warsaw run.
+That is right whatever it does to a rank, and the full suite is green.
+
+## For the next agent
+
+Do not compare against a baseline older than a few runs. Re-measure the
+baseline in the same session as the change, or the drift in the provider's
+index will be attributed to the code.

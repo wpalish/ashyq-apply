@@ -333,6 +333,13 @@ async def discover_candidates(
     if top_k < 1:
         raise ValueError(f"top_k must be at least 1, got {top_k}")
 
+    # The ``site:`` prefix stays. Dropping it looked right — the provider is
+    # already told the domain through ``domains=``, and repeating it inside a
+    # neural query is arguably noise — and measured worse: Aalto fell six
+    # places, three others fell one each, and the number of cases with the
+    # correct page at rank 1 went from two to zero. ``queries_for`` keeps the
+    # ``site_prefix`` switch so the next provider can be measured, not argued
+    # about.
     queries: tuple[DiscoveryQuery, ...] = (
         queries_for(intent) if query_budget is None else queries_for(intent, budget=query_budget)
     )
