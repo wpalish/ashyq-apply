@@ -217,9 +217,7 @@ def _intakes(text: str) -> list[str]:
     return found
 
 
-def _has_marker(
-    text: str, start: int, end: int, marker: re.Pattern[str] = _INTAKE_MARKER
-) -> bool:
+def _has_marker(text: str, start: int, end: int, marker: re.Pattern[str] = _INTAKE_MARKER) -> bool:
     """Whether a scoping word stands beside this match."""
     window = text[max(0, start - _MARKER_RADIUS) : end + _MARKER_RADIUS]
     return bool(marker.search(window))

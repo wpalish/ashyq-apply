@@ -2029,6 +2029,10 @@ V2-01: evaluation-only Pydantic schema and JSON corpus/capture/metric contracts 
 
 V2-01: set PYTHONUTF8=1 on Windows for text fixtures; do not modify evaluation schemas while a live batch is running (parent and child processes can import different versions). Instrumented baseline segments and restart are recorded in baseline/README.md. Scope matching is deliberately literal; missing/different names count as conservative match failures, not human-confirmed wrong facts.
 
+- **Never read a gate through `| tail -1`.** `ruff format --check` prints `Would reformat: <file>`
+  *above* its summary line, so a one-line tail shows "208 files already formatted" while the command
+  exits 1. I shipped an unformatted file and CI caught it on PR #16. The gate's exit code is the
+  result; the summary line is not. Read the whole output, or check `$?`.
 - **"The first row" is not a selection when ids are random.** A V2-25 gate run failed on a test I wrote
   in V2-24, which passed on its own every time: it took `.order_by(id).first()` of the demo's results
   and assumed that row had a deadline claim. Ids are random hex, so which row that is varies with the
