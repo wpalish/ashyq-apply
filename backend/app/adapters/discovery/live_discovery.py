@@ -413,6 +413,16 @@ _CATALOGUE_PATH = re.compile(
 )
 
 
+def is_excluded_path(url: str) -> bool:
+    """Whether a URL is one of the pages a programme search never wants.
+
+    News, events, vacancies, shops, logins and static media. Public because
+    the search package applies the same rule to provider results, and a second
+    copy of this list would drift from this one within a release.
+    """
+    return bool(_URL_EXCLUSIONS.search(urlparse(url).path or ""))
+
+
 def looks_like_catalogue(url: str) -> bool:
     """Whether a URL looks like a page that lists programmes."""
     path = urlparse(url).path or ""
