@@ -21,7 +21,7 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
-**V2-22a — campus disambiguation from the registry's verified seeds (shipped).** Phase 1 so far is `ready-for-review (PR #15)`, which supersedes draft PR #14. Phase 1 retrieval was measured live: The owner approved the §6 exception and authorised the live probe; the Exa adapter works and the retrieval ceiling moved **1/10 → 9/10**. V2-01 was accepted 2026-09-21 and its record is below.
+**V2-13e — wire discovery to the search path (in-progress).** This is the step that makes Phase 1 visible in the product; nothing before it changed any behaviour. Phase 1 so far is `ready-for-review (PR #15)`, which supersedes draft PR #14. Phase 1 retrieval was measured live: The owner approved the §6 exception and authorised the live probe; the Exa adapter works and the retrieval ceiling moved **1/10 → 9/10**. V2-01 was accepted 2026-09-21 and its record is below.
 Owner explicitly prioritizes the new workstream. V2-01 follows this documentation commit in a task branch from this predecessor (explicit branch exception). Goal: measure current research/discovery quality before architecture changes.
 
 
@@ -494,6 +494,31 @@ Scope:
 
 The key is never read by this session, never written to a file, and never logged — only
 `EXA_API_KEY` / `UNIMATCH_EXA_API_KEY` at runtime.
+
+Write-ahead (claude-opus-5, 2026-09-21, V2-13e): **connecting `discover_candidates` to
+`LiveDiscoveryAdapter`.** The owner asked when they can see this working; the answer is that they
+cannot yet, because every Phase 1 module is measured on a bench and called by nothing. This is the
+wiring.
+
+Also worth recording: the owner was told by another tool that task "2.18" makes it visible. **There is
+no V2-18.** `02_EXECUTION_PLAN.md` numbers V2-00…V2-17 and then V2-20…V2-46, and no numbered task in
+it is the wiring — the plan assumes it and never names it. Hence this one.
+
+Design, following what was measured rather than what seems sensible:
+- search results are **appended** to `selected[PageCategory.PROGRAM_PAGE]`, never interleaved. V2-16d
+  measured the alternative: a coverage generator that competes with a ranked one costs cases.
+- **off unless configured.** `get_search_provider()` raises `SearchProviderNotConfigured` on the
+  default `none`, and that is caught and treated as "no search layer", so a deployment without a key
+  runs byte-identically to today. That is the same dormant-seam pattern `page_recorder` uses two
+  attributes above.
+- the hop's page reader is the adapter's own `Fetcher`, so robots, rate limits, the PII guard and SSRF
+  protection all apply exactly as before. The §6 exception covers the provider call only.
+- a provider failure degrades the run, never ends it: discovery keeps whatever the sitemap and walker
+  found.
+
+Acceptance: the existing suite must stay green **unchanged** with no provider configured — that is the
+proof this is dormant — and `seed_demo.py`'s order must still match brief §5.7, because this is the
+first change on the branch that touches the live pipeline at all.
 
 **Correction, and it matters more than the change itself.** The previous entry said the campus fix
 "needs data this repository does not hold" and put it to the owner. **That was wrong.** The data was
