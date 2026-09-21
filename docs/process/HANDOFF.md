@@ -21,7 +21,7 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
-**V2-12 — field and degree ontology (in-progress).** V2-10's seam and V2-11's query generator are committed. V2-01 was accepted 2026-09-21 and its record is below.
+**V2-13 — hybrid candidate retrieval (in-progress).** V2-10, V2-11 and V2-12 are committed. V2-01 was accepted 2026-09-21 and its record is below.
 Owner explicitly prioritizes the new workstream. V2-01 follows this documentation commit in a task branch from this predecessor (explicit branch exception). Goal: measure current research/discovery quality before architecture changes.
 
 
@@ -337,6 +337,35 @@ It is deliberately not wired into `queries_for`: bounded alias expansion is V2-1
 warns against exploding aliases into unlimited queries. Non-English aliases are kept to ones that are
 not in doubt; a guessed alias silently matches the wrong programme, which is the same class of error as
 a guessed fact.
+
+Write-ahead (claude-opus-5, 2026-09-21, V2-13): **starting V2-13 — hybrid candidate retrieval**, per
+`analysis/v2/04_PHASE_1_DISCOVERY_ENGINE.md` §4–§6. This is the task that joins the three previous ones
+and the first that can move the **1/10** baseline.
+
+**Finding before coding: §5's prefilter mostly already exists.** `live_discovery.py` already has
+`canonical_url` (fragment, tracking params, default port, trailing slash), `registrable_domain` /
+`same_institution` (multipart suffixes, so `edu.kz` works), `_URL_EXCLUSIONS` (news, events, jobs,
+media), `degree_level_named` and `names_other_degree_level`. Writing a second copy in the search package
+would be the per-source duplication `12_AGENT_DO_AND_DONT.md` warns about, and the two would drift.
+V2-13 therefore **reuses** them and adds only what is missing: scheme rejection, PDF detection (§9 says
+a PDF can be a real handbook, so it is flagged and kept, not dropped), deduplication that keeps the best
+rank, and a rejection record per URL so §4's "telemetry" is real.
+
+Scope:
+- `backend/app/adapters/search/prefilter.py` — the §5 chain over `SearchResult`s, returning kept
+  candidates *and* every rejection with its reason.
+- `backend/app/adapters/search/retrieval.py` — a small self-contained BM25 (no new dependency) over
+  title + snippet + URL words, a hybrid score combining it with the deterministic signals, and
+  `discover_candidates(provider, intent, ...)` running queries → provider → prefilter → rank → top K.
+  Every candidate carries the signals that produced its score, because an unexplainable ranking cannot
+  be debugged against the benchmark.
+- one public predicate added to `live_discovery.py` so the search package does not reach into a private
+  name.
+- `backend/tests/test_hybrid_retrieval.py`.
+
+Per §6, **only the deterministic layer and BM25 ship here.** Embeddings, a cross-encoder, Jev and an LLM
+are left as a documented seam: §6 says not to deploy them all automatically, and each needs its own
+benchmark run to justify its cost. Alias expansion stays inside `DEFAULT_QUERY_BUDGET` (§4).
 
 V2-12 is implemented and green (§6). Phase 1's three preparatory pieces — the provider seam (V2-10),
 the query generator (V2-11) and the ontology (V2-12) — are all in place and none of them calls another
