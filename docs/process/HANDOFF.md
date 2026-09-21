@@ -21,7 +21,7 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
-**V2-17 — programme identity verification (in-progress).** V2-10 … V2-16 are committed. The owner is registering with a search provider in parallel; V2-17 needs neither key nor authorisation. V2-01 was accepted 2026-09-21 and its record is below.
+**V2-10b — Exa search adapter (in-progress).** The owner chose Exa and holds a key. V2-10 … V2-17 are committed. V2-01 was accepted 2026-09-21 and its record is below.
 Owner explicitly prioritizes the new workstream. V2-01 follows this documentation commit in a task branch from this predecessor (explicit branch exception). Goal: measure current research/discovery quality before architecture changes.
 
 
@@ -467,6 +467,33 @@ Scope — `backend/app/domain/programme_identity.py` (the rule, pure, no I/O, as
 in domain code) and `backend/app/adapters/search/identity.py` (reading the dimensions from what a
 candidate actually shows), plus `tests/test_programme_identity.py`. A dimension the page does not state
 is `UNKNOWN`; nothing is inferred to fill a gap.
+
+Write-ahead (claude-opus-5, 2026-09-21, V2-10b): **the owner picked Exa and registered.** Writing the
+adapter behind the V2-10 seam.
+
+**A rule conflict is being raised, not resolved unilaterally.** `AGENTS.md` §6, listed as not negotiable
+by either agent: *"Do not weaken `Fetcher` (robots, rate limit, PII guard); no network outside it."*
+A search provider is network outside `Fetcher`. The V2 roadmap the owner approved requires one
+(`04_PHASE_1_DISCOVERY_ENGINE.md` §1), so the two documents disagree. Per §6 the conflict goes to §7
+and the owner decides; it is **not** silently settled here. The adapter is therefore written but
+**off by default** — `UNIMATCH_SEARCH_PROVIDER` stays `none`, and nothing reaches the network until the
+owner sets it. Why `Fetcher` is the wrong instrument for this one call, and what replaces each of its
+three guarantees, is argued in §7.
+
+Scope:
+- `backend/app/adapters/search/exa.py` — `ExaSearchProvider` satisfying the V2-10 protocol. POST
+  `/search` with `type`, `numResults`, `includeDomains`, `contents.highlights`; maps the response to
+  `SearchResult` / `SearchResponse`; maps every transport and HTTP failure to `SearchUnavailable` so a
+  degraded run stays visible as degraded rather than as a run that found less.
+- The host is checked through the existing `network_policy` before the call, the response body is
+  capped, redirects are not followed, and there are no retries — a provider quota error must not be
+  multiplied by three.
+- `config.py`: `exa_api_key: SecretStr` like every other credential, `"exa"` added to
+  `KNOWN_SEARCH_PROVIDERS`, and `_validate_search` refusing to start with `exa` selected and no key.
+- Tests drive a mocked `httpx` transport. `AGENTS.md` §6: tests never call the internet.
+
+The key is never read by this session, never written to a file, and never logged — only
+`EXA_API_KEY` / `UNIMATCH_EXA_API_KEY` at runtime.
 
 V2-17 is implemented and green (§6).
 
