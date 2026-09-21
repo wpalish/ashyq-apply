@@ -28,12 +28,34 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+import httpx
+
 from app.adapters.discovery.live_discovery import canonical_url
 from app.adapters.search.base import SearchProvider, SearchUnavailable
 from app.adapters.search.identity import verify_candidate
 from app.adapters.search.intent import DiscoveryIntent
 from app.adapters.search.retrieval import discover_candidates
 from app.domain.enums import DegreeLevel
+
+
+async def read_page(url: str) -> str:
+    """Read a page for the navigation hop, in evaluation only.
+
+    Production passes a ``Fetcher``-backed reader instead, and must: robots,
+    rate limits, the PII guard and the SSRF protections all live there. This
+    one exists because `Fetcher` pins IPs and cannot reach the network from
+    the cloud container this benchmark runs in (HANDOFF §9), while `httpx`
+    honours ``HTTPS_PROXY``. Legitimate here for the same reason evaluation
+    may hold ground truth that production must never read: this module never
+    ships.
+    """
+    try:
+        async with httpx.AsyncClient(timeout=20, follow_redirects=True) as client:
+            response = await client.get(url)
+    except httpx.HTTPError:
+        return ""
+    return response.text if response.status_code == httpx.codes.OK else ""
+
 
 #: Ten cases at six queries each. Stated so a reader can price a run before
 #: starting one.
@@ -50,6 +72,8 @@ class CaseProbe:
     correct_position: int | None
     queries_run: int
     failed_queries: int
+    hop_entry_points: int = 0
+    hop_candidates: int = 0
     #: What the identity check said about the top candidate, if there was one.
     top_url: str = ""
     top_identity: str = ""
@@ -76,12 +100,16 @@ def _intent(case: dict[str, Any]) -> DiscoveryIntent:
     )
 
 
-async def probe_case(provider: SearchProvider, case: dict[str, Any]) -> CaseProbe:
+async def probe_case(
+    provider: SearchProvider, case: dict[str, Any], *, hop: bool = False
+) -> CaseProbe:
     intent = _intent(case)
     truth = {canonical_url(u) for u in case["programme_urls"]}
 
     try:
-        report = await discover_candidates(provider, intent, top_k=25)
+        report = await discover_candidates(
+            provider, intent, top_k=25, fetch=read_page if hop else None
+        )
     except SearchUnavailable as exc:  # pragma: no cover - network failure path
         return CaseProbe(
             case_id=case["id"],
@@ -117,18 +145,25 @@ async def probe_case(provider: SearchProvider, case: dict[str, Any]) -> CaseProb
         top_identity=top_identity,
         top_applies_to_intake=top_applies,
         rejection_counts=report.rejection_counts or {},
+        hop_entry_points=len(report.hop_entry_points),
+        hop_candidates=report.hop_candidates,
     )
 
 
-async def run(provider: SearchProvider, dataset: dict[str, Any]) -> dict[str, Any]:
+async def run(
+    provider: SearchProvider, dataset: dict[str, Any], *, hop: bool = False
+) -> dict[str, Any]:
     probes = [
-        await probe_case(provider, case) for case in dataset["cases"] if case["programme_urls"]
+        await probe_case(provider, case, hop=hop)
+        for case in dataset["cases"]
+        if case["programme_urls"]
     ]
     reachable = sum(1 for p in probes if p.correct_position is not None)
     first = sum(1 for p in probes if p.correct_position == 1)
     return {
         "dataset_version": dataset["version"],
         "provider": getattr(provider, "name", "unknown"),
+        "navigation_hop": hop,
         "probed_at": datetime.now(UTC).isoformat(),
         "scored_cases": len(probes),
         "retrieval_ceiling": reachable,
@@ -143,6 +178,11 @@ def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dataset", required=True, type=Path)
     parser.add_argument("--out", type=Path)
+    parser.add_argument(
+        "--hop",
+        action="store_true",
+        help="also read each entry point's navigation (measured worse; see SEARCH_PROBE.md)",
+    )
     parser.add_argument(
         "--live",
         action="store_true",
@@ -160,7 +200,7 @@ def main(argv: list[str] | None = None) -> None:
     from app.adapters.search.exa import ExaSearchProvider
 
     dataset = json.loads(args.dataset.read_text(encoding="utf-8"))
-    report = asyncio.run(run(ExaSearchProvider(key), dataset))
+    report = asyncio.run(run(ExaSearchProvider(key), dataset, hop=args.hop))
     rendered = json.dumps(report, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
     if args.out:
         args.out.write_text(rendered, encoding="utf-8")

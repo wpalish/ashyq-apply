@@ -20,14 +20,21 @@ from __future__ import annotations
 
 import math
 import re
-from collections.abc import Sequence
+from collections.abc import Awaitable, Callable, Sequence
 from dataclasses import dataclass, field
 
 from app.adapters.discovery.live_discovery import looks_like_catalogue
 from app.adapters.search.base import SearchProvider, SearchResult, SearchUnavailable
+from app.adapters.search.fusion import Generator, SourcedCandidate, fuse
 from app.adapters.search.intent import DiscoveryIntent, DiscoveryQuery, queries_for
+from app.adapters.search.navigation import navigation_candidates
 from app.adapters.search.ontology import degree_aliases, ontology_version, retrieval_candidates
 from app.adapters.search.prefilter import PrefilterOutcome, prefilter
+
+#: How many of the best search results to open and read the navigation of.
+#: A hop is a supplement to search, not a crawl: each one costs a fetch, and
+#: the entry point search is surest about is the one worth opening.
+DEFAULT_HOP_ENTRY_POINTS = 3
 
 #: Standard BM25 constants. k1 bounds how much repeating a term helps; b is how
 #: strongly a long document is penalised. Not tuned — tuning them without a
@@ -115,6 +122,10 @@ class RetrievalReport:
     #: Queries whose provider call failed. A degraded run must be visible as
     #: degraded rather than reported as a run that found less.
     failed_queries: tuple[str, ...] = ()
+    #: Entry points whose navigation was read, and how many candidates the hop
+    #: contributed. Zero of either is a fact worth seeing in a report.
+    hop_entry_points: tuple[str, ...] = ()
+    hop_candidates: int = 0
 
 
 def rank_candidates(
@@ -173,6 +184,15 @@ def rank_candidates(
     return tuple(ranked)
 
 
+#: What a caller must supply to let the hop read a page: a coroutine taking a
+#: URL and returning its HTML, or "" when it could not be read. Production
+#: passes a ``Fetcher``-backed one so robots, rate limits, the PII guard and
+#: the SSRF protections all still apply; tests pass a fake; evaluation tooling
+#: passes its own. The seam exists so that none of them has to weaken
+#: ``Fetcher`` to get its job done.
+FetchPage = Callable[[str], Awaitable[str]]
+
+
 async def discover_candidates(
     provider: SearchProvider,
     intent: DiscoveryIntent,
@@ -180,6 +200,8 @@ async def discover_candidates(
     query_budget: int | None = None,
     max_results_per_query: int = 10,
     top_k: int = 20,
+    fetch: FetchPage | None = None,
+    hop_entry_points: int = DEFAULT_HOP_ENTRY_POINTS,
 ) -> RetrievalReport:
     """Queries → provider → prefilter → ranking, bounded at every step.
 
@@ -211,6 +233,44 @@ async def discover_candidates(
     outcome = prefilter(results, domain=intent.domain, degree=intent.degree)
     ranked = rank_candidates(outcome, intent)
 
+    opened: list[str] = []
+    hopped: list[SourcedCandidate] = []
+    if fetch is not None and hop_entry_points > 0:
+        # Search finds entry points reliably; a page with no words in its URL
+        # is found from one, not by a better query. See navigation.py.
+        for candidate in ranked[:hop_entry_points]:
+            try:
+                html = await fetch(candidate.url)
+            except Exception:
+                html = ""
+            if not html:
+                continue
+            opened.append(candidate.url)
+            hopped.extend(navigation_candidates(html, candidate.url, intent))
+
+    if hopped:
+        # Fused by rank, so a page both generators found keeps both
+        # attributions — the agreement signal is the reason to have two.
+        from_search = [
+            SourcedCandidate(url=c.url, generator=Generator.WEB_SEARCH, rank=index, title=c.title)
+            for index, c in enumerate(ranked, start=1)
+        ]
+        merged = fuse([*from_search, *hopped], top_k=top_k)
+        by_url = {c.url: c for c in ranked}
+        ranked = tuple(
+            by_url.get(
+                row.url,
+                RankedCandidate(
+                    url=row.url,
+                    title=row.title,
+                    score=row.score,
+                    provider="navigation",
+                    signals=("found_by_navigation_hop",),
+                ),
+            )
+            for row in merged
+        )
+
     return RetrievalReport(
         candidates=ranked[:top_k],
         queries_run=tuple(q.family for q in queries),
@@ -218,4 +278,6 @@ async def discover_candidates(
         ontology_version=ontology_version(),
         rejection_counts=outcome.rejection_counts,
         failed_queries=tuple(failed),
+        hop_entry_points=tuple(opened),
+        hop_candidates=len(hopped),
     )

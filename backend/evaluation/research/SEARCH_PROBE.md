@@ -1,5 +1,10 @@
 # Web search raises the retrieval ceiling from 1/10 to 9/10
 
+> Two measurements live in this file. The first is the headline result and is
+> committed as the baseline. The second, at the end, is a **negative** result:
+> fusing the navigation hop as an equal generator made the benchmark worse and
+> was therefore not shipped.
+
 Measured 2026-09-21 by claude-opus-5 against the certified corpus
 `ground_truth.reviewed.json` (`2026-09-21.reviewed`, signed by Диас), using the
 Phase 1 retrieval path — `DiscoveryIntent` → bounded queries → Exa → prefilter
@@ -83,3 +88,65 @@ that wiring it in is worth doing, not evidence that the product got better.
 
 Fetch budget and cost are within bounds: 50 queries, 5 per case, no case over
 the 25-result cap, no provider failures.
+
+---
+
+# Negative result: fusing the navigation hop as an equal generator makes things worse
+
+Measured 2026-09-21, same corpus, same 50 queries, with
+`--hop` enabled so each of the top three search results had its navigation
+read and the resulting links fused in through V2-16.
+
+| | Search only | With the hop fused as an equal |
+|---|---|---|
+| Retrieval ceiling | **9/10** | **8/10** |
+| Correct page at rank 1 | 2 | 2 (but different cases) |
+| NTU | **#1** | #12 |
+| UBC | #2 | #16 |
+| Groningen | #3 | #11 |
+| HKU | #5 | #11 |
+| Aalto | #19 | **lost entirely** |
+
+The hop contributed 16–30 candidates per case. Each one starts again at rank 1
+on its own entry page, and `GENERATOR_WEIGHTS` gives `catalogue_walker` and
+`web_search` the same trust, so a navigation link ranked first on some page
+outscored a search result ranked tenth or twentieth. Correct pages were pushed
+down and, for Aalto, out of the top 25 altogether.
+
+Per §12 — *a discovery change is good only if the benchmark improves* — **this
+is not shipped.** `discover_candidates` takes a `fetch` callable that defaults
+to `None`, so the hop is off unless a caller asks for it, and the probe needs
+`--hop` to turn it on. The committed baseline in `search_probe.exa.json` is the
+search-only run.
+
+## What the result actually says
+
+The hop is not wrong; it was *used* wrongly. Search ranking here is measured
+and good — 9/10 reachable, and the misses are ranking problems, not coverage
+problems. The hop exists for the one case search cannot see at all. Those are
+different jobs:
+
+- **Coverage** adds pages nothing else found. It must never displace a page a
+  ranked generator already placed well.
+- **Ranking** decides order among pages already found, and fusion by rank is
+  the right tool there only when both inputs are genuinely ranked.
+
+A navigation list is not ranked in the sense RRF assumes: link order on a page
+is layout, not relevance. Treating it as a ranking was the error.
+
+KAIST also stayed unreachable with the hop on, for a separate reason: its top
+search results are `pure.kaist.ac.kr` research profiles, so the hop opened
+those rather than `cs.kaist.ac.kr/` — the page whose navigation *does* contain
+the answer (proved in V2-16b, rank 3). Choosing entry points by search rank
+alone picks the wrong door.
+
+## What to try next, in order
+
+1. **Append, do not interleave.** Hop-only candidates after the search list,
+   keeping agreement where both generators found a page. Re-measure; the
+   ceiling should rise to 10/10 without any case moving down.
+2. **Choose entry points by kind, not by rank.** A department or faculty root
+   is worth opening; a research-profile page is not. `page_classifier` already
+   distinguishes them and the retrieval path does not consult it.
+3. Only then consider giving the hop a weight in fusion, and only if a
+   measurement asks for it.
