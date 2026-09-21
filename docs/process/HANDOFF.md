@@ -1011,7 +1011,13 @@ CI runs both on the PR.
 
 ## 7. Blockers / questions for the owner
 
-### OPEN — `AGENTS.md` §6 says "no network outside `Fetcher`"; the V2 roadmap requires a search provider (2026-09-21, claude-opus-5)
+### RESOLVED — the owner approved a bounded exception to `AGENTS.md` §6 (2026-09-21)
+
+The owner answered **yes**: a configured search provider behind the `app/adapters/search` seam may call its vendor API directly. `AGENTS.md` §6 has been **amended to say so**, because an unamended "not negotiable" rule with a live exception is worse than either answer. The exception is bounded to that seam; fetching any page a provider returns still goes through `Fetcher`, and no other network path is exempt. The owner also authorised using the current Exa key for this measurement work and will rotate it afterwards.
+
+The argument, kept for the record:
+
+### (historical) The conflict as it was put
 
 Two documents the owner approved disagree, so per §6 this is raised rather than decided.
 
