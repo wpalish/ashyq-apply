@@ -21,7 +21,7 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
-**Phase 1 retrieval measured against the certified corpus.** The owner approved the §6 exception and authorised the live probe; the Exa adapter works and the retrieval ceiling moved **1/10 → 9/10**. V2-01 was accepted 2026-09-21 and its record is below.
+**V2-16b — navigation-hop generator (in-progress).** Phase 1 retrieval was measured live: The owner approved the §6 exception and authorised the live probe; the Exa adapter works and the retrieval ceiling moved **1/10 → 9/10**. V2-01 was accepted 2026-09-21 and its record is below.
 Owner explicitly prioritizes the new workstream. V2-01 follows this documentation commit in a task branch from this predecessor (explicit branch exception). Goal: measure current research/discovery quality before architecture changes.
 
 
@@ -494,6 +494,34 @@ Scope:
 
 The key is never read by this session, never written to a file, and never logged — only
 `EXA_API_KEY` / `UNIMATCH_EXA_API_KEY` at runtime.
+
+Write-ahead (claude-opus-5, 2026-09-21, V2-16b): **adding a navigation-hop generator**, after
+investigating KAIST — the one case the live probe could not reach.
+
+**Evidence, gathered before deciding anything.** Four query shapes were tried against KAIST
+(site-restricted, domain-filtered, subdomain-filtered, and Korean). None returns
+`cs.kaist.ac.kr/content?menu=188`. But the department root `cs.kaist.ac.kr/` comes back first or second
+in almost every one, sibling CMS pages (`?menu=200`, `?menu=318`, `?menu=320`) are in the index, and
+fetching the root shows the target **linked directly from its navigation** under the text 교육, with
+`/education/undergraduate` as a word-bearing alias for the same section.
+
+**So the general lesson, not a KAIST lesson:** web search indexes what is linkable and word-bearing and
+reliably finds *entry points*; structural traversal does not care about words in a URL. They fail
+differently, which is exactly why V2-16 has several generators. The answer to an opaque site is not
+better queries — it is one hop through the site's own navigation, matching link text against the
+ontology. `live_discovery.matches_field_text` already exists for precisely this: it was written when
+Toronto's programme sat at `/data-computer-science` behind the link text "Data & Computer Science".
+
+Scope — `backend/app/adapters/search/navigation.py` and `tests/test_navigation_hop.py`:
+- `links_from(html, base_url)` — every same-institution link with its text, deduplicated and bounded.
+- `navigation_candidates(html, base_url, intent, *, limit)` — the links whose *text* or URL names the
+  requested field or degree, scored so a word-bearing alias outranks an opaque one, each carrying the
+  parent URL it was found on so provenance survives (§11: `query_or_parent_url`).
+- Emitted as `Generator.CATALOGUE_WALKER` `SourcedCandidate`s so V2-16's fusion merges them with search
+  results and attribution is kept.
+
+Bounded: one hop, a capped number of links per page, and no fetching — this module reads HTML it is
+given. Fetching the entry point stays with `Fetcher` per the amended §6.
 
 The Exa adapter works against the live API and the retrieval question is **answered**: web search
 raises the ceiling from 1/10 to 9/10. Details, per-case table and caveats in
