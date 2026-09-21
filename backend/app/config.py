@@ -148,6 +148,10 @@ class Settings(BaseSettings):
     #: search provider at all, which is a supported configuration: the registry,
     #: sitemaps and the catalogue walker do not need one.
     search_provider: str = "none"
+
+    #: SecretStr like every other credential. Read from UNIMATCH_EXA_API_KEY
+    #: (or EXA_API_KEY via the environment), never from a file in the repo.
+    exa_api_key: SecretStr = SecretStr("")
     apipay_base_url: str = "https://api.apipay.kz/api/v1"
     apipay_api_key: SecretStr = SecretStr("")
     apipay_webhook_secret: SecretStr = SecretStr("")
@@ -244,6 +248,11 @@ class Settings(BaseSettings):
             raise RuntimeError(
                 f"UNIMATCH_SEARCH_PROVIDER={self.search_provider!r} is not a search provider "
                 f"this build knows. Use one of {sorted(KNOWN_SEARCH_PROVIDERS)}."
+            )
+        if self.search_provider == "exa" and not self.exa_api_key.get_secret_value():
+            raise RuntimeError(
+                "UNIMATCH_SEARCH_PROVIDER='exa' needs UNIMATCH_EXA_API_KEY. Refusing to start "
+                "rather than reporting every search as finding nothing."
             )
         if self.is_production and self.search_provider == "fake":
             raise RuntimeError(

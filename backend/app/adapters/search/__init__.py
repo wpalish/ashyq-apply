@@ -18,7 +18,7 @@ from app.adapters.search.base import (
 
 #: Every provider name this build accepts. A name outside it is refused at
 #: startup rather than at the first search.
-KNOWN_SEARCH_PROVIDERS = frozenset({"none", "fake"})
+KNOWN_SEARCH_PROVIDERS = frozenset({"none", "fake", "exa"})
 
 __all__ = [
     "KNOWN_SEARCH_PROVIDERS",
@@ -43,6 +43,11 @@ def get_search_provider() -> SearchProvider:
     from app.config import get_settings
 
     settings = get_settings()
+    if settings.search_provider == "exa":
+        from app.adapters.search.exa import ExaSearchProvider
+
+        return ExaSearchProvider(settings.exa_api_key.get_secret_value())
+
     if settings.search_provider == "fake":
         from app.adapters.search.fake import FakeSearchProvider
 
