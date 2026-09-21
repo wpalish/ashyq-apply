@@ -21,7 +21,7 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
-**V2-21 — the scope model (in-progress).** Phase 1 is complete, measured and wired (PR #15); this starts Phase 2 on the failure Phase 1 never touched. Phase 1 so far is `ready-for-review (PR #15)`, which supersedes draft PR #14. Phase 1 retrieval was measured live: The owner approved the §6 exception and authorised the live probe; the Exa adapter works and the retrieval ceiling moved **1/10 → 9/10**. V2-01 was accepted 2026-09-21 and its record is below.
+**V2-21b — carry the scope on a claim (in-progress).** Phase 1 is complete, measured and wired (PR #15); this starts Phase 2 on the failure Phase 1 never touched. Phase 1 so far is `ready-for-review (PR #15)`, which supersedes draft PR #14. Phase 1 retrieval was measured live: The owner approved the §6 exception and authorised the live probe; the Exa adapter works and the retrieval ceiling moved **1/10 → 9/10**. V2-01 was accepted 2026-09-21 and its record is below.
 Owner explicitly prioritizes the new workstream. V2-01 follows this documentation commit in a task branch from this predecessor (explicit branch exception). Goal: measure current research/discovery quality before architecture changes.
 
 
@@ -494,6 +494,24 @@ Scope:
 
 The key is never read by this session, never written to a file, and never logged — only
 `EXA_API_KEY` / `UNIMATCH_EXA_API_KEY` at runtime.
+
+Write-ahead (claude-opus-5, 2026-09-21, V2-21b): **putting `ClaimScope` on `Claim`.**
+
+**No migration is needed, and that is a finding rather than a shortcut.** `ClaimRow.payload` is a JSON
+column holding the serialised claim whole; a new optional field on the pydantic model lands there by
+itself. `alembic heads` is one (`d9c4e7a21b83`) and stays one because nothing is added to it.
+
+Deliberately *not* adding a queryable `scope` column: nothing queries by scope yet, and the phase
+guide's own answer to persistent scoped knowledge is the V2-20 SourceSnapshot / ClaimVersion model,
+which is a design decision of its own. Adding a column now would prejudge it.
+
+Scope — `app/schemas/claim.py`: an optional `scope: ClaimScope | None`, defaulting to `None`, which
+means *nobody recorded the scope* and is distinct from a `ClaimScope()` that recorded it as empty. The
+existing `program` / `intake` / `academic_year` fields stay exactly as they are: nothing reads the new
+field yet, so nothing may depend on it, and removing them would break every extractor at once.
+
+Acceptance: the full suite passes untouched, and a round-trip through the payload JSON preserves the
+scope — a field that does not survive persistence is a field that does not exist.
 
 V2-21 ships the type and its rule; nothing consults it yet, deliberately.
 
