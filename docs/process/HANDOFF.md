@@ -584,6 +584,28 @@ value, and which of three shapes it is — **silent** (the page did not say), **
 something else), or **unrecorded** (nobody read a scope at all). Evaluation-side only; production never
 reads it. The capture workflow runs it after scoring, so a run explains itself in its own log.
 
+Write-ahead (claude-opus-5, 2026-09-21, **V2-24a**): **tell a real change from a re-render.**
+Plan item V2-24, first half.
+
+The pipeline already does the cheap half of change detection: conditional GET, then a content hash, so
+a page that has not changed costs one request and nothing else. What it cannot do is the guide's next
+question — *material* change. `reextract_page` supersedes **every** live claim over a re-read URL and
+appends the fresh ones, even when every value came back identical. A page that merely re-rendered
+therefore produces a full generation of superseded rows saying exactly what the live ones said.
+
+Scope, exactly, in a new `app/domain/change_detection.py`:
+- `ChangeKind` — `UNCHANGED`, `VALUE_CHANGED`, `ADDED`, `REMOVED`.
+- `classify_changes(before, after)` — pairs claims on `(claim_type, subject_key)`, which is what makes
+  two claims the same statement, and compares normalised values.
+- `is_material(changes)` — true when anything but `UNCHANGED` is present.
+- `source_scanner` logs the classification on every re-extract.
+
+**Deliberately no behaviour change.** Skipping supersession for unchanged claims is the obvious next
+move and it would break `test_a_forced_page_change_supersedes_old_and_appends_new_in_one_commit`, which
+encodes the T32 contract: supersession is per source URL, and a page that now yields nothing supersedes
+anyway. That contract was written deliberately by another campaign; replacing it is an owner decision,
+so this step produces the evidence and §7 carries the proposal.
+
 Write-ahead (claude-opus-5, 2026-09-21, **V2-22a**): **institution identity by evidence, not by
 resemblance.** Plan item V2-22 (entity resolution), first half.
 
