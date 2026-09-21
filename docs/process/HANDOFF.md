@@ -21,7 +21,7 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
-**V2-11b — a natural-language query family (in-progress).** Phase 1 so far is `ready-for-review (PR #15)`, which supersedes draft PR #14. Phase 1 retrieval was measured live: The owner approved the §6 exception and authorised the live probe; the Exa adapter works and the retrieval ceiling moved **1/10 → 9/10**. V2-01 was accepted 2026-09-21 and its record is below.
+**V2-13d — per-family discovery provenance (in-progress).** Phase 1 so far is `ready-for-review (PR #15)`, which supersedes draft PR #14. Phase 1 retrieval was measured live: The owner approved the §6 exception and authorised the live probe; the Exa adapter works and the retrieval ceiling moved **1/10 → 9/10**. V2-01 was accepted 2026-09-21 and its record is below.
 Owner explicitly prioritizes the new workstream. V2-01 follows this documentation commit in a task branch from this predecessor (explicit branch exception). Goal: measure current research/discovery quality before architecture changes.
 
 
@@ -494,6 +494,22 @@ Scope:
 
 The key is never read by this session, never written to a file, and never logged — only
 `EXA_API_KEY` / `UNIMATCH_EXA_API_KEY` at runtime.
+
+Write-ahead (claude-opus-5, 2026-09-21, V2-13d): **recording which query family found each candidate**,
+because Toronto's #8 → #19 regression cannot be diagnosed without it and guessing at it would be the
+third time this session that a plausible story turned out to be wrong.
+
+`04_PHASE_1_DISCOVERY_ENGINE.md` §11 asks for exactly this and it was never built: every candidate
+should keep `discovered_by`, `provider`, `query_or_parent_url` and `rank`. The report names which
+families *ran*; nothing says which family produced which row.
+
+Scope — `app/adapters/search/retrieval.py`: `RankedCandidate.found_by`, the families that surfaced
+that URL, filled while the query loop runs and carried through the prefilter and the ranking. The
+`SearchResult` contract is untouched: a provider reports what it returned, and which of our queries
+asked for it is our bookkeeping, not theirs.
+
+Then use it: one targeted run on Toronto to see which family surfaced its correct page at #8 and what
+the new family displaced. No fix is written before that answer exists.
 
 V2-11b shipped and the ceiling is back to **10/10**, this time with the cause understood rather than
 observed: five of six query families were one shape, and a neural index reads a query for meaning, so
