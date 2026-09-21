@@ -175,3 +175,68 @@ class TestTheDimensionsAreTheGuides:
         scope = ClaimScope(**{dimension: "something else"})
 
         assert scope.covers(request) is N
+
+
+class TestAScopeSurvivesBeingStored:
+    """A field that does not survive persistence is a field that does not exist."""
+
+    def _a_claim(self, **kw):
+        from datetime import UTC, datetime
+
+        from app.domain.enums import ClaimType
+        from app.schemas.claim import Claim
+
+        return Claim(
+            claim_type=next(iter(ClaimType)),
+            normalized_value=6.5,
+            source_url="https://nu.edu.kz/programmes/cs",
+            accessed_at=datetime.now(UTC),
+            **kw,
+        )
+
+    def test_it_round_trips_through_the_payload_json(self):
+        """`ClaimRow.payload` stores the claim whole, so no column is needed."""
+        from app.schemas.claim import Claim
+
+        original = self._a_claim(scope=a_scope())
+
+        restored = Claim.model_validate(original.model_dump(mode="json"))
+
+        assert restored.scope == original.scope
+
+    def test_no_recorded_scope_and_an_empty_one_are_different_facts(self):
+        """The first is a gap in our pipeline; the second is a fact about the page."""
+        assert self._a_claim().scope is None
+        assert self._a_claim(scope=ClaimScope()).scope == ClaimScope()
+
+    def test_a_stored_claim_without_the_field_still_loads(self):
+        """Every claim written before this field existed must keep working."""
+        from app.schemas.claim import Claim
+
+        stored = self._a_claim(scope=a_scope()).model_dump(mode="json")
+        del stored["scope"]
+
+        assert Claim.model_validate(stored).scope is None
+
+    def test_the_flat_fields_are_untouched(self):
+        """Nothing reads the new field yet, so nothing may depend on it."""
+        claim = self._a_claim(intake="fall 2027", academic_year="2026/27", scope=a_scope())
+
+        assert claim.intake == "fall 2027"
+        assert claim.academic_year == "2026/27"
+
+    def test_an_unrecorded_scope_leaves_no_key_in_the_json(self):
+        """Absent means "nobody looked"; a key saying so invites a wrong reading.
+
+        It also keeps every claim written before this field existed
+        byte-identical, which a golden-hash regression test relies on.
+        """
+        assert "scope" not in self._a_claim().model_dump(mode="json")
+        assert "scope" in self._a_claim(scope=a_scope()).model_dump(mode="json")
+
+    def test_a_deliberately_empty_scope_is_still_written_down(self):
+        """A page that stated no scope is a fact, and facts get recorded."""
+        dumped = self._a_claim(scope=ClaimScope()).model_dump(mode="json")
+
+        assert "scope" in dumped
+        assert all(v is None for v in dumped["scope"].values())
