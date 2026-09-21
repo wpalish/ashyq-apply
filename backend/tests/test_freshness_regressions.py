@@ -475,6 +475,11 @@ class TestSupersededExcluded:
 #: ``_canonical_demo_dump`` machinery below. GREEN on baseline by
 #: construction; the developer's T32 changes must keep the demo pipeline
 #: byte-identical under the same masking.
+#: Re-captured a third time for V2-25's successor V2-26, under the same proof:
+#: exactly one added line — `"kind": "true_conflict"` on the demo's single
+#: conflict (Delft's programme page against its admissions page, both stating
+#: the same intake, so a real contradiction). 0 removed.
+#:
 #: Re-captured a second time for V2-25, under the same proof: 0 removed lines
 #: of 2651 changed, every addition a key inside a claim's `scope`, on the four
 #: adapters that did not read scope until then. No result, bucket, check or
@@ -487,7 +492,7 @@ class TestSupersededExcluded:
 #: changed). That is the whole of the intended change — a claim now records
 #: what its page stated about who it covers — and it is the only reason this
 #: constant has a second value. Anything else that moves it is a regression.
-GOLDEN_DEMO_SHA256 = "0e99e155d98d462b7d48fe695049c2fd450d1410a83d949447142a197e3d488f"
+GOLDEN_DEMO_SHA256 = "6b7e7a98390c2a465479ba4f03a14d317722cd43624a70b074ba4f3c663f3f39"
 
 #: The golden was captured with the real clock on 2026-09-07, and the baseline
 #: payload embeds that date: ``requirement_checks[*].applicant_value`` and

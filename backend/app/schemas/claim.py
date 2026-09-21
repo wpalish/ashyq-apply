@@ -13,7 +13,7 @@ from typing import Any, Literal
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_serializer
 
 from app.domain.claim_scope import ClaimScope
-from app.domain.enums import ClaimStatus, ClaimType, SourceSpecificity
+from app.domain.enums import ClaimStatus, ClaimType, ConflictKind, SourceSpecificity
 
 #: Excerpts exist to prove a value was read, not to reproduce the page.
 MAX_EXCERPT_CHARS = 600
@@ -112,6 +112,10 @@ class Conflict(Base):
     """Two official sources disagreeing. Never resolved silently."""
 
     claim_type: ClaimType
+    #: What kind of disagreement this is. ``TRUE_CONFLICT`` unless the pages
+    #: state scopes that differ, in which case both values are correct and the
+    #: difference is who or when they are about — see :class:`ConflictKind`.
+    kind: ConflictKind = ConflictKind.TRUE_CONFLICT
     subject: str = Field(description="What the conflict is about, e.g. 'IELTS overall minimum'")
     claim_ids: list[str]
     values: list[Any]

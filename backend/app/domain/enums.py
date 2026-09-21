@@ -40,6 +40,30 @@ class FieldStatus(StrEnum):
     CONFLICTING = "conflicting"
 
 
+# --- Why two official pages disagree ------------------------------------
+
+
+class ConflictKind(StrEnum):
+    """What a disagreement between two official pages actually is.
+
+    Phase 2 asks for exactly this distinction: a contradiction and a scope
+    difference look identical in the values alone. A fee for home students and
+    a fee for overseas students are two correct numbers, and calling them a
+    contradiction teaches the applicant to distrust a right answer.
+
+    ``TRUE_CONFLICT`` stays the answer whenever the pages do not state scopes
+    that differ — including when nobody recorded a scope at all. Unknown is
+    never rounded into "different", which would explain away a real conflict.
+    """
+
+    TRUE_CONFLICT = "true_conflict"
+    DIFFERENT_POPULATION = "different_population"
+    DIFFERENT_INTAKE = "different_intake"
+    DIFFERENT_ACADEMIC_YEAR = "different_academic_year"
+    DIFFERENT_RESIDENCY = "different_residency"
+    DIFFERENT_DEGREE = "different_degree"
+
+
 # --- Provenance of a scraped fact ---------------------------------------
 
 
