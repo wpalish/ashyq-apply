@@ -217,3 +217,37 @@ class TestTheLoaderRefusesAmbiguousData:
         finally:
             module.load_ontology.cache_clear()
             module._alias_index.cache_clear()
+
+
+class TestUrlOnlyClassification:
+    """`classify_url` — what a URL alone can say, used before a page is fetched."""
+
+    def test_a_research_output_is_recognised_as_irrelevant(self):
+        """Aalto's top result was a publication; KAIST's an organisation profile."""
+        from app.adapters.page_classifier import PageType, classify_url
+
+        assert classify_url("https://research.aalto.fi/en/publications/x") is PageType.IRRELEVANT
+        assert (
+            classify_url("https://pure.kaist.ac.kr/en/organisations/school-of-computing")
+            is PageType.IRRELEVANT
+        )
+
+    def test_a_repository_host_is_recognised(self):
+        from app.adapters.page_classifier import PageType, classify_url
+
+        assert classify_url("https://pure.example.edu/anything") is PageType.IRRELEVANT
+
+    def test_news_is_recognised(self):
+        from app.adapters.page_classifier import PageType, classify_url
+
+        assert classify_url("https://www.rug.nl/news/2027/x") is PageType.NEWS
+
+    def test_an_ordinary_programme_url_says_nothing_either_way(self):
+        """A "/programmes/" segment was tried as a positive hint and measurably hurt."""
+        from app.adapters.page_classifier import PageType, classify_url
+
+        assert classify_url("https://nu.edu.kz/programmes/bsc-cs") is PageType.UNKNOWN
+        assert (
+            classify_url("https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF/")
+            is PageType.UNKNOWN
+        )

@@ -25,6 +25,7 @@ from dataclasses import dataclass, field
 from urllib.parse import urlsplit
 
 from app.adapters.discovery.live_discovery import looks_like_catalogue
+from app.adapters.page_classifier import PageType, classify_url
 from app.adapters.search.base import SearchProvider, SearchResult, SearchUnavailable
 from app.adapters.search.fusion import SourcedCandidate, fuse
 from app.adapters.search.intent import DiscoveryIntent, DiscoveryQuery, queries_for
@@ -52,7 +53,22 @@ SIGNAL_WEIGHTS = {
     "top_ranked_by_provider": 1.0,
     "related_field_only": -2.0,
     "pdf": -0.5,
+    "programme_page": 2.5,
+    "not_a_programme_page": -4.0,
 }
+
+#: What ``classify_page`` calls a page we want, and one we do not. Aalto's
+#: top result was a research publication and KAIST's an organisation profile:
+#: the ranking scored their words and never asked what the pages *were*.
+_WANTED_PAGE_KINDS = frozenset(
+    {
+        PageType.PROGRAM_DETAIL,
+        PageType.PROGRAM_CATALOG,
+        PageType.INTAKE_SPECIFIC_PROGRAM,
+        PageType.GENERAL_ADMISSIONS,
+    }
+)
+_UNWANTED_PAGE_KINDS = frozenset({PageType.NEWS, PageType.NAVIGATION, PageType.IRRELEVANT})
 
 
 def tokenize(text: str) -> list[str]:
@@ -138,13 +154,23 @@ class RetrievalReport:
     #: contributed. Zero of either is a fact worth seeing in a report.
     hop_entry_points: tuple[str, ...] = ()
     hop_candidates: int = 0
+    #: Entry points that qualified but could not be read. HKU showed zero
+    #: opened pages and the cause was a refused connection, not an empty
+    #: shortlist; two different facts deserve two counters.
+    hop_entry_points_unreachable: int = 0
 
 
 def rank_candidates(
     outcome: PrefilterOutcome,
     intent: DiscoveryIntent,
+    *,
+    rank_by_page_kind: bool = False,
 ) -> tuple[RankedCandidate, ...]:
-    """Score surviving candidates, best first."""
+    """Score surviving candidates, best first.
+
+    ``rank_by_page_kind`` is off because it was measured and made the
+    benchmark worse overall; see the comment beside the signal.
+    """
     kept = outcome.kept
     if not kept:
         return ()
@@ -179,6 +205,24 @@ def rank_candidates(
             signals.append("top_ranked_by_provider")
         if candidate.is_pdf:
             signals.append("pdf")
+
+        # **Measured, and not enabled.** Scoring a candidate by what
+        # ``classify_url`` says it is gave Toronto +11 and KAIST +2 in two
+        # consecutive runs — and cost Warsaw its place in both, with the
+        # ceiling falling 10/10 → 9/10. Warsaw's own URLs classify as
+        # ``UNKNOWN``, so the signal does not touch them directly and the
+        # interaction is not yet understood. §12: a discovery change is good
+        # only if the benchmark improves.
+        #
+        # ``classify_url`` itself stays: it is a real capability, tested, and
+        # the next attempt needs it. Re-enable this block only with a run that
+        # keeps the ceiling at 10/10. See SEARCH_PROBE.md.
+        if rank_by_page_kind:
+            kind = classify_url(candidate.url)
+            if kind in _WANTED_PAGE_KINDS:
+                signals.append("programme_page")
+            elif kind in _UNWANTED_PAGE_KINDS:
+                signals.append("not_a_programme_page")
 
         score += sum(SIGNAL_WEIGHTS[s] for s in signals)
         ranked.append(
@@ -320,6 +364,7 @@ async def discover_candidates(
     ranked = ranked[:top_k]
 
     opened: list[str] = []
+    unreachable = 0
     hopped: list[SourcedCandidate] = []
     if fetch is not None and hop_entry_points > 0:
         # Search finds entry points reliably; a page with no words in its URL
@@ -337,6 +382,7 @@ async def discover_candidates(
             except Exception:
                 html = ""
             if not html:
+                unreachable += 1
                 continue
             opened.append(candidate)
             hopped.extend(navigation_candidates(html, candidate, intent))
@@ -380,4 +426,5 @@ async def discover_candidates(
         failed_queries=tuple(failed),
         hop_entry_points=tuple(opened),
         hop_candidates=len(hopped),
+        hop_entry_points_unreachable=unreachable,
     )

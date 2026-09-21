@@ -204,3 +204,50 @@ large moves; treat ±1 as noise unless two runs agree.
 - HKU opened no entry point at all. Worth a look: either every candidate host
   scored below zero, or the fetches failed.
 - None of this touches `wrong_scope_claim_rate` 5/5.
+
+---
+
+# Ranking by page kind: +11 for one case, a lost case for another, not enabled
+
+Measured 2026-09-21, twice, `--hop` on. `classify_url` scores a candidate by
+what its URL says the page is.
+
+| | Hop baseline | With page-kind ranking (two runs, identical) |
+|---|---|---|
+| Retrieval ceiling | **10/10** | **9/10** |
+| Toronto | #19 | **#8** (+11) |
+| KAIST | #30 | #28–30 |
+| Warsaw | #1 | **lost** |
+| everything else | — | unchanged |
+
+**Not enabled.** `rank_candidates(..., rank_by_page_kind=False)` by default.
+§12: a discovery change is good only if the benchmark improves, and the ceiling
+falling is not an improvement however large the win elsewhere.
+
+## Two things learned, both kept
+
+**A URL can say reliably what a page is *not*, and not what it is.** A first
+attempt also scored `/programmes/` and `/admissions/` as positive hints. It
+promoted catalogue *index* pages over the specific programme page that was
+asked for: Warsaw lost its place, NTU fell four, Groningen and Vienna two
+each. Dropping the positive half and keeping only *research output*, *news*
+and *vacancy* recognition left every other case exactly where it was and kept
+Toronto's +11. The positive hints are gone from the code, with the reason
+beside them.
+
+**The Warsaw interaction is not understood, and is stated rather than
+guessed.** Both of Warsaw's URLs classify as `UNKNOWN`, so the signal does not
+touch them; something about reordering the other candidates costs it its
+place. Two consecutive runs agree, so it is not the provider variance that
+explains HKU's ±1. Worth understanding before the next attempt — the
+`S1-INF` (bachelor) page was replaced at the top by `S2-INF`, the **master's**
+programme, which the prefilter did not reject because that URL names no
+recognisable degree level. That is a separate, real gap.
+
+## The next attempt
+
+Keep `classify_url` — it is a capability, not a failed experiment. Re-enable
+the ranking signal only with a run that holds the ceiling at 10/10. The
+likeliest route is to make it a *prefilter* concern rather than a ranking one:
+a research-output page is not a weak candidate, it is the wrong kind of page,
+and rejections are counted and explained where ranking adjustments are not.
