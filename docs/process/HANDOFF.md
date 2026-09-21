@@ -21,7 +21,7 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
-**V2-16d — hop as coverage, appended not interleaved (in-progress).** Phase 1 so far is `ready-for-review (PR #15)`, which supersedes draft PR #14. Phase 1 retrieval was measured live: The owner approved the §6 exception and authorised the live probe; the Exa adapter works and the retrieval ceiling moved **1/10 → 9/10**. V2-01 was accepted 2026-09-21 and its record is below.
+**V2-13b — rank with the page classifier (in-progress).** Phase 1 so far is `ready-for-review (PR #15)`, which supersedes draft PR #14. Phase 1 retrieval was measured live: The owner approved the §6 exception and authorised the live probe; the Exa adapter works and the retrieval ceiling moved **1/10 → 9/10**. V2-01 was accepted 2026-09-21 and its record is below.
 Owner explicitly prioritizes the new workstream. V2-01 follows this documentation commit in a task branch from this predecessor (explicit branch exception). Goal: measure current research/discovery quality before architecture changes.
 
 
@@ -494,6 +494,30 @@ Scope:
 
 The key is never read by this session, never written to a file, and never logged — only
 `EXA_API_KEY` / `UNIMATCH_EXA_API_KEY` at runtime.
+
+Write-ahead (claude-opus-5, 2026-09-21, V2-13b): **teaching the ranking what kind of page it is
+looking at.** Retrieval is done — ten of ten reachable — and ranking is the only retrieval problem
+left: two cases at rank 1, Aalto's correct page at #19 behind *a research publication*, KAIST's at #30
+behind an organisation profile.
+
+`app/adapters/page_classifier.py` already distinguishes `PROGRAM_DETAIL`, `PROGRAM_CATALOG`, `NEWS`,
+`NAVIGATION` and `IRRELEVANT`, and the retrieval path has never consulted it. That is the gap: the
+ranking scores words and ignores what the page *is*.
+
+Scope — `app/adapters/search/retrieval.py`:
+- a `page_kind` signal from `classify_page(url=...)`, positive for a programme detail or catalogue page,
+  negative for news, navigation and irrelevant, neutral for unknown;
+- classification from the URL alone, because ranking happens before anything is fetched. A URL-only
+  verdict is weaker than one made on the page body, which is why it adjusts a score rather than
+  rejecting a candidate — the prefilter is where rejections belong.
+
+Also, one honest telemetry fix from the last run: `hop_entry_points` cannot currently tell *no host
+qualified* from *the host refused the connection*. HKU shows 0 and the cause is the second — its hosts
+score correctly and `admissions.hku.hk` resets the connection from this container. Two different facts
+deserve two different counters.
+
+Acceptance, stated before the run: Aalto and KAIST must move **up**, and no case may move down by more
+than the ±1 the provider's own variance explains (§9).
 
 V2-16d is **shipped, and it is the first change on this branch that improved the benchmark**:
 retrieval ceiling **9/10 → 10/10**, no case moved down by the hop. Still off by default —
