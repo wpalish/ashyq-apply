@@ -513,6 +513,34 @@ proves it end to end (128 of 173 claims scoped, 45 honestly empty).
    likeliest win: eligibility prose states populations more often than requirements prose does.
 3. Open items unchanged: KAIST's registry seed (owner data task, §7); page-kind as a prefilter concern.
 
+Write-ahead (claude-opus-5, 2026-09-21, V2-22b): **stop the benchmark capture from recording the
+question as the page's answer.**
+
+Re-measuring first, as §5 said to (step 1, done): `wrong_scope_claim_rate` is **5/5**, byte-identical to
+`metrics.reviewed.json`, and it *could not* have moved — the strict score runs against a frozen capture
+taken on 2026-09-20, before a claim could carry a scope at all.
+
+Reading that capture found the same bug on the measurement side, which is worth more than the number.
+Every prediction's `evidence.scope` is built in `evaluation/research/live.py` (and `map_claims.py`) from
+the **request**: `intake` is `"fall 2027"` on all ten cases because that is what the profile asked for,
+`university` is the candidate's name, `academic_year` is the runner's default. None of it was read from
+the page. So the benchmark has been comparing a label against our own question, and a scope-match
+failure there never meant a human-confirmed wrong fact — the baseline README says as much in its own
+row, without knowing why.
+
+Scope, exactly:
+- one helper in `evaluation/research/mapping.py` that builds an `Evidence` scope from a raw claim;
+- it prefers the claim's recorded `scope` (V2-22) for every dimension it states, and emits `None` for a
+  dimension the page was silent on — a gap, not the requested value;
+- it falls back to the request-side `intake` / `academic_year` fields **only when the claim carries no
+  `scope` key at all**, i.e. was written before V2-22. That fallback is bug-compatible on purpose, so a
+  re-score of the frozen capture stays exactly reproducible, and it is documented as such.
+- `live.py` and `map_claims.py` both call it, so the two paths cannot drift again.
+
+What this cannot do: **move the measured rate**. That needs a fresh live capture, and `Fetcher` has no
+network in this container (§9). The capture re-run is an owner/CI task; until it happens the honest
+statement is that 5/5 describes a capture taken before any of this existed.
+
 Previous write-ahead (claude-opus-5, 2026-09-21, V2-21b): **putting `ClaimScope` on `Claim`.**
 
 **No migration is needed, and that is a finding rather than a shortcut.** `ClaimRow.payload` is a JSON
