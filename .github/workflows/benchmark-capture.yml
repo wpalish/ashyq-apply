@@ -105,6 +105,17 @@ jobs:
             --out evaluation/research/baseline/metrics.${{ github.run_id }}.json \
             | tee capture-metrics.txt
 
+      - name: Say why each scope mismatch happened
+        # The rate alone cannot be acted on: a page that stated the wrong
+        # population and a page that stated nothing score identically, and the
+        # fix for one is nothing like the fix for the other.
+        run: |
+          set -o pipefail
+          .venv/bin/python -m evaluation.research.scope_report \
+            --dataset evaluation/research/data/ground_truth.reviewed.json \
+            --capture "$CAPTURE_JSON" \
+            --json scope-mismatches.json | tee scope-mismatches.txt
+
       - name: Show what moved
         # Printed in the log so the numbers are readable without downloading
         # anything. The comparison a human actually wants is against
@@ -140,4 +151,6 @@ jobs:
             backend/evaluation/research/baseline/metrics.${{ github.run_id }}.json
             backend/capture-metrics.txt
             backend/capture.log
+            backend/scope-mismatches.json
+            backend/scope-mismatches.txt
           retention-days: 14
