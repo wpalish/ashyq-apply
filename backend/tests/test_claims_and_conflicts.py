@@ -259,3 +259,76 @@ class TestAConflictSaysWhatKindItIs:
         )
         assert conflicts[0].kind is ConflictKind.TRUE_CONFLICT
         assert all(c.status is ClaimStatus.CONFLICTING for c in updated)
+
+
+class TestAGeneralRuleBesideASpecificOne:
+    """Plan V2-23, the kind the first pass left out.
+
+    The phase guide: a general rule and a programme-specific rule may both be
+    true, so do not label them a conflict automatically.
+    """
+
+    def test_a_programme_page_against_a_university_page_is_not_a_contradiction(self):
+        conflicts, _ = find_conflicts(
+            [
+                C("ielts_min_overall", 7.0, specificity="program_intake", url="https://u/prog"),
+                C(
+                    "ielts_min_overall",
+                    6.5,
+                    specificity="university_admissions",
+                    url="https://u/adm",
+                ),
+            ]
+        )
+        assert conflicts[0].kind is ConflictKind.MORE_SPECIFIC_SOURCE
+        assert "can both be true" in conflicts[0].resolution_rule
+        assert "kept, not discarded" in conflicts[0].resolution_rule
+
+    def test_two_pages_of_the_same_kind_disagreeing_is_still_a_contradiction(self):
+        """Specificity explains a difference between levels, never within one."""
+        conflicts, _ = find_conflicts(
+            [
+                C("ielts_min_overall", 7.0, specificity="program_intake", url="https://u/a"),
+                C("ielts_min_overall", 6.5, specificity="program_intake", url="https://u/b"),
+            ]
+        )
+        assert conflicts[0].kind is ConflictKind.TRUE_CONFLICT
+
+    def test_a_stated_scope_difference_still_wins_over_specificity(self):
+        """Two populations is a better explanation than two levels, and the
+        dimension check runs first."""
+        conflicts, _ = find_conflicts(
+            [
+                C(
+                    "ielts_min_overall",
+                    7.0,
+                    specificity="program_intake",
+                    url="https://u/prog",
+                    scope=ClaimScope(population="international"),
+                ),
+                C(
+                    "ielts_min_overall",
+                    6.5,
+                    specificity="university_admissions",
+                    url="https://u/adm",
+                    scope=ClaimScope(population="EU/EEA"),
+                ),
+            ]
+        )
+        assert conflicts[0].kind is ConflictKind.DIFFERENT_POPULATION
+
+    def test_the_claims_keep_today_s_status_until_the_owner_decides(self):
+        """Deliberate: the guide would have the specific rule stay usable, and
+        an existing contract test says otherwise. Naming lands first."""
+        _, updated = find_conflicts(
+            [
+                C("ielts_min_overall", 7.0, specificity="program_intake", url="https://u/prog"),
+                C(
+                    "ielts_min_overall",
+                    6.5,
+                    specificity="university_admissions",
+                    url="https://u/adm",
+                ),
+            ]
+        )
+        assert all(c.status is ClaimStatus.CONFLICTING for c in updated)

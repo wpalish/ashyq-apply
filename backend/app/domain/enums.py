@@ -57,6 +57,11 @@ class ConflictKind(StrEnum):
     """
 
     TRUE_CONFLICT = "true_conflict"
+    #: A programme page and a university-wide page publishing different values
+    #: are usually not contradicting: the phase guide's words are that a
+    #: general rule and a programme-specific rule may both be true. The
+    #: specific one is preferred for assessment; the broader one is kept.
+    MORE_SPECIFIC_SOURCE = "more_specific_source"
     DIFFERENT_POPULATION = "different_population"
     DIFFERENT_INTAKE = "different_intake"
     DIFFERENT_ACADEMIC_YEAR = "different_academic_year"

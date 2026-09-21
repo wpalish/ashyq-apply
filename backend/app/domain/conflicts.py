@@ -18,6 +18,7 @@ from app.domain.enums import (
     ClaimStatus,
     ClaimType,
     ConflictKind,
+    SourceSpecificity,
 )
 from app.schemas.claim import Claim, Conflict, UnresolvedQuestion
 
@@ -49,6 +50,30 @@ _KIND_BY_DIMENSION: dict[str, ConflictKind] = {
 }
 
 
+#: How far apart two sources must sit before their disagreement is read as
+#: "one is simply more specific". Adjacent levels only — a programme page
+#: against a university admissions page — because two sources of the same
+#: kind disagreeing is a real contradiction, and a programme page against an
+#: aggregator is a hierarchy problem that `enforce_source_hierarchy` already
+#: handles before this runs.
+_SPECIFICITY_LEVELS_THAT_EXPLAIN = frozenset(
+    {
+        (SourceSpecificity.PROGRAM_INTAKE, SourceSpecificity.UNIVERSITY_ADMISSIONS),
+        (SourceSpecificity.PROGRAM, SourceSpecificity.UNIVERSITY_ADMISSIONS),
+        (SourceSpecificity.PROGRAM_INTAKE, SourceSpecificity.PROGRAM),
+    }
+)
+
+
+def _explained_by_specificity(pool: list[Claim]) -> bool:
+    """Whether these sources are a specific rule beside a general one."""
+    levels = {c.source_specificity for c in pool}
+    if len(levels) != 2:
+        return False
+    a, b = sorted(levels, key=lambda level: SPECIFICITY_RANK.get(level, 9))
+    return (a, b) in _SPECIFICITY_LEVELS_THAT_EXPLAIN
+
+
 def classify_conflict(pool: list[Claim]) -> ConflictKind:
     """Why these pages disagree, as far as what they *state* can say.
 
@@ -71,6 +96,11 @@ def classify_conflict(pool: list[Claim]) -> ConflictKind:
         }
         if len(stated) > 1:
             return kind
+    if _explained_by_specificity(pool):
+        # The guide's own example: a university-wide IELTS 6.5 and a
+        # programme's 7.0 are two true rules at different levels, and calling
+        # that a contradiction teaches an applicant to distrust both.
+        return ConflictKind.MORE_SPECIFIC_SOURCE
     return ConflictKind.TRUE_CONFLICT
 
 
@@ -129,10 +159,19 @@ def find_conflicts(
         )
 
         kind = classify_conflict(pool)
-        if kind is ConflictKind.TRUE_CONFLICT:
-            # Only a real contradiction may poison the claims. Two rules for
-            # two different populations are both correct, and stamping them
-            # CONFLICTING would stop either from ever being used.
+        if kind in (ConflictKind.TRUE_CONFLICT, ConflictKind.MORE_SPECIFIC_SOURCE):
+            # A real contradiction may poison the claims. Two rules for two
+            # different *populations* may not: they are both correct, and
+            # stamping them CONFLICTING would stop either from ever being used.
+            #
+            # MORE_SPECIFIC_SOURCE keeps today's stamping on purpose, and it
+            # is the one case where this code disagrees with the phase guide.
+            # The guide says a programme rule beside a university-wide rule is
+            # not a contradiction and the specific one should be preferred for
+            # assessment; `test_two_official_pages_disagreeing_produce_one_conflict`
+            # encodes the opposite. Changing it changes what the product tells
+            # an applicant, so the classification lands now, the behaviour
+            # waits for the owner (HANDOFF §7).
             for c in pool:
                 conflicted.add(id(c))
 
@@ -149,11 +188,7 @@ def find_conflicts(
                     f"Preferring the more specific source ({preferred.source_specificity.value}); "
                     "the disagreement is shown rather than resolved."
                     if kind is ConflictKind.TRUE_CONFLICT
-                    else (
-                        "Not a contradiction: the pages state different "
-                        f"{kind.value.removeprefix('different_').replace('_', ' ')}s, so both "
-                        "values can be correct. Neither is discarded."
-                    )
+                    else _why_not_a_contradiction(kind, preferred)
                 ),
                 question_for_admissions=_draft_question(subject, pool, context, intake, kind),
                 unresolved=True,
@@ -165,6 +200,42 @@ def find_conflicts(
         for c in live
     ]
     return conflicts, updated
+
+
+def _ask(kind: ConflictKind) -> str:
+    """The one sentence the applicant actually sends.
+
+    Worded per kind, because the question a person needs answered differs:
+    with a true contradiction they ask which value is right, and with a
+    general rule beside a specific one they already know both may be right
+    and need to know which governs their application.
+    """
+    if kind is ConflictKind.TRUE_CONFLICT:
+        return "Could you confirm which value applies to my application cycle?"
+    if kind is ConflictKind.MORE_SPECIFIC_SOURCE:
+        return (
+            "One of these is published for the programme and the other university-wide. "
+            "Could you confirm which one governs my application?"
+        )
+    dimension = kind.value.removeprefix("different_").replace("_", " ")
+    return (
+        f"These appear to be published for different {dimension}s. Could you confirm which "
+        "one applies to me?"
+    )
+
+
+def _why_not_a_contradiction(kind: ConflictKind, preferred: Claim) -> str:
+    if kind is ConflictKind.MORE_SPECIFIC_SOURCE:
+        return (
+            "Not a contradiction: a programme-specific rule and a university-wide rule can "
+            f"both be true. The more specific source ({preferred.source_specificity.value}) "
+            "applies to this application; the broader rule is kept, not discarded."
+        )
+    dimension = kind.value.removeprefix("different_").replace("_", " ")
+    return (
+        f"Not a contradiction: the pages state different {dimension}s, so both values can "
+        "be correct. Neither is discarded."
+    )
 
 
 def _draft_question(
@@ -185,13 +256,7 @@ def _draft_question(
         lines.append(f"  - {c.normalized_value}  ({c.source_url})")
     lines += [
         "",
-        "Could you confirm which value applies to my application cycle?"
-        if kind is ConflictKind.TRUE_CONFLICT
-        else (
-            "These appear to be published for different "
-            f"{kind.value.removeprefix('different_').replace('_', ' ')}s. Could you confirm "
-            "which one applies to me?"
-        ),
+        _ask(kind),
         "",
         "Thank you for your time.",
     ]
