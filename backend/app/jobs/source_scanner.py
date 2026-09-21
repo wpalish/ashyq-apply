@@ -39,6 +39,7 @@ from app.adapters.base import Candidate, CandidateProgram
 from app.adapters.fetching import Fetcher, FetchOutcome, FetchResult
 from app.adapters.requirements.web_requirements import WebRequirementsAdapter
 from app.config import Settings
+from app.domain.change_detection import Reading, classify_changes, summarise
 from app.domain.enums import ClaimStatus, DegreeLevel
 from app.domain.freshness import apply_freshness
 from app.jobs.store import BACKOFF_SECONDS, JobStore
@@ -328,13 +329,30 @@ async def reextract_page(
     run.claims_recorded = (run.claims_recorded or 0) + len(fresh)
 
     _record_page(session, page, res, lastmod=None)
+    # What actually changed, as opposed to what was re-read. Supersession is
+    # unchanged and still per URL (the T32 contract); this only says whether
+    # any of it was material, so the question can be answered from a log
+    # instead of by diffing two generations of rows by hand.
+    changes = classify_changes([_reading_of(row) for row in superseded], fresh)
     log.info(
-        "reextract of %s for result %s: %d claim(s) superseded, %d appended",
+        "reextract of %s for result %s: %d claim(s) superseded, %d appended — %s",
         url[:80],
         result_id[:8],
         len(superseded),
         len(fresh),
+        summarise(changes),
     )
+
+
+def _reading_of(row: ClaimRow) -> Reading:
+    """The persisted row as a comparable statement, and nothing more.
+
+    Deliberately not ``Claim.model_validate``: a payload written by an older
+    schema would fail validation, and inside this job's single transaction
+    that failure would roll back the supersession itself. Describing history
+    must never be able to break it.
+    """
+    return Reading.from_payload(dict(row.payload))
 
 
 def _intake_of(profile: ApplicantProfileIn) -> str:
