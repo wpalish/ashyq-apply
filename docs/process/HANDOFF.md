@@ -21,7 +21,7 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
-**V2-16b — navigation-hop generator (in-progress).** Phase 1 retrieval was measured live: The owner approved the §6 exception and authorised the live probe; the Exa adapter works and the retrieval ceiling moved **1/10 → 9/10**. V2-01 was accepted 2026-09-21 and its record is below.
+**V2-16c — fuse the hop into retrieval and re-measure (in-progress).** Phase 1 retrieval was measured live: The owner approved the §6 exception and authorised the live probe; the Exa adapter works and the retrieval ceiling moved **1/10 → 9/10**. V2-01 was accepted 2026-09-21 and its record is below.
 Owner explicitly prioritizes the new workstream. V2-01 follows this documentation commit in a task branch from this predecessor (explicit branch exception). Goal: measure current research/discovery quality before architecture changes.
 
 
@@ -494,6 +494,29 @@ Scope:
 
 The key is never read by this session, never written to a file, and never logged — only
 `EXA_API_KEY` / `UNIMATCH_EXA_API_KEY` at runtime.
+
+Write-ahead (claude-opus-5, 2026-09-21, V2-16c): **fusing the navigation hop into
+`discover_candidates` and re-running the live probe**, to find out whether the retrieval ceiling goes
+from 9/10 to 10/10 and whether the seven misplaced cases move up.
+
+The obstacle is §9's environment fact: `Fetcher` cannot reach the network in this container, and the
+hop needs its entry points fetched. **The fix is not to weaken `Fetcher`.** `discover_candidates` takes
+an injected `fetch` callable instead:
+
+- production passes a `Fetcher`-backed one, so robots, rate limits, the PII guard and SSRF protection
+  are exactly as before and §6 is untouched;
+- tests pass a fake, so no test goes near the network;
+- the **evaluation probe** passes a proxy-aware one of its own. That is legitimate precisely because
+  `evaluation/` is not production and never ships — the same reason it may hold ground truth that
+  production must never read.
+
+Bounded: at most `DEFAULT_HOP_ENTRY_POINTS` entry points per case, one hop deep, no recursion, and a
+fetch failure drops that entry point rather than ending the run. Search results and hop candidates are
+merged through V2-16's `fuse`, so a page both generators find keeps both attributions — which is the
+agreement signal fusion exists to produce.
+
+Then: re-run `python -m evaluation.research.search_probe --live` and record the new numbers beside
+9/10 and 2-at-rank-1.
 
 V2-16b is implemented, green, and **validated against a real page rather than a fixture** — which is
 the only reason it works. The hand-written smoke test passed first time and KAIST's real navigation
