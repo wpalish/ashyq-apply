@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from datetime import date
 
+from app.domain.claim_scope import ClaimScope
 from app.domain.eligibility import evaluate_program
 from app.domain.enums import EligibilityStatus
 from app.schemas.profile import AcademicRecord, SatScore
@@ -157,3 +158,111 @@ class TestOtherPrerequisites:
         check = next(c for c in outcome.checks if c.requirement == "Required subjects")
         assert check.status is EligibilityStatus.PENDING
         assert "Add them if they were studied" in check.explanation
+
+
+class TestScopeGovernsWhatMayAnswer:
+    """V2-23 — a claim answers the question its page says it is about.
+
+    The benchmark's five wrong-scope claims were all the same shape: a true
+    fact, published for another intake or year, stated as the answer here.
+    """
+
+    def test_a_claim_for_another_intake_is_not_the_answer(self, profile):
+        """The page says 2026; the run asked about fall 2027."""
+        outcome = evaluate_program(
+            profile,
+            [
+                C(
+                    "admission_deadline",
+                    "2026-01-15",
+                    intake="fall 2027",
+                    scope=ClaimScope(intake="Fall 2026"),
+                )
+            ],
+            today=TODAY,
+        )
+        assert not any(c.requirement == "Admission deadline" for c in outcome.checks)
+        assert outcome.hard_filter_failures == []
+
+    def test_a_page_silent_on_the_intake_may_inform_but_may_not_eliminate(self, profile):
+        """Silence is not agreement, and it is not grounds to end an application."""
+        outcome = evaluate_program(
+            profile,
+            [
+                C(
+                    "admission_deadline",
+                    "2026-01-15",
+                    intake="fall 2027",
+                    scope=ClaimScope(population="international"),
+                )
+            ],
+            today=TODAY,
+        )
+        deadline = next(c for c in outcome.checks if c.requirement == "Admission deadline")
+        assert deadline.status is EligibilityStatus.GAP
+        assert deadline.is_hard_filter is False
+        assert outcome.hard_filter_failures == []
+
+    def test_a_page_stating_the_requested_intake_still_eliminates(self, profile):
+        outcome = evaluate_program(
+            profile,
+            [
+                C(
+                    "admission_deadline",
+                    "2026-01-15",
+                    intake="fall 2027",
+                    # The run carries an academic year from the server's
+                    # settings. A page that names the requested intake has
+                    # answered the question; it is not asked to also restate a
+                    # year nobody requested.
+                    academic_year="2026/27",
+                    scope=ClaimScope(intake="Fall 2027"),
+                )
+            ],
+            today=TODAY,
+        )
+        assert "Admission deadline" in outcome.hard_filter_failures
+
+    def test_a_page_that_says_who_it_is_for_outranks_one_that_does_not(self, profile):
+        """Ahead of specificity: answering the question beats being specific."""
+        outcome = evaluate_program(
+            profile,
+            [
+                C(
+                    "ielts_min_overall",
+                    9.0,
+                    intake="fall 2027",
+                    specificity="program_intake",
+                    scope=ClaimScope(population="international"),
+                ),
+                C(
+                    "ielts_min_overall",
+                    6.5,
+                    intake="fall 2027",
+                    specificity="university_admissions",
+                    scope=ClaimScope(intake="fall 2027"),
+                ),
+            ],
+            today=TODAY,
+        )
+        overall = next(c for c in outcome.checks if c.requirement == "IELTS overall")
+        assert overall.published_value == 6.5
+
+    def test_a_claim_written_before_scope_existed_is_judged_exactly_as_before(self, profile):
+        """Bug-compatible on purpose: None is a gap in our pipeline, not a fact."""
+        outcome = evaluate_program(
+            profile,
+            [C("admission_deadline", "2026-01-15", intake="fall 2027")],
+            today=TODAY,
+        )
+        assert "Admission deadline" in outcome.hard_filter_failures
+
+    def test_two_intakes_in_one_run_ask_about_neither(self, profile):
+        """Nothing coherent was requested, so nothing can be refused for scope."""
+        from app.domain.eligibility import requested_scope
+
+        claims = [
+            C("admission_deadline", "2026-01-15", intake="fall 2027"),
+            C("ielts_min_overall", 6.5, intake="spring 2028"),
+        ]
+        assert requested_scope(claims).intake is None
