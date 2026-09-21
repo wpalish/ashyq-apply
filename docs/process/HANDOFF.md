@@ -528,6 +528,34 @@ proves it end to end (128 of 173 claims scoped, 45 honestly empty).
 Plan items still open in Phase 2: **V2-20 (SourceSnapshot / ClaimVersion)**, **V2-22 (entity
 resolution)**, **V2-24 (change detection)**. From here I use the plan's numbers.
 
+Write-ahead (claude-opus-5, 2026-09-21, **V2-20b**): **a superseded claim says when it stopped being
+current and what replaced it.**
+
+Supersession already exists and works: `jobs/source_scanner.reextract_page` flips every live claim over
+a re-read URL to `SUPERSEDED` and appends the fresh ones beside them, in one transaction. What the
+history cannot answer is the two questions the guide's `ClaimVersion` is for — *when* did this stop
+being true, and *which* value took over. Today a superseded row carries only its old `accessed_at`,
+and the only link between the was and the became is that they share a URL.
+
+Scope, exactly, in `app/models/research.py` + one migration:
+- `claims.superseded_at` — when this row stopped being live. Set in the same transaction that flips the
+  status, never guessed afterwards from `updated_at`.
+- `claims.superseded_by_id` — the claim row that took over, FK to `claims.id`, **ON DELETE SET NULL**
+  for the same reason `source_page_id` is: a purge must never take a history row with it.
+- The successor is matched on `(claim_type, subject_key)` within the page being re-read. **A superseded
+  claim with no successor is not a bug and must not be filled in with a guess**: it means the page no
+  longer says this at all, which is exactly the case the re-extract docstring already calls the one
+  thing that must never be lost.
+- `reextract_page` sets both.
+
+Not in scope, deliberately: `valid_from`/`valid_to` as a separate interval, and a `ClaimVersion` table
+of its own. A claim row already *is* its version — it has `accessed_at` as its start and now
+`superseded_at` as its end — and splitting that into a second table would be a migration of all
+existing evidence for no query anyone makes yet. If a query does appear, the columns are already the
+shape that table would need.
+
+Demo effect: **none** expected — nothing supersedes in a demo run, which never re-reads a page.
+
 Write-ahead (claude-opus-5, 2026-09-21, **V2-20a**): **SourceSnapshot — what a page said, and when.**
 
 `SourcePage` already exists and is deliberately one mutable row per URL: the page's *current* state,
