@@ -1,0 +1,671 @@
+{
+  "schema_version": "1",
+  "pipeline_sha": "51f951239b2f3224791476945ae7ba11bd0379ee",
+  "captured_at": "20260920T040256Z",
+  "mode": "live",
+  "config": {
+    "seconds_per_case": 90,
+    "max_fetcher_calls_per_case": 60,
+    "browser_enabled": false,
+    "cohort": [
+      "groningen",
+      "delft",
+      "aalto",
+      "vienna",
+      "warsaw",
+      "ubc",
+      "toronto",
+      "hku",
+      "ntu",
+      "kaist"
+    ],
+    "scope": "current production pipeline; HTTP-only bounded cold run",
+    "rank_stage": "programme confirmation queue before catalogue walking",
+    "harness_sha256": "47476572cb65e4672a9efc56e9c88532e2ae83ffda04b6d554f74083069679e9",
+    "assembly": "One cold bounded run per institution; original parent stopped after Toronto because schema was edited while running. Last three cases completed separately. No results selected or discarded based on quality.",
+    "segments": [
+      {
+        "path": "artifacts/research-benchmark-instrumented/20260920T040256Z/capture.json",
+        "sha256": "9548a14b8fc196b74aee5729421927d6eb4cb336e5a26a8206a554bfdf2b10ed"
+      },
+      {
+        "path": "artifacts/research-benchmark-instrumented/20260920T040256Z/toronto.json",
+        "sha256": "dba600144a18523b27d1527b449a5b62a8fda460a68293c73de738997fc0303d"
+      },
+      {
+        "path": "artifacts/research-benchmark-instrumented/20260920T041222Z/capture.json",
+        "sha256": "1590256bc3bb13430e0ad1f597413dc99a482d1490ee77512aab1fad11926d44"
+      },
+      {
+        "path": "artifacts/research-benchmark-instrumented/20260920T041330Z/capture.json",
+        "sha256": "a0a567128c7701fd78594f11412477a3c8df5fdbf4e18937d6bb1236d9de6984"
+      },
+      {
+        "path": "artifacts/research-benchmark-instrumented/20260920T041416Z/capture.json",
+        "sha256": "85af18bda5f9843307de70a7c51e836de31797422fb6a63329cf2266575d537d"
+      }
+    ],
+    "normalization": "Direct claim keys and programme scope normalized from preserved raw claims using mapping.py; no labels loaded.",
+    "mapping_sha256": "020f7b65e97d479ec01463c7f67868b1dd485bab3ebb9c4c234efe4b018af707",
+    "production_base_sha": "b267b337692a5fa02c1de99e8a20443a6b482fb7",
+    "source_capture_sha256": "a59b5625707472d934ee3b50292b45b2c6c5703d23c809078d8f7a0dd0d7fae7",
+    "publication": "Evidence quotes shortened to two words; no automatic support from truncated quotes. Full raw capture retained locally; review official sources before adjudication.",
+    "production_app_tree": "5c98f59a1f56eaa22e6cd76546ef3039e2e2eee5"
+  },
+  "observations": [
+    {
+      "case_id": "groningen",
+      "programme_urls": [
+        "https://www.rug.nl/education/bachelor/bachelor-open-day",
+        "https://www.rug.nl/education/bachelor/onlinebachelorweek"
+      ],
+      "ranked_urls": [
+        "https://www.rug.nl/umcg/education/geneeskunde/bachelor/causes-of-diseases",
+        "https://www.rug.nl/umcg/education/geneeskunde/bachelor/student-ambassadors",
+        "https://www.rug.nl/umcg/education/geneeskunde/bachelor/competence-development",
+        "https://www.rug.nl/umcg/education/geneeskunde/bachelor/first-generation-network"
+      ],
+      "predictions": [
+        {
+          "key": "programme.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://www.rug.nl/education/bachelor/bachelor-open-day",
+            "excerpt": "Bachelor's Open",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Bachelor's Open Day",
+              "degree": "bachelor",
+              "field": null,
+              "intake": "fall 2027",
+              "population": null,
+              "qualification": null,
+              "academic_year": "2026/27"
+            },
+            "accessed_on": "2026-09-20",
+            "source_type": "official",
+            "excerpt_truncated": true
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        }
+      ],
+      "telemetry": {
+        "http_fetches": 93,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 0,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 74.90699999999197,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "error": null
+    },
+    {
+      "case_id": "delft",
+      "programme_urls": [
+        "https://www.tudelft.nl/en/education/study-programme-orientation/preparing-for-a-bachelor"
+      ],
+      "ranked_urls": [
+        "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/ae/bsc-aerospace-engineering",
+        "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/tw/bachelor-of-applied-mathematics",
+        "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/technische-natuurkunde/bachelor-of-applied-physics"
+      ],
+      "predictions": [
+        {
+          "key": "programme.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://www.tudelft.nl/en/education/study-programme-orientation/preparing-for-a-bachelor",
+            "excerpt": "Preparing for",
+            "scope": {
+              "university": "Delft University of Technology",
+              "programme": "Preparing for a bachelor",
+              "degree": "bachelor",
+              "field": null,
+              "intake": "fall 2027",
+              "population": null,
+              "qualification": null,
+              "academic_year": "2026/27"
+            },
+            "accessed_on": "2026-09-20",
+            "source_type": "official",
+            "excerpt_truncated": true
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        }
+      ],
+      "telemetry": {
+        "http_fetches": 48,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 0,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 72.28099999998813,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "error": null
+    },
+    {
+      "case_id": "aalto",
+      "programme_urls": [],
+      "ranked_urls": [
+        "https://www.aalto.fi/en/sgt-programme/people",
+        "https://www.aalto.fi/en/wit-programme/about-us",
+        "https://www.aalto.fi/en/wit-programme/coaching",
+        "https://www.aalto.fi/sv/program/fortsatta-studier-i-ett-magisterprogram-vid-hogskolan-for-elektroteknik",
+        "https://www.aalto.fi/en/wood-program/saie-project-information",
+        "https://www.aalto.fi/en/wood-program/kokoon-project-information",
+        "https://www.aalto.fi/en/wood-program/alava-project-information",
+        "https://www.aalto.fi/en/wit-programme/wit-programme-bridging-capacities-to-advance-resilience-of-vulnerable-communities",
+        "https://www.aalto.fi/en/wit-programme/three-ways-systems-thinking-supports-practicing-of-humanitarian-architecture",
+        "https://www.aalto.fi/en/wit-programme/taru-niskanen",
+        "https://www.aalto.fi/en/wit-programme/systemsresilience-thinking",
+        "https://www.aalto.fi/en/wit-programme/sustainable-business-models",
+        "https://www.aalto.fi/en/wit-programme/study-structure",
+        "https://www.aalto.fi/en/wit-programme/saija-hollmen",
+        "https://www.aalto.fi/en/wit-programme/resilience-thinking",
+        "https://www.aalto.fi/en/wit-programme/programme-description",
+        "https://www.aalto.fi/en/wit-programme/our-partners",
+        "https://www.aalto.fi/en/wit-programme/matleena-muhonen",
+        "https://www.aalto.fi/en/wit-programme/life-coaching-in-humanitarian-architecture-training",
+        "https://www.aalto.fi/en/wit-programme/kristjana-adalgeirsdottir",
+        "https://www.aalto.fi/en/wit-programme/katri-liisa-pulkkinen",
+        "https://www.aalto.fi/en/wit-programme/inclusive-play-kenya",
+        "https://www.aalto.fi/en/wit-programme/humanitarian-architecture-what-does-it-mean",
+        "https://www.aalto.fi/en/wit-programme/humanitarian-architecture",
+        "https://www.aalto.fi/en/wit-programme/hani-tarabichi",
+        "https://www.aalto.fi/en/wit-programme/decolonising-sustainability-reshaping-our-approach",
+        "https://www.aalto.fi/en/wit-programme/decolonising-sustainability",
+        "https://www.aalto.fi/en/wit-programme/cultural-tourism-nepal",
+        "https://www.aalto.fi/en/wit-programme/course-publications",
+        "https://www.aalto.fi/en/wit-programme/coaching-for-goal-setting-and-time-management-in-humanitarian-architecture",
+        "https://www.aalto.fi/en/wit-programme/case-5-kigali-rwanda",
+        "https://www.aalto.fi/en/wit-programme/case-4-nairobi-rivers-kenya",
+        "https://www.aalto.fi/en/wit-programme/case-3-iringa-tanzania",
+        "https://www.aalto.fi/en/wit-programme/case-2-stone-town-zanzibar",
+        "https://www.aalto.fi/en/wit-programme/case-1-madesh-and-sudurpaschim-province-nepal",
+        "https://www.aalto.fi/en/wit-programme/application",
+        "https://www.aalto.fi/en/wit-programme/anna-koskinen",
+        "https://www.aalto.fi/en/wit-programme/ali-haji-khamis",
+        "https://www.aalto.fi/en/sgt-programme/sgt-studio-studio-projects-from-2007-to-2026",
+        "https://www.aalto.fi/en/sgt-programme/sgt-programme-structure"
+      ],
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": 61,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 0,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 83.42199999999139,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "error": "RuntimeError: BENCHMARK_PAGE_BUDGET_EXHAUSTED"
+    },
+    {
+      "case_id": "vienna",
+      "programme_urls": [
+        "https://studieren.univie.ac.at/en/admission-procedure/bachelordiploma-programmes"
+      ],
+      "ranked_urls": [
+        "https://studieren.univie.ac.at/en/degree-programmes/degree-programmes-in-foreign-languages"
+      ],
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": 88,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 0,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 57.5,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "error": null
+    },
+    {
+      "case_id": "warsaw",
+      "programme_urls": [],
+      "ranked_urls": [],
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": 23,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 0,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 90.03100000000268,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"
+    },
+    {
+      "case_id": "ubc",
+      "programme_urls": [],
+      "ranked_urls": [],
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": 51,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 0,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 90.03099999998813,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"
+    },
+    {
+      "case_id": "toronto",
+      "programme_urls": [
+        "https://www.daniels.utoronto.ca/programs/undergraduate/bachelor-arts-visual-studies"
+      ],
+      "ranked_urls": [
+        "https://future.utoronto.ca/data-computer-science"
+      ],
+      "predictions": [
+        {
+          "key": "programme.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://www.daniels.utoronto.ca/programs/undergraduate/bachelor-arts-visual-studies",
+            "excerpt": "Bachelor of",
+            "scope": {
+              "university": "University of Toronto",
+              "programme": "Bachelor of Arts, Visual Studies",
+              "degree": "bachelor",
+              "field": null,
+              "intake": "fall 2027",
+              "population": null,
+              "qualification": null,
+              "academic_year": "2026/27"
+            },
+            "accessed_on": "2026-09-20",
+            "source_type": "official",
+            "excerpt_truncated": true
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        }
+      ],
+      "telemetry": {
+        "http_fetches": 44,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 0,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 53.51600000000326,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "error": "RuntimeError: BENCHMARK_PAGE_BUDGET_EXHAUSTED"
+    },
+    {
+      "case_id": "hku",
+      "programme_urls": [
+        "https://admissions.hku.hk/offerholders"
+      ],
+      "ranked_urls": [
+        "https://admissions.hku.hk/programmes/university-collaborative-programmes/hku-cambridge-joint-recruitment-scheme-engineering-and-computer-science"
+      ],
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": 47,
+        "browser_fetches": 0,
+        "pdf_fetches": 2,
+        "search_calls": 0,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 65.28200000000652,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "error": null
+    },
+    {
+      "case_id": "ntu",
+      "programme_urls": [
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-and-computer-sciences",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science-with-second-major-in-business-(international-trading)"
+      ],
+      "ranked_urls": [
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/double-degree-in-computer-science-and-business",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/double-degree-in-computer-science-and-economics",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/double-degree-in-business-(with-specialisation-in-business-analytics)-computer-engineering-computer-science",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-and-computer-sciences",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science-with-second-major-in-business-(international-trading)",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science-with-second-major-in-business",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-(hons)-in-computer-science-with-a-second-major-in-sustainability",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-(hons)-in-computer-science-with-a-second-major-in-entrepreneurship",
+        "https://www.ntu.edu.sg/admissions/undergraduate/science",
+        "https://www.ntu.edu.sg/admissions/undergraduate/humanities-arts-and-social-sciences",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/double-degree-in-electrical-and-electronic-engineering-and-social-sciences-(economics)",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/double-degree-in-bachelor-of-engineering-(chemical-and-biomolecular-engineering)-and-bachelor-of-social-science-(economics)",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/double-degree-in-bachelor-of-engineering-(bioengineering)-and-bachelor-of-social-science-(economics)",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-social-sciences-in-psychology-with-second-major-in-biological-sciences",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-social-sciences-in-psychology-(honours)",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-social-sciences-(hons)-in-double-major---economics-and-psychology",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-social-science-in-philosophy-politics-and-economics",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-physics-energy-studies-and-education",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-physics-applied-physics-with-second-major-in-data-analytics",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-physics-applied-physics-with-second-major-in-astrophysics",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-physics-and-mathematical-sciences",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-physics---applied-physics-with-second-major-in-material-physics-and-technologies",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-sciences-with-second-major-in-sustainability",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-sciences",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-maritime-studies-with-second-major-in-data-analytics",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-maritime-studies-with-second-major-in-business",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-environmental-earth-systems-science-with-second-major-in-entrepreneurship",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-environmental-earth-systems-science-and-public-policy-and-global-affairs",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-data-science-artificial-intelligence",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-chemistry-and-biological-chemistry-with-second-major-in-data-analytics",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-chemistry-and-biological-chemistry-with-second-major-in-business-(international-trading)",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-chemistry-and-biological-chemistry",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-biological-sciences-with-second-major-in-sustainability",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-biological-sciences-with-second-major-in-food-science-and-technology",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-biological-sciences-with-second-major-in-entrepreneurship",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-biological-sciences-with-second-major-in-data-analytics",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-biological-sciences-with-second-major-in-biomedical-structural-biology",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-applied-physics-with-second-major-in-quantum-technologies",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-applied-physics-with-second-major-in-microelectronics-engineering"
+      ],
+      "predictions": [
+        {
+          "key": "programme.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+            "excerpt": "The Bachelor",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor of Computing (Hons) in Computer Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": "fall 2027",
+              "population": null,
+              "qualification": null,
+              "academic_year": "2026/27"
+            },
+            "accessed_on": "2026-09-20",
+            "source_type": "official",
+            "excerpt_truncated": true
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "intake.open",
+          "value": true,
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate",
+            "excerpt": "Undergraduate |",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science",
+              "degree": null,
+              "field": null,
+              "intake": "fall 2027",
+              "population": null,
+              "qualification": null,
+              "academic_year": "2026/27"
+            },
+            "accessed_on": "2026-09-20",
+            "source_type": "official",
+            "excerpt_truncated": true
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "programme.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-and-computer-sciences",
+            "excerpt": "Bachelor of",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor of Science in Mathematical and Computer Sciences",
+              "degree": "bachelor",
+              "field": null,
+              "intake": "fall 2027",
+              "population": null,
+              "qualification": null,
+              "academic_year": "2026/27"
+            },
+            "accessed_on": "2026-09-20",
+            "source_type": "official",
+            "excerpt_truncated": true
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "intake.open",
+          "value": true,
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate",
+            "excerpt": "Undergraduate |",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Science In Mathematical And Computer Sciences",
+              "degree": null,
+              "field": null,
+              "intake": "fall 2027",
+              "population": null,
+              "qualification": null,
+              "academic_year": "2026/27"
+            },
+            "accessed_on": "2026-09-20",
+            "source_type": "official",
+            "excerpt_truncated": true
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_exists",
+          "value": "FAQs on scholarships",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/faqs-on-scholarships",
+            "excerpt": "FAQs on",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Science In Mathematical And Computer Sciences",
+              "degree": null,
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": "2026/27"
+            },
+            "accessed_on": "2026-09-20",
+            "source_type": "official",
+            "excerpt_truncated": true
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_exists",
+          "value": "Tuition Grants",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/financial-matters/tuition-grants",
+            "excerpt": "Tuition Grants",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Science In Mathematical And Computer Sciences",
+              "degree": null,
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": "2026/27"
+            },
+            "accessed_on": "2026-09-20",
+            "source_type": "official",
+            "excerpt_truncated": true
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_program_restriction",
+          "value": {
+            "degree": "bachelor",
+            "applies": "yes"
+          },
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/financial-matters/tuition-grants",
+            "excerpt": "How to",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Science In Mathematical And Computer Sciences",
+              "degree": null,
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": "2026/27"
+            },
+            "accessed_on": "2026-09-20",
+            "source_type": "official",
+            "excerpt_truncated": true
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_exists",
+          "value": "FAQs on scholarships",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/faqs-on-scholarships",
+            "excerpt": "FAQs on",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science",
+              "degree": null,
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": "2026/27"
+            },
+            "accessed_on": "2026-09-20",
+            "source_type": "official",
+            "excerpt_truncated": true
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_exists",
+          "value": "Tuition Grants",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/financial-matters/tuition-grants",
+            "excerpt": "Tuition Grants",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science",
+              "degree": null,
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": "2026/27"
+            },
+            "accessed_on": "2026-09-20",
+            "source_type": "official",
+            "excerpt_truncated": true
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_program_restriction",
+          "value": {
+            "degree": "bachelor",
+            "applies": "yes"
+          },
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/financial-matters/tuition-grants",
+            "excerpt": "How to",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science",
+              "degree": null,
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": "2026/27"
+            },
+            "accessed_on": "2026-09-20",
+            "source_type": "official",
+            "excerpt_truncated": true
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        }
+      ],
+      "telemetry": {
+        "http_fetches": 27,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 0,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 44.562999999994645,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "error": null
+    },
+    {
+      "case_id": "kaist",
+      "programme_urls": [],
+      "ranked_urls": [],
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": 38,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 0,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 90.03100000000268,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"
+    }
+  ]
+}

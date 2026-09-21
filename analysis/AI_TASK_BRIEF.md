@@ -417,3 +417,23 @@ EXCLUDED             knock-out
 | Квоты портфеля | 2 / 4 / 3 / ≤3 на страну, настраиваемые | подтверждение от консультантов по поступлению |
 | Языки advisor | ru + en | отдельная проверка качества kk |
 | Post-study work в месяцах | этап 2, задача [2.2] | — |
+
+## 11. ASHYQ Apply v2 — Evidence & Discovery (owner-directed 2026-09-20)
+
+The owner prioritizes this workstream before the remaining historical queue above.
+D1–D12 / I1–I10 and the existing AGENTS/HANDOFF relay remain authoritative.
+Roadmap: [README](v2/README.md), [execution plan](v2/02_EXECUTION_PLAN.md).
+
+### V2-01 — reproducible university research benchmark
+Status: in-progress, draft PR #14; harness and provisional baseline published, human-reviewed dataset acceptance outstanding.
+Dependency: main@b267b337 plus V2-00 documentation; PR #13 remains open and is not merged implicitly.
+Goal: measure current ASHYQ Apply research/discovery quality before changing architecture.
+Specification: [first task](v2/14_RECOMMENDED_FIRST_TASK.md), [Phase 0](v2/03_PHASE_0_BENCHMARK.md).
+Allowed: backend/evaluation/, backend/tests/test_research_benchmark.py, benchmark docs/artifacts, CI evaluation checks.
+No production discovery/ranking/provider changes. No migration. No applicant data.
+Acceptance: versioned evidence/scope schema; 10 human-reviewed cases; offline replay;
+precision/recall/coverage separately; unsupported/wrong-scope metrics; operations telemetry;
+isolation from production; explicit bounded live command; committed baseline; green gates.
+UNKNOWN is not an answer. Missing telemetry is null, never an invented zero.
+Next task after acceptance: V2-10 — provider-neutral SearchProvider abstraction with fake adapter;
+benchmark new discovery methods against the frozen baseline. Do not start it in V2-01.

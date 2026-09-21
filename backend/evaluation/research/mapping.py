@@ -1,0 +1,134 @@
+"""Lossless direct claim keys; ambiguous award/document identity stays explicit."""
+
+from typing import Any
+
+from .identities import IdentityMap
+
+CLAIM_KEYS = {
+    "ielts_min_overall": "ielts.overall",
+    "ielts_min_subscore": "ielts.subscores",
+    "sat_policy": "sat.policy",
+    "sat_min_total": "sat.minimum",
+    "admission_deadline": "deadline",
+    "country_specific_requirement": "country_credential",
+    "tuition": "tuition",
+    "mandatory_fees": "mandatory_fees",
+    "application_fee": "application_fee",
+    # Open/closed is not evidence of the requested intake's identity.
+    "intake_open": "intake.open",
+    "program_exists": "programme.exists",
+}
+
+
+def normalize_claim(
+    claim_type: str, raw: dict[str, Any]
+) -> tuple[str, Any, str | None, str | None]:
+    value = raw.get("normalized_value")
+    programme = raw.get("program")
+    degree = None
+    if claim_type == "program_exists" and isinstance(value, dict) and value.get("program"):
+        programme = value["program"]
+        degree = value.get("degree")
+        value = True
+    return CLAIM_KEYS.get(claim_type, "unmapped." + claim_type), value, programme, degree
+
+
+AWARD_KEYS = {
+    "scholarship_international_eligible": "applicability.international",
+    "scholarship_citizenship_restriction": "applicability.nationality",
+    "scholarship_program_restriction": "applicability.degree",
+    "scholarship_application_mode": "applicability.application_mode",
+    "scholarship_amount": "amount",
+    "scholarship_deadline": "deadline",
+    "scholarship_renewable": "renewable",
+    "scholarship_renewal_requirement": "renewal",
+    "scholarship_duration_years": "duration_years",
+    "scholarship_stackable": "stackable",
+    "scholarship_count": "count",
+    "scholarship_min_test_score": "minimum_test_score",
+}
+COVERAGE_KEYS = {"mandatory_fees": "fees", "health_insurance": "insurance"}
+DOCUMENT_TYPES = {"required_document", "essay_prompt", "recommendation_requirement"}
+
+
+def normalize_subject_claims(
+    claim_type: str, raw: dict[str, Any], identities: IdentityMap
+) -> list[tuple[str, Any, str | None, str | None]]:
+    """Split independent fields only after an exact source/subject identity match.
+
+    Preserve values that carry conditions; a yes/no coverage table is not a money
+    allowance, a citizenship restriction list is not all-nationality eligibility,
+    and a degree verdict is not proof of full-time programme applicability.
+    """
+    fallback = normalize_claim(claim_type, raw)
+    _, value, programme, degree = fallback
+    if isinstance(value, str) and value.upper() == "UNKNOWN":
+        value = None
+        fallback = (fallback[0], value, programme, degree)
+    source = raw.get("source_url", "")
+    if claim_type.startswith("scholarship_"):
+        subject = raw.get("subject_key")
+        # Existence itself names the award, but two disagreeing identities cannot bind.
+        if claim_type == "scholarship_exists":
+            if subject is not None and subject != value:
+                return [fallback]
+            subject = value
+        prefix = identities.resolve("award", source, subject)
+        if prefix is None:
+            return [fallback]
+        if claim_type == "scholarship_exists":
+            return [(prefix + ".exists", True, programme, degree)]
+        if claim_type == "scholarship_coverage":
+            if not isinstance(value, dict) or not value:
+                return [fallback]
+            # Unknown categories are retained, never silently dropped or reinterpreted.
+            known = {
+                "tuition",
+                "mandatory_fees",
+                "housing",
+                "meals",
+                "health_insurance",
+                "books",
+                "travel",
+                "visa",
+                "personal",
+            }
+            if any(
+                k not in known or v not in {"yes", "no", "partial", "unknown"}
+                for k, v in value.items()
+                if isinstance(v, str)
+            ) or any(not isinstance(v, str) for v in value.values()):
+                return [fallback]
+            return [
+                (
+                    prefix + ".coverage." + COVERAGE_KEYS.get(k, k),
+                    None if v == "unknown" else v,
+                    programme,
+                    degree,
+                )
+                for k, v in sorted(value.items())
+            ]
+        if claim_type in AWARD_KEYS:
+            if value == "unknown" or (
+                claim_type == "scholarship_program_restriction"
+                and isinstance(value, dict)
+                and value.get("applies") == "unknown"
+            ):
+                value = None
+            return [(prefix + "." + AWARD_KEYS[claim_type], value, programme, degree)]
+    elif claim_type in DOCUMENT_TYPES:
+        if claim_type != "essay_prompt" and not isinstance(value, str):
+            return [fallback]
+        subject = value.get("document") if isinstance(value, dict) else value
+        prefix = identities.resolve("document", source, subject)
+        if prefix is None:
+            return [fallback]
+        if claim_type == "essay_prompt":
+            if not isinstance(value, dict) or set(value) != {"document", "word_limit"}:
+                return [fallback]
+            limit = value["word_limit"]
+            if type(limit) is not int or limit <= 0:
+                return [fallback]
+            return [(prefix + ".maximum_words", limit, programme, degree)]
+        return [(prefix + ".required", True, programme, degree)]
+    return [fallback]

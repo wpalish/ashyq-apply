@@ -1,0 +1,71 @@
+{
+  "source_version": "2026-09-20.draft2",
+  "target_version": "2026-09-20.draft3",
+  "source_sha256": "faab42135e5800b3ef36fd852f94c5f131f857eef48b8aa01cf6445320e2594d",
+  "target_sha256": "70fa6bd487467e676e9a1bd29e17d59bff0851bd85b154bd17c68108bebf77ec",
+  "hash_serialization": "Dataset.model_dump_json().encode(utf-8)",
+  "changes": [
+    {
+      "case_id": "groningen",
+      "source_key": "documents.admission.secondary_diploma",
+      "mode": "object_fields",
+      "targets": {
+        "completed": "documents.admission.secondary_diploma.completed",
+        "not_completed": "documents.admission.secondary_diploma.not_completed"
+      }
+    },
+    {
+      "case_id": "groningen",
+      "source_key": "documents.admission.transcript",
+      "mode": "object_fields",
+      "targets": {
+        "completed": "documents.admission.transcript.completed",
+        "not_completed": "documents.admission.transcript.not_completed"
+      }
+    },
+    {
+      "case_id": "groningen",
+      "source_key": "documents.admission.translation",
+      "mode": "object_fields",
+      "targets": {
+        "required_unless_language_in": "documents.admission.translation.required_unless_language_in"
+      }
+    },
+    {
+      "case_id": "groningen",
+      "source_key": "documents.programme.course_descriptions",
+      "mode": "object_fields",
+      "targets": {
+        "initial_upload": "documents.programme.course_descriptions.initial_upload",
+        "board_may_request": "documents.programme.course_descriptions.board_may_request"
+      }
+    },
+    {
+      "case_id": "toronto",
+      "source_key": "documents.programme.supplemental_application",
+      "mode": "boolean_required",
+      "targets": {
+        "required": "documents.programme.supplemental_application.required"
+      }
+    },
+    {
+      "case_id": "ntu",
+      "source_key": "documents.scholarship.nanyang_global.essay",
+      "mode": "object_fields",
+      "targets": {
+        "required": "documents.scholarship.nanyang_global.essay.required",
+        "maximum_words": "documents.scholarship.nanyang_global.essay.maximum_words"
+      }
+    },
+    {
+      "case_id": "ntu",
+      "source_key": "documents.scholarship.nanyang_global.referee",
+      "mode": "object_fields",
+      "targets": {
+        "required": "documents.scholarship.nanyang_global.referee.required",
+        "role": "documents.scholarship.nanyang_global.referee.role",
+        "family_or_relative_allowed": "documents.scholarship.nanyang_global.referee.family_or_relative_allowed"
+      }
+    }
+  ]
+}

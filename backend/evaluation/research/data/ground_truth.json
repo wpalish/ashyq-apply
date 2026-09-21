@@ -1,0 +1,1996 @@
+{
+  "schema_version": "1",
+  "version": "2026-09-20.draft1",
+  "split": "development",
+  "cases": [
+    {
+      "id": "groningen",
+      "dataset_version": "2026-09-20.draft1",
+      "university": "University of Groningen",
+      "domain": "rug.nl",
+      "country": "Netherlands",
+      "site_types": [
+        "large_sitemap"
+      ],
+      "request": {
+        "university": "University of Groningen",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://www.rug.nl/bachelors/computing-science/?lang=en"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://www.rug.nl/bachelors/computing-science/?lang=en",
+          "excerpt": "BSc in Computing Science",
+          "scope": {
+            "university": "University of Groningen",
+            "programme": "Computing Science",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-09-20",
+          "source_type": "official"
+        }
+      ],
+      "labels": [
+        {
+          "key": "country_credential",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "ielts.overall",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "ielts.subscores",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "sat.policy",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "sat.minimum",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "deadline",
+          "status": "known",
+          "value": "2027-05-01",
+          "evidence": [
+            {
+              "url": "https://www.rug.nl/bachelors/computing-science/?lang=en",
+              "excerpt": "non-EU/EEA students 01 May 2027 01 September 2027",
+              "scope": {
+                "university": "University of Groningen",
+                "programme": "Computing Science",
+                "degree": "bachelor",
+                "field": null,
+                "intake": "fall 2027",
+                "population": "non-EU/EEA",
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official"
+            }
+          ],
+          "critical": true,
+          "notes": "Table cells joined with spaces for review; 2026 tuition is NOT a 2027 quote."
+        },
+        {
+          "key": "tuition",
+          "status": "known",
+          "value": {
+            "amount": 19800,
+            "currency": "EUR"
+          },
+          "evidence": [
+            {
+              "url": "https://www.rug.nl/bachelors/computing-science/?lang=en",
+              "excerpt": "non-EU/EEA 2026-2027 € 19800 full-time",
+              "scope": {
+                "university": "University of Groningen",
+                "programme": "Computing Science",
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": "non-EU/EEA",
+                "qualification": null,
+                "academic_year": "2026-2027"
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official"
+            }
+          ],
+          "critical": true,
+          "notes": "Table cells joined with spaces for review; 2026 tuition is NOT a 2027 quote."
+        },
+        {
+          "key": "mandatory_fees",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "intake",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarships",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarship_applicability",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarship_coverage",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.admission",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.programme",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.scholarship",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "programme.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://www.rug.nl/bachelors/computing-science/?lang=en",
+              "excerpt": "BSc in Computing Science",
+              "scope": {
+                "university": "University of Groningen",
+                "programme": "Computing Science",
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official"
+            }
+          ],
+          "critical": false,
+          "notes": ""
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "gpt-6-astra",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "Programme identity confirmed by AI; human review pending."
+      }
+    },
+    {
+      "id": "delft",
+      "dataset_version": "2026-09-20.draft1",
+      "university": "Delft University of Technology",
+      "domain": "tudelft.nl",
+      "country": "Netherlands",
+      "site_types": [
+        "course_catalogue"
+      ],
+      "request": {
+        "university": "Delft University of Technology",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [],
+      "programme_status": "unknown",
+      "programme_evidence": [
+        {
+          "url": "https://ocw.tudelft.nl/programs/bachelor/computer-science-engineering/",
+          "excerpt": "Computer Science and Engineering",
+          "scope": {
+            "university": "Delft University of Technology",
+            "programme": "Computer Science and Engineering",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-09-20",
+          "source_type": "official"
+        }
+      ],
+      "labels": [
+        {
+          "key": "country_credential",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "ielts.overall",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "ielts.subscores",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "sat.policy",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "sat.minimum",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "deadline",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "mandatory_fees",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "intake",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarships",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarship_applicability",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarship_coverage",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.admission",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.programme",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.scholarship",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "programme.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://ocw.tudelft.nl/programs/bachelor/computer-science-engineering/",
+              "excerpt": "Computer Science and Engineering",
+              "scope": {
+                "university": "Delft University of Technology",
+                "programme": "Computer Science and Engineering",
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official"
+            }
+          ],
+          "critical": false,
+          "notes": ""
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "gpt-6-astra",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "OCW supports existence, not an exact current admissions page. Main programme redirect inaccessible during review."
+      }
+    },
+    {
+      "id": "aalto",
+      "dataset_version": "2026-09-20.draft1",
+      "university": "Aalto University",
+      "domain": "aalto.fi",
+      "country": "Finland",
+      "site_types": [
+        "multilingual"
+      ],
+      "request": {
+        "university": "Aalto University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [],
+      "programme_status": "unknown",
+      "programme_evidence": [
+        {
+          "url": "https://www.aalto.fi/en/study-options/data-science-bachelor-of-science-and-master-of-science-technology",
+          "excerpt": "Bachelor of Science (Technology) + Master of Science (Technology)",
+          "scope": {
+            "university": "Aalto University",
+            "programme": "Data Science",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-09-20",
+          "source_type": "official"
+        }
+      ],
+      "labels": [
+        {
+          "key": "country_credential",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "ielts.overall",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "ielts.subscores",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "sat.policy",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "sat.minimum",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "deadline",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "mandatory_fees",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "intake",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarships",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarship_applicability",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarship_coverage",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.admission",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.programme",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.scholarship",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "programme.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://www.aalto.fi/en/study-options/data-science-bachelor-of-science-and-master-of-science-technology",
+              "excerpt": "Bachelor of Science (Technology) + Master of Science (Technology)",
+              "scope": {
+                "university": "Aalto University",
+                "programme": "Data Science",
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official"
+            }
+          ],
+          "critical": false,
+          "notes": ""
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "gpt-6-astra",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "Related Data Science programme is not automatically equivalent to requested Computer Science. Exact CS match unresolved; do not manufacture a positive."
+      }
+    },
+    {
+      "id": "vienna",
+      "dataset_version": "2026-09-20.draft1",
+      "university": "University of Vienna",
+      "domain": "univie.ac.at",
+      "country": "Austria",
+      "site_types": [
+        "faculty_subdomain"
+      ],
+      "request": {
+        "university": "University of Vienna",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://aufnahmeverfahren.univie.ac.at/en/computer-science"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+          "excerpt": "Computer Science (bachelor’s programme)",
+          "scope": {
+            "university": "University of Vienna",
+            "programme": "Computer Science",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-09-20",
+          "source_type": "official"
+        }
+      ],
+      "labels": [
+        {
+          "key": "country_credential",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "ielts.overall",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "ielts.subscores",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "sat.policy",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "sat.minimum",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "deadline",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "mandatory_fees",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "intake",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarships",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarship_applicability",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarship_coverage",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.admission",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.programme",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.scholarship",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "programme.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+              "excerpt": "Computer Science (bachelor’s programme)",
+              "scope": {
+                "university": "University of Vienna",
+                "programme": "Computer Science",
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official"
+            }
+          ],
+          "critical": false,
+          "notes": ""
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "gpt-6-astra",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "Admission page reached through official faculty link. Exact intake requires additional evidence."
+      }
+    },
+    {
+      "id": "warsaw",
+      "dataset_version": "2026-09-20.draft1",
+      "university": "University of Warsaw",
+      "domain": "uw.edu.pl",
+      "country": "Poland",
+      "site_types": [
+        "multilingual"
+      ],
+      "request": {
+        "university": "University of Warsaw",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF/"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF/",
+          "excerpt": "Bachelor’s degree, first cycle programme, Computer Science",
+          "scope": {
+            "university": "University of Warsaw",
+            "programme": "Computer Science",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-09-20",
+          "source_type": "official"
+        }
+      ],
+      "labels": [
+        {
+          "key": "country_credential",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "ielts.overall",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "ielts.subscores",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "sat.policy",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "sat.minimum",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "deadline",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "mandatory_fees",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "intake",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarships",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarship_applicability",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarship_coverage",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.admission",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.programme",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.scholarship",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "programme.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF/",
+              "excerpt": "Bachelor’s degree, first cycle programme, Computer Science",
+              "scope": {
+                "university": "University of Warsaw",
+                "programme": "Computer Science",
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official"
+            }
+          ],
+          "critical": false,
+          "notes": ""
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "gpt-6-astra",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "Teaching language is Polish; identity match does not establish language or intake suitability."
+      }
+    },
+    {
+      "id": "ubc",
+      "dataset_version": "2026-09-20.draft1",
+      "university": "University of British Columbia",
+      "domain": "ubc.ca",
+      "country": "Canada",
+      "site_types": [
+        "static"
+      ],
+      "request": {
+        "university": "University of British Columbia",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://you.ubc.ca/programs/computer-science-vancouver-bsc/"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://you.ubc.ca/programs/computer-science-vancouver-bsc/",
+          "excerpt": "Computer Science (BSc)",
+          "scope": {
+            "university": "University of British Columbia",
+            "programme": "Computer Science (BSc)",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-09-20",
+          "source_type": "official"
+        }
+      ],
+      "labels": [
+        {
+          "key": "country_credential",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "ielts.overall",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "ielts.subscores",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "sat.policy",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "sat.minimum",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "deadline",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "mandatory_fees",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "intake",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarships",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarship_applicability",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarship_coverage",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.admission",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.programme",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.scholarship",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "programme.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://you.ubc.ca/programs/computer-science-vancouver-bsc/",
+              "excerpt": "Computer Science (BSc)",
+              "scope": {
+                "university": "University of British Columbia",
+                "programme": "Computer Science (BSc)",
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official"
+            }
+          ],
+          "critical": false,
+          "notes": ""
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "gpt-6-astra",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "Vancouver BSc only. Do not silently equate BA or Okanagan."
+      }
+    },
+    {
+      "id": "toronto",
+      "dataset_version": "2026-09-20.draft1",
+      "university": "University of Toronto",
+      "domain": "utoronto.ca",
+      "country": "Canada",
+      "site_types": [
+        "dynamic_programme_index"
+      ],
+      "request": {
+        "university": "University of Toronto",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [],
+      "programme_status": "unknown",
+      "programme_evidence": [
+        {
+          "url": "https://future.utoronto.ca/data-computer-science",
+          "excerpt": "We are introducing a new Bachelor of Computer Science honours undergraduate degree beginning in September 2027.",
+          "scope": {
+            "university": "University of Toronto",
+            "programme": "Computer Science",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-09-20",
+          "source_type": "official"
+        }
+      ],
+      "labels": [
+        {
+          "key": "country_credential",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "ielts.overall",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "ielts.subscores",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "sat.policy",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "sat.minimum",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "deadline",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "mandatory_fees",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "intake",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarships",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarship_applicability",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarship_coverage",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.admission",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.programme",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.scholarship",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "programme.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://future.utoronto.ca/data-computer-science",
+              "excerpt": "We are introducing a new Bachelor of Computer Science honours undergraduate degree beginning in September 2027.",
+              "scope": {
+                "university": "University of Toronto",
+                "programme": "Computer Science",
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official"
+            }
+          ],
+          "critical": false,
+          "notes": ""
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "gpt-6-astra",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "Official announcement establishes new degree; exact campus programme URL not yet adjudicated."
+      }
+    },
+    {
+      "id": "hku",
+      "dataset_version": "2026-09-20.draft1",
+      "university": "University of Hong Kong",
+      "domain": "hku.hk",
+      "country": "Hong Kong",
+      "site_types": [
+        "pdf_brochure_link"
+      ],
+      "request": {
+        "university": "University of Hong Kong",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science",
+          "excerpt": "Bachelor of Engineering in Computer Science",
+          "scope": {
+            "university": "University of Hong Kong",
+            "programme": "Computer Science",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-09-20",
+          "source_type": "official"
+        }
+      ],
+      "labels": [
+        {
+          "key": "country_credential",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "ielts.overall",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "ielts.subscores",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "sat.policy",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "sat.minimum",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "deadline",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "mandatory_fees",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "intake",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarships",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarship_applicability",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarship_coverage",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.admission",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.programme",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.scholarship",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "programme.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science",
+              "excerpt": "Bachelor of Engineering in Computer Science",
+              "scope": {
+                "university": "University of Hong Kong",
+                "programme": "Computer Science",
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official"
+            }
+          ],
+          "critical": false,
+          "notes": ""
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "gpt-6-astra",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "Combined admission route contains multiple programmes; acceptable route needs human confirmation. PDF brochure is linked but not used as evidence here."
+      }
+    },
+    {
+      "id": "ntu",
+      "dataset_version": "2026-09-20.draft1",
+      "university": "Nanyang Technological University",
+      "domain": "ntu.edu.sg",
+      "country": "Singapore",
+      "site_types": [
+        "large_navigation"
+      ],
+      "request": {
+        "university": "Nanyang Technological University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science"
+      ],
+      "programme_status": "known",
+      "programme_evidence": [
+        {
+          "url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+          "excerpt": "Bachelor of Computing (Hons) in Computer Science",
+          "scope": {
+            "university": "Nanyang Technological University",
+            "programme": "Computer Science",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-09-20",
+          "source_type": "official"
+        }
+      ],
+      "labels": [
+        {
+          "key": "country_credential",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "ielts.overall",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "ielts.subscores",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "sat.policy",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "sat.minimum",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "deadline",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "mandatory_fees",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "intake",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarships",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarship_applicability",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarship_coverage",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.admission",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.programme",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.scholarship",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "programme.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+              "excerpt": "Bachelor of Computing (Hons) in Computer Science",
+              "scope": {
+                "university": "Nanyang Technological University",
+                "programme": "Computer Science",
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official"
+            }
+          ],
+          "critical": false,
+          "notes": ""
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "gpt-6-astra",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "Exact identity; intake not inferred from evergreen programme page."
+      }
+    },
+    {
+      "id": "kaist",
+      "dataset_version": "2026-09-20.draft1",
+      "university": "KAIST",
+      "domain": "kaist.ac.kr",
+      "country": "South Korea",
+      "site_types": [
+        "multilingual_faculty"
+      ],
+      "request": {
+        "university": "KAIST",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "programme_urls": [],
+      "programme_status": "unknown",
+      "programme_evidence": [
+        {
+          "url": "https://cs.kaist.ac.kr/content?menu=318",
+          "excerpt": "전산학부 전공과목 이수요건 (2023학년도 이후 입학생 학사과정용)",
+          "scope": {
+            "university": "KAIST",
+            "programme": "Computing",
+            "degree": "bachelor",
+            "field": null,
+            "intake": null,
+            "population": null,
+            "qualification": null,
+            "academic_year": null
+          },
+          "accessed_on": "2026-09-20",
+          "source_type": "official"
+        }
+      ],
+      "labels": [
+        {
+          "key": "country_credential",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "ielts.overall",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "ielts.subscores",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "sat.policy",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "sat.minimum",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "deadline",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "tuition",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "mandatory_fees",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "intake",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarships",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarship_applicability",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "scholarship_coverage",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.admission",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.programme",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "documents.scholarship",
+          "status": "unknown",
+          "value": null,
+          "evidence": [],
+          "critical": true,
+          "notes": "Not yet established for this requested scope; not evidence of absence."
+        },
+        {
+          "key": "programme.exists",
+          "status": "known",
+          "value": true,
+          "evidence": [
+            {
+              "url": "https://cs.kaist.ac.kr/content?menu=318",
+              "excerpt": "전산학부 전공과목 이수요건 (2023학년도 이후 입학생 학사과정용)",
+              "scope": {
+                "university": "KAIST",
+                "programme": "Computing",
+                "degree": "bachelor",
+                "field": null,
+                "intake": null,
+                "population": null,
+                "qualification": null,
+                "academic_year": null
+              },
+              "accessed_on": "2026-09-20",
+              "source_type": "official"
+            }
+          ],
+          "critical": false,
+          "notes": ""
+        }
+      ],
+      "review": {
+        "status": "draft",
+        "prepared_by": "gpt-6-astra",
+        "reviewer": null,
+        "verified_on": null,
+        "notes": "Official curriculum page; exact current admission route/degree equivalence needs Korean-speaking human review."
+      }
+    }
+  ]
+}

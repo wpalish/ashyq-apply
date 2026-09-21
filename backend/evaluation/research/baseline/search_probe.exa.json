@@ -1,0 +1,173 @@
+{
+  "cases": [
+    {
+      "candidates": 25,
+      "case_id": "groningen",
+      "correct_position": 3,
+      "domain": "rug.nl",
+      "failed_queries": 0,
+      "queries_run": 5,
+      "rejection_counts": {
+        "duplicate": 16,
+        "wrong_degree_level": 1
+      },
+      "top_applies_to_intake": "unknown",
+      "top_identity": "needs_review",
+      "top_url": "https://ocasys.rug.nl/2026-2027/catalog/programme/PRE-FAST-09",
+      "university": "University of Groningen"
+    },
+    {
+      "candidates": 25,
+      "case_id": "delft",
+      "correct_position": 2,
+      "domain": "tudelft.nl",
+      "failed_queries": 0,
+      "queries_run": 5,
+      "rejection_counts": {
+        "duplicate": 16,
+        "wrong_degree_level": 3
+      },
+      "top_applies_to_intake": "unknown",
+      "top_identity": "exact",
+      "top_url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering/about-the-programme",
+      "university": "Delft University of Technology"
+    },
+    {
+      "candidates": 25,
+      "case_id": "aalto",
+      "correct_position": 19,
+      "domain": "aalto.fi",
+      "failed_queries": 0,
+      "queries_run": 5,
+      "rejection_counts": {
+        "duplicate": 7,
+        "not_a_programme_page": 1,
+        "wrong_degree_level": 11
+      },
+      "top_applies_to_intake": "unknown",
+      "top_identity": "needs_review",
+      "top_url": "https://research.aalto.fi/en/publications/arguments-for-and-approaches-to-computing-education-in-undergradu",
+      "university": "Aalto University"
+    },
+    {
+      "candidates": 25,
+      "case_id": "vienna",
+      "correct_position": 5,
+      "domain": "univie.ac.at",
+      "failed_queries": 0,
+      "queries_run": 5,
+      "rejection_counts": {
+        "duplicate": 4,
+        "wrong_degree_level": 8
+      },
+      "top_applies_to_intake": "unknown",
+      "top_identity": "exact",
+      "top_url": "https://informatik.univie.ac.at/en/studies/degree-programmes/recommended-path-of-study-bachelor-computer-science",
+      "university": "University of Vienna"
+    },
+    {
+      "candidates": 25,
+      "case_id": "warsaw",
+      "correct_position": 1,
+      "domain": "uw.edu.pl",
+      "failed_queries": 0,
+      "queries_run": 5,
+      "rejection_counts": {
+        "duplicate": 11
+      },
+      "top_applies_to_intake": "unknown",
+      "top_identity": "needs_review",
+      "top_url": "https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF",
+      "university": "University of Warsaw"
+    },
+    {
+      "candidates": 25,
+      "case_id": "ubc",
+      "correct_position": 2,
+      "domain": "ubc.ca",
+      "failed_queries": 0,
+      "queries_run": 5,
+      "rejection_counts": {
+        "duplicate": 9,
+        "wrong_degree_level": 5
+      },
+      "top_applies_to_intake": "unknown",
+      "top_identity": "needs_review",
+      "top_url": "https://cs.ok.ubc.ca/undergraduate/computer-science",
+      "university": "University of British Columbia"
+    },
+    {
+      "candidates": 25,
+      "case_id": "toronto",
+      "correct_position": 19,
+      "domain": "utoronto.ca",
+      "failed_queries": 0,
+      "queries_run": 5,
+      "rejection_counts": {
+        "duplicate": 15
+      },
+      "top_applies_to_intake": "unknown",
+      "top_identity": "needs_review",
+      "top_url": "https://www.utm.utoronto.ca/future-students/programs/undergraduate/computer-science",
+      "university": "University of Toronto"
+    },
+    {
+      "candidates": 25,
+      "case_id": "hku",
+      "correct_position": 5,
+      "domain": "hku.hk",
+      "failed_queries": 0,
+      "queries_run": 5,
+      "rejection_counts": {
+        "duplicate": 11,
+        "not_a_programme_page": 1,
+        "wrong_degree_level": 2
+      },
+      "top_applies_to_intake": "unknown",
+      "top_identity": "needs_review",
+      "top_url": "https://www.cds.hku.hk/prospective-students/undergraduate/6999-computing-and-data-science",
+      "university": "University of Hong Kong"
+    },
+    {
+      "candidates": 25,
+      "case_id": "ntu",
+      "correct_position": 1,
+      "domain": "ntu.edu.sg",
+      "failed_queries": 0,
+      "queries_run": 5,
+      "rejection_counts": {
+        "duplicate": 16,
+        "wrong_degree_level": 1
+      },
+      "top_applies_to_intake": "unknown",
+      "top_identity": "exact",
+      "top_url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+      "university": "Nanyang Technological University"
+    },
+    {
+      "candidates": 25,
+      "case_id": "kaist",
+      "correct_position": null,
+      "domain": "kaist.ac.kr",
+      "failed_queries": 0,
+      "queries_run": 5,
+      "rejection_counts": {
+        "duplicate": 8,
+        "not_a_programme_page": 5,
+        "wrong_degree_level": 1
+      },
+      "top_applies_to_intake": "unknown",
+      "top_identity": "needs_review",
+      "top_url": "https://pure.kaist.ac.kr/en/organisations/school-of-computing",
+      "university": "KAIST"
+    }
+  ],
+  "cases_with_no_candidates": 0,
+  "correct_at_rank_one": 2,
+  "dataset_version": "2026-09-21.reviewed",
+  "probed_at": "2026-09-21T08:59:03.012762+00:00",
+  "provider": "exa",
+  "queries_issued": 50,
+  "retrieval_ceiling": 9,
+  "scored_cases": 10
+}

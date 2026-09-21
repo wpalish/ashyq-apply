@@ -105,7 +105,14 @@ must print the order in brief §5.7 (Groningen #1, UBC in OUT_OF_BUDGET).
 
 - Decisions D1–D12 and invariants I1–I10 are final. Contradiction → HANDOFF §7 + ask; do not guess.
 - `backend/app/domain/` imports nothing from `app.adapters.*` and does no I/O.
-- Do not weaken `Fetcher` (robots, rate limit, PII guard); no network outside it. Tests never call a real
+- Do not weaken `Fetcher` (robots, rate limit, PII guard); no network outside it, with **one approved
+  exception**: a configured search provider behind the `app/adapters/search` seam may call its vendor's
+  API directly (owner decision, 2026-09-21; reasoning in HANDOFF §7). `Fetcher` governs crawling a
+  site's pages, and robots.txt does not govern an API bought under contract. That exception is bounded
+  and does not widen: the call keeps `network_policy` egress checks, follows no redirects, caps its
+  response, never retries, and carries no applicant data — V2-11 makes that structurally impossible.
+  Fetching any page a provider *returns* still goes through `Fetcher`. No other network path is
+  exempt. Tests never call a real
   LLM or the internet — mock providers only.
 - Send nothing to an LLM beyond the privacy table in `SPEC_matching_v2.md` §6.4.
 - Never show "probability", "chance" or "%" next to the ranking.

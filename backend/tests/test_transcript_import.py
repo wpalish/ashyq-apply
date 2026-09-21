@@ -268,16 +268,32 @@ class TestTheUploadCannotStallTheService:
     def test_a_slow_parse_does_not_block_an_unrelated_request(
         self, limited_client, monkeypatch
     ) -> None:
+        """The health request must return *while the parse is still running*.
+
+        This used to time the health request and require it under 0.5s against
+        a 1.0s sleep. That is a wall-clock margin, and on a loaded machine an
+        unrelated request can legitimately take half a second without the
+        event loop ever having been blocked; it failed at 0.56s for exactly
+        that reason. The property being proved needs no margin: hold the
+        parser open until after the health request has come back, then assert
+        the parse had not finished. If the loop were blocked, the health
+        request could not complete before the parser returned, so the parse
+        would be finished by the time we look.
+        """
         import threading
-        import time
 
         import app.api.routes_profile as routes_profile
 
         parsing = threading.Event()
+        release = threading.Event()
+        parse_finished = threading.Event()
 
         def slow_parse(_data: bytes) -> str:
             parsing.set()
-            time.sleep(1.0)  # stands in for pypdf on a large scan
+            # Bounded, so a genuine regression fails the assertion below
+            # rather than hanging the suite.
+            release.wait(timeout=5)
+            parse_finished.set()
             return ""
 
         monkeypatch.setattr(routes_profile, "pdf_to_text", slow_parse)
@@ -286,14 +302,14 @@ class TestTheUploadCannotStallTheService:
         worker.start()
         try:
             assert parsing.wait(timeout=5), "the upload never reached the parser"
-            started = time.perf_counter()
             assert limited_client.get("/api/health").status_code == 200
-            waited = time.perf_counter() - started
+            assert not parse_finished.is_set(), (
+                "the health request only completed after the parse did, so the parse "
+                "was holding the event loop"
+            )
         finally:
+            release.set()
             worker.join()
-
-        # Comfortably under the 1.0s parse: the loop was free the whole time.
-        assert waited < 0.5, f"an unrelated request waited {waited:.2f}s for a PDF parse"
 
     def test_the_upload_is_rate_limited(self, limited_client) -> None:
         assert self._upload(limited_client).status_code in (200, 400)
