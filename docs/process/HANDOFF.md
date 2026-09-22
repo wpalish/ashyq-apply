@@ -60,7 +60,7 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
-**Self-review of the day's ten commits, and three defects in my own work (`<HASH10>`).** Ten steps
+**Self-review of the day's ten commits, and three defects in my own work (`cf95a59`).** Ten steps
 shipped against a live pipeline in one session is exactly when a reviewer is needed and there isn't one,
 so I read the whole diff back adversarially. Three findings, all mine, all from today:
 
