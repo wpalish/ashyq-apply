@@ -80,13 +80,13 @@ alias ('Bachelor of Computing (Hons) in Computer Science' vs 'Computer Science')
 counted, because whether the scorer compares programme identity or strings is the owner decision parked
 in §7. Answer that one and this metric is 1/2 by definition rather than by pipeline work.
 
-**The run's last step failed, and it was my bug (`<HASH>`).** `scope_report --json` serialised with
+**The run's last step failed, and it was my bug (`67db24d`).** `scope_report --json` serialised with
 `m.__dict__`, and `Mismatch` is a slotted dataclass, so the step died *after* printing the report —
 taking "Show what moved" and the per-case outcomes with it. `asdict()` now, and a test drives the CLI
 rather than the function, because the CLI is the part nothing exercised. Third time a result has been
 lost between producing it and reporting it (§9): the report was correct and the run still went red.
 
-**Phase 3 §8: a funding index is read as discovery, not thrown away (`<HASH>`).** The adapter read one
+**Phase 3 §8: a funding index is read as discovery, not thrown away (`67db24d`).** The adapter read one
 index page and dropped everything behind it: a link the classifier called `scholarship_index` — an
 international funding page, a faculty funding page — was fetched, rejected and discarded, and the awards
 it named were never seen. The page was already paid for. `find` now walks a small queue of indexes
