@@ -60,7 +60,7 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
-**Owner decision 1 of 6: the scorer compares programme identity, not strings (`<HASH18>`).**
+**Owner decision 1 of 6: the scorer compares programme identity, not strings (`d4b12d6`).**
 `scope_matches` compared every dimension with `==`, so NTU's "Bachelor of Computing (Hons) in Computer
 Science" scored as a wrong-scope claim against a label reading "Computer Science" — the same programme
 written two ways. That measured our naming rather than our research, and `programme.exists` is the
