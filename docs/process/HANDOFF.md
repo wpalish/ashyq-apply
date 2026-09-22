@@ -60,7 +60,7 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
-**Owner decision 5 of 6: the catalogue walker judges subject too (`<HASH22>`).** The divergence was
+**Owner decision 5 of 6: the catalogue walker judges subject too (`5d6b75d`).** The divergence was
 one argument wide: the walker called `profile_rejects(page, self.degree, [])`, and an empty `fields`
 list disables the subject check. Its reasoning was that a catalogue's own list is the university's
 statement of what it offers — true, and it says those programmes **exist**, not that each is the one
