@@ -144,3 +144,30 @@ class TestWhatStepsFiveAndSixAdd:
         await _confirm(_adapter(site, tmp_path), selected, set(), profile_bachelor)
 
         assert site.requested == []
+
+
+class TestItIsOffUntilMeasured:
+    """Run 35721950650 measured programme-page recall 1/10 where the run
+    before it, without this pass, measured 4/10 — and precision fell too, so
+    the pass removed correct pages and kept junk (a sign-in page, an events
+    page, a Master's PDF for a bachelor's query).
+
+    The pass and its tests stay; the wiring is off until a capture says what
+    it does. A rule that removes evidence earns its place with a number.
+    """
+
+    def test_discover_does_not_run_it_by_default(self):
+        from app.adapters.discovery import live_discovery
+
+        assert live_discovery.CONFIRM_SEARCH_PROGRAMMES is False
+
+    def test_the_pass_itself_still_works_when_called(self, tmp_path, profile_bachelor):
+        """Off at the call site, not deleted: turning it back on is one line."""
+        import asyncio
+
+        site = _Site({"https://uni.edu/bachelor-open-day": _OPEN_DAY})
+        selected = {PageCategory.PROGRAM_PAGE: ["https://uni.edu/bachelor-open-day"]}
+
+        asyncio.run(_confirm(_adapter(site, tmp_path), selected, set(), profile_bachelor))
+
+        assert selected[PageCategory.PROGRAM_PAGE] == []

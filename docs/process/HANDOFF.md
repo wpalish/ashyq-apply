@@ -60,6 +60,59 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**Run 35721950650 (`575a431`) says EXTRA-6 was a regression, and EXTRA-5 is blind where it matters
+(`<HASH12>`).** Both findings are about code I shipped this morning, and both were found by reading the
+run rather than the metrics.
+
+**EXTRA-6 is now off by default.** I shipped it saying it "can only shorten the programme list, so
+recall may fall — that is the honest direction". The measurement disagrees: `programme_page_recall`
+**4/10 → 1/10** and `programme_page_precision` **0.190 → 0.091**. Precision falling is the part that
+settles it — the pass cut correct pages and kept junk (`account.you.ubc.ca`, an events page, a Master's
+curriculum PDF for a bachelor's query). The predicate is wrong for search-sourced pages in a way I
+cannot yet name, so the pass and its tests stay and `CONFIRM_SEARCH_PROGRAMMES = False` turns it off
+until a capture says what it does. Verified the numbers myself from the artifact before acting.
+
+**EXTRA-5 lost its records in exactly the cases it exists for.** `_record_page_outcomes` ran once,
+after the candidate loop, over a plain local list — so any exception inside the loop discarded every
+diagnosis. Five of ten cases recorded nothing, including `warsaw` (83 requests) and `hku` (42). Records
+are now filed as each adapter returns them, so a case killed by a budget or a wall clock keeps what it
+learned. This is the same class of mistake as "a measurement that cannot fail loudly": the diagnostic
+was silent precisely when consulted.
+
+**What the diagnostic did buy, and it is worth the trip:** `toronto`'s zero is not an extraction
+failure at all. Every one of its six records is `fetch-failed`, HTTP 403, and its raw file shows
+`pages_checked: 24, pages_failed: 22` — `robots.txt` included. The whole origin refuses us. That case
+had looked like "read 23 pages, claimed nothing" for two runs. Elsewhere the dominant categories are
+`no-pattern-match` and `classifier-rejected`, with quotable reasons ("classified as navigation; no
+requirement can be read from this kind of page").
+
+**Open, not acted on** (needs the next run, or an owner call — recorded so it is not re-discovered):
+the scholarship and government adapters contribute no page outcomes at all, so the funding stage is
+invisible; the per-case JSON writes `CAPTURE_IN_PROGRESS` for wall-clocked cases while `capture.json`
+records the truth; NTU's Tuition Grant claim asserts the grant applies to an international applicant
+while its own excerpt is about Singapore citizens, and lands under an `unmapped.*` key where the
+scorer cannot see it; and four cases show `pages_checked: 59` against a budget of 60 **before**
+verification starts, which would mean discovery, not extraction, is eating the run.
+
+**Plan V2-33: a faculty or programme restriction is recorded, and asked about (`<HASH11>`).** §6
+decomposes `faculty_restrictions` and `programme_restrictions` separately. `program_restrictions`
+existed as a **declared field nothing ever set** — the fourth of that kind on this branch — and there
+was no faculty field at all, so "open to students in the Faculty of Engineering" was recorded as
+applying to everyone. (`SCHOLARSHIP_PROGRAM_RESTRICTION` is not that field's filler: it carries
+*degree* applicability, as NTU's `{"degree": "bachelor"}` shows.)
+
+Both are now read from the page's own sentence, deliberately narrowly — a restriction we invent
+excludes a real applicant from real money, and one we miss becomes a question they are told to ask; the
+two failures are not symmetrical. The eligibility check is **PENDING, never a pass and never a
+refusal**: the applicant's faculty is not in the profile at all, and deciding a programme restriction
+by comparing names is exactly the trap NTU taught this session. It propagates `applicant_eligible` to
+`unknown`.
+
+**The golden demo hash moved for the third time, and the proof is recorded beside it:** 0 removed
+lines, 34 added, every addition the same new empty key on the demo's seventeen scholarships. No value
+moved, and the new readers produced **nothing** on this corpus — correct, because no demo award page
+states such a restriction, and a reader that invented one would be the bug.
+
 **Self-review of the day's ten commits, and three defects in my own work (`cf95a59`).** Ten steps
 shipped against a live pipeline in one session is exactly when a reviewer is needed and there isn't one,
 so I read the whole diff back adversarially. Three findings, all mine, all from today:
@@ -868,6 +921,30 @@ Scope, in `app/adapters/scholarship/web_scholarships.py` plus tests:
 Honest scope limit: `Fetcher` already caches the bytes, so in production this saves parsing and a
 cache lookup, not network traffic. What it actually buys is the benchmark budget — which is the thing
 that killed four of ten cases — and an honest `pages_checked`.
+
+Write-ahead (claude-opus-5, 2026-09-22, **plan V2-33**): **an award restricted to a faculty or a
+named programme says nothing today.** §6 lists `faculty_restrictions` and `programme_restrictions` as
+separate decisions a scholarship must decompose into. `Scholarship.program_restrictions` exists as a
+**declared field nothing ever sets** — the fourth of that kind found on this branch — and there is no
+faculty field at all. `SCHOLARSHIP_PROGRAM_RESTRICTION` is not the gap it looks like: it carries
+*degree* applicability, as NTU's `{"degree": "bachelor", "applies": "yes"}` shows.
+
+So an award page saying "open to students in the Faculty of Engineering" or "for students of the BSc
+Data Science programme" is recorded as applying to everyone, and shown to an applicant it excludes.
+
+Scope:
+- `Scholarship.faculty_restrictions`, beside the `program_restrictions` that already exists;
+- the adapter reads both from eligibility prose, in the same evidence-only style as the citizenship
+  reader: the page's own sentence or nothing;
+- `_scholarship_eligibility` gains a check that is **PENDING, never a refusal and never a pass**. The
+  applicant's faculty is not in the profile at all, and deciding a programme restriction by comparing
+  names is precisely the trap NTU taught this session — "Bachelor of Computing (Hons) in Computer
+  Science" against "Computer Science". So a restriction the page states becomes an open question that
+  propagates `applicant_eligible` to `unknown` and reaches the applicant as something to ask, rather
+  than a verdict this pipeline cannot honestly reach.
+
+Not in this step: matching the restriction against the applicant's programme. That needs the programme
+identity decision parked in §7, and guessing it is worse than asking.
 
 **STATE, 2026-09-22 morning.** Phase 2 is complete against its exit criteria (see
 `docs/process/PHASE_2_ACCEPTANCE.md`). Phase 3 has §3, §4, §6 and §7 done; §1's visible half is done
@@ -2662,6 +2739,11 @@ V2-01: evaluation-only Pydantic schema and JSON corpus/capture/metric contracts 
 
 V2-01: set PYTHONUTF8=1 on Windows for text fixtures; do not modify evaluation schemas while a live batch is running (parent and child processes can import different versions). Instrumented baseline segments and restart are recorded in baseline/README.md. Scope matching is deliberately literal; missing/different names count as conservative match failures, not human-confirmed wrong facts.
 
+- **"It can only remove wrong things" is a hypothesis, not a safety argument.** I shipped EXTRA-6
+  reasoning that confirming search results could only shorten the programme list, so a recall drop
+  would be honest. It dropped recall 4/10 → 1/10 **and** precision 0.19 → 0.09: it cut correct pages
+  and kept a sign-in page and a Master's PDF. A filter's direction of error is a measurement, not a
+  deduction from its intent — and precision is the number that tells you which way it actually went.
 - **Check the plural. Every time.** Three bugs in this repository now: `waivers` unmatched against
   `waiver`, `scholarships` against `scholarship`, and `FAQs` against `\bf\.?a\.?q\.?\b`. The last one
   produced a third of the claims in a ten-university live run, all of them false, and stamped them

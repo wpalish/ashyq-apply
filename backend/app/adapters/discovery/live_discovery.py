@@ -78,6 +78,11 @@ MAX_LINKS_SCANNED = 400
 #: real programme page. Costs little: the pipeline fetches these pages anyway
 #: and the fetcher caches, so a confirmed candidate is free downstream.
 MAX_PROGRAM_CANDIDATES_CHECKED = 8
+#: Whether step 7 re-judges the programme pages the search provider added.
+#: Off: run 35721950650 measured recall 1/10 against 4/10 without it, and
+#: precision fell too, so it removed correct pages rather than junk. Turn it
+#: on only together with a capture that shows what it does.
+CONFIRM_SEARCH_PROGRAMMES = False
 #: Pages walked during the navigation fallback. Universities routinely nest
 #: "Degree programmes" -> "Bachelor programmes" -> a programme, so one hop is
 #: not enough; an unbounded walk would be a crawl.
@@ -947,12 +952,17 @@ class LiveDiscoveryAdapter:
 
         await self._add_search_results(entry, domain, selected, trace, profile)
 
-        # 7. Confirm what search added. Step 4 runs before it, so until this
-        #    pass existed every programme page the search provider contributed
-        #    reached the candidate unconfirmed — and on the benchmark cohort
-        #    that is most of them. Only the newcomers are read, so a page
-        #    already confirmed is never paid for twice.
-        await self._confirm_added_programs(selected, confirmed_so_far, trace, profile)
+        # 7. Confirm what search added — built, and off until it is measured.
+        #    Step 4 runs before search, so a programme page the provider
+        #    contributes reaches the candidate unconfirmed. Applying the
+        #    step-4 predicate to those pages *looked* obviously right and the
+        #    first live run said otherwise: programme-page recall fell 4/10 →
+        #    1/10 and precision fell with it, so it cut correct pages and kept
+        #    junk. The predicate is wrong for search-sourced pages in a way I
+        #    cannot yet name, and a rule that removes evidence has to earn its
+        #    place with a number, not an argument.
+        if CONFIRM_SEARCH_PROGRAMMES:
+            await self._confirm_added_programs(selected, confirmed_so_far, trace, profile)
 
         trace.selected = {k: list(v) for k, v in selected.items() if v}
         self._apply(candidate, selected, profile, trace)
