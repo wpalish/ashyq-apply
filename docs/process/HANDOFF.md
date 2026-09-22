@@ -60,7 +60,7 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
-**Phase 3 §9: a required document records what its page covered (`<HASH2>`).** §9 ends with "store
+**Phase 3 §9: a required document records what its page covered (`8c6337f`).** §9 ends with "store
 source and scope for each required document"; `DocumentItem` stored the source and dropped the scope,
 although the adapter had already read one for the claims from the same page. `DocumentItem.scope` now
 carries it, omitted from the payload when nobody recorded one exactly as `Claim.scope` is, so no stored
