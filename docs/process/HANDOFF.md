@@ -60,6 +60,19 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**Phase 3 §9: the plan no longer tells the applicant to do the impossible (`<HASH3>`).**
+`_order_steps` sorted by lead time and never read `depends_on`, so the numbered plan could put
+"notarize the translation" above "get the translation". It is a topological order now, with longest
+lead time as the tiebreak, so the demo's order is byte-identical (nothing in it depends on anything).
+A cycle keeps every step and is appended last rather than silently resolved.
+
+**And a finding in my own previous step:** §9's flagship dependency, `admission offer letter`, names a
+**milestone, not a list item** — no document on the checklist carries that name. My first cut resolved
+dependencies against the list and dropped the rest, which would have made the one dependency the
+product actually produces disappear from the applicant's view entirely. Now the split is explicit: an
+unresolvable dependency cannot order anything (it would stall the plan behind a step that does not
+exist) and is still printed beside its step, because an applicant who is not told to wait will not wait.
+
 **Phase 3 §9: a required document records what its page covered (`8c6337f`).** §9 ends with "store
 source and scope for each required document"; `DocumentItem` stored the source and dropped the scope,
 although the adapter had already read one for the claims from the same page. `DocumentItem.scope` now
@@ -596,6 +609,27 @@ Scope, exactly:
 Not in this step: acting on it (refusing a document whose page is about another programme) and showing
 it. Recording first, acting second, was the order that worked for requirements, and it is the order the
 phase guide itself uses.
+
+Write-ahead (claude-opus-5, 2026-09-22, **Phase 3 §9, the ordering half**): **the checklist's own
+order can tell the applicant to do the impossible.** §9 says a document may depend on another action and
+names three: offer letter before scholarship submission, translation before notarization, credential
+evaluation before final review. `depends_on` has been populated since `486a6ff` — and `_order_steps`
+sorts by lead time alone and never reads it. So the numbered plan the applicant is shown can put
+"notarize the translation" above "get the translation", which is worse than no order, because a
+numbered list is an instruction.
+
+Scope, in `app/adapters/documents/web_documents.py` plus tests:
+- `_order_steps` becomes a topological order with **longest lead time first as the tiebreak**, so the
+  existing behaviour survives wherever nothing depends on anything — which is most of the demo;
+- a dependency naming a document that is not on the list is ignored rather than dropping the step: the
+  step is real, the reference is not;
+- a cycle is reported, never silently reordered — the steps in it are listed last with the cycle named,
+  because inventing an order between two documents that each wait for the other is a guess about the
+  applicant's real deadline risk.
+
+Not in this step: turning `depends_on` into a blocking rule in the assessment. Order is advice; a
+blocked application is a verdict, and it needs the same "silence is not agreement" treatment
+requirements got.
 
 **STATE, 2026-09-22 morning.** Phase 2 is complete against its exit criteria (see
 `docs/process/PHASE_2_ACCEPTANCE.md`). Phase 3 has §3, §4, §6 and §7 done; §1's visible half is done

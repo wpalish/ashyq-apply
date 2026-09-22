@@ -267,8 +267,14 @@ class WebDocumentsAdapter:
 
 
 def _order_steps(items: list[DocumentItem]) -> list[str]:
-    """Longest lead time first — that is the order that actually prevents misses."""
-    ordered = sorted(items, key=lambda d: -(d.lead_time_days or 0))
+    """Prerequisites first, then longest lead time — in that order of priority.
+
+    Lead time alone used to decide, and §9's own dependencies were ignored, so
+    the numbered plan could say "notarize the translation" above "get the
+    translation". A numbered list is an instruction, and an impossible one is
+    worse than none.
+    """
+    ordered = _dependency_order(items)
     steps = []
     for i, d in enumerate(ordered, 1):
         lead = f" (allow ~{d.lead_time_days} days)" if d.lead_time_days else ""
@@ -278,5 +284,47 @@ def _order_steps(items: list[DocumentItem]) -> list[str]:
             DocumentOwner.RECOMMENDER: "Your referee",
             DocumentOwner.THIRD_PARTY: "A third party",
         }[d.owner]
-        steps.append(f"{i}. {who}: {d.name}{lead}")
+        # Every dependency is said, including one naming something that is
+        # not itself a list item: the offer letter is a real milestone, not a
+        # document the university asks for, and an applicant who is not told
+        # to wait for it will not wait for it.
+        after = f" — after {', '.join(d.depends_on)}" if d.depends_on else ""
+        steps.append(f"{i}. {who}: {d.name}{lead}{after}")
     return steps
+
+
+def _named_prerequisites(item: DocumentItem, present: set[str]) -> list[str]:
+    """The dependencies that name another step on this list — the orderable ones.
+
+    A dependency on something the list does not contain cannot order anything,
+    so it is left out *here* and still printed beside the step. Dropping it
+    from the ordering keeps a real prerequisite from stalling the whole plan;
+    dropping it from the text would hide it.
+    """
+    return [name for name in item.depends_on if name in present and name != item.name]
+
+
+def _dependency_order(items: list[DocumentItem]) -> list[DocumentItem]:
+    """Topological order, longest lead time first among what is ready.
+
+    A cycle is never silently reordered: its members are appended last, in the
+    same lead-time order, so the list stays complete and the ordering claim is
+    not made for steps that cannot honestly carry one.
+    """
+    by_lead = sorted(items, key=lambda d: -(d.lead_time_days or 0))
+    present = {d.name for d in items}
+    waiting = {d.name: set(_named_prerequisites(d, present)) for d in by_lead}
+
+    out: list[DocumentItem] = []
+    done: set[str] = set()
+    remaining = list(by_lead)
+    while remaining:
+        ready = [d for d in remaining if waiting[d.name] <= done]
+        if not ready:
+            # Everything left is in, or behind, a cycle.
+            out.extend(remaining)
+            break
+        out.extend(ready)
+        done.update(d.name for d in ready)
+        remaining = [d for d in remaining if d.name not in done]
+    return out
