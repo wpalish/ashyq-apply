@@ -421,10 +421,21 @@ def evaluate_program(
     return outcome
 
 
+def _english_waiver(claims: list[Claim]) -> Claim | None:
+    """A published exemption from the English test, if the page states one.
+
+    An empty value is the page settling it the other way — "no waivers are
+    granted" — and is not a waiver.
+    """
+    claim = _first(claims, ClaimType.ENGLISH_TEST_WAIVER)
+    return claim if claim is not None and claim.normalized_value else None
+
+
 def _english_checks(claims: list[Claim], profile: ApplicantProfileIn) -> list[RequirementCheck]:
     out: list[RequirementCheck] = []
     a = profile.academics
     requested = requested_scope(claims)
+    waiver = _english_waiver(claims)
 
     accepted = _first(claims, ClaimType.IELTS_ACCEPTED_TYPES, requested)
     if accepted is not None and isinstance(accepted.normalized_value, list):
@@ -446,10 +457,32 @@ def _english_checks(claims: list[Claim], profile: ApplicantProfileIn) -> list[Re
                 )
             )
 
+    if waiver is not None:
+        out.append(
+            RequirementCheck(
+                requirement="English test waiver",
+                published_value=waiver.normalized_value,
+                status=EligibilityStatus.NEEDS_OFFICIAL_CLARIFICATION,
+                explanation=(
+                    "This programme publishes conditions under which the English test is not "
+                    "required. Check them against your own schooling before booking a test — "
+                    "whether they cover you is not something this page settles."
+                ),
+                claim_ids=[waiver.source_url],
+                published_scope=_published_scope(waiver),
+            )
+        )
+
     overall = _first(claims, ClaimType.IELTS_MIN_OVERALL, requested)
     if overall is not None:
         out.append(
-            _check_numeric_minimum("IELTS overall", overall, a.ielts.overall, requested=requested)
+            _check_numeric_minimum(
+                "IELTS overall",
+                overall,
+                a.ielts.overall,
+                requested=requested,
+                hard=waiver is None,
+            )
         )
 
     # Subscore minimums are evaluated per band: passing overall proves nothing here.
@@ -493,7 +526,11 @@ def _english_checks(claims: list[Claim], profile: ApplicantProfileIn) -> list[Re
     if toefl is not None and a.ielts.overall is None:
         out.append(
             _check_numeric_minimum(
-                "TOEFL total", toefl, _to_float(a.toefl.total), requested=requested
+                "TOEFL total",
+                toefl,
+                _to_float(a.toefl.total),
+                requested=requested,
+                hard=waiver is None,
             )
         )
     return out

@@ -379,3 +379,61 @@ class TestARequirementSaysWhoItIsFor:
         )
         check = next(c for c in outcome.checks if c.requirement == "Admission deadline")
         assert check.published_scope == "published for intake fall 2027"
+
+
+class TestAPublishedEnglishWaiver:
+    """Phase 3 §3 — waiver conditions are their own fact.
+
+    A Kazakhstani applicant from an English-medium school lives or dies by one
+    sentence on the page, and the pipeline used to read only *fee* waivers and
+    drop this one entirely.
+    """
+
+    def test_the_conditions_are_shown_as_the_page_wrote_them(self, profile):
+        outcome = evaluate_program(
+            profile,
+            [
+                C(
+                    "english_test_waiver",
+                    "Applicants schooled in English are exempt from the English language requirement.",
+                    intake="fall 2027",
+                )
+            ],
+            today=TODAY,
+        )
+        check = next(c for c in outcome.checks if c.requirement == "English test waiver")
+        assert "schooled in English" in str(check.published_value)
+        assert check.status is EligibilityStatus.NEEDS_OFFICIAL_CLARIFICATION
+
+    def test_a_published_waiver_stops_the_english_minimum_eliminating_anyone(self, profile):
+        """Absent data never eliminates, and whether a waiver covers this
+        applicant is exactly absent data."""
+        with_waiver = evaluate_program(
+            profile,
+            [
+                C("ielts_min_overall", 9.0, intake="fall 2027"),
+                C("english_test_waiver", "Exempt if taught in English.", intake="fall 2027"),
+            ],
+            today=TODAY,
+        )
+        assert "IELTS overall" not in with_waiver.hard_filter_failures
+
+    def test_without_a_waiver_the_minimum_still_eliminates(self, profile):
+        without = evaluate_program(
+            profile, [C("ielts_min_overall", 9.0, intake="fall 2027")], today=TODAY
+        )
+        assert "IELTS overall" in without.hard_filter_failures
+
+    def test_a_page_refusing_waivers_is_not_a_waiver(self, profile):
+        """ "No waivers are granted" is recorded with an empty value, and an
+        empty value must never disarm anything."""
+        outcome = evaluate_program(
+            profile,
+            [
+                C("ielts_min_overall", 9.0, intake="fall 2027"),
+                C("english_test_waiver", "", intake="fall 2027"),
+            ],
+            today=TODAY,
+        )
+        assert "IELTS overall" in outcome.hard_filter_failures
+        assert not any(c.requirement == "English test waiver" for c in outcome.checks)

@@ -141,6 +141,10 @@ class ClaimType(StrEnum):
     CREDENTIAL_EVALUATION_REQUIRED = "credential_evaluation_required"
     APPLICATION_FEE = "application_fee"
     FEE_WAIVER_AVAILABLE = "fee_waiver_available"
+    #: The published conditions under which the English test is not required
+    #: at all. Decisive for an applicant taught in English — and, until now,
+    #: dropped entirely: only *fee* waivers were ever read.
+    ENGLISH_TEST_WAIVER = "english_test_waiver"
     ADMISSION_DEADLINE = "admission_deadline"
     INTAKE_OPEN = "intake_open"
     PROGRAM_EXISTS = "program_exists"

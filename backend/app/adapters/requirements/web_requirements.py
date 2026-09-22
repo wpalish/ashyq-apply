@@ -59,6 +59,30 @@ _INTAKE_CLOSED_EVIDENCE = re.compile(
     r"|intake (?:is )?closed|not accepting applications)\b[^.]{0,80}\.",
     re.I,
 )
+#: A sentence that settles whether the English test can be skipped. Broad on
+#: purpose about *how* it is phrased and narrow about *what* it is about: the
+#: `_MENTIONS_ENGLISH` check below is what keeps a fee waiver out.
+_ENGLISH_WAIVER = re.compile(
+    r"[^.]*\b(exempt(?:ed|ions?)?|waive(?:d|s|r|rs)?|not required to (?:submit|provide|take)"
+    r"|do(?:es)? not need to (?:submit|provide|take))\b[^.]*\.",
+    re.IGNORECASE,
+)
+#: The denial, which must be its own pattern. Reusing the fee-waiver negation
+#: read "you do not need to submit IELTS if..." — a waiver in plain words — as
+#: a refusal of one, which is the most expensive way to be wrong here.
+_NO_ENGLISH_WAIVER = re.compile(
+    r"\bno\s+(?:waivers?|exemptions?)\b"
+    r"|\b(?:waivers?|exemptions?)\s+(?:are|is)\s+not\s+(?:granted|available|possible|offered)"
+    r"|\bcannot\s+be\s+waived\b"
+    r"|\bis\s+required\s+of\s+all\s+applicants\b",
+    re.IGNORECASE,
+)
+_MENTIONS_ENGLISH = re.compile(
+    r"\b(english|ielts|toefl|duolingo|pte|language (?:test|requirement|proficiency))\b",
+    re.IGNORECASE,
+)
+
+
 #: A "fee waiver" line only yields a claim when the page actually settles the
 #: question. Negation is positive evidence of absence and is claimed as False;
 #: a line that merely mentions waivers settles nothing — unknown stays
@@ -183,6 +207,7 @@ class WebRequirementsAdapter:
                 extract_requirements(text, builder)
             self._claim_intake_state(page, text, intake, builder, out)
             self._claim_english_test_types(text, builder)
+            self._claim_english_waiver(text, builder)
             self._claim_fees(text, builder)
 
             out.claims.extend(builder.claims)
@@ -291,6 +316,33 @@ class WebRequirementsAdapter:
             f"{builder.meta['source_url']}: no statement about the application window for "
             f"{intake}; intake status is unknown, not open."
         )
+
+    def _claim_english_waiver(self, text: str, builder) -> None:
+        """The published conditions under which no English test is required.
+
+        Recorded as the page's own sentence, not as a boolean: "a waiver
+        exists" is useless to an applicant who cannot tell whether it covers
+        them, and the conditions are the whole content of the fact. A
+        Kazakhstani applicant from an English-medium school lives or dies by
+        this sentence, and until now the pipeline read only *fee* waivers and
+        dropped it.
+
+        The sentence must be about the language requirement: a fee waiver
+        beside it is a different fact, and matching "waiver" alone would claim
+        an English exemption from a page offering to waive an application fee.
+        """
+        flat = for_matching(text)
+        for match in _ENGLISH_WAIVER.finditer(flat):
+            sentence = match.group(0).strip()
+            if not _MENTIONS_ENGLISH.search(sentence):
+                continue
+            if _NO_ENGLISH_WAIVER.search(sentence):
+                # "No waivers are granted" settles it the other way, and
+                # claiming a waiver here would be the worse error.
+                builder.add(ClaimType.ENGLISH_TEST_WAIVER, "", sentence, confidence=0.7)
+                return
+            builder.add(ClaimType.ENGLISH_TEST_WAIVER, sentence, sentence, confidence=0.75)
+            return
 
     def _claim_english_test_types(self, text: str, builder) -> None:
         flat = for_matching(text)
