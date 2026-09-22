@@ -130,9 +130,16 @@ _ADMISSIONS = re.compile(
     r"|\badmissions?\b\s*(?:-|–|\||$)|general entry information",
     re.IGNORECASE,
 )
+#: The school-qualification names this repository recognises, as one
+#: alternation so there is exactly one such list. ``app.adapters.scope_reader``
+#: reads a page's stated qualification from the same vocabulary — a second
+#: list would drift from this one, and the two would disagree about what the
+#: page said.
+QUALIFICATION_NAMES = r"vwo|abitur|attestat|baccalaur|a-?levels?|matura|gaokao|cbse"
+
 _CREDENTIAL = re.compile(
     r"\b(diploma|qualification|certificate)\b[^.]{0,60}\b(equivalen|recogni|accept|assess)"
-    r"|\b(vwo|abitur|attestat|baccalaur|a-?levels?|matura|gaokao|cbse)\b",
+    rf"|\b({QUALIFICATION_NAMES})\b",
     re.IGNORECASE,
 )
 _SCHOLARSHIP_WORD = re.compile(

@@ -20,7 +20,7 @@ one distinct value comes back ``None`` rather than the first or the nearest
 match. This loses scope we could have guessed at; guessing is the failure
 this module exists to stop.
 
-Four of the nine dimensions are deliberately never read here:
+Four of the ten dimensions are deliberately never read here:
 
 ``university``, ``faculty``, ``programme``
     A page states these in its own markup and navigation, which V2-17's
@@ -164,6 +164,45 @@ _POPULATIONS: tuple[tuple[re.Pattern[str], str], ...] = (
     ),
 )
 
+#: A qualification named as a *yardstick* is not the page's scope. "A diploma
+#: equivalent to the Dutch VWO" is a rule for everyone whose diploma compares
+#: to the VWO, not a rule for VWO holders, and recording it as the latter
+#: would be this repository inventing an equivalence — the one thing the phase
+#: guide forbids by name ("unknown equivalence remains unknown"). Same shape
+#: and same radius as ``_NEGATION``: it governs a phrase that follows it,
+#: within one sentence.
+_COMPARISON = re.compile(
+    r"(?:equivalent|equivalence|comparable|similar|equal)\w*\s+(?:to|with|of)?"
+    rf"[^.\n]{{0,{_NEGATION_RADIUS}}}$",
+    re.IGNORECASE,
+)
+
+#: The school qualifications the page classifier already knows
+#: (``page_classifier.QUALIFICATION_NAMES``), mapped to the one spelling this
+#: repository records. The vocabulary is that list and nothing else; a test
+#: holds the two together so a second, drifting list cannot appear here.
+#: ``baccalaur`` is deliberately not mapped on its own: "International
+#: Baccalaureate" and the French "Baccalauréat" are different
+#: qualifications written almost the same way, so the IB pattern below asks for
+#: the word "International" or the initials, and a bare "baccalauréat"
+#: scopes nothing. Unknown equivalence remains unknown.
+_QUALIFICATIONS: tuple[tuple[re.Pattern[str], str], ...] = (
+    (re.compile(r"\battestat\b", re.IGNORECASE), "attestat"),
+    (re.compile(r"\binternational\s+baccalaureate\b", re.IGNORECASE), "IB"),
+    # Case-sensitive on purpose: lowercase "ib" is a syllable, "IB" is a
+    # qualification, and requiring the diploma word after it keeps a stray
+    # initialism from scoping a page.
+    (re.compile(r"\bIB\b\s+(?:diploma|certificate|programme|program)"), "IB"),
+    (re.compile(r"\ba-?levels?\b", re.IGNORECASE), "A-levels"),
+    (re.compile(r"\babitur\b", re.IGNORECASE), "Abitur"),
+    (re.compile(r"\bvwo\b", re.IGNORECASE), "VWO"),
+    # "matura" alone, not the "Baccalauréat"/"matura" of the shared list's
+    # `baccalaur`, which stays unread for the reason above.
+    (re.compile(r"\bmatura\b", re.IGNORECASE), "matura"),
+    (re.compile(r"\bgaokao\b", re.IGNORECASE), "gaokao"),
+    (re.compile(r"\bcbse\b", re.IGNORECASE), "CBSE"),
+)
+
 _RESIDENCIES: tuple[tuple[re.Pattern[str], str], ...] = (
     (re.compile(r"\boverseas\s+fee(?:s|\s+status)?\b", re.IGNORECASE), "overseas"),
     (re.compile(r"\bhome\s+fee(?:s|\s+status)?\b", re.IGNORECASE), "home"),
@@ -236,6 +275,25 @@ def _degrees(text: str) -> list[str]:
     ]
 
 
+def _compared(text: str, start: int) -> bool:
+    """Whether this phrase is a yardstick rather than the page's own scope."""
+    return bool(_COMPARISON.search(text[max(0, start - _NEGATION_RADIUS) : start]))
+
+
+def _qualifications(text: str) -> list[str]:
+    """The school qualifications the page states it is written for.
+
+    Two guards, not one: a negated name scopes nothing, and neither does a
+    name a sentence merely compares to.
+    """
+    return [
+        value
+        for pattern, value in _QUALIFICATIONS
+        for m in pattern.finditer(text)
+        if not _negated(text, m.start()) and not _compared(text, m.start())
+    ]
+
+
 def _by_table(text: str, table: tuple[tuple[re.Pattern[str], str], ...]) -> list[str]:
     found = []
     for pattern, value in table:
@@ -262,5 +320,6 @@ def read_scope(text: str, *, title: str = "") -> ClaimScope:
         intake=_single(_intakes(haystack)),
         academic_year=_single(_academic_years(haystack)),
         population=_single(populations),
+        qualification=_single(_qualifications(haystack)),
         residency=_single(_by_table(haystack, _RESIDENCIES)),
     )

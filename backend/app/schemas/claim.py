@@ -42,7 +42,7 @@ class Claim(Base):
     intake: str | None = None
     academic_year: str | None = Field(default=None, description="e.g. '2026/27'")
     accessed_at: datetime
-    #: Who and what the source says this claim is about, across the nine
+    #: Who and what the source says this claim is about, across the ten
     #: dimensions in ``app.domain.claim_scope``.
     #:
     #: ``None`` means **nobody recorded a scope**, which is not the same as

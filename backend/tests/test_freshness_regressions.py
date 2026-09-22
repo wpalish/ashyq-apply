@@ -500,6 +500,17 @@ class TestSupersededExcluded:
 #: conflict (Delft's programme page against its admissions page, both stating
 #: the same intake, so a real contradiction). 0 removed.
 #:
+#: Re-captured a fourth time for plan V2-30, and proved additive on this tree
+#: rather than on the one the change was written against: the pre-change dump
+#: hashed to bf20e437…, exactly the constant it replaced, which confirms the
+#: baseline. **415 keys added, 0 removed**, every one of them `"qualification":
+#: null`, every one at the single parent path `[*].claims[*].scope`, and
+#: deleting that key from the new dump reproduces the old dump object-for-object.
+#: Not one value is non-null: no page in the demo corpus states a qualification
+#: of its own. Groningen's "a diploma equivalent to the Dutch VWO" is a yardstick
+#: for comparison, not a scope, and reading it as one would be this pipeline
+#: inventing an equivalence — which is the thing it exists not to do.
+#:
 #: Re-captured a third time for V2-33, under the same proof: **0 removed lines,
 #: 34 added**, and every addition is the same new key — `"faculty_restrictions":
 #: []` — on the seventeen scholarships in the demo. No value moved, and the new
@@ -519,7 +530,7 @@ class TestSupersededExcluded:
 #: changed). That is the whole of the intended change — a claim now records
 #: what its page stated about who it covers — and it is the only reason this
 #: constant has a second value. Anything else that moves it is a regression.
-GOLDEN_DEMO_SHA256 = "bf20e437f8c0f50c8cb8c3a5169578c89b372ed4bd266dd5e4b5715f8a54c4b5"
+GOLDEN_DEMO_SHA256 = "21da148990e12dcb61128acc9eabaa7dcc58d3f668ffb4fb3d1d56ea58f31d37"
 
 #: The golden was captured with the real clock on 2026-09-07, and the baseline
 #: payload embeds that date: ``requirement_checks[*].applicant_value`` and

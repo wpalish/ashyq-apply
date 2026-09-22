@@ -60,6 +60,44 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**Plan V2-30: the ninth scope question, `qualification` (`<HASH13>`).** §1 lists nine scope questions a
+requirement must answer; `ClaimScope` had eight. `qualification` was missing — and the benchmark's own
+`Scope` already had it, so the measurement asked a question the model could not answer. Built by a
+subagent in a worktree and integrated here; the reasoning below is its finding, verified by me before
+integration.
+
+It is non-compensatory by construction: every `ClaimScope` method iterates `SCOPE_DIMENSIONS`, so
+adding the dimension to that tuple was the whole of the comparison change — no new comparison logic
+exists. The vocabulary is `page_classifier.QUALIFICATION_NAMES`, made public and used by both, so a
+second drifting list cannot appear; a test holds them together.
+
+**The finding worth keeping: a qualification named as a *yardstick* is not the page's scope.**
+Groningen's demo page says "a secondary school diploma **equivalent to** the Dutch VWO". The first
+version of the reader recorded eleven demo claims as scoped to VWO — turning a rule addressed to
+everyone whose diploma *compares* to the VWO into a rule for VWO holders. That is the pipeline
+inventing an equivalence, the one thing this repository forbids outright. A comparison guard, shaped
+like the existing negation guard, now refuses it. Verified by hand across seven sentences: "equivalent
+to"/"comparable to" → nothing; "holding the Dutch VWO diploma" → VWO; "the Kazakh attestat" →
+attestat; two names in one page → nothing, by the existing `_single()` rule.
+
+`baccalaur` is deliberately unmapped on its own: "International Baccalaureate" and the French
+"Baccalauréat" are different qualifications spelled almost alike, so IB is read only from its full
+name.
+
+**Golden hash, fourth re-capture, proved on this tree rather than the one the change was written
+against** — the subagent's worktree was cut from `07de4d9`, eleven commits behind, so its proof and its
+hash could not be reused. Mine: pre-change dump hashed to the constant it replaces (baseline
+confirmed), **415 keys added, 0 removed**, all `"qualification": null`, all at the single path
+`[*].claims[*].scope`, and stripping the key reproduces the old dump object-for-object. No value is
+non-null. A new test pins the *reason* beside the hash: no page in the demo corpus states a
+qualification of its own.
+
+**Owner decision, parked (§7):** two pages scoped to different qualifications still classify as
+`TRUE_CONFLICT`, because `ConflictKind` has no `DIFFERENT_QUALIFICATION` member and adding one touches
+a stored contract. **Deliberately not done:** `requested_scope()` still asks only for an intake —
+filling a qualification from the applicant profile would turn today's YES verdicts into UNKNOWN across
+the demo, and that is a product decision, not a refactor.
+
 **Run 35721950650 (`575a431`) says EXTRA-6 was a regression, and EXTRA-5 is blind where it matters
 (`cb43c2a` + `c61bbaa`).** Both findings are about code I shipped this morning, and both were found by reading the
 run rather than the metrics.
@@ -2489,6 +2527,12 @@ aliases those name one programme. Changing the comparison would change what the 
 I built the evidence and left the number alone: `scope_report` prints such cases separately, marked
 "reported, not counted". Two ways to settle it, both yours: adjudicate the label (write the full
 official title into the corpus, re-signed), or accept identity comparison as the scorer's rule.
+
+**Owner decision, surfaced by V2-30: should two pages scoped to different qualifications be a
+conflict?** They classify as `TRUE_CONFLICT` today, because `_KIND_BY_DIMENSION` has no
+`DIFFERENT_QUALIFICATION` member. "The Abitur route requires X" and "the attestat route requires Y" are
+not a contradiction — they are two scopes — but adding an enum value touches a stored contract, so it
+waits for you.
 
 **Owner decision, surfaced by EXTRA-6: may the catalogue walker keep a neighbouring subject?** The
 walker confirms its own candidates and, under the T29 contract, trusts a university's own catalogue
