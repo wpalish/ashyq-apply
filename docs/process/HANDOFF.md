@@ -60,7 +60,7 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
-**Owner decision 2 of 6: a per-section English minimum has somewhere to live (`<HASH19>`).**
+**Owner decision 2 of 6: a per-section English minimum has somewhere to live (`2468f9e`).**
 NTU's certified value is a map — `{"overall": 6, "writing": 6, "speaking": 6}` — and the extractor
 produced a single floor, so the named sections were dropped. "Writing 6.5, Reading 6.0" is not the
 statement "no band below 6", and collapsing them would convert a value silently.
