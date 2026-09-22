@@ -60,6 +60,24 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**EXTRA-8: a funding page is read once per run, not once per programme (`<HASH9>`).** Reading the six
+case logs I had not opened showed that all four budget-killed cases — `delft`, `groningen`, `hku`,
+`ubc` — died in the **same line**: the page budget ran out inside `WebScholarshipAdapter.find`, called
+from the funding stage. Four copies of one traceback.
+
+`_stage_funding` calls `find(cand, prog)` once per **programme**, so a university with two programmes
+read its scholarship index and every award page twice; NTU's twelve claims are six, then the same six
+again, same URLs, differing only in `program`. Funding could spend up to 2 × (3 indexes + 12 awards)
+of a 60-read budget before assessment began — and §8's index walk had just raised that ceiling. The
+adapter now memoises **pages** for its own lifetime. Claims stay per programme, because a claim carries
+the programme it was built for and reusing one would mislabel it; a page that failed is not remembered
+as an answer, so a flaky page is tried again. `pages_checked` counts real reads now, so the number the
+applicant sees stops double-counting.
+
+Honest limit: `Fetcher` already caches the bytes, so in production this saves a cache lookup and a
+re-parse, not network traffic. What it buys is the benchmark budget — the thing that killed four of ten
+cases — and an honest count.
+
 **EXTRA-7: an FAQ page is not a scholarship, however it spells "FAQ" (`769ba57`).** Reading NTU's
 twelve claims — the only real claims in run 35697105238 — four were an award named **"FAQs on
 scholarships"**, stamped `CONFLICTING` because the same page's prose ("the scholarship will be withdrawn
@@ -810,6 +828,29 @@ Reproduced offline before touching anything: `classify_page` on that title retur
 Scope: the plural in `_FAQ`, a test per form (FAQ, FAQs, F.A.Q., "frequently asked question(s)"), and a
 test that an FAQ page never becomes an award. This is the **third** plural bug in this repository —
 `waivers` and `scholarships` were the others — so the test names the pattern, not just the case.
+
+Write-ahead (claude-opus-5, 2026-09-22, **EXTRA-8**): **funding is where the budget dies, and it reads
+the same pages twice.** Every one of the four budget-killed cases in run 35697105238 — `delft`,
+`groningen`, `hku`, `ubc` — died in the **same place**: `BENCHMARK_PAGE_BUDGET_EXHAUSTED` raised inside
+`WebScholarshipAdapter.find`, from the funding stage. Their logs are four copies of one traceback.
+
+And the adapter reads the same pages once per programme. `_stage_funding` loops over rows (a row is a
+programme), constructs one adapter, and calls `find(cand, prog)` per row — so a university with two
+programmes reads its scholarship index and every award page **twice**. NTU's claims are the proof: six
+claims, then the same six again, same URLs, same subjects, differing only in `program`. Funding can
+therefore spend up to 2 × (3 indexes + 12 awards) reads of a 60-read budget before assessment begins —
+and §8's index walk, which I shipped this morning, made that ceiling higher.
+
+Scope, in `app/adapters/scholarship/web_scholarships.py` plus tests:
+- the adapter memoises fetched pages for its own lifetime (one run), so the second programme re-parses
+  rather than re-reads;
+- claims stay **per programme** — the memo holds pages, not claims, because a claim carries the
+  programme it was built for and reusing one would mislabel it;
+- `pages_checked` counts real reads, so the number the applicant sees stops double-counting.
+
+Honest scope limit: `Fetcher` already caches the bytes, so in production this saves parsing and a
+cache lookup, not network traffic. What it actually buys is the benchmark budget — which is the thing
+that killed four of ten cases — and an honest `pages_checked`.
 
 **STATE, 2026-09-22 morning.** Phase 2 is complete against its exit criteria (see
 `docs/process/PHASE_2_ACCEPTANCE.md`). Phase 3 has §3, §4, §6 and §7 done; §1's visible half is done

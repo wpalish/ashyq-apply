@@ -198,3 +198,69 @@ class TestTheBudgetIsShared:
 
         assert awards == []
         assert result.pages_checked <= 4
+
+
+class TestAPageIsReadOncePerRun:
+    """EXTRA-8: funding runs once per programme, so a university with two
+    programmes used to read its scholarship index and every award page twice.
+
+    Every budget-killed case in live run 35697105238 died inside this adapter,
+    so the second read is not free: it is half the run's page budget.
+    """
+
+    @pytest.mark.asyncio
+    async def test_the_second_programme_re_reads_nothing(self, settings, site):
+        candidate = _candidate(scholarships_url="fixture://uni/scholarships.html")
+        first = CandidateProgram(name="BSc CS", field="cs", degree=DegreeLevel.BACHELOR)
+        second = CandidateProgram(name="BSc Maths", field="maths", degree=DegreeLevel.BACHELOR)
+
+        async with Fetcher(settings.cache_dir, offline=True, corpus_dir=site) as fetcher:
+            adapter = WebScholarshipAdapter(fetcher, "2026/27")
+            awards_one, result_one = await adapter.find(candidate, first, None)
+            awards_two, result_two = await adapter.find(candidate, second, None)
+
+        assert [a.name for a in awards_one] == [a.name for a in awards_two], (
+            "the same university funds the same awards whichever programme asks"
+        )
+        assert result_one.pages_checked > 0
+        assert result_two.pages_checked == 0, "nothing new was read for the second programme"
+
+    @pytest.mark.asyncio
+    async def test_the_claims_still_belong_to_their_own_programme(self, settings, site):
+        """The memo holds pages, never claims: a claim names its programme."""
+        candidate = _candidate(scholarships_url="fixture://uni/scholarships.html")
+        first = CandidateProgram(name="BSc CS", field="cs", degree=DegreeLevel.BACHELOR)
+        second = CandidateProgram(name="BSc Maths", field="maths", degree=DegreeLevel.BACHELOR)
+
+        async with Fetcher(settings.cache_dir, offline=True, corpus_dir=site) as fetcher:
+            adapter = WebScholarshipAdapter(fetcher, "2026/27")
+            _, result_one = await adapter.find(candidate, first, None)
+            _, result_two = await adapter.find(candidate, second, None)
+
+        assert {c.program for c in result_one.claims} == {"BSc CS"}
+        assert {c.program for c in result_two.claims} == {"BSc Maths"}
+        assert len(result_two.claims) == len(result_one.claims), "same pages, same claims"
+
+    @pytest.mark.asyncio
+    async def test_a_page_that_failed_is_tried_again(self, settings, tmp_path):
+        """A failure is not an answer, so it is not remembered as one."""
+        root = tmp_path / "flaky"
+        candidate = _candidate(scholarships_url="fixture://uni/scholarships.html")
+        program = CandidateProgram(name="P", field="cs", degree=DegreeLevel.BACHELOR)
+
+        async with Fetcher(settings.cache_dir, offline=True, corpus_dir=root) as fetcher:
+            adapter = WebScholarshipAdapter(fetcher, "2026/27")
+            _, first = await adapter.find(candidate, program, None)
+            assert first.pages_failed == 1
+            _write(
+                root,
+                "uni/scholarships.html",
+                _INDEX.format(
+                    title="Scholarships",
+                    items='<li><a href="merit-scholarship.html">Merit Scholarship</a></li>',
+                ),
+            )
+            _write(root, "uni/merit-scholarship.html", _AWARD.format(name="Merit Scholarship"))
+            awards, second = await adapter.find(candidate, program, None)
+
+        assert [a.name for a in awards] == ["Merit Scholarship"]

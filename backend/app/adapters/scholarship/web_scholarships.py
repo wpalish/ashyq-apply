@@ -28,7 +28,7 @@ from app.adapters.extraction import (
     parse_timezone,
     readable_text,
 )
-from app.adapters.fetching import Fetcher
+from app.adapters.fetching import Fetcher, FetchResult
 from app.adapters.page_classifier import PageType, classify_page
 from app.adapters.scope_reader import read_scope
 from app.domain.enums import (
@@ -138,6 +138,23 @@ class WebScholarshipAdapter:
     def __init__(self, fetcher: Fetcher, academic_year: str) -> None:
         self.fetcher = fetcher
         self.academic_year = academic_year
+        #: Pages this adapter has already read, for its own lifetime — one
+        #: run. The funding stage calls ``find`` once per programme, so a
+        #: university with two programmes used to read its scholarship index
+        #: and every award page twice. Pages are memoised and claims are not:
+        #: a claim carries the programme it was built for, so the second
+        #: programme re-parses the same page rather than reusing its claims.
+        self._pages: dict[str, FetchResult] = {}
+
+    async def _read(self, url: str) -> FetchResult:
+        """Fetch a page once per run, however many programmes ask for it."""
+        cached = self._pages.get(_page_key(url))
+        if cached is not None:
+            return cached
+        page = await self.fetcher.get(url)
+        if page.ok:
+            self._pages[_page_key(url)] = page
+        return page
 
     async def find(
         self, candidate: Candidate, program: CandidateProgram, profile
@@ -174,8 +191,10 @@ class WebScholarshipAdapter:
                 continue
             seen_pages.add(key)
 
-            page = await self.fetcher.get(url)
-            out.pages_checked += 1
+            was_read_before = _page_key(url) in self._pages
+            page = await self._read(url)
+            if not was_read_before:
+                out.pages_checked += 1
             if not page.ok:
                 out.pages_failed += 1
                 out.errors.append(f"{url}: {page.outcome.value} — {page.error}")
