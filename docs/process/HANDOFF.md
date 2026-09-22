@@ -507,7 +507,18 @@ redefined. That is the honest test of this fix, and it needs a human to press th
 
 **NEXT, exact and executable.**
 
-0. **Act on what V2-27 measured, not on what anyone assumed.** The wrong-scope rate is *not* a
+**STATE, 2026-09-22 morning.** Phase 2 is complete against its exit criteria (see
+`docs/process/PHASE_2_ACCEPTANCE.md`). Phase 3 has §3, §4, §6 and §7 done; §1's visible half is done
+(`published_scope`); §2 (Kazakhstan qualification rules) is **owner data** and untouched by design; §5
+(costs) was already satisfied; §8–§10 are not started. Plan V2-22's resolver is built and unwired on
+purpose.
+
+**Do this first, and it needs a human:** re-run `benchmark-capture` on this branch. Since the last
+capture, two of the five programme mismatches should disappear (the open-day and preparing-for pages are
+no longer claimed as programmes), and the diagnostic will say so without any metric being redefined.
+Nothing below is worth doing before that number is known.
+
+0. **Act on what EXTRA-1 measured, not on what anyone assumed.** The wrong-scope rate is *not* a
    scope-reading failure: 5/5 mismatches are `differs` on `programme`. Two sub-problems, in order of
    cheapness:
    a. **NTU's two cases are a naming problem, not a retrieval one** — the page states the full official
@@ -2518,6 +2529,7 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 | 2026-09-21 UTC | claude-opus-5 | V2-13d → V2-22a | The owner asked why no fix was shipped. Correct question: the data was already in the repository. The registry's verified seeds name the host that publishes programmes, so a candidate there now outranks a sibling campus. Cases-at-rank-1 **2 → 4**, Toronto #19 → #4, Warsaw and HKU and UBC to #1, ceiling still 10/10, two runs agreeing. Best change of the session and available three attempts earlier. Gates green (1767 at 94.51%).
 | 2026-09-21 UTC | claude-opus-5 | V2-22a → V2-13e | Wired Phase 1 into live discovery so the owner can actually see it: search results are appended after the sitemap and walker, the hop reads through the adapter's own Fetcher, and the whole thing is dormant without a provider — proved by the entire pre-existing suite passing untouched. Also told the owner plainly that there is no V2-18 and that better retrieval does not fix scope. Gates green (1770 at 94.44%).
 | 2026-09-21 UTC | claude-opus-5 | V2-13e → V2-21 | Started Phase 2 on the failure Phase 1 could never fix. A claim's scope is now a first-class thing over the spec's nine dimensions, and a page that does not say who it is for answers UNKNOWN rather than yes — silence is not agreement. 28 tests, module at 100%, nothing wired yet on purpose. Gates green (1798 at 94.46%).
+| 2026-09-22 UTC | claude-opus-5 | plan V2-20/22/23/30 + Phase 3 §3/§4/§6/§7 + EXTRA-1…4 | Overnight, owner asleep, autonomous. Closed Phase 2's exit criteria and started Phase 3. The night's most useful finding was a **refutation**: the scope diagnostic (EXTRA-1) showed the stuck metric is a *programme-name* failure, not a scope-reading one, so the work that would move it is retrieval and name resolution. Four rules I wrote were wrong and caught before shipping — a positive availability pattern reading a count sentence, a fee-waiver negation reading a waiver as a refusal, `waivers` unmatched in the plural, and a Claim rebuilt from a payload taking a supersession down with it. Five owner decisions are parked in §7, untouched. Gates green at every push (1944 at 94.60%), CI green including Playwright. |
 | 2026-09-21 UTC | claude-opus-5 | V2-22a | Started plan V2-22: identity resolved by domain or by a recorded alias, with the evidence attached, never by resemblance. Left the alias data to the owner rather than inventing it. Also fixed a formatting failure CI caught that my own gate run had hidden behind `| tail -1` — §9. Gates green (1864 at 94.60%). |
 | 2026-09-21 UTC | claude-opus-5 | V2-20b | Closed the claim half of plan V2-20: a superseded claim now says when it stopped being current and what replaced it, and says nothing when nothing replaced it. Refused to build a separate ClaimVersion table for a query nobody makes yet, and wrote down why. Gates green (1852 at 94.58%), one alembic head. |
 | 2026-09-21 UTC | claude-opus-5 | V2-20a | First plan-numbered Phase 2 entity task: a page's observed versions now survive the page's own update. Reconciled my drifted task numbering with the execution plan in §5 first, so the plan stays the source of truth. Gates green (1848 at 94.56%), one alembic head. |
