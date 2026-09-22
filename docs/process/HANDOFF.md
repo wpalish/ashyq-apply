@@ -60,7 +60,7 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
-**Phase 3 §9: the plan no longer tells the applicant to do the impossible (`<HASH3>`).**
+**Phase 3 §9: the plan no longer tells the applicant to do the impossible (`6fbb7bf`).**
 `_order_steps` sorted by lead time and never read `depends_on`, so the numbered plan could put
 "notarize the translation" above "get the translation". It is a topological order now, with longest
 lead time as the tiebreak, so the demo's order is byte-identical (nothing in it depends on anything).
