@@ -115,6 +115,7 @@ jobs:
         # "never found the page" from "found it and could not read it", which
         # claim_recall alone has never done. 24 distinct URLs, so it is cheap.
         continue-on-error: true
+        timeout-minutes: 15
         run: |
           set -o pipefail
           .venv/bin/python -m evaluation.research.oracle \

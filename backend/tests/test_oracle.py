@@ -17,8 +17,10 @@ from evaluation.research.oracle import (
     FETCH_FAILED,
     RECOVERED,
     TEXT_MISSING,
+    TIMED_OUT,
     VALUE_MISSING,
     Target,
+    bounded_probe,
     excerpt_is_present,
     probe,
     summarise,
@@ -212,3 +214,17 @@ class TestReadingTheCorpus:
         assert "3 certified facts" in text
         assert f"{RECOVERED:14} 1" in text
         assert f"{VALUE_MISSING:14} 1" in text
+
+
+class _HangingFetcher:
+    async def get(self, url):
+        import asyncio
+
+        await asyncio.sleep(3600)
+
+
+@pytest.mark.asyncio
+async def test_a_hung_page_times_out_instead_of_stalling_the_run():
+    target = Target("example", "ielts.overall", 6.5, "https://example.edu/x", "IELTS 6.5")
+    finding = await bounded_probe(target, _HangingFetcher(), seconds=0.05)
+    assert finding.verdict == TIMED_OUT

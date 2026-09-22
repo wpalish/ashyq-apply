@@ -20,6 +20,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import os
 import re
 from collections import Counter
 from dataclasses import asdict, dataclass
@@ -33,6 +34,11 @@ RECOVERED = "recovered"
 VALUE_MISSING = "value_missing"
 TEXT_MISSING = "text_missing"
 FETCH_FAILED = "fetch_failed"
+#: The probe did not finish inside its wall clock — a hung fetch or an
+#: extraction pattern that never returns. Itself a finding, never a hang.
+TIMED_OUT = "timed_out"
+
+PROBE_SECONDS = 90.0
 
 #: Words carry the meaning; punctuation and casing differ between a reviewer's
 #: excerpt and the page's own rendering, and a table's cells may be joined with
@@ -157,8 +163,10 @@ async def probe(target: Target, fetcher) -> Finding:
 
     from app.adapters.extraction import readable_text
 
-    text = readable_text(page.text)
-    produced = _claims_on(target.url, page.text, page.fetched_at)
+    # Extraction is CPU-bound: run it off the loop so the wall clock can fire.
+    text, produced = await asyncio.to_thread(
+        lambda: (readable_text(page.text), _claims_on(target.url, page.text, page.fetched_at))
+    )
     for key, value in produced:
         if key == target.key and _matches(target.value, value):
             return Finding(target.case_id, target.key, target.url, RECOVERED)
@@ -186,7 +194,7 @@ def summarise(findings: list[Finding]) -> str:
     lines = [f.line() for f in findings]
     lines.append("")
     lines.append(f"{len(findings)} certified facts read from their own source pages")
-    for verdict in (RECOVERED, VALUE_MISSING, TEXT_MISSING, FETCH_FAILED):
+    for verdict in (RECOVERED, VALUE_MISSING, TEXT_MISSING, FETCH_FAILED, TIMED_OUT):
         lines.append(f"  {verdict:14} {by_verdict.get(verdict, 0)}")
     lines.append("")
     lines.append(
@@ -200,7 +208,21 @@ async def run(dataset: Dataset, *, live: bool, cache: Path, corpus: Path | None)
     from app.adapters.fetching import Fetcher
 
     async with Fetcher(cache, offline=not live, corpus_dir=corpus) as fetcher:
-        return [await probe(t, fetcher) for t in targets(dataset)]
+        findings = []
+        for target in targets(dataset):
+            findings.append(await bounded_probe(target, fetcher, seconds=PROBE_SECONDS))
+            print(findings[-1].line(), flush=True)
+        return findings
+
+
+async def bounded_probe(target: Target, fetcher, *, seconds: float) -> Finding:
+    """``probe`` with a wall clock, so one page can never stall the whole run."""
+    try:
+        return await asyncio.wait_for(probe(target, fetcher), timeout=seconds)
+    except TimeoutError:
+        return Finding(
+            target.case_id, target.key, target.url, TIMED_OUT, f"no answer within {seconds:.0f}s"
+        )
 
 
 def main() -> None:
@@ -217,9 +239,11 @@ def main() -> None:
 
     dataset = Dataset.model_validate_json(args.dataset.read_text(encoding="utf-8"))
     findings = asyncio.run(run(dataset, live=args.live, cache=args.cache, corpus=None))
-    print(summarise(findings))
     if args.json:
         args.json.write_text(json.dumps([asdict(f) for f in findings], indent=2), encoding="utf-8")
+    print(summarise(findings), flush=True)
+    # A stuck extraction thread must not keep the interpreter alive.
+    os._exit(0)
 
 
 if __name__ == "__main__":
