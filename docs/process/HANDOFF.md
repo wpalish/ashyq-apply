@@ -60,7 +60,7 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
-**Owner decision 3 of 6: two qualifications are two scopes, not a clash (`<HASH20>`).**
+**Owner decision 3 of 6: two qualifications are two scopes, not a clash (`65b494e`).**
 `_KIND_BY_DIMENSION` had entries for population, residency, intake, academic year and degree, and none
 for `qualification`, so "the Abitur route requires 6.5" beside "the attestat route requires 7.0" fell
 through to `TRUE_CONFLICT`. A conflicting claim cannot support an answer, so the applicant was left
