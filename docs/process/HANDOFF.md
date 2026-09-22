@@ -60,7 +60,7 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
-**Owner decision 6 of 6: an unchanged statement is refreshed, not superseded (`<HASH23>`).**
+**Owner decision 6 of 6: an unchanged statement is refreshed, not superseded (`38104d2`).**
 `reextract_page` superseded every live claim on a re-read URL, so a page that merely re-rendered wrote a
 whole generation of history repeating what the live rows already said. Change detection (V2-24a) could
 already tell a real change from a re-render; it only ever reached a log line.
