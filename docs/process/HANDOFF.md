@@ -60,7 +60,7 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
-**EXTRA-8: a funding page is read once per run, not once per programme (`<HASH9>`).** Reading the six
+**EXTRA-8: a funding page is read once per run, not once per programme (`82530e1`).** Reading the six
 case logs I had not opened showed that all four budget-killed cases — `delft`, `groningen`, `hku`,
 `ubc` — died in the **same line**: the page budget ran out inside `WebScholarshipAdapter.find`, called
 from the funding stage. Four copies of one traceback.
