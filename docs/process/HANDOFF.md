@@ -60,7 +60,7 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
-**EXTRA-5 is proved end to end, and the budget label is honest (`<HASH7>`).** Two small things, both
+**EXTRA-5 is proved end to end, and the budget label is honest (`49856d6`).** Two small things, both
 about not shipping a diagnostic that lies.
 
 First: EXTRA-5 reads per-page outcomes by parsing them back out of the run's own diagnostics, and
