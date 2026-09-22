@@ -136,12 +136,13 @@ def test_an_unlabelled_prediction_is_not_judged() -> None:
     assert scope_mismatches(_dataset(SCOPE), _capture(dict(SCOPE), key="tuition")) == []
 
 
-def test_the_same_programme_under_two_titles_is_reported_but_not_counted() -> None:
-    """The distinction that keeps a diagnostic from becoming a thumb on the scale.
+def test_the_same_programme_under_two_titles_is_still_shown() -> None:
+    """The diagnostic kept naming these while the scorer counted them wrong,
+    and that evidence is what the owner settled on 2026-09-22: the scorer now
+    compares programme identity, so they count as matches.
 
-    A rename is still a mismatch by the rate's own definition, which compares
-    strings. Saying so beside the number is evidence for a decision; folding
-    it in would be quietly changing what the benchmark measures.
+    They stay in this report because a rename is worth seeing — the report
+    says which way it is counted rather than implying the old answer.
     """
     from evaluation.research.scope_report import same_programme_under_another_name
 
@@ -154,11 +155,11 @@ def test_the_same_programme_under_two_titles_is_reported_but_not_counted() -> No
             }
         ),
     )
-    assert [m.shape for m in found] == ["differs"], "it is still a mismatch"
+    assert [m.shape for m in found] == ["differs"], "the strings do differ"
     renamed = same_programme_under_another_name(found)
     assert len(renamed) == 1
     text = summarise(found)
-    assert "reported, not counted" in text
+    assert "counts these as matches" in text, "the report must not imply the old answer"
 
 
 def test_a_different_field_is_not_reported_as_a_rename() -> None:

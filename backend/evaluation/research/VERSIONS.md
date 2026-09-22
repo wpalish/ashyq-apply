@@ -14,6 +14,15 @@ label inventories, not changes to the production pipeline or retrieval quality.
 | [draft7](data/ground_truth.draft7.json) | 62/220 | 10/10 | 1/9 / 1/10 | 0/5 / 0/62 | 0/210 |
 | **[reviewed](data/ground_truth.reviewed.json)** | 62/220 | 10/10 | 1/9 / 1/10 | 0/5 / 0/62 | 0/210 |
 
+**Scorer definition changed 2026-09-22, and every row's `wrong_scope_claim_rate` moved with it:
+5/5 → 4/5, in all eight versions.** The owner settled that the scorer compares programme *identity*
+rather than programme strings, so NTU's "Bachelor of Computing (Hons) in Computer Science" now answers
+a label reading "Computer Science". The pipeline did not change and the capture did not change: the
+published metrics were regenerated from the same frozen `capture.json` and the same datasets, and the
+diff is two lines per file — numerator 5 → 4, value 1.0 → 0.8 — with every other field byte-identical.
+A number computed under the old definition is not comparable to one computed under the new; that is
+why this note exists rather than a silent edit.
+
 - Draft1 freezes the initial source annotation and captured pipeline outputs.
 - Draft2 adds official-source annotations, resolves Toronto/KAIST programme identity
   and corrects Aalto subject and Groningen fee-year assumptions. It changes which

@@ -60,6 +60,33 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**Owner decision 1 of 6: the scorer compares programme identity, not strings (`<HASH18>`).**
+`scope_matches` compared every dimension with `==`, so NTU's "Bachelor of Computing (Hons) in Computer
+Science" scored as a wrong-scope claim against a label reading "Computer Science" — the same programme
+written two ways. That measured our naming rather than our research, and `programme.exists` is the
+single most common key in the certified corpus, 11 facts of 74.
+
+The `programme` dimension now asks `ontology.titles_name_same_programme`, which was built for exactly
+this and already returns a three-valued verdict. **Only `YES` counts.** `UNKNOWN` stays a miss —
+"Bachelor of Science in Mathematical and Computer Sciences" overlaps with "Computer Science" without
+equalling it, and a benchmark that scores "we could not tell" as a hit measures nothing. Every other
+dimension still compares literally.
+
+`scope_report` stops saying "reported, not counted": it now states that these count as matches, because
+a diagnostic that implies the old answer is worse than none. The test that pinned the old behaviour was
+**rewritten with the decision rather than around it** — its name said "reported but not counted", and
+that is no longer true.
+
+**The replay guard caught the consequence, which is what it is for.** Eight published metrics files —
+every corpus version from draft1 to reviewed — were computed under the old definition, and the replay
+test compares scoring the frozen capture against them. Exactly one metric moved, identically in all
+eight: **`wrong_scope_claim_rate` 5/5 → 4/5**, the first time that number has ever left 1.0. The files
+were regenerated from the same frozen capture and the same datasets, every non-metric field asserted
+byte-identical first; the diff is two lines per file. `VERSIONS.md` now carries the reason, and the
+replay test's docstring states the discipline: a deliberate change regenerates and records, an
+accidental one fails here. A number computed under a changed definition is not comparable to the one it
+replaces.
+
 **EXTRA-12: the classifier called the right programme page a catalogue (`96feda6`).** The per-page
 diagnostic built this morning named the cause of five of the ten zero-claim cases, and it is none of
 the three I had been arguing about. **Groningen's rejected page is the certified corpus' own source

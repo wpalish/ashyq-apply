@@ -163,8 +163,9 @@ def summarise(mismatches: list[Mismatch]) -> str:
         )
         lines.extend(f"  {m.case_id}: {m.recorded!r} vs {m.expected!r}" for m in renamed)
         lines.append(
-            "  (reported, not counted - whether the scorer should compare programme "
-            "identity instead of strings changes what the benchmark means; HANDOFF S7)"
+            "  (the scorer counts these as matches since 2026-09-22, when the owner settled "
+            "that programme identity is compared rather than strings; they are listed here "
+            "because a rename is still worth seeing)"
         )
     return "\n".join(lines)
 

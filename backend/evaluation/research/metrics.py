@@ -7,6 +7,9 @@ from collections import defaultdict
 from typing import Any
 from urllib.parse import urlsplit, urlunsplit
 
+from app.adapters.search.ontology import titles_name_same_programme
+from app.domain.programme_identity import Verdict
+
 from .schema import Capture, Dataset, Observation, Scope
 
 
@@ -19,10 +22,32 @@ def canonical_url(url: object) -> str:
 
 
 def scope_matches(expected: Scope, actual: Scope) -> bool:
-    return all(
-        value is None or getattr(actual, key) == value
-        for key, value in expected.model_dump().items()
-    )
+    """Whether a recorded scope answers the scope a label asked about.
+
+    Every dimension compares literally except ``programme``, which compares
+    **identity**: a page publishes "Bachelor of Computing (Hons) in Computer
+    Science" where a label reads "Computer Science", and counting that as a
+    wrong-scope claim measured our naming rather than our research. The
+    owner settled this on 2026-09-22.
+
+    Only ``YES`` is a match. ``UNKNOWN`` — two titles the ontology cannot
+    reconcile — stays a miss, because a benchmark that scores "we could not
+    tell" as a hit is measuring nothing.
+    """
+    for key, value in expected.model_dump().items():
+        if value is None:
+            continue
+        recorded = getattr(actual, key)
+        if key == "programme":
+            if (
+                not recorded
+                or titles_name_same_programme(str(value), str(recorded)) is not Verdict.YES
+            ):
+                return False
+            continue
+        if recorded != value:
+            return False
+    return True
 
 
 def ratio(numerator: int, denominator: int) -> dict[str, Any]:

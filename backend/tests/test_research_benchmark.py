@@ -335,6 +335,16 @@ def test_draft_dataset_has_ten_cases_without_fabricated_human_signoff(suffix):
     ["", ".draft2", ".draft3", ".draft4", ".draft5", ".draft6", ".draft7", ".reviewed"],
 )
 def test_published_baseline_replays_exactly_without_network(monkeypatch, suffix):
+    """Scoring the frozen capture must reproduce the published numbers exactly.
+
+    This guards against a metric moving by accident. When it moves on
+    purpose — as `wrong_scope_claim_rate` did on 2026-09-22, when the owner
+    settled that the scorer compares programme identity rather than strings —
+    the published files are regenerated from the same frozen capture and the
+    reason is recorded in VERSIONS.md, the same discipline the golden demo
+    hash follows. A number computed under a changed definition is not
+    comparable to the one it replaces, and saying so is the point.
+    """
     import json
     import socket
 
