@@ -60,7 +60,7 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
-**EXTRA-6: the programme filter now sees what search adds (`<HASH6>`).** Chasing Toronto's zero led to
+**EXTRA-6: the programme filter now sees what search adds (`e955e7c`).** Chasing Toronto's zero led to
 `live_discovery.discover`'s ordering: step 4 confirms programme candidates by reading them — the filter
 that exists because live runs offered "bachelor-open-day", "campus-tour" and a student newsletter as
 programme pages — and step 6 asks the search provider. So **everything Phase 1 contributes arrived
