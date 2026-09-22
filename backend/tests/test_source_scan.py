@@ -402,6 +402,65 @@ class TestReextractSupersedesAndAppendsAtomically:
         finally:
             check.close()
 
+    def test_an_unchanged_statement_is_refreshed_not_superseded(
+        self, pg_worker_env, pg_factory, settings, profile, monkeypatch
+    ):
+        """Owner decision, 2026-09-22: a re-read that finds the same value
+        must not write a generation of history repeating the live row.
+
+        The page still says IELTS 6.5. The old row stays live, keeps its id,
+        gets no successor, and only its read date advances — so freshness
+        still moves and the history stays meaningful.
+        """
+        same = FetchResult(
+            url="https://example.edu/programme",
+            outcome=FetchOutcome.OK,
+            status_code=200,
+            text=(
+                "<html><head><title>Programme</title></head><body><main>"
+                "<h1>MSc Computer Science</h1>"
+                "<p>This master's degree programme in computer science is taught in English. "
+                "Applicants need an IELTS Academic overall band score of 6.5.</p>"
+                "</main></body></html>"
+            ),
+            content_type="text/html; charset=utf-8",
+            etag='"v2"',
+            content_hash="ab" * 32,
+        )
+        ScriptedFetcher({"https://example.edu/programme": same}).install(monkeypatch)
+
+        session = pg_factory()
+        try:
+            page = _seed_page(
+                session,
+                "https://example.edu/programme",
+                etag='"v1"',
+                content_hash="cd" * 32,
+                fetched_at=datetime.now(UTC) - timedelta(days=1),
+            )
+            run, result_id, old_claim_rows = _seed_run_result_claims(session, page, profile)
+            _enqueue_reextract(session, run, page, result_id)
+            old_ids = [c.id for c in old_claim_rows]
+            old_read = old_claim_rows[0].accessed_at
+            run_id = run.id
+            session.commit()
+        finally:
+            session.close()
+
+        assert _drain(settings) == 1
+
+        check = pg_factory()
+        try:
+            rows = check.query(ClaimRow).filter(ClaimRow.run_id == run_id).all()
+            ielts = [r for r in rows if r.claim_type == "ielts_min_overall"]
+            assert [r.id for r in ielts] == old_ids, "no second generation was written"
+            (row,) = ielts
+            assert row.status != "SUPERSEDED"
+            assert row.superseded_at is None
+            assert row.accessed_at > old_read, "freshness still advances"
+        finally:
+            check.close()
+
     def test_a_fenced_or_crashed_attempt_writes_neither_side(
         self, pg_worker_env, pg_factory, settings, profile, monkeypatch
     ):

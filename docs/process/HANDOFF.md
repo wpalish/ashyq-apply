@@ -60,6 +60,23 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**Owner decision 6 of 6: an unchanged statement is refreshed, not superseded (`<HASH23>`).**
+`reextract_page` superseded every live claim on a re-read URL, so a page that merely re-rendered wrote a
+whole generation of history repeating what the live rows already said. Change detection (V2-24a) could
+already tell a real change from a re-render; it only ever reached a log line.
+
+Now the classification runs **before** anything is written. A statement the page still makes with the
+same value keeps its row, its id and its place in history; only `accessed_at` advances, so freshness
+still moves. Anything that changed value, appeared or disappeared is superseded and linked exactly as
+before — `test_a_forced_page_change_supersedes_old_and_appends_new_in_one_commit`, the T32 contract, is
+untouched and still passes because it forces a change. The new test is meaningful in both directions:
+before this change it would find two generations; with extraction broken it would find the old row
+superseded.
+
+**All six owner decisions are done.** The two §7 items left open are assertions about facts, not design
+choices, and stay with the owner: whether "Mathematical and Computer Sciences" is equivalent to
+"Computer Science", and which KAIST page belongs in `program_page`.
+
 **Owner decision 5 of 6: the catalogue walker judges subject too (`5d6b75d`).** The divergence was
 one argument wide: the walker called `profile_rejects(page, self.degree, [])`, and an empty `fields`
 list disables the subject check. Its reasoning was that a catalogue's own list is the university's
