@@ -74,7 +74,11 @@ jobs:
         # Fetcher calls and 90 seconds per university.
         run: |
           set -o pipefail
-          echo "budgets: ${{ inputs.max_pages }} fetches / ${{ inputs.seconds_per_case }}s per case"
+          echo "budgets: ${{ inputs.max_pages }} page reads / ${{ inputs.seconds_per_case }}s per case"
+          echo "The page budget bounds Fetcher.get calls, not HTTP requests: one read can"
+          echo "issue several (redirects, the browser tier, a PDF). Run 35697105238 made 98"
+          echo "requests for one case under a budget of 60, so the 'http' column below is"
+          echo "traffic, not the bound."
           .venv/bin/python -m evaluation.research.live \
             --live \
             --out evaluation/research/baseline/capture.${{ github.run_id }} \
@@ -152,7 +156,7 @@ jobs:
           .venv/bin/python - <<'PY'
           import json, pathlib, os
           capture = json.loads(pathlib.Path(os.environ["CAPTURE_JSON"]).read_text())
-          print(f"{'case':12} {'outcome':45} {'pages':>6} {'claims':>7}")
+          print(f"{'case':12} {'outcome':45} {'http':>6} {'claims':>7}")
           budget = 0
           for observation in capture["observations"]:
               error = observation.get("error") or "complete"

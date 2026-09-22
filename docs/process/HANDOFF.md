@@ -60,6 +60,20 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**EXTRA-5 is proved end to end, and the budget label is honest (`<HASH7>`).** Two small things, both
+about not shipping a diagnostic that lies.
+
+First: EXTRA-5 reads per-page outcomes by parsing them back out of the run's own diagnostics, and
+nothing checked that the **production runner** still writes that exact line. If it ever stops, the
+capture records `[]` and says nothing — silently, which is the failure this diagnostic exists to end.
+`test_a_real_run_writes_lines_the_capture_parser_understands` drives a real demo run through
+`ResearchRunner` and asserts the parser finds records, all in the frozen five-category vocabulary.
+
+Second: the workflow said "60 fetches" and the budget does not bound fetches. It bounds `Fetcher.get`
+calls, and one read can issue several requests — `groningen` made 98 under a budget of 60. The label
+now says "page reads", the column is headed `http`, and the log states the difference, because a
+reader comparing two runs needs to know which of the two numbers moved.
+
 **EXTRA-6: the programme filter now sees what search adds (`e955e7c`).** Chasing Toronto's zero led to
 `live_discovery.discover`'s ordering: step 4 confirms programme candidates by reading them — the filter
 that exists because live runs offered "bachelor-open-day", "campus-tour" and a student newsletter as
