@@ -60,6 +60,21 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**EXTRA-7: an FAQ page is not a scholarship, however it spells "FAQ" (`<HASH8>`).** Reading NTU's
+twelve claims — the only real claims in run 35697105238 — four were an award named **"FAQs on
+scholarships"**, stamped `CONFLICTING` because the same page's prose ("the scholarship will be withdrawn
+if you change your degree programme") then produced a second claim saying that award did not exist. Two
+per programme, so **a third of every claim the ten-university run produced came from one FAQ page**.
+
+The cause is the plural: `_FAQ` was `\bf\.?a\.?q\.?\b`, which matches "FAQ" and not "FAQs" — there
+is no word boundary between the `q` and the `s`. Reproduced offline before changing anything;
+`classify_page` returned `scholarship_award 0.85, named award 'FAQs on scholarships'`. It now returns
+`scholarship_faq` with no subject.
+
+**This is the third plural bug here** — `waivers` and `scholarships` were the others — so the tests
+cover the pattern (FAQ, FAQs, F.A.Q., "frequently asked question(s)"), that a real award still reads as
+one, and that a word merely starting with those letters ("Faqir Memorial Scholarship") does not.
+
 **EXTRA-5 is proved end to end, and the budget label is honest (`49856d6`).** Two small things, both
 about not shipping a diagnostic that lies.
 
@@ -777,6 +792,24 @@ Scope, in `app/adapters/discovery/live_discovery.py` plus tests:
 Risk, stated up front: this can only *reduce* the programme list, so `programme_page_recall` may fall
 if the classifier refuses a page the label calls correct. That is the honest direction — a wrong
 programme page produces wrong requirements — but it is a number to watch, not to assume.
+
+Write-ahead (claude-opus-5, 2026-09-22, **EXTRA-7**): **one regex produced a third of the run's
+claims, and all of them were wrong.** Reading NTU's twelve claims — the only real claims in run
+35697105238 — four are `scholarship_exists` with the subject **"FAQs on scholarships"**, stamped
+`CONFLICTING`, two per programme. The page is NTU's scholarship FAQ. The classifier has a
+`SCHOLARSHIP_FAQ` type precisely for it, and `_FAQ` is `\bf\.?a\.?q\.?\b`, which matches "FAQ" and
+**not "FAQs"**: there is no word boundary between `q` and `s`. So the FAQ page classified as
+`scholarship_award`, the award name became "FAQs on scholarships", and its prose ("the scholarship will
+be withdrawn if you change your degree programme") produced a second claim saying the award does not
+exist. Two claims from one page contradicting each other is exactly what `CONFLICTING` is for; both are
+rubbish.
+
+Reproduced offline before touching anything: `classify_page` on that title returns
+`scholarship_award 0.85, named award 'FAQs on scholarships'`.
+
+Scope: the plural in `_FAQ`, a test per form (FAQ, FAQs, F.A.Q., "frequently asked question(s)"), and a
+test that an FAQ page never becomes an award. This is the **third** plural bug in this repository —
+`waivers` and `scholarships` were the others — so the test names the pattern, not just the case.
 
 **STATE, 2026-09-22 morning.** Phase 2 is complete against its exit criteria (see
 `docs/process/PHASE_2_ACCEPTANCE.md`). Phase 3 has §3, §4, §6 and §7 done; §1's visible half is done
@@ -2571,6 +2604,11 @@ V2-01: evaluation-only Pydantic schema and JSON corpus/capture/metric contracts 
 
 V2-01: set PYTHONUTF8=1 on Windows for text fixtures; do not modify evaluation schemas while a live batch is running (parent and child processes can import different versions). Instrumented baseline segments and restart are recorded in baseline/README.md. Scope matching is deliberately literal; missing/different names count as conservative match failures, not human-confirmed wrong facts.
 
+- **Check the plural. Every time.** Three bugs in this repository now: `waivers` unmatched against
+  `waiver`, `scholarships` against `scholarship`, and `FAQs` against `\bf\.?a\.?q\.?\b`. The last one
+  produced a third of the claims in a ten-university live run, all of them false, and stamped them
+  `CONFLICTING` so they looked like a data problem at the source rather than a bug here. When a regex
+  matches an English noun, write the `s?` and a test for it in the same edit.
 - **A stub that fills one field of a result proves nothing.** `FetchResult` carries both `content` and
   `text`, and the adapters read `.text`. A test stub that set only `.content` served every page as
   empty — so four tests asserting "this page is refused" passed while refusing *blank pages*, and the
