@@ -13,6 +13,7 @@ import pytest
 from app.adapters.base import Candidate, CandidateProgram
 from app.adapters.documents.web_documents import _OFFER_LETTER, WebDocumentsAdapter
 from app.adapters.fetching import Fetcher
+from app.domain.enums import DegreeLevel
 from app.schemas.result import Scholarship
 
 
@@ -35,7 +36,10 @@ async def _collect(settings, corpus_dir, award: Scholarship):
         domain="utoronto.ca",
     )
     program = CandidateProgram(
-        name="BS CS", field="cs", degree="bachelor", url="fixture://u-toronto/program-0.html"
+        name="BS CS",
+        field="cs",
+        degree=DegreeLevel.BACHELOR,
+        url="fixture://u-toronto/program-0.html",
     )
     async with Fetcher(settings.cache_dir, offline=True, corpus_dir=corpus_dir) as fetcher:
         checklist, _ = await WebDocumentsAdapter(fetcher, "2026/27").collect(

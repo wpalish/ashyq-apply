@@ -30,7 +30,7 @@ from __future__ import annotations
 import argparse
 import json
 from collections import Counter
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from pathlib import Path
 
 from .schema import Capture, Dataset, Scope
@@ -181,7 +181,7 @@ def main() -> None:
     print(summarise(mismatches))
     if args.json:
         args.json.write_text(
-            json.dumps([m.__dict__ for m in mismatches], indent=2), encoding="utf-8"
+            json.dumps([asdict(m) for m in mismatches], indent=2), encoding="utf-8"
         )
 
 

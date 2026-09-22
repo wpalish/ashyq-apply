@@ -169,3 +169,44 @@ def test_a_different_field_is_not_reported_as_a_rename() -> None:
         _capture({"university": "Example University", "programme": "BSc Data Science"}),
     )
     assert same_programme_under_another_name(found) == []
+
+
+def test_the_json_the_workflow_asks_for_is_actually_writable(tmp_path, monkeypatch) -> None:
+    """`--json` crashed the live capture run and hid the numbers behind it.
+
+    `Mismatch` is a slotted dataclass, so `m.__dict__` raises AttributeError.
+    The report itself had been printed by then, so the failure looked like the
+    diagnostic's — it was the serialisation, one line later. The test drives
+    the CLI, because that is the part nothing exercised.
+    """
+    import json
+    import sys
+
+    from evaluation.research.scope_report import main
+
+    dataset = _dataset({"university": "Example University", "programme": "Computer Science"})
+    capture = _capture({"university": "Example University", "programme": "BSc Data Science"})
+    dataset_path = tmp_path / "dataset.json"
+    capture_path = tmp_path / "capture.json"
+    out = tmp_path / "scope-mismatches.json"
+    dataset_path.write_text(dataset.model_dump_json(), encoding="utf-8")
+    capture_path.write_text(capture.model_dump_json(), encoding="utf-8")
+
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "scope_report",
+            "--dataset",
+            str(dataset_path),
+            "--capture",
+            str(capture_path),
+            "--json",
+            str(out),
+        ],
+    )
+    main()
+
+    written = json.loads(out.read_text(encoding="utf-8"))
+    assert written[0]["dimension"] == "programme"
+    assert written[0]["shape"] == "differs"

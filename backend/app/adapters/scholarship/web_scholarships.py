@@ -143,57 +143,112 @@ class WebScholarshipAdapter:
         self, candidate: Candidate, program: CandidateProgram, profile
     ) -> tuple[list[Scholarship], AdapterResult]:
         out = AdapterResult()
-        if not candidate.scholarships_url:
+        primary = candidate.scholarships_url or ""
+        if not primary and not program.url:
             out.errors.append(
                 f"No official scholarship page is known for {candidate.name}; funding is reported "
                 "as unknown rather than assumed absent."
             )
             return [], out
-
-        index = await self.fetcher.get(candidate.scholarships_url)
-        out.pages_checked += 1
-        if not index.ok:
-            out.pages_failed += 1
+        if not primary:
+            # The one other candidate generator already in hand. It is read as
+            # an index only: a programme page is never an award page, and the
+            # classifier still has to say so before anything is recorded.
+            primary = program.url or ""
             out.errors.append(
-                f"{candidate.scholarships_url}: {index.outcome.value} — {index.error}"
-            )
-            out.retry_urls.append(candidate.scholarships_url)
-            return [], out
-
-        links = _award_links(index.text, candidate.scholarships_url)
-        if not links:
-            out.errors.append(
-                f"{candidate.scholarships_url}: no individual award pages were linked, so no award "
-                "can be verified in detail."
+                f"No official scholarship page is known for {candidate.name}; the programme page is "
+                "read as a funding index instead, and awards are recorded only from award pages."
             )
 
         scholarships: list[Scholarship] = []
-        for i, url in enumerate(links):
+        seen_pages: set[str] = set()
+        queue: list[tuple[str, int]] = [(primary, 0)]
+        indexes_read = 0
+        linked_an_award = False
+        fallback_used = primary == program.url
+
+        while queue:
+            url, depth = queue.pop(0)
+            key = _page_key(url)
+            if key in seen_pages:
+                continue
+            seen_pages.add(key)
+
             page = await self.fetcher.get(url)
             out.pages_checked += 1
             if not page.ok:
                 out.pages_failed += 1
                 out.errors.append(f"{url}: {page.outcome.value} — {page.error}")
                 out.retry_urls.append(url)
-                continue
+            else:
+                classification = classify_page(url=url, html=page.text)
+                if depth > 0:
+                    out.page_types.append((url, classification.page_type.value))
 
-            classification = classify_page(url=url, html=page.text)
-            out.page_types.append((url, classification.page_type.value))
-            if classification.page_type is not PageType.SCHOLARSHIP_AWARD:
-                # An index, an FAQ or a navigation page is not an award. This is
-                # what turned "Scholarships", "Practical matters" and "Prizes
-                # and awards" into three separate scholarships.
-                out.errors.append(
-                    f"{url}: classified as {classification.page_type.value}, not an award page; "
-                    "no scholarship recorded."
-                )
-                continue
+                is_index = classification.page_type is PageType.SCHOLARSHIP_INDEX
+                if depth == 0 or (is_index and indexes_read < _MAX_INDEX_PAGES):
+                    # An index is discovery, never award proof: nothing is
+                    # recorded from the page itself, only from what it links.
+                    indexes_read += 1
+                    if depth > 0:
+                        out.errors.append(
+                            f"{url}: classified as {classification.page_type.value}; read as a "
+                            "funding index, and the awards it links are followed."
+                        )
+                    links = [
+                        link
+                        for link in _award_links(page.text, url)
+                        if _page_key(link) not in seen_pages
+                    ]
+                    if links:
+                        linked_an_award = True
+                    elif url == primary:
+                        out.errors.append(
+                            f"{url}: no individual award pages were linked, so no award "
+                            "can be verified in detail."
+                        )
+                    room = _MAX_AWARD_PAGES - len(queue) - len(scholarships)
+                    queue.extend((link, depth + 1) for link in links[: max(room, 0)])
+                elif is_index:
+                    # An index this deep is a site map, not a funding route.
+                    out.errors.append(
+                        f"{url}: classified as {classification.page_type.value}; not followed, "
+                        f"because {_MAX_INDEX_PAGES} index pages have already been read."
+                    )
+                elif classification.page_type is PageType.SCHOLARSHIP_AWARD:
+                    sch, claims = self._parse_award(
+                        candidate,
+                        program,
+                        url,
+                        page.text,
+                        page.fetched_at,
+                        classification,
+                        index=len(scholarships),
+                    )
+                    scholarships.append(sch)
+                    out.claims.extend(claims)
+                else:
+                    # An FAQ or a navigation page is not an award. This is what
+                    # turned "Scholarships", "Practical matters" and "Prizes
+                    # and awards" into three separate scholarships.
+                    out.errors.append(
+                        f"{url}: classified as {classification.page_type.value}, not an award page; "
+                        "no scholarship recorded."
+                    )
 
-            sch, claims = self._parse_award(
-                candidate, program, url, page.text, page.fetched_at, classification, index=i
-            )
-            scholarships.append(sch)
-            out.claims.extend(claims)
+            if (
+                not queue
+                and not linked_an_award
+                and not fallback_used
+                and program.url
+                and _page_key(program.url) not in seen_pages
+            ):
+                # The index existed and named no award. The programme page is
+                # the one other generator already in hand, so it is worth a
+                # fetch here and nowhere else.
+                fallback_used = True
+                queue.append((program.url, 0))
+
         return scholarships, out
 
     def _parse_award(
@@ -511,6 +566,14 @@ class WebScholarshipAdapter:
 
 
 #: A link worth following from a funding index page.
+#: How many award pages one candidate may cost. Unchanged from when a single
+#: index supplied them all; the walk below shares this budget rather than
+#: giving each index its own.
+_MAX_AWARD_PAGES = 12
+#: Including the first one. An index behind an index behind an index is a
+#: site map, not a funding route.
+_MAX_INDEX_PAGES = 3
+
 _AWARD_HINTS = (
     "scholarship",
     "grant",
@@ -584,7 +647,12 @@ def _award_links(html: str, base: str) -> list[str]:
 
         seen.add(url)
         out.append(url)
-    return out[:12]
+    return out
+
+
+def _page_key(url: str) -> str:
+    """One page, one identity — a fragment and a trailing slash are neither."""
+    return url.split("#")[0].rstrip("/")
 
 
 def _coverage_from_tables(soup: BeautifulSoup) -> tuple[list[CoverageBreakdown], str]:

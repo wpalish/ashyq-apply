@@ -1,0 +1,200 @@
+"""A funding index is discovery, not award proof (Phase 3 §8).
+
+The adapter used to read one index page and throw away everything behind it:
+a link that classified as another index - an international funding page, a
+faculty funding page - was fetched, rejected and dropped, and the awards it
+named were never seen. These tests pin the walk that reads it instead, and
+the two rules that keep the walk from inventing anything: an index never
+becomes a scholarship, and a page is fetched once.
+"""
+
+from __future__ import annotations
+
+from pathlib import Path
+
+import pytest
+
+from app.adapters.base import Candidate, CandidateProgram
+from app.adapters.fetching import Fetcher
+from app.adapters.scholarship.web_scholarships import WebScholarshipAdapter
+from app.domain.enums import DegreeLevel
+
+_AWARD = """<html><head><title>{name}</title></head><body>
+<h1>{name}</h1>
+<p>The {name} covers full tuition for the first year of study.</p>
+<p>Eligibility: open to international students holding an offer of admission.</p>
+<p>The award is worth EUR 12,000 per year and the deadline is 1 March 2027.</p>
+</body></html>"""
+
+_INDEX = """<html><head><title>{title}</title></head><body>
+<h1>{title}</h1>
+<p>Overview of scholarships available to our students.</p>
+<ul>{items}</ul>
+</body></html>"""
+
+
+def _write(root: Path, rel: str, html: str) -> None:
+    path = root / rel
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(html, encoding="utf-8")
+
+
+@pytest.fixture
+def site(tmp_path: Path) -> Path:
+    """A university whose awards sit one index deeper than the main one."""
+    root = tmp_path / "site"
+    _write(
+        root,
+        "uni/scholarships.html",
+        _INDEX.format(
+            title="Scholarships",
+            items=(
+                '<li><a href="international-funding.html">International funding</a></li>'
+                '<li><a href="merit-scholarship.html">Merit Scholarship</a></li>'
+            ),
+        ),
+    )
+    _write(
+        root,
+        "uni/international-funding.html",
+        _INDEX.format(
+            title="Scholarships for international students",
+            items=(
+                '<li><a href="global-scholarship.html">Global Scholarship</a></li>'
+                '<li><a href="country-grant.html">Country Grant</a></li>'
+            ),
+        ),
+    )
+    for rel, name in (
+        ("uni/merit-scholarship.html", "Merit Scholarship"),
+        ("uni/global-scholarship.html", "Global Scholarship"),
+        ("uni/country-grant.html", "Country Grant"),
+    ):
+        _write(root, rel, _AWARD.format(name=name))
+    return root
+
+
+def _candidate(**kwargs) -> Candidate:
+    return Candidate(name="Test University", country="Testland", city="Test", **kwargs)
+
+
+async def _run(site: Path, settings, candidate: Candidate, program: CandidateProgram):
+    async with Fetcher(settings.cache_dir, offline=True, corpus_dir=site) as f:
+        return await WebScholarshipAdapter(f, "2026/27").find(candidate, program, None)
+
+
+class TestAnIndexBehindAnIndex:
+    @pytest.mark.asyncio
+    async def test_the_awards_it_links_are_read(self, settings, site):
+        candidate = _candidate(scholarships_url="fixture://uni/scholarships.html")
+        program = CandidateProgram(name="P", field="cs", degree=DegreeLevel.BACHELOR)
+
+        awards, result = await _run(site, settings, candidate, program)
+
+        assert sorted(a.name for a in awards) == [
+            "Country Grant",
+            "Global Scholarship",
+            "Merit Scholarship",
+        ], result.errors
+
+    @pytest.mark.asyncio
+    async def test_the_index_itself_never_becomes_a_scholarship(self, settings, site):
+        candidate = _candidate(scholarships_url="fixture://uni/scholarships.html")
+        program = CandidateProgram(name="P", field="cs", degree=DegreeLevel.BACHELOR)
+
+        awards, _ = await _run(site, settings, candidate, program)
+
+        names = {a.name for a in awards}
+        assert "Scholarships" not in names
+        assert "Scholarships for international students" not in names
+        assert all("fixture://uni/international-funding.html" not in a.source_urls for a in awards)
+
+    @pytest.mark.asyncio
+    async def test_no_page_is_fetched_twice(self, settings, site):
+        """The two indexes link the same awards in a real site as often as not."""
+        _write(
+            site,
+            "uni/international-funding.html",
+            _INDEX.format(
+                title="Scholarships for international students",
+                items=(
+                    '<li><a href="merit-scholarship.html">Merit Scholarship</a></li>'
+                    '<li><a href="scholarships.html">All scholarships</a></li>'
+                ),
+            ),
+        )
+        candidate = _candidate(scholarships_url="fixture://uni/scholarships.html")
+        program = CandidateProgram(name="P", field="cs", degree=DegreeLevel.BACHELOR)
+
+        awards, result = await _run(site, settings, candidate, program)
+
+        assert [a.name for a in awards] == ["Merit Scholarship"]
+        assert result.pages_checked == 3
+
+
+class TestTheProgrammePageIsAFallbackOnly:
+    @pytest.mark.asyncio
+    async def test_it_is_read_when_no_scholarship_page_is_known(self, settings, site):
+        _write(
+            site,
+            "uni/programme.html",
+            _INDEX.format(
+                title="Scholarships",
+                items='<li><a href="merit-scholarship.html">Merit Scholarship</a></li>',
+            ),
+        )
+        candidate = _candidate()
+        program = CandidateProgram(
+            name="P", field="cs", degree=DegreeLevel.BACHELOR, url="fixture://uni/programme.html"
+        )
+
+        awards, result = await _run(site, settings, candidate, program)
+
+        assert [a.name for a in awards] == ["Merit Scholarship"]
+        assert any("read as a funding index" in e for e in result.errors)
+
+    @pytest.mark.asyncio
+    async def test_a_programme_page_is_not_itself_an_award(self, settings, site):
+        _write(
+            site,
+            "uni/programme.html",
+            _AWARD.format(name="Bachelor Scholarship Programme"),
+        )
+        candidate = _candidate()
+        program = CandidateProgram(
+            name="P", field="cs", degree=DegreeLevel.BACHELOR, url="fixture://uni/programme.html"
+        )
+
+        awards, _ = await _run(site, settings, candidate, program)
+
+        assert awards == []
+
+    @pytest.mark.asyncio
+    async def test_it_is_not_fetched_when_the_index_named_an_award(self, settings, site):
+        _write(site, "uni/programme.html", _AWARD.format(name="Never Read"))
+        candidate = _candidate(scholarships_url="fixture://uni/scholarships.html")
+        program = CandidateProgram(
+            name="P", field="cs", degree=DegreeLevel.BACHELOR, url="fixture://uni/programme.html"
+        )
+
+        awards, _ = await _run(site, settings, candidate, program)
+
+        assert "Never Read" not in {a.name for a in awards}
+
+
+class TestTheBudgetIsShared:
+    @pytest.mark.asyncio
+    async def test_three_index_pages_is_the_limit(self, settings, tmp_path):
+        """A chain of indexes is a site map, not a funding route."""
+        root = tmp_path / "chain"
+        for i in range(6):
+            nxt = f'<li><a href="level{i + 1}.html">More funding</a></li>'
+            _write(root, f"uni/level{i}.html", _INDEX.format(title="Scholarships", items=nxt))
+        _write(root, "uni/level6.html", _AWARD.format(name="Deep Award"))
+        candidate = _candidate(scholarships_url="fixture://uni/level0.html")
+        program = CandidateProgram(name="P", field="cs", degree=DegreeLevel.BACHELOR)
+
+        awards, result = await _run(root, settings, candidate, program)
+
+        assert awards == []
+        assert result.pages_checked <= 4
