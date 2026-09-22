@@ -500,6 +500,13 @@ class TestSupersededExcluded:
 #: conflict (Delft's programme page against its admissions page, both stating
 #: the same intake, so a real contradiction). 0 removed.
 #:
+#: Re-captured a third time for V2-33, under the same proof: **0 removed lines,
+#: 34 added**, and every addition is the same new key — `"faculty_restrictions":
+#: []` — on the seventeen scholarships in the demo. No value moved, and the new
+#: readers produced nothing on this corpus, which is correct: no demo award page
+#: states a faculty or programme restriction, and a reader that invented one
+#: would be the bug. Anything else that moves this constant is a regression.
+#:
 #: Re-captured a second time for V2-25, under the same proof: 0 removed lines
 #: of 2651 changed, every addition a key inside a claim's `scope`, on the four
 #: adapters that did not read scope until then. No result, bucket, check or
@@ -512,7 +519,7 @@ class TestSupersededExcluded:
 #: changed). That is the whole of the intended change — a claim now records
 #: what its page stated about who it covers — and it is the only reason this
 #: constant has a second value. Anything else that moves it is a regression.
-GOLDEN_DEMO_SHA256 = "b14c5943cb9f2fee9cc09ae4293dd2c4592611f359a9c61e6562f47273446c10"
+GOLDEN_DEMO_SHA256 = "bf20e437f8c0f50c8cb8c3a5169578c89b372ed4bd266dd5e4b5715f8a54c4b5"
 
 #: The golden was captured with the real clock on 2026-09-07, and the baseline
 #: payload embeds that date: ``requirement_checks[*].applicant_value`` and

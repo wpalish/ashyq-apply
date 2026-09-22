@@ -1,0 +1,104 @@
+"""Plan V2-33: a faculty or programme restriction is recorded, and asked about.
+
+§6 decomposes `faculty_restrictions` and `programme_restrictions` separately.
+`Scholarship.program_restrictions` existed as a declared field nothing ever
+set, and there was no faculty field at all — so an award page saying "open to
+students in the Faculty of Engineering" was recorded as applying to everyone.
+"""
+
+from __future__ import annotations
+
+import pytest
+
+from app.adapters.scholarship.web_scholarships import (
+    _FACULTY_RESTRICTION,
+    _PROGRAMME_RESTRICTION,
+    _restricted_to,
+)
+from app.domain.enums import EligibilityStatus
+from app.pipeline.runner import _applicant_eligible, _scholarship_eligibility
+from app.schemas.result import Scholarship
+
+
+class TestReadingTheRestriction:
+    @pytest.mark.parametrize(
+        "sentence,expected",
+        [
+            (
+                "The award is open to students in the Faculty of Engineering.",
+                "Faculty of Engineering",
+            ),
+            ("Restricted to applicants from the School of Law.", "School of Law"),
+            (
+                "Available only to students enrolled in the College of Medicine.",
+                "College of Medicine",
+            ),
+        ],
+    )
+    def test_a_stated_faculty_is_read_in_the_page_s_own_words(self, sentence, expected):
+        found = _restricted_to(sentence, _FACULTY_RESTRICTION)
+        assert found is not None
+        assert expected in found.group("subject")
+
+    @pytest.mark.parametrize(
+        "sentence",
+        [
+            "Open to all international students.",
+            "Students in the faculty are welcome to visit during the open day.",
+            "The faculty of the university is world renowned.",
+            "Applications are open to everyone.",
+        ],
+    )
+    def test_prose_that_states_no_restriction_produces_none(self, sentence):
+        """A restriction we invent excludes a real applicant from real money."""
+        assert _restricted_to(sentence, _FACULTY_RESTRICTION) is None
+        assert _restricted_to(sentence, _PROGRAMME_RESTRICTION) is None
+
+    def test_a_named_programme_is_read_as_a_programme_not_a_faculty(self):
+        sentence = "Restricted to applicants enrolled in the BSc Data Science programme."
+        assert _restricted_to(sentence, _FACULTY_RESTRICTION) is None
+        found = _restricted_to(sentence, _PROGRAMME_RESTRICTION)
+        assert found is not None
+        assert "BSc Data Science" in found.group("subject")
+
+
+class TestWhatTheRestrictionDoesToTheVerdict:
+    @staticmethod
+    def _award(**kwargs) -> Scholarship:
+        return Scholarship(id="x", name="Award", **kwargs)
+
+    def test_a_faculty_restriction_is_an_open_question_not_a_refusal(self, profile):
+        """The applicant's faculty is not in the profile at all."""
+        award = self._award(faculty_restrictions=["the Faculty of Engineering"])
+
+        checks = _scholarship_eligibility(award, profile)
+
+        restriction = [c for c in checks if "faculty restriction" in c.requirement.lower()]
+        assert len(restriction) == 1
+        assert restriction[0].status is EligibilityStatus.PENDING
+        assert "Faculty of Engineering" in restriction[0].explanation
+
+    def test_a_programme_restriction_is_not_decided_by_comparing_names(self, profile):
+        """NTU taught this: 'Bachelor of Computing (Hons) in Computer Science'
+        against 'Computer Science' is the same programme under two titles, and
+        the scorer's own comparison could not tell."""
+        award = self._award(program_restrictions=["the BSc Data Science programme"])
+
+        checks = _scholarship_eligibility(award, profile)
+
+        restriction = [c for c in checks if "programme restriction" in c.requirement.lower()]
+        assert len(restriction) == 1
+        assert restriction[0].status is EligibilityStatus.PENDING
+
+    def test_it_leaves_the_award_unknown_rather_than_eligible(self, profile):
+        award = self._award(faculty_restrictions=["the Faculty of Engineering"])
+        award.eligibility_checks = _scholarship_eligibility(award, profile)
+
+        assert _applicant_eligible(award) == "unknown"
+
+    def test_an_award_with_no_restriction_is_unaffected(self, profile):
+        award = self._award()
+
+        checks = _scholarship_eligibility(award, profile)
+
+        assert not [c for c in checks if "restriction" in c.requirement.lower()]

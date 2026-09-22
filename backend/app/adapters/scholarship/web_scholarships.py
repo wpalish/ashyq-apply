@@ -415,6 +415,26 @@ class WebScholarshipAdapter:
                 confidence=0.9,
             )
 
+        faculty = _restricted_to(text, _FACULTY_RESTRICTION)
+        if faculty:
+            sch.faculty_restrictions = [faculty.group("subject").strip()]
+            builder.add(
+                ClaimType.SCHOLARSHIP_PROGRAM_RESTRICTION,
+                {"faculty": sch.faculty_restrictions[0]},
+                _excerpt(text, faculty.start()),
+                confidence=0.85,
+            )
+
+        programme = _restricted_to(text, _PROGRAMME_RESTRICTION)
+        if programme:
+            sch.program_restrictions = [programme.group("subject").strip()]
+            builder.add(
+                ClaimType.SCHOLARSHIP_PROGRAM_RESTRICTION,
+                {"programme": sch.program_restrictions[0]},
+                _excerpt(text, programme.start()),
+                confidence=0.85,
+            )
+
         # A restriction list is not itself an answer about international
         # eligibility - the applicant may hold one of the listed citizenships.
         international = assess_international_eligibility(text)
@@ -633,6 +653,37 @@ _NAV_NOISE = (
     "back to top",
     "share",
 )
+
+
+#: "open to students in the Faculty of Engineering" and its neighbours. The
+#: subject is captured as the page wrote it: this is evidence, not a lookup,
+#: and a faculty name normalised by us is no longer the page's statement.
+_FACULTY_RESTRICTION = re.compile(
+    r"\b(?:open (?:only )?to|restricted to|available (?:only )?to|limited to)\b"
+    r"[^.]{0,60}?\b(?:students?|applicants?)?[^.]{0,20}?"
+    r"\b(?:in|of|from|within|enrolled in)\b\s+"
+    r"(?P<subject>(?:the\s+)?(?:faculty|school|college|department)\s+of\s+[A-Z][^.,;]{2,60})",
+    re.IGNORECASE,
+)
+#: The same shape, for a named programme rather than a faculty.
+_PROGRAMME_RESTRICTION = re.compile(
+    r"\b(?:open (?:only )?to|restricted to|available (?:only )?to|limited to)\b"
+    r"[^.]{0,60}?\b(?:students?|applicants?)?[^.]{0,20}?"
+    r"\b(?:in|of|on|enrolled (?:in|on))\b\s+"
+    r"(?P<subject>(?:the\s+)?(?:B\.?Sc|B\.?A|M\.?Sc|M\.?A|Bachelor|Master)[^.,;]{2,70}"
+    r"\s+(?:programme|program|degree|course))",
+    re.IGNORECASE,
+)
+
+
+def _restricted_to(text: str, pattern: re.Pattern[str]) -> re.Match[str] | None:
+    """The page's own restriction sentence, or nothing.
+
+    Deliberately narrow. A restriction we invent excludes a real applicant
+    from real money, and a restriction we miss leaves an open question that
+    the applicant is told to ask — the two failures are not symmetrical.
+    """
+    return pattern.search(" ".join((text or "").split()))
 
 
 def _award_links(html: str, base: str) -> list[str]:

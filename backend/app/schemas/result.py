@@ -95,6 +95,11 @@ class Scholarship(Base):
     citizenship_restrictions: list[str] = Field(default_factory=list)
     residency_restrictions: list[str] = Field(default_factory=list)
     program_restrictions: list[str] = Field(default_factory=list)
+    #: Faculties or schools the page limits the award to, in the page's own
+    #: words. Separate from ``program_restrictions`` because §6 decomposes
+    #: them separately: "the Faculty of Engineering" and "the BSc Data
+    #: Science programme" exclude different people.
+    faculty_restrictions: list[str] = Field(default_factory=list)
     degree_applicability: Tristate = Field(
         default="unknown",
         description="Whether the award applies to the applicant's degree level",
