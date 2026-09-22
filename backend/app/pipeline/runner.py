@@ -551,6 +551,7 @@ class ResearchRunner:
 
                 if cand.country not in gov_cache:
                     gr = await gov.post_study_work(cand.country)
+                    self._record_page_outcomes(gr.page_outcomes)
                     self.run.pages_checked += gr.pages_checked
                     self.run.pages_failed += gr.pages_failed
                     gov_cache[cand.country] = (
@@ -666,6 +667,7 @@ class ResearchRunner:
             )
             scholarships, ar = await adapter.find(cand, prog, self.profile)
             errors.extend(ar.errors)
+            self._record_page_outcomes(ar.page_outcomes)
             self.run.pages_checked += ar.pages_checked
             self.run.pages_failed += ar.pages_failed
 

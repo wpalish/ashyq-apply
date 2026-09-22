@@ -60,6 +60,18 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**Funding and government pages now leave a page outcome (`PENDING`).** Only requirements, costs and
+discovery used to record them, so a funding stage that read pages and found nothing had nothing to
+explain itself with. Scholarship pages now record: fetch-failed, the funding indexes that were read
+(with how many award links were followed), award pages (fetched-ok, or no-pattern-match when no
+claims came out), and pages that were rejected (not an award, or an index past the index limit). The
+government page records fetch-failed / fetched-ok / unreadable, and an empty body no longer produces
+an empty post-study-work claim. The runner records both.
+
+**Oracle wall clock (`8f1b146`).** Run 8's oracle step hung for 33 minutes and was cancelled. Each
+probe now has a 90 s limit and gets the `timed_out` verdict if it runs over; findings are printed as
+they finish; the step has `timeout-minutes: 15`.
+
 **Owner decision 6 of 6: an unchanged statement is refreshed, not superseded (`38104d2`).**
 `reextract_page` superseded every live claim on a re-read URL, so a page that merely re-rendered wrote a
 whole generation of history repeating what the live rows already said. Change detection (V2-24a) could

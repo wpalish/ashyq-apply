@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from app.adapters.base import AdapterResult
+from app.adapters.base import AdapterResult, PageOutcome
 from app.adapters.extraction import ClaimBuilder, html_title, html_to_text
 from app.adapters.fetching import Fetcher
 from app.adapters.scope_reader import read_scope
@@ -31,6 +31,11 @@ class WebGovernmentAdapter:
             out.errors.append(
                 f"{url}: {res.outcome.value} — post-study work rules unverified for {country}."
             )
+            out.page_outcomes.append(
+                PageOutcome(
+                    url=url, category="fetch-failed", detail=f"{res.outcome.value} — {res.error}"
+                )
+            )
             return out
 
         text = html_to_text(res.text)
@@ -51,6 +56,15 @@ class WebGovernmentAdapter:
             for ln in text.splitlines()
             if ln.strip() and "FIXTURE" not in ln and not ln.startswith("Home")
         )
-        builder.add(ClaimType.POST_STUDY_WORK, body[:400], body[:400], confidence=0.85)
+        if body:
+            builder.add(ClaimType.POST_STUDY_WORK, body[:400], body[:400], confidence=0.85)
         out.claims.extend(builder.claims)
+        out.page_outcomes.append(
+            PageOutcome(
+                url=url,
+                category="fetched-ok" if builder.claims else "unreadable",
+                readable_chars=len(text),
+                detail=f"government page; {len(builder.claims)} post-study work claims read",
+            )
+        )
         return out

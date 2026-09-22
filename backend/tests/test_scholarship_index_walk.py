@@ -310,3 +310,31 @@ class TestAPageIsReadOncePerRun:
             _, back_again = await adapter.find(first, program, None)
 
         assert back_again.pages_checked > 0
+
+
+class TestEveryPageLeavesAnOutcome:
+    """A funding stage that read pages must be able to explain its zero."""
+
+    @pytest.mark.asyncio
+    async def test_indexes_awards_and_failures_are_all_recorded(self, settings, site):
+        _write(
+            site,
+            "uni/scholarships.html",
+            _INDEX.format(
+                title="Scholarships",
+                items=(
+                    '<li><a href="merit-scholarship.html">Merit Scholarship</a></li>'
+                    '<li><a href="missing-award.html">Missing Award</a></li>'
+                ),
+            ),
+        )
+        candidate = _candidate(scholarships_url="fixture://uni/scholarships.html")
+        program = CandidateProgram(name="P", field="cs", degree=DegreeLevel.BACHELOR)
+
+        _, result = await _run(site, settings, candidate, program)
+
+        by_url = {o.url.rsplit("/", 1)[-1]: o for o in result.page_outcomes}
+        assert "funding index" in by_url["scholarships.html"].detail
+        assert by_url["merit-scholarship.html"].page_type == "scholarship_award"
+        assert by_url["missing-award.html"].category == "fetch-failed"
+        assert len(result.page_outcomes) == result.pages_checked

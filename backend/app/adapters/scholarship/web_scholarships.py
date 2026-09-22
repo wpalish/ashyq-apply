@@ -18,7 +18,7 @@ from app.adapters.applicability import (
     assess_degree_applicability,
     assess_international_eligibility,
 )
-from app.adapters.base import AdapterResult, Candidate, CandidateProgram
+from app.adapters.base import AdapterResult, Candidate, CandidateProgram, PageOutcome
 from app.adapters.extraction import (
     ClaimBuilder,
     html_title,
@@ -212,8 +212,16 @@ class WebScholarshipAdapter:
                 out.pages_failed += 1
                 out.errors.append(f"{url}: {page.outcome.value} — {page.error}")
                 out.retry_urls.append(url)
+                out.page_outcomes.append(
+                    PageOutcome(
+                        url=url,
+                        category="fetch-failed",
+                        detail=f"{page.outcome.value} — {page.error}",
+                    )
+                )
             else:
                 classification = classify_page(url=url, html=page.text)
+                page_type = classification.page_type.value
                 if depth > 0:
                     out.page_types.append((url, classification.page_type.value))
 
@@ -239,6 +247,14 @@ class WebScholarshipAdapter:
                             f"{url}: no individual award pages were linked, so no award "
                             "can be verified in detail."
                         )
+                    out.page_outcomes.append(
+                        PageOutcome(
+                            url=url,
+                            category="fetched-ok",
+                            page_type=page_type,
+                            detail=f"read as a funding index; {len(links)} award links followed",
+                        )
+                    )
                     room = _MAX_AWARD_PAGES - len(queue) - len(scholarships)
                     queue.extend((link, depth + 1) for link in links[: max(room, 0)])
                 elif is_index:
@@ -246,6 +262,14 @@ class WebScholarshipAdapter:
                     out.errors.append(
                         f"{url}: classified as {classification.page_type.value}; not followed, "
                         f"because {_MAX_INDEX_PAGES} index pages have already been read."
+                    )
+                    out.page_outcomes.append(
+                        PageOutcome(
+                            url=url,
+                            category="classifier-rejected",
+                            page_type=page_type,
+                            detail="index page beyond the index budget; not followed",
+                        )
                     )
                 elif classification.page_type is PageType.SCHOLARSHIP_AWARD:
                     sch, claims = self._parse_award(
@@ -259,6 +283,14 @@ class WebScholarshipAdapter:
                     )
                     scholarships.append(sch)
                     out.claims.extend(claims)
+                    out.page_outcomes.append(
+                        PageOutcome(
+                            url=url,
+                            category="fetched-ok" if claims else "no-pattern-match",
+                            page_type=page_type,
+                            detail=f"award page; {len(claims)} claims read",
+                        )
+                    )
                 else:
                     # An FAQ or a navigation page is not an award. This is what
                     # turned "Scholarships", "Practical matters" and "Prizes
@@ -266,6 +298,14 @@ class WebScholarshipAdapter:
                     out.errors.append(
                         f"{url}: classified as {classification.page_type.value}, not an award page; "
                         "no scholarship recorded."
+                    )
+                    out.page_outcomes.append(
+                        PageOutcome(
+                            url=url,
+                            category="classifier-rejected",
+                            page_type=page_type,
+                            detail="not an award page; no scholarship recorded",
+                        )
                     )
 
             if (
