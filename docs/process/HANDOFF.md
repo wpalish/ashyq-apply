@@ -60,6 +60,11 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**EXTRA-5: the capture now says why a case produced nothing (`5826b0c`).** `Observation.page_outcomes`
+keeps the runner's own five per-page verdicts, filled in the same `finally` that reads the claim rows so
+a budget-killed case still records what it read; the workflow prints the counts per case. The field is
+defaulted and the first test is that the certified capture still validates unchanged.
+
 **Read the run's own per-case files, and the headline changes again (artifact 10680503688, downloaded
 and analysed 2026-09-22).** `claim_recall 0/62` is not "extraction is weak". It is this:
 
