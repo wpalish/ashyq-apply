@@ -58,10 +58,10 @@ def readable_text(html: str) -> str:
     content Students & Education Programmes...", and put every degree word in
     the global menu into the page's apparent vocabulary.
     """
-    from app.adapters.page_classifier import main_content
+    from app.adapters.page_classifier import content_for_reading
 
     soup = BeautifulSoup(html, "lxml")
-    return html_to_text(str(main_content(soup)))
+    return html_to_text(str(content_for_reading(soup)))
 
 
 def html_title(html: str) -> str:

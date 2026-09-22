@@ -60,6 +60,34 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**EXTRA-9: the extractor was handed a page with the requirements deleted from it (`<HASH14>`).**
+The first change on this branch aimed at `claim_recall 0/62` itself. An external deep-research review
+proposed a hypothesis I had not listed — representation loss before extraction — and it is right.
+Verified in code, then demonstrated on a realistically-shaped page:
+
+| fact | where it sat | seen by the extractor, before |
+|---|---|---|
+| IELTS 6.5 overall | `<form class="application-picker">` | **no** |
+| deadline 15 Jan 2027 | `<aside class="key-facts">` | **no** |
+| minimum GPA 3.0 | `<div class="requirements-banner">` | **no** |
+| "lasts three years" | a plain `<p>` | yes |
+
+`readable_text()` routed through `main_content()`, which deletes `form`, deletes `aside`, and deletes
+anything whose class or id matches `nav|menu|…|banner|…`, including inside an already-selected
+`<main>`. The GPA died because its container's class contained "banner".
+
+**Root cause: one abstraction, two incompatible jobs.** `main_content` has exactly two callers.
+`classify_page` needs site chrome gone or it counts the site's links instead of the page's — that is
+why the stripping was written, and it was right for that caller. `readable_text` needs the page's
+content. Extraction inherited a function built to throw content away. `content_for_reading` now serves
+reading: it keeps forms and asides, keeps a container whose class merely mentions a chrome word, drops
+only what is never content, and drops nav/header/footer only when bulky (the 800-character rule
+`html_to_text` already used). `main_content` is untouched, so classification cannot move.
+
+**The demo golden did not change at all, and that is the finding behind the finding.** The synthetic
+corpus is plain prose in plain `<p>` tags, so it cannot exhibit this failure — a regression suite built
+entirely on it was structurally incapable of catching the thing that was costing every real claim.
+
 **Plan V2-30: the ninth scope question, `qualification` (`254cf21`).** §1 lists nine scope questions a
 requirement must answer; `ClaimScope` had eight. `qualification` was missing — and the benchmark's own
 `Scope` already had it, so the measurement asked a question the model could not answer. Built by a
@@ -983,6 +1011,40 @@ Scope:
 
 Not in this step: matching the restriction against the applicant's programme. That needs the programme
 identity decision parked in §7, and guessing it is worse than asking.
+
+Write-ahead (claude-opus-5, 2026-09-22, **EXTRA-9**): **the extractor is handed a page with the
+requirements deleted from it.** An external deep-research review proposed a hypothesis I had not
+listed — representation loss before extraction — and it is correct. Verified in code and then
+demonstrated:
+
+    page: <main> with <form> holding the IELTS line, <aside class="key-facts"> holding the deadline,
+          <div class="requirements-banner"> holding the GPA, plus one marketing sentence
+    readable_text() returns: "BSc Computer Science\n\nThe programme lasts three years."
+
+`readable_text()` — used by **every** extractor — routes through `page_classifier.main_content()`, which
+decomposes `form`, decomposes `aside`, and decomposes **any element whose class or id matches**
+`nav|menu|breadcrumb|header|footer|sidebar|skip|cookie|banner|social|share|toolbar`, including inside an
+already-selected `<main>`. The GPA above died because its container's class contained "banner".
+
+**Root cause, stated more precisely than the review did:** `main_content()` has exactly two callers and
+they want opposite things. `classify_page` needs site chrome gone, or it counts the site's links instead
+of the page's — one award page linked to six others from its menu and was classified as an index, which
+is why the stripping was written. `readable_text` needs the page's **content**, and a requirement is
+quite often inside a `form` or an `aside`. One abstraction, two incompatible jobs; the deletion was
+right for the caller it was written for and destructive for the one that inherited it.
+
+Scope:
+- a separate reading variant for extraction: keep `form` and `aside`, keep the `<main>` scoping, drop
+  only what is never content (`script`, `style`, `noscript`, `svg`, `iframe`), drop true chrome tags
+  only when large (the rule `html_to_text` already uses), and narrow the class/id hint to tokens that
+  cannot plausibly name content;
+- `classify_page` keeps `main_content` exactly as it is — its behaviour must not move, and the tests
+  that pin classification are the proof;
+- the demo golden will move, and this time it may move by **gaining claims**, which is the intended
+  effect and must be shown claim by claim rather than waved through as "additive".
+
+This is the first change on this branch aimed at `claim_recall 0/62` itself rather than at the
+machinery around it.
 
 **STATE, 2026-09-22 morning.** Phase 2 is complete against its exit criteria (see
 `docs/process/PHASE_2_ACCEPTANCE.md`). Phase 3 has §3, §4, §6 and §7 done; §1's visible half is done
@@ -2783,6 +2845,12 @@ V2-01: evaluation-only Pydantic schema and JSON corpus/capture/metric contracts 
 
 V2-01: set PYTHONUTF8=1 on Windows for text fixtures; do not modify evaluation schemas while a live batch is running (parent and child processes can import different versions). Instrumented baseline segments and restart are recorded in baseline/README.md. Scope matching is deliberately literal; missing/different names count as conservative match failures, not human-confirmed wrong facts.
 
+- **A synthetic fixture corpus cannot catch a markup bug.** The demo corpus writes requirements as
+  prose in `<p>` tags, so the golden hash — the strongest regression guard in this repository — stayed
+  byte-identical while every extractor was being handed pages with the requirements deleted out of
+  them. When fixtures are written by the same hand as the parser, they share its blind spot. Any
+  fixture meant to protect extraction has to be shaped like the real thing: forms, asides, tables,
+  class names that mean nothing.
 - **"It can only remove wrong things" is a hypothesis, not a safety argument.** I shipped EXTRA-6
   reasoning that confirming search results could only shorten the programme list, so a recall drop
   would be honest. It dropped recall 4/10 → 1/10 **and** precision 0.19 → 0.09: it cut correct pages

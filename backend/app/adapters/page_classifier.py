@@ -251,6 +251,64 @@ def _parse_markup(markup: str) -> BeautifulSoup | None:
     return None
 
 
+#: Class/id tokens that cannot plausibly name a page's own content. Narrower
+#: than ``_CHROME_HINT`` on purpose: that one matches "banner" and "menu",
+#: which deleted a requirements container whose class was
+#: "requirements-banner" and a tab panel whose class was "tabs-nav-panel".
+#: For reading, a false deletion costs the fact itself.
+_NEVER_CONTENT_HINT = re.compile(
+    r"(?:^|[-_ ])(?:cookie|skip|social|share|breadcrumb|toolbar)(?:$|[-_ ])",
+    re.IGNORECASE,
+)
+
+
+def content_for_reading(soup: BeautifulSoup) -> BeautifulSoup:
+    """The page's content for **extraction**, not for classification.
+
+    ``main_content`` exists for ``classify_page``, which must not count the
+    site's menu as the page's own links. It therefore deletes ``form``,
+    ``aside`` and anything whose class or id looks like chrome — and a
+    requirement is very often inside exactly those. A live page with the IELTS
+    line in a ``<form>``, the deadline in an ``<aside class="key-facts">`` and
+    the GPA in a ``<div class="requirements-banner">`` reached the extractors
+    as the single sentence "The programme lasts three years."
+
+    So reading keeps what classification throws away: forms, asides, and any
+    container whose class merely *mentions* a chrome word. It still drops what
+    is never content, and still prefers a ``<main>`` region when the page
+    offers one.
+    """
+    working = _parse_markup(str(soup))
+    if working is None:
+        return soup
+    for tag in working(["script", "style", "noscript", "svg", "iframe"]):
+        tag.decompose()
+
+    for selector in _MAIN_SELECTORS:
+        found = working.select_one(selector)
+        if found is not None and len(found.get_text(strip=True)) > 200:
+            _drop_bulky_chrome(found)
+            return found
+
+    _drop_bulky_chrome(working)
+    for attribute in ("class", "id"):
+        for tag in working.find_all(attrs={attribute: _NEVER_CONTENT_HINT}):
+            tag.decompose()
+    return working
+
+
+def _drop_bulky_chrome(node) -> None:
+    """Remove nav/header/footer only when they are big enough to be the site's.
+
+    A short ``<nav>`` is often a within-page tab strip, and a deadline lives in
+    a sidebar often enough that deleting every aside costs real facts. The 800
+    character threshold is the one ``html_to_text`` already uses.
+    """
+    for tag in node(["nav", "header", "footer"]):
+        if len(tag.get_text(strip=True)) > 800:
+            tag.decompose()
+
+
 def main_content(soup: BeautifulSoup) -> BeautifulSoup:
     """The page's own content, with the site's navigation removed.
 
