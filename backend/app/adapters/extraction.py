@@ -23,6 +23,7 @@ from app.domain.claim_verifier import (
     RejectReason,
     VerificationInput,
     registrable_domain,
+    states_a_requirement_without_settling_it,
     url_matches_domains,
     verify_claim,
 )
@@ -220,6 +221,18 @@ class ClaimBuilder:
             )
             else ClaimStatus.UNVERIFIED
         )
+        # Phase 3 §10: conditional wording is grounds for escalation, not for a
+        # settled requirement. The claim keeps its value and its excerpt — it
+        # is still evidence — but it stops being something that can eliminate
+        # a university on its own, and it says which word unsettled it.
+        hedge = states_a_requirement_without_settling_it(excerpt, value)
+        if hedge and (status or default_status) is ClaimStatus.VERIFIED_CURRENT:
+            default_status = ClaimStatus.NEEDS_OFFICIAL_CLARIFICATION
+            status = None
+            notes = (
+                f"{notes} " if notes else ""
+            ) + f"The page states this conditionally ({hedge!r}); it is not settled."
+
         claim = Claim(
             claim_type=claim_type,
             normalized_value=value,

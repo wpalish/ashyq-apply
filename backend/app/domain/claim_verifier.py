@@ -285,6 +285,77 @@ OFFICIAL_PUBLIC_TLDS: Final[tuple[str, ...]] = (
 )
 
 
+#: Wording that states a requirement without settling it. Phase 3 §10 lists
+#: "wording is conditional" as grounds for escalation, and nothing checked it:
+#: a page saying applicants are *typically* expected to have IELTS 6.5 produced
+#: a VERIFIED_CURRENT claim that could eliminate the university outright.
+#:
+#: Deliberately tight. "May" alone is excluded — "applications close 15 May
+#: 2027" is a date, not a hedge — and only the phrase "may be" counts.
+HEDGED_WORDING = re.compile(
+    r"\b(typically|usually|normally|generally|in most cases|as a (?:general )?rule"
+    r"|may be|might be|could be|is expected to|are expected to|at the discretion"
+    r"|case[-\s]by[-\s]case|on a case basis|subject to change|where applicable"
+    r"|in principle|approximately|around|about)\b",
+    re.IGNORECASE,
+)
+
+
+def _value_forms(value: object) -> list[str]:
+    """The ways a claim's value could be written in the page's own words."""
+    if isinstance(value, bool) or value is None:
+        return []
+    if isinstance(value, float):
+        forms = [f"{value:g}"]
+        if value.is_integer():
+            forms.append(str(int(value)))
+        return forms
+    if isinstance(value, int):
+        return [str(value), f"{value:,}"]
+    text = str(value).strip()
+    return [text] if text else []
+
+
+def states_a_requirement_without_settling_it(excerpt: str, value: object = None) -> str:
+    """The hedging phrase in the claim's **own sentence**, or an empty string.
+
+    Returns the phrase rather than a boolean so a claim can say *which* word
+    unsettled it: "typically" and "at the discretion of the faculty" send an
+    applicant to different questions.
+
+    The sentence matters, and finding that out cost a false positive. An
+    excerpt is a window of a page, not a sentence, and the first version read
+    the whole window: a deadline claim came back "conditional" because
+    "applicants ... may be asked to provide a credential evaluation" happened
+    to sit beside it on the same page.
+
+    So the hedge counts only in the sentence that also states the value. When
+    the value cannot be located in the excerpt — a date written in words, a
+    parsed structure — this returns nothing and the claim keeps today's
+    status. Missing a hedge leaves the product where it already is; inventing
+    one downgrades a requirement that was never in doubt.
+    """
+    text = (excerpt or "").strip()
+    sentences = [s for s in re.split(r"(?<=[.!?])\s+", text) if s.strip()]
+    forms = _value_forms(value)
+    if not forms:
+        # A boolean or a parsed structure cannot be found in the page's words.
+        # One case is still unambiguous: an excerpt that *is* a single
+        # sentence has only one sentence to be about. "An interview may be
+        # required" is exactly that shape, and it is the shape where hedging
+        # matters most.
+        if len(sentences) == 1:
+            match = HEDGED_WORDING.search(sentences[0])
+            return match.group(0) if match else ""
+        return ""
+    for sentence in sentences:
+        if any(form in sentence for form in forms):
+            match = HEDGED_WORDING.search(sentence)
+            if match:
+                return match.group(0)
+    return ""
+
+
 def registrable_domain(host: str) -> str:
     """The host reduced to its registrable domain (``www.narxoz.kz`` ->
     ``narxoz.kz``; ``narxoz.kz.attacker.example`` -> ``attacker.example``)."""
