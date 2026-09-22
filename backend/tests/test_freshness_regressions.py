@@ -500,6 +500,19 @@ class TestSupersededExcluded:
 #: conflict (Delft's programme page against its admissions page, both stating
 #: the same intake, so a real contradiction). 0 removed.
 #:
+#: Re-captured a fifth time, 2026-09-22, for the owner's decision that a
+#: programme rule beside a university-wide rule is a scope difference rather
+#: than a contradiction. **This drift is not additive and was not waved
+#: through as if it were.** Leaf values: 20247 before, 20247 after. Exactly
+#: **two** leaves changed, both at `claims[*].status`, both CONFLICTING →
+#: VERIFIED_CURRENT. No value, verdict, bucket or check moved.
+#:
+#: The two are the textbook case: Delft's programme page publishes IELTS 6.5
+#: and its university admissions page 6.0. Both were poisoned, so the product
+#: told the applicant nothing at all about Delft's English requirement. The
+#: programme page's 6.5 is now preferred and usable, and the 6.0 is kept and
+#: still shown beside it.
+#:
 #: Re-captured a fourth time for plan V2-30, and proved additive on this tree
 #: rather than on the one the change was written against: the pre-change dump
 #: hashed to bf20e437…, exactly the constant it replaced, which confirms the
@@ -530,7 +543,7 @@ class TestSupersededExcluded:
 #: changed). That is the whole of the intended change — a claim now records
 #: what its page stated about who it covers — and it is the only reason this
 #: constant has a second value. Anything else that moves it is a regression.
-GOLDEN_DEMO_SHA256 = "21da148990e12dcb61128acc9eabaa7dcc58d3f668ffb4fb3d1d56ea58f31d37"
+GOLDEN_DEMO_SHA256 = "790ac509c13c90ca21bd8cdb4c4880f64e834041f5174cd1ad512c7534c26f09"
 
 #: The golden was captured with the real clock on 2026-09-07, and the baseline
 #: payload embeds that date: ``requirement_checks[*].applicant_value`` and

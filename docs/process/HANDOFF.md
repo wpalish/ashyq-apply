@@ -60,6 +60,30 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**Owner decision 4 of 6: a programme rule stays usable beside a university-wide one (`<HASH21>`).**
+The one case where this code knowingly disagreed with the phase guide, and the comment in
+`conflicts.py` said so. Both claims were stamped `CONFLICTING`, so neither could support an answer.
+
+The code change is one line — `MORE_SPECIFIC_SOURCE` leaves the set that poisons claims — because the
+rest was already right: `_first` sorts by source specificity, so "the specific one is preferred for
+assessment" is exactly what leaving them live means, and `preferred_claim_id` already named the
+programme page. The disagreement is still recorded and still shown; it simply stops silencing both
+sides.
+
+**The demo drift is not additive, and was not waved through as if it were.** 20247 leaf values before,
+20247 after; **exactly two changed**, both `claims[*].status`, both `CONFLICTING` →
+`VERIFIED_CURRENT`. No value, verdict, bucket or check moved.
+
+**And the two are the textbook case.** Delft's programme page publishes IELTS **6.5**; its university
+admissions page publishes **6.0**. Both were poisoned — so the product told the applicant *nothing at
+all* about Delft's English requirement, for a disagreement the guide says is not one. The 6.5 is now
+preferred and usable, the 6.0 kept and shown beside it.
+
+Two tests were rewritten with the decision rather than around it, including
+`test_two_official_pages_disagreeing_produce_one_conflict`, which had encoded the opposite deliberately.
+A third was added: `_first` must actually return the programme page's value, because "preferred" that
+nothing acts on is a label, not a behaviour.
+
 **Owner decision 3 of 6: two qualifications are two scopes, not a clash (`65b494e`).**
 `_KIND_BY_DIMENSION` had entries for population, residency, intake, academic year and degree, and none
 for `qualification`, so "the Abitur route requires 6.5" beside "the attestat route requires 7.0" fell

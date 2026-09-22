@@ -29,7 +29,10 @@ class TestConflictDetection:
         )
         assert len(conflicts) == 1
         assert set(conflicts[0].values) == {6.5, 6.0}
-        assert all(c.status is ClaimStatus.CONFLICTING for c in updated)
+        # A programme page beside a university-wide page is a scope
+        # difference, not a contradiction, so neither claim is poisoned. The
+        # owner settled this on 2026-09-22; see TestAGeneralRuleBesideASpecificOne.
+        assert not any(c.status is ClaimStatus.CONFLICTING for c in updated)
 
     def test_the_more_specific_source_is_marked_preferred_but_not_chosen(self):
         conflicts, _ = find_conflicts(
@@ -317,9 +320,12 @@ class TestAGeneralRuleBesideASpecificOne:
         )
         assert conflicts[0].kind is ConflictKind.DIFFERENT_POPULATION
 
-    def test_the_claims_keep_today_s_status_until_the_owner_decides(self):
-        """Deliberate: the guide would have the specific rule stay usable, and
-        an existing contract test says otherwise. Naming lands first."""
+    def test_both_rules_stay_usable(self):
+        """Settled by the owner on 2026-09-22, in the phase guide's own words:
+        both may be true, the specific one is preferred for assessment and the
+        broader one is kept. Stamping both CONFLICTING left the applicant with
+        neither value.
+        """
         _, updated = find_conflicts(
             [
                 C("ielts_min_overall", 7.0, specificity="program_intake", url="https://u/prog"),
@@ -331,4 +337,43 @@ class TestAGeneralRuleBesideASpecificOne:
                 ),
             ]
         )
-        assert all(c.status is ClaimStatus.CONFLICTING for c in updated)
+        assert not any(c.status is ClaimStatus.CONFLICTING for c in updated)
+
+    def test_the_disagreement_is_still_recorded_and_shown(self):
+        """Not poisoning the claims is not hiding the difference."""
+        conflicts, _ = find_conflicts(
+            [
+                C("ielts_min_overall", 7.0, specificity="program_intake", url="https://u/prog"),
+                C(
+                    "ielts_min_overall",
+                    6.5,
+                    specificity="university_admissions",
+                    url="https://u/adm",
+                ),
+            ]
+        )
+        assert len(conflicts) == 1
+        assert set(conflicts[0].values) == {7.0, 6.5}
+        assert conflicts[0].preferred_claim_id == "https://u/prog"
+
+    def test_the_assessment_follows_the_more_specific_page(self):
+        """`_first` sorts by source specificity, so "prefer the specific one"
+        is what leaving them live already means."""
+        from app.domain.eligibility import _first
+        from app.domain.enums import ClaimType
+
+        _, updated = find_conflicts(
+            [
+                C(
+                    "ielts_min_overall",
+                    6.5,
+                    specificity="university_admissions",
+                    url="https://u/adm",
+                ),
+                C("ielts_min_overall", 7.0, specificity="program_intake", url="https://u/prog"),
+            ]
+        )
+        chosen = _first(updated, ClaimType.IELTS_MIN_OVERALL)
+        assert chosen is not None
+        assert chosen.source_url == "https://u/prog"
+        assert chosen.normalized_value == 7.0

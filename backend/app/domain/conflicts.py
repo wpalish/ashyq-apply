@@ -160,19 +160,19 @@ def find_conflicts(
         )
 
         kind = classify_conflict(pool)
-        if kind in (ConflictKind.TRUE_CONFLICT, ConflictKind.MORE_SPECIFIC_SOURCE):
+        if kind is ConflictKind.TRUE_CONFLICT:
             # A real contradiction may poison the claims. Two rules for two
             # different *populations* may not: they are both correct, and
             # stamping them CONFLICTING would stop either from ever being used.
             #
-            # MORE_SPECIFIC_SOURCE keeps today's stamping on purpose, and it
-            # is the one case where this code disagrees with the phase guide.
-            # The guide says a programme rule beside a university-wide rule is
-            # not a contradiction and the specific one should be preferred for
-            # assessment; `test_two_official_pages_disagreeing_produce_one_conflict`
-            # encodes the opposite. Changing it changes what the product tells
-            # an applicant, so the classification lands now, the behaviour
-            # waits for the owner (HANDOFF §7).
+            # A programme rule beside a university-wide rule is the same case,
+            # settled by the owner on 2026-09-22 in the phase guide's own
+            # words: both may be true, the specific one is preferred for
+            # assessment and the broader one is kept. Stamping both
+            # CONFLICTING left the applicant with neither — and `_first`
+            # already sorts by source specificity, so leaving them live is
+            # exactly what "prefer the specific one" means here. The
+            # disagreement is still recorded and still shown.
             for c in pool:
                 conflicted.add(id(c))
 
