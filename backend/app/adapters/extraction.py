@@ -260,7 +260,12 @@ _IELTS_OVERALL = re.compile(
     re.IGNORECASE,
 )
 _IELTS_SUB = re.compile(
-    r"(?:no\s+(?:individual\s+)?(?:sub-?)?(?:score|band|component|section)\s+"
+    # "part" is the certified corpus' own word for UBC: "no part less than
+    # 6.0". Missing it dropped the per-section minimum while keeping the
+    # overall band — which the phase guide calls the single most common error
+    # in this work, because 7.0 overall with 6.0 writing fails a 6.5 per-band
+    # rule and the applicant is told they qualify.
+    r"(?:no\s+(?:individual\s+)?(?:sub-?)?(?:score|band|component|section|part)\s+"
     r"(?:below|less\s+than|lower\s+than)|minimum\s+(?:of\s+)?(\d(?:\.\d)?)\s+in\s+each)"
     r"\s*(\d(?:\.\d)?)?",
     re.IGNORECASE,
@@ -276,7 +281,17 @@ _SAT_OPTIONAL = re.compile(
     r"(test[- ]optional|test[- ]blind|SAT[^.\n]{0,40}(?:not required|optional))", re.IGNORECASE
 )
 _SAT_MIN = re.compile(
-    r"SAT[^.\n]{0,60}?(?:minimum|at least|score of)[^.\n]{0,20}?(\d{3,4})", re.IGNORECASE
+    r"SAT[^.\n]{0,60}?(?:minimum|at least|score of)[^.\n]{0,20}?(\d{3,4})"
+    # The number first: "1250 for redesigned SAT" is the certified corpus'
+    # wording for NTU, and read as nothing at all. _IELTS_OVERALL already
+    # carries a reversed alternative for the same reason. A preposition is
+    # required between the two, because a bare "number ... SAT" window read
+    # "Room 1250 is where the SAT is sat" and "1250 EUR with their SAT
+    # booking" as scores — the forward form has always demanded a qualifier
+    # and the reverse must demand one too.
+    r"|(\d{3,4})\s*(?:or\s+(?:above|higher|better)\s*)?"
+    r"(?:for|on|in)\s+(?:the\s+)?(?:redesigned\s+|new\s+|old\s+)?SAT\b",
+    re.IGNORECASE,
 )
 _SUPERSCORE = re.compile(r"(superscor\w+)", re.IGNORECASE)
 #: A currency marker must sit directly beside the number. Bare digits are never
@@ -480,12 +495,15 @@ def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
         )
     else:
         sat_min = _SAT_MIN.search(text)
-        if sat_min and 400 <= int(sat_min.group(1)) <= 1600:
+        # Either alternative may carry the number: "SAT ... 1250" or
+        # "1250 ... SAT". Whichever group matched is the score.
+        score = next((g for g in (sat_min.groups() if sat_min else ()) if g), None)
+        if sat_min and score and 400 <= int(score) <= 1600:
             _keep(
                 found,
                 builder.add(
                     ClaimType.SAT_MIN_TOTAL,
-                    int(sat_min.group(1)),
+                    int(score),
                     excerpt_around(text, sat_min.start(), sat_min.end()),
                 ),
             )

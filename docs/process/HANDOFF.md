@@ -60,6 +60,35 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**EXTRA-11: two extractor gaps found by testing against the certified corpus' own words
+(`<HASH16>`).** No live run needed: every certified excerpt is text a human confirmed sits on an
+official page, so an extractor that cannot read the excerpt cannot read the page.
+
+- **"no `part` less than 6.0"** — UBC's certified wording. `_IELTS_SUB` knew `score|band|component|
+  section` and not `part`, so the overall band was kept and the per-section floor **silently dropped**.
+  The guide calls that "the single most common error in this work": 7.0 overall with 6.0 writing fails
+  a 6.5 per-band rule, and the applicant is told they qualify.
+- **"1250 for redesigned SAT"** — NTU's certified wording, read as **nothing**. `_SAT_MIN` required
+  "SAT" before the number; `_IELTS_OVERALL` has carried a reversed alternative for years and SAT had
+  none.
+
+**My first reversed SAT pattern was too loose and I caught it before shipping.** A bare "number within
+30 characters of SAT" read *"Room 1250 is where the SAT is sat"* and *"1250 EUR with their SAT
+booking"* as scores. The forward form has always demanded a qualifier; the reverse now demands a
+preposition, and four adversarial sentences are pinned as tests.
+
+**What I did not do, because it is a contract gap rather than a pattern gap:** NTU's certified value
+for `english_evidence.ielts.minimum` is a **per-section map**, `{"overall": 6, "writing": 6,
+"speaking": 6}`, and `ielts_min_subscore` holds a single number. Collapsing three named sections into
+one floor would be converting a value silently. §7 has the question.
+
+**A correction to my own earlier framing, from reading all 74 certified excerpts.** I told the owner
+the programme-identity decision "concerns one university". That understated it: **`programme.exists` is
+11 of the 74 facts, the single most common key in the corpus.** It binds on two today only because
+nine cases produce nothing at all; it binds on all eleven the moment extraction works. The corpus is
+dominated by identity and document facts, not by numeric thresholds — which also means even perfect
+test-score patterns would move `claim_recall` by only a few points.
+
 **EXTRA-10: the oracle — read every certified fact from its own source page (`6bf098c`).**
 `evaluation/research/oracle.py` takes the **74 certified labels that carry a source URL and a
 human-reviewed excerpt**, fetches those pages **directly with no discovery**, runs the real classifier
@@ -1098,6 +1127,31 @@ the search probe; offline tests drive it through `fixture://` pages so CI needs 
 First use, deliberately: measure what EXTRA-9 actually bought. It is the first change aimed at the zero
 itself, and "the demo golden did not move" is not evidence either way — the demo cannot exhibit the
 failure.
+
+Write-ahead (claude-opus-5, 2026-09-22, **EXTRA-11**): **test the extractors against the certified
+corpus' own wording.** The oracle needs a live run; this needs none. Every certified excerpt is a
+sentence a human confirmed appears on an official page, so an extractor that cannot read the excerpt
+certainly cannot read the page. Three misses found by running them:
+
+| source | the corpus' own words | produced |
+|---|---|---|
+| UBC | "no **part** less than 6.0" | overall only — the per-section minimum is dropped |
+| NTU | "Overall 6, Writing 6,speaking 6" | overall only — both named sections dropped |
+| NTU | "1250 for redesigned SAT" | **nothing** |
+
+Two are fixable now and one is not:
+- `_IELTS_SUB` knows `score|band|component|section` and not `part`. UBC's wording is the corpus';
+  adding it is a vocabulary gap, not a design change.
+- `_SAT_MIN` requires "SAT" **before** the number. `_IELTS_OVERALL` already has a reversed
+  alternative for exactly this; SAT has none, so "1250 for redesigned SAT" reads as nothing.
+- The third is a **contract gap, not a pattern gap**, and I will not paper over it: the certified value
+  is a per-section map, `{"overall": 6, "writing": 6, "speaking": 6}`, and `ielts_min_subscore` holds a
+  single number. Collapsing three named sections into one floor would be converting a value silently,
+  which this repository forbids. Recorded in §7 for the owner.
+
+Why this matters more than its size: the phase guide calls checking only the overall band **"the single
+most common error in this work"** — an applicant with 7.0 overall and 6.0 writing fails a 6.5 per-band
+requirement. On UBC we commit exactly that error today.
 
 **STATE, 2026-09-22 morning.** Phase 2 is complete against its exit criteria (see
 `docs/process/PHASE_2_ACCEPTANCE.md`). Phase 3 has §3, §4, §6 and §7 done; §1's visible half is done
@@ -2642,6 +2696,12 @@ aliases those name one programme. Changing the comparison would change what the 
 I built the evidence and left the number alone: `scope_report` prints such cases separately, marked
 "reported, not counted". Two ways to settle it, both yours: adjudicate the label (write the full
 official title into the corpus, re-signed), or accept identity comparison as the scorer's rule.
+
+**Owner decision, surfaced by EXTRA-11: a per-section English minimum has nowhere to live.** NTU's
+certified value is `{"overall": 6, "writing": 6, "speaking": 6}`; `ielts_min_subscore` holds one
+number. Collapsing them to a floor converts a value silently, which this repository forbids, so the
+named sections are currently dropped. Fixing it means either a claim type per section or a mapped
+value — both change a stored contract, so it waits for you.
 
 **Owner decision, surfaced by V2-30: should two pages scoped to different qualifications be a
 conflict?** They classify as `TRUE_CONFLICT` today, because `_KIND_BY_DIMENSION` has no
