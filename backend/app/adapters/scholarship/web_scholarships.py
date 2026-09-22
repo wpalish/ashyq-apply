@@ -38,6 +38,7 @@ from app.domain.enums import (
     ScholarshipType,
     SourceSpecificity,
 )
+from app.domain.funding import roll_up_availability
 from app.schemas.money import Money
 from app.schemas.result import Coverage, CoverageBreakdown, Scholarship
 
@@ -82,6 +83,23 @@ _TYPE_HINTS = (
     ("excellence", ScholarshipType.COMPETITIVE),
     ("talent", ScholarshipType.COMPETITIVE),
 )
+
+
+#: A page saying the award is not on offer. `award_current_for_intake` and
+#: `currently_available` were dead fields — declared, never set, and ignored by
+#: the roll-up — so an award a page calls discontinued could still be reported
+#: as available for the intake.
+_AWARD_WITHDRAWN = re.compile(
+    r"\b(discontinued|withdrawn|no longer (?:offered|awarded|available)|suspended"
+    r"|not (?:being )?(?:offered|awarded)|paused|on hold)\b",
+    re.IGNORECASE,
+)
+#: There is deliberately **no** positive counterpart. I wrote one — "is/are
+#: offered", "applications are open" — and the demo caught it reading Delft's
+#: "30 awards are offered each year" as a statement about *this* cycle. A
+#: sentence about how many awards exist is not evidence that the scheme is
+#: running now, and `available_this_intake` needs only `!= no` from this
+#: dimension, so the positive branch bought nothing and could be wrong.
 
 
 #: "You must hold an offer" in the shapes award pages actually write it.
@@ -446,6 +464,15 @@ class WebScholarshipAdapter:
                 _excerpt(text, score.start()),
             )
 
+        # Is the award on offer at all? Read here, where the page and the
+        # builder are, and before the roll-up that consumes it: a withdrawn
+        # award needs no eligibility assessment.
+        withdrawn = _line_matching(text, _AWARD_WITHDRAWN)
+        if withdrawn:
+            sch.currently_available = "no"
+            sch.award_current_for_intake = "no"
+            builder.add(ClaimType.SCHOLARSHIP_EXISTS, False, withdrawn, confidence=0.7)
+
         self._derive_availability(sch)
         sch.claim_ids = [c.source_url for c in builder.claims]
         return sch, builder.claims
@@ -475,12 +502,12 @@ class WebScholarshipAdapter:
         else:
             sch.applicant_eligible = "unknown"
 
-        if sch.applicant_eligible == "no" or sch.application_window_open == "no":
-            sch.available_this_intake = "no"
-        elif sch.applicant_eligible == "yes" and sch.application_window_open == "yes":
-            sch.available_this_intake = "yes"
-        else:
-            sch.available_this_intake = "unknown"
+        sch.available_this_intake = roll_up_availability(
+            opportunity_exists=sch.opportunity_exists,
+            applicant_eligible=sch.applicant_eligible,
+            application_window_open=sch.application_window_open,
+            award_current_for_intake=sch.award_current_for_intake,
+        )
 
 
 #: A link worth following from a funding index page.
@@ -607,6 +634,18 @@ def _first_sentence_with(text: str, needle: str) -> str:
     end = flat.find(".", index + len(needle))
     end = len(flat) if end < 0 else end + 1
     return flat[start:end].strip()[:400]
+
+
+def _line_matching(text: str, pattern: re.Pattern[str]) -> str:
+    """The first line a pattern matches, as the evidence for a claim.
+
+    Sibling of ``_line_with``: a claim must quote the page, and a regex-shaped
+    question needs a regex-shaped lookup rather than a second substring.
+    """
+    for line in text.splitlines():
+        if pattern.search(line):
+            return line.strip()[:300]
+    return ""
 
 
 def _line_with(text: str, needle: str) -> str:

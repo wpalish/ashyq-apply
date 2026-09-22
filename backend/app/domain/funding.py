@@ -20,7 +20,7 @@ from app.domain.enums import (
     ScholarshipType,
 )
 from app.schemas.profile import FundingNeeds
-from app.schemas.result import CoverageBreakdown, Scholarship
+from app.schemas.result import CoverageBreakdown, Scholarship, Tristate
 
 #: Marketing phrases that must never, alone, drive a classification.
 MARKETING_PHRASES = (
@@ -387,3 +387,50 @@ def award_meets_shape(scholarship: Scholarship, funding: FundingNeeds) -> tuple[
             "be submitted, which is what a need-based application requires."
         )
     return True, ""
+
+
+# --- availability, rolled up deterministically -------------------------------
+# Phase 3 §7 states the rule and requires it to be deterministic. The version
+# that lived inside the scholarship adapter was neither complete nor findable:
+# it ignored `opportunity_exists` and `award_current_for_intake` entirely, so
+# an award a page says is **not offered this cycle** could still roll up to
+# "available", and the two fields were dead weight nothing ever set.
+
+
+def roll_up_availability(
+    *,
+    opportunity_exists: bool,
+    applicant_eligible: Tristate,
+    application_window_open: Tristate,
+    award_current_for_intake: Tristate,
+) -> Tristate:
+    """Whether this award is available for the intake being researched.
+
+    The guide's rule, in its own order:
+
+    * **no** when anything proves it closed — no award page at all, a stated
+      ineligibility, a passed deadline, or a page saying the award is not
+      offered for this cycle.
+    * **yes** only when the positives are all established *and* nothing
+      disproves the cycle. Note the asymmetry the guide asks for:
+      ``award_current_for_intake`` need only be *not no*, because most pages
+      never state a cycle and demanding one would make every award unknown.
+    * **unknown** otherwise, and UNKNOWN propagates. It is never rounded up
+      for convenience — an award reported as available that turns out not to
+      be costs an applicant a plan, not a click.
+    """
+    if not opportunity_exists:
+        return "no"
+    if (
+        applicant_eligible == "no"
+        or application_window_open == "no"
+        or award_current_for_intake == "no"
+    ):
+        return "no"
+    if (
+        applicant_eligible == "yes"
+        and application_window_open == "yes"
+        and award_current_for_intake != "no"
+    ):
+        return "yes"
+    return "unknown"
