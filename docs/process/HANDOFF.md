@@ -60,6 +60,33 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**EXTRA-12: the classifier called the right programme page a catalogue (`<HASH17>`).** The per-page
+diagnostic built this morning named the cause of five of the ten zero-claim cases, and it is none of
+the three I had been arguing about. **Groningen's rejected page is the certified corpus' own source
+URL** — the pipeline found it, fetched it, and `classify_page` returned `program_catalog`, which
+`ACCEPTS["requirements"]` refuses. Delft's and Toronto's programme pages the same; Vienna's admission
+procedure page came back `news`; four KAIST admissions pages came back `unknown`.
+
+The cause was one line's ordering: `program_links >= 5` decided **before** the page's own identity was
+read, so a page headed "BSc Computing Science" that links to nine sibling programmes — which every real
+programme page does — was a catalogue before anyone looked at its heading. Proved both ways on the same
+fixture: **before, `program_catalog`, requirements refused; after, `program_detail`, requirements
+allowed.**
+
+The fix is not a new idea — it is the rule the **funding branch of the same module already uses**: a
+page with links out is an index when it has *"no award identity of its own"*, and one that names its
+award is not. A plural or catalogue-shaped heading still settles it first, because that is the page
+saying what it is; link counting now only speaks when the page names no programme.
+
+**Also measured, run 35754594232 (`851b8b8`, EXTRA-9):** `toronto` produced **its first claim ever**
+(0 → 1) and `ntu` went 12 → **8** — exactly the four phantom "FAQs on scholarships" claims EXTRA-7
+removed, confirmed to the unit. The diagnostic now answers for seven cases of ten, against five before.
+
+**A correction I owe the record:** I twice dismissed capability gating as "not the problem", on the
+grounds that `no-pattern-match` proved the extractor had run. That reasoning was sound for the pages it
+covered and said nothing about the pages the classifier rejected before any extractor saw them — which
+turned out to be the larger group.
+
 **EXTRA-11: two extractor gaps found by testing against the certified corpus' own words
 (`8532b9f`).** No live run needed: every certified excerpt is text a human confirmed sits on an
 official page, so an extractor that cannot read the excerpt cannot read the page.
@@ -1152,6 +1179,71 @@ Two are fixable now and one is not:
 Why this matters more than its size: the phase guide calls checking only the overall band **"the single
 most common error in this work"** — an applicant with 7.0 overall and 6.0 writing fails a 6.5 per-band
 requirement. On UBC we commit exactly that error today.
+
+Write-ahead (claude-opus-5, 2026-09-22, **EXTRA-12**): **the classifier calls the right programme page
+a catalogue, and the allow-list then refuses to read it.** Run 35754594232's per-page records, the
+diagnostic built this morning, name the cause for five of the ten cases:
+
+| case | page | classified |
+|---|---|---|
+| groningen | `rug.nl/bachelors/computing-science` | `program_catalog` |
+| delft | `tudelft.nl/…/bachelors/cse` | `program_catalog` |
+| toronto | `utm.utoronto.ca/…/computer-science` | `program_catalog` |
+| vienna | `studieren.univie.ac.at/en/admission-procedure` | `news` |
+| kaist | four admissions pages | `unknown` |
+
+**Groningen's is the certified corpus' own URL** — the page its human reviewer read. The pipeline finds
+it, fetches it, and the classifier rejects it as a catalogue, so `ACCEPTS["requirements"]` never lets an
+extractor near it. Not discovery, not the patterns, not representation: **capability gating on a
+misclassification**. I dismissed this cause twice.
+
+The line responsible:
+
+    if _PLURAL_PROGRAM_HEADING.match(identity) or _CATALOG.search(low_head) or program_links >= 5:
+        return PROGRAM_CATALOG
+
+Link counting runs **before** the page's own identity is read, so a page headed "BSc Computing Science"
+that links to five other programmes — every real programme page does — is a catalogue before anyone
+looks at its heading.
+
+**The funding branch of the same file already learned this.** It calls a page an index on a listing
+heading, or on several award links, or on links out *"with no award identity of its own"*. The
+programme branch never got the third clause.
+
+Scope: a heading that is plural or catalogue-shaped still settles it, because that is the page saying
+what it is. Otherwise link count may only decide when the page has **no single programme name of its
+own** — the funding branch's rule, applied to programmes. Tests both ways, and the golden demo will
+say whether the demo's catalogues move.
+
+Write-ahead (claude-opus-5, 2026-09-22, **the six owner decisions**): **Диас approved all six §7
+recommendations on 2026-09-22** ("делай по рекомендациям"). They are taken in order of measured value,
+one step each, because four of them change a stored contract:
+
+1. **The scorer compares programme identity, not strings.** `scope_matches` uses `==` on every
+   dimension; the `programme` dimension now asks `ontology.titles_name_same_programme`, which already
+   exists and returns a `Verdict`. Only `YES` is a match — `UNKNOWN` stays a non-match, because a
+   benchmark that scores "we could not tell" as a hit measures nothing. This is the largest single
+   key in the corpus (`programme.exists`, 11 of 74).
+2. **A claim type per English section**, so NTU's certified `{"overall": 6, "writing": 6,
+   "speaking": 6}` has somewhere to live. Collapsing to a floor stays forbidden.
+3. **`DIFFERENT_QUALIFICATION` in `ConflictKind`** — "the Abitur route requires X" and "the attestat
+   route requires Y" are two scopes, not a contradiction.
+4. **A programme-specific rule stays usable when a university-wide one disagrees**, the broader one
+   kept rather than deleted, as the phase guide says. Today both are stamped `CONFLICTING`, so neither
+   can support a decision, and `test_two_official_pages_disagreeing_produce_one_conflict` encodes that
+   deliberately — it gets rewritten with the behaviour, not around it.
+5. **The catalogue walker uses the same predicate as everything else**, so a BSc Mathematics stops
+   surviving for a computer-science applicant. This rewrites part of the T29 contract test, with the
+   owner's word for it.
+6. **An unchanged claim is no longer superseded**, only its `accessed_at` refreshed, so a re-render
+   stops writing a generation of history that repeats the live rows. This contradicts the T32
+   supersession-per-URL contract, again with the owner's word.
+
+**Two §7 items are deliberately NOT taken, and this is not an oversight.** Whether "Mathematical and
+Computer Sciences" is equivalent to "Computer Science", and which KAIST page belongs in the
+`program_page` slot, are **assertions about facts**, not choices about design. Inventing an equivalence
+is the one thing this repository forbids outright, and it is why V2-31 waits for the owner's sources.
+They stay his.
 
 **STATE, 2026-09-22 morning.** Phase 2 is complete against its exit criteria (see
 `docs/process/PHASE_2_ACCEPTANCE.md`). Phase 3 has §3, §4, §6 and §7 done; §1's visible half is done

@@ -474,7 +474,9 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
 
     # --- programme family --------------------------------------------------
     program_links = _program_link_count(soup) if soup else 0
-    if _PLURAL_PROGRAM_HEADING.match(identity) or _CATALOG.search(low_head) or program_links >= 5:
+    # A heading that is plural or catalogue-shaped settles it: that is the page
+    # saying what it is.
+    if _PLURAL_PROGRAM_HEADING.match(identity) or _CATALOG.search(low_head):
         return PageClassification(
             PageType.PROGRAM_CATALOG,
             0.75,
@@ -487,6 +489,22 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
     # first classified BSc Computer Science and Engineering as a general
     # admissions page.
     subject = _program_name(identity)
+
+    # Links alone may only decide when the page has no programme identity of
+    # its own. Counting them first made "BSc Computing Science" a catalogue
+    # because it linked to five other programmes — every real programme page
+    # does — and the allow-list then refused every extractor. In live run
+    # 35754594232 that is exactly what happened to Groningen's certified
+    # source page, and to Delft's and Toronto's. The funding branch above
+    # already carries this rule: a page with links out and "no award identity
+    # of its own" is an index, and one that names its award is not.
+    if subject is None and program_links >= 5:
+        return PageClassification(
+            PageType.PROGRAM_CATALOG,
+            0.7,
+            [f"{program_links} programme links", "no programme identity of its own"],
+            title,
+        )
     degree = _degree_level(f"{identity} {body[:2500]}")
     language = _language(body)
     year = _academic_year(body)
