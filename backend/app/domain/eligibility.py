@@ -10,6 +10,7 @@ Two asymmetries are deliberate:
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from dataclasses import dataclass, field
 from datetime import UTC, date, datetime
 
@@ -419,6 +420,32 @@ def evaluate_program(
     outcome = _summarise(checks)
     outcome.out_of_scope = out_of_scope_claims(claims, requested)
     return outcome
+
+
+def programme_is_test_optional(claims: list[Claim]) -> bool:
+    """Whether the programme publishes a test-optional or test-blind policy."""
+    policy = _first(claims, ClaimType.SAT_POLICY)
+    text = str(policy.normalized_value).lower() if policy else ""
+    return "optional" in text or "blind" in text or "not required" in text
+
+
+def awards_needing_a_test_the_programme_made_optional(
+    claims: list[Claim], awards: Iterable[tuple[str, dict[str, float]]]
+) -> list[str]:
+    """Awards that require a test the programme itself says is optional.
+
+    The phase guide states the trap outright: do not treat "test optional" as
+    "the test is irrelevant" when a scholarship separately requires it. An
+    applicant who reads the requirements tab, sees test-optional and does not
+    sit the SAT can lose the funding rather than the offer — and nothing in
+    the product told them the two pages disagree about their year.
+
+    Returns the award names, so the caller can name them; an empty list is
+    the common and correct answer.
+    """
+    if not programme_is_test_optional(claims):
+        return []
+    return [name for name, minimums in awards if minimums.get("sat")]
 
 
 def _english_waiver(claims: list[Claim]) -> Claim | None:

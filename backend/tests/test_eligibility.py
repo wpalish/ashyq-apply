@@ -437,3 +437,56 @@ class TestAPublishedEnglishWaiver:
         )
         assert "IELTS overall" in outcome.hard_filter_failures
         assert not any(c.requirement == "English test waiver" for c in outcome.checks)
+
+
+class TestTestOptionalIsNotTestIrrelevant:
+    """Phase 3 §4 — the trap the guide names outright.
+
+    An applicant reads "test-optional" on the admissions page, skips the SAT,
+    and loses the scholarship rather than the offer. The two pages are
+    published by different offices and neither mentions the other.
+    """
+
+    def _claims(self, policy: str):
+        return [C("sat_policy", policy, intake="fall 2027")]
+
+    def test_an_award_requiring_a_test_the_programme_made_optional_is_named(self):
+        from app.domain.eligibility import awards_needing_a_test_the_programme_made_optional
+
+        clashing = awards_needing_a_test_the_programme_made_optional(
+            self._claims("test-optional"),
+            [("Merit Award", {"sat": 1400.0}), ("Need Grant", {})],
+        )
+        assert clashing == ["Merit Award"]
+
+    def test_nothing_is_named_when_the_programme_requires_the_test_anyway(self):
+        from app.domain.eligibility import awards_needing_a_test_the_programme_made_optional
+
+        assert (
+            awards_needing_a_test_the_programme_made_optional(
+                self._claims("SAT required for all applicants"),
+                [("Merit Award", {"sat": 1400.0})],
+            )
+            == []
+        )
+
+    def test_nothing_is_named_when_no_award_asks_for_the_test(self):
+        from app.domain.eligibility import awards_needing_a_test_the_programme_made_optional
+
+        assert (
+            awards_needing_a_test_the_programme_made_optional(
+                self._claims("test-blind"), [("Merit Award", {"ielts": 7.0})]
+            )
+            == []
+        )
+
+    def test_a_programme_with_no_published_policy_names_nothing(self):
+        """Silence about a policy is not a test-optional policy."""
+        from app.domain.eligibility import awards_needing_a_test_the_programme_made_optional
+
+        assert (
+            awards_needing_a_test_the_programme_made_optional(
+                [], [("Merit Award", {"sat": 1400.0})]
+            )
+            == []
+        )

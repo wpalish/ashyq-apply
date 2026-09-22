@@ -31,7 +31,10 @@ from app.domain.citizenship import CitizenshipMatch, match_citizenship
 from app.domain.conflicts import enforce_source_hierarchy, find_conflicts
 from app.domain.costs import compute_funding_gap, total_cost
 from app.domain.dates import parse_published_date
-from app.domain.eligibility import evaluate_program
+from app.domain.eligibility import (
+    awards_needing_a_test_the_programme_made_optional,
+    evaluate_program,
+)
 from app.domain.enums import (
     ClaimStatus,
     ClaimType,
@@ -889,6 +892,34 @@ class ResearchRunner:
                             hard=True,
                         )
                     )
+
+            # "Test optional" on the requirements page does not mean the test
+            # is irrelevant: an award may require it separately, and an
+            # applicant who skips the SAT on the strength of the first page
+            # loses the funding rather than the offer.
+            clashing = awards_needing_a_test_the_programme_made_optional(
+                claims, [(s.name, s.min_test_scores or {}) for s in result.scholarships]
+            )
+            for name in clashing:
+                result.unresolved.append(
+                    UnresolvedQuestion(
+                        topic="sat policy",
+                        question=(
+                            f"{result.program} is published as test-optional, but {name} "
+                            "requires an SAT score. Does the award's requirement still apply "
+                            "to applicants admitted without a test?"
+                        ),
+                        why_it_matters=(
+                            "Skipping the SAT on the strength of the admissions page can cost "
+                            "this award rather than the offer, and the two pages are published "
+                            "by different offices."
+                        ),
+                        university=result.university,
+                        program=result.program,
+                        suggested_contact="scholarships office",
+                        blocking=False,
+                    )
+                )
 
             fit, best, reason = funding_fit_for(result.scholarships)
             result.funding_fit = fit
