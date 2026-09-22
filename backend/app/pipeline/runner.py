@@ -485,7 +485,6 @@ class ResearchRunner:
 
         errors: list[str] = []
         retry: list[str] = []
-        outcomes: list[PageOutcome] = []
         seen_keys: set[str] = set()
 
         for cand in targets:
@@ -532,14 +531,20 @@ class ResearchRunner:
                 ar = await req.verify(cand, prog, self.intake)
                 errors.extend(ar.errors)
                 retry.extend(ar.retry_urls)
-                outcomes.extend(ar.page_outcomes)
+                # Filed as they arrive, not only at the end of the stage. A
+                # live capture showed five of ten cases reporting *no* page
+                # outcomes at all: the run died inside this loop — a budget,
+                # a wall clock — and the whole local list went with it. The
+                # case that dies is exactly the case whose zero needs
+                # explaining, so its diagnosis must already be on the run.
+                self._record_page_outcomes(ar.page_outcomes)
                 self.run.pages_checked += ar.pages_checked
                 self.run.pages_failed += ar.pages_failed
 
                 cb, cr = await cost.fetch(cand)
                 errors.extend(cr.errors)
                 retry.extend(cr.retry_urls)
-                outcomes.extend(cr.page_outcomes)
+                self._record_page_outcomes(cr.page_outcomes)
                 self.run.pages_checked += cr.pages_checked
                 self.run.pages_failed += cr.pages_failed
                 result.costs = cb
@@ -606,7 +611,6 @@ class ResearchRunner:
             self._save()
 
         self._record_diagnostics(errors)
-        self._record_page_outcomes(outcomes)
         self.run.retry_urls = sorted(set(list(self.run.retry_urls or []) + retry))[:200]
         st.finish(
             f"{self.run.programs_verified} programmes checked across "
@@ -1299,6 +1303,29 @@ def _scholarship_eligibility(s, profile: ApplicantProfileIn):
                 "The award is officially open to international students of any nationality.",
             )
         )
+
+    # A faculty or programme restriction the page states is an open question,
+    # never a verdict. The applicant's faculty is not in the profile at all,
+    # and deciding a programme restriction by comparing names is the trap NTU
+    # taught us — "Bachelor of Computing (Hons) in Computer Science" against
+    # "Computer Science". Refusing on a name mismatch would cost a real
+    # applicant real money; passing would recommend an award they cannot have.
+    for label, restrictions in (
+        ("faculty", s.faculty_restrictions),
+        ("programme", s.program_restrictions),
+    ):
+        for restriction in restrictions:
+            checks.append(
+                _check(
+                    f"Scholarship {label} restriction",
+                    restriction,
+                    None,
+                    EligibilityStatus.PENDING,
+                    f"The page limits this award to {restriction}. Whether this programme "
+                    f"belongs to it is not something the page settles — ask the admissions "
+                    f"office before counting on this award.",
+                )
+            )
 
     for test, minimum in (s.min_test_scores or {}).items():
         got = {
