@@ -60,7 +60,7 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
-**Funding and government pages now leave a page outcome (`PENDING`).** Only requirements, costs and
+**Funding and government pages now leave a page outcome (`50f9221`).** Only requirements, costs and
 discovery used to record them, so a funding stage that read pages and found nothing had nothing to
 explain itself with. Scholarship pages now record: fetch-failed, the funding indexes that were read
 (with how many award links were followed), award pages (fetched-ok, or no-pattern-match when no
