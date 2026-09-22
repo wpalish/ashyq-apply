@@ -61,7 +61,7 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
 **Run 35721950650 (`575a431`) says EXTRA-6 was a regression, and EXTRA-5 is blind where it matters
-(`<HASH12>`).** Both findings are about code I shipped this morning, and both were found by reading the
+(`cb43c2a` + `c61bbaa`).** Both findings are about code I shipped this morning, and both were found by reading the
 run rather than the metrics.
 
 **EXTRA-6 is now off by default.** I shipped it saying it "can only shorten the programme list, so
@@ -94,7 +94,7 @@ while its own excerpt is about Singapore citizens, and lands under an `unmapped.
 scorer cannot see it; and four cases show `pages_checked: 59` against a budget of 60 **before**
 verification starts, which would mean discovery, not extraction, is eating the run.
 
-**Plan V2-33: a faculty or programme restriction is recorded, and asked about (`<HASH11>`).** §6
+**Plan V2-33: a faculty or programme restriction is recorded, and asked about (`3bb6a06`).** §6
 decomposes `faculty_restrictions` and `programme_restrictions` separately. `program_restrictions`
 existed as a **declared field nothing ever set** — the fourth of that kind on this branch — and there
 was no faculty field at all, so "open to students in the Faculty of Engineering" was recorded as
