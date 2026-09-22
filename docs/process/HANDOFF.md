@@ -60,7 +60,7 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
-**EXTRA-12: the classifier called the right programme page a catalogue (`<HASH17>`).** The per-page
+**EXTRA-12: the classifier called the right programme page a catalogue (`96feda6`).** The per-page
 diagnostic built this morning named the cause of five of the ten zero-claim cases, and it is none of
 the three I had been arguing about. **Groningen's rejected page is the certified corpus' own source
 URL** — the pipeline found it, fetched it, and `classify_page` returned `program_catalog`, which
