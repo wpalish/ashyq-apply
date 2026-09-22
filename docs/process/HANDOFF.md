@@ -61,7 +61,7 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
 **EXTRA-11: two extractor gaps found by testing against the certified corpus' own words
-(`<HASH16>`).** No live run needed: every certified excerpt is text a human confirmed sits on an
+(`8532b9f`).** No live run needed: every certified excerpt is text a human confirmed sits on an
 official page, so an extractor that cannot read the excerpt cannot read the page.
 
 - **"no `part` less than 6.0"** — UBC's certified wording. `_IELTS_SUB` knew `score|band|component|
