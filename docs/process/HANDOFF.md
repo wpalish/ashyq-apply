@@ -60,6 +60,15 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**Phase 3 §9: a required document records what its page covered (`<HASH2>`).** §9 ends with "store
+source and scope for each required document"; `DocumentItem` stored the source and dropped the scope,
+although the adapter had already read one for the claims from the same page. `DocumentItem.scope` now
+carries it, omitted from the payload when nobody recorded one exactly as `Claim.scope` is, so no stored
+checklist changes shape. One reading, two consumers: the demo's Toronto documents now say they are
+about Fall 2027 / 2026-27, and they still name no programme or university, because the reader refuses
+to write those dimensions. Recording only — refusing a document whose page is about another programme,
+and showing the scope, come after, in that order, as they did for requirements.
+
 **MEASURED 2026-09-22, live, run 35697105238** (branch at `6c55f14`, Exa, 60 fetches / 90 s — the same
 budgets as run 35655438326, so the two are comparable). **The prediction held.** Scope mismatches fell
 **5 → 2**, and the three "read the wrong page" cases (an open day, a "preparing for a bachelor" page, a
@@ -569,6 +578,24 @@ Deliberately **not** done: web search restricted to official domains, and govern
 budget — measuring that trade needs the capture number, not a guess. Nothing here spends a fetch the
 current code did not already spend, except the fallback, which only runs where today's code produces
 nothing at all.
+
+Write-ahead (claude-opus-5, 2026-09-22, **Phase 3 §9**): **a required document says who it is for.**
+§9 ends with "store source and scope for each required document". `DocumentItem` stores the source
+(`source_url`, `claim_ids`) and **no scope** — so a document list read off a general admissions page and
+one read off the programme's own page are indistinguishable on the record, which is the same failure
+Phase 2 fixed for requirements. The adapter already computes the page's scope (it passes one to
+`ClaimBuilder`); the checklist simply drops it.
+
+Scope, exactly:
+- `DocumentItem.scope: ClaimScope | None`, omitted from the payload when None, exactly as `Claim.scope`
+  is, so no stored checklist changes shape;
+- `web_documents` passes the scope it already read to every item it builds from that page;
+- tests: a document from a programme page carries the programme, one from a general admissions page
+  does not invent one, and the field survives a round trip.
+
+Not in this step: acting on it (refusing a document whose page is about another programme) and showing
+it. Recording first, acting second, was the order that worked for requirements, and it is the order the
+phase guide itself uses.
 
 **STATE, 2026-09-22 morning.** Phase 2 is complete against its exit criteria (see
 `docs/process/PHASE_2_ACCEPTANCE.md`). Phase 3 has §3, §4, §6 and §7 done; §1's visible half is done

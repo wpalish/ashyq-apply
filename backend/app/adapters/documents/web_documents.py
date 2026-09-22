@@ -199,6 +199,10 @@ class WebDocumentsAdapter:
             return []
 
         text = html_to_text(res.text)
+        # Read once and given to both: the claims and the checklist rows from
+        # this page describe the same population, and §9 asks the checklist to
+        # store it too.
+        page_scope = read_scope(text, title=html_title(res.text))
         builder = ClaimBuilder(
             source_url=url,
             page_title=html_title(res.text),
@@ -209,7 +213,7 @@ class WebDocumentsAdapter:
             or is_official_domain(url, [candidate.domain]),
             extraction_method="fixture" if url.startswith("fixture://") else "html_rule",
             accessed_at=res.fetched_at,
-            scope=read_scope(text, title=html_title(res.text)),
+            scope=page_scope,
         )
 
         items: list[DocumentItem] = []
@@ -238,6 +242,7 @@ class WebDocumentsAdapter:
                     else None,
                     source_url=url,
                     claim_ids=[url],
+                    scope=page_scope,
                     **flags,
                 )
                 items.append(item)

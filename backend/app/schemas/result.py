@@ -5,8 +5,9 @@ from __future__ import annotations
 from datetime import date, datetime
 from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_serializer
 
+from app.domain.claim_scope import ClaimScope
 from app.domain.enums import (
     AdmissionsFit,
     ApplicationMode,
@@ -272,6 +273,23 @@ class DocumentItem(Base):
     lead_time_days: int | None = None
     source_url: str | None = None
     claim_ids: list[str] = Field(default_factory=list)
+    #: What the page this document was read from said it covered. ``None``
+    #: means nobody recorded a scope — not that the document is universal.
+    #: Phase 3 §9: "store source and scope for each required document".
+    scope: ClaimScope | None = None
+
+    @model_serializer(mode="wrap")
+    def _omit_unrecorded_scope(self, handler):
+        """Leave ``scope`` out when nobody recorded one, as ``Claim`` does.
+
+        A key whose value is "we never looked" invites a reader to treat the
+        absence as a finding, and a checklist stored before this field existed
+        keeps its payload byte-identical.
+        """
+        data = handler(self)
+        if isinstance(data, dict) and data.get("scope") is None:
+            data.pop("scope", None)
+        return data
 
 
 class DocumentChecklist(Base):
