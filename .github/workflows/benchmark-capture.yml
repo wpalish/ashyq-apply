@@ -109,6 +109,20 @@ jobs:
             --out evaluation/research/baseline/metrics.${{ github.run_id }}.json \
             | tee capture-metrics.txt
 
+      - name: Read every certified fact from its own source page
+        # The oracle: fetch each labelled URL directly, with no discovery at
+        # all, and ask whether the extractor can recover the fact. That splits
+        # "never found the page" from "found it and could not read it", which
+        # claim_recall alone has never done. 24 distinct URLs, so it is cheap.
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          .venv/bin/python -m evaluation.research.oracle \
+            --dataset evaluation/research/data/ground_truth.reviewed.json \
+            --live \
+            --cache .cache/oracle \
+            --json oracle.json | tee oracle.txt
+
       - name: Say why each scope mismatch happened
         # The rate alone cannot be acted on: a page that stated the wrong
         # population and a page that stated nothing score identically, and the
@@ -197,4 +211,6 @@ jobs:
             backend/capture.log
             backend/scope-mismatches.json
             backend/scope-mismatches.txt
+            backend/oracle.json
+            backend/oracle.txt
           retention-days: 14

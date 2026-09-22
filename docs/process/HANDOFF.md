@@ -60,6 +60,28 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**EXTRA-10: the oracle — read every certified fact from its own source page (`<HASH15>`).**
+`evaluation/research/oracle.py` takes the **74 certified labels that carry a source URL and a
+human-reviewed excerpt**, fetches those pages **directly with no discovery**, runs the real classifier
+and the real extractors, and files one of four verdicts per fact: `recovered`, `value_missing` (the
+reviewer's words are in our text and no claim came out — the patterns), `text_missing` (the words never
+reached us — representation or dynamic content), `fetch_failed`. Claims are normalised through
+`mapping.normalize_claim`, the scorer's own function, so "recovered" means what a benchmark hit means.
+
+**It costs 24 fetches**, because 74 facts sit on 24 distinct pages — against ~600 for a full capture.
+Wired into the workflow as its own step, `continue-on-error`, so it can never hide the capture.
+
+Two things found while building it, both worth keeping:
+- The corpus itself corroborates the table problem. Groningen's certified deadline excerpt is
+  *"non-EU/EEA students 01 May 2027 01 September 2027"* with the reviewer's note **"Table cells joined
+  with spaces for review"** — the human had to flatten a table by hand to quote it.
+- The excerpt comparison is word-sequence, not substring, for exactly that reason: a reviewer's joining
+  whitespace and a page's non-breaking spaces differ character by character while the words do not.
+- My first table fixture was accidentally *recoverable* — a two-column table flattens to
+  "Overall IELTS (Academic) 6.5", which the existing pattern catches. The test now uses Groningen's real
+  six-column shape, where the header is 39 characters from the value and the pattern's 30-character
+  window cannot reach. A fixture that passes for the wrong reason proves nothing.
+
 **EXTRA-9: the extractor was handed a page with the requirements deleted from it (`43f7d9a`).**
 The first change on this branch aimed at `claim_recall 0/62` itself. An external deep-research review
 proposed a hypothesis I had not listed — representation loss before extraction — and it is right.
@@ -1045,6 +1067,37 @@ Scope:
 
 This is the first change on this branch aimed at `claim_recall 0/62` itself rather than at the
 machinery around it.
+
+Write-ahead (claude-opus-5, 2026-09-22, **EXTRA-10**): **separate "never found the page" from "could
+not read the page", in one run.** `claim_recall 0/62` has never distinguished the two, and every fix so
+far has been aimed at a guess about which it is. The certified corpus already contains the oracle: **73
+labels carry an exact source URL and a verbatim excerpt**, human-reviewed.
+
+`evaluation/research/oracle.py` fetches each certified source URL **directly, with no discovery at
+all**, runs the real classifier and the real extractors on it, and files one verdict per certified
+fact:
+
+| verdict | meaning |
+|---|---|
+| `recovered` | the extractor produced this key with this value |
+| `value_missing` | the page's readable text contains the certified excerpt, and no claim came out |
+| `text_missing` | the certified excerpt is **not in** the readable text at all |
+| `fetch_failed` | the URL could not be read |
+
+That splits the causes cleanly, because fetching the labelled URL removes discovery from the question
+by construction: `text_missing` is representation loss or dynamic content (EXTRA-9's territory, and
+H1), `value_missing` is the patterns (H2), and a high `recovered` count with a still-zero live
+`claim_recall` would prove the problem is navigation (H3).
+
+It speaks the scorer's own language: claims are normalised through `mapping.normalize_claim`, the same
+function the metric uses, so an oracle "recovered" means the same thing a benchmark hit means.
+
+Constraints kept: evaluation-only (production never reads ground truth); live by explicit opt-in, like
+the search probe; offline tests drive it through `fixture://` pages so CI needs no network.
+
+First use, deliberately: measure what EXTRA-9 actually bought. It is the first change aimed at the zero
+itself, and "the demo golden did not move" is not evidence either way — the demo cannot exhibit the
+failure.
 
 **STATE, 2026-09-22 morning.** Phase 2 is complete against its exit criteria (see
 `docs/process/PHASE_2_ACCEPTANCE.md`). Phase 3 has §3, §4, §6 and §7 done; §1's visible half is done
