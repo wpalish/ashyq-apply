@@ -60,6 +60,29 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**Owner decision 2 of 6: a per-section English minimum has somewhere to live (`<HASH19>`).**
+NTU's certified value is a map — `{"overall": 6, "writing": 6, "speaking": 6}` — and the extractor
+produced a single floor, so the named sections were dropped. "Writing 6.5, Reading 6.0" is not the
+statement "no band below 6", and collapsing them would convert a value silently.
+
+**It needed no new claim type, and no stored contract moved.** `eligibility` has read a per-band map
+since it was written (`if isinstance(required, dict)`), and nothing upstream ever produced one — a
+consumer waiting years for a producer. So the change is: the extractor builds the map when the page
+names its sections, and `_band_check` checks every band in it against the bounds a single value has
+always had, rather than stricter ones invented for maps. One bad band condemns the map.
+
+Two things the cases caught:
+- **A decimal point is not a full stop.** My sentence anchor was `[^.\n]*`, which stopped at the 7 of
+  "overall 7.0" and lost every band stated after it. A period now ends the sentence only when a digit
+  does not follow. Same class as the hedging bug in `claim_verifier` — a window is not a sentence.
+- **A section word in the next sentence is not a band.** "IELTS overall 6.5. Writing competitions are
+  held in June 7" yields the overall band and nothing else; the bands must sit in a sentence that names
+  IELTS.
+
+**And my own test was wrong before the code was.** I asserted that `{"writing": 6.0, "speaking": 0.0}`
+must fail, but 0.0 is inside the band range a single value has always been allowed — tightening the
+bounds for maps alone would have been an invented rule. The test now uses 9.5.
+
 **Owner decision 1 of 6: the scorer compares programme identity, not strings (`d4b12d6`).**
 `scope_matches` compared every dimension with `==`, so NTU's "Bachelor of Computing (Hons) in Computer
 Science" scored as a wrong-scope claim against a label reading "Computer Science" — the same programme

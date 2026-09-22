@@ -270,6 +270,23 @@ _IELTS_SUB = re.compile(
     r"\s*(\d(?:\.\d)?)?",
     re.IGNORECASE,
 )
+#: "Overall 6, Writing 6,speaking 6" — NTU's certified wording, where each
+#: section carries its own minimum. The bands are read as a map, because a
+#: single floor cannot say that writing is 6 while reading is 6.5, and
+#: flattening them to the lowest would be converting a value silently.
+#: One sentence that mentions IELTS, so a bare "Writing 6" elsewhere on the
+#: page cannot become a band. A full stop ends the sentence only when it is
+#: not a decimal point: "[^.]" alone stopped at the 7 of "overall 7.0" and
+#: lost every band stated after it.
+_IELTS_SENTENCE = re.compile(
+    r"(?:[^.\n]|\.(?=\d))*\bIELTS\b(?:[^.\n]|\.(?=\d))*",
+    re.IGNORECASE,
+)
+_IELTS_NAMED_BAND = re.compile(
+    r"\b(listening|reading|writing|speaking)\b\s*[:\-–]?\s*(\d(?:\.\d)?)",
+    re.IGNORECASE,
+)
+
 _TOEFL = re.compile(r"TOEFL[^.\n]{0,90}?(\d{2,3})", re.IGNORECASE)
 _DUOLINGO = re.compile(r"Duolingo[^.\n]{0,90}?(\d{2,3})", re.IGNORECASE)
 _GPA = re.compile(
@@ -412,6 +429,25 @@ def _keep(found: list[Claim], claim: Claim | None) -> None:
         found.append(claim)
 
 
+def _named_bands(text: str) -> tuple[int, int, dict[str, float]] | None:
+    """Per-section IELTS minimums, when the page names the sections itself.
+
+    Anchored to a sentence that mentions IELTS: "Writing 6" on its own is a
+    grade, a room number or a column of something else. Returns the span to
+    quote and the bands, or nothing.
+    """
+    for sentence in _IELTS_SENTENCE.finditer(text):
+        body = sentence.group(0)
+        bands = {
+            match.group(1).lower(): float(match.group(2))
+            for match in _IELTS_NAMED_BAND.finditer(body)
+            if 4.0 <= float(match.group(2)) <= 9.0
+        }
+        if bands:
+            return sentence.start(), sentence.end(), bands
+    return None
+
+
 def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
     """Pull admission requirements out of readable page text."""
     found: list[Claim] = []
@@ -435,22 +471,37 @@ def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
         )
         break
 
-    for m in _IELTS_SUB.finditer(text):
-        raw = m.group(1) or m.group(2)
-        if raw is None:
-            continue
-        value = float(raw)
-        if 4.0 <= value <= 9.0:
-            _keep(
-                found,
-                builder.add(
-                    ClaimType.IELTS_MIN_SUBSCORE,
-                    value,
-                    excerpt_around(text, m.start(), m.end()),
-                    section="English language requirements",
-                ),
-            )
-            break
+    # Sections named one by one beat a single floor, because they say more:
+    # "Writing 6, Speaking 6" is not the same statement as "no band below 6".
+    named = _named_bands(text)
+    if named:
+        start, end, bands = named
+        _keep(
+            found,
+            builder.add(
+                ClaimType.IELTS_MIN_SUBSCORE,
+                bands,
+                excerpt_around(text, start, end),
+                section="English language requirements",
+            ),
+        )
+    else:
+        for m in _IELTS_SUB.finditer(text):
+            raw = m.group(1) or m.group(2)
+            if raw is None:
+                continue
+            value = float(raw)
+            if 4.0 <= value <= 9.0:
+                _keep(
+                    found,
+                    builder.add(
+                        ClaimType.IELTS_MIN_SUBSCORE,
+                        value,
+                        excerpt_around(text, m.start(), m.end()),
+                        section="English language requirements",
+                    ),
+                )
+                break
 
     toefl = _TOEFL.search(text)
     if toefl and 40 <= int(toefl.group(1)) <= 120:

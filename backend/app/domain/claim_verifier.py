@@ -138,11 +138,23 @@ _BARE_YEAR: Final[re.Pattern[str]] = re.compile(r"\d{4}")
 
 
 def _band_check(low: float, high: float, step: float | None) -> Callable[[object, date], bool]:
-    def check(value: object, today: date) -> bool:
-        number = cast("float", value)
+    def one(number: float) -> bool:
         if not low <= number <= high:
             return False
         return step is None or abs(number / step - round(number / step)) <= _STEP_TOLERANCE
+
+    def check(value: object, today: date) -> bool:
+        # A per-section minimum arrives as a map — "Writing 6, Speaking 6" is
+        # not the same statement as one floor — and every band in it has to
+        # pass the same range and step check a single value would.
+        if isinstance(value, dict):
+            if not value:
+                return False
+            try:
+                return all(one(float(band)) for band in value.values())
+            except (TypeError, ValueError):
+                return False
+        return one(cast("float", value))
 
     return check
 
