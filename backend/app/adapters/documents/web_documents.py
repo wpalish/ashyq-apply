@@ -88,6 +88,13 @@ _SIZE = re.compile(r"max(?:imum)? (\d{1,3})\s*MB", re.IGNORECASE)
 _FORMAT = re.compile(r"\b(PDF|DOCX?|JPE?G|PNG)\b")
 
 
+#: What a scholarship submission waits for when the award requires an offer.
+#: A phrase rather than an id: the offer letter is issued by the university
+#: after a decision, so it is not one of the checklist's own items and cannot
+#: be pointed at by one.
+_OFFER_LETTER = "admission offer letter"
+
+
 class WebDocumentsAdapter:
     name = "web-documents"
 
@@ -120,6 +127,14 @@ class WebDocumentsAdapter:
                     d.deadline = sch.deadline
                     d.deadline_timezone = sch.deadline_timezone
                     d.name = f"{d.name} — for {sch.name}"
+                    # The guide's own example of a dependency between
+                    # documents: an offer letter before a scholarship
+                    # submission. Recorded only when the award page **said**
+                    # an offer is required — `depends_on` was a declared field
+                    # nothing ever set, and filling it with a guess about
+                    # someone's paperwork order is worse than leaving it empty.
+                    if sch.offer_required == "yes":
+                        d.depends_on = [_OFFER_LETTER]
                 checklist.scholarship_documents.extend(docs)
             if sch.application_mode.value == "nomination":
                 checklist.unresolved.append(
