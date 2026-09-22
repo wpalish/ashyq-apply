@@ -60,7 +60,7 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
-**EXTRA-9: the extractor was handed a page with the requirements deleted from it (`<HASH14>`).**
+**EXTRA-9: the extractor was handed a page with the requirements deleted from it (`43f7d9a`).**
 The first change on this branch aimed at `claim_recall 0/62` itself. An external deep-research review
 proposed a hypothesis I had not listed — representation loss before extraction — and it is right.
 Verified in code, then demonstrated on a realistically-shaped page:
