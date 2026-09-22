@@ -60,7 +60,7 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
-**EXTRA-10: the oracle — read every certified fact from its own source page (`<HASH15>`).**
+**EXTRA-10: the oracle — read every certified fact from its own source page (`6bf098c`).**
 `evaluation/research/oracle.py` takes the **74 certified labels that carry a source URL and a
 human-reviewed excerpt**, fetches those pages **directly with no discovery**, runs the real classifier
 and the real extractors, and files one of four verdicts per fact: `recovered`, `value_missing` (the
