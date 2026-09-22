@@ -47,6 +47,7 @@ _KIND_BY_DIMENSION: dict[str, ConflictKind] = {
     "intake": ConflictKind.DIFFERENT_INTAKE,
     "academic_year": ConflictKind.DIFFERENT_ACADEMIC_YEAR,
     "degree": ConflictKind.DIFFERENT_DEGREE,
+    "qualification": ConflictKind.DIFFERENT_QUALIFICATION,
 }
 
 

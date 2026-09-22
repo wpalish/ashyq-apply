@@ -60,6 +60,24 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**Owner decision 3 of 6: two qualifications are two scopes, not a clash (`<HASH20>`).**
+`_KIND_BY_DIMENSION` had entries for population, residency, intake, academic year and degree, and none
+for `qualification`, so "the Abitur route requires 6.5" beside "the attestat route requires 7.0" fell
+through to `TRUE_CONFLICT`. A conflicting claim cannot support an answer, so the applicant was left
+with **neither** value — for a disagreement that does not exist.
+
+`ConflictKind.DIFFERENT_QUALIFICATION` is added and the dimension wired. The applicant's question
+generates itself from the kind's own name, as the other `DIFFERENT_` kinds already do: "These appear to
+be published for different qualifications. Could you confirm which one applies to me?"
+
+**No migration, and I checked rather than assumed:** the kind is carried on the `Conflict` schema, not
+stored as a database enum, so adding a value moves no stored contract.
+
+The safety property is unchanged and has its own tests: the same qualification twice still conflicts, a
+scope nobody recorded still conflicts, and one side stating a qualification while the other is silent
+still conflicts. Unknown is never rounded into "different" — wrongly keeping a conflict costs a
+question, wrongly dismissing one costs a decision.
+
 **Owner decision 2 of 6: a per-section English minimum has somewhere to live (`2468f9e`).**
 NTU's certified value is a map — `{"overall": 6, "writing": 6, "speaking": 6}` — and the extractor
 produced a single floor, so the named sections were dropped. "Writing 6.5, Reading 6.0" is not the

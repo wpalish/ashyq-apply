@@ -67,6 +67,12 @@ class ConflictKind(StrEnum):
     DIFFERENT_ACADEMIC_YEAR = "different_academic_year"
     DIFFERENT_RESIDENCY = "different_residency"
     DIFFERENT_DEGREE = "different_degree"
+    #: "The Abitur route requires X" and "the attestat route requires Y" are
+    #: two scopes, not a contradiction — the same distinction the other
+    #: DIFFERENT_ kinds make. Added 2026-09-22 by the owner's decision; until
+    #: then a qualification-scoped disagreement was stamped TRUE_CONFLICT and
+    #: neither value could support an answer.
+    DIFFERENT_QUALIFICATION = "different_qualification"
 
 
 # --- Provenance of a scraped fact ---------------------------------------
