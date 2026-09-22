@@ -450,10 +450,15 @@ class CatalogWalker:
             walk.outcomes.append((link.url, result.outcome.value))
             return
         assert page is not None
-        # The walker asks what the confirm stage asks, minus the subject
-        # refinement: a catalogue's own list is the university's statement of
-        # what it offers, and subject fit is judged downstream per programme.
-        reason = profile_rejects(page, self.degree, [])
+        # The walker asks exactly what the confirm stage asks, subject
+        # included. It used to pass no fields — trusting a catalogue's own
+        # list as the university's statement of what it offers — and that
+        # kept a BSc Mathematics for a computer-science applicant, which
+        # `test_r5_js_json_payload_yields_programs` encoded. One predicate for
+        # every stage is what the owner settled on 2026-09-22: a university
+        # listing a programme says the programme exists, not that it is the
+        # one this applicant asked about.
+        reason = profile_rejects(page, self.degree, self.fields)
         if reason is not None:
             mismatch = page.degree_level and page.degree_level != self.degree
             walk.outcomes.append(

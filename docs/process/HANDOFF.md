@@ -60,6 +60,22 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**Owner decision 5 of 6: the catalogue walker judges subject too (`<HASH22>`).** The divergence was
+one argument wide: the walker called `profile_rejects(page, self.degree, [])`, and an empty `fields`
+list disables the subject check. Its reasoning was that a catalogue's own list is the university's
+statement of what it offers — true, and it says those programmes **exist**, not that each is the one
+this applicant asked about. A BSc Mathematics survived for a computer-science applicant.
+
+`test_r5_js_json_payload_yields_programs` — the T29 contract test — was **amended with the decision
+rather than worked around**, which is what I refused to do this morning without the owner's word: its
+interception contract (payload read, entries fetched, URLs needing no pattern) is unchanged and still
+checked, and the Mathematics entry is still fetched and read, then refused **on its subject**. That
+distinction is asserted explicitly, because "refused after reading" and "never fetched" are different
+behaviours and only one of them honours the contract.
+
+A source-level guard was added: the divergence is one argument wide, and an empty list is an easy thing
+to reintroduce without noticing.
+
 **Owner decision 4 of 6: a programme rule stays usable beside a university-wide one (`768e8d7`).**
 The one case where this code knowingly disagreed with the phase guide, and the comment in
 `conflicts.py` said so. Both claims were stamped `CONFLICTING`, so neither could support an answer.

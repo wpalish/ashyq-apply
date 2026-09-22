@@ -1495,6 +1495,15 @@ class TestCatalogWalkerContract:
         entries fetched and confirmed — the URLs need not match any URL
         pattern, because the payload is the university's own statement of
         what its programmes are.
+
+        Amended 2026-09-22 by the owner's decision: that statement says the
+        programmes exist, not that each is the one this applicant asked
+        about. The walker now applies the same subject predicate as every
+        other stage, so the BSc Mathematics in this payload is refused for a
+        computer-science applicant while the BSc Computer Science survives.
+        The interception contract — payload read, entries fetched, URLs
+        needing no pattern — is unchanged and is what the rest of this test
+        still checks.
         """
         payload = _json_shape("js_catalog_payload.json")
         page = WalkerFakePage(
@@ -1517,13 +1526,16 @@ class TestCatalogWalkerContract:
         adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, _walker_entry()))
         candidate = (await adapter.discover(profile_bachelor))[0]
 
-        assert {p.url for p in candidate.programs} == {
-            "https://uni.edu/p/42",
-            "https://uni.edu/p/77",
-        }, "the JSON payload's programmes must be fetched even though /p/N matches no pattern"
+        assert {p.url for p in candidate.programs} == {"https://uni.edu/p/42"}, (
+            "the payload's CS programme must be fetched even though /p/N matches no pattern"
+        )
+        assert "https://uni.edu/p/77" in site.requested, (
+            "the Mathematics entry is still fetched and read — it is refused on its "
+            "subject, not skipped on its URL"
+        )
         walker = adapter.traces[0].walker
         assert walker["catalogs_walked"] == 1
-        assert walker["programs_confirmed"] == 2
+        assert walker["programs_confirmed"] == 1, "Mathematics is read, then refused on subject"
         assert "https://uni.edu/p/42" in site.requested
 
     # --- R6 ---------------------------------------------------------------
@@ -1835,3 +1847,22 @@ class TestCatalogWalkerContract:
             url="https://uni.edu/en/programmes", html=_shape("js_catalog_shell.html")
         )
         assert page.page_type == PageType.PROGRAM_CATALOG
+
+
+class TestTheWalkerUsesOnePredicate:
+    """Owner decision, 2026-09-22: the catalogue walker judges subject too.
+
+    It used to pass no fields to `profile_rejects`, which disabled the subject
+    check on the reasoning that a catalogue's own list is the university's
+    statement of what it offers. That statement says the programmes exist; it
+    does not say each is the one this applicant asked about.
+    """
+
+    def test_the_walker_asks_the_same_question_as_the_confirm_stage(self):
+        """A source-level guard: the divergence was one argument wide, and an
+        empty list is an easy thing to reintroduce without noticing."""
+        source = (
+            Path(__file__).resolve().parents[1] / "app/adapters/discovery/catalog_walker.py"
+        ).read_text(encoding="utf-8")
+        assert "profile_rejects(page, self.degree, self.fields)" in source
+        assert "profile_rejects(page, self.degree, [])" not in source
