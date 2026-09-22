@@ -60,7 +60,7 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
-**Plan V2-30: the ninth scope question, `qualification` (`<HASH13>`).** §1 lists nine scope questions a
+**Plan V2-30: the ninth scope question, `qualification` (`254cf21`).** §1 lists nine scope questions a
 requirement must answer; `ClaimScope` had eight. `qualification` was missing — and the benchmark's own
 `Scope` already had it, so the measurement asked a question the model could not answer. Built by a
 subagent in a worktree and integrated here; the reasoning below is its finding, verified by me before
