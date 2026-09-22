@@ -1001,12 +1001,15 @@ class LiveDiscoveryAdapter:
         trace: DiscoveryTrace,
         profile: ApplicantProfileIn,
     ) -> None:
-        """Apply the step-4 filter to programme pages found after step 4.
+        """Apply the step-4 filter to the programme pages search added.
 
-        The same question, asked of the pages the catalogue walk and the
-        search provider added: does this page describe a programme at the
-        requested level in a requested field? A page that cannot be read is
-        kept rather than dropped — an unreachable page is not a refusal.
+        The same question step 4 asks: does this page describe a programme at
+        the requested level in a requested field? A page that cannot be read
+        is kept rather than dropped — an unreachable page is not a refusal.
+
+        The catalogue walker's own candidates are not re-judged here; it
+        confirms them under the T29 contract, which deliberately trusts a
+        university's own catalogue listing.
         """
         newcomers = [
             url for url in selected[PageCategory.PROGRAM_PAGE] if url not in already_confirmed
@@ -1017,6 +1020,10 @@ class LiveDiscoveryAdapter:
         requested_level = str(profile.context.level)
         fields = list(profile.context.intended_fields)
         refused: set[str] = set()
+        # Anything past the cap stays unconfirmed rather than being dropped:
+        # losing a lead unread is the worse failure, and MAX_PAGES_PER_CATEGORY
+        # keeps `selected` far below this in practice. If that ever changes,
+        # this is the line that decides which way the doubt falls.
         for url in newcomers[:MAX_PROGRAM_CANDIDATES_CHECKED]:
             result = await self.fetcher.get(url)
             if not result.ok:

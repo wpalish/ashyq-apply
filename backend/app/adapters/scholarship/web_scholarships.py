@@ -145,6 +145,18 @@ class WebScholarshipAdapter:
         #: a claim carries the programme it was built for, so the second
         #: programme re-parses the same page rather than reusing its claims.
         self._pages: dict[str, FetchResult] = {}
+        #: Which university ``_pages`` belongs to. The memo exists to stop the
+        #: second programme re-reading the first one's pages, and a university
+        #: is as far as that goes — holding every university's HTML for the
+        #: whole run would be tens of megabytes of dead weight for no gain.
+        self._pages_for: str | None = None
+
+    def _memo_for(self, candidate: Candidate) -> None:
+        """Point the page memo at this university, dropping the last one's."""
+        key = f"{candidate.name}::{candidate.country}"
+        if key != self._pages_for:
+            self._pages = {}
+            self._pages_for = key
 
     async def _read(self, url: str) -> FetchResult:
         """Fetch a page once per run, however many programmes ask for it."""
@@ -160,6 +172,7 @@ class WebScholarshipAdapter:
         self, candidate: Candidate, program: CandidateProgram, profile
     ) -> tuple[list[Scholarship], AdapterResult]:
         out = AdapterResult()
+        self._memo_for(candidate)
         primary = candidate.scholarships_url or ""
         if not primary and not program.url:
             out.errors.append(

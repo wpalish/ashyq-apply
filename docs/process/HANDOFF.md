@@ -60,6 +60,23 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**Self-review of the day's ten commits, and three defects in my own work (`<HASH10>`).** Ten steps
+shipped against a live pipeline in one session is exactly when a reviewer is needed and there isn't one,
+so I read the whole diff back adversarially. Three findings, all mine, all from today:
+
+1. **The page memo held every university's HTML for the whole run.** EXTRA-8's memo is keyed by URL and
+   lived for the adapter's lifetime, which is the run — so a twenty-candidate run would hold up to
+   ~300 pages of raw HTML to save re-reading at most fifteen. It is now bound to the university being
+   worked on and dropped when that changes. The cost is stated in a test rather than hidden: rows are
+   not guaranteed to be grouped by university, so coming back to one reads it again.
+2. **A docstring that described the code I decided not to write.** `_confirm_added_programs` still said
+   it judged "the catalogue walk and the search provider", after I narrowed it to search alone. A
+   comment that describes the rejected design is worse than none.
+3. **The unchecked tail past `MAX_PROGRAM_CANDIDATES_CHECKED`.** Newcomers beyond the cap stay in the
+   list unconfirmed — the hole EXTRA-6 exists to close, left half open. `MAX_PAGES_PER_CATEGORY` keeps
+   `selected` far below the cap in practice, so this is documented at the line that decides which way
+   the doubt falls rather than changed: losing a lead unread is the worse failure.
+
 **EXTRA-8: a funding page is read once per run, not once per programme (`82530e1`).** Reading the six
 case logs I had not opened showed that all four budget-killed cases — `delft`, `groningen`, `hku`,
 `ubc` — died in the **same line**: the page budget ran out inside `WebScholarshipAdapter.find`, called

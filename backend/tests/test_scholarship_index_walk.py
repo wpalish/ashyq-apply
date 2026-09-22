@@ -264,3 +264,49 @@ class TestAPageIsReadOncePerRun:
             awards, second = await adapter.find(candidate, program, None)
 
         assert [a.name for a in awards] == ["Merit Scholarship"]
+
+    @pytest.mark.asyncio
+    async def test_the_memo_does_not_hold_every_university_s_pages(self, settings, site):
+        """It exists to stop the second programme re-reading the first one's
+        pages. Holding every university's HTML for a whole run would be tens
+        of megabytes of dead weight for no gain, so the last one is dropped.
+        """
+        program = CandidateProgram(name="P", field="cs", degree=DegreeLevel.BACHELOR)
+        first = _candidate(scholarships_url="fixture://uni/scholarships.html")
+        second = Candidate(
+            name="Other University",
+            country="Testland",
+            city="Test",
+            scholarships_url="fixture://uni/scholarships.html",
+        )
+
+        async with Fetcher(settings.cache_dir, offline=True, corpus_dir=site) as fetcher:
+            adapter = WebScholarshipAdapter(fetcher, "2026/27")
+            await adapter.find(first, program, None)
+            held_after_first = len(adapter._pages)
+            await adapter.find(second, program, None)
+            held_after_second = len(adapter._pages)
+
+        assert held_after_first > 0
+        assert held_after_second == held_after_first, "one university's pages, not two"
+
+    @pytest.mark.asyncio
+    async def test_returning_to_a_university_reads_it_again(self, settings, site):
+        """The cost of bounding the memo, stated rather than hidden: rows are
+        not guaranteed to be grouped by university."""
+        program = CandidateProgram(name="P", field="cs", degree=DegreeLevel.BACHELOR)
+        first = _candidate(scholarships_url="fixture://uni/scholarships.html")
+        other = Candidate(
+            name="Other University",
+            country="Testland",
+            city="Test",
+            scholarships_url="fixture://uni/scholarships.html",
+        )
+
+        async with Fetcher(settings.cache_dir, offline=True, corpus_dir=site) as fetcher:
+            adapter = WebScholarshipAdapter(fetcher, "2026/27")
+            await adapter.find(first, program, None)
+            await adapter.find(other, program, None)
+            _, back_again = await adapter.find(first, program, None)
+
+        assert back_again.pages_checked > 0
