@@ -60,7 +60,7 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
-**EXTRA-7: an FAQ page is not a scholarship, however it spells "FAQ" (`<HASH8>`).** Reading NTU's
+**EXTRA-7: an FAQ page is not a scholarship, however it spells "FAQ" (`769ba57`).** Reading NTU's
 twelve claims — the only real claims in run 35697105238 — four were an award named **"FAQs on
 scholarships"**, stamped `CONFLICTING` because the same page's prose ("the scholarship will be withdrawn
 if you change your degree programme") then produced a second claim saying that award did not exist. Two
