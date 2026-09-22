@@ -60,7 +60,7 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
-**Owner decision 4 of 6: a programme rule stays usable beside a university-wide one (`<HASH21>`).**
+**Owner decision 4 of 6: a programme rule stays usable beside a university-wide one (`768e8d7`).**
 The one case where this code knowingly disagreed with the phase guide, and the comment in
 `conflicts.py` said so. Both claims were stamped `CONFLICTING`, so neither could support an answer.
 
