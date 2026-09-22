@@ -20,7 +20,7 @@ from unittest.mock import patch
 from pydantic import HttpUrl
 
 from .mapping import evidence_scope, normalize_claim
-from .schema import Capture, Evidence, Observation, Prediction, Telemetry
+from .schema import Capture, Evidence, Observation, PageOutcome, Prediction, Telemetry
 
 # Evaluation cohort IDs, not expected URLs/values. Registry remains production's input.
 COHORT = {
@@ -108,6 +108,20 @@ async def capture_one(case_id: str, output: Path, max_pages: int) -> None:
             try:
                 return await super().run_to_decision()
             finally:
+                # Why a page produced nothing, in the runner's own vocabulary.
+                # Read here rather than after the run, so a case killed by its
+                # budget still records what it managed to read — which is
+                # exactly the case whose zero needs explaining.
+                observation.page_outcomes = [
+                    PageOutcome(
+                        category=record["category"],
+                        url=record["url"],
+                        page_type=record.get("page_type") or "",
+                        detail=record.get("detail") or "",
+                        characters=int(record["characters"]) if record.get("characters") else None,
+                    )
+                    for record in canary.page_outcomes(self.run)
+                ]
                 for row in self.session.query(ClaimRow).filter(ClaimRow.run_id == self.run.id):
                     raw = row.payload
                     raw_claims.append(raw)

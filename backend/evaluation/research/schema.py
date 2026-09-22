@@ -133,12 +133,31 @@ class Telemetry(Strict):
     human_review_required: bool | None = None
 
 
+class PageOutcome(Strict):
+    """Why one page produced what it produced, in the runner's own vocabulary.
+
+    The categories are the frozen acceptance vocabulary — fetch-failed,
+    unreadable, classifier-rejected, no-pattern-match, fetched-ok — and the
+    point of recording them in the capture is that a case filing zero claims
+    can otherwise say nothing about which of the five happened to it.
+    """
+
+    category: str
+    url: str
+    page_type: str = ""
+    detail: str = ""
+    characters: int | None = Field(default=None, ge=0)
+
+
 class Observation(Strict):
     case_id: str
     programme_urls: list[HttpUrl] = Field(default_factory=list)
     ranked_urls: list[HttpUrl] | None = None
     predictions: list[Prediction] = Field(default_factory=list)
     telemetry: Telemetry = Field(default_factory=Telemetry)
+    #: Defaulted, so every capture written before this field existed - the
+    #: certified one included - still validates byte-for-byte unchanged.
+    page_outcomes: list[PageOutcome] = Field(default_factory=list)
     error: str | None = None
 
 

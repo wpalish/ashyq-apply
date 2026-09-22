@@ -165,6 +165,21 @@ jobs:
                   f"{len(observation.get('predictions') or []):>7}"
               )
           print(f"\n{budget} of {len(capture['observations'])} cases ran out of budget")
+
+          # Why a case filed nothing. Nine of ten cases in run 35697105238
+          # produced zero claims and the capture could not say why for any of
+          # them; a count of the runner's own five outcomes is the answer.
+          print("\nwhy pages produced nothing, per case:")
+          for observation in capture["observations"]:
+              outcomes = observation.get("page_outcomes") or []
+              if not outcomes:
+                  print(f"  {observation['case_id']:12} (no per-page records)")
+                  continue
+              counts = {}
+              for record in outcomes:
+                  counts[record["category"]] = counts.get(record["category"], 0) + 1
+              summary = ", ".join(f"{k}={v}" for k, v in sorted(counts.items()))
+              print(f"  {observation['case_id']:12} {summary}")
           PY
 
       - uses: actions/upload-artifact@v4

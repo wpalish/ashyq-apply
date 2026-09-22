@@ -60,6 +60,72 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**Read the run's own per-case files, and the headline changes again (artifact 10680503688, downloaded
+and analysed 2026-09-22).** `claim_recall 0/62` is not "extraction is weak". It is this:
+
+| case | fetches | programme_urls | ranked_urls | claims | ended |
+|---|---|---|---|---|---|
+| ntu | 28 | 3 | **40** | **12** | complete |
+| toronto | 23 | 3 | **0** | **0** | complete |
+| kaist | 46 | 3 | 1 | **0** | complete |
+| delft | 53 | 3 | 3 | 0 | page budget |
+| groningen | 98 | 3 | 4 | 0 | page budget |
+| hku | 52 | 3 | 1 | 0 | page budget |
+| ubc | 57 | 3 | 0 | 0 | page budget |
+| aalto | 2 | 0 | 0 | 0 | wall clock |
+| vienna | 94 | 0 | 1 | 0 | wall clock |
+| warsaw | 80 | 0 | 0 | 0 | wall clock |
+
+**Every claim in the entire run came from one university.** Nine of ten produced zero — including
+`toronto` and `kaist`, which finished with no error, found three programme URLs each, and still filed
+nothing. So every Phase 2 and Phase 3 metric in that table is a measurement of NTU, and the two scope
+mismatches are literally NTU's two claims. That also means my own "wrong_scope_claim_rate is now one
+owner decision" is true and much smaller than it sounded: it is one decision about **one university**.
+
+Two further facts from the same files, both worth keeping:
+- **The fetch budget does not bound fetches.** `groningen` made 98 HTTP requests under a budget of 60,
+  and `vienna` 94: the counter wraps `Fetcher.get`, and one `get` can issue several requests (redirects,
+  the browser tier, PDFs). The budget bounds *reads*, not *traffic*, and the workflow's label
+  ("60 fetches") says otherwise.
+- **`ranked_urls` and claims move together.** The only case with a full ranked list is the only case
+  with claims. `toronto` has three programme URLs and an empty ranked list — so the thing that feeds
+  extraction is not what `programme_urls` reports, and a case can look successful in the summary while
+  the pipeline read nothing.
+
+**The full metrics table from run 35697105238, copied here because the CI log expires in 14 days —
+and it moves the headline.** I reported the scope numbers first because that is what the run was for.
+The rest of the table says something larger, and it is not good news:
+
+| metric | run 35697105238 |
+|---|---|
+| `programme_page_recall` | **4/10** (certified 1/10, yesterday 3/10) |
+| `programme_page_precision` | 4/21 |
+| `claim_adjudication_rate` | 2/12 |
+| `claim_precision` | **0/2** |
+| `claim_recall` | **0/62** |
+| `critical_field_coverage` | **0/210** |
+| `scholarship_discovery_recall` | **0/3** |
+| `scholarship_applicability_recall` | 0/7 |
+| `primary_source_rate` | 12/12 |
+| `recall_at_5/10/20` | 1/9 |
+
+**Retrieval is improving and extraction is not following it.** The run found the right programme page
+in 4 cases of 10 — four times the certified baseline — and produced **twelve claims in total across ten
+universities**, matching none of the 62 labels and filling none of the 210 critical fields. Phase 1
+moved the page; nothing after it is reading the page.
+
+**And the budget is now the binding constraint: 7 of 10 cases ran out**, against 5 of 10 yesterday —
+`groningen`, `delft`, `ubc`, `hku` on pages, `aalto`, `vienna`, `warsaw` on wall clock. Only `toronto`,
+`ntu` and `kaist` finished. Every number above is therefore a **floor**, measured on a cohort that
+mostly stopped early, and the three completed cases are the only ones where the pipeline was allowed to
+finish.
+
+This also puts a price on the step I shipped an hour ago: **§8's index walk spends fetches**, and the
+fallback spends one more. It cost nothing on the demo, but on a cohort where seven cases already
+exhaust the budget, the next capture must be read with that in mind — if `scholarship_discovery_recall`
+does not move, the walk is not paying for its fetches and belongs behind the budget check, not in front
+of it.
+
 **Phase 3 §9: the plan no longer tells the applicant to do the impossible (`6fbb7bf`).**
 `_order_steps` sorted by lead time and never read `depends_on`, so the numbered plan could put
 "notarize the translation" above "get the translation". It is a topological order now, with longest
@@ -630,6 +696,28 @@ Scope, in `app/adapters/documents/web_documents.py` plus tests:
 Not in this step: turning `depends_on` into a blocking rule in the assessment. Order is advice; a
 blocked application is a verdict, and it needs the same "silence is not agreement" treatment
 requirements got.
+
+Write-ahead (claude-opus-5, 2026-09-22, **EXTRA-5**): **make the capture say why a case produced
+nothing.** Nine of ten cases in run 35697105238 filed zero claims and the capture cannot say why for a
+single one of them: `Observation` records what was predicted and never what was read and rejected. The
+runner already files a per-page outcome for every page it touches — fetch-failed / unreadable /
+classifier-rejected / no-pattern-match / fetched-ok — and `scripts/canary_discovery.py::page_outcomes`
+already parses them back out. The capture throws them away, so the one question that matters ("Toronto
+found three programme URLs, read 23 pages and filed nothing — which of those five things happened?")
+cannot be answered without re-running with the network, which nobody here has.
+
+Scope:
+- `evaluation/research/schema.py` — `PageOutcome` (category, url, page_type, detail, characters) and
+  `Observation.page_outcomes`, defaulted so the frozen certified capture still validates unchanged;
+- `evaluation/research/live.py` — fill it from the run in the same `finally` that already reads the
+  claim rows, so a case that dies on its budget still records what it managed to read;
+- a test that the frozen `capture.json` still loads, because a schema change that breaks the certified
+  corpus is worse than no diagnostic.
+
+This is EXTRA-1's pattern, and EXTRA-1 is the only thing this session did that changed what I believed:
+measure why, not what. Nothing about ranking, extraction or budgets should be touched until this run
+says which of the five outcomes is dominant — including my own §8 index walk, whose fetch cost is now a
+real risk with seven of ten cases out of budget.
 
 **STATE, 2026-09-22 morning.** Phase 2 is complete against its exit criteria (see
 `docs/process/PHASE_2_ACCEPTANCE.md`). Phase 3 has §3, §4, §6 and §7 done; §1's visible half is done
