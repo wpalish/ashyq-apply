@@ -940,8 +940,19 @@ class LiveDiscoveryAdapter:
         #    difference, so discovery asks it rather than guessing harder.
         await self._confirm_programs(selected, ranked, trace, profile)
         await self._walk_catalogs(entry, selected, trace, profile)
+        # The walker confirms its own candidates under the T29 contract, which
+        # deliberately trusts a university's own catalogue listing — so the
+        # snapshot is taken after it, and step 7 judges only what search adds.
+        confirmed_so_far = set(selected[PageCategory.PROGRAM_PAGE])
 
         await self._add_search_results(entry, domain, selected, trace, profile)
+
+        # 7. Confirm what search added. Step 4 runs before it, so until this
+        #    pass existed every programme page the search provider contributed
+        #    reached the candidate unconfirmed — and on the benchmark cohort
+        #    that is most of them. Only the newcomers are read, so a page
+        #    already confirmed is never paid for twice.
+        await self._confirm_added_programs(selected, confirmed_so_far, trace, profile)
 
         trace.selected = {k: list(v) for k, v in selected.items() if v}
         self._apply(candidate, selected, profile, trace)
@@ -982,6 +993,44 @@ class LiveDiscoveryAdapter:
             # Only replace the list when something was actually checked; an
             # unreachable site keeps its leads rather than losing them silently.
             selected[PageCategory.PROGRAM_PAGE] = confirmed
+
+    async def _confirm_added_programs(
+        self,
+        selected: dict[str, list[str]],
+        already_confirmed: set[str],
+        trace: DiscoveryTrace,
+        profile: ApplicantProfileIn,
+    ) -> None:
+        """Apply the step-4 filter to programme pages found after step 4.
+
+        The same question, asked of the pages the catalogue walk and the
+        search provider added: does this page describe a programme at the
+        requested level in a requested field? A page that cannot be read is
+        kept rather than dropped — an unreachable page is not a refusal.
+        """
+        newcomers = [
+            url for url in selected[PageCategory.PROGRAM_PAGE] if url not in already_confirmed
+        ]
+        if not newcomers:
+            return
+
+        requested_level = str(profile.context.level)
+        fields = list(profile.context.intended_fields)
+        refused: set[str] = set()
+        for url in newcomers[:MAX_PROGRAM_CANDIDATES_CHECKED]:
+            result = await self.fetcher.get(url)
+            if not result.ok:
+                continue
+            page = classify_page(url=url, html=result.text)
+            reason = profile_rejects(page, requested_level, fields)
+            if reason is not None:
+                trace.reject(url, reason)
+                refused.add(url)
+
+        if refused:
+            selected[PageCategory.PROGRAM_PAGE] = [
+                url for url in selected[PageCategory.PROGRAM_PAGE] if url not in refused
+            ]
 
     async def _walk_catalogs(
         self,

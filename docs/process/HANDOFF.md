@@ -60,6 +60,22 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**EXTRA-6: the programme filter now sees what search adds (`<HASH6>`).** Chasing Toronto's zero led to
+`live_discovery.discover`'s ordering: step 4 confirms programme candidates by reading them — the filter
+that exists because live runs offered "bachelor-open-day", "campus-tour" and a student newsletter as
+programme pages — and step 6 asks the search provider. So **everything Phase 1 contributes arrived
+unconfirmed**, and Phase 1 is what moved `programme_page_recall` 1/10 → 4/10. A step 7 now applies the
+same predicate to the pages search added, reading only the newcomers, so no confirmed page is paid for
+twice — the fetch budget is the binding constraint on seven of ten cases.
+
+**Two things this cost, both worth more than the fix.** First, the pass initially judged the catalogue
+walker's output too, and `test_r5_js_json_payload_yields_programs` went red: the walker deliberately
+trusts a university's own catalogue listing and keeps a BSc **Mathematics** for a computer-science
+applicant. I narrowed the pass rather than rewrite another campaign's contract, and parked the question
+in §7. Second, four of my five new tests passed for the wrong reason: the stub `FetchResult` set
+`content` and not `text`, so every page it served read as empty and every page was "correctly" refused.
+`FetchResult` carries both; a stub that fills one is a stub that proves nothing.
+
 **EXTRA-5: the capture now says why a case produced nothing (`5826b0c`).** `Observation.page_outcomes`
 keeps the runner's own five per-page verdicts, filled in the same `finally` that reads the claim rows so
 a budget-killed case still records what it read; the workflow prints the counts per case. The field is
@@ -723,6 +739,30 @@ This is EXTRA-1's pattern, and EXTRA-1 is the only thing this session did that c
 measure why, not what. Nothing about ranking, extraction or budgets should be touched until this run
 says which of the five outcomes is dominant — including my own §8 index walk, whose fetch cost is now a
 real risk with seven of ten cases out of budget.
+
+Write-ahead (claude-opus-5, 2026-09-22, **EXTRA-6**): **the programme filter runs before the two steps
+that find most programmes.** Chasing Toronto's zero (three programme URLs, 23 pages read, no claims)
+led to `live_discovery.discover`'s own ordering. Step 4 confirms programme candidates by reading them —
+the filter whose comment says it exists because live runs offered "bachelor-open-day", "campus-tour"
+and a student newsletter as programme pages. Steps 5 and 6 are the catalogue walk and web search, and
+**they run after it.** So every programme page Phase 1 contributes — the contribution that moved
+`programme_page_recall` from 1/10 to 4/10 — reaches the candidate **unconfirmed**. Toronto is the
+clearest case: its `ranked_urls` at confirmation time were empty, meaning the filter ran on nothing,
+and the three programme URLs it finished with arrived afterwards, unchecked. EXTRA-3 patched this
+class of error downstream in extraction; this is where it starts.
+
+Scope, in `app/adapters/discovery/live_discovery.py` plus tests:
+- a second confirmation pass after step 6, over **only the pages added since the first one**, so a page
+  already confirmed is not re-read and the fetch cost is one read per genuinely new page — a page the
+  requirements adapter was going to read anyway;
+- `_confirm_programs` keeps its exact signature, because the benchmark capture patches it by name to
+  record `ranked_urls`, and a diagnostic that stops recording is worse than the bug;
+- tests: a search-supplied open-day page is refused, a search-supplied real programme page survives,
+  and an unreadable site still keeps its leads rather than losing them silently.
+
+Risk, stated up front: this can only *reduce* the programme list, so `programme_page_recall` may fall
+if the classifier refuses a page the label calls correct. That is the honest direction — a wrong
+programme page produces wrong requirements — but it is a number to watch, not to assume.
 
 **STATE, 2026-09-22 morning.** Phase 2 is complete against its exit criteria (see
 `docs/process/PHASE_2_ACCEPTANCE.md`). Phase 3 has §3, §4, §6 and §7 done; §1's visible half is done
@@ -2268,6 +2308,14 @@ I built the evidence and left the number alone: `scope_report` prints such cases
 "reported, not counted". Two ways to settle it, both yours: adjudicate the label (write the full
 official title into the corpus, re-signed), or accept identity comparison as the scorer's rule.
 
+**Owner decision, surfaced by EXTRA-6: may the catalogue walker keep a neighbouring subject?** The
+walker confirms its own candidates and, under the T29 contract, trusts a university's own catalogue
+listing: `test_r5_js_json_payload_yields_programs` asserts that a BSc **Mathematics** entry survives for
+an applicant who asked for computer science. The step-4 filter would refuse it
+(`profile_rejects` compares the subject). I found this by making the new pass judge the walker's output
+too, watched that test go red, and narrowed the pass rather than rewrite another campaign's contract.
+Say the word and the walker uses the same predicate as everything else.
+
 **Owner data, also not urgent:** the ontology has no plural entry for `computer sciences`, so NTU's
 `Mathematical and Computer Sciences` resolves to UNKNOWN. That is the safe answer — a joint degree is
 not a single-subject one — but if you judge them equivalent, it is one line of ontology data with your
@@ -2509,6 +2557,11 @@ V2-01: evaluation-only Pydantic schema and JSON corpus/capture/metric contracts 
 
 V2-01: set PYTHONUTF8=1 on Windows for text fixtures; do not modify evaluation schemas while a live batch is running (parent and child processes can import different versions). Instrumented baseline segments and restart are recorded in baseline/README.md. Scope matching is deliberately literal; missing/different names count as conservative match failures, not human-confirmed wrong facts.
 
+- **A stub that fills one field of a result proves nothing.** `FetchResult` carries both `content` and
+  `text`, and the adapters read `.text`. A test stub that set only `.content` served every page as
+  empty — so four tests asserting "this page is refused" passed while refusing *blank pages*, and the
+  one test asserting a good page survives was the only one that failed. When a new stub makes most
+  tests pass immediately, check that the one which should fail does.
 - **Test the entry point, not only the function behind it.** `scope_report` had nine tests and every
   one called `scope_mismatches()` directly. Its `--json` flag — the one thing only the workflow uses —
   serialised a slotted dataclass with `m.__dict__` and raised `AttributeError` on the live run, *after*
