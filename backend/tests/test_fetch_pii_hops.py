@@ -448,7 +448,36 @@ async def test_a_crawl_delay_too_long_to_wait_is_honoured_by_not_reading(tmp_pat
         )
         result = await fetcher.get("https://slow.example.com/page")
 
-    assert result.outcome is FetchOutcome.ROBOTS_DISALLOWED
+    assert result.outcome is FetchOutcome.ROBOTS_CRAWL_DELAY
     assert "120s crawl delay" in (result.error or "")
     assert page_requests == 0
     assert slept == []
+
+
+async def test_a_fetcher_without_a_ceiling_waits_the_delay_out(tmp_path, monkeypatch):
+    """The background source scan has no applicant waiting: it reads the page,
+    spacing requests by exactly what robots.txt asks."""
+    slept: list[float] = []
+
+    async def fake_sleep(seconds):
+        slept.append(seconds)
+
+    monkeypatch.setattr(asyncio, "sleep", fake_sleep)
+    monkeypatch.setattr("app.adapters.fetching.check_url", allow_all)
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        if request.url.path == "/robots.txt":
+            return httpx.Response(200, text="User-agent: *\nCrawl-delay: 120\nAllow: /\n")
+        return httpx.Response(200, headers={"content-type": "text/html"}, text="<html>p</html>")
+
+    async with Fetcher(
+        tmp_path / "c", delay_seconds=0.0, respect_robots=True, max_crawl_delay=None
+    ) as fetcher:
+        fetcher._client = httpx.AsyncClient(
+            transport=httpx.MockTransport(handler), follow_redirects=False
+        )
+        first = await fetcher.get("https://slow.example.com/a", use_cache=False)
+        second = await fetcher.get("https://slow.example.com/b", use_cache=False)
+
+    assert first.outcome is FetchOutcome.OK and second.outcome is FetchOutcome.OK
+    assert slept and max(slept) > 100

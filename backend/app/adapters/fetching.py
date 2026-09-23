@@ -429,10 +429,13 @@ class Fetcher:
         timeout: float = DEFAULT_TIMEOUT,
         contact: str = "",
         corpus_dir: Path | None = None,
+        max_crawl_delay: float | None = MAX_CRAWL_DELAY_SECONDS,
     ) -> None:
         self.cache = ResponseCache(cache_dir, cache_ttl_seconds)
         self.robots = RobotsPolicy(enabled=respect_robots)
         self.delay = delay_seconds
+        #: None waits out any Crawl-delay: for background work with no clock.
+        self.max_crawl_delay = max_crawl_delay
         self.offline = offline
         self.timeout = timeout
         self.user_agent = (
@@ -813,18 +816,20 @@ class Fetcher:
                 return FetchResult(url=url, outcome=FetchOutcome.ROBOTS_DISALLOWED, error=reason)
 
             asked = await self.robots.crawl_delay(url)
-            if asked is not None and asked > MAX_CRAWL_DELAY_SECONDS:
+            limit = self.max_crawl_delay
+            if asked is not None and limit is not None and asked > limit:
                 # The site's own request is honoured by not reading it, never by
                 # reading it faster: waiting that long per request is a hang.
-                # Aalto stalled a whole run here, 2 requests in 90 s.
+                # Aalto stalled a whole run here, 2 requests in 90 s. It is not
+                # a refusal, so it is not reported as one.
                 log.warning("robots.txt crawl-delay %.0fs for %s: not read", asked, host)
-                self.stats[FetchOutcome.ROBOTS_DISALLOWED.value] += 1
+                self.stats[FetchOutcome.ROBOTS_CRAWL_DELAY.value] += 1
                 return FetchResult(
                     url=url,
-                    outcome=FetchOutcome.ROBOTS_DISALLOWED,
+                    outcome=FetchOutcome.ROBOTS_CRAWL_DELAY,
                     error=(
                         f"robots.txt asks for a {asked:.0f}s crawl delay; this run waits at most "
-                        f"{MAX_CRAWL_DELAY_SECONDS:.0f}s between requests, so the page was not read"
+                        f"{limit:.0f}s between requests, so the page was not read"
                     ),
                 )
 

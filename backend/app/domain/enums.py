@@ -369,6 +369,9 @@ class FetchOutcome(StrEnum):
     REFUSED_PRIVACY = "refused_privacy"
     CACHED = "cached"
     ROBOTS_DISALLOWED = "robots_disallowed"
+    #: Allowed, but robots.txt asks for a longer pause between requests than
+    #: this fetcher will wait. Not a refusal: a slower reader may take it.
+    ROBOTS_CRAWL_DELAY = "robots_crawl_delay"
     HTTP_ERROR = "http_error"
     TIMEOUT = "timeout"
     NETWORK_UNAVAILABLE = "network_unavailable"

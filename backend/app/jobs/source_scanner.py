@@ -185,6 +185,9 @@ def _fetcher_for(settings: Settings, *, demo: bool) -> Fetcher:
         timeout=settings.fetch_timeout_seconds,
         contact=settings.fetch_contact,
         corpus_dir=settings.corpus_dir if demo else None,
+        # A scan has no applicant waiting on it, so a long Crawl-delay is
+        # waited out here instead of leaving the host unread.
+        max_crawl_delay=None,
     )
 
 
