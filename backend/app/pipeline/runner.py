@@ -49,6 +49,7 @@ from app.domain.funding import (
     award_meets_shape,
     classify,
     funding_fit_for,
+    roll_up_availability,
     unmet_coverage_requirements,
 )
 from app.domain.ranking_v2 import rank_result
@@ -698,6 +699,17 @@ class ResearchRunner:
                 # imply. Classification reads the verdict, so an award the
                 # applicant cannot hold can never be classified as funding.
                 s.applicant_eligible = _applicant_eligible(s)
+                # Re-rolled from the verdict just settled. The adapter rolled
+                # availability up from its own, earlier reading of
+                # eligibility; left alone, an award this applicant cannot hold
+                # (a missed test minimum, a pending faculty restriction) kept
+                # saying it was available.
+                s.available_this_intake = roll_up_availability(
+                    opportunity_exists=s.opportunity_exists,
+                    applicant_eligible=s.applicant_eligible,
+                    application_window_open=s.application_window_open,
+                    award_current_for_intake=s.award_current_for_intake,
+                )
                 page_text = (
                     " ".join(
                         c.original_text_excerpt

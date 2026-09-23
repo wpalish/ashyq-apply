@@ -475,6 +475,16 @@ class TestSupersededExcluded:
 #: ``_canonical_demo_dump`` machinery below. GREEN on baseline by
 #: construction; the developer's T32 changes must keep the demo pipeline
 #: byte-identical under the same masking.
+#: Re-captured for Phase 3 §7, 2026-09-23: availability is re-rolled from the
+#: runner's eligibility verdict. **Not additive, and not waved through.** The
+#: old code reproduces the previous constant exactly; leaf-by-leaf, exactly
+#: **two** leaves changed, both `scholarships[*].available_this_intake`,
+#: both "unknown" → "no": NUS's ASEAN Undergraduate Scholarship and KU
+#: Leuven's Flemish Community Tuition Grant. For both, the runner had already
+#: settled `applicant_eligible = "no"` (citizenship check NOT_APPLICABLE for a
+#: Kazakh applicant), but availability kept the adapter's earlier "unknown".
+#: No claim, check, verdict or classification moved.
+#:
 #: Re-captured a sixth time, for Phase 3 §6's offer/need decisions: additive,
 #: 0 removed. Every award gains two "unknown" fields, and **one real claim
 #: appears** — NUS's Financial Aid page says the award "depends on an
@@ -543,7 +553,7 @@ class TestSupersededExcluded:
 #: changed). That is the whole of the intended change — a claim now records
 #: what its page stated about who it covers — and it is the only reason this
 #: constant has a second value. Anything else that moves it is a regression.
-GOLDEN_DEMO_SHA256 = "790ac509c13c90ca21bd8cdb4c4880f64e834041f5174cd1ad512c7534c26f09"
+GOLDEN_DEMO_SHA256 = "d45924f04438765cd06af6e9c3e66c75325b33ee4c373fb11bf32511feb62862"
 
 #: The golden was captured with the real clock on 2026-09-07, and the baseline
 #: payload embeds that date: ``requirement_checks[*].applicant_value`` and

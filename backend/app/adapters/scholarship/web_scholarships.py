@@ -644,7 +644,15 @@ class WebScholarshipAdapter:
 
         if sch.degree_applicability == "no" or sch.international_eligible == "no":
             sch.applicant_eligible = "no"
-        elif sch.degree_applicability == "yes" and sch.international_eligible == "yes":
+        elif (
+            sch.degree_applicability == "yes"
+            and sch.international_eligible == "yes"
+            # A faculty or programme restriction the page states but does not
+            # settle for this programme is an open question, and an open
+            # question is never a yes.
+            and not sch.faculty_restrictions
+            and not sch.program_restrictions
+        ):
             sch.applicant_eligible = "yes"
         else:
             sch.applicant_eligible = "unknown"

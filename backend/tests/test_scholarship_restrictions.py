@@ -102,3 +102,37 @@ class TestWhatTheRestrictionDoesToTheVerdict:
         checks = _scholarship_eligibility(award, profile)
 
         assert not [c for c in checks if "restriction" in c.requirement.lower()]
+
+
+class TestTheRollUpNeverRoundsUp:
+    """Phase 3 §7: UNKNOWN propagates, and is never changed to YES."""
+
+    def test_the_adapter_does_not_call_a_restricted_award_eligible(self):
+        from app.adapters.scholarship.web_scholarships import WebScholarshipAdapter
+
+        award = Scholarship(
+            id="x",
+            name="Engineering Excellence Award",
+            opportunity_exists=True,
+            degree_applicability="yes",
+            international_eligible="yes",
+            faculty_restrictions=["the Faculty of Engineering"],
+        )
+        WebScholarshipAdapter._derive_availability(award)
+
+        assert award.applicant_eligible == "unknown"
+        assert award.available_this_intake != "yes"
+
+    def test_an_unrestricted_award_with_every_positive_is_still_eligible(self):
+        from app.adapters.scholarship.web_scholarships import WebScholarshipAdapter
+
+        award = Scholarship(
+            id="x",
+            name="Open Award",
+            opportunity_exists=True,
+            degree_applicability="yes",
+            international_eligible="yes",
+        )
+        WebScholarshipAdapter._derive_availability(award)
+
+        assert award.applicant_eligible == "yes"
