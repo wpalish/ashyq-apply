@@ -102,6 +102,17 @@ test.beforeEach(async ({ page }) => {
   });
 });
 
+test('skip link appears on keyboard focus and moves focus to content', async ({ page }) => {
+  await page.goto('/#/case');
+  const skip = page.locator('.skip-link');
+  await expect(skip).toHaveCSS('opacity', '0');
+  await page.keyboard.press('Tab');
+  await expect(skip).toBeFocused();
+  await expect(skip).toHaveCSS('opacity', '1');
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#main-content')).toBeFocused();
+});
+
 test('design catalogue uses the refreshed type and color system in both themes', async ({ page }, info) => {
   await page.emulateMedia({ reducedMotion: 'reduce', colorScheme: 'light' });
   await page.goto('/design-system.html');
@@ -174,6 +185,10 @@ test('profile wizard keeps edits across sections and supports review mode', asyn
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   const violations = (await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze()).violations;
   expect(violations).toEqual([]);
+  // Axe may leave the keyboard-only skip link focused; hide that transient
+  // inspection state before capturing the page for visual review.
+  await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
+  await expect(page.locator('.skip-link')).not.toBeFocused();
   await page.screenshot({ path: `../docs/screenshots/profile-wizard-${info.project.name}.png`, fullPage: true });
   await page.getByTestId('profile-show-all').click();
   await expect(page.getByLabel('GPA / средний балл')).toHaveValue('4.8');

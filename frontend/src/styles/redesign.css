@@ -34,8 +34,8 @@
 .app--redesign .topbar { position: relative; background: var(--color-background); backdrop-filter: none; gap: var(--space-3); }
 .topbar__title { font-family: var(--font-family-brand); font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); }
 .shell-run { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); padding: var(--space-3) var(--space-6); background: var(--color-info-soft); color: var(--color-info); }
-.skip-link { position: fixed; top: var(--space-3); left: var(--space-3); z-index: var(--z-modal); padding: var(--space-3); background: var(--color-surface); transform: translateY(-200%); }
-.skip-link:focus { transform: none; }
+.skip-link { position: fixed; top: var(--space-3); left: var(--space-3); z-index: var(--z-modal); padding: var(--space-3); background: var(--color-surface); transform: translateY(-200%); opacity: 0; pointer-events: none; }
+.skip-link:focus { transform: none; opacity: 1; pointer-events: auto; }
 .case-home { display: grid; gap: var(--space-7); max-width: var(--size-content); margin: var(--space-5) var(--space-auto); }
 .case-intro h1 { font-size: var(--font-size-display); max-width: var(--size-reading-column); }
 .case-intro .screen__eyebrow { font-family: var(--font-family-brand); font-size: var(--font-size-xs); }

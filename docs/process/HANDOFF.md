@@ -1496,6 +1496,8 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**Screenshot QA in progress, 2026-09-23:** post-change frontend token audit 5 files / 0 errors / 0 warnings, typecheck, lint, 251 unit tests, build, redesign Playwright 19 passed / 1 intentional skip, and `21st review` of `redesign.css` 0 findings. Desktop/mobile profile and mobile exam screenshots inspected without the skip-link artifact. Backend Ruff and format pass; mypy passes 198 source files; full backend pytest/coverage rerun remains in progress. Previous complete GitHub release-gates run `35838605960` passed all four jobs before the screenshot CSS change.
+
 **Open Path after main integration, 2026-09-23:** frontend token audit 5 CSS/SCSS files, 0 errors/0 warnings; typecheck, lint, 251 unit tests and build pass; redesign Playwright 17 passed/1 intentional skip, including desktop/mobile light/dark axe and overflow. Backend Ruff check passes, Ruff format reports 198 files formatted, mypy reports no issues in 198 source files, targeted KZT extraction file passes under ordinary Windows locale, one Alembic head (`c5d01b7e4f83`), and full pytest coverage passes at 94.56% against the 92% floor. `21st review` of the case component and changed component CSS reports 0 findings. All four jobs in release-gates run `35836680685` passed on the pre-QA code tree. Post-QA edits only affect docs and 21st metadata; referenced source paths all exist, token audit and typecheck pass. Latest docs-only CI is pending. The fixture helper's explicit UTF-8 read is `547d32d`.
 
 V2-20b, gates run by claude-opus-5 on 2026-09-21. All green: ruff check and format; mypy over `app` and
