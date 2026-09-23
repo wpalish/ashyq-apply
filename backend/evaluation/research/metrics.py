@@ -8,6 +8,7 @@ from typing import Any
 from urllib.parse import urlsplit, urlunsplit
 
 from app.adapters.search.ontology import titles_name_same_programme
+from app.domain.claim_verifier import registrable_domain
 from app.domain.programme_identity import Verdict
 
 from .schema import Capture, Dataset, Observation, Scope
@@ -27,6 +28,10 @@ def canonical_url(url: object) -> str:
 #: ours to lie *inside* theirs made every correct claim unsupported. The cap
 #: keeps "the reviewer's words are somewhere in half a page" from counting.
 SUPPORTING_QUOTE_MAX = 300
+
+
+def _domain(url: object) -> str:
+    return registrable_domain(urlsplit(str(url)).hostname or "")
 
 
 def quote_supports(ours: str, theirs: str) -> bool:
@@ -124,6 +129,7 @@ def score(dataset: Dataset, capture: Capture, *, allow_drafts: bool = False) -> 
                 predictions[prediction.model_dump_json()] = prediction
         labels = {label.key: label for label in case.labels}
         correct_keys: set[str] = set()
+        correct_same_page_keys: set[str] = set()
         answered = {p.key for p in predictions.values()}
         correct_predictions = 0
         adjudicated = 0
@@ -144,9 +150,29 @@ def score(dataset: Dataset, capture: Capture, *, allow_drafts: bool = False) -> 
                     for e in label.evidence
                 )
             )
-            supported = provenance and (
+            # Owner decision 2026-09-23: another official page of the same
+            # university may support a label. The reviewer cites one page;
+            # universities publish the same deadline or fee on several, and a
+            # right value quoted from the fees page instead of the programme
+            # page was scored as unsupported. The strict reading stays beside
+            # it as ``claim_recall_same_page``.
+            sibling_evidence = bool(
+                label
+                and evidence
+                and not evidence.excerpt_truncated
+                and evidence.excerpt.strip()
+                and _domain(evidence.url) in {_domain(e.url) for e in label.evidence}
+            )
+            supported_same_page = provenance and (
                 p.supported is True
                 or (p.supported is None and exact_evidence and label is not None and value_matches)
+            )
+            supported = supported_same_page or (
+                provenance
+                and p.supported is None
+                and sibling_evidence
+                and label is not None
+                and value_matches
             )
             support_known = not provenance or p.supported is not None or exact_evidence
             if support_known:
@@ -166,6 +192,8 @@ def score(dataset: Dataset, capture: Capture, *, allow_drafts: bool = False) -> 
                 )
                 add("wrong_scope_claim_rate", int(not valid_scope), 1)
                 correct = value_matches and valid_scope and supported
+                if value_matches and valid_scope and supported_same_page:
+                    correct_same_page_keys.add(p.key)
                 correct_predictions += int(correct)
                 adjudicated += 1
                 if correct:
@@ -186,6 +214,7 @@ def score(dataset: Dataset, capture: Capture, *, allow_drafts: bool = False) -> 
         add("claim_precision", correct_predictions, adjudicated)
         add("claim_adjudication_rate", adjudicated, len(predictions))
         add("claim_recall", len(correct_keys), len(known))
+        add("claim_recall_same_page", len(correct_same_page_keys), len(known))
         add("critical_field_coverage", len(critical & answered), len(critical))
         for label in case.labels:
             if label.status == "not_applicable":
@@ -219,6 +248,7 @@ def score(dataset: Dataset, capture: Capture, *, allow_drafts: bool = False) -> 
         "recall_at_20",
         "claim_precision",
         "claim_recall",
+        "claim_recall_same_page",
         "unsupported_claim_rate",
         "wrong_scope_claim_rate",
         "critical_field_coverage",

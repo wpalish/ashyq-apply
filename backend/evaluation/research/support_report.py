@@ -24,7 +24,7 @@ from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
 
-from .metrics import SUPPORTING_QUOTE_MAX, canonical_url
+from .metrics import SUPPORTING_QUOTE_MAX, _domain, canonical_url
 from .schema import Capture, Dataset
 
 #: Our quote lies inside the reviewer's: the original rule.
@@ -36,7 +36,10 @@ THEIRS_IN_OURS = "theirs_in_ours"
 THEIRS_IN_LONG_QUOTE = "theirs_in_long"
 #: Same page, and neither quote contains the other.
 NEITHER = "neither"
-#: Our quote is from another page than any the reviewer cited.
+#: Another page of the same university's site than any the reviewer cited.
+#: Counted as supported since the owner's decision of 2026-09-23.
+SAME_SITE = "same_site"
+#: A page on another site entirely.
 OTHER_PAGE = "other_page"
 NO_EVIDENCE = "no_evidence"
 
@@ -59,7 +62,10 @@ def _shape(prediction, label) -> tuple[str, str]:
         return NO_EVIDENCE, ""
     same_page = [e for e in label.evidence if canonical_url(e.url) == canonical_url(evidence.url)]
     if not same_page:
-        return OTHER_PAGE, label.evidence[0].excerpt if label.evidence else ""
+        theirs = label.evidence[0].excerpt if label.evidence else ""
+        if _domain(evidence.url) in {_domain(e.url) for e in label.evidence}:
+            return SAME_SITE, theirs
+        return OTHER_PAGE, theirs
     ours = " ".join(evidence.excerpt.split())
     for theirs in same_page:
         if ours and ours in " ".join(theirs.excerpt.split()):
@@ -114,13 +120,15 @@ def summarise(rows: list[Support]) -> str:
         THEIRS_IN_OURS,
         THEIRS_IN_LONG_QUOTE,
         NEITHER,
+        SAME_SITE,
         OTHER_PAGE,
         NO_EVIDENCE,
     ):
         lines.append(f"  {shape:15} {counts.get(shape, 0)}")
     lines.append("")
     lines.append(
-        f"{OURS_IN_THEIRS} and {THEIRS_IN_OURS} count as supported (owner decision 2026-09-23); "
+        f"{OURS_IN_THEIRS}, {THEIRS_IN_OURS} and {SAME_SITE} count as supported "
+        "(owner decisions 2026-09-23); "
         f"{THEIRS_IN_LONG_QUOTE} holds the reviewer's words inside more than "
         f"{SUPPORTING_QUOTE_MAX} characters, which does not."
     )

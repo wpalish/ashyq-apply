@@ -10,6 +10,7 @@ from evaluation.research.support_report import (
     NEITHER,
     OTHER_PAGE,
     OURS_IN_THEIRS,
+    SAME_SITE,
     THEIRS_IN_OURS,
     summarise,
     support_shapes,
@@ -48,9 +49,36 @@ def test_another_page_is_named_as_such():
         _capture(dict(SCOPE)), "IELTS overall 6.5", url="https://example.edu/other"
     )
     [row] = support_shapes(_dataset(SCOPE), capture)
+    assert row.shape == SAME_SITE
+
+
+def test_a_quote_from_another_site_is_other_page():
+    capture = _with_excerpt(
+        _capture(dict(SCOPE)), "IELTS overall 6.5", url="https://aggregator.example.com/x"
+    )
+    [row] = support_shapes(_dataset(SCOPE), capture)
     assert row.shape == OTHER_PAGE
 
 
 def test_a_wrong_value_is_not_this_reports_business():
     assert support_shapes(_dataset(SCOPE), _capture(dict(SCOPE), value=7.0)) == []
     assert "no value-correct claims" in summarise([])
+
+
+def test_the_scorer_counts_a_sibling_page_and_keeps_the_strict_count_beside_it():
+    """Owner decision 2026-09-23: another official page of the same site
+    supports a right-valued, right-scoped claim; another site does not."""
+    from evaluation.research.metrics import score
+
+    dataset = _dataset(SCOPE)
+    sibling = _with_excerpt(
+        _capture(dict(SCOPE)), "IELTS overall 6.5", url="https://example.edu/fees"
+    )
+    elsewhere = _with_excerpt(
+        _capture(dict(SCOPE)), "IELTS overall 6.5", url="https://aggregator.example.com/x"
+    )
+    near = score(dataset, sibling, allow_drafts=True)["metrics"]
+    far = score(dataset, elsewhere, allow_drafts=True)["metrics"]
+    assert near["claim_recall"]["numerator"] == 1
+    assert near["claim_recall_same_page"]["numerator"] == 0
+    assert far["claim_recall"]["numerator"] == 0

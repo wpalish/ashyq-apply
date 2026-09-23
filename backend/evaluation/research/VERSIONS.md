@@ -116,3 +116,11 @@ for twice. Run 20 ended Delft, Vienna and UBC in the funding stage with several 
 being cache hits. The budget now counts reads that reach a server; the capture's `config` says so
 (`page_budget_counts`). Live runs before this commit are not directly comparable on budget-bound
 cases. Scoring and every published file are unaffected.
+
+**Scorer definition, 2026-09-23 — a sibling official page supports (owner decision).** A right-valued,
+right-scoped claim whose quote comes from another page on the same registrable domain as a page the
+reviewer cited now counts as supported. Universities publish one deadline or fee on several pages; run 23
+had 9 value-correct claims and 8 of them were quoted from such a sibling page, all scored unsupported.
+Another site still does not support. `verbatim_evidence_rate` keeps the same-page reading, and the strict
+recall is published beside the new one as **`claim_recall_same_page`**. All eight published files were
+regenerated from the frozen capture: every existing metric is identical; only the new key is added.
