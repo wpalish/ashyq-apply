@@ -206,6 +206,27 @@ jobs:
               )
           print(f"\n{budget} of {len(capture['observations'])} cases ran out of budget")
 
+          # Where the budget went. A case that ran out of wall clock after two
+          # fetches spent its time somewhere other than reading pages; its own
+          # child log is the only record, and it sits beside capture.json.
+          logs = pathlib.Path(os.environ["CAPTURE_JSON"]).parent
+          for observation in capture["observations"]:
+              if "BUDGET" not in (observation.get("error") or ""):
+                  continue
+              telemetry = observation.get("telemetry") or {}
+              print(
+                  f"\n--- {observation['case_id']}: {observation.get('error')} | "
+                  f"http={telemetry.get('http_fetches')} search={telemetry.get('search_calls')} "
+                  f"browser={telemetry.get('browser_fetches')} "
+                  f"latency={telemetry.get('latency_seconds')}"
+              )
+              log = logs / f"{observation['case_id']}.log"
+              if log.exists():
+                  for line in log.read_text(encoding="utf-8", errors="replace").splitlines()[-15:]:
+                      print(f"    {line[:220]}")
+              else:
+                  print("    (no child log)")
+
           # Why a case filed nothing. Nine of ten cases in run 35697105238
           # produced zero claims and the capture could not say why for any of
           # them; a count of the runner's own five outcomes is the answer.
