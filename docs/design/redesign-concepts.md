@@ -1,13 +1,13 @@
-# Redesign concepts — rounds 1 to 5 (2026-09-23)
+# Redesign concepts — rounds 1 to 6 (2026-09-23)
 
 The owner asked for a redesign at the level of the product itself: the current UI is "not serious enough",
 overloads an ordinary school student with information, and does not hook. The agreed process is
 **concepts first, then develop the chosen one into a design system and apply it**. This file is the
 record of the rounds: what is wrong today, what every concept keeps, the references, the four
 round-1 directions, the owner's feedback, the round-2 and round-3 directions built from it, and the
-round-4 developments of H and the round-5 directions on K and M, each with its adversarial review.
+round-4 developments of H the round-5 directions on K and M, and the round-6 share kit, each with its adversarial review.
 
-- Live canvas with all 67 artboards (private to the owner until shared):
+- Live canvas with all 74 artboards (private to the owner until shared):
   https://claude.ai/artifact/Ncsd2YkQMcV9oCG3bHrBsa
 - Nothing in `frontend/` changes in this round. PR #10 (tokenised profile workflow) and PR #19
   ("Open Path" visual refinement) are untouched; whichever concept wins decides what happens to them.
@@ -570,20 +570,154 @@ Scores after cycle 2:
 - Contrast was computed from the token values, not measured on rendered pages.
 - Label placement on the globe was done by hand.
 
-## 14. Next step
+## 14. Owner feedback on round 5 (2026-09-23)
 
-The owner picks N, O or P, or a mix. The review suggests:
+- All three (N, O, P) were liked.
+- The owner wants students to share what the service shows them. For example, when a student learns
+  that they meet a university's requirements, the result should look good enough to screenshot and
+  post as a story.
 
-- **N as the base**: K and M together, which is what the owner liked
+## 15. Round 6 — results worth sharing
+
+This round is a sharing layer for N, O and P rather than a new direction. It covers:
+
+- four story cards (9:16, exported at 1080×1920)
+- the screen that opens the results
+- a share sheet where the student chooses the card and what it shows
+- the page a friend lands on from the story link
+
+![Share kit Q](concepts/concept-Q.webp)
+
+References:
+
+| Reference | What it lends |
+|---|---|
+| [Strava iOS — sharing an activity](https://mobbin.com/flows/45843a61-b3e8-482e-8621-17daa8a09bb5) | A map with a few big numbers, and "Share using → Instagram Stories" |
+| [Spotify iOS — Wrapped](https://mobbin.com/explore/flows/bfce8d16-d027-4b98-8f94-75ef39bcaf2a) | A season summary as bold full-screen cards made for stories |
+| [Duolingo iOS — daily streak](https://mobbin.com/explore/screens/40836ed3-605b-452f-9dc8-c97c7b9d6dd0) | A milestone worth a celebration screen |
+
+### What is shareable, and what is not
+
+The card only states what the product knows, in the product's own vocabulary:
+
+| Card | What it says | What it never says |
+|---|---|---|
+| **Мой маршрут** (night, gold arc, globe on the horizon) | "Казахстан → Гронинген", the programme, what the grant covers, the source and the date | "I will get in" |
+| **Требования выполнены** (sun yellow, stamp) | Tokyo PEAK: IELTS and SAT above the published minimums, the interview still ahead, the source, and "Решение о приёме — за университетом" | a probability, a chance, a percentage |
+| **Моя карта поступления** (Wrapped-style) | 6 programmes, 6 countries, 2 within budget, the first deadline | a rank or a score |
+| **Заявка отправлена** (split-flap board from L) | the student's own action, 69 days before the deadline, 1 of 2 applications | a result the student has not received |
+
+**Privacy defaults for a 16-year-old:**
+
+- The first name is shown. The price after the grant and the student's own scores are hidden until
+  they switch them on.
+- The surname, the school, the city and the documents are never shown. The route starts at
+  "Казахстан", not at the city.
+- The friend's page shows only the card that was shared, never the profile.
+
+**Screenshot-worthy by default:**
+
+- The results reveal ("Аружан, у тебя 6 маршрутов в 6 стран") is a full-screen night globe carrying
+  the brand, so a plain screenshot also advertises the product.
+- Every fact sits inside Instagram's safe area: below the top 14 %, where the profile bar and the
+  progress are, and above the bottom 18 %, where the reply bar is. Only the globe and the brand band
+  sit in those zones.
+
+**Where the share button appears:**
+
+- the reveal screen after research
+- the programme page's sticky bar
+- a toast when the last requirement is met
+- after the student marks an application as sent
+- the season summary
+
+### Adversarial review (loop report)
+
+**Definition of Done:**
+
+- 4 story templates at 1080×1920, with facts inside the safe area
+- every claim true to the demo corpus or the profile: no "шанс", no percentage, no "поступлю"; a
+  source and a date on factual cards
+- the privacy defaults above
+- the brand on every card, and a page for the friend
+- text of at least 11 px, a contrast of at least 4.5:1, and 44 px targets
+- two review cycles
+
+**Personas:**
+
+- the 16-year-old who posts
+- the friend who sees the story for a second and a half
+- a parent
+- an auditor of the product's invariants
+- a privacy auditor for minors
+- a growth sceptic
+
+**Cycle 1** found 10 defects. Mean score: 6.5.
+
+| # | Defect | Root cause | Fix |
+|---|---|---|---|
+| Q1 | The route card showed "Астана" while the share sheet promised never to show the city | The card reused the in-app route label; the privacy rules were written after the card | The route starts at the country, "Казахстан" |
+| Q2 | The logo disappeared on the yellow card | A yellow mark on a yellow background | An inverted mark: a navy circle with a sun-yellow door |
+| Q3 | The "requirements met" card printed the student's scores, while the share sheet's default hides them | The card was drawn before the defaults | The card shows only the public minimums ("выше минимума 6.5"); the scores appear only when switched on |
+| Q4 | A "без «шансов в %»" chip on a personal story read like an advert | Product copy was reused on a personal card | Removed; the promise lives on the friend's page |
+| Q5 | "1.12" as the first deadline read like a decimal | A number tile was used for a date | A line: "Первый срок — 1 декабря, Токио" |
+| Q6 | "6 программ", but the globe showed 5 routes | Toronto is behind the globe | An edge chip, "← Торонто" |
+| Q7 | "University of Tokyo ·" wrapped with a dangling separator | Name and programme in one line | Two lines |
+| Q8 | On the reveal screen, stat labels and "Смотреть маршруты" wrapped badly | The labels were too long for half-width tiles | Two-line labels by design; the button says "К маршрутам" |
+| Q9 | The share sheet's template thumbnails were blank colour blocks | Placeholders were left in | Real miniatures of the cards |
+| Q10 | The friend's page had a one-word last line ("ты?") and an empty middle | No no-break space; no content under the promises | A no-break space; three steps |
+
+**Cycle 2** found 1 defect: on the map card, the numbers collided with the deadline line. The globe
+is smaller and the rows are re-spaced.
+
+After cycle 2:
+
+- no text below 11 px, except inside the share sheet's template thumbnails, which are pictures
+  of the cards and not meant to be read
+- the lowest text contrast is 5.5:1, and the gold and green texts on navy are above 7:1
+- the wording scan finds only the friend page's promise "Без «шансов в %»"
+
+Scores after cycle 2:
+
+| Persona | Score |
+|---|---|
+| The 16-year-old who posts | 8 |
+| The friend | 8 |
+| Parent | 8 |
+| Invariants auditor | 9 |
+| Privacy auditor | 9 |
+| Growth sceptic | 7 |
+| **Mean** | **8.2** |
+
+The most shareable cards are "Требования выполнены" and "Заявка отправлена". They are
+achievements, which is what people post.
+
+**Remaining risks:**
+
+- A friend can still read "Требования выполнены" as "поступила". The honesty line sits next to the
+  headline, but anyone can crop it.
+- There is no reward for sharing yet (for example, a referral).
+- The link travels only if the student adds Instagram's link sticker. Without it, only the brand
+  travels.
+- The cards need server-side rendering from the same tokens (for example a headless browser or
+  satori), so that a shared card and the app always match.
+- An "offer received" card must be based only on the student's own report, and be labelled as such.
+- These are static mock-ups, not yet tested with students.
+
+## 16. Next step
+
+The owner picks among N, O and P, or a mix. The review suggests:
+
+- **N as the base**: K and M together
 - **O's ladder** as the budget filter and the comparison screen
-- **P's triage** as the way to finish the shortlist on the phone
-- the light theme everywhere; P's dark landing only if the owner likes it
+- **P's triage** to finish the shortlist on the phone
+- the **Q share kit** across all of them
 
 After the choice:
 
 1. The next canvas round: the chosen direction across the real flow (landing, sign-in, profile
-   questions, research progress, shortlist, programme, plan, documents), light and dark, 390 and 1440,
-   delivered as phone images in the chat.
+   questions, research progress, shortlist, programme, plan, documents, share), light and dark, 390
+   and 1440, delivered as phone images in the chat.
 2. Tokens in `frontend/src/styles/tokens.css` (primitives → semantic → component), with the status
    vocabulary above in `i18n.ts`.
 3. Apply screen by screen behind the existing tests, starting with the shortlist, which is where the
