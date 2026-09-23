@@ -253,3 +253,31 @@ def test_the_demo_corpus_states_no_qualification_of_its_own() -> None:
             stated[str(page.relative_to(corpus))] = qualification
 
     assert stated == {}, f"a demo page was read as scoped to a qualification: {stated}"
+
+
+class TestATitleNamesItsOwnDegree:
+    """Groningen's bachelor deadline stayed out of scope on degree: the title
+    says "Bachelor", but only a body phrase like "bachelor programme" counted."""
+
+    def test_a_bare_degree_word_in_the_title_is_the_page_naming_itself(self):
+        scope = read_scope(
+            "Admission requirements and deadlines.",
+            title="Computing Science | Bachelor | University of Groningen",
+        )
+        assert scope.degree == "bachelor"
+
+    def test_the_title_outranks_a_passing_mention_in_the_body(self):
+        scope = read_scope(
+            "Many graduates continue to a master programme.",
+            title="Computing Science | Bachelor | University of Groningen",
+        )
+        assert scope.degree == "bachelor"
+
+    def test_a_title_naming_two_degrees_leaves_the_body_to_decide(self):
+        scope = read_scope(
+            "Requirements for the bachelor programme.", title="Bachelor and Master programmes"
+        )
+        assert scope.degree == "bachelor"
+
+    def test_a_title_naming_none_changes_nothing(self):
+        assert read_scope("Bachelor and master requirements.", title="Admissions").degree is None

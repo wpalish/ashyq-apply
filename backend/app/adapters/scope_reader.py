@@ -275,6 +275,25 @@ def _degrees(text: str) -> list[str]:
     ]
 
 
+#: In a title a bare degree word is the page naming itself — "Computing Science
+#: | Bachelor | University of Groningen" — so it needs none of the "programme"
+#: or "degree" that the body pattern demands of running prose.
+_TITLE_DEGREE = re.compile(
+    r"\b(bachelor(?:'?s)?|undergraduate|bsc|beng|master(?:'?s)?|postgraduate|msc|meng"
+    r"|phd|doctoral|doctorate)\b",
+    re.IGNORECASE,
+)
+
+
+def _title_degrees(title: str) -> list[str]:
+    text = _flatten(title or "")
+    return [
+        _DEGREE_WORDS[m.group(1).lower().replace("’", "'")]
+        for m in _TITLE_DEGREE.finditer(text)
+        if not _negated(text, m.start()) and m.group(1).lower().replace("’", "'") in _DEGREE_WORDS
+    ]
+
+
 def _compared(text: str, start: int) -> bool:
     """Whether this phrase is a yardstick rather than the page's own scope."""
     return bool(_COMPARISON.search(text[max(0, start - _NEGATION_RADIUS) : start]))
@@ -325,7 +344,11 @@ def read_scope(text: str, *, title: str = "") -> ClaimScope:
     # state both in the same breath ("EU/EEA and non-EU/EEA applicants pay
     # different fees"). Two populations is two, and two is silence.
     return ClaimScope(
-        degree=_single(_degrees(haystack)),
+        # The title is the page saying what it is about. When it names exactly
+        # one degree, a body that also mentions another ("many continue to a
+        # master's") does not make the page silent on its own degree — that
+        # silence is what kept Groningen's bachelor deadline out of scope.
+        degree=_single(_title_degrees(title)) or _single(_degrees(haystack)),
         intake=_single(_intakes(haystack)),
         academic_year=_single(_academic_years(haystack)),
         population=_single(populations),

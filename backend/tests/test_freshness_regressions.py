@@ -475,6 +475,18 @@ class TestSupersededExcluded:
 #: ``_canonical_demo_dump`` machinery below. GREEN on baseline by
 #: construction; the developer's T32 changes must keep the demo pipeline
 #: byte-identical under the same masking.
+#: Re-captured, 2026-09-23, for a title that names its own degree. **Not
+#: additive.** The old code reproduces the previous constant exactly; 179
+#: leaves changed, in exactly three shapes and nothing else: 120 ×
+#: `claims[*].scope.degree` None → "bachelor", and 59 ×
+#: `requirement_checks[*].published_scope` gaining "degree bachelor" (53
+#: "published for intake Fall 2027" → "published for degree bachelor, intake
+#: Fall 2027"; 6 the same with the population kept). Every changed claim comes
+#: from a page whose title names one bachelor-level degree ("BSc Computing
+#: Science - University of Groningen", "Bachelor of Computing (Computer
+#: Science) - …", "MEXT Undergraduate Scholarship …"). No status, value,
+#: verdict or check outcome moved.
+#:
 #: Re-captured for Phase 3 §7, 2026-09-23: availability is re-rolled from the
 #: runner's eligibility verdict. **Not additive, and not waved through.** The
 #: old code reproduces the previous constant exactly; leaf-by-leaf, exactly
@@ -553,7 +565,7 @@ class TestSupersededExcluded:
 #: changed). That is the whole of the intended change — a claim now records
 #: what its page stated about who it covers — and it is the only reason this
 #: constant has a second value. Anything else that moves it is a regression.
-GOLDEN_DEMO_SHA256 = "d45924f04438765cd06af6e9c3e66c75325b33ee4c373fb11bf32511feb62862"
+GOLDEN_DEMO_SHA256 = "3492987b16c498456c6626e744c7c84a2113b46eae32a90f88a59a4db7f2c9b2"
 
 #: The golden was captured with the real clock on 2026-09-07, and the baseline
 #: payload embeds that date: ``requirement_checks[*].applicant_value`` and
