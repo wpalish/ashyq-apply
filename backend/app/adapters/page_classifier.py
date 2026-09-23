@@ -488,7 +488,12 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
     # programme page has an "entry requirements" section, and matching that
     # first classified BSc Computer Science and Engineering as a general
     # admissions page.
-    subject = _program_name(identity) or _program_name_from_context(identity, title, path)
+    subject = _program_name(identity)
+    context_degree: str | None = None
+    if subject is None:
+        from_context = _program_name_from_context(identity, title, path, body[:4000])
+        if from_context:
+            subject, context_degree = from_context
 
     # Links alone may only decide when the page has no programme identity of
     # its own. Counting them first made "BSc Computing Science" a catalogue
@@ -505,7 +510,7 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
             [f"{program_links} programme links", "no programme identity of its own"],
             title,
         )
-    degree = _degree_level(f"{identity} {body[:2500]}")
+    degree = context_degree or _degree_level(f"{identity} {body[:2500]}")
     language = _language(body)
     year = _academic_year(body)
 
@@ -602,11 +607,19 @@ def _text(soup: BeautifulSoup) -> str:
 
 
 def _degree_level(text: str) -> str | None:
+    """The degree the text names first.
+
+    First by position, not by the order of ``_DEGREE_WORDS``: that order made
+    any "master" anywhere in the body outrank the "BSc" in the heading, and
+    HKU's undergraduate page came out as a master's programme.
+    """
     low = text.lower()
+    earliest: tuple[int, str] | None = None
     for pattern, level in _DEGREE_WORDS:
-        if re.search(pattern, low):
-            return level
-    return None
+        match = re.search(pattern, low)
+        if match and (earliest is None or match.start() < earliest[0]):
+            earliest = (match.start(), level)
+    return earliest[1] if earliest else None
 
 
 def _language(text: str) -> str | None:
@@ -666,16 +679,20 @@ def _program_name(identity: str) -> str | None:
     return name
 
 
-def _program_name_from_context(identity: str, title: str, path: str) -> str | None:
+def _program_name_from_context(
+    identity: str, title: str, path: str, body: str = ""
+) -> tuple[str, str] | None:
     """A bare subject heading ("Computing Science") that the page's own title
-    and address place at one degree level.
+    and address place at one degree level, and the degree they place it at.
 
     Groningen's certified programme page carries its degree only in the title
     and in ``/bachelors/``; the heading alone failed ``_program_name`` and the
     page's links then made it a catalogue, which the allow-list refuses. All
-    three must agree: a short single name, repeated in the title, with a
-    degree word in the title or the path. A section heading repeated in a
-    title without a degree anywhere stays unnamed.
+    must agree: a short single name, repeated in the title, with a degree word
+    in the title or the path — and no full degree title in the body naming a
+    different subject. HKU's "Computing and Data Science" is a school whose
+    page says "The Bachelor of Engineering in Computer Science covers …": its
+    heading is an area, and naming it a programme recorded a false one.
     """
     name = (identity or "").strip()
     if not name or len(name) > 80 or len(name.split()) > 6:
@@ -687,9 +704,24 @@ def _program_name_from_context(identity: str, title: str, path: str) -> str | No
     if name.casefold() not in (title or "").casefold():
         return None
     segments = " ".join(re.split(r"[/_-]+", path or ""))
-    if not (_degree_level(title or "") or _degree_level(segments)):
+    degree = _degree_level(title or "") or _degree_level(segments)
+    if not degree:
         return None
-    return name
+    for match in _FULL_DEGREE_TITLE.finditer(body or ""):
+        if name.casefold() not in match.group(0).casefold():
+            return None
+    return name, degree
+
+
+#: "Bachelor of Engineering in Computer Science", "BSc in Data Science",
+#: "Master of Science in Computing": a degree named in full, with its subject.
+_FULL_DEGREE_TITLE = re.compile(
+    # The degree word in any case; the subject only in capitals, so "bachelor
+    # in the Netherlands" or "taught in English" never reads as a programme.
+    r"(?i:\b(?:bachelor|master|b\.?sc|m\.?sc|b\.?eng|m\.?eng)\b)"
+    r"(?:\s+of\s+[A-Z]\w*(?:\s+[A-Z]\w*)?)?(?:\s*\((?i:hons)\))?"
+    r"\s+in\s+(?!English\b|Dutch\b|German\b|French\b)[A-Z][\w&]*(?:\s+(?:and\s+)?[A-Z][\w&]*){0,3}"
+)
 
 
 def _award_name(identity: str) -> str | None:

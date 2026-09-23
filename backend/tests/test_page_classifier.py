@@ -77,3 +77,39 @@ class TestABareSubjectHeading:
             html=self._page("Computing Science | About us | University of Groningen"),
         )
         assert page.page_type is PageType.PROGRAM_CATALOG
+
+
+class TestASchoolIsNotItsOwnProgramme:
+    """Run 12: HKU's "Computing and Data Science" school page was recorded as a
+    master's programme of that name — a false programme and a wrong degree."""
+
+    def test_a_heading_the_body_names_under_a_different_degree_title_is_not_a_programme(self):
+        html = (
+            "<html><head><title>Computing and Data Science | HKU Admissions</title></head>"
+            "<body><main><h1>Computing and Data Science</h1>"
+            "<p>Explore master programmes as well. The Bachelor of Engineering in Computer "
+            "Science covers algorithms and data structures.</p></main></body></html>"
+        )
+        page = classify_page(
+            url="https://admissions.hku.hk/programmes/undergraduate-programmes/"
+            "computing-and-data-science",
+            html=html,
+        )
+        assert page.subject != "Computing and Data Science"
+
+    def test_a_context_named_programme_takes_its_degree_from_the_title_not_the_body(self):
+        html = (
+            "<html><head><title>Computing Science | Bachelor | University of Groningen</title>"
+            "</head><body><main><h1>Computing Science</h1>"
+            "<p>After this, many continue to a master's degree.</p></main></body></html>"
+        )
+        page = classify_page(url="https://www.rug.nl/bachelors/computing-science/", html=html)
+        assert page.subject == "Computing Science"
+        assert page.degree_level == "bachelor"
+
+
+def test_the_degree_named_first_wins_not_the_first_in_the_word_list():
+    from app.adapters.page_classifier import _degree_level
+
+    assert _degree_level("BSc Computer Science. Continue to our master programmes.") == "bachelor"
+    assert _degree_level("MSc Data Science, building on a bachelor degree.") == "master"
