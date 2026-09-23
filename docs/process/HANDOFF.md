@@ -3074,8 +3074,9 @@ call, so none is mine to make:
 3. **HKU:** the certified programme source is a school page that lists programmes. Should a listing
    that names "Bachelor of Engineering in Computer Science" confirm existence? The adapter's rule
    today is that only a programme's own page may.
-4. **Vienna deadline:** the page says "Application period 2 March to 4 May 2026", but the certified
-   value is null, so it can never match.
+4. ~~Vienna deadline~~ **withdrawn (claude-opus-5, 2026-09-23): my error.** The label's status is
+   `unknown`, with the note "Published entrance-exam cycle is 2026, not a confirmed fall 2027
+   deadline", so it is not in claim_recall's denominator at all. Nothing to decide.
 5. **Which way "supported" contains.** The scorer requires our excerpt to lie inside the reviewer's
    (`evidence.excerpt in e.excerpt`). Reviewer excerpts are minimal, so a correct claim quoting the
    whole sentence is never supported, and claim_recall stays 0 whatever extraction does. Accepting the
@@ -3083,6 +3084,10 @@ call, so none is mine to make:
    need regenerating plus a VERSIONS note. The `support_report` step shows the effect before anyone
    decides. Run 13: 0 of 6 value-correct claims are supported today; 2 would be under the reverse
    direction.
+
+**RESOLVED 2026-09-22 — the six decisions below were approved by the owner ("делай по
+рекомендациям") and implemented (see §3: `5d6b75d`, `38104d2` and the entries around them). The text is
+kept as the record of what was asked.**
 
 **Owner decision: may a programme-specific rule stay usable when a university-wide rule disagrees?**
 The phase guide says yes — a general rule and a specific one may both be true, the specific one is
