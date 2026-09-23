@@ -15,7 +15,11 @@ import uuid
 from datetime import timedelta
 
 from app.models.base import utcnow
-from app.payments.errors import DuplicateOrderError, ProviderRejected
+from app.payments.errors import (
+    DuplicateOrderError,
+    ProviderRejected,
+    UnconfiguredWebhookSecret,
+)
 from app.payments.provider import ProviderInvoice
 
 #: ApiPay accepts a payer phone as 11 digits beginning with 8.
@@ -85,10 +89,23 @@ class FakeProvider:
 
     # -- webhooks ------------------------------------------------------
     def sign(self, raw_body: bytes) -> str:
+        if not self.secret:
+            raise UnconfiguredWebhookSecret(
+                "This provider has no webhook secret, so it cannot sign anything."
+            )
         return "sha256=" + hmac.new(self.secret, raw_body, hashlib.sha256).hexdigest()
 
     def verify_webhook(self, raw_body: bytes, signature: str) -> bool:
-        if not signature:
+        """An unconfigured secret verifies nothing, rather than everything.
+
+        HMAC with an empty key is still a valid HMAC, and the key is then a
+        constant every reader of this file knows — so a deployment that turned
+        payments on without setting a secret would accept a forged `paid`
+        event from anyone. Refusing here means the worst case is a callback
+        that does not land, which an operator notices, rather than a paywall
+        that silently opens, which nobody does.
+        """
+        if not signature or not self.secret:
             return False
         return hmac.compare_digest(self.sign(raw_body), signature)
 
@@ -97,7 +114,12 @@ _shared: FakeProvider | None = None
 
 
 def get_shared_fake(secret: str) -> FakeProvider:
-    """One instance per process, so a test can simulate what a route created."""
+    """One instance per process, so a test can simulate what a route created.
+
+    ``secret`` may be empty. It used to be defaulted to a constant written in
+    this repository, which meant an unconfigured deployment shipped with a
+    publicly known webhook key.
+    """
     global _shared
     if _shared is None or _shared.secret != secret.encode():
         _shared = FakeProvider(webhook_secret=secret)

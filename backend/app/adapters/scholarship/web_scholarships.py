@@ -30,6 +30,7 @@ from app.adapters.extraction import (
 )
 from app.adapters.fetching import Fetcher
 from app.adapters.page_classifier import PageType, classify_page
+from app.adapters.scope_reader import read_scope
 from app.domain.enums import (
     ApplicationMode,
     ClaimType,
@@ -179,6 +180,10 @@ class WebScholarshipAdapter:
             or is_official_domain(url, [candidate.domain]),
             extraction_method="fixture" if url.startswith("fixture://") else "html_rule",
             accessed_at=accessed_at or datetime.now(UTC),
+            # Eligibility prose names a population far more often than
+            # requirements prose does, and an award claimed for the wrong one
+            # is the most expensive wrong answer this product can give.
+            scope=read_scope(text, title=title),
         )
         _plain_add = builder.add
 

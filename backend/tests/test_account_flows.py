@@ -667,3 +667,102 @@ class TestPasswordHashing:
         legacy = hash_password(PASSWORD, n=2**12)
         assert verify_password(PASSWORD, legacy) is True
         assert needs_rehash(legacy) is True
+
+    def test_signing_in_rewrites_a_hash_that_was_written_more_cheaply(self, auth_client):
+        """The upgrade `needs_rehash` was written for, which nothing performed.
+
+        The cost was raised to 2**17 and the comment on ``SCRYPT_N`` promised
+        that older hashes would be "rewritten at the next successful login".
+        Nothing called ``needs_rehash``, so an account created before the raise
+        kept its cheap hash for the life of the account — the one thing that
+        makes a stolen table expensive to attack.
+        """
+        from app.db import SessionLocal
+        from app.models import User
+        from app.security import hash_password
+
+        client, settings = auth_client
+        principal = register(client, "legacy")
+        with SessionLocal() as session:
+            user = session.get(User, principal["user_id"])
+            user.password_hash = hash_password(PASSWORD, n=2**12)
+            session.commit()
+
+        client.post("/api/auth/logout")
+        signed_in = client.post(
+            "/api/auth/login", json={"email": "legacy@example.test", "password": PASSWORD}
+        )
+        assert signed_in.status_code == 200, signed_in.text
+
+        with SessionLocal() as session:
+            stored = session.get(User, principal["user_id"]).password_hash
+        assert stored.startswith(f"scrypt${2**settings.password_scrypt_log2}$")
+
+    def test_a_rewritten_hash_still_accepts_the_same_password(self, auth_client):
+        from app.db import SessionLocal
+        from app.models import User
+        from app.security import hash_password
+
+        client, _settings = auth_client
+        principal = register(client, "again")
+        with SessionLocal() as session:
+            user = session.get(User, principal["user_id"])
+            user.password_hash = hash_password(PASSWORD, n=2**12)
+            session.commit()
+
+        client.post("/api/auth/logout")
+        assert (
+            client.post(
+                "/api/auth/login", json={"email": "again@example.test", "password": PASSWORD}
+            ).status_code
+            == 200
+        )
+        client.post("/api/auth/logout")
+        assert (
+            client.post(
+                "/api/auth/login", json={"email": "again@example.test", "password": PASSWORD}
+            ).status_code
+            == 200
+        )
+
+
+class TestChangingAPasswordClosesEveryWayBackIn:
+    def test_a_reset_link_in_flight_stops_working(self, mail_sink):
+        """A live reset token outlives the password it was asked for.
+
+        Someone changes their password because they believe another person has
+        it. If that person had already asked for a reset link, the link kept
+        working for the rest of its hour — a way back in that the password
+        change was performed precisely to close.
+        """
+        client, _settings, sink = mail_sink
+        register(client, "worried")
+        client.post("/api/auth/password/reset-request", json={"email": "worried@example.test"})
+        token = reset_token_from_letter(sink.messages[-1])
+
+        changed = client.post(
+            "/api/auth/password",
+            json={"current_password": PASSWORD, "new_password": "a brand new secret 1"},
+        )
+        assert changed.status_code == 200, changed.text
+
+        spent = client.post(
+            "/api/auth/password/reset",
+            json={"token": token, "new_password": "attacker chosen value"},
+        )
+        assert spent.status_code == 400
+        assert "no longer valid" in spent.json()["detail"]
+
+    def test_the_change_records_what_it_revoked(self, mail_sink):
+        client, _settings, sink = mail_sink
+        register(client, "audited")
+        client.post("/api/auth/password/reset-request", json={"email": "audited@example.test"})
+
+        client.post(
+            "/api/auth/password",
+            json={"current_password": PASSWORD, "new_password": "a brand new secret 2"},
+        )
+
+        events = client.get("/api/audit").json()
+        change = next(e for e in events if e["action"] == "password_changed")
+        assert change["detail"]["reset_tokens_revoked"] == 1

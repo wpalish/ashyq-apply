@@ -267,6 +267,49 @@ def main_content(soup: BeautifulSoup) -> BeautifulSoup:
     return working
 
 
+#: What a URL alone can say about a page. Weaker than reading the page, and
+#: that is the point: discovery has to rank candidates *before* fetching them,
+#: and a URL that announces a research output or a news item is worth ranking
+#: below one that announces a programme. Nothing here rejects a candidate —
+#: rejections need evidence, and these are hints.
+_URL_ONLY_HINTS: tuple[tuple[re.Pattern[str], PageType], ...] = (
+    *_PATH_HINTS,
+    # Research outputs. Aalto's top search result was a publication page and
+    # KAIST's an organisation profile; both outranked the actual programme.
+    (
+        re.compile(
+            r"/(publications?|research-?outputs?|organisations?|organizations?|persons?"
+            r"|profiles?|datasets?|projects?|patents?|theses|dissertations?)(/|$)",
+            re.IGNORECASE,
+        ),
+        PageType.IRRELEVANT,
+    ),
+    (re.compile(r"^(pure|research|scholar|repository)\.", re.IGNORECASE), PageType.IRRELEVANT),
+)
+
+# Deliberately **only negative**. A "/programmes/" segment was tried as a
+# positive hint and measurably hurt: it promotes catalogue index pages over
+# the specific programme page that was asked for, and cost Warsaw its place
+# entirely while pushing NTU down four. A URL can say reliably what a page is
+# *not*; what it *is* needs the page.
+
+
+def classify_url(url: str) -> PageType:
+    """What the URL alone suggests this page is. ``UNKNOWN`` when it says nothing.
+
+    Separate from :func:`classify_page`, which reads the page and is the
+    authority. This exists because ranking happens before fetching, and the
+    alternative — a second copy of these patterns inside the retrieval code —
+    would drift from this one.
+    """
+    parts = urlparse(url)
+    haystack = f"{parts.hostname or ''}{parts.path or ''}"
+    for pattern, page_type in _URL_ONLY_HINTS:
+        if pattern.search(haystack):
+            return page_type
+    return PageType.UNKNOWN
+
+
 def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassification:
     """Classify a fetched page. Never raises; unknown is a valid answer."""
     full = _parse_markup(html) if html else None

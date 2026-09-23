@@ -385,3 +385,22 @@ class TestPriorities:
         assert reloaded.preferences.priorities == []
         assert reloaded.preferences.research_privacy == "preferences_only"
         assert reloaded.weights_override is False
+
+
+def test_the_conversion_endpoints_are_behind_the_session() -> None:
+    """Every route on this API requires a principal; these two did not.
+
+    Reference data, but reference data served by a process that answers before
+    any rate limiter looks at the request. The dependency is what puts them
+    inside the same boundary as everything else.
+    """
+    from app.api import routes_profile
+    from app.security import get_principal
+
+    for endpoint in (routes_profile.conversion_methods, routes_profile.preview_conversion):
+        dependencies = [
+            default.dependency
+            for default in endpoint.__defaults__ or ()
+            if hasattr(default, "dependency")
+        ]
+        assert get_principal in dependencies, endpoint.__name__

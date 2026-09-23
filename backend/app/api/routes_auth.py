@@ -19,6 +19,7 @@ from app.security import (
     get_optional_principal,
     get_principal,
     hash_password,
+    needs_rehash,
     normalize_email,
     token_hash,
     verify_password,
@@ -157,6 +158,14 @@ def login(
         raise HTTPException(401, "Invalid email or password.")
     if not verify_password(payload.password, user.password_hash):
         raise HTTPException(401, "Invalid email or password.")
+    if needs_rehash(user.password_hash):
+        # The one moment the plaintext is in hand. `needs_rehash` and the
+        # comment on SCRYPT_N have promised this since the cost was raised, but
+        # nothing called it, so every account created under the old parameters
+        # kept a 2**14 hash for ever - eight times cheaper to attack offline
+        # than the ones written today.
+        user.password_hash = hash_password(payload.password)
+        session.commit()
     membership = (
         session.query(OrganizationMembership)
         .filter(OrganizationMembership.user_id == user.id)

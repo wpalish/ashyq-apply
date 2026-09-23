@@ -1,0 +1,109 @@
+{
+  "version": "2026-09-21.1",
+  "notes": "Vocabulary for retrieval only. A strong alias is the same field under another name; a related concept is a candidate worth fetching and never an automatic match. Non-English aliases are limited to ones that are not in doubt: a guessed alias silently matches the wrong programme.",
+  "fields": {
+    "computer_science": {
+      "label": "Computer Science",
+      "strong_aliases": [
+        "computer science",
+        "computing science",
+        "computing",
+        "informatics"
+      ],
+      "related_not_equivalent": [
+        "software engineering",
+        "data science",
+        "artificial intelligence",
+        "computer engineering",
+        "information systems",
+        "information technology",
+        "computer science and engineering"
+      ],
+      "localized_aliases": [
+        {"language": "fi", "alias": "tietotekniikka"},
+        {"language": "de", "alias": "informatik"},
+        {"language": "nl", "alias": "informatica"},
+        {"language": "pl", "alias": "informatyka"},
+        {"language": "fr", "alias": "informatique"},
+        {"language": "ru", "alias": "информатика"}
+      ]
+    },
+    "data_science": {
+      "label": "Data Science",
+      "strong_aliases": ["data science"],
+      "related_not_equivalent": [
+        "computer science",
+        "statistics",
+        "artificial intelligence",
+        "applied mathematics",
+        "business analytics"
+      ],
+      "localized_aliases": []
+    },
+    "software_engineering": {
+      "label": "Software Engineering",
+      "strong_aliases": ["software engineering"],
+      "related_not_equivalent": [
+        "computer science",
+        "computer engineering",
+        "information technology"
+      ],
+      "localized_aliases": []
+    },
+    "artificial_intelligence": {
+      "label": "Artificial Intelligence",
+      "strong_aliases": ["artificial intelligence"],
+      "related_not_equivalent": [
+        "computer science",
+        "data science",
+        "machine learning",
+        "cognitive science"
+      ],
+      "localized_aliases": []
+    },
+    "computer_engineering": {
+      "label": "Computer Engineering",
+      "strong_aliases": ["computer engineering"],
+      "related_not_equivalent": [
+        "computer science",
+        "electrical engineering",
+        "electronic engineering",
+        "embedded systems"
+      ],
+      "localized_aliases": []
+    },
+    "mathematics": {
+      "label": "Mathematics",
+      "strong_aliases": ["mathematics", "maths", "math"],
+      "related_not_equivalent": [
+        "applied mathematics",
+        "statistics",
+        "computer science",
+        "econometrics"
+      ],
+      "localized_aliases": []
+    }
+  },
+  "degrees": {
+    "foundation": {
+      "aliases": ["foundation", "foundation year", "pre-university", "preparatory"]
+    },
+    "bachelor": {
+      "aliases": [
+        "bachelor",
+        "bachelor's",
+        "bsc",
+        "bs",
+        "beng",
+        "ba",
+        "undergraduate"
+      ]
+    },
+    "master": {
+      "aliases": ["master", "master's", "msc", "ms", "meng", "ma", "graduate", "postgraduate"]
+    },
+    "phd": {
+      "aliases": ["phd", "doctorate", "doctoral", "dphil"]
+    }
+  }
+}

@@ -203,6 +203,33 @@ class TestBlocking:
         me = join_as(client, "alone")
         assert client.post(f"/api/social/blocks/{me}").status_code == 400
 
+    def test_a_block_hides_the_card_from_the_direct_route_too(self, client):
+        """Discover and the feed hid them; the card by id did not.
+
+        Someone who had been blocked could still read the bio, the city and the
+        universities of the person who blocked them by asking for the user id
+        the feed had already shown them — which is the whole of what a block is
+        supposed to withhold.
+        """
+        blocker = join_as(client, "withdrawn", bio="Ищу соседа по квартире, пишите")
+        client.post("/api/auth/logout")
+        blocked = join_as(client, "persistent")
+        client.post("/api/auth/logout")
+
+        sign_in(client, "withdrawn")
+        assert client.post(f"/api/social/blocks/{blocked}").status_code == 204
+        client.post("/api/auth/logout")
+
+        sign_in(client, "persistent")
+        listed = [p["user_id"] for p in client.get("/api/social/people").json()["items"]]
+        assert blocker not in listed
+        assert client.get(f"/api/social/people/{blocker}").status_code == 404
+        # And the blocker cannot read the blocked person's card either: a block
+        # is symmetric everywhere else, and this route is no exception.
+        client.post("/api/auth/logout")
+        sign_in(client, "withdrawn")
+        assert client.get(f"/api/social/people/{blocked}").status_code == 404
+
 
 class TestReporting:
     def _a_post_to_report(self, client) -> str:

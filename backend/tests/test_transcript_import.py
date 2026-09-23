@@ -11,6 +11,8 @@ applicant has not looked at must never reach the profile.
 
 from __future__ import annotations
 
+import pytest
+
 from app.domain.transcript import suggest_from_transcript
 
 # The API suite already builds a client on a throwaway database; loaded as a
@@ -208,3 +210,110 @@ class TestTheUploadItself:
         assert response.status_code == 200
         assert response.json()["suggestions"] == []
         assert "image" in response.json()["note"]
+
+
+class TestTheUploadCannotStallTheService:
+    """Parsing is CPU-bound and slow; it must not run on the event loop.
+
+    ``pdf_to_text`` is synchronous pypdf. Called directly from the async
+    handler it held the loop for the whole parse, so one upload froze every
+    other request in the process — health checks, other tenants, everything —
+    and the endpoint carried no rate limit to bound how often that happened.
+    """
+
+    @pytest.fixture
+    def limited_client(self, tmp_path, monkeypatch, corpus_dir):
+        from fastapi.testclient import TestClient
+
+        from app.config import Settings, get_settings
+
+        settings = Settings(
+            demo_mode=True,
+            database_url=f"sqlite:///{tmp_path / 'upload.db'}",
+            cache_dir=tmp_path / "cache",
+            export_dir=tmp_path / "exports",
+            corpus_dir=corpus_dir,
+            fetch_delay_seconds=0.0,
+            enable_browser_tier=False,
+            upload_rate_limit_per_minute=2,
+        )
+        settings.ensure_dirs()
+        get_settings.cache_clear()
+        monkeypatch.setattr("app.config.get_settings", lambda: settings)
+
+        import app.db as db_module
+        import app.main as main_module
+
+        monkeypatch.setattr(main_module, "settings", settings)
+        monkeypatch.setattr(main_module, "_limiter", main_module.FixedWindowLimiter())
+        engine = db_module.create_engine(
+            settings.database_url, connect_args={"check_same_thread": False}
+        )
+        monkeypatch.setattr(db_module, "engine", engine)
+        monkeypatch.setattr(
+            db_module, "SessionLocal", db_module.sessionmaker(bind=engine, future=True)
+        )
+        db_module.migrate_to_head(settings.database_url)
+
+        with TestClient(main_module.app) as c:
+            yield c
+        get_settings.cache_clear()
+
+    def _upload(self, client):
+        return client.post(
+            "/api/profiles/transcript",
+            files={"file": ("t.pdf", b"%PDF-1.4\n%%EOF\n", "application/pdf")},
+        )
+
+    def test_a_slow_parse_does_not_block_an_unrelated_request(
+        self, limited_client, monkeypatch
+    ) -> None:
+        """The health request must return *while the parse is still running*.
+
+        This used to time the health request and require it under 0.5s against
+        a 1.0s sleep. That is a wall-clock margin, and on a loaded machine an
+        unrelated request can legitimately take half a second without the
+        event loop ever having been blocked; it failed at 0.56s for exactly
+        that reason. The property being proved needs no margin: hold the
+        parser open until after the health request has come back, then assert
+        the parse had not finished. If the loop were blocked, the health
+        request could not complete before the parser returned, so the parse
+        would be finished by the time we look.
+        """
+        import threading
+
+        import app.api.routes_profile as routes_profile
+
+        parsing = threading.Event()
+        release = threading.Event()
+        parse_finished = threading.Event()
+
+        def slow_parse(_data: bytes) -> str:
+            parsing.set()
+            # Bounded, so a genuine regression fails the assertion below
+            # rather than hanging the suite.
+            release.wait(timeout=5)
+            parse_finished.set()
+            return ""
+
+        monkeypatch.setattr(routes_profile, "pdf_to_text", slow_parse)
+
+        worker = threading.Thread(target=self._upload, args=(limited_client,))
+        worker.start()
+        try:
+            assert parsing.wait(timeout=5), "the upload never reached the parser"
+            assert limited_client.get("/api/health").status_code == 200
+            assert not parse_finished.is_set(), (
+                "the health request only completed after the parse did, so the parse "
+                "was holding the event loop"
+            )
+        finally:
+            release.set()
+            worker.join()
+
+    def test_the_upload_is_rate_limited(self, limited_client) -> None:
+        assert self._upload(limited_client).status_code in (200, 400)
+        assert self._upload(limited_client).status_code in (200, 400)
+        refused = self._upload(limited_client)
+        assert refused.status_code == 429
+        assert refused.headers["Retry-After"] == "60"

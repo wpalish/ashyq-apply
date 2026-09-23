@@ -33,9 +33,14 @@ def scrape(request: Request) -> Response:
     if settings.metrics_token:
         offered = request.headers.get("authorization", "")
         scheme, _, value = offered.partition(" ")
-        # Constant time: the token is a shared secret, and a scraper retries
-        # forever, which is exactly the budget a timing attack needs.
-        if scheme.lower() != "bearer" or not hmac.compare_digest(value, settings.metrics_token):
+        # Constant time, and over bytes rather than str: `compare_digest`
+        # raises TypeError on a str containing non-ASCII, so a header of
+        # `Bearer tökén` used to leave this route with an unhandled exception
+        # and answer 500 where the only correct answer is 401.
+        expected = settings.metrics_token.encode("utf-8")
+        if scheme.lower() != "bearer" or not hmac.compare_digest(
+            value.encode("utf-8", "surrogateescape"), expected
+        ):
             raise HTTPException(status_code=401, detail="Metrics require a bearer token.")
 
     return Response(content=metrics.render(), media_type=metrics.CONTENT_TYPE)

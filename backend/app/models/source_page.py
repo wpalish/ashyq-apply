@@ -15,7 +15,7 @@ from __future__ import annotations
 from datetime import UTC, datetime, timedelta
 from typing import TYPE_CHECKING
 
-from sqlalchemy import DateTime, Index, Integer, String, Text, func
+from sqlalchemy import DateTime, ForeignKey, Index, Integer, String, Text, func
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.models.base import TimestampedBase, utcnow
@@ -142,7 +142,116 @@ class SourcePage(TimestampedBase):
         session.flush()
         # Materialize the upserted row as a persistent instance, so the
         # caller's further edits (claim counters) land on the same row.
-        return session.query(cls).filter(cls.url == url).one()
+        page = session.query(cls).filter(cls.url == url).one()
+        if content_hash:
+            # The page's metadata and the version it was observed at are one
+            # fact, so they are written together. Recording them separately
+            # would let a caller update the page and forget the version, and
+            # the history would quietly have holes in it.
+            SourceSnapshot.record(
+                session,
+                page_id=page.id,
+                content_hash=content_hash,
+                etag=etag,
+                last_modified_header=last_modified_header,
+                http_status=http_status,
+                observed_at=fetched_at,
+            )
+        return page
+
+
+class SourceSnapshot(TimestampedBase):
+    """One row per version of a page we have actually observed.
+
+    ``SourcePage`` is the page's *current* state, overwritten on every fetch.
+    That answers "has it changed?" and nothing else: once a page changes, what
+    it said before is gone, and "what did this page say when we claimed that?"
+    has no answer. This table is that answer.
+
+    Metadata only, like the page table: a content hash and the validators seen
+    with it, never a body.
+
+    One row per (page, content hash), upserted. **A page that reverts to
+    earlier content is the same content seen again, not a third version** —
+    the re-observation updates ``last_seen_at`` and the version in between
+    keeps its own row, so the order of events survives without inventing a
+    version that is byte-for-byte one we already have.
+    """
+
+    __tablename__ = "source_snapshots"
+    __table_args__ = (
+        Index("uq_snapshots_page_hash", "page_id", "content_hash", unique=True),
+        Index("ix_snapshots_page_last_seen", "page_id", "last_seen_at"),
+    )
+
+    page_id: Mapped[str] = mapped_column(
+        String(32),
+        ForeignKey("source_pages.id", ondelete="CASCADE", name="fk_snapshots_source_page"),
+        nullable=False,
+    )
+    #: sha256 hex of the normalized extracted text, as on the page row.
+    content_hash: Mapped[str] = mapped_column(String(64), nullable=False)
+    etag: Mapped[str | None] = mapped_column(Text, nullable=True)
+    last_modified_header: Mapped[str | None] = mapped_column(Text, nullable=True)
+    http_status: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    #: When this exact content was first and most recently observed.
+    first_seen_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, default=utcnow
+    )
+    last_seen_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, default=utcnow
+    )
+
+    @classmethod
+    def record(
+        cls,
+        session: Session,
+        *,
+        page_id: str,
+        content_hash: str,
+        etag: str | None = None,
+        last_modified_header: str | None = None,
+        http_status: int | None = None,
+        observed_at: datetime | None = None,
+    ) -> None:
+        """Insert this version, or mark the existing one seen again.
+
+        Same upsert discipline as ``SourcePage.record`` and for the same
+        reason: two workers fetching one page must converge on one row rather
+        than race two inserts. ``first_seen_at`` is never moved forward — the
+        first time we saw this content is a fact and does not change.
+        """
+        from sqlalchemy.dialects.postgresql import insert as pg_insert
+        from sqlalchemy.dialects.sqlite import insert as sqlite_insert
+
+        bind = session.get_bind()
+        dialect_insert = pg_insert if bind.dialect.name == "postgresql" else sqlite_insert
+        seen = observed_at or utcnow()
+        table = cls.__table__
+        stmt = (
+            dialect_insert(cls)
+            .values(
+                page_id=page_id,
+                content_hash=content_hash,
+                etag=etag,
+                last_modified_header=last_modified_header,
+                http_status=http_status,
+                first_seen_at=seen,
+                last_seen_at=seen,
+            )
+            .on_conflict_do_update(
+                index_elements=[table.c.page_id, table.c.content_hash],
+                set_={
+                    "etag": etag,
+                    "last_modified_header": last_modified_header,
+                    "http_status": http_status,
+                    "last_seen_at": seen,
+                    "updated_at": utcnow(),
+                },
+            )
+        )
+        session.execute(stmt)
+        session.flush()
 
 
 def is_purgeable(

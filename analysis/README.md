@@ -23,3 +23,5 @@ UNIMATCH_DEMO_MODE=true ./.venv/bin/python ../analysis/reference/ranking_v2.py
 
 - `DEPLOYMENT_SECURITY_LEGAL.md` — записка: где хостить (KZ ЦОД, Oracle только под staging), чек-лист безопасности, Cloudflare для аудитории в РК, карта требований закона о ПД 2026 → задачи L1–L8 и комплект документов для юриста.
 - `TWO_AGENT_WORKFLOW.md` — эстафета Claude Code ↔ Codex (по очереди, при исчерпании токенов): правила передачи, HANDOFF-файл, скрипт проверки, kickoff-промпты; готовые файлы для репо — `agents/` (AGENTS.md, CLAUDE.md, HANDOFF.md, handoff_check.py, PR-шаблон, KICKOFF_PROMPTS.md).
+
+Evidence & Discovery: [start here](v2/README.md) · [execution plan](v2/02_EXECUTION_PLAN.md).

@@ -50,6 +50,16 @@ class SessionExpired(PaymentError):
     code = "kaspi_session_expired"
 
 
+class UnconfiguredWebhookSecret(PaymentError):
+    """Payments are on, but no webhook secret was configured.
+
+    Raised rather than defaulted. A signing key with a default is a key
+    everyone who can read this repository already has.
+    """
+
+    code = "unconfigured_webhook_secret"
+
+
 class RateLimited(PaymentError):
     """The provider is throttling us. ``retry_after`` is its own advice, in seconds."""
 

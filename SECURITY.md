@@ -88,6 +88,15 @@ attests, pays, uploads to a portal or impersonates a recommender.
   names the fields it rejected, never their values.
 - `apipay_api_key` and `apipay_webhook_secret` are `SecretStr` and do not
   render in a settings dump. The API key travels in a header, never a URL.
+- **A callback that cannot be verified is refused, not accepted.** Both
+  providers return `False` from `verify_webhook` when no secret is configured,
+  rather than comparing against an HMAC keyed on the empty string, and the
+  fake provider is no longer handed a fallback secret written in the source.
+  `Settings.validate_runtime` refuses to start when payments are enabled
+  without a secret, when production is still pointed at the `fake` provider,
+  or when a production secret is shorter than 16 characters. The webhook
+  signature is the only thing between a stranger and a free unlock, so every
+  way of having no signature is a startup failure.
 - Unlocking is authorised through the same `owned_profile` check as everything
   else, so an order against another organization's case answers `404`.
 - Subscription quota is spent by exactly one function, `consume_for_case`,
@@ -100,6 +109,33 @@ attests, pays, uploads to a portal or impersonates a recommender.
 - Granting a subscription is a CLI action requiring database access. It is
   deliberately not a network endpoint: it happens about once a year per school
   and an admin route would be a privileged surface bought for nothing.
+
+## Accounts and mail
+
+- Passwords are scrypt at `2**17` (about a second of CPU and 128 MB each). A
+  hash written under weaker parameters still verifies and is rewritten at the
+  next successful sign-in, so raising the cost actually reaches existing
+  accounts instead of only new ones.
+- Changing a password revokes every other session **and** any unspent password
+  reset token. A reset link already in a mailbox is exactly the way back in
+  that a password change is performed to close.
+- Reset tokens are stored as digests, single-use, and expire in an hour; the
+  response to a reset request is identical whether or not the account exists,
+  and never carries the token.
+- SMTP delivery uses STARTTLS with `ssl.create_default_context()`, so the
+  server's certificate chain and hostname are verified. `smtplib`'s default
+  context is `CERT_NONE` with hostname checking off, which would have
+  encrypted the SMTP password and every reset link to whoever answered the
+  port.
+
+## Exports
+
+- Every cell written to CSV and XLSX passes through `export.tabular.neutralize`,
+  which prefixes a value beginning `=`, `+`, `-`, `@`, tab or carriage return
+  with an apostrophe. Two values in a row come from outside the service — the
+  applicant's own notes and text the crawler lifted off a third-party page —
+  and a spreadsheet executes a cell that starts with any of those. A bare
+  negative number is left alone so it stays a number.
 
 ## Data lifecycle
 

@@ -17,6 +17,7 @@ from urllib.parse import urlparse
 
 from bs4 import BeautifulSoup
 
+from app.domain.claim_scope import ClaimScope
 from app.domain.claim_verifier import (
     OFFICIAL_PUBLIC_TLDS,
     RejectReason,
@@ -146,6 +147,7 @@ class ClaimBuilder:
         official_domain: bool = False,
         extraction_method: str = "html_rule",
         accessed_at: datetime | None = None,
+        scope: ClaimScope | None = None,
         page_text: str | None = None,
         page_type: str | None = None,
         allowed_domains: Sequence[str] = (),
@@ -160,6 +162,10 @@ class ClaimBuilder:
             "official_domain": official_domain,
             "extraction_method": extraction_method,
             "accessed_at": accessed_at or datetime.now(UTC),
+            # Deliberately whatever the caller passed, ``None`` included: a
+            # builder that was given no scope records that nobody read one,
+            # which is not the same claim as "the page stated nothing".
+            "scope": scope,
         }
         self.claims: list[Claim] = []
         self.rejected: list[tuple[ClaimType, str, RejectReason]] = []

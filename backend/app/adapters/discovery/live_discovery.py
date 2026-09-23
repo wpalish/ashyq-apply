@@ -34,6 +34,7 @@ import logging
 import re
 from collections.abc import Callable
 from dataclasses import dataclass, field
+from functools import lru_cache
 from pathlib import Path
 from typing import TypedDict
 from urllib.parse import urljoin, urlparse, urlunparse
@@ -245,10 +246,56 @@ _URL_EXCLUSIONS = re.compile(
 )
 
 #: A programme page for the wrong level is not a match for this applicant.
+#: How a catalogue writes a degree level in a URL.
+#:
+#: The cycle forms matter as much as the words. Warsaw's catalogue writes its
+#: bachelor as ``IN/S1-INF`` and its master as ``IN/S2-INF``, and with only the
+#: word list a master's page reached the top of a bachelor search — the right
+#: fact about the wrong population, which is exactly what the prefilter exists
+#: to stop. ``S1``/``S2`` is Bologna cycle numbering, not a Warsaw quirk: it is
+#: ``studia pierwszego/drugiego stopnia`` in Polish, ``I``/``II stopnia`` in
+#: prose, "first cycle"/"second cycle" in English. A numeric convention defeats
+#: a word list wherever it is used.
+#:
+#: Every slug here is matched on a path-segment boundary by
+#: :func:`degree_level_named`, which is what makes a two-character slug like
+#: ``s1`` safe to list.
 _DEGREE_SLUGS: dict[str, tuple[str, ...]] = {
-    "bachelor": ("bsc", "ba", "beng", "llb", "bachelor", "bachelors", "undergraduate"),
-    "master": ("msc", "ma", "meng", "llm", "mba", "master", "masters", "graduate", "postgraduate"),
-    "phd": ("phd", "doctoral", "doctorate", "dphil"),
+    "bachelor": (
+        "bsc",
+        "ba",
+        "beng",
+        "llb",
+        "bachelor",
+        "bachelors",
+        "undergraduate",
+        # Bologna first cycle
+        "s1",
+        "1st-cycle",
+        "first-cycle",
+        "i-stopnia",
+        "licence",
+        "licenciatura",
+    ),
+    "master": (
+        "msc",
+        "ma",
+        "meng",
+        "llm",
+        "mba",
+        "master",
+        "masters",
+        "graduate",
+        "postgraduate",
+        # Bologna second cycle
+        "s2",
+        "2nd-cycle",
+        "second-cycle",
+        "ii-stopnia",
+        "magister",
+        "mastere",
+    ),
+    "phd": ("phd", "doctoral", "doctorate", "dphil", "s3", "3rd-cycle", "third-cycle"),
     "foundation": ("foundation", "pre-bachelor", "preparatory"),
 }
 
@@ -411,6 +458,62 @@ def degree_level_named(url: str) -> str | None:
 _CATALOGUE_PATH = re.compile(
     r"/[a-z0-9-]*(programmes?|programs?|degrees?|courses?|studies)/?$", re.IGNORECASE
 )
+
+
+@lru_cache(maxsize=1)
+def _registry_hosts_by_domain() -> dict[str, frozenset[str]]:
+    """Registrable domain to the hosts this institution's verified seeds name.
+
+    The registry records a homepage and seed URLs per institution, each
+    carrying a ``seeds_verified_on`` date: human-checked data about a real
+    university. That makes it the sanctioned place for institution-specific
+    knowledge — the phase guide allows exactly this and forbids the
+    alternative, a rule in code that knows something about one university.
+
+    It answers a question nothing else in the pipeline could: which of an
+    institution's many hosts actually publishes its programmes. Toronto's
+    seeds name ``future.utoronto.ca``; ``utm.utoronto.ca`` and
+    ``utsc.utoronto.ca`` are other campuses and are not named.
+    """
+    try:
+        entries = json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
+    except (OSError, ValueError):  # pragma: no cover - a broken registry is a deploy problem
+        return {}
+
+    by_domain: dict[str, set[str]] = {}
+    for entry in entries:
+        urls = [entry.get("homepage") or ""]
+        urls += [u for u in (entry.get("seeds") or {}).values() if u]
+        hosts = {h for h in (urlparse(u).hostname or "" for u in urls) if h}
+        if not hosts:
+            continue
+        domain = registrable_domain(next(iter(hosts)))
+        if domain:
+            by_domain.setdefault(domain, set()).update(hosts)
+    return {domain: frozenset(hosts) for domain, hosts in by_domain.items()}
+
+
+def is_seed_host(url: str) -> bool:
+    """Whether this URL sits on a host the institution's verified seeds name.
+
+    ``www.`` is ignored on both sides: a registry that records ``www.rug.nl``
+    is naming the same host as a search result on ``rug.nl``.
+    """
+    host = (urlparse(url).hostname or "").lower().removeprefix("www.")
+    if not host:
+        return False
+    named = _registry_hosts_by_domain().get(registrable_domain(host), frozenset())
+    return any(host == h.lower().removeprefix("www.") for h in named)
+
+
+def is_excluded_path(url: str) -> bool:
+    """Whether a URL is one of the pages a programme search never wants.
+
+    News, events, vacancies, shops, logins and static media. Public because
+    the search package applies the same rule to provider results, and a second
+    copy of this list would drift from this one within a release.
+    """
+    return bool(_URL_EXCLUSIONS.search(urlparse(url).path or ""))
 
 
 def looks_like_catalogue(url: str) -> bool:
@@ -838,6 +941,8 @@ class LiveDiscoveryAdapter:
         await self._confirm_programs(selected, ranked, trace, profile)
         await self._walk_catalogs(entry, selected, trace, profile)
 
+        await self._add_search_results(entry, domain, selected, trace, profile)
+
         trace.selected = {k: list(v) for k, v in selected.items() if v}
         self._apply(candidate, selected, profile, trace)
         return candidate, trace
@@ -956,6 +1061,85 @@ class LiveDiscoveryAdapter:
                     break
                 if url not in selected[PageCategory.PROGRAM_PAGE]:
                     selected[PageCategory.PROGRAM_PAGE].append(url)
+
+    async def _add_search_results(
+        self,
+        entry: dict,
+        domain: str,
+        selected: dict[str, list[str]],
+        trace: DiscoveryTrace,
+        profile: ApplicantProfileIn,
+    ) -> None:
+        """Add programme pages a web search found, if one is configured.
+
+        **Dormant unless a provider is set.** `UNIMATCH_SEARCH_PROVIDER`
+        defaults to `none`, the factory raises, and this returns having done
+        nothing — so a deployment without a key behaves byte-identically to
+        before. Same pattern as ``page_recorder`` above.
+
+        **Appended, never interleaved.** Whatever the sitemap and the walker
+        found keeps its place; search only adds pages they missed. The
+        alternative was measured and cost whole cases; the write-up lives with
+        the benchmark tooling, which production deliberately cannot name — a
+        guard test rejects any path to it from this package, docstrings
+        included.
+
+        A provider failure degrades this run rather than ending it: discovery
+        keeps everything the other generators produced.
+        """
+        from app.adapters.search import SearchError, get_search_provider
+        from app.adapters.search.intent import DiscoveryIntent
+        from app.adapters.search.retrieval import discover_candidates
+
+        try:
+            provider = get_search_provider()
+        except SearchError:
+            return
+
+        fields = list(profile.context.intended_fields)
+        if not fields:
+            return
+
+        try:
+            intent = DiscoveryIntent(
+                institution=entry["name"],
+                domain=domain,
+                degree=profile.context.level,
+                field=fields[0],
+            )
+        except ValueError as exc:
+            # A registry entry or a field the intent refuses — for instance one
+            # carrying something that looks like applicant data. Skip search for
+            # this institution rather than sending it.
+            trace.errors.append(f"search skipped: {exc}")
+            return
+
+        async def read(url: str) -> str:
+            # The adapter's own Fetcher, so robots, rate limits, the PII guard
+            # and the SSRF protections apply exactly as they do everywhere else.
+            result = await self.fetcher.get(url)
+            return result.text if result else ""
+
+        try:
+            report = await discover_candidates(provider, intent, fetch=read, top_k=10)
+        except SearchError as exc:
+            trace.errors.append(f"search unavailable: {exc}")
+            return
+
+        pages = selected[PageCategory.PROGRAM_PAGE]
+        added = 0
+        for found in report.candidates:
+            if len(pages) >= MAX_PAGES_PER_CATEGORY:
+                break
+            if found.url in pages:
+                continue
+            pages.append(found.url)
+            added += 1
+        trace.errors.append(
+            f"search added {added} programme page(s) via {report.provider}"
+            if added
+            else f"search added nothing via {report.provider}"
+        )
 
     def _apply(
         self,

@@ -842,6 +842,30 @@ class ResearchRunner:
             result.requirement_checks = outcome.checks
             result.hard_filter_failures = outcome.hard_filter_failures
             result.missing_prerequisites = outcome.missing_prerequisites
+            # A claim set aside for scope is not a claim that vanished. Say so,
+            # in the applicant's channel, with the page and the reason — a gap
+            # nobody is told about cannot be closed by anybody.
+            for declined in outcome.out_of_scope:
+                topic = declined.claim_type.value.replace("_", " ")
+                result.unresolved.append(
+                    UnresolvedQuestion(
+                        topic=topic,
+                        question=(
+                            f"Does {declined.source_url} also apply to {result.program} for the "
+                            f"intake you are applying to? It is the only page we found stating "
+                            f"this, and it {declined.reason}."
+                        ),
+                        why_it_matters=(
+                            "The page was read correctly, but it states it is about something "
+                            "else, so nothing here is claimed from it. An admissions office can "
+                            "confirm in one reply whether the same rule applies to your intake."
+                        ),
+                        university=result.university,
+                        program=result.program,
+                        suggested_contact="admissions office",
+                        blocking=declined.unanswered,
+                    )
+                )
 
             dl = next((c for c in claims if c.claim_type == ClaimType.ADMISSION_DEADLINE), None)
             if dl is not None:

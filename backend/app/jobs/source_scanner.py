@@ -278,12 +278,17 @@ async def reextract_page(
         )
         .all()
     )
+    superseded_at = datetime.now(UTC)
     for row in superseded:
         row.status = ClaimStatus.SUPERSEDED.value
         new_payload = dict(row.payload)
         new_payload["status"] = ClaimStatus.SUPERSEDED.value
         row.payload = new_payload
         row.source_page_id = page.id
+        # When it stopped being live, written here rather than inferred later
+        # from updated_at, which moves for reasons unrelated to a claim
+        # ceasing to be true.
+        row.superseded_at = superseded_at
 
     fresh = [
         claim.model_copy(
@@ -291,20 +296,35 @@ async def reextract_page(
         )
         for claim in extracted.claims
     ]
+    #: Which old row each new one takes over from, matched on what makes two
+    #: claims the same statement: its type and its subject. A superseded row
+    #: left without a successor is **not** an unfilled link — it means the
+    #: page no longer states this at all, which is the case this whole path
+    #: exists to record, and guessing a successor would erase it.
+    predecessors: dict[tuple[str, str | None], ClaimRow] = {}
+    for row in superseded:
+        key = (row.claim_type, (row.payload or {}).get("subject_key"))
+        predecessors.setdefault(key, row)
+
     for claim in fresh:
-        session.add(
-            ClaimRow(
-                run_id=run.id,
-                result_id=result_id,
-                claim_type=claim.claim_type.value,
-                status=claim.status.value,
-                source_url=claim.source_url,
-                source_specificity=claim.source_specificity.value,
-                accessed_at=claim.accessed_at,
-                payload=claim.model_dump(mode="json"),
-                source_page_id=page.id,
-            )
+        successor = ClaimRow(
+            run_id=run.id,
+            result_id=result_id,
+            claim_type=claim.claim_type.value,
+            status=claim.status.value,
+            source_url=claim.source_url,
+            source_specificity=claim.source_specificity.value,
+            accessed_at=claim.accessed_at,
+            payload=claim.model_dump(mode="json"),
+            source_page_id=page.id,
         )
+        session.add(successor)
+        predecessor = predecessors.pop((claim.claim_type.value, claim.subject_key), None)
+        if predecessor is not None:
+            # Flush first: the successor needs its primary key before another
+            # row can point at it.
+            session.flush()
+            predecessor.superseded_by_id = successor.id
     run.claims_recorded = (run.claims_recorded or 0) + len(fresh)
 
     _record_page(session, page, res, lastmod=None)

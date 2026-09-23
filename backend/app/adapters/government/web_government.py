@@ -5,6 +5,7 @@ from __future__ import annotations
 from app.adapters.base import AdapterResult
 from app.adapters.extraction import ClaimBuilder, html_title, html_to_text
 from app.adapters.fetching import Fetcher
+from app.adapters.scope_reader import read_scope
 from app.domain.enums import ClaimType, SourceSpecificity
 
 
@@ -40,6 +41,10 @@ class WebGovernmentAdapter:
             official_domain=True,
             extraction_method="fixture" if url.startswith("fixture://") else "html_rule",
             accessed_at=res.fetched_at,
+            # Expected to come back empty, and that is the right answer: a
+            # post-study-work rule is national, with no intake and no
+            # programme. Reading it anyway is how we find out we were wrong.
+            scope=read_scope(text, title=html_title(res.text)),
         )
         body = " ".join(
             ln.strip()

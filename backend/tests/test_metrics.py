@@ -267,3 +267,63 @@ def _demo_profile() -> dict:
     from app.corpus.demo_profile import DEMO_PROFILE
 
     return DEMO_PROFILE.model_dump(mode="json")
+
+
+class TestTheScrapeTokenComparison:
+    """The bearer check must answer 401 for every wrong token, not 500 for some.
+
+    ``hmac.compare_digest`` raises TypeError when a ``str`` argument carries a
+    non-ASCII character, so an Authorization header of `Bearer tökén` left the
+    route with an unhandled exception. Comparing bytes keeps the comparison
+    constant time and makes every wrong token the same 401.
+    """
+
+    def _client(self, monkeypatch, token: str):
+        from fastapi.testclient import TestClient
+
+        from app.config import Settings, get_settings
+
+        settings = Settings(metrics_enabled=True, metrics_token=token)
+        get_settings.cache_clear()
+        monkeypatch.setattr("app.config.get_settings", lambda: settings)
+        import app.api.routes_metrics as routes_metrics
+        import app.main as main_module
+
+        monkeypatch.setattr(routes_metrics, "get_settings", lambda: settings)
+        monkeypatch.setattr(main_module, "settings", settings)
+        return TestClient(main_module.app)
+
+    def test_a_non_ascii_token_is_refused_rather_than_crashing(self, monkeypatch) -> None:
+        client = self._client(monkeypatch, "a-real-scrape-token")
+        # Sent as bytes because that is what a socket carries. Starlette decodes
+        # header bytes as latin-1, so the route sees a str with a character
+        # `hmac.compare_digest` refuses to look at.
+        response = client.get(
+            "/metrics", headers={"Authorization": "Bearer tökén".encode("latin-1")}
+        )
+        assert response.status_code == 401
+
+    def test_the_right_token_still_scrapes(self, monkeypatch) -> None:
+        client = self._client(monkeypatch, "a-real-scrape-token")
+        response = client.get("/metrics", headers={"Authorization": "Bearer a-real-scrape-token"})
+        assert response.status_code == 200
+
+    def test_a_wrong_ascii_token_is_refused(self, monkeypatch) -> None:
+        client = self._client(monkeypatch, "a-real-scrape-token")
+        assert client.get("/metrics", headers={"Authorization": "Bearer nope"}).status_code == 401
+
+
+def test_raising_the_scrypt_cost_does_not_break_hashing() -> None:
+    """The cost is meant to be raised. 2**18 used to exceed a hardcoded maxmem.
+
+    scrypt needs about 128*n*r bytes, and the fixed 2**28 ceiling sat exactly
+    on the requirement at n=2**18 - so the next step up the schedule would have
+    made hash_password and verify_password raise instead of getting slower,
+    locking every account out of the product.
+    """
+    from app.security import hash_password, verify_password
+
+    for log2 in (14, 17, 18):
+        encoded = hash_password("a sufficiently long password", n=2**log2)
+        assert encoded.startswith(f"scrypt${2**log2}$8$1$")
+        assert verify_password("a sufficiently long password", encoded) is True

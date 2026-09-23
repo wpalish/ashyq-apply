@@ -475,7 +475,24 @@ class TestSupersededExcluded:
 #: ``_canonical_demo_dump`` machinery below. GREEN on baseline by
 #: construction; the developer's T32 changes must keep the demo pipeline
 #: byte-identical under the same masking.
-GOLDEN_DEMO_SHA256 = "aae8c595ab8f78c8a03a87eddde03a811b8986e4725817d05c65059327e4d702"
+#: Re-captured a third time for V2-25's successor V2-26, under the same proof:
+#: exactly one added line — `"kind": "true_conflict"` on the demo's single
+#: conflict (Delft's programme page against its admissions page, both stating
+#: the same intake, so a real contradiction). 0 removed.
+#:
+#: Re-captured a second time for V2-25, under the same proof: 0 removed lines
+#: of 2651 changed, every addition a key inside a claim's `scope`, on the four
+#: adapters that did not read scope until then. No result, bucket, check or
+#: value moved — only evidence gained a statement of who it is about.
+#:
+#: Re-captured once, for V2-22, from the same frozen clock and the same
+#: masking. The drift was proven additive before the hash moved: every line of
+#: `diff old new` is an addition, every addition is a key inside a claim's new
+#: ``scope`` object, and no existing byte moved (0 removed lines over 1903
+#: changed). That is the whole of the intended change — a claim now records
+#: what its page stated about who it covers — and it is the only reason this
+#: constant has a second value. Anything else that moves it is a regression.
+GOLDEN_DEMO_SHA256 = "6b7e7a98390c2a465479ba4f03a14d317722cd43624a70b074ba4f3c663f3f39"
 
 #: The golden was captured with the real clock on 2026-09-07, and the baseline
 #: payload embeds that date: ``requirement_checks[*].applicant_value`` and
@@ -633,8 +650,9 @@ class TestDemoRunIsByteIdentical:
         dump = _canonical_demo_dump(session, run_id)
         assert hashlib.sha256(dump.encode("utf-8")).hexdigest() == GOLDEN_DEMO_SHA256, (
             "the demo pipeline output drifted from the baseline golden. If (and only if) "
-            "the drift is intended and confined to documented masking shapes, re-capture "
-            "GOLDEN_DEMO_SHA256 from the new baseline; otherwise fix the regression."
+            "the drift is intended, prove it additive first (diff the dumps: no removed "
+            "lines, every addition confined to the documented shape) and record that "
+            "proof beside GOLDEN_DEMO_SHA256 as V2-22 did; otherwise fix the regression."
         )
 
 

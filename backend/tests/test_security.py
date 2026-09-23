@@ -365,6 +365,54 @@ class TestRequestSecurity:
         assert response.headers["retry-after"] == "60"
         assert response.headers["x-frame-options"] == "DENY"
 
+    #: The whole browser policy, not a sample of it. `_secure` is applied by
+    #: hand at each early return in the middleware, so a new refusal added
+    #: without it would ship a response with no policy at all - and the
+    #: refusals are exactly the responses an attacker sees most.
+    POLICY_HEADERS = (
+        "content-security-policy",
+        "x-frame-options",
+        "x-content-type-options",
+        "referrer-policy",
+        "permissions-policy",
+        "cross-origin-opener-policy",
+        "cross-origin-resource-policy",
+    )
+
+    def test_every_response_shape_carries_the_whole_policy(self, auth_client):
+        """Success, refusal, unmatched route and validation error alike."""
+        client, _ = auth_client
+        shapes = {
+            "ok": client.get("/api/health"),
+            "unauthenticated": client.get("/api/profiles"),
+            "unmatched route": client.get("/api/no-such-route"),
+            "validation error": client.post("/api/auth/login", json={"not": "a login"}),
+            "cross-site refusal": client.post(
+                "/api/auth/login",
+                headers={"Sec-Fetch-Site": "cross-site"},
+                json={"email": "a@example.test", "password": "x" * 12},
+            ),
+            "untrusted origin": client.post(
+                "/api/auth/login",
+                headers={"Origin": "https://evil.example"},
+                json={"email": "a@example.test", "password": "x" * 12},
+            ),
+        }
+        for name, response in shapes.items():
+            missing = [h for h in self.POLICY_HEADERS if h not in response.headers]
+            assert not missing, f"{name} ({response.status_code}) is missing {missing}"
+
+    def test_hsts_is_sent_only_where_it_is_true(self, auth_client, monkeypatch):
+        """Promising HSTS over plain HTTP would be a promise the deployment breaks."""
+        client, settings = auth_client
+        assert "strict-transport-security" not in client.get("/api/health").headers
+
+        import app.main as main_module
+
+        secure = settings.model_copy(update={"environment": "production", "cookie_secure": True})
+        monkeypatch.setattr(main_module, "settings", secure)
+        assert "strict-transport-security" in client.get("/api/health").headers
+
     def test_openapi_marks_tenant_routes_as_cookie_secured(self, auth_client):
         client, _ = auth_client
         schema = client.get("/openapi.json").json()

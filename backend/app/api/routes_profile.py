@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from fastapi import APIRouter, Depends, File, HTTPException, Query, Response, UploadFile
 from sqlalchemy.orm import Session
+from starlette.concurrency import run_in_threadpool
 
 from app.adapters.extraction import pdf_to_text
 from app.api.tenancy import owned_profile
@@ -169,7 +170,11 @@ async def read_transcript(
     if not data:
         raise HTTPException(400, "That file is empty.")
 
-    text = pdf_to_text(data)
+    # Off the event loop. pypdf is synchronous, CPU-bound, and slow on a large
+    # scan; calling it here directly stopped *every* other request in this
+    # process - health checks included - for the length of the parse, so one
+    # upload at a time was a denial of service against the whole API.
+    text = await run_in_threadpool(pdf_to_text, data)
     if not text.strip():
         # A scan with no text layer is the ordinary case here, not a failure:
         # say which it is, because the two need different things from the user.
@@ -215,8 +220,17 @@ def validation_report(
 
 
 @router.get("/conversions/methods")
-def conversion_methods(scale_label: str = "") -> dict:
-    """Offer grade conversions. Applying one is always the user's choice."""
+def conversion_methods(
+    scale_label: str = "",
+    _principal: Principal = Depends(get_principal),
+) -> dict:
+    """Offer grade conversions. Applying one is always the user's choice.
+
+    Behind the session like every other route on this router. These two were
+    the only openings in the API: reference data, but reference data served by
+    a process that does arithmetic for whoever asks and answers before any
+    limiter looks at the request.
+    """
     methods = available_methods(scale_label) if scale_label else list(METHODS.values())
     return {
         "methods": [
@@ -238,7 +252,11 @@ def conversion_methods(scale_label: str = "") -> dict:
 
 
 @router.post("/conversions/preview", response_model=GradeValue)
-def preview_conversion(grade: GradeValue, method_key: str) -> GradeValue:
+def preview_conversion(
+    grade: GradeValue,
+    method_key: str,
+    _principal: Principal = Depends(get_principal),
+) -> GradeValue:
     try:
         return propose_conversion(grade, method_key)
     except ValueError as exc:

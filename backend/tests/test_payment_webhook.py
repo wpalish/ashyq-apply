@@ -113,3 +113,89 @@ def test_an_expired_event_settles_the_order_without_granting(paid_client, order)
     assert _post(paid_client, _body(order, status="expired")).status_code == 200
     assert paid_client.get(f"/api/billing/orders/{order['id']}").json()["status"] == "expired"
     assert _full_access(paid_client, order["profile_id"]) is False
+
+
+class TestAnUnconfiguredSecretIsNotASecret:
+    """Payments on, no webhook secret: the callback must verify nothing.
+
+    The fake provider used to be handed the literal string ``test-secret`` when
+    ``UNIMATCH_APIPAY_WEBHOOK_SECRET`` was unset, so a deployment that turned
+    payments on and forgot the secret accepted a forged ``paid`` event from
+    anyone who had read this repository — and a forged ``paid`` event grants
+    the entitlement and queues a full research run.
+    """
+
+    @pytest.fixture
+    def unsigned_client(self, tmp_path, monkeypatch, corpus_dir):
+        from fastapi.testclient import TestClient
+
+        from app.config import get_settings
+        from app.payments.fake import reset_shared_fake
+        from tests.conftest import configure_from_env
+
+        configure_from_env(
+            monkeypatch,
+            tmp_path,
+            corpus_dir,
+            UNIMATCH_PAYMENTS_ENABLED="true",
+            UNIMATCH_PAYMENTS_PROVIDER="fake",
+            UNIMATCH_APIPAY_WEBHOOK_SECRET="",
+        )
+        reset_shared_fake()
+        settings = get_settings()
+
+        import app.db as db_module
+
+        engine = db_module.create_engine(
+            settings.database_url, connect_args={"check_same_thread": False}
+        )
+        monkeypatch.setattr(db_module, "engine", engine)
+        monkeypatch.setattr(
+            db_module, "SessionLocal", db_module.sessionmaker(bind=engine, future=True)
+        )
+        db_module.migrate_to_head(settings.database_url)
+
+        from app.main import app
+
+        with TestClient(app) as client:
+            yield client
+        get_settings.cache_clear()
+        reset_shared_fake()
+
+    def test_the_old_default_secret_no_longer_signs_anything(self, unsigned_client) -> None:
+        import hashlib
+        import hmac
+
+        from app.corpus.demo_profile import DEMO_PROFILE
+
+        profile_id = unsigned_client.post(
+            "/api/profiles", json=DEMO_PROFILE.model_dump(mode="json")
+        ).json()["id"]
+        order = unsigned_client.post(
+            "/api/billing/orders", json={"profile_id": profile_id, "method": "qr"}
+        ).json()
+
+        body = json.dumps(
+            {"event": "invoice.status_changed", "id": order["id"], "status": "paid"}
+        ).encode()
+        forged = "sha256=" + hmac.new(b"test-secret", body, hashlib.sha256).hexdigest()
+
+        response = unsigned_client.post(
+            "/webhooks/apipay", content=body, headers={"X-Webhook-Signature": forged}
+        )
+
+        assert response.status_code == 401
+        assert _full_access(unsigned_client, profile_id) is False
+
+    def test_an_empty_key_signature_is_refused_too(self, unsigned_client) -> None:
+        import hashlib
+        import hmac
+
+        body = json.dumps({"event": "invoice.status_changed", "id": "x", "status": "paid"}).encode()
+        forged = "sha256=" + hmac.new(b"", body, hashlib.sha256).hexdigest()
+
+        response = unsigned_client.post(
+            "/webhooks/apipay", content=body, headers={"X-Webhook-Signature": forged}
+        )
+
+        assert response.status_code == 401

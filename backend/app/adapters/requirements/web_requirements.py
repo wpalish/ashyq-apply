@@ -30,6 +30,7 @@ from app.adapters.extraction import (
 from app.adapters.fetching import Fetcher
 from app.adapters.matching import program_matches
 from app.adapters.page_classifier import PageType, classify_page
+from app.adapters.scope_reader import read_scope
 from app.domain.enums import ClaimType, FetchOutcome, SourceSpecificity
 
 #: An intake is open only when a page says so. Each pattern must capture the
@@ -154,11 +155,10 @@ class WebRequirementsAdapter:
                 )
                 continue
 
+            page_title = html_title(res.text) if not res.is_pdf else target.url.rsplit("/", 1)[-1]
             builder = ClaimBuilder(
                 source_url=target.url,
-                page_title=html_title(res.text)
-                if not res.is_pdf
-                else target.url.rsplit("/", 1)[-1],
+                page_title=page_title,
                 specificity=(
                     SourceSpecificity.PROGRAM_INTAKE
                     if page.page_type is PageType.INTAKE_SPECIFIC_PROGRAM
@@ -171,6 +171,11 @@ class WebRequirementsAdapter:
                 or is_official_domain(target.url, [candidate.domain]),
                 extraction_method="fixture" if target.url.startswith("fixture://") else "html_rule",
                 accessed_at=res.fetched_at,
+                # Read from the page's own words only. The programme, intake
+                # and year above are what we asked for; this is what the page
+                # answered, and recording the second as if it were the first
+                # is the whole of the wrong-scope failure.
+                scope=read_scope(text, title=page_title),
             )
 
             self._claim_program_exists(page, program, builder, out, text)
