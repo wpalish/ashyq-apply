@@ -60,6 +60,23 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**Run 14 (35839356648) and a title that names its degree (`5f9ba76`).**
+- Run 14 is the first live run with per-population deadlines. Groningen yields 4 claims and KAIST
+  yields claims for the first time (4). Groningen's deadline now comes as two claims: the
+  **non-EU/EEA row matches the label's population**, and the EU/EEA row reports a different population
+  (correctly, not the label's row). The non-EU row was still out of scope only on degree and intake,
+  both silent. `critical_field_coverage` is 1/210, `wrong_scope` 3/9.
+- **Fix:** `read_scope` required a degree word followed by "programme"/"degree"/…, so a title like
+  "Computing Science | Bachelor | University of Groningen" never counted, while one body phrase ("a
+  master programme") alone could set the degree. A title naming exactly one degree now settles it; a
+  title naming two, or none, leaves the body to decide as before.
+- **Golden re-captured with proof:** the old code reproduces the previous hash; 179 leaves changed in
+  exactly three shapes (120 × claim `scope.degree` None → "bachelor", 59 × `published_scope` gaining
+  "degree bachelor"), every one from a page whose title names one bachelor-level degree. No status,
+  value, verdict or check outcome moved.
+- Intake stays silent on Groningen ("Start course 01 September 2027" vs the label's "fall 2027"):
+  turning a date into a season is a conversion, and it is left for the owner.
+
 **V2-34: availability follows the final eligibility verdict (`2bfdbd2`).** The adapter rolled
 `available_this_intake` up from its own early reading of eligibility; the runner then settled
 `applicant_eligible` from the full checks and never re-rolled availability. So an award this applicant
