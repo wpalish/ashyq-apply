@@ -60,6 +60,11 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**Run 17 (35853021542, head `44823bc`, all five owner decisions): claim_recall moves for the first
+time, 0/62 → 2/62.** claim_precision 0/5 → 2/9, verbatim_evidence_rate 0/5 → 2/9, support 2/18,
+unsupported 0/2, wrong_scope 2/9, programme_page_recall 5/10. Six of ten cases still hit a budget, and
+the next work is the time spent in reads before search (run 18 has per-read logging, `840fdad`).
+
 **Run 16 (35846785728): where the budget goes, first answer.** Search is fast (0.7–0.9 s per call), and
 it is not where the time goes. **Aalto:** 2 reads, 0 searches, empty log, 90 s, so something hangs
 before discovery searches. **Vienna:** its first search starts at t=73 s, after 95 reads.
