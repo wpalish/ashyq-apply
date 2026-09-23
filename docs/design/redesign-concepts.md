@@ -1,12 +1,13 @@
-# Redesign concepts — rounds 1 to 3 (2026-09-23)
+# Redesign concepts — rounds 1 to 4 (2026-09-23)
 
 The owner asked for a redesign at the level of the product itself: the current UI is "not serious enough",
 overloads an ordinary school student with information, and does not hook. The agreed process is
 **concepts first, then develop the chosen one into a design system and apply it**. This file is the
 record of the rounds: what is wrong today, what every concept keeps, the references, the four
-round-1 directions, the owner's feedback, and the round-2 and round-3 directions built from it.
+round-1 directions, the owner's feedback, the round-2 and round-3 directions built from it, and the
+round-4 developments of H with their adversarial review.
 
-- Live canvas with all 43 artboards (private to the owner until shared):
+- Live canvas with all 55 artboards (private to the owner until shared):
   https://claude.ai/artifact/Ncsd2YkQMcV9oCG3bHrBsa
 - Nothing in `frontend/` changes in this round. PR #10 (tokenised profile workflow) and PR #19
   ("Open Path" visual refinement) are untouched; whichever concept wins decides what happens to them.
@@ -276,10 +277,172 @@ New references for this round:
   childish.
 - **Risk.** It is close to A, so it will not surprise, but it is the safest path to "A, but serious".
 
-## 10. Next step
+## 10. Owner feedback on round 3 (2026-09-23)
 
-The owner picks among H, I and J (or A, F), or a mix — for example J's landing and onboarding with H's route
-screens or I's home dashboard. Then:
+- **H** was liked most.
+- The owner asked for new concepts built on H, with new references welcome, and asked for an adversarial
+  review to improve the result.
+
+## 11. Round 4 — three ways to develop H, with an adversarial review
+
+All three keep H's direction: the route from Kazakhstan, a dotted map drawn from real coordinates,
+calm status words and the same three judgements. They also keep A's fonts. Each concept pushes
+one part of H further.
+
+New references for this round:
+
+| Reference | What it lends | Used in |
+|---|---|---|
+| [Airbnb web — search results with a map](https://mobbin.com/explore/screens/c5b023cb-fab3-4ac0-8967-8b1cb34875a6), [Airbnb iOS — room details](https://mobbin.com/explore/screens/2d4d5075-5bca-4a65-be8b-b16d527aa3b7) | A search bar with three fields, a list beside the map, a price on every pin, a listing page with a sticky price bar | K |
+| [21st.dev map components](https://21st.dev/community/components/s/map), including *Departures Board* | The precision of a flight board: fixed columns, split-flap figures, one status word per row | L |
+| [Citymapper iOS — route map](https://mobbin.com/explore/screens/bfe8a3ec-fe61-42ff-9028-93d1dd30a55a), [route planner](https://mobbin.com/screens/8a78ff89-c1b0-4e01-9497-0f32444e06cc) | A route as a vertical line of stops, where the current stop is highlighted and the times sit on the right | M |
+| [21st.dev map components](https://21st.dev/community/components/s/map), including *Globe Flights*; [21st.dev timelines](https://21st.dev/community/components/s/timeline) | A dotted globe with great-circle arcs; a stepped timeline | M |
+
+### K · Атлас — search on the map, price after the grant on every point
+
+![Concept K](concepts/concept-K.webp)
+
+- **Idea.** Airbnb's pattern, applied to universities. The landing is one question, "Найди, где
+  учиться, — и сколько это будет стоить", with a three-field search (what to study, where, budget
+  per year) and H's map below. Every point carries a label: "Гронинген · $1 848 / год",
+  "Лёвен · $7 554 · выше бюджета", "Торонто · нет цены". The desktop workspace is a list beside
+  the map. On the phone, the map is the home screen and the programme page ends with a sticky price
+  bar.
+- **Who it serves best.** Parents: the money figure comes first and is never hidden.
+- **Risk.** It is the closest to a marketplace. What sets it apart (the price after the grant, the
+  three judgements and the source on each card) must stay on every point and every card.
+  Otherwise it becomes "another catalogue".
+
+### L · Табло — every deadline on one board, with what to do for each
+
+![Concept L](concepts/concept-L.webp)
+
+- **Idea.** A departures board for applications. Each row shows the date, the destination, what is
+  due, the days left and one status word:
+  - **ПО ПЛАНУ** — the student's tasks for that date are on track
+  - **НУЖНО ДЕЙСТВИЕ** — there is a task to do now
+  - **НУЖНО УТОЧНИТЬ** — something must be checked with the university
+
+  The next deadline is a split-flap card. Below the board sit "На этой неделе" (this week's tasks)
+  and a map strip of the same routes, so H's map is kept. Selecting a row opens its tasks, money,
+  quote and the three judgements.
+- **Who it serves best.** Students and school counsellors. It answers "what is due next and what do I
+  do about it" at a glance.
+- **Risk.** Countdowns can make a 16-year-old anxious. Money sits second on the landing page. The
+  status words describe the student's tasks and never an admission outcome.
+
+### M · Глобус — the route to a university, step by step
+
+![Concept M](concepts/concept-M.webp)
+
+- **Idea.** H's routes on a dotted globe centred on Kazakhstan, with Citymapper's route screen for
+  each programme:
+  - done
+  - now (highlighted)
+  - next, with dates
+  - unknown ("дата не опубликована")
+
+  Below the steps come the three judgements and the source line. On desktop there is a globe with
+  the route list on the left, and the journey, the money split and the actions on the right.
+- **Who it serves best.** The first impression: it has the most emotion of the three and still shows
+  the real numbers.
+- **Risk.**
+  - A dotted globe is a common SaaS hero, so it can look borrowed.
+  - Routes on the far side (Toronto) cannot be seen without rotating the globe, so the list must be
+    the source of truth.
+  - A live globe must stay light on low-end Android. The fallback is the static SVG used here.
+
+### Adversarial review (loop report)
+
+**Definition of done, written before building:**
+
+- 3 concepts × 4 boards (landing, desktop workspace, two phone screens)
+- only numbers that exist in the demo corpus and fixture pages
+- no "probability", "chance" or "%" next to a result; unknowns shown as "нет данных", "нет цены" or
+  "цена неполная"; a source and date near every fact
+- no clipped text, overlaps or mid-word wraps
+- text contrast of at least 4.5:1; phone targets of at least 44 px
+- A's fonts with H's palette
+- at least two review cycles with hostile personas, the weakest link fixed and the remaining risks
+  written down
+
+**Personas:**
+
+- a 16-year-old student
+- a parent
+- a school counsellor
+- a designer at the level of Linear or Airbnb
+- an auditor of the product's invariants and of accessibility
+- a sceptical competitor
+
+**Cycle 1** found 11 defects. Scores (mean of the six personas): K 6.3 · L 6.0 · M 7.0.
+
+| # | Defect | Root cause | Fix |
+|---|---|---|---|
+| K1 | The European labels overlapped | Labels were anchored on the points, and three cities sit within 60 px at world scale | Labels moved into free space with leader lines; a cluster chip "Европа · 3 · от $1 848" on the phone |
+| K2 | The selected card covered Toronto | The card was placed by the page layout, not by the map's geography | Moved over the ocean, below all the points |
+| K3 | The over-budget price was struck through and read as a discount | An e-commerce convention was reused | Plain text "выше бюджета" |
+| K4 | Tokyo was clipped on the phone | The label was centred on a point near the edge | Labels anchored on the side away from the edge |
+| L1 | The board's columns overflowed | The only flexible column was squeezed by fixed ones | Explicit column widths |
+| L2 | The split-flap effect was invisible | The tiles were too low in contrast and narrower than the glyphs | Wider tiles with a visible split line |
+| L3 | "ЦЕНА НЕ ОПУБЛИКОВАНА" appeared in the deadline status column | Two axes (the deadline and the money) were mixed in one column | The deadline status reads "НУЖНО УТОЧНИТЬ"; the unknown price stays in the money judgement |
+| L4 | L had lost H's map and had dead zones | The concept had been built as a table only | A mini route on the next-deadline card, a map strip, "На этой неделе" and a three-step band |
+| M1 | The headline broke with a lone dash | Automatic wrapping of a long line with a dash | An explicit line break after "—" |
+| M2 | The arcs were small and Europe sat on the rim | The globe was centred too far east | Rotated to 60° E, 36° N, made larger, with a thicker selected arc |
+| M3 | The phone route had no source, no date and no judgements | Citymapper's pattern was copied without the product's invariants | The three judgements and "rug.nl · проверено 14 сентября" added |
+
+**Cycle 2** re-rendered all 12 boards and found these defects:
+
+- In K's workspace, the Лёвен and Вена labels collided.
+- Astana had no label in K's workspace, and on K's landing its label was not styled like the others.
+- On K's landing, the card's third status label ran past the card's edge.
+- In K's list, "нет цены" and "неполная" were set in the bold figure style used for real prices, so
+  they read as values. They are now muted text: "нет цены", "цена неполная".
+- On L's landing:
+  - the legend ran off the right edge and broke "u-tokyo.ac.jp" at its hyphen
+  - the mini route's city names were clipped
+  - the amber step numbers had a contrast of 3.4:1 (now 5.4:1)
+- In M's phone route, "220 дн" wrapped inside its tile.
+- Toronto was missing from M's route lists. It is now a row with "нет цены" and "нужно уточнить".
+
+After cycle 2:
+
+- no text below 11 px
+- every text colour pair measured at 4.6:1 or more
+- a scan of the 12 boards finds no "вероятн…", "шанс…" or percentage next to a result; the only
+  match is the landing's promise "Без «шансов в %»"
+
+Scores after cycle 2:
+
+| Persona | K | L | M |
+|---|---|---|---|
+| Student, 16 | 8 | 8 | 8 |
+| Parent | 8 | 6 | 7 |
+| School counsellor | 7 | 8 | 7 |
+| Designer | 7 | 8 | 8 |
+| Invariants and accessibility auditor | 8 | 8 | 7 |
+| Sceptical competitor | 6 | 6 | 6 |
+| **Mean** | **7.3** | **7.3** | **7.2** |
+
+**Remaining risks:**
+
+- No concept wins outright; each wins with a different persona. The sceptic scores all three at 6,
+  because each borrows a well-known pattern (Airbnb, a flight board, a globe).
+- These are static mock-ups, not yet tested with real students.
+- Contrast was measured from the token values, not with an automated tool on rendered pages.
+- The map labels were placed by hand. Production needs collision-aware placement.
+
+## 12. Next step
+
+The owner picks K, L or M, or a mix. The review suggests a mix, because each concept wins with a
+different persona:
+
+- **M's globe** as the landing hero (the first impression)
+- **K's search and map** as the "Подбор" tab (the money for parents)
+- **L's board** as the "План" tab (deadlines for students and counsellors)
+- the programme screen as M's step route plus K's sticky price bar
+
+After the choice:
 
 1. The next canvas round: the chosen direction across the real flow (landing, sign-in, profile
    questions, research progress, shortlist, programme, plan, documents), light and dark, 390 and 1440,
