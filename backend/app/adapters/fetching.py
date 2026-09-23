@@ -59,6 +59,11 @@ MAX_CRAWL_DELAY_SECONDS = 10.0
 DEFAULT_DELAY_SECONDS = 1.5
 MAX_PER_HOST_CONCURRENCY = 2
 MAX_ATTEMPTS = 3
+#: httpx's timeout bounds each connect and each read, not the whole response:
+#: a server that trickles bytes never trips it. Aalto's robots.txt held a run
+#: for its entire 90 s this way. These bound the whole exchange.
+ROBOTS_DEADLINE_SECONDS = 15.0
+ATTEMPT_DEADLINE_FACTOR = 2.0
 MAX_BYTES = 5_000_000
 MAX_ROBOTS_BYTES = 512_000
 #: Content types worth parsing. Anything else is refused before it is read, so
@@ -283,7 +288,15 @@ class RobotsPolicy:
         host = f"{parsed.scheme}://{parsed.netloc}"
         async with self._lock:
             if host not in self._parsers:
-                self._parsers[host] = await self._load(host, client)
+                try:
+                    self._parsers[host] = await asyncio.wait_for(
+                        self._load(host, client), ROBOTS_DEADLINE_SECONDS
+                    )
+                except TimeoutError:
+                    # Same reading as an unreachable robots.txt, and remembered,
+                    # so the host is not stalled on again for every page.
+                    log.info("robots.txt for %s did not arrive in time", host)
+                    self._parsers[host] = None
         parser = self._parsers[host]
         if parser is None:
             # No reachable robots.txt is treated as "allowed" - the same
@@ -836,11 +849,23 @@ class Fetcher:
             for attempt in range(1, MAX_ATTEMPTS + 1):
                 await self._space_requests(host, url)
                 try:
-                    result = await self._request_with_redirects(url, validators=validators)
+                    result = await asyncio.wait_for(
+                        self._request_with_redirects(url, validators=validators),
+                        self.timeout * ATTEMPT_DEADLINE_FACTOR,
+                    )
                 except BlockedRequest as exc:
                     log.warning("blocked mid-redirect: %s", exc)
                     self.stats[FetchOutcome.BLOCKED.value] += 1
                     return FetchResult(url=url, outcome=FetchOutcome.BLOCKED, error=str(exc))
+                except TimeoutError:
+                    # The whole exchange overran: a server that trickles will
+                    # trickle again, so this is not retried.
+                    self.stats[FetchOutcome.TIMEOUT.value] += 1
+                    return FetchResult(
+                        url=url,
+                        outcome=FetchOutcome.TIMEOUT,
+                        error="no complete response within the deadline",
+                    )
                 except httpx.TimeoutException as exc:
                     if attempt == MAX_ATTEMPTS:
                         self.stats[FetchOutcome.TIMEOUT.value] += 1

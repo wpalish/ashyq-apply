@@ -481,3 +481,53 @@ async def test_a_fetcher_without_a_ceiling_waits_the_delay_out(tmp_path, monkeyp
 
     assert first.outcome is FetchOutcome.OK and second.outcome is FetchOutcome.OK
     assert slept and max(slept) > 100
+
+
+class _Trickle(httpx.AsyncByteStream):
+    """A body that starts and never finishes: each read is well inside
+    httpx's per-read timeout, so only a whole-exchange deadline ends it."""
+
+    async def __aiter__(self):
+        while True:
+            await asyncio.sleep(0.01)
+            yield b"#"
+
+    async def aclose(self) -> None:
+        return None
+
+
+async def test_a_robots_txt_that_never_finishes_does_not_hold_the_host(tmp_path, monkeypatch):
+    """Run 19: Aalto's robots.txt started and never ended; the case lost 90 s."""
+    monkeypatch.setattr("app.adapters.fetching.check_url", allow_all)
+    monkeypatch.setattr("app.adapters.fetching.ROBOTS_DEADLINE_SECONDS", 0.2)
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        if request.url.path == "/robots.txt":
+            return httpx.Response(200, stream=_Trickle())
+        return httpx.Response(200, headers={"content-type": "text/html"}, text="<html>p</html>")
+
+    async with Fetcher(tmp_path / "c", delay_seconds=0.0, respect_robots=True) as fetcher:
+        fetcher._client = httpx.AsyncClient(
+            transport=httpx.MockTransport(handler), follow_redirects=False
+        )
+        result = await asyncio.wait_for(fetcher.get("https://slow.example.com/page"), 5)
+
+    assert result.outcome is FetchOutcome.OK
+
+
+async def test_a_page_that_never_finishes_is_a_timeout_not_a_hang(tmp_path, monkeypatch):
+    monkeypatch.setattr("app.adapters.fetching.check_url", allow_all)
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        return httpx.Response(200, headers={"content-type": "text/html"}, stream=_Trickle())
+
+    async with Fetcher(
+        tmp_path / "c", delay_seconds=0.0, respect_robots=False, timeout=0.05
+    ) as fetcher:
+        fetcher._client = httpx.AsyncClient(
+            transport=httpx.MockTransport(handler), follow_redirects=False
+        )
+        result = await asyncio.wait_for(fetcher.get("https://slow.example.com/page"), 5)
+
+    assert result.outcome is FetchOutcome.TIMEOUT
+    assert result.error
