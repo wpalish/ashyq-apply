@@ -877,6 +877,15 @@ Report items NOT done, needing the owner: dedicated live-benchmark runner with a
 (Study in Korea; `apply.kaist.ac.kr` named by the report, unverified by us). Not yet done, no decision needed:
 per-phase fetch tracing (DNS/TCP/TLS/headers/body) — next.
 
+**Run 23 (35899295750, `d181e99`): 9 of 10 cases complete (run 21: 4).** Only UBC ran out of wall clock
+(funding stage). claim_recall 1/62 (run 19: 2/62), claim_precision 1/9, programme_page_recall 4/10 (was 1/10),
+wrong_scope 3/9. The binding constraint has moved: of 9 claims carrying the certified value, **8 are
+`other_page`** — right value, quoted from an official page other than the one the reviewer cited, so not
+supported (support_report). Whether another official page of the same university may support a label is a
+scorer-definition question for the owner. Also seen: Aalto's `programme.exists` came from a research-paper
+title ("Arguments for and Approaches to Computing Education…"), and scope_report lists it as the same programme
+as 'Tietotekniikka' "by strong aliases" — looks like a false alias match; to investigate.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
