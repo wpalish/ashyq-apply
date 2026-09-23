@@ -869,6 +869,13 @@ Run 19: claim_recall held at 2/62 (precision 2/9, wrong_scope 2/9). Vienna's foo
 | robots.txt load bounded to 15 s in total (then "unavailable", remembered); each page attempt bounded to 2× timeout, not retried | `5cd493d` |
 | Run 20 (35890139634): deadline held but Aalto's whole host is silent to the runner (robots 50 s, then sitemap); KAIST admission host 50 s. A host that stalled once fails fast for the rest of the run; attempt deadline 1× timeout | `551c2ef` |
 | Run 21 (35894685440): Aalto now completes (1 claim) under fail-fast. KAIST www/cs hosts (1–2 s in run 20) each cost ~30 s: `check_url` ran blocking `getaddrinfo` on the event loop, so no deadline could fire. Resolution now in a thread, 10 s deadline; stalled check before resolving. Also `0d85a6d`: page budget counts network reads only (VERSIONS.md) | `3e5e352` |
+| From the owner's deep-research report: robots.txt 5xx / network failure / stall now = complete disallow (RFC 9309 §2.3.1.4; was "allowed"); 4xx stays "no restrictions". Per-origin robots locks | `92ac782` |
+| Same report: up to 3 validated addresses per hop, 5 s connect each, only connect failures fall through; Host/SNI unchanged | `5f86976` |
+
+Report items NOT done, needing the owner: dedicated live-benchmark runner with a fixed public IP + rDNS + bot page
+(GitHub's shared Azure egress is a suspect, unproven); Finnish Studyinfo/Konfo public API adapter; Korea sources
+(Study in Korea; `apply.kaist.ac.kr` named by the report, unverified by us). Not yet done, no decision needed:
+per-phase fetch tracing (DNS/TCP/TLS/headers/body) — next.
 
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
