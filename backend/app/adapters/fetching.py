@@ -63,7 +63,7 @@ MAX_ATTEMPTS = 3
 #: a server that trickles bytes never trips it. Aalto's robots.txt held a run
 #: for its entire 90 s this way. These bound the whole exchange.
 ROBOTS_DEADLINE_SECONDS = 15.0
-ATTEMPT_DEADLINE_FACTOR = 2.0
+ATTEMPT_DEADLINE_FACTOR = 1.0
 MAX_BYTES = 5_000_000
 MAX_ROBOTS_BYTES = 512_000
 #: Content types worth parsing. Anything else is refused before it is read, so
@@ -279,6 +279,8 @@ class RobotsPolicy:
         self.user_agent = user_agent
         self.enabled = enabled
         self._parsers: dict[str, urllib.robotparser.RobotFileParser | None] = {}
+        #: Hosts whose robots.txt never finished arriving.
+        self.stalled: set[str] = set()
         self._lock = asyncio.Lock()
 
     async def allowed(self, url: str, client: httpx.AsyncClient) -> tuple[bool, str]:
@@ -297,6 +299,7 @@ class RobotsPolicy:
                     # so the host is not stalled on again for every page.
                     log.info("robots.txt for %s did not arrive in time", host)
                     self._parsers[host] = None
+                    self.stalled.add(parsed.hostname or parsed.netloc)
         parser = self._parsers[host]
         if parser is None:
             # No reachable robots.txt is treated as "allowed" - the same
@@ -455,6 +458,10 @@ class Fetcher:
             USER_AGENT.replace("set FETCH_CONTACT", contact) if contact else USER_AGENT
         )
         self._host_locks: dict[str, asyncio.Semaphore] = {}
+        #: Hosts that already let one whole exchange run past its deadline in
+        #: this fetcher's life. Run 20: Aalto stalled robots.txt, then
+        #: sitemap.xml, and each stall cost the case most of its clock.
+        self._stalled_hosts: set[str] = set()
         self._last_request: dict[str, float] = {}
         self._client: httpx.AsyncClient | None = None
         self.corpus_dir = corpus_dir
@@ -821,8 +828,22 @@ class Fetcher:
             return FetchResult(url=url, outcome=FetchOutcome.BLOCKED, error=str(exc))
 
         host = target.host
+        if host in self._stalled_hosts or host in self.robots.stalled:
+            self.stats[FetchOutcome.TIMEOUT.value] += 1
+            return FetchResult(
+                url=url,
+                outcome=FetchOutcome.TIMEOUT,
+                error="host stopped responding earlier in this run; not waited on again",
+            )
         async with self._semaphore(host):
             allowed, reason = await self.robots.allowed(url, self._client)
+            if host in self.robots.stalled:
+                self.stats[FetchOutcome.TIMEOUT.value] += 1
+                return FetchResult(
+                    url=url,
+                    outcome=FetchOutcome.TIMEOUT,
+                    error="robots.txt never finished arriving; the host is not waited on again",
+                )
             if not allowed:
                 log.warning("robots.txt disallows %s", url)
                 self.stats[FetchOutcome.ROBOTS_DISALLOWED.value] += 1
@@ -859,7 +880,8 @@ class Fetcher:
                     return FetchResult(url=url, outcome=FetchOutcome.BLOCKED, error=str(exc))
                 except TimeoutError:
                     # The whole exchange overran: a server that trickles will
-                    # trickle again, so this is not retried.
+                    # trickle again, so this is not retried, nor is the host.
+                    self._stalled_hosts.add(host)
                     self.stats[FetchOutcome.TIMEOUT.value] += 1
                     return FetchResult(
                         url=url,

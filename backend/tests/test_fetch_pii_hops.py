@@ -512,13 +512,19 @@ async def test_a_robots_txt_that_never_finishes_does_not_hold_the_host(tmp_path,
         )
         result = await asyncio.wait_for(fetcher.get("https://slow.example.com/page"), 5)
 
-    assert result.outcome is FetchOutcome.OK
+    # A host whose robots.txt never arrives is not waited on for its pages either.
+    assert result.outcome is FetchOutcome.TIMEOUT
+    assert "robots.txt never finished" in (result.error or "")
 
 
 async def test_a_page_that_never_finishes_is_a_timeout_not_a_hang(tmp_path, monkeypatch):
     monkeypatch.setattr("app.adapters.fetching.check_url", allow_all)
 
+    calls = 0
+
     def handler(request: httpx.Request) -> httpx.Response:
+        nonlocal calls
+        calls += 1
         return httpx.Response(200, headers={"content-type": "text/html"}, stream=_Trickle())
 
     async with Fetcher(
@@ -531,3 +537,16 @@ async def test_a_page_that_never_finishes_is_a_timeout_not_a_hang(tmp_path, monk
 
     assert result.outcome is FetchOutcome.TIMEOUT
     assert result.error
+    assert calls == 1, "a stalled exchange is not retried"
+
+    async with Fetcher(
+        tmp_path / "c2", delay_seconds=0.0, respect_robots=False, timeout=0.05
+    ) as fetcher:
+        fetcher._client = httpx.AsyncClient(
+            transport=httpx.MockTransport(handler), follow_redirects=False
+        )
+        await fetcher.get("https://slow.example.com/a")
+        again = await fetcher.get("https://slow.example.com/b")
+    assert again.outcome is FetchOutcome.TIMEOUT
+    assert "earlier in this run" in (again.error or "")
+    assert calls == 2, "the second page of a stalled host is never requested"
