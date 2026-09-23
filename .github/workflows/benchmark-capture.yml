@@ -124,6 +124,16 @@ jobs:
             --cache .cache/oracle \
             --json oracle.json | tee oracle.txt
 
+      - name: Say how many certified facts could ever be scored
+        # claim_recall's denominator counts every known label, but a label no
+        # claim type maps to, or an award or document whose identity is not
+        # bound, scores zero whatever extraction does. Read recall against
+        # this ceiling, not against the raw count.
+        run: |
+          .venv/bin/python -m evaluation.research.expressibility \
+            --dataset evaluation/research/data/ground_truth.reviewed.json \
+            --bindings evaluation/research/data/identity_bindings.draft1.json
+
       - name: Say why each scope mismatch happened
         # The rate alone cannot be acted on: a page that stated the wrong
         # population and a page that stated nothing score identically, and the

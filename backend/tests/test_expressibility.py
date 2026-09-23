@@ -1,0 +1,61 @@
+"""The claim_recall ceiling: which certified facts any claim could ever match."""
+
+from __future__ import annotations
+
+from pathlib import Path
+
+from evaluation.research.expressibility import (
+    NO_CLAIM_TYPE,
+    REACHABLE,
+    UNBOUND,
+    UNSUPPORTED_FIELD,
+    load_bindings,
+    reach,
+    report,
+)
+from evaluation.research.schema import Dataset
+
+_DATA = Path(__file__).resolve().parents[1] / "evaluation" / "research" / "data"
+_BINDINGS = {"scholarships.nanyang_global": "award", "documents.admission.transcript": "document"}
+
+
+def test_a_directly_mapped_key_is_reachable():
+    assert reach("ielts.overall", _BINDINGS) == REACHABLE
+    assert reach("programme.exists", _BINDINGS) == REACHABLE
+
+
+def test_a_bound_award_field_the_mapping_carries_is_reachable():
+    assert reach("scholarships.nanyang_global.coverage.tuition", _BINDINGS) == REACHABLE
+    assert reach("scholarships.nanyang_global.exists", _BINDINGS) == REACHABLE
+
+
+def test_a_bound_award_field_the_mapping_does_not_carry_says_so():
+    assert reach("scholarships.nanyang_global.bond", _BINDINGS) == UNSUPPORTED_FIELD
+
+
+def test_an_unbound_award_or_document_is_unbound_not_missing():
+    assert reach("scholarships.entrance.exists", _BINDINGS) == UNBOUND
+    assert reach("documents.programme.supplemental_application.required", _BINDINGS) == UNBOUND
+
+
+def test_a_key_no_claim_type_produces_is_named():
+    assert reach("programme.language", _BINDINGS) == NO_CLAIM_TYPE
+
+
+def test_the_reviewed_corpus_counts_the_same_population_as_claim_recall():
+    """62 known facts is claim_recall's own denominator in every live run."""
+    dataset = Dataset.model_validate_json(
+        (_DATA / "ground_truth.reviewed.json").read_text(encoding="utf-8")
+    )
+    rows = report(dataset, load_bindings(_DATA / "identity_bindings.draft1.json"))
+    assert len(rows) == 62
+    assert sum(r.verdict == REACHABLE for r in rows) == 28
+
+
+def test_live_capture_maps_without_bindings_so_its_ceiling_is_lower():
+    """live.py calls normalize_claim alone: no award or document fact can score live."""
+    dataset = Dataset.model_validate_json(
+        (_DATA / "ground_truth.reviewed.json").read_text(encoding="utf-8")
+    )
+    rows = report(dataset, {})
+    assert sum(r.verdict == REACHABLE for r in rows) == 14
