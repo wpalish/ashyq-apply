@@ -154,6 +154,11 @@ _FAQ = re.compile(
     r"\bf\.?a\.?q\.?s?\b|frequently asked questions?",
     re.IGNORECASE,
 )
+_RESEARCH_OUTPUT = re.compile(
+    r"\b(abstract|doi|peer[- ]reviewed|research output|journal|proceedings|conference paper"
+    r"|published in|isbn|issn|citation)\b",
+    re.IGNORECASE,
+)
 _NEWS = re.compile(r"\b(news|press release|announcement|blog|article)\b", re.IGNORECASE)
 _IRRELEVANT = re.compile(
     r"\b(vacanc|job openings?|careers? (?:at|portal|site)|recruitment|staff directory"
@@ -407,6 +412,21 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
 
     if _NEWS.search(low_head):
         return PageClassification(PageType.NEWS, 0.75, ["news markers in the title"], title)
+
+    # --- a research output --------------------------------------------------
+    # The URL alone only ranks (see _URL_ONLY_HINTS); with the page agreeing
+    # it rejects. Run 23: Aalto's programme claim was a paper titled
+    # "Arguments for and Approaches to Computing Education in Undergraduate
+    # Computer Science Programmes", whose field words read as a programme.
+    if classify_url(url) is PageType.IRRELEVANT:
+        research = {m.group(1).lower() for m in _RESEARCH_OUTPUT.finditer(low_body[:6000])}
+        if len(research) >= 2:
+            return PageClassification(
+                PageType.IRRELEVANT,
+                0.8,
+                [f"research-output url and content ({', '.join(sorted(research))})"],
+                title,
+            )
 
     # --- mostly links and little prose ----------------------------------
     if soup is not None and body and len(body) < 1500:

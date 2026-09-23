@@ -51,9 +51,12 @@ class Support:
     shape: str
     ours: str
     theirs: str
+    url: str = ""
 
     def line(self) -> str:
-        return f"{self.case_id:11} {self.key:28} {self.shape:15} ours={self.ours[:70]!r}"
+        return (
+            f"{self.case_id:11} {self.key:28} {self.shape:15} ours={self.ours[:70]!r} at {self.url}"
+        )
 
 
 def _shape(prediction, label) -> tuple[str, str]:
@@ -104,7 +107,8 @@ def support_shapes(dataset: Dataset, capture: Capture) -> list[Support]:
                 continue
             shape, theirs = _shape(prediction, label)
             ours = prediction.evidence.excerpt if prediction.evidence else ""
-            found.append(Support(case.id, prediction.key, shape, ours, theirs))
+            url = str(prediction.evidence.url) if prediction.evidence else ""
+            found.append(Support(case.id, prediction.key, shape, ours, theirs, url))
     return found
 
 

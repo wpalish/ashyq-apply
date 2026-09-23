@@ -113,3 +113,27 @@ def test_the_degree_named_first_wins_not_the_first_in_the_word_list():
 
     assert _degree_level("BSc Computer Science. Continue to our master programmes.") == "bachelor"
     assert _degree_level("MSc Data Science, building on a bachelor degree.") == "master"
+
+
+def test_a_research_output_on_a_research_portal_is_not_a_programme():
+    """Run 23: a paper's field words read as a programme on Aalto's portal."""
+    html = (
+        "<html><head><title>Arguments for and Approaches to Computing Education in "
+        "Undergraduate Computer Science Programmes</title></head><body><main>"
+        "<h1>Arguments for and Approaches to Computing Education in Undergraduate "
+        "Computer Science Programmes</h1><p>Research output: Contribution to journal. "
+        "Abstract: we survey bachelor programmes in computer science. DOI 10.1000/x</p>"
+        "</main></body></html>"
+    )
+    result = classify_page(url="https://research.aalto.fi/en/publications/arguments", html=html)
+    assert result.page_type is PageType.IRRELEVANT
+
+
+def test_a_portal_url_alone_does_not_reject_a_page():
+    html = (
+        "<html><head><title>Bachelor's Programme in Computer Science</title></head><body>"
+        "<main><h1>Bachelor's Programme in Computer Science</h1><p>Apply by January. "
+        "The programme lasts three years.</p></main></body></html>"
+    )
+    result = classify_page(url="https://research.example.edu/en/projects/cs", html=html)
+    assert result.page_type is not PageType.IRRELEVANT
