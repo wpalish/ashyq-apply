@@ -60,6 +60,23 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**The owner's five claim_recall decisions, implemented (2026-09-23).** Each commit ran the full gates.
+- **4, support direction (`4215efc`):** a quote supports when ours lies inside the reviewer's, or
+  theirs lies inside ours and ours is at most 300 characters (`metrics.quote_supports`). All eight
+  published baselines replay byte-identically.
+- **1, bindings (`fa4503c`):** `identity_bindings.reviewed.json` (draft1 stays frozen). Live capture
+  maps with `normalize_subject_claims`. Live ceiling 14 → 28.
+- **2, language key (`aeda991`):** Aalto's label renamed to `programme.language` in the certified
+  corpus (`2026-09-23.reviewed`; amendment and new canonical digest in ACCEPTANCE.md).
+  `program_exists`' stated language maps to it. Ceiling → 31. Top-level reviewed metrics identical.
+- **5, date → season (`34acea4`):** a stated September–November programme start is the fall intake, in
+  text and in a deadline table's start column. The scorer compares non-programme scope case-blind
+  ("Fall 2027" vs "fall 2027" could never match). Golden demo unchanged.
+- **3, HKU (`3bd91dd`):** a catalogue or unknown page may confirm existence only, by a full degree title
+  the ontology equates with the request at the requested degree. Golden unchanged.
+- Not yet mirrored: the oracle's programme-existence probe does not try the listing path (diagnostic
+  only).
+
 **Run 15 (35844255604, head `61a778d`): the title-degree fix holds live.** Groningen's non-EU/EEA
 deadline row is now out of scope **only on intake** (degree resolved; population matches). With the
 owner's date→season decision it would be fully in scope, and then only the support direction (§7 q.5)
