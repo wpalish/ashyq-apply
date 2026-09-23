@@ -857,6 +857,20 @@ manufacture compliant history. [0.4] was committed before [0.3].
 | `SourceLink` rendered an unvalidated `href` | Low | `84f0b43` | `isSafeHref`; non-http(s) sources render as text. |
 | SECURITY.md described intent, not the controls | — | `b96845f` | Payments, accounts and mail, exports sections rewritten to what holds. |
 
+### Robots and stalled responses, 2026-09-23 (after run 19 = run id 35861235523 on `7b67f01`)
+
+Run 19: claim_recall held at 2/62 (precision 2/9, wrong_scope 2/9). Vienna's footer walk is gone
+(pre-search reads are now informatik/studieren). Aalto still lost 90 s — not to a Crawl-delay: its
+`get #1` (robots.txt) *started and never finished*; httpx's timeout bounds each read, not the exchange.
+
+| Change | Hash |
+|---|---|
+| `ROBOTS_CRAWL_DELAY` outcome (a long delay is not a refusal); `Fetcher(max_crawl_delay=)`; source scanner passes `None` and waits delays out | `a8a7ad3` |
+| robots.txt load bounded to 15 s in total (then "unavailable", remembered); each page attempt bounded to 2× timeout, not retried | `5cd493d` |
+
+Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
+order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
+
 ## 4. Half-done / uncommitted at the moment of writing
 
 ### Prompt C recovery audit — gpt-6-astra, 2026-09-06 10:54 UTC
