@@ -361,9 +361,10 @@ _A_DATE = (
 #: One row of a deadline table that names its population: Groningen's
 #: "non-EU/EEA students 01 May 2027 01 September 2027". The lookbehind keeps
 #: the "EU/EEA" inside "non-EU/EEA" from reading as a second row.
+_POPULATION_NAME = r"(?<![\w/-])(non[-\s]?EU(?:\s*/\s*EEA)?|EU\s*/\s*EEA)"
+_POPULATION_WORD = re.compile(_POPULATION_NAME, re.IGNORECASE)
 _POPULATION_ROW = re.compile(
-    r"(?<![\w/-])(non[-\s]?EU(?:\s*/\s*EEA)?|EU\s*/\s*EEA)"
-    r"(?:\s+(?:students|applicants|nationals|citizens))?\s*[:\-–]?\s*"
+    _POPULATION_NAME + r"(?:\s+(?:students|applicants|nationals|citizens))?\s*[:\-–]?\s*"
     rf"({_A_DATE})(?:\s+({_A_DATE}))?",
     re.IGNORECASE,
 )
@@ -735,6 +736,39 @@ _FLOOR_AT_TUITION: Final[frozenset[ClaimType]] = frozenset(
 )
 
 
+def _population_amounts(text: str, label: str) -> list[tuple[str, float, str, int, int]]:
+    """One fee per population row of a fee table, or none at all.
+
+    ``(population, amount, currency, start, end)`` — only when the table after
+    ``label`` names at least two populations, each followed by its own amount
+    before the next one begins. The statutory EU/EEA fee and the institutional
+    non-EU/EEA fee are different numbers on one page, and the first-match
+    reading quoted whichever came first to everybody.
+    """
+    header = re.search(label, text, re.IGNORECASE)
+    if header is None:
+        return []
+    names = [
+        m for m in _POPULATION_WORD.finditer(text, header.end()) if m.start() - header.end() < 600
+    ]
+    out: list[tuple[str, float, str, int, int]] = []
+    seen: set[str] = set()
+    for i, name in enumerate(names):
+        stop = names[i + 1].start() if i + 1 < len(names) else len(text)
+        segment = text[name.end() : min(stop, name.end() + 120)]
+        money = _MONEY.search(segment)
+        population = population_named(name.group(0))
+        parsed = parse_money(money.group(0)) if money else None
+        if money is None or parsed is None or population is None or population in seen:
+            continue
+        amount, currency = parsed
+        if amount < TUITION_FLOOR_AMOUNT:
+            continue
+        seen.add(population)
+        out.append((population, amount, currency, name.start(), name.end() + money.end()))
+    return out if len(out) >= 2 else []
+
+
 def extract_costs(text: str, builder: ClaimBuilder) -> list[Claim]:
     """Pull cost figures out of a fees page."""
     found: list[Claim] = []
@@ -755,6 +789,22 @@ def extract_costs(text: str, builder: ClaimBuilder) -> list[Claim]:
         ),
     )
     for ctype, label in patterns:
+        if ctype is ClaimType.TUITION:
+            rows = _population_amounts(text, label)
+            for population, amount, currency, start, end in rows:
+                _keep(
+                    found,
+                    builder.add(
+                        ctype,
+                        {"amount": amount, "currency": currency},
+                        excerpt_around(text, start, end),
+                        section="Fees and costs",
+                        subject_key=population,
+                        population=population,
+                    ),
+                )
+            if rows:
+                continue
         m = re.search(rf"{label}[^.\n]{{0,120}}", text, re.IGNORECASE)
         if not m:
             continue

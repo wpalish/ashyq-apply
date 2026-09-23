@@ -101,6 +101,7 @@ class WebCostAdapter:
 
         breakdown.academic_year = year
         breakdown.source_urls.append(candidate.costs_url)
+        by_population = _tuition_by_population(claims)
         for c in claims:
             category = _CLAIM_TO_CATEGORY.get(c.claim_type)
             value = c.normalized_value
@@ -116,6 +117,20 @@ class WebCostAdapter:
                 breakdown.total = money
             elif category is not None:
                 breakdown.items[category] = money
+        if by_population is not None:
+            low, high, currency = by_population
+            # The applicant's fee population here is not inferred, so the
+            # cost is the highest row — never understated — and the range
+            # the page publishes stays on the figure for everything downstream.
+            breakdown.items[CostCategory.TUITION] = Money(
+                amount=high,
+                currency=currency,
+                academic_year=year,
+                source_url=candidate.costs_url,
+                range_low=low,
+                range_high=high,
+            )
+            breakdown.is_range = True
 
         if not breakdown.items and breakdown.total is None:
             out.errors.append(
@@ -151,3 +166,28 @@ def _detect_year(text: str) -> str | None:
         return None
     end = m.group(2)
     return f"{m.group(1)}/{end[-2:]}"
+
+
+def _tuition_by_population(claims) -> tuple[float, float, str] | None:
+    """``(lowest, highest, currency)`` when tuition is published per fee
+    population with different amounts in one currency, else ``None``.
+
+    Two currencies are not ranged here: converting to compare them is a
+    judgement this adapter does not make, and the ordinary last-wins path
+    keeps its behaviour.
+    """
+    rows = [
+        c.normalized_value
+        for c in claims
+        if c.claim_type == ClaimType.TUITION
+        and c.scope is not None
+        and c.scope.population
+        and c.subject_key == c.scope.population
+        and isinstance(c.normalized_value, dict)
+    ]
+    if len(rows) < 2 or len({r["currency"] for r in rows}) != 1:
+        return None
+    amounts = [float(r["amount"]) for r in rows]
+    if min(amounts) == max(amounts):
+        return None
+    return min(amounts), max(amounts), rows[0]["currency"]
