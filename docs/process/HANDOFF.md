@@ -60,6 +60,13 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**Run 16 (35846785728): where the budget goes, first answer.** Search is fast (0.7–0.9 s per call), and
+it is not where the time goes. **Aalto:** 2 reads, 0 searches, empty log, 90 s, so something hangs
+before discovery searches. **Vienna:** its first search starts at t=73 s, after 95 reads.
+**Warsaw:** 46 reads and never searches. **Delft, UBC:** the page budget ends in the funding stage,
+after their requirements were read. The time goes into reads **before** search. `840fdad` logs every
+read (start, duration, outcome) so run 18 names the pages.
+
 **The owner's five claim_recall decisions, implemented (2026-09-23).** Each commit ran the full gates.
 - **4, support direction (`4215efc`):** a quote supports when ours lies inside the reviewer's, or
   theirs lies inside ours and ours is at most 300 characters (`metrics.quote_supports`). All eight
