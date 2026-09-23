@@ -867,6 +867,7 @@ Run 19: claim_recall held at 2/62 (precision 2/9, wrong_scope 2/9). Vienna's foo
 |---|---|
 | `ROBOTS_CRAWL_DELAY` outcome (a long delay is not a refusal); `Fetcher(max_crawl_delay=)`; source scanner passes `None` and waits delays out | `a8a7ad3` |
 | robots.txt load bounded to 15 s in total (then "unavailable", remembered); each page attempt bounded to 2× timeout, not retried | `5cd493d` |
+| Run 20 (35890139634): deadline held but Aalto's whole host is silent to the runner (robots 50 s, then sitemap); KAIST admission host 50 s. A host that stalled once fails fast for the rest of the run; attempt deadline 1× timeout | `551c2ef` |
 
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
