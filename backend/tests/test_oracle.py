@@ -14,7 +14,9 @@ import pytest
 
 from app.adapters.fetching import Fetcher
 from evaluation.research.oracle import (
+    CLASSIFIER_GATED,
     FETCH_FAILED,
+    NOT_MEASURED,
     RECOVERED,
     TEXT_MISSING,
     TIMED_OUT,
@@ -228,3 +230,40 @@ async def test_a_hung_page_times_out_instead_of_stalling_the_run():
     target = Target("example", "ielts.overall", 6.5, "https://example.edu/x", "IELTS 6.5")
     finding = await bounded_probe(target, _HangingFetcher(), seconds=0.05)
     assert finding.verdict == TIMED_OUT
+
+
+_AWARD_PAGE = """<html><head><title>Global Excellence Scholarship</title></head><body><main>
+<h1>Global Excellence Scholarship</h1>
+<p>The Global Excellence Scholarship covers full tuition for international students.</p>
+<p>Eligibility: applicants need an IELTS Academic overall band score of 6.5.</p>
+<p>The award is worth EUR 12,000 per year; apply by 1 March 2027.</p>
+</main></body></html>"""
+
+
+class TestTellingTheClassifierFromThePatterns:
+    @pytest.mark.asyncio
+    async def test_a_refused_page_whose_words_the_patterns_read_is_classifier_gated(self, tmp_path):
+        found = await _probe_one(
+            tmp_path,
+            {"uni/award.html": _AWARD_PAGE},
+            "fixture://uni/award.html",
+            "IELTS Academic overall band score of 6.5",
+        )
+        assert found.verdict == CLASSIFIER_GATED
+        assert "scholarship" in found.detail
+
+    @pytest.mark.asyncio
+    async def test_a_fact_no_claim_type_can_carry_is_not_measured(self, tmp_path):
+        corpus = tmp_path / "corpus"
+        (corpus / "uni").mkdir(parents=True)
+        (corpus / "uni/cs.html").write_text(_PLAIN, encoding="utf-8")
+        target = Target(
+            "example",
+            "documents.admission.transcript.completed",
+            True,
+            "fixture://uni/cs.html",
+            "IELTS Academic",
+        )
+        async with Fetcher(tmp_path / "cache", offline=True, corpus_dir=corpus) as fetcher:
+            found = await probe(target, fetcher)
+        assert found.verdict == NOT_MEASURED

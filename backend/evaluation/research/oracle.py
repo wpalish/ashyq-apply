@@ -26,7 +26,7 @@ from collections import Counter
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
-from .mapping import normalize_claim
+from .mapping import CLAIM_KEYS, normalize_claim
 from .schema import Dataset
 
 #: What happened to one certified fact when we read its own source page.
@@ -37,6 +37,12 @@ FETCH_FAILED = "fetch_failed"
 #: The probe did not finish inside its wall clock — a hung fetch or an
 #: extraction pattern that never returns. Itself a finding, never a hang.
 TIMED_OUT = "timed_out"
+#: The patterns recover it when the page is read ungated, but the classifier
+#: refused the page for requirements — a classification fault, not a pattern one.
+CLASSIFIER_GATED = "classifier_gated"
+#: No claim type maps to this key at all, so no page could ever recover it
+#: through this path. A gap in coverage, not a failure to read.
+NOT_MEASURED = "not_measured"
 
 PROBE_SECONDS = 90.0
 
@@ -115,30 +121,34 @@ def excerpt_is_present(excerpt: str, text: str) -> bool:
     return False
 
 
-def _claims_on(url: str, html: str, fetched_at) -> list[tuple[str, object]]:
-    """The real extraction path, on one page, normalised to the scorer's keys."""
+def _claims_on(url: str, html: str, fetched_at) -> tuple[str, list[tuple[str, object]], list]:
+    """The real extraction path on one page, normalised to the scorer's keys.
+
+    Returns the page type, the claims the pipeline would keep (gated by the
+    classifier, as the adapter is) and the claims the patterns find with the
+    gate lifted, so a refusal by the classifier is told apart from a miss.
+    """
     from app.adapters.extraction import ClaimBuilder, html_title, readable_text
     from app.adapters.page_classifier import classify_page
     from app.adapters.requirements.web_requirements import extract_requirements
 
     text = readable_text(html)
-    title = html_title(html)
     page = classify_page(url=url, html=html)
     builder = ClaimBuilder(
         source_url=url,
-        page_title=title,
+        page_title=html_title(html),
         official_domain=True,
         extraction_method="html_rule",
         accessed_at=fetched_at,
     )
-    if page.accepts("requirements"):
-        extract_requirements(text, builder)
-    out: list[tuple[str, object]] = []
+    extract_requirements(text, builder)
+    ungated: list[tuple[str, object]] = []
     for claim in builder.claims:
         payload = claim.model_dump(mode="json")
         key, value, _programme, _degree = normalize_claim(payload["claim_type"], payload)
-        out.append((key, value))
-    return out
+        ungated.append((key, value))
+    gated = ungated if page.accepts("requirements") else []
+    return page.page_type.value, gated, ungated
 
 
 def _matches(expected: object, produced: object) -> bool:
@@ -164,28 +174,37 @@ async def probe(target: Target, fetcher) -> Finding:
     from app.adapters.extraction import readable_text
 
     # Extraction is CPU-bound: run it off the loop so the wall clock can fire.
-    text, produced = await asyncio.to_thread(
+    text, (page_type, gated, ungated) = await asyncio.to_thread(
         lambda: (readable_text(page.text), _claims_on(target.url, page.text, page.fetched_at))
     )
-    for key, value in produced:
-        if key == target.key and _matches(target.value, value):
-            return Finding(target.case_id, target.key, target.url, RECOVERED)
 
-    if excerpt_is_present(target.excerpt, text):
-        return Finding(
-            target.case_id,
-            target.key,
-            target.url,
-            VALUE_MISSING,
-            f"the quoted words are in our text; {len(produced)} claims came out, none this one",
+    def found(claims: list[tuple[str, object]]) -> bool:
+        return any(k == target.key and _matches(target.value, v) for k, v in claims)
+
+    def finding(verdict: str, detail: str = "") -> Finding:
+        return Finding(target.case_id, target.key, target.url, verdict, detail)
+
+    if found(gated):
+        return finding(RECOVERED, f"[{page_type}]")
+    if found(ungated):
+        return finding(
+            CLASSIFIER_GATED, f"[{page_type}] the patterns read it; the page was not accepted"
         )
-    return Finding(
-        target.case_id,
-        target.key,
-        target.url,
+    if target.key not in _MEASURED_KEYS:
+        return finding(NOT_MEASURED, f"[{page_type}] no claim type maps to this key")
+    if excerpt_is_present(target.excerpt, text):
+        return finding(
+            VALUE_MISSING,
+            f"[{page_type}] the quoted words are in our text; "
+            f"{len(ungated)} claims came out, none this one",
+        )
+    return finding(
         TEXT_MISSING,
-        f"the quoted words are not in our text at all ({len(text)} chars read)",
+        f"[{page_type}] the quoted words are not in our text at all ({len(text)} chars read)",
     )
+
+
+_MEASURED_KEYS = frozenset(CLAIM_KEYS.values())
 
 
 def summarise(findings: list[Finding]) -> str:
@@ -194,12 +213,22 @@ def summarise(findings: list[Finding]) -> str:
     lines = [f.line() for f in findings]
     lines.append("")
     lines.append(f"{len(findings)} certified facts read from their own source pages")
-    for verdict in (RECOVERED, VALUE_MISSING, TEXT_MISSING, FETCH_FAILED, TIMED_OUT):
+    for verdict in (
+        RECOVERED,
+        CLASSIFIER_GATED,
+        VALUE_MISSING,
+        TEXT_MISSING,
+        NOT_MEASURED,
+        FETCH_FAILED,
+        TIMED_OUT,
+    ):
         lines.append(f"  {verdict:14} {by_verdict.get(verdict, 0)}")
     lines.append("")
     lines.append(
-        "value_missing means the patterns; text_missing means the page's content never "
-        "reached us; recovered with a still-zero live claim_recall would mean navigation."
+        "value_missing means the patterns; classifier_gated means the page type; "
+        "text_missing means the page's content never reached us; not_measured means no "
+        "claim type exists for the fact; recovered with a still-zero live claim_recall "
+        "would mean navigation."
     )
     return "\n".join(lines)
 
@@ -209,8 +238,23 @@ async def run(dataset: Dataset, *, live: bool, cache: Path, corpus: Path | None)
 
     async with Fetcher(cache, offline=not live, corpus_dir=corpus) as fetcher:
         findings = []
+        hung: set[str] = set()
         for target in targets(dataset):
-            findings.append(await bounded_probe(target, fetcher, seconds=PROBE_SECONDS))
+            if target.url in hung:
+                # One wait per page, not one per fact read from it.
+                findings.append(
+                    Finding(
+                        target.case_id,
+                        target.key,
+                        target.url,
+                        TIMED_OUT,
+                        "same page already timed out; not waited on again",
+                    )
+                )
+            else:
+                findings.append(await bounded_probe(target, fetcher, seconds=PROBE_SECONDS))
+                if findings[-1].verdict == TIMED_OUT:
+                    hung.add(target.url)
             print(findings[-1].line(), flush=True)
         return findings
 
