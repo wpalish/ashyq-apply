@@ -891,6 +891,13 @@ clock), claim_recall 1/62, 8 of 9 value-correct claims other_page. No case lost 
 the oracle's KAIST scholarship pages now read `robots.txt unreachable (ConnectTimeout)` → disallowed, as the
 RFC requires. Sibling-page rule `2603351` and research-output classifier `ccc07d7` land in run 25.
 
+**Run 25 (35909275111, `ccc07d7`): claim_recall 5/62 (strict same-page 1/62), claim_precision 6/8**
+(run 23: 1/62, 1/9). The sibling-page rule accounts for four facts. Aalto's research-paper claim is now
+`classifier-rejected` (Aalto files 0 claims: its real programme page still is not reached — 9 fetch
+failures). 8/10 complete: UBC (funding stage) and HKU (scholarship pagination, zh-hant/zh-hans copies)
+ran out of wall clock. Open: Groningen deadline scope mismatch (label non-EU/EEA; the live page now lists
+01 May for every population — the page may have changed since certification; labels are not ours to edit).
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
