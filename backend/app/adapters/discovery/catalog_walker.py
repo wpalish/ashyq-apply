@@ -19,7 +19,9 @@ The frozen walker outcome vocabulary (T29 contract): the fetch layer reports
 with ``FetchOutcome.value`` verbatim; the walker layer uses ``program_detail``,
 ``intake_specific_program``, ``not_program_catalog``, ``reads_as_<page_type>``,
 ``degree_level_mismatch``, ``field_mismatch``, ``off_domain``, ``short_label``,
-``excluded_url``, ``walker_budget_exhausted`` and ``js_no_program_list``.
+``excluded_url``, ``walker_budget_exhausted`` and ``js_no_program_list``; and,
+since 2026-09-23, ``walker_no_signal`` for a link off the catalogue's own host
+that carries no programme signal at all, which is recorded and not read.
 """
 
 from __future__ import annotations
@@ -290,8 +292,24 @@ def score_link(url: str, label: str, degree: str, fields: list[str]) -> int | No
     return score
 
 
+def _host(url: str) -> str:
+    return urlparse(url).netloc.lower()
+
+
 def _parent_directory(url: str) -> str:
-    return (urlparse(url).path or "").rsplit("/", 1)[0]
+    """The list a link sits in: its host and the path above it.
+
+    The host is part of it, and a site root is in no list at all. Vienna's
+    catalogue footer links moodle, wiki, webmail and the library — each the
+    root of a different subdomain — and grouping them by path alone made them
+    "siblings" of one repeating list, so each earned the list bonus and was
+    read as a programme lead before search had started.
+    """
+    parsed = urlparse(url)
+    path = (parsed.path or "").rstrip("/")
+    if not path:
+        return ""
+    return f"{parsed.netloc.lower()}{path.rsplit('/', 1)[0]}"
 
 
 def _drop_outcome(url: str, label: str) -> str:
@@ -408,7 +426,7 @@ class CatalogWalker:
             walk.outcomes.append((catalogue_url, "js_no_program_list"))
             return walk
 
-        scored = self._score(list(candidates.values()), walk.outcomes)
+        scored = self._score(list(candidates.values()), walk.outcomes, _host(catalogue_url))
         walk.candidates = scored
 
         budget = scored[:WALKER_TOP_N]
@@ -419,7 +437,12 @@ class CatalogWalker:
             await self._read_lead(link, walk)
         return walk
 
-    def _score(self, links: list[WalkerLink], outcomes: list[tuple[str, str]]) -> list[WalkerLink]:
+    def _score(
+        self,
+        links: list[WalkerLink],
+        outcomes: list[tuple[str, str]],
+        catalogue_host: str = "",
+    ) -> list[WalkerLink]:
         """Apply the frozen scorer plus the repeating-list bonus, strongest first."""
         siblings = Counter(_parent_directory(link.url) for link in links)
         scored: list[WalkerLink] = []
@@ -428,7 +451,17 @@ class CatalogWalker:
             if base is None:
                 outcomes.append((link.url, _drop_outcome(link.url, link.label)))
                 continue
-            repeating = siblings[_parent_directory(link.url)] >= REPEATING_LIST_MIN_SIBLINGS
+            parent = _parent_directory(link.url)
+            repeating = bool(parent) and siblings[parent] >= REPEATING_LIST_MIN_SIBLINGS
+            if base <= 0 and not repeating and _host(link.url) != catalogue_host:
+                # Nothing about it says programme, and it leaves the catalogue's
+                # own site: moodle, the wiki, webmail, the library. The T29
+                # contract reads a signal-less lead on the catalogue's site and
+                # records what it was; a link out of that site with no signal
+                # is furniture, and reading it spent Vienna's budget before
+                # search had started.
+                outcomes.append((link.url, "walker_no_signal"))
+                continue
             walk = WalkerLink(
                 url=link.url,
                 label=link.label,
