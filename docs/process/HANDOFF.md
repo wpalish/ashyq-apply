@@ -60,6 +60,24 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**Run 12 (35829646301) and what it changed (`55fc075`; regression fix `1e44137`).**
+- **Groningen now yields live claims** (0 → 2) and `critical_field_coverage` moved 0/210 → 1/210: the
+  classifier fix `7626ff2` let its programme page through. Its deadline still scores as wrong scope,
+  because degree, intake and population are all silent. The value is read from the "Dutch students" row
+  of a three-row table (same date in every row), and the page names three populations, so page-level
+  scope is silent by design. The fix is one deadline claim per population row; that touches conflicts
+  and supersession pairing, so it is planned, not done.
+- **A regression I caused, fixed in `1e44137`:** HKU's "Computing and Data Science" school page became
+  a *master's* programme of that name, a false `programme.exists`. The context fallback now refuses a
+  heading when the body names a full degree title with another subject, and takes its degree from the
+  title or path that named it. `_degree_level` now returns the degree named first; before, any "master"
+  in the body outranked a "BSc" in the heading.
+- **Why a right value never counts (`support_report`, new benchmark step):** supported means our quote
+  is contained *in* the reviewer's. Reviewers quote the least that proves a fact ("6.5", "4 May 2026");
+  we quote a sentence or a ±150-character window. So a claim can carry the certified value from the
+  certified page and still never be supported. The report shows, per right-valued claim, which
+  direction holds. The direction is §7 question 5.
+
 **The claim_recall ceiling (`3649853`).** `evaluation/research/expressibility.py`, printed by a new
 benchmark step, answers which of the 62 known facts any claim could ever match:
 - **Live: 14 of 62.** `live.py` maps with `normalize_claim` alone, and the identity bindings are
@@ -2981,6 +2999,12 @@ call, so none is mine to make:
    today is that only a programme's own page may.
 4. **Vienna deadline:** the page says "Application period 2 March to 4 May 2026", but the certified
    value is null, so it can never match.
+5. **Which way "supported" contains.** The scorer requires our excerpt to lie inside the reviewer's
+   (`evidence.excerpt in e.excerpt`). Reviewer excerpts are minimal, so a correct claim quoting the
+   whole sentence is never supported, and claim_recall stays 0 whatever extraction does. Accepting the
+   reverse (the reviewer's words inside ours) is a definition change: every published baseline would
+   need regenerating plus a VERSIONS note. The `support_report` step shows the effect before anyone
+   decides.
 
 **Owner decision: may a programme-specific rule stay usable when a university-wide rule disagrees?**
 The phase guide says yes — a general rule and a specific one may both be true, the specific one is
