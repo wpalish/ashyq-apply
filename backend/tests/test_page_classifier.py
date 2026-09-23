@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from app.adapters.page_classifier import PageType, classify_page
+
 
 class TestADegreeWordIsNotAProgramme:
     """V2-29 — headings a live run actually claimed a programme from.
@@ -46,3 +48,32 @@ class TestADegreeWordIsNotAProgramme:
             "MSc Computer Science and Engineering",
         ):
             assert _program_name(heading) == heading, heading
+
+
+class TestABareSubjectHeading:
+    """Groningen's certified page: heading "Computing Science", degree only in
+    the title and the path, eight links to sibling programmes."""
+
+    _LINKS = "".join(f'<li><a href="/bachelors/p{i}">Programme {i} BSc</a></li>' for i in range(8))
+
+    def _page(self, title: str) -> str:
+        return (
+            f"<html><head><title>{title}</title></head><body><main>"
+            "<h1>Computing Science</h1><p>Three-year bachelor taught in English.</p>"
+            f"<ul>{self._LINKS}</ul></main></body></html>"
+        )
+
+    def test_title_and_path_name_the_programme(self):
+        page = classify_page(
+            url="https://www.rug.nl/bachelors/computing-science/",
+            html=self._page("Computing Science | Bachelor | University of Groningen"),
+        )
+        assert page.page_type is PageType.PROGRAM_DETAIL
+        assert page.subject == "Computing Science"
+
+    def test_without_a_degree_in_title_or_path_it_stays_a_listing(self):
+        page = classify_page(
+            url="https://www.rug.nl/about/computing-science/",
+            html=self._page("Computing Science | About us | University of Groningen"),
+        )
+        assert page.page_type is PageType.PROGRAM_CATALOG

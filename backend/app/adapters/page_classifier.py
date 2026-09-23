@@ -488,7 +488,7 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
     # programme page has an "entry requirements" section, and matching that
     # first classified BSc Computer Science and Engineering as a general
     # admissions page.
-    subject = _program_name(identity)
+    subject = _program_name(identity) or _program_name_from_context(identity, title, path)
 
     # Links alone may only decide when the page has no programme identity of
     # its own. Counting them first made "BSc Computing Science" a catalogue
@@ -662,6 +662,32 @@ def _program_name(identity: str) -> str | None:
         return None
     # A heading that is a question or an instruction is not a programme name.
     if name.endswith("?") or re.match(r"^(check|how|what|apply|find|browse|search)\b", name, re.I):
+        return None
+    return name
+
+
+def _program_name_from_context(identity: str, title: str, path: str) -> str | None:
+    """A bare subject heading ("Computing Science") that the page's own title
+    and address place at one degree level.
+
+    Groningen's certified programme page carries its degree only in the title
+    and in ``/bachelors/``; the heading alone failed ``_program_name`` and the
+    page's links then made it a catalogue, which the allow-list refuses. All
+    three must agree: a short single name, repeated in the title, with a
+    degree word in the title or the path. A section heading repeated in a
+    title without a degree anywhere stays unnamed.
+    """
+    name = (identity or "").strip()
+    if not name or len(name) > 80 or len(name.split()) > 6:
+        return None
+    if _PLURAL_PROGRAM_HEADING.match(name) or _NOT_A_PROGRAMME_HEADING.search(name):
+        return None
+    if name.endswith("?") or re.match(r"^(check|how|what|apply|find|browse|search)\b", name, re.I):
+        return None
+    if name.casefold() not in (title or "").casefold():
+        return None
+    segments = " ".join(re.split(r"[/_-]+", path or ""))
+    if not (_degree_level(title or "") or _degree_level(segments)):
         return None
     return name
 
