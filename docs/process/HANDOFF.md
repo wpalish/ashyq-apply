@@ -8,17 +8,17 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 | | |
 |---|---|
-| Holder | **nobody — visual refinement WIP published for owner review** |
-| Since (UTC) | 2026-09-23 06:37 UTC |
+| Holder | **gpt-6-astra — owner-directed Open Path integration** |
+| Since (UTC) | 2026-09-23 07:56 UTC |
 | Branch | `task/open-path-on-redesign`, based on `origin/task/frontend-redesign@e679432` |
-| HEAD when written | `e679432` (clean baseline; PR #10 remains untouched) |
+| HEAD when written | `9efa1bc` (clean and synchronized with origin before this continuation) |
 | Origin main when checked | `07de4d9`; PR #10 is open and conflicts with current main |
 | Previous holder | gpt-6-astra; pushed the bounded evidence-link implementation as WIP, then stopped before full verification and release |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
 
-**Current branch only, 2026-09-23:** The owner asked to continue the ASHYQ Apply visual-design work after rejecting the contrast and some fonts. This branch refines PR #10's existing UX and three-layer token system. Softer semantic surfaces, Onest-led typography, readable data styling, 21st context, screenshots, and verification are in `docs/frontend-visual-refinement.md`. No product data, flow, or evidence-link implementation changed. Frontend gates pass; full backend pytest retains the predecessor branch's KZT extraction failure (§6/§7). Status is WIP pending visual review and integration with current main. The older E02 record below describes the predecessor branch.
+**Current branch only, 2026-09-23:** The owner asked to continue the ASHYQ Apply visual-design work after rejecting the contrast and some fonts. This branch refines PR #10's existing UX and three-layer token system. Softer semantic surfaces, Onest-led typography, readable data styling, 21st context, screenshots, and verification are in `docs/frontend-visual-refinement.md`. The owner now directs continuation through integration. The apparent inherited KZT backend failure is a Windows fixture decoding issue: the isolated test fails under the local legacy encoding and passes with `PYTHONUTF8=1`; no production extraction bug was proved. Next: fix that fixture's read encoding, merge current main preserving both handoff histories, and run the gates on the integrated tree. The older E02 record below describes the predecessor branch.
 
 Published owner-requested **Draft PR #10**: https://github.com/wpalish/ashyq-apply/pull/10
 Base main; head task/frontend-redesign. Available for download/review and continued implementation,
@@ -272,7 +272,7 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-**Current branch next step, 2026-09-23 07:04 UTC:** owner reviews the light/dark/mobile screenshots in `docs/frontend-visual-refinement.md`. On acceptance, reconcile PR #10 with current `main` in an integration branch, resolve the existing PR conflict, rerun frontend/backend gates and fix the inherited KZT extraction failure before removing the WIP status. Do not merge this branch as green on its own. No backend changes were made here.
+**Current branch write-ahead, 2026-09-23 07:56 UTC:** (1) make `backend/tests/test_live_extraction.py::fixture` decode synthetic HTML with explicit UTF-8, rerun the failing KZT case under the ordinary Windows environment; (2) merge `origin/main@07de4d9` into `task/open-path-on-redesign`, resolving only `docs/process/HANDOFF.md` by retaining the current Open Path task at the top and the main branch's V2 history below; (3) run Ruff/format/mypy/full pytest coverage, token audit/typecheck/lint/unit/build, redesign browser/axe and any required integration checks; (4) push a green commit, open a draft PR with real gate output, then release the baton. Preserve PR #10 unchanged.
 
 Every write-ahead below is historical context for PR #10.
 
@@ -708,3 +708,4 @@ status pushed; 215 unit/10 browser checks green; inherited integration caveats p
 | 2026-09-10 03:20:01 UTC | gpt-6-astra | `d1e4fe9` → `32d6264` + merge `fc1fdc2` + release handoff | Accepted the PR #10 regression slice in `44dfa2a`, repaired Bucket/Decision geometry, BottomNav hit ownership, context navigation and AA contrast, then preserved and merged concurrent WIP `49c961b` with its long-detail/profile overflow fixes and refreshed screenshots. Frontend 232/232, ordinary E2E 77/1 skip, auth 6/6, token audit 0/0 and backend 1358 at 93.80% pass. Browser checked 412×915 and 320×720. No API/ranking/privacy/payment change; E02 remains partial. Baton released; evidence-link rows are the one current next step. |
 | 2026-09-10 04:20:57 UTC | gpt-6-astra | `3e7dc27` → in progress | Owner requested continuation. Fetched a clean synchronized branch, confirmed the real `list[Str200]`/five-link schema and accepted the bounded E02 evidence-link row slice; exact write-ahead is in §5. |
 | 2026-09-23 07:04 UTC | gpt-6-astra | `e679432` → visual-refinement WIP | Owner-directed contrast/type revision on an isolated branch from PR #10, with local 21st context and light/dark/mobile screenshots. Frontend 245/245, redesign browser 17/1 skip, token audit 0/0, build/axe green. Backend Ruff/mypy and coverage floor pass; inherited KZT extraction test fails. Baton released; owner visual review precedes integration. |
+| 2026-09-23 07:56 UTC | gpt-6-astra | `9efa1bc` → integration in progress | Owner asked to continue. Fetched clean branch, reproduced the KZT failure isolated, proved it passes with `PYTHONUTF8=1`, and previewed the current-main merge: only HANDOFF conflicts. Next: explicit UTF-8 fixture reading and integration gates. |
