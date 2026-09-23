@@ -60,6 +60,20 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**Run 9 (35819428739, head `8fcb23e`) and what the oracle could not yet say (`64d55fa`).**
+Moved against the certified baseline: programme_page_recall 1/10 → **5/10**, wrong_scope_claim_rate
+4/5 → **1/5** (the one left is NTU "Mathematical and Computer Sciences", an equivalence the owner
+still holds). claim_recall is still 0/62. Six of ten cases ran out of budget.
+
+The oracle finished its first live pass: 49 value_missing, 1 text_missing, 3 fetch_failed (Toronto
+403), 9 timed_out (Aalto, KAIST). **That value_missing count exaggerates the problem:** the oracle ran
+only the requirements extractor, and only when the classifier accepted the page for requirements. So
+every programme, document, tuition and scholarship fact was counted as a pattern miss, as was every
+requirement on a page the classifier refused. It now separates `classifier_gated` (the patterns read
+it; the page type refused it) and `not_measured` (no claim type maps to the key) from real
+`value_missing`, prints the page type on every line, and waits on a hung URL once rather than once per
+fact.
+
 **Funding and government pages now leave a page outcome (`50f9221`).** Only requirements, costs and
 discovery used to record them, so a funding stage that read pages and found nothing had nothing to
 explain itself with. Scholarship pages now record: fetch-failed, the funding indexes that were read
