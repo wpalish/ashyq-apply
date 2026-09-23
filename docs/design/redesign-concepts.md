@@ -1,12 +1,12 @@
-# Redesign concepts — rounds 1 and 2 (2026-09-23)
+# Redesign concepts — rounds 1 to 3 (2026-09-23)
 
 The owner asked for a redesign at the level of the product itself: the current UI is "not serious enough",
 overloads an ordinary school student with information, and does not hook. The agreed process is
 **concepts first, then develop the chosen one into a design system and apply it**. This file is the
 record of the rounds: what is wrong today, what every concept keeps, the references, the four
-round-1 directions, the owner's feedback and three round-2 evolutions of A.
+round-1 directions, the owner's feedback, and the round-2 and round-3 directions built from it.
 
-- Live canvas with all 31 artboards (private to the owner until shared):
+- Live canvas with all 43 artboards (private to the owner until shared):
   https://claude.ai/artifact/Ncsd2YkQMcV9oCG3bHrBsa
 - Nothing in `frontend/` changes in this round. PR #10 (tokenised profile workflow) and PR #19
   ("Open Path" visual refinement) are untouched; whichever concept wins decides what happens to them.
@@ -214,10 +214,72 @@ None uses chat as the front door. They differ in how far they move A towards "se
   landmark clichés. The sky-and-sun palette echoes the national flag, which is a plus for a Kazakh
   audience but must stay a nod, not a flag.
 
-## 8. Next step
+## 8. Owner feedback on round 2 (2026-09-23)
 
-The owner picks among A, E, F and G, or a mix (for example E as the light theme and F as the dark
-one). Then:
+- **G** looks far too unserious.
+- **E** is like A, but A's landing page and A's fonts (Unbounded + Manrope) were more interesting.
+- **F:** the owner is undecided.
+- New concepts were requested, and new references were welcome.
+
+## 9. Round 3 — serious, on A's typography
+
+All three keep what was liked: Unbounded + Manrope, A's navy `#0F1E36` and sun `#FFC23D`, and a landing
+page with a product scene rather than plain text. They drop the "toy" signals (big yellow blocks,
+rotations, heavy shadows) and borrow structure from serious products instead of illustration.
+
+New references for this round:
+
+| Reference | What it lends | Used in |
+|---|---|---|
+| [Flighty iOS — flight alerts](https://mobbin.com/explore/screens/0b1b9d14-b576-44ea-b93b-c40ba046fbfd), [flights home](https://mobbin.com/explore/screens/f28cca69-a528-4c55-9170-5be260ef981a) | Map on top with a list sheet below; big origin → destination type; calm status words ("on time") | H |
+| [21st.dev map components](https://21st.dev/community/components/s/map) — *World Map* (Manu Arora), *Globe Flights* (shuding), *Departures Board* (flightcn) | Dotted world map with arcs; flight-board precision | H |
+| [Mercury web home](https://mobbin.com/explore/screens/d8564614-5b4c-4cdc-8088-0891fc9260df), [Stripe dashboard](https://mobbin.com/explore/screens/b6bcbb98-1398-4f4f-84ca-106dda66841e) | A calm, serious dashboard: greeting, quick actions, a bento of cards | I |
+| [21st.dev bento grids](https://21st.dev/community/components/s/bento-grid) | A product-led hero built from real widgets | I |
+
+### H · Маршруты — Flighty-like routes from Kazakhstan
+
+![Concept H](concepts/concept-H.webp)
+
+- **Idea.** Each programme is a route from Astana to a campus on a dotted world map. The phone home
+  screen is a map with a sheet of routes. The programme screen reads like a flight: "Астана → Гронинген",
+  the two key dates with days left, the path of steps, the money and the three judgements.
+- **Why it is serious.** It borrows the precision of a travel tool (dates, days left, status words), and
+  the map is drawn from real coordinates, not decoration.
+- **Risk.** It is still a metaphor. It needs one careful rule: route status ("по плану", "нужно
+  действие") describes the student's to-do list, never an admission outcome.
+
+### I · Штаб — the whole application on one screen
+
+![Concept I](concepts/concept-I.webp)
+
+- **Idea.** A control room in the manner of Mercury and Stripe. The next step leads on a navy card,
+  followed by the nearest deadline in days, the cost, the shortlist table and the source quote. The
+  landing page is the same bento, so the product sells itself. On the phone, the home screen is a
+  widget stack and "План" is grouped by deadline, using the fixture pages' own document lists.
+- **Why it is serious.** It is the most "adult tool" of the three and the easiest for parents and
+  counsellors to trust.
+- **Risk.** It is less emotional. The hook must come from the next-step card and the money figure.
+
+### J · Наставник 2.0 — A, finished
+
+![Concept J](concepts/concept-J.webp)
+
+- **Idea.** A's landing page and fonts almost unchanged, because they were liked, with the playful
+  signals removed:
+  - thin borders instead of heavy shadows
+  - no rotated cards
+  - a neutral money block
+  - a sun underline on "шаг за шагом"
+  - a proof card with the grant's real quote and ledger
+  - B's list-plus-detail workspace on desktop, with the coach line on top
+- **Why it is serious.** It keeps everything the owner already approved and changes only what read as
+  childish.
+- **Risk.** It is close to A, so it will not surprise, but it is the safest path to "A, but serious".
+
+## 10. Next step
+
+The owner picks among H, I and J (or A, F), or a mix — for example J's landing and onboarding with H's route
+screens or I's home dashboard. Then:
 
 1. Round 3 on the canvas: the chosen direction across the real flow (landing, sign-in, profile
    questions, research progress, shortlist, programme, plan, documents), light and dark, 390 and 1440,
