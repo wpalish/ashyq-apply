@@ -6,13 +6,13 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-Current holder: **nobody**. Branch: `task/open-path-on-redesign`, based on `origin/task/frontend-redesign@e679432` and integrated with `origin/main@07de4d9` at `5180437`. Open Path is ready for visual review in draft PR #19. The older V2 history remains for provenance.
+Current holder: **gpt-6-astra**, 2026-09-23 08:35 UTC. Branch: `task/open-path-on-redesign`, based on `origin/task/frontend-redesign@e679432` and integrated with `origin/main@07de4d9` at `5180437`. Continuing visual QA on draft PR #19. The older V2 history remains for provenance.
 
 
 | | |
 |---|---|
-| Holder | **nobody** |
-| Since (UTC) | 2026-09-23 08:00 |
+| Holder | **gpt-6-astra** |
+| Since (UTC) | 2026-09-23 08:35 |
 | Branch | `task/open-path-on-redesign`, based on frontend redesign PR #10 |
 | Last task commit before release | `987b733`; main merge `5180437` |
 | Origin main when checked | `07de4d9` (fetched 2026-09-23) |
@@ -267,7 +267,7 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-**Open Path next:** Owner reviews draft PR #19 and the light/dark/mobile screenshots in `docs/frontend-visual-refinement.md`; apply any visual feedback in this branch and re-run relevant gates. Review PR #19 as an integration of PR #10's UX plus this visual refinement; merge only after the owner accepts the visual direction. Main's earlier plan below is historical for this task.
+**Open Path next (visual QA):** Align `frontend/.21st/design.json`, `frontend/.21st/DESIGN.md`, `specs/design-system.md`, `specs/foundations/typography.md`, and `specs/components/profile-screen.md` with the implemented Onest-led tokens and owner feedback; retain the earlier Prata rule as superseded history, not current instruction. Verify 21st review, token audit, tests and final CI; publish a small commit to draft PR #19 and release the baton. Then the owner reviews the light/dark/mobile screenshots in `docs/frontend-visual-refinement.md`. Main's earlier plan below is historical for this task.
 
 Write-ahead (claude-opus-5, 2026-09-20, V2-10): **starting V2-10 — the search provider interface**,
 per `analysis/v2/02_EXECUTION_PLAN.md` (Phase 1) and `analysis/v2/04_PHASE_1_DISCOVERY_ENGINE.md` §1.
@@ -2240,6 +2240,8 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 `[0.8]` → `[1.1]` → `[1.2]` → `[1.3]` → `[1.4]` → `[2.1]` → `[2.2]` → `[2.3]` → `[3.1]` → `[3.2]` → `[4.1]` → `[4.2]` → `[5]`
 
 ## 11. Session log (one line per session, newest last)
+
+| 2026-09-23 08:35 UTC | gpt-6-astra | `5329b76` → visual QA in progress | PR #19 is mergeable; one complete CI run green. Screenshot and 21st-ui-review found stale Prata/mono guidance in nested 21st config and specs. Reconcile design context with implemented Onest tokens, then review again. |
 
 | 2026-09-23 08:00 UTC | gpt-6-astra | `5180437` → `987b733` + release handoff | Integrated main with only the handoff conflict, passed all required gates (backend 94.56% coverage, frontend 251 tests, redesign E2E 17 passed/1 skip), opened draft PR #19 and released the baton for owner visual review. |
 
