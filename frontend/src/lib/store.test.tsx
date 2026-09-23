@@ -11,6 +11,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { StoreProvider, blankProfile, toDraft, useStore } from './store';
 import { DEFAULT_PROFILE } from './defaultProfile';
 import { ApiError, api } from '@/api/client';
+import { readProfileStep } from './profileStep';
 import type { RunView, StoredProfile } from '@/types';
 
 // The spread comes first: anything after it is the part that makes this
@@ -51,6 +52,60 @@ beforeEach(() => {
   vi.spyOn(api, 'capabilities').mockResolvedValue({} as never);
   vi.spyOn(api, 'validateProfile').mockResolvedValue({
     gaps: [], can_proceed: true, blocking_count: 0, summary: 'ok',
+  });
+});
+
+describe('case-scoped wizard navigation', () => {
+  let current: ReturnType<typeof useStore>;
+  function Capture() { current = useStore(); return null; }
+
+  it('migrates the latest step on first save, then isolates case switches and resets', async () => {
+    vi.spyOn(api, 'cases').mockResolvedValue([]);
+    vi.spyOn(api, 'listRuns').mockResolvedValue([]);
+    vi.spyOn(api, 'getProfile').mockImplementation(async id => ({ ...REAL_PROFILE, id }));
+    let resolve!: (profile: StoredProfile) => void;
+    vi.spyOn(api, 'createProfile').mockReturnValue(new Promise(yes => { resolve = yes; }));
+    render(<StoreProvider><Capture /></StoreProvider>);
+    await waitFor(() => expect(current.hydrated).toBe(true));
+    act(() => current.newCase());
+    const localKey = current.activeCaseKey!;
+    act(() => current.setProfileStep(3));
+    let saving!: Promise<void>;
+    act(() => { saving = current.saveProfile(); });
+    act(() => current.setProfileStep(5));
+    await act(async () => { resolve(REAL_PROFILE); await saving; });
+    expect(current.profileStep).toBe(5);
+    expect(readProfileStep(REAL_PROFILE.id)).toBe(5);
+    expect(sessionStorage.getItem(`ashyq.profileStep.v1.${localKey}`)).toBeNull();
+    await act(async () => { await current.switchCase('another-case'); });
+    expect(current.profileStep).toBe(0);
+    act(() => current.setProfileStep(2));
+    await act(async () => { await current.switchCase(REAL_PROFILE.id); });
+    expect(current.profileStep).toBe(5);
+    act(() => current.clearProfile());
+    expect(current.profileStep).toBe(0);
+    expect(readProfileStep('another-case')).toBe(2);
+    act(() => current.setProfileStep(4));
+    act(() => current.loadDemoProfile());
+    expect(current.profileStep).toBe(0);
+  });
+
+  it('does not migrate a stale save after a new case was created', async () => {
+    vi.spyOn(api, 'cases').mockResolvedValue([]);
+    let resolve!: (profile: StoredProfile) => void;
+    vi.spyOn(api, 'createProfile').mockReturnValue(new Promise(yes => { resolve = yes; }));
+    render(<StoreProvider><Capture /></StoreProvider>);
+    await waitFor(() => expect(current.hydrated).toBe(true));
+    act(() => current.newCase());
+    act(() => current.setProfileStep(4));
+    let saving!: Promise<void>;
+    act(() => { saving = current.saveProfile(); });
+    act(() => current.newCase());
+    const freshKey = current.activeCaseKey;
+    await act(async () => { resolve(REAL_PROFILE); await saving; });
+    expect(current.activeCaseKey).toBe(freshKey);
+    expect(current.profileStep).toBe(0);
+    expect(sessionStorage.getItem(`ashyq.profileStep.v1.${REAL_PROFILE.id}`)).toBeNull();
   });
 });
 

@@ -1,3 +1,4 @@
+import { navigate } from './navigation';
 /**
  * The workspace round trip, with authentication actually on.
  *
@@ -52,6 +53,7 @@ test('a new workspace can be registered', async () => {
   await page.getByTestId('auth-password').fill(PASSWORD);
   await page.getByTestId('auth-submit').click();
 
+  await navigate(page, 'profile');
   await expect(page.getByTestId('to-preferences')).toBeVisible();
 });
 
@@ -68,6 +70,7 @@ test('the workspace can hold a profile and a finished run', async () => {
 });
 
 test('signing out returns to the sign-in screen', async () => {
+  await page.getByTestId('section-more').click();
   await page.getByTestId('sign-out').click();
   await expect(page.getByRole('heading', { name: SIGN_IN })).toBeVisible();
 });
@@ -96,7 +99,7 @@ test('a session that dies mid-use returns to sign-in, not an error banner', asyn
   // that render from state already in memory, so they never reach the server
   // and never learn the session is gone. A write is the first thing the user
   // does that actually asks.
-  await page.getByTestId('nav-profile').click();
+  await navigate(page, "profile");
   await page.getByTestId('save-profile').click();
 
   await expect(page.getByRole('heading', { name: SIGN_IN })).toBeVisible();

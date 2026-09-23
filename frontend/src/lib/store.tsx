@@ -12,6 +12,8 @@ import {
 } from 'react';
 import { ApiError, api, isPaymentRequired } from '@/api/client';
 import { DEFAULT_PROFILE } from '@/lib/defaultProfile';
+import { clearProfileStep, migrateProfileStep, useProfileStep } from '@/lib/profileStep';
+import { useProfileValidation, type ValidationStatus } from '@/lib/useProfileValidation';
 import {
   adoptPointer, clearDraftSlot, isLocalCaseKey, migrateLegacyDraft, newLocalCaseKey,
   readDraftEnvelope, writeDraftEnvelope, writePointer,
@@ -56,9 +58,14 @@ export interface Store {
    * store and concludes there are no results a moment before they arrive.
    */
   hydrated: boolean;
+  activeCaseKey: string | null;
+  profileStep: number;
+  setProfileStep: (step: number) => void;
   loadDemoProfile: () => void;
   clearProfile: () => void;
   validation: ProfileValidationReport | null;
+  validationStatus: ValidationStatus;
+  retryValidation: () => void;
   run: RunView | null;
   results: ProgramResult[];
   summary: ShortlistSummary | null;
@@ -146,7 +153,6 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   );
   const [savedProfile, setSavedProfile] = useState<StoredProfile | null>(null);
   const [cases, setCases] = useState<ApplicantCase[]>([]);
-  const [validation, setValidation] = useState<ProfileValidationReport | null>(null);
   const [run, setRun] = useState<RunView | null>(null);
   const [results, setResults] = useState<ProgramResult[]>([]);
   const [shortlist, setShortlist] = useState<BalancedShortlist | null>(null);
@@ -159,6 +165,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   >(null);
   const [draftRestored, setDraftRestored] = useState(false);
   const [hydrated, setHydrated] = useState(false);
+  const { validation, validationStatus, retryValidation } = useProfileValidation(profileDraft, hydrated);
   //: What the draft looked like when it was last saved or loaded. Comparing
   //: against this is what makes "unsaved changes" a fact rather than a guess.
   const [baseline, setBaseline] = useState<string>('');
@@ -180,6 +187,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   //: releases the `hydrated` gate once its own requests have settled.
   const hydrationPassRef = useRef(0);
   const activeCaseKey: string | null = savedProfile?.id ?? localCaseKey;
+  const [profileStep, setProfileStep] = useProfileStep(hydrated ? activeCaseKey : null);
+  const profileStepRef = useRef(profileStep);
+  profileStepRef.current = profileStep;
 
   const fail = useCallback((e: unknown) => {
     // A 401 is not something the user can act on from this screen. AuthGate
@@ -240,13 +250,6 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     if (savedProfile) setDraft(toDraft(savedProfile));
   }, [activeCaseKey, savedProfile]);
 
-  // Validation follows the draft, debounced so typing does not flood the API.
-  useEffect(() => {
-    const timer = window.setTimeout(() => {
-      api.validateProfile(profileDraft).then(setValidation).catch(() => setValidation(null));
-    }, 400);
-    return () => window.clearTimeout(timer);
-  }, [profileDraft]);
 
   const saveNotes = useCallback(async (resultId: string, notes: string) => {
     if (!run) return;
@@ -500,6 +503,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         : await api.createProfile(profileDraft);
       const nextCases = await api.cases();
       if (gen !== opGenRef.current) return;
+      migrateProfileStep(previousCaseKey, saved.id, profileStepRef.current);
       setSavedProfile(saved);
       setCases(nextCases);
       setLocalCaseKey(null);
@@ -577,7 +581,6 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setRun(null);
     setResults([]);
     setSummary(null);
-    setValidation(null);
     writePointer('profile', localId);
     writePointer('run', null);
   }, []);
@@ -593,6 +596,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         profile = await api.createProfile(profileDraft);
         const nextCases = await api.cases();
         if (gen !== opGenRef.current) return;
+        migrateProfileStep(previousCaseKey, profile.id, profileStepRef.current);
         setSavedProfile(profile);
         setCases(nextCases);
         setLocalCaseKey(null);
@@ -744,6 +748,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       writePointer('run', null);
       writePointer('profile', null);
       clearDraftSlot(caseKey);
+      clearProfileStep(caseKey);
       setCases(await api.cases());
     } catch (e) {
       fail(e);
@@ -751,26 +756,28 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   }, [savedProfile, fail]);
 
   const loadDemoProfile = useCallback(() => {
+    setProfileStep(0);
     setDraft(structuredClone(DEFAULT_PROFILE) as Record<string, unknown>);
-  }, []);
+  }, [setProfileStep]);
 
   const clearProfile = useCallback(() => {
+    setProfileStep(0);
     setDraft(blankProfile());
-  }, []);
+  }, [setProfileStep]);
 
   const value = useMemo<Store>(
     () => ({
       capabilities, profileDraft, setProfileDraft, savedProfile, cases, switchCase, newCase, restored,
-      dirty, draftRestored, discardDraft, hydrated,
-      loadDemoProfile, clearProfile, validation, run, results,
+      dirty, draftRestored, discardDraft, hydrated, activeCaseKey, profileStep, setProfileStep,
+      loadDemoProfile, clearProfile, validation, validationStatus, retryValidation, run, results,
       summary, loading, error, saveProfile, startRun, cancelRun, retryRun, recheckNow, collectDocuments,
       exportShortlist, decide, saveNotes, refreshResults, rerank, shortlist, deleteEverything,
       clearError: () => setError(null),
       paywall, clearPaywall: () => setPaywall(null), unlockFromSubscription,
     }),
     [capabilities, profileDraft, setProfileDraft, savedProfile, cases, switchCase, newCase,
-     restored, dirty, draftRestored, discardDraft, hydrated, loadDemoProfile,
-     clearProfile, validation, run, results, summary, loading, error, saveProfile, startRun,
+     restored, dirty, draftRestored, discardDraft, hydrated, activeCaseKey, profileStep, setProfileStep, loadDemoProfile,
+     clearProfile, validation, validationStatus, retryValidation, run, results, summary, loading, error, saveProfile, startRun,
      cancelRun, retryRun, recheckNow, collectDocuments, exportShortlist, decide, saveNotes,
      refreshResults, rerank, shortlist, deleteEverything, paywall, unlockFromSubscription],
   );

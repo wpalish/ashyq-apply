@@ -16,7 +16,16 @@ export default defineConfig({
     // to configure in the client.
     proxy: { '/api': { target: 'http://127.0.0.1:8099', changeOrigin: true } },
   },
-  build: { outDir: 'dist', sourcemap: true },
+  build: {
+    outDir: 'dist',
+    sourcemap: true,
+    rollupOptions: {
+      input: {
+        app: path.resolve(__dirname, 'index.html'),
+        designSystem: path.resolve(__dirname, 'design-system.html'),
+      },
+    },
+  },
   test: {
     environment: 'jsdom',
     globals: true,
