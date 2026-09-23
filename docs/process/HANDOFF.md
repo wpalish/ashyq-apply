@@ -60,6 +60,12 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**Run 15 (35844255604, head `61a778d`): the title-degree fix holds live.** Groningen's non-EU/EEA
+deadline row is now out of scope **only on intake** (degree resolved; population matches). With the
+owner's date→season decision it would be fully in scope, and then only the support direction (§7 q.5)
+stands between it and a first counted claim. 8 of 10 cases hit a budget this run; run 16 is the first
+with the per-case budget diagnostic and honest search/browser counters (`f44a601`, `ddbe18c`).
+
 **Run 14 (35839356648) and a title that names its degree (`5f9ba76`).**
 - Run 14 is the first live run with per-population deadlines. Groningen yields 4 claims and KAIST
   yields claims for the first time (4). Groningen's deadline now comes as two claims: the
