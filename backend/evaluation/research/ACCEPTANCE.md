@@ -68,3 +68,12 @@ not state, and the pipeline's own output. The Kazakhstan intake, fees and the
 general SAT/IELTS policy for several cases are still open, and a later draft that
 adds them needs its own signature — certification is of a version, not of the
 corpus forever.
+
+## Amendment, 2026-09-23 — one key for teaching language
+
+Approved by **Диас** on 2026-09-23 ("Разрешаю твои рекомендации"). The only change: Aalto's label
+`programme.teaching_language.primary` is renamed `programme.language`, the key Vienna and Warsaw
+already used; its value, evidence, scope and review are untouched. The corpus version is now
+`2026-09-23.reviewed` (SHA-256 `f5deda977a2f4f007ca674b4043bc67f417577bfea729b3c146d2357fb9da7f4`, the canonical digest the scorer records as `dataset_sha256`, as the hash above is); that hash remains the record of the 2026-09-21
+signing. Every top-level metric in `metrics.reviewed.json` is unchanged; only the per-field row
+moves into `programme.language` (denominator 2 → 3).

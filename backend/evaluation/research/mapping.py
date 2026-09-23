@@ -64,6 +64,12 @@ def evidence_scope(
     )
 
 
+#: Keys the mapping derives from a claim's value rather than from its type:
+#: ``programme.language`` comes from the teaching language a programme page
+#: states on its ``program_exists`` claim.
+DERIVED_KEYS = frozenset({"programme.language"})
+
+
 def normalize_claim(
     claim_type: str, raw: dict[str, Any]
 ) -> tuple[str, Any, str | None, str | None]:
@@ -119,6 +125,15 @@ def normalize_subject_claims(
         value = None
         fallback = (fallback[0], value, programme, degree)
     source = raw.get("source_url", "")
+    if claim_type == "program_exists":
+        # The page's stated teaching language rides on the existence claim; the
+        # owner settled one key for it on 2026-09-23. Only a language the page
+        # stated is emitted, capitalised as the corpus writes it ("English").
+        stated = raw.get("normalized_value")
+        language = stated.get("language") if isinstance(stated, dict) else None
+        if isinstance(language, str) and language.strip():
+            return [fallback, ("programme.language", language.strip().title(), programme, degree)]
+        return [fallback]
     if claim_type.startswith("scholarship_"):
         subject = raw.get("subject_key")
         # Existence itself names the award, but two disagreeing identities cannot bind.

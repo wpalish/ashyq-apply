@@ -93,3 +93,11 @@ approved by the owner; draft1 stays frozen). An NTU Nanyang Global or KAIST Scho
 Groningen's transcript, lands on its certified key instead of `unmapped.*`. The live claim_recall
 ceiling moves from 14 to 28 of 62 (`expressibility`). The frozen capture and the eight published
 baselines are unaffected: they are scored from stored predictions, not re-mapped.
+
+**Corpus amendment, 2026-09-23 — one key for teaching language (owner decision).** Aalto's
+`programme.teaching_language.primary` is renamed `programme.language` in `ground_truth.reviewed.json`
+(now `2026-09-23.reviewed`; see the amendment in [ACCEPTANCE.md](ACCEPTANCE.md)). The mapping now
+emits `programme.language` from the teaching language a programme page states on its `program_exists`
+claim, capitalised as the corpus writes it. `metrics.reviewed.json` was regenerated: every top-level
+metric is identical, and only the per-field row moves (`programme.language` 2 → 3). Drafts stay frozen.
+The live ceiling becomes 31 of 62.

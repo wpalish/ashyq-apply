@@ -161,8 +161,8 @@
     ],
     "source_capture_sha256": "a59b5625707472d934ee3b50292b45b2c6c5703d23c809078d8f7a0dd0d7fae7"
   },
-  "dataset_sha256": "726bb1226ef6a234b1e4f5086f9a0df88697e7e32d70b242da0d1898e3897797",
-  "dataset_version": "2026-09-21.reviewed",
+  "dataset_sha256": "f5deda977a2f4f007ca674b4043bc67f417577bfea729b3c146d2357fb9da7f4",
+  "dataset_version": "2026-09-23.reviewed",
   "fields": {
     "country_credential": {
       "coverage": {
@@ -535,24 +535,12 @@
     },
     "programme.language": {
       "coverage": {
-        "denominator": 2,
+        "denominator": 3,
         "numerator": 0,
         "value": 0.0
       },
       "recall": {
-        "denominator": 2,
-        "numerator": 0,
-        "value": 0.0
-      }
-    },
-    "programme.teaching_language.primary": {
-      "coverage": {
-        "denominator": 1,
-        "numerator": 0,
-        "value": 0.0
-      },
-      "recall": {
-        "denominator": 1,
+        "denominator": 3,
         "numerator": 0,
         "value": 0.0
       }

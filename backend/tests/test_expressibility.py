@@ -39,7 +39,8 @@ def test_an_unbound_award_or_document_is_unbound_not_missing():
 
 
 def test_a_key_no_claim_type_produces_is_named():
-    assert reach("programme.language", _BINDINGS) == NO_CLAIM_TYPE
+    assert reach("german.application_minimum", _BINDINGS) == NO_CLAIM_TYPE
+    assert reach("programme.language", _BINDINGS) == REACHABLE
 
 
 def test_the_reviewed_corpus_counts_the_same_population_as_claim_recall():
@@ -49,7 +50,8 @@ def test_the_reviewed_corpus_counts_the_same_population_as_claim_recall():
     )
     rows = report(dataset, load_bindings(_DATA / "identity_bindings.reviewed.json"))
     assert len(rows) == 62
-    assert sum(r.verdict == REACHABLE for r in rows) == 28
+    # 28 with the approved bindings, + 3 teaching languages under one key.
+    assert sum(r.verdict == REACHABLE for r in rows) == 31
 
 
 def test_without_any_bindings_the_ceiling_is_what_live_had_before_2026_09_23():
@@ -58,4 +60,4 @@ def test_without_any_bindings_the_ceiling_is_what_live_had_before_2026_09_23():
         (_DATA / "ground_truth.reviewed.json").read_text(encoding="utf-8")
     )
     rows = report(dataset, {})
-    assert sum(r.verdict == REACHABLE for r in rows) == 14
+    assert sum(r.verdict == REACHABLE for r in rows) == 17

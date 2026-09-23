@@ -24,7 +24,7 @@ from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
 
-from .mapping import AWARD_KEYS, CLAIM_KEYS, COVERAGE_KEYS
+from .mapping import AWARD_KEYS, CLAIM_KEYS, COVERAGE_KEYS, DERIVED_KEYS
 from .schema import Dataset
 
 REACHABLE = "reachable"
@@ -59,7 +59,7 @@ class Reach:
 
 def reach(key: str, bindings: dict[str, str]) -> str:
     """Why ``key`` can or cannot be produced, given ``{prefix: kind}`` bindings."""
-    if key in set(CLAIM_KEYS.values()):
+    if key in set(CLAIM_KEYS.values()) or key in DERIVED_KEYS:
         return REACHABLE
     for prefix, kind in bindings.items():
         if key.startswith(prefix + "."):

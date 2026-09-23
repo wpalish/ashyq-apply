@@ -398,7 +398,22 @@ def test_certification_changes_no_measured_value():
     reviewed = json.loads((root / "baseline/metrics.reviewed.json").read_text(encoding="utf-8"))
     draft7 = json.loads((root / "baseline/metrics.draft7.json").read_text(encoding="utf-8"))
     assert reviewed["metrics"] == draft7["metrics"]
-    assert reviewed["fields"] == draft7["fields"]
+    # The one amendment since signing (owner, 2026-09-23): Aalto's
+    # `programme.teaching_language.primary` became `programme.language`, the
+    # key Vienna and Warsaw already used. Its field row moves into that key's
+    # denominators; nothing else may differ.
+    old_fields = dict(draft7["fields"])
+    moved = old_fields.pop("programme.teaching_language.primary")
+    merged = old_fields["programme.language"]
+    for part in ("coverage", "recall"):
+        merged[part]["numerator"] += moved[part]["numerator"]
+        merged[part]["denominator"] += moved[part]["denominator"]
+        merged[part]["value"] = (
+            merged[part]["numerator"] / merged[part]["denominator"]
+            if merged[part]["denominator"]
+            else None
+        )
+    assert reviewed["fields"] == old_fields
 
 
 def test_scholarship_dimensions_freshness_and_review_have_separate_metrics():
