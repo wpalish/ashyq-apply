@@ -60,6 +60,25 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**Run 10 (35822490998, head `2ae0f94`): the oracle's first clean split (`056dd7a`).** 74 certified
+facts: recovered 0, classifier_gated 1, value_missing 12, text_missing 0, not_measured 54,
+fetch_failed 3 (Toronto 403), timed_out 4 (Aalto, one page). The oracle took 5.5 min, down from a
+cancelled 33.
+
+What the 12 value_missing are: **8 are `programme.exists`**. That claim is made by the adapter, not by
+the patterns, and the oracle did not run that path, so this was the oracle's own blind spot. It now
+mirrors the adapter's check (accepted as a programme page, with a recognised subject). 1 is Groningen
+tuition (the cost extractor, still outside the oracle). **3 are real:** UBC IELTS overall and
+subscores, and Vienna's deadline. Vienna's is also a labelling question, because the certified value
+is null and so can never match; this needs the owner or a reviewer. Groningen's deadline is
+classifier_gated: its page is classified `program_catalog`.
+
+text_missing is **0**, so the page content reaches us for every page the oracle could read. The
+remaining gap is claim types and scope (54 facts the requirements path cannot express: scholarship
+structure, documents, country credentials, programme language), then classification, and only then
+patterns. Every value_missing now carries the page text around the reviewer's words, so the next UBC
+pattern can be written against what the page actually says instead of a guess.
+
 **Run 9 (35819428739, head `8fcb23e`) and what the oracle could not yet say (`64d55fa`).**
 Moved against the certified baseline: programme_page_recall 1/10 → **5/10**, wrong_scope_claim_rate
 4/5 → **1/5** (the one left is NTU "Mathematical and Computer Sciences", an equivalence the owner
