@@ -514,3 +514,34 @@ async def test_capture_reads_canary_output_without_loading_ground_truth(tmp_path
     assert str(observation.programme_urls[0]) == "https://example.edu/programme"
     assert observation.predictions == []
     assert canary.CanaryRunner is original
+
+
+@pytest.mark.asyncio
+async def test_capture_counts_the_search_calls_it_used_to_report_as_zero(tmp_path, monkeypatch):
+    """`search_calls` was initialised to 0 and never incremented, so a case
+    that spent its wall clock on search reported that it had searched nothing."""
+    from app.adapters.search.exa import ExaSearchProvider
+    from evaluation.research.live import capture_one
+    from scripts import canary_discovery as canary
+
+    async def quiet_search(provider, *args, **kwargs):
+        return []
+
+    monkeypatch.setattr(ExaSearchProvider, "search", quiet_search)
+    wrapped: list[object] = []
+
+    async def fake_canary(selector, verbose):
+        wrapped.append(ExaSearchProvider.search)
+        await ExaSearchProvider.search(None, query="computer science")
+        await ExaSearchProvider.search(None, query="admissions")
+        return {"institutions": [{"programs": []}], "run_error": ""}
+
+    monkeypatch.setattr(canary, "run_canary", fake_canary)
+    output = tmp_path / "observation.json"
+    await capture_one("groningen", output, 4)
+    from evaluation.research.schema import Observation
+
+    observation = Observation.model_validate_json(output.read_text())
+    assert observation.telemetry.search_calls == 2
+    assert wrapped[0] is not quiet_search
+    assert ExaSearchProvider.search is quiet_search

@@ -41,6 +41,7 @@ async def capture_one(case_id: str, output: Path, max_pages: int) -> None:
     # Delayed imports keep ordinary offline evaluation entirely independent of I/O.
     from app.adapters import fetching
     from app.adapters.discovery.live_discovery import LiveDiscoveryAdapter, PageCategory
+    from app.adapters.search.exa import ExaSearchProvider
     from app.models.research import ClaimRow
     from scripts import canary_discovery as canary
 
@@ -60,14 +61,42 @@ async def capture_one(case_id: str, output: Path, max_pages: int) -> None:
         ),
     )
 
+    fetchers: list[Any] = []
+
     def checkpoint() -> None:
         observation.telemetry.latency_seconds = time.monotonic() - started
+        # Counted from the fetcher's own tier tally, never assumed: a zero
+        # that nothing increments is a counter invented after the fact.
+        observation.telemetry.browser_fetches = sum(
+            f.tier_counts.get("browser", 0) for f in fetchers if hasattr(f, "tier_counts")
+        )
         temporary = output.with_suffix(".pending")
         temporary.write_text(observation.model_dump_json(indent=2), encoding="utf-8")
         temporary.replace(output)
 
     checkpoint()
     original_request = fetching._pinned_request
+    original_search = ExaSearchProvider.search
+
+    async def counted_search(provider, *args, **kwargs):
+        # Each search call is counted and timed into this case's own log: a
+        # case that runs out of wall clock after two fetches spent the time
+        # somewhere, and search is the first place to look.
+        observation.telemetry.search_calls = (observation.telemetry.search_calls or 0) + 1
+        began = time.monotonic()
+        try:
+            return await original_search(provider, *args, **kwargs)
+        except Exception as exc:
+            print(f"search failed after {time.monotonic() - began:.1f}s: {type(exc).__name__}")
+            raise
+        finally:
+            print(
+                f"search #{observation.telemetry.search_calls} took "
+                f"{time.monotonic() - began:.1f}s (t={time.monotonic() - started:.0f}s)",
+                flush=True,
+            )
+            checkpoint()
+
     original_confirm = LiveDiscoveryAdapter._confirm_programs
 
     def counted_request(*args, **kwargs):
@@ -87,6 +116,7 @@ async def capture_one(case_id: str, output: Path, max_pages: int) -> None:
     class ObservedRunner(canary.CanaryRunner):
         def _make_fetcher(self):
             fetcher = super()._make_fetcher()
+            fetchers.append(fetcher)
             original = fetcher.get
             requests = 0
 
@@ -154,6 +184,7 @@ async def capture_one(case_id: str, output: Path, max_pages: int) -> None:
     with (
         patch.object(canary, "CanaryRunner", ObservedRunner),
         patch.object(fetching, "_pinned_request", counted_request),
+        patch.object(ExaSearchProvider, "search", counted_search),
         patch.object(LiveDiscoveryAdapter, "_confirm_programs", observed_confirm),
     ):
         report = await canary.run_canary(COHORT[case_id], False)
