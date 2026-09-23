@@ -1,13 +1,14 @@
-# Redesign concepts — rounds 1 to 6 (2026-09-23)
+# Redesign concepts — rounds 1 to 7 (2026-09-23)
 
 The owner asked for a redesign at the level of the product itself: the current UI is "not serious enough",
 overloads an ordinary school student with information, and does not hook. The agreed process is
 **concepts first, then develop the chosen one into a design system and apply it**. This file is the
 record of the rounds: what is wrong today, what every concept keeps, the references, the four
 round-1 directions, the owner's feedback, the round-2 and round-3 directions built from it, and the
-round-4 developments of H the round-5 directions on K and M, and the round-6 share kit, each with its adversarial review.
+round-4 developments of H, the round-5 directions on K and M, the round-6 share kit, and the round-7 final concept
+«Горизонт» with its design system, each with its adversarial review.
 
-- Live canvas with all 74 artboards (private to the owner until shared):
+- Live canvas with all 96 artboards (private to the owner until shared):
   https://claude.ai/artifact/Ncsd2YkQMcV9oCG3bHrBsa
 - Nothing in `frontend/` changes in this round. PR #10 (tokenised profile workflow) and PR #19
   ("Open Path" visual refinement) are untouched; whichever concept wins decides what happens to them.
@@ -704,21 +705,292 @@ achievements, which is what people post.
 - An "offer received" card must be based only on the student's own report, and be labelled as such.
 - These are static mock-ups, not yet tested with students.
 
-## 16. Next step
+## 16. Owner decision (2026-09-23)
 
-The owner picks among N, O and P, or a mix. The review suggests:
+The owner took the mix the review suggested and asked to see it as one concept:
 
-- **N as the base**: K and M together
-- **O's ladder** as the budget filter and the comparison screen
-- **P's triage** to finish the shortlist on the phone
-- the **Q share kit** across all of them
+- **N as the base**
+- **O's budget ladder and comparison**
+- **P's one-at-a-time triage** on the phone
+- **Q's stories** everywhere
 
-After the choice:
+## 17. Round 7 — «Горизонт», the final concept
 
-1. The next canvas round: the chosen direction across the real flow (landing, sign-in, profile
-   questions, research progress, shortlist, programme, plan, documents, share), light and dark, 390
-   and 1440, delivered as phone images in the chat.
-2. Tokens in `frontend/src/styles/tokens.css` (primitives → semantic → component), with the status
-   vocabulary above in `i18n.ts`.
-3. Apply screen by screen behind the existing tests, starting with the shortlist, which is where the
-   overload is worst.
+Round 7 draws the mix as one product:
+
+- the whole path on the phone: sign-in → profile → shortlist → programme → plan → documents → share
+- the landing, the shortlist and the programme on the desktop
+- the design system and its tokens
+
+Every number comes from the product's demo run and corpus. On the canvas it is row R: 14 phone
+screens, 4 stories, 3 desktop screens and the design-system board.
+
+![Round 7 · the phone path](concepts/concept-R.webp)
+
+![Round 7 · stories](concepts/concept-R-stories.webp)
+
+![Round 7 · desktop shortlist](concepts/concept-R-desktop.webp)
+
+### What comes from where
+
+| Part | From | Screens |
+|---|---|---|
+| Search with the globe rising under it; the list and the globe together; an edge chip for everything the globe hides | N | 01, 07; desktop landing and shortlist |
+| The budget ladder: in budget, above budget, and not computed with the reason | O | 08; desktop shortlist |
+| The row-by-row comparison | O | 11; the desktop compare tray |
+| One programme at a time: «Не моё», «Подумаю», «Оставить» | P | 09 |
+| The story cards and the share sheet | Q | 14–18 |
+| The split-flap date for the nearest deadline | L | 12, story 18 |
+
+### The path
+
+| # | Screen | What it shows | Product part |
+|---|---|---|---|
+| 01 | Старт | Search (what, where, budget per year) over the globe, with one example price after the grant | landing |
+| 02 | Аккаунт | Name, email, a password of at least 12 characters, and the language (RU · ҚАЗ · EN) | `AuthGate` |
+| 03 | Профиль: деньги | Step 6 of 8: the family's budget per year after the scholarship, in $ or ₸, and what the coverage must include | preferences (funding) |
+| 04 | Поиск идёт | Night moment: programmes checked, pages read, and what was found, including an exclusion, a year mismatch and a site that did not answer | research progress |
+| 05 | Подбор готов | 20 programmes in 15 countries: 9 meet the requirements, 3 have a grant for tuition and living, 414 facts, 5 visible for free | results |
+| 06 | Открыть всё | 4 990 ₸ once, via Kaspi (an invoice to the phone, or a QR code) or the school's subscription. The free view is the first 5 rows, without prices or sources | paywall, `PaymentModal` |
+| 07 | Подбор | The list by fit, with the price after the grant, over a small globe. Region chips: Europe 13, Americas 4, Asia and Australia 3 | shortlist |
+| 08 | Шкала бюджета | 3 in budget, 9 above it, 8 not computed, each with its reason | shortlist filter |
+| 09 | Разбор по одной | One programme at a time, with the three judgements kept separate | shortlist |
+| 10 | Программа | The three judgements, the requirements next to the student's values, the money as arithmetic, and the grant page quoted with its source and date | programme |
+| 11 | Сравнение | Two programmes row by row: the grant, what it leaves out, deadlines, requirements, sources | compare |
+| 12 | План | The nearest deadline on a split-flap board, then every deadline on the list | plan |
+| 13 | Документы | What each programme asks for, what is uploaded and what is still missing | documents |
+| 14 | Поделиться | Four templates. Only the first name is on by default | share |
+
+### Design system
+
+![Round 7 · design system](concepts/concept-R-system.webp)
+
+**Fonts — the finding that changed the system.** Unbounded, the heading font since concept A, has
+none of Ә Ғ Қ Ң Ө Ұ Ү Һ. Manrope, A's text font, lacks Ә Ғ Қ Ң Ұ and the tenge sign ₸. The browser
+fills the gaps from another font, so a Kazakh name or "4 990 ₸" is built from mismatched letters,
+even in the Russian interface. The check renders each letter over two different fallback fonts: a
+letter the font lacks comes out different. Round 7 moves to:
+
+- **Montserrat 800** for headings
+- **Onest 400–800** for text and numbers, with tabular figures
+
+Both have every Kazakh letter and ₸. The board shows the same strings in all four fonts, and real
+Kazakh strings from `i18n.ts`.
+
+**Colour.** Primitives (navy, slate, cloud, sun, gold, amber, green, mint, teal, sky, blue, red)
+map to semantic tokens:
+
+- The light theme is for work.
+- The night theme is for moments: research running, results ready, the one-at-a-time triage and
+  the stories.
+
+| Token | Light | Night |
+|---|---|---|
+| `--bg` | cloud 50 `#F6F7F9` | navy 950 `#0B1628` |
+| `--surface` | white | navy 800 `#16263F` |
+| `--ink` | navy 900 `#0F1E36` | white |
+| `--ink-muted` | slate 600 `#5A6578` | `#A7B1C2` |
+| `--line` | cloud 150 `#E3E7ED` | navy 600 `#2A3D61` |
+| `--accent` (the main button) | sun 400 `#FFC23D` | sun 400 |
+| `--route` (lines only, never text) | gold 500 `#E8A317` | sun 400 |
+| `--link` | teal 700 `#0B6F93` | sky 300 `#8FD3F4` |
+| `--ok-fg` / `--ok-bg` | green 700 `#177A4C` / green 100 `#E4F5EC` | mint 300 `#6BE3A4` |
+| `--wait-fg` / `--wait-bg` | amber 700 `#8A5A00` / amber 100 `#FFF3DB` | not defined yet |
+| `--info-fg` / `--info-bg` | blue 700 `#1D4F91` / blue 100 `#E7F0FA` | not defined yet |
+| `--risk-fg` / `--risk-bg` | red 700 `#B42318` / red 100 `#FDECEA` | not defined yet |
+| `--unknown` | slate 600 text on a dashed slate 400 `#9AA4B2` edge | not defined yet |
+
+**Type scale.**
+
+- Montserrat 800: Display XL 48/1.08, Display L 34/1.1, Title 26/1.15, Card 16/1.3
+- Onest: Body L 18/1.55, Body 15/1.5, Small 13/1.45, Label 12 in capitals with +8 % tracking,
+  Micro 11
+
+**Sizes.**
+
+- Spacing: 4, 8, 12, 16, 20, 24, 32, 40, 56, 80
+- Radii: 8 (key), 14 (field), 16 (tile), 22 (card), 28 (sheet), 999 (pill)
+- Three elevations: labels; the search bar and the tray; cards over the globe
+
+**Status vocabulary.** There is one label for each domain value. The tones are the ones
+`frontend/src/lib/format.ts` already uses (ok, info, warn, risk, neutral), so the redesign changes
+how a status looks, not what it means.
+
+| Judgement | Domain value | Tone | Label |
+|---|---|---|---|
+| Requirements | `MET` | ok | Требования выполнены |
+| | `PENDING` | warn | Ждём: <what is missing> |
+| | `GAP` | risk | Не хватает: <what, and what is needed> |
+| | `NOT_APPLICABLE` | neutral | Не требуется |
+| | `NEEDS_OFFICIAL_CLARIFICATION` | neutral | Требования уточняем у вуза |
+| Profile | `STRONGER_FIT` | ok | Выше требований, always with «отбор всё равно конкурсный» |
+| | `PLAUSIBLE_FIT` | info | На уровне требований |
+| | `AMBITIOUS` | warn | Смелый вариант |
+| | `INSUFFICIENT_DATA` | neutral | Мало данных |
+| Grant | `FULL_RIDE_CONFIRMED` | ok | Грант: учёба и проживание |
+| | `FULL_TUITION` | info | Грант покрывает обучение |
+| | `LARGE_GRANT` | info | Крупный грант |
+| | `PARTIAL` | warn | Грант частичный |
+| | `NEED_BASED_POSSIBLE` | warn | Помощь по нуждаемости |
+| | `NOT_ELIGIBLE` | risk | Грант недоступен: <the condition from the source> |
+| | `UNKNOWN` | neutral | Про грант нет данных |
+| Cost per year | within budget | dark | $1 848 в год |
+| | above budget | neutral | $7 554 · выше бюджета |
+| | not computable | neutral | итог не посчитан: <reason> |
+
+**Rules.** The board lists ten. These five are the ones a reviewer checks first:
+
+- The night theme is only for moments.
+- A source and a date sit next to every figure, not in a footnote.
+- "We don't know" is its own state, with a dashed edge and a reason. It is never shown as zero and
+  never left out.
+- No chances and no percentages near a shortlist, and the three judgements stay separate.
+- A price is always "per year, after the scholarship". A converted currency always shows the rate
+  and its date.
+
+### The data
+
+The numbers come from the demo run (`ai-team/outputs/c1-t18-a1/logs/qa_t18_a3_seed.log`) and the
+demo corpus (`backend/app/corpus/`). Dates are counted from 23 September 2026.
+
+- **The run:** 20 results in 15 countries, 96 pages (14 failed), 414 claims.
+- **Against a budget of $6 000 a year:**
+  - 3 are within it: Groningen $1 848, Tokyo $1 986, and Delft $2 446 (Delft still has a gap:
+    IELTS Writing 6.0, 6.5 needed)
+  - 9 are above it
+  - 8 cannot be computed
+- **Judgements:** 9 meet the requirements; 3 have a grant confirmed for tuition and living.
+- **Groningen's €1 700 a year:**
+  - costs: €16 500 tuition, €600 fees, €7 200 housing, €3 600 meals, €1 450 insurance and €700
+    books, €30 050 in all
+  - the Talent Grant: €28 350, for tuition, fees, housing and meals
+  - what remains: €1 700, or $1 848 at the rate bundled with the app ($1 = €0.92 on 1 August 2026)
+
+Corrections made while drawing this round:
+
+| Earlier rounds | Round 7 | Why |
+|---|---|---|
+| 6 hand-picked programmes | the demo run's 20 | The concept should show what the product returns |
+| Toronto: "цена не опубликована" | "грант за 2024/25, цены за 2026/27" | The real reason in the run is a year mismatch |
+| "через Studielink" | removed | It is not in the corpus |
+| «Грант покрывает всё» | «Грант: учёба и проживание» | `FULL_RIDE_CONFIRMED` means tuition, fees, housing and meals. Groningen still leaves €1 700 a year |
+| "$1 848" on its own | the arithmetic, the rate and the rate's date | `currency.py` returns the rate and its date with every conversion |
+| Region counts typed by hand ("Европа · 7") | counted from the data, with asserts ("Европа · 13") | A typed count drifted from the list |
+
+### Adversarial review (loop report)
+
+**Definition of Done:**
+
+- The whole path on the phone at 390×844, plus the landing, the shortlist and the programme at
+  1440×900.
+- One system: tokens (primitives → semantic), a type scale, components, rules, and one label for
+  each domain value.
+- Numbers from the demo run and the corpus only. Counts are computed, not typed.
+- The invariants:
+  - no chance and no percentage
+  - the three judgements kept separate
+  - "unknown" as its own state, with a reason
+  - a source and a date next to facts
+  - prices per year after the scholarship
+  - the rate and its date next to conversions
+- Fonts that render Kazakh and ₸.
+- On every board, text of at least 11 px and a contrast of at least 4.5:1. On the phone, targets of
+  at least 44 px.
+- At least two review cycles.
+
+**Personas:**
+
+- a 16-year-old outside Almaty, on a budget Android phone, reading in Russian or Kazakh
+- a parent who pays the 4 990 ₸
+- a school counsellor
+- an auditor of the product's invariants
+- an accessibility auditor
+- the frontend engineer who has to build it
+
+**Found while building.** The heading and text fonts lacked Kazakh letters and ₸. Round 1 chose
+them for how they looked in Latin and Russian, and nobody checked Kazakh. The fix is Montserrat and
+Onest, above.
+
+**Cycle 1 — the phone path (01–13).** Recorded defects:
+
+| # | Defect | Root cause | Fix |
+|---|---|---|---|
+| R1 | The region chips said "Европа · 7", but the data has 13 | A count typed by hand | Every count is computed from the data, with asserts |
+| R2 | Copy the data does not support: "через Studielink", and Toronto's "цена не опубликована" | Text carried over from earlier rounds instead of being derived again | Derived again from the run and the corpus |
+
+**Cycle 2 — share, stories, desktop and the system board:**
+
+| # | Defect | Root cause | Fix |
+|---|---|---|---|
+| R3 | The share sheet's template thumbnails were blank | The previews were not wired to the cards | Real miniatures of the four cards |
+| R4 | Under the comparison, the two ✓ buttons wrapped and did not say what they do | Long labels at half width, and no heading | «Оставить в списке» above them, programme names as labels, and accessible names |
+| R5 | The system board's sections overlapped | Fixed positions for sections of unknown height | Normal flow. The board's height is measured |
+| R6 | Desktop shortlist: Melbourne was on the list but nowhere on the globe, and the card at the bottom was cut off | The edge-chip rule was applied to the Americas only, and the rows were too tall | A "Мельбурн" chip at the edge, and tighter rows |
+| R7 | Desktop programme: the lower half was empty, and the money was a single figure | The page had no place for how the figure is made | «Деньги за год»: the costs, the grant, the remainder and the renewal condition |
+
+**Cycle 3 — the wording, the data and automated scans on all 22 boards:**
+
+| # | Defect | Root cause | Fix |
+|---|---|---|---|
+| R8 | «Грант покрывает всё» next to «$1 848 в год» | The label followed the marketing phrase, not the domain definition | «Грант: учёба и проживание» everywhere, and the remainder as arithmetic |
+| R9 | «На тебе остаётся медстраховка» | The books are not covered either, and the €1 700 is the total minus the grant, not one item | The arithmetic instead of a claim |
+| R10 | A converted price had no rate and no date | The mock-ups skipped the rule `currency.py` enforces | "$1 = €0.92 на 1 августа 2026" next to the arithmetic, and a rule |
+| R11 | Three tones instead of the product's five, and three domain values without a label | The vocabulary was drawn from the screens, not from `enums.py` and `format.ts` | The info and risk tones, and labels for `NOT_APPLICABLE`, `LARGE_GRANT` and `NOT_ELIGIBLE` |
+| R12 | Gold section numbers, and the "?" and "–" marks, at 1.6–2.5:1 | Gold is a line colour and was used for text. Pale rings coloured their marks | Amber 700 for numerals, slate 600 for marks |
+| R13 | Phone targets under 44 px: text links, the currency and payment toggles, the share switches | Links were sized by their text, and the segmented controls had an inset | 44 px on the phone. Each share row is the switch |
+| R14 | The sign-up form grew into the button, and the budget sheet's buttons were cut off | The fix for R13 made controls taller | The school field moved to the payment step, and "Выше бюджета" shows one row fewer |
+
+After cycle 3, the automated scan of all 22 boards finds:
+
+- no text under a contrast of 4.5:1
+- no text under 11 px
+- no "шанс", percentage or probability wording on a product board (the system board names them
+  only in its rules)
+- no phone target under 44 px, and no desktop target under 24 px
+
+Scores after cycle 3:
+
+| Persona | Score |
+|---|---|
+| The 16-year-old | 8 |
+| Parent | 8 |
+| School counsellor | 6 |
+| Invariants auditor | 9 |
+| Accessibility auditor | 8 |
+| Frontend engineer | 7 |
+| **Mean** | **7.7** |
+
+The weakest link is the school counsellor. The school's subscription appears only as a way to pay,
+and there is no counsellor view.
+
+**Remaining risks:**
+
+- **The globe** has to be built: the projection, the hit areas, and speed on budget Android phones.
+  The list stays the main path and the globe is an enhancement. It must respect reduced motion.
+- **Kazakh:** the screens are drawn in Russian. Kazakh strings are longer, so every screen needs a
+  Kazakh pass at 390 px.
+- **The night theme** has no warn, info, risk or unknown tokens yet. The night screens put statuses
+  on light cards.
+- **Exchange rates:** a list shows many converted prices. Each list needs one line with the rate
+  and its date, and only the programme screen has one so far.
+- **The counsellor view** is not designed.
+- **Stories** carry over round 6's risks: they need server-side rendering from the same tokens, and
+  «Требования выполнены» can still be read as "admitted".
+- **Testing:** these are static mock-ups, not yet tested with students or parents.
+
+## 18. Next step
+
+After the owner approves «Горизонт»:
+
+1. **Tokens.** `frontend/src/styles/tokens.css` takes the Горизонт values under its existing
+   semantic names (`--ink`, `--ink-muted`, `--surface`, `--ok`, `--info`, `--warn`, `--risk` and
+   the rest). The night palette serves both the "moment" screens and the dark appearance the app
+   already offers.
+2. **Fonts.** `@fontsource/montserrat` and `@fontsource/onest` replace Inter and Fraunces. They are
+   self-hosted as today, with the Cyrillic-extended subset. Decide whether JetBrains Mono stays for
+   quotations.
+3. **Vocabulary.** The labels above go into `i18n.ts` for ru, kk and en.
+4. **Screens.** Apply the design screen by screen, behind the existing tests. Start with the
+   shortlist (07–09), where the overload is worst.
+5. **Kazakh and testing.** Do the Kazakh pass, then usability sessions on the prototype with 5–6
+   students and 2–3 parents.
