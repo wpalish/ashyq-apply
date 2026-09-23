@@ -60,6 +60,25 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**Run 11 (35825874826): the page contexts turned into three fixes (`c3ba545`; classifier `7626ff2`).**
+- **UBC IELTS.** The live page reads "International English Language Testing System (Academic) 6.5,
+  with no part less than 6.0". The spelled-out name now carries the overall band, but only when a
+  per-part floor follows, so a bare number after the name stays nothing.
+- **A real bug the test exposed:** with no full stop between UBC's IELTS and PTE rows, PTE's "Reading:
+  60" was read as IELTS reading **6.0**. A band may no longer run on into another digit, and the IELTS
+  sentence now ends where another test's name begins.
+- **Mapping.** A single floor is written as the four bands it governs (VERSIONS.md). No published
+  metric moves.
+- **Groningen (`7626ff2`).** A bare subject heading ("Computing Science") whose title repeats it, with
+  a degree word in the title or path, is a programme page, no longer a catalogue by its links.
+
+Still open from the contexts: **Vienna's deadline** is on the page as "Application period 2 March to 4
+May 2026". The certified value is null, so the label needs a reviewer before any pattern can score.
+**KAIST's** certified programme page is a Korean navigation menu (the context is menu items only);
+that page is the owner's open KAIST `program_page` question, not a pattern gap. **HKU's** page is
+`unknown` to the classifier although it says "The Bachelor of Engineering in Computer Science covers
+…"; that is the next classifier case.
+
 **Run 10 (35822490998, head `2ae0f94`): the oracle's first clean split (`056dd7a`).** 74 certified
 facts: recovered 0, classifier_gated 1, value_missing 12, text_missing 0, not_measured 54,
 fetch_failed 3 (Toronto 403), timed_out 4 (Aalto, one page). The oracle took 5.5 min, down from a
