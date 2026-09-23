@@ -6,22 +6,22 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-Current holder: **gpt-6-astra**, 2026-09-23 UTC. Branch: `task/open-path-on-redesign`, based on `origin/task/frontend-redesign@e679432` and integrated with `origin/main@07de4d9` at `5180437`. Visual refinement is ready for draft review; see current notes below. The older V2 history remains for provenance.
+Current holder: **nobody**. Branch: `task/open-path-on-redesign`, based on `origin/task/frontend-redesign@e679432` and integrated with `origin/main@07de4d9` at `5180437`. Open Path is ready for visual review in draft PR #19. The older V2 history remains for provenance.
 
 
 | | |
 |---|---|
-| Holder | **gpt-6-astra** |
+| Holder | **nobody** |
 | Since (UTC) | 2026-09-23 08:00 |
 | Branch | `task/open-path-on-redesign`, based on frontend redesign PR #10 |
-| HEAD before main merge | `547d32d`; write-ahead handoff `a546da6` |
+| Last task commit before release | `987b733`; main merge `5180437` |
 | Origin main when checked | `07de4d9` (fetched 2026-09-23) |
 | Previous holder | gpt-6-astra, same visual refinement task |
 | Sections 3 and 4 below | Historical V2 and recovery record from `main`; current Open Path status is at the top of §§2, 5–7. |
 
 ## 2. Current task
 
-**Current: Open Path visual refinement, ready for draft review.** The user likes parts of the application UX but rejects the UI mood, contrast and some fonts. Work on top of frontend redesign PR #10, in an isolated worktree, is committed at `9efa1bc` (visual system), `547d32d` (UTF-8 fixture correction), `a546da6` (write-ahead baton), and `5180437` (main integration). The visual system uses Onest for user-facing typography, neutral surfaces and restrained blue action emphasis. Details, decisions, references and screenshots: `docs/frontend-visual-refinement.md`; tokens and 21st.dev configuration: `frontend/src/styles/tokens.css`, `.21st/design.json`, `DESIGN.md`. Integrated gates are green (§6); open a draft PR for owner feedback. PR #10 remains the UX predecessor. Earlier V2 status below describes the main history inherited here, not this branch's active task.
+**Current: Open Path visual refinement, ready-for-review (draft PR #19).** The user likes parts of the application UX but rejects the UI mood, contrast and some fonts. Work on top of frontend redesign PR #10, in an isolated worktree, is committed at `9efa1bc` (visual system), `547d32d` (UTF-8 fixture correction), `a546da6` (write-ahead baton), and `5180437` (main integration). The visual system uses Onest for user-facing typography, neutral surfaces and restrained blue action emphasis. Details, decisions, references and screenshots: `docs/frontend-visual-refinement.md`; tokens and 21st.dev configuration: `frontend/src/styles/tokens.css`, `.21st/design.json`, `DESIGN.md`. Integrated gates are green (§6); the owner can now review draft PR #19. PR #10 remains the UX predecessor. Earlier V2 status below describes the main history inherited here, not this branch's active task.
 
 **Phase 2 is `ready-for-review (PR #16)`.** PR #15 was merged by the owner on 2026-09-21 at `cba911a`; a merged PR cannot track new work, so everything since is PR #16 from the same branch. **V2-20 (plan numbering) — evidence history: page versions and claim supersession lineage (done).** V2-20a shipped `SourceSnapshot`; V2-20b closes the claim half. See the numbering note in §5. Previously: **conflict model v2 (plan V2-23).** Previously: **V2-25 — all five claim-producing adapters read scope.** Previously: **V2-24 — a scope refusal is said out loud to the applicant.** Previously: **V2-23 — the assessment refuses a claim whose page is about something else.** Previously: **V2-22 — fill a claim's scope from what its page states.** V2-21/V2-21b gave scope a shape and put it on the claim; this fills it, from the page's own words only. Previously: **V2-21b — carry the scope on a claim.** Phase 1 is complete, measured and wired (PR #15); this starts Phase 2 on the failure Phase 1 never touched. Phase 1 so far is `ready-for-review (PR #15)`, which supersedes draft PR #14. Phase 1 retrieval was measured live: The owner approved the §6 exception and authorised the live probe; the Exa adapter works and the retrieval ceiling moved **1/10 → 9/10**. V2-01 was accepted 2026-09-21 and its record is below.
 Owner explicitly prioritizes the new workstream. V2-01 follows this documentation commit in a task branch from this predecessor (explicit branch exception). Goal: measure current research/discovery quality before architecture changes.
@@ -267,7 +267,7 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-**Open Path next:** Publish the draft PR against main with the integrated gate output, then collect owner feedback on the light/dark/mobile screenshots in `docs/frontend-visual-refinement.md`. Review the resulting PR as an integration of PR #10's UX plus this visual refinement; only merge after the owner accepts the visual direction. After draft publication, release this baton. Main's earlier plan below is historical for this task.
+**Open Path next:** Owner reviews draft PR #19 and the light/dark/mobile screenshots in `docs/frontend-visual-refinement.md`; apply any visual feedback in this branch and re-run relevant gates. Review PR #19 as an integration of PR #10's UX plus this visual refinement; merge only after the owner accepts the visual direction. Main's earlier plan below is historical for this task.
 
 Write-ahead (claude-opus-5, 2026-09-20, V2-10): **starting V2-10 — the search provider interface**,
 per `analysis/v2/02_EXECUTION_PLAN.md` (Phase 1) and `analysis/v2/04_PHASE_1_DISCOVERY_ENGINE.md` §1.
@@ -2240,6 +2240,8 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 `[0.8]` → `[1.1]` → `[1.2]` → `[1.3]` → `[1.4]` → `[2.1]` → `[2.2]` → `[2.3]` → `[3.1]` → `[3.2]` → `[4.1]` → `[4.2]` → `[5]`
 
 ## 11. Session log (one line per session, newest last)
+
+| 2026-09-23 08:00 UTC | gpt-6-astra | `5180437` → `987b733` + release handoff | Integrated main with only the handoff conflict, passed all required gates (backend 94.56% coverage, frontend 251 tests, redesign E2E 17 passed/1 skip), opened draft PR #19 and released the baton for owner visual review. |
 
 | 2026-09-23 08:00 UTC | gpt-6-astra | `547d32d` + `a546da6` → main integration in progress | Isolated Open Path branch; resolving the sole HANDOFF conflict while preserving main's V2 history. Next: integrated gates, draft PR, baton release. |
 
