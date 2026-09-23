@@ -550,3 +550,32 @@ async def test_a_page_that_never_finishes_is_a_timeout_not_a_hang(tmp_path, monk
     assert again.outcome is FetchOutcome.TIMEOUT
     assert "earlier in this run" in (again.error or "")
     assert calls == 2, "the second page of a stalled host is never requested"
+
+
+async def test_a_slow_resolver_does_not_freeze_the_event_loop(tmp_path, monkeypatch):
+    """Name resolution is a blocking call. On the loop, it stopped every
+    deadline from firing; off it, the fetch gives up and other work runs."""
+    import time as _time
+
+    def slow_check(url):
+        _time.sleep(1.0)
+        raise AssertionError("should have been abandoned")
+
+    monkeypatch.setattr("app.adapters.fetching.check_url", slow_check)
+    monkeypatch.setattr("app.adapters.fetching.DNS_DEADLINE_SECONDS", 0.1)
+    ticks = 0
+
+    async def ticker():
+        nonlocal ticks
+        for _ in range(5):
+            await asyncio.sleep(0.01)
+            ticks += 1
+
+    async with Fetcher(tmp_path / "c", delay_seconds=0.0, respect_robots=False) as fetcher:
+        result, _ = await asyncio.gather(fetcher.get("https://slow-dns.example.com/p"), ticker())
+        again = await fetcher.get("https://slow-dns.example.com/q")
+
+    assert result.outcome is FetchOutcome.TIMEOUT
+    assert "name resolution" in (result.error or "")
+    assert ticks == 5
+    assert "earlier in this run" in (again.error or "")

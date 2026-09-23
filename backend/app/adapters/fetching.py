@@ -64,6 +64,16 @@ MAX_ATTEMPTS = 3
 #: for its entire 90 s this way. These bound the whole exchange.
 ROBOTS_DEADLINE_SECONDS = 15.0
 ATTEMPT_DEADLINE_FACTOR = 1.0
+#: Name resolution is a blocking libc call. Run on the event loop it froze
+#: every coroutine, deadlines included, for as long as the resolver took.
+DNS_DEADLINE_SECONDS = 10.0
+
+
+async def _resolve_checked(url: str) -> ResolvedTarget:
+    """``check_url`` off the event loop, bounded. Raises TimeoutError."""
+    return await asyncio.wait_for(asyncio.to_thread(check_url, url), DNS_DEADLINE_SECONDS)
+
+
 MAX_BYTES = 5_000_000
 MAX_ROBOTS_BYTES = 512_000
 #: Content types worth parsing. Anything else is refused before it is read, so
@@ -327,7 +337,7 @@ class RobotsPolicy:
         try:
             # robots.txt is fetched from a host the crawler was pointed at, so
             # it is exactly as attacker-influenced as any other URL.
-            target = check_url(robots_url)
+            target = await _resolve_checked(robots_url)
         except BlockedRequest as exc:
             log.warning("refusing robots.txt for %s: %s", host, exc)
             return None
@@ -495,7 +505,7 @@ class Fetcher:
         current = url
         validators = dict(validators) if validators else None
         for _hop in range(MAX_REDIRECTS + 1):
-            target = check_url(current)
+            target = await _resolve_checked(current)
             # ``get()`` buffers the entire body before returning, which would
             # make the byte cap below cosmetic (and lets an endless response
             # exhaust memory). Keep the response streaming from the socket.
@@ -820,21 +830,30 @@ class Fetcher:
         if self._client is None:
             raise RuntimeError("Fetcher must be used as an async context manager")
 
-        try:
-            target = check_url(url)
-        except BlockedRequest as exc:
-            log.warning("blocked by network policy: %s", exc)
-            self.stats[FetchOutcome.BLOCKED.value] += 1
-            return FetchResult(url=url, outcome=FetchOutcome.BLOCKED, error=str(exc))
-
-        host = target.host
-        if host in self._stalled_hosts or host in self.robots.stalled:
+        early = urlparse(url).hostname or ""
+        if early in self._stalled_hosts or early in self.robots.stalled:
             self.stats[FetchOutcome.TIMEOUT.value] += 1
             return FetchResult(
                 url=url,
                 outcome=FetchOutcome.TIMEOUT,
                 error="host stopped responding earlier in this run; not waited on again",
             )
+        try:
+            target = await _resolve_checked(url)
+        except TimeoutError:
+            self._stalled_hosts.add(urlparse(url).hostname or url)
+            self.stats[FetchOutcome.TIMEOUT.value] += 1
+            return FetchResult(
+                url=url,
+                outcome=FetchOutcome.TIMEOUT,
+                error=f"name resolution took longer than {DNS_DEADLINE_SECONDS:.0f}s",
+            )
+        except BlockedRequest as exc:
+            log.warning("blocked by network policy: %s", exc)
+            self.stats[FetchOutcome.BLOCKED.value] += 1
+            return FetchResult(url=url, outcome=FetchOutcome.BLOCKED, error=str(exc))
+
+        host = target.host
         async with self._semaphore(host):
             allowed, reason = await self.robots.allowed(url, self._client)
             if host in self.robots.stalled:
