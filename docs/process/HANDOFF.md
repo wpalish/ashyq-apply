@@ -922,6 +922,16 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+Write-ahead (claude-opus-5, 2026-09-23, V2-32): **starting per-population tuition.** `extract_costs`
+takes the first tuition figure on a page, and many European fee pages list a statutory EU/EEA fee
+beside a much higher non-EU/EEA institutional fee, so an international applicant can be shown the
+lower one. Same shape as the deadline fix (`7c25df2`): a tuition table naming at least two populations
+yields one claim per row (`subject_key` and scope population). `web_costs` builds tuition `Money` with
+`amount` = the highest row (a cost is never understated) and `range_low`/`range_high` = the rows, which
+`domain/costs` already sums and the funding gap already reports as a range. It records one note naming
+every row. The population is still never inferred. Files: `extraction.py`, `cost/web_costs.py`, a new
+test file; golden demo re-proved.
+
 Write-ahead (claude-opus-5, 2026-09-20, V2-10): **starting V2-10 — the search provider interface**,
 per `analysis/v2/02_EXECUTION_PLAN.md` (Phase 1) and `analysis/v2/04_PHASE_1_DISCOVERY_ENGINE.md` §1.
 Its whole point is "no provider lock-in", so this task is a seam, not a retrieval feature: nothing is
