@@ -281,7 +281,7 @@ New references for this round:
 The owner picks among H, I and J (or A, F), or a mix — for example J's landing and onboarding with H's route
 screens or I's home dashboard. Then:
 
-1. Round 3 on the canvas: the chosen direction across the real flow (landing, sign-in, profile
+1. The next canvas round: the chosen direction across the real flow (landing, sign-in, profile
    questions, research progress, shortlist, programme, plan, documents), light and dark, 390 and 1440,
    delivered as phone images in the chat.
 2. Tokens in `frontend/src/styles/tokens.css` (primitives → semantic → component), with the status
