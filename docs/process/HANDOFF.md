@@ -60,6 +60,16 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**Run 18 (35855377260) named the pages.** **Aalto:** `get #1` is `https://www.aalto.fi/robots.txt` at
+t=2 s, then nothing until 90 s. The fetcher waited out a robots.txt Crawl-delay with no cap, which
+fits these symptoms. Aalto's actual delay value is not yet confirmed; run 19 logs it. Fixed (next
+commit): a delay over 10 s is refused at once (ROBOTS_DISALLOWED with the delay named), never waited
+out and never ignored. **Vienna, Warsaw:** before search, discovery reads a university homepage's
+service links (moodle, wiki, blog, webmail, cookie-statement, library, governance). Most are cached
+(0.0 s) but each costs a page of budget. That is the next fix: the pre-search walk should not follow
+service links. **Delft, UBC:** the page budget ends in the funding walk, after requirements; lower
+priority.
+
 **Run 17 (35853021542, head `44823bc`, all five owner decisions): claim_recall moves for the first
 time, 0/62 → 2/62.** claim_precision 0/5 → 2/9, verbatim_evidence_rate 0/5 → 2/9, support 2/18,
 unsupported 0/2, wrong_scope 2/9, programme_page_recall 5/10. Six of ten cases still hit a budget, and
