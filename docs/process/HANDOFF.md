@@ -60,6 +60,22 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**One deadline per fee population (`7c25df2`).** Groningen's certified page is a table: "Type of
+student | Deadline | Start course", with a row each for Dutch, EU/EEA and non-EU/EEA students. The
+single-match reading quoted the first row as everybody's deadline, which is the wrong date for every
+other population wherever the rows differ (EU and non-EU deadlines often do).
+- **Extraction:** a deadline table naming at least two populations yields one claim per row
+  (`subject_key` and scope population = the row's population). The date comes from the column the
+  header calls the deadline, not from position: "Start of studies | Deadline" puts it second. One row,
+  or a plain sentence, keeps the old reading.
+- **Assessment:** the applicant's population at a university is still never inferred.
+  `population_deadlines` returns the rows only when their dates differ. The check shows the earliest
+  date and names every row. It is a hard filter only when every row has passed; when only some have,
+  it is `NEEDS_OFFICIAL_CLARIFICATION` naming which, so no applicant is eliminated by another
+  population's date. The runner's `deadline_passed` follows the same rule.
+- Conflicts already group by `subject_key`, so the rows do not conflict with each other. The golden
+  demo is unchanged (no demo page has such a table).
+
 **Run 12 (35829646301) and what it changed (`55fc075`; regression fix `1e44137`).**
 - **Groningen now yields live claims** (0 → 2) and `critical_field_coverage` moved 0/210 → 1/210: the
   classifier fix `7626ff2` let its programme page through. Its deadline still scores as wrong scope,
