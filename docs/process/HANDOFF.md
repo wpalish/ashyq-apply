@@ -3068,6 +3068,18 @@ CI runs both on the PR.
 
 ## 7. Blockers / questions for the owner
 
+### RESOLVED 2026-09-23 — the owner approved every recommendation ("Разрешаю твои рекомендации")
+Implemented in this order, each with its own gates and commit (hashes in §3):
+1. **Bindings:** the three draft identity bindings are approved; live scoring maps with them.
+2. **Language key:** one key, `programme.language`; Aalto's label is renamed to it, and
+   `program_exists`' stated teaching language is mapped onto it.
+3. **HKU:** a school or listing page may confirm **existence only**, and only when it names the
+   requested programme by a full degree title that the ontology's strong aliases equate with it.
+4. **Support direction:** a quote is supported when ours lies inside the reviewer's, **or** the
+   reviewer's lies inside ours and ours is at most 300 characters.
+5. **Date → season:** only when the page states the programme's own start date; September–November →
+   fall.
+
 ### OPEN — what claim_recall is allowed to count (2026-09-23, claude-opus-5)
 The live ceiling is 14 of 62 (see §3). Each of these moves it, and each is an identity or definition
 call, so none is mine to make:
