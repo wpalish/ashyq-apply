@@ -86,3 +86,10 @@ the pipeline a sentence, so the one-way rule made every correct claim unsupporte
 value-correct claims supported, 2 under the reverse). **No published number moved:** all eight files
 replay byte-identically against the frozen capture, whose excerpts are fragments like "The Bachelor"
 that neither contain nor sit inside a reviewer's quote. Live captures are where it shows.
+
+**Live mapping, 2026-09-23 — the approved identity bindings (owner decision).** Live captures now map
+with `normalize_subject_claims` and `data/identity_bindings.reviewed.json` (the three draft1 bindings,
+approved by the owner; draft1 stays frozen). An NTU Nanyang Global or KAIST Scholarship claim, or
+Groningen's transcript, lands on its certified key instead of `unmapped.*`. The live claim_recall
+ceiling moves from 14 to 28 of 62 (`expressibility`). The frozen capture and the eight published
+baselines are unaffected: they are scored from stored predictions, not re-mapped.

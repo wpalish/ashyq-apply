@@ -578,3 +578,23 @@ class TestWhichWayAQuoteSupports:
         result = score(dataset, Capture.model_validate(raw), allow_drafts=True)
         assert result["metrics"]["claim_recall"]["numerator"] == 1
         assert result["metrics"]["verbatim_evidence_rate"]["numerator"] == 1
+
+
+def test_live_scoring_resolves_an_owner_approved_award_identity():
+    """Owner decision 2026-09-23: live capture maps with the reviewed bindings,
+    so an NTU Nanyang Global claim lands on its certified key instead of
+    ``unmapped.scholarship_exists``."""
+    from evaluation.research.identities import IdentityMap
+    from evaluation.research.live import REVIEWED_BINDINGS
+    from evaluation.research.mapping import normalize_subject_claims
+
+    identities = IdentityMap.model_validate_json(REVIEWED_BINDINGS.read_text(encoding="utf-8"))
+    raw = {
+        "claim_type": "scholarship_exists",
+        "normalized_value": "Nanyang Global Scholarship",
+        "subject_key": "Nanyang Global Scholarship",
+        "source_url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/"
+        "scholarship-opportunities/detail/nanyang-scholarship",
+    }
+    [(key, value, _, _)] = normalize_subject_claims("scholarship_exists", raw, identities)
+    assert (key, value) == ("scholarships.nanyang_global.exists", True)

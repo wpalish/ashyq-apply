@@ -132,7 +132,7 @@ jobs:
         run: |
           .venv/bin/python -m evaluation.research.expressibility \
             --dataset evaluation/research/data/ground_truth.reviewed.json \
-            --bindings evaluation/research/data/identity_bindings.draft1.json
+            --bindings evaluation/research/data/identity_bindings.reviewed.json
 
       - name: Say why a right-valued claim was not supported
         # Supported means our quote lies inside the reviewer's. Reviewers quote

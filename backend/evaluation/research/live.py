@@ -19,7 +19,8 @@ from unittest.mock import patch
 
 from pydantic import HttpUrl
 
-from .mapping import evidence_scope, normalize_claim
+from .identities import IdentityMap
+from .mapping import evidence_scope, normalize_subject_claims
 from .schema import Capture, Evidence, Observation, PageOutcome, Prediction, Telemetry
 
 # Evaluation cohort IDs, not expected URLs/values. Registry remains production's input.
@@ -37,6 +38,12 @@ COHORT = {
 }
 
 
+#: Award and document identities the owner approved on 2026-09-23. Scoring
+#: live with them is what lets a scholarship or document claim land on its
+#: certified key; without them every such claim stays ``unmapped.*``.
+REVIEWED_BINDINGS = Path(__file__).parent / "data" / "identity_bindings.reviewed.json"
+
+
 async def capture_one(case_id: str, output: Path, max_pages: int) -> None:
     # Delayed imports keep ordinary offline evaluation entirely independent of I/O.
     from app.adapters import fetching
@@ -47,6 +54,7 @@ async def capture_one(case_id: str, output: Path, max_pages: int) -> None:
 
     predictions: list[Prediction] = []
     raw_claims: list[dict[str, Any]] = []
+    identities = IdentityMap.model_validate_json(REVIEWED_BINDINGS.read_text(encoding="utf-8"))
     started = time.monotonic()
     observation = Observation(
         case_id=case_id,
@@ -155,31 +163,30 @@ async def capture_one(case_id: str, output: Path, max_pages: int) -> None:
                 for row in self.session.query(ClaimRow).filter(ClaimRow.run_id == self.run.id):
                     raw = row.payload
                     raw_claims.append(raw)
-                    key, value, programme, degree = normalize_claim(row.claim_type, raw)
+                    # With the owner-approved identity bindings (2026-09-23),
+                    # the same split the offline mapper makes: an award or a
+                    # document claim becomes the fields of the identity it is
+                    # bound to, and an unbound one stays under its raw key.
+                    mapped = normalize_subject_claims(row.claim_type, raw, identities)
                     excerpt = raw.get("original_text_excerpt")
-                    evidence = None
-                    if excerpt and str(row.source_url).startswith(("http://", "https://")):
-                        evidence = Evidence(
-                            url=row.source_url,
-                            excerpt=excerpt,
-                            scope=evidence_scope(
-                                raw,
-                                university=next(iter(self._candidates)).name
-                                if self._candidates
-                                else case_id,
-                                programme=programme,
-                                degree=degree,
-                            ),
-                            accessed_on=row.accessed_at.date(),
-                            source_type="official" if raw.get("official_domain") else "unknown",
-                        )
-                    predictions.append(
-                        Prediction(
-                            key=key,
-                            value=value,
-                            evidence=evidence,
-                        )
-                    )
+                    for key, value, programme, degree in mapped:
+                        evidence = None
+                        if excerpt and str(row.source_url).startswith(("http://", "https://")):
+                            evidence = Evidence(
+                                url=row.source_url,
+                                excerpt=excerpt,
+                                scope=evidence_scope(
+                                    raw,
+                                    university=next(iter(self._candidates)).name
+                                    if self._candidates
+                                    else case_id,
+                                    programme=programme,
+                                    degree=degree,
+                                ),
+                                accessed_on=row.accessed_at.date(),
+                                source_type="official" if raw.get("official_domain") else "unknown",
+                            )
+                        predictions.append(Prediction(key=key, value=value, evidence=evidence))
 
     with (
         patch.object(canary, "CanaryRunner", ObservedRunner),

@@ -7,11 +7,13 @@ zero forever, whatever extraction does. Read against 62, a recall of 0 says
 nothing about which half of the problem is in the way; read against this
 ceiling, it does.
 
-Two ceilings, because two mappings exist. The live capture maps with
-``normalize_claim`` alone: the identity bindings are drafts awaiting review
-(HANDOFF), so no award or document fact can score live. The offline mapper
-applies them. Both are printed; neither is changed here, because adding a
-binding or a claim type is an identity decision for a person.
+Live capture maps with ``normalize_subject_claims`` and the identity bindings
+the owner approved on 2026-09-23 (``identity_bindings.reviewed.json``), the
+same split the offline mapper makes. Before that it mapped with
+``normalize_claim`` alone and no award or document fact could score live; the
+report still prints that figure beside the current one, so the effect of the
+decision stays visible. Neither mapping nor bindings are changed here: adding
+a binding or a claim type is an identity decision for a person.
 """
 
 from __future__ import annotations
@@ -101,11 +103,11 @@ def main() -> None:
     parser.add_argument("--bindings", type=Path, required=True)
     args = parser.parse_args()
     dataset = Dataset.model_validate_json(args.dataset.read_text(encoding="utf-8"))
-    print("LIVE (the capture maps without identity bindings)")
-    print(summarise(report(dataset, {})))
-    print()
-    print(f"OFFLINE, with the draft bindings in {args.bindings.name}")
+    print(f"LIVE, with the bindings in {args.bindings.name}")
     print(summarise(report(dataset, load_bindings(args.bindings))))
+    print()
+    print("(for comparison: with no bindings at all, as live scored before 2026-09-23)")
+    print(summarise(report(dataset, {})).splitlines()[0])
 
 
 if __name__ == "__main__":

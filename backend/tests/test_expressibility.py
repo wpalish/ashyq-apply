@@ -47,13 +47,13 @@ def test_the_reviewed_corpus_counts_the_same_population_as_claim_recall():
     dataset = Dataset.model_validate_json(
         (_DATA / "ground_truth.reviewed.json").read_text(encoding="utf-8")
     )
-    rows = report(dataset, load_bindings(_DATA / "identity_bindings.draft1.json"))
+    rows = report(dataset, load_bindings(_DATA / "identity_bindings.reviewed.json"))
     assert len(rows) == 62
     assert sum(r.verdict == REACHABLE for r in rows) == 28
 
 
-def test_live_capture_maps_without_bindings_so_its_ceiling_is_lower():
-    """live.py calls normalize_claim alone: no award or document fact can score live."""
+def test_without_any_bindings_the_ceiling_is_what_live_had_before_2026_09_23():
+    """No award or document fact can score without an identity binding."""
     dataset = Dataset.model_validate_json(
         (_DATA / "ground_truth.reviewed.json").read_text(encoding="utf-8")
     )
