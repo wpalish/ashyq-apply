@@ -40,8 +40,9 @@ TIMED_OUT = "timed_out"
 #: The patterns recover it when the page is read ungated, but the classifier
 #: refused the page for requirements — a classification fault, not a pattern one.
 CLASSIFIER_GATED = "classifier_gated"
-#: No claim type maps to this key at all, so no page could ever recover it
-#: through this path. A gap in coverage, not a failure to read.
+#: The oracle runs the requirements path only; this key is filled by another
+#: adapter (scholarships, documents) or by no claim type at all. A gap in what
+#: this probe can see, not a failure to read.
 NOT_MEASURED = "not_measured"
 
 PROBE_SECONDS = 90.0
@@ -71,6 +72,9 @@ class Finding:
     url: str
     verdict: str
     detail: str = ""
+    #: For value_missing: the page text around the reviewer's words, so the
+    #: pattern that failed can be written against what the page really says.
+    context: str = ""
 
     def line(self) -> str:
         return f"{self.case_id:11} {self.key:28} {self.verdict:14} {self.detail}"
@@ -99,6 +103,21 @@ def targets(dataset: Dataset) -> list[Target]:
 
 def _words(text: str) -> list[str]:
     return [w.casefold() for w in _WORD.findall(text or "")]
+
+
+def excerpt_context(excerpt: str, text: str, radius: int = 240) -> str:
+    """The page text around the first word of the excerpt's first appearance."""
+    words = _words(excerpt)
+    if not words:
+        return ""
+    flat = " ".join((text or "").split())
+    folded = flat.casefold()
+    at = folded.find(" ".join(words[: min(3, len(words))]))
+    if at < 0:
+        at = folded.find(words[0])
+    if at < 0:
+        return ""
+    return flat[max(0, at - radius) : at + radius]
 
 
 def excerpt_is_present(excerpt: str, text: str) -> bool:
@@ -147,7 +166,15 @@ def _claims_on(url: str, html: str, fetched_at) -> tuple[str, list[tuple[str, ob
         payload = claim.model_dump(mode="json")
         key, value, _programme, _degree = normalize_claim(payload["claim_type"], payload)
         ungated.append((key, value))
-    gated = ungated if page.accepts("requirements") else []
+    gated = list(ungated) if page.accepts("requirements") else []
+    # Programme existence is claimed by the adapter, not by the patterns: a
+    # page the classifier accepts as a programme page, with a subject it
+    # recognised. The adapter also matches that subject against the request;
+    # the oracle has no request, so this is the most it can check.
+    if page.subject:
+        ungated.append(("programme.exists", True))
+        if page.accepts("program_exists"):
+            gated.append(("programme.exists", True))
     return page.page_type.value, gated, ungated
 
 
@@ -191,13 +218,19 @@ async def probe(target: Target, fetcher) -> Finding:
             CLASSIFIER_GATED, f"[{page_type}] the patterns read it; the page was not accepted"
         )
     if target.key not in _MEASURED_KEYS:
-        return finding(NOT_MEASURED, f"[{page_type}] no claim type maps to this key")
-    if excerpt_is_present(target.excerpt, text):
         return finding(
+            NOT_MEASURED,
+            f"[{page_type}] outside the requirements path this oracle runs "
+            "(scholarship, document or unmapped key)",
+        )
+    if excerpt_is_present(target.excerpt, text):
+        missing = finding(
             VALUE_MISSING,
             f"[{page_type}] the quoted words are in our text; "
-            f"{len(ungated)} claims came out, none this one",
+            f"{len(ungated)} claims came out, none this one"
+            + (" (the certified value is null)" if target.value is None else ""),
         )
+        return Finding(**{**asdict(missing), "context": excerpt_context(target.excerpt, text)})
     return finding(
         TEXT_MISSING,
         f"[{page_type}] the quoted words are not in our text at all ({len(text)} chars read)",
@@ -230,6 +263,12 @@ def summarise(findings: list[Finding]) -> str:
         "claim type exists for the fact; recovered with a still-zero live claim_recall "
         "would mean navigation."
     )
+    misses = [f for f in findings if f.verdict == VALUE_MISSING and f.context]
+    if misses:
+        lines.append("")
+        lines.append("what the page says where a pattern should have fired:")
+        for f in misses:
+            lines.append(f"  {f.case_id} {f.key}: …{f.context}…")
     return "\n".join(lines)
 
 

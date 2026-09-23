@@ -267,3 +267,30 @@ class TestTellingTheClassifierFromThePatterns:
         async with Fetcher(tmp_path / "cache", offline=True, corpus_dir=corpus) as fetcher:
             found = await probe(target, fetcher)
         assert found.verdict == NOT_MEASURED
+
+
+class TestProgrammeExistence:
+    @pytest.mark.asyncio
+    async def test_a_programme_page_with_a_subject_confirms_the_programme(self, tmp_path):
+        corpus = tmp_path / "corpus"
+        (corpus / "uni").mkdir(parents=True)
+        (corpus / "uni/cs.html").write_text(_PLAIN, encoding="utf-8")
+        target = Target(
+            "example", "programme.exists", True, "fixture://uni/cs.html", "BSc Computer Science"
+        )
+        async with Fetcher(tmp_path / "cache", offline=True, corpus_dir=corpus) as fetcher:
+            found = await probe(target, fetcher)
+        assert found.verdict == RECOVERED, found
+
+
+class TestContextForAMiss:
+    @pytest.mark.asyncio
+    async def test_value_missing_carries_the_text_around_the_reviewers_words(self, tmp_path):
+        found = await _probe_one(
+            tmp_path,
+            {"uni/cs.html": _AS_A_TABLE},
+            "fixture://uni/cs.html",
+            "IELTS (Academic) 6.5",
+        )
+        assert found.verdict == VALUE_MISSING
+        assert "IELTS (Academic)" in found.context
