@@ -136,3 +136,21 @@ class TestTheRollUpNeverRoundsUp:
         WebScholarshipAdapter._derive_availability(award)
 
         assert award.applicant_eligible == "yes"
+
+
+def test_a_translated_copy_of_a_page_is_one_page():
+    """Run 25: HKU's scholarship list was read in en, zh-hant and zh-hans."""
+    from app.adapters.scholarship.web_scholarships import _without_locale
+
+    en = "https://admissions.hku.hk/fees-and-scholarships/scholarships"
+    assert (
+        _without_locale("https://admissions.hku.hk/zh-hant/fees-and-scholarships/scholarships")
+        == en
+    )
+    assert (
+        _without_locale("https://admissions.hku.hk/zh-hans/fees-and-scholarships/scholarships")
+        == en
+    )
+    assert _without_locale(en) == en
+    # A locale-looking word that is the whole path is not a translation prefix.
+    assert _without_locale("https://x.edu/fi") == "https://x.edu/fi"

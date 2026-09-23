@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import re
 from datetime import UTC, datetime
-from urllib.parse import urljoin, urlparse
+from urllib.parse import urljoin, urlparse, urlsplit, urlunsplit
 
 from bs4 import BeautifulSoup
 
@@ -192,6 +192,7 @@ class WebScholarshipAdapter:
 
         scholarships: list[Scholarship] = []
         seen_pages: set[str] = set()
+        seen_translations: set[str] = set()
         queue: list[tuple[str, int]] = [(primary, 0)]
         indexes_read = 0
         linked_an_award = False
@@ -203,6 +204,14 @@ class WebScholarshipAdapter:
             if key in seen_pages:
                 continue
             seen_pages.add(key)
+            # The same award page in another language adds nothing an
+            # English-reading applicant can act on, and costs a read each.
+            # Run 25: HKU read its scholarship list three times (en, zh-hant,
+            # zh-hans) and ran out of clock before the awards.
+            translation = _without_locale(key)
+            if depth > 0 and translation != key and translation in seen_translations:
+                continue
+            seen_translations.add(translation)
 
             was_read_before = _page_key(url) in self._pages
             page = await self._read(url)
@@ -779,6 +788,22 @@ def _award_links(html: str, base: str) -> list[str]:
         seen.add(url)
         out.append(url)
     return out
+
+
+_LOCALE_SEGMENT = re.compile(
+    r"^(?:zh(?:-han[st]|-cn|-tw|-hk)?|ko|ja|fr|de|es|it|nl|fi|sv|pl|pt|ru|ar|tr|vi|th|id|ms)$",
+    re.IGNORECASE,
+)
+
+
+def _without_locale(key: str) -> str:
+    """``/zh-hant/fees/x`` and ``/fees/x`` are one page in two languages."""
+    parts = urlsplit(key)
+    segments = parts.path.split("/")
+    if len(segments) > 2 and _LOCALE_SEGMENT.match(segments[1]):
+        path = "/" + "/".join(segments[2:])
+        return urlunsplit((parts.scheme, parts.netloc, path, parts.query, ""))
+    return key
 
 
 def _page_key(url: str) -> str:
