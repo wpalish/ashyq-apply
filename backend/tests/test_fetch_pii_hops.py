@@ -632,3 +632,58 @@ async def test_a_robots_txt_network_failure_disallows_the_site(tmp_path, monkeyp
 
     assert result.outcome is FetchOutcome.ROBOTS_DISALLOWED
     assert pages == 0
+
+
+async def test_a_dead_address_falls_through_to_the_next_validated_one(tmp_path, monkeypatch):
+    """One bad edge must not make the whole host look down. Both addresses are
+    validated by the real network policy; only a refused connection moves on."""
+    from app.adapters.network_policy import check_url as real
+
+    second = "93.184.216.35"
+    monkeypatch.setattr(
+        "app.adapters.fetching.check_url",
+        lambda url, **_: real(url, resolver=resolver_returning(PUBLIC_ADDRESS, second)),
+    )
+    tried: list[str] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        tried.append(request.url.host)
+        if request.url.host == PUBLIC_ADDRESS:
+            raise httpx.ConnectError("no route")
+        assert request.headers["host"] == "multi.example.com"
+        assert request.extensions["sni_hostname"] == "multi.example.com"
+        return httpx.Response(200, headers={"content-type": "text/html"}, text="<html>p</html>")
+
+    async with Fetcher(tmp_path / "c", delay_seconds=0.0, respect_robots=False) as fetcher:
+        fetcher._client = httpx.AsyncClient(
+            transport=httpx.MockTransport(handler), follow_redirects=False
+        )
+        result = await fetcher.get("https://multi.example.com/page")
+
+    assert result.outcome is FetchOutcome.OK
+    assert tried == [PUBLIC_ADDRESS, second]
+
+
+async def test_an_address_that_answers_is_the_answer(tmp_path, monkeypatch):
+    """A 503 from the first address is the server's reply, not a dead edge."""
+    from app.adapters.network_policy import check_url as real
+
+    monkeypatch.setattr(
+        "app.adapters.fetching.check_url",
+        lambda url, **_: real(url, resolver=resolver_returning(PUBLIC_ADDRESS, "93.184.216.35")),
+    )
+    monkeypatch.setattr("app.adapters.fetching.MAX_ATTEMPTS", 1)
+    tried: list[str] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        tried.append(request.url.host)
+        return httpx.Response(503, text="busy")
+
+    async with Fetcher(tmp_path / "c", delay_seconds=0.0, respect_robots=False) as fetcher:
+        fetcher._client = httpx.AsyncClient(
+            transport=httpx.MockTransport(handler), follow_redirects=False
+        )
+        result = await fetcher.get("https://multi.example.com/page")
+
+    assert result.status_code == 503
+    assert tried == [PUBLIC_ADDRESS]

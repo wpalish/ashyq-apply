@@ -67,6 +67,10 @@ ATTEMPT_DEADLINE_FACTOR = 1.0
 #: Name resolution is a blocking libc call. Run on the event loop it froze
 #: every coroutine, deadlines included, for as long as the resolver took.
 DNS_DEADLINE_SECONDS = 10.0
+#: How many of a host's validated addresses one attempt may try, and how long
+#: each may take to accept a connection when there is another to fall back on.
+MAX_ADDRESSES_TRIED = 3
+PER_ADDRESS_CONNECT_SECONDS = 5.0
 
 
 async def _resolve_checked(url: str) -> ResolvedTarget:
@@ -93,11 +97,12 @@ def _pinned_request(
     client: httpx.AsyncClient,
     target: ResolvedTarget,
     *,
-    timeout: float | None = None,
+    timeout: float | httpx.Timeout | None = None,
     headers: dict[str, str] | None = None,
+    address: str | None = None,
 ) -> httpx.Request:
     """Connect to the validated IP while preserving virtual-host TLS and HTTP."""
-    pinned_url = httpx.URL(target.url).copy_with(host=target.pinned_address)
+    pinned_url = httpx.URL(target.url).copy_with(host=address or target.pinned_address)
     host = f"[{target.host}]" if ":" in target.host else target.host
     default_port = 443 if target.scheme == "https" else 80
     if target.port != default_port:
@@ -508,6 +513,38 @@ class Fetcher:
         """
         self._renderer = renderer
 
+    async def _send_to_any_address(
+        self, target: ResolvedTarget, current: str, headers: dict[str, str] | None
+    ) -> httpx.Response:
+        """Send to the first validated address that accepts a connection.
+
+        A name often resolves to several addresses; one bad edge used to make
+        the whole host look down. Every address was validated by the network
+        policy, so trying the next one widens nothing. Only a failure to
+        *connect* moves on — a server that answered is the answer.
+        """
+        assert self._client is not None
+        if not isinstance(self._client, httpx.AsyncClient):
+            request = self._client.build_request("GET", current, headers=headers)
+            return await self._client.send(request, stream=True)
+        addresses = list(dict.fromkeys(target.addresses))[:MAX_ADDRESSES_TRIED]
+        timeout = (
+            httpx.Timeout(self.timeout, connect=min(PER_ADDRESS_CONNECT_SECONDS, self.timeout))
+            if len(addresses) > 1
+            else None
+        )
+        for index, address in enumerate(addresses):
+            request = _pinned_request(
+                self._client, target, headers=headers, address=address, timeout=timeout
+            )
+            try:
+                return await self._client.send(request, stream=True)
+            except (httpx.ConnectError, httpx.ConnectTimeout) as exc:
+                if index == len(addresses) - 1:
+                    raise
+                log.info("%s via %s: %s; trying the next address", target.host, address, exc)
+        raise AssertionError("unreachable")
+
     async def _request_with_redirects(
         self, url: str, *, validators: dict[str, str] | None = None
     ) -> FetchResult:
@@ -527,16 +564,11 @@ class Fetcher:
             # ``get()`` buffers the entire body before returning, which would
             # make the byte cap below cosmetic (and lets an endless response
             # exhaust memory). Keep the response streaming from the socket.
-            request = (
-                _pinned_request(self._client, target, headers=validators)
-                if isinstance(self._client, httpx.AsyncClient)
-                else self._client.build_request("GET", current, headers=validators)
-            )
+            response = await self._send_to_any_address(target, current, validators)
             # Validators ride the caller's request only: a hop can land on
             # another host, and an entity tag minted by one origin must not be
             # replayed to another.
             validators = None
-            response = await self._client.send(request, stream=True)
 
             # A 304 is a 3xx but not a redirect: it is the answer to a
             # conditional request, and httpx counts every 3xx as is_redirect.
