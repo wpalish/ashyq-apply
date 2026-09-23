@@ -70,3 +70,10 @@ and HKU gains its offering school and its exact degree title. Whether Computer
 Engineering satisfies a computer-science request is left open for the reviewer,
 not asserted. See [source notes](REVIEW_DRAFT7.md) and
 [current worksheet](REVIEW_WORKSHEET_DRAFT7.md).
+
+**Mapping, 2026-09-23 — one IELTS floor is written as the four bands it governs.** A prediction of
+`ielts_min_subscore` with a single number ("no part less than 6.0") is mapped to
+`{"listening": 6.0, "reading": 6.0, "speaking": 6.0, "writing": 6.0}`, the certified corpus' own
+shape for the same statement. Before this, the scorer's exact comparison could never match the one to
+the other. This is a change of representation, not an equivalence. No stored capture carries a
+single-number subscore, so no published metric moves (the replay guard passes unchanged).

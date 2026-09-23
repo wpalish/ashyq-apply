@@ -74,7 +74,16 @@ def normalize_claim(
         programme = value["program"]
         degree = value.get("degree")
         value = True
+    if claim_type == "ielts_min_subscore" and isinstance(value, int | float):
+        # "No part less than 6.0" is one floor stated for all four sections;
+        # the certified corpus writes the same statement as a map. Spelling
+        # the floor out is a change of representation, not an equivalence:
+        # it says nothing the page did not say.
+        value = {band: float(value) for band in IELTS_BANDS}
     return CLAIM_KEYS.get(claim_type, "unmapped." + claim_type), value, programme, degree
+
+
+IELTS_BANDS = ("listening", "reading", "speaking", "writing")
 
 
 AWARD_KEYS = {

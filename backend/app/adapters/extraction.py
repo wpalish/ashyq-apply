@@ -256,7 +256,13 @@ _IELTS_OVERALL = re.compile(
     # "IELTS 6.5 overall (or equivalent)": many pages state the keyword after
     # the band. The keyword must follow the number directly, so "IELTS 6.5 in
     # each component" stays a subscore statement, not an overall band.
-    r"|IELTS[^\d.\n]{0,20}?(\d(?:\.\d)?)\s*(?:overall|band)",
+    r"|IELTS[^\d.\n]{0,20}?(\d(?:\.\d)?)\s*(?:overall|band)"
+    # UBC's table: "International English Language Testing System (Academic)
+    # 6.5, with no part less than 6.0". The spelled-out name carries the band
+    # directly, and the per-part floor that follows is what makes 6.5 the
+    # overall one rather than any number near a test name.
+    r"|International English Language Testing System\s*(?:\(?academic\)?)?\s*:?\s*"
+    r"(\d(?:\.\d)?)(?=,?\s*(?:with\s+)?no\s+(?:part|band|section|component|sub-?score))",
     re.IGNORECASE,
 )
 _IELTS_SUB = re.compile(
@@ -283,8 +289,15 @@ _IELTS_SENTENCE = re.compile(
     re.IGNORECASE,
 )
 _IELTS_NAMED_BAND = re.compile(
-    r"\b(listening|reading|writing|speaking)\b\s*[:\-–]?\s*(\d(?:\.\d)?)",
+    # A band never runs on into another digit: "Reading: 60" is a PTE score,
+    # and reading its first digit as IELTS 6.0 is exactly what UBC's table,
+    # with no full stop between the two tests, produced.
+    r"\b(listening|reading|writing|speaking)\b\s*[:\-–]?\s*(\d(?:\.\d)?)(?![\d.])",
     re.IGNORECASE,
+)
+#: Where another test's statement begins, the IELTS one has ended.
+_OTHER_TEST = re.compile(
+    r"\b(?:PTE|Pearson|TOEFL|Duolingo|Cambridge|CAEL|CELPIP|Michigan)\b", re.IGNORECASE
 )
 
 _TOEFL = re.compile(r"TOEFL[^.\n]{0,90}?(\d{2,3})", re.IGNORECASE)
@@ -438,6 +451,10 @@ def _named_bands(text: str) -> tuple[int, int, dict[str, float]] | None:
     """
     for sentence in _IELTS_SENTENCE.finditer(text):
         body = sentence.group(0)
+        named = re.search(r"\bIELTS\b", body, re.IGNORECASE)
+        other = _OTHER_TEST.search(body, named.end()) if named else None
+        if other:
+            body = body[: other.start()]
         bands = {
             match.group(1).lower(): float(match.group(2))
             for match in _IELTS_NAMED_BAND.finditer(body)
@@ -454,7 +471,7 @@ def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
     text = for_matching(text)
 
     for m in _IELTS_OVERALL.finditer(text):
-        raw = m.group(1) or m.group(2) or m.group(3)
+        raw = m.group(1) or m.group(2) or m.group(3) or m.group(4)
         if raw is None:
             continue
         value = float(raw)
