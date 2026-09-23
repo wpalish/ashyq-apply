@@ -3,9 +3,10 @@
 ## Families
 
 - `--font-family-brand`: Onest for the wordmark, controls, navigation, and short product headings.
-- `--font-family-display`: Prata for editorial page titles and narrative section openings only.
+- `--font-family-display`: Onest for page titles and section openings, using weight and scale for hierarchy.
 - `--font-family-ui`: Onest/system UI for controls and body copy.
-- `--font-family-mono`: IBM Plex Mono/system monospace for sources, identifiers, timestamps, and numeric evidence.
+- `--font-family-data`: Onest with tabular numerals for user-facing amounts, dates, scores and other evidence values.
+- `--font-family-mono`: IBM Plex Mono/system monospace for code and technical identifiers.
 
 ## Scale and hierarchy
 
@@ -17,7 +18,7 @@ Weights are limited to `--font-weight-medium`, `--font-weight-semibold`, and `--
 
 - Component CSS uses `--font-*`, `--line-height-*`, and `--letter-spacing-*` aliases only.
 - Display type provides structure; do not use it for long paragraphs or dense tables.
-- Owner's explicit font selection (2026-09-09) overrides the brandbook: Prata display headings, Onest brand/actions/body, IBM Plex Mono evidence. Prata is loaded at its native 400 weight; use `--font-weight-display` to avoid synthetic bold.
+- Open Path PR #19 proposes Onest for all user-facing typography after the owner's later feedback about unwanted fonts. The earlier 2026-09-09 Prata/mono choice is superseded in this working UI candidate; final visual approval remains pending. `--font-weight-display` is 600.
 - Monospace indicates machine-originated or source-like content, not emphasis.
 - Keep responsive heading behavior inside the upstream fluid size primitives.
 - Test every loaded weight with Kazakh letters `Ә Ғ Қ Ң Ө Ұ Ү Һ І` before release.

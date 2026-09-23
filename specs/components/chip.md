@@ -12,7 +12,7 @@ Use Chip for compact metadata and StatusChip for domain statuses with a human la
 
 ## 3. Anatomy
 
-Inline container, label, optional title, optional monospace treatment, and one semantic tone modifier. `StatusChip` also carries a tone icon; the label remains the accessible meaning.
+Inline container, label, optional title, optional monospace treatment for technical identifiers, and one semantic tone modifier. `StatusChip` also carries a tone icon; the label remains the accessible meaning.
 
 ## 4. Tokens used
 

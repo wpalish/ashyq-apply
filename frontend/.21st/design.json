@@ -1,7 +1,7 @@
 {
   "version": 1,
   "project": {
-    "name": "ASHYQ Apply",
+    "name": "ashyq apply",
     "productType": "evidence-backed university admissions platform",
     "stack": ["react", "vite", "css-custom-properties"]
   },
@@ -15,32 +15,36 @@
     "instructions": [
       "../epics.md",
       "../../ashyq_brand/ashyq_brandbook_v1-1.md",
-      "../specs/design-system.md"
+      "../specs/design-system.md",
+      "../docs/frontend-visual-refinement.md"
     ]
   },
   "design": {
     "colorMode": "light-and-dark",
     "colors": {
-      "ink": "#111827",
-      "paper": "#F7F3EA",
-      "academicBlue": "#526DA6",
-      "libraryBurgundy": "#8E3F4C",
-      "scholarTeal": "#437A78",
-      "parchmentGold": "#C5A66B",
-      "deadlineCoral": "#E47A6A"
+      "brandInk": "#111827",
+      "brandPaper": "#F7F3EA",
+      "brandAcademicBlue": "#526DA6",
+      "lightCanvas": "#F4F5F3",
+      "lightText": "#243044",
+      "lightAction": "#3C5985",
+      "darkCanvas": "#202B35",
+      "darkText": "#E9EEF0",
+      "darkAction": "#B0C7EB"
     },
     "typography": {
       "brandAndActions": "Onest",
-      "editorialDisplay": "Prata",
+      "display": "Onest 600",
       "uiAndBody": "Onest",
-      "evidenceAndNumbers": "IBM Plex Mono",
+      "userFacingData": "Onest with tabular numerals",
+      "technicalIdentifiers": "IBM Plex Mono",
       "scalePx": [12, 14, 16, 18, 22, 28, 36, 48]
     },
     "spacing": { "basePx": 4, "scalePx": [4, 8, 12, 16, 24, 32, 48] },
     "radius": { "productPx": [4, 8, 12], "editorialPagePx": 24 },
     "shadows": { "levels": 3, "usage": "sparse; borders and paper tones first" },
     "motion": { "interactionMaxMs": 200, "reducedMotion": true },
-    "density": "calm-editorial"
+    "density": "calm, readable and mobile-first"
   },
   "components": {
     "installed": [],
@@ -89,8 +93,8 @@
     },
     {
       "id": "DS-002",
-      "decision": "Prata 400 for display headings; Onest for wordmark, controls and body; IBM Plex Mono for evidence.",
-      "reason": "Explicit owner clarification on 2026-09-09 supersedes the brandbook and previous synthesized font choices."
+      "decision": "Historical 2026-09-09 choice of Prata for display and IBM Plex Mono for evidence; superseded in the working UI by Open Path's Onest display and user-facing data proposal.",
+      "reason": "The owner later rejected some fonts and asked for a new visual system; the implemented PR #19 candidate uses Onest across user-facing roles. Final visual approval is pending."
     },
     {
       "id": "DS-003",

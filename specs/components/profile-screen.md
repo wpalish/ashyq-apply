@@ -24,7 +24,7 @@ and remove actions. A blank row created in the UI is not profile data until the 
 `--font-family-brand`, `--font-family-ui`, `--font-family-mono`, `--font-size-sm`, `--font-size-xl`,
 `--space-2`, `--space-3`, `--space-4`, `--space-5`, `--space-6`, `--size-touch-target`,
 `--color-interactive-soft`, `--color-interactive-hover`, `--color-border`, `--radius-md`.
-Reuse Panel, Field, Notice and Button contracts. Display headings use Prata 400; controls and body use Onest.
+Reuse Panel, Field, Notice and Button contracts. Display headings, controls and body use Onest in the Open Path candidate; technical identifiers alone use the mono alias.
 
 ## 5. Props/API
 
