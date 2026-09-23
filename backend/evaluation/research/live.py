@@ -127,12 +127,18 @@ async def capture_one(case_id: str, output: Path, max_pages: int) -> None:
             fetchers.append(fetcher)
             original = fetcher.get
             requests = 0
+            network_reads = 0
 
             async def bounded(url, **kwargs):
-                nonlocal requests
-                requests += 1
-                if requests > max_pages:
+                nonlocal requests, network_reads
+                # The budget bounds reads that reach a server. A page two
+                # stages both need is served from the cache the second time,
+                # and until 2026-09-23 that repeat still spent the budget: run
+                # 20 ended Delft, Vienna and UBC in the funding stage with up
+                # to a fifth of their 60 calls being cache hits.
+                if network_reads >= max_pages:
                     raise RuntimeError("BENCHMARK_PAGE_BUDGET_EXHAUSTED")
+                requests += 1
                 began = time.monotonic()
                 # Written before the read, so a read that never returns still
                 # names itself in the log.
@@ -146,6 +152,8 @@ async def capture_one(case_id: str, output: Path, max_pages: int) -> None:
                     f"{getattr(result, 'outcome', '?')}",
                     flush=True,
                 )
+                if not getattr(result, "from_cache", False):
+                    network_reads += 1
                 if result.ok and result.is_pdf and not result.from_cache:
                     observation.telemetry.pdf_fetches = (observation.telemetry.pdf_fetches or 0) + 1
                 checkpoint()
@@ -293,6 +301,7 @@ def main() -> None:
             config={
                 "seconds_per_case": args.seconds_per_case,
                 "max_fetcher_calls_per_case": args.max_pages,
+                "page_budget_counts": "network reads; cache hits are free (since 2026-09-23)",
                 "browser_enabled": False,
                 "cohort": list(COHORT),
                 "scope": "current production pipeline; HTTP-only bounded cold run",

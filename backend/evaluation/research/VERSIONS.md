@@ -109,3 +109,10 @@ compares identity). All eight published files replay byte-identically. Alongside
 same day): a programme's own stated start in September–November is read as that fall intake, in page
 text ("programme starts 1 September 2027") and in a deadline table's start column ("Deadline | Start
 course"). A bare date is still never an intake.
+
+**Live harness, 2026-09-23 — the page budget counts network reads only.** `--max-pages` bounded every
+`Fetcher.get` call, cache hits included, so a page two stages both read (admission, tuition) was paid
+for twice. Run 20 ended Delft, Vienna and UBC in the funding stage with several of their 60 calls
+being cache hits. The budget now counts reads that reach a server; the capture's `config` says so
+(`page_budget_counts`). Live runs before this commit are not directly comparable on budget-bound
+cases. Scoring and every published file are unaffected.
