@@ -1,13 +1,13 @@
-# Redesign concepts — rounds 1 to 4 (2026-09-23)
+# Redesign concepts — rounds 1 to 5 (2026-09-23)
 
 The owner asked for a redesign at the level of the product itself: the current UI is "not serious enough",
 overloads an ordinary school student with information, and does not hook. The agreed process is
 **concepts first, then develop the chosen one into a design system and apply it**. This file is the
 record of the rounds: what is wrong today, what every concept keeps, the references, the four
 round-1 directions, the owner's feedback, the round-2 and round-3 directions built from it, and the
-round-4 developments of H with their adversarial review.
+round-4 developments of H and the round-5 directions on K and M, each with its adversarial review.
 
-- Live canvas with all 55 artboards (private to the owner until shared):
+- Live canvas with all 67 artboards (private to the owner until shared):
   https://claude.ai/artifact/Ncsd2YkQMcV9oCG3bHrBsa
 - Nothing in `frontend/` changes in this round. PR #10 (tokenised profile workflow) and PR #19
   ("Open Path" visual refinement) are untouched; whichever concept wins decides what happens to them.
@@ -432,15 +432,152 @@ Scores after cycle 2:
 - Contrast was measured from the token values, not with an automated tool on rendered pages.
 - The map labels were placed by hand. Production needs collision-aware placement.
 
-## 12. Next step
+## 12. Owner feedback on round 4 (2026-09-23)
 
-The owner picks K, L or M, or a mix. The review suggests a mix, because each concept wins with a
-different persona:
+- **K** and **M** were liked. K is the better of the two, but M's globe is appealing.
+- The owner asked for something new again.
 
-- **M's globe** as the landing hero (the first impression)
-- **K's search and map** as the "Подбор" tab (the money for parents)
-- **L's board** as the "План" tab (deadlines for students and counsellors)
-- the programme screen as M's step route plus K's sticky price bar
+## 13. Round 5 — new directions on K, with M's globe
+
+The owner's pick shapes this round: all three concepts keep K's core, which is the price after the
+grant on every point and card, and put M's globe to work. One concept fuses K and M directly. The
+other two try new ideas: one leads with money, the other with the decision on each programme.
+
+New references for this round:
+
+| Reference | What it lends | Used in |
+|---|---|---|
+| [21st.dev globe components](https://21st.dev/community/components/s/globe) — *Globe* (Dillion Verma), *COBE Globe*, *Globe Interactive* and *Globe Pulse* (shuding) | A globe rising from the bottom of the page like a horizon; labelled markers; a night globe | N, P |
+| [Google Flights Explore](https://www.google.com/travel/explore) | Filters and a list on the left, a map with a price on every destination on the right | O |
+| [Airbnb Android — filter with a price range](https://mobbin.com/explore/screens/8bc5e6ac-e18f-4ccf-8701-81b98ec58c0a) | Price as the main filter, drawn as a chart you drag | O |
+
+### N · Горизонт — K, with the globe rising under the search
+
+![Concept N](concepts/concept-N.webp)
+
+- **Idea.** K's landing page, with M's globe below the search, rising like a horizon.
+  - The points on the globe carry K's price labels, and the arcs start in Astana.
+  - A destination the globe hides gets a chip at the edge instead of an arc through empty space:
+    "Торонто · нет цены · на обороте", "Сингапур ↓". This fixes the risk M left open in round 4.
+  - The workspace is K's list, with a globe or a map to choose from.
+  - On the phone, the globe sits at the top with a sheet of cards below it. The programme page is
+    K's, with the route drawn on the globe.
+- **Who it serves best.** It keeps what the owner already approved and adds the "wow" of M.
+- **Risk.** Cities near the globe's rim are squeezed together, so labels need collision-aware
+  placement and a rotate gesture in code. A live globe must stay light on low-end phones.
+
+### O · Бюджет — the money first
+
+![Concept O](concepts/concept-O.webp)
+
+- **Idea.** The first question is "how much can the family pay per year, after the scholarship?".
+  The answer is a price ladder: one bar per programme, showing what is left to pay per year, and a
+  yellow budget marker you drag across.
+  - Programmes under the marker are dark; those above it are grey.
+  - A programme without a full price gets a hatched bar with "нет цены", "цена неполная" or "нет
+    данных", and no number is guessed.
+  - The workspace follows Google Flights Explore: the ladder is the list on the left, the map with a
+    price chip on every destination is on the right, and a comparison tray sits at the bottom.
+  - On the phone there is a filter sheet like Airbnb's and a comparison line by line: what the grant
+    covers, what it leaves out, the dates, the requirements and the sources.
+- **Honest details from the corpus.**
+  - TU Delft fits the budget, but its IELTS Writing minimum (6.5) is above the profile's 6.0.
+  - Tokyo's MEXT grant page says "Housing is not provided".
+  - UBC is cut off at $12 000 on the scale, and the scale says so.
+- **Who it serves best.** Parents: the answer they need comes first.
+- **Risk.** A money-first screen can make a student drop ambitious options too early, so "above
+  budget" stays visible and is never hidden. The ladder works for a dozen programmes; with 30 or
+  more it needs grouping.
+
+### P · Разбор — decide on one programme at a time
+
+![Concept P](concepts/concept-P.webp)
+
+- **Idea.** Once the shortlist is ready, the student goes through it one card at a time and picks
+  one of three decisions: "Не моё", "Подумаю" or "Оставить".
+  - On the phone this is a card stack over a night globe.
+  - On desktop it is a triage queue in the manner of Linear, with keys 1, 2 and 3.
+  - The result is "Мой список", grouped by decision, with the removed programmes one tap away and
+    "Дальше: план" as the next step.
+  - The landing page is dark, with a glowing globe (GitHub or Stripe style) and the Groningen card
+    in front of it.
+- **Who it serves best.** The 16-year-old: it has the most engagement of the three and turns a table
+  into a series of small decisions.
+- **Risk.**
+  - Card swiping can read as a dating app. Decisions must stay reversible, and the copy stays calm.
+  - A dark landing page next to a light app is two themes to maintain.
+  - Parents may not like "decide card by card".
+
+### Adversarial review (loop report)
+
+The same Definition of Done and the same six personas as round 4 (§11). One rule was added from
+round 4: every headline gets a no-break space before its dash.
+
+**Cycle 1** found 14 defects. Scores (mean of the six personas): N 7.0 · O 6.3 · P 6.0.
+
+| # | Defect | Root cause | Fix |
+|---|---|---|---|
+| N1 | Arcs to destinations behind the globe ran through empty space above the headline | Arc drawing dropped only the far-side points, not hidden destinations | A hidden destination gets an edge chip ("на обороте") and no arc |
+| N2 | In the workspace, the Лёвен label and the Toronto chip were clipped at the pane's edge | Labels anchored on their right side near the left edge | Anchored on the left, in free space |
+| N3 | On the programme page, the Groningen label was cut at the screen edge and "на грант · 1 фев" broke mid-phrase | The globe was framed on the arc's ends with no margin; too much text in a tile | A smaller globe radius; shorter tile text |
+| O1 | Prices showed as "$1848" without a space | The narrow no-break space is missing from the Unbounded font | A regular no-break space |
+| O2 | The headline broke with a lone dash | Automatic wrapping, the same cause as M1 in round 4 | A no-break space before the dash, now a rule |
+| O3 | "цена не опубликована" ran out of the card in the workspace and on the phone | The value column was sized for prices | A wider column for unknowns; "нет цены" in narrow layouts |
+| O4 | On the phone, the slider and the budget line disagreed | Two controls for one value, on different scales | The yellow marker on the ladder is the only control |
+| O5 | In the workspace, the price histogram was ordered by programme, not by price, so a price slider under it misled | The Airbnb pattern was copied without its axis | The ladder itself became the list |
+| O6 | The budget marker collided with the card heading | Not enough room above the ladder | More room above the ladder |
+| P1 | The headline broke with a lone dash | As O2 | As O2 |
+| P2 | Name and price ran together on the landing card ("Groningen$1 848") | No gap in the flex row | A gap and `nowrap` on the price |
+| P3 | "Не моё" wrapped onto two lines | Key hints in a narrow card | Key hints only in the workspace and under the landing CTA |
+| P4 | The list thumbnails (cropped globes) looked like broken images | A crop around one city has no context | Country-code tiles (NL, JP, CA, SG) |
+| P5 | Dead zones in the workspace centre, the phone list and the landing page | The layout was built for the card only | A money split with the dates, "next in queue", and a "Дальше: план" card |
+
+**Cycle 2** re-rendered all 12 boards and found these defects:
+
+- P's landing text still sat high, with an empty lower third. It is now centred.
+- O said "3 без цены", which is wrong for Vienna, whose price is incomplete, not missing. It now
+  says "3 без полной цены".
+- The phone summary said the universities "did not publish" a full price. For NUS we simply have no
+  data. It now says "У трёх полной цены нет — мы её не угадываем".
+- The budget marker was a 28 px target on the phone. It now has a 44 px hit area.
+- A decorative arrow was set at 10 px. It is now 12 px.
+
+After cycle 2:
+
+- no text below 11 px
+- every text colour pair measured at 4.7:1 or more (the lowest is the green status label on its
+  tint), including the dark theme (8.37:1 for the body text)
+- the scan for "вероятн…", "шанс…" or a percentage next to a result finds only the two promises
+  "Без «шансов в %»" and "Мы не ставим «шансы»"
+
+Scores after cycle 2:
+
+| Persona | N | O | P |
+|---|---|---|---|
+| Student, 16 | 8 | 6 | 9 |
+| Parent | 8 | 9 | 6 |
+| School counsellor | 7 | 8 | 7 |
+| Designer | 8 | 7 | 8 |
+| Invariants and accessibility auditor | 8 | 9 | 7 |
+| Sceptical competitor | 7 | 7 | 6 |
+| **Mean** | **7.7** | **7.7** | **7.2** |
+
+**Remaining risks:**
+
+- N and O tie. N wins with students and designers, O with parents and auditors. P is the most
+  engaging for students and the weakest with parents.
+- These are static mock-ups, not yet tested with students.
+- Contrast was computed from the token values, not measured on rendered pages.
+- Label placement on the globe was done by hand.
+
+## 14. Next step
+
+The owner picks N, O or P, or a mix. The review suggests:
+
+- **N as the base**: K and M together, which is what the owner liked
+- **O's ladder** as the budget filter and the comparison screen
+- **P's triage** as the way to finish the shortlist on the phone
+- the light theme everywhere; P's dark landing only if the owner likes it
 
 After the choice:
 
