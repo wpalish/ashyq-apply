@@ -52,6 +52,10 @@ USER_AGENT = (
     "university admissions research for a single applicant; contact: set FETCH_CONTACT)"
 )
 DEFAULT_TIMEOUT = 20.0
+#: The longest robots.txt Crawl-delay this crawler will honour by waiting. A
+#: longer one is honoured by not reading the host at all: waiting it out made
+#: a single university's run hang until its wall clock ended.
+MAX_CRAWL_DELAY_SECONDS = 10.0
 DEFAULT_DELAY_SECONDS = 1.5
 MAX_PER_HOST_CONCURRENCY = 2
 MAX_ATTEMPTS = 3
@@ -807,6 +811,22 @@ class Fetcher:
                 log.warning("robots.txt disallows %s", url)
                 self.stats[FetchOutcome.ROBOTS_DISALLOWED.value] += 1
                 return FetchResult(url=url, outcome=FetchOutcome.ROBOTS_DISALLOWED, error=reason)
+
+            asked = await self.robots.crawl_delay(url)
+            if asked is not None and asked > MAX_CRAWL_DELAY_SECONDS:
+                # The site's own request is honoured by not reading it, never by
+                # reading it faster: waiting that long per request is a hang.
+                # Aalto stalled a whole run here, 2 requests in 90 s.
+                log.warning("robots.txt crawl-delay %.0fs for %s: not read", asked, host)
+                self.stats[FetchOutcome.ROBOTS_DISALLOWED.value] += 1
+                return FetchResult(
+                    url=url,
+                    outcome=FetchOutcome.ROBOTS_DISALLOWED,
+                    error=(
+                        f"robots.txt asks for a {asked:.0f}s crawl delay; this run waits at most "
+                        f"{MAX_CRAWL_DELAY_SECONDS:.0f}s between requests, so the page was not read"
+                    ),
+                )
 
             for attempt in range(1, MAX_ATTEMPTS + 1):
                 await self._space_requests(host, url)

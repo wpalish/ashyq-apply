@@ -420,3 +420,35 @@ class TestHopStreamHygiene:
         assert result.outcome is FetchOutcome.OK  # the chain itself still completes
         assert hop_stream.closed is True
         assert final_stream.closed is True
+
+
+async def test_a_crawl_delay_too_long_to_wait_is_honoured_by_not_reading(tmp_path, monkeypatch):
+    """Run 18: Aalto stalled its whole budget after two requests. A crawl
+    delay longer than the run will wait is refused at once — never waited out,
+    never ignored by reading faster."""
+    slept: list[float] = []
+
+    async def fake_sleep(seconds):
+        slept.append(seconds)
+
+    monkeypatch.setattr(asyncio, "sleep", fake_sleep)
+    monkeypatch.setattr("app.adapters.fetching.check_url", allow_all)
+    page_requests = 0
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        nonlocal page_requests
+        if request.url.path == "/robots.txt":
+            return httpx.Response(200, text="User-agent: *\nCrawl-delay: 120\nAllow: /\n")
+        page_requests += 1
+        return httpx.Response(200, headers={"content-type": "text/html"}, text="<html>p</html>")
+
+    async with Fetcher(tmp_path / "c", delay_seconds=0.0, respect_robots=True) as fetcher:
+        fetcher._client = httpx.AsyncClient(
+            transport=httpx.MockTransport(handler), follow_redirects=False
+        )
+        result = await fetcher.get("https://slow.example.com/page")
+
+    assert result.outcome is FetchOutcome.ROBOTS_DISALLOWED
+    assert "120s crawl delay" in (result.error or "")
+    assert page_requests == 0
+    assert slept == []
