@@ -1,12 +1,12 @@
-# Redesign concepts — round 1 (2026-09-23)
+# Redesign concepts — rounds 1 and 2 (2026-09-23)
 
 The owner asked for a redesign at the level of the product itself: the current UI is "not serious enough",
 overloads an ordinary school student with information, and does not hook. The agreed process is
 **concepts first, then develop the chosen one into a design system and apply it**. This file is the
-record of round 1: what is wrong today, what every concept keeps, the references, and four
-directions to choose from.
+record of the rounds: what is wrong today, what every concept keeps, the references, the four
+round-1 directions, the owner's feedback and three round-2 evolutions of A.
 
-- Live canvas with all 16 artboards (private to the owner until shared):
+- Live canvas with all 31 artboards (private to the owner until shared):
   https://claude.ai/artifact/Ncsd2YkQMcV9oCG3bHrBsa
 - Nothing in `frontend/` changes in this round. PR #10 (tokenised profile workflow) and PR #19
   ("Open Path" visual refinement) are untouched; whichever concept wins decides what happens to them.
@@ -153,18 +153,75 @@ own text. Where the corpus has no complete price (Vienna, NUS, Toronto) the artb
   privacy table in `SPEC_matching_v2.md` §6.4 limits what may reach an LLM. Deadlines and documents still
   need structured screens, so D is a front door, not the whole app.
 
-## 5. Recommendation and next step
+## 5. Round 1 recommendation (superseded by the owner's feedback)
 
-Recommendation for the owner's decision: **B's visual language (the dossier, the cost ledger, the
-citation) in a light and a dark theme, with A's one-question-at-a-time profile**. B answers "serious"
-and makes the product's real advantage visible; A's onboarding answers "an ordinary student must manage
-it"; together they avoid D's engineering cost and C's approval-stamp risk. C and D both have elements
-worth keeping if the owner prefers them (C's stamps as a share card, D's answer box on the landing page).
+Before the owner's feedback the recommendation was B's visual language with A's one-question profile.
+The owner's feedback below replaced it.
 
-After the owner chooses:
+## 6. Owner feedback on round 1 (2026-09-23)
 
-1. Round 2 on the canvas: the chosen direction across the real flow (landing, sign-in, profile
-   questions, research progress, shortlist, programme, plan, documents), light and dark, 390 and 1440.
+- **A is the favourite, but not perfect yet.**
+- **B:** the desktop shortlist workspace (list on the left, programme on the right) is good.
+- **C:** the passport idea is fun, but the owner is not sure about it.
+- **D:** the chat idea is fun, but people may take the product for a "GPT wrapper" and underrate it.
+  The minimalist look is liked.
+- Also: the canvas does not open on the owner's phone. Previews are sent as images in the chat, and
+  every future round is delivered that way too.
+
+## 7. Round 2 — three evolutions of A
+
+Every round-2 concept keeps A's flow: one question per screen, a big card per programme, and
+"Не моё / Подумаю / Оставить". Every one takes B's list-plus-detail workspace for the desktop shortlist.
+None uses chat as the front door. They differ in how far they move A towards "serious".
+
+### E · Ясно — A + D's minimalism
+
+![Concept E](concepts/concept-E.webp)
+
+- **Idea.** A with the noise removed. There is no mascot face; the coach is one line of text. A
+  programme is three typographic lines (*Подать / Профиль / Платить*), and the key figure carries a
+  yellow highlighter, taken from A's sun and D's marker.
+- **Type.** Jost 400–500 for headings and figures, Manrope 500–800 for text.
+- **Colour.** Paper `#FBFAF6`, ink `#121417` (primary buttons), sun `#FFC23D`, marker `#FFD567`,
+  hairlines `#ECEAE3`. Statuses as in A.
+- **Risk.** It is the calmest of the three and the least memorable. The brand has to come from
+  copy and the marker.
+
+### F · Графит — A + B's seriousness
+
+![Concept F](concepts/concept-F.webp)
+
+- **Idea.** A at night. It keeps A's type, rounded cards, path rail and coach, on graphite. The sun
+  becomes the only bright colour: the primary button and "now". B's cost ledger is kept.
+- **Type.** Unbounded 500 + Manrope.
+- **Colour.** Graphite `#0E1116` / `#161A21`, text `#F2F3F5`, sun `#FFC23D`, sky link `#7CC7F5`,
+  mint `#45D48A`, orange wait `#FF9A52`, lilac ambitious `#B69CFF`.
+- **Risk.** A dark default is unusual for a school audience and for printing. It needs a light twin,
+  which could simply be E.
+
+### G · Ашық — A + an identity of its own
+
+![Concept G](concepts/concept-G.webp)
+
+- **Idea.** Instead of C's passport, a simpler owned symbol: **the arch-door**, because *ashyq* means
+  "open". Every university sits in its own arch with sky, sun and a flat city skyline. Profile score
+  cards and status tiles repeat the arch. A shareable arch card, "Путь Аружан", replaces the passport as
+  the social object.
+- **Type.** Unbounded 600–700 + Manrope.
+- **Colour.** Warm white `#FBF7EF`, night `#13233F`, sky `#1C9BD6` (dark text only), sun `#FFC23D`.
+  Statuses as in A.
+- **Risk.** It is the loudest of the three and needs illustration discipline: flat shapes only, no
+  landmark clichés. The sky-and-sun palette echoes the national flag, which is a plus for a Kazakh
+  audience but must stay a nod, not a flag.
+
+## 8. Next step
+
+The owner picks among A, E, F and G, or a mix (for example E as the light theme and F as the dark
+one). Then:
+
+1. Round 3 on the canvas: the chosen direction across the real flow (landing, sign-in, profile
+   questions, research progress, shortlist, programme, plan, documents), light and dark, 390 and 1440,
+   delivered as phone images in the chat.
 2. Tokens in `frontend/src/styles/tokens.css` (primitives → semantic → component), with the status
    vocabulary above in `i18n.ts`.
 3. Apply screen by screen behind the existing tests, starting with the shortlist, which is where the
