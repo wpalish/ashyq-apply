@@ -763,3 +763,18 @@ def _program_link_count(soup: BeautifulSoup | None) -> int:
             r"/(bsc|msc|ba|ma|bachelor|master|programme|program|course)s?/", a.get("href", ""), re.I
         )
     )
+
+
+def full_degree_titles(text: str) -> list[str]:
+    """Every degree a text names in full, with its subject, in order.
+
+    "The Bachelor of Engineering in Computer Science covers …" yields
+    "Bachelor of Engineering in Computer Science". Public for the one caller
+    that may use a listing page's named programmes as evidence of existence.
+    """
+    return [m.group(0).strip() for m in _FULL_DEGREE_TITLE.finditer(text or "")]
+
+
+def degree_level_of(text: str) -> str | None:
+    """The degree a text names first; see ``_degree_level``."""
+    return _degree_level(text or "")

@@ -28,10 +28,17 @@ from app.adapters.extraction import (
     readable_text,
 )
 from app.adapters.fetching import Fetcher
-from app.adapters.matching import program_matches
-from app.adapters.page_classifier import PageType, classify_page
+from app.adapters.matching import degree_matches, program_matches
+from app.adapters.page_classifier import (
+    PageType,
+    classify_page,
+    degree_level_of,
+    full_degree_titles,
+)
 from app.adapters.scope_reader import read_scope
+from app.adapters.search.ontology import titles_name_same_programme
 from app.domain.enums import ClaimType, FetchOutcome, SourceSpecificity
+from app.domain.programme_identity import Verdict
 
 #: An intake is open only when a page says so. Each pattern must capture the
 #: sentence it matched, which becomes the claim's excerpt.
@@ -160,25 +167,6 @@ class WebRequirementsAdapter:
             page = classify_page(url=target.url, html="" if res.is_pdf else res.text, text=text)
             out.page_types.append((target.url, page.page_type.value))
 
-            if not page.accepts("requirements"):
-                out.errors.append(
-                    f"{target.url}: classified as {page.page_type.value}; no requirement can be "
-                    "read from this kind of page."
-                )
-                out.page_outcomes.append(
-                    PageOutcome(
-                        url=target.url,
-                        category="classifier-rejected",
-                        page_type=page.page_type.value,
-                        readable_chars=len(text),
-                        detail=(
-                            f"classified as {page.page_type.value}; no requirement can be "
-                            "read from this kind of page."
-                        ),
-                    )
-                )
-                continue
-
             page_title = html_title(res.text) if not res.is_pdf else target.url.rsplit("/", 1)[-1]
             builder = ClaimBuilder(
                 source_url=target.url,
@@ -201,6 +189,39 @@ class WebRequirementsAdapter:
                 # is the whole of the wrong-scope failure.
                 scope=read_scope(text, title=page_title),
             )
+
+            if not page.accepts("requirements"):
+                if page.page_type in _LISTING_PAGE_TYPES and self._claim_listed_programme(
+                    program, builder, text
+                ):
+                    out.claims.extend(builder.claims)
+                    out.page_outcomes.append(
+                        PageOutcome(
+                            url=target.url,
+                            category="fetched-ok",
+                            page_type=page.page_type.value,
+                            readable_chars=len(text),
+                            detail="listing page: only the programme's existence was read",
+                        )
+                    )
+                    continue
+                out.errors.append(
+                    f"{target.url}: classified as {page.page_type.value}; no requirement can be "
+                    "read from this kind of page."
+                )
+                out.page_outcomes.append(
+                    PageOutcome(
+                        url=target.url,
+                        category="classifier-rejected",
+                        page_type=page.page_type.value,
+                        readable_chars=len(text),
+                        detail=(
+                            f"classified as {page.page_type.value}; no requirement can be "
+                            "read from this kind of page."
+                        ),
+                    )
+                )
+                continue
 
             self._claim_program_exists(page, program, builder, out, text)
             if page.accepts("requirements"):
@@ -238,6 +259,10 @@ class WebRequirementsAdapter:
     def _claim_program_exists(self, page, program, builder, out, text: str) -> None:
         """Only a programme page whose own subject matches may confirm existence."""
         if not page.accepts("program_exists"):
+            if page.page_type in _LISTING_PAGE_TYPES and self._claim_listed_programme(
+                program, builder, text
+            ):
+                return
             out.errors.append(
                 f"{builder.meta['source_url']}: {page.page_type.value} pages cannot confirm that "
                 f"{program.name!r} exists."
@@ -270,6 +295,33 @@ class WebRequirementsAdapter:
             confidence=0.9,
             section="Programme identity",
         )
+
+    @staticmethod
+    def _claim_listed_programme(program, builder, text: str) -> bool:
+        """Confirm existence from a listing page, or do nothing.
+
+        Owner decision 2026-09-23: a school or listing page may confirm
+        **existence only**, and only by naming the requested programme by a
+        full degree title the ontology's strong aliases equate with it. HKU's
+        certified source is exactly such a page. Nothing else is read from it.
+        """
+        listed = _listed_programme(text, program)
+        if listed is None:
+            return False
+        title, degree = listed
+        builder.add(
+            ClaimType.PROGRAM_EXISTS,
+            {
+                "program": title,
+                "degree": degree,
+                "language": None,
+                "matched_because": "named by its full degree title on a listing page",
+            },
+            _first_sentence_containing(text, title) or title,
+            confidence=0.7,
+            section="Programme identity",
+        )
+        return True
 
     def _claim_intake_state(self, page, text: str, intake: str, builder, out) -> None:
         """Open, closed, or no claim at all. Silence is never 'open'."""
@@ -395,6 +447,28 @@ class WebRequirementsAdapter:
 def _target_year(intake: str) -> int | None:
     match = re.search(r"\b(20\d{2})\b", intake or "")
     return int(match.group(1)) if match else None
+
+
+#: Pages that list programmes rather than describe one. Only these may name a
+#: programme into existence, and only by its full degree title.
+_LISTING_PAGE_TYPES = frozenset({PageType.PROGRAM_CATALOG, PageType.UNKNOWN})
+
+
+def _listed_programme(text: str, program) -> tuple[str, str | None] | None:
+    """The first full degree title on a listing page that names the requested
+    programme, and its degree — or ``None``.
+
+    Strict on both counts: the ontology must say YES (a strong alias, never a
+    related field), and a stated degree level must be the requested one.
+    """
+    for title in full_degree_titles(text):
+        if titles_name_same_programme(title, program.name) is not Verdict.YES:
+            continue
+        degree = degree_level_of(title)
+        if degree_matches(program.degree, degree) is False:
+            continue
+        return title, degree
+    return None
 
 
 def _first_sentence_containing(text: str, needle: str | None) -> str:
