@@ -898,6 +898,15 @@ failures). 8/10 complete: UBC (funding stage) and HKU (scholarship pagination, z
 ran out of wall clock. Open: Groningen deadline scope mismatch (label non-EU/EEA; the live page now lists
 01 May for every population — the page may have changed since certification; labels are not ours to edit).
 
+**Run 26 (35913127890, `d7a20e8`): claim_recall 3/62 (strict 1/62), precision 4/5.** HKU now completes
+(translated-copy skip); KAIST files 4 claims (0 before). But Groningen ran out of wall clock at t=90 s
+on the same ~97 reads that finished inside the clock in runs 23–25, and its 5 claims went with it — the
+drop from 5/62 is that case, not a regression in extraction. Groningen spends ~50 reads before search on
+faculty home pages (`/cf`, `/feb`, `/gmw`, `/let`, `/museum`) from the navigation fallback. Moving search
+earlier is the obvious lever and is **not** taken: `_add_search_results` records that interleaving was
+measured and cost whole cases. Options for the owner: a larger per-case wall clock for the benchmark
+(production has no 90 s cap of this shape), or a measured experiment with search-before-navigation.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
