@@ -60,10 +60,16 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**Catalogue walker: footer links are not leads (`35bf92a`).** Siblings are grouped by host and parent path,
+so a site root is in no list. A link with no programme signal that leaves the catalogue's own host is
+recorded as `walker_no_signal` and not read. The T29 contract (a signal-less lead on the catalogue's
+own site is read and classified) is kept; its R2 and R8 tests caught my first, broader version and
+are unchanged. Warsaw's pre-search reads are on its own host (cookie-statement, research,
+governance), so this does not reach them; that needs a contract decision.
+
 **Run 18 (35855377260) named the pages.** **Aalto:** `get #1` is `https://www.aalto.fi/robots.txt` at
 t=2 s, then nothing until 90 s. The fetcher waited out a robots.txt Crawl-delay with no cap, which
-fits these symptoms. Aalto's actual delay value is not yet confirmed; run 19 logs it. Fixed (next
-commit): a delay over 10 s is refused at once (ROBOTS_DISALLOWED with the delay named), never waited
+fits these symptoms. Aalto's actual delay value is not yet confirmed; run 19 logs it. Fixed (`7ee02a7`): a delay over 10 s is refused at once (ROBOTS_DISALLOWED with the delay named), never waited
 out and never ignored. **Vienna, Warsaw:** before search, discovery reads a university homepage's
 service links (moodle, wiki, blog, webmail, cookie-statement, library, governance). Most are cached
 (0.0 s) but each costs a page of budget. That is the next fix: the pre-search walk should not follow
