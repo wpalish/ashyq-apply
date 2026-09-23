@@ -60,6 +60,17 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**V2-32: tuition per fee population (`4163cf2`).** `extract_costs` took the first tuition figure, and
+European fee pages list the statutory EU/EEA fee beside a far higher non-EU/EEA fee, so an
+international applicant could be shown the lower one and a funding gap several times too small. A
+tuition table naming at least two populations now yields one claim per row (`subject_key` and scope
+population). `web_costs` records tuition as the highest row, with `range_low`/`range_high` holding
+the published rows and `is_range` set. `domain/costs` already sums ranges and the funding gap already
+reports `gap_low`/`gap_high`, so the range reaches the applicant without new arithmetic. The
+population is still never inferred. Two currencies are not ranged (converting to compare is a
+judgement the adapter does not make). A single fee, or one row, keeps the old reading. The golden demo
+is unchanged.
+
 **Run 13 (35836097167, head `c990519`): the regression is gone, and question 5 has numbers.**
 - HKU's false programme claim is gone (0 claims), and wrong_scope is 1/6. Groningen ran out of wall
   clock this time (86 fetches, 0 claims) after yielding 2 claims in run 12: live discovery varies from
