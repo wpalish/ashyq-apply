@@ -113,7 +113,7 @@
 .uni-cell__meta { font-size: var(--font-size-xs); color: var(--color-text-muted); }
 .uni-cell__prog { font-size: var(--font-size-xs); color: var(--color-text-muted); }
 
-.num { font-family: var(--font-family-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.num { font-family: var(--font-family-data); font-variant-numeric: tabular-nums; white-space: nowrap; }
 
 .decision-group { display: inline-flex; gap: var(--space-0-5); }
 .shortlist-table .decision-group { display: flex; width: 100%; }
@@ -180,10 +180,10 @@
 .claim--conflict { border-left-color: var(--color-danger); }
 .claim--unverified { border-left-color: var(--color-neutral); }
 .claim__head { display: flex; gap: var(--space-2); align-items: baseline; flex-wrap: wrap; }
-.claim__type { font-family: var(--font-family-mono); font-size: var(--font-size-xs); color: var(--color-text-muted); }
+.claim__type { font-family: var(--font-family-data); font-size: var(--font-size-xs); color: var(--color-text-muted); }
 .claim__value { font-weight: var(--font-weight-semibold); }
 .claim__excerpt {
-  font-family: var(--font-family-mono);
+  font-family: var(--font-family-ui);
   font-size: var(--font-size-xs);
   line-height: var(--line-height-compact);
   color: var(--color-text-muted);
@@ -366,7 +366,7 @@
   padding: var(--space-3) 0;
   border-bottom: var(--border-width-hairline) solid var(--color-border);
 }
-.timeline__date { font-family: var(--font-family-mono); font-size: var(--font-size-xs); color: var(--color-text-muted); padding-top: 2px; }
+.timeline__date { font-family: var(--font-family-data); font-variant-numeric: tabular-nums; font-size: var(--font-size-xs); color: var(--color-text-muted); padding-top: var(--space-0-5); }
 .timeline__item--past .timeline__date { color: var(--color-danger); }
 
 /* --- funding comparison bars --------------------------------------------- */

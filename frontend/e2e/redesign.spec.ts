@@ -102,6 +102,24 @@ test.beforeEach(async ({ page }) => {
   });
 });
 
+test('design catalogue uses the refreshed type and color system in both themes', async ({ page }, info) => {
+  await page.emulateMedia({ reducedMotion: 'reduce', colorScheme: 'light' });
+  await page.goto('/design-system.html');
+  await page.evaluate(() => document.fonts.ready);
+  await expect(page.getByRole('heading', { level: 1 })).toHaveCSS('font-family', /Onest/);
+  for (const theme of ['light', 'dark'] as const) {
+    if (theme === 'dark') await page.getByRole('button', { name: 'Включить тёмную тему' }).click();
+    await expect(page.locator('html')).toHaveAttribute('data-theme', theme);
+    await page.evaluate(async () => {
+      await new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+      await Promise.all(document.getAnimations().filter(animation => animation.effect?.getTiming().iterations !== Infinity).map(animation => animation.finished.catch(() => {})));
+    });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    expect((await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze()).violations).toEqual([]);
+    await page.screenshot({ path: info.outputPath(`design-catalogue-${theme}.png`), fullPage: true });
+  }
+});
+
 for (const theme of ['light', 'dark'] as const) {
   test(`case dashboard: ${theme}, navigation, accessibility and layout`, async ({ page }, info) => {
     await page.emulateMedia({ colorScheme: theme, reducedMotion: 'reduce' });
@@ -109,8 +127,8 @@ for (const theme of ['light', 'dark'] as const) {
     await expect(page).toHaveURL(/#\/case$/);
     await expect(page.getByRole('heading', { level: 1 })).toContainText('Большой путь');
     await page.evaluate(() => document.fonts.ready);
-    await expect(page.getByRole('heading', { level: 1 })).toHaveCSS('font-family', /Prata/);
-    await expect(page.getByRole('heading', { level: 1 })).toHaveCSS('font-weight', '400');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveCSS('font-family', /Onest/);
+    await expect(page.getByRole('heading', { level: 1 })).toHaveCSS('font-weight', '600');
     await expect(page.locator('body')).toHaveCSS('font-family', /Onest/);
     await expect(page.getByTestId('section-shortlist')).toBeDisabled();
     await expect(page.getByTestId('section-plan')).toBeDisabled();

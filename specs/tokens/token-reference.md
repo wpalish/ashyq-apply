@@ -13,52 +13,53 @@
 | `--ds-color-brand-scholar-teal` | `#437a78` | — | Exact brandbook v1.1 primitive. Keep the value exact; components consume its semantic Layer 2 alias. |
 | `--ds-color-brand-parchment-gold` | `#c5a66b` | — | Exact brandbook v1.1 primitive. Keep the value exact; components consume its semantic Layer 2 alias. |
 | `--ds-color-brand-deadline-coral` | `#e47a6a` | — | Exact brandbook v1.1 primitive. Keep the value exact; components consume its semantic Layer 2 alias. |
-| `--ds-color-paper` | `var(--ds-color-brand-paper)` | `#0b1220` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
-| `--ds-color-surface` | `#fffcf6` | `var(--ds-color-brand-ink)` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
-| `--ds-color-surface-sunken` | `#efe9de` | `#080e19` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
-| `--ds-color-surface-raised` | `#ffffff` | `#1b2535` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
-| `--ds-color-surface-inverse` | `var(--ds-color-brand-ink)` | `var(--ds-color-brand-paper)` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
-| `--ds-color-ink` | `var(--ds-color-brand-ink)` | `var(--ds-color-brand-paper)` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
-| `--ds-color-ink-muted` | `#5d6470` | `#c4cbd6` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
-| `--ds-color-ink-subtle` | `#636b77` | `#aeb7c5` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
-| `--ds-color-ink-inverse` | `var(--ds-color-brand-paper)` | `var(--ds-color-brand-ink)` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
-| `--ds-color-rule` | `#ded6c8` | `#2e3a4d` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
-| `--ds-color-rule-strong` | `#c7bdae` | `#46566d` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
-| `--ds-color-accent` | `var(--ds-color-brand-academic-blue)` | `#9cb2e1` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
-| `--ds-color-accent-hover` | `#3f5885` | `#b9c8e8` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
-| `--ds-color-accent-soft` | `#e8ecf5` | `#1e2c46` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
-| `--ds-color-accent-border` | `#aab8d9` | `var(--ds-color-brand-academic-blue)` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
-| `--ds-color-success` | `#376b69` | `#8fc7c4` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
-| `--ds-color-success-soft` | `#e5efec` | `#173331` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
+| `--ds-color-paper` | `#f4f5f3` | `#202b35` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
+| `--ds-color-surface` | `#ffffff` | `#293745` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
+| `--ds-color-surface-sunken` | `#eef1f0` | `#24333f` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
+| `--ds-color-surface-raised` | `#ffffff` | `#344859` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
+| `--ds-color-surface-inverse` | `#344859` | `#e9eef0` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
+| `--ds-color-ink` | `#243044` | `#e9eef0` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
+| `--ds-color-ink-muted` | `#526173` | `#b6c4cc` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
+| `--ds-color-ink-subtle` | `#526173` | `#b6c4cc` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
+| `--ds-color-ink-inverse` | `#f2f5f6` | `#243044` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
+| `--ds-color-rule` | `#dce3e6` | `#4b5c69` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
+| `--ds-color-rule-strong` | `#aab9c2` | `#738694` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
+| `--ds-color-accent` | `#3c5985` | `#b0c7eb` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
+| `--ds-color-accent-hover` | `#304b72` | `#c5d5ed` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
+| `--ds-color-accent-soft` | `#e8eef5` | `#344863` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
+| `--ds-color-accent-border` | `#aab9c2` | `#738694` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
+| `--ds-color-success` | `#2c6664` | `#92c9bd` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
+| `--ds-color-success-soft` | `#e5efec` | `#25433f` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
 | `--ds-color-success-border` | `var(--ds-color-brand-scholar-teal)` | `var(--ds-color-brand-scholar-teal)` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
-| `--ds-color-info` | `#4b6599` | `#9cb2e1` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
-| `--ds-color-info-soft` | `#e8ecf5` | `#1e2c46` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
-| `--ds-color-info-border` | `#aab8d9` | `var(--ds-color-brand-academic-blue)` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
+| `--ds-color-info` | `#3c5985` | `#b0c7eb` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
+| `--ds-color-info-soft` | `#e8eef5` | `#344863` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
+| `--ds-color-info-border` | `#aab9c2` | `#738694` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
 | `--ds-color-warning` | `#725a2a` | `#e1c88f` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
 | `--ds-color-warning-soft` | `#f4ebd7` | `#372f20` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
 | `--ds-color-warning-border` | `var(--ds-color-brand-parchment-gold)` | `var(--ds-color-brand-parchment-gold)` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
-| `--ds-color-danger` | `var(--ds-color-brand-library-burgundy)` | `#f0b5bd` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
-| `--ds-color-danger-soft` | `#f4e6e8` | `#3d242b` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
+| `--ds-color-danger` | `#7a3743` | `#e1a9b3` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
+| `--ds-color-danger-soft` | `#f4e8e9` | `#4c303a` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
 | `--ds-color-danger-border` | `#c8919a` | `var(--ds-color-brand-library-burgundy)` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
-| `--ds-color-deadline` | `#8b4338` | `#f2a79d` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
-| `--ds-color-deadline-soft` | `#f8e4df` | `#402722` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
+| `--ds-color-deadline` | `#aa4539` | `#f0a397` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
+| `--ds-color-deadline-soft` | `#fbece8` | `#52332f` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
 | `--ds-color-deadline-border` | `var(--ds-color-brand-deadline-coral)` | `var(--ds-color-brand-deadline-coral)` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
-| `--ds-color-neutral` | `#5f6673` | `#c5cbd5` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
-| `--ds-color-neutral-soft` | `#ebe8e2` | `#273142` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
-| `--ds-color-neutral-border` | `#c9c4ba` | `#475569` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
+| `--ds-color-neutral` | `#465164` | `#c4ced8` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
+| `--ds-color-neutral-soft` | `#edf0f3` | `#344050` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
+| `--ds-color-neutral-border` | `#aab9c2` | `#738694` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
 | `--ds-color-demo` | `var(--ds-color-brand-library-burgundy)` | `#d7a7b0` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
 | `--ds-color-demo-soft` | `#f4e6e8` | `#3b2530` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
 | `--ds-color-demo-border` | `#c8919a` | `var(--ds-color-brand-library-burgundy)` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
 | `--ds-color-overlay` | `rgb(0 0 0 / 60%)` | — | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
 | `--ds-color-white` | `oklch(99% 0 0)` | — | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
-| `--ds-color-on-accent` | `#ffffff` | `var(--ds-color-brand-ink)` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
+| `--ds-color-on-accent` | `#ffffff` | `#202b35` | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
 | `--ds-color-transparent` | `transparent` | — | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
 | `--ds-color-inherit` | `inherit` | — | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
 | `--ds-font-family-brand` | `'Onest', system-ui, sans-serif` | — | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
-| `--ds-font-family-display` | `'Prata', Georgia, serif` | — | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
-| `--ds-font-weight-display` | `400` | — | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
+| `--ds-font-family-display` | `'Onest', system-ui, sans-serif` | — | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
+| `--ds-font-weight-display` | `600` | — | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
 | `--ds-font-family-ui` | `'Onest', system-ui, -apple-system, 'Segoe UI', sans-serif` | — | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
 | `--ds-font-family-mono` | `'IBM Plex Mono', 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace` | — | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
+| `--ds-font-family-data` | `'Onest', system-ui, sans-serif` | — | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
 | `--ds-font-size-2xs` | `0.75rem` | — | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
 | `--ds-font-size-micro` | `0.75rem` | — | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
 | `--ds-font-size-xs` | `0.875rem` | — | Upstream primitive. Define or theme at the design-system boundary; never reference directly from component CSS. |
@@ -207,42 +208,42 @@
 | `--color-brand-scholar-teal` | `var(--ds-color-brand-scholar-teal, #437a78)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
 | `--color-brand-parchment-gold` | `var(--ds-color-brand-parchment-gold, #c5a66b)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
 | `--color-brand-deadline-coral` | `var(--ds-color-brand-deadline-coral, #e47a6a)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
-| `--color-background` | `var(--ds-color-paper, #f7f3ea)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
-| `--color-surface` | `var(--ds-color-surface, #fffcf6)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
-| `--color-surface-sunken` | `var(--ds-color-surface-sunken, #efe9de)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
+| `--color-background` | `var(--ds-color-paper, #f4f5f3)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
+| `--color-surface` | `var(--ds-color-surface, #ffffff)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
+| `--color-surface-sunken` | `var(--ds-color-surface-sunken, #eef1f0)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
 | `--color-surface-raised` | `var(--ds-color-surface-raised, #ffffff)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
-| `--color-surface-inverse` | `var(--ds-color-surface-inverse, #111827)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
-| `--color-text` | `var(--ds-color-ink, #111827)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
-| `--color-text-muted` | `var(--ds-color-ink-muted, #5d6470)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
-| `--color-text-subtle` | `var(--ds-color-ink-subtle, #636b77)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
-| `--color-text-inverse` | `var(--ds-color-ink-inverse, #f7f3ea)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
-| `--color-border` | `var(--ds-color-rule, #ded6c8)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
-| `--color-border-strong` | `var(--ds-color-rule-strong, #c7bdae)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
-| `--color-link` | `var(--ds-color-accent, #526da6)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
-| `--color-link-hover` | `var(--ds-color-accent-hover, #3f5885)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
-| `--color-interactive` | `var(--ds-color-accent, #526da6)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
-| `--color-interactive-hover` | `var(--ds-color-accent-hover, #3f5885)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
-| `--color-interactive-soft` | `var(--ds-color-accent-soft, #e8ecf5)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
-| `--color-interactive-border` | `var(--ds-color-accent-border, #aab8d9)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
-| `--color-focus-ring` | `var(--ds-color-accent, #526da6)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
-| `--color-success` | `var(--ds-color-success, #376b69)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
+| `--color-surface-inverse` | `var(--ds-color-surface-inverse, #344859)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
+| `--color-text` | `var(--ds-color-ink, #243044)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
+| `--color-text-muted` | `var(--ds-color-ink-muted, #526173)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
+| `--color-text-subtle` | `var(--ds-color-ink-subtle, #526173)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
+| `--color-text-inverse` | `var(--ds-color-ink-inverse, #f2f5f6)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
+| `--color-border` | `var(--ds-color-rule, #dce3e6)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
+| `--color-border-strong` | `var(--ds-color-rule-strong, #aab9c2)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
+| `--color-link` | `var(--ds-color-accent, #3c5985)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
+| `--color-link-hover` | `var(--ds-color-accent-hover, #304b72)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
+| `--color-interactive` | `var(--ds-color-accent, #3c5985)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
+| `--color-interactive-hover` | `var(--ds-color-accent-hover, #304b72)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
+| `--color-interactive-soft` | `var(--ds-color-accent-soft, #e8eef5)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
+| `--color-interactive-border` | `var(--ds-color-accent-border, #aab9c2)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
+| `--color-focus-ring` | `var(--ds-color-accent, #3c5985)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
+| `--color-success` | `var(--ds-color-success, #2c6664)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
 | `--color-success-soft` | `var(--ds-color-success-soft, #e5efec)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
 | `--color-success-border` | `var(--ds-color-success-border, #437a78)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
-| `--color-info` | `var(--ds-color-info, #4b6599)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
-| `--color-info-soft` | `var(--ds-color-info-soft, #e8ecf5)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
-| `--color-info-border` | `var(--ds-color-info-border, #aab8d9)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
+| `--color-info` | `var(--ds-color-info, #3c5985)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
+| `--color-info-soft` | `var(--ds-color-info-soft, #e8eef5)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
+| `--color-info-border` | `var(--ds-color-info-border, #aab9c2)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
 | `--color-warning` | `var(--ds-color-warning, #725a2a)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
 | `--color-warning-soft` | `var(--ds-color-warning-soft, #f4ebd7)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
 | `--color-warning-border` | `var(--ds-color-warning-border, #c5a66b)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
-| `--color-danger` | `var(--ds-color-danger, #8e3f4c)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
-| `--color-danger-soft` | `var(--ds-color-danger-soft, #f4e6e8)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
+| `--color-danger` | `var(--ds-color-danger, #7a3743)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
+| `--color-danger-soft` | `var(--ds-color-danger-soft, #f4e8e9)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
 | `--color-danger-border` | `var(--ds-color-danger-border, #c8919a)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
-| `--color-deadline` | `var(--ds-color-deadline, #8b4338)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
-| `--color-deadline-soft` | `var(--ds-color-deadline-soft, #f8e4df)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
+| `--color-deadline` | `var(--ds-color-deadline, #aa4539)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
+| `--color-deadline-soft` | `var(--ds-color-deadline-soft, #fbece8)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
 | `--color-deadline-border` | `var(--ds-color-deadline-border, #e47a6a)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
-| `--color-neutral` | `var(--ds-color-neutral, #5f6673)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
-| `--color-neutral-soft` | `var(--ds-color-neutral-soft, #ebe8e2)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
-| `--color-neutral-border` | `var(--ds-color-neutral-border, #c9c4ba)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
+| `--color-neutral` | `var(--ds-color-neutral, #465164)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
+| `--color-neutral-soft` | `var(--ds-color-neutral-soft, #edf0f3)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
+| `--color-neutral-border` | `var(--ds-color-neutral-border, #aab9c2)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
 | `--color-demo` | `var(--ds-color-demo, #8e3f4c)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
 | `--color-demo-soft` | `var(--ds-color-demo-soft, #f4e6e8)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
 | `--color-demo-border` | `var(--ds-color-demo-border, #c8919a)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
@@ -251,10 +252,11 @@
 | `--color-transparent` | `var(--ds-color-transparent, transparent)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
 | `--color-inherit` | `var(--ds-color-inherit, inherit)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
 | `--font-family-brand` | `var(--ds-font-family-brand, 'Onest', system-ui, sans-serif)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
-| `--font-family-display` | `var(--ds-font-family-display, 'Prata', Georgia, serif)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
-| `--font-weight-display` | `var(--ds-font-weight-display, 400)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
+| `--font-family-display` | `var(--ds-font-family-display, 'Onest', system-ui, sans-serif)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
+| `--font-weight-display` | `var(--ds-font-weight-display, 600)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
 | `--font-family-ui` | `var(--ds-font-family-ui, system-ui, sans-serif)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
 | `--font-family-mono` | `var(--ds-font-family-mono, ui-monospace, monospace)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
+| `--font-family-data` | `var(--ds-font-family-data, 'Onest', system-ui, sans-serif)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
 | `--font-size-2xs` | `var(--ds-font-size-2xs, 0.75rem)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
 | `--font-size-micro` | `var(--ds-font-size-micro, 0.75rem)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |
 | `--font-size-xs` | `var(--ds-font-size-xs, 0.875rem)` | Use this project-semantic alias by meaning; never reach through to a `--ds-*` primitive from component CSS. |

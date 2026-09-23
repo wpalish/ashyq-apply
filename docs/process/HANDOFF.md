@@ -8,15 +8,17 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 | | |
 |---|---|
-| Holder | **gpt-6-astra — completing verification for the E02 evidence-link row slice** |
-| Since (UTC) | 2026-09-10 10:09:09 UTC |
-| Branch | `task/frontend-redesign`, owner-directed continuation from design-system predecessor |
-| HEAD when written | `21d31c8` (clean and synchronized with `origin/task/frontend-redesign`; previous executor's WIP preserved) |
-| Origin main when checked | `b267b33`; observed after final CI, not merged into this PR branch |
+| Holder | **nobody — visual refinement WIP published for owner review** |
+| Since (UTC) | 2026-09-23 06:37 UTC |
+| Branch | `task/open-path-on-redesign`, based on `origin/task/frontend-redesign@e679432` |
+| HEAD when written | `e679432` (clean baseline; PR #10 remains untouched) |
+| Origin main when checked | `07de4d9`; PR #10 is open and conflicts with current main |
 | Previous holder | gpt-6-astra; pushed the bounded evidence-link implementation as WIP, then stopped before full verification and release |
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**Current branch only, 2026-09-23:** The owner asked to continue the ASHYQ Apply visual-design work after rejecting the contrast and some fonts. This branch refines PR #10's existing UX and three-layer token system. Softer semantic surfaces, Onest-led typography, readable data styling, 21st context, screenshots, and verification are in `docs/frontend-visual-refinement.md`. No product data, flow, or evidence-link implementation changed. Frontend gates pass; full backend pytest retains the predecessor branch's KZT extraction failure (§6/§7). Status is WIP pending visual review and integration with current main. The older E02 record below describes the predecessor branch.
 
 Published owner-requested **Draft PR #10**: https://github.com/wpalish/ashyq-apply/pull/10
 Base main; head task/frontend-redesign. Available for download/review and continued implementation,
@@ -270,7 +272,9 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-Only this block is current; every write-ahead below it is historical context.
+**Current branch next step, 2026-09-23 07:04 UTC:** owner reviews the light/dark/mobile screenshots in `docs/frontend-visual-refinement.md`. On acceptance, reconcile PR #10 with current `main` in an integration branch, resolve the existing PR conflict, rerun frontend/backend gates and fix the inherited KZT extraction failure before removing the WIP status. Do not merge this branch as green on its own. No backend changes were made here.
+
+Every write-ahead below is historical context for PR #10.
 
 Accepted 2026-09-10 10:09:09 UTC by gpt-6-astra. Complete the already-pushed evidence-link WIP at
 `21d31c8` without widening its scope:
@@ -356,6 +360,8 @@ were adapted for the new primary/context navigation but those suites were not ex
 The backend KZT failure in section 7 needs separate resolution; do not claim all gates green.
 
 ## 6. Gate status at last run (numbers, not adjectives)
+
+2026-09-23 `task/open-path-on-redesign`: token audit 5 files, 0 errors/0 warnings; typecheck and lint exit 0; 245/245 frontend unit tests pass; production build exit 0; redesign Playwright 17 passed, 1 intentional desktop skip; axe/overflow pass on case and design catalogue in both themes on desktop and mobile. `21st review` of three changed component stylesheets: 0 findings. Backend Ruff check and format pass; mypy passes 164 files. Full backend pytest/coverage: 93.80% coverage (92% required), **one failed test** `tests/test_live_extraction.py::TestKztTuitionVocabulary::test_a_tenge_fees_page_yields_a_tuition_breakdown`; no backend source/test changed on this branch. PR #10 remains open and conflicts with current `main`; no merge or deploy from this branch.
 
 2026-09-10 evidence-link WIP checkpoint (before full repository gates): frontend typecheck, lint and
 production build pass; 245/245 unit tests in 26 files pass; token audit scans 5 CSS/SCSS files with
@@ -484,6 +490,8 @@ failures. The e2e suite's crowded-default-database trap remains documented in §
 it with explicitly isolated SQLite databases rather than changing user data.
 
 ## 7. Blockers / questions for the owner
+
+2026-09-23 visual-refinement branch: the owner can review the screenshots without resolving any contract question. Integration is blocked by PR #10's current conflict with `main` and its inherited KZT extraction test failure. The failure states that a fixture page containing `Tuition fee: 2 500 000 ₸ в год` produced no tuition figure; this exact baseline was already named in the predecessor handoff. The visual branch did not edit backend files. Existing PR #10 RU screens also contain English navigation/account copy; a separate localization pass is needed before release.
 
 ### RESOLVED — I4 / T3 wording vs the approved formula (2026-09-06, owner-delegated)
 
@@ -699,3 +707,4 @@ status pushed; 215 unit/10 browser checks green; inherited integration caveats p
 | 2026-09-08 16:29 UTC | gpt-6-astra | `0468974` → `bf29056` + release handoff | First frontend redesign slice: real-state Case dashboard, five primary destinations, mobile BottomNav, translated new copy, token-only styles and browser evidence. 195 unit tests/4 isolated browser tests green; baseline KZT test still red. Next E02; no deploy or merge. |
 | 2026-09-10 03:20:01 UTC | gpt-6-astra | `d1e4fe9` → `32d6264` + merge `fc1fdc2` + release handoff | Accepted the PR #10 regression slice in `44dfa2a`, repaired Bucket/Decision geometry, BottomNav hit ownership, context navigation and AA contrast, then preserved and merged concurrent WIP `49c961b` with its long-detail/profile overflow fixes and refreshed screenshots. Frontend 232/232, ordinary E2E 77/1 skip, auth 6/6, token audit 0/0 and backend 1358 at 93.80% pass. Browser checked 412×915 and 320×720. No API/ranking/privacy/payment change; E02 remains partial. Baton released; evidence-link rows are the one current next step. |
 | 2026-09-10 04:20:57 UTC | gpt-6-astra | `3e7dc27` → in progress | Owner requested continuation. Fetched a clean synchronized branch, confirmed the real `list[Str200]`/five-link schema and accepted the bounded E02 evidence-link row slice; exact write-ahead is in §5. |
+| 2026-09-23 07:04 UTC | gpt-6-astra | `e679432` → visual-refinement WIP | Owner-directed contrast/type revision on an isolated branch from PR #10, with local 21st context and light/dark/mobile screenshots. Frontend 245/245, redesign browser 17/1 skip, token audit 0/0, build/axe green. Backend Ruff/mypy and coverage floor pass; inherited KZT extraction test fails. Baton released; owner visual review precedes integration. |

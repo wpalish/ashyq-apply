@@ -32,7 +32,6 @@ h1, h2, h3, h4 {
   line-height: var(--line-height-tight);
   letter-spacing: var(--letter-spacing-tight);
   margin: var(--space-0);
-  font-variation-settings: 'opsz' 40;
   text-wrap: balance;
 }
 
@@ -86,11 +85,20 @@ button { font: inherit; color: inherit; }
 
 .brand { display: flex; flex-direction: column; gap: var(--space-0-5); }
 .brand__mark {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-2);
   font-family: var(--font-family-brand);
   font-size: var(--font-size-brand);
   font-weight: var(--font-weight-bold);
   letter-spacing: var(--letter-spacing-display);
-  font-variation-settings: 'opsz' 90;
+}
+.brand__mark small {
+  padding-left: var(--space-2);
+  border-left: var(--border-width-hairline) solid var(--color-border-strong);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-medium);
 }
 .brand__tag {
   font-size: var(--font-size-xs);
@@ -133,7 +141,7 @@ button { font: inherit; color: inherit; }
 }
 .nav__item[disabled] { opacity: 0.42; cursor: not-allowed; }
 .nav__num {
-  font-family: var(--font-family-mono);
+  font-family: var(--font-family-data);
   font-size: var(--font-size-micro);
   color: var(--color-text-subtle);
   min-width: var(--size-badge-min);
@@ -176,7 +184,7 @@ button { font: inherit; color: inherit; }
   font-weight: var(--font-weight-semibold);
   margin-bottom: var(--space-2);
 }
-.screen__title { font-size: var(--font-size-display); font-variation-settings: 'opsz' 120; }
+.screen__title { font-size: var(--font-size-display); }
 .screen__lede {
   color: var(--color-text-muted);
   font-size: var(--font-size-md);

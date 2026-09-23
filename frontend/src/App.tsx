@@ -321,7 +321,7 @@ export default function App() {
       <a className="skip-link" href="#main-content">{copy.skip}</a>
       <aside className="sidebar">
         <div className="brand">
-          <span className="brand__mark">ASHYQ Apply</span>
+          <span className="brand__mark">ashyq <small>apply</small></span>
           <span className="brand__tag">
             {t('brand.tagline')}
           </span>

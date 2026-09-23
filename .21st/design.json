@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "project": {
+    "name": "ashyq apply",
+    "productType": "evidence-backed university and scholarship shortlist",
+    "stack": ["React", "Vite", "CSS custom properties"]
+  },
+  "sources": {
+    "tokens": ["frontend/src/styles/tokens.css"],
+    "components": ["frontend/src/styles/global.css", "frontend/src/styles/components.css", "frontend/src/styles/redesign.css"],
+    "assets": [],
+    "instructions": [
+      "AGENTS.md",
+      "CLAUDE.md"
+    ]
+  },
+  "design": {
+    "colorMode": "light and dark",
+    "colors": {
+      "lightCanvas": "#f4f5f3",
+      "lightText": "#243044",
+      "lightAction": "#3c5985",
+      "darkCanvas": "#202b35",
+      "darkText": "#e9eef0",
+      "darkAction": "#b0c7eb"
+    },
+    "typography": {"display": "Onest 600", "body": "Onest 400", "data": "Onest with tabular numerals", "code": "IBM Plex Mono"},
+    "spacing": {"base": "4px", "touchTarget": "44px"},
+    "radius": {"control": "8px", "page": "24px"},
+    "shadows": {"role": "subtle elevation only"},
+    "motion": {"role": "brief feedback; honor reduced motion"},
+    "density": "mobile-first, concise decision summary with details on demand"
+  },
+  "components": {
+    "installed": [],
+    "preferredPrimitives": [],
+    "patterns": []
+  },
+  "constraints": {
+    "must": ["show official source and date beside material facts", "keep unknown values explicit", "separate eligibility, profile fit, and funding", "support Russian, Kazakh, and English"],
+    "avoid": ["admission probabilities", "decorative gradients and glass", "tiny interactive targets", "editorial serif in the working UI"]
+  },
+  "decisions": [{"date": "2026-09-23", "status": "proposal pending owner review", "summary": "Refine PR #10 UX with softer surfaces and one Onest-led UI type system; reserve mono for technical identifiers."}],
+  "evidence": [
+    {
+      "fact": "project.instructions",
+      "source": "AGENTS.md"
+    },
+    {
+      "fact": "project.instructions",
+      "source": "CLAUDE.md"
+    }
+  ],
+  "generatedAt": "2026-09-23T06:36:41.144Z"
+}
