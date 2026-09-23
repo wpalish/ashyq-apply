@@ -886,6 +886,11 @@ scorer-definition question for the owner. Also seen: Aalto's `programme.exists` 
 title ("Arguments for and Approaches to Computing Education…"), and scope_report lists it as the same programme
 as 'Tietotekniikka' "by strong aliases" — looks like a false alias match; to investigate.
 
+**Run 24 (35905039431, `eee37ac`, RFC 9309 + multi-address):** same as run 23 — 9/10 complete (UBC wall
+clock), claim_recall 1/62, 8 of 9 value-correct claims other_page. No case lost to the stricter robots rule;
+the oracle's KAIST scholarship pages now read `robots.txt unreachable (ConnectTimeout)` → disallowed, as the
+RFC requires. Sibling-page rule `2603351` and research-output classifier `ccc07d7` land in run 25.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
