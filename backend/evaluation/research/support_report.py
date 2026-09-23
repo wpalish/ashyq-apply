@@ -2,14 +2,15 @@
 
 ``metrics.score`` counts a claim correct only when its value matches, its scope
 matches, and it is *supported*. Without a human adjudication, supported means
-``exact_evidence``: the claim's quote is contained **in** the reviewer's quote,
-on the same page. Reviewers quote the least that proves a fact ("6.5",
-"4 May 2026"); the pipeline quotes a window around its match. So a claim can
-carry the right value from the right page and still never be supported.
+``exact_evidence`` on the same page. Until 2026-09-23 that was one direction
+only — our quote inside the reviewer's — and reviewers quote the least that
+proves a fact ("6.5", "4 May 2026") while the pipeline quotes a sentence, so a
+right value from the right page was never supported. The owner then accepted
+the reverse as well, for a quote of at most ``SUPPORTING_QUOTE_MAX`` characters
+(``metrics.quote_supports``).
 
 This walks the claims whose value already matches and says, for each, which
-direction of containment holds. Nothing here changes the scorer: the direction
-is a definition for the owner to settle, and this is the evidence for it.
+relation holds, so the effect of the rule stays visible run by run.
 
 Evaluation tooling: it reads the certified corpus, so nothing under ``app/``
 may import it, and it is never part of a run.
@@ -23,13 +24,16 @@ from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
 
-from .metrics import canonical_url
+from .metrics import SUPPORTING_QUOTE_MAX, canonical_url
 from .schema import Capture, Dataset
 
-#: Our quote lies inside the reviewer's: what the scorer counts today.
+#: Our quote lies inside the reviewer's: the original rule.
 OURS_IN_THEIRS = "ours_in_theirs"
 #: The reviewer's quote lies inside ours: we quoted the certifying words and more.
+#: Counted as supported since the owner's decision of 2026-09-23.
 THEIRS_IN_OURS = "theirs_in_ours"
+#: The reviewer's words are inside ours, but ours is too long to be a quotation.
+THEIRS_IN_LONG_QUOTE = "theirs_in_long"
 #: Same page, and neither quote contains the other.
 NEITHER = "neither"
 #: Our quote is from another page than any the reviewer cited.
@@ -56,12 +60,15 @@ def _shape(prediction, label) -> tuple[str, str]:
     same_page = [e for e in label.evidence if canonical_url(e.url) == canonical_url(evidence.url)]
     if not same_page:
         return OTHER_PAGE, label.evidence[0].excerpt if label.evidence else ""
+    ours = " ".join(evidence.excerpt.split())
     for theirs in same_page:
-        if evidence.excerpt in theirs.excerpt:
+        if ours and ours in " ".join(theirs.excerpt.split()):
             return OURS_IN_THEIRS, theirs.excerpt
     for theirs in same_page:
-        if theirs.excerpt in evidence.excerpt:
-            return THEIRS_IN_OURS, theirs.excerpt
+        flat = " ".join(theirs.excerpt.split())
+        if flat and flat in ours:
+            shape = THEIRS_IN_OURS if len(ours) <= SUPPORTING_QUOTE_MAX else THEIRS_IN_LONG_QUOTE
+            return shape, theirs.excerpt
     return NEITHER, same_page[0].excerpt
 
 
@@ -102,12 +109,20 @@ def summarise(rows: list[Support]) -> str:
     lines = [r.line() for r in rows]
     lines.append("")
     lines.append(f"{len(rows)} claims carry the certified value")
-    for shape in (OURS_IN_THEIRS, THEIRS_IN_OURS, NEITHER, OTHER_PAGE, NO_EVIDENCE):
+    for shape in (
+        OURS_IN_THEIRS,
+        THEIRS_IN_OURS,
+        THEIRS_IN_LONG_QUOTE,
+        NEITHER,
+        OTHER_PAGE,
+        NO_EVIDENCE,
+    ):
         lines.append(f"  {shape:15} {counts.get(shape, 0)}")
     lines.append("")
     lines.append(
-        f"only {OURS_IN_THEIRS} counts as supported today; {THEIRS_IN_OURS} quoted the "
-        "reviewer's words and more, which the scorer does not accept."
+        f"{OURS_IN_THEIRS} and {THEIRS_IN_OURS} count as supported (owner decision 2026-09-23); "
+        f"{THEIRS_IN_LONG_QUOTE} holds the reviewer's words inside more than "
+        f"{SUPPORTING_QUOTE_MAX} characters, which does not."
     )
     return "\n".join(lines)
 

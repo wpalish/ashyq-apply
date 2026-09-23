@@ -545,3 +545,36 @@ async def test_capture_counts_the_search_calls_it_used_to_report_as_zero(tmp_pat
     assert observation.telemetry.search_calls == 2
     assert wrapped[0] is not quiet_search
     assert ExaSearchProvider.search is quiet_search
+
+
+class TestWhichWayAQuoteSupports:
+    """Owner decision 2026-09-23: the reviewer's words inside a short quote of ours count."""
+
+    def test_both_directions_and_the_cap(self):
+        from evaluation.research.metrics import SUPPORTING_QUOTE_MAX, quote_supports
+
+        assert quote_supports("IELTS 6.5", "Bachelor CS IELTS 6.5")
+        assert quote_supports(
+            "Applicants need Bachelor CS IELTS 6.5 overall.", "Bachelor CS IELTS 6.5"
+        )
+        long_quote = "x " * SUPPORTING_QUOTE_MAX + "Bachelor CS IELTS 6.5"
+        assert not quote_supports(long_quote, "Bachelor CS IELTS 6.5")
+        assert quote_supports("Bachelor  CS\nIELTS 6.5", "Bachelor CS IELTS 6.5")
+        assert not quote_supports("", "Bachelor CS IELTS 6.5")
+        assert not quote_supports("IELTS 7.0 overall", "IELTS 6.5")
+
+    def test_a_sentence_around_the_reviewers_words_now_scores(self):
+        dataset, capture, evidence = inputs()
+        ours = dict(
+            evidence, excerpt="Applicants need Bachelor CS IELTS 6.5 overall, per band 6.0."
+        )
+        raw = capture.model_dump()
+        raw["observations"] = [
+            {
+                "case_id": "example",
+                "predictions": [{"key": "ielts.overall", "value": 6.5, "evidence": ours}],
+            }
+        ]
+        result = score(dataset, Capture.model_validate(raw), allow_drafts=True)
+        assert result["metrics"]["claim_recall"]["numerator"] == 1
+        assert result["metrics"]["verbatim_evidence_rate"]["numerator"] == 1

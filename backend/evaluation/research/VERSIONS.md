@@ -77,3 +77,12 @@ not asserted. See [source notes](REVIEW_DRAFT7.md) and
 shape for the same statement. Before this, the scorer's exact comparison could never match the one to
 the other. This is a change of representation, not an equivalence. No stored capture carries a
 single-number subscore, so no published metric moves (the replay guard passes unchanged).
+
+**Scorer definition, 2026-09-23 — which way a quote supports (owner decision).** A prediction's quote
+supports a label's when ours lies inside the reviewer's (the original rule), **or** the reviewer's lies
+inside ours and ours is at most `SUPPORTING_QUOTE_MAX` = 300 characters; whitespace is compared
+collapsed on both sides (`metrics.quote_supports`). Reviewers quote the least that proves a fact and
+the pipeline a sentence, so the one-way rule made every correct claim unsupported (run 13: 0 of 6
+value-correct claims supported, 2 under the reverse). **No published number moved:** all eight files
+replay byte-identically against the frozen capture, whose excerpts are fragments like "The Bachelor"
+that neither contain nor sit inside a reviewer's quote. Live captures are where it shows.

@@ -21,6 +21,30 @@ def canonical_url(url: object) -> str:
     )
 
 
+#: The longest quote of ours that may contain the reviewer's words and still
+#: count as quoting them. Owner decision 2026-09-23: reviewers quote the least
+#: that proves a fact ("6.5"), the pipeline a sentence around it, so requiring
+#: ours to lie *inside* theirs made every correct claim unsupported. The cap
+#: keeps "the reviewer's words are somewhere in half a page" from counting.
+SUPPORTING_QUOTE_MAX = 300
+
+
+def quote_supports(ours: str, theirs: str) -> bool:
+    """Whether our quote and the reviewer's are the same evidence.
+
+    Either ours lies inside theirs (the original rule), or theirs lies inside
+    ours and ours is short enough to still be a quotation. Whitespace is
+    compared collapsed on both sides: a table's cells joined differently are
+    the same words.
+    """
+    ours_flat, theirs_flat = " ".join(ours.split()), " ".join(theirs.split())
+    if not ours_flat or not theirs_flat:
+        return False
+    if ours_flat in theirs_flat:
+        return True
+    return len(ours_flat) <= SUPPORTING_QUOTE_MAX and theirs_flat in ours_flat
+
+
 def scope_matches(expected: Scope, actual: Scope) -> bool:
     """Whether a recorded scope answers the scope a label asked about.
 
@@ -113,7 +137,7 @@ def score(dataset: Dataset, capture: Capture, *, allow_drafts: bool = False) -> 
                 and not evidence.excerpt_truncated
                 and any(
                     canonical_url(e.url) == canonical_url(evidence.url)
-                    and evidence.excerpt in e.excerpt
+                    and quote_supports(evidence.excerpt, e.excerpt)
                     for e in label.evidence
                 )
             )
