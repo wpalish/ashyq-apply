@@ -239,14 +239,48 @@ def _academic_years(text: str) -> list[str]:
     return found
 
 
+#: The programme's own start date, stated as such: "programme starts 1 September
+#: 2027", "Start date: 2 September 2027". Owner decision 2026-09-23: a stated
+#: start in September–November is a fall intake. A bare date is never read this
+#: way — "15 January 2027" is a deadline, and that refusal stands.
+_START_DATE = re.compile(
+    r"\b(?:(?:programme|program|course|studies|classes|teaching)\s+(?:starts?|begins?)"
+    r"|start(?:\s+(?:date|of\s+(?:the\s+)?(?:programme|program|studies|classes)))"
+    r")\s*(?:on|in)?\s*[:\-–]?\s*(?:\d{1,2}\s+)?"
+    rf"({_MONTH_TERM})\s+(20\d{{2}})\b",
+    re.IGNORECASE,
+)
+_FALL_MONTHS = frozenset({"september", "october", "november"})
+
+
+def intake_from_start(month: str, year: str) -> str | None:
+    """The intake a stated programme start implies, or ``None``.
+
+    Only September–November, as fall, per the owner's decision: other months
+    map to no season this module is entitled to name.
+    """
+    return f"Fall {year}" if month.lower() in _FALL_MONTHS else None
+
+
 def _intakes(text: str) -> list[str]:
     found = []
+    # A phrase read as the programme's start is read once: the month rule
+    # below would otherwise name the same words "September 2027" beside our
+    # "Fall 2027", and two values for one statement is silence.
+    started: list[tuple[int, int]] = []
+    for m in _START_DATE.finditer(text):
+        season = intake_from_start(m.group(1), m.group(2))
+        if season and not _negated(text, m.start()):
+            found.append(season)
+            started.append(m.span())
     for m in _INTAKE_SEASON.finditer(text):
         if _negated(text, m.start()):
             continue
         found.append(f"{_term(m.group(1))} {m.group(2)}")
     for m in _INTAKE_MONTH.finditer(text):
         if _negated(text, m.start()) or not _has_marker(text, m.start(), m.end()):
+            continue
+        if any(lo <= m.start() < hi for lo, hi in started):
             continue
         found.append(f"{_term(m.group(1))} {m.group(2)}")
     for m in _INTAKE_REVERSED.finditer(text):

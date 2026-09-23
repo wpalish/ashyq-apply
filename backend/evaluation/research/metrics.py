@@ -69,7 +69,10 @@ def scope_matches(expected: Scope, actual: Scope) -> bool:
             ):
                 return False
             continue
-        if recorded != value:
+        # Case is not meaning: the pipeline writes "Fall 2027", the corpus
+        # "fall 2027". Compared literally, no intake read from a page could
+        # ever match (definition fixed 2026-09-23, recorded in VERSIONS.md).
+        if recorded is None or str(recorded).casefold() != str(value).casefold():
             return False
     return True
 

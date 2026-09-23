@@ -101,3 +101,11 @@ emits `programme.language` from the teaching language a programme page states on
 claim, capitalised as the corpus writes it. `metrics.reviewed.json` was regenerated: every top-level
 metric is identical, and only the per-field row moves (`programme.language` 2 → 3). Drafts stay frozen.
 The live ceiling becomes 31 of 62.
+
+**Scorer definition, 2026-09-23 — scope compares case-blind outside the programme.** The pipeline writes
+an intake as "Fall 2027" and the corpus as "fall 2027"; compared literally, no intake read from a page
+could ever match. Every non-programme dimension now compares `casefold()`-equal (programme still
+compares identity). All eight published files replay byte-identically. Alongside it (owner decision,
+same day): a programme's own stated start in September–November is read as that fall intake, in page
+text ("programme starts 1 September 2027") and in a deadline table's start column ("Deadline | Start
+course"). A bare date is still never an intake.

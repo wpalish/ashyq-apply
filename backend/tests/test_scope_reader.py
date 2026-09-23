@@ -125,7 +125,10 @@ def test_a_deadline_date_is_not_an_intake() -> None:
     day number in front, makes them a term.
     """
     assert read_scope("Applications close on 15 January 2027.").intake is None
-    assert read_scope("Teaching starts in September 2026.").intake == "September 2026"
+    # A stated start in September–November is the fall intake (owner decision
+    # 2026-09-23); before it, this read "September 2026", which no corpus
+    # label ever used.
+    assert read_scope("Teaching starts in September 2026.").intake == "Fall 2026"
 
 
 def test_the_reversed_form_is_the_same_intake() -> None:
@@ -281,3 +284,25 @@ class TestATitleNamesItsOwnDegree:
 
     def test_a_title_naming_none_changes_nothing(self):
         assert read_scope("Bachelor and master requirements.", title="Admissions").degree is None
+
+
+class TestAStatedStartIsAnIntake:
+    """Owner decision 2026-09-23: a programme's own stated start in
+    September–November is a fall intake. A bare date never is."""
+
+    @pytest.mark.parametrize(
+        "text",
+        [
+            "The programme starts on 1 September 2027.",
+            "Start date: 2 September 2027",
+            "Start of studies: September 2027",
+        ],
+    )
+    def test_a_stated_autumn_start_is_fall(self, text):
+        assert read_scope(text).intake == "Fall 2027"
+
+    def test_a_deadline_date_is_still_never_an_intake(self):
+        assert read_scope("Applications close 15 January 2027.").intake is None
+
+    def test_a_start_outside_autumn_names_no_season(self):
+        assert read_scope("The programme starts on 1 February 2027.").intake is None

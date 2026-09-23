@@ -613,3 +613,14 @@ def test_live_scoring_resolves_an_owner_approved_award_identity():
     }
     [(key, value, _, _)] = normalize_subject_claims("scholarship_exists", raw, identities)
     assert (key, value) == ("scholarships.nanyang_global.exists", True)
+
+
+def test_scope_compares_case_blind_outside_the_programme():
+    """ "Fall 2027" from a page and "fall 2027" in the corpus are one intake."""
+    from evaluation.research.metrics import scope_matches
+    from evaluation.research.schema import Scope
+
+    label = Scope(university="Example", intake="fall 2027")
+    assert scope_matches(label, Scope(university="Example", intake="Fall 2027"))
+    assert not scope_matches(label, Scope(university="Example", intake="Spring 2027"))
+    assert not scope_matches(label, Scope(university="Example"))

@@ -108,3 +108,15 @@ class TestAssessingIt:
         )
         [check] = [c for c in outcome.checks if c.requirement == "Admission deadline"]
         assert check.status is EligibilityStatus.GAP
+
+
+def test_each_row_takes_its_intake_from_the_start_column():
+    """Groningen's "Deadline | Start course": the start date is the row's own."""
+    builder = ClaimBuilder(
+        source_url="https://www.rug.nl/bachelors/computing-science/",
+        official_domain=True,
+        accessed_at=datetime(2026, 9, 23, tzinfo=UTC),
+    )
+    extract_requirements(_GRONINGEN, builder)
+    intakes = {c.scope.population: c.scope.intake for c in builder.claims if c.scope}
+    assert intakes == {"EU/EEA": "Fall 2027", "non-EU/EEA": "Fall 2027"}

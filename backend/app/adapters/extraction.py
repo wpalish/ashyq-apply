@@ -18,7 +18,7 @@ from urllib.parse import urlparse
 
 from bs4 import BeautifulSoup
 
-from app.adapters.scope_reader import population_named
+from app.adapters.scope_reader import intake_from_start, population_named
 from app.domain.claim_scope import ClaimScope
 from app.domain.claim_verifier import (
     OFFICIAL_PUBLIC_TLDS,
@@ -190,6 +190,7 @@ class ClaimBuilder:
         notes: str = "",
         subject_key: str | None = None,
         population: str | None = None,
+        intake: str | None = None,
     ) -> Claim | None:
         verdict = verify_claim(
             VerificationInput(
@@ -237,12 +238,14 @@ class ClaimBuilder:
             ) + f"The page states this conditionally ({hedge!r}); it is not settled."
 
         meta = dict(self.meta)
-        if population is not None:
-            # One row of a table can say who it is for when the page as a whole
-            # cannot: "non-EU/EEA students 01 May 2027" beside two other rows.
-            # Only that dimension changes; the rest is still the page's.
+        row_scope = {k: v for k, v in (("population", population), ("intake", intake)) if v}
+        if row_scope:
+            # One row of a table can say who and when it is for when the page as
+            # a whole cannot: "non-EU/EEA students 01 May 2027 01 September
+            # 2027" beside two other rows. Only those dimensions change; the
+            # rest is still the page's.
             page_scope = cast("ClaimScope | None", meta["scope"]) or ClaimScope()
-            meta["scope"] = replace(page_scope, population=population)
+            meta["scope"] = replace(page_scope, **row_scope)
         claim = Claim(
             claim_type=claim_type,
             normalized_value=value,
@@ -499,10 +502,10 @@ def _named_bands(text: str) -> tuple[int, int, dict[str, float]] | None:
     return None
 
 
-def _population_deadlines(text: str) -> list[tuple[str, str, int, int]]:
+def _population_deadlines(text: str) -> list[tuple[str, str, int, int, str | None]]:
     """One deadline per population row of a deadline table, or none at all.
 
-    Returns ``(population, iso_date, start, end)`` only when the table names at
+    Returns ``(population, iso_date, start, end, intake)`` only when the table names at
     least two populations: a single row is not a table, and the page-level
     reading already covers it. The date taken from each row is the one in the
     column the header calls the deadline — "Type of student | Deadline | Start
@@ -531,7 +534,11 @@ def _population_deadlines(text: str) -> list[tuple[str, str, int, int]]:
     )
     if column > 1:
         return []
-    out: list[tuple[str, str, int, int]] = []
+    # A single start column beside the deadline ("Deadline | Start course") is
+    # the programme's own start date, stated per row; the owner's decision of
+    # 2026-09-23 reads a September–November start as that row's fall intake.
+    starts = [m for m in _OTHER_DATE_COLUMN.finditer(zone) if m.start() >= heading]
+    out: list[tuple[str, str, int, int, str | None]] = []
     seen: set[str] = set()
     for row in rows:
         population = population_named(row.group(1))
@@ -540,7 +547,13 @@ def _population_deadlines(text: str) -> list[tuple[str, str, int, int]]:
         if population is None or parsed is None or population in seen:
             continue
         seen.add(population)
-        out.append((population, parsed.isoformat(), row.start(), row.end()))
+        intake = None
+        if len(starts) == 1:
+            start_raw = row.group(3) if column == 0 else row.group(2)
+            started = parse_date_string(start_raw) if start_raw else None
+            if started is not None:
+                intake = intake_from_start(started.strftime("%B"), str(started.year))
+        out.append((population, parsed.isoformat(), row.start(), row.end(), intake))
     return out if len(out) >= 2 else []
 
 
@@ -667,7 +680,7 @@ def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
         )
 
     rows = _population_deadlines(text)
-    for population, iso, start, end in rows:
+    for population, iso, start, end, intake in rows:
         _keep(
             found,
             builder.add(
@@ -677,6 +690,7 @@ def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
                 notes="timezone: not stated on page",
                 subject_key=population,
                 population=population,
+                intake=intake,
             ),
         )
     deadline_match = None if rows else _DEADLINE.search(text)
