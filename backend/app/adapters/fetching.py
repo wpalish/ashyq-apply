@@ -282,6 +282,10 @@ class _FractionalCrawlDelayParser(urllib.robotparser.RobotFileParser):
                         break
 
 
+class _RobotsUnreachable(Exception):
+    """robots.txt could not be fetched for a network or server reason."""
+
+
 class RobotsPolicy:
     """robots.txt, fetched once per host and cached for the process lifetime."""
 
@@ -291,29 +295,42 @@ class RobotsPolicy:
         self._parsers: dict[str, urllib.robotparser.RobotFileParser | None] = {}
         #: Hosts whose robots.txt never finished arriving.
         self.stalled: set[str] = set()
-        self._lock = asyncio.Lock()
+        #: Origins whose robots.txt was *unreachable* — a network error, a 5xx
+        #: or a stall. RFC 9309 §2.3.1.4: the crawler MUST then assume a
+        #: complete disallow. Unavailable (4xx) is different: no restrictions.
+        self._unreachable: dict[str, str] = {}
+        #: One lock per origin: a stalled host must not hold every other
+        #: host's robots.txt behind it.
+        self._locks: dict[str, asyncio.Lock] = {}
 
     async def allowed(self, url: str, client: httpx.AsyncClient) -> tuple[bool, str]:
         if not self.enabled:
             return True, "robots checking disabled by configuration"
         parsed = urlparse(url)
         host = f"{parsed.scheme}://{parsed.netloc}"
-        async with self._lock:
-            if host not in self._parsers:
+        async with self._locks.setdefault(host, asyncio.Lock()):
+            if host not in self._parsers and host not in self._unreachable:
                 try:
                     self._parsers[host] = await asyncio.wait_for(
                         self._load(host, client), ROBOTS_DEADLINE_SECONDS
                     )
                 except TimeoutError:
-                    # Same reading as an unreachable robots.txt, and remembered,
-                    # so the host is not stalled on again for every page.
+                    # Remembered, so the host is not stalled on again.
                     log.info("robots.txt for %s did not arrive in time", host)
-                    self._parsers[host] = None
+                    self._unreachable[host] = "did not arrive in time"
                     self.stalled.add(parsed.hostname or parsed.netloc)
+                except _RobotsUnreachable as exc:
+                    log.info("robots.txt for %s unreachable: %s", host, exc)
+                    self._unreachable[host] = str(exc)
+        if host in self._unreachable:
+            return False, (
+                f"robots.txt unreachable ({self._unreachable[host]}); RFC 9309 treats the "
+                "whole site as disallowed"
+            )
         parser = self._parsers[host]
         if parser is None:
-            # No reachable robots.txt is treated as "allowed" - the same
-            # interpretation the RFC and every major crawler uses.
+            # Unavailable (4xx, or a robots.txt we will not read): the RFC's
+            # "no restrictions" reading.
             return True, "no robots.txt available"
         allowed = parser.can_fetch(self.user_agent, url)
         return allowed, "robots.txt allows" if allowed else "robots.txt disallows this path"
@@ -345,9 +362,10 @@ class RobotsPolicy:
             request = _pinned_request(client, target, timeout=10.0)
             resp = await client.send(request, stream=True)
         except (httpx.HTTPError, OSError) as exc:
-            log.info("robots.txt unavailable for %s (%s)", host, exc.__class__.__name__)
-            return None
+            raise _RobotsUnreachable(exc.__class__.__name__) from exc
         try:
+            if resp.status_code >= 500:
+                raise _RobotsUnreachable(f"HTTP {resp.status_code}")
             if resp.status_code < 200 or resp.status_code >= 300:
                 return None
             declared = resp.headers.get("content-length")

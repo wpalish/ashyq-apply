@@ -32,6 +32,7 @@ import socket
 import unicodedata
 
 import httpx
+import pytest
 
 from app.adapters.fetching import (
     DEFAULT_DELAY_SECONDS,
@@ -579,3 +580,55 @@ async def test_a_slow_resolver_does_not_freeze_the_event_loop(tmp_path, monkeypa
     assert "name resolution" in (result.error or "")
     assert ticks == 5
     assert "earlier in this run" in (again.error or "")
+
+
+@pytest.mark.parametrize(
+    ("robots_status", "expected"),
+    [
+        (503, FetchOutcome.ROBOTS_DISALLOWED),  # unreachable: complete disallow
+        (500, FetchOutcome.ROBOTS_DISALLOWED),
+        (404, FetchOutcome.OK),  # unavailable: no restrictions
+        (403, FetchOutcome.OK),
+    ],
+)
+async def test_robots_txt_status_follows_rfc_9309(tmp_path, monkeypatch, robots_status, expected):
+    """RFC 9309 §2.3.1.3–4: a 4xx robots.txt means no restrictions; a 5xx or a
+    network failure means the crawler MUST assume the whole site is off limits.
+    Until 2026-09-23 both were read as "allowed"."""
+    monkeypatch.setattr("app.adapters.fetching.check_url", allow_all)
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        if request.url.path == "/robots.txt":
+            return httpx.Response(robots_status, text="")
+        return httpx.Response(200, headers={"content-type": "text/html"}, text="<html>p</html>")
+
+    async with Fetcher(tmp_path / "c", delay_seconds=0.0, respect_robots=True) as fetcher:
+        fetcher._client = httpx.AsyncClient(
+            transport=httpx.MockTransport(handler), follow_redirects=False
+        )
+        result = await fetcher.get("https://site.example.com/page")
+
+    assert result.outcome is expected
+    if expected is FetchOutcome.ROBOTS_DISALLOWED:
+        assert "RFC 9309" in (result.error or "")
+
+
+async def test_a_robots_txt_network_failure_disallows_the_site(tmp_path, monkeypatch):
+    monkeypatch.setattr("app.adapters.fetching.check_url", allow_all)
+    pages = 0
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        nonlocal pages
+        if request.url.path == "/robots.txt":
+            raise httpx.ConnectError("refused")
+        pages += 1
+        return httpx.Response(200, headers={"content-type": "text/html"}, text="<html>p</html>")
+
+    async with Fetcher(tmp_path / "c", delay_seconds=0.0, respect_robots=True) as fetcher:
+        fetcher._client = httpx.AsyncClient(
+            transport=httpx.MockTransport(handler), follow_redirects=False
+        )
+        result = await fetcher.get("https://site.example.com/page")
+
+    assert result.outcome is FetchOutcome.ROBOTS_DISALLOWED
+    assert pages == 0
