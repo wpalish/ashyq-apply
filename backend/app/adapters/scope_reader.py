@@ -303,6 +303,15 @@ def _by_table(text: str, table: tuple[tuple[re.Pattern[str], str], ...]) -> list
     return found
 
 
+def population_named(text: str) -> str | None:
+    """The one population a short span of text names, or ``None``.
+
+    For a single table row ("non-EU/EEA students 01 May 2027"), not a page: a
+    page naming two populations is silent, and so is a row.
+    """
+    return _single(_by_table(_flatten(text), _POPULATIONS))
+
+
 def read_scope(text: str, *, title: str = "") -> ClaimScope:
     """What this page states about who and what it covers.
 

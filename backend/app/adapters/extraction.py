@@ -11,12 +11,14 @@ from __future__ import annotations
 import io
 import re
 from collections.abc import Iterable, Sequence
+from dataclasses import replace
 from datetime import UTC, date, datetime
 from typing import Final, cast
 from urllib.parse import urlparse
 
 from bs4 import BeautifulSoup
 
+from app.adapters.scope_reader import population_named
 from app.domain.claim_scope import ClaimScope
 from app.domain.claim_verifier import (
     OFFICIAL_PUBLIC_TLDS,
@@ -187,6 +189,7 @@ class ClaimBuilder:
         status: ClaimStatus | None = None,
         notes: str = "",
         subject_key: str | None = None,
+        population: str | None = None,
     ) -> Claim | None:
         verdict = verify_claim(
             VerificationInput(
@@ -233,6 +236,13 @@ class ClaimBuilder:
                 f"{notes} " if notes else ""
             ) + f"The page states this conditionally ({hedge!r}); it is not settled."
 
+        meta = dict(self.meta)
+        if population is not None:
+            # One row of a table can say who it is for when the page as a whole
+            # cannot: "non-EU/EEA students 01 May 2027" beside two other rows.
+            # Only that dimension changes; the rest is still the page's.
+            page_scope = cast("ClaimScope | None", meta["scope"]) or ClaimScope()
+            meta["scope"] = replace(page_scope, population=population)
         claim = Claim(
             claim_type=claim_type,
             normalized_value=value,
@@ -242,7 +252,7 @@ class ClaimBuilder:
             status=status or default_status,
             notes=notes,
             subject_key=subject_key,
-            **self.meta,  # type: ignore[arg-type]
+            **meta,  # type: ignore[arg-type]
         )
         self.claims.append(claim)
         return claim
@@ -338,6 +348,29 @@ _DEADLINE = re.compile(
     r"(\d{1,2}\s+(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{4}"
     r"|(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},?\s+\d{4}"
     r"|\d{4}-\d{2}-\d{2})",
+    re.IGNORECASE,
+)
+_MONTH_NAMES = (
+    "January|February|March|April|May|June|July|August|September|October|November|December"
+)
+_A_DATE = (
+    rf"\d{{1,2}}\s+(?:{_MONTH_NAMES})\s+\d{{4}}"
+    rf"|(?:{_MONTH_NAMES})\s+\d{{1,2}},?\s+\d{{4}}"
+    r"|\d{4}-\d{2}-\d{2}"
+)
+#: One row of a deadline table that names its population: Groningen's
+#: "non-EU/EEA students 01 May 2027 01 September 2027". The lookbehind keeps
+#: the "EU/EEA" inside "non-EU/EEA" from reading as a second row.
+_POPULATION_ROW = re.compile(
+    r"(?<![\w/-])(non[-\s]?EU(?:\s*/\s*EEA)?|EU\s*/\s*EEA)"
+    r"(?:\s+(?:students|applicants|nationals|citizens))?\s*[:\-–]?\s*"
+    rf"({_A_DATE})(?:\s+({_A_DATE}))?",
+    re.IGNORECASE,
+)
+_DEADLINE_WORD = re.compile(r"\bdeadlines?\b", re.IGNORECASE)
+#: Other date columns a deadline table carries beside the deadline itself.
+_OTHER_DATE_COLUMN = re.compile(
+    r"\b(?:start(?:\s+(?:course|date|of\s+(?:studies|programme)))?|begins?|commencement)\b",
     re.IGNORECASE,
 )
 #: An explicit list. A catch-all like [A-Z]{2,4}T matched the word "SAT" in a
@@ -465,6 +498,51 @@ def _named_bands(text: str) -> tuple[int, int, dict[str, float]] | None:
     return None
 
 
+def _population_deadlines(text: str) -> list[tuple[str, str, int, int]]:
+    """One deadline per population row of a deadline table, or none at all.
+
+    Returns ``(population, iso_date, start, end)`` only when the table names at
+    least two populations: a single row is not a table, and the page-level
+    reading already covers it. The date taken from each row is the one in the
+    column the header calls the deadline — "Type of student | Deadline | Start
+    course" puts it first, and a header that lists the start first puts it
+    second. A header that cannot be read that way yields nothing rather than
+    a start date presented as a deadline.
+    """
+    header = _DEADLINE_WORD.search(text)
+    if header is None:
+        return []
+    rows = [
+        m for m in _POPULATION_ROW.finditer(text, header.end()) if m.start() - header.end() < 600
+    ]
+    if not rows:
+        return []
+    zone = text[max(0, header.start() - 80) : rows[0].start()]
+    # The header cell nearest the rows, not a "Deadlines" title above them:
+    # "Deadlines — Start of studies | Deadline" puts the deadline second.
+    cells = list(_DEADLINE_WORD.finditer(zone))
+    if not cells:
+        return []
+    deadline_at = cells[-1]
+    heading = cells[-2].end() if len(cells) > 1 else 0
+    column = sum(
+        1 for m in _OTHER_DATE_COLUMN.finditer(zone) if heading <= m.start() < deadline_at.start()
+    )
+    if column > 1:
+        return []
+    out: list[tuple[str, str, int, int]] = []
+    seen: set[str] = set()
+    for row in rows:
+        population = population_named(row.group(1))
+        raw = row.group(2) if column == 0 else row.group(3)
+        parsed = parse_date_string(raw) if raw else None
+        if population is None or parsed is None or population in seen:
+            continue
+        seen.add(population)
+        out.append((population, parsed.isoformat(), row.start(), row.end()))
+    return out if len(out) >= 2 else []
+
+
 def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
     """Pull admission requirements out of readable page text."""
     found: list[Claim] = []
@@ -587,7 +665,20 @@ def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
             ),
         )
 
-    deadline_match = _DEADLINE.search(text)
+    rows = _population_deadlines(text)
+    for population, iso, start, end in rows:
+        _keep(
+            found,
+            builder.add(
+                ClaimType.ADMISSION_DEADLINE,
+                iso,
+                excerpt_around(text, start, end),
+                notes="timezone: not stated on page",
+                subject_key=population,
+                population=population,
+            ),
+        )
+    deadline_match = None if rows else _DEADLINE.search(text)
     if deadline_match:
         deadline = parse_date_string(deadline_match.group(1))
         if deadline:

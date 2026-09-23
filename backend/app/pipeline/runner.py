@@ -34,6 +34,7 @@ from app.domain.dates import parse_published_date
 from app.domain.eligibility import (
     awards_needing_a_test_the_programme_made_optional,
     evaluate_program,
+    population_deadlines,
 )
 from app.domain.enums import (
     ClaimStatus,
@@ -876,7 +877,10 @@ class ResearchRunner:
                     )
                 )
 
+            by_population = population_deadlines(claims)
             dl = next((c for c in claims if c.claim_type == ClaimType.ADMISSION_DEADLINE), None)
+            if by_population:
+                dl = by_population[0][2]
             if dl is not None:
                 parsed = _as_date(dl.normalized_value)
                 result.admission_deadline = parsed
@@ -884,7 +888,14 @@ class ResearchRunner:
                 result.admission_deadline_timezone = (
                     dl.notes.replace("timezone: ", "") if dl.notes.startswith("timezone:") else None
                 )
-                result.deadline_passed = bool(parsed and parsed < today)
+                # The earliest row is shown; "passed" only when every
+                # population's row has, or one applicant would be told their
+                # window closed on another population's date.
+                result.deadline_passed = (
+                    all(d < today for _, d, _ in by_population)
+                    if by_population
+                    else bool(parsed and parsed < today)
+                )
 
             for s in result.scholarships:
                 if s.deadline and s.deadline < today:

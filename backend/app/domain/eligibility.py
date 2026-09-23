@@ -276,7 +276,12 @@ def evaluate_program(
         )
 
     # --- deadline -----------------------------------------------------
-    deadline_claim = _first(claims, ClaimType.ADMISSION_DEADLINE, requested)
+    by_population = population_deadlines(claims, requested)
+    if by_population:
+        checks.append(_population_deadline_check(by_population, today, requested))
+    deadline_claim = (
+        None if by_population else _first(claims, ClaimType.ADMISSION_DEADLINE, requested)
+    )
     if deadline_claim is not None:
         parsed = _as_date(deadline_claim.normalized_value)
         if parsed is None:
@@ -604,6 +609,77 @@ def _to_float(v: object) -> float | None:
         return float(v)  # type: ignore[arg-type]
     except (TypeError, ValueError):
         return None
+
+
+def population_deadlines(
+    claims: list[Claim], requested: RequestedScope | None = None
+) -> list[tuple[str, date, Claim]]:
+    """Deadlines a page publishes per fee population, when they differ.
+
+    ``(population, date, claim)``, earliest first — or nothing, when the page
+    published one deadline, or the same date for every population, in which
+    case there is no choice to make and the ordinary path answers.
+
+    The applicant's population at a given university is never inferred here
+    (``requested_scope`` refuses to for the same reason): it depends on the
+    institution's own fee rules, and guessing it would quietly pick a row.
+    """
+    rows: dict[str, tuple[date, Claim]] = {}
+    for c in claims:
+        if c.claim_type is not ClaimType.ADMISSION_DEADLINE or c.scope is None:
+            continue
+        population = c.scope.population
+        if not population or c.subject_key != population:
+            continue
+        if requested is not None and _scope_verdict(c, requested) is Verdict.NO:
+            continue
+        parsed = _as_date(c.normalized_value)
+        if parsed is not None and population not in rows:
+            rows[population] = (parsed, c)
+    if len(rows) < 2 or len({d for d, _ in rows.values()}) < 2:
+        return []
+    return sorted(((p, d, c) for p, (d, c) in rows.items()), key=lambda row: (row[1], row[0]))
+
+
+def _population_deadline_check(
+    rows: list[tuple[str, date, Claim]], today: date, requested: RequestedScope | None
+) -> RequirementCheck:
+    """One check for a deadline that depends on who the applicant is here.
+
+    Shown at the earliest date, so nobody is told they have more time than
+    they may have. Never a hard filter unless every row has passed: an
+    applicant whose own row is still open must not be eliminated by another
+    population's date.
+    """
+    listed = "; ".join(f"{p}: {d.isoformat()}" for p, d, _ in rows)
+    passed = [p for p, d, _ in rows if d < today]
+    earliest = rows[0][1]
+    if len(passed) == len(rows):
+        status = EligibilityStatus.GAP
+        hard = all(_confirmed(c, requested) for _, _, c in rows)
+        explanation = f"Every published deadline has passed ({listed})."
+    elif passed:
+        status, hard = EligibilityStatus.NEEDS_OFFICIAL_CLARIFICATION, False
+        explanation = (
+            f"The deadline depends on your fee population here ({listed}). "
+            f"The one for {', '.join(passed)} has passed; confirm which applies to you."
+        )
+    else:
+        status, hard = EligibilityStatus.MET, False
+        explanation = (
+            f"Applications close {earliest.isoformat()} at the earliest; the deadline "
+            f"depends on your fee population here ({listed})."
+        )
+    return RequirementCheck(
+        requirement="Admission deadline",
+        published_value=earliest.isoformat(),
+        applicant_value=today.isoformat(),
+        status=status,
+        is_hard_filter=hard,
+        explanation=explanation,
+        claim_ids=sorted({c.source_url for _, _, c in rows}),
+        published_scope=f"by fee population: {listed}",
+    )
 
 
 def _as_date(v: object) -> date | None:
