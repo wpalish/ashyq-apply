@@ -60,6 +60,18 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**V2-34: availability follows the final eligibility verdict (`2bfdbd2`).** The adapter rolled
+`available_this_intake` up from its own early reading of eligibility; the runner then settled
+`applicant_eligible` from the full checks and never re-rolled availability. So an award this applicant
+cannot hold kept saying "unknown" (or "yes"). In the demo, NUS's ASEAN Undergraduate Scholarship and
+KU Leuven's Flemish Community Tuition Grant are both closed to a Kazakh citizen, yet both reported
+availability "unknown". The runner now re-rolls availability right after the verdict. The adapter's
+early roll-up also no longer says "yes" while a faculty or programme restriction is pending (§7:
+UNKNOWN is never rounded up). **Golden re-captured with proof:** the old code reproduces the previous
+hash exactly, and exactly two leaves changed, both `available_this_intake` "unknown" → "no" on those
+two awards. No claim, check, verdict or classification moved. The new adapter test fails on the old
+code.
+
 **V2-32: tuition per fee population (`4163cf2`).** `extract_costs` took the first tuition figure, and
 European fee pages list the statutory EU/EEA fee beside a far higher non-EU/EEA fee, so an
 international applicant could be shown the lower one and a funding gap several times too small. A
