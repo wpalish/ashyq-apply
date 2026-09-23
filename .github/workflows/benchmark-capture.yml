@@ -134,6 +134,17 @@ jobs:
             --dataset evaluation/research/data/ground_truth.reviewed.json \
             --bindings evaluation/research/data/identity_bindings.draft1.json
 
+      - name: Say why a right-valued claim was not supported
+        # Supported means our quote lies inside the reviewer's. Reviewers quote
+        # the least that proves a fact; we quote a window around it. This shows
+        # which way each right-valued quote relates, so the direction can be
+        # settled on evidence.
+        run: |
+          set -o pipefail
+          .venv/bin/python -m evaluation.research.support_report \
+            --dataset evaluation/research/data/ground_truth.reviewed.json \
+            --capture "$CAPTURE_JSON" | tee support-shapes.txt
+
       - name: Say why each scope mismatch happened
         # The rate alone cannot be acted on: a page that stated the wrong
         # population and a page that stated nothing score identically, and the
@@ -222,6 +233,7 @@ jobs:
             backend/capture.log
             backend/scope-mismatches.json
             backend/scope-mismatches.txt
+            backend/support-shapes.txt
             backend/oracle.json
             backend/oracle.txt
           retention-days: 14
