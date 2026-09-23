@@ -60,6 +60,22 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**The claim_recall ceiling (`3649853`).** `evaluation/research/expressibility.py`, printed by a new
+benchmark step, answers which of the 62 known facts any claim could ever match:
+- **Live: 14 of 62.** `live.py` maps with `normalize_claim` alone, and the identity bindings are
+  unreviewed drafts, so no award or document fact can score in a live run. This is deliberate
+  (HANDOFF V2-01 notes), and I did not change it.
+- **Offline, with `identity_bindings.draft1.json`: 28 of 62.**
+- The 34 that can never score: 14 have no claim type (programme language under two different label
+  keys, `programme.language` and `programme.teaching_language.primary`; German minimums; faculty;
+  `country_credential.*` and `english_evidence.*` sub-keys; subjects; admission route; Toronto
+  intake), 11 are unbound documents, 7 are bound fields the mapping does not carry (scholarship
+  living coverage, duration, bond, offer applicability; transcript completed/not_completed), and 2 are
+  unbound HKU awards.
+
+So live claim_recall at 0 is measured against 14 reachable facts, not 62. Extraction and navigation
+can move at most those 14 until the owner decides the identity questions in §7.
+
 **Run 11 (35825874826): the page contexts turned into three fixes (`c3ba545`; classifier `7626ff2`).**
 - **UBC IELTS.** The live page reads "International English Language Testing System (Academic) 6.5,
   with no part less than 6.0". The spelled-out name now carries the overall band, but only when a
@@ -2950,6 +2966,21 @@ E2E (`npm run e2e`, `npm run e2e:auth`) was **not** run locally — ports 5173/8
 CI runs both on the PR.
 
 ## 7. Blockers / questions for the owner
+
+### OPEN — what claim_recall is allowed to count (2026-09-23, claude-opus-5)
+The live ceiling is 14 of 62 (see §3). Each of these moves it, and each is an identity or definition
+call, so none is mine to make:
+1. **Review the three draft identity bindings and let live scoring use reviewed ones** (+14 NTU and
+   KAIST scholarship facts).
+2. **One key for teaching language.** Labels use both `programme.language` (Vienna, Warsaw) and
+   `programme.teaching_language.primary` (Aalto). `program_exists` already carries the page's teaching
+   language, so mapping it is cheap once there is one key. Mapping it also adds predictions to stored
+   captures, which moves published denominators and needs a VERSIONS note.
+3. **HKU:** the certified programme source is a school page that lists programmes. Should a listing
+   that names "Bachelor of Engineering in Computer Science" confirm existence? The adapter's rule
+   today is that only a programme's own page may.
+4. **Vienna deadline:** the page says "Application period 2 March to 4 May 2026", but the certified
+   value is null, so it can never match.
 
 **Owner decision: may a programme-specific rule stay usable when a university-wide rule disagrees?**
 The phase guide says yes — a general rule and a specific one may both be true, the specific one is
