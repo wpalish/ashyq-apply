@@ -6,13 +6,13 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-Current holder: **nobody**. Branch: `task/open-path-on-redesign`, based on `origin/task/frontend-redesign@e679432` and integrated with `origin/main@07de4d9` at `5180437`. Visual QA is complete on draft PR #19; owner review is next. The older V2 history remains for provenance.
+Current holder: **gpt-6-astra**, 2026-09-23 09:00 UTC. Branch: `task/open-path-on-redesign`, based on `origin/task/frontend-redesign@e679432` and integrated with `origin/main@07de4d9` at `5180437`. Fixing a screenshot capture artifact in draft PR #19. The older V2 history remains for provenance.
 
 
 | | |
 |---|---|
-| Holder | **nobody** |
-| Since (UTC) | 2026-09-23 08:35; released after visual QA |
+| Holder | **gpt-6-astra** |
+| Since (UTC) | 2026-09-23 09:00 |
 | Branch | `task/open-path-on-redesign`, based on frontend redesign PR #10 |
 | Last task commit before release | `8a1e58a`; main merge `5180437` |
 | Origin main when checked | `07de4d9` (fetched 2026-09-23) |
@@ -267,7 +267,7 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-**Open Path next:** Owner reviews draft PR #19 and light/dark/mobile screenshots in `docs/frontend-visual-refinement.md`; apply feedback in this branch, then re-run relevant gates. The prior Prata guidance is marked historical. Full release-gates passed on the pre-QA code tree; latest docs-only CI is running. Merge only after the owner accepts the visual direction. Main's earlier plan below is historical for this task.
+**Open Path next (screenshot QA):** In `frontend/e2e/redesign.spec.ts`, remove transient keyboard focus before saving the profile wizard evidence screenshots, leaving the skip link's keyboard behavior intact. Regenerate `docs/screenshots/profile-wizard-{desktop,mobile}.png`, inspect both, run redesign E2E, token audit, typecheck and relevant frontend gates, then push a small commit to draft PR #19 and release the baton. Owner review of light/dark/mobile remains the next product decision. Main's earlier plan below is historical for this task.
 
 Write-ahead (claude-opus-5, 2026-09-20, V2-10): **starting V2-10 — the search provider interface**,
 per `analysis/v2/02_EXECUTION_PLAN.md` (Phase 1) and `analysis/v2/04_PHASE_1_DISCOVERY_ENGINE.md` §1.
@@ -2240,6 +2240,8 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 `[0.8]` → `[1.1]` → `[1.2]` → `[1.3]` → `[1.4]` → `[2.1]` → `[2.2]` → `[2.3]` → `[3.1]` → `[3.2]` → `[4.1]` → `[4.2]` → `[5]`
 
 ## 11. Session log (one line per session, newest last)
+
+| 2026-09-23 09:00 UTC | gpt-6-astra | `7b3ff42` → screenshot QA in progress | Profile screenshot review found the focused skip link captured mid-image after axe. Refresh the evidence without changing production skip-link behavior, validate, then release for owner review. |
 
 | 2026-09-23 08:35 UTC | gpt-6-astra | `b5734b5` → `8a1e58a` + release handoff | Visual QA separated deterministic documentation drift from subjective taste; aligned nested 21st context and specs with Onest candidate, verified all referenced paths, token audit/typecheck and 21st reviews. Prior full CI run green; latest docs-only CI pending. Baton released for owner review of PR #19. |
 
