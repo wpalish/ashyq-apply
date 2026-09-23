@@ -133,7 +133,19 @@ async def capture_one(case_id: str, output: Path, max_pages: int) -> None:
                 requests += 1
                 if requests > max_pages:
                     raise RuntimeError("BENCHMARK_PAGE_BUDGET_EXHAUSTED")
+                began = time.monotonic()
+                # Written before the read, so a read that never returns still
+                # names itself in the log.
+                print(f"get #{requests} start t={began - started:.0f}s {url[:120]}", flush=True)
                 result = await original(url, **kwargs)
+                # One line per page read, so a case that runs out of wall
+                # clock shows which reads took it: its own log is printed by
+                # the benchmark when the budget ends the case.
+                print(
+                    f"get #{requests} took {time.monotonic() - began:.1f}s "
+                    f"{getattr(result, 'outcome', '?')}",
+                    flush=True,
+                )
                 if result.ok and result.is_pdf and not result.from_cache:
                     observation.telemetry.pdf_fetches = (observation.telemetry.pdf_fetches or 0) + 1
                 checkpoint()

@@ -222,7 +222,7 @@ jobs:
               )
               log = logs / f"{observation['case_id']}.log"
               if log.exists():
-                  for line in log.read_text(encoding="utf-8", errors="replace").splitlines()[-15:]:
+                  for line in log.read_text(encoding="utf-8", errors="replace").splitlines()[-40:]:
                       print(f"    {line[:220]}")
               else:
                   print("    (no child log)")
