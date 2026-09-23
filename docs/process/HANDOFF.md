@@ -60,6 +60,17 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**Run 13 (35836097167, head `c990519`): the regression is gone, and question 5 has numbers.**
+- HKU's false programme claim is gone (0 claims), and wrong_scope is 1/6. Groningen ran out of wall
+  clock this time (86 fetches, 0 claims) after yielding 2 claims in run 12: live discovery varies from
+  run to run, so one run's per-case zero is not a regression by itself.
+- Live claim_recall ceiling printed: 14 of 62, as computed.
+- **Support shapes:** 6 predictions carry the certified value (all `programme.exists`). 0 have our
+  quote inside the reviewer's (the scorer's rule today), 2 contain the reviewer's words and more (UBC,
+  NTU), and 4 quote a different page than the reviewer cited (Delft ×2, Toronto, NTU MCS). So under
+  the reverse direction NTU, whose scope already matches by strong alias, is the likely first non-zero
+  claim_recall.
+
 **One deadline per fee population (`7c25df2`).** Groningen's certified page is a table: "Type of
 student | Deadline | Start course", with a row each for Dutch, EU/EEA and non-EU/EEA students. The
 single-match reading quoted the first row as everybody's deadline, which is the wrong date for every
@@ -3020,7 +3031,8 @@ call, so none is mine to make:
    whole sentence is never supported, and claim_recall stays 0 whatever extraction does. Accepting the
    reverse (the reviewer's words inside ours) is a definition change: every published baseline would
    need regenerating plus a VERSIONS note. The `support_report` step shows the effect before anyone
-   decides.
+   decides. Run 13: 0 of 6 value-correct claims are supported today; 2 would be under the reverse
+   direction.
 
 **Owner decision: may a programme-specific rule stay usable when a university-wide rule disagrees?**
 The phase guide says yes — a general rule and a specific one may both be true, the specific one is
