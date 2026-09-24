@@ -372,6 +372,13 @@ _POPULATION_ROW = re.compile(
     re.IGNORECASE,
 )
 _DEADLINE_WORD = re.compile(r"\bdeadlines?\b", re.IGNORECASE)
+#: "Application period 2 March to 4 May 2026": the deadline is the period's
+#: end. The start often omits its year, so only the end must be a full date.
+_APPLICATION_PERIOD = re.compile(
+    rf"application period\s*:?\s*\d{{1,2}}\s+(?:{_MONTH_NAMES})(?:\s+\d{{4}})?"
+    rf"\s*(?:to|until|[–-])\s*({_A_DATE})",
+    re.IGNORECASE,
+)
 #: Other date columns a deadline table carries beside the deadline itself.
 _OTHER_DATE_COLUMN = re.compile(
     r"\b(?:start(?:\s+(?:course|date|of\s+(?:studies|programme)))?|begins?|commencement)\b",
@@ -693,7 +700,7 @@ def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
                 intake=intake,
             ),
         )
-    deadline_match = None if rows else _DEADLINE.search(text)
+    deadline_match = None if rows else (_DEADLINE.search(text) or _APPLICATION_PERIOD.search(text))
     if deadline_match:
         deadline = parse_date_string(deadline_match.group(1))
         if deadline:

@@ -120,3 +120,9 @@ def test_each_row_takes_its_intake_from_the_start_column():
     extract_requirements(_GRONINGEN, builder)
     intakes = {c.scope.population: c.scope.intake for c in builder.claims if c.scope}
     assert intakes == {"EU/EEA": "Fall 2027", "non-EU/EEA": "Fall 2027"}
+
+
+def test_an_application_period_ends_on_its_deadline():
+    """Vienna: "Application period 2 March to 4 May 2026" — no word "deadline"."""
+    text = "Overview Application period 2 March to 4 May 2026 Written test 13 July 2026 on site"
+    assert _deadlines(text) == [("2026-05-04", None)]
