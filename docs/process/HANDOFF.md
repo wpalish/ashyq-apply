@@ -936,6 +936,12 @@ classified *unknown* and files nothing — not yet diagnosed (page not reachable
 robots.txt ReadTimeout → whole site disallowed (RFC-correct); the only page left is the research-portal
 paper, correctly rejected. KAIST: admission host robots.txt ConnectTimeout → disallowed.
 
+**Run 32 (35958818912, news fix):** Vienna's admission page is no longer news but was left *unknown* —
+fixed `6e7d4ff` ('Admission procedure' in the admissions vocabulary). Toronto filed nothing this run:
+`future.utoronto.ca` answers **HTTP 403** to every request (a refusal, not a network fault — recurring in
+earlier runs too), and `utm.utoronto.ca` robots.txt timed out → disallowed. A 403 is the site's explicit
+answer; it is not retried and not worked around.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
