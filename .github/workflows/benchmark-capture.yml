@@ -248,6 +248,8 @@ jobs:
                   for inst in institutions if isinstance(institutions, list) else [institutions]:
                       dtrace = (inst or {}).get("discovery_trace") or {}
                       print(f"    selected: {json.dumps(dtrace.get('selected'))[:600]}")
+                      for err in (dtrace.get("errors") or [])[:8]:
+                          print(f"    trace: {str(err)[:400]}")
                       walker = dtrace.get("walker") or {}
                       print(f"    walker: catalogs={walker.get('catalogs_walked')} confirmed={walker.get('programs_confirmed')}")
                       for cand in (walker.get("candidates") or [])[:12]:

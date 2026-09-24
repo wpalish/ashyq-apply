@@ -1242,10 +1242,16 @@ class LiveDiscoveryAdapter:
                 continue
             pages.append(found.url)
             added += 1
+        # Which pages search offered, so a miss can be told apart from
+        # "search never saw the programme" (run 46, Warsaw).
+        offered = ", ".join(c.url for c in report.candidates[:5]) or "none"
         trace.errors.append(
-            f"search added {added} programme page(s) via {report.provider}"
-            if added
-            else f"search added nothing via {report.provider}"
+            (
+                f"search added {added} programme page(s) via {report.provider}"
+                if added
+                else f"search added nothing via {report.provider}"
+            )
+            + f"; offered: {offered}"[:600]
         )
 
     def _apply(
