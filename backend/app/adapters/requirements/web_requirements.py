@@ -17,6 +17,7 @@ import re
 from dataclasses import dataclass
 
 from app.adapters.base import AdapterResult, Candidate, CandidateProgram, PageOutcome
+from app.adapters.discovery.live_discovery import matches_field_text
 from app.adapters.extraction import (
     ClaimBuilder,
     excerpt_around,
@@ -280,6 +281,23 @@ class WebRequirementsAdapter:
             requested_degree=program.degree,
             page_degree=page.degree_level,
         )
+        if (
+            matched
+            and program.field
+            and _named_after_its_url(program)
+            and not matches_field_text(page.subject or "", [program.field])
+        ):
+            # The requested name can be discovery's placeholder from a URL slug,
+            # so it matches the page it came from. The applicant's field is the
+            # check that cannot: HKU's "Computing and Data Science", reached by
+            # search, confirmed itself for a computer science applicant (run 51).
+            matched, why = (
+                False,
+                (
+                    f"page subject {page.subject!r} does not name the requested field "
+                    f"{program.field!r}"
+                ),
+            )
         if not matched:
             out.errors.append(
                 f"{builder.meta['source_url']}: not confirming {program.name!r} — {why}"
@@ -446,6 +464,21 @@ class WebRequirementsAdapter:
 
 
 # --- helpers ---------------------------------------------------------------
+
+
+def _named_after_its_url(program: CandidateProgram) -> bool:
+    """Whether the requested name is only discovery's placeholder from the URL.
+
+    Such a name matches the page it came from by construction, so it cannot
+    say the page is the applicant's programme. A name from a catalogue or a
+    registry is the university's own and is trusted as before.
+    """
+    if not program.url:
+        return False
+    slug = program.url.rstrip("/").rsplit("/", 1)[-1]
+    slug_words = [w for w in re.split(r"[-_]+", slug.lower().replace(".html", "")) if w]
+    name_words = [w for w in re.split(r"[^a-z0-9]+", program.name.lower()) if w]
+    return bool(slug_words) and slug_words == name_words
 
 
 def _target_year(intake: str) -> int | None:

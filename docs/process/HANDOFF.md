@@ -1035,6 +1035,14 @@ and Data Science". Next commit: an alias matches a title only when every other w
 Scorer note (not changed): HKU university "The University of Hong Kong" vs "University of Hong Kong"
 counts as a scope difference.
 
+Run 51 (36040801960, on 9d4eaba): 5/62, precision 6/10; Toronto now completes (0 claims, 403);
+Vienna's Business Informatics gone; UBC out of wall clock again. HKU still files programme.exists for
+"Computing and Data Science" (a search lead named after its URL slug confirms itself). Next commit:
+when the requested name is only discovery's URL-slug placeholder, the page subject must also name the
+applicant's field (`_named_after_its_url` + `matches_field_text`). A broader version removed the demo's
+Melbourne "Computing and Software Systems" existence claim (golden drift, a removal) — narrowed so the
+golden is byte-identical.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
