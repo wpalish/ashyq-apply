@@ -253,6 +253,9 @@ _URL_EXCLUSIONS = re.compile(
     r"/(news|nieuws|actueel|press|blog|events?|agenda|calendar|vacature|vacanc"
     r"|jobs?|careers?|alumni|donate|shop|library|contact|privacy|cookie|search"
     r"|login|signin|account|basket|cart|rss|feed|tag|author|archive)(/|$)"
+    # One course's page is never a programme: Warsaw's catalogue answered a
+    # computer science search with "Introduction to computer science I" (run 54).
+    r"|/courses?/(view|details?)(/|$)"
     r"|\.(jpg|jpeg|png|gif|svg|webp|css|js|zip|mp4|mp3|docx?|xlsx?|pptx?)$",
     re.IGNORECASE,
 )

@@ -47,3 +47,14 @@ def test_an_alias_inside_another_programmes_name_is_not_the_field():
 def test_the_applicants_own_words_still_match_inside_a_longer_title():
     assert matches_field_text("Data & Computer Science", FIELDS)
     assert matches_field_text("Bachelor of Computing (Hons) in Computer Science", FIELDS)
+
+
+def test_a_single_course_page_is_excluded_but_a_course_list_path_is_not():
+    """Run 54, Warsaw: search offered one course's page first."""
+    from app.adapters.discovery.live_discovery import is_excluded_path
+
+    assert is_excluded_path(
+        "https://informatorects.uw.edu.pl/en/courses/view?prz_kod=1000-111bWI1a"
+    )
+    assert not is_excluded_path("https://informatorects.uw.edu.pl/en/programmes-all/IN")
+    assert not is_excluded_path("https://uni.edu/study/courses/computer-science")

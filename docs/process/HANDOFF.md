@@ -1057,6 +1057,11 @@ Run-to-run variance with Tavily is visible (programme_page_recall 6/10 → 4/10 
 so single-run deltas of ±1 fact are not evidence; compare over two runs before attributing a change.
 Open: UBC "Computer Science (BA)" vs certified BSc; Warsaw 0 claims.
 
+Run 54 (36070050028, on db7f838): 5/62, precision 6/9, UBC out of wall clock. Search by registrable
+domain now reaches informatorects.uw.edu.pl for Warsaw, but its top offers were one course's page
+("Introduction to computer science I", /courses/view) and a news item; /programmes-all/IN came third.
+Next commit excludes single-course URLs (`/courses?/(view|details?)`) in `_URL_EXCLUSIONS`.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
