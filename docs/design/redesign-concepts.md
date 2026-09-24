@@ -978,7 +978,40 @@ and there is no counsellor view.
   «Требования выполнены» can still be read as "admitted".
 - **Testing:** these are static mock-ups, not yet tested with students or parents.
 
-## 18. Next step
+## 18. Palette experiments (2026-09-24)
+
+The owner asked whether a different palette would work better. Ten palettes were drawn on the same
+six screens: start, results, shortlist, triage, programme and a story. Only the brand colours
+changed: text, night, background, the main button, the route line and links. Every other shade (lines, globe dots,
+the night theme) was derived from them. The status colours stayed as `format.ts` defines them, so
+the comparison is about the brand only. Every palette passed the text-contrast check (at least
+4.5:1).
+
+![Ten palettes on the shortlist screen](concepts/concept-R-palettes.webp)
+
+| | Palette | Character | Main drawback |
+|---|---|---|---|
+| A | **Солнце** (navy and sun yellow) | calm and serious | the yellow button is close to the yellow "Ждём данные" status |
+| B | Көк Ту (turquoise and gold from the flag) | Kazakh and recognisable | a turquoise button can be mistaken for a link |
+| C | Индиго и лайм | bold and young | lime is divisive |
+| D | Графит (near-black and bright yellow) | stricter than A | same drawback as A |
+| E | Слива и персик | warm and soft | the pink route line is close to the red "Не хватает" status |
+| F | Лаванда | calm and modern | may feel too soft for money |
+| G | Коралл | energetic | coral is close to the red status |
+| H | Изумруд и шафран | solid, academic | green text competes with the green "met" status |
+| I | Ою (felt ornament: burgundy, ochre, cream) | warm and Kazakh | the yellow button, as in A |
+| J | Көк + лайм | B's colours with C's button | lime is divisive |
+
+**Decision: the owner kept A, «Солнце».** The tokens in §17 stand as they are.
+
+The drawback of A stays on the list of risks, and the implementation must keep the button and the
+status apart:
+
+- The main button is always solid sun yellow, full width, with a verb.
+- The "warn" status is always a pale amber pill with dark amber text (`#8A5A00` on `#FFF3DB`),
+  never solid yellow.
+
+## 19. Next step
 
 After the owner approves «Горизонт»:
 
