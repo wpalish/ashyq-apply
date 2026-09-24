@@ -1254,7 +1254,11 @@ class LiveDiscoveryAdapter:
         try:
             intent = DiscoveryIntent(
                 institution=entry["name"],
-                domain=domain,
+                # The institution, not the host its homepage sits on: Warsaw's
+                # registry homepage is en.uw.edu.pl and its programme catalogue
+                # is informatorects.uw.edu.pl, so a host filter kept search on
+                # the news pages (run 53).
+                domain=registrable_domain(domain) or domain,
                 degree=profile.context.level,
                 field=fields[0],
             )

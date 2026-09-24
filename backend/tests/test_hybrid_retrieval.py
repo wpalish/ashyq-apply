@@ -684,6 +684,30 @@ class TestDiscoveryUsesSearchOnlyWhenOneIsConfigured:
 
         assert selected[PageCategory.PROGRAM_PAGE] == ["https://nu.edu.kz/found-by-sitemap"]
 
+    async def test_search_is_asked_for_the_institution_not_its_homepage_host(
+        self, tmp_path, profile, monkeypatch
+    ):
+        """Run 53, Warsaw: en.uw.edu.pl kept informatorects.uw.edu.pl out of reach."""
+        import app.adapters.search as search_pkg
+        from app.adapters.discovery.live_discovery import DiscoveryTrace, PageCategory
+
+        asked: list[list[str]] = []
+
+        class _Recording(FakeSearchProvider):
+            async def search(self, *, query, domains=(), max_results=10):
+                asked.append(list(domains))
+                return await super().search(query=query, domains=domains, max_results=max_results)
+
+        monkeypatch.setattr(search_pkg, "get_search_provider", lambda: _Recording({}, now=NOW))
+        selected = {c: [] for c in vars(PageCategory).values() if isinstance(c, str)}
+        trace = DiscoveryTrace(institution="UW", domain="en.uw.edu.pl")
+
+        await self._adapter(tmp_path)._add_search_results(
+            {"name": "University of Warsaw"}, "en.uw.edu.pl", selected, trace, profile
+        )
+
+        assert asked and all(d == ["uw.edu.pl"] for d in asked)
+
 
 class TestRejectingKindsThatAreNotProgrammes:
     """V2-30 — available, measured, and off until it is measured again.
