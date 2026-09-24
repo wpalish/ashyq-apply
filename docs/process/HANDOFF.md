@@ -985,6 +985,13 @@ programme.exists; its deadline is still missing (it lives on aufnahmeverfahren.u
 and HKU hit BENCHMARK_PAGE_BUDGET_EXHAUSTED (the descent read 20 more leads). Next commit caps the
 descended walk at `WALKER_DESCENT_TOP_N = 5` leads.
 
+Run 42 (35994920559, on 7fe2337): 10/10 complete, claim_recall 3/62 held. Vienna's deadline is
+certified `status: unknown` (the published cycle is 2026, not the fall 2027 intake), so not filing one
+is correct. Next: Groningen's certified page is `rug.nl/bachelors/computing-science`; the ontology
+lists "computing science" as a strong alias of computer science but discovery matched field words
+literally. Next commit reads fields through `with_strong_aliases` (strong aliases only; related
+concepts never match).
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 

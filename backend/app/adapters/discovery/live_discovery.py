@@ -49,6 +49,7 @@ from app.adapters.page_classifier import (
     PageType,
     classify_page,
 )
+from app.adapters.search.ontology import canonical_field, load_ontology
 from app.schemas.profile import ApplicantProfileIn
 from app.schemas.result import RankingEntry
 
@@ -448,10 +449,38 @@ def matches_field(url: str, fields: list[str]) -> int:
     path = (urlparse(url).path or "").lower()
     bonus = 0
     for field_name in fields:
-        for word in re.split(r"[^a-z]+", field_name.lower()):
-            if len(word) > 3 and word in path:
-                bonus += 8
+        # One field counts once, under whichever of its names the path uses.
+        best = 0
+        for name in with_strong_aliases([field_name]):
+            words = {w for w in re.split(r"[^a-z]+", name.lower()) if len(w) > 3}
+            best = max(best, 8 * sum(1 for w in words if w in path))
+        bonus += best
     return bonus
+
+
+@lru_cache(maxsize=64)
+def _strong_aliases(field_name: str) -> tuple[str, ...]:
+    key = canonical_field(field_name)
+    if key is None:
+        return ()
+    concept = load_ontology().fields.get(key) or {}
+    return tuple(concept.get("strong_aliases") or ())
+
+
+def with_strong_aliases(fields: list[str]) -> list[str]:
+    """The applicant's fields plus the ontology's strong aliases for each.
+
+    Groningen calls its programme "Computing Science"; the ontology records that
+    as the same field as "Computer Science", and discovery compared the words
+    literally, so the programme page never scored as the applicant's subject.
+    Only strong aliases: a related concept is never a match.
+    """
+    out: list[str] = []
+    for field_name in fields:
+        for name in (field_name, *_strong_aliases(field_name)):
+            if name.lower() not in (o.lower() for o in out):
+                out.append(name)
+    return out
 
 
 def degree_level_named(url: str) -> str | None:
@@ -547,7 +576,7 @@ def matches_field_text(label: str, fields: list[str]) -> bool:
     words = {w for w in re.split(r"[^a-z]+", label.lower()) if len(w) > 3}
     if not words:
         return False
-    for field_name in fields:
+    for field_name in with_strong_aliases(fields):
         wanted = {w for w in re.split(r"[^a-z]+", field_name.lower()) if len(w) > 3}
         if wanted and wanted <= words:
             return True

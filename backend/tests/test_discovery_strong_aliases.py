@@ -1,0 +1,35 @@
+"""Discovery reads the applicant's subject through the ontology's strong aliases.
+
+Run 42, Groningen: the certified programme page is ``/bachelors/computing-science``.
+The ontology already records "computing science" as the same field as
+"computer science"; discovery compared words literally and never scored it.
+"""
+
+from __future__ import annotations
+
+from app.adapters.discovery.live_discovery import (
+    matches_field,
+    matches_field_text,
+    with_strong_aliases,
+)
+
+FIELDS = ["computer science"]
+
+
+def test_a_strong_alias_scores_like_the_field_itself():
+    assert matches_field("https://www.rug.nl/bachelors/computing-science", FIELDS) == matches_field(
+        "https://uni.edu/bachelors/computer-science", FIELDS
+    )
+    assert matches_field_text("Computing Science", FIELDS)
+
+
+def test_a_related_concept_is_not_an_alias():
+    names = [n.lower() for n in with_strong_aliases(FIELDS)]
+    assert "data science" not in names
+    assert "software engineering" not in names
+    assert not matches_field_text("Data Science", FIELDS)
+
+
+def test_an_unknown_field_is_used_verbatim_and_counted_once():
+    assert with_strong_aliases(["Egyptology"]) == ["Egyptology"]
+    assert matches_field("https://uni.edu/egyptology", ["Egyptology"]) == 8
