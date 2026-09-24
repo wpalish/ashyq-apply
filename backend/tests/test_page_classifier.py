@@ -137,3 +137,22 @@ def test_a_portal_url_alone_does_not_reject_a_page():
     )
     result = classify_page(url="https://research.example.edu/en/projects/cs", html=html)
     assert result.page_type is not PageType.IRRELEVANT
+
+
+def test_a_news_block_on_the_page_does_not_make_it_news():
+    """Run 31: Vienna's admission-procedure page, rejected on a sidebar h2."""
+    html = (
+        "<html><head><title>Admission procedure | University of Vienna</title></head><body><main>"
+        "<h1>Admission procedure</h1><p>Apply online in u:space by the deadline.</p>"
+        "<h2>News</h2><p>Open day on 3 March.</p></main></body></html>"
+    )
+    result = classify_page(url="https://studieren.univie.ac.at/en/admission-procedure", html=html)
+    assert result.page_type is not PageType.NEWS
+
+
+def test_a_page_titled_as_news_is_still_news():
+    html = (
+        "<html><head><title>News | University</title></head><body><main>"
+        "<h1>New lab opens</h1><p>Text.</p></main></body></html>"
+    )
+    assert classify_page(url="https://x.edu/a", html=html).page_type is PageType.NEWS

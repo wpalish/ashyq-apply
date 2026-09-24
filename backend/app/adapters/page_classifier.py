@@ -410,7 +410,10 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
     if _IRRELEVANT.search(low_head):
         return PageClassification(PageType.IRRELEVANT, 0.8, ["title is off-topic"], title)
 
-    if _NEWS.search(low_head):
+    # The page's own title and first heading only: a "News" block in the
+    # sidebar is not the page. Run 31: Vienna's admission-procedure page and
+    # HKU's admissions home were both rejected as news on a secondary h2.
+    if _NEWS.search(" ".join([title, *headings[:1]]).lower()):
         return PageClassification(PageType.NEWS, 0.75, ["news markers in the title"], title)
 
     # --- a research output --------------------------------------------------
