@@ -1015,6 +1015,11 @@ offered: none" and each search call takes ~0.1 s — search is contributing noth
 HKU, UBC have only catalogues). Next commit logs each failed query's reason and adds query/failed/
 rejected counts to the trace line, to tell a refused key or quota from an empty index or the prefilter.
 
+Run 48 (36016512038, on a6f2dc3): 5/62 held. Root cause of "search offered nothing": every Exa query
+answers HTTP 402 (Payment Required) — the account's credits are spent. All six query families fail
+for every case, so search has contributed nothing since the balance ran out. OWNER ACTION: top up the
+Exa account (or rotate the key in the repository secret). Nothing in code can fix a 402.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
