@@ -942,6 +942,12 @@ fixed `6e7d4ff` ('Admission procedure' in the admissions vocabulary). Toronto fi
 earlier runs too), and `utm.utoronto.ca` robots.txt timed out → disallowed. A 403 is the site's explicit
 answer; it is not retried and not worked around.
 
+**Run 33 (35961069742) rejection detail:** HKU programme page title 'Computing and Data Science | Admissions
+Office', no decisive signals — a faculty listing. Degree titles in brackets ('Bachelor of Engineering
+(Computer Science)') were not read by `full_degree_titles`; now they are (`29a2c2a`) — a *suspected* cause,
+unconfirmed. `04a37a4` adds text length and the degree titles found to every rejection, which the next
+capture will use to confirm or rule it out.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
