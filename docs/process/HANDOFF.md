@@ -921,6 +921,14 @@ same shape of loss that got interleaving rejected before. One run each is noise-
 swings 5 facts). Recommendation to the owner: benchmark default 90→120 s (harness only, production has no
 such cap); keep SEARCH_BEFORE_NAVIGATION off until a second paired run explains Warsaw/KAIST.
 
+**Paired repeat, 2026-09-24, both at 120 s on `2c492af` (owner: 120 s default, `2c492af`):**
+run 29 (35954240254, default order) and run 30 (35954242214, search first) — both 10/10 complete,
+claim_recall 6/62, strict 2/62, precision 7/9. Default order: programme_page_recall 5/10, recall@5 1/10.
+Search first: 4/10, recall@5 3/10, ~25% fewer reads. KAIST's zero was noise (search-first KAIST 4 claims
+this time, default-order KAIST 0); Warsaw files nothing under search-first in both runs (its 2 claims are
+not certified facts). Verdict: no difference in scored facts across four runs; SEARCH_BEFORE_NAVIGATION
+stays off (the measured default keeps one more programme page), and the flag stays for later measurement.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
