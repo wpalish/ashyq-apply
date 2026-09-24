@@ -1050,6 +1050,13 @@ leads). Remaining wrong-scope claims: UBC "Computer Science (BA)" for a certifie
 master. Scorer-side string differences (Delft/NTU/Vienna titles, HKU "The University of") are matched
 by identity and not counted as wrong.
 
+Run 53 (36066263881, on eb3e3bc): claim_recall 6/62, precision 8/11, programme_page_recall 4/10,
+10/10 complete. Toronto's "Topic Courses" claim is gone (Toronto now 0 claims); HKU now records
+"BEng in Computer Science" (the right programme; university string "The University of" still differs).
+Run-to-run variance with Tavily is visible (programme_page_recall 6/10 → 4/10 with no discovery change),
+so single-run deltas of ±1 fact are not evidence; compare over two runs before attributing a change.
+Open: UBC "Computer Science (BA)" vs certified BSc; Warsaw 0 claims.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
