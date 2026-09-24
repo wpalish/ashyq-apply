@@ -123,6 +123,8 @@ _PLURAL_FUNDING_HEADING = re.compile(
 )
 _ADMISSIONS = re.compile(
     r"admission requirements|entry requirements|how to apply|application procedure"
+    # Vienna heads its admissions page "Admission procedure" (run 32).
+    r"|admissions? (?:procedure|process)"
     r"|admission and application|apply for admission|entry criteria"
     # A page headed "International admissions" or "Undergraduate admissions" is
     # a general admissions page even though it never says "requirements".

@@ -156,3 +156,14 @@ def test_a_page_titled_as_news_is_still_news():
         "<h1>New lab opens</h1><p>Text.</p></main></body></html>"
     )
     assert classify_page(url="https://x.edu/a", html=html).page_type is PageType.NEWS
+
+
+def test_an_admission_procedure_page_is_an_admissions_page():
+    """Run 32: Vienna's page, once no longer news, was left unknown."""
+    html = (
+        "<html><head><title>Admission procedure | University of Vienna</title></head><body><main>"
+        "<h1>Admission procedure</h1><p>Apply online in u:space by the deadline.</p>"
+        "</main></body></html>"
+    )
+    result = classify_page(url="https://studieren.univie.ac.at/en/admission-procedure", html=html)
+    assert result.page_type is PageType.GENERAL_ADMISSIONS
