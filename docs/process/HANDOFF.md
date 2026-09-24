@@ -1062,6 +1062,27 @@ domain now reaches informatorects.uw.edu.pl for Warsaw, but its top offers were 
 ("Introduction to computer science I", /courses/view) and a news item; /programmes-all/IN came third.
 Next commit excludes single-course URLs (`/courses?/(view|details?)`) in `_URL_EXCLUSIONS`.
 
+Run 55 (36072768171, on 2cf6ad8): 5/62, precision 6/9; Groningen hit the page budget (search reads
+added), UBC finished with 0 claims. Live results now swing 5–7/62 with Tavily's answers.
+
+STAGE LEDGER — every scorable fact (31 of 62; the other 31 need a claim type or an identity binding,
+see expressibility) and why it is or is not scored, as of runs 52–55:
+- Scored (live, when discovery reaches the page): groningen deadline, groningen programme.exists,
+  vienna programme.exists, delft programme.exists (identity), ntu programme.exists,
+  hku programme.exists (run 53+, "BEng in Computer Science"), ubc programme.exists (BA vs certified
+  BSc: counted wrong-scope; both degrees exist, the profile does not choose — not "fixed" by guessing).
+- Reachable, extraction gap: ubc ielts.subscores — "no part less than 6.0" extracts on the quoted text
+  and the scorer already maps a floor to the four-band map, yet the full page yields no subscore claim;
+  cause not established without the full page (open).
+- Certified as unknown/null, correctly not claimed: vienna deadline (published cycle is 2026, not
+  fall 2027), groningen tuition (certified value null).
+- Blocked by the site, not the pipeline: aalto (3 facts) and kaist (14 facts) — robots.txt does not
+  answer, RFC 9309 ⇒ disallowed; toronto (3 facts) — HTTP 403 on future.utoronto.ca.
+- JS-rendered: warsaw programme.exists — search now reaches informatorects.uw.edu.pl/en/programmes-all/IN
+  but it serves 446 characters without a browser; the certified IN/S1-INF page was not offered.
+Owner-level options for the blocked 20: permission/API from the universities, official aggregators
+(Studyinfo, Study in Korea), a browser tier for JS pages, a fixed-IP crawler.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
