@@ -929,6 +929,13 @@ this time, default-order KAIST 0); Warsaw files nothing under search-first in bo
 not certified facts). Verdict: no difference in scored facts across four runs; SEARCH_BEFORE_NAVIGATION
 stays off (the measured default keeps one more programme page), and the flag stays for later measurement.
 
+**Run 31 (35956516997) zero-claim page listing (`74cda21`) says why:** Vienna's admission-procedure page
+and HKU's admissions home were classified *news* on a sidebar heading — fixed `cf1cbeb` (title and first
+heading only). HKU's programme page (`www.admissions.hku.hk/.../computing-and-data-science`) is
+classified *unknown* and files nothing — not yet diagnosed (page not reachable from the sandbox). Aalto:
+robots.txt ReadTimeout → whole site disallowed (RFC-correct); the only page left is the research-portal
+paper, correctly rejected. KAIST: admission host robots.txt ConnectTimeout → disallowed.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
