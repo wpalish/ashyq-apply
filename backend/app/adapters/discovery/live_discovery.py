@@ -83,6 +83,13 @@ MAX_PROGRAM_CANDIDATES_CHECKED = 8
 #: precision fell too, so it removed correct pages rather than junk. Turn it
 #: on only together with a capture that shows what it does.
 CONFIRM_SEARCH_PROGRAMMES = False
+#: Whether search runs *before* the navigation fallback, and the fallback is
+#: skipped when search found a programme page. Off: appending search after the
+#: other generators is the measured default, and interleaving once cost whole
+#: cases. Run 26 lost Groningen to ~50 navigation reads of faculty home pages
+#: before search found the programme at once; this exists so that trade is
+#: measured rather than argued. The benchmark harness flips it per capture.
+SEARCH_BEFORE_NAVIGATION = False
 #: Pages walked during the navigation fallback. Universities routinely nest
 #: "Degree programmes" -> "Bachelor programmes" -> a programme, so one hop is
 #: not enough; an unbounded walk would be a crawl.
@@ -933,6 +940,10 @@ class LiveDiscoveryAdapter:
         #    so a registry entry with an admissions seed suppressed the fallback
         #    and the run finished with no programme — which the live canary
         #    showed on six of ten sites.
+        searched_early = False
+        if SEARCH_BEFORE_NAVIGATION and not selected[PageCategory.PROGRAM_PAGE]:
+            await self._add_search_results(entry, domain, selected, trace, profile)
+            searched_early = True
         if not selected[PageCategory.PROGRAM_PAGE]:
             trace.used_navigation_fallback = True
             await self._navigation_fallback(entry, domain, selected, trace, profile)
@@ -950,7 +961,8 @@ class LiveDiscoveryAdapter:
         # snapshot is taken after it, and step 7 judges only what search adds.
         confirmed_so_far = set(selected[PageCategory.PROGRAM_PAGE])
 
-        await self._add_search_results(entry, domain, selected, trace, profile)
+        if not searched_early:
+            await self._add_search_results(entry, domain, selected, trace, profile)
 
         # 7. Confirm what search added — built, and off until it is measured.
         #    Step 4 runs before search, so a programme page the provider

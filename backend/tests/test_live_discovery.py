@@ -1866,3 +1866,51 @@ class TestTheWalkerUsesOnePredicate:
         ).read_text(encoding="utf-8")
         assert "profile_rejects(page, self.degree, self.fields)" in source
         assert "profile_rejects(page, self.degree, [])" not in source
+
+
+class TestSearchBeforeNavigation:
+    """The experiment flag: off is the measured default; on, search that finds
+    a programme page spares the navigation fallback's reads."""
+
+    @staticmethod
+    def _run(tmp_path, profile, monkeypatch, *, flag: bool):
+        from app.adapters.discovery import live_discovery
+
+        monkeypatch.setattr(live_discovery, "SEARCH_BEFORE_NAVIGATION", flag)
+        calls: list[int] = []
+
+        async def fake_search(self, entry, domain, selected, trace, profile):
+            calls.append(1)
+            selected[PageCategory.PROGRAM_PAGE].append(
+                "https://uni.edu/en/bachelors/computer-science"
+            )
+
+        monkeypatch.setattr(LiveDiscoveryAdapter, "_add_search_results", fake_search)
+        entry = {"name": "U", "country": "Netherlands", "city": "X", "homepage": "https://uni.edu/"}
+        site = StubSite({"https://uni.edu/robots.txt": ""})
+        return entry, site, calls
+
+    @pytest.mark.asyncio
+    async def test_on_search_first_skips_the_navigation_fallback(
+        self, tmp_path, profile_bachelor, monkeypatch
+    ):
+        entry, site, calls = self._run(tmp_path, profile_bachelor, monkeypatch, flag=True)
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            adapter = LiveDiscoveryAdapter(fetcher, TestAdapter.registry_file(tmp_path, entry))
+            await adapter.discover(profile_bachelor)
+        assert calls == [1], "search runs once, early"
+        assert not adapter.traces[0].used_navigation_fallback
+        assert "https://uni.edu/" not in site.requested
+
+    @pytest.mark.asyncio
+    async def test_off_navigation_runs_first_and_search_once_after(
+        self, tmp_path, profile_bachelor, monkeypatch
+    ):
+        entry, site, calls = self._run(tmp_path, profile_bachelor, monkeypatch, flag=False)
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            adapter = LiveDiscoveryAdapter(fetcher, TestAdapter.registry_file(tmp_path, entry))
+            await adapter.discover(profile_bachelor)
+        assert calls == [1]
+        assert adapter.traces[0].used_navigation_fallback

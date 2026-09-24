@@ -235,11 +235,20 @@ def main() -> None:
     parser.add_argument("--case", choices=list(COHORT))
     parser.add_argument("--seconds-per-case", type=int, default=120)
     parser.add_argument("--max-pages", type=int, default=40)
+    parser.add_argument(
+        "--search-first",
+        action="store_true",
+        help="experiment: search before the navigation fallback (default off)",
+    )
     parser.add_argument("--child", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args()
     if not 1 <= args.seconds_per_case <= 600 or not 1 <= args.max_pages <= 100:
         parser.error("Budget must be 1..600 seconds and 1..100 Fetcher.get calls per university")
     if args.child:
+        if args.search_first:
+            from app.adapters.discovery import live_discovery
+
+            live_discovery.SEARCH_BEFORE_NAVIGATION = True
         asyncio.run(capture_one(args.case, args.out, args.max_pages))
         return
     stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
@@ -272,6 +281,7 @@ def main() -> None:
                         str(output),
                         "--max-pages",
                         str(args.max_pages),
+                        *(["--search-first"] if args.search_first else []),
                     ],
                     env=environment,
                     stdout=log,
@@ -302,6 +312,7 @@ def main() -> None:
                 "seconds_per_case": args.seconds_per_case,
                 "max_fetcher_calls_per_case": args.max_pages,
                 "page_budget_counts": "network reads; cache hits are free (since 2026-09-23)",
+                "search_before_navigation": args.search_first,
                 "browser_enabled": False,
                 "cohort": list(COHORT),
                 "scope": "current production pipeline; HTTP-only bounded cold run",

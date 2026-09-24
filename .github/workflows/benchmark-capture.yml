@@ -30,6 +30,10 @@ on:
         description: 'Fetcher calls per university (60 matches the frozen baseline)'
         required: false
         default: '60'
+      search_first:
+        description: 'Experiment: search before the navigation fallback (false matches the measured default)'
+        required: false
+        default: 'false'
 
 permissions:
   contents: read
@@ -84,6 +88,7 @@ jobs:
             --out evaluation/research/baseline/capture.${{ github.run_id }} \
             --seconds-per-case ${{ inputs.seconds_per_case }} \
             --max-pages ${{ inputs.max_pages }} \
+            ${{ inputs.search_first == 'true' && '--search-first' || '' }} \
             ${{ inputs.case && format('--case {0}', inputs.case) || '' }} \
             | tee capture.log
           # The capture writes into a timestamped subdirectory and prints that
