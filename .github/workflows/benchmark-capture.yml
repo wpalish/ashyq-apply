@@ -23,9 +23,9 @@ on:
         required: false
         default: ''
       seconds_per_case:
-        description: 'Wall-clock budget per university, in seconds (90 matches the frozen baseline)'
+        description: 'Wall-clock budget per university, in seconds (120 since 2026-09-24; 90 matches the frozen baseline)'
         required: false
-        default: '90'
+        default: '120'
       max_pages:
         description: 'Fetcher calls per university (60 matches the frozen baseline)'
         required: false

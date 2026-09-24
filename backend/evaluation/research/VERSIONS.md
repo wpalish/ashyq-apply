@@ -124,3 +124,8 @@ had 9 value-correct claims and 8 of them were quoted from such a sibling page, a
 Another site still does not support. `verbatim_evidence_rate` keeps the same-page reading, and the strict
 recall is published beside the new one as **`claim_recall_same_page`**. All eight published files were
 regenerated from the frozen capture: every existing metric is identical; only the new key is added.
+
+**Live harness, 2026-09-24 — the per-case wall clock defaults to 120 s (owner decision).** At 90 s,
+Groningen and UBC finished or not depending on the runner's network that minute (run 26: 8/10, 3/62;
+run 27 at 120 s: 10/10, 6/62). The budget bounds the harness, not the product. Live captures at 90 s
+are not directly comparable on budget-bound cases; each capture's `config.seconds_per_case` says which ran.
