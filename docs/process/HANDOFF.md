@@ -957,6 +957,16 @@ field counts too — `fbad784`.
 the 120 s clock (its admissions page is accepted and walked; not yet diagnosed). UBC ran out reading eight
 Canadian-students award pages for a Kazakh applicant — skipped for plain foreigners, `dda17f3`.
 
+Run 37 (35971288445, on 457b2c0): 10/10 cases complete inside 120 s; UBC now skips its
+`canadian-students` award pages as intended. claim_recall 2/62 (same-page 1/62): delft and ntu
+programme.exists only. Vienna is a navigation miss, not a clock or pattern miss: the deadline fact
+lives on `aufnahmeverfahren.univie.ac.at/en/computer-science` and the programme page is
+`studieren.univie.ac.at/en/bachelordiploma-programmes/computer-science-bachelor-with-entrance-exam-procedure/`
+(linked from `/en/degree-programmes/bachelordiploma-programmes/` as "Computer Science (Bachelor - with
+entrance exam procedure)"); discovery spent 63 reads without selecting it, and requirements only reads
+program.url + admissions_url. `_APPLICATION_PERIOD` matches that page's text offline. Next: see which
+discovery stage drops that link (needs a CI trace; the sandbox cannot reach sites through the Fetcher).
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
