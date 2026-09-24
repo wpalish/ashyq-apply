@@ -953,6 +953,10 @@ Computer Science' — the bracket theory (`29a2c2a`, kept: harmless and correct)
 compared against `program.name` = 'Computing and Data Science' (the faculty page's title). Now the requested
 field counts too — `fbad784`.
 
+**Run 36 (35968336185):** HKU files its programme-exists claim (listing fix works). Vienna now ran out of
+the 120 s clock (its admissions page is accepted and walked; not yet diagnosed). UBC ran out reading eight
+Canadian-students award pages for a Kazakh applicant — skipped for plain foreigners, `dda17f3`.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
