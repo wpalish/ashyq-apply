@@ -332,6 +332,38 @@ def _drop_outcome(url: str, label: str) -> str:
     return "degree_level_mismatch"
 
 
+def _without_query(url: str) -> str:
+    """A page without its query: ``/bachelors?lang=nl`` is ``/bachelors``."""
+    parsed = urlparse(url)
+    return f"{parsed.netloc.lower()}{(parsed.path or '/').rstrip('/')}"
+
+
+def _descent_lead(walk: CatalogWalk, seen: set[str]) -> str | None:
+    """The list one level down that this walk offered, strongest first.
+
+    A lead that reads as a catalogue, or whose URL names a list, comes first.
+    Failing that, a page directly below the catalogue it was found on that
+    was read and was not this applicant's programme: Groningen's
+    "Bachelor's degrees" offers ``/bachelors/alphabet``, whose title reads as
+    one page and whose body lists every programme (run 45). A language copy
+    of a page already walked (``?lang=nl``) is never a new list.
+    """
+    read = [
+        (url, outcome)
+        for url, outcome in walk.outcomes
+        if outcome.startswith("reads_as_") and _without_query(url) not in seen
+    ]
+    for url, outcome in read:
+        if outcome == f"reads_as_{PageType.PROGRAM_CATALOG.value}" or looks_like_catalogue(url):
+            return url
+    parent = _without_query(walk.catalogue_url) + "/"
+    for url, _outcome in read:
+        page = _without_query(url)
+        if page.startswith(parent) and "/" not in page[len(parent) :]:
+            return url
+    return None
+
+
 class CatalogRenderer(BrowserFetcher):
     """A browser tier that also keeps the JSON payloads a catalogue fetches.
 
@@ -389,7 +421,7 @@ class CatalogWalker:
         # (url, depth): depth 0 is a catalogue discovery chose; each descent
         # is one level deeper, bounded per chain and in total.
         queue: list[tuple[str, int]] = [(u, 0) for u in catalogue_urls[:WALKER_MAX_CATALOGS]]
-        seen = {u for u, _ in queue}
+        seen = {_without_query(u) for u, _ in queue}
         descents = 0
         while queue:
             catalogue_url, depth = queue.pop(0)
@@ -417,18 +449,13 @@ class CatalogWalker:
             # the walk's strongest lead and was dropped as "not a programme"
             # (its title reads as one programme's name, so the classifier's
             # verdict alone is not enough; the URL naming a list is).
-            for url, outcome in walk.outcomes:
-                if url in seen or not outcome.startswith("reads_as_"):
-                    continue
-                if outcome == f"reads_as_{PageType.PROGRAM_CATALOG.value}" or looks_like_catalogue(
-                    url
-                ):
-                    seen.add(url)
-                    # Deeper first: the list below this one is a more
-                    # specific lead than another top-level catalogue.
-                    queue.insert(0, (url, depth + 1))
-                    descents += 1
-                    break
+            child = _descent_lead(walk, seen)
+            if child is not None:
+                seen.add(_without_query(child))
+                # Deeper first: the list below this one is a more specific
+                # lead than another top-level catalogue.
+                queue.insert(0, (child, depth + 1))
+                descents += 1
         return walks
 
     async def walk_catalog(self, catalogue_url: str, top_n: int = WALKER_TOP_N) -> CatalogWalk:

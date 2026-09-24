@@ -89,3 +89,23 @@ async def test_a_programme_page_that_is_not_a_list_is_not_walked():
     pages = {ROOT: CatalogWalk(catalogue_url=ROOT, outcomes=[(other, "reads_as_program_detail")])}
     await _walker(pages, walked).walk([ROOT])
     assert walked == [ROOT]
+
+
+@pytest.mark.asyncio
+async def test_a_language_copy_is_not_a_new_list_and_a_child_index_is():
+    """Run 45, Groningen: the second descent went to ``?lang=nl`` of the same page."""
+    bachelors = "https://www.rug.nl/bachelors"
+    alphabet = "https://www.rug.nl/bachelors/alphabet"
+    walked: list[str] = []
+    pages = {
+        ROOT: CatalogWalk(catalogue_url=ROOT, outcomes=[(bachelors, "reads_as_program_catalog")]),
+        bachelors: CatalogWalk(
+            catalogue_url=bachelors,
+            outcomes=[
+                (bachelors + "?lang=nl", "reads_as_program_catalog"),
+                (alphabet, "reads_as_program_detail"),
+            ],
+        ),
+    }
+    await _walker(pages, walked).walk([ROOT])
+    assert walked == [ROOT, bachelors, alphabet]

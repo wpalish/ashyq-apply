@@ -999,6 +999,12 @@ by-subject); the programme links are one level below. Next commit: descents trac
 top-level catalogue. Warsaw: the walker reads en.uw.edu.pl menus only; the certified programme page is
 on informatorects.uw.edu.pl (not yet reached).
 
+Run 45 (36003951574, on 7e7f91f): claim_recall 3/62, programme_page_recall 3/10 (was 2/10), 10/10
+complete. Groningen's second descent went to `/bachelors?lang=nl` (a language copy) instead of
+`/bachelors/alphabet`, which does link `/bachelors/computing-science/`. Next commit: a language copy
+of a walked page is not a new list, and a read page directly below the catalogue is a descent lead when
+no lead reads as a catalogue (`_descent_lead`).
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
