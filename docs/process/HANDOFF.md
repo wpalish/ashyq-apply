@@ -1043,6 +1043,13 @@ applicant's field (`_named_after_its_url` + `matches_field_text`). A broader ver
 Melbourne "Computing and Software Systems" existence claim (golden drift, a removal) — narrowed so the
 golden is byte-identical.
 
+Run 52 (36046148794, on a33629d): claim_recall 7/62 (best so far), precision 10/13, wrong_scope 3/13,
+programme_page_recall 6/10, 10/10 complete (UBC and Toronto finish; Toronto files 2 claims via search
+leads). Remaining wrong-scope claims: UBC "Computer Science (BA)" for a certified BSc; Toronto
+"Computer Science Topic Courses" (a UTM calendar section read as a programme); HKU a page read as
+master. Scorer-side string differences (Delft/NTU/Vienna titles, HKU "The University of") are matched
+by identity and not counted as wrong.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
