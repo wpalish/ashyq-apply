@@ -217,7 +217,10 @@ class WebRequirementsAdapter:
                         readable_chars=len(text),
                         detail=(
                             f"classified as {page.page_type.value}; no requirement can be "
-                            "read from this kind of page."
+                            "read from this kind of page. "
+                            # What the classifier saw, so a wrong call can be
+                            # diagnosed from a capture without the page itself.
+                            f"title={page.title[:80]!r} signals={'; '.join(page.signals[:3])!r}"
                         ),
                     )
                 )

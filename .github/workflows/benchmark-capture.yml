@@ -253,7 +253,7 @@ jobs:
                   continue
               print(f"\n  {observation['case_id']}: no claims; its pages:")
               for record in (observation.get("page_outcomes") or [])[:25]:
-                  detail = (record.get("detail") or "")[:120]
+                  detail = (record.get("detail") or "")[:260]
                   print(f"    {record['category']:20} {record['url'][:110]}  {detail}")
           PY
 
