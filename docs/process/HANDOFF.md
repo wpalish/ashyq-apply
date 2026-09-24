@@ -979,6 +979,12 @@ names Computer Science. Fix in the next commit: the walker descends into one suc
 the deadline fact: it lives on `aufnahmeverfahren.univie.ac.at/en/computer-science`, which
 requirements does not read (only program.url + admissions_url).
 
+Run 41 (35991678662, on 687113d): claim_recall 3/62 (was 2). Vienna now confirms
+`/en/bachelordiploma-programmes/computer-science-bachelor-with-entrance-exam-procedure/` and files
+programme.exists; its deadline is still missing (it lives on aufnahmeverfahren.univie.ac.at). Cost: UBC
+and HKU hit BENCHMARK_PAGE_BUDGET_EXHAUSTED (the descent read 20 more leads). Next commit caps the
+descended walk at `WALKER_DESCENT_TOP_N = 5` leads.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 

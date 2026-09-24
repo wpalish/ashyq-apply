@@ -20,7 +20,10 @@ DEEPER = "https://studieren.univie.ac.at/en/bachelordiploma-programmes/by-topic-
 CS = "https://studieren.univie.ac.at/en/bachelordiploma-programmes/computer-science-bachelor"
 
 
-def _walker(pages: dict[str, CatalogWalk], walked: list[str]) -> CatalogWalker:
+def _walker(
+    pages: dict[str, CatalogWalk], walked: list[str], budgets: list[int] | None = None
+) -> CatalogWalker:
+    budgets = [] if budgets is None else budgets
     walker = CatalogWalker(
         fetcher=None,  # type: ignore[arg-type]
         domain="univie.ac.at",
@@ -28,8 +31,9 @@ def _walker(pages: dict[str, CatalogWalk], walked: list[str]) -> CatalogWalker:
         fields=["computer science"],
     )
 
-    async def walk_catalog(catalogue_url: str) -> CatalogWalk:
+    async def walk_catalog(catalogue_url: str, top_n: int = cw.WALKER_TOP_N) -> CatalogWalk:
         walked.append(catalogue_url)
+        budgets.append(top_n)
         return pages.get(catalogue_url, CatalogWalk(catalogue_url=catalogue_url))
 
     walker.walk_catalog = walk_catalog  # type: ignore[method-assign]
@@ -50,9 +54,11 @@ async def test_the_walk_descends_into_a_list_its_catalogue_offered():
             outcomes=[(DEEPER, "reads_as_program_catalog")],
         ),
     }
-    walks = await _walker(pages, walked).walk([ROOT, CHOICE])
+    budgets: list[int] = []
+    walks = await _walker(pages, walked, budgets).walk([ROOT, CHOICE])
 
     assert walked == [ROOT, CHOICE, LIST]
+    assert budgets == [cw.WALKER_TOP_N, cw.WALKER_TOP_N, cw.WALKER_DESCENT_TOP_N]
     assert [url for walk in walks for url in walk.confirmed] == [CS]
 
 

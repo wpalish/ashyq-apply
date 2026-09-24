@@ -69,6 +69,9 @@ WALKER_TOP_N = 20
 WALKER_MAX_CATALOGS = 2
 #: Sub-catalogues the walk may descend into, found as leads of a catalogue.
 WALKER_MAX_DESCENTS = 1
+#: Leads read in a descended sub-list. The applicant's own programme scores
+#: first there; twenty more reads spent UBC's and HKU's page budget (run 41).
+WALKER_DESCENT_TOP_N = 5
 
 #: A label shorter than this cannot say which programme it leads to. "Ask us"
 #: and "Learn more" are furniture, not leads.
@@ -384,8 +387,9 @@ class CatalogWalker:
         descents = 0
         while queue:
             catalogue_url = queue.pop(0)
+            top_n = WALKER_DESCENT_TOP_N if catalogue_url not in catalogue_urls else WALKER_TOP_N
             try:
-                walk = await self.walk_catalog(catalogue_url)
+                walk = await self.walk_catalog(catalogue_url, top_n=top_n)
             except Exception as exc:  # one broken catalogue must not end discovery
                 log.warning(
                     "catalog walk of %s failed: %s: %s",
@@ -415,7 +419,7 @@ class CatalogWalker:
                     break
         return walks
 
-    async def walk_catalog(self, catalogue_url: str) -> CatalogWalk:
+    async def walk_catalog(self, catalogue_url: str, top_n: int = WALKER_TOP_N) -> CatalogWalk:
         """Read one catalogue page and fetch its strongest leads.
 
         The rendered DOM is the truth when a renderer is attached (an HTTP
@@ -456,8 +460,8 @@ class CatalogWalker:
         scored = self._score(list(candidates.values()), walk.outcomes, _host(catalogue_url))
         walk.candidates = scored
 
-        budget = scored[:WALKER_TOP_N]
-        for link in scored[WALKER_TOP_N:]:
+        budget = scored[:top_n]
+        for link in scored[top_n:]:
             walk.outcomes.append((link.url, "walker_budget_exhausted"))
 
         for link in budget:
