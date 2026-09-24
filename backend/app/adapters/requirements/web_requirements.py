@@ -298,6 +298,10 @@ class WebRequirementsAdapter:
                     f"{program.field!r}"
                 ),
             )
+        if matched and _COURSE_LIST.search(page.subject or ""):
+            # A calendar section lists courses, not a programme one can apply
+            # to: Toronto's "Computer Science Topic Courses" (run 52).
+            matched, why = False, f"page subject {page.subject!r} names courses, not a programme"
         if not matched:
             out.errors.append(
                 f"{builder.meta['source_url']}: not confirming {program.name!r} — {why}"
@@ -464,6 +468,10 @@ class WebRequirementsAdapter:
 
 
 # --- helpers ---------------------------------------------------------------
+
+
+#: A subject that names a list of courses rather than a programme.
+_COURSE_LIST = re.compile(r"\bcourses?\b(?!\s+of\s+study)", re.IGNORECASE)
 
 
 def _named_after_its_url(program: CandidateProgram) -> bool:

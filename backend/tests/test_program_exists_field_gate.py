@@ -50,3 +50,12 @@ async def test_a_slug_named_lead_does_not_confirm_another_field(monkeypatch, tmp
 async def test_the_applicants_field_still_confirms(monkeypatch, tmp_path):
     claims = await _exists(monkeypatch, tmp_path, "Computer Science", "Computer Science")
     assert len(claims) == 1
+
+
+@pytest.mark.asyncio
+async def test_a_course_list_is_not_a_programme(monkeypatch, tmp_path):
+    """Run 52, Toronto: a calendar section "Computer Science Topic Courses"."""
+    claims = await _exists(
+        monkeypatch, tmp_path, "Computer Science Topic Courses", "Computer Science"
+    )
+    assert claims == []
