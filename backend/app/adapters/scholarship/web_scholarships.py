@@ -249,6 +249,20 @@ class WebScholarshipAdapter:
                         for link in _award_links(page.text, url)
                         if _page_key(link) not in seen_pages
                     ]
+                    if _is_international(profile, candidate):
+                        # Awards a university reserves for its own citizens are
+                        # not read for someone who is not one. Run 36: UBC spent
+                        # its last 30 s on eight Canadian-students award pages.
+                        for link in [x for x in links if _DOMESTIC_ONLY.search(x)]:
+                            links.remove(link)
+                            out.page_outcomes.append(
+                                PageOutcome(
+                                    url=link,
+                                    category="classifier-rejected",
+                                    detail="for domestic students only; not read for an "
+                                    "international applicant",
+                                )
+                            )
                     if links:
                         linked_an_award = True
                     elif url == primary:
@@ -741,6 +755,32 @@ def _restricted_to(text: str, pattern: re.Pattern[str]) -> re.Match[str] | None:
     the applicant is told to ask — the two failures are not symmetrical.
     """
     return pattern.search(" ".join((text or "").split()))
+
+
+#: A path that says an award or list is for the university's own citizens.
+_DOMESTIC_ONLY = re.compile(r"/[\w-]*\b(?:domestic|canadian|home)-students?\b", re.IGNORECASE)
+
+
+def _is_international(profile, candidate) -> bool:
+    """Whether the applicant plainly holds no citizenship of the university's country.
+
+    Only a clear "no" from :func:`match_citizenship` counts; an unresolvable
+    pair (a code, an unknown spelling) keeps every page, so nothing an
+    applicant might qualify for is skipped on a guess.
+    """
+    from app.domain.citizenship import CitizenshipMatch, match_citizenship
+
+    context = getattr(profile, "context", None)
+    country = getattr(candidate, "country", "") or ""
+    if context is None or not country:
+        return False
+    held = [getattr(context, "citizenship", None), getattr(context, "second_citizenship", None)]
+    if any(h and len(h.strip()) <= 3 for h in held):
+        # An ISO code ("CA") is not a name the matcher can compare with
+        # "Canada"; a Canadian written that way must not lose Canadian awards.
+        return False
+    verdict, _ = match_citizenship([country], held)
+    return verdict is CitizenshipMatch.NOT_APPLICABLE
 
 
 def _award_links(html: str, base: str) -> list[str]:

@@ -154,3 +154,28 @@ def test_a_translated_copy_of_a_page_is_one_page():
     assert _without_locale(en) == en
     # A locale-looking word that is the whole path is not a translation prefix.
     assert _without_locale("https://x.edu/fi") == "https://x.edu/fi"
+
+
+def test_domestic_only_award_lists_are_skipped_only_for_a_plain_foreigner():
+    """Run 36: UBC read eight Canadian-students award pages for a Kazakh applicant."""
+    from types import SimpleNamespace
+
+    from app.adapters.scholarship.web_scholarships import _DOMESTIC_ONLY, _is_international
+
+    uni = SimpleNamespace(country="Canada")
+
+    def applicant(first, second=None):
+        return SimpleNamespace(
+            context=SimpleNamespace(citizenship=first, second_citizenship=second)
+        )
+
+    assert _is_international(applicant("Kazakhstan"), uni)
+    assert not _is_international(applicant("Canada"), uni)
+    assert not _is_international(applicant("Kazakhstan", "Canada"), uni)
+    assert not _is_international(applicant("CA"), uni), "a code is never guessed at"
+    assert _DOMESTIC_ONLY.search(
+        "https://you.ubc.ca/financial-planning/scholarships-awards-canadian-students/loran-awards"
+    )
+    assert not _DOMESTIC_ONLY.search(
+        "https://you.ubc.ca/financial-planning/scholarships-awards-international-students"
+    )
