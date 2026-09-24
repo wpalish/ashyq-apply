@@ -34,8 +34,6 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from urllib.parse import urljoin, urlparse
 
-from bs4 import BeautifulSoup
-
 from app.adapters.browser import BrowserFetcher
 from app.adapters.discovery.live_discovery import (
     _DEGREE_SLUGS,
@@ -52,6 +50,7 @@ from app.adapters.discovery.live_discovery import (
     same_institution,
 )
 from app.adapters.fetching import Fetcher, FetchResult
+from app.adapters.html_parse import parse_html
 from app.adapters.page_classifier import (
     PageClassification,
     PageType,
@@ -188,7 +187,7 @@ def extract_links(
     institution's domain are reported through ``drops`` (as ``(url, reason)``
     pairs) so the walk can explain them instead of silently losing them.
     """
-    soup = BeautifulSoup(html, "lxml")
+    soup = parse_html(html)
     out: list[WalkerLink] = []
     seen: set[str] = set()
     for anchor in soup.find_all("a", href=True)[:MAX_LINKS_SCANNED]:

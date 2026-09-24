@@ -29,6 +29,7 @@ from app.adapters.extraction import (
     readable_text,
 )
 from app.adapters.fetching import Fetcher, FetchResult
+from app.adapters.html_parse import parse_html
 from app.adapters.page_classifier import PageType, classify_page
 from app.adapters.scope_reader import read_scope
 from app.domain.enums import (
@@ -356,7 +357,7 @@ class WebScholarshipAdapter:
         classification,
         index: int,
     ) -> tuple[Scholarship, list]:
-        soup = BeautifulSoup(html, "lxml")
+        soup = parse_html(html)
         text = readable_text(html)
         low = text.lower()
         title = html_title(html)
@@ -790,7 +791,7 @@ def _award_links(html: str, base: str) -> list[str]:
     "Menu główne" and "Skip to main content" into scholarships, so a link now
     has to look like an award in its text or its path to be followed.
     """
-    soup = BeautifulSoup(html, "lxml")
+    soup = parse_html(html)
     seen: set[str] = set()
     out: list[str] = []
     base_host = urlparse(base).netloc

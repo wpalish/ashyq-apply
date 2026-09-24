@@ -16,8 +16,7 @@ from datetime import UTC, date, datetime
 from typing import Final, cast
 from urllib.parse import urlparse
 
-from bs4 import BeautifulSoup
-
+from app.adapters.html_parse import parse_html
 from app.adapters.scope_reader import intake_from_start, population_named
 from app.domain.claim_scope import ClaimScope
 from app.domain.claim_verifier import (
@@ -40,7 +39,7 @@ _BLANKS = re.compile(r"\n{3,}")
 
 def html_to_text(html: str) -> str:
     """Readable text with script/style/nav removed, structure preserved."""
-    soup = BeautifulSoup(html, "lxml")
+    soup = parse_html(html)
     for tag in soup(["script", "style", "noscript", "svg", "iframe"]):
         tag.decompose()
     for tag in soup.find_all(["nav", "footer", "header"]):
@@ -62,12 +61,12 @@ def readable_text(html: str) -> str:
     """
     from app.adapters.page_classifier import content_for_reading
 
-    soup = BeautifulSoup(html, "lxml")
+    soup = parse_html(html)
     return html_to_text(str(content_for_reading(soup)))
 
 
 def html_title(html: str) -> str:
-    soup = BeautifulSoup(html, "lxml")
+    soup = parse_html(html)
     if soup.title and soup.title.string:
         return soup.title.string.strip()[:200]
     h1 = soup.find("h1")

@@ -40,10 +40,9 @@ from typing import TypedDict
 from urllib.parse import urljoin, urlparse, urlunparse
 from xml.etree import ElementTree
 
-from bs4 import BeautifulSoup
-
 from app.adapters.base import Candidate, CandidateProgram, PageOutcome
 from app.adapters.fetching import Fetcher
+from app.adapters.html_parse import parse_html
 from app.adapters.page_classifier import (
     PageClassification,
     PageType,
@@ -1415,7 +1414,7 @@ def _program_name_from_url(url: str, fields: list[str], degree: object) -> str:
 
 
 def _harvest_links(html: str, base: str, domain: str) -> list[tuple[str, str]]:
-    soup = BeautifulSoup(html, "lxml")
+    soup = parse_html(html)
     out: list[tuple[str, str]] = []
     seen: set[str] = set()
     for anchor in soup.find_all("a", href=True)[:MAX_LINKS_SCANNED]:
