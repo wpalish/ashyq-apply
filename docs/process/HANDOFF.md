@@ -907,6 +907,20 @@ earlier is the obvious lever and is **not** taken: `_add_search_results` records
 measured and cost whole cases. Options for the owner: a larger per-case wall clock for the benchmark
 (production has no 90 s cap of this shape), or a measured experiment with search-before-navigation.
 
+**Budget and order experiments, 2026-09-24 (both on `c5290be`/`3431768`, one run each):**
+
+| Run | Setting | complete | claim_recall | strict same-page | programme_page_recall | recall@5 | reads (delft/ubc/warsaw) |
+|---|---|---|---|---|---|---|---|
+| 26 | 90 s, default order | 8/10 | 3/62 | 1/62 | 3/10 | 1/10 | 53/46/63 |
+| 27 (35948537073) | **120 s**, default order | **10/10** | **6/62** | 2/62 | **5/10** | 1/10 | 55/55/65 |
+| 28 (35949580173) | 90 s, **search first** | **10/10** | **6/62** | 2/62 | 4/10 | **3/10** | 39/31/55 |
+
+Same recall either way. Search-first reaches it inside 90 s with far fewer reads and ranks the right page
+higher, but Warsaw (2→0 claims) and KAIST (4→0) filed nothing — not scored facts, but lost evidence, the
+same shape of loss that got interleaving rejected before. One run each is noise-sized (Groningen alone
+swings 5 facts). Recommendation to the owner: benchmark default 90→120 s (harness only, production has no
+such cap); keep SEARCH_BEFORE_NAVIGATION off until a second paired run explains Warsaw/KAIST.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
