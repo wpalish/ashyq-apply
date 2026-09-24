@@ -42,6 +42,7 @@ from app.adapters.discovery.live_discovery import (
     _URL_EXCLUSIONS,
     MAX_LINKS_SCANNED,
     canonical_url,
+    looks_like_catalogue,
     matches_degree,
     matches_field,
     matches_field_text,
@@ -66,6 +67,8 @@ WALKER_TOP_N = 20
 
 #: Catalogues walked per institution, in discovery's own order of preference.
 WALKER_MAX_CATALOGS = 2
+#: Sub-catalogues the walk may descend into, found as leads of a catalogue.
+WALKER_MAX_DESCENTS = 1
 
 #: A label shorter than this cannot say which programme it leads to. "Ask us"
 #: and "Learn more" are furniture, not leads.
@@ -376,9 +379,13 @@ class CatalogWalker:
     async def walk(self, catalogue_urls: list[str]) -> list[CatalogWalk]:
         """Walk at most :data:`WALKER_MAX_CATALOGS` catalogues, in order given."""
         walks: list[CatalogWalk] = []
-        for catalogue_url in catalogue_urls[:WALKER_MAX_CATALOGS]:
+        queue = list(catalogue_urls[:WALKER_MAX_CATALOGS])
+        seen = set(queue)
+        descents = 0
+        while queue:
+            catalogue_url = queue.pop(0)
             try:
-                walks.append(await self.walk_catalog(catalogue_url))
+                walk = await self.walk_catalog(catalogue_url)
             except Exception as exc:  # one broken catalogue must not end discovery
                 log.warning(
                     "catalog walk of %s failed: %s: %s",
@@ -386,6 +393,26 @@ class CatalogWalker:
                     type(exc).__name__,
                     exc,
                 )
+                continue
+            walks.append(walk)
+            if walk.confirmed or descents >= WALKER_MAX_DESCENTS:
+                continue
+            # A lead that reads as a catalogue is the list one level down:
+            # Vienna's "Degree programmes" leads to "Bachelor/diploma
+            # programmes", and only that page names Computer Science. It was
+            # the walk's strongest lead and was dropped as "not a programme"
+            # (its title reads as one programme's name, so the classifier's
+            # verdict alone is not enough; the URL naming a list is).
+            for url, outcome in walk.outcomes:
+                if url in seen or not outcome.startswith("reads_as_"):
+                    continue
+                if outcome == f"reads_as_{PageType.PROGRAM_CATALOG.value}" or looks_like_catalogue(
+                    url
+                ):
+                    seen.add(url)
+                    queue.append(url)
+                    descents += 1
+                    break
         return walks
 
     async def walk_catalog(self, catalogue_url: str) -> CatalogWalk:

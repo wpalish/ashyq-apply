@@ -967,6 +967,18 @@ entrance exam procedure)"); discovery spent 63 reads without selecting it, and r
 program.url + admissions_url. `_APPLICATION_PERIOD` matches that page's text offline. Next: see which
 discovery stage drops that link (needs a CI trace; the sandbox cannot reach sites through the Fetcher).
 
+Runs 38–40 (51296dd, 164f118, 6fab51c), Vienna: claim_recall stayed 2/62. The CI capture now prints,
+for every zero-claim case, the read trail plus discovery's selection and the catalogue walker's
+candidates/outcomes. Findings: (1) navigation kept the first three programme links, not the
+strongest (fixed in 164f118, tested; did not move Vienna, whose programme page is found by the
+walker, not by navigation); (2) the walker walks at most two catalogues ("Degree programmes",
+"Choice of degree"); its strongest lead, "Bachelor/diploma programmes", classifies as a single
+programme (title reads as a name), fails the subject check and was dropped — the only page that
+names Computer Science. Fix in the next commit: the walker descends into one such lead
+(`WALKER_MAX_DESCENTS = 1`) when it reads as a catalogue or its URL looks like one. Still open for
+the deadline fact: it lives on `aufnahmeverfahren.univie.ac.at/en/computer-science`, which
+requirements does not read (only program.url + admissions_url).
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
