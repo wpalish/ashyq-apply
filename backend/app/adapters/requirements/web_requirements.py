@@ -220,7 +220,8 @@ class WebRequirementsAdapter:
                             "read from this kind of page. "
                             # What the classifier saw, so a wrong call can be
                             # diagnosed from a capture without the page itself.
-                            f"title={page.title[:80]!r} signals={'; '.join(page.signals[:3])!r}"
+                            f"title={page.title[:80]!r} signals={'; '.join(page.signals[:3])!r} "
+                            f"chars={len(text)} degrees={full_degree_titles(text)[:3]!r}"
                         ),
                     )
                 )
