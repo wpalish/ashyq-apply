@@ -252,7 +252,12 @@ jobs:
                       print(f"    walker: catalogs={walker.get('catalogs_walked')} confirmed={walker.get('programs_confirmed')}")
                       for cand in (walker.get("candidates") or [])[:12]:
                           print(f"      cand {cand.get('score')} {str(cand.get('url'))[:110]} | {str(cand.get('label'))[:40]}")
-                      for out in (walker.get("outcomes") or [])[:40]:
+                      # Dropped links (off-site, short labels, furniture) are
+                      # counted, not listed: the reads are what explain a miss.
+                      dropped = {"off_domain", "short_label", "walker_no_signal", "excluded_url", "degree_level_mismatch", "walker_budget_exhausted"}
+                      outs = walker.get("outcomes") or []
+                      print(f"      ({sum(1 for o in outs if o.get('outcome') in dropped)} links dropped unread)")
+                      for out in [o for o in outs if o.get("outcome") not in dropped][:60]:
                           print(f"      out {out.get('outcome')} {str(out.get('url'))[:110]}")
               else:
                   print("    (no child log)")
