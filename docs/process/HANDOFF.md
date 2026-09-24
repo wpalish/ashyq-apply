@@ -1005,6 +1005,11 @@ complete. Groningen's second descent went to `/bachelors?lang=nl` (a language co
 of a walked page is not a new list, and a read page directly below the catalogue is a descent lead when
 no lead reads as a catalogue (`_descent_lead`).
 
+Run 46 (36007972261, on f39b206): claim_recall 5/62 (was 3), claim_precision 6/8, 10/10 complete.
+Groningen reaches `rug.nl/bachelors/computing-science` via `/bachelors` → `/bachelors/alphabet` and
+files deadline + programme.exists (both same_site). One Groningen deadline claim is recorded for
+EU/EEA where the certified row is non-EU/EEA (the page's table lists both; wrong_scope, not wrong value).
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
