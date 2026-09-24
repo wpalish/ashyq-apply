@@ -222,7 +222,7 @@ jobs:
           logs = pathlib.Path(os.environ["CAPTURE_JSON"]).parent
           for observation in capture["observations"]:
               budget_case = "BUDGET" in (observation.get("error") or "")
-              if not budget_case and observation.get("predictions"):
+              if not budget_case and observation.get("predictions") and not observation.get("error"):
                   continue
               telemetry = observation.get("telemetry") or {}
               print(
@@ -234,8 +234,14 @@ jobs:
               log = logs / f"{observation['case_id']}.log"
               if log.exists():
                   lines = log.read_text(encoding="utf-8", errors="replace").splitlines()
+                  failed_case = bool(observation.get("error")) and not budget_case
                   if budget_case:
                       shown = lines[-40:]
+                  elif failed_case:
+                      # A crash: the traceback is the only record (run 49,
+                      # Toronto: "not enough values to unpack").
+                      tb = [i for i, ln in enumerate(lines) if "Traceback" in ln]
+                      shown = lines[tb[-1]:][:60] if tb else lines[-60:]
                   else:
                       # A case that filed nothing: every read and its outcome,
                       # so a navigation miss shows which pages it went to.
