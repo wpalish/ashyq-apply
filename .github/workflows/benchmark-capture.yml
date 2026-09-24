@@ -246,6 +246,15 @@ jobs:
                   counts[record["category"]] = counts.get(record["category"], 0) + 1
               summary = ", ".join(f"{k}={v}" for k, v in sorted(counts.items()))
               print(f"  {observation['case_id']:12} {summary}")
+
+          # A case that filed nothing: every page it read, and what became of it.
+          for observation in capture["observations"]:
+              if observation.get("predictions"):
+                  continue
+              print(f"\n  {observation['case_id']}: no claims; its pages:")
+              for record in (observation.get("page_outcomes") or [])[:25]:
+                  detail = (record.get("detail") or "")[:120]
+                  print(f"    {record['category']:20} {record['url'][:110]}  {detail}")
           PY
 
       - uses: actions/upload-artifact@v4
