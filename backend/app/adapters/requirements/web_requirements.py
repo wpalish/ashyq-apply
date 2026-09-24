@@ -466,7 +466,12 @@ def _listed_programme(text: str, program) -> tuple[str, str | None] | None:
     related field), and a stated degree level must be the requested one.
     """
     for title in full_degree_titles(text):
-        if titles_name_same_programme(title, program.name) is not Verdict.YES:
+        # Against the requested field as well as the candidate's name: the
+        # name can be what a faculty page calls itself. Run 35: HKU's page,
+        # named "Computing and Data Science", listed "Bachelor of Engineering
+        # in Computer Science" for a request for computer science.
+        wanted = [n for n in (program.name, getattr(program, "field", "")) if n]
+        if not any(titles_name_same_programme(title, n) is Verdict.YES for n in wanted):
             continue
         degree = degree_level_of(title)
         if degree_matches(program.degree, degree) is False:

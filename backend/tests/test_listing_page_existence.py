@@ -71,3 +71,30 @@ async def test_a_listing_page_yields_existence_and_nothing_else(monkeypatch, tmp
         ),
     )
     assert {c.claim_type.value for c in result.claims} <= {"program_exists"}
+
+
+@pytest.mark.asyncio
+async def test_the_requested_field_counts_when_the_name_is_the_faculty_s(monkeypatch, tmp_path):
+    """Run 35: the candidate carried the page's own name, 'Computing and Data
+    Science', while the applicant asked for computer science."""
+    from dataclasses import replace
+
+    from app.adapters.base import CandidateProgram
+    from app.domain.enums import DegreeLevel
+
+    program = CandidateProgram(
+        name="Computing and Data Science",
+        field="computer science",
+        degree=DegreeLevel.BACHELOR,
+        url=_URL,
+    )
+    html = _school("The Bachelor of Engineering in Computer Science covers algorithms.")
+    async with Fetcher(tmp_path / "cache", delay_seconds=0.0, offline=True) as fetcher:
+        _serve(monkeypatch, fetcher, {_URL: html})
+        result = await WebRequirementsAdapter(fetcher, "2026/27").verify(
+            _candidate(), replace(program), "fall 2027"
+        )
+    claims = [c for c in result.claims if c.claim_type.value == "program_exists"]
+    assert [c.normalized_value["program"] for c in claims] == [
+        "Bachelor of Engineering in Computer Science"
+    ]
