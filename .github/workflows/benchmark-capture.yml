@@ -51,8 +51,11 @@ jobs:
       # key the run still completes — discovery falls back to sitemaps and the
       # catalogue walker — but it measures a different pipeline, so the step
       # below says which one it measured.
-      UNIMATCH_SEARCH_PROVIDER: ${{ secrets.UNIMATCH_EXA_API_KEY != '' && 'exa' || 'none' }}
+      # Tavily first when its key is set: the Exa account answered 402 on every
+      # query in run 48, and a spent balance must not silently remove search.
+      UNIMATCH_SEARCH_PROVIDER: ${{ secrets.UNIMATCH_TAVILY_API_KEY != '' && 'tavily' || (secrets.UNIMATCH_EXA_API_KEY != '' && 'exa' || 'none') }}
       UNIMATCH_EXA_API_KEY: ${{ secrets.UNIMATCH_EXA_API_KEY }}
+      UNIMATCH_TAVILY_API_KEY: ${{ secrets.UNIMATCH_TAVILY_API_KEY }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -65,7 +68,9 @@ jobs:
 
       - name: Say which pipeline is being measured
         run: |
-          if [ -n "${{ secrets.UNIMATCH_EXA_API_KEY }}" ]; then
+          if [ -n "${{ secrets.UNIMATCH_TAVILY_API_KEY }}" ]; then
+            echo "search provider: tavily"
+          elif [ -n "${{ secrets.UNIMATCH_EXA_API_KEY }}" ]; then
             echo "search provider: exa (the shipped Phase 1 path)"
           else
             echo "search provider: none — no UNIMATCH_EXA_API_KEY secret is set."

@@ -232,7 +232,7 @@ class TestNobodySearchesByAccident:
             settings._validate_search()
 
     def test_every_known_name_is_one_this_build_can_actually_build(self):
-        assert set(KNOWN_SEARCH_PROVIDERS) == {"none", "fake", "exa"}
+        assert set(KNOWN_SEARCH_PROVIDERS) == {"none", "fake", "exa", "tavily"}
 
 
 class TestTheContractItself:

@@ -152,6 +152,8 @@ class Settings(BaseSettings):
     #: SecretStr like every other credential. Read from UNIMATCH_EXA_API_KEY
     #: (or EXA_API_KEY via the environment), never from a file in the repo.
     exa_api_key: SecretStr = SecretStr("")
+    #: Same rules as the Exa key: UNIMATCH_TAVILY_API_KEY, environment only.
+    tavily_api_key: SecretStr = SecretStr("")
     apipay_base_url: str = "https://api.apipay.kz/api/v1"
     apipay_api_key: SecretStr = SecretStr("")
     apipay_webhook_secret: SecretStr = SecretStr("")
@@ -253,6 +255,11 @@ class Settings(BaseSettings):
             raise RuntimeError(
                 "UNIMATCH_SEARCH_PROVIDER='exa' needs UNIMATCH_EXA_API_KEY. Refusing to start "
                 "rather than reporting every search as finding nothing."
+            )
+        if self.search_provider == "tavily" and not self.tavily_api_key.get_secret_value():
+            raise RuntimeError(
+                "UNIMATCH_SEARCH_PROVIDER='tavily' needs UNIMATCH_TAVILY_API_KEY. Refusing to "
+                "start rather than reporting every search as finding nothing."
             )
         if self.is_production and self.search_provider == "fake":
             raise RuntimeError(

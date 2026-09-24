@@ -1020,6 +1020,11 @@ answers HTTP 402 (Payment Required) — the account's credits are spent. All six
 for every case, so search has contributed nothing since the balance ran out. OWNER ACTION: top up the
 Exa account (or rotate the key in the repository secret). Nothing in code can fix a 402.
 
+2026-09-24: Tavily added as a second search provider (`app/adapters/search/tavily.py`, same contract as
+Exa: hint-only snippets, fail closed, no retries). The capture workflow prefers Tavily when the secret
+`UNIMATCH_TAVILY_API_KEY` is set, then Exa, then none. OWNER ACTION: add that repository secret; the
+key was given in chat and is never committed.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
