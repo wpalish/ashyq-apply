@@ -57,8 +57,8 @@ async def test_the_walk_descends_into_a_list_its_catalogue_offered():
     budgets: list[int] = []
     walks = await _walker(pages, walked, budgets).walk([ROOT, CHOICE])
 
-    assert walked == [ROOT, CHOICE, LIST]
-    assert budgets == [cw.WALKER_TOP_N, cw.WALKER_TOP_N, cw.WALKER_DESCENT_TOP_N]
+    assert walked == [ROOT, LIST, CHOICE], "the list below goes before the next catalogue"
+    assert budgets == [cw.WALKER_TOP_N, cw.WALKER_DESCENT_TOP_N, cw.WALKER_TOP_N]
     assert [url for walk in walks for url in walk.confirmed] == [CS]
 
 
@@ -69,8 +69,12 @@ async def test_the_descent_is_bounded_and_skips_a_walk_that_confirmed():
         ROOT: CatalogWalk(catalogue_url=ROOT, outcomes=[(LIST, "reads_as_program_catalog")]),
         LIST: CatalogWalk(catalogue_url=LIST, outcomes=[(DEEPER, "reads_as_program_catalog")]),
     }
+    deepest = "https://studieren.univie.ac.at/en/bachelordiploma-programmes/a-z-programmes"
+    pages[DEEPER] = CatalogWalk(
+        catalogue_url=DEEPER, outcomes=[(deepest, "reads_as_program_catalog")]
+    )
     await _walker(pages, walked).walk([ROOT])
-    assert walked == [ROOT, LIST], f"at most {cw.WALKER_MAX_DESCENTS} descent"
+    assert walked == [ROOT, LIST, DEEPER], f"at most {cw.WALKER_MAX_DESCENTS} levels"
 
     walked.clear()
     pages[ROOT].confirmed.append(CS)

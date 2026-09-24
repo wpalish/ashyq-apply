@@ -992,6 +992,13 @@ lists "computing science" as a strong alias of computer science but discovery ma
 literally. Next commit reads fields through `with_strong_aliases` (strong aliases only; related
 concepts never match).
 
+Runs 43–44 (e7379dd, a8f64da): claim_recall 3/62 held, 10/10 complete; Vienna files 4 claims in 43.
+Groningen: the walker descended into `rug.nl/bachelors`, which is itself an index (alphabet, in-english,
+by-subject); the programme links are one level below. Next commit: descents tracked per chain (depth ≤
+`WALKER_MAX_DESCENTS = 2`, total ≤ `WALKER_MAX_DESCENT_READS = 3`), deeper lists walked before the next
+top-level catalogue. Warsaw: the walker reads en.uw.edu.pl menus only; the certified programme page is
+on informatorects.uw.edu.pl (not yet reached).
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 

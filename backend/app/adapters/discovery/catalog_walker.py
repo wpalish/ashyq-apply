@@ -68,7 +68,11 @@ WALKER_TOP_N = 20
 #: Catalogues walked per institution, in discovery's own order of preference.
 WALKER_MAX_CATALOGS = 2
 #: Sub-catalogues the walk may descend into, found as leads of a catalogue.
-WALKER_MAX_DESCENTS = 1
+#: Two: Groningen's "Bachelor's degrees" is itself an index (A-Z, by subject,
+#: in English) and only the level below names the programmes (run 44).
+WALKER_MAX_DESCENTS = 2
+#: Descents per institution across every chain, so a walk stays bounded.
+WALKER_MAX_DESCENT_READS = 3
 #: Leads read in a descended sub-list. The applicant's own programme scores
 #: first there; twenty more reads spent UBC's and HKU's page budget (run 41).
 WALKER_DESCENT_TOP_N = 5
@@ -382,12 +386,14 @@ class CatalogWalker:
     async def walk(self, catalogue_urls: list[str]) -> list[CatalogWalk]:
         """Walk at most :data:`WALKER_MAX_CATALOGS` catalogues, in order given."""
         walks: list[CatalogWalk] = []
-        queue = list(catalogue_urls[:WALKER_MAX_CATALOGS])
-        seen = set(queue)
+        # (url, depth): depth 0 is a catalogue discovery chose; each descent
+        # is one level deeper, bounded per chain and in total.
+        queue: list[tuple[str, int]] = [(u, 0) for u in catalogue_urls[:WALKER_MAX_CATALOGS]]
+        seen = {u for u, _ in queue}
         descents = 0
         while queue:
-            catalogue_url = queue.pop(0)
-            top_n = WALKER_DESCENT_TOP_N if catalogue_url not in catalogue_urls else WALKER_TOP_N
+            catalogue_url, depth = queue.pop(0)
+            top_n = WALKER_TOP_N if depth == 0 else WALKER_DESCENT_TOP_N
             try:
                 walk = await self.walk_catalog(catalogue_url, top_n=top_n)
             except Exception as exc:  # one broken catalogue must not end discovery
@@ -399,7 +405,11 @@ class CatalogWalker:
                 )
                 continue
             walks.append(walk)
-            if walk.confirmed or descents >= WALKER_MAX_DESCENTS:
+            if (
+                walk.confirmed
+                or depth >= WALKER_MAX_DESCENTS
+                or descents >= WALKER_MAX_DESCENT_READS
+            ):
                 continue
             # A lead that reads as a catalogue is the list one level down:
             # Vienna's "Degree programmes" leads to "Bachelor/diploma
@@ -414,7 +424,9 @@ class CatalogWalker:
                     url
                 ):
                     seen.add(url)
-                    queue.append(url)
+                    # Deeper first: the list below this one is a more
+                    # specific lead than another top-level catalogue.
+                    queue.insert(0, (url, depth + 1))
                     descents += 1
                     break
         return walks
