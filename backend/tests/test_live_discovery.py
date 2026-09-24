@@ -25,6 +25,7 @@ from app.adapters.discovery.live_discovery import (
     MAX_PAGES_PER_CATEGORY,
     MAX_SITEMAP_DOCUMENTS,
     REGISTRY_PATH,
+    DiscoveryTrace,
     LiveDiscoveryAdapter,
     PageCategory,
     SitemapReader,
@@ -828,6 +829,44 @@ class TestAdapter:
         assert trace.used_navigation_fallback
         assert candidate.costs_url == "https://uni.edu/tuition-fees"
         assert candidate.scholarships_url is None, "an off-domain link must not be followed"
+
+    @pytest.mark.asyncio
+    async def test_navigation_keeps_the_strongest_leads_not_the_first(
+        self, tmp_path, profile_bachelor
+    ):
+        """Run 38, Vienna: the bachelor list names three other programmes first.
+
+        The three programme slots filled with "by topic", African Studies and
+        Egyptology, so the applicant's subject further down was never read.
+        """
+        entry = {"name": "U", "country": "Austria", "city": "X", "homepage": "https://uni.edu/"}
+        others = "".join(
+            f'<a href="/en/bachelor-programmes/{slug}-bachelor">{slug}</a>'
+            for slug in ("by-topic", "african-studies", "egyptology", "history")
+        )
+        target = "https://uni.edu/en/bachelor-programmes/computer-science-bachelor-with-exam"
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "User-agent: *\n",
+                "https://uni.edu/": (
+                    f"<html><body><main>{others}"
+                    f'<a href="{target}">Computer Science (Bachelor)</a>'
+                    "</main></body></html>"
+                ),
+            }
+        )
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, entry))
+            selected: dict[str, list[str]] = {c: [] for c in PageCategory.ALL}
+            trace = DiscoveryTrace(institution="U", domain="uni.edu")
+            # The navigation step alone: the catalogue walker reads the same
+            # page afterwards and would hide a lead this step dropped.
+            await adapter._navigation_fallback(entry, "uni.edu", selected, trace, profile_bachelor)
+
+        programmes = selected[PageCategory.PROGRAM_PAGE]
+        assert len(programmes) <= MAX_PAGES_PER_CATEGORY
+        assert target in programmes, "the subject's own programme must be kept"
 
     @pytest.mark.asyncio
     async def test_navigation_is_not_used_when_a_programme_page_was_found(

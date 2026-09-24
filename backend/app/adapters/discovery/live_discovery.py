@@ -1277,6 +1277,7 @@ class LiveDiscoveryAdapter:
         # walk reached the programme list.
         queue = list(selected[PageCategory.PROGRAM_CATALOG][:2])
         walked: set[str] = set()
+        scores: dict[str, int] = {}
         homepage_tried = False
 
         while len(walked) < MAX_FALLBACK_PAGES:
@@ -1336,11 +1337,26 @@ class LiveDiscoveryAdapter:
                         queue.insert(0, canonical)
                     else:
                         queue.append(canonical)
-                if (
-                    len(selected[category]) < MAX_PAGES_PER_CATEGORY
-                    and canonical not in selected[category]
-                ):
+                if canonical in selected[category]:
+                    continue
+                if len(selected[category]) < MAX_PAGES_PER_CATEGORY:
                     selected[category].append(canonical)
+                    scores[canonical] = score
+                    continue
+                # Keep the strongest leads, not the first ones. Vienna's
+                # bachelor list names "Bachelor Programmes by Topic", African
+                # Studies and Egyptology before Computer Science, and the
+                # three slots were gone by the time the applicant's subject
+                # came up. Only leads this walk scored can be displaced: a
+                # seed or a sitemap pick stays.
+                ours = [u for u in selected[category] if u in scores]
+                if not ours:
+                    continue
+                weakest = min(ours, key=lambda u: scores[u])
+                if score > scores[weakest]:
+                    selected[category][selected[category].index(weakest)] = canonical
+                    del scores[weakest]
+                    scores[canonical] = score
 
 
 def _first(urls: list[str]) -> str | None:
