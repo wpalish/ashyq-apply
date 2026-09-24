@@ -211,3 +211,10 @@ def test_the_json_the_workflow_asks_for_is_actually_writable(tmp_path, monkeypat
     written = json.loads(out.read_text(encoding="utf-8"))
     assert written[0]["dimension"] == "programme"
     assert written[0]["shape"] == "differs"
+
+
+def test_a_case_only_difference_is_not_reported() -> None:
+    """The scorer has compared non-programme scope case-blind since 2026-09-23."""
+    wanted = {**SCOPE, "intake": "fall 2027"}
+    got = {**SCOPE, "intake": "Fall 2027"}
+    assert scope_mismatches(_dataset(wanted), _capture(got)) == []
