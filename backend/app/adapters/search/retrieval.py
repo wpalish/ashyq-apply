@@ -18,6 +18,7 @@ can explain cannot be debugged against a benchmark: "recall went from 1/10 to
 
 from __future__ import annotations
 
+import logging
 import math
 import re
 from collections.abc import Awaitable, Callable, Mapping, Sequence
@@ -74,6 +75,9 @@ _WANTED_PAGE_KINDS = frozenset(
     }
 )
 _UNWANTED_PAGE_KINDS = frozenset({PageType.NEWS, PageType.NAVIGATION, PageType.IRRELEVANT})
+
+
+log = logging.getLogger("unimatch.search.retrieval")
 
 
 def tokenize(text: str) -> list[str]:
@@ -377,7 +381,10 @@ async def discover_candidates(
                 domains=[intent.domain],
                 max_results=max_results_per_query,
             )
-        except SearchUnavailable:
+        except SearchUnavailable as exc:
+            # The reason, not only the count: "offered: none" on every case
+            # in run 47 could be a refused key, a quota or an empty index.
+            log.warning("search query failed (%s): %s", query.family, exc)
             failed.append(query.family)
             continue
         results.extend(response.results)

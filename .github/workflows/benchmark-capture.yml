@@ -234,7 +234,7 @@ jobs:
                   else:
                       # A case that filed nothing: every read and its outcome,
                       # so a navigation miss shows which pages it went to.
-                      shown = [ln for ln in lines if " took " in ln or " start " in ln][:160]
+                      shown = [ln for ln in lines if " took " in ln or " start " in ln or "search query failed" in ln][:160]
                   for line in shown:
                       print(f"    {line[:220]}")
               raw = logs / f"{observation['case_id']}.raw.json"

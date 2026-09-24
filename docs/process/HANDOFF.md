@@ -1010,6 +1010,11 @@ Groningen reaches `rug.nl/bachelors/computing-science` via `/bachelors` → `/ba
 files deadline + programme.exists (both same_site). One Groningen deadline claim is recorded for
 EU/EEA where the certified row is non-EU/EEA (the page's table lists both; wrong_scope, not wrong value).
 
+Run 47 (36012276603, on 9350064): 5/62 held. Every case reports "search added nothing via exa;
+offered: none" and each search call takes ~0.1 s — search is contributing nothing anywhere (Warsaw,
+HKU, UBC have only catalogues). Next commit logs each failed query's reason and adds query/failed/
+rejected counts to the trace line, to tell a refused key or quota from an empty index or the prefilter.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 

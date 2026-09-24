@@ -1252,6 +1252,8 @@ class LiveDiscoveryAdapter:
                 else f"search added nothing via {report.provider}"
             )
             + f"; offered: {offered}"[:600]
+            + f"; queries {len(report.queries_run)}, failed {len(report.failed_queries)}"
+            + f", rejected {dict(report.rejection_counts)}"[:300]
         )
 
     def _apply(
