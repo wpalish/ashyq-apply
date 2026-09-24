@@ -948,6 +948,11 @@ Office', no decisive signals — a faculty listing. Degree titles in brackets ('
 unconfirmed. `04a37a4` adds text length and the degree titles found to every rejection, which the next
 capture will use to confirm or rule it out.
 
+**Run 35 (35965530771) confirms HKU's cause:** its page has 4977 chars and lists 'Bachelor of Engineering in
+Computer Science' — the bracket theory (`29a2c2a`, kept: harmless and correct) was not it. `_listed_programme`
+compared against `program.name` = 'Computing and Data Science' (the faculty page's title). Now the requested
+field counts too — `fbad784`.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
