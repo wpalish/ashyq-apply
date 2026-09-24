@@ -237,6 +237,23 @@ jobs:
                       shown = [ln for ln in lines if " took " in ln or " start " in ln][:160]
                   for line in shown:
                       print(f"    {line[:220]}")
+              raw = logs / f"{observation['case_id']}.raw.json"
+              if not budget_case and raw.exists():
+                  # What discovery chose and what the catalogue walker saw:
+                  # the read trail says where it went, this says why.
+                  try:
+                      institutions = json.loads(raw.read_text())["canary"]["institutions"]
+                  except (ValueError, KeyError, TypeError):
+                      institutions = []
+                  for inst in institutions if isinstance(institutions, list) else [institutions]:
+                      dtrace = (inst or {}).get("discovery_trace") or {}
+                      print(f"    selected: {json.dumps(dtrace.get('selected'))[:600]}")
+                      walker = dtrace.get("walker") or {}
+                      print(f"    walker: catalogs={walker.get('catalogs_walked')} confirmed={walker.get('programs_confirmed')}")
+                      for cand in (walker.get("candidates") or [])[:12]:
+                          print(f"      cand {cand.get('score')} {str(cand.get('url'))[:110]} | {str(cand.get('label'))[:40]}")
+                      for out in (walker.get("outcomes") or [])[:40]:
+                          print(f"      out {out.get('outcome')} {str(out.get('url'))[:110]}")
               else:
                   print("    (no child log)")
 
