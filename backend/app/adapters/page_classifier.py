@@ -745,7 +745,10 @@ _FULL_DEGREE_TITLE = re.compile(
     # in the Netherlands" or "taught in English" never reads as a programme.
     r"(?i:\b(?:bachelor|master|b\.?sc|m\.?sc|b\.?eng|m\.?eng)\b)"
     r"(?:\s+of\s+[A-Z]\w*(?:\s+[A-Z]\w*)?)?(?:\s*\((?i:hons)\))?"
-    r"\s+in\s+(?!English\b|Dutch\b|German\b|French\b)[A-Z][\w&]*(?:\s+(?:and\s+)?[A-Z][\w&]*){0,3}"
+    r"(?:\s+in\s+(?!English\b|Dutch\b|German\b|French\b)[A-Z][\w&]*(?:\s+(?:and\s+)?[A-Z][\w&]*){0,3}"
+    # "Bachelor of Engineering (Computer Science)", the other way a programme
+    # list writes the subject.
+    r"|(?<=[a-z])\s+\((?!(?i:hons)\))[A-Z][\w&]*(?:\s+(?:and\s+)?[A-Z][\w&]*){0,3}\))"
 )
 
 
@@ -797,7 +800,14 @@ def full_degree_titles(text: str) -> list[str]:
     "Bachelor of Engineering in Computer Science". Public for the one caller
     that may use a listing page's named programmes as evidence of existence.
     """
-    return [m.group(0).strip() for m in _FULL_DEGREE_TITLE.finditer(text or "")]
+    # "Bachelor of Engineering (Computer Science)" is returned in the "in"
+    # form, the one the programme ontology reads.
+    return [
+        re.sub(r"\s*\(([^()]+)\)$", r" in \1", m.group(0).strip())
+        if not m.group(0).strip().lower().endswith("(hons)")
+        else m.group(0).strip()
+        for m in _FULL_DEGREE_TITLE.finditer(text or "")
+    ]
 
 
 def degree_level_of(text: str) -> str | None:

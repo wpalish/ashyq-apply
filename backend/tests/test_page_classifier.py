@@ -167,3 +167,13 @@ def test_an_admission_procedure_page_is_an_admissions_page():
     )
     result = classify_page(url="https://studieren.univie.ac.at/en/admission-procedure", html=html)
     assert result.page_type is PageType.GENERAL_ADMISSIONS
+
+
+def test_a_degree_title_with_its_subject_in_brackets_is_read():
+    """The bracketed way programme lists name a subject; HKU's page is a suspect, unconfirmed."""
+    from app.adapters.page_classifier import full_degree_titles
+
+    assert full_degree_titles("BEng(CompSc) Bachelor of Engineering (Computer Science)") == [
+        "Bachelor of Engineering in Computer Science"
+    ]
+    assert full_degree_titles("Bachelor of Arts (Hons)") == []
