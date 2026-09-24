@@ -33,3 +33,17 @@ def test_a_related_concept_is_not_an_alias():
 def test_an_unknown_field_is_used_verbatim_and_counted_once():
     assert with_strong_aliases(["Egyptology"]) == ["Egyptology"]
     assert matches_field("https://uni.edu/egyptology", ["Egyptology"]) == 8
+
+
+def test_an_alias_inside_another_programmes_name_is_not_the_field():
+    """Run 50: Vienna kept Business Informatics, HKU Computing and Data Science."""
+    assert not matches_field_text("Business Informatics (bachelor's programme)", FIELDS)
+    assert not matches_field_text("Computing and Data Science", FIELDS)
+    assert not matches_field_text("Cloud Computing", FIELDS)
+    assert matches_field_text("Informatics", FIELDS)
+    assert matches_field_text("Computing Science (Bachelor)", FIELDS)
+
+
+def test_the_applicants_own_words_still_match_inside_a_longer_title():
+    assert matches_field_text("Data & Computer Science", FIELDS)
+    assert matches_field_text("Bachelor of Computing (Hons) in Computer Science", FIELDS)

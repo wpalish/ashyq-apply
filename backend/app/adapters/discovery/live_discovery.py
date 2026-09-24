@@ -575,11 +575,56 @@ def matches_field_text(label: str, fields: list[str]) -> bool:
     words = {w for w in re.split(r"[^a-z]+", label.lower()) if len(w) > 3}
     if not words:
         return False
+    own = {f.lower() for f in fields}
     for field_name in with_strong_aliases(fields):
         wanted = {w for w in re.split(r"[^a-z]+", field_name.lower()) if len(w) > 3}
-        if wanted and wanted <= words:
+        if not wanted or not wanted <= words:
+            continue
+        if field_name.lower() in own:
+            return True
+        # An alias names the field only when nothing else in the title names
+        # another subject: "Informatics" is computer science, "Business
+        # Informatics" is not, and "Computing and Data Science" is not
+        # "Computing" (run 50, Vienna and HKU).
+        if words - wanted <= _TITLE_FILLER:
             return True
     return False
+
+
+#: Words a programme title carries besides its subject: level, form, and the
+#: procedure notes Vienna appends ("with entrance exam procedure").
+_TITLE_FILLER = frozenset(
+    {
+        "bachelor",
+        "bachelors",
+        "master",
+        "masters",
+        "degree",
+        "programme",
+        "program",
+        "programmes",
+        "programs",
+        "hons",
+        "honours",
+        "honors",
+        "with",
+        "entrance",
+        "exam",
+        "procedure",
+        "undergraduate",
+        "study",
+        "studies",
+        "course",
+        "english",
+        "taught",
+        "full",
+        "time",
+        "year",
+        "years",
+        "track",
+        "major",
+    }
+)
 
 
 def matches_degree(url: str, degree: str) -> int:

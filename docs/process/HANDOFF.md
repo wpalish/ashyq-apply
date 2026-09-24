@@ -1025,6 +1025,16 @@ Exa: hint-only snippets, fail closed, no retries). The capture workflow prefers 
 `UNIMATCH_TAVILY_API_KEY` is set, then Exa, then none. OWNER ACTION: add that repository secret; the
 key was given in chat and is never committed.
 
+Runs 49–50 (Tavily live): 49 gave claim_recall 6/62, programme_page_recall 5/10 (was 3), precision
+8/12; 50 gave 5/62, precision 6/10, UBC out of wall clock. Toronto crashed both times: bs4's lxml
+builder raises ValueError on a malformed attribute (`{x="1"`) on its scholarships page — fixed in
+879c929 (`app/adapters/html_parse.parse_html`, lxml → html.parser → empty soup, used at all 7 call
+sites). Wrong-scope claims from my strong-alias change: Vienna "Business Informatics", HKU "Computing
+and Data Science". Next commit: an alias matches a title only when every other word is filler
+(level/form words); the applicant's own field words still match inside longer titles.
+Scorer note (not changed): HKU university "The University of Hong Kong" vs "University of Hong Kong"
+counts as a scope difference.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
