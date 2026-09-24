@@ -51,7 +51,9 @@
 .dtable tbody tr { transition: background var(--duration-fast); }
 .dtable tbody tr:hover { background: var(--surface-sunken); }
 .dtable tbody tr.is-expanded { background: var(--accent-soft); }
-.dtable tbody tr.is-rejected { opacity: 0.5; }
+/* A rejected row recedes by colour, not opacity: half-transparent text failed contrast. */
+.dtable tbody tr.is-rejected { background: var(--surface-sunken); }
+.dtable tbody tr.is-rejected .uni-cell__name { color: var(--ink-muted); text-decoration: line-through; text-decoration-color: var(--rule-strong); }
 .dtable tbody tr:last-child td { border-bottom: 0; }
 
 .uni-cell { display: flex; flex-direction: column; gap: 2px; min-width: 10rem; max-width: 18rem; }
@@ -109,7 +111,7 @@
 .uni-cell__meta { font-size: var(--text-xs); color: var(--ink-faint); }
 .uni-cell__prog { font-size: var(--text-xs); color: var(--ink-muted); }
 
-.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.num { font-family: var(--font-ui); font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
 
 .decision-group { display: inline-flex; gap: 2px; }
 .decision-btn {
@@ -121,14 +123,15 @@
   cursor: pointer;
   transition: all var(--duration-fast);
 }
-.decision-btn:first-child { border-radius: var(--radius) 0 0 var(--radius); }
-.decision-btn:last-child { border-radius: 0 var(--radius) var(--radius) 0; }
+.decision-btn:first-child { border-radius: var(--radius-pill) 0 0 var(--radius-pill); }
+.decision-btn:last-child { border-radius: 0 var(--radius-pill) var(--radius-pill) 0; }
 .decision-btn:hover { background: var(--surface-sunken); }
-.decision-btn[aria-pressed='true'] { color: oklch(99% 0 0); }
+/* ink-inverted is white on the light theme and navy on the night one, so the
+   pressed state keeps its contrast in both. */
+.decision-btn[aria-pressed='true'] { color: var(--ink-inverted); }
 .decision-btn--approve[aria-pressed='true'] { background: var(--ok); border-color: var(--ok); }
 .decision-btn--maybe[aria-pressed='true']   { background: var(--warn); border-color: var(--warn); }
 .decision-btn--reject[aria-pressed='true']  { background: var(--risk); border-color: var(--risk); }
-:root[data-theme='dark'] .decision-btn[aria-pressed='true'] { color: var(--ink-inverted); }
 
 /* --- expandable detail drawer ------------------------------------------ */
 
@@ -152,7 +155,7 @@
   transition: color var(--duration-fast), border-color var(--duration-fast);
 }
 .tab:hover { color: var(--ink); }
-.tab[aria-selected='true'] { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+.tab[aria-selected='true'] { color: var(--ink); border-bottom-color: var(--route); font-weight: 700; }
 
 .kv { display: grid; grid-template-columns: minmax(9rem, auto) 1fr; gap: var(--space-2) var(--space-4); font-size: var(--text-sm); }
 .kv dt { color: var(--ink-muted); font-weight: 500; }
@@ -202,7 +205,9 @@
   background: var(--surface);
 }
 .stage--running { border-color: var(--accent-border); background: var(--accent-soft); }
-.stage--done { opacity: 0.82; }
+/* Done is said by the green dot and the chip. Fading the row with opacity took
+   its muted text under 4.5:1, so the row stays at full contrast. */
+.stage--done { background: var(--surface); }
 .stage--failed { border-color: var(--risk-border); background: var(--risk-soft); }
 .stage__dot {
   width: 0.7rem; height: 0.7rem; border-radius: 50%;
@@ -224,7 +229,7 @@
 .meter { height: 6px; border-radius: 99px; background: var(--surface-sunken); overflow: hidden; border: 1px solid var(--rule); }
 .meter__fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--accent), oklch(from var(--accent) calc(l + 0.12) c calc(h + 22)));
+  background: linear-gradient(90deg, var(--route), var(--sun));
   transition: width var(--duration-normal) var(--ease-out-expo);
 }
 
@@ -243,9 +248,9 @@
 .stat__value {
   font-family: var(--font-display);
   font-size: 1.9rem;
-  font-weight: 700;
+  font-weight: 800;
   line-height: 1;
-  font-variation-settings: 'opsz' 100;
+  letter-spacing: -0.02em;
   font-variant-numeric: tabular-nums;
 }
 .stat__label {
@@ -261,7 +266,8 @@
 .field { display: flex; flex-direction: column; gap: var(--space-1); }
 .field__label { font-size: var(--text-sm); font-weight: 600; }
 .field__hint { font-size: var(--text-xs); color: var(--ink-faint); }
-.field input, .field select, .field textarea {
+.field input, .field select, .field textarea,
+.topbar select {
   font: inherit;
   font-size: var(--text-sm);
   padding: 0.42rem 0.6rem;
@@ -272,12 +278,15 @@
   width: 100%;
   transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
 }
-.field input:hover, .field select:hover, .field textarea:hover { border-color: var(--ink-faint); }
-.field input:focus, .field select:focus, .field textarea:focus {
+.field input:hover, .field select:hover, .field textarea:hover,
+.topbar select:hover { border-color: var(--ink-faint); }
+.field input:focus, .field select:focus, .field textarea:focus,
+.topbar select:focus {
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-soft);
 }
+.topbar select { width: auto; max-width: 16rem; padding-top: 0.3rem; padding-bottom: 0.3rem; }
 .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: var(--space-4); }
 .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); gap: var(--space-3); }
 
@@ -404,6 +413,44 @@
   .dtable tbody tr:not(.detail-row) td:last-child { border-bottom: 0; }
   .dtable .detail-row { display: block; margin: calc(-1 * var(--space-4)) 0 var(--space-4); }
   .dtable .detail-row td { display: block; width: 100%; }
+  /* The shortlist row as a card: name on top, the three judgements side by
+     side, then money, deadline and match, then the decision. It replaces ten
+     stacked label rows per programme - about 500px each on a phone - with
+     five short ones, and keeps every column and its label. */
+  .shortlist-table tbody tr:not(.detail-row) {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .shortlist-table tbody tr:not(.detail-row) td {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+    padding: var(--space-2) var(--space-3);
+    border-bottom: 0;
+  }
+  .shortlist-table tbody tr:not(.detail-row) { column-gap: var(--space-1); }
+  .shortlist-table tbody tr:not(.detail-row) td { min-width: 0; }
+  /* Labels wrap inside their third of the card instead of running into the
+     next one ("REMAINING / YEARDEADLINE"). */
+  .shortlist-table tbody tr:not(.detail-row) td::before {
+    letter-spacing: 0.03em;
+    font-size: 0.6875rem;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .shortlist-table tbody tr:not(.detail-row) td:first-child,
+  .shortlist-table tbody tr:not(.detail-row) td[data-label='Decision'] {
+    grid-column: 1 / -1;
+  }
+  .shortlist-table tbody tr:not(.detail-row) td:first-child { padding: var(--space-3); margin-bottom: var(--space-1); }
+  .shortlist-table tbody tr:not(.detail-row) td[data-label='Decision'] {
+    border-top: 1px solid var(--rule);
+    margin-top: var(--space-1);
+    padding: var(--space-3);
+  }
+  .shortlist-table .uni-cell { max-width: none; }
   .kv { grid-template-columns: 1fr; gap: var(--space-1) 0; }
   .kv dt { margin-top: var(--space-2); }
   .fund-row { grid-template-columns: 1fr; }
@@ -607,7 +654,7 @@
   padding: 0 0.35rem;
   border-radius: 99px;
   background: var(--accent);
-  color: oklch(99% 0 0);
+  color: var(--ink-inverted);
   font-size: var(--text-xs);
   font-weight: 700;
   text-align: center;

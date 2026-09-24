@@ -26,7 +26,7 @@ import { DiscoverScreen } from '@/screens/DiscoverScreen';
 import { PersonScreen } from '@/screens/PersonScreen';
 import { MessagesScreen } from '@/screens/MessagesScreen';
 import { ModerationScreen } from '@/screens/ModerationScreen';
-import { Chip } from '@/components/primitives';
+import { BrandSun, Chip } from '@/components/primitives';
 import { api } from '@/api/client';
 import { LOCALES, t as translate, type Locale, type MessageKey } from '@/lib/i18n';
 import { useTranslation } from '@/lib/useTranslation';
@@ -278,7 +278,7 @@ export default function App() {
     <div className="app">
       <aside className="sidebar">
         <div className="brand">
-          <span className="brand__mark">ASHYQ Apply</span>
+          <span className="brand__mark"><BrandSun /><span>ASHYQ <span className="brand__apply">Apply</span></span></span>
           <span className="brand__tag">
             {t('brand.tagline')}
           </span>
@@ -313,7 +313,7 @@ export default function App() {
           })}
         </nav>
 
-        <div className="stack stack--tight" style={{ marginTop: 'auto' }}>
+        <div className="stack stack--tight sidebar__settings" style={{ marginTop: 'auto' }}>
           <div className="field">
             <label className="field__label xs" htmlFor="theme">{t('appearance.label')}</label>
             <select
@@ -391,7 +391,7 @@ export default function App() {
             newCase(); setScreen('profile');
           }}>{t('topbar.newCase')}</button>
           {summary && (
-            <span className="xs muted">
+            <span className="xs muted topbar__summary">
               {plural(summary.total, 'programme')} · {plural(summary.with_conflicts, 'conflict')} ·{' '}
               {plural(summary.with_open_questions, 'open question')}
             </span>

@@ -38,6 +38,19 @@ export function StatusChip({ status, tone }: { status: string; tone: Tone }) {
   );
 }
 
+/**
+ * The brand's sun: a door opening onto a horizon. Decorative, so hidden from
+ * assistive technology; the product name always sits next to it as text.
+ */
+export function BrandSun({ size = 28 }: { size?: number }) {
+  return (
+    <svg className="brand__sun" width={size} height={size} viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+      <circle cx="16" cy="16" r="16" fill="var(--sun)" />
+      <path d="M10.5 32V22.5a5.5 5.5 0 0 1 11 0V32Z" fill="var(--sun-ink)" />
+    </svg>
+  );
+}
+
 export function Panel({
   title, hint, children, sunken = false, actions,
 }: { title?: string; hint?: string; children: ReactNode; sunken?: boolean; actions?: ReactNode }) {

@@ -265,6 +265,24 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+Write-ahead (claude-opus-5, 2026-09-24, redesign «Горизонт», owner approved the concept and asked for
+it to be implemented with an adversarial review, working autonomously overnight). Branch
+`claude/website-ui-ux-redesign-qp2t38` (PR #20; the session is restricted to this branch). Steps, each
+a pushed commit with green gates:
+1. `frontend/src/styles/tokens.css` — «Солнце» palette under the existing semantic names (light and
+   dark), Montserrat 700–800 + Onest 400–700 via `@fontsource` in `main.tsx`; primitives in
+   `global.css` / `components.css` (pill buttons, sun primary, pill chips, 22 px cards).
+2. App shell (`App.tsx`, `global.css`): brand mark, calmer sidebar and topbar; every `data-testid`,
+   gate and hash route unchanged.
+3. `ShortlistScreen.tsx`: add the budget ladder and a one-at-a-time triage above the table, built on
+   the existing `decide()`; the table, its columns (brief §267: fit, coverage %, bucket) and all test
+   ids stay.
+4. Status labels for ru/kk from the round-7 vocabulary (docs/design/redesign-concepts.md §17); English
+   labels unchanged.
+5. Adversarial review of the running app (390 and 1440 px), fixes, loop report in the design doc.
+Not touched: backend, API, migrations, ranking, any invariant.
+
+
 Write-ahead (claude-opus-5, 2026-09-20, V2-10): **starting V2-10 — the search provider interface**,
 per `analysis/v2/02_EXECUTION_PLAN.md` (Phase 1) and `analysis/v2/04_PHASE_1_DISCOVERY_ENGINE.md` §1.
 Its whole point is "no provider lock-in", so this task is a seam, not a retrieval feature: nothing is
