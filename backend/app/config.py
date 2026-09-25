@@ -154,6 +154,10 @@ class Settings(BaseSettings):
     exa_api_key: SecretStr = SecretStr("")
     #: Same rules as the Exa key: UNIMATCH_TAVILY_API_KEY, environment only.
     tavily_api_key: SecretStr = SecretStr("")
+    #: Same rules again: UNIMATCH_BRAVE_API_KEY, environment only.
+    brave_api_key: SecretStr = SecretStr("")
+    #: And again: UNIMATCH_SERPER_API_KEY, environment only.
+    serper_api_key: SecretStr = SecretStr("")
     apipay_base_url: str = "https://api.apipay.kz/api/v1"
     apipay_api_key: SecretStr = SecretStr("")
     apipay_webhook_secret: SecretStr = SecretStr("")
@@ -259,6 +263,16 @@ class Settings(BaseSettings):
         if self.search_provider == "tavily" and not self.tavily_api_key.get_secret_value():
             raise RuntimeError(
                 "UNIMATCH_SEARCH_PROVIDER='tavily' needs UNIMATCH_TAVILY_API_KEY. Refusing to "
+                "start rather than reporting every search as finding nothing."
+            )
+        if self.search_provider == "brave" and not self.brave_api_key.get_secret_value():
+            raise RuntimeError(
+                "UNIMATCH_SEARCH_PROVIDER='brave' needs UNIMATCH_BRAVE_API_KEY. Refusing to "
+                "start rather than reporting every search as finding nothing."
+            )
+        if self.search_provider == "serper" and not self.serper_api_key.get_secret_value():
+            raise RuntimeError(
+                "UNIMATCH_SEARCH_PROVIDER='serper' needs UNIMATCH_SERPER_API_KEY. Refusing to "
                 "start rather than reporting every search as finding nothing."
             )
         if self.is_production and self.search_provider == "fake":

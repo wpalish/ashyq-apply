@@ -222,7 +222,7 @@ class TestNobodySearchesByAccident:
             get_settings.cache_clear()
 
     def test_a_typo_is_refused_at_startup_not_at_the_first_search(self):
-        settings = Settings(search_provider="brave")
+        settings = Settings(search_provider="bravo")
         with pytest.raises(RuntimeError, match="not a search provider"):
             settings.validate_runtime()
 
@@ -232,7 +232,7 @@ class TestNobodySearchesByAccident:
             settings._validate_search()
 
     def test_every_known_name_is_one_this_build_can_actually_build(self):
-        assert set(KNOWN_SEARCH_PROVIDERS) == {"none", "fake", "exa", "tavily"}
+        assert set(KNOWN_SEARCH_PROVIDERS) == {"none", "fake", "exa", "tavily", "brave", "serper"}
 
 
 class TestTheContractItself:

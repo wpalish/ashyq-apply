@@ -53,9 +53,13 @@ jobs:
       # below says which one it measured.
       # Tavily first when its key is set: the Exa account answered 402 on every
       # query in run 48, and a spent balance must not silently remove search.
-      UNIMATCH_SEARCH_PROVIDER: ${{ secrets.UNIMATCH_TAVILY_API_KEY != '' && 'tavily' || (secrets.UNIMATCH_EXA_API_KEY != '' && 'exa' || 'none') }}
+      # Serper, then Brave, then Tavily, then Exa: Tavily's free plan answered
+      # 432 on every query in runs 68-69.
+      UNIMATCH_SEARCH_PROVIDER: ${{ secrets.UNIMATCH_SERPER_API_KEY != '' && 'serper' || (secrets.UNIMATCH_BRAVE_API_KEY != '' && 'brave' || (secrets.UNIMATCH_TAVILY_API_KEY != '' && 'tavily' || (secrets.UNIMATCH_EXA_API_KEY != '' && 'exa' || 'none'))) }}
       UNIMATCH_EXA_API_KEY: ${{ secrets.UNIMATCH_EXA_API_KEY }}
       UNIMATCH_TAVILY_API_KEY: ${{ secrets.UNIMATCH_TAVILY_API_KEY }}
+      UNIMATCH_BRAVE_API_KEY: ${{ secrets.UNIMATCH_BRAVE_API_KEY }}
+      UNIMATCH_SERPER_API_KEY: ${{ secrets.UNIMATCH_SERPER_API_KEY }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -68,7 +72,11 @@ jobs:
 
       - name: Say which pipeline is being measured
         run: |
-          if [ -n "${{ secrets.UNIMATCH_TAVILY_API_KEY }}" ]; then
+          if [ -n "${{ secrets.UNIMATCH_SERPER_API_KEY }}" ]; then
+            echo "search provider: serper"
+          elif [ -n "${{ secrets.UNIMATCH_BRAVE_API_KEY }}" ]; then
+            echo "search provider: brave"
+          elif [ -n "${{ secrets.UNIMATCH_TAVILY_API_KEY }}" ]; then
             echo "search provider: tavily"
           elif [ -n "${{ secrets.UNIMATCH_EXA_API_KEY }}" ]; then
             echo "search provider: exa (the shipped Phase 1 path)"
