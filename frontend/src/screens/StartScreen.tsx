@@ -172,7 +172,7 @@ export function StartScreen({
         </button>
         {run && (
           <button type="button" className="start__link start__link--result" onClick={onOpenResults} data-testid="start-open-results">
-            <span>{results.length > 0 ? `Your last search: ${results.length} programmes` : 'Your search is running'}</span>
+            <span>{results.length > 0 ? `Your last search: ${results.length} programme${results.length === 1 ? '' : 's'}` : 'Your search is running'}</span>
             <span className="start__hint">Open it</span>
           </button>
         )}

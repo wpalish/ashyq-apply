@@ -66,7 +66,7 @@ export function ApprovedScreen({ onCollect }: { onCollect: () => void }) {
               }}
               data-testid="collect-documents"
             >
-              {collecting ? 'Collecting…' : `Collect documents for ${shortlisted} programmes`}
+              {collecting ? 'Collecting…' : `Collect documents for ${shortlisted} programme${shortlisted === 1 ? '' : 's'}`}
             </button>
           </div>
           {shortlisted === 0 && (

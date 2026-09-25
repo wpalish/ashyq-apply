@@ -205,7 +205,7 @@ function ChecklistFor({
     <div className="stack">
       <Panel
         title={`${result.university} — ${result.program}`}
-        hint={`${completed} of ${total} items ticked off. Generated ${dateTime(c.generated_at)}.`}
+        hint={`${completed} of ${total} item${total === 1 ? '' : 's'} ticked off. Generated ${dateTime(c.generated_at)}.`}
         actions={
           <Chip tone={c.completeness === 'official' ? 'ok' : c.completeness === 'partial' ? 'warn' : 'risk'}>
             {c.completeness === 'official' ? 'from official pages'

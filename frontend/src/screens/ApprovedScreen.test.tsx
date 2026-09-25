@@ -75,3 +75,12 @@ describe('next to start', () => {
     expect(screen.getByTestId('next-to-start')).not.toHaveTextContent('Academic reference');
   });
 });
+
+describe('the collect button', () => {
+  it('counts one programme in the singular', () => {
+    results = [programme('a', 'approved', false)];
+    render(<ApprovedScreen onCollect={() => {}} />);
+    expect(screen.getByTestId('collect-documents')).toHaveTextContent('Collect documents for 1 programme');
+    expect(screen.getByTestId('collect-documents')).not.toHaveTextContent('1 programmes');
+  });
+});
