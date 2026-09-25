@@ -349,7 +349,10 @@ class WebScholarshipAdapter:
                             url=url,
                             category="classifier-rejected",
                             page_type=page_type,
-                            detail="not an award page; no scholarship recorded",
+                            detail=(
+                                "not an award page; no scholarship recorded "
+                                f"({_award_link_summary(page.text, url)})"
+                            ),
                         )
                     )
 
@@ -880,6 +883,19 @@ def _lists_awards_below(html: str, url: str) -> bool:
         link for link in _award_links(html, url) if urlparse(link).path.lower().startswith(own)
     ]
     return len(below) >= _CHILD_AWARDS_FOR_INDEX
+
+
+def _award_link_summary(html: str, url: str) -> str:
+    """How many award links a rejected page carries, and a few of them.
+
+    Run 61: NTU's /scholarships/freshmen stayed rejected and nothing said what
+    it linked, so the next fix would have been a guess.
+    """
+    links = _award_links(html, url)
+    own = re.sub(r"(/index)?\.html?$", "", urlparse(url).path.rstrip("/").lower()) + "/"
+    below = sum(1 for link in links if urlparse(link).path.lower().startswith(own))
+    sample = ", ".join(urlparse(link).path for link in links[:4])
+    return f"{len(links)} award links, {below} below it: {sample}"
 
 
 def _award_priority(url: str) -> tuple[int, int]:

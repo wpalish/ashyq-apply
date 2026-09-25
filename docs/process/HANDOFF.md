@@ -1110,6 +1110,11 @@ page". Change: a page that links three or more awards under its own path is now 
 the index budget). Research, innovation, fellowship and staff-award pages also rank after awards for
 incoming applicants.
 
+Claude, 2026-09-25, run 61: 5/62, precision 6/9 (UBC hit the wall-clock budget again; NTU 16 claims).
+/scholarships/freshmen is still rejected, so its award links are not filed beneath its own path. A rejected
+page's outcome now lists its award-link count, how many sit below it, and a sample of them, so the next fix
+comes from evidence rather than a guess.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
