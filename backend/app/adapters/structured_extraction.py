@@ -17,9 +17,12 @@ text, verbatim; the headers that give it meaning go in ``section``.
 from __future__ import annotations
 
 import re
+from dataclasses import replace
 
 from app.adapters.document_ir import DocumentIR, EvidenceBlock
 from app.adapters.extraction import ClaimBuilder
+from app.adapters.scope_reader import read_scope
+from app.domain.claim_scope import ClaimScope
 from app.domain.enums import ClaimType
 from app.schemas.claim import Claim
 
@@ -53,7 +56,28 @@ def _section(block: EvidenceBlock) -> str:
 
 
 def extract_table_requirements(doc: DocumentIR, builder: ClaimBuilder) -> list[Claim]:
-    """IELTS overall and per-section minimums from table cells, one table at a time."""
+    """IELTS overall and per-section minimums from table cells, one table at a time.
+
+    A table claim's population is what the table's own context states (its
+    section heading, caption, row), never a population named elsewhere on the
+    page: run 75 filed UBC's IELTS row as "transfer" because the page mentions
+    transfer students in another section.
+    """
+    page_scope = builder.meta.get("scope")
+    try:
+        return _extract(doc, builder, page_scope)
+    finally:
+        builder.meta["scope"] = page_scope
+
+
+def _scope_for(block: EvidenceBlock, page_scope: object) -> object:
+    if not isinstance(page_scope, ClaimScope):
+        return page_scope
+    local = read_scope(" ".join([*block.section_path, block.caption, *block.row_headers]))
+    return replace(page_scope, population=local.population)
+
+
+def _extract(doc: DocumentIR, builder: ClaimBuilder, page_scope: object) -> list[Claim]:
     found: list[Claim] = []
     overall_done = False
     bands: dict[str, float] = {}
@@ -68,6 +92,7 @@ def extract_table_requirements(doc: DocumentIR, builder: ClaimBuilder) -> list[C
         if floor and not overall_done:
             overall, part = _band(floor.group(1)), _band(floor.group(2))
             if overall is not None and part is not None and part <= overall:
+                builder.meta["scope"] = _scope_for(block, page_scope)
                 for claim_type, value in (
                     (ClaimType.IELTS_MIN_OVERALL, overall),
                     (ClaimType.IELTS_MIN_SUBSCORE, part),
@@ -88,6 +113,7 @@ def extract_table_requirements(doc: DocumentIR, builder: ClaimBuilder) -> list[C
             bands.setdefault(named[0], band)
             band_block = band_block or block
         elif not named and _OVERALL.search(headers) and not overall_done:
+            builder.meta["scope"] = _scope_for(block, page_scope)
             claim = builder.add(
                 ClaimType.IELTS_MIN_OVERALL, band, block.text, section=_section(block)
             )
@@ -96,6 +122,7 @@ def extract_table_requirements(doc: DocumentIR, builder: ClaimBuilder) -> list[C
             overall_done = True
     if bands and band_block is not None:
         # Sections named one by one, as the prose extractor records them: a map.
+        builder.meta["scope"] = _scope_for(band_block, page_scope)
         claim = builder.add(
             ClaimType.IELTS_MIN_SUBSCORE,
             dict(sorted(bands.items())),

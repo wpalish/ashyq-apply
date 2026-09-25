@@ -1256,6 +1256,18 @@ English.
 Jev link ranking: the confirm-stage queue is mostly sitemap URLs with no anchor text, so richer Jev state
 helps less than expected. Leave it in shadow and keep collecting ranks.
 
+Claude, 2026-09-25, run 75: 6/62, precision 6/10. UBC went from 1 to 5 claims.
+- The language-link follow reached you.ubc.ca/.../english-language-competency/ and the table reader read
+  "6.5, with no part less than 6.0" there (live, right values).
+- Both IELTS facts still missed on population: we recorded "transfer", read from another section of the
+  page. Fixed: a table claim's population now comes only from its table's context (section heading,
+  caption, row).
+- OWNER DECISION: the UBC labels' population is free text ("Vancouver applicants using IELTS Academic"),
+  and scope_matches compares population literally, so no pipeline value can ever match it. Options:
+  (a) relabel population to a controlled value, or (b) score population None as compatible when the
+  label is descriptive. I have not touched labels or the scorer.
+- Jev shadow ranks: Delft 3/3, NTU 1/1 — no difference this run.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 

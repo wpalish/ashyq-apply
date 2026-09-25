@@ -59,3 +59,27 @@ def test_every_excerpt_passes_the_verbatim_check():
     for html in (UBC, GRONINGEN):
         claims, builder = _run(html)
         assert claims and not builder.rejected
+
+
+def test_a_population_named_elsewhere_on_the_page_is_not_the_tables():
+    """Run 75: UBC's IELTS row was filed as 'transfer' from another section."""
+    from app.adapters.scope_reader import read_scope
+
+    html = UBC.replace(
+        "<h1>English language competency</h1>",
+        "<h1>English language competency</h1><h2>Transfer students</h2>"
+        "<p>Transfer students from another university apply separately.</p>",
+    )
+    builder = ClaimBuilder(
+        source_url="https://u.edu/x",
+        official_domain=True,
+        page_text=html_to_text(html),
+        scope=read_scope(html_to_text(html)),
+    )
+    page_population = builder.meta["scope"].population
+    claims = extract_table_requirements(build_document_ir(html, "https://u.edu/x"), builder)
+    assert page_population == "transfer"
+    assert claims
+    assert all(c.scope.population is None for c in claims)
+    # The builder's page scope is restored for whatever reads the page next.
+    assert builder.meta["scope"].population == page_population
