@@ -50,9 +50,8 @@ export function awardNote(result: ProgramResult): string {
   return best ? best.name : 'no award found for this programme';
 }
 
-/** The site the facts were read from: a host name, or "demo fixture". */
-export function sourceHost(result: ProgramResult): string {
-  const url = result.source_urls?.[0];
+/** A page's site: its host name, or "demo fixture". */
+export function urlHost(url: string | undefined): string {
   if (!url) return '';
   if (url.startsWith('fixture://')) return 'demo fixture';
   try {
@@ -60,6 +59,11 @@ export function sourceHost(result: ProgramResult): string {
   } catch {
     return '';
   }
+}
+
+/** The site the facts were read from: a host name, or "demo fixture". */
+export function sourceHost(result: ProgramResult): string {
+  return urlHost(result.source_urls?.[0]);
 }
 
 /** Where the facts come from, short enough for one line. */

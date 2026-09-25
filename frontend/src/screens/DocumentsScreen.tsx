@@ -119,11 +119,11 @@ export function DocumentsScreen() {
             {deadlines.map((d, i) => (
               <div key={i} className={`timeline__item ${d.past ? 'timeline__item--past' : ''}`}>
                 <span className="timeline__date">{date(d.when)}</span>
-                <div>
+                <div className="timeline__what">
                   <div className="small"><strong>{d.what}</strong></div>
                   <div className="xs muted">{d.where}</div>
                 </div>
-                {d.past && <Chip tone="risk">passed</Chip>}
+                {d.past && <span className="timeline__flag"><Chip tone="risk">passed</Chip></span>}
               </div>
             ))}
             {deadlines.length === 0 && <p className="muted small">No dated deadlines were found.</p>}

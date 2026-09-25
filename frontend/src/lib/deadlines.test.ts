@@ -4,16 +4,27 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { daysUntil, flapDate, nextDeadline, planDeadlines } from './deadlines';
-import type { ProgramResult } from '@/types';
+import { daysUntil, flapDate, nextDeadline, planDeadlines, rowText } from './deadlines';
+import type { ProgramResult, Scholarship } from '@/types';
 
 const today = new Date(2026, 8, 25); // 25 September 2026, local time
 
-function row(id: string, decision: string, deadline: string | null, passed = false): ProgramResult {
+function row(
+  id: string, decision: string, deadline: string | null, passed = false, scholarships: Partial<Scholarship>[] = [],
+): ProgramResult {
   return {
-    id, university: `University ${id}`, user_decision: decision,
-    admission_deadline: deadline, deadline_passed: passed,
+    id, university: `University ${id}`, program: 'BSc', user_decision: decision, eligibility: 'MET',
+    admission_deadline: deadline, deadline_passed: passed, scholarships,
   } as unknown as ProgramResult;
+}
+
+function award(overrides: Partial<Scholarship>): Partial<Scholarship> {
+  return {
+    id: 'g', name: 'Talent Grant', application_mode: 'separate', applicant_eligible: 'unknown',
+    deadline: '2027-02-01', deadline_passed: false, requires_extra_essays: true,
+    eligibility_checks: [{ requirement: 'GPA', status: 'MET' }] as Scholarship['eligibility_checks'],
+    ...overrides,
+  };
 }
 
 describe('the plan deadlines', () => {
@@ -56,5 +67,40 @@ describe('the plan deadlines', () => {
   it('reads a timestamp as its calendar date, not shifted by the time zone', () => {
     const [p] = planDeadlines([row('a', 'approved', '2026-12-01T23:59:00-05:00')], today);
     expect(p?.day).toBe('2026-12-01');
+  });
+
+  it('brings a grant with its own application onto the board, before the admission date', () => {
+    const planned = planDeadlines([row('a', 'approved', '2027-05-01', false, [award({})])], today);
+    expect(planned.map((p) => p.key)).toEqual(['a:g', 'a']);
+    const [grant] = planned;
+    expect(grant?.kind).toBe('award');
+    expect(grant?.beforeAdmission).toBe(true);
+    expect(grant && rowText(grant)).toEqual({ title: 'Talent Grant', detail: 'Grant application · essays · University a' });
+    expect(nextDeadline(planned)?.key).toBe('a:g');
+  });
+
+  it('leaves off an award considered automatically, and one the applicant cannot hold', () => {
+    const planned = planDeadlines([row('a', 'approved', '2027-05-01', false, [
+      award({ id: 'auto', application_mode: 'automatic' }),
+      award({ id: 'no', applicant_eligible: 'no' }),
+      award({ id: 'undated', deadline: null }),
+    ])], today);
+    expect(planned.map((p) => p.key)).toEqual(['a']);
+  });
+
+  it("reads a grant's status from its own checks, the worst one first", () => {
+    const planned = planDeadlines([row('a', 'approved', '2027-05-01', false, [
+      award({ id: 'gap', eligibility_checks: [{ status: 'MET' }, { status: 'GAP' }] as Scholarship['eligibility_checks'] }),
+      award({ id: 'none', eligibility_checks: [] }),
+    ])], today);
+    const status = Object.fromEntries(planned.map((p) => [p.key, p.status]));
+    expect(status).toEqual({ a: 'MET', 'a:gap': 'GAP', 'a:none': 'NEEDS_OFFICIAL_CLARIFICATION' });
+  });
+
+  it('names a nomination as one, since someone else has to act by that date', () => {
+    const [grant] = planDeadlines([row('a', 'approved', '2027-05-01', false, [
+      award({ application_mode: 'nomination', requires_extra_essays: false }),
+    ])], today);
+    expect(grant && rowText(grant).detail).toBe('Grant nomination · University a');
   });
 });

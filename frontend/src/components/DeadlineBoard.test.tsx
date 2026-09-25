@@ -17,6 +17,7 @@ function row(overrides: Partial<ProgramResult>): ProgramResult {
     city: 'Tokyo', country: 'Japan', eligibility: 'MET', user_decision: 'approved',
     admission_deadline: '2026-12-01', deadline_passed: false,
     source_urls: ['https://www.u-tokyo.ac.jp/peak'], last_verified: '2026-09-14T10:00:00Z',
+    scholarships: [],
     ...overrides,
   } as unknown as ProgramResult;
 }
@@ -76,5 +77,28 @@ describe('the deadline board', () => {
   it('says so when no deadline is still ahead', () => {
     render(<DeadlineBoard planned={planDeadlines([row({ admission_deadline: '2026-01-01' })], today)} />);
     expect(screen.getByTestId('board-next')).toHaveTextContent('No upcoming deadline on your list');
+  });
+
+  it('shows a grant deadline as its own row, flagged when it comes before the admission date', () => {
+    const planned = planDeadlines([row({
+      id: 'groningen', university: 'University of Groningen', city: 'Groningen', admission_deadline: '2027-05-01',
+      scholarships: [{
+        id: 'talent', name: 'Groningen Talent Grant', application_mode: 'separate', applicant_eligible: 'unknown',
+        deadline: '2027-02-01', deadline_passed: false, requires_extra_essays: true,
+        eligibility_checks: [{ requirement: 'GPA', status: 'MET' }],
+        source_urls: ['https://www.rug.nl/talent-grant'], last_verified: '2026-09-10T10:00:00Z',
+      }],
+    } as unknown as Partial<ProgramResult>)], today);
+    render(<DeadlineBoard planned={planned} />);
+    const grant = screen.getByTestId('board-row-groningen:talent');
+    expect(grant).toHaveAttribute('data-kind', 'award');
+    expect(grant).toHaveTextContent('Groningen Talent Grant');
+    expect(grant).toHaveTextContent('Grant application · essays · University of Groningen');
+    expect(grant).toHaveTextContent('before the admission deadline');
+    expect(screen.getByTestId('board-next')).toHaveTextContent('Due before the admission deadline');
+    // The award's own page and read date, not the programme's.
+    const foot = screen.getByText(/Dates as each university publishes them/);
+    expect(foot).toHaveTextContent('rug.nl');
+    expect(foot).toHaveTextContent('10 September 2026');
   });
 });

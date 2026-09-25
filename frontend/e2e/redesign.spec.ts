@@ -147,9 +147,12 @@ test('the plan puts the nearest deadline on the board and every one after it in 
   const count = async (word: string) => Number((await page.getByText(new RegExp(`^\\d+ ${word}$`)).innerText()).split(' ')[0]);
   const planned = (await count('approved')) + (await count('maybe'));
   expect(planned).toBeGreaterThanOrEqual(2);
-  const rows = board.locator('[data-testid^="board-row-"]');
-  await expect(rows).toHaveCount(planned);
-  await expect(rows.filter({ hasText: 'University of Groningen' })).toContainText('Action needed');
+  const applications = board.locator('[data-kind="admission"]');
+  await expect(applications).toHaveCount(planned);
+  await expect(applications.filter({ hasText: 'University of Groningen' })).toContainText('Action needed');
+  // A grant with its own application is a deadline too, and Groningen's comes three months earlier.
+  await expect(board.locator('[data-kind="award"]').filter({ hasText: 'Groningen Talent Grant' }))
+    .toContainText('before the admission deadline');
 
   // Upcoming rows are in date order: the days left never go down.
   const days = (await board.locator('.board__row:not(.is-passed) .board__left [aria-hidden]').allTextContents())

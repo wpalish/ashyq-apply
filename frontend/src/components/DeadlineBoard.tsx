@@ -2,7 +2,8 @@
  * The departures board: the nearest deadline, then every one on the list.
  *
  * Round 7's plan screen took concept L's board: the next deadline on
- * split-flap tiles with the days left, and one row per programme under it -
+ * split-flap tiles with the days left, and one row per deadline under it -
+ * the application, and any grant with an application of its own - with the
  * date, where, what, days, and one word for the requirements. That last word
  * describes what the applicant has to do, never how the university will
  * decide: "Met", "Action needed", "Ask the university". Money stays in its
@@ -14,9 +15,9 @@
  * did not find reads "not found" and is never guessed.
  */
 
-import { sourceHost } from '@/components/ResultCard';
+import { urlHost } from '@/components/ResultCard';
 import {
-  REQUIREMENT_WORD, flapDate, nextDeadline, spokenDate, type PlannedDeadline,
+  REQUIREMENT_WORD, flapDate, nextDeadline, rowText, spokenDate, type PlannedDeadline,
 } from '@/lib/deadlines';
 
 function Flaps({ text }: { text: string }) {
@@ -51,9 +52,16 @@ function wordTone(status: string): string {
   return 'act';
 }
 
+/** The page a row's date was read from: the award's own for a grant. */
+function sourceOf(p: PlannedDeadline): { url?: string; read: string | null } {
+  return p.award
+    ? { url: p.award.source_urls?.[0], read: p.award.last_verified }
+    : { url: p.result.source_urls?.[0], read: p.result.last_verified };
+}
+
 /** Where the dates were read, once for the whole board. */
 function sourcesLine(planned: PlannedDeadline[]): string {
-  const where = new Set(planned.filter((p) => p.day).map((p) => sourceHost(p.result)));
+  const where = new Set(planned.filter((p) => p.day).map((p) => urlHost(sourceOf(p).url)));
   return [...where].filter(Boolean).join(' · ');
 }
 
@@ -62,7 +70,7 @@ export function DeadlineBoard({ planned }: { planned: PlannedDeadline[] }) {
   const dated = planned.filter((p) => p.day !== null);
   const sources = sourcesLine(planned);
   const oldest = dated
-    .map((p) => p.result.last_verified)
+    .map((p) => sourceOf(p).read)
     .filter((v): v is string => Boolean(v))
     .sort()[0];
 
@@ -74,12 +82,14 @@ export function DeadlineBoard({ planned }: { planned: PlannedDeadline[] }) {
           <>
             <p className="board__flap-row">
               <span className="visually-hidden">
-                {spokenDate(next.day)}, {spokenDays(next)}: {next.result.university}, {next.result.program}.
+                {spokenDate(next.day)}, {spokenDays(next)}: {rowText(next).title}, {rowText(next).detail}.
+                {next.beforeAdmission && ' Due before the admission deadline.'}
               </span>
               <Flaps text={flapDate(next.day)} />
               <span className="board__next-what" aria-hidden="true">
-                <strong>{next.result.university}</strong>
-                <span>Application · {next.result.program}</span>
+                <strong>{rowText(next).title}</strong>
+                <span>{rowText(next).detail}</span>
+                {next.beforeAdmission && <span className="board__note">Due before the admission deadline</span>}
               </span>
               <span className="board__days" aria-hidden="true">
                 <Flaps text={days(next)} />
@@ -99,13 +109,14 @@ export function DeadlineBoard({ planned }: { planned: PlannedDeadline[] }) {
       {planned.length > 0 && (
         <ol className="board__rows" aria-label="Every deadline on your list">
           <li className="board__head" aria-hidden="true">
-            <span>Date</span><span>Where</span><span>Programme</span><span>Days</span><span>Requirements</span>
+            <span>Date</span><span>Where</span><span>What</span><span>Days</span><span>Requirements</span>
           </li>
           {planned.map((p) => (
             <li
-              key={p.result.id}
+              key={p.key}
               className={`board__row${p.passed ? ' is-passed' : ''}${p === next ? ' is-next' : ''}`}
-              data-testid={`board-row-${p.result.id}`}
+              data-testid={`board-row-${p.key}`}
+              data-kind={p.kind}
             >
               <span className="board__date">
                 {p.day ? (
@@ -121,18 +132,19 @@ export function DeadlineBoard({ planned }: { planned: PlannedDeadline[] }) {
               <span className="board__where">{p.result.city || p.result.country}</span>
               <span className="board__what">
                 <span className="board__uni">
-                  {p.result.university}
+                  {rowText(p).title}
                   {p.result.user_decision === 'maybe' && <span className="board__maybe"> · maybe</span>}
                 </span>
-                <span className="board__prog">{p.result.program}</span>
+                <span className="board__prog">{rowText(p).detail}</span>
+                {p.beforeAdmission && <span className="board__note">before the admission deadline</span>}
               </span>
               <span className="board__left">
                 <span aria-hidden="true">{days(p)}</span>
                 <span className="visually-hidden">{spokenDays(p)}</span>
               </span>
-              <span className={`board__word board__word--${wordTone(p.result.eligibility)}`}>
+              <span className={`board__word board__word--${wordTone(p.status)}`}>
                 <span className="visually-hidden">Requirements: </span>
-                {REQUIREMENT_WORD[p.result.eligibility] ?? p.result.eligibility}
+                {REQUIREMENT_WORD[p.status] ?? p.status}
               </span>
             </li>
           ))}
