@@ -110,6 +110,31 @@ test('region chips count the list and filter it', async () => {
   await expect(cards).toHaveCount(total);
 });
 
+test('the globe places every programme at its city, turns by region and opens a card', async () => {
+  await goTo(page, 'shortlist');
+  await page.getByTestId('view-cards').click();
+  const globe = page.getByTestId('shortlist-globe');
+  await expect(globe).toBeVisible();
+  // Every demo city is in the checked table, so nothing is left off.
+  await expect(page.getByTestId('globe-unplaced')).toHaveCount(0);
+
+  await page.getByTestId('region-americas').click();
+  const americas = Number((await page.getByTestId('region-americas').innerText()).replace(/\D/g, ''));
+  await expect(globe.locator('[data-testid^="globe-marker-"]')).toHaveCount(americas);
+
+  const marker = globe.locator('[data-testid^="globe-marker-"]').first();
+  const id = (await marker.getAttribute('data-testid'))!.replace('globe-marker-', '');
+  await marker.click();
+  await expect(page.getByTestId(`card-open-${id}`)).toHaveAttribute('aria-expanded', 'true');
+  await page.getByTestId(`card-open-${id}`).click();
+  await page.getByTestId('region-all').click();
+
+  await goTo(page, 'progress');
+  await expect(page.getByTestId('reveal-globe')).toBeVisible();
+  await goTo(page, 'start');
+  await expect(page.getByTestId('start-globe')).toBeAttached();
+});
+
 test('the results reveal counts what the run found', async () => {
   await goTo(page, 'progress');
   const reveal = page.getByTestId('results-reveal');

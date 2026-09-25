@@ -13,7 +13,9 @@
  * with the same reason.
  */
 
-import { useEffect, useState, type InputHTMLAttributes } from 'react';
+import { useEffect, useMemo, useState, type InputHTMLAttributes } from 'react';
+import { Globe } from '@/components/Globe';
+import { defaultView, homeOf, markersFor } from '@/lib/globe';
 import { useStore } from '@/lib/store';
 import { castInput, get, setIn, type Path } from '@/lib/immutable';
 
@@ -71,6 +73,9 @@ export function StartScreen({
     onChange: (e: { target: { value: string } }) =>
       setProfileDraft((d) => setIn(d, path, castInput(e.target.value, cast))),
   });
+
+  const home = homeOf(profileDraft);
+  const globe = useMemo(() => markersFor(results), [results]);
 
   const synthetic = String(profileDraft.display_name ?? '').includes('synthetic');
   const blocked = validation ? !validation.can_proceed : false;
@@ -178,10 +183,22 @@ export function StartScreen({
         )}
       </div>
 
-      <svg className="start__horizon" viewBox="0 0 400 120" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-        <path d="M-10 120 Q200 -20 410 120" fill="none" stroke="var(--route)" strokeWidth="2" strokeDasharray="2 7" strokeLinecap="round" />
-        <circle cx="200" cy="50" r="7" fill="var(--sun)" />
-      </svg>
+      {/* Concept N: the globe rising under the search. Before a search it
+          shows only home; after one, the programmes it found - never an
+          example the data does not hold. */}
+      <Globe
+        layout="horizon"
+        tone="day"
+        height={200}
+        markers={globe.markers}
+        home={home}
+        focus={defaultView(home)}
+        routes={globe.markers.length > 0}
+        caption={globe.markers.length > 0
+          ? `A globe with your last search: ${globe.markers.length} programmes${home ? `, with routes from ${home.city}` : ''}.`
+          : `A globe${home ? ` with ${home.city}, your home` : ''}. Programmes appear on it after a search.`}
+        testId="start-globe"
+      />
     </div>
   );
 }

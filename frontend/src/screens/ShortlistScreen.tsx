@@ -14,6 +14,8 @@ import { Fragment, useMemo, useState } from 'react';
 import { BudgetLadder, ceilingFrom } from '@/components/BudgetLadder';
 import { CompareView } from '@/components/CompareView';
 import { REGION_LABEL, regionCounts, regionOf, type Region } from '@/lib/regions';
+import { Globe } from '@/components/Globe';
+import { REGION_VIEW, defaultView, homeOf, markersFor } from '@/lib/globe';
 import { ResultCard } from '@/components/ResultCard';
 import { ResultDetail } from '@/components/ResultDetail';
 import { Triage } from '@/components/Triage';
@@ -164,6 +166,8 @@ export function ShortlistScreen({ onEditSearch }: { onEditSearch?: () => void } 
   // A row with no ranking is one assessed under v1; it still belongs in the
   // list rather than in a set-aside section it was never scored for.
   const ranked = rows.filter((r) => !r.ranking || RANKED.includes(r.ranking.bucket));
+  const home = homeOf(savedProfile);
+  const globe = useMemo(() => markersFor(rows), [rows]);
 
   if (results.length === 0) {
     return <Empty title="No results yet">Run the research first.</Empty>;
@@ -611,6 +615,34 @@ export function ShortlistScreen({ onEditSearch }: { onEditSearch?: () => void } 
             </button>
           ))}
         </div>
+
+        {/* Concept N's list over a small globe: the programmes the filters
+            show, at their cities; a region chip turns it to that region, and
+            a marker opens its card. The list stays the way through - the
+            globe is for looking. */}
+        {view === 'cards' && (
+          <div className="shortlist-globe">
+            <Globe
+              layout="band"
+              tone="day"
+              height={230}
+              markers={globe.markers}
+              home={home}
+              focus={region && REGION_VIEW[region] ? REGION_VIEW[region] : defaultView(home)}
+              zoom={region && REGION_VIEW[region] ? REGION_VIEW[region].zoom : 1}
+              routes={false}
+              selected={expanded}
+              onSelect={openRow}
+              caption={`A globe with ${globe.markers.length} of the ${rows.length} programmes shown at their cities.`}
+              testId="shortlist-globe"
+            />
+            {globe.unplaced > 0 && (
+              <p className="shortlist-globe__note" data-testid="globe-unplaced">
+                {globe.unplaced} programme{globe.unplaced === 1 ? ' is' : 's are'} not on the globe: the city is not in its table yet.
+              </p>
+            )}
+          </div>
+        )}
 
         {ceiling && (
           <BudgetLadder results={rows} ceiling={ceiling} onOpen={openRow} folded={view === 'cards'} />

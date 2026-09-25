@@ -11,11 +11,13 @@
  * When it finishes, the same list stays under "How the research went".
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { api } from '@/api/client';
 import { ceilingFrom, groupByBudget } from '@/components/BudgetLadder';
 import { Chip, Loading, Notice, Panel, Stat } from '@/components/primitives';
+import { Globe } from '@/components/Globe';
 import { findingTotals, findingsSoFar, type Finding } from '@/lib/findings';
+import { defaultView, homeOf, markersFor } from '@/lib/globe';
 import { dateTime } from '@/lib/format';
 import { useStore } from '@/lib/store';
 
@@ -74,6 +76,10 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
       });
   }, [runStage]);
 
+  // Memoised, and above the early return: this screen re-renders on every
+  // poll, and a new marker list would redraw the globe each time.
+  const globe = useMemo(() => markersFor(results), [results]);
+
   if (!run) {
     return (
       <Panel title="No research is running">
@@ -107,6 +113,7 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
   // count is only shown when the data can say it - the budget tile needs a
   // budget, and none of them is a chance of anything.
   const revealed = finished && results.length > 0;
+  const home = homeOf(savedProfile);
   const running = !finished && !failed && !cancelled;
   const findings = findingsSoFar(run.errors, results, 2, run.pages_failed);
   const moreFindings = findingTotals(run.errors, results, run.pages_failed) - findings.length;
@@ -121,7 +128,7 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
   return (
     <>
       {revealed ? (
-        <section className="reveal" aria-labelledby="reveal-title" data-testid="results-reveal">
+        <section className="reveal reveal--globe" aria-labelledby="reveal-title" data-testid="results-reveal">
           <p className="reveal__kicker">Research complete</p>
           <h1 className="reveal__title" id="reveal-title">
             {results.length} programme{results.length === 1 ? '' : 's'} in {countries} countr{countries === 1 ? 'y' : 'ies'}
@@ -158,6 +165,18 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
           <button className="btn btn--primary reveal__cta" onClick={onDone} data-testid="to-shortlist">
             See {results.length} programme{results.length === 1 ? '' : 's'}
           </button>
+          {/* Concept N's reveal: the routes from home to every programme found. */}
+          <Globe
+            layout="horizon"
+            tone="night"
+            height={220}
+            markers={globe.markers}
+            home={home}
+            focus={defaultView(home)}
+            routes
+            caption={`A globe with ${globe.markers.length} of ${results.length} programmes at their cities${home ? `, routes from ${home.city}` : ''}.`}
+            testId="reveal-globe"
+          />
         </section>
       ) : running ? (
         <section className="reveal reveal--running" aria-labelledby="running-title" data-testid="research-running">
