@@ -535,7 +535,10 @@ class CatalogWalker:
                 continue
             parent = _parent_directory(link.url)
             repeating = bool(parent) and siblings[parent] >= REPEATING_LIST_MIN_SIBLINGS
-            if base <= 0 and not repeating and (site_root or _host(link.url) != catalogue_host):
+            # On a home page every menu link shares the root as its parent, so
+            # "repeating" there is the menu itself, not a programme list
+            # (run 67: the site-root rule alone let UBC's menu through).
+            if base <= 0 and (site_root or (not repeating and _host(link.url) != catalogue_host)):
                 # Nothing about it says programme, and it leaves the catalogue's
                 # own site: moodle, the wiki, webmail, the library. The T29
                 # contract reads a signal-less lead on the catalogue's site and

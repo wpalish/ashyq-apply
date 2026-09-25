@@ -1150,6 +1150,12 @@ menu links (Indigenous, Contact us, the CLF terms page) from t=25 s to t=68 s. A
 catalogue, so its signal-less leads are now dropped as walker_no_signal. The T29 contract still reads
 signal-less leads on a real catalogue page. Golden demo unchanged; test added.
 
+Claude, 2026-09-25, run 67: 5/62, precision 5/7. The oracle now recovers 8 facts, UBC ielts.subscores
+among them (the key-order fix). UBC completed with 0 claims: search did not reach its programme page
+(Tavily variance), and the menu reads were still there. Cause: every menu link sits directly under the site
+root, so five or more count as a "repeating list" and bypassed the site-root rule. On a home page the
+repeating bonus no longer applies. Test extended to five menu siblings.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 

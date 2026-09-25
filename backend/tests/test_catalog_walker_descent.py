@@ -131,7 +131,14 @@ def test_a_site_home_page_reads_only_leads_that_say_programme():
     )
     outcomes: list[tuple[str, str]] = []
 
-    kept = walker._score([menu, lead], outcomes, "you.ubc.ca", site_root=True)
+    siblings = [
+        WalkerLink(url=f"https://you.ubc.ca/{slug}", label=slug, score=0, source="html")
+        for slug in ("canadian", "contact-us", "tours-events", "international")
+    ]
 
+    kept = walker._score([menu, *siblings, lead], outcomes, "you.ubc.ca", site_root=True)
+
+    # Five menu links under one root would count as a repeating list on a
+    # catalogue; on a home page they are still the menu (run 67).
     assert [link.url for link in kept] == [lead.url]
     assert (menu.url, "walker_no_signal") in outcomes
