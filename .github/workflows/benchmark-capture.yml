@@ -236,7 +236,11 @@ jobs:
                   lines = log.read_text(encoding="utf-8", errors="replace").splitlines()
                   failed_case = bool(observation.get("error")) and not budget_case
                   if budget_case:
-                      shown = lines[-40:]
+                      # Every read it started, then the tail: run 63's Groningen
+                      # tail showed only science-shops pages, not how it got there.
+                      starts = [ln for ln in lines if " start " in ln]
+                      others = [ln for ln in lines if " start " not in ln and " took " not in ln]
+                      shown = starts[:160] + others[-20:]
                   elif failed_case:
                       # A crash: the traceback is the only record (run 49,
                       # Toronto: "not enough values to unpack").
