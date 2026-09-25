@@ -1541,7 +1541,9 @@ The steps codex left, unchanged and still next after this review:
 
 Redesign part 2, frontend only, gates run by claude-opus-5 on 2026-09-25 at `bd1abc0`: typecheck, lint,
 **231 unit tests** (24 files), build — green; Playwright **91 passed, 1 skipped** (desktop + Pixel 7);
-auth e2e (`playwright.auth.config.ts`) **6 passed** at `ec12b7d`. CI still gets no runner (see §5).
+auth e2e (`playwright.auth.config.ts`) **6 passed** at `ec12b7d`. CI: runners are back; `release-gates` is
+green on `85839dc` (frontend, backend sqlite and postgresql, security-and-containers). The outage from
+00:31 to about 09:40 UTC assigned no runner at all; nothing in the PR caused it.
 
 Redesign «Горизонт», frontend only, gates run by claude-opus-5 on 2026-09-25 at `6a814d3`: typecheck,
 lint, **216 unit tests** (23 files), build — all green; Playwright **85 passed, 1 skipped** (desktop
