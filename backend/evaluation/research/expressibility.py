@@ -24,7 +24,14 @@ from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
 
-from .mapping import AWARD_KEYS, CLAIM_KEYS, COVERAGE_KEYS, DERIVED_KEYS
+from .mapping import (
+    AWARD_KEYS,
+    CLAIM_KEYS,
+    COMPLETION_STATES,
+    COVERAGE_KEYS,
+    DERIVED_KEYS,
+    structured_key_matches,
+)
 from .schema import Dataset
 
 REACHABLE = "reachable"
@@ -47,7 +54,7 @@ _COVERAGE = (
 _AWARD_FIELDS = frozenset(
     {"exists", *AWARD_KEYS.values(), *(f"coverage.{COVERAGE_KEYS.get(c, c)}" for c in _COVERAGE)}
 )
-_DOCUMENT_FIELDS = frozenset({"required", "maximum_words"})
+_DOCUMENT_FIELDS = frozenset({"required", "maximum_words", *COMPLETION_STATES})
 
 
 @dataclass(frozen=True, slots=True)
@@ -59,7 +66,7 @@ class Reach:
 
 def reach(key: str, bindings: dict[str, str]) -> str:
     """Why ``key`` can or cannot be produced, given ``{prefix: kind}`` bindings."""
-    if key in set(CLAIM_KEYS.values()) or key in DERIVED_KEYS:
+    if key in set(CLAIM_KEYS.values()) or key in DERIVED_KEYS or structured_key_matches(key):
         return REACHABLE
     for prefix, kind in bindings.items():
         if key.startswith(prefix + "."):

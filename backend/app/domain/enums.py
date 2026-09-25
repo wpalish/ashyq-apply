@@ -154,6 +154,27 @@ class ClaimType(StrEnum):
     ADMISSION_DEADLINE = "admission_deadline"
     INTAKE_OPEN = "intake_open"
     PROGRAM_EXISTS = "program_exists"
+    #: The term the programme starts, as the page states it ("September 1,
+    #: 2027" is a fall 2027 intake).
+    INTAKE_TERM = "intake_term"
+    #: The faculty or school that owns the programme.
+    PROGRAM_FACULTY = "program_faculty"
+    #: How a student enters the programme when that is not direct admission
+    #: to the major (KAIST: admitted undeclared, the major chosen later).
+    ADMISSION_ROUTE = "admission_route"
+    #: One rule for one named national credential: its level equivalence,
+    #: minimum grades, or whether an extra qualification is required. The
+    #: value names the credential and the field, so a rule for a Kazakh NIS
+    #: certificate never reads as a rule for every applicant.
+    CREDENTIAL_REQUIREMENT = "credential_requirement"
+    #: A named school subject is required ("Mathematics*").
+    SUBJECT_REQUIREMENT = "subject_requirement"
+    #: A minimum level in a language other than English, per stage (Vienna:
+    #: German A2 to apply, C1 to enrol).
+    OTHER_LANGUAGE_MINIMUM = "other_language_minimum"
+    #: A test score accepted as evidence of English, stated as such on the
+    #: page (NTU: SAT 1250, or IELTS per band) — not the admission minimum.
+    ENGLISH_EVIDENCE_MINIMUM = "english_evidence_minimum"
 
     SCHOLARSHIP_EXISTS = "scholarship_exists"
     SCHOLARSHIP_AMOUNT = "scholarship_amount"
@@ -182,6 +203,9 @@ class ClaimType(StrEnum):
     #: The award lasts for the programme's normal duration, when the page says
     #: so in words rather than years ("for the normal duration of the course").
     SCHOLARSHIP_DURATION = "scholarship_duration"
+    #: A service bond the award or the grant behind it imposes: years, what it
+    #: is tied to, and who it binds ("three-year bond", NTU's tuition grant).
+    SCHOLARSHIP_BOND = "scholarship_bond"
 
     TUITION = "tuition"
     MANDATORY_FEES = "mandatory_fees"
@@ -196,6 +220,9 @@ class ClaimType(StrEnum):
     REQUIRED_DOCUMENT = "required_document"
     ESSAY_PROMPT = "essay_prompt"
     RECOMMENDATION_REQUIREMENT = "recommendation_requirement"
+    #: Which form of a document applies depending on whether the applicant has
+    #: finished school (a transcript when completed, a course list when not).
+    DOCUMENT_BY_COMPLETION = "document_by_completion"
     POST_STUDY_WORK = "post_study_work"
     WORK_DURING_STUDY = "work_during_study"
     RANKING_POSITION = "ranking_position"

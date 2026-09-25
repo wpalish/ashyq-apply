@@ -1,5 +1,6 @@
 """Lossless direct claim keys; ambiguous award/document identity stays explicit."""
 
+import re
 from typing import Any
 
 from .identities import IdentityMap
@@ -18,7 +19,26 @@ CLAIM_KEYS = {
     # Open/closed is not evidence of the requested intake's identity.
     "intake_open": "intake.open",
     "program_exists": "programme.exists",
+    "intake_term": "intake",
+    "program_faculty": "programme.faculty",
+    "admission_route": "programme.admission_route",
 }
+
+#: Claim types whose key is built from what the claim itself names: which
+#: credential, subject, language or test. Each value is a map with exactly
+#: these fields; the key template is filled from them and the value is the
+#: one field left over. A claim missing a field stays unmapped, never guessed.
+STRUCTURED_KEYS: dict[str, tuple[str, tuple[str, ...], str]] = {
+    "credential_requirement": (
+        "country_credential.{credential}.{field}",
+        ("credential", "field"),
+        "value",
+    ),
+    "subject_requirement": ("subjects.{subject}.required", ("subject",), "required"),
+    "other_language_minimum": ("{language}.{stage}_minimum", ("language", "stage"), "level"),
+    "english_evidence_minimum": ("english_evidence.{test}.minimum", ("test",), "minimum"),
+}
+_SLUG = re.compile(r"[a-z0-9_]+")
 
 
 def evidence_scope(
@@ -86,7 +106,27 @@ def normalize_claim(
         # the floor out is a change of representation, not an equivalence:
         # it says nothing the page did not say.
         value = {band: float(value) for band in IELTS_BANDS}
+    if claim_type in STRUCTURED_KEYS:
+        template, names, field = STRUCTURED_KEYS[claim_type]
+        if (
+            isinstance(value, dict)
+            and set(value) == {*names, field}
+            and all(isinstance(value[n], str) and _SLUG.fullmatch(value[n]) for n in names)
+        ):
+            return template.format(**value), value[field], programme, degree
+        return "unmapped." + claim_type, value, programme, degree
     return CLAIM_KEYS.get(claim_type, "unmapped." + claim_type), value, programme, degree
+
+
+def structured_key_matches(key: str) -> bool:
+    """Whether some structured claim type can produce ``key``."""
+    for template, names, _field in STRUCTURED_KEYS.values():
+        pattern = re.escape(template)
+        for name in names:
+            pattern = pattern.replace(re.escape("{" + name + "}"), "[a-z0-9_]+")
+        if re.fullmatch(pattern, key):
+            return True
+    return False
 
 
 IELTS_BANDS = ("listening", "reading", "speaking", "writing")
@@ -110,9 +150,18 @@ AWARD_KEYS = {
     # programme duration"). Same statements, the corpus's own keys.
     "scholarship_living_allowance": "coverage.living",
     "scholarship_duration": "duration",
+    "scholarship_bond": "bond",
+    "scholarship_offer_required": "applicability.offer",
 }
 COVERAGE_KEYS = {"mandatory_fees": "fees", "health_insurance": "insurance"}
-DOCUMENT_TYPES = {"required_document", "essay_prompt", "recommendation_requirement"}
+DOCUMENT_TYPES = {
+    "required_document",
+    "essay_prompt",
+    "recommendation_requirement",
+    "document_by_completion",
+}
+#: The two completion states a document's form can depend on.
+COMPLETION_STATES = ("completed", "not_completed")
 
 
 def normalize_subject_claims(
@@ -190,6 +239,19 @@ def normalize_subject_claims(
                 value = None
             return [(prefix + "." + AWARD_KEYS[claim_type], value, programme, degree)]
     elif claim_type in DOCUMENT_TYPES:
+        if claim_type == "document_by_completion":
+            # {"document": subject, "status": completed|not_completed, "form": ...}
+            if (
+                not isinstance(value, dict)
+                or set(value) != {"document", "status", "form"}
+                or value["status"] not in COMPLETION_STATES
+                or not isinstance(value["form"], str)
+            ):
+                return [fallback]
+            prefix = identities.resolve("document", source, value["document"])
+            if prefix is None:
+                return [fallback]
+            return [(prefix + "." + value["status"], value["form"], programme, degree)]
         if claim_type != "essay_prompt" and not isinstance(value, str):
             return [fallback]
         subject = value.get("document") if isinstance(value, dict) else value

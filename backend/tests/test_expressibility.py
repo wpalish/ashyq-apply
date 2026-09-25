@@ -30,7 +30,9 @@ def test_a_bound_award_field_the_mapping_carries_is_reachable():
 
 
 def test_a_bound_award_field_the_mapping_does_not_carry_says_so():
-    assert reach("scholarships.nanyang_global.bond", _BINDINGS) == UNSUPPORTED_FIELD
+    assert reach("scholarships.nanyang_global.stipend_bonus", _BINDINGS) == UNSUPPORTED_FIELD
+    # Carried since V2-30A (2026-09-25).
+    assert reach("scholarships.nanyang_global.bond", _BINDINGS) == REACHABLE
 
 
 def test_an_unbound_award_or_document_is_unbound_not_missing():
@@ -39,7 +41,10 @@ def test_an_unbound_award_or_document_is_unbound_not_missing():
 
 
 def test_a_key_no_claim_type_produces_is_named():
-    assert reach("german.application_minimum", _BINDINGS) == NO_CLAIM_TYPE
+    assert reach("programme.mascot", _BINDINGS) == NO_CLAIM_TYPE
+    # Structured claim types since V2-30A: the key is built from the claim.
+    assert reach("german.application_minimum", _BINDINGS) == REACHABLE
+    assert reach("country_credential.nis_grade12.minimum_grades", _BINDINGS) == REACHABLE
     assert reach("programme.language", _BINDINGS) == REACHABLE
 
 
@@ -52,8 +57,11 @@ def test_the_reviewed_corpus_counts_the_same_population_as_claim_recall():
     assert len(rows) == 62
     # 28 with the approved bindings, + 3 teaching languages under one key,
     # + 3 award fields with claim types since 2026-09-25 (NTU living allowance
-    # and duration in words, KAIST living allowance).
-    assert sum(r.verdict == REACHABLE for r in rows) == 34
+    # and duration in words, KAIST living allowance), + 15 with V2-30A's claim
+    # types (credential, subject, other-language, English-evidence, intake,
+    # faculty, route, bond, offer, document by completion). The 13 left need
+    # an identity binding, which is the owner's decision.
+    assert sum(r.verdict == REACHABLE for r in rows) == 49
 
 
 def test_without_any_bindings_the_ceiling_is_what_live_had_before_2026_09_23():
@@ -62,4 +70,5 @@ def test_without_any_bindings_the_ceiling_is_what_live_had_before_2026_09_23():
         (_DATA / "ground_truth.reviewed.json").read_text(encoding="utf-8")
     )
     rows = report(dataset, {})
-    assert sum(r.verdict == REACHABLE for r in rows) == 17
+    # 17 before V2-30A; its 11 claim types that need no binding raise it to 28.
+    assert sum(r.verdict == REACHABLE for r in rows) == 28

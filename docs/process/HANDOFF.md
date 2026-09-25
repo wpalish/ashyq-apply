@@ -1187,6 +1187,18 @@ with tables, claim-slot link expansion, goal-aware Playwright, bounded LLM span 
 owner's go before starting V2-30A. Note: our Fetcher already follows RFC 9309 (4xx robots = allowed,
 5xx or unreachable = disallowed); the brief's wording was imprecise, not the code.
 
+Claude, 2026-09-25, V2-30A (schema completeness; the owner said "делай как лучше" to the deep-research plan):
+- The representability ceiling rose from 34 to 49 of 62 (28 without bindings).
+- New claim types: intake_term, program_faculty, admission_route, credential_requirement,
+  subject_requirement, other_language_minimum, english_evidence_minimum, scholarship_bond,
+  document_by_completion. scholarship_offer_required is now mapped.
+- Structured keys are built only from slug-valued fields the claim names; a claim missing a field stays
+  unmapped. No extractor emits these types yet: this sets the ceiling, not recall.
+- The 13 facts left need identity bindings, one owner decision each: Groningen secondary_diploma,
+  translation, course_descriptions; Toronto supplemental_application; HKU entrance scholarship; NTU
+  Nanyang essay/referee.
+Golden demo unchanged.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
