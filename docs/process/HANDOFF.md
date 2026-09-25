@@ -1171,6 +1171,13 @@ no list parent, and a signal-less link to one is dropped as walker_no_signal eve
 Links that name the applicant's subject still score by label (Toronto's /data-computer-science). Golden
 demo unchanged. Search remains off (Tavily 432) until the owner renews it.
 
+Claude, 2026-09-25, run 69: 5/62, precision 5/7, no case worse than run 68. Tavily still answers 432 (36
+times this run), so search is off. UBC's top-level menu reads are gone. The walker now reads the next menu
+level (ubc-life/*, tours-events/*), because /programs is a JS catalogue whose static HTML is navigation only.
+Without search or the browser tier, UBC's programme page is not reachable, and more menu rules would be
+whack-a-mole. Runs are held until the owner renews search (a new Tavily key or plan, or Exa credits).
+Navigation-only runs spend Actions minutes and measure little.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
