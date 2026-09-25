@@ -1206,3 +1206,49 @@ stays and the globe waits (§21). The share stories (concept 14) and the unlock 
 **Gates at `a4f3c95`:** typecheck, lint, **260 unit tests** (29 files), build; Playwright **95 passed,
 1 skipped** (desktop and Pixel 7). The axe scan now covers the comparison and the plan. There is no
 horizontal scroll at 320, 390 or 1440 px on the new views.
+
+## 23. Part 4: the rest of the flow (2026-09-25)
+
+The owner said "продолжай" again. Part 4 brings the remaining concept screens in line with the concept, where
+no owner decision is needed. Screen 02 (the account form) keeps its current shape. Screen 06 (the unlock step)
+and screen 14 (share stories) still wait for the owner.
+
+| Commit | Concept screen | What |
+|---|---|---|
+| `4abcaf1` | 12 План | Grant deadlines join the board. Concept L put "the essay for the grant, 1 February" above the admission date of 1 May. Each kept programme now brings its grant deadlines as their own rows, marked "before the admission deadline" when they are. In the demo, the next deadline moves from Tokyo's application (1 December) to the MEXT nomination (1 November). |
+| `b4085dc` | 04 Поиск идёт | The research runs as a night moment: the stage in words, how far it has got, four counters, and "Found so far". The concept's three kinds of finding are read off the run: a requirement that rules a programme out, a cost and an award from different years, and a site that did not answer. The list stays as "Found along the way" once the run finishes. |
+| `6d14550` | 13 Документы | Each programme card says "3 of 9 ready · 6 still missing". Each document gets a "start by" date: its due date minus the time it takes. "Start first" names the unticked document to begin with. The every-deadline list moves under the checklist. |
+
+**Defects found in part 4, with their root causes:**
+
+| # | Defect | Root cause | Fix |
+|---|---|---|---|
+| I37 | The plan's next deadline was Tokyo's application on 1 December, but its MEXT nomination closes on 1 November | The board read only `admission_deadline`. The grants' own deadlines were only on the documents screen, in a list of all 20 programmes | Grant rows on the board. Awards considered automatically and awards the applicant cannot hold stay off |
+| I38 | On the documents screen, "passed" wrapped onto its own row, even at 1440 px | A grid of two columns held three children | A third column, and the flag sits on the date's line |
+| I39 | "Nothing to flag yet" appeared beside "10 pages that could not be read" | The counter moves before the error messages arrive | Until a site can be named, the count is shown as a finding of its own |
+| I40 | One unreadable page was counted twice | The URL pattern took the colon that ends "…program-0.html:" as part of the address | Trailing punctuation is trimmed. A unit test caught this |
+| I41 | Oslo was named "u-oslo" | Every Oslo page failed, so its result had no source to match the site against | The programme's own address is matched too |
+| I42 | A queued run was titled "queued" | The stage had no label | "Starting the research" |
+| I43 | The arc of the night panel crossed the "Found so far" text on a phone | The panel ended right under the list | Room under the list for the arc |
+| I44 | On a phone, two programme cards filled the first screen of the documents tab | One card per row, each with the programme name | Two to a row, with the name left to the checklist heading |
+| I45 | The documents screen had never been scanned by axe | It is reachable only after a documents collection, and no scan ran there | The journey scans it after the collection. It is clean |
+
+**Decisions taken without the owner, and why:**
+
+- **"Ready" means the applicant ticked it.** The concept said "uploaded", but the product never uploads or
+  submits anything, and the screen says so.
+- **"Start by" is arithmetic, not advice:** the published due date minus the lead time the checklist already
+  shows ("allow ~30 days"). Nothing is dated when either date is unknown or the deadline has passed. "Start
+  now" appears when the start date has gone by.
+- **A grant row's last column reads the award's own checks**, worst first. An award with no checks reads "Ask
+  the university", never "Met".
+- **The findings list shows what the run recorded.** Exclusions and year mismatches appear only after the
+  comparison stage. The empty state says so ("Requirements and money are compared once the pages are read")
+  rather than implying there is nothing.
+
+**Gates at `6d14550`:**
+
+- typecheck, lint, **279 unit tests** (31 files) and build pass.
+- Playwright: **95 passed, 1 skipped** (desktop and Pixel 7).
+- axe is clean on the documents screen, which is new to the scan.
+- The found list is checked for the concept's three kinds of finding.

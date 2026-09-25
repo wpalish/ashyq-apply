@@ -276,6 +276,10 @@ still in the old shape, none needing an owner decision:
 3. Documents (concept 13): per programme, what is asked, what is ticked and what is still missing.
 4. Review at 390/1440 light and dark, video, docs (§23), PR.
 
+Progress on part 4: 1 `4abcaf1`, 2 `b4085dc`, 3 `6d14550`, 4 the docs commit. Report and defects I37–I45 are
+in `docs/design/redesign-concepts.md` §23. **Next:** the owner reviews PR #20. Still waiting for the owner: the
+globe, the Russian vocabulary, share stories and the unlock step.
+
 Write-ahead (claude-opus-5, 2026-09-25, redesign part 3; owner: "продолжай"). The concept screens that
 need no owner decision (English stays, the globe waits), each a pushed commit with green gates:
 1. Programme (concept 10): the money as arithmetic — price − grants = left to pay, the backend's own
@@ -1564,6 +1568,11 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+Redesign part 4, frontend only, gates run by claude-opus-5 on 2026-09-25 at `6d14550`:
+- typecheck, lint, **279 unit tests** (31 files) and build are green;
+- Playwright **95 passed, 1 skipped**;
+- the journey now also scans the documents screen with axe, and it is clean.
+
 Redesign part 3, frontend only. Gates run by claude-opus-5 on 2026-09-25 at `a4f3c95`: typecheck, lint,
 **260 unit tests** (29 files) and build are green. Playwright: **95 passed, 1 skipped** (desktop and
 Pixel 7). The axe scan now includes the comparison and the plan. There is no horizontal scroll at 320 px
@@ -2374,6 +2383,7 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 | 2026-09-25 UTC | claude-opus-5 | `2dfa367` → `6a814d3` redesign implemented | Owner approved «Горизонт» with «Солнце» and asked for it built overnight with adversarial review. Landed the design system, the budget ladder, one-at-a-time triage, gold "you pay", folded profile sections; three review cycles found 20 defects (I1–I20, root causes in the design doc §20), all fixed. Vocabulary kept as glossary proposals per the i18n rule. Next: owner review of PR #20. |
 | 2026-09-25 UTC | claude-opus-5 | `6a814d3` → `bd1abc0` redesign part 2 | Owner: the app did not look like the concept. The first pass had changed the paint; this pass changes the structure: five tabs, a three-field start, the results reveal, price cards (table one tap away). English stays, the globe waits. 7 more defects (I21–I27) found and fixed. |
 | 2026-09-25 UTC | claude-opus-5 | `d192d19` → `a4f3c95` redesign part 3 | Owner: "продолжай". Added three concept screens: the programme's money as arithmetic (10), a row-by-row comparison of up to three programmes (11) and the Plan tab's departures board of deadlines (12). 9 defects (I28–I36) found and fixed; root causes are in the design doc §22. Share stories, the globe and the Russian vocabulary still wait for the owner. |
+| 2026-09-25 UTC | claude-opus-5 | `5cbcd9e` → `6d14550` redesign part 4 | Owner said "продолжай" again. Grant deadlines now appear on the plan board (the next deadline became the MEXT nomination). The research run became a night moment that shows what it found so far. The documents screen now shows what is ready, what is missing and when to start. Found and fixed 9 defects (I37–I45); design doc §23. |
 
 | 2026-09-20 | gpt-6-astra | b267b337 → V2-00 in progress | Startup/recovery, PR inventory, all pack files read; isolated worktree preserves existing dirty research work. |
 
