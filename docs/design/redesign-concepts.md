@@ -1164,3 +1164,45 @@ the **globe comes later**.
   to show, and an invented example is what the product refuses to show.
 - **The unlock step (4 990 ₸)** and the share stories are not part of this pass.
 
+
+## 22. Part 3: the programme, the comparison and the plan (2026-09-25)
+
+The owner said "продолжай". Part 3 builds the concept screens that need no owner decision: English
+stays and the globe waits (§21). The share stories (concept 14) and the unlock step are not in this pass.
+
+| Commit | Concept screen | What |
+|---|---|---|
+| `567cd88` | 10 Программа | The programme opens on "Money a year": price − grants, if awarded = left to pay. It uses the backend's own figures and currency. When a university publishes in another currency, the published price and award are shown too, with the date of the rate snapshot; the frontend converts nothing. Then what the grant covers and what it leaves out ("Not covered: health insurance, books"), the caveats, and the award's source and date. When the remainder was not computed, the reason replaces the sum. |
+| `f86f008` | 11 Сравнение | A card can join a comparison of at most three. A tray counts the picks. "Row by row" asks each programme the same nine questions: left to pay, price, grant, covers, not covered, requirements, profile, deadline, source. An unknown stays "not computed" in its cell, and nothing is ranked between the columns. |
+| `a4f3c95` | 12 План | The Plan tab opens on concept L's departures board. The nearest deadline among the kept and "maybe" programmes is on split-flap tiles, with the days left. Every other deadline follows in order: upcoming first, then passed ("passed"), then missing ("not found", never guessed). The last column is what the requirements ask of the applicant — Met, Action needed, Ask the university — and never a decision. |
+
+**Defects found in part 3, with their root causes:**
+
+| # | Defect | Root cause | Fix |
+|---|---|---|---|
+| I28 | On a phone, Toronto's money block hid the reason its remainder is unknown: its award and its costs are from different years | The triage and the money block each ordered caveats their own way, and "needs a nomination" came first | One shared order (`lib/caveats.ts`): first what explains the figures, then whether the aid can be won, then the rest |
+| I29 | On a phone, the comparison had four columns for three programmes | An empty corner cell stayed visible, because a more specific `td` rule beat the rule that hid it | The hide is scoped to `.compare__table .compare__corner` |
+| I30 | On a phone, the comparison tray covered a card and a half | The tray listed every pick with its price | At ≤640 px only the count and the button show |
+| I31 | At 320 px the sums ran together ("1,848 USD7,554 USD") and were clipped | `nowrap` on an inline amount in a narrow cell | The amount is a block and may wrap between the number and the currency |
+| I32 | Removing picks down to one went back to the list, and the next pick reopened the comparison without being asked | The view was shown while `comparing && picks ≥ 2`, and `comparing` was never reset | The view closes when fewer than two remain. The test fails without the fix |
+| I33 | The Plan tab opened halfway down its board | The shell never reset the page scroll between screens, so a long shortlist's position carried over | A new screen starts at its top (not on first load) |
+| I34 | On a desktop, the next deadline's days sat in the middle of the row | The global `p { max-width: var(--measure) }` capped the row | The board's row has no measure |
+| I35 | At 320 px "GRONINGEN" broke into "GRO / NING / EN" | The width of "ACTION NEEDED" in its column squeezed the city, and `overflow-wrap: anywhere` split the word | On a phone the requirement word sits under the name. A word breaks only when it is longer than its column |
+| I36 | On a phone, "01 DEC" wrapped onto two lines but "15 JAN" did not | The width of the letters decided the wrap | On a phone the day and the month always stack, as in the concept |
+
+**Decisions taken without the owner, and why:**
+
+- **The board's last column is about requirements, not "on track".** Concept L's "ПО ПЛАНУ" would say
+  the applicant's tasks are on track, and the product does not know that: no documents are tracked per
+  date. "Met / Action needed / Ask the university" is what it does know.
+- **No colour for "soon".** A countdown that turns red frightens a 16-year-old and tells them nothing
+  the number does not (the risk recorded for concept L). Only "passed" has a colour.
+- **The days are counted in the browser from today's calendar date**, and the run's own "passed" flag
+  wins over the count. A board computed on the day of the run would be wrong a week later.
+- **Only kept and "maybe" programmes are on the plan.** An undecided row is not a plan yet, and a
+  rejected one is not coming back.
+- **At most three in a comparison.** Three columns are what a 320 px phone can hold and still be read.
+
+**Gates at `a4f3c95`:** typecheck, lint, **260 unit tests** (29 files), build; Playwright **95 passed,
+1 skipped** (desktop and Pixel 7). The axe scan now covers the comparison and the plan. There is no
+horizontal scroll at 320, 390 or 1440 px on the new views.

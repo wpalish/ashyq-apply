@@ -274,6 +274,11 @@ need no owner decision (English stays, the globe waits), each a pushed commit wi
 3. Plan (concept 12): the nearest deadline on a split-flap board, then every deadline in order.
 4. Review at 390 and 1440, video, docs (§22), PR. Share stories (concept 14) stay out of this pass.
 
+Progress on part 3: 1 `567cd88`, 2 `f86f008`, 3 `a4f3c95`, 4 the docs commit. The report and nine
+defects with their root causes (I28–I36) are in `docs/design/redesign-concepts.md` §22. **Next:** the
+owner reviews PR #20. The globe, the Russian vocabulary, the share stories and the unlock step wait for
+the owner.
+
 Progress on part 2 (below): 1–2 `ec12b7d`, 3 `ded86aa`, 4 `e393a65`, 5 `bd1abc0` + the docs commit;
 report in `docs/design/redesign-concepts.md` §21. **Next:** the owner compares again; the globe and the
 Russian vocabulary wait for the owner.
@@ -1548,6 +1553,11 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+Redesign part 3, frontend only. Gates run by claude-opus-5 on 2026-09-25 at `a4f3c95`: typecheck, lint,
+**260 unit tests** (29 files) and build are green. Playwright: **95 passed, 1 skipped** (desktop and
+Pixel 7). The axe scan now includes the comparison and the plan. There is no horizontal scroll at 320 px
+on either. Auth e2e was not re-run: no auth path changed.
+
 Redesign part 2, frontend only, gates run by claude-opus-5 on 2026-09-25 at `bd1abc0`: typecheck, lint,
 **231 unit tests** (24 files), build — green; Playwright **91 passed, 1 skipped** (desktop + Pixel 7);
 auth e2e (`playwright.auth.config.ts`) **6 passed** at `ec12b7d`. CI: runners are back; `release-gates` is
@@ -2352,6 +2362,7 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 | 2026-09-23 UTC | claude-opus-5 | `07de4d9` → redesign concepts | Owner asked for a redesign, concepts first. Audited main and PR #19 screens, read Mobbin flows and 21st.dev components, drew four directions (16 artboards) on real demo-corpus data, and wrote them up in `docs/design/redesign-concepts.md`. Round 2 on owner feedback: E/F/G, three evolutions of A. Round 3: H/I/J on A's fonts. Round 4: K/L/M developing H, two adversarial review cycles. Round 5: N/O/P on K and M's globe, two cycles. Round 6: Q share kit (story cards), two cycles. Round 7: «Горизонт», the chosen mix across the real flow, with its design system and tokens, three cycles. Palette experiments: ten palettes, owner kept «Солнце». No product code changed. Next: owner approves, then tokens land in `frontend/`. |
 | 2026-09-25 UTC | claude-opus-5 | `2dfa367` → `6a814d3` redesign implemented | Owner approved «Горизонт» with «Солнце» and asked for it built overnight with adversarial review. Landed the design system, the budget ladder, one-at-a-time triage, gold "you pay", folded profile sections; three review cycles found 20 defects (I1–I20, root causes in the design doc §20), all fixed. Vocabulary kept as glossary proposals per the i18n rule. Next: owner review of PR #20. |
 | 2026-09-25 UTC | claude-opus-5 | `6a814d3` → `bd1abc0` redesign part 2 | Owner: the app did not look like the concept. The first pass had changed the paint; this pass changes the structure: five tabs, a three-field start, the results reveal, price cards (table one tap away). English stays, the globe waits. 7 more defects (I21–I27) found and fixed. |
+| 2026-09-25 UTC | claude-opus-5 | `d192d19` → `a4f3c95` redesign part 3 | Owner: "продолжай". Added three concept screens: the programme's money as arithmetic (10), a row-by-row comparison of up to three programmes (11) and the Plan tab's departures board of deadlines (12). 9 defects (I28–I36) found and fixed; root causes are in the design doc §22. Share stories, the globe and the Russian vocabulary still wait for the owner. |
 
 | 2026-09-20 | gpt-6-astra | b267b337 → V2-00 in progress | Startup/recovery, PR inventory, all pack files read; isolated worktree preserves existing dirty research work. |
 

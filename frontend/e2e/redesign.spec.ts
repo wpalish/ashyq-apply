@@ -160,6 +160,8 @@ test('the plan puts the nearest deadline on the board and every one after it in 
   await expect(board).toContainText('Days are counted from today');
   await expect(board).not.toContainText('%');
   await expect(board).not.toContainText(/chance|probab/i);
+  // The tiles flip in on arrival; the picture is of the board at rest.
+  await page.evaluate(() => Promise.all(document.getAnimations().map((a) => a.finished)));
   await page.screenshot({ path: shot('18-plan-board.png'), fullPage: false });
 });
 
