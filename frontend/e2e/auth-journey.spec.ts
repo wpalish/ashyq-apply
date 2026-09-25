@@ -10,6 +10,7 @@
  * the same time as `npm run e2e`: both bind 5173 and 8099.
  */
 
+import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 import { goTo, newSession, openShortlist, shot, waitForResults } from './helpers';
 
@@ -40,6 +41,10 @@ test('the sign-in screen stands in front of the app', async () => {
   // pass while proving nothing.
   await expect(page.getByRole('heading', { name: SIGN_IN })).toBeVisible();
   await page.screenshot({ path: shot('auth-sign-in.png'), fullPage: true });
+  // The first page a family sees had never been scanned.
+  const scan = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
+  const serious = scan.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
+  expect(serious, serious.map((v) => `${v.id} (${v.nodes.length})`).join(', ')).toEqual([]);
 });
 
 test('a new workspace can be registered', async () => {

@@ -79,7 +79,7 @@ export function StartScreen({
   return (
     <div className="start">
       <div className="start__intro">
-        <h1 className="start__title">Find where you can study — and what it will cost</h1>
+        <h1 className="start__title">Find where you can study{'\u00A0'}— and what it will cost</h1>
         <p className="start__lede">
           Programmes whose published requirements you meet, and the price a year after grants.
           Every figure links to the university&rsquo;s own page, with the date it was read.
