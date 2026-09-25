@@ -300,6 +300,18 @@ jobs:
                   if re.search(r"scholar|award|funding|financ|bursar", url + " " + detail, re.I):
                       print(f"  {observation['case_id']:10} {record['category']:20} {url[:100]}  {detail[:140]}")
 
+          # The funding reads themselves, from each case's own trail: run 58 queued
+          # twelve NTU award links and no outcome for any of them was recorded.
+          print("\nfunding reads in each case's trail:")
+          for observation in capture["observations"]:
+              log = logs / f"{observation['case_id']}.log"
+              if not log.exists():
+                  continue
+              lines = log.read_text(encoding="utf-8", errors="replace").splitlines()
+              hits = [ln for ln in lines if re.search(r"scholar|award|bursar", ln, re.I)]
+              for ln in hits[:30]:
+                  print(f"  {observation['case_id']:10} {ln[:200]}")
+
           # A case that filed nothing: every page it read, and what became of it.
           for observation in capture["observations"]:
               if observation.get("predictions"):
