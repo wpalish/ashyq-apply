@@ -860,3 +860,90 @@
   .triage__card { padding: var(--space-4); }
   .triage__answers { gap: var(--space-3); }
 }
+
+/* --- start: the three-field search (round 7, screen 01) ------------------
+   One question, three fields, one sun button; the full profile is one tap
+   away and optional. The horizon under it is the brand's arc, not a globe:
+   the globe comes later. */
+
+.start { position: relative; max-width: 44rem; padding-bottom: var(--space-7); }
+.start__intro { margin: var(--space-4) 0 var(--space-5); }
+.start__title {
+  font-size: clamp(2rem, 1.2rem + 3.2vw, 3.25rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  max-width: 16ch;
+}
+.start__lede { margin-top: var(--space-4); max-width: 38rem; color: var(--ink-muted); font-size: var(--text-md); }
+.start__card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.start__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--rule);
+  min-width: 0;
+}
+.start__field + .start__field:not(.start__field--wide) { border-left: 1px solid var(--rule); }
+.start__field--wide { grid-column: 1 / -1; }
+.start__label { font-size: var(--text-xs); font-weight: 600; color: var(--ink-muted); }
+.start__field input,
+.start__field select {
+  border: 0;
+  padding: 0.1rem 0;
+  background: transparent;
+  font-size: var(--text-md);
+  font-weight: 600;
+  color: var(--ink);
+  box-shadow: none;
+  min-width: 0;
+}
+.start__field input:focus-visible,
+.start__field select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.start__budget { display: flex; gap: var(--space-2); align-items: center; }
+.start__budget input { flex: 1 1 auto; width: 100%; }
+.start__budget select { flex: none; width: auto; font-size: var(--text-sm); }
+.start__go {
+  grid-column: 1 / -1;
+  margin: var(--space-4);
+  min-height: 3.25rem;
+  font-size: var(--text-md);
+  gap: var(--space-2);
+}
+.start__blocked,
+.start__small { grid-column: 1 / -1; margin: 0 var(--space-4) var(--space-4); font-size: var(--text-xs); color: var(--ink-muted); }
+.start__blocked { color: var(--risk); font-weight: 600; margin-top: calc(-1 * var(--space-2)); }
+.start__more { display: grid; gap: var(--space-2); margin-top: var(--space-5); }
+.start__link {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  text-align: left;
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  font-weight: 700;
+  color: var(--ink);
+  cursor: pointer;
+}
+.start__link:hover { border-color: var(--rule-strong); }
+.start__link--result { background: var(--night); color: var(--night-ink); border-color: var(--night); }
+.start__link--result .start__hint { color: var(--night-muted); }
+.start__hint { font-size: var(--text-xs); font-weight: 500; color: var(--ink-muted); }
+.start__horizon { display: block; width: 100%; height: 5rem; margin-top: var(--space-6); }
+
+@media (max-width: 520px) {
+  .start__card { grid-template-columns: minmax(0, 1fr); }
+  .start__field + .start__field:not(.start__field--wide) { border-left: 0; }
+}

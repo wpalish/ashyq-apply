@@ -17,7 +17,7 @@ import { expect, test } from '@playwright/test';
 test.describe.configure({ mode: 'serial' });
 
 test('a saved profile is restored into the form after a reload', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/#/profile');
 
   // Start from a blank profile so nothing synthetic is in play.
   await page.getByTestId('clear-profile').click();
@@ -38,7 +38,7 @@ test('a saved profile is restored into the form after a reload', async ({ page }
 });
 
 test('demo data is only ever loaded on request, and is labelled when it is', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/#/profile');
   await page.getByTestId('clear-profile').click();
   const confirm = page.getByTestId('confirm-replace');
   if (await confirm.isVisible().catch(() => false)) await confirm.click();
@@ -55,7 +55,7 @@ test('demo data is only ever loaded on request, and is labelled when it is', asy
 });
 
 test('replacing a saved profile asks first', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/#/profile');
   await page.getByTestId('clear-profile').click();
   const confirm = page.getByTestId('confirm-replace');
   if (await confirm.isVisible().catch(() => false)) await confirm.click();

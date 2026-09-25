@@ -11,7 +11,7 @@
  */
 
 import { expect, test, type Page } from '@playwright/test';
-import { newSession, openShortlist, shot, waitForResults } from './helpers';
+import { goTo, newSession, openShortlist, shot, waitForResults } from './helpers';
 
 test.describe.configure({ mode: 'serial' });
 
@@ -52,10 +52,11 @@ test('a new workspace can be registered', async () => {
   await page.getByTestId('auth-password').fill(PASSWORD);
   await page.getByTestId('auth-submit').click();
 
-  await expect(page.getByTestId('to-preferences')).toBeVisible();
+  await expect(page.getByTestId('start-search')).toBeVisible();
 });
 
 test('the workspace can hold a profile and a finished run', async () => {
+  await goTo(page, 'profile');
   await page.getByTestId('load-demo-profile').click();
   const confirm = page.getByTestId('confirm-replace');
   if (await confirm.isVisible().catch(() => false)) await confirm.click();
@@ -96,7 +97,7 @@ test('a session that dies mid-use returns to sign-in, not an error banner', asyn
   // that render from state already in memory, so they never reach the server
   // and never learn the session is gone. A write is the first thing the user
   // does that actually asks.
-  await page.getByTestId('nav-profile').click();
+  await goTo(page, 'profile');
   await page.getByTestId('save-profile').click();
 
   await expect(page.getByRole('heading', { name: SIGN_IN })).toBeVisible();

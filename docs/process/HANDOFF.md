@@ -265,6 +265,21 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+Write-ahead (claude-opus-5, 2026-09-25, redesign «Горизонт» part 2). The owner compared the app with the
+concept and found it too close to the old app: the first pass changed the paint, not the structure. Owner
+decisions: interface stays **English** for now (glossary rule stands), the **globe comes later**. Steps,
+each a pushed commit with green gates, on `claude/website-ui-ux-redesign-qp2t38` (PR #20):
+1. Shell: five tabs (Match, Plan, Documents, People, Me) instead of the 15-item sidebar — top bar on a
+   desktop, bottom tab bar on a phone; each tab has a sub-nav that keeps every `nav-*` test id; theme and
+   language move to the footer; the demo chip stays in `.topbar`. E2E gets a `goTo(page, screen)` helper
+   because a screen in another tab is one click further away.
+2. Start screen: "what to study, where, budget a year" and one button; the full profile stays, optional.
+3. Results ready: the finished progress screen becomes a night reveal with counts computed from the run.
+4. Shortlist: price cards by default, the table one toggle away (fit, coverage %, bucket unchanged);
+   a compact programme card (price, requirements, money, source and date).
+5. Review cycles against the concept at 390 and 1440, docs, PR.
+Not touched: backend, API, ranking, invariants.
+
 Write-ahead (claude-opus-5, 2026-09-24, redesign «Горизонт», owner approved the concept and asked for
 it to be implemented with an adversarial review, working autonomously overnight). Branch
 `claude/website-ui-ux-redesign-qp2t38` (PR #20; the session is restricted to this branch). Steps, each

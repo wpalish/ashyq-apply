@@ -8,7 +8,7 @@
  */
 
 import { expect, test, type Page } from '@playwright/test';
-import { newSession, openShortlist, runDemoResearch, shot } from './helpers';
+import { goTo, newSession, openShortlist, runDemoResearch, shot } from './helpers';
 
 test.describe.configure({ mode: 'serial' });
 
@@ -71,7 +71,7 @@ test('one at a time: an answer moves to the next programme and shows in the tabl
 });
 
 test('optional profile sections fold while empty and open on request', async () => {
-  await page.getByTestId('nav-profile').click();
+  await goTo(page, 'profile');
   const activities = page.getByTestId('fold-activities');
   // The demo profile has activities, so the section starts open.
   await expect(activities).toHaveAttribute('open', '');

@@ -62,26 +62,25 @@ button { font: inherit; color: inherit; }
 
 /* --- app shell --------------------------------------------------------- */
 
+/* The header is sticky, and on a phone the tab bar is fixed to the bottom:
+   anything scrolled into view - a focused field, a jumped-to row - must land
+   clear of both, or it is focused but hidden (WCAG 2.4.11). */
+html { scroll-padding-top: 4.5rem; }
+@media (max-width: 900px) {
+  html { scroll-padding-top: 3.75rem; scroll-padding-bottom: calc(5rem + env(safe-area-inset-bottom)); }
+}
+
+/* «Горизонт»: five tabs on top of a desktop and at the bottom of a phone, the
+   screens of the current tab in a sub-navigation under them, and the settings
+   in a footer. The sidebar of fifteen items is gone. */
+
 .app {
-  display: grid;
-  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
 }
 
-.sidebar {
-  border-right: 1px solid var(--rule);
-  background: var(--surface);
-  padding: var(--space-5) var(--space-4) var(--space-5);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-5);
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  overflow-y: auto;
-}
-
-.brand { display: flex; flex-direction: column; gap: 2px; }
+.brand { display: flex; align-items: center; flex: none; }
 .brand__mark {
   font-family: var(--font-display);
   font-size: 1.3rem;
@@ -93,59 +92,94 @@ button { font: inherit; color: inherit; }
 }
 .brand__sun { flex: none; }
 .brand__apply { font-family: var(--font-ui); font-weight: 600; font-size: 0.95rem; color: var(--ink-muted); letter-spacing: 0; }
-.brand__tag {
-  font-size: var(--text-xs);
-  color: var(--ink-faint);
-  line-height: 1.3;
-  max-width: 20ch;
-}
 
-.nav { display: flex; flex-direction: column; gap: 1px; }
-.nav__group-label {
-  font-size: var(--text-xs);
-  text-transform: uppercase;
-  letter-spacing: 0.09em;
-  color: var(--ink-faint);
-  font-weight: 600;
-  padding: var(--space-4) var(--space-2) var(--space-2);
-}
-.nav__item {
+.topbar {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  padding: var(--space-2) var(--space-3);
+  padding: var(--space-3) var(--space-6);
+  border-bottom: 1px solid var(--rule);
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  backdrop-filter: blur(8px);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+.topbar__spacer { margin-left: auto; }
+.topbar button { white-space: nowrap; }
+
+.navtabs { display: flex; align-items: center; gap: var(--space-1); margin-left: var(--space-5); }
+.navtabs__item {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 2.5rem;
+  padding: 0 1rem;
   border: 0;
+  border-radius: var(--radius-pill);
   background: transparent;
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+  /* Colours switch at once, as on every navy selected state (see .nav__item). */
+}
+.navtabs__item:hover:not(:disabled) { background: var(--surface-sunken); color: var(--ink); }
+.navtabs__item[aria-current='page'] { background: var(--ink); color: var(--ink-inverted); }
+.navtabs__item:disabled { opacity: 0.42; cursor: not-allowed; }
+.navtabs__icon { display: inline-flex; }
+.navtabs__badge {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: var(--radius-pill);
+  background: var(--sun);
+  color: var(--sun-ink);
+}
+
+/* The screens of the current tab. Wrapped pills: a scroller once hid half of
+   the navigation with nothing saying it was there. */
+.subnav {
+  width: 100%;
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: var(--space-4) var(--space-6) 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+}
+.nav { display: flex; flex-wrap: wrap; gap: var(--space-1); }
+.nav__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--rule);
+  background: var(--surface);
   border-radius: var(--radius-pill);
   cursor: pointer;
-  text-align: left;
   font-size: var(--text-sm);
-  font-weight: 500;
+  font-weight: 600;
   color: var(--ink-muted);
-  width: 100%;
+  white-space: nowrap;
   /* Colours switch at once: the selected item is navy with white text, and a
      fade from the light state passes through mid-greys under 3:1 that axe
      caught right after a click (a flaky CI failure). */
   transition: transform var(--duration-fast);
 }
 .nav__item:hover { background: var(--surface-sunken); color: var(--ink); }
-.nav__item:active { transform: translateX(1px); }
+.nav__item:active { transform: translateY(1px); }
 .nav__item[aria-current='page'] {
   background: var(--ink);
+  border-color: var(--ink);
   color: var(--ink-inverted);
-  font-weight: 600;
 }
-.nav__item[aria-current='page'] .nav__num { color: inherit; opacity: 0.7; }
 .nav__item[aria-current='page'] .nav__badge { background: var(--sun); color: var(--sun-ink); border-color: var(--sun); }
 .nav__item[disabled] { opacity: 0.42; cursor: not-allowed; }
-.nav__num {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  color: var(--ink-faint);
-  min-width: 1.1rem;
-}
 .nav__badge {
-  margin-left: auto;
   font-family: var(--font-mono);
   font-size: 0.68rem;
   padding: 1px 5px;
@@ -155,34 +189,24 @@ button { font: inherit; color: inherit; }
   border: 1px solid var(--rule-strong);
   font-weight: 600;
 }
+.subnav__case { display: flex; align-items: center; gap: var(--space-2); margin-left: auto; }
+.subnav__case select { width: auto; max-width: 16rem; padding-top: 0.3rem; padding-bottom: 0.3rem; }
 
-.main { min-width: 0; display: flex; flex-direction: column; }
+.main { width: 100%; max-width: var(--page-width); margin: 0 auto; min-width: 0; display: flex; flex-direction: column; flex: 1; }
 
-.topbar {
+.app-footer { border-top: 1px solid var(--rule); background: var(--surface); margin-top: var(--space-6); }
+.app-footer__inner {
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-6) var(--space-6);
   display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-3) var(--space-6);
-  border-bottom: 1px solid var(--rule);
-  background: color-mix(in srgb, var(--surface) 88%, transparent);
-  backdrop-filter: blur(8px);
-  position: sticky;
-  top: 0;
-  z-index: 20;
   flex-wrap: wrap;
+  gap: var(--space-4) var(--space-5);
+  align-items: flex-end;
 }
-.topbar__spacer { margin-left: auto; }
-/* The run summary is the one item that gives way: it shrinks to an ellipsis
-   (full text in its title) instead of pushing Account and Sign out onto a
-   second row, which it did even at 1440px. */
-.topbar__summary {
-  flex: 1 1 0;
-  min-width: 4rem;
-  text-align: right;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
+.app-footer .field { min-width: 11rem; }
+.app-footer__about { flex: 1 1 18rem; }
+.app-footer__about p { margin: 0 0 var(--space-1); }
 
 .screen { padding: var(--space-6) var(--space-6) var(--space-8); }
 .screen__head { margin-bottom: var(--space-5); }
@@ -328,54 +352,72 @@ button { font: inherit; color: inherit; }
 
 /* --- responsive ---------------------------------------------------------- */
 
-@media (max-width: 900px) {
-  .app { grid-template-columns: 1fr; }
-  /* On a phone the sidebar dissolves: brand and navigation stay on top, the
-     appearance and language settings move below the screen. They used to push
-     the screen's own title 700px down, and a student opens the app to see a
-     result, not a theme picker. Nothing is hidden, so every control keeps its
-     place in the tab order and its test id. */
-  .sidebar { display: contents; }
-  .brand { order: 1; padding: var(--space-4) var(--space-4) var(--space-2); }
-  .nav { order: 2; padding: 0 var(--space-4) var(--space-3); border-bottom: 1px solid var(--rule); }
-  .main { order: 3; }
-  .sidebar__settings {
-    order: 4;
-    padding: var(--space-5) var(--space-4) var(--space-6);
-    border-top: 1px solid var(--rule);
-    background: var(--surface);
-  }
-  .brand__tag { display: none; }
-  /* Wrapped, not scrolled. As a strip this was 2223px of content in 343px of
-     room: one item visible, and Community 1660px along a scroller with no
-     affordance saying it was there. Wrapped pills keep every entry in reach. */
-  .nav { flex-direction: row; flex-wrap: wrap; gap: var(--space-1); }
-  .nav__item {
-    width: auto;
-    white-space: nowrap;
-    padding: 0.3rem 0.75rem;
-    font-size: var(--text-xs);
-    background: var(--surface-sunken);
-  }
-  /* The number is half of "Prepare · 01", and the group labels are hidden
-     here. On its own it is noise that costs three characters a row. */
-  .nav__num { display: none; }
-  .nav__group-label { display: none; }
-  .screen { padding: var(--space-5) var(--space-4) var(--space-7); }
-  .topbar { padding: var(--space-2) var(--space-4); gap: var(--space-2); position: static; }
+@media (max-width: 1100px) {
+  .navtabs { margin-left: var(--space-2); }
+  .navtabs__item { padding: 0 0.7rem; }
 }
 
-/* Below this width the caption is the first thing to go, still read out for
-   the select it names; the select itself says "Demo Applicant…" anyway. */
 @media (max-width: 1360px) {
+  /* The caption goes first, still read out for the select it names; the
+     select itself says "Demo Applicant…" anyway. */
   .topbar__caption {
     position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
     overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
   }
 }
 
-@media (max-width: 700px) {
-  .topbar__summary { display: none; }
+@media (max-width: 900px) {
+  /* A phone: the tabs become a bar along the bottom edge, where a thumb is,
+     and the top keeps only the brand, the demo label and the account. */
+  .app { padding-bottom: calc(4.25rem + env(safe-area-inset-bottom)); }
+  /* No blur here: a backdrop-filter makes the header the containing block of
+     every fixed child, and the bottom tab bar rendered at the top. */
+  .topbar { padding: var(--space-2) var(--space-4); gap: var(--space-2); backdrop-filter: none; background: var(--surface); }
+  .navtabs {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 30;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0;
+    padding: 0.35rem 0.25rem calc(0.35rem + env(safe-area-inset-bottom));
+    background: var(--surface);
+    border-top: 1px solid var(--rule);
+  }
+  .navtabs__item {
+    flex-direction: column;
+    gap: 2px;
+    min-height: 3.25rem;
+    padding: 0 0.1rem;
+    border-radius: var(--radius);
+    font-size: 0.6875rem;
+  }
+  .navtabs__item[aria-current='page'] { background: transparent; color: var(--ink); }
+  .navtabs__item[aria-current='page'] .navtabs__icon {
+    background: var(--ink);
+    color: var(--ink-inverted);
+    border-radius: var(--radius-pill);
+    padding: 0.1rem 0.9rem;
+  }
+  .navtabs__badge { position: absolute; top: 0.15rem; left: calc(50% + 0.55rem); }
+  .subnav { padding: var(--space-3) var(--space-4) 0; }
+  .nav__item { padding: 0.3rem 0.75rem; font-size: var(--text-xs); }
+  .subnav__case { margin-left: 0; }
+  .screen { padding: var(--space-5) var(--space-4) var(--space-7); }
+  .app-footer__inner { padding: var(--space-5) var(--space-4) var(--space-6); }
+}
+
+@media (max-width: 520px) {
+  .brand__apply { display: none; }
+  .topbar__signout { padding-left: 0.5rem; padding-right: 0.5rem; }
+}
+
+@media (max-width: 420px) {
+  /* The sun is the brand; the word goes before the account does. */
+  .brand__mark > span:last-child { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 }
 
 /* --- folded optional panels (FoldPanel) --------------------------------- */

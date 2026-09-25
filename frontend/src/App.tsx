@@ -1,17 +1,24 @@
 /**
- * Application shell: sidebar navigation, a status bar, and one screen at a time.
+ * Application shell: five tabs, the screens inside each, and one screen at a time.
+ *
+ * The tabs are the «Горизонт» navigation - Match, Plan, Documents, People, Me -
+ * on top on a desktop and at the bottom of a phone. Each tab keeps its own
+ * screens in a sub-navigation, so every screen still has a button, an address
+ * and a `nav-*` id; what changed is that a student sees five places, not
+ * fifteen.
  *
  * Navigation is a plain state machine rather than a router. The workflow is
  * linear and gated — you cannot read a shortlist that has not been produced —
- * and disabled nav items say *why* they are disabled instead of vanishing.
+ * and disabled items say *why* they are disabled instead of vanishing.
  */
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { useStore } from '@/lib/store';
 import { PaywallNotice } from '@/components/PaywallNotice';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { AccountMenu } from '@/components/AccountMenu';
 import { ProfileScreen } from '@/screens/ProfileScreen';
+import { StartScreen } from '@/screens/StartScreen';
 import { PreferencesScreen } from '@/screens/PreferencesScreen';
 import { ProgressScreen } from '@/screens/ProgressScreen';
 import { ShortlistScreen } from '@/screens/ShortlistScreen';
@@ -33,7 +40,7 @@ import { useTranslation } from '@/lib/useTranslation';
 import type { PersonCard } from '@/types';
 
 export type ScreenId =
-  | 'profile' | 'preferences' | 'progress' | 'shortlist' | 'funding'
+  | 'start' | 'profile' | 'preferences' | 'progress' | 'shortlist' | 'funding'
   | 'approved' | 'documents' | 'sources' | 'export'
   | 'feed' | 'discover' | 'messages' | 'me' | 'person' | 'moderation' | 'legal';
 
@@ -43,6 +50,7 @@ export type ScreenId =
  * sequence, so those entries carry no number.
  */
 const SCREENS: { id: ScreenId; num?: string; label: MessageKey; group: MessageKey }[] = [
+  { id: 'start', label: 'nav.start', group: 'nav.group.prepare' },
   { id: 'profile', num: '01', label: 'nav.profile', group: 'nav.group.prepare' },
   { id: 'preferences', num: '02', label: 'nav.preferences', group: 'nav.group.prepare' },
   { id: 'progress', num: '03', label: 'nav.progress', group: 'nav.group.research' },
@@ -61,6 +69,78 @@ const SCREENS: { id: ScreenId; num?: string; label: MessageKey; group: MessageKe
   // person can be sent to: "read the privacy policy" is a link, not a hunt.
   { id: 'legal', label: 'nav.legal', group: 'nav.group.about' },
 ];
+
+type TabId = 'match' | 'plan' | 'documents' | 'people' | 'me';
+
+/**
+ * Which screens live under which tab, in their sub-navigation order.
+ *
+ * Match is the search and everything it produced; Plan is what the applicant
+ * decided; Documents is what to send; People is the community; Me is the
+ * applicant's own data and the product's paperwork. The person screen is
+ * someone else's community profile, reached from People, so it belongs there
+ * without a button of its own.
+ */
+const TABS: { id: TabId; label: MessageKey; screens: ScreenId[] }[] = [
+  { id: 'match', label: 'tab.match', screens: ['start', 'progress', 'shortlist', 'funding', 'sources'] },
+  { id: 'plan', label: 'tab.plan', screens: ['approved'] },
+  { id: 'documents', label: 'tab.documents', screens: ['documents'] },
+  { id: 'people', label: 'tab.people', screens: ['feed', 'discover', 'messages', 'person'] },
+  { id: 'me', label: 'tab.me', screens: ['profile', 'preferences', 'me', 'export', 'moderation', 'legal'] },
+];
+
+/** The short sub-navigation name, where the tab already gives the context. */
+const SUBNAV_LABEL: Partial<Record<ScreenId, MessageKey>> = {
+  progress: 'subnav.progress',
+  shortlist: 'subnav.shortlist',
+  funding: 'subnav.funding',
+  sources: 'subnav.sources',
+  profile: 'subnav.profile',
+  preferences: 'subnav.preferences',
+  me: 'subnav.me',
+  export: 'subnav.export',
+  moderation: 'subnav.moderation',
+  legal: 'subnav.legal',
+};
+
+function tabOf(screen: ScreenId): TabId {
+  return TABS.find((tab) => tab.screens.includes(screen))?.id ?? 'match';
+}
+
+/** Line icons for the tabs: decorative, the label always sits next to them. */
+const TAB_ICON: Record<TabId, ReactNode> = {
+  match: (
+    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+      <circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M3.5 12h17M12 3.5c2.6 2.4 3.9 5.2 3.9 8.5s-1.3 6.1-3.9 8.5c-2.6-2.4-3.9-5.2-3.9-8.5s1.3-6.1 3.9-8.5Z" fill="none" stroke="currentColor" strokeWidth="1.6" />
+    </svg>
+  ),
+  plan: (
+    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+      <path d="M9 6h11M9 12h11M9 18h11" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      <circle cx="4.5" cy="6" r="1.4" fill="currentColor" /><circle cx="4.5" cy="12" r="1.4" fill="currentColor" /><circle cx="4.5" cy="18" r="1.4" fill="currentColor" />
+    </svg>
+  ),
+  documents: (
+    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+      <path d="M6 3.5h8l4 4v13H6z" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+      <path d="M14 3.5v4h4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+    </svg>
+  ),
+  people: (
+    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+      <circle cx="9" cy="8.5" r="3.2" fill="none" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M3 19.5c.6-3.3 3-5 6-5s5.4 1.7 6 5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      <path d="M15.5 5.6a3 3 0 0 1 0 5.8M17.5 14.8c1.9.6 3.1 2.2 3.5 4.7" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  ),
+  me: (
+    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+      <circle cx="12" cy="8.5" r="3.6" fill="none" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M4.5 20c.8-3.8 3.7-5.8 7.5-5.8s6.7 2 7.5 5.8" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  ),
+};
 
 /** The screen named by `#/…`, if it names one at all. */
 function screenFromHash(): ScreenId | null {
@@ -95,7 +175,9 @@ export default function App() {
     cases, savedProfile, switchCase, newCase, dirty, hydrated,
   } = useStore();
   const { t, locale, setLocale } = useTranslation();
-  const [screen, setScreenState] = useState<ScreenId>(() => screenFromHash() ?? 'profile');
+  const [screen, setScreenState] = useState<ScreenId>(() => screenFromHash() ?? 'start');
+  // The last screen seen in each tab, so a tab returns to where you were in it.
+  const [lastInTab, setLastInTab] = useState<Partial<Record<TabId, ScreenId>>>({});
   const [redirected, setRedirected] = useState<string | null>(null);
   /** Ask before throwing away typing the applicant has not saved. */
   const confirmDiscard = () =>
@@ -156,7 +238,7 @@ export default function App() {
   // Follow the workflow forward on its own, but never take the user backwards.
   useEffect(() => {
     if (!run) return;
-    if (screen === 'profile' || screen === 'preferences') setScreen('progress');
+    if (screen === 'start' || screen === 'profile' || screen === 'preferences') setScreen('progress');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [run?.id]);
 
@@ -173,6 +255,7 @@ export default function App() {
   );
 
   const gate: Record<ScreenId, string | null> = {
+    start: null,
     profile: null,
     preferences: null,
     progress: run ? null : 'Start research first',
@@ -205,6 +288,7 @@ export default function App() {
   // before there were any results redirects to progress and says why.
   const setScreen = useCallback((next: ScreenId) => {
     setScreenState(next);
+    setLastInTab((seen) => ({ ...seen, [tabOf(next)]: next }));
     const target = `#/${next}`;
     if (window.location.hash !== target) window.location.hash = target;
   }, []);
@@ -229,7 +313,7 @@ export default function App() {
       setScreenState(requested);
       return;
     }
-    const fallback: ScreenId = runRef.current ? 'progress' : 'profile';
+    const fallback: ScreenId = runRef.current ? 'progress' : 'start';
     setRedirected(`${label(requested)}: ${blocked}.`);
     setScreen(fallback);
   }, [setScreen]);
@@ -272,139 +356,137 @@ export default function App() {
     messages: unread || undefined,
   };
 
-  let groupSeen = '';
+  /**
+   * Where a tab lands: the screen last seen in it, else its first open one.
+   * Match follows the workflow instead - results once there are any, the run
+   * while it works, the search before either.
+   */
+  const tabHome = (tab: TabId): ScreenId | null => {
+    const remembered = lastInTab[tab];
+    if (remembered && remembered !== 'person' && !gate[remembered]) return remembered;
+    if (tab === 'match') return hasResults ? 'shortlist' : run ? 'progress' : 'start';
+    const entry = TABS.find((item) => item.id === tab);
+    return entry?.screens.find((id) => id !== 'person' && !gate[id]) ?? null;
+  };
+  const tabBadge: Partial<Record<TabId, number>> = {
+    plan: badges.approved,
+    documents: badges.documents,
+    people: badges.messages,
+  };
+  const activeTab = tabOf(screen);
+  const subScreens = (TABS.find((tab) => tab.id === activeTab)?.screens ?? [])
+    .filter((id) => id !== 'person');
 
   return (
     <div className="app">
-      <aside className="sidebar">
+      <header className="topbar">
         <div className="brand">
           <span className="brand__mark"><BrandSun /><span>ASHYQ <span className="brand__apply">Apply</span></span></span>
-          <span className="brand__tag">
-            {t('brand.tagline')}
-          </span>
         </div>
 
-        <nav className="nav" aria-label="Workflow">
-          {SCREENS.map((s) => {
-            const header = s.group !== groupSeen ? ((groupSeen = s.group), s.group) : null;
-            const blocked = gate[s.id];
+        <nav className="navtabs" aria-label="Sections">
+          {TABS.map((tab) => {
+            const home = tabHome(tab.id);
+            const firstGate = gate[tab.screens[0] ?? 'start'];
             return (
-              <div key={s.id}>
-                {header && <div className="nav__group-label">{t(header)}</div>}
-                <button
-                  type="button"
-                  className="nav__item"
-                  aria-current={screen === s.id ? 'page' : undefined}
-                  disabled={Boolean(blocked)}
-                  title={blocked ?? undefined}
-                  data-testid={`nav-${s.id}`}
-                  onClick={() => {
-                    // A deliberate move answers the explanation, so it goes.
-                    setRedirected(null);
-                    setScreen(s.id);
-                  }}
-                >
-                  <span className="nav__num">{s.num ?? ''}</span>
-                  <span>{t(s.label)}</span>
-                  {badges[s.id] !== undefined && <span className="nav__badge">{badges[s.id]}</span>}
-                </button>
-              </div>
+              <button
+                key={tab.id}
+                type="button"
+                className="navtabs__item"
+                aria-current={activeTab === tab.id ? 'page' : undefined}
+                disabled={!home}
+                title={home ? undefined : firstGate ?? undefined}
+                data-testid={`navtab-${tab.id}`}
+                onClick={() => {
+                  if (!home) return;
+                  setRedirected(null);
+                  setScreen(home);
+                }}
+              >
+                <span className="navtabs__icon">{TAB_ICON[tab.id]}</span>
+                <span className="navtabs__label">{t(tab.label)}</span>
+                {tabBadge[tab.id] !== undefined && <span className="navtabs__badge">{tabBadge[tab.id]}</span>}
+              </button>
             );
           })}
         </nav>
 
-        <div className="stack stack--tight sidebar__settings" style={{ marginTop: 'auto' }}>
-          <div className="field">
-            <label className="field__label xs" htmlFor="theme">{t('appearance.label')}</label>
-            <select
-              id="theme"
-              value={theme}
-              onChange={(e) => setTheme(e.target.value as Theme)}
-            >
-              <option value="system">{t('appearance.system')}</option>
-              <option value="light">{t('appearance.light')}</option>
-              <option value="dark">{t('appearance.dark')}</option>
-            </select>
-          </div>
-          <div className="field">
-            <label className="field__label xs" htmlFor="locale">{t('language.label')}</label>
-            {/* Russian and Kazakh are partial on purpose: a string whose terms
-                are still under review stays in English rather than being
-                machine-translated. See docs/i18n/GLOSSARY.md. */}
-            <select
-              id="locale"
-              data-testid="locale"
-              value={locale}
-              onChange={(e) => setLocale(e.target.value as Locale)}
-            >
-              {LOCALES.map((option) => (
-                <option key={option.id} value={option.id}>{option.label}</option>
-              ))}
-            </select>
-          </div>
-          <p className="xs faint" style={{ margin: 0 }}>
-            {t('brand.disclaimer')}
-          </p>
+        <div className="topbar__spacer" />
+        <Chip tone={capabilities?.demo_mode ? 'demo' : 'accent'}>
+          {capabilities ? (capabilities.demo_mode ? 'Demo data' : 'Live sources') : 'connecting…'}
+        </Chip>
+        <AccountMenu onSignedOut={() => window.location.reload()} />
+        <button className="btn btn--sm btn--ghost topbar__signout" data-testid="sign-out" type="button" onClick={async () => {
+          await api.logout(); window.location.reload();
+        }}>{t('topbar.signOut')}</button>
+      </header>
+
+      {(subScreens.length > 1 || activeTab === 'me') && (
+        <div className="subnav">
+          {subScreens.length > 1 && (
+            <nav className="nav" aria-label={t(TABS.find((tab) => tab.id === activeTab)?.label ?? 'tab.match')}>
+              {subScreens.map((id) => {
+                const blocked = gate[id];
+                return (
+                  <button
+                    key={id}
+                    type="button"
+                    className="nav__item"
+                    aria-current={screen === id ? 'page' : undefined}
+                    disabled={Boolean(blocked)}
+                    title={blocked ?? undefined}
+                    data-testid={`nav-${id}`}
+                    onClick={() => {
+                      // A deliberate move answers the explanation, so it goes.
+                      setRedirected(null);
+                      setScreen(id);
+                    }}
+                  >
+                    <span>{t(SUBNAV_LABEL[id] ?? (SCREENS.find((item) => item.id === id)?.label ?? 'nav.start'))}</span>
+                    {badges[id] !== undefined && <span className="nav__badge">{badges[id]}</span>}
+                  </button>
+                );
+              })}
+            </nav>
+          )}
+          {activeTab === 'me' && (
+            // Whose case this is. It lives with the applicant's own data: the
+            // search and the results are always about the case chosen here.
+            <div className="subnav__case">
+              <label className="row row--tight xs muted" htmlFor="case-switcher">
+                <span className="topbar__caption">Applicant</span>
+                <select
+                  id="case-switcher"
+                  value={savedProfile?.id ?? ''}
+                  onChange={(event) => {
+                    // Switching case replaces the form. Unsaved edits are the
+                    // applicant's typing, so they are never discarded silently.
+                    if (!confirmDiscard()) {
+                      event.target.value = savedProfile?.id ?? '';
+                      return;
+                    }
+                    if (event.target.value) void switchCase(event.target.value);
+                    else newCase();
+                  }}
+                >
+                  <option value="">{t('topbar.newApplicant')}</option>
+                  {cases.map((item) => (
+                    <option key={item.id} value={item.profile_id}>
+                      {item.display_name} · {item.run_count} run{item.run_count === 1 ? '' : 's'}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <button className="btn btn--sm" type="button" onClick={() => {
+                if (!confirmDiscard()) return;
+                newCase(); setScreen('start');
+              }}>{t('topbar.newCase')}</button>
+            </div>
+          )}
         </div>
-      </aside>
+      )}
 
       <div className="main">
-        <header className="topbar">
-          <Chip tone={capabilities?.demo_mode ? 'demo' : 'accent'}>
-            {capabilities ? (capabilities.demo_mode ? 'Demo data' : 'Live sources') : 'connecting…'}
-          </Chip>
-          {run && (
-            <>
-              <Chip tone="neutral" mono>run {run.id.slice(0, 8)}</Chip>
-              <Chip tone={run.stage === 'failed' ? 'risk' : 'neutral'}>
-                {run.stage.replace(/_/g, ' ')}
-              </Chip>
-            </>
-          )}
-          <div className="topbar__spacer" />
-          <label className="row row--tight xs muted" htmlFor="case-switcher">
-            <span className="topbar__caption">Applicant</span>
-            <select
-              id="case-switcher"
-              value={savedProfile?.id ?? ''}
-              onChange={(event) => {
-                // Switching case replaces the form. Unsaved edits are the
-                // applicant's typing, so they are never discarded silently.
-                if (!confirmDiscard()) {
-                  event.target.value = savedProfile?.id ?? '';
-                  return;
-                }
-                if (event.target.value) void switchCase(event.target.value);
-                else newCase();
-              }}
-            >
-              <option value="">{t('topbar.newApplicant')}</option>
-              {cases.map((item) => (
-                <option key={item.id} value={item.profile_id}>
-                  {item.display_name} · {item.run_count} run{item.run_count === 1 ? '' : 's'}
-                </option>
-              ))}
-            </select>
-          </label>
-          <button className="btn btn--sm" type="button" onClick={() => {
-            if (!confirmDiscard()) return;
-            newCase(); setScreen('profile');
-          }}>{t('topbar.newCase')}</button>
-          {summary && (
-            <span
-              className="xs muted topbar__summary"
-              title={`${plural(summary.total, 'programme')} · ${plural(summary.with_conflicts, 'conflict')} · ${plural(summary.with_open_questions, 'open question')}`}
-            >
-              {plural(summary.total, 'programme')} · {plural(summary.with_conflicts, 'conflict')} ·{' '}
-              {plural(summary.with_open_questions, 'open question')}
-            </span>
-          )}
-          <AccountMenu onSignedOut={() => window.location.reload()} />
-          <button className="btn btn--sm btn--ghost" data-testid="sign-out" type="button" onClick={async () => {
-            await api.logout(); window.location.reload();
-          }}>{t('topbar.signOut')}</button>
-        </header>
-
         {redirected && (
           <div style={{ padding: 'var(--space-4) var(--space-6) 0' }}>
             <div className="notice notice--warn" role="status" data-testid="redirect-notice">
@@ -436,8 +518,16 @@ export default function App() {
 
         <main className="screen">
           {/* Scoped to the screen, so one broken screen cannot take the
-              sidebar and the case switcher down with it. */}
+              tabs and the case switcher down with it. */}
           <ErrorBoundary label={`the ${screen} screen`} key={screen}>
+          {screen === 'start' && (
+            <StartScreen
+              onStarted={() => setScreen('progress')}
+              onOpenProfile={() => setScreen('profile')}
+              onOpenPreferences={() => setScreen('preferences')}
+              onOpenResults={() => setScreen(hasResults ? 'shortlist' : 'progress')}
+            />
+          )}
           {screen === 'profile' && <ProfileScreen onNext={() => setScreen('preferences')} />}
           {screen === 'preferences' && <PreferencesScreen onStarted={() => setScreen('progress')} />}
           {screen === 'progress' && <ProgressScreen onDone={() => setScreen('shortlist')} />}
@@ -481,6 +571,50 @@ export default function App() {
           </ErrorBoundary>
         </main>
       </div>
+
+      <footer className="app-footer">
+        <div className="app-footer__inner">
+          <div className="field">
+            <label className="field__label xs" htmlFor="theme">{t('appearance.label')}</label>
+            <select
+              id="theme"
+              value={theme}
+              onChange={(e) => setTheme(e.target.value as Theme)}
+            >
+              <option value="system">{t('appearance.system')}</option>
+              <option value="light">{t('appearance.light')}</option>
+              <option value="dark">{t('appearance.dark')}</option>
+            </select>
+          </div>
+          <div className="field">
+            <label className="field__label xs" htmlFor="locale">{t('language.label')}</label>
+            {/* Russian and Kazakh are partial on purpose: a string whose terms
+                are still under review stays in English rather than being
+                machine-translated. See docs/i18n/GLOSSARY.md. */}
+            <select
+              id="locale"
+              data-testid="locale"
+              value={locale}
+              onChange={(e) => setLocale(e.target.value as Locale)}
+            >
+              {LOCALES.map((option) => (
+                <option key={option.id} value={option.id}>{option.label}</option>
+              ))}
+            </select>
+          </div>
+          <div className="app-footer__about">
+            <p className="xs faint">{t('brand.tagline')}. {t('brand.disclaimer')}</p>
+            {run && (
+              // For support and bug reports, not for the applicant's decision:
+              // it used to sit in the top bar, in front of everything.
+              <p className="xs faint mono">
+                run {run.id.slice(0, 8)} · {run.stage.replace(/_/g, ' ')}
+                {summary && ` · ${plural(summary.total, 'programme')} · ${plural(summary.with_conflicts, 'conflict')} · ${plural(summary.with_open_questions, 'open question')}`}
+              </p>
+            )}
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

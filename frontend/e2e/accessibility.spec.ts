@@ -7,7 +7,7 @@
 
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
-import { newSession, openShortlist, runDemoResearch, shot } from './helpers';
+import { goTo, newSession, openShortlist, runDemoResearch, shot } from './helpers';
 
 const BREAKPOINTS = [
   { name: '320', width: 320, height: 720 },
@@ -56,7 +56,7 @@ test('no workflow screen scrolls horizontally on the narrowest phone', async () 
   const screens = ['profile', 'preferences', 'progress', 'shortlist', 'funding', 'sources', 'approved', 'export'];
   await page.setViewportSize({ width: 320, height: 720 });
   for (const screen of screens) {
-    await page.getByTestId(`nav-${screen}`).click();
+    await goTo(page, screen);
     await page.waitForTimeout(250);
     const overflow = await page.evaluate(
       () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
@@ -132,7 +132,7 @@ test('the whole workflow is reachable by keyboard', async () => {
 });
 
 test('progress is announced to assistive technology', async () => {
-  await page.getByTestId('nav-progress').click();
+  await goTo(page, 'progress');
   const bar = page.getByRole('progressbar', { name: 'Research progress' });
   await expect(bar).toBeVisible();
   await expect(bar).toHaveAttribute('aria-valuemax', '100');
@@ -163,7 +163,7 @@ test('every reachable workflow screen has no serious axe violations', async () =
   const screens = ['profile', 'preferences', 'progress', 'shortlist', 'funding', 'sources', 'approved', 'export'];
 
   for (const screen of screens) {
-    await page.getByTestId(`nav-${screen}`).click();
+    await goTo(page, screen);
     const report = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
       .analyze();
@@ -194,9 +194,9 @@ test('both themes render with a painted background and readable text', async () 
 test('no console errors during the full journey', async () => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await openShortlist(page);
-  await page.getByTestId('nav-funding').click();
-  await page.getByTestId('nav-sources').click();
-  await page.getByTestId('nav-export').click();
+  await goTo(page, 'funding');
+  await goTo(page, 'sources');
+  await goTo(page, 'export');
 
   expect(consoleErrors, `console errors: ${consoleErrors.join(' | ')}`).toHaveLength(0);
 });
