@@ -1104,6 +1104,12 @@ NTU's queued award links were all fetched. The problem was the ranking. All twel
 graduate, current-student, exchange and teaching-award pages, so the Nanyang Scholarship link was never
 read. `_award_priority` now ranks those after awards for incoming applicants (a tuple key). Run 60 checks it.
 
+Claude, 2026-09-25, run 60: 6/62, precision 7/11. NTU filed 18 claims, but the Nanyang Scholarship page
+was still not read. Its link sits under /scholarships/freshmen, and that page was rejected as "not an award
+page". Change: a page that links three or more awards under its own path is now read as an index (within
+the index budget). Research, innovation, fellowship and staff-award pages also rank after awards for
+incoming applicants.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 

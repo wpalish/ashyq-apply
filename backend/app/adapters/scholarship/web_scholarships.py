@@ -235,7 +235,15 @@ class WebScholarshipAdapter:
                 if depth > 0:
                     out.page_types.append((url, classification.page_type.value))
 
-                is_index = classification.page_type is PageType.SCHOLARSHIP_INDEX
+                # A page that links several awards filed beneath its own path is
+                # a list of awards whatever the classifier calls it. Run 60: NTU's
+                # /scholarships/freshmen holds the Nanyang Scholarship link and was
+                # rejected as "not an award page".
+                is_index = classification.page_type is PageType.SCHOLARSHIP_INDEX or (
+                    depth > 0
+                    and classification.page_type is not PageType.SCHOLARSHIP_AWARD
+                    and _lists_awards_below(page.text, url)
+                )
                 if depth == 0 or (is_index and indexes_read < _MAX_INDEX_PAGES):
                     # An index is discovery, never award proof: nothing is
                     # recorded from the page itself, only from what it links.
@@ -855,9 +863,23 @@ def _living_allowance(text: str) -> tuple[dict[str, object], str] | None:
 #: Run 59: NTU's twelve award slots went to these, Nanyang Scholarship unread.
 _OFF_TARGET_AWARD = re.compile(
     r"faqs?\b|/(post)?graduate/|(?<!under)graduate-|current-students?|student-exchanges?|"
-    r"inbound|teaching|/education/|diploma|staff",
+    r"inbound|teaching|/education/|diploma|staff|innovat|research|fellow|seed-?fund|"
+    r"grants-funding|accolade|life-at",
     re.I,
 )
+
+
+#: How many award links under a page's own path make it a list of awards.
+_CHILD_AWARDS_FOR_INDEX = 3
+
+
+def _lists_awards_below(html: str, url: str) -> bool:
+    """True when the page links at least three awards filed beneath its own path."""
+    own = re.sub(r"(/index)?\.html?$", "", urlparse(url).path.rstrip("/").lower()) + "/"
+    below = [
+        link for link in _award_links(html, url) if urlparse(link).path.lower().startswith(own)
+    ]
+    return len(below) >= _CHILD_AWARDS_FOR_INDEX
 
 
 def _award_priority(url: str) -> tuple[int, int]:

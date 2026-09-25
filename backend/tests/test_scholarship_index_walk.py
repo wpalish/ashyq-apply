@@ -393,3 +393,39 @@ class TestAwardPriorityPrefersIncomingApplicantPages:
         ranked = sorted(links, key=_award_priority)
         assert ranked[0].endswith("/nanyang-scholarship")
         assert ranked[1].endswith("/undergraduate-bursaries")
+
+
+class TestAPageListingAwardsBelowItIsAnIndex:
+    @pytest.mark.asyncio
+    async def test_awards_under_a_rejected_list_page_are_read(self, settings, tmp_path):
+        """Run 60: NTU's /scholarships/freshmen held the Nanyang link and was rejected."""
+        root = tmp_path / "site"
+        _write(
+            root,
+            "uni/scholarships.html",
+            _INDEX.format(
+                title="Scholarships",
+                items='<li><a href="scholarships/freshmen.html">Freshmen scholarships</a></li>',
+            ),
+        )
+        _write(
+            root,
+            "uni/scholarships/freshmen.html",
+            "<html><head><title>Freshmen</title></head><body><h1>Freshmen</h1><ul>"
+            '<li><a href="freshmen/nanyang-scholarship">Nanyang Scholarship</a></li>'
+            '<li><a href="freshmen/college-scholarship">College Scholarship</a></li>'
+            '<li><a href="freshmen/merit-scholarship">Merit Scholarship</a></li>'
+            "</ul></body></html>",
+        )
+        for slug, name in (
+            ("nanyang-scholarship", "Nanyang Scholarship"),
+            ("college-scholarship", "College Scholarship"),
+            ("merit-scholarship", "Merit Scholarship"),
+        ):
+            _write(root, f"uni/scholarships/freshmen/{slug}", _AWARD.format(name=name))
+        candidate = _candidate(scholarships_url="fixture://uni/scholarships.html")
+        program = CandidateProgram(name="P", field="cs", degree=DegreeLevel.BACHELOR)
+
+        awards, result = await _run(root, settings, candidate, program)
+
+        assert "Nanyang Scholarship" in {a.name for a in awards}, result.errors
