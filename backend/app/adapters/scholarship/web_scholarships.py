@@ -850,14 +850,26 @@ def _living_allowance(text: str) -> tuple[dict[str, object], str] | None:
     return None
 
 
-def _award_priority(url: str) -> int:
-    """Lower reads first: a named scholarship, then awards, then need-based aid."""
+#: Pages about an award rather than one award, or awards for someone else:
+#: FAQs, graduate study, enrolled students, exchanges and teaching prizes.
+#: Run 59: NTU's twelve award slots went to these, Nanyang Scholarship unread.
+_OFF_TARGET_AWARD = re.compile(
+    r"faqs?\b|/(post)?graduate/|(?<!under)graduate-|current-students?|student-exchanges?|"
+    r"inbound|teaching|/education/|diploma|staff",
+    re.I,
+)
+
+
+def _award_priority(url: str) -> tuple[int, int]:
+    """Lower reads first: a named scholarship, then awards, then need-based aid;
+    within each, a page for an incoming applicant before one for someone else."""
     path = urlparse(url).path.lower()
+    off_target = 1 if _OFF_TARGET_AWARD.search(path) else 0
     if "scholarship" in path:
-        return 0
+        return (off_target, 0)
     if re.search(r"bursar|financial-?aid|loan|hardship", path):
-        return 2
-    return 1
+        return (off_target, 2)
+    return (off_target, 1)
 
 
 def _award_links(html: str, base: str) -> list[str]:

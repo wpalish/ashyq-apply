@@ -1099,6 +1099,11 @@ misleading. Next commit ranks pending award links from every index together (nam
 first, bursaries/financial aid last) within the same 12-page budget, and the outcome says how many
 links were actually queued.
 
+Claude, 2026-09-25, runs 58–59: 6/62 (precision 7/9), then 5/62 (6/8; UBC hit the wall-clock budget).
+NTU's queued award links were all fetched. The problem was the ranking. All twelve slots went to FAQs,
+graduate, current-student, exchange and teaching-award pages, so the Nanyang Scholarship link was never
+read. `_award_priority` now ranks those after awards for incoming applicants (a tuple key). Run 60 checks it.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 

@@ -376,3 +376,20 @@ class TestOneAwardBudgetRankedAcrossIndexes:
 
         assert "Nanyang Scholarship" in {a.name for a in awards}, result.page_outcomes
         assert len(awards) <= 12
+
+
+class TestAwardPriorityPrefersIncomingApplicantPages:
+    def test_named_undergraduate_award_before_faq_and_graduate_pages(self) -> None:
+        from app.adapters.scholarship.web_scholarships import _award_priority
+
+        base = "https://www.example.edu/admissions"
+        links = [
+            f"{base}/undergraduate/scholarships/faqs-on-scholarships",
+            f"{base}/graduate/financialmatters/scholarships",
+            f"{base}/undergraduate/scholarships/current-student",
+            f"{base}/undergraduate/scholarships/nanyang-scholarship",
+            f"{base}/undergraduate-bursaries",
+        ]
+        ranked = sorted(links, key=_award_priority)
+        assert ranked[0].endswith("/nanyang-scholarship")
+        assert ranked[1].endswith("/undergraduate-bursaries")
