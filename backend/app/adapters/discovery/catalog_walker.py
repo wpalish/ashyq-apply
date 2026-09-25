@@ -436,6 +436,12 @@ class CatalogWalker:
                 )
                 continue
             walks.append(walk)
+            if walk.confirmed:
+                # The applicant's programme is found; the other catalogues are
+                # further reads for nothing. Run 64: Groningen confirmed
+                # Computing Science at t=53s, then walked science-shops and the
+                # faculty pages until its clock ran out and it filed nothing.
+                break
             if (
                 walk.confirmed
                 or depth >= WALKER_MAX_DESCENTS

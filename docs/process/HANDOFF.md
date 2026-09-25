@@ -1124,6 +1124,14 @@ Claude, 2026-09-25, run 62: 5/62, precision 6/8.
   itself 5 s before the kill (asyncio.wait_for), keeps the claims already filed, and still reports
   BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED. Harness only; production is untouched.
 
+Claude, 2026-09-25, runs 63–64: 4/62 (5/8), then 6/62 (8/11).
+- The soft stop works: in run 64, UBC hit the clock and kept 2 claims.
+- Groningen hit the clock in both runs with 0 claims. The full trail (now printed for budget cases) shows
+  the walker confirmed /bachelors/computing-science at t=53s. It then kept walking the remaining catalogues:
+  science-shops projects, the faculty home pages and the museum, until the kill.
+- Fix: the walk stops at the first walk that confirms a programme. The descent test was updated to pin this.
+  The golden demo is unchanged.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 

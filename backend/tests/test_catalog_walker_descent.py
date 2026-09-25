@@ -57,8 +57,10 @@ async def test_the_walk_descends_into_a_list_its_catalogue_offered():
     budgets: list[int] = []
     walks = await _walker(pages, walked, budgets).walk([ROOT, CHOICE])
 
-    assert walked == [ROOT, LIST, CHOICE], "the list below goes before the next catalogue"
-    assert budgets == [cw.WALKER_TOP_N, cw.WALKER_DESCENT_TOP_N, cw.WALKER_TOP_N]
+    # The list below goes before the next catalogue, and once it confirms the
+    # applicant's programme the next catalogue is not read at all (run 64).
+    assert walked == [ROOT, LIST], "the walk stops at the first confirmed programme"
+    assert budgets == [cw.WALKER_TOP_N, cw.WALKER_DESCENT_TOP_N]
     assert [url for walk in walks for url in walk.confirmed] == [CS]
 
 
