@@ -19,7 +19,7 @@ export function LegalScreen() {
   return (
     <>
       <div className="screen__head">
-        <p className="screen__eyebrow">About</p>
+        <p className="screen__eyebrow">Me · Privacy &amp; terms</p>
         <h1 className="screen__title">Privacy &amp; terms</h1>
         <p className="screen__lede">
           What ASHYQ Apply stores, what it never does, and what is still owed to you.

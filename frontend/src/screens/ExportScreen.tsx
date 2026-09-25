@@ -28,7 +28,7 @@ export function ExportScreen() {
   return (
     <>
       <div className="screen__head">
-        <p className="screen__eyebrow">Step 09</p>
+        <p className="screen__eyebrow">Me · Data &amp; export</p>
         <h1 className="screen__title">Take it with you, or erase it</h1>
         <p className="screen__lede">
           Every export carries the source link and the verification date for each row, so a

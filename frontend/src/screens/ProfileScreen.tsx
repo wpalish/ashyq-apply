@@ -160,7 +160,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
   return (
     <>
       <div className="screen__head">
-        <p className="screen__eyebrow">Step 01</p>
+        <p className="screen__eyebrow">Me · Profile</p>
         <h1 className="screen__title">Who is applying</h1>
         <p className="screen__lede">
           Nothing here is converted or inferred behind your back. Grades keep their original scale,

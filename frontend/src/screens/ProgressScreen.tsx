@@ -192,7 +192,7 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
         </section>
       ) : (
         <div className="screen__head">
-          <p className="screen__eyebrow">Step 03</p>
+          <p className="screen__eyebrow">Match · Research</p>
           <h1 className="screen__title">
             {failed ? 'Research failed' : cancelled ? 'Research cancelled' : finished ? 'Research complete' : 'Researching'}
           </h1>
