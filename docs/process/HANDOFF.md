@@ -273,6 +273,10 @@ Write-ahead (claude-opus-5, 2026-09-25, redesign part 6; owner: "продолж�
    Sources, Export, People). Fix what it finds, with root causes.
 3. Docs (§25), video, PR.
 
+Progress on part 6: 1 `e83f923`; 2 `db25804`, `76015f0`; 3 the docs commit. Report and defects I52–I55 are in the
+design doc §25. **Next:** the owner reviews PR #20. Still waiting on the owner: the globe, the Russian vocabulary,
+share stories and the unlock step.
+
 Write-ahead (claude-opus-5, 2026-09-25, redesign part 5; owner: "продолжай" a third time). What is left of
 the concept without an owner decision:
 1. Plan: concept L's "На этой неделе" - the documents whose start-by date falls in the next seven days (or has
@@ -1591,6 +1595,10 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+Redesign part 6, frontend only. Gates run by claude-opus-5 on 2026-09-25 at `76015f0`:
+- typecheck, lint, **297 unit tests** (35 files) and build: green;
+- Playwright: **97 passed, 1 skipped**.
+
 Redesign part 5, frontend only. claude-opus-5 ran the gates on 2026-09-25 at `03c2846`: typecheck, lint,
 **290 unit tests** (34 files) and build are green. Playwright: **95 passed, 1 skipped**. Auth e2e: **6 passed**,
 including the new axe scan of the sign-in screen, which is clean.
@@ -2412,6 +2420,7 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 | 2026-09-25 UTC | claude-opus-5 | `d192d19` → `a4f3c95` redesign part 3 | Owner: "продолжай". Added three concept screens: the programme's money as arithmetic (10), a row-by-row comparison of up to three programmes (11) and the Plan tab's departures board of deadlines (12). 9 defects (I28–I36) found and fixed; root causes are in the design doc §22. Share stories, the globe and the Russian vocabulary still wait for the owner. |
 | 2026-09-25 UTC | claude-opus-5 | `5cbcd9e` → `6d14550` redesign part 4 | Owner said "продолжай" again. Grant deadlines now appear on the plan board (the next deadline became the MEXT nomination). The research run became a night moment that shows what it found so far. The documents screen now shows what is ready, what is missing and when to start. Found and fixed 9 defects (I37–I45); design doc §23. |
 | 2026-09-25 UTC | claude-opus-5 | `47b8e2b` → `03c2846` redesign part 5 | Owner: "продолжай" (third time). Board rows open onto their programme. Added "Next to start" and the shared documents module, replaced step numbers with tab-and-section eyebrows, and put the brand on the account screen. Six defects (I46–I51), design doc §24. |
+| 2026-09-25 UTC | claude-opus-5 | `fff50a1` → `76015f0` redesign part 6 | Owner: "продолжай" (fourth time). Added region chips on the shortlist (concept 07, counted from the results) and swept every screen. The sweep fixed three things: the switcher's stale run count, its styling (including a 320 px overflow), and singular counts. Defects I52–I55; see design doc §25. |
 
 | 2026-09-20 | gpt-6-astra | b267b337 → V2-00 in progress | Startup/recovery, PR inventory, all pack files read; isolated worktree preserves existing dirty research work. |
 

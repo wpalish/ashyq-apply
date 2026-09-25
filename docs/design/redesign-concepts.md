@@ -1290,3 +1290,36 @@ account screen (concept 02) into the brand, and removes the old step numbers.
 - typecheck, lint, **290 unit tests** (34 files) and build pass.
 - Playwright: **95 passed, 1 skipped**.
 - Auth e2e: **6 passed**, with the sign-in screen's axe scan clean.
+
+## 25. Part 6: region chips and a sweep of every screen (2026-09-25)
+
+The owner said "продолжай" a fourth time. The last concept element that needs no owner decision was
+screen 07's region chips. The rest of the pass swept every screen at 390 and 1440 px, in light and
+dark, looking hardest at the screens the redesign had barely touched.
+
+| Commit | What |
+|---|---|
+| `e83f923` | Region chips on the shortlist ("All 20 · Europe 13 · Americas 4 · Asia & Oceania 3") filter both views. Each count is computed from the results. Regions come from a fixed table; a country missing from it is counted under "Other" and never guessed. |
+| `db25804` | The applicant switcher showed "0 runs" beside a run that had finished. It now counts the run that was just started, and it is styled like the pills beside it. |
+| `76015f0` | Three counts that said "1 programmes" now use the singular. |
+
+**Defects found in part 6, with their root causes:**
+
+| # | Defect | Root cause | Fix |
+|---|---|---|---|
+| I52 | The Me tab's switcher said "0 runs" beside a finished run | The case list was read once, when the profile was created, before the run existed | Read again after a run starts. A failed refresh keeps the old count. A store test fails without the fix |
+| I53 | The switcher was an unstyled system select in a row of pills | It moved from the top bar to the Me tab in part 2, and the top bar's select rule did not move with it | It shares the field style, rounded |
+| I54 | Styling the switcher pushed "New case" off a 320 px screen | A styled select takes the width of its longest option | On a phone it takes the space that is left and cuts its text. The accessibility spec caught this |
+| I55 | "Collect documents for 1 programmes", "1 of 1 items", "1 programmes" | Counts built with a fixed plural | Singular for one |
+
+**Seen and deliberately left alone:**
+- The Discover screen logs a 404 for every person without a photo. The avatar component asks for the picture and falls back to initials when it is missing; its code comment says so. Removing the request needs a "has a photo" field from the API, and this PR changes no API.
+
+**Decisions taken without the owner:**
+- Türkiye is placed in Europe, because it is in the European Higher Education Area. The Gulf states and
+  Central Asia are placed in Asia. The table in `lib/regions.ts` names both choices.
+
+**Gates at `76015f0`:**
+- typecheck, lint, **297 unit tests** (35 files) and build pass.
+- Playwright: **97 passed, 1 skipped**.
+- No screen scrolls horizontally at 320 px.
