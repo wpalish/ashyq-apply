@@ -60,6 +60,9 @@ jobs:
       UNIMATCH_TAVILY_API_KEY: ${{ secrets.UNIMATCH_TAVILY_API_KEY }}
       UNIMATCH_BRAVE_API_KEY: ${{ secrets.UNIMATCH_BRAVE_API_KEY }}
       UNIMATCH_SERPER_API_KEY: ${{ secrets.UNIMATCH_SERPER_API_KEY }}
+      # Phase 4 shadow: a decision model only ranks, and only into the log.
+      UNIMATCH_DECISION_PROVIDER: ${{ secrets.UNIMATCH_TYPESAFE_API_KEY != '' && 'typesafe' || 'none' }}
+      UNIMATCH_TYPESAFE_API_KEY: ${{ secrets.UNIMATCH_TYPESAFE_API_KEY }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -320,6 +323,9 @@ jobs:
               if not log.exists():
                   continue
               lines = log.read_text(encoding="utf-8", errors="replace").splitlines()
+              for ln in lines:
+                  if ln.startswith("jev shadow:"):
+                      print(f"  {observation['case_id']:10} {ln}")
               hits = [ln for ln in lines if re.search(r"scholar|award|bursar", ln, re.I)]
               for ln in hits[:30]:
                   print(f"  {observation['case_id']:10} {ln[:200]}")

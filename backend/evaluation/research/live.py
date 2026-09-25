@@ -44,6 +44,46 @@ COHORT = {
 REVIEWED_BINDINGS = Path(__file__).parent / "data" / "identity_bindings.reviewed.json"
 
 
+async def _jev_shadow(case_id: str, queued: list[str], profile: Any) -> None:
+    """Shadow only: where a decision model would rank the certified programme page.
+
+    Nothing the run reads changes. The line it prints is the Phase 4 experiment's
+    evidence: the gold page's rank in the heuristic queue beside its rank after the
+    model reorders the same candidates (analysis/v2/07, Experiment 2).
+    """
+    from app.adapters.decisions import get_decision_model
+    from app.adapters.decisions.link_ranker import LinkCandidate, rank_links
+
+    model = get_decision_model()
+    if model is None or not queued:
+        return
+    from .metrics import canonical_url
+    from .schema import Dataset
+
+    dataset = Dataset.model_validate_json(
+        (Path(__file__).parent / "data" / "ground_truth.reviewed.json").read_text(encoding="utf-8")
+    )
+    case = next((c for c in dataset.cases if c.id == case_id), None)
+    gold = {canonical_url(u) for u in (case.programme_urls if case else [])}
+    context = profile.context
+    ranked, model_id = await rank_links(
+        model,
+        [LinkCandidate(u) for u in queued[:48]],
+        field=", ".join(context.intended_fields),
+        degree=str(context.level),
+        target="programme page",
+    )
+
+    def rank(urls: list[str]) -> int | None:
+        return next((i + 1 for i, u in enumerate(urls) if canonical_url(u) in gold), None)
+
+    print(
+        f"jev shadow: gold programme rank heuristic={rank(queued[:48])} "
+        f"model={rank([r.url for r in ranked])} of {len(ranked)} ({model_id or 'unavailable'})",
+        flush=True,
+    )
+
+
 async def capture_one(
     case_id: str, output: Path, max_pages: int, seconds: float | None = None
 ) -> None:
@@ -121,6 +161,7 @@ async def capture_one(
                 queued.append(url)
         observation.ranked_urls = [HttpUrl(url) for url in queued]
         checkpoint()
+        await _jev_shadow(case_id, queued, profile)
         return await original_confirm(adapter, selected, ranked, trace, profile)
 
     class ObservedRunner(canary.CanaryRunner):

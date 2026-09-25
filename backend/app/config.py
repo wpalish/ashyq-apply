@@ -158,6 +158,11 @@ class Settings(BaseSettings):
     brave_api_key: SecretStr = SecretStr("")
     #: And again: UNIMATCH_SERPER_API_KEY, environment only.
     serper_api_key: SecretStr = SecretStr("")
+    #: Bounded model decisions (Phase 4): "none" (default), "fake" or "typesafe".
+    #: Shadow-only so far: nothing a run reads or claims depends on it.
+    decision_provider: str = "none"
+    #: UNIMATCH_TYPESAFE_API_KEY, environment only.
+    typesafe_api_key: SecretStr = SecretStr("")
     apipay_base_url: str = "https://api.apipay.kz/api/v1"
     apipay_api_key: SecretStr = SecretStr("")
     apipay_webhook_secret: SecretStr = SecretStr("")
@@ -274,6 +279,17 @@ class Settings(BaseSettings):
             raise RuntimeError(
                 "UNIMATCH_SEARCH_PROVIDER='serper' needs UNIMATCH_SERPER_API_KEY. Refusing to "
                 "start rather than reporting every search as finding nothing."
+            )
+        from app.adapters.decisions import KNOWN_DECISION_PROVIDERS
+
+        if self.decision_provider not in KNOWN_DECISION_PROVIDERS:
+            raise RuntimeError(
+                f"UNIMATCH_DECISION_PROVIDER={self.decision_provider!r} is not one of "
+                f"{sorted(KNOWN_DECISION_PROVIDERS)}."
+            )
+        if self.decision_provider == "typesafe" and not self.typesafe_api_key.get_secret_value():
+            raise RuntimeError(
+                "UNIMATCH_DECISION_PROVIDER='typesafe' needs UNIMATCH_TYPESAFE_API_KEY."
             )
         if self.is_production and self.search_provider == "fake":
             raise RuntimeError(

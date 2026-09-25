@@ -1213,6 +1213,19 @@ The review's other points agree with the deep-research report (DocumentIR, table
 of two targets, a content-deficit browser trigger instead of <400 chars, verifier reject telemetry). Its
 RFC 9309 point is already met on this branch.
 
+Claude, 2026-09-25: Jev (TypeSafe) behind a decision seam, shadow only (analysis/v2/07, Experiment 2; the
+owner's Jev report).
+- app/adapters/decisions: the DecisionModel protocol (Noul/Choice), a fake, and TypeSafe pinned to
+  jev-1.13.0. It fails closed to the heuristics.
+- link_ranker reorders only link ids the code gave it: it cannot invent a URL or delete a lead.
+- The benchmark prints "jev shadow: gold programme rank heuristic=X model=Y" per case. Nothing the run reads
+  changes.
+- Config: UNIMATCH_DECISION_PROVIDER / UNIMATCH_TYPESAFE_API_KEY, environment only.
+- This adds a new egress (the owner supplied the key). The state carries field, degree and public links,
+  no applicant data.
+- Pending: the owner adds the UNIMATCH_TYPESAFE_API_KEY repo secret. The key pasted in chat is not in the
+  repo and should be rotated after testing.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
