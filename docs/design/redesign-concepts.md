@@ -1323,3 +1323,48 @@ dark, looking hardest at the screens the redesign had barely touched.
 - typecheck, lint, **297 unit tests** (35 files) and build pass.
 - Playwright: **97 passed, 1 skipped**.
 - No screen scrolls horizontally at 320 px.
+
+## 26. Part 7: the globe (2026-09-25)
+
+The owner approved the globe ("делай глобус"). The risk recorded in §21 was weight on a budget Android
+phone, so the globe was built with the list still as the main path.
+
+| Commit | What |
+|---|---|
+| `ef51b57` | The globe on the start screen (rising under the search), in "Research complete" (routes from home) and above the shortlist cards (a small globe that region chips turn and zoom, where a marker opens its card). |
+| `84a5dd9` | Crowded cities fold into a cluster with its count, and tapping it zooms in. Two or three touching markers are set one step apart. Close in, the cities show their names. |
+
+**How it is built:**
+- **Land.** 8 441 dots precomputed once from Natural Earth 1:50m (public domain, via world-atlas) by
+  `frontend/scripts/gen-globe.mjs`. They are packed as Int16 pairs and loaded as their own chunk
+  (45 KB, 33 KB gzipped) the first time a globe draws.
+- **Code.** There is no geometry library: the orthographic projection, great-circle routes and turns are
+  in `lib/globe.ts`. The main bundle grew by 7 KB gzipped, from 123.4 KB to 130.5 KB.
+- **Drawing.** One canvas holds dots and routes and is redrawn only when something changes. This was
+  measured at zero redraws over two idle seconds on every screen. Markers are buttons over the canvas,
+  kept out of the tab order and hidden from screen readers, because each one is also a card in the
+  list; a caption says what the globe shows. A turn eases over 650 ms, or jumps under reduced motion.
+- **Every point is a fact.** `globe-places.json` is a fixed table of 107 cities and 19 homes. The
+  generator checks each entry against its country's outline: it must be inside it or within 60 km.
+  A result whose city is missing is left off the globe, and the shortlist says how many were left off.
+  Home is the capital of the country of residence. A marker's label is the price the card shows, or
+  "cost not computed". Before any search, the start screen shows home only, never an example.
+
+**Defects found in part 7, with their root causes:**
+
+| # | Defect | Root cause | Fix |
+|---|---|---|---|
+| I56 | Routes to cities behind the globe drew lines into empty space | A route was drawn for every marker, including ones out of view | Routes go only to cities in view, lower on the horizon |
+| I57 | At Europe's zoom the land was an unreadable scatter | 4 218 dots are too sparse close in | 8 441 dots, lazy-loaded so the first screen does not pay for them |
+| I58 | The start and reveal globes redrew continuously | A focus object built on every render restarted the turn | The turn is keyed on the numbers |
+| I59 | Every globe spun for 650 ms as it appeared | The first width measurement was animated as a turn | Only a new focus or zoom animates |
+| I60 | Toronto could not be tapped: Montreal's marker covered it | 500 km is less than a marker's width at that scale | Two or three touching markers are set one step apart |
+| I61 | At the whole-globe view, Europe's 13 markers spread up to 78 px from their cities, some into the Sahara | The first fix walked a spiral outwards | Four or more fold into a cluster that zooms in when tapped, as in concept K1 |
+| I62 | Four Dutch cities stayed a cluster even at the zoom limit | Within 150 km, they are closer than a marker's width | Close in (zoom 10 and above), a crowd is set round its place and the cities name themselves |
+| I63 | The e2e compared a cluster count read mid-turn with the settled one | A fixed delay was used as a proxy for the animation | The figure carries `data-turning`, and the test waits on it |
+
+**Left for later:** concept P's globe in the one-at-a-time triage, and the route on the programme detail
+(concept 10). Both reuse this component.
+
+**Gates at `84a5dd9`:** typecheck, lint, **312 unit tests** (37 files) and build pass. Playwright: **99 passed,
+1 skipped**. axe is clean on the start screen, the reveal and the cards with the globe.

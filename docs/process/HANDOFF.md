@@ -278,6 +278,10 @@ Concept N/M's globe, built so the list stays the main path on a budget Android p
 4. Tests (projection, table coverage, e2e markers and axe), review at 320/390/1440 light and dark, video,
    docs (§26), PR.
 
+Progress on part 7: 1–3 `ef51b57`, clusters `84a5dd9`, 4 the docs commit. The report and defects I56–I63 are in
+the design doc §26. **Next:** the owner reviews PR #20. Still waiting for the owner: the Russian vocabulary,
+share stories and the unlock step. Possible follow-ups: a globe in the triage and on the programme detail.
+
 Write-ahead (claude-opus-5, 2026-09-25, redesign part 6; owner: "продолжай" a fourth time).
 1. Shortlist: concept 07's region chips (Europe · Americas · Asia & Oceania) as a filter, counted from the
    results. The mapping from country to region is a static geography table, and a country missing from it is
@@ -1608,6 +1612,12 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+Redesign part 7 (the globe), frontend only. claude-opus-5 ran the gates on 2026-09-25 at `84a5dd9`:
+- typecheck, lint, **312 unit tests** (37 files) and build: green;
+- Playwright: **99 passed, 1 skipped**.
+
+The main bundle is 130.5 KB gzipped (+7 KB); the land dots are a lazy 33 KB chunk.
+
 Redesign part 6, frontend only. Gates run by claude-opus-5 on 2026-09-25 at `76015f0`:
 - typecheck, lint, **297 unit tests** (35 files) and build: green;
 - Playwright: **97 passed, 1 skipped**.
@@ -2434,6 +2444,7 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 | 2026-09-25 UTC | claude-opus-5 | `5cbcd9e` → `6d14550` redesign part 4 | Owner said "продолжай" again. Grant deadlines now appear on the plan board (the next deadline became the MEXT nomination). The research run became a night moment that shows what it found so far. The documents screen now shows what is ready, what is missing and when to start. Found and fixed 9 defects (I37–I45); design doc §23. |
 | 2026-09-25 UTC | claude-opus-5 | `47b8e2b` → `03c2846` redesign part 5 | Owner: "продолжай" (third time). Board rows open onto their programme. Added "Next to start" and the shared documents module, replaced step numbers with tab-and-section eyebrows, and put the brand on the account screen. Six defects (I46–I51), design doc §24. |
 | 2026-09-25 UTC | claude-opus-5 | `fff50a1` → `76015f0` redesign part 6 | Owner: "продолжай" (fourth time). Added region chips on the shortlist (concept 07, counted from the results) and swept every screen. The sweep fixed three things: the switcher's stale run count, its styling (including a 320 px overflow), and singular counts. Defects I52–I55; see design doc §25. |
+| 2026-09-25 UTC | claude-opus-5 | `3973167` → `84a5dd9` redesign part 7 | Owner: "делай глобус". Built the globe as canvas dots with lazy land data, a checked city table and routes from home. It appears on the start screen, the reveal and the shortlist, with region zoom and clusters. No idle redraws. Fixed I56–I63; see design doc §26. |
 
 | 2026-09-20 | gpt-6-astra | b267b337 → V2-00 in progress | Startup/recovery, PR inventory, all pack files read; isolated worktree preserves existing dirty research work. |
 
