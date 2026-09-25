@@ -100,11 +100,40 @@ test('the results reveal counts what the run found', async () => {
   await page.screenshot({ path: shot('16-results-reveal.png'), fullPage: false });
 });
 
-test('the start, the reveal and the cards have no serious axe violations', async () => {
+test('two programmes compare row by row, an unknown left unknown', async () => {
+  await goTo(page, 'shortlist');
+  await page.getByTestId('view-cards').click();
+  const cards = page.getByTestId('shortlist-cards');
+  for (const name of ['University of Groningen', 'University of Toronto']) {
+    const card = cards.locator('article').filter({ hasText: name }).first();
+    await card.getByRole('button', { name: 'Compare', exact: true }).click();
+    await expect(card.getByRole('button', { name: 'In comparison' })).toHaveAttribute('aria-pressed', 'true');
+  }
+  const tray = page.getByTestId('compare-tray');
+  await expect(tray).toContainText('2 picked');
+  await page.getByTestId('compare-go').click();
+
+  const view = page.getByTestId('compare-view');
+  await expect(view.getByRole('heading', { name: 'Row by row' })).toBeFocused();
+  await expect(view.getByRole('columnheader')).toHaveCount(2);
+  const left = view.getByRole('row').filter({ has: page.getByRole('rowheader', { name: 'Left to pay a year' }) });
+  await expect(left).toContainText('1,848 USD');
+  // Toronto's award year does not match its costs, so the remainder is unknown.
+  await expect(left).toContainText('not computed');
+  await expect(view).not.toContainText('%');
+  await expect(view).not.toContainText(/chance|probab/i);
+  await page.screenshot({ path: shot('17-compare.png'), fullPage: false });
+
+  await page.getByTestId('compare-close').click();
+  await expect(page.getByTestId('compare-go')).toBeFocused();
+});
+
+test('the start, the reveal, the cards and the comparison have no serious axe violations', async () => {
   const views: [string, () => Promise<void>][] = [
     ['start', async () => { await goTo(page, 'start'); }],
     ['reveal', async () => { await goTo(page, 'progress'); }],
     ['cards', async () => { await goTo(page, 'shortlist'); await page.getByTestId('view-cards').click(); }],
+    ['compare', async () => { await page.getByTestId('compare-go').click(); }],
   ];
   for (const [name, open] of views) {
     await open();

@@ -35,7 +35,7 @@ export function requirementNote(result: ProgramResult): string {
 }
 
 /** What an admissions-fit label does and does not say. */
-const FIT_NOTE: Record<string, string> = {
+export const FIT_NOTE: Record<string, string> = {
   STRONGER_FIT: 'above the minimums; selection is still competitive',
   PLAUSIBLE_FIT: 'meets the minimums; selection is competitive',
   AMBITIOUS: 'at or below the published range',
@@ -75,7 +75,7 @@ function firstSentence(text: string | undefined): string {
 }
 
 export function ResultCard({
-  result, open, onToggle, decision, detail,
+  result, open, onToggle, decision, detail, compare,
 }: {
   result: ProgramResult;
   open: boolean;
@@ -84,6 +84,8 @@ export function ResultCard({
   decision: ReactNode;
   /** The full detail, shown under the card when it is open. */
   detail?: ReactNode;
+  /** The "compare" toggle, when the screen offers a comparison. */
+  compare?: ReactNode;
 }) {
   const r = result;
   const gap = r.funding_gap;
@@ -162,7 +164,7 @@ export function ResultCard({
         </span>
       </div>
 
-      <div className="rcard__decide">{decision}</div>
+      <div className="rcard__decide">{decision}{compare}</div>
 
       {open && detail && <div className="rcard__detail">{detail}</div>}
     </article>

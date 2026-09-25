@@ -15,10 +15,11 @@ const decide = vi.fn().mockResolvedValue(undefined);
 const saveNotes = vi.fn().mockResolvedValue(undefined);
 
 vi.mock('@/lib/store', () => ({
-  useStore: () => ({ results: [row], summary, shortlist: null, decide, saveNotes }),
+  useStore: () => ({ results: [row, ...others], summary, shortlist: null, decide, saveNotes }),
 }));
 
 let row: ProgramResult;
+let others: ProgramResult[] = [];
 // The filters are built from the summary the API returns, not from the rows.
 const summary = {
   total: 1,
@@ -63,6 +64,8 @@ beforeEach(() => {
   decide.mockClear();
   saveNotes.mockClear();
   row = makeRow();
+  others = [];
+  window.localStorage.removeItem('ashyq.compare');
   // These tests read the table; the cards view is the default and has its
   // own tests at the end.
   window.localStorage.setItem('ashyq.shortlistView', 'table');
@@ -307,5 +310,70 @@ describe('the cards view', () => {
     fireEvent.click(screen.getByTestId('view-table'));
     expect(screen.getByTestId('shortlist-table')).toBeInTheDocument();
     expect(window.localStorage.getItem('ashyq.shortlistView')).toBe('table');
+  });
+});
+
+describe('comparing programmes', () => {
+  beforeEach(() => {
+    window.localStorage.removeItem('ashyq.shortlistView');
+    const gap = (amount: number) => ({
+      computable: true,
+      gap: { amount, currency: 'USD', academic_year: '2026/27' },
+      total_cost: { amount: amount + 10000, currency: 'USD', academic_year: '2026/27' },
+      confirmed_aid: { amount: 10000, currency: 'USD', academic_year: '2026/27' },
+      reason: '', warnings: [],
+    });
+    row = makeRow({ funding_gap: gap(1848) } as unknown as Partial<ProgramResult>);
+    others = [
+      makeRow({ id: 'result-2', university: 'TU Delft', funding_gap: gap(7554) } as unknown as Partial<ProgramResult>),
+      makeRow({ id: 'result-3', university: 'Leiden University', funding_gap: { computable: false, gap: null, reason: 'No cost.' } } as unknown as Partial<ProgramResult>),
+      makeRow({ id: 'result-4', university: 'Utrecht University' }),
+    ];
+  });
+
+  it('picks up to three and says how many are picked', () => {
+    render(<ShortlistScreen />);
+    expect(screen.queryByTestId('compare-tray')).toBeNull();
+    fireEvent.click(screen.getByTestId('compare-result-1'));
+    expect(screen.getByTestId('compare-result-1')).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByTestId('compare-tray')).toHaveTextContent('1 picked');
+    expect(screen.getByTestId('compare-go')).toBeDisabled();
+    fireEvent.click(screen.getByTestId('compare-result-2'));
+    fireEvent.click(screen.getByTestId('compare-result-3'));
+    expect(screen.getByTestId('compare-tray')).toHaveTextContent('3 picked');
+    expect(screen.getByTestId('compare-go')).toHaveTextContent('Compare 3 row by row');
+    expect(screen.getByTestId('compare-result-4')).toBeDisabled();
+    expect(JSON.parse(window.localStorage.getItem('ashyq.compare') ?? '[]')).toEqual(['result-1', 'result-2', 'result-3']);
+  });
+
+  it('shows the picks row by row, an unknown remainder as not computed', () => {
+    render(<ShortlistScreen />);
+    fireEvent.click(screen.getByTestId('compare-result-1'));
+    fireEvent.click(screen.getByTestId('compare-result-3'));
+    fireEvent.click(screen.getByTestId('compare-go'));
+    const view = screen.getByTestId('compare-view');
+    expect(within(view).getAllByRole('columnheader')).toHaveLength(2);
+    const left = within(view).getByRole('rowheader', { name: 'Left to pay a year' }).closest('tr')!;
+    expect(left).toHaveTextContent('1,848 USD');
+    expect(left).toHaveTextContent('not computed');
+    expect(view.textContent).not.toMatch(/%|chance|probab/i);
+  });
+
+  it('goes back to the list when a removal leaves one, and does not reopen by itself', () => {
+    render(<ShortlistScreen />);
+    fireEvent.click(screen.getByTestId('compare-result-1'));
+    fireEvent.click(screen.getByTestId('compare-result-2'));
+    fireEvent.click(screen.getByTestId('compare-go'));
+    fireEvent.click(screen.getByRole('button', { name: 'Remove TU Delft from the comparison' }));
+    expect(screen.queryByTestId('compare-view')).toBeNull();
+    fireEvent.click(screen.getByTestId('compare-result-4'));
+    expect(screen.queryByTestId('compare-view')).toBeNull();
+    expect(screen.getByTestId('compare-tray')).toHaveTextContent('2 picked');
+  });
+
+  it('drops a remembered pick whose row is gone', () => {
+    window.localStorage.setItem('ashyq.compare', JSON.stringify(['result-1', 'from-an-old-run']));
+    render(<ShortlistScreen />);
+    expect(screen.getByTestId('compare-tray')).toHaveTextContent('1 picked');
   });
 });

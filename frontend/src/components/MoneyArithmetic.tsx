@@ -37,15 +37,24 @@ function hostOf(url: string | undefined): string {
   }
 }
 
+/**
+ * The award behind the funding label, what it covers, and what the price
+ * includes that it does not - read off the award's coverage, never inferred.
+ */
+export function coverageOf(result: ProgramResult) {
+  const award = result.scholarships.find((s) => s.classification === result.best_funding_classification)
+    ?? result.scholarships[0];
+  const covered = (award?.coverage ?? []).filter((c) => c.covered === 'yes').map((c) => c.category as string);
+  const partly = (award?.coverage ?? []).filter((c) => c.covered === 'partial').map((c) => c.category as string);
+  const priced = Object.keys(result.costs?.items ?? {});
+  const leftOut = award ? priced.filter((category) => !covered.includes(category) && !partly.includes(category)) : [];
+  return { award, covered, partly, leftOut };
+}
+
 export function MoneyArithmetic({ result, rate }: { result: ProgramResult; rate?: RateNote | null }) {
   const gap = result.funding_gap;
   if (!gap) return null;
-  const award = result.scholarships.find((s) => s.classification === result.best_funding_classification)
-    ?? result.scholarships[0];
-  const covered = (award?.coverage ?? []).filter((c) => c.covered === 'yes').map((c) => c.category);
-  const partly = (award?.coverage ?? []).filter((c) => c.covered === 'partial').map((c) => c.category);
-  const priced = Object.keys(result.costs?.items ?? {});
-  const leftOut = award ? priced.filter((category) => !covered.includes(category as never) && !partly.includes(category as never)) : [];
+  const { award, covered, partly, leftOut } = coverageOf(result);
   const computedIn = gap.gap?.currency ?? gap.total_cost?.currency;
   const published = result.costs?.total;
   const converted = Boolean(published && computedIn && published.currency !== computedIn);

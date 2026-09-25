@@ -12,6 +12,7 @@
 
 import { Fragment, useMemo, useState } from 'react';
 import { BudgetLadder, ceilingFrom } from '@/components/BudgetLadder';
+import { CompareView } from '@/components/CompareView';
 import { ResultCard } from '@/components/ResultCard';
 import { ResultDetail } from '@/components/ResultDetail';
 import { Triage } from '@/components/Triage';
@@ -52,6 +53,18 @@ const SORT_LABEL: Record<SortKey, string> = {
 
 type View = 'cards' | 'table';
 const VIEW_KEY = 'ashyq.shortlistView';
+const COMPARE_KEY = 'ashyq.compare';
+/** Three columns is what a phone can hold side by side and still be read. */
+const COMPARE_MAX = 3;
+
+function storedCompare(): string[] {
+  try {
+    const raw = JSON.parse(window.localStorage.getItem(COMPARE_KEY) ?? '[]');
+    return Array.isArray(raw) ? raw.filter((id): id is string => typeof id === 'string').slice(0, COMPARE_MAX) : [];
+  } catch {
+    return [];
+  }
+}
 
 function storedView(): View {
   try {
@@ -105,6 +118,16 @@ export function ShortlistScreen({ onEditSearch }: { onEditSearch?: () => void } 
   const [rejectFor, setRejectFor] = useState<string | null>(null);
   const [rejectReason, setRejectReason] = useState('');
   const [triageTotal, setTriageTotal] = useState<number | null>(null);
+  const [compareIds, setCompareIds] = useState<string[]>(storedCompare);
+  const [comparing, setComparing] = useState(false);
+  const saveCompare = (next: string[]) => {
+    setCompareIds(next);
+    try {
+      window.localStorage.setItem(COMPARE_KEY, JSON.stringify(next));
+    } catch {
+      /* the picks still hold on this screen */
+    }
+  };
 
   const countries = useMemo(
     () => Array.from(new Set(results.map((r) => r.country))).sort(),
@@ -157,6 +180,39 @@ export function ShortlistScreen({ onEditSearch }: { onEditSearch?: () => void } 
       el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, 0);
   };
+
+  // Picks from an older run whose rows are gone simply drop out.
+  const picked = compareIds
+    .map((id) => results.find((r) => r.id === id))
+    .filter((r): r is ProgramResult => Boolean(r));
+  const toggleCompare = (id: string) => {
+    const ids = picked.map((r) => r.id);
+    if (ids.includes(id)) saveCompare(ids.filter((other) => other !== id));
+    else if (ids.length < COMPARE_MAX) saveCompare([...ids, id]);
+  };
+
+  const closeCompare = () => {
+    setComparing(false);
+    setTimeout(() => document.querySelector<HTMLElement>('[data-testid="compare-go"]')?.focus(), 0);
+  };
+
+  if (comparing && picked.length >= 2) {
+    return (
+      <>
+        <h1 className="visually-hidden">The shortlist, compared row by row</h1>
+        <CompareView
+          programmes={picked}
+          onRemove={(id) => {
+            toggleCompare(id);
+            // One programme is not a comparison: back to the list, and a
+            // later pick does not reopen this view without being asked.
+            if (picked.length - 1 < 2) closeCompare();
+          }}
+          onClose={closeCompare}
+        />
+      </>
+    );
+  }
 
   if (triageTotal !== null) {
     return (
@@ -314,6 +370,23 @@ export function ShortlistScreen({ onEditSearch }: { onEditSearch?: () => void } 
       onToggle={() => setExpanded(expanded === r.id ? null : r.id)}
       decision={renderDecision(r)}
       detail={<ResultDetail result={r} rate={rate} />}
+      compare={(() => {
+        const on = picked.some((p) => p.id === r.id);
+        const full = !on && picked.length >= COMPARE_MAX;
+        return (
+          <button
+            type="button"
+            className="btn btn--sm rcard__compare"
+            aria-pressed={on}
+            disabled={full}
+            title={full ? `Compare at most ${COMPARE_MAX} at a time` : undefined}
+            onClick={() => toggleCompare(r.id)}
+            data-testid={`compare-${r.id}`}
+          >
+            {on ? 'In comparison' : 'Compare'}
+          </button>
+        );
+      })()}
     />
   );
 
@@ -719,6 +792,41 @@ export function ShortlistScreen({ onEditSearch }: { onEditSearch?: () => void } 
             Showing {rows.length} of {results.length}. Rejected rows are kept with their reason so the
             same programme is not proposed again without new information.
           </p>
+        )}
+
+        {picked.length > 0 && (
+          <div className="compare-tray" data-testid="compare-tray" role="region" aria-label="Comparison">
+            <span className="compare-tray__label">Compare</span>
+            <span className="compare-tray__count">{picked.length} picked</span>
+            <ul className="compare-tray__picks">
+              {picked.map((r) => (
+                <li key={r.id}>
+                  <span className="compare-tray__name">{r.university}</span>
+                  <span className="compare-tray__price">
+                    {r.funding_gap?.computable && r.funding_gap.gap
+                      ? money({ ...r.funding_gap.gap, academic_year: null })
+                      : 'not computed'}
+                  </span>
+                  <button
+                    type="button"
+                    className="compare-tray__remove"
+                    onClick={() => toggleCompare(r.id)}
+                    aria-label={`Remove ${r.university} from the comparison`}
+                  >×</button>
+                </li>
+              ))}
+            </ul>
+            <button
+              type="button"
+              className="btn btn--dark compare-tray__go"
+              disabled={picked.length < 2}
+              title={picked.length < 2 ? 'Pick one more programme' : undefined}
+              onClick={() => setComparing(true)}
+              data-testid="compare-go"
+            >
+              {picked.length < 2 ? 'Pick one more' : `Compare ${picked.length} row by row`}
+            </button>
+          </div>
         )}
       </div>
     </>

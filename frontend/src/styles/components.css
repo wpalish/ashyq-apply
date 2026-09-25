@@ -1177,3 +1177,83 @@
   .money__term--result { padding: 0.2rem 0.5rem; }
   .money__op { grid-column: 1; padding: 0; }
 }
+
+/* --- compare: row by row (round 7, screen 11) ------------------------------
+   Pick up to three on the cards; a tray holds the picks; the comparison asks
+   each programme the same questions on one line. */
+
+.rcard__compare[aria-pressed='true'] { background: var(--ink); color: var(--ink-inverted); border-color: var(--ink); }
+.rcard__decide .rcard__compare { margin-left: auto; }
+
+.compare-tray {
+  position: sticky;
+  bottom: var(--space-3);
+  z-index: 15;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+}
+.compare-tray__label { font-weight: 800; font-family: var(--font-display); }
+.compare-tray__count { display: none; font-size: var(--text-sm); color: var(--ink-muted); }
+.compare-tray__picks { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0; padding: 0; list-style: none; flex: 1 1 auto; min-width: 0; }
+.compare-tray__picks li {
+  display: inline-flex; align-items: baseline; gap: 0.4rem;
+  padding: 0.3rem 0.3rem 0.3rem 0.75rem;
+  background: var(--surface-sunken);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xs);
+  max-width: 100%;
+}
+.compare-tray__name { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 12rem; }
+.compare-tray__price { color: var(--ink-muted); white-space: nowrap; }
+.compare-tray__remove {
+  border: 0; background: transparent; cursor: pointer; color: var(--ink-muted);
+  width: 1.6rem; height: 1.6rem; border-radius: 50%; font-size: 1rem; line-height: 1;
+}
+.compare-tray__remove:hover { background: var(--surface); color: var(--ink); }
+.compare-tray__go { margin-left: auto; }
+
+.compare { display: flex; flex-direction: column; gap: var(--space-3); }
+.compare__top { display: flex; justify-content: space-between; align-items: center; gap: var(--space-3); }
+.compare__title { font-size: var(--text-xl); margin: 0; }
+.compare__lede { margin: 0; color: var(--ink-muted); font-size: var(--text-sm); max-width: 44rem; }
+.compare__wrap { background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius-lg); overflow: hidden; }
+.compare__table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.compare__table th, .compare__table td { padding: var(--space-3); text-align: left; vertical-align: top; border-bottom: 1px solid var(--rule); font-size: var(--text-sm); }
+.compare__table tbody tr:last-child th, .compare__table tbody tr:last-child td { border-bottom: 0; }
+.compare__table thead th { background: var(--surface-sunken); }
+.compare__table th[scope='row'] { width: 11rem; color: var(--ink-muted); font-size: var(--text-xs); font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; }
+.compare__table td > * + * { margin-top: 0.25rem; }
+.compare__corner { width: 11rem; background: var(--surface-sunken); }
+.compare__uni { display: block; font-family: var(--font-display); font-weight: 800; font-size: var(--text-md); }
+.compare__prog { display: block; font-size: var(--text-xs); color: var(--ink-muted); font-weight: 500; }
+.compare__remove { margin-top: var(--space-2); border: 0; background: none; padding: 0; color: var(--accent); font-size: var(--text-xs); font-weight: 700; cursor: pointer; text-decoration: underline; }
+.compare__money { display: block; font-family: var(--font-display); font-size: 1.15rem; }
+.compare__sub { display: block; font-size: var(--text-xs); color: var(--ink-muted); overflow-wrap: anywhere; }
+.compare__unknown { color: var(--ink-muted); font-style: italic; }
+
+@media (max-width: 900px) {
+  .compare-tray { bottom: calc(4.75rem + env(safe-area-inset-bottom)); }
+}
+@media (max-width: 640px) {
+  /* On a phone each row's name goes above its cells, and the columns share
+     the width: two or three programmes stay side by side. */
+  .compare__table, .compare__table thead, .compare__table tbody { display: block; }
+  .compare__table tr { display: grid; grid-template-columns: repeat(var(--compare-n), minmax(0, 1fr)); border-bottom: 1px solid var(--rule); }
+  .compare__table th, .compare__table td { border-bottom: 0; padding: var(--space-2) var(--space-3); }
+  .compare__table th[scope='row'] { grid-column: 1 / -1; width: auto; padding-bottom: 0; }
+  .compare__table .compare__corner { display: none; }
+  .compare__uni { font-size: var(--text-sm); }
+  .compare__money { font-size: var(--text-md); }
+  /* The tray is one line on a phone: the count and the button. The picks
+     are on their cards ("In comparison") and in the comparison itself. */
+  .compare-tray__picks { display: none; }
+  .compare-tray__count { display: inline; }
+  .compare-tray__go { margin-left: auto; }
+}
