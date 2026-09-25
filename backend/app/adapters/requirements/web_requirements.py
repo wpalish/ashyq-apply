@@ -110,6 +110,34 @@ _WAIVER_OFFERED = re.compile(r"\b(available|offered|granted|waive[ds]?|waiving)\
 class _Target:
     url: str
     specificity: SourceSpecificity
+    #: Reached by following an English-requirement link from an official page.
+    language_follow: bool = False
+
+
+#: Language-requirement pages followed per programme, beyond the two targets.
+_MAX_LANGUAGE_FOLLOWS = 2
+_LANGUAGE_LINK = re.compile(
+    r"english[\s-]+(language|proficiency|competency|requirement)|language[\s-]+"
+    r"(requirement|proficiency|competency|admission)|\bielts\b",
+    re.I,
+)
+
+
+def _language_links(html: str, base: str, domain: str | None) -> list[str]:
+    """Official links on a page whose text or URL names an English requirement."""
+    if not domain:
+        return []
+    out: list[str] = []
+    for link in build_document_ir(html, base).links:
+        url = link.url.split("#")[0]
+        if not url.startswith(("https://", "http://", "fixture://")):
+            continue
+        if not (url.startswith("fixture://") or is_official_domain(url, [domain])):
+            continue
+        named = _LANGUAGE_LINK.search(link.text) or _LANGUAGE_LINK.search(url.replace("/", " "))
+        if named and url not in out and url.rstrip("/") != base.rstrip("/"):
+            out.append(url)
+    return out
 
 
 class WebRequirementsAdapter:
@@ -132,7 +160,11 @@ class WebRequirementsAdapter:
             if candidate.admissions_url
             else None,
         ]
-        for target in [t for t in targets if t]:
+        queue = [t for t in targets if t]
+        visited = {t.url for t in queue}
+        followed = 0
+        while queue:
+            target = queue.pop(0)
             res = await self.fetcher.get(target.url)
             out.pages_checked += 1
             if not res.ok:
@@ -220,6 +252,27 @@ class WebRequirementsAdapter:
                         )
                     )
                     continue
+                if target.language_follow and not res.is_pdf:
+                    # The classifier's page type is a routing hint, not a permission
+                    # (both reviews, 2026-09-25): a page reached through an official
+                    # "English language requirements" link may state IELTS in a table
+                    # whatever type it reads as. Only the structural IELTS reader runs;
+                    # verbatim and domain checks still apply to what it reads.
+                    tabled = extract_table_requirements(
+                        build_document_ir(res.text, target.url), builder
+                    )
+                    if tabled:
+                        out.claims.extend(builder.claims)
+                        out.page_outcomes.append(
+                            PageOutcome(
+                                url=target.url,
+                                category="fetched-ok",
+                                page_type=page.page_type.value,
+                                readable_chars=len(text),
+                                detail=f"language page: {len(tabled)} claims read from its tables",
+                            )
+                        )
+                        continue
                 out.errors.append(
                     f"{target.url}: classified as {page.page_type.value}; no requirement can be "
                     "read from this kind of page."
@@ -279,6 +332,24 @@ class WebRequirementsAdapter:
                     ),
                 )
             )
+            # The English requirement often lives on its own page that the
+            # programme or admissions page links to (UBC's English Language
+            # Admission Standard, Groningen's faculty language page). When no
+            # IELTS minimum has been read yet, follow at most
+            # _MAX_LANGUAGE_FOLLOWS such official links, once.
+            if (
+                followed < _MAX_LANGUAGE_FOLLOWS
+                and not res.is_pdf
+                and not any(c.claim_type is ClaimType.IELTS_MIN_OVERALL for c in out.claims)
+            ):
+                for url in _language_links(res.text, target.url, candidate.domain):
+                    if url in visited or followed >= _MAX_LANGUAGE_FOLLOWS:
+                        continue
+                    visited.add(url)
+                    followed += 1
+                    queue.append(
+                        _Target(url, SourceSpecificity.UNIVERSITY_ADMISSIONS, language_follow=True)
+                    )
 
         if not out.claims and out.pages_checked == 0:
             out.errors.append(

@@ -1245,6 +1245,17 @@ Claude, 2026-09-25, run 74 (tables + Jev shadow): 6/62, precision 6/9.
   no anchor text. Next: pass anchors/titles into the shadow state, collect more runs, then judge by the
   gate in analysis/v2/07.
 
+Claude, 2026-09-25, V2-31 seed (the owner: "делай по своим рекомендациям"): claim-slot link following for
+English.
+- When no IELTS overall has been read from the programme or admissions page, up to 2 official links whose
+  text or URL names an English or language requirement are followed.
+- On such a page the classifier type is a hint, not a gate: the structural IELTS reader runs even on
+  "unknown" pages (the H6 finding). Verbatim and domain checks still apply.
+- Links that name nothing (the museum) are never read. Golden demo unchanged.
+- Known gap: urljoin does not resolve relative links on fixture:// pages (real https pages are fine).
+Jev link ranking: the confirm-stage queue is mostly sitemap URLs with no anchor text, so richer Jev state
+helps less than expected. Leave it in shadow and keep collecting ranks.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
