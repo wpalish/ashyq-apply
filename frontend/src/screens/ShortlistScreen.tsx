@@ -9,7 +9,9 @@
  */
 
 import { Fragment, useMemo, useState } from 'react';
+import { BudgetLadder, ceilingFrom } from '@/components/BudgetLadder';
 import { ResultDetail } from '@/components/ResultDetail';
+import { Triage } from '@/components/Triage';
 import { Chip, Empty, Field, Notice, Panel, StatusChip } from '@/components/primitives';
 import {
   FIT_DISCLAIMER, STATUS_LABEL, admissionsFitTone, bucketTone, date, eligibilityTone,
@@ -37,7 +39,7 @@ const SET_ASIDE_HINT: Record<string, string> = {
 const REJECTION_REASONS = ['cost', 'deadline passed', 'no funding', 'not a fit'];
 
 export function ShortlistScreen() {
-  const { results, summary, shortlist, decide, saveNotes } = useStore();
+  const { results, summary, shortlist, decide, saveNotes, savedProfile } = useStore();
   const [expanded, setExpanded] = useState<string | null>(null);
   const [sort, setSort] = useState<SortKey>('key');
   const [country, setCountry] = useState('');
@@ -48,6 +50,7 @@ export function ShortlistScreen() {
   const [noteText, setNoteText] = useState('');
   const [rejectFor, setRejectFor] = useState<string | null>(null);
   const [rejectReason, setRejectReason] = useState('');
+  const [triageTotal, setTriageTotal] = useState<number | null>(null);
 
   const countries = useMemo(
     () => Array.from(new Set(results.map((r) => r.country))).sort(),
@@ -84,6 +87,38 @@ export function ShortlistScreen() {
 
   if (results.length === 0) {
     return <Empty title="No results yet">Run the research first.</Empty>;
+  }
+
+  const ceiling = ceilingFrom(savedProfile);
+  const undecided = rows.filter((r) => r.user_decision === 'undecided');
+
+  /** Open a row's detail from the ladder, wherever the row sits. */
+  const openRow = (id: string) => {
+    setExpanded(id);
+    window.setTimeout(() => {
+      const el = document.querySelector(`[data-testid="row-${id}"]`);
+      // A set-aside row lives in a collapsed section; open it first.
+      const section = el?.closest('details');
+      if (section && !section.open) section.open = true;
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 0);
+  };
+
+  if (triageTotal !== null) {
+    return (
+      <>
+        <div className="screen__head">
+          <p className="screen__eyebrow">Step 04 · one at a time</p>
+          <h1 className="screen__title">The shortlist</h1>
+        </div>
+        <Triage
+          queue={undecided}
+          total={triageTotal}
+          decide={decide}
+          onClose={() => setTriageTotal(null)}
+        />
+      </>
+    );
   }
 
   const decideRow = (r: ProgramResult, d: UserDecision) => {
@@ -348,6 +383,19 @@ export function ShortlistScreen() {
           <strong>funding</strong> is what an official page says an award covers. None of them
           predicts a decision.
         </p>
+        {undecided.length > 0 && (
+          <div className="row" style={{ marginTop: 'var(--space-4)' }}>
+            <button
+              type="button"
+              className="btn btn--primary"
+              onClick={() => setTriageTotal(undecided.length)}
+              data-testid="triage-start"
+            >
+              Decide one at a time
+            </button>
+            <span className="small muted">{undecided.length} without an answer yet</span>
+          </div>
+        )}
       </div>
 
       <div className="stack stack--loose">
@@ -359,6 +407,8 @@ export function ShortlistScreen() {
             </div>
           </Notice>
         )}
+
+        {ceiling && <BudgetLadder results={rows} ceiling={ceiling} onOpen={openRow} />}
 
         <Panel sunken>
           <div className="filters">

@@ -205,3 +205,25 @@ describe('the v2 ranking on the shortlist', () => {
     expect(screen.getByTestId('shortlist-table')).toBeInTheDocument();
   });
 });
+
+describe('deciding one at a time', () => {
+  it('opens the triage on the undecided rows and returns to the list', () => {
+    render(<ShortlistScreen />);
+    fireEvent.click(screen.getByTestId('triage-start'));
+    expect(screen.getByTestId('triage-card-result-1')).toBeInTheDocument();
+    expect(screen.queryByTestId('shortlist-table')).toBeNull();
+    fireEvent.click(screen.getByTestId('triage-close'));
+    expect(screen.getByTestId('shortlist-table')).toBeInTheDocument();
+  });
+
+  it('is not offered when every row already has an answer', () => {
+    row = makeRow({ user_decision: 'approved' });
+    render(<ShortlistScreen />);
+    expect(screen.queryByTestId('triage-start')).toBeNull();
+  });
+
+  it('shows no budget ladder without a saved budget', () => {
+    render(<ShortlistScreen />);
+    expect(screen.queryByTestId('budget-ladder')).toBeNull();
+  });
+});
