@@ -265,6 +265,17 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+Write-ahead (claude-opus-5, 2026-09-25, redesign part 5; owner: "продолжай" a third time). What is left of
+the concept without an owner decision:
+1. Plan: concept L's "На этой неделе" - the documents whose start-by date falls in the next seven days (or has
+   passed) across the kept programmes - and a board row that opens its programme: the three judgements, the
+   money line and the next documents. The ticks and the start-by arithmetic move to one shared module so the
+   plan and the documents screen cannot disagree.
+2. Eyebrows: "Step 01…09" came from the old 15-item sidebar and means nothing in five tabs; each screen says
+   its tab and section instead.
+3. Account (concept 02): the sign-in / sign-up card in the brand, checked with auth on.
+4. Review at 390/1440 light and dark, video, docs (§24), PR.
+
 Write-ahead (claude-opus-5, 2026-09-25, redesign part 4; owner: "продолжай" again). Concept screens
 still in the old shape, none needing an owner decision:
 1. Plan board: the kept programmes' grant deadlines join the admission ones (concept L's "Эссе на
