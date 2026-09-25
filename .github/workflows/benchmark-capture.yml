@@ -200,7 +200,7 @@ jobs:
         run: |
           set -o pipefail
           .venv/bin/python - <<'PY'
-          import json, pathlib, os
+          import json, pathlib, os, re
           capture = json.loads(pathlib.Path(os.environ["CAPTURE_JSON"]).read_text())
           print(f"{'case':12} {'outcome':45} {'http':>6} {'claims':>7}")
           budget = 0
@@ -289,6 +289,16 @@ jobs:
                   counts[record["category"]] = counts.get(record["category"], 0) + 1
               summary = ", ".join(f"{k}={v}" for k, v in sorted(counts.items()))
               print(f"  {observation['case_id']:12} {summary}")
+
+          # Funding pages for every case: scholarship discovery scored 0/3 through
+          # run 55 while cases with claims printed no page detail at all.
+          print("\nfunding pages read, per case:")
+          for observation in capture["observations"]:
+              for record in (observation.get("page_outcomes") or []):
+                  url = record.get("url") or ""
+                  detail = record.get("detail") or ""
+                  if re.search(r"scholar|award|funding|financ|bursar", url + " " + detail, re.I):
+                      print(f"  {observation['case_id']:10} {record['category']:20} {url[:100]}  {detail[:140]}")
 
           # A case that filed nothing: every page it read, and what became of it.
           for observation in capture["observations"]:
