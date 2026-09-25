@@ -44,16 +44,49 @@ export async function waitForResults(page: Page, timeout = 120_000): Promise<voi
   await expect(page.getByTestId('to-shortlist')).toBeVisible({ timeout });
 }
 
+/** Which tab holds each screen: the «Горизонт» navigation, as App.tsx has it. */
+const TAB_OF: Record<string, string> = {
+  start: 'match', progress: 'match', shortlist: 'match', funding: 'match', sources: 'match',
+  approved: 'plan',
+  documents: 'documents',
+  feed: 'people', discover: 'people', messages: 'people',
+  profile: 'me', preferences: 'me', me: 'me', export: 'me', moderation: 'me', legal: 'me',
+};
+/** Tabs with one screen have no sub-navigation: the tab is the screen. */
+const SINGLE = new Set(['approved', 'documents']);
+
+/**
+ * Open a screen the way a person would: its tab, then its sub-navigation item.
+ *
+ * Every screen used to sit in one sidebar, one click away from anywhere. Under
+ * five tabs a screen in another tab is two clicks away, and a test that clicks
+ * `nav-*` directly only works from inside the same tab.
+ */
+export async function goTo(page: Page, screen: string): Promise<void> {
+  const item = page.getByTestId(`nav-${screen}`);
+  if (!SINGLE.has(screen) && (await item.isVisible().catch(() => false))) {
+    await item.click();
+    return;
+  }
+  await page.getByTestId(`navtab-${TAB_OF[screen]}`).click();
+  if (SINGLE.has(screen)) return;
+  await page.getByTestId(`nav-${screen}`).click();
+}
+
+/** The three-field search on the start screen, with the demo applicant's values. */
 export async function runDemoResearch(page: Page): Promise<void> {
   await page.goto('/');
-  await page.getByTestId('to-preferences').click();
-  await expect(page.getByTestId('start-research')).toBeEnabled();
-  await page.getByTestId('start-research').click();
+  await expect(page.getByTestId('start-search')).toBeEnabled();
+  await page.getByTestId('start-search').click();
   await waitForResults(page);
 }
 
 export async function openShortlist(page: Page): Promise<void> {
-  await page.getByTestId('nav-shortlist').click();
+  await goTo(page, 'shortlist');
+  // Cards are the default view; the journeys assert on the table's rows, so
+  // they choose it the way a person would, with the view switch.
+  const table = page.getByTestId('view-table');
+  if ((await table.getAttribute('aria-pressed')) !== 'true') await table.click();
   await expect(page.getByTestId('shortlist-table')).toBeVisible();
 
   // Out-of-budget, needs-clarification and excluded rows sit in sections that
@@ -81,5 +114,9 @@ export async function expandRow(page: Page, name: string) {
   const row = rowFor(page, name);
   await expect(row).toBeVisible();
   await row.getByRole('button', { name, exact: true }).click();
+  // Bring the opened programme to the top, as a person scrolls to read it. On
+  // a phone the tab bar is fixed along the bottom edge, and Playwright counts
+  // a control under it as "in view" - then waits forever to click it.
+  await row.evaluate((element) => element.scrollIntoView({ block: 'start' }));
   return row;
 }

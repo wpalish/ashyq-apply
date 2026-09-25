@@ -51,7 +51,9 @@
 .dtable tbody tr { transition: background var(--duration-fast); }
 .dtable tbody tr:hover { background: var(--surface-sunken); }
 .dtable tbody tr.is-expanded { background: var(--accent-soft); }
-.dtable tbody tr.is-rejected { opacity: 0.5; }
+/* A rejected row recedes by colour, not opacity: half-transparent text failed contrast. */
+.dtable tbody tr.is-rejected { background: var(--surface-sunken); }
+.dtable tbody tr.is-rejected .uni-cell__name { color: var(--ink-muted); text-decoration: line-through; text-decoration-color: var(--rule-strong); }
 .dtable tbody tr:last-child td { border-bottom: 0; }
 
 .uni-cell { display: flex; flex-direction: column; gap: 2px; min-width: 10rem; max-width: 18rem; }
@@ -109,7 +111,7 @@
 .uni-cell__meta { font-size: var(--text-xs); color: var(--ink-faint); }
 .uni-cell__prog { font-size: var(--text-xs); color: var(--ink-muted); }
 
-.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.num { font-family: var(--font-ui); font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
 
 .decision-group { display: inline-flex; gap: 2px; }
 .decision-btn {
@@ -119,16 +121,19 @@
   font-size: var(--text-xs);
   font-weight: 600;
   cursor: pointer;
-  transition: all var(--duration-fast);
+  /* Only the edge fades. The pressed state is navy on white; fading into it
+     passes through low-contrast greys (see .nav__item). */
+  transition: border-color var(--duration-fast);
 }
-.decision-btn:first-child { border-radius: var(--radius) 0 0 var(--radius); }
-.decision-btn:last-child { border-radius: 0 var(--radius) var(--radius) 0; }
+.decision-btn:first-child { border-radius: var(--radius-pill) 0 0 var(--radius-pill); }
+.decision-btn:last-child { border-radius: 0 var(--radius-pill) var(--radius-pill) 0; }
 .decision-btn:hover { background: var(--surface-sunken); }
-.decision-btn[aria-pressed='true'] { color: oklch(99% 0 0); }
+/* ink-inverted is white on the light theme and navy on the night one, so the
+   pressed state keeps its contrast in both. */
+.decision-btn[aria-pressed='true'] { color: var(--ink-inverted); }
 .decision-btn--approve[aria-pressed='true'] { background: var(--ok); border-color: var(--ok); }
 .decision-btn--maybe[aria-pressed='true']   { background: var(--warn); border-color: var(--warn); }
 .decision-btn--reject[aria-pressed='true']  { background: var(--risk); border-color: var(--risk); }
-:root[data-theme='dark'] .decision-btn[aria-pressed='true'] { color: var(--ink-inverted); }
 
 /* --- expandable detail drawer ------------------------------------------ */
 
@@ -152,7 +157,7 @@
   transition: color var(--duration-fast), border-color var(--duration-fast);
 }
 .tab:hover { color: var(--ink); }
-.tab[aria-selected='true'] { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+.tab[aria-selected='true'] { color: var(--ink); border-bottom-color: var(--route); font-weight: 700; }
 
 .kv { display: grid; grid-template-columns: minmax(9rem, auto) 1fr; gap: var(--space-2) var(--space-4); font-size: var(--text-sm); }
 .kv dt { color: var(--ink-muted); font-weight: 500; }
@@ -202,7 +207,9 @@
   background: var(--surface);
 }
 .stage--running { border-color: var(--accent-border); background: var(--accent-soft); }
-.stage--done { opacity: 0.82; }
+/* Done is said by the green dot and the chip. Fading the row with opacity took
+   its muted text under 4.5:1, so the row stays at full contrast. */
+.stage--done { background: var(--surface); }
 .stage--failed { border-color: var(--risk-border); background: var(--risk-soft); }
 .stage__dot {
   width: 0.7rem; height: 0.7rem; border-radius: 50%;
@@ -224,7 +231,7 @@
 .meter { height: 6px; border-radius: 99px; background: var(--surface-sunken); overflow: hidden; border: 1px solid var(--rule); }
 .meter__fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--accent), oklch(from var(--accent) calc(l + 0.12) c calc(h + 22)));
+  background: linear-gradient(90deg, var(--route), var(--sun));
   transition: width var(--duration-normal) var(--ease-out-expo);
 }
 
@@ -243,11 +250,14 @@
 .stat__value {
   font-family: var(--font-display);
   font-size: 1.9rem;
-  font-weight: 700;
+  font-weight: 800;
   line-height: 1;
-  font-variation-settings: 'opsz' 100;
+  letter-spacing: -0.02em;
   font-variant-numeric: tabular-nums;
 }
+.statband--night { background: var(--night); border-color: var(--night); color: var(--night-ink); }
+.statband--night .stat { border-color: var(--night-line); }
+.statband--night .stat__label { color: var(--night-muted); }
 .stat__label {
   font-size: var(--text-xs);
   text-transform: uppercase;
@@ -261,7 +271,8 @@
 .field { display: flex; flex-direction: column; gap: var(--space-1); }
 .field__label { font-size: var(--text-sm); font-weight: 600; }
 .field__hint { font-size: var(--text-xs); color: var(--ink-faint); }
-.field input, .field select, .field textarea {
+.field input, .field select, .field textarea,
+.topbar select, .subnav__case select {
   font: inherit;
   font-size: var(--text-sm);
   padding: 0.42rem 0.6rem;
@@ -272,18 +283,35 @@
   width: 100%;
   transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
 }
-.field input:hover, .field select:hover, .field textarea:hover { border-color: var(--ink-faint); }
-.field input:focus, .field select:focus, .field textarea:focus {
+.field input:hover, .field select:hover, .field textarea:hover,
+.topbar select:hover, .subnav__case select:hover { border-color: var(--ink-faint); }
+.field input:focus, .field select:focus, .field textarea:focus,
+.topbar select:focus, .subnav__case select:focus {
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.topbar select { width: auto; max-width: 14rem; padding-top: 0.3rem; padding-bottom: 0.3rem; }
+/* The case switcher moved from the top bar to the Me tab in part 2 and lost
+   the top bar's select styling with it. Round, like the pills beside it. */
+.subnav__case select { width: auto; max-width: 16rem; padding: 0.3rem 0.8rem; border-radius: 999px; }
+.subnav__case .btn { flex: none; white-space: nowrap; }
+@media (max-width: 640px) {
+  /* A styled select sizes to its longest option; on a 320 px phone that
+     pushed "New case" off the screen. Here it takes what is left and cuts. */
+  .subnav__case { width: 100%; }
+  .subnav__case label { flex: 1 1 auto; min-width: 0; }
+  .subnav__case select { width: 100%; max-width: none; min-width: 0; text-overflow: ellipsis; }
 }
 .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: var(--space-4); }
 .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); gap: var(--space-3); }
 
 .gap-item {
   display: grid;
-  grid-template-columns: auto 1fr;
+  /* minmax(0, 1fr): a long field path must wrap, not push the row past a
+     phone's edge (it widened the page to 396px at 390). */
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
   gap: var(--space-3);
   padding: var(--space-3);
   border-left: 3px solid var(--rule-strong);
@@ -294,7 +322,13 @@
 .gap-item--high { border-left-color: var(--warn); }
 .gap-item--medium { border-left-color: var(--info); }
 .gap-item--low { border-left-color: var(--unknown); }
-.gap-item__path { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--ink-muted); }
+.gap-item__path { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--ink-muted); overflow-wrap: anywhere; }
+/* A pill squeezed onto two lines turns into an oval; keep the label on one. */
+.gap-item > .chip { white-space: nowrap; }
+@media (max-width: 520px) {
+  .gap-item { grid-template-columns: minmax(0, 1fr); gap: var(--space-2); }
+  .gap-item > .chip { justify-self: start; }
+}
 
 /* --- documents ------------------------------------------------------------ */
 
@@ -316,20 +350,27 @@
 .timeline { display: flex; flex-direction: column; gap: 0; }
 .timeline__item {
   display: grid;
-  grid-template-columns: 6.5rem 1fr;
+  grid-template-columns: 6.5rem minmax(0, 1fr) auto;
+  grid-template-areas: 'date what flag';
+  align-items: start;
   gap: var(--space-4);
   padding: var(--space-3) 0;
   border-bottom: 1px solid var(--rule);
 }
 .timeline__date { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--ink-muted); padding-top: 2px; }
 .timeline__item--past .timeline__date { color: var(--risk); }
+.timeline__date { grid-area: date; }
+.timeline__what { grid-area: what; min-width: 0; }
+/* The flag sits on the date's line; it used to wrap onto a row of its own. */
+.timeline__flag { grid-area: flag; }
 
 /* --- funding comparison bars --------------------------------------------- */
 
 .fund-row { display: grid; grid-template-columns: minmax(11rem, 1fr) minmax(0, 2.2fr) auto; gap: var(--space-4); align-items: center; padding: var(--space-3) 0; border-bottom: 1px solid var(--rule); }
 .fund-bar { display: flex; height: 1.4rem; border-radius: var(--radius-sm); overflow: hidden; background: var(--surface-sunken); border: 1px solid var(--rule); }
 .fund-bar__covered { background: var(--ok); }
-.fund-bar__gap { background: var(--risk); }
+/* What the family pays is not a failure, so it is not red: red means "not met". */
+.fund-bar__gap { background: var(--route); }
 .fund-bar__unknown {
   background: repeating-linear-gradient(45deg, var(--unknown-soft), var(--unknown-soft) 5px, var(--surface-sunken) 5px, var(--surface-sunken) 10px);
   flex: 1;
@@ -404,10 +445,48 @@
   .dtable tbody tr:not(.detail-row) td:last-child { border-bottom: 0; }
   .dtable .detail-row { display: block; margin: calc(-1 * var(--space-4)) 0 var(--space-4); }
   .dtable .detail-row td { display: block; width: 100%; }
+  /* The shortlist row as a card: name on top, the three judgements side by
+     side, then money, deadline and match, then the decision. It replaces ten
+     stacked label rows per programme - about 500px each on a phone - with
+     five short ones, and keeps every column and its label. */
+  .shortlist-table tbody tr:not(.detail-row) {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .shortlist-table tbody tr:not(.detail-row) td {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+    padding: var(--space-2) var(--space-3);
+    border-bottom: 0;
+  }
+  .shortlist-table tbody tr:not(.detail-row) { column-gap: var(--space-1); }
+  .shortlist-table tbody tr:not(.detail-row) td { min-width: 0; }
+  /* Labels wrap inside their third of the card instead of running into the
+     next one ("REMAINING / YEARDEADLINE"). */
+  .shortlist-table tbody tr:not(.detail-row) td::before {
+    letter-spacing: 0.03em;
+    font-size: 0.6875rem;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .shortlist-table tbody tr:not(.detail-row) td:first-child,
+  .shortlist-table tbody tr:not(.detail-row) td[data-label='Decision'] {
+    grid-column: 1 / -1;
+  }
+  .shortlist-table tbody tr:not(.detail-row) td:first-child { padding: var(--space-3); margin-bottom: var(--space-1); }
+  .shortlist-table tbody tr:not(.detail-row) td[data-label='Decision'] {
+    border-top: 1px solid var(--rule);
+    margin-top: var(--space-1);
+    padding: var(--space-3);
+  }
+  .shortlist-table .uni-cell { max-width: none; }
   .kv { grid-template-columns: 1fr; gap: var(--space-1) 0; }
   .kv dt { margin-top: var(--space-2); }
   .fund-row { grid-template-columns: 1fr; }
-  .timeline__item { grid-template-columns: 1fr; gap: var(--space-1); }
+  .timeline__item { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: 'date flag' 'what what'; gap: var(--space-1); }
   .stat { border-right: 0; border-bottom: 1px solid var(--rule); }
 }
 
@@ -607,7 +686,7 @@
   padding: 0 0.35rem;
   border-radius: 99px;
   background: var(--accent);
-  color: oklch(99% 0 0);
+  color: var(--ink-inverted);
   font-size: var(--text-xs);
   font-weight: 700;
   text-align: center;
@@ -634,3 +713,1117 @@
 /* A photo fills the same tile the initials occupy, so nothing shifts when one
    person has a picture and the next does not. */
 .avatar--photo { object-fit: cover; padding: 0; }
+
+/* --- budget ladder (round 7, concept O) ------------------------------------
+   One row per programme: name, a bar for what is left to pay, the amount.
+   The dashed line is the family's ceiling; the track spans twice it, so the
+   line always sits in the middle and a row past the track is clipped, not
+   squeezed. Bars are decoration (aria-hidden): the amount is always text. */
+
+.ladder__head { margin-bottom: var(--space-3); }
+.ladder__body { position: relative; display: flex; flex-direction: column; gap: var(--space-2); }
+.ladder__label {
+  font-family: var(--font-ui);
+  font-size: var(--text-xs);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-top: var(--space-3);
+}
+.ladder__label--within { color: var(--ok); margin-top: 0; }
+.ladder__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+.ladder__row {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(9rem, 16rem) minmax(6rem, 1fr) minmax(6.5rem, auto);
+  gap: var(--space-4);
+  align-items: center;
+  min-height: 2.75rem;
+  padding: var(--space-1) var(--space-3);
+  border: 0;
+  border-radius: var(--radius);
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  color: var(--ink);
+}
+.ladder__row:hover { background: var(--surface-sunken); }
+/* Only the cheapest row is marked: every button is the first child of its own <li>. */
+.ladder__list > li:first-child > .ladder__row--within { background: color-mix(in srgb, var(--sun) 16%, var(--surface)); }
+.ladder__name { display: flex; flex-direction: column; min-width: 0; }
+.ladder__uni { font-weight: 700; font-size: var(--text-sm); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ladder__prog { font-size: var(--text-xs); color: var(--ink-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ladder__track { position: relative; height: 0.75rem; }
+.ladder__track::after {
+  content: '';
+  position: absolute;
+  left: var(--ladder-line, 50%);
+  top: -0.6rem;
+  bottom: -0.6rem;
+  border-left: 2px dashed var(--route);
+}
+.ladder__bar { position: absolute; left: 0; top: 0; bottom: 0; border-radius: var(--radius-pill); background: var(--ink); }
+.ladder__row--above .ladder__bar { background: var(--rule-strong); }
+.ladder__clip {
+  position: absolute; right: 0.4rem; top: -0.15rem; width: 0.3rem; height: 1.05rem;
+  background: var(--surface); transform: skewX(-20deg);
+}
+.ladder__amount {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-sm);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.ladder__row--above .ladder__amount { color: var(--ink-muted); }
+.ladder__row--unknown { grid-template-columns: minmax(9rem, 16rem) 1fr; }
+.ladder__reason {
+  font-size: var(--text-xs);
+  color: var(--ink-muted);
+  padding: 0.3rem 0.6rem;
+  border: 1px dashed var(--unknown-border);
+  /* A reason runs to two or three lines; a pill radius turned it into an oval. */
+  border-radius: var(--radius-sm);
+  justify-self: start;
+}
+
+/* --- one-at-a-time triage (round 7, concept P) -----------------------------
+   A night "moment": the list goes away and one programme is on the table. */
+
+.triage {
+  background: var(--night);
+  color: var(--night-ink);
+  /* Keeps the card's edge on the dark appearance, where the page is night too. */
+  border: 1px solid var(--night-line);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 44rem;
+}
+.triage__top { display: flex; justify-content: space-between; align-items: center; gap: var(--space-3); }
+.triage__count { font-size: var(--text-sm); font-weight: 700; color: var(--night-muted); }
+.triage__muted { color: var(--night-muted); font-size: var(--text-sm); }
+.triage__title { color: var(--night-ink); }
+.triage .btn.triage__close { background: var(--night-surface); color: var(--night-ink); border-color: var(--night-line); }
+.triage__card {
+  background: #FFFFFF;
+  color: #0F1E36;
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.triage__uni { font-size: var(--text-lg); color: #0F1E36; }
+.triage__prog { margin: var(--space-1) 0 0; font-size: var(--text-sm); color: #5A6578; }
+.triage__judgements, .triage__facts {
+  display: grid;
+  /* Three judgements side by side at every width: stacked, they read as a
+     form to fill in rather than three answers to compare. */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-3);
+  margin: 0;
+}
+.triage__judgements > div, .triage__facts > div { display: flex; flex-direction: column; gap: 0.3rem; }
+.triage__judgements dt, .triage__facts dt {
+  font-size: 0.6875rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: #5A6578;
+}
+.triage__judgements dd, .triage__facts dd { margin: 0; font-weight: 700; }
+.triage__facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.triage__judgements dt { overflow-wrap: anywhere; }
+.triage__sub { display: block; margin-top: 0.15rem; font-size: var(--text-xs); font-weight: 600; color: #5A6578; }
+/* The ranking's own caveats about the aid it subtracted (competitive, needs a
+   nomination, cannot be combined), in the card's warning tone. */
+.triage__foot { margin: 0; font-size: var(--text-xs); text-align: center; }
+@media (max-width: 520px) {
+  /* One caveat on a phone - the one that says whether the aid can be won -
+     so the three answers stay above the tab bar. The card's detail has all. */
+  .triage__caveats li + li { display: none; }
+}
+.triage__caveats {
+  margin: 0; padding: var(--space-2) var(--space-3) var(--space-2) 1.6rem;
+  background: #FFF3DB; color: #6B4600; border-radius: var(--radius-sm);
+  font-size: var(--text-xs); display: flex; flex-direction: column; gap: 0.25rem;
+}
+/* The card is always light, even in the dark appearance, so its chips use the light status palette. */
+.triage__card .chip { background: #FFFFFF; color: #5A6578; border-color: #9AA4B2; }
+.triage__card .chip--ok   { background: #E4F5EC; color: #177A4C; border-color: #A9DCC0; }
+.triage__card .chip--info { background: #E7F0FA; color: #1D4F91; border-color: #B5CCEA; }
+.triage__card .chip--warn { background: #FFF3DB; color: #8A5A00; border-color: #F0D08E; }
+.triage__card .chip--risk { background: #FDECEA; color: #B42318; border-color: #F2B8B0; }
+.triage__answers { display: flex; justify-content: center; gap: var(--space-5); }
+.triage__answer {
+  display: flex; flex-direction: column; align-items: center; gap: var(--space-2);
+  background: none; border: 0; color: var(--night-ink); font-weight: 700; font-size: var(--text-sm);
+  cursor: pointer; min-width: 5rem;
+}
+.triage__icon {
+  width: 3.5rem; height: 3.5rem; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--night-surface); border: 1px solid var(--night-line);
+  font-size: 1.35rem; font-weight: 800;
+}
+.triage__answer--keep .triage__icon { background: var(--sun); color: var(--sun-ink); border-color: var(--sun); }
+.triage__answer:disabled { opacity: 0.6; cursor: progress; }
+.triage__answer:focus-visible .triage__icon { outline: 2px solid var(--sun); outline-offset: 3px; }
+.triage__reason { display: flex; flex-direction: column; gap: var(--space-3); }
+.triage .btn.triage__chip { background: var(--night-surface); color: var(--night-ink); border-color: var(--night-line); }
+.triage .btn.triage__chip.is-on { background: var(--sun); color: var(--sun-ink); border-color: var(--sun); }
+
+@media (max-width: 700px) {
+  .ladder__row { grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-1) var(--space-3); padding: var(--space-2); }
+  .ladder__name { grid-column: 1 / -1; }
+  .ladder__row--unknown { grid-template-columns: 1fr; }
+  .triage { padding: var(--space-4); }
+  .triage__card { padding: var(--space-4); }
+  .triage__answers { gap: var(--space-3); }
+}
+
+/* --- start: the three-field search (round 7, screen 01) ------------------
+   One question, three fields, one sun button; the full profile is one tap
+   away and optional. The horizon under it is the brand's arc, not a globe:
+   the globe comes later. */
+
+.start { position: relative; max-width: 44rem; padding-bottom: var(--space-7); }
+.start__intro { margin: var(--space-4) 0 var(--space-5); }
+.start__title {
+  font-size: clamp(2rem, 1.2rem + 3.2vw, 3.25rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  max-width: 16ch;
+}
+.start__lede { margin-top: var(--space-4); max-width: 38rem; color: var(--ink-muted); font-size: var(--text-md); }
+.start__card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.start__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--rule);
+  min-width: 0;
+}
+.start__field + .start__field:not(.start__field--wide) { border-left: 1px solid var(--rule); }
+.start__field--wide { grid-column: 1 / -1; }
+.start__label { font-size: var(--text-xs); font-weight: 600; color: var(--ink-muted); }
+.start__field input,
+.start__field select {
+  border: 0;
+  padding: 0.1rem 0;
+  background: transparent;
+  font-size: var(--text-md);
+  font-weight: 600;
+  color: var(--ink);
+  box-shadow: none;
+  min-width: 0;
+}
+.start__field input:focus-visible,
+.start__field select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.start__budget { display: flex; gap: var(--space-2); align-items: center; }
+.start__budget input { flex: 1 1 auto; width: 100%; }
+.start__budget select { flex: none; width: auto; font-size: var(--text-sm); }
+.start__go {
+  grid-column: 1 / -1;
+  margin: var(--space-4);
+  min-height: 3.25rem;
+  font-size: var(--text-md);
+  gap: var(--space-2);
+}
+.start__blocked,
+.start__small { grid-column: 1 / -1; margin: 0 var(--space-4) var(--space-4); font-size: var(--text-xs); color: var(--ink-muted); }
+.start__blocked { color: var(--risk); font-weight: 600; margin-top: calc(-1 * var(--space-2)); }
+.start__more { display: grid; gap: var(--space-2); margin-top: var(--space-5); }
+.start__link {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  text-align: left;
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  font-weight: 700;
+  color: var(--ink);
+  cursor: pointer;
+}
+.start__link:hover { border-color: var(--rule-strong); }
+.start__link--result { background: var(--night); color: var(--night-ink); border-color: var(--night); }
+.start__link--result .start__hint { color: var(--night-muted); }
+.start__hint { font-size: var(--text-xs); font-weight: 500; color: var(--ink-muted); }
+
+@media (max-width: 520px) {
+  .start__card { grid-template-columns: minmax(0, 1fr); }
+  .start__field + .start__field:not(.start__field--wide) { border-left: 0; }
+}
+
+/* --- results ready: the night reveal (round 7, screen 02) ----------------
+   What the run found, in four counts from the results, and one button. The
+   stages, counters and failures stay underneath for anyone who wants them. */
+
+.reveal {
+  background: var(--night);
+  color: var(--night-ink);
+  border: 1px solid var(--night-line);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6) var(--space-5);
+  margin-bottom: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 44rem;
+  position: relative;
+  overflow: hidden;
+}
+.reveal::after {
+  /* The brand's horizon: a dotted arc and the sun on it. Decoration only. */
+  content: '';
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  bottom: -9rem;
+  height: 12rem;
+  border-radius: 50%;
+  border-top: 2px dotted color-mix(in srgb, var(--sun) 70%, transparent);
+  pointer-events: none;
+}
+.reveal__kicker {
+  margin: 0;
+  font-size: var(--text-xs);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sun);
+}
+.reveal__title {
+  color: var(--night-ink);
+  font-size: clamp(1.9rem, 1.3rem + 2.4vw, 2.75rem);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  max-width: 14ch;
+}
+.reveal__tiles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+  margin: 0;
+}
+.reveal__tile {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+  gap: var(--space-1);
+  padding: var(--space-4);
+  background: var(--night-surface);
+  border: 1px solid var(--night-line);
+  border-radius: var(--radius);
+}
+.reveal__tile dd {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--night-ink);
+}
+.reveal__tile dt { font-size: var(--text-xs); color: var(--night-muted); line-height: 1.35; }
+.reveal__note {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--night-muted);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--night-line);
+  border-radius: var(--radius);
+}
+.reveal__cta { align-self: flex-start; min-height: 3rem; padding: 0 1.75rem; font-size: var(--text-md); position: relative; z-index: 1; }
+.reveal__how { font-size: var(--text-lg); margin: 0 0 var(--space-3); }
+
+/* --- shortlist: cards view (round 7, screen 03) ---------------------------
+   The price a year is the headline; requirements, profile and money stay
+   three separate lines, each with its one reason; the source and the date
+   close the card. The table is one tap away. */
+
+.search-pill {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  max-width: 34rem;
+  margin-bottom: var(--space-4);
+  padding: 0.6rem 1rem;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-sm);
+  color: var(--ink);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+.search-pill:hover:not(:disabled) { border-color: var(--rule-strong); }
+.search-pill__text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+
+.shortlist-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); margin-top: var(--space-4); }
+.segmented {
+  display: inline-flex;
+  margin-left: auto;
+  padding: 3px;
+  gap: 2px;
+  background: var(--surface-sunken);
+  border-radius: var(--radius-pill);
+}
+.segmented button {
+  border: 0;
+  background: transparent;
+  padding: 0.35rem 0.9rem;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--ink-muted);
+  cursor: pointer;
+}
+.segmented button[aria-pressed='true'] { background: var(--surface); color: var(--ink); box-shadow: var(--shadow-sm); }
+
+.rcards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 26rem), 1fr)); gap: var(--space-3); }
+.rcard {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-4) var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+}
+.rcard.is-open { grid-column: 1 / -1; border-color: var(--ink); }
+.rcard.is-rejected { background: var(--surface-sunken); }
+.rcard.is-rejected .rcard__uni button { text-decoration: line-through; text-decoration-color: var(--ink-faint); }
+.rcard__head { display: flex; justify-content: space-between; gap: var(--space-3); align-items: flex-start; }
+.rcard__names { min-width: 0; }
+.rcard__uni { font-size: var(--text-md); line-height: 1.25; margin: 0; }
+.rcard__uni button {
+  all: unset;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-weight: 800;
+  color: var(--ink);
+}
+.rcard__uni button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.rcard__uni button:hover { text-decoration: underline; text-underline-offset: 3px; }
+.rcard__prog { margin: 2px 0 0; font-size: var(--text-xs); color: var(--ink-muted); }
+.rcard__price { display: flex; flex-direction: column; align-items: flex-end; text-align: right; flex: none; max-width: 45%; }
+.rcard__amount { font-family: var(--font-display); font-weight: 800; font-size: 1.25rem; line-height: 1.1; white-space: nowrap; }
+.rcard__amount--unknown { font-family: var(--font-ui); font-size: var(--text-sm); font-weight: 700; color: var(--ink-muted); white-space: normal; }
+.rcard__per { font-size: 0.72rem; color: var(--ink-muted); line-height: 1.3; }
+.rcard__lines { margin: 0; display: flex; flex-direction: column; border-top: 1px solid var(--rule); }
+.rcard__line {
+  display: grid;
+  grid-template-columns: 6.5rem minmax(0, 1fr);
+  gap: var(--space-2);
+  align-items: baseline;
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--rule);
+}
+.rcard__line dt { font-size: var(--text-xs); font-weight: 700; color: var(--ink-muted); }
+.rcard__line dd { margin: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.2rem 0.5rem; min-width: 0; }
+.rcard__note { font-size: var(--text-xs); color: var(--ink-muted); overflow-wrap: anywhere; }
+.rcard__foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--space-1) var(--space-3); font-size: var(--text-xs); color: var(--ink-muted); }
+.rcard__source { display: inline-flex; align-items: center; gap: 0.4rem; }
+.rcard__dot { width: 0.45rem; height: 0.45rem; border-radius: 50%; background: var(--accent); flex: none; }
+.rcard__passed { color: var(--risk); }
+.rcard__decide { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+.rcard__decide > div { flex: 0 1 auto; }
+.rcard__detail { border-top: 1px solid var(--rule); padding-top: var(--space-3); min-width: 0; }
+
+@media (max-width: 520px) {
+  .rcard__line { grid-template-columns: 5.75rem minmax(0, 1fr); }
+  .segmented { margin-left: 0; }
+}
+
+/* --- programme: the money as arithmetic (round 7, screen 10) --------------
+   price − grants = left to pay, the backend's own figures; then what the
+   grant covers and leaves out, and where that was read. */
+
+.money {
+  background: var(--surface-sunken);
+  border-radius: var(--radius);
+  padding: var(--space-4);
+  margin-bottom: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.money__title { font-size: var(--text-sm); margin: 0; color: var(--ink-muted); text-transform: uppercase; letter-spacing: 0.06em; font-family: var(--font-ui); font-weight: 800; }
+.money__sum { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--space-2) var(--space-3); }
+.money__term { display: flex; flex-direction: column; min-width: 0; }
+.money__value { font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; line-height: 1.15; white-space: nowrap; }
+.money__term--result .money__value { font-size: 1.5rem; color: var(--ink); }
+.money__term--result {
+  padding: 0.15rem 0.6rem;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--route) 22%, var(--surface));
+}
+.money__label { font-size: var(--text-xs); color: var(--ink-muted); }
+.money__op { font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; color: var(--ink-muted); padding-bottom: 1.1rem; }
+.money__note, .money__unknown { margin: 0; font-size: var(--text-sm); color: var(--ink-muted); }
+.money__note strong { color: var(--ink); }
+.money__caveats {
+  margin: 0; padding: var(--space-2) var(--space-3) var(--space-2) 1.6rem;
+  background: var(--warn-soft); color: var(--warn); border-radius: var(--radius-sm);
+  font-size: var(--text-xs); display: flex; flex-direction: column; gap: 0.25rem;
+}
+.money__source { margin: 0; display: inline-flex; align-items: center; gap: 0.4rem; font-size: var(--text-xs); color: var(--ink-muted); }
+@media (max-width: 520px) {
+  /* A receipt on a phone: one term a row, the operator in front of it. */
+  .money__sum { display: grid; grid-template-columns: 1.1rem minmax(0, 1fr); gap: var(--space-1) var(--space-2); align-items: baseline; }
+  .money__term { grid-column: 2; flex-direction: row; align-items: baseline; justify-content: space-between; gap: var(--space-2); }
+  .money__term--result { padding: 0.2rem 0.5rem; }
+  .money__op { grid-column: 1; padding: 0; }
+}
+
+/* --- compare: row by row (round 7, screen 11) ------------------------------
+   Pick up to three on the cards; a tray holds the picks; the comparison asks
+   each programme the same questions on one line. */
+
+.rcard__compare[aria-pressed='true'] { background: var(--ink); color: var(--ink-inverted); border-color: var(--ink); }
+.rcard__decide .rcard__compare { margin-left: auto; }
+
+.compare-tray {
+  position: sticky;
+  bottom: var(--space-3);
+  z-index: 15;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+}
+.compare-tray__label { font-weight: 800; font-family: var(--font-display); }
+.compare-tray__count { display: none; font-size: var(--text-sm); color: var(--ink-muted); }
+.compare-tray__picks { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0; padding: 0; list-style: none; flex: 1 1 auto; min-width: 0; }
+.compare-tray__picks li {
+  display: inline-flex; align-items: baseline; gap: 0.4rem;
+  padding: 0.3rem 0.3rem 0.3rem 0.75rem;
+  background: var(--surface-sunken);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xs);
+  max-width: 100%;
+}
+.compare-tray__name { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 12rem; }
+.compare-tray__price { color: var(--ink-muted); white-space: nowrap; }
+.compare-tray__remove {
+  border: 0; background: transparent; cursor: pointer; color: var(--ink-muted);
+  width: 1.6rem; height: 1.6rem; border-radius: 50%; font-size: 1rem; line-height: 1;
+}
+.compare-tray__remove:hover { background: var(--surface); color: var(--ink); }
+.compare-tray__go { margin-left: auto; }
+
+.compare { display: flex; flex-direction: column; gap: var(--space-3); }
+.compare__top { display: flex; justify-content: space-between; align-items: center; gap: var(--space-3); }
+.compare__title { font-size: var(--text-xl); margin: 0; }
+.compare__lede { margin: 0; color: var(--ink-muted); font-size: var(--text-sm); max-width: 44rem; }
+.compare__wrap { background: var(--surface); border: 1px solid var(--rule); border-radius: var(--radius-lg); overflow: hidden; }
+.compare__table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.compare__table th, .compare__table td { padding: var(--space-3); text-align: left; vertical-align: top; border-bottom: 1px solid var(--rule); font-size: var(--text-sm); }
+.compare__table tbody tr:last-child th, .compare__table tbody tr:last-child td { border-bottom: 0; }
+.compare__table thead th { background: var(--surface-sunken); }
+.compare__table th[scope='row'] { width: 11rem; color: var(--ink-muted); font-size: var(--text-xs); font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; }
+.compare__table td > * + * { margin-top: 0.25rem; }
+.compare__corner { width: 11rem; background: var(--surface-sunken); }
+.compare__uni { display: block; font-family: var(--font-display); font-weight: 800; font-size: var(--text-md); }
+.compare__prog { display: block; font-size: var(--text-xs); color: var(--ink-muted); font-weight: 500; }
+.compare__remove { margin-top: var(--space-2); border: 0; background: none; padding: 0; color: var(--accent); font-size: var(--text-xs); font-weight: 700; cursor: pointer; text-decoration: underline; }
+.compare__money { display: block; font-family: var(--font-display); font-size: 1.15rem; }
+.compare__sub { display: block; font-size: var(--text-xs); color: var(--ink-muted); overflow-wrap: anywhere; }
+.compare__unknown { color: var(--ink-muted); font-style: italic; }
+
+@media (max-width: 900px) {
+  .compare-tray { bottom: calc(4.75rem + env(safe-area-inset-bottom)); }
+}
+@media (max-width: 640px) {
+  /* On a phone each row's name goes above its cells, and the columns share
+     the width: two or three programmes stay side by side. */
+  .compare__table, .compare__table thead, .compare__table tbody { display: block; }
+  .compare__table tr { display: grid; grid-template-columns: repeat(var(--compare-n), minmax(0, 1fr)); border-bottom: 1px solid var(--rule); }
+  .compare__table th, .compare__table td { border-bottom: 0; padding: var(--space-2) var(--space-3); }
+  .compare__table th[scope='row'] { grid-column: 1 / -1; width: auto; padding-bottom: 0; }
+  .compare__table .compare__corner { display: none; }
+  .compare__uni { font-size: var(--text-sm); }
+  .compare__money { font-size: var(--text-md); }
+  /* The tray is one line on a phone: the count and the button. The picks
+     are on their cards ("In comparison") and in the comparison itself. */
+  .compare-tray__picks { display: none; }
+  .compare-tray__count { display: inline; }
+  .compare-tray__go { margin-left: auto; }
+}
+
+/* --- plan: the departures board (round 7, screen 12; concept L) ----------
+   The next deadline on split-flap tiles, then one row per programme. The
+   board is night in both appearances, like the reveal. No colour for "soon":
+   the number says it, and a board that turns red frightens without telling
+   anything more. */
+
+.board {
+  background: var(--night);
+  color: var(--night-ink);
+  border: 1px solid var(--night-line);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.board__next { display: flex; flex-direction: column; gap: var(--space-3); }
+.board__kicker {
+  margin: 0;
+  font-size: var(--text-xs);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sun);
+}
+.board__flap-row {
+  margin: 0;
+  max-width: none;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-4);
+}
+.board__next-what { display: flex; flex-direction: column; min-width: 0; }
+.board__next-what strong { font-family: var(--font-display); font-size: var(--text-md); }
+.board__next-what span { font-size: var(--text-sm); color: var(--night-muted); }
+.board__days { display: flex; flex-direction: column; align-items: flex-end; gap: var(--space-1); }
+.board__days .flaps__tile { color: var(--sun); }
+.board__days-label { font-size: var(--text-xs); color: var(--night-muted); }
+.board__none { margin: 0; color: var(--night-muted); font-size: var(--text-sm); max-width: 40rem; }
+
+.flaps { display: inline-flex; gap: 3px; perspective: 400px; }
+.flaps__gap { width: 0.4em; }
+.flaps__tile {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.35em;
+  height: 1.75em;
+  padding: 0 0.12em;
+  border-radius: 6px;
+  background: var(--flap);
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.35);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.35rem, 1rem + 1.4vw, 1.9rem);
+  line-height: 1;
+  color: var(--night-ink);
+  font-variant-numeric: tabular-nums;
+  animation: flap 420ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
+  animation-delay: calc(var(--i, 0) * 55ms);
+  transform-origin: 50% 50%;
+}
+/* The split line: without it the tiles read as plain boxes (concept defect L2). */
+.flaps__tile::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.6);
+}
+@keyframes flap {
+  from { transform: rotateX(-88deg); }
+  to { transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .flaps__tile { animation: none; }
+}
+
+.board__rows { list-style: none; margin: 0; padding: 0; }
+.board__head,
+.board__row {
+  display: grid;
+  grid-template-columns: 5.25rem 8.5rem minmax(0, 1fr) 4.5rem 9.5rem;
+  gap: var(--space-3);
+  align-items: baseline;
+  padding: 0.65rem var(--space-3);
+  border-top: 1px solid var(--night-line);
+}
+.board__head {
+  border-top: 0;
+  padding-top: 0;
+  font-size: var(--text-xs);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--night-muted);
+}
+.board__row.is-next { box-shadow: inset 3px 0 0 var(--sun); background: var(--night-surface); border-radius: 4px; }
+.board__date,
+.board__where,
+.board__left {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+.board__where { text-transform: uppercase; overflow-wrap: break-word; min-width: 0; }
+.board__uni { display: block; font-size: var(--text-sm); }
+.board__prog { display: block; font-size: var(--text-xs); color: var(--night-muted); }
+.board__maybe { color: var(--night-act); }
+.board .board__note { display: block; font-size: var(--text-xs); font-weight: 700; color: var(--sun); }
+.board__word { font-size: var(--text-xs); font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; }
+.board__word--ok { color: var(--night-ok); }
+.board__word--act { color: var(--night-act); }
+.board__word--ask { color: var(--night-ask); }
+.board__row.is-passed .board__date,
+.board__row.is-passed .board__where,
+.board__row.is-passed .board__uni { color: var(--night-muted); }
+.board__row.is-passed .board__left { color: var(--night-passed); font-size: var(--text-sm); }
+.board__foot { margin: 0; font-size: var(--text-xs); color: var(--night-muted); max-width: 52rem; }
+
+@media (max-width: 640px) {
+  .board { padding: var(--space-4); }
+  .board__flap-row {
+    grid-template-columns: auto auto;
+    grid-template-areas: 'date days' 'what what';
+    justify-content: space-between;
+    row-gap: var(--space-3);
+  }
+  .board__flap-row > .flaps { grid-area: date; }
+  .board__days { grid-area: days; }
+  .board__next-what { grid-area: what; }
+  .board__head { display: none; }
+  .board__row {
+    grid-template-columns: 3.75rem minmax(0, 1fr) auto;
+    grid-template-areas: 'date where left' 'date what left' 'date word left';
+    row-gap: 0.15rem;
+    padding: 0.7rem var(--space-2);
+    align-items: start;
+  }
+  .board__date { grid-area: date; line-height: 1.2; }
+  .board__dd, .board__mon { display: block; }
+  .board__where { grid-area: where; }
+  .board__what { grid-area: what; }
+  .board__left { grid-area: left; text-align: right; }
+  .board__word { grid-area: word; }
+  .board__uni { font-size: var(--text-xs); color: var(--night-muted); }
+  .board__prog { display: none; }
+}
+
+/* --- research running: the night moment (round 7, screen 04) ------------
+   The reveal's panel, while the run is still going: the stage in words, the
+   progress, four counters and what has been found so far. */
+
+/* Room under the list for the horizon, so the arc never crosses the text. */
+.reveal--running { padding-bottom: calc(var(--space-6) + 2.5rem); }
+.reveal__title--stage { font-size: clamp(1.5rem, 1.1rem + 1.8vw, 2.25rem); max-width: 22ch; }
+.reveal__progress { display: flex; flex-direction: column; gap: var(--space-2); font-size: var(--text-xs); color: var(--night-muted); }
+.meter--night { background: var(--night-surface); border-color: var(--night-line); }
+.reveal__tiles--four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.reveal__tiles--four .reveal__tile dd { font-size: 1.6rem; }
+@media (max-width: 640px) {
+  .reveal__tiles--four { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+.found { position: relative; z-index: 1; display: flex; flex-direction: column; gap: var(--space-2); }
+.found__title { margin: 0; font-size: var(--text-xs); font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sun); }
+.found__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.found__item {
+  display: grid;
+  grid-template-columns: 9.5rem minmax(0, 1fr);
+  grid-template-areas: 'label where' 'label text';
+  column-gap: var(--space-3);
+  padding: var(--space-2) 0;
+  border-top: 1px solid var(--night-line);
+}
+.found__label { grid-area: label; font-size: var(--text-xs); font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; padding-top: 0.15rem; }
+.found__where { grid-area: where; font-weight: 700; font-size: var(--text-sm); }
+.found__text { grid-area: text; font-size: var(--text-sm); color: var(--night-muted); }
+.found__item--exclusion .found__label { color: var(--night-passed); }
+.found__item--year .found__label { color: var(--night-act); }
+.found__item--unreadable .found__label { color: var(--night-ask); }
+.found__more, .found__none { margin: 0; font-size: var(--text-xs); color: var(--night-muted); }
+/* The same list on the page, after the run: day colours. */
+.found--day .found__item { border-top-color: var(--rule); }
+.found--day .found__text, .found--day .found__more { color: var(--ink-muted); }
+.found--day .found__item--exclusion .found__label { color: var(--risk); }
+.found--day .found__item--year .found__label { color: var(--warn); }
+.found--day .found__item--unreadable .found__label { color: var(--accent); }
+@media (max-width: 520px) {
+  .found__item { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'label' 'where' 'text'; }
+}
+
+/* --- documents: per programme, ready and missing (round 7, screen 13) ---- */
+
+.doc-progs { display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: var(--space-3); }
+.doc-prog {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+.doc-prog:hover { border-color: var(--rule-strong); }
+.doc-prog.is-on { border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+.doc-prog__uni { font-family: var(--font-display); font-weight: 800; }
+.doc-prog__name { font-size: var(--text-xs); color: var(--ink-muted); }
+.doc-prog__meter { display: block; height: 4px; border-radius: 99px; background: var(--surface-sunken); overflow: hidden; margin-top: 0.2rem; }
+.doc-prog__meter > span { display: block; height: 100%; background: var(--sun); }
+.doc-prog__count { font-size: var(--text-xs); font-weight: 700; }
+.doc-first {
+  margin: 0 0 var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  background: var(--warn-soft);
+  border-left: 3px solid var(--sun);
+  border-radius: var(--radius-sm, 6px);
+  font-size: var(--text-sm);
+  max-width: none;
+}
+.doc__start { font-size: var(--text-xs); font-weight: 700; color: var(--ink-muted); margin-top: 2px; }
+.doc__start--late { color: var(--warn); }
+@media (max-width: 640px) {
+  /* Two to a row, so the list itself starts on the first screen. */
+  .doc-progs { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-2); }
+  .doc-prog { padding: var(--space-2) var(--space-3); }
+  .doc-prog__uni { font-size: var(--text-sm); }
+  .doc-prog__name { display: none; }
+}
+
+/* A board row opened: its programme's three answers, money and documents. */
+.board__open {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--night-ink) 35%, transparent);
+  text-underline-offset: 3px;
+}
+.board__open:hover { text-decoration-color: var(--sun); }
+.board__open[aria-expanded='true'] { text-decoration-color: var(--sun); }
+.board__detail {
+  grid-column: 1 / -1;
+  margin-top: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  background: var(--night-surface);
+  border: 1px solid var(--night-line);
+  border-radius: var(--radius);
+}
+.board__judgements { margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3) var(--space-5); }
+.board__judgements dt { font-size: var(--text-xs); font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--night-muted); }
+.board__judgements dd { margin: 0.2rem 0 0; font-size: var(--text-sm); color: var(--night-ink); }
+@media (max-width: 640px) {
+  .board__judgements { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Next to start: the earliest document start dates across the kept list. */
+.next-docs { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.next-docs__item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: var(--space-3);
+  align-items: start;
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--rule);
+}
+.next-docs__item:first-child { border-top: 0; }
+.next-docs__item input { width: 1rem; height: 1rem; margin-top: 0.2rem; accent-color: var(--accent); }
+.next-docs__name { font-weight: 700; font-size: var(--text-sm); }
+.next-docs__where { font-size: var(--text-xs); color: var(--ink-muted); }
+.next-docs__when { font-size: var(--text-xs); font-weight: 700; color: var(--ink-muted); white-space: nowrap; }
+.next-docs__when--soon { color: var(--warn); }
+.next-docs__item.is-done .next-docs__name { text-decoration: line-through; color: var(--ink-muted); }
+@media (max-width: 520px) {
+  .next-docs__item { grid-template-columns: auto minmax(0, 1fr); }
+  .next-docs__when { grid-column: 2; white-space: normal; }
+}
+
+/* --- region chips (round 7, screen 07) ------------------------------------ */
+.region-chips { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.region-chips button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2.25rem;
+  padding: 0 0.9rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: 700;
+  cursor: pointer;
+}
+.region-chips button[aria-pressed='true'] { background: var(--ink); color: var(--ink-inverted); border-color: var(--ink); }
+.region-chips button:disabled { opacity: 0.55; cursor: default; }
+.region-chips__n { font-variant-numeric: tabular-nums; font-weight: 800; }
+@media (max-width: 640px) {
+  .region-chips button { min-height: 2.75rem; }
+}
+
+/* --- the globe (round 7, concepts M and N) --------------------------------
+   Dots and routes on a canvas, markers as buttons over it. Colours are
+   tokens, so the globe follows the appearance. */
+
+.globe { position: relative; margin: 0; width: 100%; overflow: hidden; }
+.globe__canvas { display: block; }
+.globe__markers { position: absolute; inset: 0; pointer-events: none; }
+.globe--day {
+  --globe-land: #7C8BA3;
+  --globe-sea: color-mix(in srgb, var(--surface-sunken) 70%, transparent);
+  --globe-limb: var(--rule);
+  --globe-route: var(--route);
+  --globe-home: var(--ink);
+}
+.globe--night {
+  --globe-land: #C9D3E3;
+  --globe-sea: rgba(255, 255, 255, 0.03);
+  --globe-limb: var(--night-line);
+  --globe-route: var(--sun);
+  --globe-home: #FFFFFF;
+}
+:root[data-theme='dark'] .globe--day { --globe-land: #8FA0BB; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .globe--day { --globe-land: #8FA0BB; }
+}
+.globe__marker {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  margin: -13px 0 0 -13px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.globe__marker::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  border-radius: 50%;
+  background: var(--sun);
+  box-shadow: 0 0 0 2px var(--sun-ink);
+}
+.globe--night .globe__marker::after { box-shadow: 0 0 0 2px var(--night); }
+.globe__marker.is-selected::after { width: 14px; height: 14px; margin: -7px 0 0 -7px; box-shadow: 0 0 0 3px var(--sun-ink), 0 0 0 6px color-mix(in srgb, var(--sun) 45%, transparent); }
+.globe__label {
+  position: absolute;
+  transform: translate(14px, -50%);
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  background: var(--sun-ink);
+  color: #FFFFFF;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.globe__label.is-left { transform: translate(calc(-100% - 14px), -50%); }
+.globe--night .globe__label { background: var(--sun); color: var(--sun-ink); }
+
+/* The reveal's globe replaces its dotted horizon: it sits flush at the bottom. */
+.reveal--globe { padding-bottom: 0; }
+.reveal--globe::after { display: none; }
+.reveal--globe .globe { margin: var(--space-2) calc(-1 * var(--space-5)) 0; width: auto; }
+.start .globe { margin-top: var(--space-5); }
+.shortlist-globe { display: flex; flex-direction: column; gap: var(--space-1); }
+.shortlist-globe__note { margin: 0; font-size: var(--text-xs); color: var(--ink-muted); }
+.globe__cluster {
+  position: absolute;
+  min-width: 30px;
+  height: 30px;
+  margin: -15px 0 0 -15px;
+  padding: 0 0.4rem;
+  border: 2px solid var(--sun-ink);
+  border-radius: 999px;
+  background: var(--sun);
+  color: var(--sun-ink);
+  font: inherit;
+  font-size: var(--text-xs);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  pointer-events: auto;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--sun) 35%, transparent);
+}
+.globe--night .globe__cluster { border-color: var(--night); }
+.globe__name {
+  position: absolute;
+  transform: translate(10px, -50%);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--ink);
+  white-space: nowrap;
+  pointer-events: none;
+  text-shadow: 0 0 3px var(--paper), 0 0 3px var(--paper), 0 0 3px var(--paper);
+}
+.globe--night .globe__name { color: #FFFFFF; text-shadow: 0 0 3px var(--night), 0 0 3px var(--night); }
+.shortlist-globe { position: relative; }
+.shortlist-globe__out { position: absolute; top: var(--space-2); right: 0; z-index: 1; }
+
+/* A route names both its ends under their points (concept 10). */
+.globe__name--below { transform: translate(-50%, 9px); }
+.globe__name--home { font-weight: 800; }
+
+/* What the globe hides, named at the edge it lies towards (concept N):
+   "← Americas · 4". */
+.globe__edges {
+  position: absolute;
+  display: flex;
+  gap: var(--space-1);
+  max-width: 46%;
+  pointer-events: none;
+}
+.globe__edges--left { left: 8px; flex-direction: column; align-items: flex-start; transform: translateY(-50%); }
+.globe__edges--right { right: 8px; flex-direction: column; align-items: flex-end; transform: translateY(-50%); }
+.globe__edges--bottom { bottom: 8px; transform: translateX(-50%); max-width: 92%; }
+.globe__edges--top { top: 8px; transform: translateX(-50%); max-width: 92%; }
+.globe__edge {
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  pointer-events: auto;
+}
+button.globe__edge { cursor: pointer; }
+.globe--night .globe__edge { background: var(--night-surface); color: var(--night-ink); border-color: var(--night-line); }
+
+/* A programme's route from home (concept 10). */
+.route { display: flex; flex-direction: column; gap: var(--space-1); }
+.route .globe { border-radius: var(--radius-lg); }
+.route--day .globe { background: color-mix(in srgb, var(--surface-sunken) 55%, transparent); }
+.route__note { margin: 0; font-size: var(--text-xs); color: var(--ink-muted); }
+.detail__top { display: flex; flex-direction: column; gap: var(--space-3); }
+@media (min-width: 900px) {
+  .detail__top { display: grid; grid-template-columns: minmax(0, 20rem) minmax(0, 1fr); align-items: start; }
+}
+
+/* The triage's night globe (concept P): the route to the programme on the
+   table, turning as each answer brings the next one; the card sits over its
+   lower part. */
+.triage { --triage-pad: var(--space-5); }
+.triage__globe { margin: 0 calc(-1 * var(--triage-pad)); }
+.triage__card--over { position: relative; z-index: 1; margin-top: calc(-1 * (var(--space-4) + var(--card-over))); }
+.route--steady { position: relative; }
+.route--steady .route__note {
+  position: absolute; top: var(--space-2); left: 50%; transform: translateX(-50%);
+  width: max-content; max-width: calc(100% - 2 * var(--space-4));
+  padding: 0.2rem 0.6rem; border-radius: 999px; text-align: center;
+}
+.route__note--night { color: var(--night-muted); }
+.route--steady .route__note--night { background: var(--night-surface); border: 1px solid var(--night-line); }
+@media (max-width: 700px) {
+  .triage { --triage-pad: var(--space-4); }
+}
+/* On a phone the triage is a moment of its own, with its own bar ("1 of 20",
+   "Back to the list"), as in concept R-09: the section links step aside so
+   the globe, the card and the three answers fit above the tab bar. */
+@media (max-width: 640px) {
+  body:has(.triage) .subnav { display: none; }
+}
+/* The band's top edge fades into the night instead of cutting the dots off. */
+.triage__globe .globe__canvas {
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 28px);
+  mask-image: linear-gradient(to bottom, transparent, #000 28px);
+}
+
+/* --- the share sheet (concept Q, screen 14) --------------------------------
+   A bottom sheet on a phone, a dialog on a wide screen: the card on the left,
+   what it shows on the right. */
+
+.sheet-backdrop {
+  position: fixed; inset: 0; z-index: 60;
+  background: rgba(11, 22, 40, 0.6);
+  display: flex; align-items: flex-end; justify-content: center;
+}
+.sheet {
+  width: 100%; max-height: 92vh; overflow: auto;
+  background: var(--paper); color: var(--ink);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding: var(--space-4) var(--space-4) calc(var(--space-5) + env(safe-area-inset-bottom));
+  box-shadow: 0 -12px 40px rgba(11, 22, 40, 0.3);
+}
+.sheet__head { display: flex; justify-content: space-between; align-items: center; gap: var(--space-3); margin-bottom: var(--space-3); }
+.sheet__title { font-size: var(--text-lg); margin: 0; }
+.sheet__body { display: flex; flex-direction: column; gap: var(--space-4); }
+.sheet__preview { display: flex; justify-content: center; }
+.sheet__canvas {
+  width: 180px; height: auto; aspect-ratio: 9 / 16;
+  border-radius: var(--radius-sm); box-shadow: 0 6px 24px rgba(11, 22, 40, 0.25);
+  background: var(--surface-sunken);
+}
+.sheet__controls { display: flex; flex-direction: column; gap: var(--space-4); min-width: 0; }
+.sheet__group { border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-2); }
+.sheet__group legend {
+  font-size: 0.6875rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink-muted); margin-bottom: var(--space-2); padding: 0;
+}
+.sheet__choice {
+  display: flex; align-items: center; gap: var(--space-2);
+  padding: 0.6rem 0.8rem; border: 1px solid var(--rule); border-radius: var(--radius-sm);
+  font-weight: 700; cursor: pointer; min-height: 44px;
+}
+.sheet__choice.is-on { border-color: var(--ink); background: var(--surface-sunken); }
+.sheet__switch { display: flex; align-items: flex-start; gap: var(--space-2); cursor: pointer; font-weight: 700; min-height: 44px; }
+.sheet__switch input, .sheet__choice input { width: 1.1rem; height: 1.1rem; margin-top: 0.15rem; accent-color: var(--ink); }
+.sheet__hint { display: block; font-size: var(--text-xs); font-weight: 500; color: var(--ink-muted); margin: 0; }
+.sheet__privacy { margin: 0; font-size: var(--text-xs); color: var(--ink-muted); }
+.sheet__actions { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.sheet__actions .btn { min-height: 2.75rem; }
+.sheet__status { margin: 0; min-height: 1.2em; font-size: var(--text-sm); color: var(--ink-muted); }
+/* The night card keeps its edge on the dark appearance. */
+:root[data-theme='dark'] .sheet__canvas { outline: 1px solid var(--rule); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .sheet__canvas { outline: 1px solid var(--rule); }
+}
+@media (min-width: 720px) {
+  .sheet-backdrop { align-items: center; }
+  .sheet { max-width: 46rem; border-radius: var(--radius-lg); padding: var(--space-5); }
+  .sheet__body { flex-direction: row; align-items: flex-start; }
+  .sheet__canvas { width: 240px; }
+}
+/* The reveal's second button, on the night panel. */
+.reveal__actions { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; position: relative; z-index: 1; }
+.reveal .btn.reveal__share { background: var(--night-surface); color: var(--night-ink); border-color: var(--night-line); min-height: 3rem; }
+.route__share { align-self: flex-start; }
+.route-block { display: flex; flex-direction: column; gap: var(--space-2); min-width: 0; }

@@ -29,6 +29,26 @@ an applicant would act on it.
 | **export & data deletion** | Navigation, screen 09 | Legal weight: this is the GDPR-shaped right, and the wording should match what the reviewed privacy policy ends up saying. |
 | **research (run)** | Navigation, screens 03-06 | The product's "research" is automated evidence collection, not academic research. Kazakh "зерттеу" carries the academic sense. |
 
+## Proposed by the redesign (2026-09-24) — not decided, not shipped
+
+The «Горизонт» redesign (`docs/design/redesign-concepts.md` §17) drew its screens in Russian and had
+to put words on them. They are listed here as **input for the decision above**, not as the decision.
+None of them is in `i18n.ts`, and the implemented screens stay in English until a person closes the
+rows above. No Kazakh wording is proposed: that needs a native admissions advisor.
+
+| Term | Russian used in the mock-ups | Reasoning | What the reviewer should check |
+|---|---|---|---|
+| **shortlist** | «Подбор» | Names the result of matching, not any list | Does «подбор» still read as the filtered set? |
+| **funding gap** | «Осталось платить в год» | Describes the amount without debt or deficit | Shown next to "after the scholarship" every time? |
+| **full ride** (`FULL_RIDE_CONFIRMED`) | «Грант: учёба и проживание» | Names the four covered categories instead of a superlative, so it is not stronger than the English | Is «проживание» read as housing and meals? |
+| **unknown** (status) | «Нет данных», with a dashed edge | Different words from the clarification status below | — |
+| **NEEDS_OFFICIAL_CLARIFICATION** | «Уточняем у вуза» | An action, so it cannot be read as "rejected" | Does it overpromise that someone is asking? |
+| **claim** | «факт» ("414 фактов") | Short enough for a counter | Probably reject: a claim can be wrong or in conflict, and «факт» asserts it is true |
+| **research (run)** | «Поиск» ("Поиск идёт") | Avoids the academic sense of «исследование» | — |
+
+The labels for every other status value (`MET`, `PENDING`, `GAP`, fit and grant values) are in the
+table in §17 of the design document and are proposals in the same sense.
+
 ## Settled
 
 Ordinary interface words with no product-specific meaning — Save, Cancel,

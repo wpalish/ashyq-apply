@@ -210,6 +210,20 @@ describe('starting research twice', () => {
     expect(startRun).toHaveBeenCalledWith(REAL_PROFILE.id, true, expect.any(String));
     expect(startRun.mock.calls[0]?.[2]).toBeTruthy();
   });
+
+  it('reads the case list again once the run exists, so its run count is current', async () => {
+    vi.spyOn(api, 'createProfile').mockResolvedValue(REAL_PROFILE);
+    const cases = vi.spyOn(api, 'cases').mockResolvedValue([]);
+    vi.spyOn(api, 'startRun').mockResolvedValue({ id: 'run-1' } as unknown as RunView);
+
+    render(<StoreProvider><StartProbe /></StoreProvider>);
+    const before = cases.mock.calls.length;
+    await act(async () => { screen.getByText('start').click(); });
+
+    // Once for the new profile, once more after the run started.
+    await waitFor(() => expect(cases.mock.calls.length).toBe(before + 2));
+    expect(screen.getByTestId('run')).toHaveTextContent('run-1');
+  });
 });
 
 describe('renaming the storage keys', () => {

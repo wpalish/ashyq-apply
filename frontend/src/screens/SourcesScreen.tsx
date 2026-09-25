@@ -48,7 +48,7 @@ export function SourcesScreen() {
   return (
     <>
       <div className="screen__head">
-        <p className="screen__eyebrow">Step 06</p>
+        <p className="screen__eyebrow">Match · Sources</p>
         <h1 className="screen__title">What we could not settle</h1>
         <p className="screen__lede">
           When two official pages disagree, ASHYQ Apply shows both and marks the more specific one as

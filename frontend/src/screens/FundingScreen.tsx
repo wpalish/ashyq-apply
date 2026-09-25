@@ -36,7 +36,7 @@ export function FundingScreen() {
   return (
     <>
       <div className="screen__head">
-        <p className="screen__eyebrow">Step 05</p>
+        <p className="screen__eyebrow">Match · Money</p>
         <h1 className="screen__title">What you would actually pay</h1>
         <p className="screen__lede">
           Cost of attendance against confirmed aid, in one currency. A hatched bar means the two
@@ -58,7 +58,7 @@ export function FundingScreen() {
           </label>
           <div className="fund-legend">
             <span><i style={{ background: 'var(--ok)' }} /> covered by aid</span>
-            <span><i style={{ background: 'var(--risk)' }} /> you pay</span>
+            <span><i style={{ background: 'var(--route)' }} /> you pay</span>
             <span><i style={{ background: 'var(--unknown-border)' }} /> not comparable</span>
           </div>
         </div>

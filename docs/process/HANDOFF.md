@@ -21,6 +21,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
+**Unplanned, owner request (2026-09-23, claude-opus-5): redesign concepts, round 1.** Branch `claude/website-ui-ux-redesign-qp2t38`. The owner wants a new UI/UX and design system, concepts first. Round 1 is design only — no `frontend/` or backend change: four directions (A Наставник, B Досье, C Паспорт, D Ответ) are recorded in `docs/design/redesign-concepts.md` with previews and a private canvas link. Round 2 followed the owner's feedback (A favourite; keep B's desktop shortlist; C unsure; D's chat risks looking like a GPT wrapper): three A-based evolutions E Ясно, F Графит, G Ашық. The canvas does not open on the owner's phone, so previews go to the chat as images. Round 3 followed the round-2 feedback (G too unserious; E weaker than A; F undecided): H Маршруты (Flighty-like routes), I Штаб (Mercury-like dashboard), J Наставник 2.0 (A made serious), all on A's fonts. Round 4 followed the owner's choice of H: K Атлас (Airbnb-like search on the map), L Табло (a departures board of deadlines), M Глобус (Citymapper-like step route on a globe), each put through two adversarial review cycles with six personas; the loop report, root causes and remaining risks are in §11 of the design doc. Round 5 followed the owner's feedback (K and M liked, K better, M's globe appealing): N Горизонт (K with the globe rising under the search), O Бюджет (money first, a price ladder), P Разбор (decide on one programme at a time, dark landing), again with two adversarial cycles (§13). Round 6 (owner: N/O/P liked; results must be worth posting in stories): the Q share kit — four 9:16 story cards (route, requirements met, season map, application sent) with invariant-safe wording and privacy defaults for minors, the results reveal, the share sheet and the friend's landing page, two adversarial cycles (§15). Round 7 (owner: take the suggested mix — N as the base, O's ladder and comparison, P's triage, Q's stories): «Горизонт», the final concept across the real flow (14 phone screens, 4 stories, 3 desktop screens) and its design system on one board, built on the demo run's 20 results. It switches fonts to Montserrat + Onest because Unbounded and Manrope lack Kazakh letters and ₸, aligns status tones and labels with `format.ts` and `enums.py`, shows conversions with the rate and its date, and records three review cycles with automated contrast, size and target scans (§16, §17, §19). Next step: on the owner's approval, tokens and fonts land in `frontend/` (`tokens.css`, `@fontsource`), then the shortlist screens first. Palette experiments (2026-09-24): ten palettes on the same six screens; the owner kept «Солнце» (§18). **Implemented (2026-09-24/25, owner approved):** the design system app-wide, the budget ladder and one-at-a-time triage on the shortlist, gold for what the family pays, folded optional profile sections, and three adversarial review cycles on the running app (`34600e5` … `6a814d3`; loop report and remaining risks in the design doc §20). Frontend only: no backend, API, ranking or invariant changed; every `data-testid` and route kept. PR #10 and PR #19 are untouched. The brief queue in §10 is unchanged.
+
 **Phase 2 is `ready-for-review (PR #16)`.** PR #15 was merged by the owner on 2026-09-21 at `cba911a`; a merged PR cannot track new work, so everything since is PR #16 from the same branch. **V2-20 (plan numbering) — evidence history: page versions and claim supersession lineage (done).** V2-20a shipped `SourceSnapshot`; V2-20b closes the claim half. See the numbering note in §5. Previously: **conflict model v2 (plan V2-23).** Previously: **V2-25 — all five claim-producing adapters read scope.** Previously: **V2-24 — a scope refusal is said out loud to the applicant.** Previously: **V2-23 — the assessment refuses a claim whose page is about something else.** Previously: **V2-22 — fill a claim's scope from what its page states.** V2-21/V2-21b gave scope a shape and put it on the claim; this fills it, from the page's own words only. Previously: **V2-21b — carry the scope on a claim.** Phase 1 is complete, measured and wired (PR #15); this starts Phase 2 on the failure Phase 1 never touched. Phase 1 so far is `ready-for-review (PR #15)`, which supersedes draft PR #14. Phase 1 retrieval was measured live: The owner approved the §6 exception and authorised the live probe; the Exa adapter works and the retrieval ceiling moved **1/10 → 9/10**. V2-01 was accepted 2026-09-21 and its record is below.
 Owner explicitly prioritizes the new workstream. V2-01 follows this documentation commit in a task branch from this predecessor (explicit branch exception). Goal: measure current research/discovery quality before architecture changes.
 
@@ -262,6 +264,169 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+Write-ahead (claude-opus-5, 2026-09-25, redesign part 9; owner: "продолжай" after being told that only
+owner decisions were left, with the standing rule "decide by your own recommendation"). Recommendation taken:
+build concept Q's share stories (screen 14), since the owner's round-6 request was results worth posting;
+keep English (the owner's decision), and leave the unlock step (a price and what is free are business
+decisions) and the ru/kk vocabulary alone. Frontend only:
+1. `lib/story.ts`: what each card says, from the run's own data and the privacy defaults of §15. The first
+   name is on by default; the price after grants and the student's own scores are off. The surname, school,
+   city and documents are never shown, and the route starts at the country. Demo data is labelled on the
+   card. There is no "chance", "%" or "will get in".
+2. Cards drawn on the device (a 1080 × 1920 canvas, the app's fonts and the globe). Nothing is uploaded: the
+   phone's share sheet or "Save image". There is no link or friend's page, because that needs a public
+   backend route.
+3. Three templates: my route, requirements met (only when every checked requirement is met), and my
+   application map. "Application sent" is left out: the product has no record of a sent application, and
+   the card would invent one.
+4. Where: the reveal (the map) and an open programme (its route and requirements).
+5. Tests, review, video, docs (§28), PR.
+
+Progress on part 9: 1–4 `2b1db21`, 5 the docs commit. The report and defects I72–I81 are in the design doc §28.
+One privacy choice departs from the concept: the name is off by default, because the only name the profile
+has is the case's label, whose first word is the surname on a Kazakh document. **Next:** the owner reviews
+PR #20. Still waiting for the owner: the Russian vocabulary, the unlock step, a public link or friend's page
+for the stories (needs a backend route), and sessions with students.
+
+Write-ahead (claude-opus-5, 2026-09-25, redesign part 8; owner: "продолжай" after part 7 offered the two
+globe follow-ups). Reuse `components/Globe`; frontend only:
+1. Edge chips (concept N, Q6; R-07's "← Americas · 4"): a programme the globe hides - behind it or outside
+   the frame - is named at the edge it lies towards, grouped by region, instead of silently missing. On the
+   shortlist a chip turns the globe there; on the reveal it only says so.
+2. A `fit` view: the globe finds the centre and zoom that show a set of places (home and one city).
+3. The programme detail (concept 10): its route from home at the top, with both places named. No route
+   without a home or without the city in the table; the detail says which.
+4. The one-at-a-time triage (concept P, R-09): a night globe behind the card that turns to each programme's
+   route. The answers must stay above the phone's tab bar (defect I27).
+5. Tests, review at 320/390/1440 light and dark, video, docs (§27), PR.
+
+Progress on part 8: 1–4 `5610790`, 5 `c1adbdc`, the CI fix `9b77217` (I71). The report and defects I64–I71
+are in the design doc §27.
+One structural choice for the owner to check: on a phone, the section links (Search · Research · Results ·
+Money · Sources) step aside while the one-at-a-time triage is open, as in concept R-09, so the globe, the card
+and the answers fit above the tab bar. **Next:** the owner reviews PR #20. Still waiting for the owner: the
+Russian vocabulary, share stories and the unlock step.
+
+Write-ahead (claude-opus-5, 2026-09-25, redesign part 7; owner: "делай глобус" - the globe is approved).
+Concept N/M's globe, built so the list stays the main path on a budget Android phone:
+1. `lib/globe*`: land as dots precomputed once from Natural Earth (world-atlas, public domain) into a compact
+   array - no new runtime dependency; an orthographic projection of our own; city coordinates from a fixed
+   table, each checked at generation time to fall inside its country's outline. A city missing from the table
+   is not placed and the screen says how many are not on the globe - never guessed.
+2. `components/Globe`: canvas for dots and arcs, HTML buttons for the programme markers (keyboard and screen
+   reader), no animation loop when idle, no rotation animation under reduced motion.
+3. Placement: the start screen (the globe rising under the search), the results reveal (arcs from home), the
+   shortlist cards (a small globe; region chips turn it; a marker opens its card).
+4. Tests (projection, table coverage, e2e markers and axe), review at 320/390/1440 light and dark, video,
+   docs (§26), PR.
+
+Progress on part 7: 1–3 `ef51b57`, clusters `84a5dd9`, 4 the docs commit. The report and defects I56–I63 are in
+the design doc §26. **Next:** the owner reviews PR #20. Still waiting for the owner: the Russian vocabulary,
+share stories and the unlock step. Possible follow-ups: a globe in the triage and on the programme detail.
+
+Write-ahead (claude-opus-5, 2026-09-25, redesign part 6; owner: "продолжай" a fourth time).
+1. Shortlist: concept 07's region chips (Europe · Americas · Asia & Oceania) as a filter, counted from the
+   results. The mapping from country to region is a static geography table, and a country missing from it is
+   counted under "Other", never guessed. The globe stays with the owner.
+2. A sweep of every screen at 390/1440, light and dark, aimed at the ones the redesign barely touched (Money,
+   Sources, Export, People). Fix what it finds, with root causes.
+3. Docs (§25), video, PR.
+
+Progress on part 6: 1 `e83f923`; 2 `db25804`, `76015f0`; 3 the docs commit. Report and defects I52–I55 are in the
+design doc §25. **Next:** the owner reviews PR #20. Still waiting on the owner: the globe, the Russian vocabulary,
+share stories and the unlock step.
+
+Write-ahead (claude-opus-5, 2026-09-25, redesign part 5; owner: "продолжай" a third time). What is left of
+the concept without an owner decision:
+1. Plan: concept L's "На этой неделе" - the documents whose start-by date falls in the next seven days (or has
+   passed) across the kept programmes - and a board row that opens its programme: the three judgements, the
+   money line and the next documents. The ticks and the start-by arithmetic move to one shared module so the
+   plan and the documents screen cannot disagree.
+2. Eyebrows: "Step 01…09" came from the old 15-item sidebar and means nothing in five tabs; each screen says
+   its tab and section instead.
+3. Account (concept 02): the sign-in / sign-up card in the brand, checked with auth on.
+4. Review at 390/1440 light and dark, video, docs (§24), PR.
+
+Progress on part 5: 1 `fd8442b`, 2 `8bc32e6`, 3 `13dc954`, fixes from the review `03c2846`, then the docs commit.
+Report and defects I46–I51 are in the design doc §24. **Next:** the owner reviews PR #20. Still waiting on the
+owner: the globe, the Russian vocabulary, share stories and the unlock step.
+
+Write-ahead (claude-opus-5, 2026-09-25, redesign part 4; owner: "продолжай" again). Concept screens
+still in the old shape, none needing an owner decision:
+1. Plan board: the kept programmes' grant deadlines join the admission ones (concept L's "Эссе на
+   грант · 01 ФЕВ"), marked when earlier than the admission deadline; awards considered automatically
+   and awards the applicant is not eligible for stay off. The documents screen's "passed" chip stops
+   wrapping under the date.
+2. Research running (concept 04): the night moment, with what was found so far - an exclusion, a
+   year mismatch, a site that did not answer - taken from the run, never invented.
+3. Documents (concept 13): per programme, what is asked, what is ticked and what is still missing.
+4. Review at 390/1440 light and dark, video, docs (§23), PR.
+
+Progress on part 4: 1 `4abcaf1`, 2 `b4085dc`, 3 `6d14550`, 4 the docs commit. Report and defects I37–I45 are
+in `docs/design/redesign-concepts.md` §23. **Next:** the owner reviews PR #20. Still waiting for the owner: the
+globe, the Russian vocabulary, share stories and the unlock step.
+
+Write-ahead (claude-opus-5, 2026-09-25, redesign part 3; owner: "продолжай"). The concept screens that
+need no owner decision (English stays, the globe waits), each a pushed commit with green gates:
+1. Programme (concept 10): the money as arithmetic — price − grants = left to pay, the backend's own
+   figures, the published currency and the rate snapshot date when converted — and what the grant
+   covers and leaves out, with its source and date. On top of the programme detail.
+2. Compare (concept 11): pick up to three programmes on the cards; compare them row by row.
+3. Plan (concept 12): the nearest deadline on a split-flap board, then every deadline in order.
+4. Review at 390 and 1440, video, docs (§22), PR. Share stories (concept 14) stay out of this pass.
+
+Progress on part 3: 1 `567cd88`, 2 `f86f008`, 3 `a4f3c95`, 4 the docs commit. The report and nine
+defects with their root causes (I28–I36) are in `docs/design/redesign-concepts.md` §22. **Next:** the
+owner reviews PR #20. The globe, the Russian vocabulary, the share stories and the unlock step wait for
+the owner.
+
+Progress on part 2 (below): 1–2 `ec12b7d`, 3 `ded86aa`, 4 `e393a65`, 5 `bd1abc0` + the docs commit;
+report in `docs/design/redesign-concepts.md` §21. **Next:** the owner compares again; the globe and the
+Russian vocabulary wait for the owner.
+
+Write-ahead (claude-opus-5, 2026-09-25, redesign «Горизонт» part 2). The owner compared the app with the
+concept and found it too close to the old app: the first pass changed the paint, not the structure. Owner
+decisions: interface stays **English** for now (glossary rule stands), the **globe comes later**. Steps,
+each a pushed commit with green gates, on `claude/website-ui-ux-redesign-qp2t38` (PR #20):
+1. Shell: five tabs (Match, Plan, Documents, People, Me) instead of the 15-item sidebar — top bar on a
+   desktop, bottom tab bar on a phone; each tab has a sub-nav that keeps every `nav-*` test id; theme and
+   language move to the footer; the demo chip stays in `.topbar`. E2E gets a `goTo(page, screen)` helper
+   because a screen in another tab is one click further away.
+2. Start screen: "what to study, where, budget a year" and one button; the full profile stays, optional.
+3. Results ready: the finished progress screen becomes a night reveal with counts computed from the run.
+4. Shortlist: price cards by default, the table one toggle away (fit, coverage %, bucket unchanged);
+   a compact programme card (price, requirements, money, source and date).
+5. Review cycles against the concept at 390 and 1440, docs, PR.
+Not touched: backend, API, ranking, invariants.
+
+Write-ahead (claude-opus-5, 2026-09-24, redesign «Горизонт», owner approved the concept and asked for
+it to be implemented with an adversarial review, working autonomously overnight). Branch
+`claude/website-ui-ux-redesign-qp2t38` (PR #20; the session is restricted to this branch). Steps, each
+a pushed commit with green gates:
+1. `frontend/src/styles/tokens.css` — «Солнце» palette under the existing semantic names (light and
+   dark), Montserrat 700–800 + Onest 400–700 via `@fontsource` in `main.tsx`; primitives in
+   `global.css` / `components.css` (pill buttons, sun primary, pill chips, 22 px cards).
+2. App shell (`App.tsx`, `global.css`): brand mark, calmer sidebar and topbar; every `data-testid`,
+   gate and hash route unchanged.
+3. `ShortlistScreen.tsx`: add the budget ladder and a one-at-a-time triage above the table, built on
+   the existing `decide()`; the table, its columns (brief §267: fit, coverage %, bucket) and all test
+   ids stay.
+4. Status labels for ru/kk from the round-7 vocabulary (docs/design/redesign-concepts.md §17); English
+   labels unchanged.
+5. Adversarial review of the running app (390 and 1440 px), fixes, loop report in the design doc.
+Not touched: backend, API, migrations, ranking, any invariant.
+
+Progress: 1–2 `34600e5`; 3 `8dc40d1`; 4 **changed** — translating status labels would break the
+glossary policy in `docs/i18n/GLOSSARY.md` (product vocabulary stays English until a person decides),
+so the round-7 words are recorded there as proposals instead (`37fb075`, with the gold "you pay" and
+the night progress band). 5 **done**: `a81fd8b` (optional profile sections fold while empty: 3 927 → 3 118 px on desktop,
+7 293 → 6 059 on a phone), `2ed27b0` (the aid behind "left to pay" is said to be competitive, not
+won; phone overflow on the profile; oval chips; two-row top bar; grey disabled primary; overflow e2e
+now covers every screen), `6a814d3` (focus follows the triage card). Loop report:
+`docs/design/redesign-concepts.md` §20. **Next:** the owner reviews PR #20; open product decisions are
+in §20's remaining risks (phone chrome, a step-by-step profile, the vocabulary).
+
 
 Write-ahead (claude-opus-5, 2026-09-20, V2-10): **starting V2-10 — the search provider interface**,
 per `analysis/v2/02_EXECUTION_PLAN.md` (Phase 1) and `analysis/v2/04_PHASE_1_DISCOVERY_ENGINE.md` §1.
@@ -1490,6 +1655,57 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+Redesign part 9 (share stories), frontend only. claude-opus-5 ran the gates on 2026-09-25 at `2b1db21`:
+- typecheck, lint, **340 unit tests** (40 files) and build: green;
+- Playwright: **101 passed, 1 skipped**.
+
+The main bundle is 133.9 KB gzipped; the share sheet is a lazy 7.2 KB chunk.
+
+Redesign part 8 (edge chips, programme route, triage globe), frontend only. claude-opus-5 ran the gates on
+2026-09-25 at `9b77217`:
+- typecheck, lint, **325 unit tests** (38 files) and build: green;
+- Playwright: **99 passed, 1 skipped**. The redesign spec passed four times in a row on both projects (88/88)
+  after the CI fix for I71.
+
+The main bundle is 133.5 KB gzipped (+3 KB).
+
+Redesign part 7 (the globe), frontend only. claude-opus-5 ran the gates on 2026-09-25 at `84a5dd9`:
+- typecheck, lint, **312 unit tests** (37 files) and build: green;
+- Playwright: **99 passed, 1 skipped**.
+
+The main bundle is 130.5 KB gzipped (+7 KB); the land dots are a lazy 33 KB chunk.
+
+Redesign part 6, frontend only. Gates run by claude-opus-5 on 2026-09-25 at `76015f0`:
+- typecheck, lint, **297 unit tests** (35 files) and build: green;
+- Playwright: **97 passed, 1 skipped**.
+
+Redesign part 5, frontend only. claude-opus-5 ran the gates on 2026-09-25 at `03c2846`: typecheck, lint,
+**290 unit tests** (34 files) and build are green. Playwright: **95 passed, 1 skipped**. Auth e2e: **6 passed**,
+including the new axe scan of the sign-in screen, which is clean.
+
+Redesign part 4, frontend only, gates run by claude-opus-5 on 2026-09-25 at `6d14550`:
+- typecheck, lint, **279 unit tests** (31 files) and build are green;
+- Playwright **95 passed, 1 skipped**;
+- the journey now also scans the documents screen with axe, and it is clean.
+
+Redesign part 3, frontend only. Gates run by claude-opus-5 on 2026-09-25 at `a4f3c95`: typecheck, lint,
+**260 unit tests** (29 files) and build are green. Playwright: **95 passed, 1 skipped** (desktop and
+Pixel 7). The axe scan now includes the comparison and the plan. There is no horizontal scroll at 320 px
+on either. Auth e2e was not re-run: no auth path changed.
+
+Redesign part 2, frontend only, gates run by claude-opus-5 on 2026-09-25 at `bd1abc0`: typecheck, lint,
+**231 unit tests** (24 files), build — green; Playwright **91 passed, 1 skipped** (desktop + Pixel 7);
+auth e2e (`playwright.auth.config.ts`) **6 passed** at `ec12b7d`. CI: runners are back; `release-gates` is
+green on `85839dc` (frontend, backend sqlite and postgresql, security-and-containers). The outage from
+00:31 to about 09:40 UTC assigned no runner at all; nothing in the PR caused it.
+
+Redesign «Горизонт», frontend only, gates run by claude-opus-5 on 2026-09-25 at `6a814d3`: typecheck,
+lint, **216 unit tests** (23 files), build — all green; Playwright **85 passed, 1 skipped** (desktop
+Chromium and Pixel 7, against a local backend on Python 3.12), axe clean on every workflow screen, no
+horizontal scroll at 320 px on any workflow screen. Backend not touched and not re-run locally; CI
+passed on `a81fd8b`. The CI runs for `2ed27b0` and `6a814d3` failed in 2–3 s with no runner assigned
+(no step ran); one re-run was requested.
+
 V2-20b, gates run by claude-opus-5 on 2026-09-21. All green: ruff check and format; mypy over `app` and
 `evaluation`; `pytest --cov=app --cov-fail-under=92` exit 0, **1852 collected**, 0 failed, coverage
 **94.58%**. `alembic heads`: one, now **`c5d01b7e4f83`**. Both new behaviours (lineage recorded; no
@@ -2278,6 +2494,16 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 | 2026-09-21 UTC | claude-opus-5 | V2-22b | Re-measured as instructed: 5/5, unchanged. Found why while reading the capture — its evidence scope was built from the request, so the benchmark compared labels against our own question. Fixed both capture paths through one helper, kept the pre-V2-22 fallback so frozen captures re-score identically (verified), and left the number where it is: it needs a live re-capture with network, which this container lacks. Gates green (1823 at 94.51%). |
 | 2026-09-21 UTC | claude-opus-5 | V2-22 | Filled the scope from the page's own words. The reader refuses four of the nine dimensions in writing and treats ambiguity as silence. Its first draft read deadline dates as intakes in 39 demo claims; the golden-hash guard forced the look that caught it. The golden was re-captured once, after proving the drift additive, and the guard's wording now demands that proof. Gates green (1820 at 94.51%). The rate itself is unmoved and expected to be — using the scope is the next step. |
 | 2026-09-21 UTC | claude-opus-5 | V2-21 → V2-21b | Put the scope on the claim. Found no migration was needed — the payload column is JSON — and kept `alembic heads` at one. A golden-hash guard caught the payload drift immediately; rather than re-capture a hash the test does not permit re-capturing, the field is now omitted when unrecorded, so absent in JSON means exactly what None means in the model. Gates green (1804 at 94.48%).
+| 2026-09-23 UTC | claude-opus-5 | `07de4d9` → redesign concepts | Owner asked for a redesign, concepts first. Audited main and PR #19 screens, read Mobbin flows and 21st.dev components, drew four directions (16 artboards) on real demo-corpus data, and wrote them up in `docs/design/redesign-concepts.md`. Round 2 on owner feedback: E/F/G, three evolutions of A. Round 3: H/I/J on A's fonts. Round 4: K/L/M developing H, two adversarial review cycles. Round 5: N/O/P on K and M's globe, two cycles. Round 6: Q share kit (story cards), two cycles. Round 7: «Горизонт», the chosen mix across the real flow, with its design system and tokens, three cycles. Palette experiments: ten palettes, owner kept «Солнце». No product code changed. Next: owner approves, then tokens land in `frontend/`. |
+| 2026-09-25 UTC | claude-opus-5 | `2dfa367` → `6a814d3` redesign implemented | Owner approved «Горизонт» with «Солнце» and asked for it built overnight with adversarial review. Landed the design system, the budget ladder, one-at-a-time triage, gold "you pay", folded profile sections; three review cycles found 20 defects (I1–I20, root causes in the design doc §20), all fixed. Vocabulary kept as glossary proposals per the i18n rule. Next: owner review of PR #20. |
+| 2026-09-25 UTC | claude-opus-5 | `6a814d3` → `bd1abc0` redesign part 2 | Owner: the app did not look like the concept. The first pass had changed the paint; this pass changes the structure: five tabs, a three-field start, the results reveal, price cards (table one tap away). English stays, the globe waits. 7 more defects (I21–I27) found and fixed. |
+| 2026-09-25 UTC | claude-opus-5 | `d192d19` → `a4f3c95` redesign part 3 | Owner: "продолжай". Added three concept screens: the programme's money as arithmetic (10), a row-by-row comparison of up to three programmes (11) and the Plan tab's departures board of deadlines (12). 9 defects (I28–I36) found and fixed; root causes are in the design doc §22. Share stories, the globe and the Russian vocabulary still wait for the owner. |
+| 2026-09-25 UTC | claude-opus-5 | `5cbcd9e` → `6d14550` redesign part 4 | Owner said "продолжай" again. Grant deadlines now appear on the plan board (the next deadline became the MEXT nomination). The research run became a night moment that shows what it found so far. The documents screen now shows what is ready, what is missing and when to start. Found and fixed 9 defects (I37–I45); design doc §23. |
+| 2026-09-25 UTC | claude-opus-5 | `47b8e2b` → `03c2846` redesign part 5 | Owner: "продолжай" (third time). Board rows open onto their programme. Added "Next to start" and the shared documents module, replaced step numbers with tab-and-section eyebrows, and put the brand on the account screen. Six defects (I46–I51), design doc §24. |
+| 2026-09-25 UTC | claude-opus-5 | `fff50a1` → `76015f0` redesign part 6 | Owner: "продолжай" (fourth time). Added region chips on the shortlist (concept 07, counted from the results) and swept every screen. The sweep fixed three things: the switcher's stale run count, its styling (including a 320 px overflow), and singular counts. Defects I52–I55; see design doc §25. |
+| 2026-09-25 UTC | claude-opus-5 | `3973167` → `84a5dd9` redesign part 7 | Owner: "делай глобус". Built the globe as canvas dots with lazy land data, a checked city table and routes from home. It appears on the start screen, the reveal and the shortlist, with region zoom and clusters. No idle redraws. Fixed I56–I63; see design doc §26. |
+| 2026-09-25 UTC | claude-opus-5 | `84a5dd9` → `5610790` redesign part 8 | Owner: "продолжай". Added edge chips for hidden programmes, a programme's route from home, and a night globe behind the triage. On a phone the triage answers stay above the tab bar (now asserted in e2e). Fixed I64–I70; see design doc §27. |
+| 2026-09-25 UTC | claude-opus-5 | `4d28534` → `2b1db21` redesign part 9 | Owner: "продолжай", with the rule to decide by recommendation. Built concept Q's share stories: route, requirements met and the application map. They are drawn on the device with privacy defaults; the name is off because the label's first word can be a surname. Nothing is posted. Fixed I72–I81; see design doc §28. |
 
 | 2026-09-20 | gpt-6-astra | b267b337 → V2-00 in progress | Startup/recovery, PR inventory, all pack files read; isolated worktree preserves existing dirty research work. |
 

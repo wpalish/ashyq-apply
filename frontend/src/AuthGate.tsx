@@ -1,6 +1,35 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import { ApiError, api } from '@/api/client';
+import { BrandSun } from '@/components/primitives';
 import type { AuthStatus } from '@/types';
+
+const MIN_PASSWORD = 12;
+
+/**
+ * Round 7's account screen: the brand and what the product promises beside
+ * the form, so the first page a family sees says what this is before it asks
+ * for an email. The night panel is the reveal's; on a phone it shrinks to the
+ * brand and one line so the form stays on the first screen.
+ */
+function AuthFrame({ children }: { children: ReactNode }) {
+  return (
+    <main className="auth-shell auth-shell--split">
+      <section className="auth-hero" aria-label="About ASHYQ Apply">
+        <span className="brand__mark auth-hero__brand">
+          <BrandSun size={32} />
+          <span>ASHYQ <span className="brand__apply">Apply</span></span>
+        </span>
+        <p className="auth-hero__title">Find where you can study{'\u00A0'}— and what it will cost</p>
+        <ul className="auth-hero__facts">
+          <li>Every figure links to the university's own page, with the date it was read.</li>
+          <li>Requirements, your profile and money stay three separate answers.</li>
+          <li>Nothing here predicts a decision: admission is decided by the university.</li>
+        </ul>
+      </section>
+      {children}
+    </main>
+  );
+}
 
 export function AuthGate({ children }: { children: ReactNode }) {
   const [status, setStatus] = useState<AuthStatus | null>(null);
@@ -24,13 +53,13 @@ export function AuthGate({ children }: { children: ReactNode }) {
 
   if (!status) {
     return (
-      <main className="auth-shell">
+      <AuthFrame>
         <div className="panel auth-card" role="status">
           <h1>ASHYQ Apply</h1>
           <p className="muted">Connecting securely…</p>
           {error && <div className="notice notice--risk">{error}</div>}
         </div>
-      </main>
+      </AuthFrame>
     );
   }
   if (status.authenticated) return <>{children}</>;
@@ -68,7 +97,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
       }
     };
     return (
-      <main className="auth-shell">
+      <AuthFrame>
         <form className="panel auth-card stack" onSubmit={finishReset}>
           <h1>Choose a new password</h1>
           <label className="field">
@@ -89,7 +118,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
             setResetToken('');
           }}>Back to sign in</button>
         </form>
-      </main>
+      </AuthFrame>
     );
   }
 
@@ -113,7 +142,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
   };
 
   return (
-    <main className="auth-shell">
+    <AuthFrame>
       <form className="panel auth-card stack" onSubmit={submit}>
         <div>
           <p className="screen__eyebrow">Private applicant workspace</p>
@@ -142,9 +171,17 @@ export function AuthGate({ children }: { children: ReactNode }) {
         <label className="field">
           <span className="field__label">Password</span>
           <input data-testid="auth-password" type="password" autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
-                 minLength={mode === 'register' ? 12 : undefined} required value={password}
+                 minLength={mode === 'register' ? MIN_PASSWORD : undefined} required value={password}
                  onChange={(e) => setPassword(e.target.value)} />
-          {mode === 'register' && <span className="field__hint">At least 12 characters.</span>}
+          {mode === 'register' && (
+            <span className="field__hint" data-testid="password-count">
+              At least {MIN_PASSWORD} characters
+              {password.length > 0 && (password.length < MIN_PASSWORD
+                ? ` · ${password.length} so far`
+                : ' · long enough')}
+              .
+            </span>
+          )}
         </label>
         {error && <div className="notice notice--risk" role="alert">{error}</div>}
         {notice && <div className="notice notice--ok small" data-testid="reset-notice">{notice}</div>}
@@ -167,6 +204,6 @@ export function AuthGate({ children }: { children: ReactNode }) {
           </button>
         )}
       </form>
-    </main>
+    </AuthFrame>
   );
 }

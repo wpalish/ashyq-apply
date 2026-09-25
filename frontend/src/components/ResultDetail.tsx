@@ -7,6 +7,9 @@
  */
 
 import { useState } from 'react';
+import { MoneyArithmetic, type RateNote } from '@/components/MoneyArithmetic';
+import { ProgrammeRoute } from '@/components/ProgrammeRoute';
+import type { LatLon } from '@/lib/globe';
 import { Chip, Notice, SourceLink, StatusChip } from '@/components/primitives';
 import {
   FIT_DISCLAIMER, bucketTone, claimStatusTone, date, dateTime, eligibilityTone, fundingClassTone,
@@ -25,11 +28,35 @@ const TABS: { id: Tab; label: string }[] = [
   { id: 'sources', label: 'Sources & evidence' },
 ];
 
-export function ResultDetail({ result }: { result: ProgramResult }) {
+export function ResultDetail({
+  result, rate, home, onShare,
+}: {
+  result: ProgramResult;
+  rate?: RateNote | null;
+  /** The applicant's home, for the route; undefined leaves the route out. */
+  home?: (LatLon & { city: string }) | null;
+  /** Opens the share sheet on this programme (concept Q). */
+  onShare?: () => void;
+}) {
   const [tab, setTab] = useState<Tab>('requirements');
 
   return (
     <div className="detail" data-testid={`detail-${result.id}`}>
+      {/* Concept 10: the route from home heads the programme, beside the
+          money on a wide screen and above it on a phone. */}
+      <div className={home !== undefined ? 'detail__top' : undefined}>
+        {home !== undefined && (
+          <div className="route-block">
+            <ProgrammeRoute result={result} home={home} tone="day" height={180} testId={`route-${result.id}`} />
+            {onShare && (
+              <button type="button" className="btn btn--sm route__share" onClick={onShare} data-testid={`share-${result.id}`}>
+                Share as a story
+              </button>
+            )}
+          </div>
+        )}
+        <MoneyArithmetic result={result} rate={rate} />
+      </div>
       <div className="tabs" role="tablist" aria-label={`${result.university} details`}>
         {TABS.map((t) => (
           <button
