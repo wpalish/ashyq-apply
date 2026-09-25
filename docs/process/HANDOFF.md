@@ -1115,6 +1115,15 @@ Claude, 2026-09-25, run 61: 5/62, precision 6/9 (UBC hit the wall-clock budget a
 page's outcome now lists its award-link count, how many sit below it, and a sample of them, so the next fix
 comes from evidence rather than a guess.
 
+Claude, 2026-09-25, run 62: 5/62, precision 6/8.
+- NTU /scholarships/freshmen: 18 award links, none below it. They are the site-wide menu, the same on
+  every NTU page, so the Nanyang Scholarship link is not in the static HTML (likely JS-rendered). This joins
+  the browser-tier owner decision; no further HTTP-side fix.
+- UBC (runs 59, 61, 62) ran out of wall clock mid-funding and lost everything, because claims are collected
+  in run_to_decision's finally and the parent's subprocess kill never reaches it. The harness child now stops
+  itself 5 s before the kill (asyncio.wait_for), keeps the claims already filed, and still reports
+  BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED. Harness only; production is untouched.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 

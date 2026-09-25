@@ -624,3 +624,23 @@ def test_scope_compares_case_blind_outside_the_programme():
     assert scope_matches(label, Scope(university="Example", intake="Fall 2027"))
     assert not scope_matches(label, Scope(university="Example", intake="Spring 2027"))
     assert not scope_matches(label, Scope(university="Example"))
+
+
+def test_a_child_stopped_by_its_own_clock_keeps_what_it_filed(tmp_path, monkeypatch):
+    """Runs 59-62: UBC's kill came mid-funding and every claim it had filed was lost."""
+    import asyncio
+
+    from evaluation.research import live
+    from evaluation.research.schema import Observation
+    from scripts import canary_discovery as canary
+
+    async def slow(*_args, **_kwargs):
+        await asyncio.sleep(5)
+
+    monkeypatch.setattr(canary, "run_canary", slow)
+    output = tmp_path / "groningen.json"
+
+    asyncio.run(live.capture_one("groningen", output, max_pages=5, seconds=0.05))
+
+    observation = Observation.model_validate_json(output.read_text(encoding="utf-8"))
+    assert observation.error == "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"

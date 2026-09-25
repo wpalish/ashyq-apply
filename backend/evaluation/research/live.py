@@ -44,7 +44,9 @@ COHORT = {
 REVIEWED_BINDINGS = Path(__file__).parent / "data" / "identity_bindings.reviewed.json"
 
 
-async def capture_one(case_id: str, output: Path, max_pages: int) -> None:
+async def capture_one(
+    case_id: str, output: Path, max_pages: int, seconds: float | None = None
+) -> None:
     # Delayed imports keep ordinary offline evaluation entirely independent of I/O.
     from app.adapters import fetching
     from app.adapters.discovery.live_discovery import LiveDiscoveryAdapter, PageCategory
@@ -214,7 +216,17 @@ async def capture_one(case_id: str, output: Path, max_pages: int) -> None:
         patch.object(ExaSearchProvider, "search", counted_search),
         patch.object(LiveDiscoveryAdapter, "_confirm_programs", observed_confirm),
     ):
-        report = await canary.run_canary(COHORT[case_id], False)
+        try:
+            report = await asyncio.wait_for(canary.run_canary(COHORT[case_id], False), seconds)
+        except TimeoutError:
+            # The child stops itself just short of the parent's kill, so the
+            # claims already filed are kept: run_to_decision's finally reads
+            # them on cancellation, which a killed process never reaches.
+            # Runs 59-62: UBC filed nothing because the kill came mid-funding.
+            observation.predictions = predictions
+            observation.error = "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"
+            checkpoint()
+            return
     rows = report["institutions"]
     observation.programme_urls = [HttpUrl(url) for r in rows for url in r["programs"]]
     observation.predictions = predictions
@@ -249,7 +261,10 @@ def main() -> None:
             from app.adapters.discovery import live_discovery
 
             live_discovery.SEARCH_BEFORE_NAVIGATION = True
-        asyncio.run(capture_one(args.case, args.out, args.max_pages))
+        # A few seconds under the parent's timeout, so the child's own stop
+        # comes first and writes what it has.
+        soft = max(args.seconds_per_case - 5, 1)
+        asyncio.run(capture_one(args.case, args.out, args.max_pages, soft))
         return
     stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
     directory = args.out / stamp
@@ -281,6 +296,8 @@ def main() -> None:
                         str(output),
                         "--max-pages",
                         str(args.max_pages),
+                        "--seconds-per-case",
+                        str(args.seconds_per_case),
                         *(["--search-first"] if args.search_first else []),
                     ],
                     env=environment,
