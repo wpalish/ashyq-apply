@@ -16,6 +16,7 @@ import { api } from '@/api/client';
 import { ceilingFrom, groupByBudget } from '@/components/BudgetLadder';
 import { Chip, Loading, Notice, Panel, Stat } from '@/components/primitives';
 import { Globe } from '@/components/Globe';
+import { LazyShareSheet } from '@/components/LazyShareSheet';
 import { findingTotals, findingsSoFar, type Finding } from '@/lib/findings';
 import { defaultView, homeOf, markersFor } from '@/lib/globe';
 import { dateTime } from '@/lib/format';
@@ -64,6 +65,7 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
   // Work the queue gave up on after exhausting its attempts. It is asked for
   // here, before the early return, because a hook cannot live behind one.
   const [deadJobs, setDeadJobs] = useState(0);
+  const [sharing, setSharing] = useState(false);
   const runStage = run?.stage;
 
   useEffect(() => {
@@ -162,9 +164,15 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
             Prices after grants, sources with dates, deadlines and documents are in the results.
             Grants are mostly competitive, and admission is decided by the university.
           </p>
-          <button className="btn btn--primary reveal__cta" onClick={onDone} data-testid="to-shortlist">
-            See {results.length} programme{results.length === 1 ? '' : 's'}
-          </button>
+          <div className="reveal__actions">
+            <button className="btn btn--primary reveal__cta" onClick={onDone} data-testid="to-shortlist">
+              See {results.length} programme{results.length === 1 ? '' : 's'}
+            </button>
+            {/* Concept Q: the map of the search, as a story card. */}
+            <button className="btn reveal__share" onClick={() => setSharing(true)} data-testid="share-map">
+              Share my map
+            </button>
+          </div>
           {/* Concept N's reveal: the routes from home to every programme found. */}
           <Globe
             layout="horizon"
@@ -177,6 +185,9 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
             caption={`A globe with ${globe.markers.length} of ${results.length} programmes at their cities${home ? `, routes from ${home.city}` : ''}.`}
             testId="reveal-globe"
           />
+          {sharing && (
+            <LazyShareSheet results={results} profile={savedProfile} demo={run.demo_mode} onClose={() => setSharing(false)} />
+          )}
         </section>
       ) : running ? (
         <section className="reveal reveal--running" aria-labelledby="running-title" data-testid="research-running">

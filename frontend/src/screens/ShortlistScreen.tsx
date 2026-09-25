@@ -18,6 +18,7 @@ import { Globe } from '@/components/Globe';
 import { REGION_VIEW, centroidOf, defaultView, homeOf, markersFor } from '@/lib/globe';
 import { ResultCard } from '@/components/ResultCard';
 import { ResultDetail } from '@/components/ResultDetail';
+import { LazyShareSheet } from '@/components/LazyShareSheet';
 import { Triage } from '@/components/Triage';
 import { Chip, Empty, Field, Notice, Panel, StatusChip } from '@/components/primitives';
 import {
@@ -129,6 +130,8 @@ export function ShortlistScreen({ onEditSearch }: { onEditSearch?: () => void } 
   const [rejectFor, setRejectFor] = useState<string | null>(null);
   const [rejectReason, setRejectReason] = useState('');
   const [triageTotal, setTriageTotal] = useState<number | null>(null);
+  // The programme a story card is being made for (concept Q).
+  const [shareFor, setShareFor] = useState<string | null>(null);
   const [compareIds, setCompareIds] = useState<string[]>(storedCompare);
   const [comparing, setComparing] = useState(false);
   const saveCompare = (next: string[]) => {
@@ -385,7 +388,7 @@ export function ShortlistScreen({ onEditSearch }: { onEditSearch?: () => void } 
       open={expanded === r.id}
       onToggle={() => setExpanded(expanded === r.id ? null : r.id)}
       decision={renderDecision(r)}
-      detail={<ResultDetail result={r} rate={rate} home={home} />}
+      detail={<ResultDetail result={r} rate={rate} home={home} onShare={() => setShareFor(r.id)} />}
       compare={(() => {
         const on = picked.some((p) => p.id === r.id);
         const full = !on && picked.length >= COMPARE_MAX;
@@ -527,7 +530,7 @@ export function ShortlistScreen({ onEditSearch }: { onEditSearch?: () => void } 
                       </tr>
                       {open && (
                         <tr className="detail-row">
-                          <td colSpan={showBucket ? 10 : 9}><ResultDetail result={r} rate={rate} home={home} /></td>
+                          <td colSpan={showBucket ? 10 : 9}><ResultDetail result={r} rate={rate} home={home} onShare={() => setShareFor(r.id)} /></td>
                         </tr>
                       )}
                     </Fragment>
@@ -917,6 +920,15 @@ export function ShortlistScreen({ onEditSearch }: { onEditSearch?: () => void } 
           </div>
         )}
       </div>
+      {shareFor && (
+        <LazyShareSheet
+          results={results}
+          result={results.find((r) => r.id === shareFor) ?? null}
+          profile={savedProfile}
+          demo={Boolean(summary?.demo_data)}
+          onClose={() => setShareFor(null)}
+        />
+      )}
     </>
   );
 }

@@ -209,6 +209,53 @@ test('the results reveal counts what the run found', async () => {
   await expect(found).not.toContainText(/%|chance|probab/i);
 });
 
+test('a story card is drawn on the device, with the privacy defaults and the demo label', async () => {
+  // Concept Q: the map of the search, from the reveal.
+  await goTo(page, 'progress');
+  await page.getByTestId('share-map').click();
+  const sheet = page.getByTestId('share-sheet');
+  await expect(sheet).toBeVisible();
+  const card = sheet.getByTestId('share-canvas');
+  await expect(card).toHaveAttribute('data-ready', 'true');
+  // The demo case has no name to add; price and scores are off; demo data says so.
+  await expect(sheet.getByTestId('share-name')).not.toBeChecked();
+  await expect(card).toHaveAttribute('aria-label', /Demo data, not real university pages/);
+  await expect(card).toHaveAttribute('aria-label', /20 programmes\. 15 countries/);
+  await expect(card).not.toHaveAttribute('aria-label', /%|chance|probab|will get in/i);
+  const [download] = await Promise.all([page.waitForEvent('download'), sheet.getByTestId('share-save').click()]);
+  expect(download.suggestedFilename()).toBe('ashyq-map.png');
+  const png = await download.createReadStream().then(async (stream) => {
+    const chunks: Buffer[] = [];
+    for await (const chunk of stream) chunks.push(chunk as Buffer);
+    return Buffer.concat(chunks);
+  });
+  expect([png.readUInt32BE(16), png.readUInt32BE(20)]).toEqual([1080, 1920]);
+  const axe = await new AxeBuilder({ page }).include('[data-testid="share-sheet"]')
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
+  expect(axe.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical')).toEqual([]);
+  await page.screenshot({ path: shot('17-share-story.png'), fullPage: false });
+  await page.keyboard.press('Escape');
+  await expect(sheet).toHaveCount(0);
+  await expect(page.getByTestId('share-map')).toBeFocused();
+
+  // "Requirements met" from a programme that meets them, with the
+  // university's decision beside the headline.
+  await goTo(page, 'shortlist');
+  await page.getByTestId('view-cards').click();
+  const tokyo = page.locator('main article[data-testid^="card-"]').filter({ hasText: 'University of Tokyo' }).first();
+  const id = (await tokyo.getAttribute('data-testid'))!.replace('card-', '');
+  const opener = page.getByTestId(`card-open-${id}`);
+  if ((await opener.getAttribute('aria-expanded')) !== 'true') await opener.click();
+  await page.getByTestId(`share-${id}`).click();
+  await sheet.getByTestId('share-kind-requirements').check();
+  await expect(card).toHaveAttribute('aria-label', /Requirements met/);
+  await expect(card).toHaveAttribute('aria-label', /The admission decision is the university's/);
+  await expect(card).toHaveAttribute('aria-label', /minimum 6\.5/);
+  await expect(card).not.toHaveAttribute('aria-label', /mine/);
+  await sheet.getByTestId('share-close').click();
+  await expect(sheet).toHaveCount(0);
+});
+
 test('two programmes compare row by row, an unknown left unknown', async () => {
   await goTo(page, 'shortlist');
   await page.getByTestId('view-cards').click();

@@ -29,12 +29,14 @@ const TABS: { id: Tab; label: string }[] = [
 ];
 
 export function ResultDetail({
-  result, rate, home,
+  result, rate, home, onShare,
 }: {
   result: ProgramResult;
   rate?: RateNote | null;
   /** The applicant's home, for the route; undefined leaves the route out. */
   home?: (LatLon & { city: string }) | null;
+  /** Opens the share sheet on this programme (concept Q). */
+  onShare?: () => void;
 }) {
   const [tab, setTab] = useState<Tab>('requirements');
 
@@ -44,7 +46,14 @@ export function ResultDetail({
           money on a wide screen and above it on a phone. */}
       <div className={home !== undefined ? 'detail__top' : undefined}>
         {home !== undefined && (
-          <ProgrammeRoute result={result} home={home} tone="day" height={180} testId={`route-${result.id}`} />
+          <div className="route-block">
+            <ProgrammeRoute result={result} home={home} tone="day" height={180} testId={`route-${result.id}`} />
+            {onShare && (
+              <button type="button" className="btn btn--sm route__share" onClick={onShare} data-testid={`share-${result.id}`}>
+                Share as a story
+              </button>
+            )}
+          </div>
         )}
         <MoneyArithmetic result={result} rate={rate} />
       </div>
