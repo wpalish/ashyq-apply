@@ -1013,7 +1013,7 @@ status apart:
 
 ## 19. Next step
 
-After the owner approves «Горизонт»:
+After the owner approves «Горизонт» (approved 2026-09-24; what happened to each step is in §20):
 
 1. **Tokens.** `frontend/src/styles/tokens.css` takes the Горизонт values under its existing
    semantic names (`--ink`, `--ink-muted`, `--surface`, `--ok`, `--info`, `--warn`, `--risk` and
@@ -1027,3 +1027,101 @@ After the owner approves «Горизонт»:
    shortlist (07–09), where the overload is worst.
 5. **Kazakh and testing.** Do the Kazakh pass, then usability sessions on the prototype with 5–6
    students and 2–3 parents.
+
+## 20. Implementation and review loop (2026-09-24 – 25)
+
+The owner approved «Горизонт» with the «Солнце» palette and asked for it to be built with an
+adversarial review, deciding open questions by recommendation. What landed, on the real app and
+behind the existing tests (no backend, API, ranking or invariant changed):
+
+| Commit | What |
+|---|---|
+| `34600e5` | Tokens (light and night), Onest + Montserrat, pill buttons and chips, dashed "unknown" chip, brand sun and favicon, calmer phone shell |
+| `8dc40d1` | Shortlist: the budget ladder and deciding one programme at a time, above the unchanged table |
+| `37fb075` | "You pay" in gold instead of the risk red; research progress as a night moment; vocabulary proposals in `docs/i18n/GLOSSARY.md` |
+| `a81fd8b` | Profile: empty optional sections fold to one line |
+| `2ed27b0` | Review fixes: the aid behind "left to pay" is not yet won; four layout defects |
+| `6a814d3` | Review fix: focus follows the programme being decided |
+
+**Changed from §19.** Step 3 (labels into `i18n.ts`) would have broken the glossary rule that
+product vocabulary stays English until a person decides, so the round-7 words are recorded in the
+glossary as proposals instead. JetBrains Mono stays for field paths and source URLs.
+
+### Loop report
+
+**Definition of Done:**
+
+- Every workflow screen at 390 and 1440 px, light and dark, from the real demo run.
+- Behaviour, routes, gates and every `data-testid` unchanged; the shortlist keeps fit, coverage and
+  bucket (brief §267).
+- The invariants: no chance or probability; three judgements kept apart; unknown as its own state;
+  a remaining cost never compared across currencies (the frontend holds no rates).
+- axe: no serious or critical violation on any workflow screen. No horizontal scroll at 320 px. No
+  console errors.
+- Typecheck, lint, unit, build and the full e2e suite green on desktop and Pixel 7.
+- At least two review cycles on the running app, each defect with its root cause.
+
+**Personas:** a student on a budget Android phone; a parent who reads every number; a keyboard and
+screen-reader user; an invariants auditor; the next engineer.
+
+**Cycle 1 — while building (`34600e5`, `8dc40d1`, `37fb075`):**
+
+| # | Defect | Root cause | Fix |
+|---|---|---|---|
+| I1 | A finished research stage and a rejected row fell under 4.5:1 | Receding by `opacity` fades the text too | Recede by background colour; axe clean |
+| I2 | A console 404 failed the "no console errors" test | No favicon | The sun favicon |
+| I3 | Every within-budget ladder row was highlighted, not the cheapest | Each button is the first child of its own `<li>` | Select the first `<li>`, not the first button |
+| I4 | "REMAINING / YEARDEADLINE" collided on a phone card | Fixed-width labels in a three-column card | Labels wrap at a smaller size |
+| I5 | The theme and language pickers pushed the title 700 px down on a phone | The sidebar stacked above the screen | Settings move below the screen |
+| I6 | A phone shortlist row was ten stacked label rows | The table's mobile fallback | A compact three-column card |
+| I7 | What the family pays was drawn in the risk red | Red means "not met" here; paying is not a failure | The route gold |
+| I8 | The plan put Russian labels live | It conflicted with the glossary's decision rule | Proposals in the glossary, not shipped |
+
+**Cycle 2 — the running app, all screens (`a81fd8b`, `2ed27b0`):**
+
+| # | Defect | Root cause | Fix |
+|---|---|---|---|
+| I9 | An empty profile was 3 927 px tall (7 293 on a phone) | Every optional section open at once | Optional sections fold while empty: 3 118 px (−21%) and 6 059 px (−17%) |
+| I10 | After Blank profile the folds stayed open from the demo | "Never close by itself" also covered replacing the whole profile | A new key on replace (blank, demo, discard, another applicant); not on the first save |
+| I11 | "1 848 USD left" next to "Full ride", and the ladder said "a confirmed award" | "Confirmed" means an official page confirms what an award covers, not that it is won; most are competitive | The ladder says so; the card shows "if awarded · price 32 663 USD" and the ranking's own caveats |
+| I12 | The profile was 396 px wide at 390 | A grid `1fr` cannot shrink below a long mono field path | `minmax(0, 1fr)` and wrapping paths |
+| I13 | Severity and "open" chips were ovals | The same grid stretched them to the row's height | `align-items: start`, one-line chips |
+| I14 | The top bar took two rows even at 1440 px | Nothing in it could give way | The summary shrinks to an ellipsis (full text in its title); the caption goes screen-reader-only below 1360 px |
+| I15 | A disabled sun button looked pressable | Half-opacity yellow is still yellow | Disabled primary and dark buttons are grey |
+| I16 | The triage card lost its edge on the dark appearance | Night card on a night page | A night-line border |
+| I17 | I12 shipped with the suite green | The overflow test only visited the shortlist | It now checks every workflow screen at 320 px, and fails without the fix |
+
+**Cycle 3 — keyboard and screen reader (`6a814d3`):**
+
+| # | Defect | Root cause | Fix |
+|---|---|---|---|
+| I18 | After "Save and next" focus fell to the page body and nothing announced the next university | The pressed button is removed | Each card focuses its heading; closing returns focus to the button that opened it |
+
+**Checked and kept:** the wrapped phone navigation (about 190 px before the title). A scrolled strip
+was tried before and hid Community 1 660 px along a scroller with no affordance; the comment in
+`global.css` records why. It is listed as a risk below instead of being reverted.
+
+Scores after cycle 3 (the round-7 scale):
+
+| Persona | Score | Weakest point |
+|---|---|---|
+| Student on a phone | 7 | Navigation and the top bar before the title |
+| Parent | 8 | The price is on the card and the detail, not on the ladder row |
+| Keyboard and screen reader | 8 | No shortcuts in the triage |
+| Invariants auditor | 9 | — |
+| Next engineer | 8 | Triage chips hard-code the light palette on a night card |
+| **Mean** | **8.0** | |
+
+**Remaining risks:**
+
+- **Phone chrome:** navigation and the top bar still take about 290 px before the title on a 390 px
+  phone. A bottom tab bar for the four main steps is the likely answer, and a product decision.
+- **Profile:** the empty form is still 3 118 px. A step-by-step profile would halve it, but it
+  changes the flow the e2e journeys walk.
+- **Vocabulary:** the Russian and Kazakh words are proposals until the owner decides them
+  (`docs/i18n/GLOSSARY.md`). Kazakh strings are longer; every screen needs a Kazakh pass at 390 px.
+- **Research progress** reads "100% of stages complete" while documents and "finished" are pending.
+  The wording predates the redesign and was not changed here.
+- **Top bar at 1024 px** still takes two rows.
+- **Testing:** no sessions with students or parents yet.
+
