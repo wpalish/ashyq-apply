@@ -147,7 +147,9 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
           </Notice>
         )}
 
-        <div className="statband">
+        {/* While the research runs, the counters are the night "moment" of the
+            design; once it has finished they settle back onto the page. */}
+        <div className={`statband${!finished && !failed && !cancelled ? ' statband--night' : ''}`}>
           <Stat value={run.candidates_found} label="Candidates found" />
           <Stat value={run.programs_verified} label="Programmes checked" />
           <Stat value={run.pages_checked} label="Official pages read" />

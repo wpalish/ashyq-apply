@@ -253,6 +253,9 @@
   letter-spacing: -0.02em;
   font-variant-numeric: tabular-nums;
 }
+.statband--night { background: var(--night); border-color: var(--night); color: var(--night-ink); }
+.statband--night .stat { border-color: var(--night-line); }
+.statband--night .stat__label { color: var(--night-muted); }
 .stat__label {
   font-size: var(--text-xs);
   text-transform: uppercase;
@@ -338,7 +341,8 @@
 .fund-row { display: grid; grid-template-columns: minmax(11rem, 1fr) minmax(0, 2.2fr) auto; gap: var(--space-4); align-items: center; padding: var(--space-3) 0; border-bottom: 1px solid var(--rule); }
 .fund-bar { display: flex; height: 1.4rem; border-radius: var(--radius-sm); overflow: hidden; background: var(--surface-sunken); border: 1px solid var(--rule); }
 .fund-bar__covered { background: var(--ok); }
-.fund-bar__gap { background: var(--risk); }
+/* What the family pays is not a failure, so it is not red: red means "not met". */
+.fund-bar__gap { background: var(--route); }
 .fund-bar__unknown {
   background: repeating-linear-gradient(45deg, var(--unknown-soft), var(--unknown-soft) 5px, var(--surface-sunken) 5px, var(--surface-sunken) 10px);
   flex: 1;

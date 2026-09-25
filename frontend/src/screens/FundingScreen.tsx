@@ -58,7 +58,7 @@ export function FundingScreen() {
           </label>
           <div className="fund-legend">
             <span><i style={{ background: 'var(--ok)' }} /> covered by aid</span>
-            <span><i style={{ background: 'var(--risk)' }} /> you pay</span>
+            <span><i style={{ background: 'var(--route)' }} /> you pay</span>
             <span><i style={{ background: 'var(--unknown-border)' }} /> not comparable</span>
           </div>
         </div>
