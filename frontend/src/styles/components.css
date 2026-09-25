@@ -1416,3 +1416,46 @@
   .board__uni { font-size: var(--text-xs); color: var(--night-muted); }
   .board__prog { display: none; }
 }
+
+/* --- research running: the night moment (round 7, screen 04) ------------
+   The reveal's panel, while the run is still going: the stage in words, the
+   progress, four counters and what has been found so far. */
+
+/* Room under the list for the horizon, so the arc never crosses the text. */
+.reveal--running { padding-bottom: calc(var(--space-6) + 2.5rem); }
+.reveal__title--stage { font-size: clamp(1.5rem, 1.1rem + 1.8vw, 2.25rem); max-width: 22ch; }
+.reveal__progress { display: flex; flex-direction: column; gap: var(--space-2); font-size: var(--text-xs); color: var(--night-muted); }
+.meter--night { background: var(--night-surface); border-color: var(--night-line); }
+.reveal__tiles--four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.reveal__tiles--four .reveal__tile dd { font-size: 1.6rem; }
+@media (max-width: 640px) {
+  .reveal__tiles--four { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+.found { position: relative; z-index: 1; display: flex; flex-direction: column; gap: var(--space-2); }
+.found__title { margin: 0; font-size: var(--text-xs); font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sun); }
+.found__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.found__item {
+  display: grid;
+  grid-template-columns: 9.5rem minmax(0, 1fr);
+  grid-template-areas: 'label where' 'label text';
+  column-gap: var(--space-3);
+  padding: var(--space-2) 0;
+  border-top: 1px solid var(--night-line);
+}
+.found__label { grid-area: label; font-size: var(--text-xs); font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; padding-top: 0.15rem; }
+.found__where { grid-area: where; font-weight: 700; font-size: var(--text-sm); }
+.found__text { grid-area: text; font-size: var(--text-sm); color: var(--night-muted); }
+.found__item--exclusion .found__label { color: var(--night-passed); }
+.found__item--year .found__label { color: var(--night-act); }
+.found__item--unreadable .found__label { color: var(--night-ask); }
+.found__more, .found__none { margin: 0; font-size: var(--text-xs); color: var(--night-muted); }
+/* The same list on the page, after the run: day colours. */
+.found--day .found__item { border-top-color: var(--rule); }
+.found--day .found__text, .found--day .found__more { color: var(--ink-muted); }
+.found--day .found__item--exclusion .found__label { color: var(--risk); }
+.found--day .found__item--year .found__label { color: var(--warn); }
+.found--day .found__item--unreadable .found__label { color: var(--accent); }
+@media (max-width: 520px) {
+  .found__item { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'label' 'where' 'text'; }
+}

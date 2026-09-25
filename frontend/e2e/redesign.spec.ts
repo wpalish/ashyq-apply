@@ -98,6 +98,16 @@ test('the results reveal counts what the run found', async () => {
   await expect(reveal).toContainText('20 programmes in 15 countries');
   await expect(reveal).not.toContainText('%');
   await page.screenshot({ path: shot('16-results-reveal.png'), fullPage: false });
+
+  // What the run found along the way, each read off the run: an exclusion, a
+  // year mismatch and a site that did not answer - the concept's three.
+  const found = page.getByTestId('found-list');
+  await expect(found).toContainText('Requirement not met');
+  await expect(found).toContainText('Different years');
+  await expect(found).toContainText('University of Toronto');
+  await expect(found).toContainText('Did not answer');
+  await expect(found).toContainText('University of Oslo');
+  await expect(found).not.toContainText(/%|chance|probab/i);
 });
 
 test('two programmes compare row by row, an unknown left unknown', async () => {

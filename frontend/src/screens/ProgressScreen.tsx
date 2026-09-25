@@ -3,16 +3,24 @@
  *
  * There is never an unexplained spinner here: each stage names what it is
  * doing, how far it has got, and every page it failed to read.
+ *
+ * While the research runs, the top of the screen is round 7's night moment:
+ * the stage in words, how far it has got, four counters, and what has been
+ * found so far that is worth knowing - a requirement that rules a programme
+ * out, a cost and an award from different years, a site that did not answer.
+ * When it finishes, the same list stays under "How the research went".
  */
 
 import { useEffect, useState } from 'react';
 import { api } from '@/api/client';
 import { ceilingFrom, groupByBudget } from '@/components/BudgetLadder';
 import { Chip, Loading, Notice, Panel, Stat } from '@/components/primitives';
+import { findingTotals, findingsSoFar, type Finding } from '@/lib/findings';
 import { dateTime } from '@/lib/format';
 import { useStore } from '@/lib/store';
 
 const STAGE_LABELS: Record<string, string> = {
+  queued: 'Starting the research',
   profile_validation: 'Checking your profile',
   candidate_discovery: 'Finding candidate universities',
   program_verification: 'Reading official programme pages',
@@ -30,6 +38,23 @@ function errorCategory(message: string): string {
   if (/not applicable|degree|intake|citizenship/.test(value)) return 'Page not applicable to this applicant';
   if (/robots|blocked|refused/.test(value)) return 'Site policy prevented reading';
   return 'Page could not be interpreted';
+}
+
+function FoundList({ findings, more }: { findings: Finding[]; more: number }) {
+  return (
+    <>
+      <ul className="found__list" data-testid="found-list">
+        {findings.map((f) => (
+          <li key={`${f.kind}-${f.where}-${f.text}`} className={`found__item found__item--${f.kind}`}>
+            <span className="found__label">{f.label}</span>
+            <span className="found__where">{f.where}</span>
+            <span className="found__text">{f.text}</span>
+          </li>
+        ))}
+      </ul>
+      {more > 0 && <p className="found__more">and {more} more like these in the results</p>}
+    </>
+  );
 }
 
 export function ProgressScreen({ onDone }: { onDone: () => void }) {
@@ -82,6 +107,11 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
   // count is only shown when the data can say it - the budget tile needs a
   // budget, and none of them is a chance of anything.
   const revealed = finished && results.length > 0;
+  const running = !finished && !failed && !cancelled;
+  const findings = findingsSoFar(run.errors, results, 2, run.pages_failed);
+  const moreFindings = findingTotals(run.errors, results, run.pages_failed) - findings.length;
+  const runningStage = run.stages.find((s) => s.status === 'running');
+  const percent = Math.round(run.progress * 100);
   const countries = new Set(results.map((r) => r.country)).size;
   const met = results.filter((r) => r.eligibility === 'MET').length;
   const livingGrant = results.filter((r) => r.best_funding_classification === 'FULL_RIDE_CONFIRMED').length;
@@ -129,6 +159,37 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
             See {results.length} programme{results.length === 1 ? '' : 's'}
           </button>
         </section>
+      ) : running ? (
+        <section className="reveal reveal--running" aria-labelledby="running-title" data-testid="research-running">
+          <p className="reveal__kicker">Research running</p>
+          <h1 className="reveal__title reveal__title--stage" id="running-title">
+            {STAGE_LABELS[run.stage] ?? run.stage.replace(/_/g, ' ')}
+          </h1>
+          <div className="reveal__progress">
+            <div className="meter meter--night" role="progressbar" aria-valuenow={percent}
+                 aria-valuemin={0} aria-valuemax={100} aria-label="Research progress">
+              <div className="meter__fill" style={{ width: `${Math.max(3, percent)}%` }} />
+            </div>
+            <span>
+              {runningStage && runningStage.items_total > 0
+                ? `${runningStage.items_done} of ${runningStage.items_total} in this stage · `
+                : ''}
+              {percent}% of stages complete
+            </span>
+          </div>
+          <dl className="reveal__tiles reveal__tiles--four">
+            <div className="reveal__tile"><dt>programmes checked</dt><dd>{run.programs_verified}</dd></div>
+            <div className="reveal__tile"><dt>official pages read</dt><dd>{run.pages_checked}</dd></div>
+            <div className="reveal__tile"><dt>facts recorded, each with its page</dt><dd>{run.claims_recorded}</dd></div>
+            <div className="reveal__tile"><dt>pages that could not be read</dt><dd>{run.pages_failed}</dd></div>
+          </dl>
+          <div className="found">
+            <h2 className="found__title">Found so far</h2>
+            {findings.length > 0
+              ? <FoundList findings={findings} more={moreFindings} />
+              : <p className="found__none">Nothing to flag yet. Requirements and money are compared once the pages are read.</p>}
+          </div>
+        </section>
       ) : (
         <div className="screen__head">
           <p className="screen__eyebrow">Step 03</p>
@@ -142,7 +203,7 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
       {revealed && <h2 className="reveal__how">How the research went</h2>}
 
       <div className="stack stack--loose">
-        <div className="stack stack--tight">
+        {!running && <div className="stack stack--tight">
           <div className="meter" role="progressbar" aria-valuenow={Math.round(run.progress * 100)}
                aria-valuemin={0} aria-valuemax={100} aria-label="Research progress">
             <div className="meter__fill" style={{ width: `${Math.max(3, run.progress * 100)}%` }} />
@@ -154,7 +215,7 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
               {run.finished_at && ` · finished ${dateTime(run.finished_at)}`}
             </span>
           </div>
-        </div>
+        </div>}
 
         {abandoned && (
           <Notice kind="risk">
@@ -201,16 +262,26 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
           </Notice>
         )}
 
-        {/* While the research runs, the counters are the night "moment" of the
-            design; once it has finished they settle back onto the page. */}
-        <div className={`statband${!finished && !failed && !cancelled ? ' statband--night' : ''}`}>
-          <Stat value={run.candidates_found} label="Candidates found" />
-          <Stat value={run.programs_verified} label="Programmes checked" />
-          <Stat value={run.pages_checked} label="Official pages read" />
-          <Stat value={run.pages_failed} label="Pages unreadable" />
-          <Stat value={run.claims_recorded} label="Claims recorded" />
-          <Stat value={results.length} label="Results ready" />
-        </div>
+        {/* While the research runs, the night panel above carries the counters;
+            once it has finished they settle back onto the page. */}
+        {!running && (
+          <div className="statband">
+            <Stat value={run.candidates_found} label="Candidates found" />
+            <Stat value={run.programs_verified} label="Programmes checked" />
+            <Stat value={run.pages_checked} label="Official pages read" />
+            <Stat value={run.pages_failed} label="Pages unreadable" />
+            <Stat value={run.claims_recorded} label="Claims recorded" />
+            <Stat value={results.length} label="Results ready" />
+          </div>
+        )}
+
+        {!running && findings.length > 0 && (
+          <Panel title="Found along the way" hint="Read off the results and the pages, so none of it is a guess.">
+            <div className="found found--day">
+              <FoundList findings={findings} more={moreFindings} />
+            </div>
+          </Panel>
+        )}
 
         {finished && (
           <p className="small muted">

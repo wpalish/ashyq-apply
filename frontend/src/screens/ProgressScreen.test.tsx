@@ -299,3 +299,40 @@ describe('the results reveal', () => {
     expect(screen.queryByTestId('results-reveal')).not.toBeInTheDocument();
   });
 });
+
+describe('while the research runs', () => {
+  beforeEach(() => {
+    currentRun = makeRun({
+      stage: 'program_verification',
+      job_running: true,
+      pages_failed: 3,
+      errors: ['fixture://u-oslo/program-0.html: http_error — No bundled page'],
+      stages: [
+        { stage: 'program_verification', status: 'running', detail: '', error: '', items_done: 6, items_total: 20, started_at: null, finished_at: null },
+      ],
+    } as Partial<RunView>);
+    currentResults = [
+      { id: 'delft', university: 'Delft University of Technology', country: 'Netherlands', hard_filter_failures: ['IELTS writing'], source_urls: [], scholarships: [] },
+      { id: 'oslo', university: 'University of Oslo', country: 'Norway', hard_filter_failures: [], source_urls: ['fixture://u-oslo/program-0.html'], scholarships: [] },
+    ];
+  });
+
+  it('is a night moment: the stage in words, how far it has got, and four counters', () => {
+    render(<ProgressScreen onDone={() => {}} />);
+    const panel = screen.getByTestId('research-running');
+    expect(panel).toHaveTextContent('Reading official programme pages');
+    expect(panel).toHaveTextContent('6 of 20 in this stage');
+    expect(panel).toHaveTextContent('pages that could not be read3');
+    expect(screen.queryByTestId('results-reveal')).not.toBeInTheDocument();
+  });
+
+  it('lists what has been found so far, from the run itself', () => {
+    render(<ProgressScreen onDone={() => {}} />);
+    const found = screen.getByTestId('found-list');
+    expect(found).toHaveTextContent('Requirement not met');
+    expect(found).toHaveTextContent('Delft University of Technology');
+    expect(found).toHaveTextContent('Did not answer');
+    expect(found).toHaveTextContent('University of Oslo');
+    expect(screen.getByTestId('research-running').textContent).not.toMatch(/%\s*chance|probab/i);
+  });
+});
