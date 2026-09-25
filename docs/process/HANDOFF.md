@@ -1226,6 +1226,14 @@ owner's Jev report).
 - Pending: the owner adds the UNIMATCH_TYPESAFE_API_KEY repo secret. The key pasted in chat is not in the
   repo and should be rotated after testing.
 
+Claude, 2026-09-25, V2-30C: extract_table_requirements reads IELTS from DocumentIR table cells whose row
+header names IELTS.
+- A "6.5, with no part less than 6.0" cell gives the overall and the per-part floor.
+- Section columns give a per-section map. An unnamed column or a floor above the overall is not read.
+- It runs before the prose regexes; a prose claim of a type the table answered is dropped.
+- Excerpts are cell text (verbatim); the headers go in section. Golden demo unchanged.
+The owner added the Jev secret; the next run shows the shadow ranks.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 

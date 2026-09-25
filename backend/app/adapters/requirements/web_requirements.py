@@ -18,6 +18,7 @@ from dataclasses import dataclass
 
 from app.adapters.base import AdapterResult, Candidate, CandidateProgram, PageOutcome
 from app.adapters.discovery.live_discovery import matches_field_text
+from app.adapters.document_ir import build_document_ir
 from app.adapters.extraction import (
     ClaimBuilder,
     excerpt_around,
@@ -39,6 +40,7 @@ from app.adapters.page_classifier import (
 )
 from app.adapters.scope_reader import read_scope
 from app.adapters.search.ontology import titles_name_same_programme
+from app.adapters.structured_extraction import extract_table_requirements
 from app.domain.enums import ClaimType, FetchOutcome, SourceSpecificity
 from app.domain.programme_identity import Verdict
 
@@ -242,7 +244,21 @@ class WebRequirementsAdapter:
 
             self._claim_program_exists(page, program, builder, out, text)
             if page.accepts("requirements"):
+                # Structure first: a table row states the test, the column and the
+                # value together (V2-30C). A prose claim of a type the table
+                # already answered is dropped, so one page never states two
+                # IELTS minimums from two readings of itself.
+                tabled = (
+                    extract_table_requirements(build_document_ir(res.text, target.url), builder)
+                    if not res.is_pdf
+                    else []
+                )
+                before = len(builder.claims)
                 extract_requirements(text, builder)
+                answered = {c.claim_type for c in tabled}
+                builder.claims[before:] = [
+                    c for c in builder.claims[before:] if c.claim_type not in answered
+                ]
             self._claim_intake_state(page, text, intake, builder, out)
             self._claim_english_test_types(text, builder)
             self._claim_english_waiver(text, builder)
