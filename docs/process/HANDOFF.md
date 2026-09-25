@@ -265,6 +265,24 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+Write-ahead (claude-opus-5, 2026-09-25, redesign part 9; owner: "продолжай" after being told that only
+owner decisions were left, with the standing rule "decide by your own recommendation"). Recommendation taken:
+build concept Q's share stories (screen 14), since the owner's round-6 request was results worth posting;
+keep English (the owner's decision), and leave the unlock step (a price and what is free are business
+decisions) and the ru/kk vocabulary alone. Frontend only:
+1. `lib/story.ts`: what each card says, from the run's own data and the privacy defaults of §15. The first
+   name is on by default; the price after grants and the student's own scores are off. The surname, school,
+   city and documents are never shown, and the route starts at the country. Demo data is labelled on the
+   card. There is no "chance", "%" or "will get in".
+2. Cards drawn on the device (a 1080 × 1920 canvas, the app's fonts and the globe). Nothing is uploaded: the
+   phone's share sheet or "Save image". There is no link or friend's page, because that needs a public
+   backend route.
+3. Three templates: my route, requirements met (only when every checked requirement is met), and my
+   application map. "Application sent" is left out: the product has no record of a sent application, and
+   the card would invent one.
+4. Where: the reveal (the map) and an open programme (its route and requirements).
+5. Tests, review, video, docs (§28), PR.
+
 Write-ahead (claude-opus-5, 2026-09-25, redesign part 8; owner: "продолжай" after part 7 offered the two
 globe follow-ups). Reuse `components/Globe`; frontend only:
 1. Edge chips (concept N, Q6; R-07's "← Americas · 4"): a programme the globe hides - behind it or outside
