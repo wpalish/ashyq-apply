@@ -41,6 +41,15 @@ const SET_ASIDE_HINT: Record<string, string> = {
 //: stays available because these will never cover every case.
 const REJECTION_REASONS = ['cost', 'deadline passed', 'no funding', 'not a fit'];
 
+const SORT_LABEL: Record<SortKey, string> = {
+  key: 'Match, discounted by what is unverified',
+  fit: 'Match with your priorities',
+  coverage: 'Most confirmed',
+  gap: 'Smallest remaining cost',
+  deadline: 'Earliest deadline',
+  university: 'University name',
+};
+
 type View = 'cards' | 'table';
 const VIEW_KEY = 'ashyq.shortlistView';
 
@@ -149,10 +158,9 @@ export function ShortlistScreen({ onEditSearch }: { onEditSearch?: () => void } 
   if (triageTotal !== null) {
     return (
       <>
-        <div className="screen__head">
-          <p className="screen__eyebrow">Step 04 · one at a time</p>
-          <h1 className="screen__title">The shortlist</h1>
-        </div>
+        {/* The card is the screen here, as in the concept: the heading stays
+            for assistive technology, and the answers stay above the fold. */}
+        <h1 className="visually-hidden">The shortlist, one programme at a time</h1>
         <Triage
           queue={undecided}
           total={triageTotal}
@@ -509,7 +517,8 @@ export function ShortlistScreen({ onEditSearch }: { onEditSearch?: () => void } 
           <BudgetLadder results={rows} ceiling={ceiling} onOpen={openRow} folded={view === 'cards'} />
         )}
 
-        <Panel sunken>
+        {view === 'table' ? (
+          <Panel sunken>
           <div className="filters">
             <Field label="Country" htmlFor="f-country">
               <select id="f-country" value={country} onChange={(e) => setCountry(e.target.value)}>
@@ -536,12 +545,9 @@ export function ShortlistScreen({ onEditSearch }: { onEditSearch?: () => void } 
             </Field>
             <Field label="Sort by" htmlFor="f-sort">
               <select id="f-sort" value={sort} onChange={(e) => setSort(e.target.value as SortKey)}>
-                <option value="key">Match, discounted by what is unverified</option>
-                <option value="fit">Match with your priorities</option>
-                <option value="coverage">Most confirmed</option>
-                <option value="gap">Smallest remaining cost</option>
-                <option value="deadline">Earliest deadline</option>
-                <option value="university">University name</option>
+                {(Object.keys(SORT_LABEL) as SortKey[]).map((key) => (
+                  <option key={key} value={key}>{SORT_LABEL[key]}</option>
+                ))}
               </select>
             </Field>
             <label className="row row--tight small" style={{ paddingBottom: 6 }}>
@@ -549,7 +555,62 @@ export function ShortlistScreen({ onEditSearch }: { onEditSearch?: () => void } 
               Hide rejected
             </label>
           </div>
-        </Panel>
+          </Panel>
+        ) : (
+          // One line in the cards view, as the concept's "best for you" sort:
+          // the same controls, folded until they are wanted.
+          <details className="panel panel--fold filters-fold" data-testid="filters-fold">
+            <summary className="panel__summary">
+              <span className="panel__summary-text">
+                <h2 className="panel__title">Sort and filter</h2>
+                <span className="panel__hint">
+                  {SORT_LABEL[sort]} · showing {rows.length} of {results.length}
+                </span>
+              </span>
+              <span className="panel__state">
+                {[country, eligibility, funding].filter(Boolean).length + (hideRejected ? 1 : 0) || 'none'} on
+              </span>
+            </summary>
+            <div className="panel__body">
+          <div className="filters">
+            <Field label="Country" htmlFor="f-country">
+              <select id="f-country" value={country} onChange={(e) => setCountry(e.target.value)}>
+                <option value="">All ({results.length})</option>
+                {countries.map((c) => <option key={c} value={c}>{c}</option>)}
+              </select>
+            </Field>
+            <Field label="Eligibility" htmlFor="f-elig">
+              <select id="f-elig" value={eligibility} onChange={(e) => setEligibility(e.target.value)}>
+                <option value="">Any</option>
+                {Object.entries(summary?.by_eligibility ?? {}).map(([k, v]) => (
+                  // The value stays the enum; only the label is for humans.
+                  <option key={k} value={k}>{STATUS_LABEL[k] ?? humanize(k)} ({v})</option>
+                ))}
+              </select>
+            </Field>
+            <Field label="Funding" htmlFor="f-fund">
+              <select id="f-fund" value={funding} onChange={(e) => setFunding(e.target.value)}>
+                <option value="">Any</option>
+                {Object.entries(summary?.by_funding ?? {}).map(([k, v]) => (
+                  <option key={k} value={k}>{STATUS_LABEL[k] ?? humanize(k)} ({v})</option>
+                ))}
+              </select>
+            </Field>
+            <Field label="Sort by" htmlFor="f-sort">
+              <select id="f-sort" value={sort} onChange={(e) => setSort(e.target.value as SortKey)}>
+                {(Object.keys(SORT_LABEL) as SortKey[]).map((key) => (
+                  <option key={key} value={key}>{SORT_LABEL[key]}</option>
+                ))}
+              </select>
+            </Field>
+            <label className="row row--tight small" style={{ paddingBottom: 6 }}>
+              <input type="checkbox" checked={hideRejected} onChange={(e) => setHideRejected(e.target.checked)} />
+              Hide rejected
+            </label>
+          </div>
+            </div>
+          </details>
+        )}
 
         {view === 'table' && shortlist && shortlist.chosen.length > 0 && (
           <Panel

@@ -76,7 +76,10 @@ export function Triage({
   // is competitive. The card says so with the price and the ranking's own
   // caveats, so "1,848 a year" is never read as a grant already won.
   const aid = gap?.confirmed_aid?.amount ?? 0;
-  const caveats = (gap?.warnings ?? []).slice(0, 2);
+  // Whether the aid can be won comes first: "competitive" and "nomination"
+  // decide if the number is reachable at all.
+  const weight = (text: string) => (/competitive|nomination/i.test(text) ? 0 : 1);
+  const caveats = [...(gap?.warnings ?? [])].sort((a, b) => weight(a) - weight(b)).slice(0, 2);
 
   return (
     <section className="triage" aria-labelledby="triage-title" data-testid="triage">
@@ -140,10 +143,6 @@ export function Triage({
             {caveats.map((text) => <li key={text}>{text}</li>)}
           </ul>
         )}
-        <p className="triage__note">
-          None of these predicts a decision: they compare your profile and budget with what the
-          university publishes.
-        </p>
       </article>
 
       {asking ? (
@@ -204,6 +203,10 @@ export function Triage({
           </button>
         </div>
       )}
+      <p className="triage__muted triage__foot">
+        None of these predicts a decision: they compare your profile and budget with what the
+        university publishes.
+      </p>
     </section>
   );
 }
