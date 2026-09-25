@@ -339,9 +339,12 @@ _SUPERSCORE = re.compile(r"(superscor\w+)", re.IGNORECASE)
 #: A currency marker must sit directly beside the number. Bare digits are never
 #: read as money, which keeps years and scores out of the cost table.
 _MONEY = re.compile(
-    r"(?:(US\$|USD|EUR|€|GBP|£|CAD|AUD|CHF|SEK|NOK|DKK|SGD|JPY|KZT|₸|\$)\s*)"
+    # A country-prefixed dollar is not a US dollar: "S$6,500" is Singapore's
+    # (NTU's living allowance) and was read as USD while the prefix was absent.
+    r"(?:(US\$|S\$|HK\$|C\$|CA\$|A\$|AU\$|NZ\$|USD|EUR|€|GBP|£|CAD|AUD|CHF|SEK|NOK|DKK|SGD"
+    r"|HKD|NZD|KRW|JPY|KZT|₸|\$)\s*)"
     r"([\d]{1,3}(?:[,\s]\d{3})+|\d{2,7})(?:\.(\d{2}))?"
-    r"|([\d]{1,3}(?:[,\s]\d{3})+|\d{2,7})\s*(EUR|USD|GBP|CHF|SEK|NOK|DKK|AUD|CAD|SGD|JPY|KZT|₸)",
+    r"|([\d]{1,3}(?:[,\s]\d{3})+|\d{2,7})\s*(EUR|USD|GBP|CHF|SEK|NOK|DKK|AUD|CAD|SGD|HKD|NZD|KRW|JPY|KZT|₸)",
     re.IGNORECASE,
 )
 _PERCENT_TUITION = re.compile(r"(\d{1,3})\s*%\s*(?:of\s+)?(?:the\s+)?tuition", re.IGNORECASE)
@@ -408,6 +411,16 @@ _CURRENCY_SYMBOLS = {
     "nok": "NOK",
     "dkk": "DKK",
     "sgd": "SGD",
+    "s$": "SGD",
+    "hk$": "HKD",
+    "hkd": "HKD",
+    "c$": "CAD",
+    "ca$": "CAD",
+    "a$": "AUD",
+    "au$": "AUD",
+    "nz$": "NZD",
+    "nzd": "NZD",
+    "krw": "KRW",
     "jpy": "JPY",
     "kzt": "KZT",
     "₸": "KZT",

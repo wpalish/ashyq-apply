@@ -50,8 +50,10 @@ def test_the_reviewed_corpus_counts_the_same_population_as_claim_recall():
     )
     rows = report(dataset, load_bindings(_DATA / "identity_bindings.reviewed.json"))
     assert len(rows) == 62
-    # 28 with the approved bindings, + 3 teaching languages under one key.
-    assert sum(r.verdict == REACHABLE for r in rows) == 31
+    # 28 with the approved bindings, + 3 teaching languages under one key,
+    # + 3 award fields with claim types since 2026-09-25 (NTU living allowance
+    # and duration in words, KAIST living allowance).
+    assert sum(r.verdict == REACHABLE for r in rows) == 34
 
 
 def test_without_any_bindings_the_ceiling_is_what_live_had_before_2026_09_23():

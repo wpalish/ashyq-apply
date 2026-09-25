@@ -175,6 +175,13 @@ class ClaimType(StrEnum):
     SCHOLARSHIP_NEED_BASED = "scholarship_need_based"
     SCHOLARSHIP_COUNT = "scholarship_count"
     SCHOLARSHIP_DURATION_YEARS = "scholarship_duration_years"
+    #: A stated living or maintenance allowance: amount, currency and period.
+    #: Separate from coverage, which is yes/no per category, because an
+    #: allowance is money an applicant can put into the gap arithmetic.
+    SCHOLARSHIP_LIVING_ALLOWANCE = "scholarship_living_allowance"
+    #: The award lasts for the programme's normal duration, when the page says
+    #: so in words rather than years ("for the normal duration of the course").
+    SCHOLARSHIP_DURATION = "scholarship_duration"
 
     TUITION = "tuition"
     MANDATORY_FEES = "mandatory_fees"

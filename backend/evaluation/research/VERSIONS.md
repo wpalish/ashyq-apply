@@ -129,3 +129,10 @@ regenerated from the frozen capture: every existing metric is identical; only th
 Groningen and UBC finished or not depending on the runner's network that minute (run 26: 8/10, 3/62;
 run 27 at 120 s: 10/10, 6/62). The budget bounds the harness, not the product. Live captures at 90 s
 are not directly comparable on budget-bound cases; each capture's `config.seconds_per_case` says which ran.
+
+2026-09-25 — two award claim types join the scorer's vocabulary: `scholarship_living_allowance`
+(amount, currency, period) files under `coverage.living`, and `scholarship_duration`
+("normal_programme_duration") under `duration`, the corpus's own keys. The expressibility ceiling
+rises from 31 to 34 of 62; no label, binding or existing definition changes. Separately,
+`parse_money` now reads country-prefixed dollars (S$, HK$, C$, A$, NZ$) and KRW/HKD/NZD instead of
+calling them USD.

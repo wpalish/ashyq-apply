@@ -447,6 +447,19 @@ class WebScholarshipAdapter:
                 notes="Award size is not published; it cannot be entered into the gap arithmetic.",
             )
 
+        # --- living allowance and duration in words ----------------------
+        living = _living_allowance(text)
+        if living is not None:
+            value, quote = living
+            builder.add(ClaimType.SCHOLARSHIP_LIVING_ALLOWANCE, value, quote)
+        normal = _NORMAL_DURATION.search(text)
+        if normal:
+            builder.add(
+                ClaimType.SCHOLARSHIP_DURATION,
+                "normal_programme_duration",
+                _excerpt(text, normal.start()),
+            )
+
         # --- coverage table (the only route to FULL_RIDE_CONFIRMED) -----
         sch.coverage, coverage_quote = _coverage_from_tables(soup)
         if sch.coverage:
@@ -782,6 +795,46 @@ def _is_international(profile, candidate) -> bool:
         return False
     verdict, _ = match_citizenship([country], held)
     return verdict is CitizenshipMatch.NOT_APPLICABLE
+
+
+#: "for the normal duration of the programme", "normal candidature",
+#: "the minimum duration of the course" — a duration stated as the
+#: programme's own length rather than a number of years.
+_NORMAL_DURATION = re.compile(
+    r"\b(?:normal|standard|minimum)\s+(?:candidature|duration|length|period)"
+    r"(?:\s+of\s+(?:the|their|your|his|her)?\s*(?:programme|program|course|study|studies|degree))?",
+    re.IGNORECASE,
+)
+_LIVING_LINE = re.compile(
+    r"[^.\n]*\b(?:living|maintenance|subsistence)\s+(?:allowance|stipend|subsidy)[^.\n]*",
+    re.IGNORECASE,
+)
+_PER_YEAR = re.compile(
+    r"\b(?:per|a|each)\s+(?:academic\s+)?(?:year|annum)\b|\bannual(?:ly)?\b", re.I
+)
+_PER_MONTH = re.compile(r"\b(?:per|a|each)\s+month\b|\bmonthly\b", re.I)
+
+
+def _living_allowance(text: str) -> tuple[dict[str, object], str] | None:
+    """A living allowance with its amount, currency and period, or nothing.
+
+    All three must be on the page's own line: an amount without a period is
+    not an allowance anyone can plan with, so none is invented.
+    """
+    for match in _LIVING_LINE.finditer(text):
+        line = match.group(0).strip()
+        money = parse_money(line)
+        if not money:
+            continue
+        if _PER_MONTH.search(line):
+            period = "month"
+        elif _PER_YEAR.search(line):
+            period = "academic_year"
+        else:
+            continue
+        amount, currency = money
+        return {"currency": currency, "amount": amount, "period": period}, line
+    return None
 
 
 def _award_links(html: str, base: str) -> list[str]:

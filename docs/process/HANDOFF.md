@@ -1083,6 +1083,14 @@ see expressibility) and why it is or is not scored, as of runs 52–55:
 Owner-level options for the blocked 20: permission/API from the universities, official aggregators
 (Studyinfo, Study in Korea), a browser tier for JS pages, a fixed-IP crawler.
 
+2026-09-25, GitHub Actions is out of minutes (owner: "0 минут"): every workflow job fails in ~4 s with
+no runner since 00:43 UTC, so run 56 (90d0121) never ran. Offline work meanwhile: two award claim
+types, `scholarship_living_allowance` → `coverage.living` and `scholarship_duration` → `duration`
+(NTU Nanyang S$6,500/year, "normal programme duration"); expressibility ceiling 31 → 34 of 62; see
+VERSIONS.md. `parse_money` read S$/HK$/C$/A$/NZ$ as USD — fixed, with KRW/HKD/NZD. Bond not added:
+the corpus value carries a basis and populations no pattern can read honestly. Scholarship discovery
+is still 0/3 live; these fields score only once the award page is reached (open, needs Actions).
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 

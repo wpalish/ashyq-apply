@@ -105,6 +105,11 @@ AWARD_KEYS = {
     "scholarship_stackable": "stackable",
     "scholarship_count": "count",
     "scholarship_min_test_score": "minimum_test_score",
+    # The corpus files a stated allowance under coverage and a duration given
+    # in words under "duration" (NTU Nanyang: S$6,500 a year; "normal
+    # programme duration"). Same statements, the corpus's own keys.
+    "scholarship_living_allowance": "coverage.living",
+    "scholarship_duration": "duration",
 }
 COVERAGE_KEYS = {"mandatory_fees": "fees", "health_insurance": "insurance"}
 DOCUMENT_TYPES = {"required_document", "essay_prompt", "recommendation_requirement"}
