@@ -338,3 +338,41 @@ class TestEveryPageLeavesAnOutcome:
         assert by_url["merit-scholarship.html"].page_type == "scholarship_award"
         assert by_url["missing-award.html"].category == "fetch-failed"
         assert len(result.page_outcomes) == result.pages_checked
+
+
+class TestOneAwardBudgetRankedAcrossIndexes:
+    """Run 57, NTU: a bursaries index filled every slot before the scholarships
+    index was read, and its Nanyang Scholarship link was never queued."""
+
+    @pytest.mark.asyncio
+    async def test_a_named_scholarship_beats_a_page_of_bursaries(self, settings, tmp_path):
+        root = tmp_path / "site"
+        bursaries = "".join(
+            f'<li><a href="bursary-{i}.html">Community Bursary {i}</a></li>' for i in range(14)
+        )
+        _write(
+            root,
+            "uni/funding.html",
+            _INDEX.format(
+                title="Scholarships and financial aid",
+                items=bursaries + '<li><a href="awards-list.html">Awards for new students</a></li>',
+            ),
+        )
+        _write(
+            root,
+            "uni/awards-list.html",
+            _INDEX.format(
+                title="Scholarships for new students",
+                items='<li><a href="nanyang-scholarship.html">Nanyang Scholarship</a></li>',
+            ),
+        )
+        for i in range(14):
+            _write(root, f"uni/bursary-{i}.html", _AWARD.format(name=f"Community Bursary {i}"))
+        _write(root, "uni/nanyang-scholarship.html", _AWARD.format(name="Nanyang Scholarship"))
+
+        candidate = _candidate(scholarships_url="fixture://uni/funding.html")
+        program = CandidateProgram(name="P", field="cs", degree=DegreeLevel.BACHELOR)
+        awards, result = await _run(root, settings, candidate, program)
+
+        assert "Nanyang Scholarship" in {a.name for a in awards}, result.page_outcomes
+        assert len(awards) <= 12

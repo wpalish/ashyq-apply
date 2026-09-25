@@ -271,16 +271,29 @@ class WebScholarshipAdapter:
                             f"{url}: no individual award pages were linked, so no award "
                             "can be verified in detail."
                         )
+                    # Every index shares one award budget, ranked together: NTU's
+                    # bursaries index was read first and its 21 links took all
+                    # twelve slots, so the scholarships index's Nanyang link was
+                    # never read (run 57). Awards named as scholarships go first.
+                    pending = [q for q in queue if q[1] > 0]
+                    kept = [q for q in queue if q[1] == 0]
+                    known = {_page_key(q[0]) for q in pending}
+                    pending += [(link, depth + 1) for link in links if _page_key(link) not in known]
+                    pending.sort(key=lambda q: _award_priority(q[0]))
+                    room = max(_MAX_AWARD_PAGES - len(scholarships), 0)
+                    queue[:] = kept + pending[:room]
+                    queued = sum(1 for link in links if any(q[0] == link for q in queue))
                     out.page_outcomes.append(
                         PageOutcome(
                             url=url,
                             category="fetched-ok",
                             page_type=page_type,
-                            detail=f"read as a funding index; {len(links)} award links followed",
+                            detail=(
+                                f"read as a funding index; {len(links)} award links, "
+                                f"{queued} queued within the award budget"
+                            ),
                         )
                     )
-                    room = _MAX_AWARD_PAGES - len(queue) - len(scholarships)
-                    queue.extend((link, depth + 1) for link in links[: max(room, 0)])
                 elif is_index:
                     # An index this deep is a site map, not a funding route.
                     out.errors.append(
@@ -835,6 +848,16 @@ def _living_allowance(text: str) -> tuple[dict[str, object], str] | None:
         amount, currency = money
         return {"currency": currency, "amount": amount, "period": period}, line
     return None
+
+
+def _award_priority(url: str) -> int:
+    """Lower reads first: a named scholarship, then awards, then need-based aid."""
+    path = urlparse(url).path.lower()
+    if "scholarship" in path:
+        return 0
+    if re.search(r"bursar|financial-?aid|loan|hardship", path):
+        return 2
+    return 1
 
 
 def _award_links(html: str, base: str) -> list[str]:

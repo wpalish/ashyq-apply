@@ -1091,6 +1091,14 @@ VERSIONS.md. `parse_money` read S$/HK$/C$/A$/NZ$ as USD — fixed, with KRW/HKD/
 the corpus value carries a basis and populations no pattern can read honestly. Scholarship discovery
 is still 0/3 live; these fields score only once the award page is reached (open, needs Actions).
 
+Run 57 (36112077422, on 5aa1e78; Actions restored): 5/62, precision 6/8; Groningen out of wall clock;
+KAIST files 4 claims, Warsaw 1, NTU 10. The funding-pages block shows why scholarship discovery is 0/3:
+NTU reads its bursaries index first, its 21 links fill all 12 award slots, then the scholarships index
+("17 award links followed") gets no room and the Nanyang page is never read — the "followed" count was
+misleading. Next commit ranks pending award links from every index together (named scholarships
+first, bursaries/financial aid last) within the same 12-page budget, and the outcome says how many
+links were actually queued.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
