@@ -1448,3 +1448,89 @@ of concept N that part 7 had left out:
 
 **Gates at `9b77217`:** typecheck, lint, **325 unit tests** (38 files) and build pass. Playwright: **99 passed,
 1 skipped**, and the redesign spec passes four times in a row on both projects (88/88).
+
+## 28. Part 9: share stories (2026-09-25)
+
+The owner said "продолжай" after being told that only owner decisions were left, and the standing rule is
+"decide by your own recommendation". The recommendation taken was to build concept Q's share stories
+(screen 14). The owner's round-6 request was results a student would post, and "Q's stories everywhere" was
+part of the mix the owner chose (§16). Two things were left alone because they are not design choices: the
+interface language, which is English by the owner's decision, and the unlock step, where the price and what
+is free are business decisions.
+
+| Commit | What |
+|---|---|
+| `2b1db21` | `lib/story.ts` (what each card says), `lib/storyCanvas.ts` (the card, drawn on the device), the share sheet, and "Share my map" / "Share as a story" |
+
+**The cards** (1080 × 1920, the app's fonts and colours, the globe drawn from the app's land dots and
+projection):
+- **My route** (night). It runs from the country of residence to the programme's city, then gives the
+  programme and intake, what its grant covers, and the site and date the facts were read.
+- **Requirements met** (sun). It is offered only when every checked requirement is met. It shows up to three
+  published minimums, overall and total scores first and never the deadline check. "The admission decision
+  is the university's." sits under the headline, where a crop keeps it.
+- **My application map** (day). It gives the reveal's counts ("within budget, if awarded"), the first
+  deadline still ahead, and chips for the regions the globe hides.
+- **"Application sent" is not built.** The product has no record of a sent application, and the card would
+  have to invent one.
+
+**Privacy for a 16-year-old:**
+- The price after grants and the student's own scores are off until switched on.
+- School, city and documents are never on a card, and the route starts at the country.
+- **The name is off by default, which departs from the concept.** The profile has no first-name field, so
+  the name would be the first word of the case's label. On a Kazakh document that word is the surname
+  ("Sadykova Aruzhan"). The switch shows the exact word it would add. A placeholder label ("Demo Applicant")
+  offers no name at all.
+- A demo run is labelled on the card itself, inside the safe area.
+
+**Nothing is uploaded or posted:**
+- "Share…" hands the PNG to the phone's own share sheet (Instagram, Telegram and WhatsApp are there). It
+  appears only where the device can share files.
+- "Save image" downloads the PNG.
+- There is no link and no friend's page. Both need a public backend route, which is out of this frontend
+  pass.
+
+**Where:** "Share my map" on the reveal, and "Share as a story" under an open programme's route. The sheet
+loads as its own chunk (7.2 KB gzipped), so the main bundle stays at 133.9 KB.
+
+**Defects found in part 9, with their root causes:**
+
+| # | Defect | Root cause | Fix |
+|---|---|---|---|
+| I72 | The route card's globe showed no route | The horizon's cap was a fixed size and tilt, and the route's middle fell below the card | The largest horizon that keeps both ends on the card, turned as high on the rim as the route allows (Astana to Tokyo needs a smaller globe) |
+| I73 | The globe on the route card ran under the source line when the grant's name took three lines | The globe's top was fixed | The globe starts below the text |
+| I74 | On the map card, the first deadline and the source were hidden under the brand band | The card was laid out top-down past the safe area | Laid out from the bottom of the safe area up |
+| I75 | Twelve European rings on one spot read as a smudge | Markers were drawn one by one | Places closer than a ring fold into one disc with their count |
+| I76 | "→ Asia & Oceania · 1" covered Singapore on the map card | The chips sat at the globe's middle height | In the frame's top corners, which the round globe leaves empty |
+| I77 | "covers … personal, travel" | A cost category's raw name | "fees", "personal costs" |
+| I78 | The name switch promised "never the surname" while printing the first word of the label, which on a Kazakh document is the surname | The concept assumed a first-name field that the profile does not have | The name is off by default, and the switch names the word it would add. A test fails if the default is turned on |
+| I79 | "3 within budget" on the map card, without the "if awarded" the reveal says | The label was shortened for the card | "within budget, if awarded" |
+| I80 | The card's spoken description read "20. programmes. 15. countries" | Every field was a separate sentence | Numbers and their words are joined, and the demo label is read first |
+| I81 | The share code added 7 KB to the first screen | The sheet was imported directly | Loaded when first opened |
+
+**Tests:**
+- Unit (`story.test`, `ShareSheet.test`):
+  - the privacy defaults, and that the surname, city and school never appear;
+  - no outcome words (chance, %, "will get in", accepted, admitted) with every switch on;
+  - the grant's coverage without saying it was won;
+  - "requirements met" only when met, with minimums and never dates;
+  - the map's counts as the reveal counts them;
+  - the sheet: its cards for what it was opened on, its switches and their spoken card, Escape, and the focus
+    returned.
+- E2E (`redesign.spec`, a new test):
+  - the map card saves as a 1080 × 1920 PNG, with the demo label and counts;
+  - the name is off;
+  - axe finds no serious violation in the open sheet;
+  - Escape gives the focus back;
+  - a met programme's "Requirements met" carries the university's decision and no scores.
+
+**Remaining risks:**
+- The cards are drawn in the browser, not rendered by a server from the same tokens. A browser without
+  Montserrat or Onest falls back to a system font.
+- There is no link on the card, so only the brand travels.
+- The cards have not been tested with students.
+- The Web Share API with files was checked only by feature detection here. Headless Chromium offers
+  "Save image" only.
+
+**Gates at `2b1db21`:** typecheck, lint, **340 unit tests** (40 files) and build pass. Playwright: **101
+passed, 1 skipped**. No horizontal scroll at 320 px with the sheet open.

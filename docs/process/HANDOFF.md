@@ -283,6 +283,12 @@ decisions) and the ru/kk vocabulary alone. Frontend only:
 4. Where: the reveal (the map) and an open programme (its route and requirements).
 5. Tests, review, video, docs (§28), PR.
 
+Progress on part 9: 1–4 `2b1db21`, 5 the docs commit. The report and defects I72–I81 are in the design doc §28.
+One privacy choice departs from the concept: the name is off by default, because the only name the profile
+has is the case's label, whose first word is the surname on a Kazakh document. **Next:** the owner reviews
+PR #20. Still waiting for the owner: the Russian vocabulary, the unlock step, a public link or friend's page
+for the stories (needs a backend route), and sessions with students.
+
 Write-ahead (claude-opus-5, 2026-09-25, redesign part 8; owner: "продолжай" after part 7 offered the two
 globe follow-ups). Reuse `components/Globe`; frontend only:
 1. Edge chips (concept N, Q6; R-07's "← Americas · 4"): a programme the globe hides - behind it or outside
@@ -1649,6 +1655,12 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+Redesign part 9 (share stories), frontend only. claude-opus-5 ran the gates on 2026-09-25 at `2b1db21`:
+- typecheck, lint, **340 unit tests** (40 files) and build: green;
+- Playwright: **101 passed, 1 skipped**.
+
+The main bundle is 133.9 KB gzipped; the share sheet is a lazy 7.2 KB chunk.
+
 Redesign part 8 (edge chips, programme route, triage globe), frontend only. claude-opus-5 ran the gates on
 2026-09-25 at `9b77217`:
 - typecheck, lint, **325 unit tests** (38 files) and build: green;
@@ -2491,6 +2503,7 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 | 2026-09-25 UTC | claude-opus-5 | `fff50a1` → `76015f0` redesign part 6 | Owner: "продолжай" (fourth time). Added region chips on the shortlist (concept 07, counted from the results) and swept every screen. The sweep fixed three things: the switcher's stale run count, its styling (including a 320 px overflow), and singular counts. Defects I52–I55; see design doc §25. |
 | 2026-09-25 UTC | claude-opus-5 | `3973167` → `84a5dd9` redesign part 7 | Owner: "делай глобус". Built the globe as canvas dots with lazy land data, a checked city table and routes from home. It appears on the start screen, the reveal and the shortlist, with region zoom and clusters. No idle redraws. Fixed I56–I63; see design doc §26. |
 | 2026-09-25 UTC | claude-opus-5 | `84a5dd9` → `5610790` redesign part 8 | Owner: "продолжай". Added edge chips for hidden programmes, a programme's route from home, and a night globe behind the triage. On a phone the triage answers stay above the tab bar (now asserted in e2e). Fixed I64–I70; see design doc §27. |
+| 2026-09-25 UTC | claude-opus-5 | `4d28534` → `2b1db21` redesign part 9 | Owner: "продолжай", with the rule to decide by recommendation. Built concept Q's share stories: route, requirements met and the application map. They are drawn on the device with privacy defaults; the name is off because the label's first word can be a surname. Nothing is posted. Fixed I72–I81; see design doc §28. |
 
 | 2026-09-20 | gpt-6-astra | b267b337 → V2-00 in progress | Startup/recovery, PR inventory, all pack files read; isolated worktree preserves existing dirty research work. |
 
