@@ -216,6 +216,13 @@ describe('deciding one at a time', () => {
     expect(screen.getByTestId('shortlist-table')).toBeInTheDocument();
   });
 
+  it('gives focus back to the button that opened it', async () => {
+    render(<ShortlistScreen />);
+    fireEvent.click(screen.getByTestId('triage-start'));
+    fireEvent.click(screen.getByTestId('triage-close'));
+    await waitFor(() => expect(screen.getByTestId('triage-start')).toHaveFocus());
+  });
+
   it('is not offered when every row already has an answer', () => {
     row = makeRow({ user_decision: 'approved' });
     render(<ShortlistScreen />);

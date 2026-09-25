@@ -12,7 +12,7 @@
  * is not a reason to drop that promise. The reason stays optional.
  */
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { StatusChip } from '@/components/primitives';
 import {
   admissionsFitTone, date, eligibilityTone, fundingClassTone, money,
@@ -35,11 +35,19 @@ export function Triage({
   const [reason, setReason] = useState('');
   const [busy, setBusy] = useState(false);
   const current = queue[0];
+  const title = useRef<HTMLHeadingElement>(null);
+  // Each new programme (and the final "every programme has an answer") takes
+  // focus on its heading: the button that was pressed may be gone, and a
+  // screen reader should hear which university is on the table now.
+  const currentId = current?.id ?? null;
+  useEffect(() => {
+    title.current?.focus();
+  }, [currentId]);
 
   if (!current) {
     return (
       <section className="triage" aria-labelledby="triage-title" data-testid="triage">
-        <h2 className="triage__title" id="triage-title">Every programme has an answer</h2>
+        <h2 className="triage__title" id="triage-title" tabIndex={-1} ref={title}>Every programme has an answer</h2>
         <p className="triage__muted">
           Approved and maybe programmes are waiting on the Approved screen. Nothing was decided for
           you: every answer here was yours.
@@ -81,7 +89,7 @@ export function Triage({
 
       <article className="triage__card" data-testid={`triage-card-${current.id}`}>
         <div className="triage__head">
-          <h2 className="triage__uni" id="triage-title">{current.university}</h2>
+          <h2 className="triage__uni" id="triage-title" tabIndex={-1} ref={title}>{current.university}</h2>
           <p className="triage__prog">{current.program} · {current.city}, {current.country}</p>
         </div>
 

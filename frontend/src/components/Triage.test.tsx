@@ -80,6 +80,17 @@ describe('triage', () => {
     await waitFor(() => expect(decide).toHaveBeenCalledWith('a', 'rejected', 'no funding', 'ask about housing'));
   });
 
+  it('moves focus to the next programme after an answer', async () => {
+    const decide = vi.fn().mockResolvedValue(undefined);
+    const { rerender } = render(<Triage queue={[row('a'), row('b')]} total={2} decide={decide} onClose={() => {}} />);
+    expect(screen.getByRole('heading', { name: 'University a' })).toHaveFocus();
+    fireEvent.click(screen.getByTestId('triage-reject'));
+    fireEvent.click(screen.getByTestId('triage-reject-save'));
+    await waitFor(() => expect(decide).toHaveBeenCalled());
+    rerender(<Triage queue={[row('b')]} total={2} decide={decide} onClose={() => {}} />);
+    expect(screen.getByRole('heading', { name: 'University b' })).toHaveFocus();
+  });
+
   it('says so when every programme has an answer', () => {
     const onClose = vi.fn();
     render(<Triage queue={[]} total={4} decide={vi.fn()} onClose={onClose} />);

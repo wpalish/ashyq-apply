@@ -115,7 +115,14 @@ export function ShortlistScreen() {
           queue={undecided}
           total={triageTotal}
           decide={decide}
-          onClose={() => setTriageTotal(null)}
+          onClose={() => {
+            setTriageTotal(null);
+            // Back where the person started; the title when nothing is left to decide.
+            setTimeout(() => {
+              const start = document.querySelector<HTMLElement>('[data-testid="triage-start"]');
+              (start ?? document.getElementById('shortlist-title'))?.focus();
+            }, 0);
+          }}
         />
       </>
     );
@@ -376,7 +383,7 @@ export function ShortlistScreen() {
     <>
       <div className="screen__head">
         <p className="screen__eyebrow">Step 04</p>
-        <h1 className="screen__title">The shortlist</h1>
+        <h1 className="screen__title" id="shortlist-title" tabIndex={-1}>The shortlist</h1>
         <p className="screen__lede">
           Three independent judgements per row. <strong>Eligibility</strong> is about published
           requirements, <strong>fit</strong> is how your profile sits against them, and{' '}
