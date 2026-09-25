@@ -1156,6 +1156,15 @@ among them (the key-order fix). UBC completed with 0 claims: search did not reac
 root, so five or more count as a "repeating list" and bypassed the site-root rule. On a home page the
 repeating bonus no longer applies. Test extended to five menu siblings.
 
+Claude, 2026-09-25, run 68: 5/62, precision 5/7.
+- Tavily answers HTTP 432 (plan usage limit) to every query, so search is off for the whole cohort. This
+  explains part of the drop since run 65. It needs the owner: a new key or plan, or another provider. Runs
+  until then measure navigation only.
+- UBC's menu reads come from walking the catalogue https://you.ubc.ca/programs (a JS page whose static HTML
+  is only the site menu), not from the home page. The walker scores those menu links 2 ("Canadian students",
+  "International students", "Applying to UBC"), so the signal-less and site-root rules never apply. Next:
+  look at why score_link gives a menu label a positive score. Not changed yet.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
