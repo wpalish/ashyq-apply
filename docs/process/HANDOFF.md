@@ -277,7 +277,8 @@ globe follow-ups). Reuse `components/Globe`; frontend only:
    route. The answers must stay above the phone's tab bar (defect I27).
 5. Tests, review at 320/390/1440 light and dark, video, docs (§27), PR.
 
-Progress on part 8: 1–4 `5610790`, 5 the docs commit. The report and defects I64–I70 are in the design doc §27.
+Progress on part 8: 1–4 `5610790`, 5 `c1adbdc`, the CI fix `9b77217` (I71). The report and defects I64–I71
+are in the design doc §27.
 One structural choice for the owner to check: on a phone, the section links (Search · Research · Results ·
 Money · Sources) step aside while the one-at-a-time triage is open, as in concept R-09, so the globe, the card
 and the answers fit above the tab bar. **Next:** the owner reviews PR #20. Still waiting for the owner: the
@@ -1631,9 +1632,10 @@ The steps codex left, unchanged and still next after this review:
 ## 6. Gate status at last run
 
 Redesign part 8 (edge chips, programme route, triage globe), frontend only. claude-opus-5 ran the gates on
-2026-09-25 at `5610790`:
-- typecheck, lint, **324 unit tests** (38 files) and build: green;
-- Playwright: **99 passed, 1 skipped**.
+2026-09-25 at `9b77217`:
+- typecheck, lint, **325 unit tests** (38 files) and build: green;
+- Playwright: **99 passed, 1 skipped**. The redesign spec passed four times in a row on both projects (88/88)
+  after the CI fix for I71.
 
 The main bundle is 133.5 KB gzipped (+3 KB).
 

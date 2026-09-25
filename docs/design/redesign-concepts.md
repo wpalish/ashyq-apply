@@ -1389,6 +1389,7 @@ of concept N that part 7 had left out:
 | Commit | What |
 |---|---|
 | `5610790` | Edge chips, the `fit` view, the route on the programme, the triage globe, and fixes I64–I70 |
+| `9b77217` | CI fix I71: the globe says it is turning from the render that asks for the turn |
 
 **How it is built:**
 - **A `fit` view.** The globe turns to the middle of the places it must show (their mean direction) and takes
@@ -1414,6 +1415,7 @@ of concept N that part 7 had left out:
 | I68 | On a 360 × 740 phone the triage answers were 11 px under the tab bar even before the globe | Two rows of section links sat above a screen that is meant to be the card alone. I27 was checked by eye, and no test guarded it | On a phone the section links step aside during the triage. The e2e now asserts that the answers end above the tab bar, and it fails without the fix |
 | I69 | With a region chosen, "Whole globe" went back to the region, not the globe (from part 7) | The label ignored the region filter | "All of Europe" |
 | I70 | On a wide screen the route was a full-width band with a small globe in empty grey | A band's globe is sized by its height | Beside the money from 900 px |
+| I71 | CI (mobile) read a cluster of 9 right after "Whole globe" and clicked it mid-turn | `data-turning` was set a frame after the render that asked for the turn, so waiting for "not turning" right after a tap could pass before the turn began | The figure says it is turning from the first render. A unit test reads it before any effect runs and fails without the fix |
 
 **Measured:**
 - There are zero canvas redraws over two idle seconds on the shortlist globe, an open programme's route
@@ -1444,4 +1446,5 @@ of concept N that part 7 had left out:
 - Two mutations were run: removing the chips and bringing back the section links. The new e2e assertions
   fail on each.
 
-**Gates:** typecheck, lint, **324 unit tests** (38 files) and build pass. Playwright: **99 passed, 1 skipped**.
+**Gates at `9b77217`:** typecheck, lint, **325 unit tests** (38 files) and build pass. Playwright: **99 passed,
+1 skipped**, and the redesign spec passes four times in a row on both projects (88/88).
