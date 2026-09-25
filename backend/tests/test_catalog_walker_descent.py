@@ -142,3 +142,29 @@ def test_a_site_home_page_reads_only_leads_that_say_programme():
     # catalogue; on a home page they are still the menu (run 67).
     assert [link.url for link in kept] == [lead.url]
     assert (menu.url, "walker_no_signal") in outcomes
+
+
+def test_top_level_menu_links_on_a_catalogue_are_not_a_repeating_list():
+    """Run 68: UBC's /programs HTML is only the site menu, and each item scored 2."""
+    from app.adapters.discovery.catalog_walker import WalkerLink
+
+    walker = _walker({}, [])
+    walker.domain = "ubc.ca"
+    menu = [
+        WalkerLink(url=f"https://you.ubc.ca/{slug}", label=label, score=0, source="html")
+        for slug, label in (
+            ("canadian", "Canadian students"),
+            ("international", "International students"),
+            ("tours-events", "Tours and events"),
+            ("contact-us", "Contact us"),
+            ("indigenous", "Indigenous students"),
+        )
+    ]
+    outcomes: list[tuple[str, str]] = []
+
+    kept = walker._score(menu, outcomes, "you.ubc.ca")
+
+    # Not a repeating list, and signal-less items one level below the root
+    # are the menu: none of them is read.
+    assert kept == []
+    assert all(outcome == "walker_no_signal" for _url, outcome in outcomes)

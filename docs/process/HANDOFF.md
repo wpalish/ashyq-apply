@@ -1165,6 +1165,12 @@ Claude, 2026-09-25, run 68: 5/62, precision 5/7.
   "International students", "Applying to UBC"), so the signal-less and site-root rules never apply. Next:
   look at why score_link gives a menu label a positive score. Not changed yet.
 
+Claude, 2026-09-25: UBC menu, fixed. The score 2 on the menu links was the repeating-list bonus: every item
+sits one level below the root, so five or more counted as a list. A page one level below the root now has
+no list parent, and a signal-less link to one is dropped as walker_no_signal even on the catalogue's host.
+Links that name the applicant's subject still score by label (Toronto's /data-computer-science). Golden
+demo unchanged. Search remains off (Tavily 432) until the owner renews it.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 

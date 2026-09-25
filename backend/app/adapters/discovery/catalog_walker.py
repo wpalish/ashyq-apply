@@ -316,9 +316,14 @@ def _parent_directory(url: str) -> str:
     """
     parsed = urlparse(url)
     path = (parsed.path or "").rstrip("/")
-    if not path:
+    parent = path.rsplit("/", 1)[0] if path else ""
+    if not parent:
+        # A page one level below the root sits in the site's menu, not in a
+        # list: UBC's JS catalogue at /programs shows only that menu in its
+        # HTML, and "Canadian students", "Contact us" and "Tours and events"
+        # each earned the list bonus and a read (run 68).
         return ""
-    return f"{parsed.netloc.lower()}{path.rsplit('/', 1)[0]}"
+    return f"{parsed.netloc.lower()}{parent}"
 
 
 def _drop_outcome(url: str, label: str) -> str:
@@ -538,7 +543,10 @@ class CatalogWalker:
             # On a home page every menu link shares the root as its parent, so
             # "repeating" there is the menu itself, not a programme list
             # (run 67: the site-root rule alone let UBC's menu through).
-            if base <= 0 and (site_root or (not repeating and _host(link.url) != catalogue_host)):
+            menu_item = not parent
+            if base <= 0 and (
+                site_root or menu_item or (not repeating and _host(link.url) != catalogue_host)
+            ):
                 # Nothing about it says programme, and it leaves the catalogue's
                 # own site: moodle, the wiki, webmail, the library. The T29
                 # contract reads a signal-less lead on the catalogue's site and
