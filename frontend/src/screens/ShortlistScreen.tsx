@@ -13,6 +13,7 @@
 import { Fragment, useMemo, useState } from 'react';
 import { BudgetLadder, ceilingFrom } from '@/components/BudgetLadder';
 import { CompareView } from '@/components/CompareView';
+import { REGION_LABEL, regionCounts, regionOf, type Region } from '@/lib/regions';
 import { ResultCard } from '@/components/ResultCard';
 import { ResultDetail } from '@/components/ResultDetail';
 import { Triage } from '@/components/Triage';
@@ -110,6 +111,7 @@ export function ShortlistScreen({ onEditSearch }: { onEditSearch?: () => void } 
   const [expanded, setExpanded] = useState<string | null>(null);
   const [sort, setSort] = useState<SortKey>('key');
   const [country, setCountry] = useState('');
+  const [region, setRegion] = useState<Region | ''>('');
   const [eligibility, setEligibility] = useState('');
   const [funding, setFunding] = useState('');
   const [hideRejected, setHideRejected] = useState(false);
@@ -137,6 +139,7 @@ export function ShortlistScreen({ onEditSearch }: { onEditSearch?: () => void } 
   const rows = useMemo(() => {
     const filtered = results.filter(
       (r) =>
+        (!region || regionOf(r.country) === region) &&
         (!country || r.country === country) &&
         (!eligibility || r.eligibility === eligibility) &&
         (!funding || r.best_funding_classification === funding) &&
@@ -156,7 +159,7 @@ export function ShortlistScreen({ onEditSearch }: { onEditSearch?: () => void } 
       const key = (r: ProgramResult) => r.ranking?.sort_key ?? r.preference_score?.total ?? 0;
       return key(b) - key(a) || a.id.localeCompare(b.id);
     });
-  }, [results, country, eligibility, funding, hideRejected, sort]);
+  }, [results, region, country, eligibility, funding, hideRejected, sort]);
 
   // A row with no ranking is one assessed under v1; it still belongs in the
   // list rather than in a set-aside section it was never scored for.
@@ -589,6 +592,26 @@ export function ShortlistScreen({ onEditSearch }: { onEditSearch?: () => void } 
           </Notice>
         )}
 
+        {/* Concept 07's region chips: counted from every result, so a chip
+            never promises programmes the list will not show. */}
+        <div className="region-chips" role="group" aria-label="Region" data-testid="region-chips">
+          <button type="button" aria-pressed={region === ''} onClick={() => setRegion('')} data-testid="region-all">
+            All <span className="region-chips__n">{results.length}</span>
+          </button>
+          {regionCounts(results).map(({ region: r, count }) => (
+            <button
+              key={r}
+              type="button"
+              aria-pressed={region === r}
+              disabled={count === 0}
+              onClick={() => setRegion(region === r ? '' : r)}
+              data-testid={`region-${r}`}
+            >
+              {REGION_LABEL[r]} <span className="region-chips__n">{count}</span>
+            </button>
+          ))}
+        </div>
+
         {ceiling && (
           <BudgetLadder results={rows} ceiling={ceiling} onOpen={openRow} folded={view === 'cards'} />
         )}
@@ -644,7 +667,7 @@ export function ShortlistScreen({ onEditSearch }: { onEditSearch?: () => void } 
                 </span>
               </span>
               <span className="panel__state">
-                {[country, eligibility, funding].filter(Boolean).length + (hideRejected ? 1 : 0) || 'none'} on
+                {[region, country, eligibility, funding].filter(Boolean).length + (hideRejected ? 1 : 0) || 'none'} on
               </span>
             </summary>
             <div className="panel__body">

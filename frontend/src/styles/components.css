@@ -1553,3 +1553,27 @@
   .next-docs__item { grid-template-columns: auto minmax(0, 1fr); }
   .next-docs__when { grid-column: 2; white-space: normal; }
 }
+
+/* --- region chips (round 7, screen 07) ------------------------------------ */
+.region-chips { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.region-chips button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2.25rem;
+  padding: 0 0.9rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: 700;
+  cursor: pointer;
+}
+.region-chips button[aria-pressed='true'] { background: var(--ink); color: var(--ink-inverted); border-color: var(--ink); }
+.region-chips button:disabled { opacity: 0.55; cursor: default; }
+.region-chips__n { font-variant-numeric: tabular-nums; font-weight: 800; }
+@media (max-width: 640px) {
+  .region-chips button { min-height: 2.75rem; }
+}

@@ -377,3 +377,35 @@ describe('comparing programmes', () => {
     expect(screen.getByTestId('compare-tray')).toHaveTextContent('1 picked');
   });
 });
+
+describe('region chips', () => {
+  beforeEach(() => {
+    window.localStorage.removeItem('ashyq.shortlistView');
+    row = makeRow({ id: 'result-1', university: 'University of Groningen', country: 'Netherlands' });
+    others = [
+      makeRow({ id: 'result-2', university: 'University of Toronto', country: 'Canada' }),
+      makeRow({ id: 'result-3', university: 'University of Tokyo', country: 'Japan' }),
+      makeRow({ id: 'result-4', university: 'KU Leuven', country: 'Belgium' }),
+    ];
+  });
+
+  it('counts every result by region', () => {
+    render(<ShortlistScreen />);
+    expect(screen.getByTestId('region-all')).toHaveTextContent('All 4');
+    expect(screen.getByTestId('region-europe')).toHaveTextContent('Europe 2');
+    expect(screen.getByTestId('region-americas')).toHaveTextContent('Americas 1');
+    expect(screen.getByTestId('region-asia_oceania')).toHaveTextContent('Asia & Oceania 1');
+    expect(screen.queryByTestId('region-other')).toBeNull();
+  });
+
+  it('filters the list to one region, and back', () => {
+    render(<ShortlistScreen />);
+    fireEvent.click(screen.getByTestId('region-europe'));
+    expect(screen.getByTestId('region-europe')).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByTestId('card-result-1')).toBeInTheDocument();
+    expect(screen.getByTestId('card-result-4')).toBeInTheDocument();
+    expect(screen.queryByTestId('card-result-2')).toBeNull();
+    fireEvent.click(screen.getByTestId('region-europe'));
+    expect(screen.getByTestId('card-result-2')).toBeInTheDocument();
+  });
+});

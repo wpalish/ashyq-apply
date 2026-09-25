@@ -92,6 +92,24 @@ test('the shortlist reads as price cards, and a card opens its programme', async
   await expect(page.getByTestId('budget-ladder')).toContainText('3 within 6,000 USD');
 });
 
+test('region chips count the list and filter it', async () => {
+  await goTo(page, 'shortlist');
+  await page.getByTestId('view-cards').click();
+  const chips = page.getByTestId('region-chips');
+  const total = Number((await chips.getByTestId('region-all').innerText()).replace(/\D/g, ''));
+  const counts = await chips.locator('button:not([data-testid="region-all"]) .region-chips__n').allTextContents();
+  expect(counts.map(Number).reduce((a, b) => a + b, 0)).toBe(total);
+
+  // Cards sit in more than one group (ranked, and the ones set aside), so count them all.
+  const cards = page.locator('main article[data-testid^="card-"]');
+  await chips.getByTestId('region-europe').click();
+  const europe = Number((await chips.getByTestId('region-europe').innerText()).replace(/\D/g, ''));
+  await expect(cards).toHaveCount(europe);
+  await expect(cards.filter({ hasText: 'University of Toronto' })).toHaveCount(0);
+  await chips.getByTestId('region-all').click();
+  await expect(cards).toHaveCount(total);
+});
+
 test('the results reveal counts what the run found', async () => {
   await goTo(page, 'progress');
   const reveal = page.getByTestId('results-reveal');
