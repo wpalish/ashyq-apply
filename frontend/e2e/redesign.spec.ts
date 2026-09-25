@@ -119,6 +119,7 @@ test('the globe places every programme at its city, turns by region and opens a 
   await expect(page.getByTestId('globe-unplaced')).toHaveCount(0);
 
   await page.getByTestId('region-americas').click();
+  await expect(globe).not.toHaveAttribute('data-turning', 'true');
   const americas = Number((await page.getByTestId('region-americas').innerText()).replace(/\D/g, ''));
   await expect(globe.locator('[data-testid^="globe-marker-"]')).toHaveCount(americas);
 
@@ -128,6 +129,20 @@ test('the globe places every programme at its city, turns by region and opens a 
   await expect(page.getByTestId(`card-open-${id}`)).toHaveAttribute('aria-expanded', 'true');
   await page.getByTestId(`card-open-${id}`).click();
   await page.getByTestId('region-all').click();
+  await expect(globe).not.toHaveAttribute('data-turning', 'true');
+
+  // Crowded cities fold into a cluster with a count; tapping it zooms in, and
+  // "Whole globe" comes back. A marker is never moved far from its city.
+  const cluster = globe.getByTestId('globe-cluster').first();
+  const before = Number(await cluster.getAttribute('data-count'));
+  expect(before).toBeGreaterThanOrEqual(4);
+  await cluster.click();
+  await expect(page.getByTestId('globe-out')).toBeVisible();
+  await expect(globe).not.toHaveAttribute('data-turning', 'true');
+  const afterClusters = await globe.getByTestId('globe-cluster').evaluateAll((els) => els.map((e) => Number(e.getAttribute('data-count'))));
+  expect(Math.max(0, ...afterClusters)).toBeLessThan(before);
+  await page.getByTestId('globe-out').click();
+  await expect(page.getByTestId('globe-out')).toHaveCount(0);
 
   await goTo(page, 'progress');
   await expect(page.getByTestId('reveal-globe')).toBeVisible();

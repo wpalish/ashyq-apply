@@ -171,6 +171,7 @@ export function defaultView(home: LatLon | null): LatLon {
 export interface ResultMarker extends LatLon {
   id: string;
   label: string;
+  name: string;
 }
 
 /**
@@ -191,7 +192,7 @@ export function markersFor(results: ProgramResult[]): { markers: ResultMarker[];
     const price = gap?.computable && gap.gap
       ? `${money({ ...gap.gap, academic_year: null })} a year`
       : 'cost not computed';
-    markers.push({ id: r.id, lat: place.lat, lon: place.lon, label: `${r.city} · ${price}` });
+    markers.push({ id: r.id, lat: place.lat, lon: place.lon, label: `${r.city} · ${price}`, name: r.city });
   }
   return { markers, unplaced };
 }

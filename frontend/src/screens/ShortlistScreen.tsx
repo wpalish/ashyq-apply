@@ -113,7 +113,14 @@ export function ShortlistScreen({ onEditSearch }: { onEditSearch?: () => void } 
   const [expanded, setExpanded] = useState<string | null>(null);
   const [sort, setSort] = useState<SortKey>('key');
   const [country, setCountry] = useState('');
-  const [region, setRegion] = useState<Region | ''>('');
+  const [region, setRegionState] = useState<Region | ''>('');
+  // A cluster tapped on the globe: where to look, and how close. A region
+  // chip starts from that region's own view again.
+  const [globeCloser, setGlobeCloser] = useState<{ lat: number; lon: number; zoom: number } | null>(null);
+  const setRegion = (next: Region | '') => {
+    setRegionState(next);
+    setGlobeCloser(null);
+  };
   const [eligibility, setEligibility] = useState('');
   const [funding, setFunding] = useState('');
   const [hideRejected, setHideRejected] = useState(false);
@@ -622,14 +629,25 @@ export function ShortlistScreen({ onEditSearch }: { onEditSearch?: () => void } 
             globe is for looking. */}
         {view === 'cards' && (
           <div className="shortlist-globe">
+            {globeCloser && (
+              <button type="button" className="btn btn--sm shortlist-globe__out" onClick={() => setGlobeCloser(null)} data-testid="globe-out">
+                Whole globe
+              </button>
+            )}
             <Globe
               layout="band"
               tone="day"
               height={230}
               markers={globe.markers}
               home={home}
-              focus={region && REGION_VIEW[region] ? REGION_VIEW[region] : defaultView(home)}
-              zoom={region && REGION_VIEW[region] ? REGION_VIEW[region].zoom : 1}
+              focus={globeCloser ?? (region && REGION_VIEW[region] ? REGION_VIEW[region] : defaultView(home))}
+              zoom={globeCloser?.zoom ?? (region && REGION_VIEW[region] ? REGION_VIEW[region].zoom : 1)}
+              onCluster={(members) => {
+                const lat = members.reduce((n, m) => n + m.lat, 0) / members.length;
+                const lon = members.reduce((n, m) => n + m.lon, 0) / members.length;
+                const now = globeCloser?.zoom ?? (region && REGION_VIEW[region] ? REGION_VIEW[region].zoom : 1);
+                setGlobeCloser({ lat, lon, zoom: Math.min(12, now * 2.4) });
+              }}
               routes={false}
               selected={expanded}
               onSelect={openRow}

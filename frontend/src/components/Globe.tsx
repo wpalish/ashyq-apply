@@ -23,6 +23,8 @@ export interface GlobeMarker extends LatLon {
   id: string;
   /** Shown beside the marker when it is the selected one. */
   label: string;
+  /** The city, shown beside every marker once the globe is close in. */
+  name?: string;
 }
 
 export interface GlobeProps {
@@ -40,6 +42,8 @@ export interface GlobeProps {
   routes?: boolean;
   selected?: string | null;
   onSelect?: (id: string) => void;
+  /** A crowd of markers was tapped: zoom in on them. Without it, crowds still show their count. */
+  onCluster?: (members: GlobeMarker[]) => void;
   /** What the globe shows, for a screen reader. */
   caption: string;
   testId?: string;
@@ -181,31 +185,71 @@ function draw(
   }
 }
 
-const MARKER_GAP = 22;
+/** A marker's tap target; two closer than this would cover each other. */
+const MARKER_GAP = 26;
+/** From this many crowded markers up, they show as one cluster to zoom into. */
+const CLUSTER_FROM = 4;
+
+interface Placed { m: GlobeMarker; x: number; y: number }
+
+/** Markers whose tap targets touch, grouped (single link). */
+function crowds(points: Placed[]): Placed[][] {
+  const groups: Placed[][] = [];
+  const seen = new Set<number>();
+  points.forEach((_, start) => {
+    if (seen.has(start)) return;
+    const group: Placed[] = [];
+    const queue = [start];
+    seen.add(start);
+    while (queue.length) {
+      const i = queue.pop()!;
+      const p = points[i]!;
+      group.push(p);
+      points.forEach((q, j) => {
+        if (!seen.has(j) && Math.hypot(p.x - q.x, p.y - q.y) < MARKER_GAP) {
+          seen.add(j);
+          queue.push(j);
+        }
+      });
+    }
+    groups.push(group);
+  });
+  return groups;
+}
 
 /**
- * Nudges a marker that sits on top of another, so every one can be tapped:
- * Toronto and Montreal are 500 km apart, a marker's width at this scale.
- * The nudge is a few pixels round the true place, never across a region.
+ * Two or three markers that touch are set one step apart round their true
+ * place, so each can be tapped. Never further: a marker a long way from its
+ * city would be a wrong fact, which is why a bigger crowd becomes a cluster.
  */
-function declutter<T extends { x: number; y: number }>(points: T[]): T[] {
-  const out: T[] = [];
-  for (const point of points) {
-    let { x, y } = point;
-    for (let attempt = 0; attempt < 6; attempt += 1) {
-      const clash = out.find((o) => Math.hypot(o.x - x, o.y - y) < MARKER_GAP);
-      if (!clash) break;
-      const angle = (attempt * Math.PI) / 3 + Math.PI / 6;
-      x = point.x + Math.cos(angle) * MARKER_GAP;
-      y = point.y + Math.sin(angle) * MARKER_GAP;
-    }
-    out.push({ ...point, x, y });
-  }
-  return out;
+function spread(group: Placed[]): Placed[] {
+  if (group.length === 1) return group;
+  const cx = group.reduce((n, p) => n + p.x, 0) / group.length;
+  const cy = group.reduce((n, p) => n + p.y, 0) / group.length;
+  return group.map((p, i) => {
+    const angle = (i / group.length) * Math.PI * 2 - Math.PI / 2;
+    const r = MARKER_GAP / (2 * Math.sin(Math.PI / group.length));
+    return { ...p, x: cx + Math.cos(angle) * r, y: cy + Math.sin(angle) * r };
+  });
+}
+
+/**
+ * The city names that fit without covering one another; a name that would
+ * overlap one already shown is left to its marker's own label on tap.
+ */
+function namesThatFit(points: Placed[]): Placed[] {
+  const boxes: [number, number, number, number][] = [];
+  return points.filter(({ m, x, y }) => {
+    const w = (m.name?.length ?? 0) * 6.4 + 4;
+    const box: [number, number, number, number] = [x + 10, y - 8, x + 10 + w, y + 8];
+    const hit = boxes.some((b) => box[0] < b[2] && box[2] > b[0] && box[1] < b[3] && box[3] > b[1]);
+    if (!hit) boxes.push(box);
+    return !hit;
+  });
 }
 
 export function Globe(props: GlobeProps) {
-  const { markers, home, focus, tone, layout, height, zoom = 1, selected, onSelect, caption, testId } = props;
+  const { markers, home, focus, tone, layout, height, zoom = 1, selected, onSelect, onCluster, caption, testId } = props;
   const wrap = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   const [width, setWidth] = useState(360);
@@ -254,6 +298,9 @@ export function Globe(props: GlobeProps) {
   }, []);
 
   // Turning: ease to the new centre and zoom, or jump when motion is reduced.
+  // Said on the figure while it turns, so a test (or anything else) can wait
+  // for it to settle instead of guessing a delay.
+  const [turning, setTurning] = useState(false);
   const zoomRef = useRef(shownZoom);
   zoomRef.current = shownZoom;
   // Only a new focus or zoom is a turn worth watching; a new width (the first
@@ -274,15 +321,17 @@ export function Globe(props: GlobeProps) {
     }
     let frame = 0;
     const start = performance.now();
+    setTurning(true);
     const step = (now: number) => {
       const t = Math.min(1, (now - start) / 650);
       setCenter(interpolateCenter(from, target, t));
       const e = t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
       setShownZoom(fromZoom + (zoom - fromZoom) * e);
       if (t < 1) frame = requestAnimationFrame(step);
+      else setTurning(false);
     };
     frame = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(frame);
+    return () => { cancelAnimationFrame(frame); setTurning(false); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [target, zoom]);
 
@@ -291,15 +340,27 @@ export function Globe(props: GlobeProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [g, center, markers, home, selected, themeTick, props.routes, dots]);
 
-  const placed = declutter(markers
+  const inView: Placed[] = markers
     .map((m) => ({ m, p: project(m, center) }))
     .filter(({ p }) => p.z > 0.04)
     .map(({ m, p }) => ({ m, x: g.cx + p.x * g.radius, y: g.cy - p.y * g.radius }))
-    .filter(({ x, y }) => x >= 0 && x <= g.width && y >= 0 && y <= g.height));
+    .filter(({ x, y }) => x >= 0 && x <= g.width && y >= 0 && y <= g.height);
+  const groups = crowds(inView);
+  // Close enough in, a step of 26 px is a few kilometres: a crowd is then
+  // set round its place rather than folded into a cluster that cannot open.
+  const closeIn = shownZoom >= 10;
+  const clusters = closeIn ? [] : groups.filter((group) => group.length >= CLUSTER_FROM);
+  const placed = groups.filter((group) => closeIn || group.length < CLUSTER_FROM).flatMap(spread);
   const label = placed.find(({ m }) => m.id === selected);
 
   return (
-    <figure className={`globe globe--${tone} globe--${layout}`} style={{ height }} ref={wrap} data-testid={testId}>
+    <figure
+      className={`globe globe--${tone} globe--${layout}`}
+      style={{ height }}
+      ref={wrap}
+      data-testid={testId}
+      data-turning={turning ? 'true' : undefined}
+    >
       <canvas ref={canvas} className="globe__canvas" style={{ width: '100%', height }} aria-hidden="true" />
       <div className="globe__markers" aria-hidden="true">
         {placed.map(({ m, x, y }) => (
@@ -313,6 +374,30 @@ export function Globe(props: GlobeProps) {
             title={m.label}
             data-testid={`globe-marker-${m.id}`}
           />
+        ))}
+        {clusters.map((group) => {
+          const x = group.reduce((n, p) => n + p.x, 0) / group.length;
+          const y = group.reduce((n, p) => n + p.y, 0) / group.length;
+          return (
+            <button
+              key={group.map((p) => p.m.id).join('|')}
+              type="button"
+              tabIndex={-1}
+              className="globe__cluster"
+              style={{ left: x, top: y }}
+              onClick={() => onCluster?.(group.map((p) => p.m))}
+              title={`${group.length} programmes here`}
+              data-testid="globe-cluster"
+              data-count={group.length}
+            >
+              {group.length}
+            </button>
+          );
+        })}
+        {/* Close in, the land is too sparse to say where you are: the
+            cities name themselves instead. */}
+        {shownZoom >= 4 && namesThatFit(placed.filter(({ m }) => m.id !== selected && m.name)).map(({ m, x, y }) => (
+          <span key={`name-${m.id}`} className="globe__name" style={{ left: x, top: y }}>{m.name}</span>
         ))}
         {label && (
           <span
