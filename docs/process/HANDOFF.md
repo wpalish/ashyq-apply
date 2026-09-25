@@ -265,6 +265,14 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+Write-ahead (claude-opus-5, 2026-09-25, redesign part 6; owner: "продолжай" a fourth time).
+1. Shortlist: concept 07's region chips (Europe · Americas · Asia & Oceania) as a filter, counted from the
+   results. The mapping from country to region is a static geography table, and a country missing from it is
+   counted under "Other", never guessed. The globe stays with the owner.
+2. A sweep of every screen at 390/1440, light and dark, aimed at the ones the redesign barely touched (Money,
+   Sources, Export, People). Fix what it finds, with root causes.
+3. Docs (§25), video, PR.
+
 Write-ahead (claude-opus-5, 2026-09-25, redesign part 5; owner: "продолжай" a third time). What is left of
 the concept without an owner decision:
 1. Plan: concept L's "На этой неделе" - the documents whose start-by date falls in the next seven days (or has
