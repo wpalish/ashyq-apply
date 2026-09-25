@@ -227,7 +227,8 @@ async def probe(target: Target, fetcher) -> Finding:
         missing = finding(
             VALUE_MISSING,
             f"[{page_type}] the quoted words are in our text; "
-            f"{len(ungated)} claims came out, none this one"
+            f"{len(ungated)} claims came out, none this one: "
+            + ", ".join(f"{k}={str(v)[:60]}" for k, v in ungated[:6])
             + (" (the certified value is null)" if target.value is None else ""),
         )
         return Finding(**{**asdict(missing), "context": excerpt_context(target.excerpt, text)})

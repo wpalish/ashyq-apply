@@ -1132,6 +1132,12 @@ Claude, 2026-09-25, runs 63–64: 4/62 (5/8), then 6/62 (8/11).
 - Fix: the walk stops at the first walk that confirms a programme. The descent test was updated to pin this.
   The golden demo is unchanged.
 
+Claude, 2026-09-25, run 65: 7/62 (ties best), precision 8/11. All 10 cases completed; Groningen got its 5
+claims back. Vienna 4→2 claims, and the two lost were a scorer-"neither" wrong-host duplicate, not a fact.
+UBC ielts.subscores: the oracle's extraction on the certified page yields 4 claims and no subscore. The
+same excerpt alone extracts 6.0 locally, so something else on the full page pre-empts it. The oracle now
+names the claims it got, so run 66 will show what.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
