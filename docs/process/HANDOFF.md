@@ -276,6 +276,10 @@ the concept without an owner decision:
 3. Account (concept 02): the sign-in / sign-up card in the brand, checked with auth on.
 4. Review at 390/1440 light and dark, video, docs (§24), PR.
 
+Progress on part 5: 1 `fd8442b`, 2 `8bc32e6`, 3 `13dc954`, fixes from the review `03c2846`, then the docs commit.
+Report and defects I46–I51 are in the design doc §24. **Next:** the owner reviews PR #20. Still waiting on the
+owner: the globe, the Russian vocabulary, share stories and the unlock step.
+
 Write-ahead (claude-opus-5, 2026-09-25, redesign part 4; owner: "продолжай" again). Concept screens
 still in the old shape, none needing an owner decision:
 1. Plan board: the kept programmes' grant deadlines join the admission ones (concept L's "Эссе на
@@ -1579,6 +1583,10 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+Redesign part 5, frontend only. claude-opus-5 ran the gates on 2026-09-25 at `03c2846`: typecheck, lint,
+**290 unit tests** (34 files) and build are green. Playwright: **95 passed, 1 skipped**. Auth e2e: **6 passed**,
+including the new axe scan of the sign-in screen, which is clean.
+
 Redesign part 4, frontend only, gates run by claude-opus-5 on 2026-09-25 at `6d14550`:
 - typecheck, lint, **279 unit tests** (31 files) and build are green;
 - Playwright **95 passed, 1 skipped**;
@@ -2395,6 +2403,7 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 | 2026-09-25 UTC | claude-opus-5 | `6a814d3` → `bd1abc0` redesign part 2 | Owner: the app did not look like the concept. The first pass had changed the paint; this pass changes the structure: five tabs, a three-field start, the results reveal, price cards (table one tap away). English stays, the globe waits. 7 more defects (I21–I27) found and fixed. |
 | 2026-09-25 UTC | claude-opus-5 | `d192d19` → `a4f3c95` redesign part 3 | Owner: "продолжай". Added three concept screens: the programme's money as arithmetic (10), a row-by-row comparison of up to three programmes (11) and the Plan tab's departures board of deadlines (12). 9 defects (I28–I36) found and fixed; root causes are in the design doc §22. Share stories, the globe and the Russian vocabulary still wait for the owner. |
 | 2026-09-25 UTC | claude-opus-5 | `5cbcd9e` → `6d14550` redesign part 4 | Owner said "продолжай" again. Grant deadlines now appear on the plan board (the next deadline became the MEXT nomination). The research run became a night moment that shows what it found so far. The documents screen now shows what is ready, what is missing and when to start. Found and fixed 9 defects (I37–I45); design doc §23. |
+| 2026-09-25 UTC | claude-opus-5 | `47b8e2b` → `03c2846` redesign part 5 | Owner: "продолжай" (third time). Board rows open onto their programme. Added "Next to start" and the shared documents module, replaced step numbers with tab-and-section eyebrows, and put the brand on the account screen. Six defects (I46–I51), design doc §24. |
 
 | 2026-09-20 | gpt-6-astra | b267b337 → V2-00 in progress | Startup/recovery, PR inventory, all pack files read; isolated worktree preserves existing dirty research work. |
 

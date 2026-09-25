@@ -1252,3 +1252,41 @@ and screen 14 (share stories) still wait for the owner.
 - Playwright: **95 passed, 1 skipped** (desktop and Pixel 7).
 - axe is clean on the documents screen, which is new to the scan.
 - The found list is checked for the concept's three kinds of finding.
+
+## 24. Part 5: the plan's tasks, the account screen, the labels (2026-09-25)
+
+The owner said "продолжай" a third time. Part 5 finishes what concept L put under the board, brings the
+account screen (concept 02) into the brand, and removes the old step numbers.
+
+| Commit | What |
+|---|---|
+| `fd8442b` | Plan. A row's name opens its programme: the three answers, the money line and the documents ("0 of 8 ready · next: Letter of recommendation, start by 2 Oct"). "Next to start" shows the three unticked documents with the earliest start dates across the kept list, and the ones due within seven days say "this week". The ticks and the start-by arithmetic moved to `lib/docs.ts`, which both screens use. |
+| `8bc32e6` | Each eyebrow names its tab and section ("Match · Money") instead of "Step 05". |
+| `13dc954` | Account. The sign-in and sign-up card sits beside the night panel: the brand, "Find where you can study — and what it will cost", and three promises the product keeps. On a phone the panel is just the brand and that line. The password hint counts characters. |
+| `03c2846` | Two fixes found while recording: a document ticked in "Next to start" can be unticked there, and the documents screen says "Collecting documents…" during a collection. |
+
+**Defects found in part 5, with their root causes:**
+
+| # | Defect | Root cause | Fix |
+|---|---|---|---|
+| I46 | Six screens said "Step 01" to "Step 09"; "Step 05" sat above Match › Money, and steps 04, 07 and 08 no longer existed | The eyebrows were numbered for the old fifteen-item sidebar | Tab and section, in the navigation's own words |
+| I47 | The first page a family sees had no brand and did not say what the product is | The auth card was built as a bare form before the design system | The brand and three promises beside the form |
+| I48 | On a phone, a line of the headline began with its dash ("— and what it will cost") | An ordinary space before the dash (the concept's own defect M1) | A no-break space before the dash, on the start screen too |
+| I49 | Ticking a document in "Next to start" removed it at once, with no way to undo there | The list was recomputed from the ticks on every change | A document ticked there stays, struck through, until the next visit |
+| I50 | Right after "Collect documents", the documents screen said "run Collect documents" | Its empty state did not know a collection was running | "Collecting documents…", using the same test as the plan's button |
+| I51 | The sign-in screen had never been scanned by axe | The only auth-on suite checked the flow, not accessibility | The auth journey scans it. It is clean |
+
+**Decisions taken without the owner, and why:**
+
+- **"Next to start" rather than "this week".** A list limited to seven days is empty on most days. The panel
+  always shows the next three documents and marks the ones in this week. In the demo, MEXT's letter of
+  recommendation is due 1 November and takes about 30 days, so it has to start by 2 October, which is this
+  week.
+- **No language switch on the account screen.** The concept shows RU · ҚАЗ · EN there, but this screen is
+  not translated, and the owner decided the interface stays English. A switch that changes nothing would
+  mislead.
+
+**Gates at `03c2846`:**
+- typecheck, lint, **290 unit tests** (34 files) and build pass.
+- Playwright: **95 passed, 1 skipped**.
+- Auth e2e: **6 passed**, with the sign-in screen's axe scan clean.
