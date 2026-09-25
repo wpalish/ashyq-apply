@@ -183,6 +183,11 @@ def _matches(expected: object, produced: object) -> bool:
         return False
     if isinstance(expected, int | float) and isinstance(produced, int | float):
         return abs(float(expected) - float(produced)) < 1e-9
+    if isinstance(expected, dict) and isinstance(produced, dict):
+        # The scorer's own comparison: key order is not a value. Run 66 showed
+        # UBC's subscores extracted exactly and reported missing, because
+        # str() of the two maps listed the bands in different orders.
+        return json.dumps(expected, sort_keys=True) == json.dumps(produced, sort_keys=True)
     return str(expected).casefold() == str(produced).casefold()
 
 

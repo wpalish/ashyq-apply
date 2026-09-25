@@ -644,3 +644,12 @@ def test_a_child_stopped_by_its_own_clock_keeps_what_it_filed(tmp_path, monkeypa
 
     observation = Observation.model_validate_json(output.read_text(encoding="utf-8"))
     assert observation.error == "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"
+
+
+def test_the_oracle_compares_band_maps_regardless_of_key_order():
+    from evaluation.research.oracle import _matches
+
+    expected = {"reading": 6.0, "listening": 6.0, "speaking": 6.0, "writing": 6.0}
+    produced = {"listening": 6.0, "reading": 6.0, "speaking": 6.0, "writing": 6.0}
+    assert _matches(expected, produced)
+    assert not _matches(expected, {**produced, "writing": 5.5})

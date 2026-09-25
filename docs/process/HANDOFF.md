@@ -1138,6 +1138,13 @@ UBC ielts.subscores: the oracle's extraction on the certified page yields 4 clai
 same excerpt alone extracts 6.0 locally, so something else on the full page pre-empts it. The oracle now
 names the claims it got, so run 66 will show what.
 
+Claude, 2026-09-25, run 66: 6/62, precision 7/9. UBC hit the clock again but kept 2 claims.
+UBC ielts.subscores is not an extraction gap. The certified page yields exactly
+{listening, reading, speaking, writing: 6.0}. The oracle compared maps with str(), so the different key
+order read as "value missing". The scorer itself uses json.dumps(sort_keys=True) and was never affected.
+The oracle now compares the same way (test added). What is left for UBC is the live run reaching that page
+within its clock.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
