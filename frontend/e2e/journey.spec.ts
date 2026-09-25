@@ -125,9 +125,12 @@ test('an incomparable zero is refused rather than shown as nothing to pay', asyn
   await expect(toronto).toContainText('not computable');
 
   await expandRow(page, 'University of Toronto');
+  // Refused twice now: in the money summary on top of the programme, and in
+  // its costs tab. Neither may turn the incomparable figures into a zero.
+  await expect(page.getByTestId('money-unknown')).toContainText('Not computed.');
   await page.getByTestId('tab-costs').click();
-  await expect(page.getByText('Not computed.')).toBeVisible();
-  await expect(page.getByText(/not directly comparable/)).toBeVisible();
+  await expect(page.getByText('Not computed.')).toHaveCount(2);
+  await expect(page.getByText(/not directly comparable/).first()).toBeVisible();
 });
 
 test('a per-section IELTS minimum is enforced independently of the overall band', async () => {

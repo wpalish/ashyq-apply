@@ -265,6 +265,15 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+Write-ahead (claude-opus-5, 2026-09-25, redesign part 3; owner: "продолжай"). The concept screens that
+need no owner decision (English stays, the globe waits), each a pushed commit with green gates:
+1. Programme (concept 10): the money as arithmetic — price − grants = left to pay, the backend's own
+   figures, the published currency and the rate snapshot date when converted — and what the grant
+   covers and leaves out, with its source and date. On top of the programme detail.
+2. Compare (concept 11): pick up to three programmes on the cards; compare them row by row.
+3. Plan (concept 12): the nearest deadline on a split-flap board, then every deadline in order.
+4. Review at 390 and 1440, video, docs (§22), PR. Share stories (concept 14) stay out of this pass.
+
 Progress on part 2 (below): 1–2 `ec12b7d`, 3 `ded86aa`, 4 `e393a65`, 5 `bd1abc0` + the docs commit;
 report in `docs/design/redesign-concepts.md` §21. **Next:** the owner compares again; the globe and the
 Russian vocabulary wait for the owner.

@@ -7,6 +7,7 @@
  */
 
 import { useState } from 'react';
+import { MoneyArithmetic, type RateNote } from '@/components/MoneyArithmetic';
 import { Chip, Notice, SourceLink, StatusChip } from '@/components/primitives';
 import {
   FIT_DISCLAIMER, bucketTone, claimStatusTone, date, dateTime, eligibilityTone, fundingClassTone,
@@ -25,11 +26,12 @@ const TABS: { id: Tab; label: string }[] = [
   { id: 'sources', label: 'Sources & evidence' },
 ];
 
-export function ResultDetail({ result }: { result: ProgramResult }) {
+export function ResultDetail({ result, rate }: { result: ProgramResult; rate?: RateNote | null }) {
   const [tab, setTab] = useState<Tab>('requirements');
 
   return (
     <div className="detail" data-testid={`detail-${result.id}`}>
+      <MoneyArithmetic result={result} rate={rate} />
       <div className="tabs" role="tablist" aria-label={`${result.university} details`}>
         {TABS.map((t) => (
           <button

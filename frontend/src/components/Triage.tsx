@@ -17,6 +17,7 @@ import { StatusChip } from '@/components/primitives';
 import {
   admissionsFitTone, date, eligibilityTone, fundingClassTone, money,
 } from '@/lib/format';
+import { orderCaveats } from '@/lib/caveats';
 import type { ProgramResult, UserDecision } from '@/types';
 
 const REASONS = ['cost', 'deadline passed', 'no funding', 'not a fit'];
@@ -76,10 +77,8 @@ export function Triage({
   // is competitive. The card says so with the price and the ranking's own
   // caveats, so "1,848 a year" is never read as a grant already won.
   const aid = gap?.confirmed_aid?.amount ?? 0;
-  // Whether the aid can be won comes first: "competitive" and "nomination"
-  // decide if the number is reachable at all.
-  const weight = (text: string) => (/competitive|nomination/i.test(text) ? 0 : 1);
-  const caveats = [...(gap?.warnings ?? [])].sort((a, b) => weight(a) - weight(b)).slice(0, 2);
+  // What explains the figures first, then whether the aid can be won.
+  const caveats = orderCaveats(gap?.warnings);
 
   return (
     <section className="triage" aria-labelledby="triage-title" data-testid="triage">

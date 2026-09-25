@@ -81,7 +81,10 @@ function searchSummary(profile: unknown): string | null {
 }
 
 export function ShortlistScreen({ onEditSearch }: { onEditSearch?: () => void } = {}) {
-  const { results, summary, shortlist, decide, saveNotes, savedProfile } = useStore();
+  const { results, summary, shortlist, decide, saveNotes, savedProfile, capabilities } = useStore();
+  const rate = capabilities?.currency
+    ? { date: capabilities.currency.rate_date, source: capabilities.currency.rate_source }
+    : null;
   const [view, setViewState] = useState<View>(storedView);
   const setView = (next: View) => {
     setViewState(next);
@@ -310,7 +313,7 @@ export function ShortlistScreen({ onEditSearch }: { onEditSearch?: () => void } 
       open={expanded === r.id}
       onToggle={() => setExpanded(expanded === r.id ? null : r.id)}
       decision={renderDecision(r)}
-      detail={<ResultDetail result={r} />}
+      detail={<ResultDetail result={r} rate={rate} />}
     />
   );
 
@@ -435,7 +438,7 @@ export function ShortlistScreen({ onEditSearch }: { onEditSearch?: () => void } 
                       </tr>
                       {open && (
                         <tr className="detail-row">
-                          <td colSpan={showBucket ? 10 : 9}><ResultDetail result={r} /></td>
+                          <td colSpan={showBucket ? 10 : 9}><ResultDetail result={r} rate={rate} /></td>
                         </tr>
                       )}
                     </Fragment>
