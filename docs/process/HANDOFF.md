@@ -1145,6 +1145,11 @@ order read as "value missing". The scorer itself uses json.dumps(sort_keys=True)
 The oracle now compares the same way (test added). What is left for UBC is the live run reaching that page
 within its clock.
 
+Claude, 2026-09-25: UBC's clock. In run 66 the walker's homepage root (http://you.ubc.ca/) read about 20
+menu links (Indigenous, Contact us, the CLF terms page) from t=25 s to t=68 s. A site root is not a
+catalogue, so its signal-less leads are now dropped as walker_no_signal. The T29 contract still reads
+signal-less leads on a real catalogue page. Golden demo unchanged; test added.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 

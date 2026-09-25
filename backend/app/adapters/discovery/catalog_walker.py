@@ -501,7 +501,12 @@ class CatalogWalker:
             walk.outcomes.append((catalogue_url, "js_no_program_list"))
             return walk
 
-        scored = self._score(list(candidates.values()), walk.outcomes, _host(catalogue_url))
+        scored = self._score(
+            list(candidates.values()),
+            walk.outcomes,
+            _host(catalogue_url),
+            site_root=urlparse(catalogue_url).path in ("", "/"),
+        )
         walk.candidates = scored
 
         budget = scored[:top_n]
@@ -517,6 +522,8 @@ class CatalogWalker:
         links: list[WalkerLink],
         outcomes: list[tuple[str, str]],
         catalogue_host: str = "",
+        *,
+        site_root: bool = False,
     ) -> list[WalkerLink]:
         """Apply the frozen scorer plus the repeating-list bonus, strongest first."""
         siblings = Counter(_parent_directory(link.url) for link in links)
@@ -528,13 +535,17 @@ class CatalogWalker:
                 continue
             parent = _parent_directory(link.url)
             repeating = bool(parent) and siblings[parent] >= REPEATING_LIST_MIN_SIBLINGS
-            if base <= 0 and not repeating and _host(link.url) != catalogue_host:
+            if base <= 0 and not repeating and (site_root or _host(link.url) != catalogue_host):
                 # Nothing about it says programme, and it leaves the catalogue's
                 # own site: moodle, the wiki, webmail, the library. The T29
                 # contract reads a signal-less lead on the catalogue's site and
                 # records what it was; a link out of that site with no signal
                 # is furniture, and reading it spent Vienna's budget before
                 # search had started.
+                # A site's home page is not a catalogue either: its links are
+                # the site's menu. Run 66: UBC's walk of you.ubc.ca read
+                # "Indigenous", "Contact us" and the CLF terms page, 40 s of
+                # its clock, before search had started.
                 outcomes.append((link.url, "walker_no_signal"))
                 continue
             walk = WalkerLink(

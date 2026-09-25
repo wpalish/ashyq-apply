@@ -111,3 +111,27 @@ async def test_a_language_copy_is_not_a_new_list_and_a_child_index_is():
     }
     await _walker(pages, walked).walk([ROOT])
     assert walked == [ROOT, bachelors, alphabet]
+
+
+def test_a_site_home_page_reads_only_leads_that_say_programme():
+    """Run 66: UBC's walk of you.ubc.ca read its menu for 40 s."""
+    from app.adapters.discovery.catalog_walker import WalkerLink
+
+    walker = _walker({}, [])
+    walker.domain = "ubc.ca"
+    walker.fields = ["computer science"]
+    menu = WalkerLink(
+        url="https://you.ubc.ca/indigenous", label="Indigenous", score=0, source="html"
+    )
+    lead = WalkerLink(
+        url="https://you.ubc.ca/programs/computer-science",
+        label="Computer Science",
+        score=0,
+        source="html",
+    )
+    outcomes: list[tuple[str, str]] = []
+
+    kept = walker._score([menu, lead], outcomes, "you.ubc.ca", site_root=True)
+
+    assert [link.url for link in kept] == [lead.url]
+    assert (menu.url, "walker_no_signal") in outcomes
