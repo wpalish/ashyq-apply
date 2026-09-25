@@ -265,6 +265,18 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+Write-ahead (claude-opus-5, 2026-09-25, redesign part 8; owner: "продолжай" after part 7 offered the two
+globe follow-ups). Reuse `components/Globe`; frontend only:
+1. Edge chips (concept N, Q6; R-07's "← Americas · 4"): a programme the globe hides - behind it or outside
+   the frame - is named at the edge it lies towards, grouped by region, instead of silently missing. On the
+   shortlist a chip turns the globe there; on the reveal it only says so.
+2. A `fit` view: the globe finds the centre and zoom that show a set of places (home and one city).
+3. The programme detail (concept 10): its route from home at the top, with both places named. No route
+   without a home or without the city in the table; the detail says which.
+4. The one-at-a-time triage (concept P, R-09): a night globe behind the card that turns to each programme's
+   route. The answers must stay above the phone's tab bar (defect I27).
+5. Tests, review at 320/390/1440 light and dark, video, docs (§27), PR.
+
 Write-ahead (claude-opus-5, 2026-09-25, redesign part 7; owner: "делай глобус" - the globe is approved).
 Concept N/M's globe, built so the list stays the main path on a budget Android phone:
 1. `lib/globe*`: land as dots precomputed once from Natural Earth (world-atlas, public domain) into a compact
