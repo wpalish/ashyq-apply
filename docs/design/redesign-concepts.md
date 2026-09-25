@@ -1091,11 +1091,12 @@ screen-reader user; an invariants auditor; the next engineer.
 | I16 | The triage card lost its edge on the dark appearance | Night card on a night page | A night-line border |
 | I17 | I12 shipped with the suite green | The overflow test only visited the shortlist | It now checks every workflow screen at 320 px, and fails without the fix |
 
-**Cycle 3 — keyboard and screen reader (`6a814d3`):**
+**Cycle 3 — keyboard and screen reader, and the final screenshots (`6a814d3`, and the commit after it):**
 
 | # | Defect | Root cause | Fix |
 |---|---|---|---|
 | I18 | After "Save and next" focus fell to the page body and nothing announced the next university | The pressed button is removed | Each card focuses its heading; closing returns focus to the button that opened it |
+| I19 | The ladder's "cost not computed" reasons were ovals | Two- and three-line text in a pill radius (the I13 pattern again) | A small radius for multi-line reasons |
 
 **Checked and kept:** the wrapped phone navigation (about 190 px before the title). A scrolled strip
 was tried before and hid Community 1 660 px along a scroller with no affordance; the comment in

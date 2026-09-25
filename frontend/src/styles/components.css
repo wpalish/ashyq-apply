@@ -763,9 +763,10 @@
 .ladder__reason {
   font-size: var(--text-xs);
   color: var(--ink-muted);
-  padding: 0.2rem 0.6rem;
+  padding: 0.3rem 0.6rem;
   border: 1px dashed var(--unknown-border);
-  border-radius: var(--radius-pill);
+  /* A reason runs to two or three lines; a pill radius turned it into an oval. */
+  border-radius: var(--radius-sm);
   justify-self: start;
 }
 
