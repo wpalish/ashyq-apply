@@ -27,6 +27,7 @@ from app.adapters.extraction import (
     is_official_domain,
     pdf_to_text,
     readable_text,
+    verification_domains,
 )
 from app.adapters.fetching import Fetcher
 from app.adapters.matching import degree_matches, program_matches
@@ -189,9 +190,20 @@ class WebRequirementsAdapter:
                 # answered, and recording the second as if it were the first
                 # is the whole of the wrong-scope failure.
                 scope=read_scope(text, title=page_title),
+                # The verifier's context: without it the verbatim, domain and
+                # page-type checks were silently skipped for every requirement
+                # claim (found in the owner's adversarial review, 2026-09-25).
+                page_text=text,
+                page_type=page.page_type.value,
+                allowed_domains=verification_domains(target.url, candidate.domain),
             )
 
             if not page.accepts("requirements"):
+                # A catalogue listing confirms existence by the T29 contract
+                # (the university's own list); the verifier's page-type table
+                # admits existence only on programme pages, so that one check
+                # is lifted here while verbatim and domain still apply.
+                builder.page_type = None
                 if page.page_type in _LISTING_PAGE_TYPES and self._claim_listed_programme(
                     program, builder, text
                 ):

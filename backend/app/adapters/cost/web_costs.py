@@ -10,6 +10,7 @@ from app.adapters.extraction import (
     is_official_domain,
     pdf_to_text,
     readable_text,
+    verification_domains,
 )
 from app.adapters.fetching import Fetcher
 from app.adapters.page_classifier import classify_page
@@ -95,6 +96,8 @@ class WebCostAdapter:
             # A fee figure's scope is usually its fee status: "home" and
             # "overseas" are different numbers on the same page.
             scope=read_scope(text, title=html_title(res.text) if not res.is_pdf else ""),
+            page_text=text,
+            allowed_domains=verification_domains(candidate.costs_url, candidate.domain),
         )
         claims = extract_costs(text, builder)
         out.claims.extend(claims)

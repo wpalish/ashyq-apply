@@ -27,6 +27,7 @@ from app.adapters.extraction import (
     parse_money,
     parse_timezone,
     readable_text,
+    verification_domains,
 )
 from app.adapters.fetching import Fetcher, FetchResult
 from app.adapters.html_parse import parse_html
@@ -407,6 +408,10 @@ class WebScholarshipAdapter:
             # requirements prose does, and an award claimed for the wrong one
             # is the most expensive wrong answer this product can give.
             scope=read_scope(text, title=title),
+            # The verifier's context (adversarial review, 2026-09-25): without
+            # it the verbatim and domain checks were skipped.
+            page_text=text,
+            allowed_domains=verification_domains(url, candidate.domain),
         )
         _plain_add = builder.add
 

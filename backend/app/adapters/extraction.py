@@ -124,6 +124,17 @@ def is_official_domain(url: str, university_domains: Iterable[str] = ()) -> bool
     )
 
 
+def verification_domains(url: str, domain: str | None) -> tuple[str, ...]:
+    """The domains a claim's page must belong to, for the verifier.
+
+    Empty for a ``fixture://`` page, which is official by construction and has
+    no host to check, and when the candidate names no domain.
+    """
+    if not domain or url.startswith("fixture://"):
+        return ()
+    return (domain,)
+
+
 class ClaimBuilder:
     """Accumulates claims that share one page's provenance.
 

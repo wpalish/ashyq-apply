@@ -1199,6 +1199,20 @@ Claude, 2026-09-25, V2-30A (schema completeness; the owner said "делай ка
   Nanyang essay/referee.
 Golden demo unchanged.
 
+Claude, 2026-09-25: the owner's adversarial review found that no production adapter passed the verifier its
+context (page_text, page_type, allowed_domains). ClaimBuilder runs only the checks it has context for, so
+the verbatim and official-domain checks were silently skipped for every claim. Only value ranges ran.
+- Requirements, costs, scholarships and documents now pass page_text and allowed_domains; government passes
+  page_text. Fixture pages pass no domains, because they are official by construction
+  (verification_domains).
+- Requirements also passes page_type. On the catalogue-listing existence path (the T29 contract) the
+  page-type check is lifted explicitly; the verbatim and domain checks still apply there.
+- The demo shows zero rejections and the golden demo is byte-identical.
+- Run 72 checks live rejections.
+The review's other points agree with the deep-research report (DocumentIR, tables, a source graph instead
+of two targets, a content-deficit browser trigger instead of <400 chars, verifier reject telemetry). Its
+RFC 9309 point is already met on this branch.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 

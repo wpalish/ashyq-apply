@@ -17,6 +17,7 @@ from app.adapters.extraction import (
     html_title,
     html_to_text,
     is_official_domain,
+    verification_domains,
 )
 from app.adapters.fetching import Fetcher
 from app.adapters.scope_reader import read_scope
@@ -214,6 +215,8 @@ class WebDocumentsAdapter:
             extraction_method="fixture" if url.startswith("fixture://") else "html_rule",
             accessed_at=res.fetched_at,
             scope=page_scope,
+            page_text=text,
+            allowed_domains=verification_domains(url, candidate.domain),
         )
 
         items: list[DocumentItem] = []

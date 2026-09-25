@@ -50,6 +50,7 @@ class WebGovernmentAdapter:
             # post-study-work rule is national, with no intake and no
             # programme. Reading it anyway is how we find out we were wrong.
             scope=read_scope(text, title=html_title(res.text)),
+            page_text=text,
         )
         body = " ".join(
             ln.strip()
