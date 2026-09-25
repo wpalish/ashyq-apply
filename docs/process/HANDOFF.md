@@ -282,6 +282,13 @@ a pushed commit with green gates:
 5. Adversarial review of the running app (390 and 1440 px), fixes, loop report in the design doc.
 Not touched: backend, API, migrations, ranking, any invariant.
 
+Progress: 1–2 `34600e5`; 3 `8dc40d1`; 4 **changed** — translating status labels would break the
+glossary policy in `docs/i18n/GLOSSARY.md` (product vocabulary stays English until a person decides),
+so the round-7 words are recorded there as proposals instead (`37fb075`, with the gold "you pay" and
+the night progress band). 5 in progress: the review found the empty profile 3 927 px tall on desktop
+(7 293 on a phone) — optional sections now fold while empty (`FoldPanel`), and re-fold when the whole
+profile is replaced; then the loop report.
+
 
 Write-ahead (claude-opus-5, 2026-09-20, V2-10): **starting V2-10 — the search provider interface**,
 per `analysis/v2/02_EXECUTION_PLAN.md` (Phase 1) and `analysis/v2/04_PHASE_1_DISCOVERY_ENGINE.md` §1.

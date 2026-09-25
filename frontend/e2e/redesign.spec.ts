@@ -1,6 +1,7 @@
 /**
  * The «Горизонт» additions on the shortlist, against the real demo run:
- * the budget ladder and deciding one programme at a time.
+ * the budget ladder and deciding one programme at a time, plus the folded
+ * optional sections on the profile.
  *
  * Its own session, so answers given here cannot change what the journey spec
  * counts on the Approved screen.
@@ -67,4 +68,21 @@ test('one at a time: an answer moves to the next programme and shows in the tabl
 
   await page.getByTestId('triage-close').click();
   await expect(page.getByTestId(`maybe-${firstId}`)).toHaveAttribute('aria-pressed', 'true');
+});
+
+test('optional profile sections fold while empty and open on request', async () => {
+  await page.getByTestId('nav-profile').click();
+  const activities = page.getByTestId('fold-activities');
+  // The demo profile has activities, so the section starts open.
+  await expect(activities).toHaveAttribute('open', '');
+
+  await page.getByTestId('clear-profile').click();
+  const confirm = page.getByTestId('confirm-replace');
+  if (await confirm.count()) await confirm.click();
+
+  await expect(activities).not.toHaveAttribute('open');
+  await expect(activities).toContainText('optional');
+  await activities.locator('summary').click();
+  await expect(activities).toHaveAttribute('open', '');
+  await expect(activities.getByRole('button', { name: /Add activity/ })).toBeVisible();
 });

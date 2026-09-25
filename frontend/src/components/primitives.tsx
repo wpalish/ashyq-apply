@@ -1,6 +1,6 @@
 /** Small shared building blocks. */
 
-import type { ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { STATUS_LABEL, STATUS_MEANING, humanize, type Tone } from '@/lib/format';
 
 const TONE_CLASS: Record<Tone, string> = {
@@ -65,6 +65,54 @@ export function Panel({
       {hint && <p className="panel__hint" style={{ marginBottom: 'var(--space-4)' }}>{hint}</p>}
       {children}
     </section>
+  );
+}
+
+/**
+ * A panel for an optional part of a form, folded until it holds something.
+ *
+ * A first-time applicant used to face every optional section at once - a
+ * form four thousand pixels long. An empty optional section now folds to one
+ * line that says what it is and that it is optional. It opens by itself when
+ * data arrives (a loaded profile, say) and never closes by itself: removing
+ * the last entry does not snatch the section away while it is being edited.
+ * Replacing the whole profile is a different event - a blank form, the demo,
+ * another applicant - and the screen gives the panel a new `key` then, so it
+ * starts again folded to what the new profile holds.
+ */
+export function FoldPanel({
+  title, hint, count, hasData, children, testId,
+}: {
+  title: string;
+  hint?: string;
+  /** Entries in the section, for the folded summary. */
+  count?: number;
+  hasData: boolean;
+  children: ReactNode;
+  testId?: string;
+}) {
+  const [open, setOpen] = useState(hasData);
+  useEffect(() => {
+    if (hasData) setOpen(true);
+  }, [hasData]);
+  return (
+    <details
+      className="panel panel--fold"
+      open={open}
+      onToggle={(event) => setOpen((event.currentTarget as HTMLDetailsElement).open)}
+      data-testid={testId}
+    >
+      <summary className="panel__summary">
+        <span className="panel__summary-text">
+          <h2 className="panel__title">{title}</h2>
+          {hint && <span className="panel__hint">{hint}</span>}
+        </span>
+        <span className="panel__state">
+          {count ? `${count} added` : hasData ? 'filled in' : 'optional'}
+        </span>
+      </summary>
+      <div className="panel__body">{children}</div>
+    </details>
   );
 }
 
