@@ -1364,7 +1364,84 @@ phone, so the globe was built with the list still as the main path.
 | I63 | The e2e compared a cluster count read mid-turn with the settled one | A fixed delay was used as a proxy for the animation | The figure carries `data-turning`, and the test waits on it |
 
 **Left for later:** concept P's globe in the one-at-a-time triage, and the route on the programme detail
-(concept 10). Both reuse this component.
+(concept 10). Both reuse this component. (Done in part 8, §27.)
 
 **Gates at `84a5dd9`:** typecheck, lint, **312 unit tests** (37 files) and build pass. Playwright: **99 passed,
 1 skipped**. axe is clean on the start screen, the reveal and the cards with the globe.
+
+## 27. Part 8: the globe's last three pieces (2026-09-25)
+
+The owner said "продолжай" after part 7 offered its two follow-ups. Part 8 built them, and one more piece
+of concept N that part 7 had left out:
+
+- **Edge chips** (concept N, Q6; R-07's "← Америка · 4"). A programme the globe hides is named at the
+  edge it lies towards, grouped by region: "← Americas · 4", or "↓ Singapore" when it is the only one.
+  Part 7 had dropped the route to a hidden city (I56), so a hidden city was simply missing, and the globe
+  could look like a shorter list. On the shortlist a chip turns the globe to what it names. On the start
+  screen and the reveal the chips only say it.
+- **The route on the programme** (concept 10). An open programme starts with its route from home, and both
+  ends are named. It sits above the money on a phone and beside it on a wide screen. With no city in the
+  table there is no globe, and a line says why. With no country of residence the city stands alone, and a
+  line says what would draw the route.
+- **The triage globe** (concept P, R-09). A night globe sits behind the one-at-a-time card and turns to each
+  programme's route as each answer brings the next one.
+
+| Commit | What |
+|---|---|
+| `5610790` | Edge chips, the `fit` view, the route on the programme, the triage globe, and fixes I64–I70 |
+
+**How it is built:**
+- **A `fit` view.** The globe turns to the middle of the places it must show (their mean direction) and takes
+  the closest of nine zoom levels that keeps both ends, their names and the route's arc in the frame. A
+  `covered` inset keeps the view above the card that sits over the globe's lower part.
+- **Edge chips.** A chip's side is where the city falls off the frame. For a city behind the globe it is the
+  way the globe would turn to bring it round. Each side's stack sits at the spot along its edge that covers
+  the fewest markers, clusters and home. Chips hide while the globe turns.
+- **Room for the answers.** Defect I27 holds that the three answers stay above a phone's tab bar. On a phone
+  the triage has its own bar ("1 of 20", "Back to the list"), so the section links step aside, as in R-09.
+  The globe takes what the screen has left: its visible band is the viewport height minus 722 px, up to
+  152 px. Under 72 px (a phone shorter than 794 px) the card is shown alone. Only a new width re-measures,
+  so an address bar that folds away cannot make the globe come and go.
+
+**Defects found in part 8, with their root causes:**
+
+| # | Defect | Root cause | Fix |
+|---|---|---|---|
+| I64 | "→ Asia & Oceania · 2" covered Astana on the reveal, and "→ Melbourne" covered Tokyo on the shortlist | The chips' spot on the edge was fixed | Each stack goes to the spot along its edge that covers the fewest markers, clusters and home |
+| I65 | "↓ Singapore" sat at the bottom centre while its route left the frame at the right | Bottom and top chips had a fixed x | Placed under where the places left the frame |
+| I66 | On a 390 × 844 phone, "Save and next" opened 31 px under the tab bar after "Not for me" | The globe took the room the reasons used to have, and the reasons opened in place without scrolling | The reasons are brought into view above the tab bar |
+| I67 | Opening the reasons dropped keyboard focus to the page, and so did Cancel (this was there before part 8) | The pressed button is replaced, and nothing took the focus | The first reason takes the focus. Cancel returns it to "Not for me". After "Save and next" the next programme's heading keeps it. The test fails without the fix |
+| I68 | On a 360 × 740 phone the triage answers were 11 px under the tab bar even before the globe | Two rows of section links sat above a screen that is meant to be the card alone. I27 was checked by eye, and no test guarded it | On a phone the section links step aside during the triage. The e2e now asserts that the answers end above the tab bar, and it fails without the fix |
+| I69 | With a region chosen, "Whole globe" went back to the region, not the globe (from part 7) | The label ignored the region filter | "All of Europe" |
+| I70 | On a wide screen the route was a full-width band with a small globe in empty grey | A band's globe is sized by its height | Beside the money from 900 px |
+
+**Measured:**
+- There are zero canvas redraws over two idle seconds on the shortlist globe, an open programme's route
+  and the triage.
+- Under reduced motion, an answer redraws the triage globe twice: a jump, not a turn.
+- The answers end above the tab bar at 390 × 844, 412 × 915, 360 × 800 and 360 × 740, over four programmes
+  each.
+- No horizontal scroll at 320 px.
+- The main bundle is 133.5 KB gzipped (130.5 KB after part 7). The land stays a lazy chunk.
+
+**Tests:**
+- Unit tests cover:
+  - edge chips by region and side, and their click;
+  - no chips when everything is in view;
+  - a fitted route with both ends named, and a short route that comes close;
+  - the route's three states (a route, no home, no city);
+  - the triage globe: it turns to the next programme, stays steady for an unplaced city and is left out on
+    a short phone;
+  - the focus when the reasons open and close;
+  - the mean direction across the date line.
+- E2E covers:
+  - every programme is a marker, in a cluster or at an edge (the sum is the total);
+  - an edge chip turns the globe;
+  - the open programme names Groningen and Astana;
+  - the triage globe names home and the city, then turns to the next city;
+  - the answers end above the tab bar;
+  - axe on the triage.
+- Two mutations were run: removing the chips and bringing back the section links. The new e2e assertions
+  fail on each.
+
+**Gates:** typecheck, lint, **324 unit tests** (38 files) and build pass. Playwright: **99 passed, 1 skipped**.

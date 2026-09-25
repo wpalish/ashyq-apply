@@ -277,6 +277,12 @@ globe follow-ups). Reuse `components/Globe`; frontend only:
    route. The answers must stay above the phone's tab bar (defect I27).
 5. Tests, review at 320/390/1440 light and dark, video, docs (§27), PR.
 
+Progress on part 8: 1–4 `5610790`, 5 the docs commit. The report and defects I64–I70 are in the design doc §27.
+One structural choice for the owner to check: on a phone, the section links (Search · Research · Results ·
+Money · Sources) step aside while the one-at-a-time triage is open, as in concept R-09, so the globe, the card
+and the answers fit above the tab bar. **Next:** the owner reviews PR #20. Still waiting for the owner: the
+Russian vocabulary, share stories and the unlock step.
+
 Write-ahead (claude-opus-5, 2026-09-25, redesign part 7; owner: "делай глобус" - the globe is approved).
 Concept N/M's globe, built so the list stays the main path on a budget Android phone:
 1. `lib/globe*`: land as dots precomputed once from Natural Earth (world-atlas, public domain) into a compact
@@ -1624,6 +1630,13 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+Redesign part 8 (edge chips, programme route, triage globe), frontend only. claude-opus-5 ran the gates on
+2026-09-25 at `5610790`:
+- typecheck, lint, **324 unit tests** (38 files) and build: green;
+- Playwright: **99 passed, 1 skipped**.
+
+The main bundle is 133.5 KB gzipped (+3 KB).
+
 Redesign part 7 (the globe), frontend only. claude-opus-5 ran the gates on 2026-09-25 at `84a5dd9`:
 - typecheck, lint, **312 unit tests** (37 files) and build: green;
 - Playwright: **99 passed, 1 skipped**.
@@ -2457,6 +2470,7 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 | 2026-09-25 UTC | claude-opus-5 | `47b8e2b` → `03c2846` redesign part 5 | Owner: "продолжай" (third time). Board rows open onto their programme. Added "Next to start" and the shared documents module, replaced step numbers with tab-and-section eyebrows, and put the brand on the account screen. Six defects (I46–I51), design doc §24. |
 | 2026-09-25 UTC | claude-opus-5 | `fff50a1` → `76015f0` redesign part 6 | Owner: "продолжай" (fourth time). Added region chips on the shortlist (concept 07, counted from the results) and swept every screen. The sweep fixed three things: the switcher's stale run count, its styling (including a 320 px overflow), and singular counts. Defects I52–I55; see design doc §25. |
 | 2026-09-25 UTC | claude-opus-5 | `3973167` → `84a5dd9` redesign part 7 | Owner: "делай глобус". Built the globe as canvas dots with lazy land data, a checked city table and routes from home. It appears on the start screen, the reveal and the shortlist, with region zoom and clusters. No idle redraws. Fixed I56–I63; see design doc §26. |
+| 2026-09-25 UTC | claude-opus-5 | `84a5dd9` → `5610790` redesign part 8 | Owner: "продолжай". Added edge chips for hidden programmes, a programme's route from home, and a night globe behind the triage. On a phone the triage answers stay above the tab bar (now asserted in e2e). Fixed I64–I70; see design doc §27. |
 
 | 2026-09-20 | gpt-6-astra | b267b337 → V2-00 in progress | Startup/recovery, PR inventory, all pack files read; isolated worktree preserves existing dirty research work. |
 
