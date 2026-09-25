@@ -15,8 +15,13 @@ const retryRun = vi.fn();
 const cancelRun = vi.fn();
 const recheckNow = vi.fn();
 
+let currentResults: unknown[] = [];
+let currentProfile: unknown = null;
+
 vi.mock('@/lib/store', () => ({
-  useStore: () => ({ run: currentRun, cancelRun, retryRun, recheckNow, results: [] }),
+  useStore: () => ({
+    run: currentRun, cancelRun, retryRun, recheckNow, results: currentResults, savedProfile: currentProfile,
+  }),
 }));
 
 const { deadJobCount } = vi.hoisted(() => ({ deadJobCount: vi.fn() }));
@@ -67,6 +72,8 @@ beforeEach(() => {
   deadJobCount.mockReset();
   deadJobCount.mockResolvedValue(0);
   currentRun = makeRun();
+  currentResults = [];
+  currentProfile = null;
 });
 
 describe('retry controls', () => {
@@ -240,5 +247,55 @@ describe('work the queue gave up on', () => {
 
     expect(await screen.findByText(/of stages complete/)).toBeInTheDocument();
     expect(screen.queryByTestId('dead-jobs')).toBeNull();
+  });
+});
+
+describe('the results reveal', () => {
+  const result = (id: string, country: string, eligibility: string, funding: string, gap: number | null) => ({
+    id, country, eligibility, best_funding_classification: funding,
+    funding_gap: gap === null
+      ? { computable: false, gap: null, reason: 'No official cost.' }
+      : { computable: true, gap: { amount: gap, currency: 'USD', academic_year: '2026/27' }, reason: '' },
+  });
+
+  beforeEach(() => {
+    currentRun = makeRun({ stage: 'awaiting_user_decision', progress: 1, claims_recorded: 414 });
+    currentResults = [
+      result('a', 'Netherlands', 'MET', 'FULL_RIDE_CONFIRMED', 1848),
+      result('b', 'Netherlands', 'PENDING', 'FULL_TUITION', 7554),
+      result('c', 'Japan', 'MET', 'PARTIAL', null),
+    ];
+  });
+
+  // Each tile is <dt>label</dt><dd>count</dd>; the number is drawn above.
+  it('counts what the run found from the results themselves', () => {
+    currentProfile = { funding: { max_annual_budget: 6000, budget_currency: 'USD' } };
+    render(<ProgressScreen onDone={() => {}} />);
+    const reveal = screen.getByTestId('results-reveal');
+    expect(reveal).toHaveTextContent('3 programmes in 2 countries');
+    expect(reveal).toHaveTextContent('meet every published requirement checked so far2');
+    expect(reveal).toHaveTextContent('have a published grant for tuition and living1');
+    expect(reveal).toHaveTextContent('facts, each with a link to its page414');
+    expect(reveal).toHaveTextContent('left to pay within 6,000 USD a year, if awarded1');
+    expect(reveal.textContent).not.toMatch(/%|chance|probab/i);
+  });
+
+  it('shows pages read instead of a budget count when there is no budget', () => {
+    render(<ProgressScreen onDone={() => {}} />);
+    expect(screen.getByTestId('results-reveal')).toHaveTextContent('official pages read72');
+  });
+
+  it('leads to the results with one button', () => {
+    const onDone = vi.fn();
+    render(<ProgressScreen onDone={onDone} />);
+    fireEvent.click(screen.getByTestId('to-shortlist'));
+    expect(onDone).toHaveBeenCalled();
+    expect(screen.getByTestId('to-shortlist')).toHaveTextContent('See 3 programmes');
+  });
+
+  it('is not shown while the research still runs', () => {
+    currentRun = makeRun({ stage: 'program_verification', job_running: true });
+    render(<ProgressScreen onDone={() => {}} />);
+    expect(screen.queryByTestId('results-reveal')).not.toBeInTheDocument();
   });
 });

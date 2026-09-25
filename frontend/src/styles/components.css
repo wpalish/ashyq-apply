@@ -947,3 +947,84 @@
   .start__card { grid-template-columns: minmax(0, 1fr); }
   .start__field + .start__field:not(.start__field--wide) { border-left: 0; }
 }
+
+/* --- results ready: the night reveal (round 7, screen 02) ----------------
+   What the run found, in four counts from the results, and one button. The
+   stages, counters and failures stay underneath for anyone who wants them. */
+
+.reveal {
+  background: var(--night);
+  color: var(--night-ink);
+  border: 1px solid var(--night-line);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6) var(--space-5);
+  margin-bottom: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 44rem;
+  position: relative;
+  overflow: hidden;
+}
+.reveal::after {
+  /* The brand's horizon: a dotted arc and the sun on it. Decoration only. */
+  content: '';
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  bottom: -9rem;
+  height: 12rem;
+  border-radius: 50%;
+  border-top: 2px dotted color-mix(in srgb, var(--sun) 70%, transparent);
+  pointer-events: none;
+}
+.reveal__kicker {
+  margin: 0;
+  font-size: var(--text-xs);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sun);
+}
+.reveal__title {
+  color: var(--night-ink);
+  font-size: clamp(1.9rem, 1.3rem + 2.4vw, 2.75rem);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  max-width: 14ch;
+}
+.reveal__tiles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+  margin: 0;
+}
+.reveal__tile {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+  gap: var(--space-1);
+  padding: var(--space-4);
+  background: var(--night-surface);
+  border: 1px solid var(--night-line);
+  border-radius: var(--radius);
+}
+.reveal__tile dd {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--night-ink);
+}
+.reveal__tile dt { font-size: var(--text-xs); color: var(--night-muted); line-height: 1.35; }
+.reveal__note {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--night-muted);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--night-line);
+  border-radius: var(--radius);
+}
+.reveal__cta { align-self: flex-start; min-height: 3rem; padding: 0 1.75rem; font-size: var(--text-md); position: relative; z-index: 1; }
+.reveal__how { font-size: var(--text-lg); margin: 0 0 var(--space-3); }

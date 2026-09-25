@@ -7,6 +7,7 @@
 
 import { useEffect, useState } from 'react';
 import { api } from '@/api/client';
+import { ceilingFrom, groupByBudget } from '@/components/BudgetLadder';
 import { Chip, Loading, Notice, Panel, Stat } from '@/components/primitives';
 import { dateTime } from '@/lib/format';
 import { useStore } from '@/lib/store';
@@ -32,7 +33,7 @@ function errorCategory(message: string): string {
 }
 
 export function ProgressScreen({ onDone }: { onDone: () => void }) {
-  const { run, cancelRun, retryRun, recheckNow, results } = useStore();
+  const { run, cancelRun, retryRun, recheckNow, results, savedProfile } = useStore();
   // Work the queue gave up on after exhausting its attempts. It is asked for
   // here, before the early return, because a hook cannot live behind one.
   const [deadJobs, setDeadJobs] = useState(0);
@@ -77,15 +78,68 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
   // silently reclassified.
   const unknowns = run.unknowns ?? [];
 
+  // The reveal: what the run found, counted from the results themselves. A
+  // count is only shown when the data can say it - the budget tile needs a
+  // budget, and none of them is a chance of anything.
+  const revealed = finished && results.length > 0;
+  const countries = new Set(results.map((r) => r.country)).size;
+  const met = results.filter((r) => r.eligibility === 'MET').length;
+  const livingGrant = results.filter((r) => r.best_funding_classification === 'FULL_RIDE_CONFIRMED').length;
+  const ceiling = ceilingFrom(savedProfile);
+  const withinBudget = ceiling ? groupByBudget(results, ceiling).within.length : null;
+
   return (
     <>
-      <div className="screen__head">
-        <p className="screen__eyebrow">Step 03</p>
-        <h1 className="screen__title">
-          {failed ? 'Research failed' : cancelled ? 'Research cancelled' : finished ? 'Research complete' : 'Researching'}
-        </h1>
-        <p className="screen__lede">{STAGE_LABELS[run.stage] ?? run.stage.replace(/_/g, ' ')}</p>
-      </div>
+      {revealed ? (
+        <section className="reveal" aria-labelledby="reveal-title" data-testid="results-reveal">
+          <p className="reveal__kicker">Research complete</p>
+          <h1 className="reveal__title" id="reveal-title">
+            {results.length} programme{results.length === 1 ? '' : 's'} in {countries} countr{countries === 1 ? 'y' : 'ies'}
+          </h1>
+          <dl className="reveal__tiles">
+            <div className="reveal__tile">
+              <dt>meet every published requirement checked so far</dt>
+              <dd>{met}</dd>
+            </div>
+            <div className="reveal__tile">
+              <dt>have a published grant for tuition and living</dt>
+              <dd>{livingGrant}</dd>
+            </div>
+            <div className="reveal__tile">
+              <dt>facts, each with a link to its page</dt>
+              <dd>{run.claims_recorded}</dd>
+            </div>
+            {withinBudget !== null && ceiling ? (
+              <div className="reveal__tile">
+                <dt>left to pay within {ceiling.amount.toLocaleString('en-US')} {ceiling.currency} a year, if awarded</dt>
+                <dd>{withinBudget}</dd>
+              </div>
+            ) : (
+              <div className="reveal__tile">
+                <dt>official pages read</dt>
+                <dd>{run.pages_checked}</dd>
+              </div>
+            )}
+          </dl>
+          <p className="reveal__note">
+            Prices after grants, sources with dates, deadlines and documents are in the results.
+            Grants are mostly competitive, and admission is decided by the university.
+          </p>
+          <button className="btn btn--primary reveal__cta" onClick={onDone} data-testid="to-shortlist">
+            See {results.length} programme{results.length === 1 ? '' : 's'}
+          </button>
+        </section>
+      ) : (
+        <div className="screen__head">
+          <p className="screen__eyebrow">Step 03</p>
+          <h1 className="screen__title">
+            {failed ? 'Research failed' : cancelled ? 'Research cancelled' : finished ? 'Research complete' : 'Researching'}
+          </h1>
+          <p className="screen__lede">{STAGE_LABELS[run.stage] ?? run.stage.replace(/_/g, ' ')}</p>
+        </div>
+      )}
+
+      {revealed && <h2 className="reveal__how">How the research went</h2>}
 
       <div className="stack stack--loose">
         <div className="stack stack--tight">
@@ -295,11 +349,7 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
               Re-run everything
             </button>
           )}
-          {finished && results.length > 0 && (
-            <button className="btn btn--primary" onClick={onDone} data-testid="to-shortlist">
-              View {results.length} results →
-            </button>
-          )}
+
         </div>
       </div>
     </>

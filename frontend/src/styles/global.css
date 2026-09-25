@@ -130,7 +130,9 @@ html { scroll-padding-top: 4.5rem; }
 .navtabs__item:disabled { opacity: 0.42; cursor: not-allowed; }
 .navtabs__icon { display: inline-flex; }
 .navtabs__badge {
-  font-family: var(--font-mono);
+  /* Not the mono face: its slashed zero read "20" as "28" at this size. */
+  font-family: var(--font-ui);
+  font-variant-numeric: tabular-nums;
   font-size: 0.66rem;
   font-weight: 700;
   padding: 1px 5px;
@@ -180,7 +182,9 @@ html { scroll-padding-top: 4.5rem; }
 .nav__item[aria-current='page'] .nav__badge { background: var(--sun); color: var(--sun-ink); border-color: var(--sun); }
 .nav__item[disabled] { opacity: 0.42; cursor: not-allowed; }
 .nav__badge {
-  font-family: var(--font-mono);
+  /* Not the mono face: its slashed zero read "20" as "28" at this size. */
+  font-family: var(--font-ui);
+  font-variant-numeric: tabular-nums;
   font-size: 0.68rem;
   padding: 1px 5px;
   border-radius: 99px;
