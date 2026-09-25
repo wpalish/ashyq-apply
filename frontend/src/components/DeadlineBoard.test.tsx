@@ -3,7 +3,7 @@
  * and a last column that says what the requirements ask - never a chance.
  */
 
-import { render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { DeadlineBoard } from './DeadlineBoard';
 import { planDeadlines } from '@/lib/deadlines';
@@ -100,5 +100,26 @@ describe('the deadline board', () => {
     const foot = screen.getByText(/Dates as each university publishes them/);
     expect(foot).toHaveTextContent('rug.nl');
     expect(foot).toHaveTextContent('10 September 2026');
+  });
+
+  it('opens a row onto its programme: three answers, the money and the documents', () => {
+    const planned = planDeadlines([row({
+      id: 'tokyo', admissions_fit: 'STRONGER_FIT', best_funding_classification: 'FULL_TUITION',
+      funding_gap: { computable: true, gap: { amount: 1986, currency: 'USD', academic_year: '2026/27' } },
+      checklist: {
+        recommender_actions: [{ name: 'Academic reference', lead_time_days: 30, deadline: null }],
+        school_actions: [], certification_actions: [], applicant_actions: [],
+      },
+    } as unknown as Partial<ProgramResult>)], today);
+    render(<DeadlineBoard planned={planned} done={{}} />);
+    const opener = screen.getByTestId('board-open-tokyo');
+    expect(opener).toHaveAttribute('aria-expanded', 'false');
+    fireEvent.click(opener);
+    expect(opener).toHaveAttribute('aria-expanded', 'true');
+    const detail = screen.getByTestId('board-detail-tokyo');
+    for (const line of ['Requirements', 'Your profile', 'Money', 'Documents']) expect(detail).toHaveTextContent(line);
+    expect(detail).toHaveTextContent('1,986 USD a year left to pay, if awarded');
+    expect(detail).toHaveTextContent('0 of 1 ready · next: Academic reference, start by');
+    expect(detail.textContent).not.toMatch(/%|chance|probab/i);
   });
 });

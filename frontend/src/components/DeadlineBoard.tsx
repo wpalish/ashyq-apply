@@ -15,10 +15,17 @@
  * did not find reads "not found" and is never guessed.
  */
 
-import { urlHost } from '@/components/ResultCard';
+import { useState } from 'react';
+import { StatusChip } from '@/components/primitives';
+import { FIT_NOTE, awardNote, requirementNote, urlHost } from '@/components/ResultCard';
 import {
   REQUIREMENT_WORD, flapDate, nextDeadline, rowText, spokenDate, type PlannedDeadline,
 } from '@/lib/deadlines';
+import { doneKey, itemsOf, timingOf } from '@/lib/docs';
+import {
+  admissionsFitTone, date, eligibilityTone, fundingClassTone, money,
+} from '@/lib/format';
+import type { ProgramResult } from '@/types';
 
 function Flaps({ text }: { text: string }) {
   return (
@@ -65,7 +72,61 @@ function sourcesLine(planned: PlannedDeadline[]): string {
   return [...where].filter(Boolean).join(' · ');
 }
 
-export function DeadlineBoard({ planned }: { planned: PlannedDeadline[] }) {
+/**
+ * A row opened: concept L's "tasks, money and the three judgements" for its
+ * programme - the same three answers as the card, the money line, and how
+ * far the documents are.
+ */
+function RowDetail({ result, done, id }: { result: ProgramResult; done: Record<string, boolean>; id: string }) {
+  const gap = result.funding_gap;
+  const items = itemsOf(result);
+  const ready = items.filter((d) => done[doneKey(result, d)]).length;
+  const nextItem = items
+    .filter((d) => !done[doneKey(result, d)])
+    .map((d) => ({ d, t: timingOf(result, d) }))
+    .filter((x) => x.t !== null)
+    .sort((a, b) => a.t!.start.localeCompare(b.t!.start))[0];
+  return (
+    <div className="board__detail" id={id} data-testid={`board-detail-${result.id}`}>
+      <dl className="board__judgements">
+        <div>
+          <dt>Requirements</dt>
+          <dd><StatusChip status={result.eligibility} tone={eligibilityTone[result.eligibility]} /> {requirementNote(result)}</dd>
+        </div>
+        <div>
+          <dt>Your profile</dt>
+          <dd><StatusChip status={result.admissions_fit} tone={admissionsFitTone[result.admissions_fit]} /> {FIT_NOTE[result.admissions_fit] ?? ''}</dd>
+        </div>
+        <div>
+          <dt>Money</dt>
+          <dd>
+            <StatusChip status={result.best_funding_classification} tone={fundingClassTone[result.best_funding_classification]} />{' '}
+            {gap?.computable && gap.gap
+              ? <>{money({ ...gap.gap, academic_year: null })} a year left to pay, if awarded · {awardNote(result)}</>
+              : <>cost not computed · {awardNote(result)}</>}
+          </dd>
+        </div>
+        <div>
+          <dt>Documents</dt>
+          <dd>
+            {items.length === 0
+              ? 'not collected yet'
+              : <>{ready} of {items.length} ready{nextItem ? <> · next: {nextItem.d.name}, {nextItem.t!.late ? 'start now' : `start by ${date(nextItem.t!.start)}`}</> : null}</>}
+          </dd>
+        </div>
+      </dl>
+    </div>
+  );
+}
+
+export function DeadlineBoard({
+  planned, done = {},
+}: {
+  planned: PlannedDeadline[];
+  /** The applicant's document ticks, for a row's detail. */
+  done?: Record<string, boolean>;
+}) {
+  const [open, setOpen] = useState<string | null>(null);
   const next = nextDeadline(planned);
   const dated = planned.filter((p) => p.day !== null);
   const sources = sourcesLine(planned);
@@ -132,7 +193,16 @@ export function DeadlineBoard({ planned }: { planned: PlannedDeadline[] }) {
               <span className="board__where">{p.result.city || p.result.country}</span>
               <span className="board__what">
                 <span className="board__uni">
-                  {rowText(p).title}
+                  <button
+                    type="button"
+                    className="board__open"
+                    aria-expanded={open === p.key}
+                    aria-controls={`board-detail-${p.key}`}
+                    onClick={() => setOpen(open === p.key ? null : p.key)}
+                    data-testid={`board-open-${p.key}`}
+                  >
+                    {rowText(p).title}
+                  </button>
                   {p.result.user_decision === 'maybe' && <span className="board__maybe"> · maybe</span>}
                 </span>
                 <span className="board__prog">{rowText(p).detail}</span>
@@ -146,6 +216,7 @@ export function DeadlineBoard({ planned }: { planned: PlannedDeadline[] }) {
                 <span className="visually-hidden">Requirements: </span>
                 {REQUIREMENT_WORD[p.status] ?? p.status}
               </span>
+              {open === p.key && <RowDetail result={p.result} done={done} id={`board-detail-${p.key}`} />}
             </li>
           ))}
         </ol>

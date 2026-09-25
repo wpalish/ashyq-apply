@@ -14,7 +14,7 @@
 
 import { useMemo, useState } from 'react';
 import { Chip, Empty, Notice, Panel } from '@/components/primitives';
-import { calendarDay, daysUntil, startBy } from '@/lib/deadlines';
+import { doneKey, itemsOf, timingOf, useDocsDone } from '@/lib/docs';
 import { date, dateTime } from '@/lib/format';
 import { api } from '@/api/client';
 import { useStore } from '@/lib/store';
@@ -27,44 +27,11 @@ const OWNER_LABEL: Record<string, string> = {
   third_party: 'A third party (translator, WES/ECE, notary)',
 };
 
-const DONE_KEY = 'ashyq.docsDone';
-
-/** Every document on a checklist, once: the four groups split it by who acts. */
-function itemsOf(result: ProgramResult): DocumentItem[] {
-  const c = result.checklist;
-  if (!c) return [];
-  return [...c.recommender_actions, ...c.school_actions, ...c.certification_actions, ...c.applicant_actions];
-}
-
-function doneKey(result: ProgramResult, item: DocumentItem): string {
-  return `${result.id}::${item.name}`;
-}
-
-function loadDone(): Record<string, boolean> {
-  try {
-    return JSON.parse(window.localStorage.getItem(DONE_KEY) ?? '{}');
-  } catch {
-    return {};
-  }
-}
-
 export function DocumentsScreen() {
   const { results, run } = useStore();
   const withChecklists = results.filter((r) => r.checklist);
   const [selected, setSelected] = useState<string>(withChecklists[0]?.id ?? '');
-  const [done, setDone] = useState<Record<string, boolean>>(loadDone);
-
-  const toggle = (key: string) => {
-    setDone((prev) => {
-      const next = { ...prev, [key]: !prev[key] };
-      try {
-        window.localStorage.setItem(DONE_KEY, JSON.stringify(next));
-      } catch {
-        /* progress ticks are a convenience; storage being unavailable is fine */
-      }
-      return next;
-    });
-  };
+  const [done, toggle] = useDocsDone();
 
   const deadlines = useMemo(() => {
     const items: { when: string; what: string; where: string; past: boolean }[] = [];
@@ -208,17 +175,10 @@ function ChecklistFor({
     (n, [, items]) => n + items.filter((d) => done[doneKey(result, d)]).length, 0,
   );
 
-  // When to begin each document: its due date - its own, or the programme's
-  // admission deadline - minus the time it takes. Nothing is dated when either
-  // is unknown, and nothing is dated for a deadline that has already passed.
+  // When to begin each document (lib/docs.ts): shared with the plan, so the
+  // two screens cannot disagree.
   const today = new Date();
-  const admission = calendarDay(result.admission_deadline);
-  const timing = (d: DocumentItem) => {
-    const due = calendarDay(d.deadline) ?? admission;
-    if (!due || !d.lead_time_days || daysUntil(due, today) < 0) return null;
-    const start = startBy(due, d.lead_time_days);
-    return { due, start, late: daysUntil(start, today) < 0 };
-  };
+  const timing = (d: DocumentItem) => timingOf(result, d, today);
   const first = groups
     .flatMap(([, items]) => items)
     .filter((d) => !done[doneKey(result, d)])

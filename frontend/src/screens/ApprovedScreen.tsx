@@ -10,12 +10,14 @@
 import { DeadlineBoard } from '@/components/DeadlineBoard';
 import { Chip, Empty, Notice, Panel, StatusChip } from '@/components/primitives';
 import { planDeadlines } from '@/lib/deadlines';
+import { doneKey, nextToStart, useDocsDone } from '@/lib/docs';
 import { date, eligibilityTone, fundingClassTone, money } from '@/lib/format';
 import { useStore } from '@/lib/store';
 import type { ProgramResult, UserDecision } from '@/types';
 
 export function ApprovedScreen({ onCollect }: { onCollect: () => void }) {
   const { results, run, collectDocuments, decide } = useStore();
+  const [done, toggle] = useDocsDone();
 
   const group = (d: UserDecision) => results.filter((r) => r.user_decision === d);
   const approved = group('approved');
@@ -42,7 +44,9 @@ export function ApprovedScreen({ onCollect }: { onCollect: () => void }) {
       </div>
 
       <div className="stack stack--loose">
-        <DeadlineBoard planned={planDeadlines(results)} />
+        <DeadlineBoard planned={planDeadlines(results)} done={done} />
+
+        <NextToStart results={results} done={done} toggle={toggle} />
 
         <Panel>
           <div className="row" style={{ justifyContent: 'space-between' }}>
@@ -154,5 +158,66 @@ function DecidedRow({
       </div>
       {result.user_notes && <p className="xs faint" style={{ marginTop: 8 }}>{result.user_notes}</p>}
     </div>
+  );
+}
+
+/**
+ * Concept L's "this week", made useful on any day: the documents with the
+ * earliest start dates across the kept list, ticked here or on the documents
+ * screen alike. The ones due to start within seven days say so.
+ */
+function NextToStart({
+  results, done, toggle,
+}: {
+  results: ProgramResult[];
+  done: Record<string, boolean>;
+  toggle: (key: string) => void;
+}) {
+  const kept = results.filter((r) => r.user_decision === 'approved' || r.user_decision === 'maybe');
+  if (kept.length === 0) return null;
+  const collected = kept.some((r) => r.checklist);
+  const tasks = nextToStart(results, done);
+  const shown = tasks.slice(0, 3);
+  return (
+    <Panel title="Next to start" hint="From your document lists: each one's due date minus the time it takes.">
+      <div data-testid="next-to-start">
+        {!collected ? (
+          <p className="small muted">Collect documents for what you keep, and the first ones to start appear here.</p>
+        ) : shown.length === 0 ? (
+          <p className="small muted">Nothing left to start on the dates that are known.</p>
+        ) : (
+          <>
+            <ul className="next-docs">
+              {shown.map(({ result, item, timing }) => {
+                const key = doneKey(result, item);
+                const soon = timing.late || timing.daysToStart <= 7;
+                return (
+                  <li key={key} className="next-docs__item">
+                    <input
+                      type="checkbox"
+                      checked={Boolean(done[key])}
+                      onChange={() => toggle(key)}
+                      aria-label={`${item.name}, ${result.university}: ready`}
+                    />
+                    <span>
+                      <span className="next-docs__name">{item.name}</span>
+                      <span className="next-docs__where"> · {result.university} · due {date(timing.due)}</span>
+                    </span>
+                    <span className={`next-docs__when${soon ? ' next-docs__when--soon' : ''}`}>
+                      {timing.late ? 'start now' : timing.daysToStart <= 7 ? `this week · by ${date(timing.start)}` : `by ${date(timing.start)}`}
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+            {tasks.length > shown.length && (
+              <p className="xs muted" style={{ marginTop: 'var(--space-2)' }}>
+                and {tasks.length - shown.length} more on the documents screen
+              </p>
+            )}
+          </>
+        )}
+      </div>
+    </Panel>
   );
 }

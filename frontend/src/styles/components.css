@@ -1501,3 +1501,54 @@
   .doc-prog__uni { font-size: var(--text-sm); }
   .doc-prog__name { display: none; }
 }
+
+/* A board row opened: its programme's three answers, money and documents. */
+.board__open {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--night-ink) 35%, transparent);
+  text-underline-offset: 3px;
+}
+.board__open:hover { text-decoration-color: var(--sun); }
+.board__open[aria-expanded='true'] { text-decoration-color: var(--sun); }
+.board__detail {
+  grid-column: 1 / -1;
+  margin-top: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  background: var(--night-surface);
+  border: 1px solid var(--night-line);
+  border-radius: var(--radius);
+}
+.board__judgements { margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3) var(--space-5); }
+.board__judgements dt { font-size: var(--text-xs); font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--night-muted); }
+.board__judgements dd { margin: 0.2rem 0 0; font-size: var(--text-sm); color: var(--night-ink); }
+@media (max-width: 640px) {
+  .board__judgements { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Next to start: the earliest document start dates across the kept list. */
+.next-docs { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.next-docs__item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: var(--space-3);
+  align-items: start;
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--rule);
+}
+.next-docs__item:first-child { border-top: 0; }
+.next-docs__item input { width: 1rem; height: 1rem; margin-top: 0.2rem; accent-color: var(--accent); }
+.next-docs__name { font-weight: 700; font-size: var(--text-sm); }
+.next-docs__where { font-size: var(--text-xs); color: var(--ink-muted); }
+.next-docs__when { font-size: var(--text-xs); font-weight: 700; color: var(--ink-muted); white-space: nowrap; }
+.next-docs__when--soon { color: var(--warn); }
+@media (max-width: 520px) {
+  .next-docs__item { grid-template-columns: auto minmax(0, 1fr); }
+  .next-docs__when { grid-column: 2; white-space: normal; }
+}

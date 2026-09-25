@@ -170,6 +170,16 @@ test('the plan puts the nearest deadline on the board and every one after it in 
   expect(days).toEqual([...days].sort((a, b) => a - b));
   if (days.length) await expect(page.getByTestId('board-next')).toContainText(new RegExp(`${days[0]} days? left`));
 
+  // A row opens onto its programme: the three answers, the money and the documents.
+  const opener = applications.filter({ hasText: 'University of Groningen' }).getByRole('button');
+  await opener.click();
+  await expect(opener).toHaveAttribute('aria-expanded', 'true');
+  const detail = board.locator('[data-testid^="board-detail-"]');
+  for (const line of ['Requirements', 'Your profile', 'Money', 'Documents']) await expect(detail).toContainText(line);
+  await expect(detail).toContainText('not collected yet');
+  // Nothing to start before the lists exist, and the panel says what would fill it.
+  await expect(page.getByTestId('next-to-start')).toContainText('Collect documents for what you keep');
+
   await expect(board).toContainText('Days are counted from today');
   await expect(board).not.toContainText('%');
   await expect(board).not.toContainText(/chance|probab/i);
