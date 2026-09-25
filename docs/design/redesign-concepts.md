@@ -1097,6 +1097,7 @@ screen-reader user; an invariants auditor; the next engineer.
 |---|---|---|---|
 | I18 | After "Save and next" focus fell to the page body and nothing announced the next university | The pressed button is removed | Each card focuses its heading; closing returns focus to the button that opened it |
 | I19 | The ladder's "cost not computed" reasons were ovals | Two- and three-line text in a pill radius (the I13 pattern again) | A small radius for multi-line reasons |
+| I20 | CI's axe check failed on some runs (4.02:1 on the nav item just clicked) and passed on others | The selected nav item and the pressed decision button are navy on white; a 120 ms colour fade from the light state passes through mid-greys, and axe sometimes sampled mid-fade | Colours switch at once. Reproduced deterministically with a 2 s fade before the fix, and passed with it after |
 
 **Checked and kept:** the wrapped phone navigation (about 190 px before the title). A scrolled strip
 was tried before and hid Community 1 660 px along a scroller with no affordance; the comment in

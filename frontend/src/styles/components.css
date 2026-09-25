@@ -121,7 +121,9 @@
   font-size: var(--text-xs);
   font-weight: 600;
   cursor: pointer;
-  transition: all var(--duration-fast);
+  /* Only the edge fades. The pressed state is navy on white; fading into it
+     passes through low-contrast greys (see .nav__item). */
+  transition: border-color var(--duration-fast);
 }
 .decision-btn:first-child { border-radius: var(--radius-pill) 0 0 var(--radius-pill); }
 .decision-btn:last-child { border-radius: 0 var(--radius-pill) var(--radius-pill) 0; }

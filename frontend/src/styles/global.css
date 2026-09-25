@@ -123,7 +123,10 @@ button { font: inherit; color: inherit; }
   font-weight: 500;
   color: var(--ink-muted);
   width: 100%;
-  transition: background var(--duration-fast), color var(--duration-fast), transform var(--duration-fast);
+  /* Colours switch at once: the selected item is navy with white text, and a
+     fade from the light state passes through mid-greys under 3:1 that axe
+     caught right after a click (a flaky CI failure). */
+  transition: transform var(--duration-fast);
 }
 .nav__item:hover { background: var(--surface-sunken); color: var(--ink); }
 .nav__item:active { transform: translateX(1px); }
