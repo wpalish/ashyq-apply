@@ -5,6 +5,7 @@
  */
 
 import { fireEvent, render, screen } from '@testing-library/react';
+import { useLayoutEffect } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { Globe } from './Globe';
 
@@ -100,6 +101,22 @@ describe('the globe', () => {
     expect(chips).toContain('→ Tokyo');
     fireEvent.click(screen.getByText('← Americas · 2'));
     expect(onEdge.mock.calls[0]![0].map((m: { id: string }) => m.id).sort()).toEqual(['montreal', 'toronto']);
+  });
+
+  it('says it is turning from the render that asks for the turn, not a frame later', () => {
+    // Read before any effect runs: a test that waits for "not turning" right
+    // after a tap must not find the globe still, with the turn not begun.
+    const seen: (string | undefined)[] = [];
+    function Probe({ lon }: { lon: number }) {
+      useLayoutEffect(() => {
+        seen.push(document.querySelector<HTMLElement>('[data-testid="probe"]')?.dataset.turning);
+      });
+      return <Globe markers={markers} focus={{ lat: 48, lon }} tone="day" layout="band" height={230} caption="c" testId="probe" />;
+    }
+    const { rerender } = render(<Probe lon={14} />);
+    rerender(<Probe lon={-80} />);
+    expect(seen[0]).toBeUndefined();
+    expect(seen[1]).toBe('true');
   });
 
   it('says nothing at the edge when every place is in view', () => {

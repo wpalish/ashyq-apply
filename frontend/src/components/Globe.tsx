@@ -456,6 +456,13 @@ export function Globe(props: GlobeProps) {
   // Said on the figure while it turns, so a test (or anything else) can wait
   // for it to settle instead of guessing a delay.
   const [turning, setTurning] = useState(false);
+  // The request the view last answered. Until the effect below has taken a
+  // new one, the globe is about to turn: said from the render that carries
+  // the request, not a frame later, or a test that waits for "not turning"
+  // right after a tap passes before the turn has begun (it read a cluster
+  // mid-turn in CI).
+  const [settled, setSettled] = useState(request);
+  const moving = turning || settled !== request;
   const zoomRef = useRef(shownZoom);
   zoomRef.current = shownZoom;
   // Only a new request is a turn worth watching; a new width (the first
@@ -470,6 +477,7 @@ export function Globe(props: GlobeProps) {
       && Math.abs(fromZoom - zoom) < 0.001;
     const turned = asked.current !== request;
     asked.current = request;
+    setSettled(request);
     if (prefersReducedMotion() || still || !turned) {
       setCenter(target);
       setShownZoom(zoom);
@@ -503,7 +511,7 @@ export function Globe(props: GlobeProps) {
     .filter(({ x, y }) => x >= 0 && x <= g.width && y >= 0 && y <= g.height);
   const shown = new Set(inView.map(({ m }) => m.id));
   // Said once the globe has settled: mid-turn, chips would flicker in and out.
-  const edges = turning ? [] : edgesOf(markers.filter((m) => !shown.has(m.id)), center, g);
+  const edges = moving ? [] : edgesOf(markers.filter((m) => !shown.has(m.id)), center, g);
 
   const groups = crowds(inView);
   // Close enough in, a step of 26 px is a few kilometres: a crowd is then
@@ -531,7 +539,7 @@ export function Globe(props: GlobeProps) {
       style={{ height }}
       ref={wrap}
       data-testid={testId}
-      data-turning={turning ? 'true' : undefined}
+      data-turning={moving ? 'true' : undefined}
     >
       <canvas ref={canvas} className="globe__canvas" style={{ width: '100%', height }} aria-hidden="true" />
       <div className="globe__markers" aria-hidden="true">
