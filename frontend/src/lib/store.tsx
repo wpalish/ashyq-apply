@@ -608,6 +608,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       setResults([]);
       setSummary(null);
       writePointer('run', started.id);
+      // The case list was read before this run existed, so the switcher said
+      // "0 runs" beside a finished run. A failed refresh leaves the old count;
+      // it must not fail the run that did start.
+      api.cases()
+        .then((next) => { if (gen === opGenRef.current) setCases(next); })
+        .catch(() => {});
     } catch (e) {
       // 409 means this applicant is already being researched. Joining that run
       // is what the user wanted; reporting an error would be pedantry.

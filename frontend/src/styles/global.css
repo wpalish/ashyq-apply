@@ -248,7 +248,8 @@ html { scroll-padding-top: 4.5rem; }
   font-weight: 600;
 }
 .subnav__case { display: flex; align-items: center; gap: var(--space-2); margin-left: auto; }
-.subnav__case select { width: auto; max-width: 16rem; padding-top: 0.3rem; padding-bottom: 0.3rem; }
+/* The case switcher's select is styled in components.css, after the shared
+   field rule it would otherwise lose to. */
 
 .main { width: 100%; max-width: var(--page-width); margin: 0 auto; min-width: 0; display: flex; flex-direction: column; flex: 1; }
 

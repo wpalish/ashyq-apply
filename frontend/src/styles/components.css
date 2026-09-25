@@ -272,7 +272,7 @@
 .field__label { font-size: var(--text-sm); font-weight: 600; }
 .field__hint { font-size: var(--text-xs); color: var(--ink-faint); }
 .field input, .field select, .field textarea,
-.topbar select {
+.topbar select, .subnav__case select {
   font: inherit;
   font-size: var(--text-sm);
   padding: 0.42rem 0.6rem;
@@ -284,14 +284,25 @@
   transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
 }
 .field input:hover, .field select:hover, .field textarea:hover,
-.topbar select:hover { border-color: var(--ink-faint); }
+.topbar select:hover, .subnav__case select:hover { border-color: var(--ink-faint); }
 .field input:focus, .field select:focus, .field textarea:focus,
-.topbar select:focus {
+.topbar select:focus, .subnav__case select:focus {
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-soft);
 }
 .topbar select { width: auto; max-width: 14rem; padding-top: 0.3rem; padding-bottom: 0.3rem; }
+/* The case switcher moved from the top bar to the Me tab in part 2 and lost
+   the top bar's select styling with it. Round, like the pills beside it. */
+.subnav__case select { width: auto; max-width: 16rem; padding: 0.3rem 0.8rem; border-radius: 999px; }
+.subnav__case .btn { flex: none; white-space: nowrap; }
+@media (max-width: 640px) {
+  /* A styled select sizes to its longest option; on a 320 px phone that
+     pushed "New case" off the screen. Here it takes what is left and cuts. */
+  .subnav__case { width: 100%; }
+  .subnav__case label { flex: 1 1 auto; min-width: 0; }
+  .subnav__case select { width: 100%; max-width: none; min-width: 0; text-overflow: ellipsis; }
+}
 .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: var(--space-4); }
 .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); gap: var(--space-3); }
 
