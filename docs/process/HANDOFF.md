@@ -265,6 +265,17 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+Write-ahead (claude-opus-5, 2026-09-25, redesign part 4; owner: "продолжай" again). Concept screens
+still in the old shape, none needing an owner decision:
+1. Plan board: the kept programmes' grant deadlines join the admission ones (concept L's "Эссе на
+   грант · 01 ФЕВ"), marked when earlier than the admission deadline; awards considered automatically
+   and awards the applicant is not eligible for stay off. The documents screen's "passed" chip stops
+   wrapping under the date.
+2. Research running (concept 04): the night moment, with what was found so far - an exclusion, a
+   year mismatch, a site that did not answer - taken from the run, never invented.
+3. Documents (concept 13): per programme, what is asked, what is ticked and what is still missing.
+4. Review at 390/1440 light and dark, video, docs (§23), PR.
+
 Write-ahead (claude-opus-5, 2026-09-25, redesign part 3; owner: "продолжай"). The concept screens that
 need no owner decision (English stays, the globe waits), each a pushed commit with green gates:
 1. Programme (concept 10): the money as arithmetic — price − grants = left to pay, the backend's own
