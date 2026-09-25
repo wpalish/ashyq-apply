@@ -81,4 +81,72 @@ describe('the globe', () => {
     expect(spots).toHaveLength(2);
     expect(Math.hypot(spots[0]![0] - spots[1]![0], spots[0]![1] - spots[1]![1])).toBeGreaterThanOrEqual(25.9);
   });
+
+  it('names what it hides at the edge it lies towards, by region', () => {
+    // Seen from over Europe: Toronto and Montreal are behind, to the west.
+    const spread = [
+      { id: 'groningen', lat: 53.22, lon: 6.57, label: 'Groningen', name: 'Groningen', group: 'Europe' },
+      { id: 'toronto', lat: 43.65, lon: -79.38, label: 'Toronto', name: 'Toronto', group: 'Americas' },
+      { id: 'montreal', lat: 45.5, lon: -73.57, label: 'Montreal', name: 'Montreal', group: 'Americas' },
+      { id: 'tokyo', lat: 35.68, lon: 139.69, label: 'Tokyo', name: 'Tokyo', group: 'Asia & Oceania' },
+    ];
+    const onEdge = vi.fn();
+    render(
+      <Globe markers={spread} focus={{ lat: 50, lon: 12 }} zoom={2.1} tone="day" layout="band" height={230}
+             onEdge={onEdge} caption="c" />,
+    );
+    const chips = screen.getAllByTestId('globe-edge').map((c) => c.textContent);
+    expect(chips).toContain('← Americas · 2');
+    expect(chips).toContain('→ Tokyo');
+    fireEvent.click(screen.getByText('← Americas · 2'));
+    expect(onEdge.mock.calls[0]![0].map((m: { id: string }) => m.id).sort()).toEqual(['montreal', 'toronto']);
+  });
+
+  it('says nothing at the edge when every place is in view', () => {
+    render(
+      <Globe markers={markers.slice(0, 1)} focus={{ lat: 48, lon: 14 }} tone="day" layout="band" height={230} caption="c" />,
+    );
+    expect(screen.queryByTestId('globe-edge')).toBeNull();
+  });
+
+  it('fits a route: both ends in the frame, both named', () => {
+    const astana = { lat: 51.17, lon: 71.45, city: 'Astana' };
+    const groningen = { id: 'g', lat: 53.22, lon: 6.57, label: 'Groningen · 1,848 USD a year', name: 'Groningen' };
+    const { container } = render(
+      <Globe markers={[groningen]} home={astana} fit={[astana, groningen]} focus={{ lat: 0, lon: 0 }}
+             routes names tone="day" layout="band" height={180} caption="c" />,
+    );
+    const marker = screen.getByTestId('globe-marker-g');
+    const x = parseFloat(marker.style.left);
+    // jsdom has no layout, so the globe keeps its default 360 px width.
+    expect(x).toBeGreaterThan(40);
+    expect(x).toBeLessThan(320);
+    const names = [...container.querySelectorAll('.globe__name')].map((n) => n.textContent);
+    expect(names).toEqual(['Groningen', 'Astana']);
+    expect(screen.queryByTestId('globe-edge')).toBeNull();
+  });
+
+  it('comes close enough on a short route that its ends stand apart', () => {
+    const astana = { lat: 51.17, lon: 71.45, city: 'Astana' };
+    const near = { id: 'n', lat: 43.24, lon: 76.89, label: 'Almaty', name: 'Almaty' };
+    const far = { id: 'f', lat: 43.65, lon: -79.38, label: 'Toronto', name: 'Toronto' };
+    const gap = (m: typeof near) => {
+      const { unmount } = render(
+        <Globe markers={[m]} home={astana} fit={[astana, m]} focus={{ lat: 0, lon: 0 }}
+               routes names tone="day" layout="band" height={180} caption="c" />,
+      );
+      const marker = screen.getByTestId(`globe-marker-${m.id}`);
+      const home = document.querySelector<HTMLElement>('.globe__name--home')!;
+      const d = Math.hypot(
+        parseFloat(marker.style.left) - parseFloat(home.style.left),
+        parseFloat(marker.style.top) - parseFloat(home.style.top),
+      );
+      unmount();
+      return d;
+    };
+    // Almaty is 1,000 km from Astana, Toronto 9,000: the short route is
+    // drawn closer in, so its ends are not a few pixels apart.
+    expect(gap(near)).toBeGreaterThan(60);
+    expect(gap(far)).toBeGreaterThan(60);
+  });
 });

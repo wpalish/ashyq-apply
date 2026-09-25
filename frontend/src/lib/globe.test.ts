@@ -6,7 +6,7 @@
 
 import { describe, expect, it } from 'vitest';
 import {
-  decodeLand, greatCircle, homeOf, interpolateCenter, isVisible, markersFor, placeOf, project,
+  centroidOf, decodeLand, greatCircle, homeOf, interpolateCenter, isVisible, markersFor, placeOf, project,
 } from './globe';
 import { LAND_DOTS, LAND_DOT_COUNT } from './globe-land';
 import type { ProgramResult } from '@/types';
@@ -44,6 +44,17 @@ describe('routes and turns', () => {
   it('turns the short way round across the date line', () => {
     const half = interpolateCenter({ lat: 0, lon: 170 }, { lat: 0, lon: -170 }, 0.5);
     expect(Math.abs(Math.abs(half.lon) - 180)).toBeLessThan(1);
+  });
+});
+
+describe('the middle of a route', () => {
+  it('is halfway along the great circle, across the date line too', () => {
+    const mid = centroidOf([{ lat: 0, lon: 170 }, { lat: 0, lon: -170 }]);
+    expect(mid.lat).toBeCloseTo(0, 5);
+    expect(Math.abs(mid.lon)).toBeCloseTo(180, 5);
+    const one = centroidOf([{ lat: 51.17, lon: 71.45 }]);
+    expect(one.lat).toBeCloseTo(51.17, 5);
+    expect(one.lon).toBeCloseTo(71.45, 5);
   });
 });
 
@@ -103,5 +114,7 @@ describe('places', () => {
     expect(markers.map((m) => m.label)).toEqual(['Groningen · 1,848 USD a year', 'Toronto · cost not computed']);
     expect(unplaced).toBe(1);
     expect(markers.map((m) => m.label).join(' ')).not.toMatch(/%|chance/i);
+    // The region names the chip at the globe's edge when the city is hidden.
+    expect(markers.map((m) => m.group)).toEqual(['Europe', 'Americas']);
   });
 });

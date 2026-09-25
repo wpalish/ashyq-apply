@@ -57,10 +57,28 @@ test('one at a time: an answer moves to the next programme and shows in the tabl
   const card = page.locator('[data-testid^="triage-card-"]');
   await expect(card).toBeVisible();
   const firstId = (await card.getAttribute('data-testid'))!.replace('triage-card-', '');
+  // Concept P: a night globe behind the card with the route from home to
+  // this programme's city, both ends named.
+  const globe = page.getByTestId('triage-globe');
+  await expect(globe).toBeVisible();
+  await expect(globe).not.toHaveAttribute('data-turning', 'true');
+  await expect(globe.locator('.globe__name--home')).toHaveText('Astana');
+  const firstCity = await globe.locator('.globe__name:not(.globe__name--home)').innerText();
+  // The answers stay above a phone's tab bar (defect I27); on a wide screen
+  // the tabs are at the top and the answers stay in the first screen.
+  const answers = (await page.locator('.triage__answers').boundingBox())!;
+  const tabs = (await page.locator('.navtabs').boundingBox())!;
+  const floor = tabs.y > answers.y ? tabs.y : page.viewportSize()!.height;
+  expect(answers.y + answers.height).toBeLessThanOrEqual(floor);
   await page.screenshot({ path: shot('14-one-at-a-time.png'), fullPage: false });
 
   await page.getByTestId('triage-maybe').click();
   await expect(card).not.toHaveAttribute('data-testid', `triage-card-${firstId}`);
+  // The globe turns to the next programme's route.
+  await expect(globe).not.toHaveAttribute('data-turning', 'true');
+  const nextCity = (await card.locator('.triage__prog').innerText()).split(' · ').pop()!.split(',')[0]!.trim();
+  await expect(globe.locator('.globe__name:not(.globe__name--home)')).toHaveText(nextCity);
+  expect(firstCity).not.toBe('');
 
   // A rejection still asks why before it is saved.
   await page.getByTestId('triage-reject').click();
@@ -87,6 +105,10 @@ test('the shortlist reads as price cards, and a card opens its programme', async
   const opener = groningen.getByRole('button', { name: 'University of Groningen' });
   if ((await opener.getAttribute('aria-expanded')) !== 'true') await opener.click();
   await expect(groningen.getByRole('tab', { name: 'Funding' })).toBeVisible();
+  // Concept 10: the programme opens on its route from home, both ends named.
+  const route = groningen.locator('[data-testid^="route-"]');
+  await expect(route).toBeVisible();
+  await expect(route.locator('.globe__name')).toHaveText(['Groningen', 'Astana']);
   await page.screenshot({ path: shot('15-shortlist-cards.png'), fullPage: false });
   // The ladder folds into one line here, as the concept's budget sheet.
   await expect(page.getByTestId('budget-ladder')).toContainText('3 within 6,000 USD');
@@ -129,6 +151,25 @@ test('the globe places every programme at its city, turns by region and opens a 
   await expect(page.getByTestId(`card-open-${id}`)).toHaveAttribute('aria-expanded', 'true');
   await page.getByTestId(`card-open-${id}`).click();
   await page.getByTestId('region-all').click();
+  await expect(globe).not.toHaveAttribute('data-turning', 'true');
+
+  // Nothing goes missing silently (concept N): every programme is a marker,
+  // in a cluster, or named at the edge the globe hides it towards.
+  const total = Number((await page.getByTestId('region-all').innerText()).replace(/\D/g, ''));
+  const sum = async (id: string) => (await globe.getByTestId(id).evaluateAll(
+    (els) => els.map((e) => Number(e.getAttribute('data-count'))),
+  )).reduce((a, b) => a + b, 0);
+  const markers = await globe.locator('[data-testid^="globe-marker-"]').count();
+  const atEdges = await sum('globe-edge');
+  expect(atEdges).toBeGreaterThan(0);
+  expect(markers + (await sum('globe-cluster')) + atEdges).toBe(total);
+  // A chip at the edge turns the globe to what it names.
+  const edge = globe.getByTestId('globe-edge').filter({ hasText: 'Americas' });
+  await edge.click();
+  await expect(page.getByTestId('globe-out')).toBeVisible();
+  await expect(globe).not.toHaveAttribute('data-turning', 'true');
+  await expect(globe.getByTestId('globe-edge').filter({ hasText: 'Americas' })).toHaveCount(0);
+  await page.getByTestId('globe-out').click();
   await expect(globe).not.toHaveAttribute('data-turning', 'true');
 
   // Crowded cities fold into a cluster with a count; tapping it zooms in, and
@@ -246,13 +287,14 @@ test('the plan puts the nearest deadline on the board and every one after it in 
   await page.screenshot({ path: shot('18-plan-board.png'), fullPage: false });
 });
 
-test('the start, the reveal, the cards, the comparison and the plan have no serious axe violations', async () => {
+test('the start, the reveal, the cards, the comparison, the plan and the triage have no serious axe violations', async () => {
   const views: [string, () => Promise<void>][] = [
     ['start', async () => { await goTo(page, 'start'); }],
     ['reveal', async () => { await goTo(page, 'progress'); }],
     ['cards', async () => { await goTo(page, 'shortlist'); await page.getByTestId('view-cards').click(); }],
     ['compare', async () => { await page.getByTestId('compare-go').click(); }],
     ['plan', async () => { await goTo(page, 'approved'); }],
+    ['one at a time', async () => { await openShortlist(page); await page.getByTestId('triage-start').click(); }],
   ];
   for (const [name, open] of views) {
     await open();

@@ -1692,3 +1692,77 @@
 .globe--night .globe__name { color: #FFFFFF; text-shadow: 0 0 3px var(--night), 0 0 3px var(--night); }
 .shortlist-globe { position: relative; }
 .shortlist-globe__out { position: absolute; top: var(--space-2); right: 0; z-index: 1; }
+
+/* A route names both its ends under their points (concept 10). */
+.globe__name--below { transform: translate(-50%, 9px); }
+.globe__name--home { font-weight: 800; }
+
+/* What the globe hides, named at the edge it lies towards (concept N):
+   "← Americas · 4". */
+.globe__edges {
+  position: absolute;
+  display: flex;
+  gap: var(--space-1);
+  max-width: 46%;
+  pointer-events: none;
+}
+.globe__edges--left { left: 8px; flex-direction: column; align-items: flex-start; transform: translateY(-50%); }
+.globe__edges--right { right: 8px; flex-direction: column; align-items: flex-end; transform: translateY(-50%); }
+.globe__edges--bottom { bottom: 8px; transform: translateX(-50%); max-width: 92%; }
+.globe__edges--top { top: 8px; transform: translateX(-50%); max-width: 92%; }
+.globe__edge {
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  pointer-events: auto;
+}
+button.globe__edge { cursor: pointer; }
+.globe--night .globe__edge { background: var(--night-surface); color: var(--night-ink); border-color: var(--night-line); }
+
+/* A programme's route from home (concept 10). */
+.route { display: flex; flex-direction: column; gap: var(--space-1); }
+.route .globe { border-radius: var(--radius-lg); }
+.route--day .globe { background: color-mix(in srgb, var(--surface-sunken) 55%, transparent); }
+.route__note { margin: 0; font-size: var(--text-xs); color: var(--ink-muted); }
+.detail__top { display: flex; flex-direction: column; gap: var(--space-3); }
+@media (min-width: 900px) {
+  .detail__top { display: grid; grid-template-columns: minmax(0, 20rem) minmax(0, 1fr); align-items: start; }
+}
+
+/* The triage's night globe (concept P): the route to the programme on the
+   table, turning as each answer brings the next one; the card sits over its
+   lower part. */
+.triage { --triage-pad: var(--space-5); }
+.triage__globe { margin: 0 calc(-1 * var(--triage-pad)); }
+.triage__card--over { position: relative; z-index: 1; margin-top: calc(-1 * (var(--space-4) + var(--card-over))); }
+.route--steady { position: relative; }
+.route--steady .route__note {
+  position: absolute; top: var(--space-2); left: 50%; transform: translateX(-50%);
+  width: max-content; max-width: calc(100% - 2 * var(--space-4));
+  padding: 0.2rem 0.6rem; border-radius: 999px; text-align: center;
+}
+.route__note--night { color: var(--night-muted); }
+.route--steady .route__note--night { background: var(--night-surface); border: 1px solid var(--night-line); }
+@media (max-width: 700px) {
+  .triage { --triage-pad: var(--space-4); }
+}
+/* On a phone the triage is a moment of its own, with its own bar ("1 of 20",
+   "Back to the list"), as in concept R-09: the section links step aside so
+   the globe, the card and the three answers fit above the tab bar. */
+@media (max-width: 640px) {
+  body:has(.triage) .subnav { display: none; }
+}
+/* The band's top edge fades into the night instead of cutting the dots off. */
+.triage__globe .globe__canvas {
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 28px);
+  mask-image: linear-gradient(to bottom, transparent, #000 28px);
+}

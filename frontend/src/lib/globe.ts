@@ -10,12 +10,13 @@
  * the table is left off and counted, so the screen can say so.
  *
  * An orthographic projection of our own, so the app carries no geometry
- * library: the land is 4 218 precomputed dots, and a frame is a few thousand
+ * library: the land is 8 441 precomputed dots, and a frame is a few thousand
  * multiplications.
  */
 
 import PLACES from '@/lib/globe-places.json';
 import { money } from '@/lib/format';
+import { REGION_LABEL, regionOf } from '@/lib/regions';
 import type { ProgramResult } from '@/types';
 
 export interface LatLon {
@@ -117,6 +118,25 @@ export function greatCircle(a: LatLon, b: LatLon, steps = 48, height = 0.18): { 
   return out;
 }
 
+/**
+ * The point that faces all of `points` best: their mean direction. For two
+ * places it is the middle of the route between them.
+ */
+export function centroidOf(points: LatLon[]): LatLon {
+  let x = 0;
+  let y = 0;
+  let z = 0;
+  for (const p of points) {
+    const [px, py, pz] = toVector(p);
+    x += px;
+    y += py;
+    z += pz;
+  }
+  const n = Math.hypot(x, y, z);
+  if (n < 1e-9) return points[0] ?? { lat: 0, lon: 0 };
+  return toLatLon([x / n, y / n, z / n]);
+}
+
 /** Eases a turn of the globe from `from` to `to`, the short way round. */
 export function interpolateCenter(from: LatLon, to: LatLon, t: number): LatLon {
   let dLon = to.lon - from.lon;
@@ -172,6 +192,8 @@ export interface ResultMarker extends LatLon {
   id: string;
   label: string;
   name: string;
+  /** The region, for a chip at the edge when the globe hides the city. */
+  group?: string;
 }
 
 /**
@@ -192,7 +214,15 @@ export function markersFor(results: ProgramResult[]): { markers: ResultMarker[];
     const price = gap?.computable && gap.gap
       ? `${money({ ...gap.gap, academic_year: null })} a year`
       : 'cost not computed';
-    markers.push({ id: r.id, lat: place.lat, lon: place.lon, label: `${r.city} · ${price}`, name: r.city });
+    const region = regionOf(r.country);
+    markers.push({
+      id: r.id,
+      lat: place.lat,
+      lon: place.lon,
+      label: `${r.city} · ${price}`,
+      name: r.city,
+      group: region === 'other' ? undefined : REGION_LABEL[region],
+    });
   }
   return { markers, unplaced };
 }

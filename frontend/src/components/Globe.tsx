@@ -16,7 +16,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
-  greatCircle, interpolateCenter, isVisible, loadLandDots, project, projectRad, type LatLon,
+  centroidOf, greatCircle, interpolateCenter, isVisible, loadLandDots, project, projectRad, type LatLon,
 } from '@/lib/globe';
 
 export interface GlobeMarker extends LatLon {
@@ -25,6 +25,8 @@ export interface GlobeMarker extends LatLon {
   label: string;
   /** The city, shown beside every marker once the globe is close in. */
   name?: string;
+  /** The region: markers the globe hides are named at its edge by region. */
+  group?: string;
 }
 
 export interface GlobeProps {
@@ -32,6 +34,15 @@ export interface GlobeProps {
   home?: (LatLon & { city: string }) | null;
   /** The place to bring into the middle of the visible part. */
   focus: LatLon;
+  /**
+   * Places that must all be in view - home and a programme's city: the globe
+   * turns to their middle and comes as close as it can. Replaces focus and zoom.
+   */
+  fit?: LatLon[];
+  /** Name every place on the globe, home included, whatever the zoom. */
+  names?: boolean;
+  /** Pixels at the bottom that something sits over (a card): the view keeps above them. */
+  covered?: number;
   /** Day on a light page; night inside the navy panels. */
   tone: 'day' | 'night';
   /** Horizon: the top of a large globe rising from the bottom. Band: most of a smaller one. */
@@ -44,6 +55,8 @@ export interface GlobeProps {
   onSelect?: (id: string) => void;
   /** A crowd of markers was tapped: zoom in on them. Without it, crowds still show their count. */
   onCluster?: (members: GlobeMarker[]) => void;
+  /** A chip at the edge was tapped: turn to what it names. Without it, the chips only say. */
+  onEdge?: (members: GlobeMarker[]) => void;
   /** What the globe shows, for a screen reader. */
   caption: string;
   testId?: string;
@@ -59,16 +72,18 @@ interface Geometry {
   focusY: number;
 }
 
-function geometryOf(layout: GlobeProps['layout'], width: number, height: number, zoom = 1): Geometry {
+function geometryOf(layout: GlobeProps['layout'], width: number, height: number, zoom = 1, covered = 0): Geometry {
   if (layout === 'horizon') {
     const radius = Math.max(200, Math.min(560, width * 0.52));
     const cap = height * 0.94;
     return { width, height, radius, cx: width / 2, cy: height - cap + radius, focusY: 0.5 };
   }
-  const base = Math.max(110, Math.min(width * 0.36, height * 0.72));
+  // The band is the part left in view; the globe carries on under a card.
+  const band = height - covered;
+  const base = Math.max(110, Math.min(width * 0.36, band * 0.72));
   const radius = base * zoom;
   // Zoomed in, the centre drops so the region stays in the band.
-  return { width, height, radius, cx: width / 2, cy: height * 0.5 + base * 0.3 + (radius - base) * 0.6, focusY: 0.46 };
+  return { width, height, radius, cx: width / 2, cy: band * 0.5 + base * 0.3 + (radius - base) * 0.6, focusY: (0.46 * band) / height };
 }
 
 /** The view centre that puts `focus` at the geometry's focus height. */
@@ -76,6 +91,132 @@ function viewCenter(focus: LatLon, g: Geometry): LatLon {
   const yUnit = (g.cy - g.focusY * g.height) / g.radius;
   const dLat = (Math.asin(Math.max(-0.95, Math.min(0.95, yUnit))) * 180) / Math.PI;
   return { lat: Math.max(-80, Math.min(80, focus.lat - dLat)), lon: focus.lon };
+}
+
+/** Closest first: the fit takes the first of these that shows every place. */
+const FIT_ZOOMS = [6, 4.5, 3.4, 2.6, 2, 1.6, 1.3, 1.1, 1];
+
+/**
+ * How close the globe can come with every one of `points` in the frame, room
+ * left for their names, and the route from the first to each other one.
+ */
+function fitZoom(
+  points: LatLon[], layout: GlobeProps['layout'], width: number, height: number, lift: number, covered = 0,
+): number {
+  const middle = centroidOf(points);
+  const inside = (g: Geometry, view: LatLon, p: LatLon, rise = 0, room = true) => {
+    const q = project(p, view, rise);
+    if (q.z < 0.1 && rise === 0) return false;
+    const x = g.cx + q.x * g.radius;
+    const y = g.cy - q.y * g.radius;
+    return room
+      ? x >= 44 && x <= width - 44 && y >= 12 && y <= height - covered - 30
+      : x >= 4 && x <= width - 4 && y >= 6;
+  };
+  // A place alone would fill the frame with sea: close enough to see where it is.
+  for (const zoom of points.length > 1 ? FIT_ZOOMS : FIT_ZOOMS.filter((z) => z <= 3)) {
+    const g = geometryOf(layout, width, height, zoom, covered);
+    const view = viewCenter(middle, g);
+    const [from, ...to] = points;
+    const top = from ? to.every((p) => {
+      const path = greatCircle(from, p, 8, lift);
+      return path.every(({ point, lift: rise }) => inside(g, view, point, rise, false));
+    }) : true;
+    if (top && points.every((p) => inside(g, view, p))) return zoom;
+  }
+  return 1;
+}
+
+type Side = 'left' | 'right' | 'bottom' | 'top';
+const ARROW: Record<Side, string> = { left: '←', right: '→', bottom: '↓', top: '↑' };
+
+/**
+ * Which edge a hidden place lies towards: where it falls off the frame, or,
+ * behind the globe, the way the globe would turn to bring it round.
+ */
+function sideOf(m: LatLon, center: LatLon, g: Geometry): Side {
+  const p = project(m, center);
+  if (p.z > 0.04) {
+    const x = g.cx + p.x * g.radius;
+    const y = g.cy - p.y * g.radius;
+    if (x < 0) return 'left';
+    if (x > g.width) return 'right';
+    if (y > g.height) return 'bottom';
+    if (y < 0) return 'top';
+  }
+  let dLon = m.lon - center.lon;
+  if (dLon > 180) dLon -= 360;
+  if (dLon < -180) dLon += 360;
+  if (Math.abs(dLon) >= 20) return dLon < 0 ? 'left' : 'right';
+  return m.lat < center.lat ? 'bottom' : 'top';
+}
+
+interface Edge {
+  side: Side;
+  key: string;
+  text: string;
+  members: GlobeMarker[];
+  /** Where along a top or bottom edge the places left the frame. */
+  at?: number;
+}
+
+/**
+ * One chip per region on each edge: "← Americas · 4", or the city when it is
+ * the only one. Concept N's rule: what the globe hides is said at its edge,
+ * never left to look like a smaller list.
+ */
+function edgesOf(hidden: GlobeMarker[], center: LatLon, g: Geometry): Edge[] {
+  const bySide = new Map<string, Edge>();
+  for (const m of hidden) {
+    const side = sideOf(m, center, g);
+    const key = `${side}|${m.group ?? ''}`;
+    const edge = bySide.get(key) ?? { side, key, text: '', members: [] };
+    edge.members.push(m);
+    bySide.set(key, edge);
+  }
+  return [...bySide.values()]
+    .map((e) => {
+      const only = e.members.length === 1 ? e.members[0] : undefined;
+      const xs = e.members.map((m) => project(m, center)).filter((p) => p.z > 0).map((p) => g.cx + p.x * g.radius);
+      const at = (e.side === 'bottom' || e.side === 'top') && xs.length
+        ? xs.reduce((a, b) => a + b, 0) / xs.length
+        : undefined;
+      const what = only
+        ? only.name ?? only.label
+        : e.members[0]?.group ? `${e.members[0].group} · ${e.members.length}` : `${e.members.length} more`;
+      return { ...e, at, text: `${ARROW[e.side]} ${what}` };
+    })
+    .sort((a, b) => b.members.length - a.members.length);
+}
+
+/** A chip's size, near enough to keep a stack of them off the markers. */
+const chipWidth = (text: string) => text.length * 6.8 + 24;
+const CHIP_HEIGHT = 28;
+
+/**
+ * Where a side's stack of chips sits along its edge: the spot that covers the
+ * fewest markers, clusters and home, preferring the middle. A fixed spot put
+ * "→ Asia & Oceania" over Astana on the reveal.
+ */
+function stackAt(side: Side, here: Edge[], obstacles: { x: number; y: number }[], g: Geometry): number {
+  const w = Math.max(...here.map((e) => chipWidth(e.text)));
+  const h = side === 'left' || side === 'right' ? here.length * CHIP_HEIGHT : CHIP_HEIGHT;
+  // Below or above the frame, first try under where the places went out of it.
+  const hint = here.find((e) => e.at !== undefined)?.at;
+  const along = side === 'left' || side === 'right'
+    ? [0.42, 0.24, 0.62, 0.8].map((f) => f * g.height)
+    : [...(hint !== undefined ? [hint] : []), ...[0.5, 0.28, 0.72].map((f) => f * g.width)];
+  const cost = (at: number) => obstacles.filter(({ x, y }) => {
+    const box = side === 'left' ? [8, at - h / 2, 8 + w, at + h / 2]
+      : side === 'right' ? [g.width - 8 - w, at - h / 2, g.width - 8, at + h / 2]
+        : side === 'bottom' ? [at - w / 2, g.height - 8 - h, at + w / 2, g.height - 8]
+          : [at - w / 2, 8, at + w / 2, 8 + h];
+    return x > box[0]! - 14 && x < box[2]! + 14 && y > box[1]! - 14 && y < box[3]! + 14;
+  }).length;
+  let best = along[0]!;
+  for (const at of along) if (cost(at) < cost(best)) best = at;
+  if (side === 'left' || side === 'right') return Math.max(h / 2 + 6, Math.min(g.height - h / 2 - 6, best));
+  return Math.max(w / 2 + 6, Math.min(g.width - w / 2 - 6, best));
 }
 
 function prefersReducedMotion(): boolean {
@@ -249,19 +390,33 @@ function namesThatFit(points: Placed[]): Placed[] {
 }
 
 export function Globe(props: GlobeProps) {
-  const { markers, home, focus, tone, layout, height, zoom = 1, selected, onSelect, onCluster, caption, testId } = props;
+  const {
+    markers, home, focus, fit, names, covered = 0, tone, layout, height, selected, onSelect, onCluster, onEdge,
+    caption, testId,
+  } = props;
   const wrap = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   const [width, setWidth] = useState(360);
+  // What was asked for, as numbers: a caller that builds a new focus (or a
+  // new fit list) on every render must not restart the turn - that looped,
+  // redrawing the reveal twenty times a second while it sat still.
+  const fitKey = fit?.map((p) => `${p.lat},${p.lon}`).join('|') ?? '';
+  const request = fit?.length ? `fit:${fitKey}` : `${focus.lat},${focus.lon},${props.zoom ?? 1}`;
+  const lift = layout === 'horizon' ? 0.07 : 0.14;
+  const view = useMemo(
+    () => (fit?.length
+      ? { focus: centroidOf(fit), zoom: fitZoom(fit, layout, width, height, props.routes ? lift : 0, covered) }
+      : { focus: { lat: focus.lat, lon: focus.lon }, zoom: props.zoom ?? 1 }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [request, layout, width, height, props.routes, lift, covered],
+  );
+  const zoom = view.zoom;
   // The zoom eases with the turn, so a region chip reads as one movement.
   const [shownZoom, setShownZoom] = useState(zoom);
-  const g = useMemo(() => geometryOf(layout, width, height, shownZoom), [layout, width, height, shownZoom]);
-  // Keyed on the numbers, not the object: a caller that builds a new focus on
-  // every render must not restart the turn - that looped, redrawing the reveal
-  // twenty times a second while it sat still.
+  const g = useMemo(() => geometryOf(layout, width, height, shownZoom, covered), [layout, width, height, shownZoom, covered]);
   const target = useMemo(
-    () => viewCenter({ lat: focus.lat, lon: focus.lon }, geometryOf(layout, width, height, zoom)),
-    [focus.lat, focus.lon, layout, width, height, zoom],
+    () => viewCenter(view.focus, geometryOf(layout, width, height, zoom, covered)),
+    [view.focus, layout, width, height, zoom, covered],
   );
   const [center, setCenter] = useState<LatLon>(target);
   const centerRef = useRef(center);
@@ -303,17 +458,18 @@ export function Globe(props: GlobeProps) {
   const [turning, setTurning] = useState(false);
   const zoomRef = useRef(shownZoom);
   zoomRef.current = shownZoom;
-  // Only a new focus or zoom is a turn worth watching; a new width (the first
-  // measurement, a rotated phone) moves the view at once. Animating that made
-  // every globe spin for 650 ms as it appeared.
-  const asked = useRef({ lat: focus.lat, lon: focus.lon, zoom });
+  // Only a new request is a turn worth watching; a new width (the first
+  // measurement, a rotated phone) moves the view at once, even when a fit's
+  // zoom changes with it. Animating that made every globe spin for 650 ms as
+  // it appeared.
+  const asked = useRef(request);
   useEffect(() => {
     const from = centerRef.current;
     const fromZoom = zoomRef.current;
     const still = Math.abs(from.lat - target.lat) < 0.01 && Math.abs(from.lon - target.lon) < 0.01
       && Math.abs(fromZoom - zoom) < 0.001;
-    const turned = asked.current.lat !== focus.lat || asked.current.lon !== focus.lon || asked.current.zoom !== zoom;
-    asked.current = { lat: focus.lat, lon: focus.lon, zoom };
+    const turned = asked.current !== request;
+    asked.current = request;
     if (prefersReducedMotion() || still || !turned) {
       setCenter(target);
       setShownZoom(zoom);
@@ -345,6 +501,10 @@ export function Globe(props: GlobeProps) {
     .filter(({ p }) => p.z > 0.04)
     .map(({ m, p }) => ({ m, x: g.cx + p.x * g.radius, y: g.cy - p.y * g.radius }))
     .filter(({ x, y }) => x >= 0 && x <= g.width && y >= 0 && y <= g.height);
+  const shown = new Set(inView.map(({ m }) => m.id));
+  // Said once the globe has settled: mid-turn, chips would flicker in and out.
+  const edges = turning ? [] : edgesOf(markers.filter((m) => !shown.has(m.id)), center, g);
+
   const groups = crowds(inView);
   // Close enough in, a step of 26 px is a few kilometres: a crowd is then
   // set round its place rather than folded into a cluster that cannot open.
@@ -352,6 +512,18 @@ export function Globe(props: GlobeProps) {
   const clusters = closeIn ? [] : groups.filter((group) => group.length >= CLUSTER_FROM);
   const placed = groups.filter((group) => closeIn || group.length < CLUSTER_FROM).flatMap(spread);
   const label = placed.find(({ m }) => m.id === selected);
+  const homeSeen = home ? (() => {
+    const p = project(home, center);
+    return isVisible(p) ? { x: g.cx + p.x * g.radius, y: g.cy - p.y * g.radius } : null;
+  })() : null;
+  const obstacles = [
+    ...placed,
+    ...clusters.map((group) => ({
+      x: group.reduce((n, p) => n + p.x, 0) / group.length,
+      y: group.reduce((n, p) => n + p.y, 0) / group.length,
+    })),
+    ...(homeSeen ? [homeSeen] : []),
+  ];
 
   return (
     <figure
@@ -395,10 +567,19 @@ export function Globe(props: GlobeProps) {
           );
         })}
         {/* Close in, the land is too sparse to say where you are: the
-            cities name themselves instead. */}
-        {shownZoom >= 4 && namesThatFit(placed.filter(({ m }) => m.id !== selected && m.name)).map(({ m, x, y }) => (
-          <span key={`name-${m.id}`} className="globe__name" style={{ left: x, top: y }}>{m.name}</span>
-        ))}
+            cities name themselves instead. A route names both its ends. */}
+        {names
+          ? placed.filter(({ m }) => m.id !== selected && m.name).map(({ m, x, y }) => (
+            <span key={`name-${m.id}`} className="globe__name globe__name--below" style={{ left: x, top: y }}>{m.name}</span>
+          ))
+          : shownZoom >= 4 && namesThatFit(placed.filter(({ m }) => m.id !== selected && m.name)).map(({ m, x, y }) => (
+            <span key={`name-${m.id}`} className="globe__name" style={{ left: x, top: y }}>{m.name}</span>
+          ))}
+        {names && homeSeen && home && (
+          <span className="globe__name globe__name--below globe__name--home" style={{ left: homeSeen.x, top: homeSeen.y }}>
+            {home.city}
+          </span>
+        )}
         {label && (
           <span
             className={`globe__label${label.x > g.width * 0.62 ? ' is-left' : ''}`}
@@ -407,6 +588,43 @@ export function Globe(props: GlobeProps) {
             {label.m.label}
           </span>
         )}
+        {(['left', 'right', 'bottom', 'top'] as Side[]).map((side) => {
+          const here = edges.filter((e) => e.side === side);
+          if (here.length === 0) return null;
+          const at = stackAt(side, here, obstacles, g);
+          return (
+            <div
+              key={side}
+              className={`globe__edges globe__edges--${side}`}
+              style={side === 'left' || side === 'right' ? { top: at } : { left: at }}
+            >
+              {here.map((e) => (onEdge ? (
+                <button
+                  key={e.key}
+                  type="button"
+                  tabIndex={-1}
+                  className="globe__edge"
+                  onClick={() => onEdge(e.members)}
+                  title={e.members.map((m) => m.name ?? m.label).join(', ')}
+                  data-testid="globe-edge"
+                  data-count={e.members.length}
+                >
+                  {e.text}
+                </button>
+              ) : (
+                <span
+                  key={e.key}
+                  className="globe__edge"
+                  title={e.members.map((m) => m.name ?? m.label).join(', ')}
+                  data-testid="globe-edge"
+                  data-count={e.members.length}
+                >
+                  {e.text}
+                </span>
+              )))}
+            </div>
+          );
+        })}
       </div>
       <figcaption className="visually-hidden">{caption}</figcaption>
     </figure>

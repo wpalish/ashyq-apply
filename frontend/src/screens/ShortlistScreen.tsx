@@ -13,9 +13,9 @@
 import { Fragment, useMemo, useState } from 'react';
 import { BudgetLadder, ceilingFrom } from '@/components/BudgetLadder';
 import { CompareView } from '@/components/CompareView';
-import { REGION_LABEL, regionCounts, regionOf, type Region } from '@/lib/regions';
+import { REGION_LABEL, REGION_ORDER, regionCounts, regionOf, type Region } from '@/lib/regions';
 import { Globe } from '@/components/Globe';
-import { REGION_VIEW, defaultView, homeOf, markersFor } from '@/lib/globe';
+import { REGION_VIEW, centroidOf, defaultView, homeOf, markersFor } from '@/lib/globe';
 import { ResultCard } from '@/components/ResultCard';
 import { ResultDetail } from '@/components/ResultDetail';
 import { Triage } from '@/components/Triage';
@@ -175,6 +175,7 @@ export function ShortlistScreen({ onEditSearch }: { onEditSearch?: () => void } 
   const ranked = rows.filter((r) => !r.ranking || RANKED.includes(r.ranking.bucket));
   const home = homeOf(savedProfile);
   const globe = useMemo(() => markersFor(rows), [rows]);
+  const globeZoom = globeCloser?.zoom ?? (region && REGION_VIEW[region] ? REGION_VIEW[region].zoom : 1);
 
   if (results.length === 0) {
     return <Empty title="No results yet">Run the research first.</Empty>;
@@ -238,6 +239,7 @@ export function ShortlistScreen({ onEditSearch }: { onEditSearch?: () => void } 
           queue={undecided}
           total={triageTotal}
           decide={decide}
+          home={home}
           onClose={() => {
             setTriageTotal(null);
             // Back where the person started; the title when nothing is left to decide.
@@ -383,7 +385,7 @@ export function ShortlistScreen({ onEditSearch }: { onEditSearch?: () => void } 
       open={expanded === r.id}
       onToggle={() => setExpanded(expanded === r.id ? null : r.id)}
       decision={renderDecision(r)}
-      detail={<ResultDetail result={r} rate={rate} />}
+      detail={<ResultDetail result={r} rate={rate} home={home} />}
       compare={(() => {
         const on = picked.some((p) => p.id === r.id);
         const full = !on && picked.length >= COMPARE_MAX;
@@ -525,7 +527,7 @@ export function ShortlistScreen({ onEditSearch }: { onEditSearch?: () => void } 
                       </tr>
                       {open && (
                         <tr className="detail-row">
-                          <td colSpan={showBucket ? 10 : 9}><ResultDetail result={r} rate={rate} /></td>
+                          <td colSpan={showBucket ? 10 : 9}><ResultDetail result={r} rate={rate} home={home} /></td>
                         </tr>
                       )}
                     </Fragment>
@@ -631,7 +633,8 @@ export function ShortlistScreen({ onEditSearch }: { onEditSearch?: () => void } 
           <div className="shortlist-globe">
             {globeCloser && (
               <button type="button" className="btn btn--sm shortlist-globe__out" onClick={() => setGlobeCloser(null)} data-testid="globe-out">
-                Whole globe
+                {/* With a region chosen, going back out stops at the region. */}
+                {region && REGION_VIEW[region] ? `All of ${REGION_LABEL[region]}` : 'Whole globe'}
               </button>
             )}
             <Globe
@@ -641,12 +644,24 @@ export function ShortlistScreen({ onEditSearch }: { onEditSearch?: () => void } 
               markers={globe.markers}
               home={home}
               focus={globeCloser ?? (region && REGION_VIEW[region] ? REGION_VIEW[region] : defaultView(home))}
-              zoom={globeCloser?.zoom ?? (region && REGION_VIEW[region] ? REGION_VIEW[region].zoom : 1)}
+              zoom={globeZoom}
               onCluster={(members) => {
                 const lat = members.reduce((n, m) => n + m.lat, 0) / members.length;
                 const lon = members.reduce((n, m) => n + m.lon, 0) / members.length;
-                const now = globeCloser?.zoom ?? (region && REGION_VIEW[region] ? REGION_VIEW[region].zoom : 1);
-                setGlobeCloser({ lat, lon, zoom: Math.min(12, now * 2.4) });
+                setGlobeCloser({ lat, lon, zoom: Math.min(12, globeZoom * 2.4) });
+              }}
+              onEdge={(members) => {
+                // One city: bring it round at this zoom. A region's worth:
+                // that region's own view, as its chip above would give.
+                const only = members.length === 1 ? members[0] : undefined;
+                const groups = new Set(members.map((m) => m.group));
+                const key = groups.size === 1
+                  ? REGION_ORDER.find((r) => REGION_LABEL[r] === members[0]?.group)
+                  : undefined;
+                const whole = key ? REGION_VIEW[key] : undefined;
+                if (only) setGlobeCloser({ lat: only.lat, lon: only.lon, zoom: globeZoom });
+                else if (whole) setGlobeCloser({ ...whole });
+                else setGlobeCloser({ ...centroidOf(members), zoom: 1 });
               }}
               routes={false}
               selected={expanded}

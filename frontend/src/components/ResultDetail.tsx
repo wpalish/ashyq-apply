@@ -8,6 +8,8 @@
 
 import { useState } from 'react';
 import { MoneyArithmetic, type RateNote } from '@/components/MoneyArithmetic';
+import { ProgrammeRoute } from '@/components/ProgrammeRoute';
+import type { LatLon } from '@/lib/globe';
 import { Chip, Notice, SourceLink, StatusChip } from '@/components/primitives';
 import {
   FIT_DISCLAIMER, bucketTone, claimStatusTone, date, dateTime, eligibilityTone, fundingClassTone,
@@ -26,12 +28,26 @@ const TABS: { id: Tab; label: string }[] = [
   { id: 'sources', label: 'Sources & evidence' },
 ];
 
-export function ResultDetail({ result, rate }: { result: ProgramResult; rate?: RateNote | null }) {
+export function ResultDetail({
+  result, rate, home,
+}: {
+  result: ProgramResult;
+  rate?: RateNote | null;
+  /** The applicant's home, for the route; undefined leaves the route out. */
+  home?: (LatLon & { city: string }) | null;
+}) {
   const [tab, setTab] = useState<Tab>('requirements');
 
   return (
     <div className="detail" data-testid={`detail-${result.id}`}>
-      <MoneyArithmetic result={result} rate={rate} />
+      {/* Concept 10: the route from home heads the programme, beside the
+          money on a wide screen and above it on a phone. */}
+      <div className={home !== undefined ? 'detail__top' : undefined}>
+        {home !== undefined && (
+          <ProgrammeRoute result={result} home={home} tone="day" height={180} testId={`route-${result.id}`} />
+        )}
+        <MoneyArithmetic result={result} rate={rate} />
+      </div>
       <div className="tabs" role="tablist" aria-label={`${result.university} details`}>
         {TABS.map((t) => (
           <button

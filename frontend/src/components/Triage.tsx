@@ -13,17 +13,35 @@
  */
 
 import { useEffect, useRef, useState } from 'react';
+import { ProgrammeRoute } from '@/components/ProgrammeRoute';
 import { StatusChip } from '@/components/primitives';
 import {
   admissionsFitTone, date, eligibilityTone, fundingClassTone, money,
 } from '@/lib/format';
 import { orderCaveats } from '@/lib/caveats';
+import type { LatLon } from '@/lib/globe';
 import type { ProgramResult, UserDecision } from '@/types';
+
+/** How much of the globe the card sits over, as in concept P. */
+const CARD_OVER = 48;
+
+/**
+ * The globe takes what the screen has left once the card and the three
+ * answers are above the tab bar (defect I27): on a 390 x 844 phone the card
+ * and answers end about 606 px down, the tab bar starts 64 px from the
+ * bottom, and a long programme name or caveat adds up to 40 px. What is left
+ * is the globe's visible band, up to 152 px; under 72 px a route cannot be
+ * read, so a short phone keeps the card alone.
+ */
+export function globeHeightFor(viewportHeight: number): number {
+  const band = Math.min(152, viewportHeight - 722);
+  return band < 72 ? 0 : band + CARD_OVER;
+}
 
 const REASONS = ['cost', 'deadline passed', 'no funding', 'not a fit'];
 
 export function Triage({
-  queue, total, decide, onClose,
+  queue, total, decide, onClose, home,
 }: {
   /** Undecided rows in the order the screen shows them. */
   queue: ProgramResult[];
@@ -31,12 +49,32 @@ export function Triage({
   total: number;
   decide: (id: string, decision: UserDecision, reason: string, notes: string) => Promise<void>;
   onClose: () => void;
+  /**
+   * The applicant's home: with it, a night globe behind the card turns to
+   * each programme's route (concept P). Undefined leaves the globe out.
+   */
+  home?: (LatLon & { city: string }) | null;
 }) {
   const [asking, setAsking] = useState(false);
   const [reason, setReason] = useState('');
   const [busy, setBusy] = useState(false);
   const current = queue[0];
   const title = useRef<HTMLHeadingElement>(null);
+  const [globeHeight, setGlobeHeight] = useState(() => globeHeightFor(typeof window === 'undefined' ? 900 : window.innerHeight));
+  // A phone turned on its side has a new height; a phone's address bar
+  // folding away changes only the height, and must not make the globe come
+  // and go while the page scrolls - so only a new width re-measures.
+  useEffect(() => {
+    let width = window.innerWidth;
+    const onResize = () => {
+      if (window.innerWidth === width) return;
+      width = window.innerWidth;
+      setGlobeHeight(globeHeightFor(window.innerHeight));
+    };
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+  const showGlobe = home !== undefined && globeHeight > 0;
   // Each new programme (and the final "every programme has an answer") takes
   // focus on its heading: the button that was pressed may be gone, and a
   // screen reader should hear which university is on the table now.
@@ -44,6 +82,28 @@ export function Triage({
   useEffect(() => {
     title.current?.focus();
   }, [currentId]);
+
+  // "Not for me" swaps the three answers for the reasons, so the button that
+  // was pressed is gone: focus goes to the first reason, and the whole block,
+  // "Save and next" included, is brought above a phone's tab bar - with the
+  // globe above the card it could open under it. Cancel returns focus to
+  // "Not for me".
+  const reasons = useRef<HTMLDivElement>(null);
+  const notForMe = useRef<HTMLButtonElement>(null);
+  // Which programme the question was asked about: after "Save and next" the
+  // next programme's heading has the focus, and keeps it.
+  const askedAbout = useRef<string | null>(null);
+  useEffect(() => {
+    if (asking) {
+      askedAbout.current = currentId;
+      reasons.current?.querySelector<HTMLButtonElement>('button')?.focus({ preventScroll: true });
+      reasons.current?.scrollIntoView?.({ block: 'nearest' });
+    } else if (askedAbout.current !== null) {
+      if (askedAbout.current === currentId) notForMe.current?.focus();
+      askedAbout.current = null;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [asking]);
 
   if (!current) {
     return (
@@ -89,7 +149,25 @@ export function Triage({
         </button>
       </div>
 
-      <article className="triage__card" data-testid={`triage-card-${current.id}`}>
+      {showGlobe && (
+        <div className="triage__globe">
+          <ProgrammeRoute
+            result={current}
+            home={home}
+            tone="night"
+            height={globeHeight}
+            covered={CARD_OVER}
+            steady
+            testId="triage-globe"
+          />
+        </div>
+      )}
+
+      <article
+        className={`triage__card${showGlobe ? ' triage__card--over' : ''}`}
+        style={showGlobe ? { ['--card-over' as string]: `${CARD_OVER}px` } : undefined}
+        data-testid={`triage-card-${current.id}`}
+      >
         <div className="triage__head">
           <h2 className="triage__uni" id="triage-title" tabIndex={-1} ref={title}>{current.university}</h2>
           <p className="triage__prog">{current.program} · {current.city}, {current.country}</p>
@@ -145,7 +223,7 @@ export function Triage({
       </article>
 
       {asking ? (
-        <div className="triage__reason" data-testid="triage-reason">
+        <div className="triage__reason" data-testid="triage-reason" ref={reasons}>
           <p className="triage__muted" id="triage-why">Why not this one? Optional, and kept with the row.</p>
           <div className="row row--tight" role="group" aria-labelledby="triage-why">
             {REASONS.map((preset) => (
@@ -178,6 +256,7 @@ export function Triage({
             className="triage__answer"
             disabled={busy}
             onClick={() => setAsking(true)}
+            ref={notForMe}
             data-testid="triage-reject"
           >
             <span className="triage__icon" aria-hidden="true">✕</span>Not for me

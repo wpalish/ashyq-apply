@@ -5,7 +5,7 @@
 
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { Triage } from './Triage';
+import { Triage, globeHeightFor } from './Triage';
 import type { ProgramResult } from '@/types';
 
 function row(id: string): ProgramResult {
@@ -80,6 +80,15 @@ describe('triage', () => {
     await waitFor(() => expect(decide).toHaveBeenCalledWith('a', 'rejected', 'no funding', 'ask about housing'));
   });
 
+  it('keeps the focus in place when the reasons open and when they are cancelled', () => {
+    render(<Triage queue={[row('a')]} total={1} decide={vi.fn()} onClose={() => {}} />);
+    fireEvent.click(screen.getByTestId('triage-reject'));
+    // The button that was pressed is gone; the first reason has the focus.
+    expect(screen.getByRole('button', { name: 'cost' })).toHaveFocus();
+    fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+    expect(screen.getByTestId('triage-reject')).toHaveFocus();
+  });
+
   it('moves focus to the next programme after an answer', async () => {
     const decide = vi.fn().mockResolvedValue(undefined);
     const { rerender } = render(<Triage queue={[row('a'), row('b')]} total={2} decide={decide} onClose={() => {}} />);
@@ -97,5 +106,46 @@ describe('triage', () => {
     expect(screen.getByText('Every programme has an answer')).toBeInTheDocument();
     fireEvent.click(screen.getByTestId('triage-close'));
     expect(onClose).toHaveBeenCalled();
+  });
+
+  describe('the globe behind the card', () => {
+    const astana = { lat: 51.17, lon: 71.45, city: 'Astana' };
+    const withHeight = (h: number, run: () => void) => {
+      const before = window.innerHeight;
+      Object.defineProperty(window, 'innerHeight', { configurable: true, value: h });
+      try { run(); } finally { Object.defineProperty(window, 'innerHeight', { configurable: true, value: before }); }
+    };
+
+    it('shows the route to the programme on the table, and turns to the next', () => {
+      withHeight(900, () => {
+        const decide = vi.fn().mockResolvedValue(undefined);
+        const tokyo = { ...row('b'), city: 'Tokyo', country: 'Japan' } as ProgramResult;
+        const { rerender } = render(
+          <Triage queue={[row('a'), tokyo]} total={2} decide={decide} onClose={() => {}} home={astana} />,
+        );
+        expect(screen.getByText('The route from Astana to Groningen.')).toBeInTheDocument();
+        rerender(<Triage queue={[tokyo]} total={2} decide={decide} onClose={() => {}} home={astana} />);
+        expect(screen.getByText('The route from Astana to Tokyo.')).toBeInTheDocument();
+      });
+    });
+
+    it('keeps the globe steady and says why when a city cannot be placed', () => {
+      withHeight(900, () => {
+        const lost = { ...row('a'), city: 'Atlantis', country: 'Greece' } as ProgramResult;
+        render(<Triage queue={[lost]} total={1} decide={vi.fn()} onClose={() => {}} home={astana} />);
+        expect(screen.getByTestId('triage-globe')).toBeInTheDocument();
+        expect(screen.getByTestId('triage-globe-none')).toHaveTextContent('Atlantis is not in its table');
+      });
+    });
+
+    it('leaves the globe out on a short phone, so the answers stay above the tab bar', () => {
+      withHeight(740, () => {
+        render(<Triage queue={[row('a')]} total={1} decide={vi.fn()} onClose={() => {}} home={astana} />);
+        expect(screen.queryByTestId('triage-globe')).toBeNull();
+      });
+      expect(globeHeightFor(740)).toBe(0);
+      expect(globeHeightFor(844)).toBe(170);
+      expect(globeHeightFor(1200)).toBe(200);
+    });
   });
 });
