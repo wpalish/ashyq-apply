@@ -79,11 +79,13 @@ function formatAmount(amount: number, currency: string): string {
 const PREVIEW = 3;
 
 export function BudgetLadder({
-  results, ceiling, onOpen,
+  results, ceiling, onOpen, folded = false,
 }: {
   results: ProgramResult[];
   ceiling: Ceiling;
   onOpen: (id: string) => void;
+  /** One summary line that opens into the ladder, as the concept's budget sheet. */
+  folded?: boolean;
 }) {
   const [showAll, setShowAll] = useState(false);
   const groups = groupByBudget(results, ceiling);
@@ -126,11 +128,7 @@ export function BudgetLadder({
   const unknownShown = showAll ? groups.unknown : groups.unknown.slice(0, PREVIEW);
   const hidden = groups.above.length - aboveShown.length + groups.unknown.length - unknownShown.length;
 
-  return (
-    <section className="panel ladder" aria-labelledby="ladder-title" data-testid="budget-ladder">
-      <div className="ladder__head">
-        <div>
-          <h2 className="panel__title" id="ladder-title">What is left to pay each year</h2>
+  const hint = (
           <p className="panel__hint">
             The published price minus the grants an official page says are open to you, against your
             budget of <strong>{formatAmount(ceiling.amount, ceiling.currency)}</strong> a year from
@@ -138,9 +136,9 @@ export function BudgetLadder({
             awarded, not a promise and not an estimate of your chances. Open a programme for its full
             price.
           </p>
-        </div>
-      </div>
+  );
 
+  const body = (
       <div className="ladder__body" style={{ ['--ladder-line' as string]: `${linePct}%` }}>
         <h3 className="ladder__label ladder__label--within" data-testid="ladder-within">
           Within budget · {groups.within.length}
@@ -182,6 +180,38 @@ export function BudgetLadder({
           </button>
         )}
       </div>
+  );
+
+  if (folded) {
+    return (
+      <details className="panel panel--fold ladder" data-testid="budget-ladder">
+        <summary className="panel__summary">
+          <span className="panel__summary-text">
+            <h2 className="panel__title" id="ladder-title">What is left to pay each year</h2>
+            <span className="panel__hint">
+              {groups.within.length} within {formatAmount(ceiling.amount, ceiling.currency)} ·{' '}
+              {groups.above.length} above · {groups.unknown.length} not computed
+            </span>
+          </span>
+          <span className="panel__state">budget</span>
+        </summary>
+        <div className="panel__body">
+          {hint}
+          {body}
+        </div>
+      </details>
+    );
+  }
+
+  return (
+    <section className="panel ladder" aria-labelledby="ladder-title" data-testid="budget-ladder">
+      <div className="ladder__head">
+        <div>
+          <h2 className="panel__title" id="ladder-title">What is left to pay each year</h2>
+          {hint}
+        </div>
+      </div>
+      {body}
     </section>
   );
 }

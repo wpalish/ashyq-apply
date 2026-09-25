@@ -7,6 +7,7 @@
  * counts on the Approved screen.
  */
 
+import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 import { goTo, newSession, openShortlist, runDemoResearch, shot } from './helpers';
 
@@ -68,6 +69,53 @@ test('one at a time: an answer moves to the next programme and shows in the tabl
 
   await page.getByTestId('triage-close').click();
   await expect(page.getByTestId(`maybe-${firstId}`)).toHaveAttribute('aria-pressed', 'true');
+});
+
+test('the shortlist reads as price cards, and a card opens its programme', async () => {
+  await goTo(page, 'shortlist');
+  await page.getByTestId('view-cards').click();
+  const cards = page.getByTestId('shortlist-cards');
+  await expect(cards).toBeVisible();
+  const groningen = cards.locator('article').filter({ hasText: 'University of Groningen' }).first();
+  await expect(groningen).toContainText('1,848 USD');
+  await expect(groningen).toContainText('a year after grants, if awarded');
+  for (const line of ['Requirements', 'Your profile', 'Money']) {
+    await expect(groningen).toContainText(line);
+  }
+  await expect(groningen).not.toContainText('%');
+  // The open programme carries across views: the ladder test above opened it.
+  const opener = groningen.getByRole('button', { name: 'University of Groningen' });
+  if ((await opener.getAttribute('aria-expanded')) !== 'true') await opener.click();
+  await expect(groningen.getByRole('tab', { name: 'Funding' })).toBeVisible();
+  await page.screenshot({ path: shot('15-shortlist-cards.png'), fullPage: false });
+  // The ladder folds into one line here, as the concept's budget sheet.
+  await expect(page.getByTestId('budget-ladder')).toContainText('3 within 6,000 USD');
+});
+
+test('the results reveal counts what the run found', async () => {
+  await goTo(page, 'progress');
+  const reveal = page.getByTestId('results-reveal');
+  await expect(reveal).toContainText('20 programmes in 15 countries');
+  await expect(reveal).not.toContainText('%');
+  await page.screenshot({ path: shot('16-results-reveal.png'), fullPage: false });
+});
+
+test('the start, the reveal and the cards have no serious axe violations', async () => {
+  const views: [string, () => Promise<void>][] = [
+    ['start', async () => { await goTo(page, 'start'); }],
+    ['reveal', async () => { await goTo(page, 'progress'); }],
+    ['cards', async () => { await goTo(page, 'shortlist'); await page.getByTestId('view-cards').click(); }],
+  ];
+  for (const [name, open] of views) {
+    await open();
+    const report = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+      .analyze();
+    const serious = report.violations.filter(
+      (violation) => violation.impact === 'serious' || violation.impact === 'critical',
+    );
+    expect(serious, `${name}: ${serious.map((v) => `${v.id} (${v.nodes.length})`).join(', ')}`).toEqual([]);
+  }
 });
 
 test('optional profile sections fold while empty and open on request', async () => {

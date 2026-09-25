@@ -1,15 +1,18 @@
 /**
  * Screen 04 — University shortlist.
  *
- * A compact table with an expandable detail row, deliberately not one card per
- * university: the whole point is comparing thirty rows on the same axes.
- * Eligibility, admissions fit and funding are three separate columns because
- * they are three separate judgements and collapsing them would hide which one
- * is the problem.
+ * Two views of the same rows. Cards are the default («Горизонт»): the price a
+ * year after grants as the headline, and requirements, profile and money as
+ * three separate lines with their reasons - a student reads one programme at a
+ * time. The table is one tap away for comparing thirty rows on the same axes,
+ * with the match, what is confirmed and the bucket (brief §267). Eligibility,
+ * admissions fit and funding stay three separate judgements in both, because
+ * collapsing them would hide which one is the problem.
  */
 
 import { Fragment, useMemo, useState } from 'react';
 import { BudgetLadder, ceilingFrom } from '@/components/BudgetLadder';
+import { ResultCard } from '@/components/ResultCard';
 import { ResultDetail } from '@/components/ResultDetail';
 import { Triage } from '@/components/Triage';
 import { Chip, Empty, Field, Notice, Panel, StatusChip } from '@/components/primitives';
@@ -38,8 +41,47 @@ const SET_ASIDE_HINT: Record<string, string> = {
 //: stays available because these will never cover every case.
 const REJECTION_REASONS = ['cost', 'deadline passed', 'no funding', 'not a fit'];
 
-export function ShortlistScreen() {
+type View = 'cards' | 'table';
+const VIEW_KEY = 'ashyq.shortlistView';
+
+function storedView(): View {
+  try {
+    return window.localStorage.getItem(VIEW_KEY) === 'table' ? 'table' : 'cards';
+  } catch {
+    return 'cards';
+  }
+}
+
+/** "computer science · Netherlands, Germany +3 · up to 6,000 USD a year" */
+function searchSummary(profile: unknown): string | null {
+  const p = profile as {
+    context?: { intended_fields?: string[] };
+    preferences?: { preferred_countries?: string[] };
+    funding?: { max_annual_budget?: number | null; budget_currency?: string };
+  } | null | undefined;
+  if (!p) return null;
+  const fields = p.context?.intended_fields ?? [];
+  const countries = p.preferences?.preferred_countries ?? [];
+  const where = countries.length === 0
+    ? 'anywhere'
+    : countries.length <= 2 ? countries.join(', ') : `${countries.slice(0, 2).join(', ')} +${countries.length - 2}`;
+  const budget = typeof p.funding?.max_annual_budget === 'number'
+    ? `up to ${p.funding.max_annual_budget.toLocaleString('en-US')} ${p.funding.budget_currency ?? 'USD'} a year`
+    : 'no budget set';
+  return [fields.join(', ') || 'any subject', where, budget].join(' · ');
+}
+
+export function ShortlistScreen({ onEditSearch }: { onEditSearch?: () => void } = {}) {
   const { results, summary, shortlist, decide, saveNotes, savedProfile } = useStore();
+  const [view, setViewState] = useState<View>(storedView);
+  const setView = (next: View) => {
+    setViewState(next);
+    try {
+      window.localStorage.setItem(VIEW_KEY, next);
+    } catch {
+      /* the choice still holds on this screen */
+    }
+  };
   const [expanded, setExpanded] = useState<string | null>(null);
   const [sort, setSort] = useState<SortKey>('key');
   const [country, setCountry] = useState('');
@@ -96,7 +138,7 @@ export function ShortlistScreen() {
   const openRow = (id: string) => {
     setExpanded(id);
     window.setTimeout(() => {
-      const el = document.querySelector(`[data-testid="row-${id}"]`);
+      const el = document.querySelector(`[data-testid="row-${id}"], [data-testid="card-${id}"]`);
       // A set-aside row lives in a collapsed section; open it first.
       const section = el?.closest('details');
       if (section && !section.open) section.open = true;
@@ -141,6 +183,128 @@ export function ShortlistScreen() {
     setRejectFor(null);
     return decide(r.id, next, '', r.user_notes);
   };
+
+  /** Yes / Maybe / No, the reason and the note: one set of controls for the
+   *  table row and the card, so both views decide the same way. */
+  const renderDecision = (r: ProgramResult) => (
+    <>
+      <div className="decision-group" role="group" aria-label={`Decision for ${r.university}`}>
+        <button
+          className="decision-btn decision-btn--approve"
+          aria-pressed={r.user_decision === 'approved'}
+          onClick={() => decideRow(r, 'approved')}
+          data-testid={`approve-${r.id}`}
+        >Yes</button>
+        <button
+          className="decision-btn decision-btn--maybe"
+          aria-pressed={r.user_decision === 'maybe'}
+          onClick={() => decideRow(r, 'maybe')}
+          data-testid={`maybe-${r.id}`}
+        >Maybe</button>
+        <button
+          className="decision-btn decision-btn--reject"
+          aria-pressed={r.user_decision === 'rejected'}
+          onClick={() => decideRow(r, 'rejected')}
+          data-testid={`reject-${r.id}`}
+        >No</button>
+      </div>
+      {rejectFor === r.id && (
+        <div
+          className="stack stack--tight"
+          style={{ marginTop: 6, minWidth: '13rem' }}
+          data-testid={`reject-reason-${r.id}`}
+        >
+          <label className="xs muted" htmlFor={`reject-input-${r.id}`}>
+            Why not this one? (optional — it is kept with the row)
+          </label>
+          <div className="row row--tight" style={{ flexWrap: 'wrap' }}>
+            {REJECTION_REASONS.map((preset) => (
+              <button
+                key={preset}
+                type="button"
+                className="btn btn--sm btn--ghost xs"
+                onClick={() => setRejectReason(preset)}
+                data-testid={`reject-chip-${preset.replace(/\s+/g, '-')}-${r.id}`}
+              >{preset}</button>
+            ))}
+          </div>
+          <input
+            id={`reject-input-${r.id}`}
+            value={rejectReason}
+            onChange={(e) => setRejectReason(e.target.value)}
+            placeholder="cost, deadline, fit…"
+            data-testid={`reject-input-${r.id}`}
+          />
+          <div className="row row--tight">
+            <button
+              className="btn btn--sm"
+              onClick={async () => {
+                await decide(r.id, 'rejected', rejectReason, r.user_notes);
+                setRejectFor(null);
+              }}
+              data-testid={`reject-save-${r.id}`}
+            >Save rejection</button>
+            <button
+              className="btn btn--sm btn--ghost"
+              onClick={() => setRejectFor(null)}
+              data-testid={`reject-cancel-${r.id}`}
+            >Cancel</button>
+          </div>
+        </div>
+      )}
+      {r.user_decision === 'rejected' && r.user_decision_reason && rejectFor !== r.id && (
+        <p className="xs faint" style={{ margin: '4px 0 0', maxWidth: '12rem' }}>
+          Rejected: {r.user_decision_reason}
+        </p>
+      )}
+      <div>
+        <button
+          className="btn btn--sm btn--ghost xs"
+          onClick={() => {
+            setNoteFor(noteFor === r.id ? null : r.id);
+            setNoteText(r.user_notes);
+          }}
+        >
+          {r.user_notes ? 'Edit note' : 'Add note'}
+        </button>
+      </div>
+      {noteFor === r.id && (
+        <div className="stack stack--tight" style={{ marginTop: 6, minWidth: '13rem' }}>
+          <textarea
+            rows={2}
+            value={noteText}
+            onChange={(e) => setNoteText(e.target.value)}
+            placeholder="Why this one?"
+            data-testid={`note-input-${r.id}`}
+          />
+          <button
+            className="btn btn--sm"
+            onClick={async () => {
+              await saveNotes(r.id, noteText);
+              setNoteFor(null);
+            }}
+            data-testid={`note-save-${r.id}`}
+          >Save note</button>
+        </div>
+      )}
+      {r.user_notes && noteFor !== r.id && (
+        <p className="xs faint" style={{ margin: '4px 0 0', maxWidth: '12rem' }}>
+          {r.user_notes}
+        </p>
+      )}
+    </>
+  );
+
+  const renderCard = (r: ProgramResult) => (
+    <ResultCard
+      key={r.id}
+      result={r}
+      open={expanded === r.id}
+      onToggle={() => setExpanded(expanded === r.id ? null : r.id)}
+      decision={renderDecision(r)}
+      detail={<ResultDetail result={r} />}
+    />
+  );
 
   const renderTable = (
     tableRows: ProgramResult[],
@@ -259,112 +423,7 @@ export function ShortlistScreen() {
                             )}
                           </td>
                         )}
-                        <td data-label="Decision">
-                          <div className="decision-group" role="group" aria-label={`Decision for ${r.university}`}>
-                            <button
-                              className="decision-btn decision-btn--approve"
-                              aria-pressed={r.user_decision === 'approved'}
-                              onClick={() => decideRow(r, 'approved')}
-                              data-testid={`approve-${r.id}`}
-                            >Yes</button>
-                            <button
-                              className="decision-btn decision-btn--maybe"
-                              aria-pressed={r.user_decision === 'maybe'}
-                              onClick={() => decideRow(r, 'maybe')}
-                              data-testid={`maybe-${r.id}`}
-                            >Maybe</button>
-                            <button
-                              className="decision-btn decision-btn--reject"
-                              aria-pressed={r.user_decision === 'rejected'}
-                              onClick={() => decideRow(r, 'rejected')}
-                              data-testid={`reject-${r.id}`}
-                            >No</button>
-                          </div>
-                          {rejectFor === r.id && (
-                            <div
-                              className="stack stack--tight"
-                              style={{ marginTop: 6, minWidth: '13rem' }}
-                              data-testid={`reject-reason-${r.id}`}
-                            >
-                              <label className="xs muted" htmlFor={`reject-input-${r.id}`}>
-                                Why not this one? (optional — it is kept with the row)
-                              </label>
-                              <div className="row row--tight" style={{ flexWrap: 'wrap' }}>
-                                {REJECTION_REASONS.map((preset) => (
-                                  <button
-                                    key={preset}
-                                    type="button"
-                                    className="btn btn--sm btn--ghost xs"
-                                    onClick={() => setRejectReason(preset)}
-                                    data-testid={`reject-chip-${preset.replace(/\s+/g, '-')}-${r.id}`}
-                                  >{preset}</button>
-                                ))}
-                              </div>
-                              <input
-                                id={`reject-input-${r.id}`}
-                                value={rejectReason}
-                                onChange={(e) => setRejectReason(e.target.value)}
-                                placeholder="cost, deadline, fit…"
-                                data-testid={`reject-input-${r.id}`}
-                              />
-                              <div className="row row--tight">
-                                <button
-                                  className="btn btn--sm"
-                                  onClick={async () => {
-                                    await decide(r.id, 'rejected', rejectReason, r.user_notes);
-                                    setRejectFor(null);
-                                  }}
-                                  data-testid={`reject-save-${r.id}`}
-                                >Save rejection</button>
-                                <button
-                                  className="btn btn--sm btn--ghost"
-                                  onClick={() => setRejectFor(null)}
-                                  data-testid={`reject-cancel-${r.id}`}
-                                >Cancel</button>
-                              </div>
-                            </div>
-                          )}
-                          {r.user_decision === 'rejected' && r.user_decision_reason && rejectFor !== r.id && (
-                            <p className="xs faint" style={{ margin: '4px 0 0', maxWidth: '12rem' }}>
-                              Rejected: {r.user_decision_reason}
-                            </p>
-                          )}
-                          <div>
-                            <button
-                              className="btn btn--sm btn--ghost xs"
-                              onClick={() => {
-                                setNoteFor(noteFor === r.id ? null : r.id);
-                                setNoteText(r.user_notes);
-                              }}
-                            >
-                              {r.user_notes ? 'Edit note' : 'Add note'}
-                            </button>
-                          </div>
-                          {noteFor === r.id && (
-                            <div className="stack stack--tight" style={{ marginTop: 6, minWidth: '13rem' }}>
-                              <textarea
-                                rows={2}
-                                value={noteText}
-                                onChange={(e) => setNoteText(e.target.value)}
-                                placeholder="Why this one?"
-                                data-testid={`note-input-${r.id}`}
-                              />
-                              <button
-                                className="btn btn--sm"
-                                onClick={async () => {
-                                  await saveNotes(r.id, noteText);
-                                  setNoteFor(null);
-                                }}
-                                data-testid={`note-save-${r.id}`}
-                              >Save note</button>
-                            </div>
-                          )}
-                          {r.user_notes && noteFor !== r.id && (
-                            <p className="xs faint" style={{ margin: '4px 0 0', maxWidth: '12rem' }}>
-                              {r.user_notes}
-                            </p>
-                          )}
-                        </td>
+                        <td data-label="Decision">{renderDecision(r)}</td>
                       </tr>
                       {open && (
                         <tr className="detail-row">
@@ -382,27 +441,58 @@ export function ShortlistScreen() {
   return (
     <>
       <div className="screen__head">
-        <p className="screen__eyebrow">Step 04</p>
+        {searchSummary(savedProfile) && (
+          <button
+            type="button"
+            className="search-pill"
+            onClick={onEditSearch}
+            disabled={!onEditSearch}
+            data-testid="search-pill"
+          >
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">
+              <circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" strokeWidth="2.2" />
+              <path d="m15.5 15.5 5 5" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+            </svg>
+            <span className="search-pill__text">{searchSummary(savedProfile)}</span>
+          </button>
+        )}
+        <p className="screen__eyebrow">
+          {results.length} programme{results.length === 1 ? '' : 's'} · {countries.length} countr{countries.length === 1 ? 'y' : 'ies'}
+        </p>
         <h1 className="screen__title" id="shortlist-title" tabIndex={-1}>The shortlist</h1>
         <p className="screen__lede">
-          Three independent judgements per row. <strong>Eligibility</strong> is about published
-          requirements, <strong>fit</strong> is how your profile sits against them, and{' '}
-          <strong>funding</strong> is what an official page says an award covers. None of them
-          predicts a decision.
+          <strong>Requirements</strong>, your <strong>profile</strong> and <strong>money</strong>:
+          three separate answers per programme. None of them predicts a decision.
         </p>
-        {undecided.length > 0 && (
-          <div className="row" style={{ marginTop: 'var(--space-4)' }}>
+        <div className="shortlist-actions">
+          {undecided.length > 0 && (
+            <>
+              <button
+                type="button"
+                className="btn btn--primary"
+                onClick={() => setTriageTotal(undecided.length)}
+                data-testid="triage-start"
+              >
+                Decide one at a time
+              </button>
+              <span className="small muted">{undecided.length} without an answer yet</span>
+            </>
+          )}
+          <div className="segmented" role="group" aria-label="View">
             <button
               type="button"
-              className="btn btn--primary"
-              onClick={() => setTriageTotal(undecided.length)}
-              data-testid="triage-start"
-            >
-              Decide one at a time
-            </button>
-            <span className="small muted">{undecided.length} without an answer yet</span>
+              aria-pressed={view === 'cards'}
+              onClick={() => setView('cards')}
+              data-testid="view-cards"
+            >Cards</button>
+            <button
+              type="button"
+              aria-pressed={view === 'table'}
+              onClick={() => setView('table')}
+              data-testid="view-table"
+            >Table</button>
           </div>
-        )}
+        </div>
       </div>
 
       <div className="stack stack--loose">
@@ -415,7 +505,9 @@ export function ShortlistScreen() {
           </Notice>
         )}
 
-        {ceiling && <BudgetLadder results={rows} ceiling={ceiling} onOpen={openRow} />}
+        {ceiling && (
+          <BudgetLadder results={rows} ceiling={ceiling} onOpen={openRow} folded={view === 'cards'} />
+        )}
 
         <Panel sunken>
           <div className="filters">
@@ -459,7 +551,7 @@ export function ShortlistScreen() {
           </div>
         </Panel>
 
-        {shortlist && shortlist.chosen.length > 0 && (
+        {view === 'table' && shortlist && shortlist.chosen.length > 0 && (
           <Panel
             title="A balanced shortlist"
             hint="Filled to quota before the ranking speaks: a top ten of ten ambitious options is a list nobody can act on."
@@ -482,7 +574,39 @@ export function ShortlistScreen() {
           </Panel>
         )}
 
-        {ranked.length > 0 ? (
+        {view === 'cards' ? (
+          <>
+            {ranked.length > 0 ? (
+              <div className="rcards" data-testid="shortlist-cards">{ranked.map(renderCard)}</div>
+            ) : (
+              <Notice kind="info">
+                <div>
+                  Nothing here is both affordable and verified enough to rank. Every option is in a
+                  section below, with the reason it is there.
+                </div>
+              </Notice>
+            )}
+            {SET_ASIDE.map((bucket) => {
+              const setAside = rows.filter((r) => r.ranking?.bucket === bucket);
+              if (setAside.length === 0) return null;
+              return (
+                <details key={bucket} className="stack" data-testid={`cards-${bucket}`}>
+                  <summary className="small">
+                    {STATUS_LABEL[bucket] ?? humanize(bucket)} ({setAside.length})
+                  </summary>
+                  <p className="xs muted">{SET_ASIDE_HINT[bucket]}</p>
+                  <div className="rcards">{setAside.map(renderCard)}</div>
+                </details>
+              );
+            })}
+            <p className="xs faint">
+              Showing {rows.length} of {results.length}. The table view adds the match with your
+              priorities, how much of it is confirmed, and the bucket.
+            </p>
+          </>
+        ) : null}
+
+        {view === 'table' && (ranked.length > 0 ? (
           renderTable(
             ranked,
             'shortlist-table',
@@ -497,15 +621,15 @@ export function ShortlistScreen() {
               section below, with the reason it is there.
             </div>
           </Notice>
-        )}
+        ))}
 
-        <p className="xs faint">
+        {view === 'table' && <p className="xs faint">
           Showing {ranked.length} of {results.length} ranked rows. <strong>Match</strong> is how well
           a place fits the priorities you stated, on confirmed data — not a probability of admission.
           The <strong>Confirmed</strong> percentage is how much of that judgement rests on data we could verify.
-        </p>
+        </p>}
 
-        {SET_ASIDE.map((bucket) => {
+        {view === 'table' && SET_ASIDE.map((bucket) => {
           const setAside = rows.filter((r) => r.ranking?.bucket === bucket);
           if (setAside.length === 0) return null;
           return (
@@ -526,10 +650,12 @@ export function ShortlistScreen() {
         })}
 
 
-        <p className="xs faint">
-          Showing {rows.length} of {results.length}. Rejected rows are kept with their reason so the
-          same programme is not proposed again without new information.
-        </p>
+        {view === 'table' && (
+          <p className="xs faint">
+            Showing {rows.length} of {results.length}. Rejected rows are kept with their reason so the
+            same programme is not proposed again without new information.
+          </p>
+        )}
       </div>
     </>
   );

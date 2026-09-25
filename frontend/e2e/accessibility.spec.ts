@@ -150,10 +150,12 @@ test('the results table is labelled and its controls are named', async () => {
   }
   // Every decision control belongs to a named group, so a screen reader says
   // which university a "Yes" applies to.
-  const group = page.getByRole('group').first();
+  // Scoped to the table: the page now has other named groups (the view switch).
+  const table = page.getByTestId('shortlist-table');
+  const group = table.getByRole('group').first();
   await expect(group).toHaveAttribute('aria-label', /Decision for /);
 
-  const expandable = page.locator('button[aria-expanded]').first();
+  const expandable = table.locator('button[aria-expanded]').first();
   await expect(expandable).toHaveAttribute('aria-expanded', 'false');
   await expandable.click();
   await expect(expandable).toHaveAttribute('aria-expanded', 'true');

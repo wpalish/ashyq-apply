@@ -83,6 +83,10 @@ export async function runDemoResearch(page: Page): Promise<void> {
 
 export async function openShortlist(page: Page): Promise<void> {
   await goTo(page, 'shortlist');
+  // Cards are the default view; the journeys assert on the table's rows, so
+  // they choose it the way a person would, with the view switch.
+  const table = page.getByTestId('view-table');
+  if ((await table.getAttribute('aria-pressed')) !== 'true') await table.click();
   await expect(page.getByTestId('shortlist-table')).toBeVisible();
 
   // Out-of-budget, needs-clarification and excluded rows sit in sections that

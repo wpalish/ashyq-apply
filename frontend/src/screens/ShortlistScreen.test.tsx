@@ -63,6 +63,9 @@ beforeEach(() => {
   decide.mockClear();
   saveNotes.mockClear();
   row = makeRow();
+  // These tests read the table; the cards view is the default and has its
+  // own tests at the end.
+  window.localStorage.setItem('ashyq.shortlistView', 'table');
 });
 
 describe('rejecting a programme', () => {
@@ -232,5 +235,77 @@ describe('deciding one at a time', () => {
   it('shows no budget ladder without a saved budget', () => {
     render(<ShortlistScreen />);
     expect(screen.queryByTestId('budget-ladder')).toBeNull();
+  });
+});
+
+describe('the cards view', () => {
+  beforeEach(() => {
+    window.localStorage.removeItem('ashyq.shortlistView');
+    row = makeRow({
+      eligibility: 'PENDING',
+      admissions_fit: 'STRONGER_FIT',
+      best_funding_classification: 'FULL_RIDE_CONFIRMED',
+      requirement_checks: [
+        { requirement: 'Admission deadline', status: 'MET' },
+        { requirement: 'Minimum GPA', status: 'PENDING' },
+      ],
+      scholarships: [{ name: 'Groningen Talent Grant', classification: 'FULL_RIDE_CONFIRMED' }],
+      funding_gap: {
+        computable: true,
+        gap: { amount: 1848, currency: 'USD', academic_year: '2026/27' },
+        confirmed_aid: { amount: 30815, currency: 'USD', academic_year: '2026/27' },
+        reason: '',
+      },
+      source_urls: ['https://www.rug.nl/bachelors/computing-science/'],
+      last_verified: '2026-09-14T10:00:00Z',
+      admission_deadline: '2027-05-01',
+    } as Partial<ProgramResult>);
+  });
+
+  it('is the default, with the price a year as the headline', () => {
+    render(<ShortlistScreen />);
+    expect(screen.queryByTestId('shortlist-table')).toBeNull();
+    const card = screen.getByTestId('card-result-1');
+    expect(card).toHaveTextContent('1,848 USD');
+    expect(card).toHaveTextContent('a year after grants, if awarded');
+  });
+
+  it('keeps requirements, profile and money as three separate lines with their reasons', () => {
+    render(<ShortlistScreen />);
+    const card = screen.getByTestId('card-result-1');
+    expect(within(card).getByText('Requirements')).toBeInTheDocument();
+    expect(within(card).getByText('Your profile')).toBeInTheDocument();
+    expect(within(card).getByText('Money')).toBeInTheDocument();
+    expect(card).toHaveTextContent('waiting on: Minimum GPA');
+    expect(card).toHaveTextContent('selection is still competitive');
+    expect(card).toHaveTextContent('Groningen Talent Grant');
+    expect(card).toHaveTextContent('rug.nl');
+  });
+
+  it('never presents anything as a chance', () => {
+    render(<ShortlistScreen />);
+    expect(screen.getByTestId('card-result-1').textContent).not.toMatch(/%|chance|probab/i);
+  });
+
+  it('says why a cost is missing instead of showing a number', () => {
+    row = makeRow({ funding_gap: { computable: false, gap: null, reason: 'No official cost of attendance was found. More text.' } } as Partial<ProgramResult>);
+    render(<ShortlistScreen />);
+    const card = screen.getByTestId('card-result-1');
+    expect(card).toHaveTextContent('Cost not computed');
+    expect(card).toHaveTextContent('No official cost of attendance was found.');
+    expect(card).not.toHaveTextContent('More text.');
+  });
+
+  it('decides with the same controls as the table', async () => {
+    render(<ShortlistScreen />);
+    fireEvent.click(screen.getByTestId('approve-result-1'));
+    await waitFor(() => expect(decide).toHaveBeenCalledWith('result-1', 'approved', '', ''));
+  });
+
+  it('switches to the table and remembers it', () => {
+    render(<ShortlistScreen />);
+    fireEvent.click(screen.getByTestId('view-table'));
+    expect(screen.getByTestId('shortlist-table')).toBeInTheDocument();
+    expect(window.localStorage.getItem('ashyq.shortlistView')).toBe('table');
   });
 });
