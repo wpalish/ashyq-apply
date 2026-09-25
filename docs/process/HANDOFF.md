@@ -265,6 +265,19 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+Write-ahead (claude-opus-5, 2026-09-25, redesign part 7; owner: "делай глобус" - the globe is approved).
+Concept N/M's globe, built so the list stays the main path on a budget Android phone:
+1. `lib/globe*`: land as dots precomputed once from Natural Earth (world-atlas, public domain) into a compact
+   array - no new runtime dependency; an orthographic projection of our own; city coordinates from a fixed
+   table, each checked at generation time to fall inside its country's outline. A city missing from the table
+   is not placed and the screen says how many are not on the globe - never guessed.
+2. `components/Globe`: canvas for dots and arcs, HTML buttons for the programme markers (keyboard and screen
+   reader), no animation loop when idle, no rotation animation under reduced motion.
+3. Placement: the start screen (the globe rising under the search), the results reveal (arcs from home), the
+   shortlist cards (a small globe; region chips turn it; a marker opens its card).
+4. Tests (projection, table coverage, e2e markers and axe), review at 320/390/1440 light and dark, video,
+   docs (§26), PR.
+
 Write-ahead (claude-opus-5, 2026-09-25, redesign part 6; owner: "продолжай" a fourth time).
 1. Shortlist: concept 07's region chips (Europe · Americas · Asia & Oceania) as a filter, counted from the
    results. The mapping from country to region is a static geography table, and a country missing from it is
