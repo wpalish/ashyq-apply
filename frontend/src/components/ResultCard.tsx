@@ -50,20 +50,21 @@ export function awardNote(result: ProgramResult): string {
   return best ? best.name : 'no award found for this programme';
 }
 
+/** The site the facts were read from: a host name, or "demo fixture". */
+export function sourceHost(result: ProgramResult): string {
+  const url = result.source_urls?.[0];
+  if (!url) return '';
+  if (url.startsWith('fixture://')) return 'demo fixture';
+  try {
+    return new URL(url).hostname.replace(/^www\./, '');
+  } catch {
+    return '';
+  }
+}
+
 /** Where the facts come from, short enough for one line. */
 export function sourceNote(result: ProgramResult): string {
-  const url = result.source_urls?.[0];
-  let where = '';
-  if (url) {
-    if (url.startsWith('fixture://')) where = 'demo fixture';
-    else {
-      try {
-        where = new URL(url).hostname.replace(/^www\./, '');
-      } catch {
-        where = '';
-      }
-    }
-  }
+  const where = sourceHost(result);
   const when = result.last_verified ? `read ${date(result.last_verified)}` : 'date not recorded';
   return where ? `${where} · ${when}` : when;
 }

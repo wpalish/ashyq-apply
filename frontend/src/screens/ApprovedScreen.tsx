@@ -1,11 +1,15 @@
 /**
- * Screen 07 — Approved universities.
+ * Screen 07 — the plan: deadlines and decisions.
  *
- * The decision ledger. Rejected rows stay visible with their reason, because
- * "why did I rule this out in March" is a real question in October.
+ * The departures board first - the nearest deadline among the kept and
+ * "maybe" programmes, then every one after it - and the decision ledger
+ * under it. Rejected rows stay visible with their reason, because "why did I
+ * rule this out in March" is a real question in October.
  */
 
+import { DeadlineBoard } from '@/components/DeadlineBoard';
 import { Chip, Empty, Notice, Panel, StatusChip } from '@/components/primitives';
+import { planDeadlines } from '@/lib/deadlines';
 import { date, eligibilityTone, fundingClassTone, money } from '@/lib/format';
 import { useStore } from '@/lib/store';
 import type { ProgramResult, UserDecision } from '@/types';
@@ -29,15 +33,17 @@ export function ApprovedScreen({ onCollect }: { onCollect: () => void }) {
   return (
     <>
       <div className="screen__head">
-        <p className="screen__eyebrow">Step 07</p>
-        <h1 className="screen__title">Your decisions</h1>
+        <p className="screen__eyebrow">Plan</p>
+        <h1 className="screen__title">Your deadlines and decisions</h1>
         <p className="screen__lede">
-          Documents are collected only for what you shortlist. It is the slowest step, so it runs
-          on the handful you actually intend to apply to.
+          Every deadline on your list, nearest first. Documents are collected only for what you
+          keep: it is the slowest step, so it runs on the handful you intend to apply to.
         </p>
       </div>
 
       <div className="stack stack--loose">
+        <DeadlineBoard planned={planDeadlines(results)} />
+
         <Panel>
           <div className="row" style={{ justifyContent: 'space-between' }}>
             <div className="row">

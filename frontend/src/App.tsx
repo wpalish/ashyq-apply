@@ -293,6 +293,17 @@ export default function App() {
     if (window.location.hash !== target) window.location.hash = target;
   }, []);
 
+  // A new screen starts at its top. The page scroll used to carry over, so the
+  // plan opened halfway down its board after a long shortlist.
+  const firstScreen = useRef(true);
+  useEffect(() => {
+    if (firstScreen.current) {
+      firstScreen.current = false;
+      return;
+    }
+    document.scrollingElement?.scrollTo?.({ top: 0, behavior: 'instant' as ScrollBehavior });
+  }, [screen]);
+
   // Only an address typed, bookmarked or arrived at through history is checked
   // against the gates. In-app navigation is already gated by the disabled nav
   // buttons, and re-checking on every state change made the redirect fight the

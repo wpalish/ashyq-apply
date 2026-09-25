@@ -128,12 +128,48 @@ test('two programmes compare row by row, an unknown left unknown', async () => {
   await expect(page.getByTestId('compare-go')).toBeFocused();
 });
 
-test('the start, the reveal, the cards and the comparison have no serious axe violations', async () => {
+test('the plan puts the nearest deadline on the board and every one after it in order', async () => {
+  await goTo(page, 'shortlist');
+  await page.getByTestId('view-cards').click();
+  const cards = page.getByTestId('shortlist-cards');
+  for (const name of ['University of Groningen', 'University of Tokyo']) {
+    const keep = cards.locator('article').filter({ hasText: name }).first().locator('.decision-btn--approve');
+    if ((await keep.getAttribute('aria-pressed')) !== 'true') await keep.click();
+    await expect(keep).toHaveAttribute('aria-pressed', 'true');
+  }
+
+  await goTo(page, 'approved');
+  // A new screen starts at its top, not at the shortlist's scroll position.
+  expect(await page.evaluate(() => window.scrollY)).toBe(0);
+  const board = page.getByTestId('deadline-board');
+  await expect(board).toBeVisible();
+  // Kept and "maybe" programmes only, as the counts under the board say.
+  const count = async (word: string) => Number((await page.getByText(new RegExp(`^\\d+ ${word}$`)).innerText()).split(' ')[0]);
+  const planned = (await count('approved')) + (await count('maybe'));
+  expect(planned).toBeGreaterThanOrEqual(2);
+  const rows = board.locator('[data-testid^="board-row-"]');
+  await expect(rows).toHaveCount(planned);
+  await expect(rows.filter({ hasText: 'University of Groningen' })).toContainText('Action needed');
+
+  // Upcoming rows are in date order: the days left never go down.
+  const days = (await board.locator('.board__row:not(.is-passed) .board__left [aria-hidden]').allTextContents())
+    .map((text) => Number(text)).filter((n) => !Number.isNaN(n));
+  expect(days).toEqual([...days].sort((a, b) => a - b));
+  if (days.length) await expect(page.getByTestId('board-next')).toContainText(new RegExp(`${days[0]} days? left`));
+
+  await expect(board).toContainText('Days are counted from today');
+  await expect(board).not.toContainText('%');
+  await expect(board).not.toContainText(/chance|probab/i);
+  await page.screenshot({ path: shot('18-plan-board.png'), fullPage: false });
+});
+
+test('the start, the reveal, the cards, the comparison and the plan have no serious axe violations', async () => {
   const views: [string, () => Promise<void>][] = [
     ['start', async () => { await goTo(page, 'start'); }],
     ['reveal', async () => { await goTo(page, 'progress'); }],
     ['cards', async () => { await goTo(page, 'shortlist'); await page.getByTestId('view-cards').click(); }],
     ['compare', async () => { await page.getByTestId('compare-go').click(); }],
+    ['plan', async () => { await goTo(page, 'approved'); }],
   ];
   for (const [name, open] of views) {
     await open();
