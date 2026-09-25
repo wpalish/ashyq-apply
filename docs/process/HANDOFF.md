@@ -1234,6 +1234,17 @@ header names IELTS.
 - Excerpts are cell text (verbatim); the headers go in section. Golden demo unchanged.
 The owner added the Jev secret; the next run shows the shadow ranks.
 
+Claude, 2026-09-25, run 74 (tables + Jev shadow): 6/62, precision 6/9.
+- The oracle now recovers UBC ielts.overall and ielts.subscores; the live UBC run still hit its clock.
+- Jev answered every call (jev-1.13.0). Gold programme rank, heuristic -> model:
+  - Delft 3 -> 1;
+  - NTU 1 -> 6 (of 40);
+  - Groningen, HKU, KAIST, Vienna: the gold page was not among the candidates at all (a discovery miss, not
+    a ranking one).
+  Two comparable cases is no evidence either way. The model also sees URLs only, because the queue carries
+  no anchor text. Next: pass anchors/titles into the shadow state, collect more runs, then judge by the
+  gate in analysis/v2/07.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
