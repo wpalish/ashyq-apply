@@ -62,6 +62,21 @@ export function DocumentsScreen() {
     return items.sort((a, b) => a.when.localeCompare(b.when));
   }, [results]);
 
+  // The same test the plan's button uses: a queued job counts as collecting.
+  const collecting =
+    run?.job_status === 'queued' || run?.job_status === 'running' ||
+    (run?.stage === 'document_collection' && run.job_running);
+
+  if (withChecklists.length === 0 && collecting) {
+    // Opening this screen right after "Collect documents" used to say "run
+    // Collect documents" while the collection was already running.
+    return (
+      <Empty title="Collecting documents…">
+        Reading each kept programme's official list of what to send. It appears here when it is ready.
+      </Empty>
+    );
+  }
+
   if (withChecklists.length === 0) {
     return (
       <Empty title="No checklists yet">

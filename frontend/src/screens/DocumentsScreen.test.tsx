@@ -10,9 +10,10 @@ import { DocumentsScreen } from './DocumentsScreen';
 import type { DocumentItem, ProgramResult } from '@/types';
 
 let results: ProgramResult[] = [];
+let run: unknown = null;
 
 vi.mock('@/lib/store', () => ({
-  useStore: () => ({ results, run: null }),
+  useStore: () => ({ results, run }),
 }));
 vi.mock('@/api/client', () => ({ api: { deadlinesUrl: () => '/deadlines.ics' } }));
 
@@ -45,6 +46,7 @@ beforeEach(() => {
   vi.useFakeTimers({ toFake: ['Date'] });
   vi.setSystemTime(new Date(2026, 8, 25, 12));
   window.localStorage.removeItem('ashyq.docsDone');
+  run = null;
   results = [
     programme('groningen', 'University of Groningen', '2027-05-01', {
       recommender: [item('Academic reference', { owner: 'recommender', lead_time_days: 30 })],
@@ -109,5 +111,13 @@ describe('the documents screen', () => {
   it('never states a chance', () => {
     const { container } = render(<DocumentsScreen />);
     expect(container.textContent).not.toMatch(/%|chance|probab/i);
+  });
+
+  it('says the collection is running instead of asking for it again', () => {
+    results = [];
+    run = { job_status: 'running', stage: 'document_collection', job_running: true };
+    render(<DocumentsScreen />);
+    expect(screen.getByText('Collecting documents…')).toBeInTheDocument();
+    expect(screen.queryByText(/No checklists yet/)).toBeNull();
   });
 });

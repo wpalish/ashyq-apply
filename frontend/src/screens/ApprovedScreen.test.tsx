@@ -56,11 +56,22 @@ describe('next to start', () => {
     expect(panel).not.toHaveTextContent('University b');
   });
 
-  it('drops a document once it is ticked, and keeps the tick for the documents screen', () => {
+  it('keeps a ticked document in place so a slip can be undone, and shares the tick', () => {
     results = [programme('a', 'approved', true)];
     render(<ApprovedScreen onCollect={() => {}} />);
-    fireEvent.click(screen.getByLabelText('Academic reference, University a: ready'));
-    expect(screen.getByTestId('next-to-start')).not.toHaveTextContent('Academic reference');
+    const box = screen.getByLabelText('Academic reference, University a: ready');
+    fireEvent.click(box);
+    expect(box).toBeChecked();
+    expect(screen.getByTestId('next-to-start')).toHaveTextContent('Academic reference');
     expect(JSON.parse(window.localStorage.getItem('ashyq.docsDone') ?? '{}')).toEqual({ 'a::Academic reference': true });
+    fireEvent.click(box);
+    expect(box).not.toBeChecked();
+  });
+
+  it('leaves out what was ticked before this visit', () => {
+    window.localStorage.setItem('ashyq.docsDone', JSON.stringify({ 'a::Academic reference': true }));
+    results = [programme('a', 'approved', true)];
+    render(<ApprovedScreen onCollect={() => {}} />);
+    expect(screen.getByTestId('next-to-start')).not.toHaveTextContent('Academic reference');
   });
 });

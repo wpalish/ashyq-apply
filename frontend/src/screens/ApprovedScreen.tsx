@@ -7,6 +7,7 @@
  * rule this out in March" is a real question in October.
  */
 
+import { useState } from 'react';
 import { DeadlineBoard } from '@/components/DeadlineBoard';
 import { Chip, Empty, Notice, Panel, StatusChip } from '@/components/primitives';
 import { planDeadlines } from '@/lib/deadlines';
@@ -173,10 +174,14 @@ function NextToStart({
   done: Record<string, boolean>;
   toggle: (key: string) => void;
 }) {
+  // A document ticked here stays in place, struck through, until the next
+  // visit: vanishing on the tick left no way to undo a slip from this list.
+  const [tickedHere, setTickedHere] = useState<Set<string>>(() => new Set());
   const kept = results.filter((r) => r.user_decision === 'approved' || r.user_decision === 'maybe');
   if (kept.length === 0) return null;
   const collected = kept.some((r) => r.checklist);
-  const tasks = nextToStart(results, done);
+  const settled = Object.fromEntries(Object.entries(done).filter(([key]) => !tickedHere.has(key)));
+  const tasks = nextToStart(results, settled);
   const shown = tasks.slice(0, 3);
   return (
     <Panel title="Next to start" hint="From your document lists: each one's due date minus the time it takes.">
@@ -192,11 +197,14 @@ function NextToStart({
                 const key = doneKey(result, item);
                 const soon = timing.late || timing.daysToStart <= 7;
                 return (
-                  <li key={key} className="next-docs__item">
+                  <li key={key} className={`next-docs__item${done[key] ? ' is-done' : ''}`}>
                     <input
                       type="checkbox"
                       checked={Boolean(done[key])}
-                      onChange={() => toggle(key)}
+                      onChange={() => {
+                        toggle(key);
+                        setTickedHere((prev) => new Set(prev).add(key));
+                      }}
                       aria-label={`${item.name}, ${result.university}: ready`}
                     />
                     <span>
