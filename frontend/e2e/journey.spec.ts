@@ -6,6 +6,7 @@
  * ineligible, that a zero gap is refused when the figures are not comparable.
  */
 
+import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 import { goTo, expandRow, newSession, openShortlist, rowFor, shot, waitForResults } from './helpers';
 
@@ -201,6 +202,10 @@ test('approve, collect documents, and export', async () => {
   // Lead-time ordering puts the referee first, because that is what sinks applications.
   await expect(page.locator('.doc').first()).toContainText(/reference|transcript|diploma|statement/i);
   await page.screenshot({ path: shot('11-documents.png'), fullPage: true });
+  // The documents screen was never scanned: it is reachable only after a collection.
+  const scan = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
+  const serious = scan.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
+  expect(serious, serious.map((v) => `${v.id} (${v.nodes.length})`).join(', ')).toEqual([]);
 
   await goTo(page, 'export');
   await expect(page.getByRole('heading', { name: 'Take it with you, or erase it' })).toBeVisible();

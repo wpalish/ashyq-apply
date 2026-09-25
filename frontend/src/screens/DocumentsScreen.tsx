@@ -4,10 +4,17 @@
  * Grouped by who has to act, and ordered by lead time rather than by deadline.
  * A reference letter with a thirty-day lead time is the thing that actually
  * sinks an application, not the form you can fill in on the last evening.
+ *
+ * Round 7's documents screen: each programme says how much of its list is
+ * ready and how much is still missing, and each document says when to start
+ * it - its due date (its own, or the programme's admission deadline) minus
+ * the time it takes. "Ready" is the applicant's own tick: the product never
+ * uploads or submits anything.
  */
 
 import { useMemo, useState } from 'react';
 import { Chip, Empty, Notice, Panel } from '@/components/primitives';
+import { calendarDay, daysUntil, startBy } from '@/lib/deadlines';
 import { date, dateTime } from '@/lib/format';
 import { api } from '@/api/client';
 import { useStore } from '@/lib/store';
@@ -21,6 +28,17 @@ const OWNER_LABEL: Record<string, string> = {
 };
 
 const DONE_KEY = 'ashyq.docsDone';
+
+/** Every document on a checklist, once: the four groups split it by who acts. */
+function itemsOf(result: ProgramResult): DocumentItem[] {
+  const c = result.checklist;
+  if (!c) return [];
+  return [...c.recommender_actions, ...c.school_actions, ...c.certification_actions, ...c.applicant_actions];
+}
+
+function doneKey(result: ProgramResult, item: DocumentItem): string {
+  return `${result.id}::${item.name}`;
+}
 
 function loadDone(): Record<string, boolean> {
   try {
@@ -90,7 +108,7 @@ export function DocumentsScreen() {
   return (
     <>
       <div className="screen__head">
-        <p className="screen__eyebrow">Step 08</p>
+        <p className="screen__eyebrow">Documents</p>
         <h1 className="screen__title">What to prepare, and when</h1>
         <p className="screen__lede">
           Ordered by lead time, not by deadline. The items at the top depend on other people, so
@@ -99,6 +117,36 @@ export function DocumentsScreen() {
       </div>
 
       <div className="stack stack--loose">
+        <div className="doc-progs" role="group" aria-label="Programmes with a document list">
+          {withChecklists.map((r) => {
+            const items = itemsOf(r);
+            const ready = items.filter((d) => done[doneKey(r, d)]).length;
+            const on = r.id === current.id;
+            return (
+              <button
+                key={r.id}
+                type="button"
+                className={`doc-prog${on ? ' is-on' : ''}`}
+                aria-pressed={on}
+                onClick={() => setSelected(r.id)}
+                data-testid={`doc-tab-${r.id}`}
+              >
+                <span className="doc-prog__uni">{r.university}</span>
+                <span className="doc-prog__name">{r.program}</span>
+                <span className="doc-prog__meter" aria-hidden="true">
+                  <span style={{ width: `${items.length ? (ready / items.length) * 100 : 0}%` }} />
+                </span>
+                <span className="doc-prog__count">
+                  {ready} of {items.length} ready
+                  {items.length - ready > 0 && <> · {items.length - ready} still missing</>}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        <ChecklistFor result={current} done={done} toggle={toggle} />
+
         <Panel
           title="Every deadline across your shortlist"
           sunken
@@ -129,22 +177,6 @@ export function DocumentsScreen() {
             {deadlines.length === 0 && <p className="muted small">No dated deadlines were found.</p>}
           </div>
         </Panel>
-
-        <div className="row">
-          {withChecklists.map((r) => (
-            <button
-              key={r.id}
-              className="btn btn--sm"
-              style={r.id === current.id ? { borderColor: 'var(--accent)', color: 'var(--accent)' } : undefined}
-              onClick={() => setSelected(r.id)}
-              data-testid={`doc-tab-${r.id}`}
-            >
-              {r.university}
-            </button>
-          ))}
-        </div>
-
-        <ChecklistFor result={current} done={done} toggle={toggle} />
       </div>
     </>
   );
@@ -173,8 +205,26 @@ function ChecklistFor({
   ).sort((a, b) => maxLead(b[1]) - maxLead(a[1]));
   const total = groups.reduce((n, [, items]) => n + items.length, 0);
   const completed = groups.reduce(
-    (n, [, items]) => n + items.filter((d) => done[`${result.id}::${d.name}`]).length, 0,
+    (n, [, items]) => n + items.filter((d) => done[doneKey(result, d)]).length, 0,
   );
+
+  // When to begin each document: its due date - its own, or the programme's
+  // admission deadline - minus the time it takes. Nothing is dated when either
+  // is unknown, and nothing is dated for a deadline that has already passed.
+  const today = new Date();
+  const admission = calendarDay(result.admission_deadline);
+  const timing = (d: DocumentItem) => {
+    const due = calendarDay(d.deadline) ?? admission;
+    if (!due || !d.lead_time_days || daysUntil(due, today) < 0) return null;
+    const start = startBy(due, d.lead_time_days);
+    return { due, start, late: daysUntil(start, today) < 0 };
+  };
+  const first = groups
+    .flatMap(([, items]) => items)
+    .filter((d) => !done[doneKey(result, d)])
+    .map((d) => ({ d, t: timing(d) }))
+    .filter((x): x is { d: DocumentItem; t: NonNullable<ReturnType<typeof timing>> } => x.t !== null)
+    .sort((a, b) => a.t.start.localeCompare(b.t.start))[0];
 
   return (
     <div className="stack">
@@ -192,12 +242,24 @@ function ChecklistFor({
           <div className="meter__fill" style={{ width: `${total ? (completed / total) * 100 : 0}%` }} />
         </div>
 
+        {total > 0 && completed === total ? (
+          <p className="doc-first" data-testid="doc-first">Everything on this list is ticked off.</p>
+        ) : first ? (
+          <p className="doc-first" data-testid="doc-first">
+            <strong>Start first: {first.d.name}.</strong>{' '}
+            {first.t.late
+              ? <>It takes about {first.d.lead_time_days} days and is due {date(first.t.due)}, so it needs starting now.</>
+              : <>It takes about {first.d.lead_time_days} days: begin by {date(first.t.start)} to have it by {date(first.t.due)}.</>}
+          </p>
+        ) : null}
+
         {groups.map(([owner, items]) =>
           items.length === 0 ? null : (
             <div key={owner} className="stack stack--tight" style={{ marginBottom: 'var(--space-5)' }}>
               <h3 style={{ fontSize: 'var(--text-base)' }}>{OWNER_LABEL[owner]}</h3>
               {items.map((d) => {
-                const key = `${result.id}::${d.name}`;
+                const key = doneKey(result, d);
+                const t = timing(d);
                 return (
                   <label key={key} className={`doc ${done[key] ? 'doc--done' : ''}`}>
                     <input type="checkbox" checked={Boolean(done[key])} onChange={() => toggle(key)} />
@@ -218,6 +280,11 @@ function ChecklistFor({
                           d.deadline ? `due ${date(d.deadline)}` : null,
                         ].filter(Boolean).join(' · ')}
                       </div>
+                      {t && !done[key] && (
+                        <div className={`doc__start${t.late ? ' doc__start--late' : ''}`}>
+                          {t.late ? 'start now' : `start by ${date(t.start)}`}
+                        </div>
+                      )}
                       {d.prompt_text && (
                         <p className="xs faint" style={{ margin: '4px 0 0' }}>{d.prompt_text}</p>
                       )}

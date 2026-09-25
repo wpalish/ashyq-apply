@@ -38,7 +38,8 @@ export interface PlannedDeadline {
 const MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
 const DAY_MS = 86_400_000;
 
-function calendarDay(iso: string | null | undefined): string | null {
+/** The calendar date at the start of an ISO date or timestamp, never shifted by a zone. */
+export function calendarDay(iso: string | null | undefined): string | null {
   const match = iso?.match(/^(\d{4})-(\d{2})-(\d{2})/);
   return match ? match[0] : null;
 }
@@ -57,6 +58,11 @@ function utcOf(day: string): number {
 export function daysUntil(day: string, today: Date): number {
   const start = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate());
   return Math.round((utcOf(day) - start) / DAY_MS);
+}
+
+/** The day to begin something that takes `leadDays`, to have it ready by `due`. */
+export function startBy(due: string, leadDays: number): string {
+  return new Date(utcOf(due) - leadDays * DAY_MS).toISOString().slice(0, 10);
 }
 
 /** "01 DEC" - the date as the board's tiles spell it. */
