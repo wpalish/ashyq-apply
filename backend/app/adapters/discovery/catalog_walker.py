@@ -514,6 +514,16 @@ class CatalogWalker:
         )
         walk.candidates = scored
 
+        if scored and max(link.score for link in scored) <= 0:
+            # Not one link on it says programme: a page whose HTML is only the
+            # site's navigation (UBC's JS catalogue at /programs) is not a list
+            # to walk. Run 70: reading its second-level menu cost UBC 50 s,
+            # and search, which runs after the walk, found the programme late.
+            for link in scored:
+                walk.outcomes.append((link.url, "walker_no_signal"))
+            walk.outcomes.append((catalogue_url, "js_no_program_list"))
+            return walk
+
         budget = scored[:top_n]
         for link in scored[top_n:]:
             walk.outcomes.append((link.url, "walker_budget_exhausted"))

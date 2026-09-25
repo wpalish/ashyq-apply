@@ -1178,6 +1178,15 @@ Without search or the browser tier, UBC's programme page is not reachable, and m
 whack-a-mole. Runs are held until the owner renews search (a new Tavily key or plan, or Exa credits).
 Navigation-only runs spend Actions minutes and measure little.
 
+Claude, 2026-09-25, run 70: Serper live (the owner added the secret). 6/62, precision 6/9. UBC still hit
+its clock: search runs after the walker, and the walker read /programs' second-level menu for ~50 s. A
+catalogue page where no link carries a programme signal is now not walked at all (js_no_program_list).
+Test added, golden demo unchanged.
+Owner's deep-research report received (evidence-first engine: schema completeness, an EvidenceDocument
+with tables, claim-slot link expansion, goal-aware Playwright, bounded LLM span proposer). Waiting for the
+owner's go before starting V2-30A. Note: our Fetcher already follows RFC 9309 (4xx robots = allowed,
+5xx or unreachable = disallowed); the brief's wording was imprecise, not the code.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 

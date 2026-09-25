@@ -76,3 +76,32 @@ def test_a_real_repeating_list_still_earns_its_bonus():
     scored = _walker()._score(rows, outcomes, "studieren.univie.ac.at")
     assert len(scored) == 5
     assert all(link.score > 0 for link in scored)
+
+
+async def test_a_page_where_no_link_says_programme_is_not_walked():
+    """Run 70: UBC's /programs HTML is navigation only; reading it cost 50 s."""
+    walker = _walker()
+    walker.domain = "ubc.ca"
+    menu = "".join(
+        f'<a href="https://you.ubc.ca/ubc-life/{slug}">{label}</a>'
+        for slug, label in (
+            ("getting-involved", "Getting involved"),
+            ("campus-community", "Campus community"),
+            ("arts-and-culture", "Arts and culture"),
+        )
+    )
+    reads: list[str] = []
+
+    async def read_catalogue(url):
+        return f"<html><body><nav>{menu}</nav></body></html>", [], None
+
+    async def read_lead(link, walk):
+        reads.append(link.url)
+
+    walker._read_catalogue = read_catalogue  # type: ignore[method-assign]
+    walker._read_lead = read_lead  # type: ignore[method-assign]
+
+    walk = await walker.walk_catalog("https://you.ubc.ca/programs")
+
+    assert reads == []
+    assert ("https://you.ubc.ca/programs", "js_no_program_list") in walk.outcomes
