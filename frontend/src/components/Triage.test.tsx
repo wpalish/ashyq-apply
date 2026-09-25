@@ -37,6 +37,32 @@ describe('triage', () => {
     expect(screen.getByText('1,848 USD')).toBeInTheDocument();
   });
 
+  it('never lets a remaining cost read as a grant already won', () => {
+    const r = row('a');
+    r.funding_gap = {
+      ...r.funding_gap!,
+      total_cost: { amount: 32663, currency: 'USD', academic_year: '2026/27' },
+      confirmed_aid: { amount: 30815, currency: 'USD', academic_year: '2026/27' },
+      warnings: [
+        "'Talent Grant' is open to this applicant by published criteria and is awarded by competitive selection.",
+        'second caveat',
+        'third caveat is not shown on the card',
+      ],
+    } as ProgramResult['funding_gap'];
+    render(<Triage queue={[r]} total={1} decide={vi.fn()} onClose={() => {}} />);
+    expect(screen.getByTestId('triage-price')).toHaveTextContent('if awarded · price 32,663 USD');
+    const caveats = screen.getByTestId('triage-caveats');
+    expect(caveats).toHaveTextContent('awarded by competitive selection');
+    expect(caveats).toHaveTextContent('second caveat');
+    expect(caveats).not.toHaveTextContent('third caveat');
+  });
+
+  it('adds no price line when no aid was subtracted', () => {
+    render(<Triage queue={[row('a')]} total={1} decide={vi.fn()} onClose={() => {}} />);
+    expect(screen.queryByTestId('triage-price')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('triage-caveats')).not.toBeInTheDocument();
+  });
+
   it('keeps and maybes go straight through decide(), keeping the notes', async () => {
     const decide = vi.fn().mockResolvedValue(undefined);
     render(<Triage queue={[row('a')]} total={1} decide={decide} onClose={() => {}} />);

@@ -363,7 +363,7 @@ export default function App() {
           )}
           <div className="topbar__spacer" />
           <label className="row row--tight xs muted" htmlFor="case-switcher">
-            Applicant
+            <span className="topbar__caption">Applicant</span>
             <select
               id="case-switcher"
               value={savedProfile?.id ?? ''}
@@ -391,7 +391,10 @@ export default function App() {
             newCase(); setScreen('profile');
           }}>{t('topbar.newCase')}</button>
           {summary && (
-            <span className="xs muted topbar__summary">
+            <span
+              className="xs muted topbar__summary"
+              title={`${plural(summary.total, 'programme')} · ${plural(summary.with_conflicts, 'conflict')} · ${plural(summary.with_open_questions, 'open question')}`}
+            >
               {plural(summary.total, 'programme')} · {plural(summary.with_conflicts, 'conflict')} ·{' '}
               {plural(summary.with_open_questions, 'open question')}
             </span>

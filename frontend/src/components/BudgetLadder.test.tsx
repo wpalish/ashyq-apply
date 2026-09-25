@@ -3,7 +3,7 @@
  * ceiling the ranking uses, and never converts or invents a number.
  */
 
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { BudgetLadder, ceilingFrom, groupByBudget } from './BudgetLadder';
 import type { ProgramResult } from '@/types';
@@ -80,7 +80,10 @@ describe('the ladder', () => {
     render(<BudgetLadder results={[row('a', 1848)]} ceiling={{ amount: 6000, currency: 'USD' }} onOpen={() => {}} />);
     const text = screen.getByTestId('budget-ladder').textContent ?? '';
     expect(text).not.toMatch(/%|probab/i);
-    expect(within(screen.getByTestId('budget-ladder')).getByText(/never an estimate of your chances/)).toBeInTheDocument();
+    expect(text).toMatch(/not an estimate of your chances/);
+    // The grants it subtracts are mostly competitive; the ladder must say so.
+    expect(text).toMatch(/Most of those grants are competitive/);
+    expect(text).toMatch(/not a promise/);
   });
 
   it('shows three above budget and hides the rest behind a button', () => {

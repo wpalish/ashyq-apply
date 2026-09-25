@@ -132,9 +132,11 @@ export function BudgetLadder({
         <div>
           <h2 className="panel__title" id="ladder-title">What is left to pay each year</h2>
           <p className="panel__hint">
-            After confirmed grants, against your budget of{' '}
-            <strong>{formatAmount(ceiling.amount, ceiling.currency)}</strong> a year from Preferences.
-            A number is a published price minus a confirmed award, never an estimate of your chances.
+            The published price minus the grants an official page says are open to you, against your
+            budget of <strong>{formatAmount(ceiling.amount, ceiling.currency)}</strong> a year from
+            Preferences. Most of those grants are competitive: a number here is what you would pay if
+            awarded, not a promise and not an estimate of your chances. Open a programme for its full
+            price.
           </p>
         </div>
       </div>

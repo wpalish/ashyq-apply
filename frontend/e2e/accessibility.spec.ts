@@ -50,6 +50,22 @@ test('the page never scrolls horizontally at any breakpoint', async () => {
   }
 });
 
+test('no workflow screen scrolls horizontally on the narrowest phone', async () => {
+  // The shortlist alone was not enough: the profile's gap list once widened
+  // the page to 396px at 390 while this suite stayed green.
+  const screens = ['profile', 'preferences', 'progress', 'shortlist', 'funding', 'sources', 'approved', 'export'];
+  await page.setViewportSize({ width: 320, height: 720 });
+  for (const screen of screens) {
+    await page.getByTestId(`nav-${screen}`).click();
+    await page.waitForTimeout(250);
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    );
+    expect(overflow, `horizontal overflow on ${screen} at 320px`).toBeLessThanOrEqual(1);
+  }
+  await page.setViewportSize({ width: 1440, height: 900 });
+});
+
 test('the ranked bucket stays clear of the pinned decision column at 1440px', async () => {
   await openShortlist(page);
   await page.setViewportSize({ width: 1440, height: 900 });

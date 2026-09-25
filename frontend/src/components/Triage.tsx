@@ -64,6 +64,11 @@ export function Triage({
 
   const gap = current.funding_gap;
   const position = total - queue.length + 1;
+  // The remaining cost already subtracts published aid, and most of that aid
+  // is competitive. The card says so with the price and the ranking's own
+  // caveats, so "1,848 a year" is never read as a grant already won.
+  const aid = gap?.confirmed_aid?.amount ?? 0;
+  const caveats = (gap?.warnings ?? []).slice(0, 2);
 
   return (
     <section className="triage" aria-labelledby="triage-title" data-testid="triage">
@@ -107,6 +112,11 @@ export function Triage({
               {gap?.computable && gap.gap
                 ? money({ ...gap.gap, academic_year: null })
                 : <span className="triage__muted" title={gap?.reason}>not computable</span>}
+              {gap?.computable && gap.gap && gap.total_cost && aid > 0 && (
+                <span className="triage__sub" data-testid="triage-price">
+                  if awarded · price {money({ ...gap.total_cost, academic_year: null })}
+                </span>
+              )}
             </dd>
           </div>
           <div>
@@ -117,6 +127,11 @@ export function Triage({
             </dd>
           </div>
         </dl>
+        {caveats.length > 0 && (
+          <ul className="triage__caveats" data-testid="triage-caveats">
+            {caveats.map((text) => <li key={text}>{text}</li>)}
+          </ul>
+        )}
         <p className="triage__note">
           None of these predicts a decision: they compare your profile and budget with what the
           university publishes.

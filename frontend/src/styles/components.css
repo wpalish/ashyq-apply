@@ -289,13 +289,16 @@
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-soft);
 }
-.topbar select { width: auto; max-width: 16rem; padding-top: 0.3rem; padding-bottom: 0.3rem; }
+.topbar select { width: auto; max-width: 14rem; padding-top: 0.3rem; padding-bottom: 0.3rem; }
 .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: var(--space-4); }
 .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); gap: var(--space-3); }
 
 .gap-item {
   display: grid;
-  grid-template-columns: auto 1fr;
+  /* minmax(0, 1fr): a long field path must wrap, not push the row past a
+     phone's edge (it widened the page to 396px at 390). */
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
   gap: var(--space-3);
   padding: var(--space-3);
   border-left: 3px solid var(--rule-strong);
@@ -306,7 +309,13 @@
 .gap-item--high { border-left-color: var(--warn); }
 .gap-item--medium { border-left-color: var(--info); }
 .gap-item--low { border-left-color: var(--unknown); }
-.gap-item__path { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--ink-muted); }
+.gap-item__path { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--ink-muted); overflow-wrap: anywhere; }
+/* A pill squeezed onto two lines turns into an oval; keep the label on one. */
+.gap-item > .chip { white-space: nowrap; }
+@media (max-width: 520px) {
+  .gap-item { grid-template-columns: minmax(0, 1fr); gap: var(--space-2); }
+  .gap-item > .chip { justify-self: start; }
+}
 
 /* --- documents ------------------------------------------------------------ */
 
@@ -766,6 +775,8 @@
 .triage {
   background: var(--night);
   color: var(--night-ink);
+  /* Keeps the card's edge on the dark appearance, where the page is night too. */
+  border: 1px solid var(--night-line);
   border-radius: var(--radius-lg);
   padding: var(--space-5);
   display: flex;
@@ -805,6 +816,14 @@
 .triage__facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .triage__judgements dt { overflow-wrap: anywhere; }
 .triage__note { font-size: var(--text-xs); color: #5A6578; margin: 0; }
+.triage__sub { display: block; margin-top: 0.15rem; font-size: var(--text-xs); font-weight: 600; color: #5A6578; }
+/* The ranking's own caveats about the aid it subtracted (competitive, needs a
+   nomination, cannot be combined), in the card's warning tone. */
+.triage__caveats {
+  margin: 0; padding: var(--space-2) var(--space-3) var(--space-2) 1.6rem;
+  background: #FFF3DB; color: #6B4600; border-radius: var(--radius-sm);
+  font-size: var(--text-xs); display: flex; flex-direction: column; gap: 0.25rem;
+}
 /* The card is always light, even in the dark appearance, so its chips use the light status palette. */
 .triage__card .chip { background: #FFFFFF; color: #5A6578; border-color: #9AA4B2; }
 .triage__card .chip--ok   { background: #E4F5EC; color: #177A4C; border-color: #A9DCC0; }
