@@ -265,6 +265,10 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+Progress on part 2 (below): 1–2 `ec12b7d`, 3 `ded86aa`, 4 `e393a65`, 5 `bd1abc0` + the docs commit;
+report in `docs/design/redesign-concepts.md` §21. **Next:** the owner compares again; the globe and the
+Russian vocabulary wait for the owner.
+
 Write-ahead (claude-opus-5, 2026-09-25, redesign «Горизонт» part 2). The owner compared the app with the
 concept and found it too close to the old app: the first pass changed the paint, not the structure. Owner
 decisions: interface stays **English** for now (glossary rule stands), the **globe comes later**. Steps,
@@ -1535,6 +1539,10 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+Redesign part 2, frontend only, gates run by claude-opus-5 on 2026-09-25 at `bd1abc0`: typecheck, lint,
+**231 unit tests** (24 files), build — green; Playwright **91 passed, 1 skipped** (desktop + Pixel 7);
+auth e2e (`playwright.auth.config.ts`) **6 passed** at `ec12b7d`. CI still gets no runner (see §5).
+
 Redesign «Горизонт», frontend only, gates run by claude-opus-5 on 2026-09-25 at `6a814d3`: typecheck,
 lint, **216 unit tests** (23 files), build — all green; Playwright **85 passed, 1 skipped** (desktop
 Chromium and Pixel 7, against a local backend on Python 3.12), axe clean on every workflow screen, no
@@ -2332,6 +2340,7 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 | 2026-09-21 UTC | claude-opus-5 | V2-21 → V2-21b | Put the scope on the claim. Found no migration was needed — the payload column is JSON — and kept `alembic heads` at one. A golden-hash guard caught the payload drift immediately; rather than re-capture a hash the test does not permit re-capturing, the field is now omitted when unrecorded, so absent in JSON means exactly what None means in the model. Gates green (1804 at 94.48%).
 | 2026-09-23 UTC | claude-opus-5 | `07de4d9` → redesign concepts | Owner asked for a redesign, concepts first. Audited main and PR #19 screens, read Mobbin flows and 21st.dev components, drew four directions (16 artboards) on real demo-corpus data, and wrote them up in `docs/design/redesign-concepts.md`. Round 2 on owner feedback: E/F/G, three evolutions of A. Round 3: H/I/J on A's fonts. Round 4: K/L/M developing H, two adversarial review cycles. Round 5: N/O/P on K and M's globe, two cycles. Round 6: Q share kit (story cards), two cycles. Round 7: «Горизонт», the chosen mix across the real flow, with its design system and tokens, three cycles. Palette experiments: ten palettes, owner kept «Солнце». No product code changed. Next: owner approves, then tokens land in `frontend/`. |
 | 2026-09-25 UTC | claude-opus-5 | `2dfa367` → `6a814d3` redesign implemented | Owner approved «Горизонт» with «Солнце» and asked for it built overnight with adversarial review. Landed the design system, the budget ladder, one-at-a-time triage, gold "you pay", folded profile sections; three review cycles found 20 defects (I1–I20, root causes in the design doc §20), all fixed. Vocabulary kept as glossary proposals per the i18n rule. Next: owner review of PR #20. |
+| 2026-09-25 UTC | claude-opus-5 | `6a814d3` → `bd1abc0` redesign part 2 | Owner: the app did not look like the concept. The first pass had changed the paint; this pass changes the structure: five tabs, a three-field start, the results reveal, price cards (table one tap away). English stays, the globe waits. 7 more defects (I21–I27) found and fixed. |
 
 | 2026-09-20 | gpt-6-astra | b267b337 → V2-00 in progress | Startup/recovery, PR inventory, all pack files read; isolated worktree preserves existing dirty research work. |
 

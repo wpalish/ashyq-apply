@@ -1127,3 +1127,40 @@ Scores after cycle 3 (the round-7 scale):
 - **Top bar at 1024 px** still takes two rows.
 - **Testing:** no sessions with students or parents yet.
 
+## 21. Part 2: the structure, not only the paint (2026-09-25)
+
+The owner compared the app with the concept and found it too close to the old app. That was fair.
+Part 1 (§20) changed tokens, fonts and two components and kept every screen's structure. The concept
+is a structure: five places instead of fifteen, a search before a form, a reveal, and cards with the
+price first. Owner decisions for part 2: the interface stays **English** (the glossary rule stands) and
+the **globe comes later**.
+
+| Commit | What |
+|---|---|
+| `ec12b7d` | Five tabs (Match, Plan, Documents, People, Me): a header row on a desktop, a bottom bar on a phone. Each tab has a sub-navigation with short names that keeps every `nav-*` id and `#/` address. Settings, the run id and the stage are in the footer; the applicant switcher is under Me. There is a new start screen with three fields. |
+| `ded86aa` | The night "research complete" reveal: "20 programmes in 15 countries", four counts taken from the results, one button |
+| `e393a65` | The shortlist opens as price cards: the price per year is the headline; requirements, profile and money are three lines, each with its reason; then the source and date. The table (match, confirmed %, bucket) is one tap away. The ladder folds into one line. |
+| `bd1abc0` | The phone review against the concept: a one-line sort, a full-screen triage, the brand word kept at 390 px |
+
+**Defects found in part 2, with their root causes:**
+
+| # | Defect | Root cause | Fix |
+|---|---|---|---|
+| I21 | The phone tab bar rendered at the top | The header's `backdrop-filter` makes it the containing block of fixed children | No blur on a phone |
+| I22 | The programme card's tab row was pinned to the bottom of a phone | The new bar reused the `.tabs` class that `ResultDetail` already had | The bar is `.navtabs`; the ids are `navtab-*` (`tab-funding` was taken too) |
+| I23 | A control near the bottom sat under the fixed bar: focused but hidden | Nothing reserved space for the sticky header and the bottom bar | `scroll-padding` for both (WCAG 2.4.11) |
+| I24 | "20" read as "28" in badges | The mono face's slashed zero at 11 px | The UI face with tabular figures |
+| I25 | "a, " became "a" in the list fields: a second country could not be typed | The parsed list was rendered back into the box on every keystroke | The box keeps the typed text; the draft gets the parsed list |
+| I26 | The axe scan never saw the cards, the start or the reveal | The workflow scan opens the shortlist in the table view | A scan of the three new views |
+| I27 | Triage answers under the tab bar on a phone | Screen title, sub-navigation and two caveats above the card | The card is the screen; one caveat on a phone, the one about whether the aid can be won |
+
+**What still differs from the concept, on purpose or for later:**
+
+- **Language:** English, by the owner's decision; the Russian words are proposals in the glossary.
+- **The globe:** later (heavy on budget Android phones; the list stays the main path).
+- **Cards are taller than the concept's:** the concept's list card shows two lines, and ours keeps all
+  three judgements on every card. Collapsing them would hide which one is the problem.
+- **The start screen's example card** ("пример подбора") is not drawn: before a run there is no data
+  to show, and an invented example is what the product refuses to show.
+- **The unlock step (4 990 ₸)** and the share stories are not part of this pass.
+
