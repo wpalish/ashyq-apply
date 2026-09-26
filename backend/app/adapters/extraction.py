@@ -201,6 +201,7 @@ class ClaimBuilder:
         subject_key: str | None = None,
         population: str | None = None,
         intake: str | None = None,
+        degree: str | None = None,
     ) -> Claim | None:
         verdict = verify_claim(
             VerificationInput(
@@ -248,7 +249,11 @@ class ClaimBuilder:
             ) + f"The page states this conditionally ({hedge!r}); it is not settled."
 
         meta = dict(self.meta)
-        row_scope = {k: v for k, v in (("population", population), ("intake", intake)) if v}
+        row_scope = {
+            k: v
+            for k, v in (("population", population), ("intake", intake), ("degree", degree))
+            if v
+        }
         if row_scope:
             # One row of a table can say who and when it is for when the page as
             # a whole cannot: "non-EU/EEA students 01 May 2027 01 September

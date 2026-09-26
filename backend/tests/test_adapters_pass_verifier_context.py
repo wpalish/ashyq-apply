@@ -80,3 +80,17 @@ def test_a_claim_not_on_its_page_is_now_rejected():
     )
     assert builder.add(extraction.ClaimType.IELTS_MIN_OVERALL, 7.0, "IELTS overall 7.0") is None
     assert builder.rejected
+
+
+def test_a_row_degree_overrides_the_page_scope_degree():
+    """Run 76: HKU's undergraduate page was scoped 'master' from a stray mention."""
+    from app.domain.claim_scope import ClaimScope
+
+    builder = extraction.ClaimBuilder(
+        source_url="https://www.hku.hk/x", scope=ClaimScope(degree="master")
+    )
+    claim = builder.add(
+        extraction.ClaimType.PROGRAM_EXISTS, {"program": "BEng CS"}, "BEng CS", degree="bachelor"
+    )
+    assert claim is not None and claim.scope.degree == "bachelor"
+    assert builder.meta["scope"].degree == "master"

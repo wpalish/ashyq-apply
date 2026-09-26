@@ -565,7 +565,15 @@ class TestSupersededExcluded:
 #: changed). That is the whole of the intended change — a claim now records
 #: what its page stated about who it covers — and it is the only reason this
 #: constant has a second value. Anything else that moves it is a regression.
-GOLDEN_DEMO_SHA256 = "3492987b16c498456c6626e744c7c84a2113b46eae32a90f88a59a4db7f2c9b2"
+#:
+#: Re-captured for run 76's HKU finding (2026-09-26, Claude). `diff old new` is
+#: one line: a program_exists claim's scope ``"degree": null`` became
+#: ``"degree": "bachelor"``. The claim's value already named the programme's
+#: degree from its own title; its scope now says so instead of staying silent.
+#: A silent dimension gained a statement; no result, bucket, check, value or
+#: other scope key moved. Previous value:
+#: 3492987b16c498456c6626e744c7c84a2113b46eae32a90f88a59a4db7f2c9b2
+GOLDEN_DEMO_SHA256 = "79dd02254ec44f2771b3f010402af4496fc483bb8d47f3fc7a0b9c93949e5848"
 
 #: The golden was captured with the real clock on 2026-09-07, and the baseline
 #: payload embeds that date: ``requirement_checks[*].applicant_value`` and

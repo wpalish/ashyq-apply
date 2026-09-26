@@ -419,6 +419,9 @@ class WebRequirementsAdapter:
             excerpt,
             confidence=0.9,
             section="Programme identity",
+            # The programme's own title states its degree; a stray "master's"
+            # elsewhere on the page must not re-scope it (run 76, HKU).
+            degree=str(page.degree_level) if page.degree_level else None,
         )
 
     @staticmethod
@@ -445,6 +448,7 @@ class WebRequirementsAdapter:
             _first_sentence_containing(text, title) or title,
             confidence=0.7,
             section="Programme identity",
+            degree=str(degree) if degree else None,
         )
         return True
 
