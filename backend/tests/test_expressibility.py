@@ -60,8 +60,9 @@ def test_the_reviewed_corpus_counts_the_same_population_as_claim_recall():
     # and duration in words, KAIST living allowance), + 15 with V2-30A's claim
     # types (credential, subject, other-language, English-evidence, intake,
     # faculty, route, bond, offer, document by completion). The 13 left need
-    # an identity binding, which is the owner's decision.
-    assert sum(r.verdict == REACHABLE for r in rows) == 49
+    # an identity binding, which is the owner's decision. + 2 with the Groningen
+    # diploma and translation bindings added under delegation on 2026-09-26.
+    assert sum(r.verdict == REACHABLE for r in rows) == 51
 
 
 def test_without_any_bindings_the_ceiling_is_what_live_had_before_2026_09_23():

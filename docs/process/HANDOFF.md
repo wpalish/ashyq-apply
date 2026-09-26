@@ -1288,6 +1288,19 @@ Claude, 2026-09-26, run 77: 8/62 (new best), precision 8/10. UBC IELTS now score
   BSc is the old open question.
 - Open: UBC still hits its clock.
 
+Claude, 2026-09-26, run 78: 9/62 (new best), precision 10/11. KAIST filed 4 claims. The single wrong claim
+is UBC BA vs BSc (the old open question). UBC hit the page budget again.
+Identity bindings, added under the owner's delegation; each has notes saying so, pending the owner's
+confirmation:
+- groningen documents.admission.secondary_diploma -> "Secondary school diploma (certified copy)".
+- groningen documents.admission.translation -> "Certified English translation of non-English documents".
+Both use the same certified source as the approved transcript binding, and the production document-rule
+names are exact. The representability ceiling is now 51/62.
+Not bound (ambiguous or nothing to bind to), for the owner:
+- Groningen course_descriptions and Toronto supplemental_application: no document rule emits these names.
+- HKU entrance scholarship: the award name on node/891 is unknown.
+- NTU Nanyang essay/referee: the JS page, so which rule names would fire cannot be verified.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
