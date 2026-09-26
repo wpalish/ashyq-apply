@@ -653,3 +653,25 @@ def test_the_oracle_compares_band_maps_regardless_of_key_order():
     produced = {"listening": 6.0, "reading": 6.0, "speaking": 6.0, "writing": 6.0}
     assert _matches(expected, produced)
     assert not _matches(expected, {**produced, "writing": 5.5})
+
+
+def test_a_descriptive_corpus_population_accepts_silence_but_not_a_wrong_value():
+    from evaluation.research.metrics import scope_matches
+    from evaluation.research.schema import Scope
+
+    expected = Scope(university="U", population="Vancouver applicants using IELTS Academic")
+    assert scope_matches(expected, Scope(university="U"))
+    assert not scope_matches(expected, Scope(university="U", population="transfer"))
+    # A controlled population must still be recorded.
+    assert not scope_matches(Scope(university="U", population="non-EU/EEA"), Scope(university="U"))
+    assert scope_matches(
+        Scope(university="U", population="non-EU/EEA"),
+        Scope(university="U", population="non-eu/eea"),
+    )
+
+
+def test_the_controlled_populations_match_the_scope_reader():
+    from app.adapters import scope_reader
+    from evaluation.research.metrics import CONTROLLED_POPULATIONS
+
+    assert {v.casefold() for _p, v in scope_reader._POPULATIONS} == CONTROLLED_POPULATIONS

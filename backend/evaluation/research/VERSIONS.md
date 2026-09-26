@@ -71,6 +71,15 @@ Engineering satisfies a computer-science request is left open for the reviewer,
 not asserted. See [source notes](REVIEW_DRAFT7.md) and
 [current worksheet](REVIEW_WORKSHEET_DRAFT7.md).
 
+**Scorer definition, 2026-09-26 — descriptive populations accept silence (owner delegated).** Seven
+corpus populations are descriptive notes, for example "Vancouver applicants using IELTS Academic" and
+"non-Dutch qualification", not values a page reading can emit. `scope_matches` compared them literally,
+so no claim could ever match them. They now accept a claim that records no population. A claim that
+records a different population still misses, and the controlled populations the scope reader emits
+("non-EU/EEA", "international", ...) must still be recorded. No label was edited. The owner had delegated
+the choice ("делай по своим рекомендациям"); relabelling was considered and rejected because it would
+edit certified labels and leave six other descriptive populations inconsistent.
+
 **Mapping, 2026-09-23 — one IELTS floor is written as the four bands it governs.** A prediction of
 `ielts_min_subscore` with a single number ("no part less than 6.0") is mapped to
 `{"listening": 6.0, "reading": 6.0, "speaking": 6.0, "writing": 6.0}`, the certified corpus' own

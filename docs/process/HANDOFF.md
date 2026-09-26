@@ -1268,6 +1268,17 @@ Claude, 2026-09-25, run 75: 6/62, precision 6/10. UBC went from 1 to 5 claims.
   label is descriptive. I have not touched labels or the scorer.
 - Jev shadow ranks: Delft 3/3, NTU 1/1 — no difference this run.
 
+Claude, 2026-09-26, run 76: 7/62 (ties best), precision 7/11. Adversarial review of the run (owner: review
+after every run, decide by my recommendations):
+- HKU programme.exists was scoped "master" from a stray mention. Fixed: a programme-existence claim takes
+  its degree from its own title (builder.add(degree=...)). The golden demo was re-captured with a recorded
+  one-line proof.
+- UBC IELTS: live, right values and right page; it missed only on the descriptive corpus population.
+  Scorer rule (VERSIONS 2026-09-26): a descriptive population accepts silence; a wrong or missing
+  controlled population still misses. No label edited. I chose this over relabelling (my earlier
+  recommendation) after finding 7 descriptive populations in the corpus.
+- UBC hit the 40-read page budget (the language follow costs reads). Next: budget.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 

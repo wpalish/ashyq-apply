@@ -50,6 +50,13 @@ def quote_supports(ours: str, theirs: str) -> bool:
     return len(ours_flat) <= SUPPORTING_QUOTE_MAX and theirs_flat in ours_flat
 
 
+#: The populations a page reading can record (app.adapters.scope_reader), as
+#: plain data: evaluation reads no production module at scoring time.
+CONTROLLED_POPULATIONS = frozenset(
+    {"eu/eea", "domestic", "first-year", "international", "non-eu/eea", "transfer"}
+)
+
+
 def scope_matches(expected: Scope, actual: Scope) -> bool:
     """Whether a recorded scope answers the scope a label asked about.
 
@@ -73,6 +80,18 @@ def scope_matches(expected: Scope, actual: Scope) -> bool:
                 or titles_name_same_programme(str(value), str(recorded)) is not Verdict.YES
             ):
                 return False
+            continue
+        if (
+            key == "population"
+            and recorded is None
+            and str(value).casefold() not in CONTROLLED_POPULATIONS
+        ):
+            # A descriptive corpus population ("Vancouver applicants using
+            # IELTS Academic") is a note on who the source addresses, not a
+            # value any page reading can emit; silence is compatible with it.
+            # A population we did record must still match literally, and a
+            # controlled one ("non-EU/EEA") must be recorded. Owner delegated
+            # this choice on 2026-09-26; recorded in VERSIONS.md.
             continue
         # Case is not meaning: the pipeline writes "Fall 2027", the corpus
         # "fall 2027". Compared literally, no intake read from a page could
