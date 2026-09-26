@@ -1279,6 +1279,15 @@ after every run, decide by my recommendations):
   recommendation) after finding 7 descriptive populations in the corpus.
 - UBC hit the 40-read page budget (the language follow costs reads). Next: budget.
 
+Claude, 2026-09-26, run 77: 8/62 (new best), precision 8/10. UBC IELTS now scores. Adversarial review:
+- scope_report and the scorer had drifted (the report still listed UBC IELTS as a miss). They now share
+  dimension_matches. Programme renames stay listed on purpose.
+- HKU missed on "The University of Hong Kong" vs "University of Hong Kong". A leading "the" is now
+  dropped (VERSIONS 2026-09-26).
+- Not my errors: Groningen's EU/EEA deadline is a correct claim for another population, and UBC BA vs
+  BSc is the old open question.
+- Open: UBC still hits its clock.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 

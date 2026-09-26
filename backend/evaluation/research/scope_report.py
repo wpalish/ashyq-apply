@@ -33,6 +33,7 @@ from collections import Counter
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
+from .metrics import dimension_matches
 from .schema import Capture, Dataset, Scope
 
 #: The dimensions a label can carry, in the order a reviewer reads them.
@@ -75,15 +76,16 @@ def _mismatches(expected: Scope, actual: Scope | None, case_id: str, key: str) -
             out.append(Mismatch(case_id, key, dimension, wanted, None, "unrecorded"))
             continue
         got = getattr(actual, dimension, None)
-        if got is None:
-            out.append(Mismatch(case_id, key, dimension, wanted, None, "silent"))
-        elif got != wanted and not (
-            # The scorer compares every non-programme dimension case-blind
-            # since 2026-09-23; a report that still flags "Fall 2027" against
-            # "fall 2027" points at a difference that no longer costs a fact.
-            dimension != "programme" and str(got).casefold() == str(wanted).casefold()
-        ):
-            out.append(Mismatch(case_id, key, dimension, wanted, got, "differs"))
+        # The scorer's own rule, so the report names only misses that count.
+        # A programme rename stays visible on purpose (summarise says it is
+        # counted as a match): a rename is worth seeing.
+        if dimension == "programme":
+            if got == wanted:
+                continue
+        elif dimension_matches(dimension, wanted, got):
+            continue
+        shape = "silent" if got is None else "differs"
+        out.append(Mismatch(case_id, key, dimension, wanted, got, shape))
     return out
 
 

@@ -675,3 +675,10 @@ def test_the_controlled_populations_match_the_scope_reader():
     from evaluation.research.metrics import CONTROLLED_POPULATIONS
 
     assert {v.casefold() for _p, v in scope_reader._POPULATIONS} == CONTROLLED_POPULATIONS
+
+
+def test_a_leading_the_is_not_part_of_a_university_name():
+    from evaluation.research.metrics import dimension_matches
+
+    assert dimension_matches("university", "University of Hong Kong", "The University of Hong Kong")
+    assert not dimension_matches("university", "University of Hong Kong", "Hong Kong University")

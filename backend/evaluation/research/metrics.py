@@ -57,6 +57,39 @@ CONTROLLED_POPULATIONS = frozenset(
 )
 
 
+def _plain(text: object) -> str:
+    """Case-blind, and a leading "The" is not part of a name ("The University
+    of Hong Kong" is the University of Hong Kong; run 77)."""
+    folded = str(text).casefold().strip()
+    return folded[4:] if folded.startswith("the ") else folded
+
+
+def dimension_matches(key: str, value: object, recorded: object) -> bool:
+    """One scope dimension: whether ``recorded`` answers the label's ``value``.
+
+    Shared with ``scope_report`` so the report never explains a miss the score
+    does not count (run 77 found the two had drifted apart).
+    """
+    if key == "programme":
+        return bool(recorded) and (
+            titles_name_same_programme(str(value), str(recorded)) is Verdict.YES
+        )
+    if (
+        key == "population"
+        and recorded is None
+        and str(value).casefold() not in CONTROLLED_POPULATIONS
+    ):
+        # A descriptive corpus population ("Vancouver applicants using IELTS
+        # Academic") is a note on who the source addresses, not a value any
+        # page reading can emit; silence is compatible with it. A population we
+        # did record must still match, and a controlled one ("non-EU/EEA") must
+        # be recorded. Owner delegated this choice on 2026-09-26 (VERSIONS.md).
+        return True
+    # Case is not meaning: the pipeline writes "Fall 2027", the corpus
+    # "fall 2027" (definition fixed 2026-09-23, recorded in VERSIONS.md).
+    return recorded is not None and _plain(recorded) == _plain(value)
+
+
 def scope_matches(expected: Scope, actual: Scope) -> bool:
     """Whether a recorded scope answers the scope a label asked about.
 
@@ -71,32 +104,7 @@ def scope_matches(expected: Scope, actual: Scope) -> bool:
     tell" as a hit is measuring nothing.
     """
     for key, value in expected.model_dump().items():
-        if value is None:
-            continue
-        recorded = getattr(actual, key)
-        if key == "programme":
-            if (
-                not recorded
-                or titles_name_same_programme(str(value), str(recorded)) is not Verdict.YES
-            ):
-                return False
-            continue
-        if (
-            key == "population"
-            and recorded is None
-            and str(value).casefold() not in CONTROLLED_POPULATIONS
-        ):
-            # A descriptive corpus population ("Vancouver applicants using
-            # IELTS Academic") is a note on who the source addresses, not a
-            # value any page reading can emit; silence is compatible with it.
-            # A population we did record must still match literally, and a
-            # controlled one ("non-EU/EEA") must be recorded. Owner delegated
-            # this choice on 2026-09-26; recorded in VERSIONS.md.
-            continue
-        # Case is not meaning: the pipeline writes "Fall 2027", the corpus
-        # "fall 2027". Compared literally, no intake read from a page could
-        # ever match (definition fixed 2026-09-23, recorded in VERSIONS.md).
-        if recorded is None or str(recorded).casefold() != str(value).casefold():
+        if value is not None and not dimension_matches(key, value, getattr(actual, key)):
             return False
     return True
 

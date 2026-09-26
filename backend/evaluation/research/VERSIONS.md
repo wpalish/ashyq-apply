@@ -71,6 +71,12 @@ Engineering satisfies a computer-science request is left open for the reviewer,
 not asserted. See [source notes](REVIEW_DRAFT7.md) and
 [current worksheet](REVIEW_WORKSHEET_DRAFT7.md).
 
+**Scorer definition, 2026-09-26 — a leading "The" is not part of a name.** Run 77 missed HKU because
+"The University of Hong Kong" was compared literally with "University of Hong Kong". Non-programme
+dimensions now drop one leading "the" after case folding. `scope_report` shares the scorer's own
+per-dimension rule (`dimension_matches`), so it no longer lists misses that the score does not count.
+Programme renames stay visible there on purpose.
+
 **Scorer definition, 2026-09-26 — descriptive populations accept silence (owner delegated).** Seven
 corpus populations are descriptive notes, for example "Vancouver applicants using IELTS Academic" and
 "non-Dutch qualification", not values a page reading can emit. `scope_matches` compared them literally,
