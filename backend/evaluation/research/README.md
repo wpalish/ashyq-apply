@@ -9,6 +9,10 @@ Certified corpus: [acceptance record](ACCEPTANCE.md). Retrieval measurements:
 [draft7](REVIEW_DRAFT7.md), [version comparison](VERSIONS.md),
 [human review worksheet](REVIEW_WORKSHEET_DRAFT7.md).
 
+For blinded expert recovery experiments and the separate run agent, start with
+[the expert recovery protocol](expert/README.md) and
+[the runner handoff](expert/HANDOFF_TO_RUNNER.md).
+
 ## Current acceptance status
 
 **ACCEPTED.** `ground_truth.reviewed.json` was signed by Диас on 2026-09-21: 10/10
