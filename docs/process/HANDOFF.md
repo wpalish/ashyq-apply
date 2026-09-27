@@ -6,6 +6,11 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**Current branch-specific baton (2026-09-27 UTC):** `gpt-6-astra` on
+`task/research-expert-traces`, from `origin/main@07de4d9`. The table below is
+historical and predates the merged PR #16. This branch owns only offline
+evaluation tooling and handoff documents for expert recovery traces.
+
 Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj2z`, branched from `task/v2-01-research-benchmark@a4cd5b3`; base: `b267b337`. V2-01 is not accepted; see review blockers below.
 
 
@@ -20,6 +25,15 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**Owner-directed expert recovery pilot, in progress (2026-09-27).** Build a
+blinded task export, a strict recorded-action trace contract, a first-failure
+diagnostic, and a hypothesis registry for the separate run agent. The design is
+`docs/superpowers/specs/2026-09-27-expert-recovery-design.md`; the executable
+plan is `docs/superpowers/plans/2026-09-27-expert-recovery.md`. Do not modify
+signed gold labels, the frozen capture, production discovery/claims, or the
+other worktrees. The earlier Phase 2 text below is historical: PR #16 is already
+merged on `main@07de4d9`.
 
 **Phase 2 is `ready-for-review (PR #16)`.** PR #15 was merged by the owner on 2026-09-21 at `cba911a`; a merged PR cannot track new work, so everything since is PR #16 from the same branch. **V2-20 (plan numbering) — evidence history: page versions and claim supersession lineage (done).** V2-20a shipped `SourceSnapshot`; V2-20b closes the claim half. See the numbering note in §5. Previously: **conflict model v2 (plan V2-23).** Previously: **V2-25 — all five claim-producing adapters read scope.** Previously: **V2-24 — a scope refusal is said out loud to the applicant.** Previously: **V2-23 — the assessment refuses a claim whose page is about something else.** Previously: **V2-22 — fill a claim's scope from what its page states.** V2-21/V2-21b gave scope a shape and put it on the claim; this fills it, from the page's own words only. Previously: **V2-21b — carry the scope on a claim.** Phase 1 is complete, measured and wired (PR #15); this starts Phase 2 on the failure Phase 1 never touched. Phase 1 so far is `ready-for-review (PR #15)`, which supersedes draft PR #14. Phase 1 retrieval was measured live: The owner approved the §6 exception and authorised the live probe; the Exa adapter works and the retrieval ceiling moved **1/10 → 9/10**. V2-01 was accepted 2026-09-21 and its record is below.
 Owner explicitly prioritizes the new workstream. V2-01 follows this documentation commit in a task branch from this predecessor (explicit branch exception). Goal: measure current research/discovery quality before architecture changes.
@@ -262,6 +276,14 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**Current branch write-ahead (2026-09-27, expert recovery):** implement
+`backend/evaluation/research/expert/models.py`, `packet.py`, `__main__.py` and
+focused tests so `prepare` exports only public request fields plus baseline
+observations, and `validate` refuses unproven or post-hoc trace actions. Then
+implement `diagnose.py` and the candidate hypothesis registry; finish with
+`HANDOFF_TO_RUNNER.md`, gates, commit, push and PR. The older write-ahead entries
+below are retained as history, not an instruction to redo V2-10.
 
 Write-ahead (claude-opus-5, 2026-09-20, V2-10): **starting V2-10 — the search provider interface**,
 per `analysis/v2/02_EXECUTION_PLAN.md` (Phase 1) and `analysis/v2/04_PHASE_1_DISCOVERY_ENGINE.md` §1.
