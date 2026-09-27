@@ -347,6 +347,11 @@ def main() -> None:
         action="store_true",
         help="experiment ER-05: links naming undergraduate admission become candidates",
     )
+    parser.add_argument(
+        "--navigation-slot",
+        action="store_true",
+        help="experiment ER-07: one programme-page slot is kept for the navigation hop",
+    )
     parser.add_argument("--child", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args()
     if not 1 <= args.seconds_per_case <= 600 or not 1 <= args.max_pages <= 100:
@@ -368,6 +373,10 @@ def main() -> None:
             from app.adapters.search import navigation
 
             navigation.ADMISSION_LEXICON = True
+        if args.navigation_slot:
+            from app.adapters.discovery import live_discovery
+
+            live_discovery.NAVIGATION_SLOT = True
         # A few seconds under the parent's timeout, so the child's own stop
         # comes first and writes what it has.
         soft = max(args.seconds_per_case - 5, 1)
@@ -409,6 +418,7 @@ def main() -> None:
                         *(["--skip-refused-hosts"] if args.skip_refused_hosts else []),
                         *(["--reject-archive-hosts"] if args.reject_archive_hosts else []),
                         *(["--admission-lexicon"] if args.admission_lexicon else []),
+                        *(["--navigation-slot"] if args.navigation_slot else []),
                     ],
                     env=environment,
                     stdout=log,
@@ -443,6 +453,7 @@ def main() -> None:
                 "skip_refused_search_hosts": args.skip_refused_hosts,
                 "reject_archive_hosts": args.reject_archive_hosts,
                 "admission_lexicon": args.admission_lexicon,
+                "navigation_slot": args.navigation_slot,
                 "browser_enabled": False,
                 "cohort": list(COHORT),
                 "scope": "current production pipeline; HTTP-only bounded cold run",

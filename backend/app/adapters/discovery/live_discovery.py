@@ -97,6 +97,12 @@ SEARCH_BEFORE_NAVIGATION = False
 #: after that host had answered 403 to every read; a reachable campus host
 #: was never tried. The benchmark harness flips it per capture.
 SKIP_REFUSED_SEARCH_HOSTS = False
+#: Experiment ER-07, off until measured: one of the programme-page slots is
+#: kept for the best candidate the navigation hop found. Search results fill
+#: the others. ER-05 (2026-09-27) found hop candidates are appended after
+#: search and never reach a slot, so KAIST's undergraduate-admission page,
+#: linked from the department's own navigation, was never opened.
+NAVIGATION_SLOT = False
 #: Pages walked during the navigation fallback. Universities routinely nest
 #: "Degree programmes" -> "Bachelor programmes" -> a programme, so one hop is
 #: not enough; an unbounded walk would be a crawl.
@@ -1295,8 +1301,13 @@ class LiveDiscoveryAdapter:
         added = 0
         refused = getattr(self.fetcher, "refused_hosts", {})
         skipped: list[str] = []
+        navigation = next(
+            (c for c in report.candidates if c.provider == "navigation" and c.url not in pages),
+            None,
+        )
+        limit = MAX_PAGES_PER_CATEGORY - (1 if NAVIGATION_SLOT and navigation else 0)
         for found in report.candidates:
-            if len(pages) >= MAX_PAGES_PER_CATEGORY:
+            if len(pages) >= limit:
                 break
             if found.url in pages:
                 continue
@@ -1305,6 +1316,10 @@ class LiveDiscoveryAdapter:
                 continue
             pages.append(found.url)
             added += 1
+        if NAVIGATION_SLOT and navigation is not None and navigation.url not in pages:
+            pages.append(navigation.url)
+            added += 1
+            trace.errors.append(f"navigation slot: {navigation.url}")
         if skipped:
             trace.errors.append(
                 f"search skipped {len(skipped)} candidate(s) on hosts that refused this run: "
