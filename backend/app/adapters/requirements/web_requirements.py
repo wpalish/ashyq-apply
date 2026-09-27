@@ -22,6 +22,7 @@ from app.adapters.document_ir import build_document_ir
 from app.adapters.extraction import (
     ClaimBuilder,
     excerpt_around,
+    extract_admission_route,
     extract_requirements,
     for_matching,
     html_title,
@@ -273,6 +274,23 @@ class WebRequirementsAdapter:
                             )
                         )
                         continue
+                # An admission-route statement names admission itself ("admitted
+                # without a declared major"), so it is read from any official page;
+                # verbatim and domain checks still apply (KAIST's department page
+                # classifies as unknown and states the route, 2026-09-27 trace).
+                builder.page_type = None
+                if not res.is_pdf and extract_admission_route(text, builder):
+                    out.claims.extend(builder.claims)
+                    out.page_outcomes.append(
+                        PageOutcome(
+                            url=target.url,
+                            category="fetched-ok",
+                            page_type=page.page_type.value,
+                            readable_chars=len(text),
+                            detail="only the undergraduate admission route was read",
+                        )
+                    )
+                    continue
                 out.errors.append(
                     f"{target.url}: classified as {page.page_type.value}; no requirement can be "
                     "read from this kind of page."

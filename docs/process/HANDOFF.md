@@ -1385,6 +1385,17 @@ Evidence: `runs.2026-09-27/er05.paired.txt`, `er05.readdiff.txt`.
 Next useful work: (1) the owner's self-hosted runner and a new baseline; (2) an ADMISSION_ROUTE extractor
 ("admitted without a declared major" statements) tested with the oracle URL before any discovery change.
 
+### ADMISSION_ROUTE extractor, 2026-09-27 (claude-opus-5, 1bcafe3)
+`extract_admission_route` (extraction.py, called from `extract_requirements`): explicit "admitted without a
+declared major" or "major chosen at a stated later point" (Korean + English) → `undeclared_then_major_selection`,
+quoting the page's own sentence(s) bounded by line breaks. The adapter reads this one claim type from any
+official page it opens (page-type gate lifted; verbatim and domain kept); the oracle mirrors it.
+Measured: oracle run 107 recovers **9** certified facts (was 8 in runs 74–78): the new one is
+`kaist programme.admission_route` on cs.kaist.ac.kr/content?menu=40. Live end-to-end is unchanged because
+discovery still never opens that page (ER-05 finding). No hits on 103 repository HTML fixtures or on the 10
+real pages in the expert logs; "may change their major" and direct-entry sentences are tested negatives;
+golden demo unchanged. Next: give navigation evidence a discovery slot (the ER-05 root cause), then re-measure.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 

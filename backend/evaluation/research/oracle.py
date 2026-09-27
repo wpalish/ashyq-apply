@@ -166,7 +166,13 @@ def _claims_on(url: str, html: str, fetched_at) -> tuple[str, list[tuple[str, ob
         payload = claim.model_dump(mode="json")
         key, value, _programme, _degree = normalize_claim(payload["claim_type"], payload)
         ungated.append((key, value))
-    gated = list(ungated) if page.accepts("requirements") else []
+    # The adapter reads an admission-route statement from any official page it
+    # opens (the sentence names admission itself); mirror that here.
+    gated = (
+        list(ungated)
+        if page.accepts("requirements")
+        else [kv for kv in ungated if kv[0] == "programme.admission_route"]
+    )
     # Programme existence is claimed by the adapter, not by the patterns: a
     # page the classifier accepts as a programme page, with a subject it
     # recognised. The adapter also matches that subject against the request;
