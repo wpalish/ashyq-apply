@@ -84,11 +84,11 @@
     },
     {
       "id": "ER-05",
-      "status": "candidate",
+      "status": "rejected",
       "case_ids": [
         "kaist"
       ],
-      "observation": "Blind KAIST trace: the '학부 입학' (undergraduate admission) navigation link on every cs.kaist.ac.kr page read by the baseline was never opened; opening it recovered the signed programme.admission_route fact at 13/60 calls.",
+      "observation": "Blind KAIST trace: the '학부 입학' (undergraduate admission) navigation link on every cs.kaist.ac.kr page read by the baseline was never opened; opening it recovered the signed programme.admission_route fact at 13/60 calls. Tested 2026-09-27 (3962468, cloud runners, ABBA, 60 calls/120 s, 3 dev + 9 held-out): the process metric failed - no arm opened cs.kaist.ac.kr/content?menu=40, because hop candidates are appended after search results and the three programme slots fill first. Claim differences are not the rule's: Vilnius on 3/off 0 follows Serper ranking the Bioinformatics page 2nd vs 3rd, and those 3 'verified' claims are for Bioinformatics, not the requested computer science (wrong programme); NU completed in one arm only (network). Also: no extractor emits ADMISSION_ROUTE, so even reaching the page could not add a claim. Rejected in this form; a retry needs a slot for navigation evidence and an extractor.",
       "proposed_rule": "Before score-based ranking, promote same-site navigation links whose anchor text matches an admissions/degree-level lexicon in the site's language.",
       "integration_seam": "backend/app/adapters/discovery/live_discovery.py navigation fallback and catalog walker lead scoring",
       "counterexample": "Admission menus are often generic institution pages that consume slots without programme evidence; lexicons per language can overfit.",
@@ -97,7 +97,7 @@
         "backend/evaluation/research/expert/data/runs.2026-09-27/kaist.trace.json"
       ],
       "policy_guard": "Anchor text is a discovery hint only; claims still need fetched verbatim evidence and scope.",
-      "validation_artifact": null
+      "validation_artifact": "backend/evaluation/research/expert/data/runs.2026-09-27/er05.readdiff.txt"
     },
     {
       "id": "ER-06",
