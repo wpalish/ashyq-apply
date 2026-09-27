@@ -1,0 +1,121 @@
+{
+  "schema_version": "1",
+  "dataset_sha256": "cfcacfb22aa8ee38e8ee7e72ab7edaf9195a733779ce33f3c6cf0b468eadacf6",
+  "capture_sha256": "a4a1b0bee75f69bae36443dd87b141e8c75d5140a9457f5dcbe1a4e10a2e5719",
+  "probe_sha256": "0cbf9ede2e62d516a76fbb4ccdfaedd86d837249c0b8d109c6e0fe135f4fdf67",
+  "dataset_version": "2026-09-21.reviewed",
+  "capture_pipeline_sha": "51f951239b2f3224791476945ae7ba11bd0379ee",
+  "probe_at": "2026-09-21T14:01:27.789861+00:00",
+  "records": [
+    {
+      "case_id": "groningen",
+      "legacy_stage": "legacy_gold_absent",
+      "legacy_gold_position": null,
+      "legacy_error": null,
+      "probe_gold_position": 2,
+      "probe_candidate_count": 35,
+      "probe_top_identity": "exact",
+      "known_label_count": 11,
+      "note": "Probe rank is candidate order only; it does not prove a fetch, extraction, or current claim support. Baseline and probe are different dated runs."
+    },
+    {
+      "case_id": "delft",
+      "legacy_stage": "legacy_gold_absent",
+      "legacy_gold_position": null,
+      "legacy_error": null,
+      "probe_gold_position": 2,
+      "probe_candidate_count": 28,
+      "probe_top_identity": "exact",
+      "known_label_count": 1,
+      "note": "Probe rank is candidate order only; it does not prove a fetch, extraction, or current claim support. Baseline and probe are different dated runs."
+    },
+    {
+      "case_id": "aalto",
+      "legacy_stage": "legacy_gold_absent_with_failure",
+      "legacy_gold_position": null,
+      "legacy_error": "RuntimeError: BENCHMARK_PAGE_BUDGET_EXHAUSTED",
+      "probe_gold_position": 17,
+      "probe_candidate_count": 26,
+      "probe_top_identity": "needs_review",
+      "known_label_count": 2,
+      "note": "Probe rank is candidate order only; it does not prove a fetch, extraction, or current claim support. Baseline and probe are different dated runs."
+    },
+    {
+      "case_id": "vienna",
+      "legacy_stage": "legacy_gold_absent",
+      "legacy_gold_position": null,
+      "legacy_error": null,
+      "probe_gold_position": 6,
+      "probe_candidate_count": 38,
+      "probe_top_identity": "exact",
+      "known_label_count": 4,
+      "note": "Probe rank is candidate order only; it does not prove a fetch, extraction, or current claim support. Baseline and probe are different dated runs."
+    },
+    {
+      "case_id": "warsaw",
+      "legacy_stage": "legacy_gold_absent_with_failure",
+      "legacy_gold_position": null,
+      "legacy_error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED",
+      "probe_gold_position": 1,
+      "probe_candidate_count": 37,
+      "probe_top_identity": "exact",
+      "known_label_count": 2,
+      "note": "Probe rank is candidate order only; it does not prove a fetch, extraction, or current claim support. Baseline and probe are different dated runs."
+    },
+    {
+      "case_id": "ubc",
+      "legacy_stage": "legacy_gold_absent_with_failure",
+      "legacy_gold_position": null,
+      "legacy_error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED",
+      "probe_gold_position": 1,
+      "probe_candidate_count": 44,
+      "probe_top_identity": "needs_review",
+      "known_label_count": 3,
+      "note": "Probe rank is candidate order only; it does not prove a fetch, extraction, or current claim support. Baseline and probe are different dated runs."
+    },
+    {
+      "case_id": "toronto",
+      "legacy_stage": "legacy_gold_absent_with_failure",
+      "legacy_gold_position": null,
+      "legacy_error": "RuntimeError: BENCHMARK_PAGE_BUDGET_EXHAUSTED",
+      "probe_gold_position": 4,
+      "probe_candidate_count": 48,
+      "probe_top_identity": "needs_review",
+      "known_label_count": 4,
+      "note": "Probe rank is candidate order only; it does not prove a fetch, extraction, or current claim support. Baseline and probe are different dated runs."
+    },
+    {
+      "case_id": "hku",
+      "legacy_stage": "legacy_gold_absent",
+      "legacy_gold_position": null,
+      "legacy_error": null,
+      "probe_gold_position": 1,
+      "probe_candidate_count": 36,
+      "probe_top_identity": "needs_review",
+      "known_label_count": 4,
+      "note": "Probe rank is candidate order only; it does not prove a fetch, extraction, or current claim support. Baseline and probe are different dated runs."
+    },
+    {
+      "case_id": "ntu",
+      "legacy_stage": "legacy_claims_need_adjudication",
+      "legacy_gold_position": 1,
+      "legacy_error": null,
+      "probe_gold_position": 1,
+      "probe_candidate_count": 28,
+      "probe_top_identity": "exact",
+      "known_label_count": 21,
+      "note": "Probe rank is candidate order only; it does not prove a fetch, extraction, or current claim support. Baseline and probe are different dated runs."
+    },
+    {
+      "case_id": "kaist",
+      "legacy_stage": "legacy_gold_absent_with_failure",
+      "legacy_gold_position": null,
+      "legacy_error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED",
+      "probe_gold_position": 30,
+      "probe_candidate_count": 38,
+      "probe_top_identity": "needs_review",
+      "known_label_count": 10,
+      "note": "Probe rank is candidate order only; it does not prove a fetch, extraction, or current claim support. Baseline and probe are different dated runs."
+    }
+  ]
+}

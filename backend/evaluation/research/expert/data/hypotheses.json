@@ -1,0 +1,44 @@
+{
+  "schema_version": "1",
+  "hypotheses": [
+    {
+      "id": "ER-01",
+      "status": "candidate",
+      "case_ids": ["kaist", "aalto"],
+      "observation": "In the dated search probe the signed exact page appeared at rank 30 for KAIST and rank 17 for Aalto. This is a candidate-list result, not proof that the production pipeline fetched either page. The older HTTP-only capture failed before returning either exact programme.",
+      "proposed_rule": "Reserve a bounded exploration share for high-value official candidates below the ordinary confirmation cutoff, using distinct host/page-kind signals and preserving the ranked top set.",
+      "integration_seam": "backend/app/adapters/search/retrieval.py and backend/app/adapters/discovery/live_discovery.py; evaluate selection before changing either",
+      "counterexample": "Opening rank 30 on every university can exhaust the same fetch budget and lower decision-grade precision; a low-ranked page can also be the wrong programme.",
+      "falsification": "On a frozen candidate set and equal total Fetcher budget, compare exact programme recall@fetch-budget and pages-to-first-gold. Reject if the proposed reserve displaces a correct top candidate, fails on held-out universities, or adds a wrong-scope accepted claim.",
+      "evidence_artifacts": ["backend/evaluation/research/baseline/search_probe.exa.hop.json", "backend/evaluation/research/baseline/capture.json", "backend/evaluation/research/SEARCH_PROBE.md"],
+      "policy_guard": "All page reads through Fetcher; robots, egress, rate limits, identity and scope checks remain binding.",
+      "validation_artifact": null
+    },
+    {
+      "id": "ER-02",
+      "status": "candidate",
+      "case_ids": ["toronto", "ubc"],
+      "observation": "The probe's Toronto exact page is rank 4 while the top candidate still has identity needs_review. The project review documents wrong-campus results under the same registrable domain. The signed Toronto case names St George, but the public request does not name a campus.",
+      "proposed_rule": "Keep campus as an explicit unresolved identity dimension when official sources describe distinct application routes; do not treat same university domain or a strong seed-host score as campus proof.",
+      "integration_seam": "backend/app/adapters/search/identity.py and backend/app/domain/programme_identity.py after a separate entity-contract design decision",
+      "counterexample": "Some universities use campus names only as locations for one common programme; inventing campus separation from hostname alone would reject a valid route.",
+      "falsification": "On human-adjudicated multi-campus and single-route cases, verify that unresolved requests abstain, named-campus requests choose only matching evidence, and exact programme recall does not fall. A same-domain rule alone is insufficient.",
+      "evidence_artifacts": ["backend/evaluation/research/SEARCH_PROBE.md", "backend/evaluation/research/baseline/search_probe.exa.hop.json", "backend/evaluation/research/data/ground_truth.reviewed.json"],
+      "policy_guard": "Verified registry and official page evidence may establish campus relationships; snippets and hostname similarity are discovery hints only.",
+      "validation_artifact": null
+    },
+    {
+      "id": "ER-03",
+      "status": "candidate",
+      "case_ids": ["aalto", "kaist", "toronto"],
+      "observation": "Search now surfaces exact programme pages for these three cases in a probe, while the only committed ten-case end-to-end claim capture predates the search and scope work. The current search insertion path appends results as programme-page candidates. No current end-to-end claim recovery is measured.",
+      "proposed_rule": "After programme identity is established, create separate unresolved evidence obligations for admissions, country qualification, year-specific costs and scholarships; route candidate pages by obligation without treating a page-kind hint as final evidence.",
+      "integration_seam": "backend/app/adapters/discovery/live_discovery.py category routing and an evaluation-only oracle-URL experiment before any production scheduler",
+      "counterexample": "A general admissions page may contain valid programme-wide English rules; a hard programme-only category can discard it. One page can satisfy several obligations, and absence of a rule cannot prove a negative claim.",
+      "falsification": "Run a fresh bounded end-to-end capture and an oracle-URL replay. Reject if obligation routing does not raise correctly scoped claim recall under the same budget, or if it increases unsupported or wrong-year accepted claims.",
+      "evidence_artifacts": ["backend/evaluation/research/ACCEPTANCE.md", "backend/evaluation/research/SEARCH_PROBE.md", "backend/app/adapters/discovery/live_discovery.py"],
+      "policy_guard": "Official fetched excerpt plus programme, applicant and year scope remain mandatory; UNKNOWN remains a valid outcome.",
+      "validation_artifact": null
+    }
+  ]
+}

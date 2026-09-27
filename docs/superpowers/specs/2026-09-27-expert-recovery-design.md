@@ -7,7 +7,7 @@ Use an expert AI to diagnose where the existing research pipeline loses official
 ## Boundaries
 
 - Evaluation tooling only under `backend/evaluation/research/expert/`; no production discovery, claim, or eligibility behavior changes in this slice.
-- The certified ten-case corpus supplies public task requests and later adjudication. Preparation exports only case identity, institution, domain, and request. It never exports gold URLs, labels, values, excerpts, review notes, or programme evidence.
+- The certified ten-case corpus supplies public task requests and later adjudication. Preparation copies only case identity, institution, domain, and request from it; baseline observations are copied from the independent capture. No ground-truth URL, label, value, excerpt, review note, or programme evidence is copied from the corpus. A URL independently produced by the baseline may coincidentally match a gold URL.
 - The expert's executable workspace must contain the exported pack and curated algorithm context, but not the repository's gold corpus. A prompt prohibition alone is insufficient isolation.
 - Official pages must be acquired under the same robots, egress, privacy, and fetch rules as the pipeline for an action to count as transferable. Any action using a different tool is recorded as `outside_policy` and cannot promote a rule.
 - Preserve failed actions as well as successful ones. Log actions and observations, not hidden model reasoning or a retrospective story.
@@ -17,7 +17,7 @@ Use an expert AI to diagnose where the existing research pipeline loses official
 
 1. `prepare` creates a blinded task pack from an explicit allowlist and records dataset/capture hashes and baseline observations. The pack excludes ground truth and scores.
 2. An expert starts from the algorithm's recorded state and appends a structured trace: pre-action observation, action/tool, result, URL, budget, failure stage, and proposed evidence.
-3. `validate` rejects missing provenance, post-hoc actions without observations, contradictory timestamps, leaked gold fields, and unreviewed claims represented as verified.
+3. `validate` rejects missing provenance, post-hoc actions without observations, contradictory timestamps, expanded same-policy budget, unknown fields, and unreviewed claims represented as verified. Content leakage inside free text still requires an independent controller and workspace isolation.
 4. A reviewer compares each proposal with the sealed corpus and current official source. The outcome is recorded separately; the expert never edits the benchmark.
 5. Hypotheses link to trace steps and distinguish `observed`, `candidate`, `tested`, `rejected`, and `promoted`. Promotion needs a replayable implementation, a paired baseline, and unseen cases with no precision or scope regression.
 

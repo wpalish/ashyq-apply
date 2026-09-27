@@ -22,11 +22,11 @@
 
 **Interfaces:** `build_packet(dataset: dict, capture: dict, case_ids: Sequence[str]) -> dict`; `validate_trace(trace: dict, packet: dict) -> ExpertTrace`.
 
-- [ ] Test that a packet for KAIST includes its request and baseline observations, but none of its signed URLs, values, excerpts, or label keys.
-- [ ] Implement explicit allowlist serialization and SHA-256 provenance. Reject unknown case IDs.
-- [ ] Test that each trace action has a prior observation, source/tool, timestamp, outcome, budget and stage; proposals cannot self-declare human verification.
-- [ ] Implement strict Pydantic models and the `prepare`/`validate` CLI commands. Test with a synthetic complete trace.
-- [ ] Document exact run commands, artifact locations, and the isolation boundary.
+- [x] Test that a packet for KAIST includes its request and baseline observations, but copies no signed URL, value, excerpt, or label key from the gold case. A baseline-produced URL may coincidentally equal a signed URL.
+- [x] Implement explicit allowlist serialization and SHA-256 provenance. Reject unknown case IDs.
+- [x] Test that each trace action has a prior observation, source/tool, timestamp, outcome, budget and stage; proposals cannot self-declare human verification.
+- [x] Implement strict Pydantic models and the `prepare`/`validate` CLI commands. Test with a synthetic complete trace.
+- [x] Document exact run commands, artifact locations, and the isolation boundary.
 
 ## Task 2 — First-failure analysis and hypothesis registry
 
@@ -34,18 +34,18 @@
 
 **Interfaces:** `diagnose(dataset, capture, probe) -> list[FailureRecord]`; `validate_hypotheses(hypotheses, failure_records) -> None`.
 
-- [ ] Test three failure shapes against the committed capture and probe: absent from old candidate set, present but below a specified fetch budget, and a top candidate whose identity is unproved.
-- [ ] Implement stage classification using only measured fields. Emit `unmeasured` when the capture lacks an observation; never infer a fetch from a candidate rank.
-- [ ] Record KAIST, Toronto and Aalto hypotheses with source artifact, expected gain, guard, counterexample, and falsification test. Mark them `candidate`, not `tested`.
-- [ ] Run deterministic offline diagnosis and compare its output to the curated registry.
+- [x] Test the three pilot failure shapes against the committed capture and probe: absence in the old queue, low position in the later probe, and unproved top identity.
+- [x] Implement stage classification using only measured fields. Emit `unmeasured` when the capture lacks a rank list; never infer a fetch from a candidate rank.
+- [x] Record KAIST, Toronto and Aalto hypotheses with source artifact, expected gain, guard, counterexample, and falsification test. Mark them `candidate`, not `tested`.
+- [x] Run deterministic offline diagnosis and compare its output to the curated registry.
 
 ## Task 3 — Adversarial review and downstream handoff
 
 **Files:** `backend/evaluation/research/expert/HANDOFF_TO_RUNNER.md`, `docs/process/HANDOFF.md`, this plan.
 
-- [ ] Review packet construction for gold leakage and trace validation for fabricated evidence.
-- [ ] Review each hypothesis against counterexamples: unavailable page, wrong campus, wrong intake, provider drift, and budget expansion.
-- [ ] Write copy-ready commands, artifact contract, owner boundaries, stop conditions, and acceptance gates for the separate run agent.
+- [x] Review packet construction for gold leakage and trace validation for fabricated evidence.
+- [x] Review each hypothesis against counterexamples: unavailable page, wrong campus, wrong intake, provider drift, and budget expansion.
+- [x] Write copy-ready commands, artifact contract, owner boundaries, stop conditions, and acceptance gates for the separate run agent.
 - [ ] Run focused pytest, Ruff, mypy and repository gates appropriate to the changed evaluation code; record actual outcomes.
 - [ ] Commit and push the branch; open a PR with the real verification record, and leave a precise next step in the relay.
 
