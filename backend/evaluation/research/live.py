@@ -156,14 +156,20 @@ async def capture_one(
     )
     originals = {cls: cls.search for cls in provider_classes}
 
-    async def counted_search(provider, *args, **kwargs):
+    def counted_for(cls):
+        async def counted(provider, *args, **kwargs):
+            return await counted_search(originals[cls], provider, *args, **kwargs)
+
+        return counted
+
+    async def counted_search(original_search, provider, *args, **kwargs):
         # Each search call is counted and timed into this case's own log: a
         # case that runs out of wall clock after two fetches spent the time
         # somewhere, and search is the first place to look.
         observation.telemetry.search_calls = (observation.telemetry.search_calls or 0) + 1
         began = time.monotonic()
         try:
-            return await originals[type(provider)](provider, *args, **kwargs)
+            return await original_search(provider, *args, **kwargs)
         except Exception as exc:
             print(f"search failed after {time.monotonic() - began:.1f}s: {type(exc).__name__}")
             raise
@@ -282,10 +288,10 @@ async def capture_one(
     with (
         patch.object(canary, "CanaryRunner", ObservedRunner),
         patch.object(fetching, "_pinned_request", counted_request),
-        patch.object(ExaSearchProvider, "search", counted_search),
-        patch.object(TavilySearchProvider, "search", counted_search),
-        patch.object(BraveSearchProvider, "search", counted_search),
-        patch.object(SerperSearchProvider, "search", counted_search),
+        patch.object(ExaSearchProvider, "search", counted_for(ExaSearchProvider)),
+        patch.object(TavilySearchProvider, "search", counted_for(TavilySearchProvider)),
+        patch.object(BraveSearchProvider, "search", counted_for(BraveSearchProvider)),
+        patch.object(SerperSearchProvider, "search", counted_for(SerperSearchProvider)),
         patch.object(LiveDiscoveryAdapter, "_confirm_programs", observed_confirm),
     ):
         try:
