@@ -19,6 +19,7 @@ look identical in a metric.
 
 from __future__ import annotations
 
+import re
 from collections.abc import Sequence
 from dataclasses import dataclass
 from urllib.parse import urlparse
@@ -82,6 +83,25 @@ class PrefilterOutcome:
         return counts
 
 
+#: Experiment ER-06: hosts and paths that hold archives, mirrors, research
+#: output or journals, not programmes. The 2026-09-27 captures chose
+#: ftp.kaist.ac.kr (a CTAN mirror PDF), pure.kaist.ac.kr (a clipping),
+#: an.kaist.ac.kr/courses/2006 and held-out journal articles as
+#: programme pages.
+_ARCHIVE_HOST_LABEL = re.compile(
+    r"^(ftp|mirror|mirrors|pure|research|repository|repozitorij|eprints|dspace|scholar"
+    r"|journal|journals|ojs|archive|arxiv)$"
+)
+_ARCHIVE_PATH = re.compile(r"/(ctan|pub/mirror|journal|article)s?/|/courses/(19|20)\d\d/", re.I)
+
+
+def is_archive_page(url: str) -> bool:
+    """A mirror, repository, journal or dated course archive: never a programme."""
+    parts = urlparse(url)
+    label = (parts.hostname or "").lower().removeprefix("www.").split(".", 1)[0]
+    return bool(_ARCHIVE_HOST_LABEL.match(label) or _ARCHIVE_PATH.search(parts.path or ""))
+
+
 def _is_pdf(url: str) -> bool:
     return (urlparse(url).path or "").lower().endswith(".pdf")
 
@@ -92,6 +112,7 @@ def prefilter(
     domain: str,
     degree: DegreeLevel,
     reject_irrelevant_kinds: bool = False,
+    reject_archive_hosts: bool = False,
 ) -> PrefilterOutcome:
     """Drop what is cheap to know is wrong, and say why for the rest.
 
@@ -128,6 +149,9 @@ def prefilter(
             rejected.append(RejectedCandidate(url, Rejection.OTHER_INSTITUTION))
             continue
         if is_excluded_path(url):
+            rejected.append(RejectedCandidate(url, Rejection.NOT_A_PROGRAMME_PAGE))
+            continue
+        if reject_archive_hosts and is_archive_page(url):
             rejected.append(RejectedCandidate(url, Rejection.NOT_A_PROGRAMME_PAGE))
             continue
         if reject_irrelevant_kinds and classify_url(url) is PageType.IRRELEVANT:
