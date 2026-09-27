@@ -1,0 +1,321 @@
+{
+  "$defs": {
+    "Action": {
+      "additionalProperties": false,
+      "properties": {
+        "step": {
+          "minimum": 1,
+          "title": "Step",
+          "type": "integer"
+        },
+        "at": {
+          "format": "date-time",
+          "title": "At",
+          "type": "string"
+        },
+        "observed_before": {
+          "minLength": 1,
+          "title": "Observed Before",
+          "type": "string"
+        },
+        "observed_from_step": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Observed From Step"
+        },
+        "tool": {
+          "enum": [
+            "search_provider",
+            "fetcher",
+            "browser",
+            "pdf_parser",
+            "internal_index",
+            "other"
+          ],
+          "title": "Tool",
+          "type": "string"
+        },
+        "action": {
+          "minLength": 1,
+          "title": "Action",
+          "type": "string"
+        },
+        "outcome_status": {
+          "enum": [
+            "success",
+            "failure",
+            "blocked"
+          ],
+          "title": "Outcome Status",
+          "type": "string"
+        },
+        "outcome": {
+          "minLength": 1,
+          "title": "Outcome",
+          "type": "string"
+        },
+        "stage": {
+          "enum": [
+            "access",
+            "candidate_generation",
+            "ranking",
+            "page_understanding",
+            "representation",
+            "extraction",
+            "identity_scope",
+            "schema",
+            "conflict_freshness"
+          ],
+          "title": "Stage",
+          "type": "string"
+        },
+        "policy_mode": {
+          "enum": [
+            "same_policy",
+            "outside_policy"
+          ],
+          "title": "Policy Mode",
+          "type": "string"
+        },
+        "url": {
+          "anyOf": [
+            {
+              "format": "uri",
+              "maxLength": 2083,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Url"
+        },
+        "raw_log_path": {
+          "minLength": 1,
+          "title": "Raw Log Path",
+          "type": "string"
+        },
+        "raw_log_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Raw Log Sha256",
+          "type": "string"
+        },
+        "elapsed_ms": {
+          "minimum": 0,
+          "title": "Elapsed Ms",
+          "type": "integer"
+        },
+        "fetcher_calls_cumulative": {
+          "minimum": 0,
+          "title": "Fetcher Calls Cumulative",
+          "type": "integer"
+        },
+        "elapsed_ms_cumulative": {
+          "minimum": 0,
+          "title": "Elapsed Ms Cumulative",
+          "type": "integer"
+        },
+        "cost_usd": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cost Usd"
+        }
+      },
+      "required": [
+        "step",
+        "at",
+        "observed_before",
+        "tool",
+        "action",
+        "outcome_status",
+        "outcome",
+        "stage",
+        "policy_mode",
+        "raw_log_path",
+        "raw_log_sha256",
+        "elapsed_ms",
+        "fetcher_calls_cumulative",
+        "elapsed_ms_cumulative"
+      ],
+      "title": "Action",
+      "type": "object"
+    },
+    "JsonValue": {},
+    "Proposal": {
+      "additionalProperties": false,
+      "properties": {
+        "claim_key": {
+          "minLength": 1,
+          "title": "Claim Key",
+          "type": "string"
+        },
+        "value": {
+          "$ref": "#/$defs/JsonValue"
+        },
+        "source_url": {
+          "format": "uri",
+          "maxLength": 2083,
+          "minLength": 1,
+          "title": "Source Url",
+          "type": "string"
+        },
+        "excerpt": {
+          "minLength": 1,
+          "title": "Excerpt",
+          "type": "string"
+        },
+        "accessed_on": {
+          "format": "date",
+          "title": "Accessed On",
+          "type": "string"
+        },
+        "scope": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": "Scope",
+          "type": "object"
+        },
+        "supporting_steps": {
+          "items": {
+            "type": "integer"
+          },
+          "minItems": 1,
+          "title": "Supporting Steps",
+          "type": "array"
+        },
+        "status": {
+          "const": "unreviewed",
+          "default": "unreviewed",
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "claim_key",
+        "value",
+        "source_url",
+        "excerpt",
+        "accessed_on",
+        "scope",
+        "supporting_steps"
+      ],
+      "title": "Proposal",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1",
+      "default": "1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "case_id": {
+      "minLength": 1,
+      "title": "Case Id",
+      "type": "string"
+    },
+    "packet_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Packet Sha256",
+      "type": "string"
+    },
+    "baseline_pipeline_sha": {
+      "minLength": 7,
+      "title": "Baseline Pipeline Sha",
+      "type": "string"
+    },
+    "max_fetcher_calls": {
+      "minimum": 1,
+      "title": "Max Fetcher Calls",
+      "type": "integer"
+    },
+    "max_elapsed_ms": {
+      "minimum": 1,
+      "title": "Max Elapsed Ms",
+      "type": "integer"
+    },
+    "initial_fetcher_calls": {
+      "minimum": 0,
+      "title": "Initial Fetcher Calls",
+      "type": "integer"
+    },
+    "initial_elapsed_ms": {
+      "minimum": 0,
+      "title": "Initial Elapsed Ms",
+      "type": "integer"
+    },
+    "started_at": {
+      "format": "date-time",
+      "title": "Started At",
+      "type": "string"
+    },
+    "ended_at": {
+      "format": "date-time",
+      "title": "Ended At",
+      "type": "string"
+    },
+    "actions": {
+      "items": {
+        "$ref": "#/$defs/Action"
+      },
+      "minItems": 1,
+      "title": "Actions",
+      "type": "array"
+    },
+    "proposals": {
+      "items": {
+        "$ref": "#/$defs/Proposal"
+      },
+      "title": "Proposals",
+      "type": "array"
+    },
+    "review_status": {
+      "const": "unreviewed",
+      "default": "unreviewed",
+      "title": "Review Status",
+      "type": "string"
+    }
+  },
+  "required": [
+    "case_id",
+    "packet_sha256",
+    "baseline_pipeline_sha",
+    "max_fetcher_calls",
+    "max_elapsed_ms",
+    "initial_fetcher_calls",
+    "initial_elapsed_ms",
+    "started_at",
+    "ended_at",
+    "actions"
+  ],
+  "title": "ExpertTrace",
+  "type": "object"
+}
