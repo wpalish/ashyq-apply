@@ -1396,6 +1396,15 @@ discovery still never opens that page (ER-05 finding). No hits on 103 repository
 real pages in the expert logs; "may change their major" and direct-entry sentences are tested negatives;
 golden demo unchanged. Next: give navigation evidence a discovery slot (the ER-05 root cause), then re-measure.
 
+### ER-07 paired test, 2026-09-27 (claude-opus-5)
+`NAVIGATION_SLOT` (8b68958, default off): the best navigation-hop candidate keeps one programme slot. Paired
+with the admission lexicon on in both arms (new `base_args` input). **Rejected**: claims equal in every pair on
+12 universities; KAIST's hop produced no candidate (cloud reads 7-9 pages instead of ~25), and elsewhere the
+slot often went to journal, research-portal or thesis pages. `runs.2026-09-27/er07.paired.txt`.
+State of the KAIST admission route: extraction works (oracle 9), discovery does not reach the page from the
+cloud. The remaining lever is access (self-hosted runner) — the owner has a setup prompt; until then the
+cloud runner's KAIST reads are too unstable to measure discovery changes there.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 

@@ -116,6 +116,25 @@
       ],
       "policy_guard": "Rejection only removes discovery candidates; no evidence rule is relaxed.",
       "validation_artifact": "backend/evaluation/research/expert/data/runs.2026-09-27/er06.paired.txt"
+    },
+    {
+      "id": "ER-07",
+      "status": "rejected",
+      "case_ids": [
+        "kaist",
+        "toronto"
+      ],
+      "observation": "ER-05 showed navigation-hop candidates never reach a programme slot, so KAIST's '학부 입학' page (where the new ADMISSION_ROUTE reader works: oracle 8 -> 9 facts) is never opened end to end. Tested 2026-09-27 (8b68958): claims equal in every pair on all 12 universities. KAIST produced no hop candidate at all (cloud runner read 7-9 pages instead of ~25), so the slot never applied there. Elsewhere the slot went to web.cs.utoronto.ca/bachelor-of-computer-science (plausible, no claims), iro.sabanciuniv.edu application requirements, but also to a Vilnius journal article, TUM research/Pure person pages and Tartu master-thesis pages. Rejected.",
+      "proposed_rule": "Keep one of the three programme-page slots for the best navigation-hop candidate; search fills the other two.",
+      "integration_seam": "backend/app/adapters/discovery/live_discovery.py NAVIGATION_SLOT (default False)",
+      "counterexample": "The best hop candidate is often a research, thesis or journal page; giving it a slot displaces a search result that may be the programme.",
+      "falsification": "ABBA paired captures on one runner, equal 60 calls/120 s, admission lexicon on in BOTH arms, 3 development + 9 held-out; reject if KAIST menu=40 is not read or claims do not rise, or if wrong-programme pages take the slot.",
+      "evidence_artifacts": [
+        "backend/evaluation/research/expert/data/runs.2026-09-27/kaist.trace.json",
+        "backend/evaluation/research/expert/data/runs.2026-09-27/er05.readdiff.txt"
+      ],
+      "policy_guard": "Reads via Fetcher only; slot changes discovery order, never evidence rules.",
+      "validation_artifact": "backend/evaluation/research/expert/data/runs.2026-09-27/er07.paired.txt"
     }
   ]
 }
