@@ -769,7 +769,82 @@ def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
                 ),
             )
 
+    _keep(found, extract_admission_route(text, builder))
     return found
+
+
+#: "Admitted without a declared major; the major is chosen later" (V2-30A
+#: ADMISSION_ROUTE). The KAIST blind trace of 2026-09-27 found it stated in
+#: Korean on a department page; nothing read it. Two shapes, both explicit:
+#: admission *without* a major, or a major chosen at a stated later point.
+#: "Students may change their major" is neither and must not match.
+_UNDECLARED_ADMISSION = re.compile(
+    r"(?:"
+    r"무학과로?\s*입학"
+    r"|전공\s*(?:선택|결정)\s*없이[^.。]{0,40}입학"
+    r"|admit\w*\s+(?:as\s+)?(?:an?\s+)?(?:undeclared|undecided)"
+    r"|admit\w*[^.]{0,40}\bwithout\s+(?:a\s+)?(?:declared\s+|chosen\s+)?major"
+    r"|(?:enter|enrol+|join)\w*[^.]{0,40}\bwithout\s+(?:a\s+)?(?:declared\s+)?major"
+    r")",
+    re.I,
+)
+_LATER_MAJOR_CHOICE = re.compile(
+    r"(?:"
+    r"\d\s*학기\s*(?:때|에|부터)?[^.。]{0,30}전공[^.。]{0,20}선택"
+    r"|(?:choose|select|declare)\w*\s+(?:a|their|your)\s+major\s+"
+    r"(?:at\s+the\s+end\s+of|after|in)\s+(?:the|their|your)\s+"
+    r"(?:first|second|1st|2nd)\s+(?:year|semester)"
+    r")",
+    re.I,
+)
+
+
+def extract_admission_route(text: str, builder: ClaimBuilder) -> Claim | None:
+    """Undergraduates admitted without a declared major, choosing one later.
+
+    One claim per page, quoted from the page's own sentence(s). The value is
+    the corpus vocabulary ``undeclared_then_major_selection``; anything less
+    explicit than admission-without-major or a dated later choice is left
+    UNKNOWN rather than guessed.
+    """
+    flat = for_matching(text)
+    admitted = _UNDECLARED_ADMISSION.search(flat)
+    later = _LATER_MAJOR_CHOICE.search(flat)
+    if admitted is None and later is None:
+        return None
+    first = admitted or later
+    assert first is not None
+    # Bounds on the original text, where a line break still separates a menu
+    # item from the sentence; offsets are identical to ``flat``'s.
+    start, end = _sentence_bounds(text, first.start(), first.end())
+    if admitted is not None and later is not None and later.start() >= end:
+        # The dated choice usually follows in the next sentence; quote both.
+        _, later_end = _sentence_bounds(text, later.start(), later.end())
+        if later_end - start <= 400:
+            end = later_end
+    excerpt = flat[start:end].strip()
+    return builder.add(
+        ClaimType.ADMISSION_ROUTE,
+        "undeclared_then_major_selection",
+        excerpt,
+        confidence=0.75 if admitted is not None else 0.65,
+    )
+
+
+_SENTENCE_END = re.compile(r"[.。!?]|\n|\s{2,}")
+
+
+def _sentence_bounds(text: str, start: int, end: int, limit: int = 200) -> tuple[int, int]:
+    """The sentence around ``start:end``: back to the previous full stop or
+    blank run, forward to the next, never more than ``limit`` either way. A
+    page with no punctuation between its menu and its text (KAIST) would
+    otherwise quote the whole menu."""
+    lo = max(0, start - limit)
+    before = list(_SENTENCE_END.finditer(text, lo, start))
+    s = before[-1].end() if before else lo
+    after = _SENTENCE_END.search(text, end, min(len(text), end + limit))
+    e = after.end() if after else min(len(text), end + limit)
+    return s, e
 
 
 #: A tuition under this amount is a misread window, never a real figure: the
