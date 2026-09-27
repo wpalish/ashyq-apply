@@ -46,8 +46,8 @@
 - [x] Review packet construction for gold leakage and trace validation for fabricated evidence.
 - [x] Review each hypothesis against counterexamples: unavailable page, wrong campus, wrong intake, provider drift, and budget expansion.
 - [x] Write copy-ready commands, artifact contract, owner boundaries, stop conditions, and acceptance gates for the separate run agent.
-- [ ] Run focused pytest, Ruff, mypy and repository gates appropriate to the changed evaluation code; record actual outcomes.
-- [ ] Commit and push the branch; open a PR with the real verification record, and leave a precise next step in the relay.
+- [x] Run focused pytest, Ruff, mypy and repository gates appropriate to the changed evaluation code; record actual outcomes.
+- [x] Commit and push the branch; open a PR with the real verification record, and leave a precise next step in the relay.
 
 ## Completion check
 
