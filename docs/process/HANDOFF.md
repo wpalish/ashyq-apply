@@ -1405,6 +1405,17 @@ State of the KAIST admission route: extraction works (oracle 9), discovery does 
 cloud. The remaining lever is access (self-hosted runner) — the owner has a setup prompt; until then the
 cloud runner's KAIST reads are too unstable to measure discovery changes there.
 
+### INTAKE_TERM reader + full benchmark, 2026-09-27 (claude-opus-5, 6a741f0)
+`extract_intake_terms`: a start cue next to a term ("beginning their studies in September 2027",
+"Program start Fall 2027", "the January 2028 intake"); deadline/graduation/fee sentences excluded; one claim
+per distinct term. Golden demo re-captured, proven additive (0 removed / 408 added, all inside 12 new
+intake_term claims; proof beside GOLDEN_DEMO_SHA256).
+Full 10-university benchmark (run 36359063164, cloud): claim_recall **9/62** (= best, run 78), precision
+**12/13** (run 78: 10/11); wrong-scope 1/13 is the known Groningen deadline population (EU/EEA vs non-EU).
+Oracle: `toronto intake` now **recovered**; KAIST admission_route was fetch_failed this time (runner network),
+so extraction capability is 10 certified facts (8 before #25) while one run shows 9. Live recall does not
+move because discovery does not reach web.cs.toronto.edu or KAIST menu=40 from the cloud.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
