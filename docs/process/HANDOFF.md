@@ -1328,6 +1328,41 @@ Not bound (ambiguous or nothing to bind to), for the owner:
 - HKU entrance scholarship: the award name on node/891 is unknown.
 - NTU Nanyang essay/referee: the JS page, so which rule names would fire cannot be verified.
 
+### Expert recovery run, 2026-09-27 (claude-opus-5; follows PR #21)
+
+What ran (all live reads on GitHub runners via `benchmark-capture.yml` modes `expert_baseline` /
+`expert_actions` / `expert_paired`; the agent container cannot run Fetcher):
+- Fresh bounded baseline at ff23db0, Serper, 60 Fetcher calls / 120 s, browser off: KAIST, Toronto, Aalto.
+  Blinded packets by `prepare`. No scoring in that mode.
+- Blind experts: tool-less subagents given only the packet + ALGORITHM_CONTEXT.md; transcripts show only
+  hand-back calls (3/3/5). Every action executed by `evaluation/research/expert/controller.py`, one raw log
+  per call hashed on the runner, one cumulative budget starting with a replay of the baseline path.
+- Traces (committed in `backend/evaluation/research/expert/data/runs.2026-09-27/`) validate with
+  `validate --logs-dir ../artifacts/expert-recovery/logs` (logs ignored, kept locally): toronto 2 actions,
+  aalto 2, kaist 4; all same_policy, none over budget.
+
+Adjudication (after traces were fixed; `runs.2026-09-27/adjudication.json`):
+- KAIST: 1 signed label recovered — programme.admission_route (cs.kaist.ac.kr/content?menu=40) at 13/60 calls.
+  Loss point: candidate generation (the '학부 입학' link was never opened; slots went to ftp/pure/an archives).
+  Also: gold page menu=188 was read by the baseline and produced no claim.
+- Toronto: 6 verbatim official UTSC facts, 0 signed labels — the label is St. George, the request names no
+  campus (ER-02). The expert's "tuition" is a core-fees bundle: would be an unsupported tuition claim.
+- Aalto: correct abstention; www.aalto.fi robots.txt times out from runners (3/3) → whole host disallowed.
+- UNKNOWN: all of www.aalto.fi and admission.kaist.ac.kr (KAIST scholarships); Toronto St. George facts.
+
+Rule experiments:
+- ER-04 (refused host gets no search slot, `SKIP_REFUSED_SEARCH_HOSTS`, default off): ABBA paired on one
+  runner, 3 dev + 9 held-out registry universities (nu, metu, sabanci, charles, masaryk, tum, tartu,
+  polimi, vilnius). Dev: 0 claims both arms; "on" filled freed slots with a personal page and course notes.
+  Held-out: never triggered; arm differences are within off-vs-off drift (Polimi off 4 → 0 verified).
+  **Rejected.** `runs.2026-09-27/er04.paired.txt`. Switch stays default off.
+- ER-05 (navigation anchor lexicon), ER-06 (archive/journal hosts are not programme pages): candidates
+  from the KAIST trace and held-out captures, not yet tested. ER-01/02/03 unchanged status, notes added.
+
+Negative observations: KAIST replay on another runner lost every robots.txt to ConnectTimeout; the
+harness counted search_calls=0 under Serper (fixed ae31935); NU/METU/Masaryk exhaust 120 s before any
+programme page. Next: ER-06 then ER-05, one at a time, same ABBA protocol.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 

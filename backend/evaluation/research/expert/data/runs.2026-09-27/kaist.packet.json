@@ -1,0 +1,48 @@
+{
+  "schema_version": "1",
+  "dataset_version": "2026-09-23.reviewed",
+  "dataset_sha256": "d45d26fa10a1bd60271c63225c1ff453109d8cb6781782867c0d782ee63bedd0",
+  "capture_sha256": "904b704c6b96dce5b5c33437264ef863919893bc8109c876cf41df6b47c14edf",
+  "baseline_pipeline_sha": "ff23db09a2d506af68df2172e6ae7bcb5a93166a",
+  "baseline_captured_at": "20260927T165927Z",
+  "baseline_budget": {
+    "max_fetcher_calls": 60,
+    "max_elapsed_ms": 120000,
+    "browser_enabled": false
+  },
+  "cases": [
+    {
+      "case_id": "kaist",
+      "university": "KAIST",
+      "domain": "kaist.ac.kr",
+      "request": {
+        "university": "KAIST",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "baseline": {
+        "ranked_urls": [
+          "https://cs.kaist.ac.kr/content?menu=318"
+        ],
+        "programme_urls": [
+          "https://ftp.kaist.ac.kr/ctan/macros/latex/contrib/bangorcsthesis/bangorcsthesis.pdf",
+          "https://pure.kaist.ac.kr/en/clippings/1200-free-computer-science-courses-from-the-worlds-top-universiti",
+          "https://an.kaist.ac.kr/courses/2006/cs492"
+        ],
+        "prediction_count": 0,
+        "error": null,
+        "telemetry": {
+          "http_fetches": 27,
+          "pdf_fetches": 1,
+          "browser_fetches": 0,
+          "latency_seconds": 57.375840370000006
+        }
+      }
+    }
+  ]
+}

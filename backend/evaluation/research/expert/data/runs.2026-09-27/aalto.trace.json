@@ -1,0 +1,52 @@
+{
+ "schema_version": "1",
+ "case_id": "aalto",
+ "packet_sha256": "51ee5bfc1596389383f242383bc63a9a6b7f1f58255d50edcaac79c3f368b065",
+ "baseline_pipeline_sha": "ff23db09a2d506af68df2172e6ae7bcb5a93166a",
+ "max_fetcher_calls": 60,
+ "max_elapsed_ms": 120000,
+ "initial_fetcher_calls": 1,
+ "initial_elapsed_ms": 10225,
+ "started_at": "2026-09-27T17:01:57.970693+00:00",
+ "ended_at": "2026-09-27T17:09:20.930913+00:00",
+ "actions": [
+  {
+   "step": 1,
+   "at": "2026-09-27T17:04:53.003451+00:00",
+   "observed_before": "The replay's only Fetcher call, r1 for https://www.aalto.fi/robots.txt, ended in a ReadTimeout after 10225 ms. The pipeline then treated the whole site as disallowed, so every www.aalto.fi read was refused and the three programme_urls found by discovery (including /en/study-at-aalto/study-computer-science) were never opened.",
+   "observed_from_step": null,
+   "tool": "fetcher",
+   "action": "Retry robots.txt once, because a single timeout is most likely a transient failure and not a policy decision; if it comes back readable, the whole site opens up and the pipeline can go on to the bachelor-level computer science programme page.",
+   "outcome_status": "blocked",
+   "outcome": "robots_disallowed status=None final_url=https://www.aalto.fi/robots.txt error=robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed",
+   "stage": "access",
+   "policy_mode": "same_policy",
+   "url": "https://www.aalto.fi/robots.txt",
+   "raw_log_path": "aalto-002.json",
+   "raw_log_sha256": "0da39adac551bc1926f8ffd1dc0962d78ee823f261a0730a3799f3eee85c74b1",
+   "elapsed_ms": 10253,
+   "fetcher_calls_cumulative": 2,
+   "elapsed_ms_cumulative": 20478
+  },
+  {
+   "step": 2,
+   "at": "2026-09-27T17:09:19.803913+00:00",
+   "observed_before": "Step 1 was a new, independent robots.txt request and it timed out again (ReadTimeout, 10253 ms). That is two timeouts in a row, so the host www.aalto.fi is consistently unreachable for robots.txt, and under the same policy nothing on it can be read. A further retry would only spend about 10 s of the time budget.",
+   "observed_from_step": 1,
+   "tool": "search_provider",
+   "action": "Query the search provider, which costs no Fetcher calls, to find official Aalto pages or other official hosts outside www.aalto.fi (other aalto.fi subdomains, or Finland's national admissions service Opintopolku at studyinfo.fi) for the bachelor's computer science programme with a fall 2027 intake; each such host has its own robots.txt that can be checked.",
+   "outcome_status": "success",
+   "outcome": "10 results",
+   "stage": "access",
+   "policy_mode": "same_policy",
+   "url": null,
+   "raw_log_path": "aalto-003.json",
+   "raw_log_sha256": "b2cb19670467234d5943d1173ccd158676cacede6b236fb90691e5f4d13272cd",
+   "elapsed_ms": 1127,
+   "fetcher_calls_cumulative": 2,
+   "elapsed_ms_cumulative": 21605
+  }
+ ],
+ "proposals": [],
+ "review_status": "unreviewed"
+}

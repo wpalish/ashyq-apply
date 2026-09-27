@@ -1,0 +1,160 @@
+{
+ "schema_version": "1",
+ "case_id": "toronto",
+ "packet_sha256": "d651e87a24a1930a7a64b7e7689302a46785c0434acdfe5dd3a7b9b1fa35ca9b",
+ "baseline_pipeline_sha": "ff23db09a2d506af68df2172e6ae7bcb5a93166a",
+ "max_fetcher_calls": 60,
+ "max_elapsed_ms": 120000,
+ "initial_fetcher_calls": 9,
+ "initial_elapsed_ms": 16647,
+ "started_at": "2026-09-27T17:01:57.805670+00:00",
+ "ended_at": "2026-09-27T17:06:24.306903+00:00",
+ "actions": [
+  {
+   "step": 1,
+   "at": "2026-09-27T17:04:08.544374+00:00",
+   "observed_before": "Replay steps r1-r9 all returned HTTP 403 on both www.utoronto.ca and future.utoronto.ca, including robots.txt. That looks like a host-level WAF or user-agent block, not missing pages, so the sitemap and navigation paths cannot recover the programme.",
+   "observed_from_step": null,
+   "tool": "search_provider",
+   "action": "Use the search seam, which costs no Fetcher calls, to find official computer science undergraduate programme and admissions pages on other utoronto.ca subdomains (e.g. artsci.calendar, web.cs.toronto.edu is off-domain) that may not sit behind the same 403 block.",
+   "outcome_status": "success",
+   "outcome": "10 results",
+   "stage": "access",
+   "policy_mode": "same_policy",
+   "url": null,
+   "raw_log_path": "toronto-010.json",
+   "raw_log_sha256": "dff53b57f977fa373e960776e476eaa05c0aaa44db492c01c813b67cf39a608a",
+   "elapsed_ms": 1088,
+   "fetcher_calls_cumulative": 9,
+   "elapsed_ms_cumulative": 17735
+  },
+  {
+   "step": 2,
+   "at": "2026-09-27T17:06:23.698903+00:00",
+   "observed_before": "The step 1 search returned https://www.utsc.utoronto.ca/admissions/programs/computer-science. Its snippet names a Bachelor of Computer Science (BCS) starting Fall 2027 with OSSD requirements. It sits on the UTSC subdomain, which the 403-blocked www and future hosts may not cover. Snippets are hints only.",
+   "observed_from_step": 1,
+   "tool": "fetcher",
+   "action": "Open the UTSC computer science admissions page through the Fetcher. This tests whether the utsc subdomain is reachable, and if it is, reads the exact programme, degree, intake and requirements.",
+   "outcome_status": "success",
+   "outcome": "ok status=200 final_url=https://www.utsc.utoronto.ca/admissions/programs/computer-science error=",
+   "stage": "access",
+   "policy_mode": "same_policy",
+   "url": "https://www.utsc.utoronto.ca/admissions/programs/computer-science",
+   "raw_log_path": "toronto-011.json",
+   "raw_log_sha256": "0f03633f294708a45d7f53a196225b5ed20329f77fd7530a2f2239648cb14998",
+   "elapsed_ms": 608,
+   "fetcher_calls_cumulative": 10,
+   "elapsed_ms_cumulative": 18343
+  }
+ ],
+ "proposals": [
+  {
+   "claim_key": "programme.exists",
+   "value": "Bachelor of Computer Science (BCS), U of T Scarborough, Fall 2027",
+   "source_url": "https://www.utsc.utoronto.ca/admissions/programs/computer-science",
+   "excerpt": "Degree offered Bachelor of Computer Science (BCS) Program start Fall 2027 Program length 4 years",
+   "accessed_on": "2026-09-27",
+   "scope": {
+    "programme": "Computer Science (UTSC, OUAC TXC)",
+    "degree": "bachelor",
+    "intake": "fall 2027",
+    "population": null,
+    "academic_year": "2027-28"
+   },
+   "supporting_steps": [
+    1,
+    2
+   ]
+  },
+  {
+   "claim_key": "deadline.application",
+   "value": "2027-01-15",
+   "source_url": "https://www.utsc.utoronto.ca/admissions/programs/computer-science",
+   "excerpt": "International student deadline Computer Science Fall 2027 November 7, 2026 January 15, 2027 February 1, 2027",
+   "accessed_on": "2026-09-27",
+   "scope": {
+    "programme": "Computer Science (UTSC)",
+    "degree": "bachelor",
+    "intake": "fall 2027",
+    "population": "international (domestic table shows same dates)",
+    "academic_year": "2027-28"
+   },
+   "supporting_steps": [
+    2
+   ]
+  },
+  {
+   "claim_key": "deadline.documents",
+   "value": "2027-02-01",
+   "source_url": "https://www.utsc.utoronto.ca/admissions/programs/computer-science",
+   "excerpt": "Computer Science Fall 2027 November 7, 2026 January 15, 2027 February 1, 2027",
+   "accessed_on": "2026-09-27",
+   "scope": {
+    "programme": "Computer Science (UTSC)",
+    "degree": "bachelor",
+    "intake": "fall 2027",
+    "population": "domestic and international",
+    "academic_year": "2027-28"
+   },
+   "supporting_steps": [
+    2
+   ]
+  },
+  {
+   "claim_key": "requirements.prerequisites",
+   "value": [
+    "English",
+    "Advanced Functions",
+    "Calculus and Vectors"
+   ],
+   "source_url": "https://www.utsc.utoronto.ca/admissions/programs/computer-science",
+   "excerpt": "Required Grade 12 courses English Advanced Functions Calculus and Vectors",
+   "accessed_on": "2026-09-27",
+   "scope": {
+    "programme": "Computer Science (UTSC)",
+    "degree": "bachelor",
+    "intake": "fall 2027",
+    "population": "Ontario/Canadian/international high school applicants; direct from high school only",
+    "academic_year": "2027-28"
+   },
+   "supporting_steps": [
+    2
+   ]
+  },
+  {
+   "claim_key": "requirements.grades.approximate",
+   "value": "Minimum 70% English; low 90s overall (high 90s co-op)",
+   "source_url": "https://www.utsc.utoronto.ca/admissions/programs/computer-science",
+   "excerpt": "Minimum 70% English High 90s overall (co-op) Low 90s overall",
+   "accessed_on": "2026-09-27",
+   "scope": {
+    "programme": "Computer Science (UTSC)",
+    "degree": "bachelor",
+    "intake": "fall 2027",
+    "population": "high school applicants",
+    "academic_year": "2027-28"
+   },
+   "supporting_steps": [
+    2
+   ]
+  },
+  {
+   "claim_key": "tuition.amount",
+   "value": "CAD 67,700-68,700 first-year core fees (international)",
+   "source_url": "https://www.utsc.utoronto.ca/admissions/programs/computer-science",
+   "excerpt": "International Students Core fees Tuition, school supplies, student fees, health insurance $67,700 to $68,700",
+   "accessed_on": "2026-09-27",
+   "scope": {
+    "programme": "Computer Science (UTSC)",
+    "degree": "bachelor",
+    "intake": null,
+    "population": "international",
+    "academic_year": null
+   },
+   "supporting_steps": [
+    2
+   ]
+  }
+ ],
+ "review_status": "unreviewed"
+}

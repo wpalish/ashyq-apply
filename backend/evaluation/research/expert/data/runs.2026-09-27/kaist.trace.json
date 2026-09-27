@@ -1,0 +1,106 @@
+{
+ "schema_version": "1",
+ "case_id": "kaist",
+ "packet_sha256": "8be3cb0beaebd76e28560e4ce9a489232b9206e8ee065a396e8aaebdce5d56ed",
+ "baseline_pipeline_sha": "ff23db09a2d506af68df2172e6ae7bcb5a93166a",
+ "max_fetcher_calls": 60,
+ "max_elapsed_ms": 120000,
+ "initial_fetcher_calls": 12,
+ "initial_elapsed_ms": 29502,
+ "started_at": "2026-09-27T17:03:13.030717+00:00",
+ "ended_at": "2026-09-27T17:16:10.759877+00:00",
+ "actions": [
+  {
+   "step": 1,
+   "at": "2026-09-27T17:07:28.646376+00:00",
+   "observed_before": "The replay's cs.kaist.ac.kr navigation union shows an explicit undergraduate-admission link, 학부 입학 <https://cs.kaist.ac.kr/content?menu=40>. The baseline never opened it: it chose off-domain PDFs and course pages as programme pages, and its admission.kaist.ac.kr attempt was blocked by robots.txt.",
+   "observed_from_step": null,
+   "tool": "fetcher",
+   "action": "Open the department's undergraduate-admission page. Its navigation label names the requested degree level and admissions, and it may link to the official KAIST undergraduate admission route that robots.txt allows.",
+   "outcome_status": "success",
+   "outcome": "ok status=200 final_url=https://cs.kaist.ac.kr/content?menu=40 error=",
+   "stage": "candidate_generation",
+   "policy_mode": "same_policy",
+   "url": "https://cs.kaist.ac.kr/content?menu=40",
+   "raw_log_path": "kaist-replay2-013.json",
+   "raw_log_sha256": "3631f15537dad45e09f14efa51614f89c5485b7008f0e87b496a21b050d7add2",
+   "elapsed_ms": 3389,
+   "fetcher_calls_cumulative": 13,
+   "elapsed_ms_cumulative": 32891
+  },
+  {
+   "step": 2,
+   "at": "2026-09-27T17:09:56.808085+00:00",
+   "observed_before": "Step 1's page says KAIST undergraduates are admitted without a declared major (무학과) and choose a major such as computing in their second semester. It sends applicants to http://admission.kaist.ac.kr/undergraduate/. The baseline was refused twice as robots_disallowed on admission.kaist.ac.kr/intl-undergraduate/..., so I need to know which paths on that host are allowed before spending calls there.",
+   "observed_from_step": 1,
+   "tool": "fetcher",
+   "action": "Fetch admission.kaist.ac.kr/robots.txt to see whether /undergraduate/ (Korean) or any international-undergraduate path is allowed, rather than hitting another refusal.",
+   "outcome_status": "blocked",
+   "outcome": "robots_disallowed status=None final_url=https://admission.kaist.ac.kr/robots.txt error=robots.txt unreachable (ConnectTimeout); RFC 9309 treats the whole site as disallowed",
+   "stage": "access",
+   "policy_mode": "same_policy",
+   "url": "https://admission.kaist.ac.kr/robots.txt",
+   "raw_log_path": "kaist-replay2-014.json",
+   "raw_log_sha256": "90d3213cc36e3c10840c1347a6ae94dd5d0898e355fc597ad314dd40c2afdcf8",
+   "elapsed_ms": 11530,
+   "fetcher_calls_cumulative": 14,
+   "elapsed_ms_cumulative": 44421
+  },
+  {
+   "step": 3,
+   "at": "2026-09-27T17:11:48.537524+00:00",
+   "observed_before": "Step 2: admission.kaist.ac.kr/robots.txt timed out (ConnectTimeout), so under RFC 9309 the whole admissions host counts as disallowed and cannot be read. The official route has to come from another kaist.ac.kr host, such as www.kaist.ac.kr, whose robots.txt is 'Allow: /' (r1).",
+   "observed_from_step": 2,
+   "tool": "search_provider",
+   "action": "Run a domain-restricted search to find KAIST undergraduate admissions pages for fall 2027 hosted off admission.kaist.ac.kr, for example on www.kaist.ac.kr/en; this costs 0 Fetcher calls.",
+   "outcome_status": "success",
+   "outcome": "10 results",
+   "stage": "candidate_generation",
+   "policy_mode": "same_policy",
+   "url": null,
+   "raw_log_path": "kaist-replay2-015.json",
+   "raw_log_sha256": "f9c419e938342cddff9cf96aa6b23d8a05fb6a132287244b61131c18ed68f846",
+   "elapsed_ms": 1052,
+   "fetcher_calls_cumulative": 14,
+   "elapsed_ms_cumulative": 45473
+  },
+  {
+   "step": 4,
+   "at": "2026-09-27T17:16:08.007877+00:00",
+   "observed_before": "The step-3 search ranked https://www.kaist.ac.kr/en/html/admission/0201.html ('Admissions Information') first. It sits on www.kaist.ac.kr, whose robots.txt allows everything (r1), unlike the unreachable admission.kaist.ac.kr. The apply.kaist.ac.kr hits are login portals, which are not evidence.",
+   "observed_from_step": 3,
+   "tool": "fetcher",
+   "action": "Open the English admissions information page on www.kaist.ac.kr to look for undergraduate international admission details (the fall 2027 timeline and requirements) or links to readable official pages.",
+   "outcome_status": "success",
+   "outcome": "ok status=200 final_url=https://www.kaist.ac.kr/en/html/admission/0201.html error=",
+   "stage": "candidate_generation",
+   "policy_mode": "same_policy",
+   "url": "https://www.kaist.ac.kr/en/html/admission/0201.html",
+   "raw_log_path": "kaist-replay2-016.json",
+   "raw_log_sha256": "34db83eeb6e26a19cbbff676f5b3321ccb75a4937a401d0f89cc12d54c41b6e1",
+   "elapsed_ms": 2752,
+   "fetcher_calls_cumulative": 15,
+   "elapsed_ms_cumulative": 48225
+  }
+ ],
+ "proposals": [
+  {
+   "claim_key": "programme.admission_route",
+   "value": "KAIST undergraduates are admitted without a declared major; they select a major, including computing, in their 2nd semester; details are at the KAIST admissions office site",
+   "source_url": "https://cs.kaist.ac.kr/content?menu=40",
+   "excerpt": "KAIST 학부생은 전공선택 없이 무학과로 입학을 하고 있습니다. 무학과 입학 후 2학기 때 전산을 포함한 전공을 선택하고 있습니다.",
+   "accessed_on": "2026-09-27",
+   "scope": {
+    "programme": "School of Computing undergraduate major (computer science)",
+    "degree": "bachelor",
+    "intake": null,
+    "population": null,
+    "academic_year": null
+   },
+   "supporting_steps": [
+    1
+   ]
+  }
+ ],
+ "review_status": "unreviewed"
+}
