@@ -1,0 +1,41 @@
+{
+ "adjudicated_on": "2026-09-27",
+ "adjudicator": "run controller (claude-opus-5), after all three traces were validated with --logs-dir; not a human signoff",
+ "blinding": "Experts were tool-less subagents; their transcripts show only SubagentHandback calls (toronto 3, aalto 3, kaist 5). Filesystem isolation was not enforced by the sandbox; the transcript audit is the evidence that no file or web tool was used.",
+ "cases": {
+  "toronto": {
+   "earliest_loss": "access + ranking: future.utoronto.ca and www.utoronto.ca answered 403 to every read; search then offered future.utoronto.ca pages that had already refused and they took all three programme slots",
+   "gold_programme": "https://future.utoronto.ca/program/computer-science (St. George context; page lists Mississauga, Scarborough and St. George campuses - checked by WebFetch outside the pipeline, 2026-09-27)",
+   "proposals": [
+    {"claim_key": "programme.exists", "verbatim": true, "official": true, "decision": "correct for UTSC BCS; does NOT answer the signed label, which is St. George. Campus is unresolved by the request (ER-02)."},
+    {"claim_key": "deadline.application", "verbatim": true, "official": true, "decision": "correct for UTSC CS fall 2027 international; gold deadline is UNKNOWN; not transferable to St. George"},
+    {"claim_key": "deadline.documents", "verbatim": true, "official": true, "decision": "correct for UTSC; same campus caveat"},
+    {"claim_key": "requirements.prerequisites", "verbatim": true, "official": true, "decision": "correct for UTSC"},
+    {"claim_key": "requirements.grades.approximate", "verbatim": true, "official": true, "decision": "correct for UTSC; 'approximate' must stay a descriptive, not a threshold"},
+    {"claim_key": "tuition.amount", "verbatim": true, "official": true, "decision": "WRONG KIND: 'Core fees' bundle tuition, supplies, student fees and insurance; it is a first-year cost estimate, not tuition. Would be an unsupported tuition claim."}
+   ],
+   "signed_labels_recovered": 0
+  },
+  "aalto": {
+   "earliest_loss": "access: www.aalto.fi robots.txt ReadTimeout from GitHub-hosted runners (baseline, replay, independent retry: 3/3), so RFC 9309 disallows the whole host",
+   "gold_programme": "https://www.aalto.fi/en/study-options/computer-engineering-bachelor-of-science-and-master-of-science-technology - appeared as search result #4 in the expert's step 2 but cannot be read under policy",
+   "proposals": [],
+   "signed_labels_recovered": 0,
+   "note": "Correct abstention. No bypass is permitted."
+  },
+  "kaist": {
+   "earliest_loss": "candidate generation: the '학부 입학' navigation link on every cs.kaist.ac.kr page was never opened; three programme slots went to ftp/pure/an archive hosts. Also page_understanding: the gold programme page menu=188 WAS read (replay r7) and produced no claim.",
+   "proposals": [
+    {"claim_key": "programme.admission_route", "verbatim": true, "official": true, "decision": "MATCHES signed label programme.admission_route=undeclared_then_major_selection (same URL cs.kaist.ac.kr/content?menu=40; excerpt contains the signed excerpt)"}
+   ],
+   "signed_labels_recovered": 1,
+   "budget_at_recovery": {"fetcher_calls": 13, "elapsed_ms": 32891, "cap": [60, 120000], "policy_mode": "same_policy"},
+   "unknown": "All scholarship labels live on admission.kaist.ac.kr, whose robots.txt timed out from the runner (ConnectTimeout); they stay UNKNOWN under policy."
+  }
+ },
+ "negative_observations": [
+  "KAIST replay #1 (another runner) got ConnectTimeout on every KAIST robots.txt; replay #2 matched the baseline. Runner-network variance changes access outcomes between identical runs.",
+  "The baseline harness recorded search_calls=0 while Serper ran six queries per case (fixed in 632a348).",
+  "The controller ran KAIST step 4 at 632a348, whose Fetcher adds only a passive refused-host record; request behaviour is unchanged from the baseline ff23db0."
+ ]
+}

@@ -7,9 +7,13 @@ not say something came back silent instead of convenient.
 
 from __future__ import annotations
 
+import re
 from datetime import UTC, datetime
 
+import pytest
+
 from app.adapters.extraction import ClaimBuilder
+from app.adapters.page_classifier import QUALIFICATION_NAMES
 from app.adapters.scope_reader import read_scope
 from app.domain.claim_scope import ClaimScope, RequestedScope
 from app.domain.enums import ClaimStatus, ClaimType, SourceSpecificity
@@ -121,7 +125,10 @@ def test_a_deadline_date_is_not_an_intake() -> None:
     day number in front, makes them a term.
     """
     assert read_scope("Applications close on 15 January 2027.").intake is None
-    assert read_scope("Teaching starts in September 2026.").intake == "September 2026"
+    # A stated start in September–November is the fall intake (owner decision
+    # 2026-09-23); before it, this read "September 2026", which no corpus
+    # label ever used.
+    assert read_scope("Teaching starts in September 2026.").intake == "Fall 2026"
 
 
 def test_the_reversed_form_is_the_same_intake() -> None:
@@ -149,3 +156,153 @@ def test_a_year_beside_a_figure_is_not_the_page_s_year() -> None:
     assert read_scope("The award is worth CAD 89,000 per year for 2024/25.").academic_year is None
     assert read_scope("Fees for the academic year 2026/27.").academic_year == "2026/27"
     assert read_scope("Entry in 2026/27 follows these rules.").academic_year == "2026/27"
+
+
+def test_a_page_that_names_a_qualification_has_it_read_back() -> None:
+    """V2-30: the ninth scope question the phase guide asks, "this qualification?"."""
+    scope = read_scope("Applicants holding a Kazakhstan attestat are assessed individually.")
+    assert scope.qualification == "attestat"
+
+
+def test_a_page_that_names_no_qualification_stays_silent_about_it() -> None:
+    """Unknown equivalence remains unknown: silence is never a guessed diploma."""
+    assert read_scope("Applicants must submit a transcript.").qualification is None
+
+
+def test_naming_two_qualifications_is_not_naming_one() -> None:
+    """A credential page listing several is scoped to none of them."""
+    scope = read_scope("We accept the Abitur, the VWO diploma and A-levels.")
+    assert scope.qualification is None
+
+
+def test_a_negated_qualification_does_not_scope_the_page() -> None:
+    assert read_scope("This route is not open to holders of the Abitur.").qualification is None
+
+
+def test_a_bare_baccalaureate_is_not_read_as_the_ib() -> None:
+    """The French Baccalaureat and the IB are two qualifications, not one."""
+    assert read_scope("Applicants with a Baccalaureat may apply.").qualification is None
+    assert read_scope("Applicants with an IB diploma may apply.").qualification == "IB"
+
+
+#: One phrase per name in ``page_classifier.QUALIFICATION_NAMES``. ``baccalaur``
+#: is absent on purpose and has its own test: it names two qualifications.
+_VOCABULARY_SAMPLES = (
+    "Holders of the VWO diploma.",
+    "Holders of the Abitur.",
+    "Holders of the attestat.",
+    "Holders of A-levels.",
+    "Holders of the matura.",
+    "Candidates who sat the gaokao.",
+    "Holders of a CBSE certificate.",
+)
+
+
+@pytest.mark.parametrize("sentence", _VOCABULARY_SAMPLES)
+def test_the_reader_reads_every_qualification_the_classifier_knows(sentence: str) -> None:
+    """One vocabulary, not two: a second list here would drift from that one."""
+    assert re.search(QUALIFICATION_NAMES, sentence, re.IGNORECASE)
+    assert read_scope(sentence).qualification is not None
+
+
+def test_a_requested_qualification_the_page_is_silent_on_is_unknown() -> None:
+    """Non-compensatory, like every other dimension: silence never rounds to YES."""
+    scope = read_scope("Entry requirements for international applicants, Fall 2027 intake.")
+    requested = RequestedScope(
+        population="international", intake="Fall 2027", qualification="attestat"
+    )
+    assert scope.covers(requested) is Verdict.UNKNOWN
+    assert "qualification" in scope.gaps(requested)
+
+
+def test_a_page_written_for_another_qualification_does_not_answer_the_request() -> None:
+    scope = read_scope("Entry requirements for applicants with an IB diploma, Fall 2027 intake.")
+    requested = RequestedScope(intake="Fall 2027", qualification="attestat")
+    assert scope.covers(requested) is Verdict.NO
+    assert scope.contradictions(requested) == ("qualification",)
+
+
+def test_a_qualification_named_as_a_yardstick_is_not_the_page_s_scope() -> None:
+    """Groningen's demo page, in its own words.
+
+    "A diploma equivalent to the Dutch VWO" is a rule for everyone whose
+    diploma compares to the VWO, not a rule for VWO holders. Recording it as
+    the latter would be this pipeline inventing an equivalence.
+    """
+    compared = "Applicants present a secondary school diploma equivalent to the Dutch VWO."
+    assert read_scope(compared).qualification is None
+    assert read_scope("Entry requirements for holders of the Dutch VWO.").qualification == "VWO"
+
+
+def test_the_demo_corpus_states_no_qualification_of_its_own() -> None:
+    """The regression this dimension is most likely to grow.
+
+    Reading a qualification where a page merely compares to one would put a
+    scope on 11 demo claims that no page states — which is exactly what the
+    first version of this reader did, on Groningen's page, before the
+    comparison guard existed. The golden hash pins the whole dump; this pins
+    the reason, so a future change that reintroduces the fault fails with a
+    sentence rather than with a hash mismatch.
+    """
+    from pathlib import Path
+
+    from app.adapters.extraction import readable_text
+
+    corpus = Path(__file__).resolve().parent.parent / "app" / "corpus" / "pages"
+    stated: dict[str, str] = {}
+    for page in sorted(corpus.rglob("*.html")):
+        qualification = read_scope(readable_text(page.read_text(encoding="utf-8"))).qualification
+        if qualification is not None:
+            stated[str(page.relative_to(corpus))] = qualification
+
+    assert stated == {}, f"a demo page was read as scoped to a qualification: {stated}"
+
+
+class TestATitleNamesItsOwnDegree:
+    """Groningen's bachelor deadline stayed out of scope on degree: the title
+    says "Bachelor", but only a body phrase like "bachelor programme" counted."""
+
+    def test_a_bare_degree_word_in_the_title_is_the_page_naming_itself(self):
+        scope = read_scope(
+            "Admission requirements and deadlines.",
+            title="Computing Science | Bachelor | University of Groningen",
+        )
+        assert scope.degree == "bachelor"
+
+    def test_the_title_outranks_a_passing_mention_in_the_body(self):
+        scope = read_scope(
+            "Many graduates continue to a master programme.",
+            title="Computing Science | Bachelor | University of Groningen",
+        )
+        assert scope.degree == "bachelor"
+
+    def test_a_title_naming_two_degrees_leaves_the_body_to_decide(self):
+        scope = read_scope(
+            "Requirements for the bachelor programme.", title="Bachelor and Master programmes"
+        )
+        assert scope.degree == "bachelor"
+
+    def test_a_title_naming_none_changes_nothing(self):
+        assert read_scope("Bachelor and master requirements.", title="Admissions").degree is None
+
+
+class TestAStatedStartIsAnIntake:
+    """Owner decision 2026-09-23: a programme's own stated start in
+    September–November is a fall intake. A bare date never is."""
+
+    @pytest.mark.parametrize(
+        "text",
+        [
+            "The programme starts on 1 September 2027.",
+            "Start date: 2 September 2027",
+            "Start of studies: September 2027",
+        ],
+    )
+    def test_a_stated_autumn_start_is_fall(self, text):
+        assert read_scope(text).intake == "Fall 2027"
+
+    def test_a_deadline_date_is_still_never_an_intake(self):
+        assert read_scope("Applications close 15 January 2027.").intake is None
+
+    def test_a_start_outside_autumn_names_no_season(self):
+        assert read_scope("The programme starts on 1 February 2027.").intake is None

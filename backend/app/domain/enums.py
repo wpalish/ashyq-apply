@@ -57,11 +57,22 @@ class ConflictKind(StrEnum):
     """
 
     TRUE_CONFLICT = "true_conflict"
+    #: A programme page and a university-wide page publishing different values
+    #: are usually not contradicting: the phase guide's words are that a
+    #: general rule and a programme-specific rule may both be true. The
+    #: specific one is preferred for assessment; the broader one is kept.
+    MORE_SPECIFIC_SOURCE = "more_specific_source"
     DIFFERENT_POPULATION = "different_population"
     DIFFERENT_INTAKE = "different_intake"
     DIFFERENT_ACADEMIC_YEAR = "different_academic_year"
     DIFFERENT_RESIDENCY = "different_residency"
     DIFFERENT_DEGREE = "different_degree"
+    #: "The Abitur route requires X" and "the attestat route requires Y" are
+    #: two scopes, not a contradiction — the same distinction the other
+    #: DIFFERENT_ kinds make. Added 2026-09-22 by the owner's decision; until
+    #: then a qualification-scoped disagreement was stamped TRUE_CONFLICT and
+    #: neither value could support an answer.
+    DIFFERENT_QUALIFICATION = "different_qualification"
 
 
 # --- Provenance of a scraped fact ---------------------------------------
@@ -136,9 +147,34 @@ class ClaimType(StrEnum):
     CREDENTIAL_EVALUATION_REQUIRED = "credential_evaluation_required"
     APPLICATION_FEE = "application_fee"
     FEE_WAIVER_AVAILABLE = "fee_waiver_available"
+    #: The published conditions under which the English test is not required
+    #: at all. Decisive for an applicant taught in English — and, until now,
+    #: dropped entirely: only *fee* waivers were ever read.
+    ENGLISH_TEST_WAIVER = "english_test_waiver"
     ADMISSION_DEADLINE = "admission_deadline"
     INTAKE_OPEN = "intake_open"
     PROGRAM_EXISTS = "program_exists"
+    #: The term the programme starts, as the page states it ("September 1,
+    #: 2027" is a fall 2027 intake).
+    INTAKE_TERM = "intake_term"
+    #: The faculty or school that owns the programme.
+    PROGRAM_FACULTY = "program_faculty"
+    #: How a student enters the programme when that is not direct admission
+    #: to the major (KAIST: admitted undeclared, the major chosen later).
+    ADMISSION_ROUTE = "admission_route"
+    #: One rule for one named national credential: its level equivalence,
+    #: minimum grades, or whether an extra qualification is required. The
+    #: value names the credential and the field, so a rule for a Kazakh NIS
+    #: certificate never reads as a rule for every applicant.
+    CREDENTIAL_REQUIREMENT = "credential_requirement"
+    #: A named school subject is required ("Mathematics*").
+    SUBJECT_REQUIREMENT = "subject_requirement"
+    #: A minimum level in a language other than English, per stage (Vienna:
+    #: German A2 to apply, C1 to enrol).
+    OTHER_LANGUAGE_MINIMUM = "other_language_minimum"
+    #: A test score accepted as evidence of English, stated as such on the
+    #: page (NTU: SAT 1250, or IELTS per band) — not the admission minimum.
+    ENGLISH_EVIDENCE_MINIMUM = "english_evidence_minimum"
 
     SCHOLARSHIP_EXISTS = "scholarship_exists"
     SCHOLARSHIP_AMOUNT = "scholarship_amount"
@@ -152,8 +188,24 @@ class ClaimType(StrEnum):
     SCHOLARSHIP_RENEWAL_REQUIREMENT = "scholarship_renewal_requirement"
     SCHOLARSHIP_MIN_TEST_SCORE = "scholarship_min_test_score"
     SCHOLARSHIP_STACKABLE = "scholarship_stackable"
+    #: An admission offer must be held before the award can be applied for or
+    #: received. Practically decisive: it changes the order of an applicant's
+    #: year, and the phase guide lists it as its own decision.
+    SCHOLARSHIP_OFFER_REQUIRED = "scholarship_offer_required"
+    #: The award is decided on demonstrated financial need.
+    SCHOLARSHIP_NEED_BASED = "scholarship_need_based"
     SCHOLARSHIP_COUNT = "scholarship_count"
     SCHOLARSHIP_DURATION_YEARS = "scholarship_duration_years"
+    #: A stated living or maintenance allowance: amount, currency and period.
+    #: Separate from coverage, which is yes/no per category, because an
+    #: allowance is money an applicant can put into the gap arithmetic.
+    SCHOLARSHIP_LIVING_ALLOWANCE = "scholarship_living_allowance"
+    #: The award lasts for the programme's normal duration, when the page says
+    #: so in words rather than years ("for the normal duration of the course").
+    SCHOLARSHIP_DURATION = "scholarship_duration"
+    #: A service bond the award or the grant behind it imposes: years, what it
+    #: is tied to, and who it binds ("three-year bond", NTU's tuition grant).
+    SCHOLARSHIP_BOND = "scholarship_bond"
 
     TUITION = "tuition"
     MANDATORY_FEES = "mandatory_fees"
@@ -168,6 +220,9 @@ class ClaimType(StrEnum):
     REQUIRED_DOCUMENT = "required_document"
     ESSAY_PROMPT = "essay_prompt"
     RECOMMENDATION_REQUIREMENT = "recommendation_requirement"
+    #: Which form of a document applies depending on whether the applicant has
+    #: finished school (a transcript when completed, a course list when not).
+    DOCUMENT_BY_COMPLETION = "document_by_completion"
     POST_STUDY_WORK = "post_study_work"
     WORK_DURING_STUDY = "work_during_study"
     RANKING_POSITION = "ranking_position"
@@ -348,6 +403,9 @@ class FetchOutcome(StrEnum):
     REFUSED_PRIVACY = "refused_privacy"
     CACHED = "cached"
     ROBOTS_DISALLOWED = "robots_disallowed"
+    #: Allowed, but robots.txt asks for a longer pause between requests than
+    #: this fetcher will wait. Not a refusal: a slower reader may take it.
+    ROBOTS_CRAWL_DELAY = "robots_crawl_delay"
     HTTP_ERROR = "http_error"
     TIMEOUT = "timeout"
     NETWORK_UNAVAILABLE = "network_unavailable"

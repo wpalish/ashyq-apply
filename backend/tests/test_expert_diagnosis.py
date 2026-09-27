@@ -64,7 +64,12 @@ def test_absent_signed_programme_is_not_a_retrieval_failure() -> None:
 def test_registry_needs_case_provenance_and_cannot_self_promote() -> None:
     registry = load("expert/data/hypotheses.json")
     validate_hypotheses(registry, real_report())
-    assert {item["status"] for item in registry["hypotheses"]} == {"candidate"}
+    # Nothing is promoted; a decided hypothesis names its validation artifact.
+    assert "promoted" not in {item["status"] for item in registry["hypotheses"]}
+    root = Path(__file__).resolve().parents[2]
+    for item in registry["hypotheses"]:
+        if item["status"] in {"tested", "rejected"}:
+            assert (root / item["validation_artifact"]).is_file()
 
     registry["hypotheses"][0]["status"] = "promoted"
     with pytest.raises(ValueError, match="validation artifact"):

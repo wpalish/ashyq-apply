@@ -108,6 +108,10 @@ export interface RequirementCheck {
   is_hard_filter: boolean;
   explanation: string;
   claim_ids: string[];
+  /** Who the publishing page said the rule is for, in its own terms. Empty
+   *  when the page did not say — which is not the same as "everyone", and is
+   *  why this is shown as a quiet line rather than a badge. */
+  published_scope: string;
 }
 
 export interface CoverageBreakdown {
@@ -145,6 +149,11 @@ export interface Scholarship {
   renewal_requirements: string[];
   min_test_scores: Record<string, number>;
   stackable: Tristate;
+  /** Whether an admission offer must be held before applying. "unknown" is
+   *  the common answer: most award pages never say. */
+  offer_required: Tristate;
+  /** Whether the award is decided on demonstrated financial need. */
+  financial_need_required: Tristate;
   published_count: number | null;
 
   // Availability, decomposed. A missing deadline is not availability.

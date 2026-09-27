@@ -52,9 +52,32 @@ USER_AGENT = (
     "university admissions research for a single applicant; contact: set FETCH_CONTACT)"
 )
 DEFAULT_TIMEOUT = 20.0
+#: The longest robots.txt Crawl-delay this crawler will honour by waiting. A
+#: longer one is honoured by not reading the host at all: waiting it out made
+#: a single university's run hang until its wall clock ended.
+MAX_CRAWL_DELAY_SECONDS = 10.0
 DEFAULT_DELAY_SECONDS = 1.5
 MAX_PER_HOST_CONCURRENCY = 2
 MAX_ATTEMPTS = 3
+#: httpx's timeout bounds each connect and each read, not the whole response:
+#: a server that trickles bytes never trips it. Aalto's robots.txt held a run
+#: for its entire 90 s this way. These bound the whole exchange.
+ROBOTS_DEADLINE_SECONDS = 15.0
+ATTEMPT_DEADLINE_FACTOR = 1.0
+#: Name resolution is a blocking libc call. Run on the event loop it froze
+#: every coroutine, deadlines included, for as long as the resolver took.
+DNS_DEADLINE_SECONDS = 10.0
+#: How many of a host's validated addresses one attempt may try, and how long
+#: each may take to accept a connection when there is another to fall back on.
+MAX_ADDRESSES_TRIED = 3
+PER_ADDRESS_CONNECT_SECONDS = 5.0
+
+
+async def _resolve_checked(url: str) -> ResolvedTarget:
+    """``check_url`` off the event loop, bounded. Raises TimeoutError."""
+    return await asyncio.wait_for(asyncio.to_thread(check_url, url), DNS_DEADLINE_SECONDS)
+
+
 MAX_BYTES = 5_000_000
 MAX_ROBOTS_BYTES = 512_000
 #: Content types worth parsing. Anything else is refused before it is read, so
@@ -74,11 +97,12 @@ def _pinned_request(
     client: httpx.AsyncClient,
     target: ResolvedTarget,
     *,
-    timeout: float | None = None,
+    timeout: float | httpx.Timeout | None = None,
     headers: dict[str, str] | None = None,
+    address: str | None = None,
 ) -> httpx.Request:
     """Connect to the validated IP while preserving virtual-host TLS and HTTP."""
-    pinned_url = httpx.URL(target.url).copy_with(host=target.pinned_address)
+    pinned_url = httpx.URL(target.url).copy_with(host=address or target.pinned_address)
     host = f"[{target.host}]" if ":" in target.host else target.host
     default_port = 443 if target.scheme == "https" else 80
     if target.port != default_port:
@@ -263,6 +287,10 @@ class _FractionalCrawlDelayParser(urllib.robotparser.RobotFileParser):
                         break
 
 
+class _RobotsUnreachable(Exception):
+    """robots.txt could not be fetched for a network or server reason."""
+
+
 class RobotsPolicy:
     """robots.txt, fetched once per host and cached for the process lifetime."""
 
@@ -270,20 +298,44 @@ class RobotsPolicy:
         self.user_agent = user_agent
         self.enabled = enabled
         self._parsers: dict[str, urllib.robotparser.RobotFileParser | None] = {}
-        self._lock = asyncio.Lock()
+        #: Hosts whose robots.txt never finished arriving.
+        self.stalled: set[str] = set()
+        #: Origins whose robots.txt was *unreachable* — a network error, a 5xx
+        #: or a stall. RFC 9309 §2.3.1.4: the crawler MUST then assume a
+        #: complete disallow. Unavailable (4xx) is different: no restrictions.
+        self._unreachable: dict[str, str] = {}
+        #: One lock per origin: a stalled host must not hold every other
+        #: host's robots.txt behind it.
+        self._locks: dict[str, asyncio.Lock] = {}
 
     async def allowed(self, url: str, client: httpx.AsyncClient) -> tuple[bool, str]:
         if not self.enabled:
             return True, "robots checking disabled by configuration"
         parsed = urlparse(url)
         host = f"{parsed.scheme}://{parsed.netloc}"
-        async with self._lock:
-            if host not in self._parsers:
-                self._parsers[host] = await self._load(host, client)
+        async with self._locks.setdefault(host, asyncio.Lock()):
+            if host not in self._parsers and host not in self._unreachable:
+                try:
+                    self._parsers[host] = await asyncio.wait_for(
+                        self._load(host, client), ROBOTS_DEADLINE_SECONDS
+                    )
+                except TimeoutError:
+                    # Remembered, so the host is not stalled on again.
+                    log.info("robots.txt for %s did not arrive in time", host)
+                    self._unreachable[host] = "did not arrive in time"
+                    self.stalled.add(parsed.hostname or parsed.netloc)
+                except _RobotsUnreachable as exc:
+                    log.info("robots.txt for %s unreachable: %s", host, exc)
+                    self._unreachable[host] = str(exc)
+        if host in self._unreachable:
+            return False, (
+                f"robots.txt unreachable ({self._unreachable[host]}); RFC 9309 treats the "
+                "whole site as disallowed"
+            )
         parser = self._parsers[host]
         if parser is None:
-            # No reachable robots.txt is treated as "allowed" - the same
-            # interpretation the RFC and every major crawler uses.
+            # Unavailable (4xx, or a robots.txt we will not read): the RFC's
+            # "no restrictions" reading.
             return True, "no robots.txt available"
         allowed = parser.can_fetch(self.user_agent, url)
         return allowed, "robots.txt allows" if allowed else "robots.txt disallows this path"
@@ -307,7 +359,7 @@ class RobotsPolicy:
         try:
             # robots.txt is fetched from a host the crawler was pointed at, so
             # it is exactly as attacker-influenced as any other URL.
-            target = check_url(robots_url)
+            target = await _resolve_checked(robots_url)
         except BlockedRequest as exc:
             log.warning("refusing robots.txt for %s: %s", host, exc)
             return None
@@ -315,9 +367,10 @@ class RobotsPolicy:
             request = _pinned_request(client, target, timeout=10.0)
             resp = await client.send(request, stream=True)
         except (httpx.HTTPError, OSError) as exc:
-            log.info("robots.txt unavailable for %s (%s)", host, exc.__class__.__name__)
-            return None
+            raise _RobotsUnreachable(exc.__class__.__name__) from exc
         try:
+            if resp.status_code >= 500:
+                raise _RobotsUnreachable(f"HTTP {resp.status_code}")
             if resp.status_code < 200 or resp.status_code >= 300:
                 return None
             declared = resp.headers.get("content-length")
@@ -411,6 +464,21 @@ def _content_hash(text: str) -> str:
     return hashlib.sha256(normalized.encode("utf-8")).hexdigest()
 
 
+def _refusal(result: FetchResult) -> str:
+    """Why a host refused this read outright, or "" when it did not.
+
+    A page that is missing (404) or broken (5xx) says nothing about the rest
+    of the host; a 401/403, an unreadable robots.txt or a stalled host does.
+    """
+    if result.outcome == FetchOutcome.HTTP_ERROR and result.status_code in (401, 403):
+        return f"HTTP {result.status_code}"
+    if result.outcome == FetchOutcome.ROBOTS_DISALLOWED and "unreachable" in result.error:
+        return "robots.txt unreachable"
+    if result.outcome == FetchOutcome.TIMEOUT and "not waited on again" in result.error:
+        return "host stalled"
+    return ""
+
+
 class Fetcher:
     """Polite, cached, rate-limited HTTP access."""
 
@@ -425,16 +493,23 @@ class Fetcher:
         timeout: float = DEFAULT_TIMEOUT,
         contact: str = "",
         corpus_dir: Path | None = None,
+        max_crawl_delay: float | None = MAX_CRAWL_DELAY_SECONDS,
     ) -> None:
         self.cache = ResponseCache(cache_dir, cache_ttl_seconds)
         self.robots = RobotsPolicy(enabled=respect_robots)
         self.delay = delay_seconds
+        #: None waits out any Crawl-delay: for background work with no clock.
+        self.max_crawl_delay = max_crawl_delay
         self.offline = offline
         self.timeout = timeout
         self.user_agent = (
             USER_AGENT.replace("set FETCH_CONTACT", contact) if contact else USER_AGENT
         )
         self._host_locks: dict[str, asyncio.Semaphore] = {}
+        #: Hosts that already let one whole exchange run past its deadline in
+        #: this fetcher's life. Run 20: Aalto stalled robots.txt, then
+        #: sitemap.xml, and each stall cost the case most of its clock.
+        self._stalled_hosts: set[str] = set()
         self._last_request: dict[str, float] = {}
         self._client: httpx.AsyncClient | None = None
         self.corpus_dir = corpus_dir
@@ -443,6 +518,12 @@ class Fetcher:
         self._renderer: object | None = None
         self.stats: dict[str, int] = {o.value: 0 for o in FetchOutcome}
         self.tier_counts: dict[str, int] = {"fixture": 0, "http": 0, "browser": 0, "pdf": 0}
+        #: Hosts that refused this fetcher outright earlier in its life, and
+        #: why: a 401/403, a robots.txt that could not be read, a host that
+        #: stalled. Recorded only; nothing here changes what ``get`` does.
+        #: Discovery may use it to stop offering pages on a host that is
+        #: known not to answer (expert trace, Toronto 2026-09-27).
+        self.refused_hosts: dict[str, str] = {}
 
     def attach_renderer(self, renderer: object) -> None:
         """Give the fetcher a browser to escalate to.
@@ -452,6 +533,38 @@ class Fetcher:
         browser tier was constructed on every run and never invoked once.
         """
         self._renderer = renderer
+
+    async def _send_to_any_address(
+        self, target: ResolvedTarget, current: str, headers: dict[str, str] | None
+    ) -> httpx.Response:
+        """Send to the first validated address that accepts a connection.
+
+        A name often resolves to several addresses; one bad edge used to make
+        the whole host look down. Every address was validated by the network
+        policy, so trying the next one widens nothing. Only a failure to
+        *connect* moves on — a server that answered is the answer.
+        """
+        assert self._client is not None
+        if not isinstance(self._client, httpx.AsyncClient):
+            request = self._client.build_request("GET", current, headers=headers)
+            return await self._client.send(request, stream=True)
+        addresses = list(dict.fromkeys(target.addresses))[:MAX_ADDRESSES_TRIED]
+        timeout = (
+            httpx.Timeout(self.timeout, connect=min(PER_ADDRESS_CONNECT_SECONDS, self.timeout))
+            if len(addresses) > 1
+            else None
+        )
+        for index, address in enumerate(addresses):
+            request = _pinned_request(
+                self._client, target, headers=headers, address=address, timeout=timeout
+            )
+            try:
+                return await self._client.send(request, stream=True)
+            except (httpx.ConnectError, httpx.ConnectTimeout) as exc:
+                if index == len(addresses) - 1:
+                    raise
+                log.info("%s via %s: %s; trying the next address", target.host, address, exc)
+        raise AssertionError("unreachable")
 
     async def _request_with_redirects(
         self, url: str, *, validators: dict[str, str] | None = None
@@ -468,20 +581,15 @@ class Fetcher:
         current = url
         validators = dict(validators) if validators else None
         for _hop in range(MAX_REDIRECTS + 1):
-            target = check_url(current)
+            target = await _resolve_checked(current)
             # ``get()`` buffers the entire body before returning, which would
             # make the byte cap below cosmetic (and lets an endless response
             # exhaust memory). Keep the response streaming from the socket.
-            request = (
-                _pinned_request(self._client, target, headers=validators)
-                if isinstance(self._client, httpx.AsyncClient)
-                else self._client.build_request("GET", current, headers=validators)
-            )
+            response = await self._send_to_any_address(target, current, validators)
             # Validators ride the caller's request only: a hop can land on
             # another host, and an entity tag minted by one origin must not be
             # replayed to another.
             validators = None
-            response = await self._client.send(request, stream=True)
 
             # A 304 is a 3xx but not a redirect: it is the answer to a
             # conditional request, and httpx counts every 3xx as is_redirect.
@@ -742,6 +850,27 @@ class Fetcher:
     ) -> FetchResult:
         """Fetch a URL from the disk cache when possible, else politely.
 
+        See ``_get``; this wrapper only records a host that refused outright.
+        """
+        result = await self._get(
+            url, use_cache=use_cache, etag=etag, if_modified_since=if_modified_since
+        )
+        reason = _refusal(result)
+        host = urlparse(url).hostname or ""
+        if reason and host:
+            self.refused_hosts.setdefault(host, reason)
+        return result
+
+    async def _get(
+        self,
+        url: str,
+        *,
+        use_cache: bool = True,
+        etag: str | None = None,
+        if_modified_since: str | None = None,
+    ) -> FetchResult:
+        """Fetch a URL from the disk cache when possible, else politely.
+
         ``etag`` / ``if_modified_since`` are supplied by the caller (from its
         own source_pages records); the fetcher never touches the database. With
         a validator present the disk cache is skipped and the first request
@@ -793,8 +922,24 @@ class Fetcher:
         if self._client is None:
             raise RuntimeError("Fetcher must be used as an async context manager")
 
+        early = urlparse(url).hostname or ""
+        if early in self._stalled_hosts or early in self.robots.stalled:
+            self.stats[FetchOutcome.TIMEOUT.value] += 1
+            return FetchResult(
+                url=url,
+                outcome=FetchOutcome.TIMEOUT,
+                error="host stopped responding earlier in this run; not waited on again",
+            )
         try:
-            target = check_url(url)
+            target = await _resolve_checked(url)
+        except TimeoutError:
+            self._stalled_hosts.add(urlparse(url).hostname or url)
+            self.stats[FetchOutcome.TIMEOUT.value] += 1
+            return FetchResult(
+                url=url,
+                outcome=FetchOutcome.TIMEOUT,
+                error=f"name resolution took longer than {DNS_DEADLINE_SECONDS:.0f}s",
+            )
         except BlockedRequest as exc:
             log.warning("blocked by network policy: %s", exc)
             self.stats[FetchOutcome.BLOCKED.value] += 1
@@ -803,19 +948,57 @@ class Fetcher:
         host = target.host
         async with self._semaphore(host):
             allowed, reason = await self.robots.allowed(url, self._client)
+            if host in self.robots.stalled:
+                self.stats[FetchOutcome.TIMEOUT.value] += 1
+                return FetchResult(
+                    url=url,
+                    outcome=FetchOutcome.TIMEOUT,
+                    error="robots.txt never finished arriving; the host is not waited on again",
+                )
             if not allowed:
                 log.warning("robots.txt disallows %s", url)
                 self.stats[FetchOutcome.ROBOTS_DISALLOWED.value] += 1
                 return FetchResult(url=url, outcome=FetchOutcome.ROBOTS_DISALLOWED, error=reason)
 
+            asked = await self.robots.crawl_delay(url)
+            limit = self.max_crawl_delay
+            if asked is not None and limit is not None and asked > limit:
+                # The site's own request is honoured by not reading it, never by
+                # reading it faster: waiting that long per request is a hang.
+                # Aalto stalled a whole run here, 2 requests in 90 s. It is not
+                # a refusal, so it is not reported as one.
+                log.warning("robots.txt crawl-delay %.0fs for %s: not read", asked, host)
+                self.stats[FetchOutcome.ROBOTS_CRAWL_DELAY.value] += 1
+                return FetchResult(
+                    url=url,
+                    outcome=FetchOutcome.ROBOTS_CRAWL_DELAY,
+                    error=(
+                        f"robots.txt asks for a {asked:.0f}s crawl delay; this run waits at most "
+                        f"{limit:.0f}s between requests, so the page was not read"
+                    ),
+                )
+
             for attempt in range(1, MAX_ATTEMPTS + 1):
                 await self._space_requests(host, url)
                 try:
-                    result = await self._request_with_redirects(url, validators=validators)
+                    result = await asyncio.wait_for(
+                        self._request_with_redirects(url, validators=validators),
+                        self.timeout * ATTEMPT_DEADLINE_FACTOR,
+                    )
                 except BlockedRequest as exc:
                     log.warning("blocked mid-redirect: %s", exc)
                     self.stats[FetchOutcome.BLOCKED.value] += 1
                     return FetchResult(url=url, outcome=FetchOutcome.BLOCKED, error=str(exc))
+                except TimeoutError:
+                    # The whole exchange overran: a server that trickles will
+                    # trickle again, so this is not retried, nor is the host.
+                    self._stalled_hosts.add(host)
+                    self.stats[FetchOutcome.TIMEOUT.value] += 1
+                    return FetchResult(
+                        url=url,
+                        outcome=FetchOutcome.TIMEOUT,
+                        error="no complete response within the deadline",
+                    )
                 except httpx.TimeoutException as exc:
                     if attempt == MAX_ATTEMPTS:
                         self.stats[FetchOutcome.TIMEOUT.value] += 1

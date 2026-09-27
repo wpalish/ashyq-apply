@@ -39,6 +39,7 @@ from app.adapters.base import Candidate, CandidateProgram
 from app.adapters.fetching import Fetcher, FetchOutcome, FetchResult
 from app.adapters.requirements.web_requirements import WebRequirementsAdapter
 from app.config import Settings
+from app.domain.change_detection import ChangeKind, Reading, classify_changes, summarise
 from app.domain.enums import ClaimStatus, DegreeLevel
 from app.domain.freshness import apply_freshness
 from app.jobs.store import BACKOFF_SECONDS, JobStore
@@ -184,6 +185,9 @@ def _fetcher_for(settings: Settings, *, demo: bool) -> Fetcher:
         timeout=settings.fetch_timeout_seconds,
         contact=settings.fetch_contact,
         corpus_dir=settings.corpus_dir if demo else None,
+        # A scan has no applicant waiting on it, so a long Crawl-delay is
+        # waited out here instead of leaving the host unread.
+        max_crawl_delay=None,
     )
 
 
@@ -269,7 +273,7 @@ async def reextract_page(
         raise RuntimeError(f"reextract of {url}: the page could not be re-read")
 
     # Supersession scope: the destination result's run, per source_url.
-    superseded = (
+    live = (
         session.query(ClaimRow)
         .filter(
             ClaimRow.run_id == run.id,
@@ -278,6 +282,41 @@ async def reextract_page(
         )
         .all()
     )
+    reread = [
+        claim.model_copy(
+            update={"status": apply_freshness(claim.status, claim.claim_type, claim.accessed_at)}
+        )
+        for claim in extracted.claims
+    ]
+
+    # What actually changed, decided before anything is written. A statement
+    # the page still makes with the same value is not superseded: the owner
+    # settled on 2026-09-22 that a re-render must not write a generation of
+    # history repeating the live rows. Its row stays live and only its read
+    # date advances, so freshness still moves. Anything that changed,
+    # appeared or disappeared is superseded exactly as before.
+    changes = classify_changes([_reading_of(row) for row in live], reread)
+    unchanged = {
+        (change.claim_type.value, change.subject_key)
+        for change in changes
+        if change.kind is ChangeKind.UNCHANGED
+    }
+
+    def _key(row: ClaimRow) -> tuple[str, str | None]:
+        return (row.claim_type, (row.payload or {}).get("subject_key"))
+
+    refreshed_at = {
+        (claim.claim_type.value, claim.subject_key): claim.accessed_at for claim in reread
+    }
+    superseded = [row for row in live if _key(row) not in unchanged]
+    for row in live:
+        if _key(row) in unchanged:
+            row.accessed_at = refreshed_at[_key(row)]
+            payload = dict(row.payload)
+            payload["accessed_at"] = row.accessed_at.isoformat()
+            row.payload = payload
+            row.source_page_id = page.id
+
     superseded_at = datetime.now(UTC)
     for row in superseded:
         row.status = ClaimStatus.SUPERSEDED.value
@@ -291,10 +330,7 @@ async def reextract_page(
         row.superseded_at = superseded_at
 
     fresh = [
-        claim.model_copy(
-            update={"status": apply_freshness(claim.status, claim.claim_type, claim.accessed_at)}
-        )
-        for claim in extracted.claims
+        claim for claim in reread if (claim.claim_type.value, claim.subject_key) not in unchanged
     ]
     #: Which old row each new one takes over from, matched on what makes two
     #: claims the same statement: its type and its subject. A superseded row
@@ -303,8 +339,7 @@ async def reextract_page(
     #: exists to record, and guessing a successor would erase it.
     predecessors: dict[tuple[str, str | None], ClaimRow] = {}
     for row in superseded:
-        key = (row.claim_type, (row.payload or {}).get("subject_key"))
-        predecessors.setdefault(key, row)
+        predecessors.setdefault(_key(row), row)
 
     for claim in fresh:
         successor = ClaimRow(
@@ -329,12 +364,24 @@ async def reextract_page(
 
     _record_page(session, page, res, lastmod=None)
     log.info(
-        "reextract of %s for result %s: %d claim(s) superseded, %d appended",
+        "reextract of %s for result %s: %d claim(s) superseded, %d appended — %s",
         url[:80],
         result_id[:8],
         len(superseded),
         len(fresh),
+        summarise(changes),
     )
+
+
+def _reading_of(row: ClaimRow) -> Reading:
+    """The persisted row as a comparable statement, and nothing more.
+
+    Deliberately not ``Claim.model_validate``: a payload written by an older
+    schema would fail validation, and inside this job's single transaction
+    that failure would roll back the supersession itself. Describing history
+    must never be able to break it.
+    """
+    return Reading.from_payload(dict(row.payload))
 
 
 def _intake_of(profile: ApplicantProfileIn) -> str:

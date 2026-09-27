@@ -1,0 +1,46 @@
+{
+  "schema_version": "1",
+  "dataset_version": "2026-09-23.reviewed",
+  "dataset_sha256": "d45d26fa10a1bd60271c63225c1ff453109d8cb6781782867c0d782ee63bedd0",
+  "capture_sha256": "c76dc92a313bb9a1766da4d72f2eb424c97c1c9f8eb0039be2f69b6aef891e11",
+  "baseline_pipeline_sha": "ff23db09a2d506af68df2172e6ae7bcb5a93166a",
+  "baseline_captured_at": "20260927T165933Z",
+  "baseline_budget": {
+    "max_fetcher_calls": 60,
+    "max_elapsed_ms": 120000,
+    "browser_enabled": false
+  },
+  "cases": [
+    {
+      "case_id": "aalto",
+      "university": "Aalto University",
+      "domain": "aalto.fi",
+      "request": {
+        "university": "Aalto University",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "baseline": {
+        "ranked_urls": [],
+        "programme_urls": [
+          "https://www.aalto.fi/en/aalto-university-open-university/computer-science",
+          "https://www.aalto.fi/en/study-at-aalto/study-computer-science",
+          "https://www.aalto.fi/en/minors/computer-science-minor"
+        ],
+        "prediction_count": 0,
+        "error": null,
+        "telemetry": {
+          "http_fetches": 1,
+          "pdf_fetches": 0,
+          "browser_fetches": 0,
+          "latency_seconds": 19.71790216400001
+        }
+      }
+    }
+  ]
+}

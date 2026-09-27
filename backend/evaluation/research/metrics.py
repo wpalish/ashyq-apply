@@ -7,6 +7,10 @@ from collections import defaultdict
 from typing import Any
 from urllib.parse import urlsplit, urlunsplit
 
+from app.adapters.search.ontology import titles_name_same_programme
+from app.domain.claim_verifier import registrable_domain
+from app.domain.programme_identity import Verdict
+
 from .schema import Capture, Dataset, Observation, Scope
 
 
@@ -18,11 +22,91 @@ def canonical_url(url: object) -> str:
     )
 
 
+#: The longest quote of ours that may contain the reviewer's words and still
+#: count as quoting them. Owner decision 2026-09-23: reviewers quote the least
+#: that proves a fact ("6.5"), the pipeline a sentence around it, so requiring
+#: ours to lie *inside* theirs made every correct claim unsupported. The cap
+#: keeps "the reviewer's words are somewhere in half a page" from counting.
+SUPPORTING_QUOTE_MAX = 300
+
+
+def _domain(url: object) -> str:
+    return registrable_domain(urlsplit(str(url)).hostname or "")
+
+
+def quote_supports(ours: str, theirs: str) -> bool:
+    """Whether our quote and the reviewer's are the same evidence.
+
+    Either ours lies inside theirs (the original rule), or theirs lies inside
+    ours and ours is short enough to still be a quotation. Whitespace is
+    compared collapsed on both sides: a table's cells joined differently are
+    the same words.
+    """
+    ours_flat, theirs_flat = " ".join(ours.split()), " ".join(theirs.split())
+    if not ours_flat or not theirs_flat:
+        return False
+    if ours_flat in theirs_flat:
+        return True
+    return len(ours_flat) <= SUPPORTING_QUOTE_MAX and theirs_flat in ours_flat
+
+
+#: The populations a page reading can record (app.adapters.scope_reader), as
+#: plain data: evaluation reads no production module at scoring time.
+CONTROLLED_POPULATIONS = frozenset(
+    {"eu/eea", "domestic", "first-year", "international", "non-eu/eea", "transfer"}
+)
+
+
+def _plain(text: object) -> str:
+    """Case-blind, and a leading "The" is not part of a name ("The University
+    of Hong Kong" is the University of Hong Kong; run 77)."""
+    folded = str(text).casefold().strip()
+    return folded[4:] if folded.startswith("the ") else folded
+
+
+def dimension_matches(key: str, value: object, recorded: object) -> bool:
+    """One scope dimension: whether ``recorded`` answers the label's ``value``.
+
+    Shared with ``scope_report`` so the report never explains a miss the score
+    does not count (run 77 found the two had drifted apart).
+    """
+    if key == "programme":
+        return bool(recorded) and (
+            titles_name_same_programme(str(value), str(recorded)) is Verdict.YES
+        )
+    if (
+        key == "population"
+        and recorded is None
+        and str(value).casefold() not in CONTROLLED_POPULATIONS
+    ):
+        # A descriptive corpus population ("Vancouver applicants using IELTS
+        # Academic") is a note on who the source addresses, not a value any
+        # page reading can emit; silence is compatible with it. A population we
+        # did record must still match, and a controlled one ("non-EU/EEA") must
+        # be recorded. Owner delegated this choice on 2026-09-26 (VERSIONS.md).
+        return True
+    # Case is not meaning: the pipeline writes "Fall 2027", the corpus
+    # "fall 2027" (definition fixed 2026-09-23, recorded in VERSIONS.md).
+    return recorded is not None and _plain(recorded) == _plain(value)
+
+
 def scope_matches(expected: Scope, actual: Scope) -> bool:
-    return all(
-        value is None or getattr(actual, key) == value
-        for key, value in expected.model_dump().items()
-    )
+    """Whether a recorded scope answers the scope a label asked about.
+
+    Every dimension compares literally except ``programme``, which compares
+    **identity**: a page publishes "Bachelor of Computing (Hons) in Computer
+    Science" where a label reads "Computer Science", and counting that as a
+    wrong-scope claim measured our naming rather than our research. The
+    owner settled this on 2026-09-22.
+
+    Only ``YES`` is a match. ``UNKNOWN`` — two titles the ontology cannot
+    reconcile — stays a miss, because a benchmark that scores "we could not
+    tell" as a hit is measuring nothing.
+    """
+    for key, value in expected.model_dump().items():
+        if value is not None and not dimension_matches(key, value, getattr(actual, key)):
+            return False
+    return True
 
 
 def ratio(numerator: int, denominator: int) -> dict[str, Any]:
@@ -72,6 +156,7 @@ def score(dataset: Dataset, capture: Capture, *, allow_drafts: bool = False) -> 
                 predictions[prediction.model_dump_json()] = prediction
         labels = {label.key: label for label in case.labels}
         correct_keys: set[str] = set()
+        correct_same_page_keys: set[str] = set()
         answered = {p.key for p in predictions.values()}
         correct_predictions = 0
         adjudicated = 0
@@ -88,13 +173,33 @@ def score(dataset: Dataset, capture: Capture, *, allow_drafts: bool = False) -> 
                 and not evidence.excerpt_truncated
                 and any(
                     canonical_url(e.url) == canonical_url(evidence.url)
-                    and evidence.excerpt in e.excerpt
+                    and quote_supports(evidence.excerpt, e.excerpt)
                     for e in label.evidence
                 )
             )
-            supported = provenance and (
+            # Owner decision 2026-09-23: another official page of the same
+            # university may support a label. The reviewer cites one page;
+            # universities publish the same deadline or fee on several, and a
+            # right value quoted from the fees page instead of the programme
+            # page was scored as unsupported. The strict reading stays beside
+            # it as ``claim_recall_same_page``.
+            sibling_evidence = bool(
+                label
+                and evidence
+                and not evidence.excerpt_truncated
+                and evidence.excerpt.strip()
+                and _domain(evidence.url) in {_domain(e.url) for e in label.evidence}
+            )
+            supported_same_page = provenance and (
                 p.supported is True
                 or (p.supported is None and exact_evidence and label is not None and value_matches)
+            )
+            supported = supported_same_page or (
+                provenance
+                and p.supported is None
+                and sibling_evidence
+                and label is not None
+                and value_matches
             )
             support_known = not provenance or p.supported is not None or exact_evidence
             if support_known:
@@ -114,6 +219,8 @@ def score(dataset: Dataset, capture: Capture, *, allow_drafts: bool = False) -> 
                 )
                 add("wrong_scope_claim_rate", int(not valid_scope), 1)
                 correct = value_matches and valid_scope and supported
+                if value_matches and valid_scope and supported_same_page:
+                    correct_same_page_keys.add(p.key)
                 correct_predictions += int(correct)
                 adjudicated += 1
                 if correct:
@@ -134,6 +241,7 @@ def score(dataset: Dataset, capture: Capture, *, allow_drafts: bool = False) -> 
         add("claim_precision", correct_predictions, adjudicated)
         add("claim_adjudication_rate", adjudicated, len(predictions))
         add("claim_recall", len(correct_keys), len(known))
+        add("claim_recall_same_page", len(correct_same_page_keys), len(known))
         add("critical_field_coverage", len(critical & answered), len(critical))
         for label in case.labels:
             if label.status == "not_applicable":
@@ -167,6 +275,7 @@ def score(dataset: Dataset, capture: Capture, *, allow_drafts: bool = False) -> 
         "recall_at_20",
         "claim_precision",
         "claim_recall",
+        "claim_recall_same_page",
         "unsupported_claim_rate",
         "wrong_scope_claim_rate",
         "critical_field_coverage",

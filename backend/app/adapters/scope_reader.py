@@ -20,7 +20,7 @@ one distinct value comes back ``None`` rather than the first or the nearest
 match. This loses scope we could have guessed at; guessing is the failure
 this module exists to stop.
 
-Four of the nine dimensions are deliberately never read here:
+Four of the ten dimensions are deliberately never read here:
 
 ``university``, ``faculty``, ``programme``
     A page states these in its own markup and navigation, which V2-17's
@@ -164,6 +164,45 @@ _POPULATIONS: tuple[tuple[re.Pattern[str], str], ...] = (
     ),
 )
 
+#: A qualification named as a *yardstick* is not the page's scope. "A diploma
+#: equivalent to the Dutch VWO" is a rule for everyone whose diploma compares
+#: to the VWO, not a rule for VWO holders, and recording it as the latter
+#: would be this repository inventing an equivalence — the one thing the phase
+#: guide forbids by name ("unknown equivalence remains unknown"). Same shape
+#: and same radius as ``_NEGATION``: it governs a phrase that follows it,
+#: within one sentence.
+_COMPARISON = re.compile(
+    r"(?:equivalent|equivalence|comparable|similar|equal)\w*\s+(?:to|with|of)?"
+    rf"[^.\n]{{0,{_NEGATION_RADIUS}}}$",
+    re.IGNORECASE,
+)
+
+#: The school qualifications the page classifier already knows
+#: (``page_classifier.QUALIFICATION_NAMES``), mapped to the one spelling this
+#: repository records. The vocabulary is that list and nothing else; a test
+#: holds the two together so a second, drifting list cannot appear here.
+#: ``baccalaur`` is deliberately not mapped on its own: "International
+#: Baccalaureate" and the French "Baccalauréat" are different
+#: qualifications written almost the same way, so the IB pattern below asks for
+#: the word "International" or the initials, and a bare "baccalauréat"
+#: scopes nothing. Unknown equivalence remains unknown.
+_QUALIFICATIONS: tuple[tuple[re.Pattern[str], str], ...] = (
+    (re.compile(r"\battestat\b", re.IGNORECASE), "attestat"),
+    (re.compile(r"\binternational\s+baccalaureate\b", re.IGNORECASE), "IB"),
+    # Case-sensitive on purpose: lowercase "ib" is a syllable, "IB" is a
+    # qualification, and requiring the diploma word after it keeps a stray
+    # initialism from scoping a page.
+    (re.compile(r"\bIB\b\s+(?:diploma|certificate|programme|program)"), "IB"),
+    (re.compile(r"\ba-?levels?\b", re.IGNORECASE), "A-levels"),
+    (re.compile(r"\babitur\b", re.IGNORECASE), "Abitur"),
+    (re.compile(r"\bvwo\b", re.IGNORECASE), "VWO"),
+    # "matura" alone, not the "Baccalauréat"/"matura" of the shared list's
+    # `baccalaur`, which stays unread for the reason above.
+    (re.compile(r"\bmatura\b", re.IGNORECASE), "matura"),
+    (re.compile(r"\bgaokao\b", re.IGNORECASE), "gaokao"),
+    (re.compile(r"\bcbse\b", re.IGNORECASE), "CBSE"),
+)
+
 _RESIDENCIES: tuple[tuple[re.Pattern[str], str], ...] = (
     (re.compile(r"\boverseas\s+fee(?:s|\s+status)?\b", re.IGNORECASE), "overseas"),
     (re.compile(r"\bhome\s+fee(?:s|\s+status)?\b", re.IGNORECASE), "home"),
@@ -200,14 +239,48 @@ def _academic_years(text: str) -> list[str]:
     return found
 
 
+#: The programme's own start date, stated as such: "programme starts 1 September
+#: 2027", "Start date: 2 September 2027". Owner decision 2026-09-23: a stated
+#: start in September–November is a fall intake. A bare date is never read this
+#: way — "15 January 2027" is a deadline, and that refusal stands.
+_START_DATE = re.compile(
+    r"\b(?:(?:programme|program|course|studies|classes|teaching)\s+(?:starts?|begins?)"
+    r"|start(?:\s+(?:date|of\s+(?:the\s+)?(?:programme|program|studies|classes)))"
+    r")\s*(?:on|in)?\s*[:\-–]?\s*(?:\d{1,2}\s+)?"
+    rf"({_MONTH_TERM})\s+(20\d{{2}})\b",
+    re.IGNORECASE,
+)
+_FALL_MONTHS = frozenset({"september", "october", "november"})
+
+
+def intake_from_start(month: str, year: str) -> str | None:
+    """The intake a stated programme start implies, or ``None``.
+
+    Only September–November, as fall, per the owner's decision: other months
+    map to no season this module is entitled to name.
+    """
+    return f"Fall {year}" if month.lower() in _FALL_MONTHS else None
+
+
 def _intakes(text: str) -> list[str]:
     found = []
+    # A phrase read as the programme's start is read once: the month rule
+    # below would otherwise name the same words "September 2027" beside our
+    # "Fall 2027", and two values for one statement is silence.
+    started: list[tuple[int, int]] = []
+    for m in _START_DATE.finditer(text):
+        season = intake_from_start(m.group(1), m.group(2))
+        if season and not _negated(text, m.start()):
+            found.append(season)
+            started.append(m.span())
     for m in _INTAKE_SEASON.finditer(text):
         if _negated(text, m.start()):
             continue
         found.append(f"{_term(m.group(1))} {m.group(2)}")
     for m in _INTAKE_MONTH.finditer(text):
         if _negated(text, m.start()) or not _has_marker(text, m.start(), m.end()):
+            continue
+        if any(lo <= m.start() < hi for lo, hi in started):
             continue
         found.append(f"{_term(m.group(1))} {m.group(2)}")
     for m in _INTAKE_REVERSED.finditer(text):
@@ -236,6 +309,44 @@ def _degrees(text: str) -> list[str]:
     ]
 
 
+#: In a title a bare degree word is the page naming itself — "Computing Science
+#: | Bachelor | University of Groningen" — so it needs none of the "programme"
+#: or "degree" that the body pattern demands of running prose.
+_TITLE_DEGREE = re.compile(
+    r"\b(bachelor(?:'?s)?|undergraduate|bsc|beng|master(?:'?s)?|postgraduate|msc|meng"
+    r"|phd|doctoral|doctorate)\b",
+    re.IGNORECASE,
+)
+
+
+def _title_degrees(title: str) -> list[str]:
+    text = _flatten(title or "")
+    return [
+        _DEGREE_WORDS[m.group(1).lower().replace("’", "'")]
+        for m in _TITLE_DEGREE.finditer(text)
+        if not _negated(text, m.start()) and m.group(1).lower().replace("’", "'") in _DEGREE_WORDS
+    ]
+
+
+def _compared(text: str, start: int) -> bool:
+    """Whether this phrase is a yardstick rather than the page's own scope."""
+    return bool(_COMPARISON.search(text[max(0, start - _NEGATION_RADIUS) : start]))
+
+
+def _qualifications(text: str) -> list[str]:
+    """The school qualifications the page states it is written for.
+
+    Two guards, not one: a negated name scopes nothing, and neither does a
+    name a sentence merely compares to.
+    """
+    return [
+        value
+        for pattern, value in _QUALIFICATIONS
+        for m in pattern.finditer(text)
+        if not _negated(text, m.start()) and not _compared(text, m.start())
+    ]
+
+
 def _by_table(text: str, table: tuple[tuple[re.Pattern[str], str], ...]) -> list[str]:
     found = []
     for pattern, value in table:
@@ -243,6 +354,15 @@ def _by_table(text: str, table: tuple[tuple[re.Pattern[str], str], ...]) -> list
             if not _negated(text, m.start()):
                 found.append(value)
     return found
+
+
+def population_named(text: str) -> str | None:
+    """The one population a short span of text names, or ``None``.
+
+    For a single table row ("non-EU/EEA students 01 May 2027"), not a page: a
+    page naming two populations is silent, and so is a row.
+    """
+    return _single(_by_table(_flatten(text), _POPULATIONS))
 
 
 def read_scope(text: str, *, title: str = "") -> ClaimScope:
@@ -258,9 +378,14 @@ def read_scope(text: str, *, title: str = "") -> ClaimScope:
     # state both in the same breath ("EU/EEA and non-EU/EEA applicants pay
     # different fees"). Two populations is two, and two is silence.
     return ClaimScope(
-        degree=_single(_degrees(haystack)),
+        # The title is the page saying what it is about. When it names exactly
+        # one degree, a body that also mentions another ("many continue to a
+        # master's") does not make the page silent on its own degree — that
+        # silence is what kept Groningen's bachelor deadline out of scope.
+        degree=_single(_title_degrees(title)) or _single(_degrees(haystack)),
         intake=_single(_intakes(haystack)),
         academic_year=_single(_academic_years(haystack)),
         population=_single(populations),
+        qualification=_single(_qualifications(haystack)),
         residency=_single(_by_table(haystack, _RESIDENCIES)),
     )

@@ -321,3 +321,172 @@ class TestARefusalIsCarriedOut:
             today=TODAY,
         )
         assert outcome.out_of_scope == []
+
+
+class TestARequirementSaysWhoItIsFor:
+    """Plan V2-30 — the visible half of scope.
+
+    Phase 3's question in one line: does this exact rule apply to this exact
+    applicant. A number alone cannot answer it; a number with "published for
+    international applicants, Fall 2027" beside it can.
+    """
+
+    def test_a_scoped_requirement_says_so_in_the_page_s_own_terms(self, profile):
+        outcome = evaluate_program(
+            profile,
+            [
+                C(
+                    "ielts_min_overall",
+                    9.0,
+                    intake="fall 2027",
+                    scope=ClaimScope(population="international", intake="fall 2027"),
+                )
+            ],
+            today=TODAY,
+        )
+        check = next(c for c in outcome.checks if c.requirement == "IELTS overall")
+        assert check.published_scope == "published for intake fall 2027, population international"
+
+    def test_a_page_that_said_nothing_says_nothing_here(self, profile):
+        """Silence is not a phrase to invent; the evidence carries the detail."""
+        outcome = evaluate_program(
+            profile,
+            [C("ielts_min_overall", 9.0, intake="fall 2027", scope=ClaimScope())],
+            today=TODAY,
+        )
+        check = next(c for c in outcome.checks if c.requirement == "IELTS overall")
+        assert check.published_scope == ""
+
+    def test_a_claim_predating_scope_says_nothing_rather_than_guessing(self, profile):
+        outcome = evaluate_program(
+            profile, [C("ielts_min_overall", 9.0, intake="fall 2027")], today=TODAY
+        )
+        check = next(c for c in outcome.checks if c.requirement == "IELTS overall")
+        assert check.published_scope == ""
+
+    def test_a_deadline_carries_its_scope_too(self, profile):
+        outcome = evaluate_program(
+            profile,
+            [
+                C(
+                    "admission_deadline",
+                    "2027-01-15",
+                    intake="fall 2027",
+                    scope=ClaimScope(intake="fall 2027"),
+                )
+            ],
+            today=TODAY,
+        )
+        check = next(c for c in outcome.checks if c.requirement == "Admission deadline")
+        assert check.published_scope == "published for intake fall 2027"
+
+
+class TestAPublishedEnglishWaiver:
+    """Phase 3 §3 — waiver conditions are their own fact.
+
+    A Kazakhstani applicant from an English-medium school lives or dies by one
+    sentence on the page, and the pipeline used to read only *fee* waivers and
+    drop this one entirely.
+    """
+
+    def test_the_conditions_are_shown_as_the_page_wrote_them(self, profile):
+        outcome = evaluate_program(
+            profile,
+            [
+                C(
+                    "english_test_waiver",
+                    "Applicants schooled in English are exempt from the English language requirement.",
+                    intake="fall 2027",
+                )
+            ],
+            today=TODAY,
+        )
+        check = next(c for c in outcome.checks if c.requirement == "English test waiver")
+        assert "schooled in English" in str(check.published_value)
+        assert check.status is EligibilityStatus.NEEDS_OFFICIAL_CLARIFICATION
+
+    def test_a_published_waiver_stops_the_english_minimum_eliminating_anyone(self, profile):
+        """Absent data never eliminates, and whether a waiver covers this
+        applicant is exactly absent data."""
+        with_waiver = evaluate_program(
+            profile,
+            [
+                C("ielts_min_overall", 9.0, intake="fall 2027"),
+                C("english_test_waiver", "Exempt if taught in English.", intake="fall 2027"),
+            ],
+            today=TODAY,
+        )
+        assert "IELTS overall" not in with_waiver.hard_filter_failures
+
+    def test_without_a_waiver_the_minimum_still_eliminates(self, profile):
+        without = evaluate_program(
+            profile, [C("ielts_min_overall", 9.0, intake="fall 2027")], today=TODAY
+        )
+        assert "IELTS overall" in without.hard_filter_failures
+
+    def test_a_page_refusing_waivers_is_not_a_waiver(self, profile):
+        """ "No waivers are granted" is recorded with an empty value, and an
+        empty value must never disarm anything."""
+        outcome = evaluate_program(
+            profile,
+            [
+                C("ielts_min_overall", 9.0, intake="fall 2027"),
+                C("english_test_waiver", "", intake="fall 2027"),
+            ],
+            today=TODAY,
+        )
+        assert "IELTS overall" in outcome.hard_filter_failures
+        assert not any(c.requirement == "English test waiver" for c in outcome.checks)
+
+
+class TestTestOptionalIsNotTestIrrelevant:
+    """Phase 3 §4 — the trap the guide names outright.
+
+    An applicant reads "test-optional" on the admissions page, skips the SAT,
+    and loses the scholarship rather than the offer. The two pages are
+    published by different offices and neither mentions the other.
+    """
+
+    def _claims(self, policy: str):
+        return [C("sat_policy", policy, intake="fall 2027")]
+
+    def test_an_award_requiring_a_test_the_programme_made_optional_is_named(self):
+        from app.domain.eligibility import awards_needing_a_test_the_programme_made_optional
+
+        clashing = awards_needing_a_test_the_programme_made_optional(
+            self._claims("test-optional"),
+            [("Merit Award", {"sat": 1400.0}), ("Need Grant", {})],
+        )
+        assert clashing == ["Merit Award"]
+
+    def test_nothing_is_named_when_the_programme_requires_the_test_anyway(self):
+        from app.domain.eligibility import awards_needing_a_test_the_programme_made_optional
+
+        assert (
+            awards_needing_a_test_the_programme_made_optional(
+                self._claims("SAT required for all applicants"),
+                [("Merit Award", {"sat": 1400.0})],
+            )
+            == []
+        )
+
+    def test_nothing_is_named_when_no_award_asks_for_the_test(self):
+        from app.domain.eligibility import awards_needing_a_test_the_programme_made_optional
+
+        assert (
+            awards_needing_a_test_the_programme_made_optional(
+                self._claims("test-blind"), [("Merit Award", {"ielts": 7.0})]
+            )
+            == []
+        )
+
+    def test_a_programme_with_no_published_policy_names_nothing(self):
+        """Silence about a policy is not a test-optional policy."""
+        from app.domain.eligibility import awards_needing_a_test_the_programme_made_optional
+
+        assert (
+            awards_needing_a_test_the_programme_made_optional(
+                [], [("Merit Award", {"sat": 1400.0})]
+            )
+            == []
+        )

@@ -29,6 +29,7 @@ from app.adapters.discovery.live_discovery import (
     names_other_degree_level,
     same_institution,
 )
+from app.adapters.page_classifier import PageType, classify_url
 from app.adapters.search.base import SearchResult
 from app.domain.enums import DegreeLevel
 
@@ -90,8 +91,20 @@ def prefilter(
     *,
     domain: str,
     degree: DegreeLevel,
+    reject_irrelevant_kinds: bool = False,
 ) -> PrefilterOutcome:
     """Drop what is cheap to know is wrong, and say why for the rest.
+
+    ``reject_irrelevant_kinds`` drops URLs the classifier already calls
+    IRRELEVANT — publications, person and organisation profiles, datasets,
+    theses — which the live probe repeatedly found outranking the programme
+    page they were competing with (Aalto's top result was a publication;
+    KAIST's was an organisation profile). It is **off by default on purpose**:
+    §12 of the brief allows a discovery change only when the benchmark
+    improves, this one cannot be measured without a live capture, and a
+    rejection that has never been measured is exactly the kind of silent
+    recall loss that rule exists to prevent. Turn it on for a measured run,
+    compare, and only then change the default.
 
     Deduplication keeps the first occurrence, which is the best-ranked one
     because results arrive in rank order within a response and queries are run
@@ -115,6 +128,9 @@ def prefilter(
             rejected.append(RejectedCandidate(url, Rejection.OTHER_INSTITUTION))
             continue
         if is_excluded_path(url):
+            rejected.append(RejectedCandidate(url, Rejection.NOT_A_PROGRAMME_PAGE))
+            continue
+        if reject_irrelevant_kinds and classify_url(url) is PageType.IRRELEVANT:
             rejected.append(RejectedCandidate(url, Rejection.NOT_A_PROGRAMME_PAGE))
             continue
         if names_other_degree_level(url, str(degree)):

@@ -576,3 +576,53 @@ class TestScholarshipClaimsCarryTheirScope:
         # The award quotes a 2024/25 figure on a 2026/27 page; neither becomes
         # the page's year, because the page never says which one it is about.
         assert {c.scope.academic_year for c in scoped} == {None}
+
+
+class TestAnAwardSaysWhetherAnOfferIsNeeded:
+    """Plan V2-30 / Phase 3 §6 — two decisions the guide lists separately.
+
+    Both are practically decisive and both are refused unless the page says so
+    outright: an applicant who assumes an offer is needed applies too late,
+    and one who assumes it is not may never apply at all.
+    """
+
+    def _read(self, text: str):
+        from app.adapters.scholarship.web_scholarships import (
+            _MERIT_ONLY,
+            _NEED_BASED,
+            _OFFER_NOT_REQUIRED,
+            _OFFER_REQUIRED,
+        )
+
+        low = text.lower()
+        offer = (
+            "yes"
+            if _OFFER_REQUIRED.search(low)
+            else "no"
+            if _OFFER_NOT_REQUIRED.search(low)
+            else "unknown"
+        )
+        need = "yes" if _NEED_BASED.search(low) else "no" if _MERIT_ONLY.search(low) else "unknown"
+        return offer, need
+
+    def test_an_offer_requirement_is_read_in_the_page_s_own_words(self):
+        assert self._read("Candidates must hold an offer of admission before applying.")[0] == "yes"
+        assert self._read("Open only to admitted students.")[0] == "yes"
+
+    def test_an_explicit_denial_is_read_too(self):
+        assert self._read("You do not need an offer to apply for this award.")[0] == "no"
+        assert self._read("Apply before receiving an offer; decisions are in March.")[0] == "no"
+
+    def test_a_page_that_does_not_mention_offers_stays_unknown(self):
+        assert self._read("Nominated by the department. Direct applications are not accepted.")[
+            0
+        ] == ("unknown")
+
+    def test_need_based_is_read_and_merit_based_alone_is_not_its_denial(self):
+        """Many awards are both. "Merit-based" alone has not said that need is
+        irrelevant, so it must not be read as a no."""
+        assert self._read("A need-based award for students with demonstrated financial need.")[
+            1
+        ] == ("yes")
+        assert self._read("Awards are made regardless of financial need.")[1] == "no"
+        assert self._read("A merit-based scholarship for outstanding applicants.")[1] == "unknown"

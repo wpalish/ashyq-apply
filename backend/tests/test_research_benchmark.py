@@ -335,6 +335,16 @@ def test_draft_dataset_has_ten_cases_without_fabricated_human_signoff(suffix):
     ["", ".draft2", ".draft3", ".draft4", ".draft5", ".draft6", ".draft7", ".reviewed"],
 )
 def test_published_baseline_replays_exactly_without_network(monkeypatch, suffix):
+    """Scoring the frozen capture must reproduce the published numbers exactly.
+
+    This guards against a metric moving by accident. When it moves on
+    purpose — as `wrong_scope_claim_rate` did on 2026-09-22, when the owner
+    settled that the scorer compares programme identity rather than strings —
+    the published files are regenerated from the same frozen capture and the
+    reason is recorded in VERSIONS.md, the same discipline the golden demo
+    hash follows. A number computed under a changed definition is not
+    comparable to the one it replaces, and saying so is the point.
+    """
     import json
     import socket
 
@@ -388,7 +398,22 @@ def test_certification_changes_no_measured_value():
     reviewed = json.loads((root / "baseline/metrics.reviewed.json").read_text(encoding="utf-8"))
     draft7 = json.loads((root / "baseline/metrics.draft7.json").read_text(encoding="utf-8"))
     assert reviewed["metrics"] == draft7["metrics"]
-    assert reviewed["fields"] == draft7["fields"]
+    # The one amendment since signing (owner, 2026-09-23): Aalto's
+    # `programme.teaching_language.primary` became `programme.language`, the
+    # key Vienna and Warsaw already used. Its field row moves into that key's
+    # denominators; nothing else may differ.
+    old_fields = dict(draft7["fields"])
+    moved = old_fields.pop("programme.teaching_language.primary")
+    merged = old_fields["programme.language"]
+    for part in ("coverage", "recall"):
+        merged[part]["numerator"] += moved[part]["numerator"]
+        merged[part]["denominator"] += moved[part]["denominator"]
+        merged[part]["value"] = (
+            merged[part]["numerator"] / merged[part]["denominator"]
+            if merged[part]["denominator"]
+            else None
+        )
+    assert reviewed["fields"] == old_fields
 
 
 def test_scholarship_dimensions_freshness_and_review_have_separate_metrics():
@@ -504,3 +529,156 @@ async def test_capture_reads_canary_output_without_loading_ground_truth(tmp_path
     assert str(observation.programme_urls[0]) == "https://example.edu/programme"
     assert observation.predictions == []
     assert canary.CanaryRunner is original
+
+
+@pytest.mark.asyncio
+async def test_capture_counts_the_search_calls_it_used_to_report_as_zero(tmp_path, monkeypatch):
+    """`search_calls` was initialised to 0 and never incremented, so a case
+    that spent its wall clock on search reported that it had searched nothing."""
+    from app.adapters.search.exa import ExaSearchProvider
+    from evaluation.research.live import capture_one
+    from scripts import canary_discovery as canary
+
+    async def quiet_search(provider, *args, **kwargs):
+        return []
+
+    monkeypatch.setattr(ExaSearchProvider, "search", quiet_search)
+    wrapped: list[object] = []
+
+    async def fake_canary(selector, verbose):
+        wrapped.append(ExaSearchProvider.search)
+        await ExaSearchProvider.search(None, query="computer science")
+        await ExaSearchProvider.search(None, query="admissions")
+        return {"institutions": [{"programs": []}], "run_error": ""}
+
+    monkeypatch.setattr(canary, "run_canary", fake_canary)
+    output = tmp_path / "observation.json"
+    await capture_one("groningen", output, 4)
+    from evaluation.research.schema import Observation
+
+    observation = Observation.model_validate_json(output.read_text())
+    assert observation.telemetry.search_calls == 2
+    assert wrapped[0] is not quiet_search
+    assert ExaSearchProvider.search is quiet_search
+
+
+class TestWhichWayAQuoteSupports:
+    """Owner decision 2026-09-23: the reviewer's words inside a short quote of ours count."""
+
+    def test_both_directions_and_the_cap(self):
+        from evaluation.research.metrics import SUPPORTING_QUOTE_MAX, quote_supports
+
+        assert quote_supports("IELTS 6.5", "Bachelor CS IELTS 6.5")
+        assert quote_supports(
+            "Applicants need Bachelor CS IELTS 6.5 overall.", "Bachelor CS IELTS 6.5"
+        )
+        long_quote = "x " * SUPPORTING_QUOTE_MAX + "Bachelor CS IELTS 6.5"
+        assert not quote_supports(long_quote, "Bachelor CS IELTS 6.5")
+        assert quote_supports("Bachelor  CS\nIELTS 6.5", "Bachelor CS IELTS 6.5")
+        assert not quote_supports("", "Bachelor CS IELTS 6.5")
+        assert not quote_supports("IELTS 7.0 overall", "IELTS 6.5")
+
+    def test_a_sentence_around_the_reviewers_words_now_scores(self):
+        dataset, capture, evidence = inputs()
+        ours = dict(
+            evidence, excerpt="Applicants need Bachelor CS IELTS 6.5 overall, per band 6.0."
+        )
+        raw = capture.model_dump()
+        raw["observations"] = [
+            {
+                "case_id": "example",
+                "predictions": [{"key": "ielts.overall", "value": 6.5, "evidence": ours}],
+            }
+        ]
+        result = score(dataset, Capture.model_validate(raw), allow_drafts=True)
+        assert result["metrics"]["claim_recall"]["numerator"] == 1
+        assert result["metrics"]["verbatim_evidence_rate"]["numerator"] == 1
+
+
+def test_live_scoring_resolves_an_owner_approved_award_identity():
+    """Owner decision 2026-09-23: live capture maps with the reviewed bindings,
+    so an NTU Nanyang Global claim lands on its certified key instead of
+    ``unmapped.scholarship_exists``."""
+    from evaluation.research.identities import IdentityMap
+    from evaluation.research.live import REVIEWED_BINDINGS
+    from evaluation.research.mapping import normalize_subject_claims
+
+    identities = IdentityMap.model_validate_json(REVIEWED_BINDINGS.read_text(encoding="utf-8"))
+    raw = {
+        "claim_type": "scholarship_exists",
+        "normalized_value": "Nanyang Global Scholarship",
+        "subject_key": "Nanyang Global Scholarship",
+        "source_url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/"
+        "scholarship-opportunities/detail/nanyang-scholarship",
+    }
+    [(key, value, _, _)] = normalize_subject_claims("scholarship_exists", raw, identities)
+    assert (key, value) == ("scholarships.nanyang_global.exists", True)
+
+
+def test_scope_compares_case_blind_outside_the_programme():
+    """ "Fall 2027" from a page and "fall 2027" in the corpus are one intake."""
+    from evaluation.research.metrics import scope_matches
+    from evaluation.research.schema import Scope
+
+    label = Scope(university="Example", intake="fall 2027")
+    assert scope_matches(label, Scope(university="Example", intake="Fall 2027"))
+    assert not scope_matches(label, Scope(university="Example", intake="Spring 2027"))
+    assert not scope_matches(label, Scope(university="Example"))
+
+
+def test_a_child_stopped_by_its_own_clock_keeps_what_it_filed(tmp_path, monkeypatch):
+    """Runs 59-62: UBC's kill came mid-funding and every claim it had filed was lost."""
+    import asyncio
+
+    from evaluation.research import live
+    from evaluation.research.schema import Observation
+    from scripts import canary_discovery as canary
+
+    async def slow(*_args, **_kwargs):
+        await asyncio.sleep(5)
+
+    monkeypatch.setattr(canary, "run_canary", slow)
+    output = tmp_path / "groningen.json"
+
+    asyncio.run(live.capture_one("groningen", output, max_pages=5, seconds=0.05))
+
+    observation = Observation.model_validate_json(output.read_text(encoding="utf-8"))
+    assert observation.error == "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"
+
+
+def test_the_oracle_compares_band_maps_regardless_of_key_order():
+    from evaluation.research.oracle import _matches
+
+    expected = {"reading": 6.0, "listening": 6.0, "speaking": 6.0, "writing": 6.0}
+    produced = {"listening": 6.0, "reading": 6.0, "speaking": 6.0, "writing": 6.0}
+    assert _matches(expected, produced)
+    assert not _matches(expected, {**produced, "writing": 5.5})
+
+
+def test_a_descriptive_corpus_population_accepts_silence_but_not_a_wrong_value():
+    from evaluation.research.metrics import scope_matches
+    from evaluation.research.schema import Scope
+
+    expected = Scope(university="U", population="Vancouver applicants using IELTS Academic")
+    assert scope_matches(expected, Scope(university="U"))
+    assert not scope_matches(expected, Scope(university="U", population="transfer"))
+    # A controlled population must still be recorded.
+    assert not scope_matches(Scope(university="U", population="non-EU/EEA"), Scope(university="U"))
+    assert scope_matches(
+        Scope(university="U", population="non-EU/EEA"),
+        Scope(university="U", population="non-eu/eea"),
+    )
+
+
+def test_the_controlled_populations_match_the_scope_reader():
+    from app.adapters import scope_reader
+    from evaluation.research.metrics import CONTROLLED_POPULATIONS
+
+    assert {v.casefold() for _p, v in scope_reader._POPULATIONS} == CONTROLLED_POPULATIONS
+
+
+def test_a_leading_the_is_not_part_of_a_university_name():
+    from evaluation.research.metrics import dimension_matches
+
+    assert dimension_matches("university", "University of Hong Kong", "The University of Hong Kong")
+    assert not dimension_matches("university", "University of Hong Kong", "Hong Kong University")

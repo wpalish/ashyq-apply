@@ -475,10 +475,83 @@ class TestSupersededExcluded:
 #: ``_canonical_demo_dump`` machinery below. GREEN on baseline by
 #: construction; the developer's T32 changes must keep the demo pipeline
 #: byte-identical under the same masking.
+#: Re-captured, 2026-09-23, for a title that names its own degree. **Not
+#: additive.** The old code reproduces the previous constant exactly; 179
+#: leaves changed, in exactly three shapes and nothing else: 120 ×
+#: `claims[*].scope.degree` None → "bachelor", and 59 ×
+#: `requirement_checks[*].published_scope` gaining "degree bachelor" (53
+#: "published for intake Fall 2027" → "published for degree bachelor, intake
+#: Fall 2027"; 6 the same with the population kept). Every changed claim comes
+#: from a page whose title names one bachelor-level degree ("BSc Computing
+#: Science - University of Groningen", "Bachelor of Computing (Computer
+#: Science) - …", "MEXT Undergraduate Scholarship …"). No status, value,
+#: verdict or check outcome moved.
+#:
+#: Re-captured for Phase 3 §7, 2026-09-23: availability is re-rolled from the
+#: runner's eligibility verdict. **Not additive, and not waved through.** The
+#: old code reproduces the previous constant exactly; leaf-by-leaf, exactly
+#: **two** leaves changed, both `scholarships[*].available_this_intake`,
+#: both "unknown" → "no": NUS's ASEAN Undergraduate Scholarship and KU
+#: Leuven's Flemish Community Tuition Grant. For both, the runner had already
+#: settled `applicant_eligible = "no"` (citizenship check NOT_APPLICABLE for a
+#: Kazakh applicant), but availability kept the adapter's earlier "unknown".
+#: No claim, check, verdict or classification moved.
+#:
+#: Re-captured a sixth time, for Phase 3 §6's offer/need decisions: additive,
+#: 0 removed. Every award gains two "unknown" fields, and **one real claim
+#: appears** — NUS's Financial Aid page says the award "depends on an
+#: assessment of demonstrated financial need", so `scholarship_need_based` is
+#: recorded for it. A fact the product previously dropped.
+#:
+#: Re-captured a fifth time, for plan V2-30: additive again, 121 added lines
+#: and 0 removed, every one of them a `published_scope` on a requirement check
+#: (74 "published for intake Fall 2027", 6 of those also naming international
+#: applicants, the rest empty because the page said nothing).
+#:
+#: Re-captured a fourth time, for plan V2-23's missing kind. **Not additive**,
+#: and the first re-capture that is not: three fields change on the demo's one
+#: conflict — `kind` (true_conflict -> more_specific_source), the drafted
+#: question and the resolution rule. No claim, value, status, check, bucket or
+#: result moved; the diff is those three lines and nothing else, checked. The
+#: conflict is Delft's programme page against its admissions page, which the
+#: phase guide says is a general rule beside a specific one rather than a
+#: contradiction.
+#:
 #: Re-captured a third time for V2-25's successor V2-26, under the same proof:
 #: exactly one added line — `"kind": "true_conflict"` on the demo's single
 #: conflict (Delft's programme page against its admissions page, both stating
 #: the same intake, so a real contradiction). 0 removed.
+#:
+#: Re-captured a fifth time, 2026-09-22, for the owner's decision that a
+#: programme rule beside a university-wide rule is a scope difference rather
+#: than a contradiction. **This drift is not additive and was not waved
+#: through as if it were.** Leaf values: 20247 before, 20247 after. Exactly
+#: **two** leaves changed, both at `claims[*].status`, both CONFLICTING →
+#: VERIFIED_CURRENT. No value, verdict, bucket or check moved.
+#:
+#: The two are the textbook case: Delft's programme page publishes IELTS 6.5
+#: and its university admissions page 6.0. Both were poisoned, so the product
+#: told the applicant nothing at all about Delft's English requirement. The
+#: programme page's 6.5 is now preferred and usable, and the 6.0 is kept and
+#: still shown beside it.
+#:
+#: Re-captured a fourth time for plan V2-30, and proved additive on this tree
+#: rather than on the one the change was written against: the pre-change dump
+#: hashed to bf20e437…, exactly the constant it replaced, which confirms the
+#: baseline. **415 keys added, 0 removed**, every one of them `"qualification":
+#: null`, every one at the single parent path `[*].claims[*].scope`, and
+#: deleting that key from the new dump reproduces the old dump object-for-object.
+#: Not one value is non-null: no page in the demo corpus states a qualification
+#: of its own. Groningen's "a diploma equivalent to the Dutch VWO" is a yardstick
+#: for comparison, not a scope, and reading it as one would be this pipeline
+#: inventing an equivalence — which is the thing it exists not to do.
+#:
+#: Re-captured a third time for V2-33, under the same proof: **0 removed lines,
+#: 34 added**, and every addition is the same new key — `"faculty_restrictions":
+#: []` — on the seventeen scholarships in the demo. No value moved, and the new
+#: readers produced nothing on this corpus, which is correct: no demo award page
+#: states a faculty or programme restriction, and a reader that invented one
+#: would be the bug. Anything else that moves this constant is a regression.
 #:
 #: Re-captured a second time for V2-25, under the same proof: 0 removed lines
 #: of 2651 changed, every addition a key inside a claim's `scope`, on the four
@@ -492,7 +565,15 @@ class TestSupersededExcluded:
 #: changed). That is the whole of the intended change — a claim now records
 #: what its page stated about who it covers — and it is the only reason this
 #: constant has a second value. Anything else that moves it is a regression.
-GOLDEN_DEMO_SHA256 = "6b7e7a98390c2a465479ba4f03a14d317722cd43624a70b074ba4f3c663f3f39"
+#:
+#: Re-captured for run 76's HKU finding (2026-09-26, Claude). `diff old new` is
+#: one line: a program_exists claim's scope ``"degree": null`` became
+#: ``"degree": "bachelor"``. The claim's value already named the programme's
+#: degree from its own title; its scope now says so instead of staying silent.
+#: A silent dimension gained a statement; no result, bucket, check, value or
+#: other scope key moved. Previous value:
+#: 3492987b16c498456c6626e744c7c84a2113b46eae32a90f88a59a4db7f2c9b2
+GOLDEN_DEMO_SHA256 = "79dd02254ec44f2771b3f010402af4496fc483bb8d47f3fc7a0b9c93949e5848"
 
 #: The golden was captured with the real clock on 2026-09-07, and the baseline
 #: payload embeds that date: ``requirement_checks[*].applicant_value`` and

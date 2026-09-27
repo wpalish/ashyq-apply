@@ -5,8 +5,9 @@ from __future__ import annotations
 from datetime import date, datetime
 from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_serializer
 
+from app.domain.claim_scope import ClaimScope
 from app.domain.enums import (
     AdmissionsFit,
     ApplicationMode,
@@ -53,6 +54,13 @@ class RequirementCheck(Base):
     is_hard_filter: bool = False
     explanation: str = ""
     claim_ids: list[str] = Field(default_factory=list)
+    #: Who the page publishing this requirement said it is for, in its own
+    #: terms ("published for international applicants, Fall 2027"). Empty when
+    #: the page said nothing and when no scope was read at all — those are
+    #: different facts, and the difference belongs in the evidence, not here:
+    #: this line exists so an applicant can see *whether* a rule is about them
+    #: without opening the source.
+    published_scope: str = ""
 
 
 class CoverageBreakdown(Base):
@@ -87,6 +95,11 @@ class Scholarship(Base):
     citizenship_restrictions: list[str] = Field(default_factory=list)
     residency_restrictions: list[str] = Field(default_factory=list)
     program_restrictions: list[str] = Field(default_factory=list)
+    #: Faculties or schools the page limits the award to, in the page's own
+    #: words. Separate from ``program_restrictions`` because §6 decomposes
+    #: them separately: "the Faculty of Engineering" and "the BSc Data
+    #: Science programme" exclude different people.
+    faculty_restrictions: list[str] = Field(default_factory=list)
     degree_applicability: Tristate = Field(
         default="unknown",
         description="Whether the award applies to the applicant's degree level",
@@ -103,6 +116,12 @@ class Scholarship(Base):
     renewal_requirements: list[str] = Field(default_factory=list)
     min_test_scores: dict[str, float] = Field(default_factory=dict)
     stackable: Tristate = "unknown"
+    #: Whether an admission offer must be held first. "unknown" is the honest
+    #: default: most award pages never say, and assuming either answer sends
+    #: an applicant to the wrong queue at the wrong time.
+    offer_required: Tristate = "unknown"
+    #: Whether the award is decided on demonstrated financial need.
+    financial_need_required: Tristate = "unknown"
     published_count: int | None = Field(
         default=None, description="Only set when officially published"
     )
@@ -259,6 +278,23 @@ class DocumentItem(Base):
     lead_time_days: int | None = None
     source_url: str | None = None
     claim_ids: list[str] = Field(default_factory=list)
+    #: What the page this document was read from said it covered. ``None``
+    #: means nobody recorded a scope — not that the document is universal.
+    #: Phase 3 §9: "store source and scope for each required document".
+    scope: ClaimScope | None = None
+
+    @model_serializer(mode="wrap")
+    def _omit_unrecorded_scope(self, handler):
+        """Leave ``scope`` out when nobody recorded one, as ``Claim`` does.
+
+        A key whose value is "we never looked" invites a reader to treat the
+        absence as a finding, and a checklist stored before this field existed
+        keeps its payload byte-identical.
+        """
+        data = handler(self)
+        if isinstance(data, dict) and data.get("scope") is None:
+            data.pop("scope", None)
+        return data
 
 
 class DocumentChecklist(Base):

@@ -127,3 +127,57 @@ class TestTheLimiterDoesNotLeak:
         # Still inside the window, so the count still stands.
         assert limiter.allow("auth:live", 2, 101.0) is True
         assert limiter.allow("auth:live", 2, 102.0) is False
+
+
+class TestTheCaptureCanReadThemBack:
+    """EXTRA-5 stores per-page outcomes in the benchmark capture, and it reads
+    them through `canary_discovery.page_outcomes`, which parses them back out
+    of the run's own diagnostics. If the production runner ever stops writing
+    that exact line, the capture records an empty list and says nothing —
+    silently, which is the failure mode this diagnostic exists to end.
+    """
+
+    @pytest.mark.asyncio
+    async def test_a_real_run_writes_lines_the_capture_parser_understands(self, settings, profile):
+        import sqlalchemy as sa
+        from sqlalchemy.orm import sessionmaker
+
+        from app.db import migrate_to_head
+        from app.models import ResearchRun
+        from app.pipeline.runner import ResearchRunner
+        from app.pipeline.state import RunState
+        from scripts.canary_discovery import page_outcomes
+
+        migrate_to_head(settings.database_url)
+        engine = sa.create_engine(settings.database_url, connect_args={"check_same_thread": False})
+        session = sessionmaker(bind=engine, future=True)()
+
+        row = profile_row(session, profile)
+        run = ResearchRun(
+            profile_id=row.id,
+            stage="queued",
+            demo_mode=True,
+            candidate_limit=8,
+            verify_limit=8,
+            stage_state=RunState.load(None).dump(),
+        )
+        session.add(run)
+        session.commit()
+
+        await ResearchRunner(session, run, profile, settings).run_to_decision()
+        session.refresh(run)
+
+        found = page_outcomes(run)
+        assert found, "the runner files one record per page; the parser must find them"
+        categories = {record["category"] for record in found}
+        assert categories <= {
+            "fetch-failed",
+            "unreadable",
+            "classifier-rejected",
+            "no-pattern-match",
+            "fetched-ok",
+        }, f"unexpected category, so the frozen vocabulary moved: {categories}"
+        assert all(record["url"] for record in found)
+
+        session.close()
+        engine.dispose()

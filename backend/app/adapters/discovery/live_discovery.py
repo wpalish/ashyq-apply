@@ -40,15 +40,15 @@ from typing import TypedDict
 from urllib.parse import urljoin, urlparse, urlunparse
 from xml.etree import ElementTree
 
-from bs4 import BeautifulSoup
-
 from app.adapters.base import Candidate, CandidateProgram, PageOutcome
 from app.adapters.fetching import Fetcher
+from app.adapters.html_parse import parse_html
 from app.adapters.page_classifier import (
     PageClassification,
     PageType,
     classify_page,
 )
+from app.adapters.search.ontology import canonical_field, load_ontology
 from app.schemas.profile import ApplicantProfileIn
 from app.schemas.result import RankingEntry
 
@@ -78,6 +78,25 @@ MAX_LINKS_SCANNED = 400
 #: real programme page. Costs little: the pipeline fetches these pages anyway
 #: and the fetcher caches, so a confirmed candidate is free downstream.
 MAX_PROGRAM_CANDIDATES_CHECKED = 8
+#: Whether step 7 re-judges the programme pages the search provider added.
+#: Off: run 35721950650 measured recall 1/10 against 4/10 without it, and
+#: precision fell too, so it removed correct pages rather than junk. Turn it
+#: on only together with a capture that shows what it does.
+CONFIRM_SEARCH_PROGRAMMES = False
+#: Whether search runs *before* the navigation fallback, and the fallback is
+#: skipped when search found a programme page. Off: appending search after the
+#: other generators is the measured default, and interleaving once cost whole
+#: cases. Run 26 lost Groningen to ~50 navigation reads of faculty home pages
+#: before search found the programme at once; this exists so that trade is
+#: measured rather than argued. The benchmark harness flips it per capture.
+SEARCH_BEFORE_NAVIGATION = False
+#: Experiment ER-04, off until measured: a search candidate on a host that
+#: already refused this run's fetcher outright (401/403, robots.txt
+#: unreachable, stalled) does not take one of the programme-page slots.
+#: The 2026-09-27 Toronto trace spent all three slots on future.utoronto.ca
+#: after that host had answered 403 to every read; a reachable campus host
+#: was never tried. The benchmark harness flips it per capture.
+SKIP_REFUSED_SEARCH_HOSTS = False
 #: Pages walked during the navigation fallback. Universities routinely nest
 #: "Degree programmes" -> "Bachelor programmes" -> a programme, so one hop is
 #: not enough; an unbounded walk would be a crawl.
@@ -241,6 +260,9 @@ _URL_EXCLUSIONS = re.compile(
     r"/(news|nieuws|actueel|press|blog|events?|agenda|calendar|vacature|vacanc"
     r"|jobs?|careers?|alumni|donate|shop|library|contact|privacy|cookie|search"
     r"|login|signin|account|basket|cart|rss|feed|tag|author|archive)(/|$)"
+    # One course's page is never a programme: Warsaw's catalogue answered a
+    # computer science search with "Introduction to computer science I" (run 54).
+    r"|/courses?/(view|details?)(/|$)"
     r"|\.(jpg|jpeg|png|gif|svg|webp|css|js|zip|mp4|mp3|docx?|xlsx?|pptx?)$",
     re.IGNORECASE,
 )
@@ -436,10 +458,38 @@ def matches_field(url: str, fields: list[str]) -> int:
     path = (urlparse(url).path or "").lower()
     bonus = 0
     for field_name in fields:
-        for word in re.split(r"[^a-z]+", field_name.lower()):
-            if len(word) > 3 and word in path:
-                bonus += 8
+        # One field counts once, under whichever of its names the path uses.
+        best = 0
+        for name in with_strong_aliases([field_name]):
+            words = {w for w in re.split(r"[^a-z]+", name.lower()) if len(w) > 3}
+            best = max(best, 8 * sum(1 for w in words if w in path))
+        bonus += best
     return bonus
+
+
+@lru_cache(maxsize=64)
+def _strong_aliases(field_name: str) -> tuple[str, ...]:
+    key = canonical_field(field_name)
+    if key is None:
+        return ()
+    concept = load_ontology().fields.get(key) or {}
+    return tuple(concept.get("strong_aliases") or ())
+
+
+def with_strong_aliases(fields: list[str]) -> list[str]:
+    """The applicant's fields plus the ontology's strong aliases for each.
+
+    Groningen calls its programme "Computing Science"; the ontology records that
+    as the same field as "Computer Science", and discovery compared the words
+    literally, so the programme page never scored as the applicant's subject.
+    Only strong aliases: a related concept is never a match.
+    """
+    out: list[str] = []
+    for field_name in fields:
+        for name in (field_name, *_strong_aliases(field_name)):
+            if name.lower() not in (o.lower() for o in out):
+                out.append(name)
+    return out
 
 
 def degree_level_named(url: str) -> str | None:
@@ -535,11 +585,56 @@ def matches_field_text(label: str, fields: list[str]) -> bool:
     words = {w for w in re.split(r"[^a-z]+", label.lower()) if len(w) > 3}
     if not words:
         return False
-    for field_name in fields:
+    own = {f.lower() for f in fields}
+    for field_name in with_strong_aliases(fields):
         wanted = {w for w in re.split(r"[^a-z]+", field_name.lower()) if len(w) > 3}
-        if wanted and wanted <= words:
+        if not wanted or not wanted <= words:
+            continue
+        if field_name.lower() in own:
+            return True
+        # An alias names the field only when nothing else in the title names
+        # another subject: "Informatics" is computer science, "Business
+        # Informatics" is not, and "Computing and Data Science" is not
+        # "Computing" (run 50, Vienna and HKU).
+        if words - wanted <= _TITLE_FILLER:
             return True
     return False
+
+
+#: Words a programme title carries besides its subject: level, form, and the
+#: procedure notes Vienna appends ("with entrance exam procedure").
+_TITLE_FILLER = frozenset(
+    {
+        "bachelor",
+        "bachelors",
+        "master",
+        "masters",
+        "degree",
+        "programme",
+        "program",
+        "programmes",
+        "programs",
+        "hons",
+        "honours",
+        "honors",
+        "with",
+        "entrance",
+        "exam",
+        "procedure",
+        "undergraduate",
+        "study",
+        "studies",
+        "course",
+        "english",
+        "taught",
+        "full",
+        "time",
+        "year",
+        "years",
+        "track",
+        "major",
+    }
+)
 
 
 def matches_degree(url: str, degree: str) -> int:
@@ -928,6 +1023,10 @@ class LiveDiscoveryAdapter:
         #    so a registry entry with an admissions seed suppressed the fallback
         #    and the run finished with no programme — which the live canary
         #    showed on six of ten sites.
+        searched_early = False
+        if SEARCH_BEFORE_NAVIGATION and not selected[PageCategory.PROGRAM_PAGE]:
+            await self._add_search_results(entry, domain, selected, trace, profile)
+            searched_early = True
         if not selected[PageCategory.PROGRAM_PAGE]:
             trace.used_navigation_fallback = True
             await self._navigation_fallback(entry, domain, selected, trace, profile)
@@ -940,8 +1039,25 @@ class LiveDiscoveryAdapter:
         #    difference, so discovery asks it rather than guessing harder.
         await self._confirm_programs(selected, ranked, trace, profile)
         await self._walk_catalogs(entry, selected, trace, profile)
+        # The walker confirms its own candidates under the T29 contract, which
+        # deliberately trusts a university's own catalogue listing — so the
+        # snapshot is taken after it, and step 7 judges only what search adds.
+        confirmed_so_far = set(selected[PageCategory.PROGRAM_PAGE])
 
-        await self._add_search_results(entry, domain, selected, trace, profile)
+        if not searched_early:
+            await self._add_search_results(entry, domain, selected, trace, profile)
+
+        # 7. Confirm what search added — built, and off until it is measured.
+        #    Step 4 runs before search, so a programme page the provider
+        #    contributes reaches the candidate unconfirmed. Applying the
+        #    step-4 predicate to those pages *looked* obviously right and the
+        #    first live run said otherwise: programme-page recall fell 4/10 →
+        #    1/10 and precision fell with it, so it cut correct pages and kept
+        #    junk. The predicate is wrong for search-sourced pages in a way I
+        #    cannot yet name, and a rule that removes evidence has to earn its
+        #    place with a number, not an argument.
+        if CONFIRM_SEARCH_PROGRAMMES:
+            await self._confirm_added_programs(selected, confirmed_so_far, trace, profile)
 
         trace.selected = {k: list(v) for k, v in selected.items() if v}
         self._apply(candidate, selected, profile, trace)
@@ -982,6 +1098,51 @@ class LiveDiscoveryAdapter:
             # Only replace the list when something was actually checked; an
             # unreachable site keeps its leads rather than losing them silently.
             selected[PageCategory.PROGRAM_PAGE] = confirmed
+
+    async def _confirm_added_programs(
+        self,
+        selected: dict[str, list[str]],
+        already_confirmed: set[str],
+        trace: DiscoveryTrace,
+        profile: ApplicantProfileIn,
+    ) -> None:
+        """Apply the step-4 filter to the programme pages search added.
+
+        The same question step 4 asks: does this page describe a programme at
+        the requested level in a requested field? A page that cannot be read
+        is kept rather than dropped — an unreachable page is not a refusal.
+
+        The catalogue walker's own candidates are not re-judged here; it
+        confirms them under the T29 contract, which deliberately trusts a
+        university's own catalogue listing.
+        """
+        newcomers = [
+            url for url in selected[PageCategory.PROGRAM_PAGE] if url not in already_confirmed
+        ]
+        if not newcomers:
+            return
+
+        requested_level = str(profile.context.level)
+        fields = list(profile.context.intended_fields)
+        refused: set[str] = set()
+        # Anything past the cap stays unconfirmed rather than being dropped:
+        # losing a lead unread is the worse failure, and MAX_PAGES_PER_CATEGORY
+        # keeps `selected` far below this in practice. If that ever changes,
+        # this is the line that decides which way the doubt falls.
+        for url in newcomers[:MAX_PROGRAM_CANDIDATES_CHECKED]:
+            result = await self.fetcher.get(url)
+            if not result.ok:
+                continue
+            page = classify_page(url=url, html=result.text)
+            reason = profile_rejects(page, requested_level, fields)
+            if reason is not None:
+                trace.reject(url, reason)
+                refused.add(url)
+
+        if refused:
+            selected[PageCategory.PROGRAM_PAGE] = [
+                url for url in selected[PageCategory.PROGRAM_PAGE] if url not in refused
+            ]
 
     async def _walk_catalogs(
         self,
@@ -1103,7 +1264,11 @@ class LiveDiscoveryAdapter:
         try:
             intent = DiscoveryIntent(
                 institution=entry["name"],
-                domain=domain,
+                # The institution, not the host its homepage sits on: Warsaw's
+                # registry homepage is en.uw.edu.pl and its programme catalogue
+                # is informatorects.uw.edu.pl, so a host filter kept search on
+                # the news pages (run 53).
+                domain=registrable_domain(domain) or domain,
                 degree=profile.context.level,
                 field=fields[0],
             )
@@ -1128,17 +1293,35 @@ class LiveDiscoveryAdapter:
 
         pages = selected[PageCategory.PROGRAM_PAGE]
         added = 0
+        refused = getattr(self.fetcher, "refused_hosts", {})
+        skipped: list[str] = []
         for found in report.candidates:
             if len(pages) >= MAX_PAGES_PER_CATEGORY:
                 break
             if found.url in pages:
                 continue
+            if SKIP_REFUSED_SEARCH_HOSTS and (urlparse(found.url).hostname or "") in refused:
+                skipped.append(found.url)
+                continue
             pages.append(found.url)
             added += 1
+        if skipped:
+            trace.errors.append(
+                f"search skipped {len(skipped)} candidate(s) on hosts that refused this run: "
+                + ", ".join(skipped)[:400]
+            )
+        # Which pages search offered, so a miss can be told apart from
+        # "search never saw the programme" (run 46, Warsaw).
+        offered = ", ".join(c.url for c in report.candidates[:5]) or "none"
         trace.errors.append(
-            f"search added {added} programme page(s) via {report.provider}"
-            if added
-            else f"search added nothing via {report.provider}"
+            (
+                f"search added {added} programme page(s) via {report.provider}"
+                if added
+                else f"search added nothing via {report.provider}"
+            )
+            + f"; offered: {offered}"[:600]
+            + f"; queries {len(report.queries_run)}, failed {len(report.failed_queries)}"
+            + f", rejected {dict(report.rejection_counts)}"[:300]
         )
 
     def _apply(
@@ -1199,6 +1382,7 @@ class LiveDiscoveryAdapter:
         # walk reached the programme list.
         queue = list(selected[PageCategory.PROGRAM_CATALOG][:2])
         walked: set[str] = set()
+        scores: dict[str, int] = {}
         homepage_tried = False
 
         while len(walked) < MAX_FALLBACK_PAGES:
@@ -1258,11 +1442,26 @@ class LiveDiscoveryAdapter:
                         queue.insert(0, canonical)
                     else:
                         queue.append(canonical)
-                if (
-                    len(selected[category]) < MAX_PAGES_PER_CATEGORY
-                    and canonical not in selected[category]
-                ):
+                if canonical in selected[category]:
+                    continue
+                if len(selected[category]) < MAX_PAGES_PER_CATEGORY:
                     selected[category].append(canonical)
+                    scores[canonical] = score
+                    continue
+                # Keep the strongest leads, not the first ones. Vienna's
+                # bachelor list names "Bachelor Programmes by Topic", African
+                # Studies and Egyptology before Computer Science, and the
+                # three slots were gone by the time the applicant's subject
+                # came up. Only leads this walk scored can be displaced: a
+                # seed or a sitemap pick stays.
+                ours = [u for u in selected[category] if u in scores]
+                if not ours:
+                    continue
+                weakest = min(ours, key=lambda u: scores[u])
+                if score > scores[weakest]:
+                    selected[category][selected[category].index(weakest)] = canonical
+                    del scores[weakest]
+                    scores[canonical] = score
 
 
 def _first(urls: list[str]) -> str | None:
@@ -1284,7 +1483,7 @@ def _program_name_from_url(url: str, fields: list[str], degree: object) -> str:
 
 
 def _harvest_links(html: str, base: str, domain: str) -> list[tuple[str, str]]:
-    soup = BeautifulSoup(html, "lxml")
+    soup = parse_html(html)
     out: list[tuple[str, str]] = []
     seen: set[str] = set()
     for anchor in soup.find_all("a", href=True)[:MAX_LINKS_SCANNED]:
