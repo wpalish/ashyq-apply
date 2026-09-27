@@ -82,6 +82,67 @@ _SECTION_WORDS = (
 )
 
 
+#: Experiment ER-05, off until a paired capture decides. The KAIST blind trace
+#: of 2026-09-27 found the undergraduate admission route behind a link labelled
+#: "학부 입학" that the pipeline saw on six pages and never followed: it names
+#: neither the field nor a URL word. With this on, a link whose text names
+#: admission *and* the undergraduate level becomes a candidate. The words are
+#: general vocabulary per language, not read from any benchmark or held-out
+#: page.
+ADMISSION_LEXICON = False
+_ADMISSION_WORDS = (
+    "admission",
+    "admissions",
+    "apply",
+    "applying",
+    "entry requirements",
+    "입학",
+    "入学",
+    "zulassung",
+    "bewerbung",
+    "přijímací",
+    "prijimaci",
+    "přijetí",
+    "vastuvõtt",
+    "ammissione",
+    "ammissioni",
+    "priėmimas",
+    "kabul",
+    "başvuru",
+    "admisión",
+    "hakeminen",
+    "haku",
+    "поступление",
+    "прием",
+    "приём",
+    "қабылдау",
+)
+_UNDERGRADUATE_WORDS = (
+    "undergraduate",
+    "bachelor",
+    "bachelor's",
+    "first-cycle",
+    "학부",
+    "学部",
+    "本科",
+    "bakalář",
+    "bakalářsk",
+    "bakalaureus",
+    "bakalaur",
+    "laurea triennale",
+    "lisans",
+    "kandidaatti",
+    "бакалавр",
+)
+
+
+def _names_admission_route(text: str) -> bool:
+    lowered = text.lower()
+    return any(w in lowered for w in _ADMISSION_WORDS) and any(
+        w in lowered for w in _UNDERGRADUATE_WORDS
+    )
+
+
 @dataclass(frozen=True, slots=True)
 class NavigationLink:
     url: str
@@ -194,6 +255,10 @@ def _score(link: NavigationLink, intent: DiscoveryIntent) -> tuple[int, list[str
     if any(word in text or _names(word, url) for word in _SECTION_WORDS):
         score += 2
         signals.append("education_section")
+
+    if ADMISSION_LEXICON and _names_admission_route(link.text):
+        score += 5
+        signals.append("admission_route_section")
 
     return score, signals
 
