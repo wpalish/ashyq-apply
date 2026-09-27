@@ -1363,6 +1363,17 @@ Negative observations: KAIST replay on another runner lost every robots.txt to C
 harness counted search_calls=0 under Serper (fixed ae31935); NU/METU/Masaryk exhaust 120 s before any
 programme page. Next: ER-06 then ER-05, one at a time, same ABBA protocol.
 
+### ER-06 paired test, 2026-09-27 (claude-opus-5)
+`REJECT_ARCHIVE_HOSTS` (1134da3, default off): mirror/repository/journal/dated-course-archive URLs dropped in
+the search prefilter. ABBA on cloud runners, 3 dev + 9 held-out universities, equal 60 calls/120 s. It did
+what it says (KAIST lost ftp/pure/2006 pages; Vilnius lost a journal article) but verified claims were equal in
+every pair: **tested, neutral, not promoted**. `runs.2026-09-27/er06.paired.txt`. A held-out journal host name
+was deliberately NOT put in the list (that would tune on test data).
+Runner choice: `benchmark-capture.yml` now takes `runner` (ubuntu-latest | self-hosted label, e.g.
+`ashyq-home`) and logs which machine read the sites (ca7400a). The owner is setting up a self-hosted runner
+under WSL; after it is Idle, re-take the baseline there before comparing rules (the network is part of the
+measurement: Aalto and admission.kaist.ac.kr robots.txt time out from the cloud).
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
