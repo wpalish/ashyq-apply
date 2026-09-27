@@ -18,6 +18,10 @@ name: benchmark-capture
 on:
   workflow_dispatch:
     inputs:
+      runner:
+        description: 'Where the live reads happen: ubuntu-latest (GitHub cloud) or self-hosted (the owner''s computer). Sites see this machine''s IP.'
+        required: false
+        default: 'ubuntu-latest'
       case:
         description: 'One cohort id (groningen, delft, aalto, vienna, warsaw, ubc, toronto, hku, ntu, kaist), or blank for all ten'
         required: false
@@ -53,7 +57,7 @@ permissions:
 jobs:
   capture:
     if: inputs.mode == 'benchmark' || inputs.mode == ''
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runner || 'ubuntu-latest' }}
     # Ten universities at a two-minute budget each, plus install and scoring.
     timeout-minutes: 45
     defaults:
@@ -88,6 +92,7 @@ jobs:
 
       - name: Say which pipeline is being measured
         run: |
+          echo "runner=${{ runner.name }} os=${{ runner.os }} environment=${{ runner.environment }}"
           if [ -n "${{ secrets.UNIMATCH_SERPER_API_KEY }}" ]; then
             echo "search provider: serper"
           elif [ -n "${{ secrets.UNIMATCH_BRAVE_API_KEY }}" ]; then
@@ -374,7 +379,7 @@ jobs:
   # and returns in the log as a base64 tarball. expert_baseline does not score.
   expert:
     if: startsWith(inputs.mode, 'expert_')
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runner || 'ubuntu-latest' }}
     timeout-minutes: 55
     defaults:
       run:
@@ -399,7 +404,12 @@ jobs:
       - run: python -m venv .venv
       - run: .venv/bin/pip install -q -r requirements-dev.txt
       - name: Provider
-        run: echo "search provider=$UNIMATCH_SEARCH_PROVIDER sha=$(git rev-parse HEAD)"
+        # Which machine read the sites is part of the measurement: a cloud
+        # runner and a home connection get different answers (Aalto's
+        # robots.txt timed out from GitHub's cloud 3/3 on 2026-09-27).
+        run: |
+          echo "search provider=$UNIMATCH_SEARCH_PROVIDER sha=$(git rev-parse HEAD)"
+          echo "runner=${{ runner.name }} os=${{ runner.os }} environment=${{ runner.environment }}"
 
       - name: Baseline capture and blinded packet
         if: inputs.mode == 'expert_baseline'

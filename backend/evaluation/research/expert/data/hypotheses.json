@@ -101,11 +101,11 @@
     },
     {
       "id": "ER-06",
-      "status": "candidate",
+      "status": "tested",
       "case_ids": [
         "kaist"
       ],
-      "observation": "KAIST baseline and ER-04 captures chose ftp.kaist.ac.kr (CTAN PDF), pure.kaist.ac.kr (clipping) and an.kaist.ac.kr/courses/2006 as programme pages; held-out Vilnius chose infedu.vu.lt journal pages and Tartu a conference news item.",
+      "observation": "KAIST baseline and ER-04 captures chose ftp.kaist.ac.kr (CTAN PDF), pure.kaist.ac.kr (clipping) and an.kaist.ac.kr/courses/2006 as programme pages; held-out Vilnius chose infedu.vu.lt journal pages and Tartu a conference news item. Tested 2026-09-27 (1134da3, cloud runners, ABBA, 60 calls/120 s): the switch removed the ftp/pure/2006-archive pages from KAIST's slots and a journal article from Vilnius's, but verified claims were equal in every paired arm on all 12 universities (Charles 3/3, Tartu 2/2, Vilnius 3/3, TUM 1 vs off 1/0, others 0). No precision or scope loss, no recall gain: neutral. Not promoted; switch stays off. Its value depends on a later extraction step (KAIST's freed slots went to bcs.kaist.ac.kr and the admissions index, which yielded no claims).",
       "proposed_rule": "Mirror, repository, research-portal, journal and dated course-archive hosts/paths are not programme-page candidates.",
       "integration_seam": "backend/app/adapters/search/retrieval.py prefilter (page-kind rejection switch)",
       "counterexample": "Some universities host real programme pages under unusual subdomains; a host-name list can reject a valid route.",
@@ -115,7 +115,7 @@
         "backend/evaluation/research/expert/data/runs.2026-09-27/er04.paired.txt"
       ],
       "policy_guard": "Rejection only removes discovery candidates; no evidence rule is relaxed.",
-      "validation_artifact": null
+      "validation_artifact": "backend/evaluation/research/expert/data/runs.2026-09-27/er06.paired.txt"
     }
   ]
 }
