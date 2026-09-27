@@ -1374,6 +1374,17 @@ Runner choice: `benchmark-capture.yml` now takes `runner` (ubuntu-latest | self-
 under WSL; after it is Idle, re-take the baseline there before comparing rules (the network is part of the
 measurement: Aalto and admission.kaist.ac.kr robots.txt time out from the cloud).
 
+### ER-05 paired test, 2026-09-27 (claude-opus-5)
+`ADMISSION_LEXICON` (3962468, default off): navigation links naming undergraduate admission become hop
+candidates. ABBA, cloud, 3 dev + 9 held-out, equal budget. **Rejected**: no arm reached KAIST's menu=40 —
+hop candidates are appended after search and never get one of the three slots. Differences were drift:
+Vilnius on 3/off 0 came from Serper's order, and those claims are about **Bioinformatics** (wrong programme)
+yet count as "verified" — the held-out paired metric counts wrong-programme claims; judge held-out claims by
+programme identity, not by `claims_verified`. No extractor emits `ClaimType.ADMISSION_ROUTE` at all.
+Evidence: `runs.2026-09-27/er05.paired.txt`, `er05.readdiff.txt`.
+Next useful work: (1) the owner's self-hosted runner and a new baseline; (2) an ADMISSION_ROUTE extractor
+("admitted without a declared major" statements) tested with the oracle URL before any discovery change.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
