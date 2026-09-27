@@ -90,6 +90,13 @@ CONFIRM_SEARCH_PROGRAMMES = False
 #: before search found the programme at once; this exists so that trade is
 #: measured rather than argued. The benchmark harness flips it per capture.
 SEARCH_BEFORE_NAVIGATION = False
+#: Experiment ER-04, off until measured: a search candidate on a host that
+#: already refused this run's fetcher outright (401/403, robots.txt
+#: unreachable, stalled) does not take one of the programme-page slots.
+#: The 2026-09-27 Toronto trace spent all three slots on future.utoronto.ca
+#: after that host had answered 403 to every read; a reachable campus host
+#: was never tried. The benchmark harness flips it per capture.
+SKIP_REFUSED_SEARCH_HOSTS = False
 #: Pages walked during the navigation fallback. Universities routinely nest
 #: "Degree programmes" -> "Bachelor programmes" -> a programme, so one hop is
 #: not enough; an unbounded walk would be a crawl.
@@ -1286,13 +1293,23 @@ class LiveDiscoveryAdapter:
 
         pages = selected[PageCategory.PROGRAM_PAGE]
         added = 0
+        refused = getattr(self.fetcher, "refused_hosts", {})
+        skipped: list[str] = []
         for found in report.candidates:
             if len(pages) >= MAX_PAGES_PER_CATEGORY:
                 break
             if found.url in pages:
                 continue
+            if SKIP_REFUSED_SEARCH_HOSTS and (urlparse(found.url).hostname or "") in refused:
+                skipped.append(found.url)
+                continue
             pages.append(found.url)
             added += 1
+        if skipped:
+            trace.errors.append(
+                f"search skipped {len(skipped)} candidate(s) on hosts that refused this run: "
+                + ", ".join(skipped)[:400]
+            )
         # Which pages search offered, so a miss can be told apart from
         # "search never saw the programme" (run 46, Warsaw).
         offered = ", ".join(c.url for c in report.candidates[:5]) or "none"

@@ -708,6 +708,52 @@ class TestDiscoveryUsesSearchOnlyWhenOneIsConfigured:
 
         assert asked and all(d == ["uw.edu.pl"] for d in asked)
 
+    async def _merge_with_refusal(self, tmp_path, profile, monkeypatch, *, skip: bool):
+        import app.adapters.discovery.live_discovery as live
+        import app.adapters.search as search_pkg
+        from app.adapters.discovery.live_discovery import DiscoveryTrace, PageCategory
+
+        intent = an_intent()
+        provider = FakeSearchProvider(
+            {
+                q.text: [
+                    ("https://blocked.nu.edu.kz/computer-science", "Computer Science", ""),
+                    ("https://open.nu.edu.kz/computer-science", "Computer Science", ""),
+                ]
+                for q in queries_for(intent, budget=99)
+            },
+            now=NOW,
+        )
+        monkeypatch.setattr(search_pkg, "get_search_provider", lambda: provider)
+        monkeypatch.setattr(live, "SKIP_REFUSED_SEARCH_HOSTS", skip)
+        adapter = self._adapter(tmp_path)
+        adapter.fetcher.refused_hosts = {"blocked.nu.edu.kz": "HTTP 403"}
+        selected: dict[str, list[str]] = {
+            c: [] for c in vars(PageCategory).values() if isinstance(c, str)
+        }
+        trace = DiscoveryTrace(institution="NU", domain="nu.edu.kz")
+        await adapter._add_search_results(
+            {"name": "Nazarbayev University"}, "nu.edu.kz", selected, trace, profile
+        )
+        return selected[PageCategory.PROGRAM_PAGE], trace
+
+    async def test_er04_off_keeps_a_refused_host_in_its_rank(self, tmp_path, profile, monkeypatch):
+        """The default is unchanged until the experiment is measured."""
+        pages, trace = await self._merge_with_refusal(tmp_path, profile, monkeypatch, skip=False)
+
+        assert "https://blocked.nu.edu.kz/computer-science" in pages
+        assert not any("skipped" in e for e in trace.errors)
+
+    async def test_er04_on_gives_the_slot_to_a_host_that_answered(
+        self, tmp_path, profile, monkeypatch
+    ):
+        """Toronto 2026-09-27: all three slots went to a host that had answered 403."""
+        pages, trace = await self._merge_with_refusal(tmp_path, profile, monkeypatch, skip=True)
+
+        assert "https://blocked.nu.edu.kz/computer-science" not in pages
+        assert "https://open.nu.edu.kz/computer-science" in pages
+        assert any("hosts that refused this run" in e for e in trace.errors)
+
 
 class TestRejectingKindsThatAreNotProgrammes:
     """V2-30 — available, measured, and off until it is measured again.

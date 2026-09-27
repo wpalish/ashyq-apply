@@ -254,6 +254,10 @@ def expert_view(record: dict[str, Any], *, chars: int = 6000, links: int = 120) 
                 seen.append({"url": link.url, "text": link.text[:80]})
         view["links"] = seen[:links]
         view["links_total"] = len(seen)
+    elif body and any(
+        t in (response.get("content_type") or "").lower() for t in ("xml", "text/plain")
+    ):
+        view["text"] = body.decode("utf-8", errors="replace")[:chars]
     elif body:
         view["text"] = f"[{len(body)} bytes of {response.get('content_type')}]"
     return view

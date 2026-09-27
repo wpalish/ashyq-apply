@@ -37,6 +37,22 @@ COHORT = {
     "kaist": "kaist.ac.kr",
 }
 
+#: Registry institutions outside the certified ten. They have no signed
+#: labels: a capture of one is scored by process measures and by hand, never
+#: by the corpus. They exist so that a rule tuned on the ten is tested
+#: somewhere it was not tuned (expert recovery protocol, 2026-09-27).
+HELDOUT = {
+    "nu": "nu.edu.kz",
+    "metu": "metu.edu.tr",
+    "sabanci": "sabanciuniv.edu",
+    "charles": "cuni.cz",
+    "masaryk": "muni.cz",
+    "tum": "tum.de",
+    "tartu": "ut.ee",
+    "polimi": "polimi.it",
+    "vilnius": "vu.lt",
+}
+
 
 #: Award and document identities the owner approved on 2026-09-23. Scoring
 #: live with them is what lets a scholarship or document claim land on its
@@ -126,7 +142,19 @@ async def capture_one(
 
     checkpoint()
     original_request = fetching._pinned_request
-    original_search = ExaSearchProvider.search
+    # Every provider's search is counted, not only Exa's: runs 80-93 used
+    # Serper and recorded search_calls=0 while six queries ran per case.
+    from app.adapters.search.brave import BraveSearchProvider
+    from app.adapters.search.serper import SerperSearchProvider
+    from app.adapters.search.tavily import TavilySearchProvider
+
+    provider_classes = (
+        ExaSearchProvider,
+        TavilySearchProvider,
+        BraveSearchProvider,
+        SerperSearchProvider,
+    )
+    originals = {cls: cls.search for cls in provider_classes}
 
     async def counted_search(provider, *args, **kwargs):
         # Each search call is counted and timed into this case's own log: a
@@ -135,7 +163,7 @@ async def capture_one(
         observation.telemetry.search_calls = (observation.telemetry.search_calls or 0) + 1
         began = time.monotonic()
         try:
-            return await original_search(provider, *args, **kwargs)
+            return await originals[type(provider)](provider, *args, **kwargs)
         except Exception as exc:
             print(f"search failed after {time.monotonic() - began:.1f}s: {type(exc).__name__}")
             raise
@@ -255,10 +283,15 @@ async def capture_one(
         patch.object(canary, "CanaryRunner", ObservedRunner),
         patch.object(fetching, "_pinned_request", counted_request),
         patch.object(ExaSearchProvider, "search", counted_search),
+        patch.object(TavilySearchProvider, "search", counted_search),
+        patch.object(BraveSearchProvider, "search", counted_search),
+        patch.object(SerperSearchProvider, "search", counted_search),
         patch.object(LiveDiscoveryAdapter, "_confirm_programs", observed_confirm),
     ):
         try:
-            report = await asyncio.wait_for(canary.run_canary(COHORT[case_id], False), seconds)
+            report = await asyncio.wait_for(
+                canary.run_canary({**COHORT, **HELDOUT}[case_id], False), seconds
+            )
         except TimeoutError:
             # The child stops itself just short of the parent's kill, so the
             # claims already filed are kept: run_to_decision's finally reads
@@ -285,13 +318,18 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--live", action="store_true", required=True)
     parser.add_argument("--out", type=Path, required=True)
-    parser.add_argument("--case", choices=list(COHORT))
+    parser.add_argument("--case", choices=[*COHORT, *HELDOUT])
     parser.add_argument("--seconds-per-case", type=int, default=120)
     parser.add_argument("--max-pages", type=int, default=40)
     parser.add_argument(
         "--search-first",
         action="store_true",
         help="experiment: search before the navigation fallback (default off)",
+    )
+    parser.add_argument(
+        "--skip-refused-hosts",
+        action="store_true",
+        help="experiment ER-04: search candidates on hosts that refused this run take no slot",
     )
     parser.add_argument("--child", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args()
@@ -302,6 +340,10 @@ def main() -> None:
             from app.adapters.discovery import live_discovery
 
             live_discovery.SEARCH_BEFORE_NAVIGATION = True
+        if args.skip_refused_hosts:
+            from app.adapters.discovery import live_discovery
+
+            live_discovery.SKIP_REFUSED_SEARCH_HOSTS = True
         # A few seconds under the parent's timeout, so the child's own stop
         # comes first and writes what it has.
         soft = max(args.seconds_per_case - 5, 1)
@@ -340,6 +382,7 @@ def main() -> None:
                         "--seconds-per-case",
                         str(args.seconds_per_case),
                         *(["--search-first"] if args.search_first else []),
+                        *(["--skip-refused-hosts"] if args.skip_refused_hosts else []),
                     ],
                     env=environment,
                     stdout=log,
@@ -371,6 +414,7 @@ def main() -> None:
                 "max_fetcher_calls_per_case": args.max_pages,
                 "page_budget_counts": "network reads; cache hits are free (since 2026-09-23)",
                 "search_before_navigation": args.search_first,
+                "skip_refused_search_hosts": args.skip_refused_hosts,
                 "browser_enabled": False,
                 "cohort": list(COHORT),
                 "scope": "current production pipeline; HTTP-only bounded cold run",

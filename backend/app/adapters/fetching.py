@@ -464,6 +464,21 @@ def _content_hash(text: str) -> str:
     return hashlib.sha256(normalized.encode("utf-8")).hexdigest()
 
 
+def _refusal(result: FetchResult) -> str:
+    """Why a host refused this read outright, or "" when it did not.
+
+    A page that is missing (404) or broken (5xx) says nothing about the rest
+    of the host; a 401/403, an unreadable robots.txt or a stalled host does.
+    """
+    if result.outcome == FetchOutcome.HTTP_ERROR and result.status_code in (401, 403):
+        return f"HTTP {result.status_code}"
+    if result.outcome == FetchOutcome.ROBOTS_DISALLOWED and "unreachable" in result.error:
+        return "robots.txt unreachable"
+    if result.outcome == FetchOutcome.TIMEOUT and "not waited on again" in result.error:
+        return "host stalled"
+    return ""
+
+
 class Fetcher:
     """Polite, cached, rate-limited HTTP access."""
 
@@ -503,6 +518,12 @@ class Fetcher:
         self._renderer: object | None = None
         self.stats: dict[str, int] = {o.value: 0 for o in FetchOutcome}
         self.tier_counts: dict[str, int] = {"fixture": 0, "http": 0, "browser": 0, "pdf": 0}
+        #: Hosts that refused this fetcher outright earlier in its life, and
+        #: why: a 401/403, a robots.txt that could not be read, a host that
+        #: stalled. Recorded only; nothing here changes what ``get`` does.
+        #: Discovery may use it to stop offering pages on a host that is
+        #: known not to answer (expert trace, Toronto 2026-09-27).
+        self.refused_hosts: dict[str, str] = {}
 
     def attach_renderer(self, renderer: object) -> None:
         """Give the fetcher a browser to escalate to.
@@ -820,6 +841,27 @@ class Fetcher:
         )
 
     async def get(
+        self,
+        url: str,
+        *,
+        use_cache: bool = True,
+        etag: str | None = None,
+        if_modified_since: str | None = None,
+    ) -> FetchResult:
+        """Fetch a URL from the disk cache when possible, else politely.
+
+        See ``_get``; this wrapper only records a host that refused outright.
+        """
+        result = await self._get(
+            url, use_cache=use_cache, etag=etag, if_modified_since=if_modified_since
+        )
+        reason = _refusal(result)
+        host = urlparse(url).hostname or ""
+        if reason and host:
+            self.refused_hosts.setdefault(host, reason)
+        return result
+
+    async def _get(
         self,
         url: str,
         *,

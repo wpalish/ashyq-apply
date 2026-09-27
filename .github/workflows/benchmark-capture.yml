@@ -375,7 +375,7 @@ jobs:
   expert:
     if: startsWith(inputs.mode, 'expert_')
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 55
     defaults:
       run:
         working-directory: backend
@@ -418,6 +418,24 @@ jobs:
             --out out/packet.json
           echo "provider=$UNIMATCH_SEARCH_PROVIDER" > out/config.txt
           echo "extra_args=${{ inputs.extra_args }}" >> out/config.txt
+
+      - name: Paired rule experiment (same runner, ABBA order)
+        if: inputs.mode == 'expert_paired'
+        # inputs.case is a space-separated list; inputs.extra_args is the rule
+        # switch under test. Each case runs off/on/on/off so a drift in the
+        # site or provider during the job hits both arms alike.
+        run: |
+          set -o pipefail
+          mkdir -p out
+          for c in ${{ inputs.case }}; do
+            for arm in off on on off; do
+              flags=""; [ "$arm" = on ] && flags="${{ inputs.extra_args }}"
+              .venv/bin/python -m evaluation.research.live --live --out "out/$c-$arm" \
+                --case "$c" --seconds-per-case "${{ inputs.seconds_per_case }}" \
+                --max-pages "${{ inputs.max_pages }}" $flags | tail -n 2
+            done
+          done
+          echo "extra_args=${{ inputs.extra_args }}" > out/config.txt
 
       - name: Execute an expert plan
         if: inputs.mode == 'expert_actions'
