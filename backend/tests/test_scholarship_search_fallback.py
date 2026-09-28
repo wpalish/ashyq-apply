@@ -118,3 +118,20 @@ def test_global_menu_awards_do_not_consume_the_content_budget(monkeypatch):
     assert web_scholarships._award_links(html, "https://uni.edu/scholarships") == [
         "https://uni.edu/global-scholarship"
     ]
+
+
+@pytest.mark.asyncio
+async def test_all_nationalities_award_is_not_scoped_to_one_mentioned_audience(
+    tmp_path, monkeypatch
+):
+    body = _AWARD.format(name="Global Scholarship").replace(
+        "Eligibility: open to international students holding an offer of admission.",
+        "Eligibility: open to all nationalities. "
+        "International students receive an additional travel allowance.",
+    )
+    awards, result, _ = await run(
+        tmp_path, monkeypatch, Provider(["https://uni.edu/global-scholarship"]), award_body=body
+    )
+    assert awards
+    assert result.claims
+    assert all(c.scope.population is None for c in result.claims)

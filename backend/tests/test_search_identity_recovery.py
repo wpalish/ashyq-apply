@@ -84,3 +84,48 @@ async def test_recovery_is_bounded_and_keeps_previously_confirmed_pages(tmp_path
     )
     assert pages == ["https://uni.edu/confirmed"]
     assert len(requested) == 8
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "title",
+    [
+        "Bachelor Teaching Education: Teaching Subject Computer Science",
+        "Bachelor Teaching Education: Teaching Subject Digital Literacy and Computer Science",
+        "Bachelor Computer Science: Specialisations",
+        "BSc Computer Science minor",
+        "State final examination for the bachelor of Computer Science study program",
+    ],
+)
+async def test_an_alternate_programme_is_not_the_requested_degree(tmp_path, profile, title):
+    pages, trace, _ = await recover(
+        tmp_path, profile, ["https://uni.edu/cs"], [program_html(title)]
+    )
+    assert pages == []
+    assert trace.rejected
+
+
+@pytest.mark.asyncio
+async def test_a_search_catalogue_lead_reaches_its_matching_detail_page(tmp_path, profile):
+    urls = ["https://uni.edu/programmes", "https://uni.edu/programmes/bsc-cs"]
+    pages, _, requested = await recover(
+        tmp_path,
+        profile,
+        urls,
+        [
+            "<h1>Degree programmes</h1>"
+            "<a href='/programmes/bsc-cs'>Computer Science bachelor</a>"
+            "<a href='/programmes/msc-cs'>Computer Science master</a>",
+            program_html(),
+        ],
+    )
+    assert pages == [urls[1]]
+    assert requested == urls
+
+
+@pytest.mark.asyncio
+async def test_a_subject_page_without_a_degree_is_not_confirmed(tmp_path, profile):
+    pages, _, _ = await recover(
+        tmp_path, profile, ["https://uni.edu/cs"], ["<h1>Computer Science</h1><p>Courses.</p>"]
+    )
+    assert pages == []

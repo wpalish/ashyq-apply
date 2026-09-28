@@ -9,6 +9,7 @@ keeps the sentence it came from.
 from __future__ import annotations
 
 import re
+from dataclasses import replace
 from datetime import UTC, datetime
 from urllib.parse import urljoin, urlparse, urlsplit, urlunsplit
 
@@ -459,6 +460,13 @@ class WebScholarshipAdapter:
             or (soup.find("h1").get_text(strip=True) if soup.find("h1") else title).split(" - ")[0]
         )
 
+        award_scope = read_scope(text, title=title)
+        if re.search(r"\bopen to all nationalities\b", text, re.I):
+            # A statement covering every nationality must not acquire a
+            # narrower audience merely because a later benefit/bond paragraph
+            # mentions international students. Eligibility is read separately.
+            award_scope = replace(award_scope, population=None)
+
         # Every claim from this page is about this one award; the subject key
         # keeps a second award at the same university from looking like a
         # contradiction of the first.
@@ -475,7 +483,7 @@ class WebScholarshipAdapter:
             # Eligibility prose names a population far more often than
             # requirements prose does, and an award claimed for the wrong one
             # is the most expensive wrong answer this product can give.
-            scope=read_scope(text, title=title),
+            scope=award_scope,
             # The verifier's context (adversarial review, 2026-09-25): without
             # it the verbatim and domain checks were skipped.
             page_text=text,

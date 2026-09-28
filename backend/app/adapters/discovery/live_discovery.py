@@ -1356,6 +1356,7 @@ class LiveDiscoveryAdapter:
         frees a slot for the next search result. A host failure is kept as an
         unresolved fallback, never preferred over a page that confirms identity.
         """
+        from app.adapters.discovery.catalog_walker import extract_links, score_link
         from app.adapters.extraction import html_to_text
         from app.adapters.requirements.web_requirements import (
             _LISTING_PAGE_TYPES,
@@ -1365,13 +1366,17 @@ class LiveDiscoveryAdapter:
         fields = list(profile.context.intended_fields)
         level = str(profile.context.level)
         pending: list[str] = []
+        queue = list(candidates)
+        visited = set(pages)
         checked = 0
         added = 0
-        for found in candidates:
+        while queue:
             if len(pages) >= MAX_PAGES_PER_CATEGORY or checked >= MAX_PROGRAM_CANDIDATES_CHECKED:
                 break
-            if found.url in pages:
+            found = queue.pop(0)
+            if found.url in visited:
                 continue
+            visited.add(found.url)
             checked += 1
             result = await self.fetcher.get(found.url)
             if not result.ok:
@@ -1380,6 +1385,7 @@ class LiveDiscoveryAdapter:
                 continue
             page = classify_page(url=found.url, html=result.text)
             reason = profile_rejects(page, level, fields)
+            stated_level = page.degree_level
             if reason is not None and page.page_type in _LISTING_PAGE_TYPES:
                 program = CandidateProgram(
                     name=found.title,
@@ -1387,10 +1393,45 @@ class LiveDiscoveryAdapter:
                     degree=profile.context.level,
                     url=found.url,
                 )
-                if _listed_programme(html_to_text(result.text), program) is not None:
+                listed = _listed_programme(html_to_text(result.text), program)
+                if listed is not None:
                     reason = None
+                    stated_level = listed[1]
+            if reason is None:
+                if stated_level != level:
+                    reason = "page does not state the requested degree level"
+                variants = re.findall(
+                    r"\b(?:teacher (?:education|training)|teaching (?:education|subject)"
+                    r"|digital literacy|minor|certificate|speciali[sz]ations?|second major"
+                    r"|double degree|final examination|final exam|degree plans?"
+                    r"|courses? for teachers?|recommended path|why computer science)\b",
+                    (page.subject or "") + " " + urlparse(found.url).path.replace("-", " "),
+                    flags=re.I,
+                )
+                if any(not any(v.lower() in f.lower() for f in fields) for v in variants):
+                    reason = (
+                        "page names an alternate programme variant not requested: "
+                        + ", ".join(variants)
+                    )
             if reason is not None:
                 trace.reject(found.url, reason)
+                if page.page_type is PageType.PROGRAM_CATALOG:
+                    # A search result can be the catalogue, not its detail
+                    # page. Follow its own matching links before trying more
+                    # search noise, sharing the same overall read bound.
+                    from app.adapters.search.retrieval import RankedCandidate
+
+                    leads = []
+                    for link in extract_links(result.text, found.url, trace.domain):
+                        value = score_link(link.url, link.label, level, fields)
+                        if value is None or not matches_field_text(link.label, fields):
+                            continue
+                        if link.url not in visited:
+                            leads.append(
+                                RankedCandidate(link.url, link.label, value, "search-catalogue")
+                            )
+                    leads.sort(key=lambda lead: (-lead.score, lead.url))
+                    queue[:0] = leads[: MAX_PROGRAM_CANDIDATES_CHECKED - checked]
                 continue
             pages.append(found.url)
             added += 1
