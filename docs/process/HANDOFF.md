@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+Current recovery holder: gpt-6-astra, 2026-09-28 UTC; branch `task/apply-extraction-recovery`, base `origin/main@c4bfd42`. Owner asked to investigate the Claude chat and fix the reported extraction bugs. Prior branch-specific batons below are historical.
+
 **Current branch-specific baton (2026-09-27 UTC):** holder **nobody**;
 `task/research-expert-traces`, from `origin/main@07de4d9`. The table below is
 historical and predates the merged PR #16. This branch owns only offline
@@ -27,6 +29,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**Owner-directed extraction recovery (in-progress, 2026-09-28).** Recover five commits from the already-merged Claude branch into a fresh PR, review faculty scope and completion-state documents, reproduce and fix the still-missing Vienna/Warsaw teaching language, then verify gates and a bounded live benchmark. Do not modify the other active Claude branches.
 
 **Phase 2 is `ready-for-review (PR #16)`.** PR #15 was merged by the owner on 2026-09-21 at `cba911a`; a merged PR cannot track new work, so everything since is PR #16 from the same branch. **Phase 3 §10 — conditional wording is not a settled requirement (in-progress).** Previously: **Phase 3 §9 — a document that waits for another.** Previously: **Phase 3 §7 — the availability roll-up, and two dead fields.** Previously: **Phase 3 §4 — "test optional" is not "the test is irrelevant".** Previously: **Phase 3 §3 — the English-test waiver.** Previously: **Phase 3 §6 — two scholarship decisions the schema was missing.** Previously: **plan V2-30 — a requirement says who it is for, backend and screen.** Previously: **plan V2-23, the kind the first pass left out.** Previously: **plan V2-20 exit criterion — the evidence answers its own questions.** Previously: **EXTRA-4 — an optional prefilter rejection, off until measured.** Previously: **V2-29 — a degree word in a heading is not a programme.** Previously: **V2-24a — telling a real change from a re-render.** Previously: **V2-28 — a programme title is not a term.** Previously: **V2-27 — the scope rate says why.** Previously: **V2-22b — the registry read as identities.** Previously: **V2-20 — evidence history (done).** V2-20a shipped `SourceSnapshot`; V2-20b closes the claim half. See the numbering note in §5. Previously: **conflict model v2 (plan V2-23).** Previously: **V2-25 — all five claim-producing adapters read scope.** Previously: **V2-24 — a scope refusal is said out loud to the applicant.** Previously: **V2-23 — the assessment refuses a claim whose page is about something else.** Previously: **V2-22 — fill a claim's scope from what its page states.** V2-21/V2-21b gave scope a shape and put it on the claim; this fills it, from the page's own words only. Previously: **V2-21b — carry the scope on a claim.** Phase 1 is complete, measured and wired (PR #15); this starts Phase 2 on the failure Phase 1 never touched. Phase 1 so far is `ready-for-review (PR #15)`, which supersedes draft PR #14. Phase 1 retrieval was measured live: The owner approved the §6 exception and authorised the live probe; the Exa adapter works and the retrieval ceiling moved **1/10 → 9/10**. V2-01 was accepted 2026-09-21 and its record is below.
 **Owner-directed expert recovery protocol, ready-for-review (PR #21, 2026-09-27).**
@@ -1635,6 +1639,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**Current recovery write-ahead (gpt-6-astra, 2026-09-28):** replay d080fe2, 016991c, 284245c, e0d3a36, 563336e from the merged Claude branch into this task branch; reproduce language parsing using reviewed excerpts and captured oracle context; fix `backend/app/adapters/page_classifier.py` with conservative labelled-language rules and regression tests. Run backend gates, golden demo, unchanged frontend gates, then open a fresh PR and run benchmark-capture. These commits are absent from main; the failed e0d3a36 CI is the oracle measured-key assertion corrected by 563336e.
 
 Write-ahead (claude-opus-5, 2026-09-23, V2-32): **starting per-population tuition.** `extract_costs`
 takes the first tuition figure on a page, and many European fee pages list a statutory EU/EEA fee
@@ -4424,3 +4430,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 
 | 2026-09-20 UTC | gpt-6-astra | fd07e87 -> source review in progress | Clean synchronized start; one Alembic head. Continue remaining primary-source evidence after explaining V2-01 status to owner. |
 | 2026-09-27 UTC | gpt-6-astra | 07de4d9 → f112dcd + this release handoff | Owner-directed expert recovery protocol: blinded packets, trace schema with provenance/budget guards, retrospective diagnosis, four existing rules, three candidate hypotheses and runner instructions. PR #21; 14 focused tests, Windows full backend exit 0 at 94.56%, CI 1866 passed on SQLite/PostgreSQL. No live blind trace or promoted rule. Baton released. |
+
+| 2026-09-28 UTC | gpt-6-astra | c4bfd42 -> extraction recovery | Owner-directed investigation of Claude chat; isolated clean clone, one Alembic head c5d01b7e4f83, five extraction/oracle commits missing from main after PR merge; fresh branch recovery. |
