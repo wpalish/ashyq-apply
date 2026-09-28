@@ -1640,6 +1640,8 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+**Quote-bound golden correction write-ahead (2026-09-28):** a648578 final local suite: 2427 passed, 1 failed, 94.90%; only byte-identical demo payload failed after changing every programme quote. Narrow the 300-character quote bound to the listing-page existence route that produced HKU's unsupported quote. Preserve original programme-detail quoting and golden bytes; do not update the baseline. Re-prove listing support and byte-identical demo before pushing and taking the final live capture.
+
 **Programme quote write-ahead (2026-09-28):** the full cohort reports HKU's correct full-title existence claim as unsupported because its verbatim quote exceeds the owner's 300-character support rule. Bound only programme identity quote context to 300 characters while retaining the complete title. Add a listing-claim regression with long surrounding prose and rerun the final backend gates. Vienna/Warsaw alternate copies have new verbatim source text absent from frozen signed evidence; do not rewrite those labels.
 
 **Full-cohort follow-up write-ahead (2026-09-28):** run 36471138628 completed: known claim recall 18/62, programme page recall 6/10. Toronto content recovery accepted a topic-course page; Groningen awards acquired bachelor applicability from prior-study GPA prose or navigation. Inspect actual sources through Fetcher, add classifier rejection for explicit individual/topic-course identity and read award applicability from main content with conservative prior-study contexts. Preserve all signed labels. The single reported Groningen deadline population mismatch is a valid separate EU/EEA table row beside the non-EU/EEA row, not a reason to overwrite source scope. Record remaining inaccessible sources and support-label gaps honestly.
@@ -3403,6 +3405,8 @@ The steps codex left, unchanged and still next after this review:
    the compatibility shim. Do not buy a provider or deploy application infrastructure implicitly.
 
 ## 6. Gate status at last run
+
+**a648578 golden follow-up:** 2427 passed / 1 failed, coverage 94.90%; failure was demo byte identity after broad quote shortening. Narrowed to listing claims, focused listing/oracle/golden suite 11 passed. Final full suite and CI will rerun on the corrected code. Superseded full capture 36474876085 and a648578 CI were cancelled; no measurements from that incomplete capture are treated as final.
 
 **Owner search recovery, 2026-09-28:** fdc1a39 CI 36472045853 completed green (SQLite/PostgreSQL, frontend including Playwright demo/auth, security/container builds). Follow-up before the quote-only bound: 2427 passed, 94.90% coverage in 293.79s; ruff check/format and mypy 296 files green. Quote-bound focus 9 passed; final full suite running. Full-cohort 36471138628 at 9f8a93d: programme recall 6/10, known-claim recall 18/62, precision 25/27; negative cases and scorer caveats are in docs/process/search-recovery. No labels changed.
 

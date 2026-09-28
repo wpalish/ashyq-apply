@@ -470,7 +470,7 @@ class WebRequirementsAdapter:
                 "language": None,
                 "matched_because": "named by its full degree title on a listing page",
             },
-            _first_sentence_containing(text, title) or title,
+            _first_sentence_containing(text, title, max_characters=300) or title,
             confidence=0.7,
             section="Programme identity",
             degree=str(degree) if degree else None,
@@ -649,7 +649,9 @@ def _listed_programme(text: str, program) -> tuple[str, str | None] | None:
     return None
 
 
-def _first_sentence_containing(text: str, needle: str | None) -> str:
+def _first_sentence_containing(
+    text: str, needle: str | None, *, max_characters: int | None = None
+) -> str:
     """A real quote from the page, or empty. Never a sentence we wrote."""
     if not needle:
         return ""
@@ -657,9 +659,11 @@ def _first_sentence_containing(text: str, needle: str | None) -> str:
     index = flat.lower().find(needle.lower())
     if index < 0:
         return ""
+    if max_characters is None:
+        return excerpt_around(flat, index, index + len(needle))
     # Keep the full programme title within the owner's 300-character support
     # window; unrelated surrounding prose otherwise obscures listing evidence.
-    radius = max(0, (300 - len(needle)) // 2)
+    radius = max(0, (max_characters - len(needle)) // 2)
     return excerpt_around(flat, index, index + len(needle), radius=radius)
 
 

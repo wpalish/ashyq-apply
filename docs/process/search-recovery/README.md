@@ -14,7 +14,7 @@ Owner-directed bug fix, PR #32. These are ordinary pipeline/source probes and pa
 
 8. Toronto's topic-course page acquired undergraduate programme identity from its enrolment rules. Explicit topic-course/course-description identity now rejects that route.
 9. Groningen graduate awards acquired bachelor applicability from earlier-study GPA/diploma requirements. Decimal GPA points remain inside their clauses, earlier qualifications do not establish award level, and global navigation is excluded from applicability. Actual-source replay now says no for bachelors and yes for masters on both Richard A. Freund and Bolashak pages.
-10. A full-title listing claim could carry more than 300 characters of surrounding quote, failing the owner's support rule. Programme identity context is bounded without losing the full degree title.
+10. A full-title listing claim could carry more than 300 characters of surrounding quote, failing the owner's support rule. Listing-page identity context is bounded without losing the full degree title. Normal programme-detail quoting is preserved; the first broader change failed the byte-identical demo gate and was corrected without changing the golden baseline.
 
 Five earlier Claude faculty/document/oracle commits were also recovered from the branch of already-merged PR #29. Faculty now carries the programme and degree confirmed by the same page; completion-state document forms are preserved.
 
@@ -56,3 +56,5 @@ Before the final defaults: 2418 backend tests, 94.76% coverage, mypy 296 files; 
 [36472040264](https://github.com/wpalish/ashyq-apply/actions/runs/36472040264) completed the pipeline capture with zero claims and an explicit HTTP 404 for the stale teacher-course URL. This is a source failure, not live proof that the new classifier ran. The job failed **after** capture when the blinded packet exporter tried to find Tartu in the ten-case signed dataset; the capture and source logs are preserved in its bundle. The classifier regression is verified offline, including preserving a real degree that mentions teacher courses only in body text.
 
 The earlier multi-case expert_baseline invocation stopped before reads; that mode accepts one case. Ordinary benchmark mode covers all ten. A proposed workflow edit was refused because the existing OAuth credential has no workflow scope; it was reverted unpublished. Both diagnostic flags now read implementation defaults, so ordinary benchmark needs no workflow modification.
+
+The superseded a648578 full capture [36474876085](https://github.com/wpalish/ashyq-apply/actions/runs/36474876085) was cancelled after the quote-only demo regression. It is not a final measurement; the corrected candidate is recaptured.
