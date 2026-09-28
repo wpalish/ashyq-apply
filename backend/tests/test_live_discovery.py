@@ -25,6 +25,7 @@ from app.adapters.discovery.live_discovery import (
     MAX_PAGES_PER_CATEGORY,
     MAX_SITEMAP_DOCUMENTS,
     REGISTRY_PATH,
+    DiscoveryTrace,
     LiveDiscoveryAdapter,
     PageCategory,
     SitemapReader,
@@ -830,6 +831,44 @@ class TestAdapter:
         assert candidate.scholarships_url is None, "an off-domain link must not be followed"
 
     @pytest.mark.asyncio
+    async def test_navigation_keeps_the_strongest_leads_not_the_first(
+        self, tmp_path, profile_bachelor
+    ):
+        """Run 38, Vienna: the bachelor list names three other programmes first.
+
+        The three programme slots filled with "by topic", African Studies and
+        Egyptology, so the applicant's subject further down was never read.
+        """
+        entry = {"name": "U", "country": "Austria", "city": "X", "homepage": "https://uni.edu/"}
+        others = "".join(
+            f'<a href="/en/bachelor-programmes/{slug}-bachelor">{slug}</a>'
+            for slug in ("by-topic", "african-studies", "egyptology", "history")
+        )
+        target = "https://uni.edu/en/bachelor-programmes/computer-science-bachelor-with-exam"
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "User-agent: *\n",
+                "https://uni.edu/": (
+                    f"<html><body><main>{others}"
+                    f'<a href="{target}">Computer Science (Bachelor)</a>'
+                    "</main></body></html>"
+                ),
+            }
+        )
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, entry))
+            selected: dict[str, list[str]] = {c: [] for c in PageCategory.ALL}
+            trace = DiscoveryTrace(institution="U", domain="uni.edu")
+            # The navigation step alone: the catalogue walker reads the same
+            # page afterwards and would hide a lead this step dropped.
+            await adapter._navigation_fallback(entry, "uni.edu", selected, trace, profile_bachelor)
+
+        programmes = selected[PageCategory.PROGRAM_PAGE]
+        assert len(programmes) <= MAX_PAGES_PER_CATEGORY
+        assert target in programmes, "the subject's own programme must be kept"
+
+    @pytest.mark.asyncio
     async def test_navigation_is_not_used_when_a_programme_page_was_found(
         self, tmp_path, profile_bachelor
     ):
@@ -1495,6 +1534,15 @@ class TestCatalogWalkerContract:
         entries fetched and confirmed — the URLs need not match any URL
         pattern, because the payload is the university's own statement of
         what its programmes are.
+
+        Amended 2026-09-22 by the owner's decision: that statement says the
+        programmes exist, not that each is the one this applicant asked
+        about. The walker now applies the same subject predicate as every
+        other stage, so the BSc Mathematics in this payload is refused for a
+        computer-science applicant while the BSc Computer Science survives.
+        The interception contract — payload read, entries fetched, URLs
+        needing no pattern — is unchanged and is what the rest of this test
+        still checks.
         """
         payload = _json_shape("js_catalog_payload.json")
         page = WalkerFakePage(
@@ -1517,13 +1565,16 @@ class TestCatalogWalkerContract:
         adapter = LiveDiscoveryAdapter(fetcher, self.registry_file(tmp_path, _walker_entry()))
         candidate = (await adapter.discover(profile_bachelor))[0]
 
-        assert {p.url for p in candidate.programs} == {
-            "https://uni.edu/p/42",
-            "https://uni.edu/p/77",
-        }, "the JSON payload's programmes must be fetched even though /p/N matches no pattern"
+        assert {p.url for p in candidate.programs} == {"https://uni.edu/p/42"}, (
+            "the payload's CS programme must be fetched even though /p/N matches no pattern"
+        )
+        assert "https://uni.edu/p/77" in site.requested, (
+            "the Mathematics entry is still fetched and read — it is refused on its "
+            "subject, not skipped on its URL"
+        )
         walker = adapter.traces[0].walker
         assert walker["catalogs_walked"] == 1
-        assert walker["programs_confirmed"] == 2
+        assert walker["programs_confirmed"] == 1, "Mathematics is read, then refused on subject"
         assert "https://uni.edu/p/42" in site.requested
 
     # --- R6 ---------------------------------------------------------------
@@ -1835,3 +1886,70 @@ class TestCatalogWalkerContract:
             url="https://uni.edu/en/programmes", html=_shape("js_catalog_shell.html")
         )
         assert page.page_type == PageType.PROGRAM_CATALOG
+
+
+class TestTheWalkerUsesOnePredicate:
+    """Owner decision, 2026-09-22: the catalogue walker judges subject too.
+
+    It used to pass no fields to `profile_rejects`, which disabled the subject
+    check on the reasoning that a catalogue's own list is the university's
+    statement of what it offers. That statement says the programmes exist; it
+    does not say each is the one this applicant asked about.
+    """
+
+    def test_the_walker_asks_the_same_question_as_the_confirm_stage(self):
+        """A source-level guard: the divergence was one argument wide, and an
+        empty list is an easy thing to reintroduce without noticing."""
+        source = (
+            Path(__file__).resolve().parents[1] / "app/adapters/discovery/catalog_walker.py"
+        ).read_text(encoding="utf-8")
+        assert "profile_rejects(page, self.degree, self.fields)" in source
+        assert "profile_rejects(page, self.degree, [])" not in source
+
+
+class TestSearchBeforeNavigation:
+    """The experiment flag: off is the measured default; on, search that finds
+    a programme page spares the navigation fallback's reads."""
+
+    @staticmethod
+    def _run(tmp_path, profile, monkeypatch, *, flag: bool):
+        from app.adapters.discovery import live_discovery
+
+        monkeypatch.setattr(live_discovery, "SEARCH_BEFORE_NAVIGATION", flag)
+        calls: list[int] = []
+
+        async def fake_search(self, entry, domain, selected, trace, profile):
+            calls.append(1)
+            selected[PageCategory.PROGRAM_PAGE].append(
+                "https://uni.edu/en/bachelors/computer-science"
+            )
+
+        monkeypatch.setattr(LiveDiscoveryAdapter, "_add_search_results", fake_search)
+        entry = {"name": "U", "country": "Netherlands", "city": "X", "homepage": "https://uni.edu/"}
+        site = StubSite({"https://uni.edu/robots.txt": ""})
+        return entry, site, calls
+
+    @pytest.mark.asyncio
+    async def test_on_search_first_skips_the_navigation_fallback(
+        self, tmp_path, profile_bachelor, monkeypatch
+    ):
+        entry, site, calls = self._run(tmp_path, profile_bachelor, monkeypatch, flag=True)
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            adapter = LiveDiscoveryAdapter(fetcher, TestAdapter.registry_file(tmp_path, entry))
+            await adapter.discover(profile_bachelor)
+        assert calls == [1], "search runs once, early"
+        assert not adapter.traces[0].used_navigation_fallback
+        assert "https://uni.edu/" not in site.requested
+
+    @pytest.mark.asyncio
+    async def test_off_navigation_runs_first_and_search_once_after(
+        self, tmp_path, profile_bachelor, monkeypatch
+    ):
+        entry, site, calls = self._run(tmp_path, profile_bachelor, monkeypatch, flag=False)
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            adapter = LiveDiscoveryAdapter(fetcher, TestAdapter.registry_file(tmp_path, entry))
+            await adapter.discover(profile_bachelor)
+        assert calls == [1]
+        assert adapter.traces[0].used_navigation_fallback

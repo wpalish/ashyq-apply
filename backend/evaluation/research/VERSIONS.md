@@ -14,6 +14,15 @@ label inventories, not changes to the production pipeline or retrieval quality.
 | [draft7](data/ground_truth.draft7.json) | 62/220 | 10/10 | 1/9 / 1/10 | 0/5 / 0/62 | 0/210 |
 | **[reviewed](data/ground_truth.reviewed.json)** | 62/220 | 10/10 | 1/9 / 1/10 | 0/5 / 0/62 | 0/210 |
 
+**Scorer definition changed 2026-09-22, and every row's `wrong_scope_claim_rate` moved with it:
+5/5 → 4/5, in all eight versions.** The owner settled that the scorer compares programme *identity*
+rather than programme strings, so NTU's "Bachelor of Computing (Hons) in Computer Science" now answers
+a label reading "Computer Science". The pipeline did not change and the capture did not change: the
+published metrics were regenerated from the same frozen `capture.json` and the same datasets, and the
+diff is two lines per file — numerator 5 → 4, value 1.0 → 0.8 — with every other field byte-identical.
+A number computed under the old definition is not comparable to one computed under the new; that is
+why this note exists rather than a silent edit.
+
 - Draft1 freezes the initial source annotation and captured pipeline outputs.
 - Draft2 adds official-source annotations, resolves Toronto/KAIST programme identity
   and corrects Aalto subject and Groningen fee-year assumptions. It changes which
@@ -61,3 +70,84 @@ and HKU gains its offering school and its exact degree title. Whether Computer
 Engineering satisfies a computer-science request is left open for the reviewer,
 not asserted. See [source notes](REVIEW_DRAFT7.md) and
 [current worksheet](REVIEW_WORKSHEET_DRAFT7.md).
+
+**Scorer definition, 2026-09-26 — a leading "The" is not part of a name.** Run 77 missed HKU because
+"The University of Hong Kong" was compared literally with "University of Hong Kong". Non-programme
+dimensions now drop one leading "the" after case folding. `scope_report` shares the scorer's own
+per-dimension rule (`dimension_matches`), so it no longer lists misses that the score does not count.
+Programme renames stay visible there on purpose.
+
+**Scorer definition, 2026-09-26 — descriptive populations accept silence (owner delegated).** Seven
+corpus populations are descriptive notes, for example "Vancouver applicants using IELTS Academic" and
+"non-Dutch qualification", not values a page reading can emit. `scope_matches` compared them literally,
+so no claim could ever match them. They now accept a claim that records no population. A claim that
+records a different population still misses, and the controlled populations the scope reader emits
+("non-EU/EEA", "international", ...) must still be recorded. No label was edited. The owner had delegated
+the choice ("делай по своим рекомендациям"); relabelling was considered and rejected because it would
+edit certified labels and leave six other descriptive populations inconsistent.
+
+**Mapping, 2026-09-23 — one IELTS floor is written as the four bands it governs.** A prediction of
+`ielts_min_subscore` with a single number ("no part less than 6.0") is mapped to
+`{"listening": 6.0, "reading": 6.0, "speaking": 6.0, "writing": 6.0}`, the certified corpus' own
+shape for the same statement. Before this, the scorer's exact comparison could never match the one to
+the other. This is a change of representation, not an equivalence. No stored capture carries a
+single-number subscore, so no published metric moves (the replay guard passes unchanged).
+
+**Scorer definition, 2026-09-23 — which way a quote supports (owner decision).** A prediction's quote
+supports a label's when ours lies inside the reviewer's (the original rule), **or** the reviewer's lies
+inside ours and ours is at most `SUPPORTING_QUOTE_MAX` = 300 characters; whitespace is compared
+collapsed on both sides (`metrics.quote_supports`). Reviewers quote the least that proves a fact and
+the pipeline a sentence, so the one-way rule made every correct claim unsupported (run 13: 0 of 6
+value-correct claims supported, 2 under the reverse). **No published number moved:** all eight files
+replay byte-identically against the frozen capture, whose excerpts are fragments like "The Bachelor"
+that neither contain nor sit inside a reviewer's quote. Live captures are where it shows.
+
+**Live mapping, 2026-09-23 — the approved identity bindings (owner decision).** Live captures now map
+with `normalize_subject_claims` and `data/identity_bindings.reviewed.json` (the three draft1 bindings,
+approved by the owner; draft1 stays frozen). An NTU Nanyang Global or KAIST Scholarship claim, or
+Groningen's transcript, lands on its certified key instead of `unmapped.*`. The live claim_recall
+ceiling moves from 14 to 28 of 62 (`expressibility`). The frozen capture and the eight published
+baselines are unaffected: they are scored from stored predictions, not re-mapped.
+
+**Corpus amendment, 2026-09-23 — one key for teaching language (owner decision).** Aalto's
+`programme.teaching_language.primary` is renamed `programme.language` in `ground_truth.reviewed.json`
+(now `2026-09-23.reviewed`; see the amendment in [ACCEPTANCE.md](ACCEPTANCE.md)). The mapping now
+emits `programme.language` from the teaching language a programme page states on its `program_exists`
+claim, capitalised as the corpus writes it. `metrics.reviewed.json` was regenerated: every top-level
+metric is identical, and only the per-field row moves (`programme.language` 2 → 3). Drafts stay frozen.
+The live ceiling becomes 31 of 62.
+
+**Scorer definition, 2026-09-23 — scope compares case-blind outside the programme.** The pipeline writes
+an intake as "Fall 2027" and the corpus as "fall 2027"; compared literally, no intake read from a page
+could ever match. Every non-programme dimension now compares `casefold()`-equal (programme still
+compares identity). All eight published files replay byte-identically. Alongside it (owner decision,
+same day): a programme's own stated start in September–November is read as that fall intake, in page
+text ("programme starts 1 September 2027") and in a deadline table's start column ("Deadline | Start
+course"). A bare date is still never an intake.
+
+**Live harness, 2026-09-23 — the page budget counts network reads only.** `--max-pages` bounded every
+`Fetcher.get` call, cache hits included, so a page two stages both read (admission, tuition) was paid
+for twice. Run 20 ended Delft, Vienna and UBC in the funding stage with several of their 60 calls
+being cache hits. The budget now counts reads that reach a server; the capture's `config` says so
+(`page_budget_counts`). Live runs before this commit are not directly comparable on budget-bound
+cases. Scoring and every published file are unaffected.
+
+**Scorer definition, 2026-09-23 — a sibling official page supports (owner decision).** A right-valued,
+right-scoped claim whose quote comes from another page on the same registrable domain as a page the
+reviewer cited now counts as supported. Universities publish one deadline or fee on several pages; run 23
+had 9 value-correct claims and 8 of them were quoted from such a sibling page, all scored unsupported.
+Another site still does not support. `verbatim_evidence_rate` keeps the same-page reading, and the strict
+recall is published beside the new one as **`claim_recall_same_page`**. All eight published files were
+regenerated from the frozen capture: every existing metric is identical; only the new key is added.
+
+**Live harness, 2026-09-24 — the per-case wall clock defaults to 120 s (owner decision).** At 90 s,
+Groningen and UBC finished or not depending on the runner's network that minute (run 26: 8/10, 3/62;
+run 27 at 120 s: 10/10, 6/62). The budget bounds the harness, not the product. Live captures at 90 s
+are not directly comparable on budget-bound cases; each capture's `config.seconds_per_case` says which ran.
+
+2026-09-25 — two award claim types join the scorer's vocabulary: `scholarship_living_allowance`
+(amount, currency, period) files under `coverage.living`, and `scholarship_duration`
+("normal_programme_duration") under `duration`, the corpus's own keys. The expressibility ceiling
+rises from 31 to 34 of 62; no label, binding or existing definition changes. Separately,
+`parse_money` now reads country-prefixed dollars (S$, HK$, C$, A$, NZ$) and KRW/HKD/NZD instead of
+calling them USD.

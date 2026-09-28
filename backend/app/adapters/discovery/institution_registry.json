@@ -190,7 +190,25 @@
         "url": null
       }
     ],
-    "seeds_verified_on": "2026-08-28"
+    "seeds_verified_on": "2026-08-28",
+    "campuses": [
+      {
+        "name": "University of Toronto Mississauga",
+        "hosts": [
+          "utm.utoronto.ca",
+          "utm.calendar.utoronto.ca"
+        ]
+      },
+      {
+        "name": "University of Toronto Scarborough",
+        "hosts": [
+          "utsc.utoronto.ca",
+          "utsc.calendar.utoronto.ca"
+        ]
+      }
+    ],
+    "campuses_verified_on": "2026-09-27",
+    "campuses_source": "future.utoronto.ca/program/computer-science lists Mississauga, Scarborough and St. George as separate application routes (runs.2026-09-27/toronto.trace.json)"
   },
   {
     "name": "The University of Hong Kong",
@@ -253,7 +271,10 @@
     "city": "Daejeon",
     "homepage": "https://www.kaist.ac.kr/en/",
     "seeds": {
-      "admissions": "https://admission.kaist.ac.kr/intl-undergraduate/"
+      "program_catalog": "https://cs.kaist.ac.kr/content?menu=188",
+      "program_page": "https://cs.kaist.ac.kr/content?menu=318",
+      "admissions": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+      "scholarships": "https://cs.kaist.ac.kr/content?menu=42"
     },
     "attributes": {
       "city_size": "medium",
@@ -270,7 +291,7 @@
         "url": null
       }
     ],
-    "seeds_verified_on": "2026-08-28"
+    "seeds_verified_on": "2026-09-22"
   },
   {
     "name": "Nazarbayev University",

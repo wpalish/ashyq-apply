@@ -18,21 +18,50 @@ name: benchmark-capture
 on:
   workflow_dispatch:
     inputs:
+      runner:
+        description: 'Where the live reads happen: ubuntu-latest (GitHub cloud) or self-hosted (the owner''s computer). Sites see this machine''s IP.'
+        required: false
+        default: 'ubuntu-latest'
       case:
         description: 'One cohort id (groningen, delft, aalto, vienna, warsaw, ubc, toronto, hku, ntu, kaist), or blank for all ten'
         required: false
         default: ''
       seconds_per_case:
-        description: 'Wall-clock budget per university, in seconds'
+        description: 'Wall-clock budget per university, in seconds (120 since 2026-09-24; 90 matches the frozen baseline)'
         required: false
         default: '120'
+      max_pages:
+        description: 'Fetcher calls per university (60 matches the frozen baseline)'
+        required: false
+        default: '60'
+      mode:
+        description: 'benchmark (default), expert_baseline (capture + blinded packet, no scoring) or expert_actions (execute an expert plan)'
+        required: false
+        default: 'benchmark'
+      plan:
+        description: 'expert_actions: the plan JSON (evaluation/research/expert/controller.py)'
+        required: false
+        default: ''
+      extra_args:
+        description: 'expert_baseline: extra evaluation.research.live flags; expert_paired: the switch under test'
+        required: false
+        default: ''
+      base_args:
+        description: 'expert_paired: flags applied to BOTH arms, so only extra_args differs'
+        required: false
+        default: ''
+      search_first:
+        description: 'Experiment: search before the navigation fallback (false matches the measured default)'
+        required: false
+        default: 'false'
 
 permissions:
   contents: read
 
 jobs:
   capture:
-    runs-on: ubuntu-latest
+    if: inputs.mode == 'benchmark' || inputs.mode == ''
+    runs-on: ${{ inputs.runner || 'ubuntu-latest' }}
     # Ten universities at a two-minute budget each, plus install and scoring.
     timeout-minutes: 45
     defaults:
@@ -43,8 +72,18 @@ jobs:
       # key the run still completes — discovery falls back to sitemaps and the
       # catalogue walker — but it measures a different pipeline, so the step
       # below says which one it measured.
-      UNIMATCH_SEARCH_PROVIDER: ${{ secrets.UNIMATCH_EXA_API_KEY != '' && 'exa' || 'none' }}
+      # Tavily first when its key is set: the Exa account answered 402 on every
+      # query in run 48, and a spent balance must not silently remove search.
+      # Serper, then Brave, then Tavily, then Exa: Tavily's free plan answered
+      # 432 on every query in runs 68-69.
+      UNIMATCH_SEARCH_PROVIDER: ${{ secrets.UNIMATCH_SERPER_API_KEY != '' && 'serper' || (secrets.UNIMATCH_BRAVE_API_KEY != '' && 'brave' || (secrets.UNIMATCH_TAVILY_API_KEY != '' && 'tavily' || (secrets.UNIMATCH_EXA_API_KEY != '' && 'exa' || 'none'))) }}
       UNIMATCH_EXA_API_KEY: ${{ secrets.UNIMATCH_EXA_API_KEY }}
+      UNIMATCH_TAVILY_API_KEY: ${{ secrets.UNIMATCH_TAVILY_API_KEY }}
+      UNIMATCH_BRAVE_API_KEY: ${{ secrets.UNIMATCH_BRAVE_API_KEY }}
+      UNIMATCH_SERPER_API_KEY: ${{ secrets.UNIMATCH_SERPER_API_KEY }}
+      # Phase 4 shadow: a decision model only ranks, and only into the log.
+      UNIMATCH_DECISION_PROVIDER: ${{ secrets.UNIMATCH_TYPESAFE_API_KEY != '' && 'typesafe' || 'none' }}
+      UNIMATCH_TYPESAFE_API_KEY: ${{ secrets.UNIMATCH_TYPESAFE_API_KEY }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -57,7 +96,14 @@ jobs:
 
       - name: Say which pipeline is being measured
         run: |
-          if [ -n "${{ secrets.UNIMATCH_EXA_API_KEY }}" ]; then
+          echo "runner=${{ runner.name }} os=${{ runner.os }} environment=${{ runner.environment }}"
+          if [ -n "${{ secrets.UNIMATCH_SERPER_API_KEY }}" ]; then
+            echo "search provider: serper"
+          elif [ -n "${{ secrets.UNIMATCH_BRAVE_API_KEY }}" ]; then
+            echo "search provider: brave"
+          elif [ -n "${{ secrets.UNIMATCH_TAVILY_API_KEY }}" ]; then
+            echo "search provider: tavily"
+          elif [ -n "${{ secrets.UNIMATCH_EXA_API_KEY }}" ]; then
             echo "search provider: exa (the shipped Phase 1 path)"
           else
             echo "search provider: none — no UNIMATCH_EXA_API_KEY secret is set."
@@ -65,32 +111,108 @@ jobs:
           fi
 
       - name: Capture
+        # The bounds are printed, not assumed: a capture taken under different
+        # budgets is a different measurement, and the frozen baseline's are 60
+        # Fetcher calls and 90 seconds per university.
         run: |
+          set -o pipefail
+          echo "budgets: ${{ inputs.max_pages }} page reads / ${{ inputs.seconds_per_case }}s per case"
+          echo "The page budget bounds Fetcher.get calls, not HTTP requests: one read can"
+          echo "issue several (redirects, the browser tier, a PDF). Run 35697105238 made 98"
+          echo "requests for one case under a budget of 60, so the 'http' column below is"
+          echo "traffic, not the bound."
           .venv/bin/python -m evaluation.research.live \
             --live \
             --out evaluation/research/baseline/capture.${{ github.run_id }} \
             --seconds-per-case ${{ inputs.seconds_per_case }} \
-            ${{ inputs.case && format('--case {0}', inputs.case) || '' }}
+            --max-pages ${{ inputs.max_pages }} \
+            ${{ inputs.search_first == 'true' && '--search-first' || '' }} \
+            ${{ inputs.case && format('--case {0}', inputs.case) || '' }} \
+            | tee capture.log
+          # The capture writes into a timestamped subdirectory and prints that
+          # path as its last line. Reading it back is the only way to name the
+          # file; guessing it is what made run #1 score nothing at all.
+          echo "CAPTURE_JSON=$(tail -n 1 capture.log)" >> "$GITHUB_ENV"
 
       - name: Score it strictly against the certified corpus
         # Strict: no --allow-drafts. The corpus is human-signed, so a
         # provisional score would be a step backwards from V2-01.
+        #
+        # pipefail, and the file is checked before it is used: run #1 failed
+        # here with FileNotFoundError, `tee` returned 0, the step went green
+        # and the comparison below printed a committed draft report as if it
+        # were the measurement. A measurement that cannot fail loudly is worse
+        # than no measurement.
         run: |
+          set -o pipefail
+          test -f "$CAPTURE_JSON" || { echo "no capture at $CAPTURE_JSON"; exit 1; }
           .venv/bin/python -m evaluation.research \
             --dataset evaluation/research/data/ground_truth.reviewed.json \
-            --capture evaluation/research/baseline/capture.${{ github.run_id }}/capture.json \
+            --capture "$CAPTURE_JSON" \
             --out evaluation/research/baseline/metrics.${{ github.run_id }}.json \
             | tee capture-metrics.txt
+
+      - name: Read every certified fact from its own source page
+        # The oracle: fetch each labelled URL directly, with no discovery at
+        # all, and ask whether the extractor can recover the fact. That splits
+        # "never found the page" from "found it and could not read it", which
+        # claim_recall alone has never done. 24 distinct URLs, so it is cheap.
+        continue-on-error: true
+        timeout-minutes: 15
+        run: |
+          set -o pipefail
+          .venv/bin/python -m evaluation.research.oracle \
+            --dataset evaluation/research/data/ground_truth.reviewed.json \
+            --live \
+            --cache .cache/oracle \
+            --json oracle.json | tee oracle.txt
+
+      - name: Say how many certified facts could ever be scored
+        # claim_recall's denominator counts every known label, but a label no
+        # claim type maps to, or an award or document whose identity is not
+        # bound, scores zero whatever extraction does. Read recall against
+        # this ceiling, not against the raw count.
+        run: |
+          .venv/bin/python -m evaluation.research.expressibility \
+            --dataset evaluation/research/data/ground_truth.reviewed.json \
+            --bindings evaluation/research/data/identity_bindings.reviewed.json
+
+      - name: Say why a right-valued claim was not supported
+        # Supported means our quote lies inside the reviewer's. Reviewers quote
+        # the least that proves a fact; we quote a window around it. This shows
+        # which way each right-valued quote relates, so the direction can be
+        # settled on evidence.
+        run: |
+          set -o pipefail
+          .venv/bin/python -m evaluation.research.support_report \
+            --dataset evaluation/research/data/ground_truth.reviewed.json \
+            --capture "$CAPTURE_JSON" | tee support-shapes.txt
+
+      - name: Say why each scope mismatch happened
+        # The rate alone cannot be acted on: a page that stated the wrong
+        # population and a page that stated nothing score identically, and the
+        # fix for one is nothing like the fix for the other.
+        run: |
+          set -o pipefail
+          .venv/bin/python -m evaluation.research.scope_report \
+            --dataset evaluation/research/data/ground_truth.reviewed.json \
+            --capture "$CAPTURE_JSON" \
+            --json scope-mismatches.json | tee scope-mismatches.txt
 
       - name: Show what moved
         # Printed in the log so the numbers are readable without downloading
         # anything. The comparison a human actually wants is against
         # metrics.reviewed.json, which is committed.
+        #
+        # The new report is named exactly, never globbed: run #1 globbed
+        # `metrics.*.json`, took the last one, and printed a committed draft
+        # report under the heading "this run".
         run: |
+          set -o pipefail
           .venv/bin/python - <<'PY'
           import json, pathlib
           old = json.loads(pathlib.Path("evaluation/research/baseline/metrics.reviewed.json").read_text())["metrics"]
-          new = json.loads(list(pathlib.Path("evaluation/research/baseline").glob("metrics.*.json"))[-1].read_text())["metrics"]
+          new = json.loads(pathlib.Path("evaluation/research/baseline/metrics.${{ github.run_id }}.json").read_text())["metrics"]
           print(f"{'metric':45} {'certified':>14} {'this run':>14}")
           for key in sorted(set(old) | set(new)):
               def show(report):
@@ -103,6 +225,143 @@ jobs:
               print(f"{key:45} {before:>14} {after:>14}{flag}")
           PY
 
+      - name: Per-case outcomes
+        # Last, deliberately. The capture prints these as it goes, but the
+        # metrics JSON in between pushes them out of the log's tail, and a
+        # budget exhaustion is exactly what a reader needs when a recall
+        # number looks low: it says the pipeline never finished looking.
+        run: |
+          set -o pipefail
+          .venv/bin/python - <<'PY'
+          import json, pathlib, os, re
+          capture = json.loads(pathlib.Path(os.environ["CAPTURE_JSON"]).read_text())
+          print(f"{'case':12} {'outcome':45} {'http':>6} {'claims':>7}")
+          budget = 0
+          for observation in capture["observations"]:
+              error = observation.get("error") or "complete"
+              if "BUDGET" in error:
+                  budget += 1
+              telemetry = observation.get("telemetry") or {}
+              print(
+                  f"{observation['case_id']:12} {error:45} "
+                  f"{telemetry.get('http_fetches', 0):>6} "
+                  f"{len(observation.get('predictions') or []):>7}"
+              )
+          print(f"\n{budget} of {len(capture['observations'])} cases ran out of budget")
+
+          # Where the budget went. A case that ran out of wall clock after two
+          # fetches spent its time somewhere other than reading pages; its own
+          # child log is the only record, and it sits beside capture.json.
+          logs = pathlib.Path(os.environ["CAPTURE_JSON"]).parent
+          for observation in capture["observations"]:
+              budget_case = "BUDGET" in (observation.get("error") or "")
+              if not budget_case and observation.get("predictions") and not observation.get("error"):
+                  continue
+              telemetry = observation.get("telemetry") or {}
+              print(
+                  f"\n--- {observation['case_id']}: {observation.get('error')} | "
+                  f"http={telemetry.get('http_fetches')} search={telemetry.get('search_calls')} "
+                  f"browser={telemetry.get('browser_fetches')} "
+                  f"latency={telemetry.get('latency_seconds')}"
+              )
+              log = logs / f"{observation['case_id']}.log"
+              if log.exists():
+                  lines = log.read_text(encoding="utf-8", errors="replace").splitlines()
+                  failed_case = bool(observation.get("error")) and not budget_case
+                  if budget_case:
+                      # Every read it started, then the tail: run 63's Groningen
+                      # tail showed only science-shops pages, not how it got there.
+                      starts = [ln for ln in lines if " start " in ln]
+                      others = [ln for ln in lines if " start " not in ln and " took " not in ln]
+                      shown = starts[:160] + others[-20:]
+                  elif failed_case:
+                      # A crash: the traceback is the only record (run 49,
+                      # Toronto: "not enough values to unpack").
+                      tb = [i for i, ln in enumerate(lines) if "Traceback" in ln]
+                      shown = lines[tb[-1]:][:60] if tb else lines[-60:]
+                  else:
+                      # A case that filed nothing: every read and its outcome,
+                      # so a navigation miss shows which pages it went to.
+                      shown = [ln for ln in lines if " took " in ln or " start " in ln or "search query failed" in ln][:160]
+                  for line in shown:
+                      print(f"    {line[:220]}")
+              raw = logs / f"{observation['case_id']}.raw.json"
+              if not budget_case and raw.exists():
+                  # What discovery chose and what the catalogue walker saw:
+                  # the read trail says where it went, this says why.
+                  try:
+                      institutions = json.loads(raw.read_text())["canary"]["institutions"]
+                  except (ValueError, KeyError, TypeError):
+                      institutions = []
+                  for inst in institutions if isinstance(institutions, list) else [institutions]:
+                      dtrace = (inst or {}).get("discovery_trace") or {}
+                      print(f"    selected: {json.dumps(dtrace.get('selected'))[:600]}")
+                      for err in (dtrace.get("errors") or [])[:8]:
+                          print(f"    trace: {str(err)[:400]}")
+                      walker = dtrace.get("walker") or {}
+                      print(f"    walker: catalogs={walker.get('catalogs_walked')} confirmed={walker.get('programs_confirmed')}")
+                      for cand in (walker.get("candidates") or [])[:12]:
+                          print(f"      cand {cand.get('score')} {str(cand.get('url'))[:110]} | {str(cand.get('label'))[:40]}")
+                      # Dropped links (off-site, short labels, furniture) are
+                      # counted, not listed: the reads are what explain a miss.
+                      dropped = {"off_domain", "short_label", "walker_no_signal", "excluded_url", "degree_level_mismatch", "walker_budget_exhausted"}
+                      outs = walker.get("outcomes") or []
+                      print(f"      ({sum(1 for o in outs if o.get('outcome') in dropped)} links dropped unread)")
+                      for out in [o for o in outs if o.get("outcome") not in dropped][:60]:
+                          print(f"      out {out.get('outcome')} {str(out.get('url'))[:110]}")
+              else:
+                  print("    (no child log)")
+
+          # Why a case filed nothing. Nine of ten cases in run 35697105238
+          # produced zero claims and the capture could not say why for any of
+          # them; a count of the runner's own five outcomes is the answer.
+          print("\nwhy pages produced nothing, per case:")
+          for observation in capture["observations"]:
+              outcomes = observation.get("page_outcomes") or []
+              if not outcomes:
+                  print(f"  {observation['case_id']:12} (no per-page records)")
+                  continue
+              counts = {}
+              for record in outcomes:
+                  counts[record["category"]] = counts.get(record["category"], 0) + 1
+              summary = ", ".join(f"{k}={v}" for k, v in sorted(counts.items()))
+              print(f"  {observation['case_id']:12} {summary}")
+
+          # Funding pages for every case: scholarship discovery scored 0/3 through
+          # run 55 while cases with claims printed no page detail at all.
+          print("\nfunding pages read, per case:")
+          for observation in capture["observations"]:
+              for record in (observation.get("page_outcomes") or []):
+                  url = record.get("url") or ""
+                  detail = record.get("detail") or ""
+                  if re.search(r"scholar|award|funding|financ|bursar", url + " " + detail, re.I):
+                      print(f"  {observation['case_id']:10} {record['category']:20} {url[:100]}  {detail[:140]}")
+
+          # The funding reads themselves, from each case's own trail: run 58 queued
+          # twelve NTU award links and no outcome for any of them was recorded.
+          print("\nfunding reads in each case's trail:")
+          for observation in capture["observations"]:
+              log = logs / f"{observation['case_id']}.log"
+              if not log.exists():
+                  continue
+              lines = log.read_text(encoding="utf-8", errors="replace").splitlines()
+              for ln in lines:
+                  if ln.startswith("jev shadow:"):
+                      print(f"  {observation['case_id']:10} {ln}")
+              hits = [ln for ln in lines if re.search(r"scholar|award|bursar", ln, re.I)]
+              for ln in hits[:30]:
+                  print(f"  {observation['case_id']:10} {ln[:200]}")
+
+          # A case that filed nothing: every page it read, and what became of it.
+          for observation in capture["observations"]:
+              if observation.get("predictions"):
+                  continue
+              print(f"\n  {observation['case_id']}: no claims; its pages:")
+              for record in (observation.get("page_outcomes") or [])[:25]:
+                  detail = (record.get("detail") or "")[:260]
+                  print(f"    {record['category']:20} {record['url'][:110]}  {detail}")
+          PY
+
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -111,4 +370,103 @@ jobs:
             backend/evaluation/research/baseline/capture.${{ github.run_id }}
             backend/evaluation/research/baseline/metrics.${{ github.run_id }}.json
             backend/capture-metrics.txt
+            backend/capture.log
+            backend/scope-mismatches.json
+            backend/scope-mismatches.txt
+            backend/support-shapes.txt
+            backend/oracle.json
+            backend/oracle.txt
           retention-days: 14
+
+  # Expert recovery (backend/evaluation/research/expert): the live half of the
+  # protocol. The agent container cannot run Fetcher, so each read happens here
+  # and returns in the log as a base64 tarball. expert_baseline does not score.
+  expert:
+    if: startsWith(inputs.mode, 'expert_')
+    runs-on: ${{ inputs.runner || 'ubuntu-latest' }}
+    timeout-minutes: 55
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      UNIMATCH_SEARCH_PROVIDER: ${{ secrets.UNIMATCH_SERPER_API_KEY != '' && 'serper' || (secrets.UNIMATCH_BRAVE_API_KEY != '' && 'brave' || (secrets.UNIMATCH_TAVILY_API_KEY != '' && 'tavily' || (secrets.UNIMATCH_EXA_API_KEY != '' && 'exa' || 'none'))) }}
+      UNIMATCH_EXA_API_KEY: ${{ secrets.UNIMATCH_EXA_API_KEY }}
+      UNIMATCH_TAVILY_API_KEY: ${{ secrets.UNIMATCH_TAVILY_API_KEY }}
+      UNIMATCH_BRAVE_API_KEY: ${{ secrets.UNIMATCH_BRAVE_API_KEY }}
+      UNIMATCH_SERPER_API_KEY: ${{ secrets.UNIMATCH_SERPER_API_KEY }}
+      UNIMATCH_DEMO_MODE: 'false'
+      UNIMATCH_ENABLE_BROWSER_TIER: 'false'
+      UNIMATCH_FETCH_CONTACT: 'https://github.com/wpalish/ashyq-apply'
+      PLAN_JSON: ${{ inputs.plan }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: backend/requirements*.txt
+      - run: python -m venv .venv
+      - run: .venv/bin/pip install -q -r requirements-dev.txt
+      - name: Provider
+        # Which machine read the sites is part of the measurement: a cloud
+        # runner and a home connection get different answers (Aalto's
+        # robots.txt timed out from GitHub's cloud 3/3 on 2026-09-27).
+        run: |
+          echo "search provider=$UNIMATCH_SEARCH_PROVIDER sha=$(git rev-parse HEAD)"
+          echo "runner=${{ runner.name }} os=${{ runner.os }} environment=${{ runner.environment }}"
+
+      - name: Baseline capture and blinded packet
+        if: inputs.mode == 'expert_baseline'
+        run: |
+          set -o pipefail
+          mkdir -p out
+          .venv/bin/python -m evaluation.research.live --live --out out/capture \
+            --case "${{ inputs.case }}" \
+            --seconds-per-case "${{ inputs.seconds_per_case }}" \
+            --max-pages "${{ inputs.max_pages }}" ${{ inputs.extra_args }} | tee out/capture.log
+          CAPTURE="$(tail -n 1 out/capture.log)"
+          test -f "$CAPTURE"
+          .venv/bin/python -m evaluation.research.expert prepare \
+            --dataset evaluation/research/data/ground_truth.reviewed.json \
+            --capture "$CAPTURE" --case "${{ inputs.case }}" \
+            --out out/packet.json
+          echo "provider=$UNIMATCH_SEARCH_PROVIDER" > out/config.txt
+          echo "extra_args=${{ inputs.extra_args }}" >> out/config.txt
+
+      - name: Paired rule experiment (same runner, ABBA order)
+        if: inputs.mode == 'expert_paired'
+        # inputs.case is a space-separated list; inputs.extra_args is the rule
+        # switch under test. Each case runs off/on/on/off so a drift in the
+        # site or provider during the job hits both arms alike.
+        run: |
+          set -o pipefail
+          mkdir -p out
+          for c in ${{ inputs.case }}; do
+            for arm in off on on off; do
+              flags="${{ inputs.base_args }}"; [ "$arm" = on ] && flags="$flags ${{ inputs.extra_args }}"
+              .venv/bin/python -m evaluation.research.live --live --out "out/$c-$arm" \
+                --case "$c" --seconds-per-case "${{ inputs.seconds_per_case }}" \
+                --max-pages "${{ inputs.max_pages }}" $flags | tail -n 2
+            done
+          done
+          echo "extra_args=${{ inputs.extra_args }} base_args=${{ inputs.base_args }}" > out/config.txt
+
+      - name: Execute an expert plan
+        if: inputs.mode == 'expert_actions'
+        run: |
+          set -o pipefail
+          mkdir -p out
+          printf '%s' "$PLAN_JSON" > out/plan.json
+          .venv/bin/python -m evaluation.research.expert.controller \
+            --plan out/plan.json --logs-dir out/logs --cache-dir out/cache \
+            --summary out/summary.json
+          rm -rf out/cache
+
+      - name: Return everything in the log
+        if: always()
+        run: |
+          tar -czf bundle.tgz out || true
+          sha256sum bundle.tgz
+          echo "BUNDLE_BEGIN"
+          base64 -w 4000 bundle.tgz | sed 's/^/B64 /'
+          echo "BUNDLE_END"

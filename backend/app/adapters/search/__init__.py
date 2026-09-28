@@ -18,7 +18,7 @@ from app.adapters.search.base import (
 
 #: Every provider name this build accepts. A name outside it is refused at
 #: startup rather than at the first search.
-KNOWN_SEARCH_PROVIDERS = frozenset({"none", "fake", "exa"})
+KNOWN_SEARCH_PROVIDERS = frozenset({"none", "fake", "exa", "tavily", "brave", "serper"})
 
 __all__ = [
     "KNOWN_SEARCH_PROVIDERS",
@@ -47,6 +47,21 @@ def get_search_provider() -> SearchProvider:
         from app.adapters.search.exa import ExaSearchProvider
 
         return ExaSearchProvider(settings.exa_api_key.get_secret_value())
+
+    if settings.search_provider == "tavily":
+        from app.adapters.search.tavily import TavilySearchProvider
+
+        return TavilySearchProvider(settings.tavily_api_key.get_secret_value())
+
+    if settings.search_provider == "brave":
+        from app.adapters.search.brave import BraveSearchProvider
+
+        return BraveSearchProvider(settings.brave_api_key.get_secret_value())
+
+    if settings.search_provider == "serper":
+        from app.adapters.search.serper import SerperSearchProvider
+
+        return SerperSearchProvider(settings.serper_api_key.get_secret_value())
 
     if settings.search_provider == "fake":
         from app.adapters.search.fake import FakeSearchProvider

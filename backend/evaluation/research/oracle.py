@@ -1,0 +1,423 @@
+"""Fetch the certified source of each fact directly, and ask whether we can read it.
+
+`claim_recall` has reported 0/62 for four runs and has never said which of two
+very different things is wrong: the pipeline never reaches the page, or it
+reaches it and cannot read it. Every fix so far has been aimed at a guess.
+
+The certified corpus is the oracle. Seventy-three of its labels carry an exact
+source URL and a human-reviewed verbatim excerpt. This module fetches those URLs
+**directly, with no discovery at all**, runs the real classifier and the real
+extractors, and files one verdict per fact. Removing discovery from the question
+by construction is the whole point: what is left is readability.
+
+Evaluation only. Production never reads ground truth, and this module is never
+imported from ``app``. Live by explicit opt-in, as the search probe is; the
+offline tests drive it through ``fixture://`` pages.
+"""
+
+from __future__ import annotations
+
+import argparse
+import asyncio
+import json
+import os
+import re
+from collections import Counter
+from dataclasses import asdict, dataclass
+from pathlib import Path
+
+from .mapping import CLAIM_KEYS, normalize_claim
+from .schema import Dataset
+
+#: What happened to one certified fact when we read its own source page.
+RECOVERED = "recovered"
+VALUE_MISSING = "value_missing"
+TEXT_MISSING = "text_missing"
+FETCH_FAILED = "fetch_failed"
+#: The probe did not finish inside its wall clock — a hung fetch or an
+#: extraction pattern that never returns. Itself a finding, never a hang.
+TIMED_OUT = "timed_out"
+#: The patterns recover it when the page is read ungated, but the classifier
+#: refused the page for requirements — a classification fault, not a pattern one.
+CLASSIFIER_GATED = "classifier_gated"
+#: The oracle runs the requirements path only; this key is filled by another
+#: adapter (scholarships, documents) or by no claim type at all. A gap in what
+#: this probe can see, not a failure to read.
+NOT_MEASURED = "not_measured"
+
+PROBE_SECONDS = 90.0
+
+#: Words carry the meaning; punctuation and casing differ between a reviewer's
+#: excerpt and the page's own rendering, and a table's cells may be joined with
+#: different whitespace. Comparing word sequences is strict enough to prove the
+#: text is present and loose enough not to fail on a non-breaking space.
+_WORD = re.compile(r"\w+", re.UNICODE)
+
+
+@dataclass(frozen=True, slots=True)
+class Target:
+    """One certified fact, and the page its reviewer read it from."""
+
+    case_id: str
+    key: str
+    value: object
+    url: str
+    excerpt: str
+    #: The case's requested field and degree: the adapter reads a listing
+    #: page's programme existence against the request, so the oracle must too.
+    field: str = ""
+    degree: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class Finding:
+    case_id: str
+    key: str
+    url: str
+    verdict: str
+    detail: str = ""
+    #: For value_missing: the page text around the reviewer's words, so the
+    #: pattern that failed can be written against what the page really says.
+    context: str = ""
+
+    def line(self) -> str:
+        return f"{self.case_id:11} {self.key:28} {self.verdict:14} {self.detail}"
+
+
+def targets(dataset: Dataset) -> list[Target]:
+    """Every certified fact that names the page it was read from."""
+    found: list[Target] = []
+    for case in dataset.cases:
+        for label in case.labels:
+            for evidence in label.evidence or []:
+                url = str(evidence.url)
+                if not url.startswith(("http://", "https://", "fixture://")):
+                    continue
+                found.append(
+                    Target(
+                        case_id=case.id,
+                        key=label.key,
+                        value=label.value,
+                        url=url,
+                        excerpt=evidence.excerpt or "",
+                        field=case.request.field or "",
+                        degree=case.request.degree,
+                    )
+                )
+    return found
+
+
+def _words(text: str) -> list[str]:
+    return [w.casefold() for w in _WORD.findall(text or "")]
+
+
+def excerpt_context(excerpt: str, text: str, radius: int = 240) -> str:
+    """The page text around the first word of the excerpt's first appearance."""
+    words = _words(excerpt)
+    if not words:
+        return ""
+    flat = " ".join((text or "").split())
+    folded = flat.casefold()
+    at = folded.find(" ".join(words[: min(3, len(words))]))
+    if at < 0:
+        at = folded.find(words[0])
+    if at < 0:
+        return ""
+    return flat[max(0, at - radius) : at + radius]
+
+
+def excerpt_is_present(excerpt: str, text: str) -> bool:
+    """Whether the reviewer's quoted words still appear, in order, in our text.
+
+    Not a substring test: the reviewer joined table cells with spaces, and a
+    page renders non-breaking spaces and soft hyphens we do not reproduce
+    character for character. The word sequence is the honest comparison.
+    """
+    needle = _words(excerpt)
+    if not needle:
+        return False
+    haystack = _words(text)
+    if len(needle) > len(haystack):
+        return False
+    first = needle[0]
+    for start in (i for i, word in enumerate(haystack) if word == first):
+        if haystack[start : start + len(needle)] == needle:
+            return True
+    return False
+
+
+def _claims_on(
+    url: str, html: str, fetched_at, field: str = "", degree: str | None = None
+) -> tuple[str, list[tuple[str, object]], list]:
+    """The real extraction path on one page, normalised to the scorer's keys.
+
+    Returns the page type, the claims the pipeline would keep (gated by the
+    classifier, as the adapter is) and the claims the patterns find with the
+    gate lifted, so a refusal by the classifier is told apart from a miss.
+    """
+    from app.adapters.extraction import ClaimBuilder, html_title, readable_text
+    from app.adapters.page_classifier import classify_page
+    from app.adapters.requirements.web_requirements import extract_requirements
+
+    text = readable_text(html)
+    page = classify_page(url=url, html=html)
+    builder = ClaimBuilder(
+        source_url=url,
+        page_title=html_title(html),
+        official_domain=True,
+        extraction_method="html_rule",
+        accessed_at=fetched_at,
+    )
+    extract_requirements(text, builder)
+    ungated: list[tuple[str, object]] = []
+    for claim in builder.claims:
+        payload = claim.model_dump(mode="json")
+        key, value, _programme, _degree = normalize_claim(payload["claim_type"], payload)
+        ungated.append((key, value))
+    # The adapter reads an admission-route statement from any official page it
+    # opens (the sentence names admission itself); mirror that here.
+    gated = (
+        list(ungated)
+        if page.accepts("requirements")
+        else [kv for kv in ungated if kv[0] == "programme.admission_route"]
+    )
+    # Programme existence is claimed by the adapter, not by the patterns: a
+    # page the classifier accepts as a programme page, with a subject it
+    # recognised. The adapter also matches that subject against the request;
+    # the oracle has no request, so this is the most it can check.
+    if page.subject:
+        ungated.append(("programme.exists", True))
+        if page.accepts("program_exists"):
+            gated.append(("programme.exists", True))
+    elif field:
+        # The adapter's listing path (owner decision 2026-09-23): a listing or
+        # unclassified page confirms existence only, by a full degree title the
+        # ontology equates with the requested programme. Without this the
+        # oracle reported HKU's certified fact missing while the pipeline read it.
+        from types import SimpleNamespace
+
+        from app.adapters.requirements.web_requirements import (
+            _LISTING_PAGE_TYPES,
+            _listed_programme,
+        )
+
+        request = SimpleNamespace(name=field, field=field, degree=degree)
+        if _listed_programme(text, request) is not None:
+            ungated.append(("programme.exists", True))
+            if page.page_type in _LISTING_PAGE_TYPES:
+                gated.append(("programme.exists", True))
+    return page.page_type.value, gated, ungated
+
+
+def _award_claims(
+    url: str, html: str, fetched_at, field: str = "", degree: str | None = None
+) -> tuple[list[tuple[str, object]], list[tuple[str, object]]]:
+    """The scholarship adapter's own award reader on one page, mapped to keys.
+
+    The adapter parses only pages it classifies as a single award, so those
+    claims are the gated ones; the ungated ones read every page as an award, to
+    tell a classifier refusal from a pattern miss. Keys are bound through the
+    reviewed identity map, as live capture binds them, so an award is scored
+    only under the identity its reviewer certified.
+    """
+    from app.adapters.base import Candidate, CandidateProgram
+    from app.adapters.discovery.live_discovery import registrable_domain
+    from app.adapters.page_classifier import PageType, classify_page
+    from app.adapters.scholarship.web_scholarships import WebScholarshipAdapter
+    from app.domain.enums import DegreeLevel
+
+    from .identities import IdentityMap
+    from .live import REVIEWED_BINDINGS
+    from .mapping import normalize_subject_claims
+
+    page = classify_page(url=url, html=html)
+    try:
+        level = DegreeLevel(degree or "bachelor")
+    except ValueError:
+        level = DegreeLevel("bachelor")
+    candidate = Candidate(name="", country="", city="", domain=registrable_domain(url))
+    program = CandidateProgram(name=field, field=field, degree=level)
+    adapter = WebScholarshipAdapter(None, "")  # type: ignore[arg-type]  # reads no pages
+    _award, claims = adapter._parse_award(candidate, program, url, html, fetched_at, page, index=0)
+    identities = IdentityMap.model_validate_json(REVIEWED_BINDINGS.read_text(encoding="utf-8"))
+    ungated: list[tuple[str, object]] = []
+    for claim in claims:
+        payload = claim.model_dump(mode="json")
+        for key, value, _programme, _degree in normalize_subject_claims(
+            payload["claim_type"], payload, identities
+        ):
+            ungated.append((key, value))
+    gated = list(ungated) if page.page_type is PageType.SCHOLARSHIP_AWARD else []
+    return gated, ungated
+
+
+#: Keys the award reader fills; the oracle runs it only for these.
+_AWARD_PREFIXES = ("scholarships.", "documents.scholarship.")
+
+
+def _matches(expected: object, produced: object) -> bool:
+    if expected is None:
+        return False
+    if isinstance(expected, int | float) and isinstance(produced, int | float):
+        return abs(float(expected) - float(produced)) < 1e-9
+    if isinstance(expected, dict) and isinstance(produced, dict):
+        # The scorer's own comparison: key order is not a value. Run 66 showed
+        # UBC's subscores extracted exactly and reported missing, because
+        # str() of the two maps listed the bands in different orders.
+        return json.dumps(expected, sort_keys=True) == json.dumps(produced, sort_keys=True)
+    return str(expected).casefold() == str(produced).casefold()
+
+
+async def probe(target: Target, fetcher) -> Finding:
+    """Read one certified source page and say what happened to its fact."""
+    page = await fetcher.get(target.url)
+    if not page.ok:
+        return Finding(
+            target.case_id,
+            target.key,
+            target.url,
+            FETCH_FAILED,
+            f"{page.outcome.value} — {page.error}"[:160],
+        )
+
+    from app.adapters.extraction import readable_text
+
+    # Extraction is CPU-bound: run it off the loop so the wall clock can fire.
+    text, (page_type, gated, ungated) = await asyncio.to_thread(
+        lambda: (
+            readable_text(page.text),
+            _claims_on(target.url, page.text, page.fetched_at, target.field, target.degree),
+        )
+    )
+
+    def found(claims: list[tuple[str, object]]) -> bool:
+        return any(k == target.key and _matches(target.value, v) for k, v in claims)
+
+    def finding(verdict: str, detail: str = "") -> Finding:
+        return Finding(target.case_id, target.key, target.url, verdict, detail)
+
+    if target.key.startswith(_AWARD_PREFIXES):
+        gated, ungated = await asyncio.to_thread(
+            _award_claims, target.url, page.text, page.fetched_at, target.field, target.degree
+        )
+    if found(gated):
+        return finding(RECOVERED, f"[{page_type}]")
+    if found(ungated):
+        return finding(
+            CLASSIFIER_GATED, f"[{page_type}] the patterns read it; the page was not accepted"
+        )
+    if target.key not in _MEASURED_KEYS and not target.key.startswith(_AWARD_PREFIXES):
+        return finding(
+            NOT_MEASURED,
+            f"[{page_type}] outside the requirements path this oracle runs "
+            "(scholarship, document or unmapped key)",
+        )
+    if excerpt_is_present(target.excerpt, text):
+        missing = finding(
+            VALUE_MISSING,
+            f"[{page_type}] the quoted words are in our text; "
+            f"{len(ungated)} claims came out, none this one: "
+            + ", ".join(f"{k}={str(v)[:60]}" for k, v in ungated[:6])
+            + (" (the certified value is null)" if target.value is None else ""),
+        )
+        return Finding(**{**asdict(missing), "context": excerpt_context(target.excerpt, text)})
+    return finding(
+        TEXT_MISSING,
+        f"[{page_type}] the quoted words are not in our text at all ({len(text)} chars read)",
+    )
+
+
+_MEASURED_KEYS = frozenset(CLAIM_KEYS.values())
+
+
+def summarise(findings: list[Finding]) -> str:
+    """The table, then the reading. The counts are the point."""
+    by_verdict = Counter(f.verdict for f in findings)
+    lines = [f.line() for f in findings]
+    lines.append("")
+    lines.append(f"{len(findings)} certified facts read from their own source pages")
+    for verdict in (
+        RECOVERED,
+        CLASSIFIER_GATED,
+        VALUE_MISSING,
+        TEXT_MISSING,
+        NOT_MEASURED,
+        FETCH_FAILED,
+        TIMED_OUT,
+    ):
+        lines.append(f"  {verdict:14} {by_verdict.get(verdict, 0)}")
+    lines.append("")
+    lines.append(
+        "value_missing means the patterns; classifier_gated means the page type; "
+        "text_missing means the page's content never reached us; not_measured means no "
+        "claim type exists for the fact; recovered with a still-zero live claim_recall "
+        "would mean navigation."
+    )
+    misses = [f for f in findings if f.verdict == VALUE_MISSING and f.context]
+    if misses:
+        lines.append("")
+        lines.append("what the page says where a pattern should have fired:")
+        for f in misses:
+            lines.append(f"  {f.case_id} {f.key}: …{f.context}…")
+    return "\n".join(lines)
+
+
+async def run(dataset: Dataset, *, live: bool, cache: Path, corpus: Path | None) -> list[Finding]:
+    from app.adapters.fetching import Fetcher
+
+    async with Fetcher(cache, offline=not live, corpus_dir=corpus) as fetcher:
+        findings = []
+        hung: set[str] = set()
+        for target in targets(dataset):
+            if target.url in hung:
+                # One wait per page, not one per fact read from it.
+                findings.append(
+                    Finding(
+                        target.case_id,
+                        target.key,
+                        target.url,
+                        TIMED_OUT,
+                        "same page already timed out; not waited on again",
+                    )
+                )
+            else:
+                findings.append(await bounded_probe(target, fetcher, seconds=PROBE_SECONDS))
+                if findings[-1].verdict == TIMED_OUT:
+                    hung.add(target.url)
+            print(findings[-1].line(), flush=True)
+        return findings
+
+
+async def bounded_probe(target: Target, fetcher, *, seconds: float) -> Finding:
+    """``probe`` with a wall clock, so one page can never stall the whole run."""
+    try:
+        return await asyncio.wait_for(probe(target, fetcher), timeout=seconds)
+    except TimeoutError:
+        return Finding(
+            target.case_id, target.key, target.url, TIMED_OUT, f"no answer within {seconds:.0f}s"
+        )
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--dataset", type=Path, required=True)
+    parser.add_argument("--cache", type=Path, default=Path(".cache/oracle"))
+    parser.add_argument("--json", type=Path, help="also write the findings as JSON")
+    parser.add_argument(
+        "--live",
+        action="store_true",
+        help="fetch the certified source pages for real; off by default, as the search probe is",
+    )
+    args = parser.parse_args()
+
+    dataset = Dataset.model_validate_json(args.dataset.read_text(encoding="utf-8"))
+    findings = asyncio.run(run(dataset, live=args.live, cache=args.cache, corpus=None))
+    if args.json:
+        args.json.write_text(json.dumps([asdict(f) for f in findings], indent=2), encoding="utf-8")
+    print(summarise(findings), flush=True)
+    # A stuck extraction thread must not keep the interpreter alive.
+    os._exit(0)
+
+
+if __name__ == "__main__":
+    main()

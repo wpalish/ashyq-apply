@@ -1,0 +1,38 @@
+{
+  "schema_version": "1",
+  "basis_commit": "07de4d9b75d14a8ba0ae8c2b8792a73a53587411",
+  "rules": [
+    {
+      "id": "CR-01",
+      "state": "implemented_contract",
+      "rule": "A search result, title or vendor snippet is only a discovery hint; a claim needs a fetched official source with its own excerpt and scope.",
+      "code": ["backend/app/adapters/search/base.py", "backend/app/domain/claim_verifier.py"],
+      "evidence": ["backend/tests/test_search_provider.py", "backend/tests/test_claim_verifier.py"],
+      "limit": "Tests establish the contract, not current end-to-end claim precision."
+    },
+    {
+      "id": "CR-02",
+      "state": "implemented_contract",
+      "rule": "An unstated programme, intake, population or year dimension does not silently become a match; UNKNOWN or review remains possible.",
+      "code": ["backend/app/domain/claim_scope.py", "backend/app/domain/programme_identity.py"],
+      "evidence": ["backend/tests/test_claim_scope.py", "backend/tests/test_programme_identity.py"],
+      "limit": "The signed 2026-09-20 capture predates these changes. Re-measure end-to-end wrong-scope claims."
+    },
+    {
+      "id": "CR-03",
+      "state": "implemented_measured_on_development",
+      "rule": "A navigation hop supplies additive coverage; treating unordered navigation links as an equal ranked generator displaced correct search results.",
+      "code": ["backend/app/adapters/search/retrieval.py", "backend/app/adapters/search/navigation.py"],
+      "evidence": ["backend/evaluation/research/SEARCH_PROBE.md", "backend/evaluation/research/baseline/search_probe.exa.hop.json"],
+      "limit": "The 10/10 candidate-set ceiling was measured on ten development universities in a changing external index. It does not prove fetching or correct claims."
+    },
+    {
+      "id": "CR-04",
+      "state": "implemented_measured_on_development",
+      "rule": "A host in verified registry seeds contributes a positive ranking signal, never a hard acceptance or rejection.",
+      "code": ["backend/app/adapters/search/retrieval.py", "backend/app/adapters/discovery/institution_registry.json"],
+      "evidence": ["backend/evaluation/research/SEARCH_PROBE.md", "backend/evaluation/research/baseline/search_probe.exa.hop.json"],
+      "limit": "Toronto improved from rank 19 to 4 in the dated probe, while KAIST remained around rank 30 because its department host was not a seed. Repeat paired and held-out measurements before changing weights."
+    }
+  ]
+}

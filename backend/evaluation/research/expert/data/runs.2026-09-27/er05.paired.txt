@@ -1,0 +1,145 @@
+== aalto
+ off 20260927T202809Z err=None preds=0 claims=0 verified=0 progfound=True http=3 search=6 t=21s
+     prog: ['https://www.aalto.fi/en/aalto-university-open-university/computer-science', 'https://www.aalto.fi/en/study-at-aalto/study-computer-science', 'https://www.aalto.fi/en/minors/computer-science-minor']
+     REJ: {'not_a_programme_page': 13, 'wrong_degree_level': 7, 'duplicate': 14}
+ on  20260927T202831Z err=None preds=0 claims=0 verified=0 progfound=True http=3 search=6 t=20s
+     prog: ['https://www.aalto.fi/en/aalto-university-open-university/computer-science', 'https://www.aalto.fi/en/study-at-aalto/study-computer-science', 'https://www.aalto.fi/en/minors/computer-science-minor']
+     REJ: {'not_a_programme_page': 12, 'wrong_degree_level': 8, 'duplicate': 14}
+ on  20260927T202852Z err=None preds=0 claims=0 verified=0 progfound=True http=3 search=6 t=21s
+     prog: ['https://www.aalto.fi/en/aalto-university-open-university/computer-science', 'https://www.aalto.fi/en/study-at-aalto/study-computer-science', 'https://www.aalto.fi/en/minors/computer-science-minor']
+     REJ: {'not_a_programme_page': 11, 'wrong_degree_level': 9, 'duplicate': 13}
+ off 20260927T202914Z err=None preds=0 claims=0 verified=0 progfound=True http=3 search=6 t=20s
+     prog: ['https://www.aalto.fi/en/aalto-university-open-university/computer-science', 'https://www.aalto.fi/en/study-at-aalto/study-computer-science', 'https://www.aalto.fi/en/minors/computer-science-minor']
+     REJ: {'not_a_programme_page': 13, 'wrong_degree_level': 7, 'duplicate': 14}
+== kaist
+ off 20260927T202245Z err=None preds=0 claims=0 verified=0 progfound=True http=4 search=6 t=52s
+     prog: ['https://cs.kaist.ac.kr/', 'https://btm.kaist.ac.kr/resources/wis-layout/file/BTM_Course-Requirements_Major_English__20230701.pdf', 'https://ftp.kaist.ac.kr/ctan/macros/latex/contrib/bangorcsthesis/bangorcsthesis.pdf']
+     REJ: {'not_a_programme_page': 13, 'wrong_degree_level': 5, 'duplicate': 4}
+ on  20260927T202338Z err=None preds=0 claims=0 verified=0 progfound=True http=6 search=6 t=45s
+     prog: ['https://cs.kaist.ac.kr/', 'https://ftp.kaist.ac.kr/ctan/macros/latex/contrib/bangorcsthesis/bangorcsthesis.pdf', 'https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline']
+     REJ: {'not_a_programme_page': 14, 'wrong_degree_level': 6, 'duplicate': 3}
+ on  20260927T202424Z err=None preds=0 claims=0 verified=0 progfound=True http=11 search=6 t=49s
+     prog: ['https://ftp.kaist.ac.kr/ctan/macros/latex/contrib/bangorcsthesis/bangorcsthesis.pdf', 'https://pure.kaist.ac.kr/en/clippings/1200-free-computer-science-courses-from-the-worlds-top-universiti', 'https://an.kaist.ac.kr/courses/2006/cs492']
+     REJ: {'not_a_programme_page': 16, 'wrong_degree_level': 3, 'duplicate': 3}
+ off 20260927T202514Z err=None preds=0 claims=0 verified=0 progfound=True http=8 search=6 t=48s
+     prog: ['https://ftp.kaist.ac.kr/ctan/macros/latex/contrib/bangorcsthesis/bangorcsthesis.pdf', 'https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline', 'https://pure.kaist.ac.kr/en/clippings/1200-free-computer-science-courses-from-the-worlds-top-universiti']
+     REJ: {'not_a_programme_page': 16, 'wrong_degree_level': 4, 'duplicate': 3}
+== toronto
+ off 20260927T202603Z err=None preds=0 claims=0 verified=0 progfound=True http=25 search=6 t=30s
+     prog: ['https://future.utoronto.ca/data-computer-science', 'https://www.utm.utoronto.ca/math-cs-stats/undergraduate-students/topic-courses/computer-science-topic-courses', 'https://future.utoronto.ca/undergraduate-programs']
+     REJ: {'not_a_programme_page': 7, 'duplicate': 20, 'wrong_degree_level': 1}
+ on  20260927T202633Z err=None preds=0 claims=0 verified=0 progfound=True http=26 search=6 t=30s
+     prog: ['https://future.utoronto.ca/data-computer-science', 'https://future.utoronto.ca/undergraduate-programs', 'https://future.utoronto.ca/program/computer-science']
+     REJ: {'not_a_programme_page': 9, 'duplicate': 17, 'wrong_degree_level': 1}
+ on  20260927T202705Z err=None preds=0 claims=0 verified=0 progfound=True http=25 search=6 t=31s
+     prog: ['https://future.utoronto.ca/data-computer-science', 'https://future.utoronto.ca/undergraduate-programs', 'https://future.utoronto.ca/program/computer-science']
+     REJ: {'duplicate': 21, 'not_a_programme_page': 7}
+ off 20260927T202738Z err=None preds=0 claims=0 verified=0 progfound=True http=25 search=6 t=30s
+     prog: ['https://future.utoronto.ca/data-computer-science', 'https://www.utm.utoronto.ca/math-cs-stats/undergraduate-students/topic-courses/computer-science-topic-courses', 'https://future.utoronto.ca/undergraduate-programs']
+     REJ: {'not_a_programme_page': 7, 'duplicate': 21, 'wrong_degree_level': 1}
+== metu
+ off 20260927T202854Z err=BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED preds=0 claims=None verified=None progfound=None http=17 search=0 t=115s
+     prog: []
+ on  20260927T203050Z err=BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED preds=0 claims=None verified=None progfound=None http=19 search=0 t=115s
+     prog: []
+ on  20260927T203246Z err=BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED preds=0 claims=None verified=None progfound=None http=19 search=0 t=115s
+     prog: []
+ off 20260927T203442Z err=BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED preds=0 claims=None verified=None progfound=None http=19 search=0 t=115s
+     prog: []
+== nu
+ off 20260927T202242Z err=BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED preds=0 claims=None verified=None progfound=None http=36 search=0 t=115s
+     prog: []
+ on  20260927T202438Z err=None preds=0 claims=0 verified=0 progfound=True http=4 search=6 t=23s
+     prog: ['https://nu.edu.kz/admissions/programs', 'https://nu.edu.kz/sprogram/bachelor-of-science-in-computer-science', 'https://nu.edu.kz/sprogram/ph-d-in-computer-science']
+     REJ: {'wrong_degree_level': 17, 'duplicate': 14, 'not_a_programme_page': 1}
+ on  20260927T202502Z err=BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED preds=0 claims=None verified=None progfound=None http=42 search=0 t=115s
+     prog: []
+ off 20260927T202658Z err=BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED preds=0 claims=None verified=None progfound=None http=36 search=0 t=115s
+     prog: []
+== sabanci
+ off 20260927T203638Z err=None preds=0 claims=0 verified=0 progfound=True http=80 search=6 t=105s
+     prog: ['https://cs.sabanciuniv.edu/en/sucourseslist0/201303', 'https://sabanciuniv.edu/en/computer-science-and-engineering', 'https://cs.sabanciuniv.edu/en/sucourseslist1/01']
+     REJ: {'wrong_degree_level': 8, 'duplicate': 11}
+ on  20260927T203824Z err=None preds=0 claims=0 verified=0 progfound=True http=79 search=6 t=90s
+     prog: ['https://sabanciuniv.edu/en/computer-science-and-engineering', 'https://iro.sabanciuniv.edu/en/computer-science-and-engineering', 'https://cs.sabanciuniv.edu/en/sucourseslist0/201303']
+     REJ: {'wrong_degree_level': 4, 'duplicate': 12}
+ on  20260927T203955Z err=None preds=0 claims=0 verified=0 progfound=True http=80 search=6 t=100s
+     prog: ['https://cs.sabanciuniv.edu/en/sucourseslist0/201303', 'https://sabanciuniv.edu/en/computer-science-and-engineering', 'https://cs.sabanciuniv.edu/en/sucourseslist1/01']
+     REJ: {'wrong_degree_level': 5, 'duplicate': 14, 'not_a_programme_page': 1}
+ off 20260927T204136Z err=None preds=0 claims=0 verified=0 progfound=True http=80 search=6 t=96s
+     prog: ['https://sabanciuniv.edu/en/computer-science-and-engineering', 'https://cs.sabanciuniv.edu/en/sucourseslist1/01', 'https://iro.sabanciuniv.edu/en/computer-science-and-engineering']
+     REJ: {'wrong_degree_level': 6, 'duplicate': 14}
+== charles
+ off 20260927T202245Z err=None preds=10 claims=5 verified=3 progfound=True http=31 search=6 t=50s
+     prog: ['https://www.mff.cuni.cz/en/students/bachelor-of-computer-science', 'https://www.mff.cuni.cz/en/students/bachelor-of-computer-science-2019/degree-plans-general-computer-science', 'https://cuni.cz/UKEN-191-version1-2021_bc_mgr_final_www.pdf']
+     REJ: {'not_a_programme_page': 7, 'duplicate': 14, 'wrong_degree_level': 4}
+ on  20260927T202338Z err=None preds=10 claims=5 verified=3 progfound=True http=31 search=6 t=45s
+     prog: ['https://www.mff.cuni.cz/en/students/bachelor-of-computer-science', 'https://www.mff.cuni.cz/en/students/bachelor-of-computer-science-2019/degree-plans-general-computer-science', 'https://cuni.cz/UKEN-191-version1-2021_bc_mgr_final_www.pdf']
+     REJ: {'not_a_programme_page': 7, 'duplicate': 14, 'wrong_degree_level': 5}
+ on  20260927T202424Z err=None preds=10 claims=5 verified=3 progfound=True http=31 search=6 t=50s
+     prog: ['https://www.mff.cuni.cz/en/students/bachelor-of-computer-science', 'https://www.mff.cuni.cz/en/students/bachelor-of-computer-science-2019/degree-plans-general-computer-science', 'https://cuni.cz/UKEN-191-version1-2021_bc_mgr_final_www.pdf']
+     REJ: {'duplicate': 16, 'not_a_programme_page': 5, 'wrong_degree_level': 5}
+ off 20260927T202515Z err=None preds=10 claims=5 verified=3 progfound=True http=31 search=6 t=45s
+     prog: ['https://www.mff.cuni.cz/en/students/bachelor-of-computer-science', 'https://www.mff.cuni.cz/en/students/bachelor-of-computer-science-2019/degree-plans-general-computer-science', 'https://cuni.cz/UKEN-191-version1-2021_bc_mgr_final_www.pdf']
+     REJ: {'not_a_programme_page': 4, 'duplicate': 15, 'wrong_degree_level': 6}
+== masaryk
+ off 20260927T202601Z err=BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED preds=0 claims=None verified=None progfound=None http=47 search=6 t=120s
+     prog: []
+ on  20260927T202801Z err=BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED preds=0 claims=None verified=None progfound=None http=46 search=6 t=120s
+     prog: []
+ on  20260927T203002Z err=BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED preds=0 claims=None verified=None progfound=None http=48 search=6 t=120s
+     prog: []
+ off 20260927T203202Z err=BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED preds=0 claims=None verified=None progfound=None http=47 search=6 t=120s
+     prog: []
+== tum
+ off 20260927T203402Z err=RuntimeError: BENCHMARK_PAGE_BUDGET_EXHAUSTED preds=0 claims=0 verified=0 progfound=True http=66 search=6 t=103s
+     prog: ['https://www.ed.tum.de/en/ed/news-single-view-start/article/computational-mechanics-an-der-tum-zwischen-ingenieurwissenschaft-und-informatik', 'https://portal.fis.tum.de/en/publications/undergraduate-teaching-assistants-in-computer-science-teaching-re/fingerprints', 'https://www.tum.de/en/studies/application/bachelor/application-bachelor']
+     REJ: {'wrong_degree_level': 12, 'not_a_programme_page': 7, 'duplicate': 5}
+ on  20260927T203546Z err=RuntimeError: BENCHMARK_PAGE_BUDGET_EXHAUSTED preds=0 claims=0 verified=0 progfound=True http=65 search=6 t=104s
+     prog: ['https://www.ed.tum.de/en/ed/news-single-view-start/article/computational-mechanics-an-der-tum-zwischen-ingenieurwissenschaft-und-informatik', 'https://www.tum.de/en/studies/degree-programs/detail/aerospace-bachelor-of-science-bsc', 'https://www.tum.de/en/studies/application/bachelor/application-bachelor']
+     REJ: {'wrong_degree_level': 14, 'not_a_programme_page': 6, 'duplicate': 5}
+ on  20260927T203732Z err=RuntimeError: BENCHMARK_PAGE_BUDGET_EXHAUSTED preds=0 claims=0 verified=0 progfound=True http=65 search=6 t=108s
+     prog: ['https://www.tum.de/en/studies/degree-programs/detail/information-engineering-at-tum-campus-heilbronn-bachelor-of-science-bsc', 'https://www.ed.tum.de/en/ed/news-single-view-start/article/computational-mechanics-an-der-tum-zwischen-ingenieurwissenschaft-und-informatik', 'https://portal.fis.tum.de/en/publications/undergraduate-teaching-assistants-in-computer-science-teaching-re/fingerprints']
+     REJ: {'wrong_degree_level': 13, 'not_a_programme_page': 6, 'duplicate': 6}
+ off 20260927T203922Z err=RuntimeError: BENCHMARK_PAGE_BUDGET_EXHAUSTED preds=0 claims=0 verified=0 progfound=True http=65 search=6 t=103s
+     prog: ['https://www.ed.tum.de/en/ed/news-single-view-start/article/computational-mechanics-an-der-tum-zwischen-ingenieurwissenschaft-und-informatik', 'https://www.tum.de/en/studies/degree-programs/detail/aerospace-bachelor-of-science-bsc', 'https://www.tum.de/en/studies/application/bachelor/application-bachelor']
+     REJ: {'wrong_degree_level': 11, 'not_a_programme_page': 5, 'duplicate': 7}
+== polimi
+ off 20260927T202957Z err=None preds=4 claims=0 verified=0 progfound=True http=54 search=6 t=90s
+     prog: ['https://www.polimi.it/en/education/laurea-programmes/programme-detail/engineering-of-computing-systems', 'https://www.inginformatica.polimi.it/en/english', 'https://www.polimi.it/en/education/laurea-magistrale-programmes/programme-detail/computer-science-and-engineering']
+     REJ: {'wrong_degree_level': 6, 'duplicate': 14, 'not_a_programme_page': 4}
+ on  20260927T203129Z err=None preds=4 claims=0 verified=0 progfound=True http=51 search=6 t=90s
+     prog: ['https://www.polimi.it/en/education/laurea-programmes/programme-detail/engineering-of-computing-systems', 'https://www.inginformatica.polimi.it/en/can-i-go-abroad-bachelor', 'https://www.polimi.it/en/education/laurea-magistrale-programmes/programme-detail/computer-science-and-engineering']
+     REJ: {'wrong_degree_level': 6, 'duplicate': 18, 'not_a_programme_page': 4}
+ on  20260927T203300Z err=None preds=4 claims=0 verified=0 progfound=True http=54 search=6 t=90s
+     prog: ['https://www.polimi.it/en/education/laurea-programmes/programme-detail/engineering-of-computing-systems', 'https://www.inginformatica.polimi.it/en/english', 'https://www.polimi.it/en/education/laurea-magistrale-programmes/programme-detail/computer-science-and-engineering']
+     REJ: {'wrong_degree_level': 5, 'duplicate': 16, 'not_a_programme_page': 5}
+ off 20260927T203431Z err=None preds=4 claims=0 verified=0 progfound=True http=54 search=6 t=94s
+     prog: ['https://www.polimi.it/en/education/laurea-programmes/programme-detail/engineering-of-computing-systems', 'https://www.inginformatica.polimi.it/en/english', 'https://www.polimi.it/en/education/laurea-magistrale-programmes/programme-detail/computer-science-and-engineering']
+     REJ: {'wrong_degree_level': 6, 'duplicate': 16, 'not_a_programme_page': 4}
+== tartu
+ off 20260927T202251Z err=None preds=4 claims=2 verified=2 progfound=True http=57 search=6 t=109s
+     prog: ['https://ut.ee/en/lifelong/computer-science-courses-teachers-informatics/121ab15c-f963-d08e-bbb6-97aff7afa4bb', 'https://ut.ee/en/curriculum/computer-science', 'https://ut.ee/en/curriculum/mathematics-and-computer-science']
+     REJ: {'not_a_programme_page': 3, 'duplicate': 8, 'wrong_degree_level': 3}
+ on  20260927T202442Z err=None preds=4 claims=2 verified=2 progfound=True http=57 search=6 t=103s
+     prog: ['https://ut.ee/en/lifelong/computer-science-courses-teachers-informatics/121ab15c-f963-d08e-bbb6-97aff7afa4bb', 'https://cs.ut.ee/en/content/institute-computer-science-hosts-two-conferences-intelligent-data-science-and-blockchain', 'https://ut.ee/en/curriculum/computer-science']
+     REJ: {'not_a_programme_page': 3, 'duplicate': 8, 'wrong_degree_level': 2}
+ on  20260927T202626Z err=None preds=4 claims=2 verified=2 progfound=True http=57 search=6 t=106s
+     prog: ['https://ut.ee/en/lifelong/computer-science-courses-teachers-informatics/121ab15c-f963-d08e-bbb6-97aff7afa4bb', 'https://cs.ut.ee/en/content/institute-computer-science-hosts-two-conferences-intelligent-data-science-and-blockchain', 'https://ut.ee/en/curriculum/computer-science']
+     REJ: {'not_a_programme_page': 3, 'duplicate': 9, 'wrong_degree_level': 2}
+ off 20260927T202814Z err=None preds=4 claims=2 verified=2 progfound=True http=57 search=6 t=103s
+     prog: ['https://ut.ee/en/lifelong/computer-science-courses-teachers-informatics/121ab15c-f963-d08e-bbb6-97aff7afa4bb', 'https://cs.ut.ee/en/content/institute-computer-science-hosts-two-conferences-intelligent-data-science-and-blockchain', 'https://ut.ee/en/curriculum/computer-science']
+     REJ: {'not_a_programme_page': 3, 'duplicate': 9, 'wrong_degree_level': 3}
+== vilnius
+ off 20260927T203606Z err=None preds=0 claims=0 verified=0 progfound=True http=57 search=6 t=96s
+     prog: ['https://infedu.vu.lt/', 'https://infedu.vu.lt/journal/INFEDU/article/613', 'https://www.vu.lt/en/studies/bachelor-studies/bioinformatics']
+     REJ: {'wrong_degree_level': 8, 'duplicate': 11, 'not_a_programme_page': 3}
+ on  20260927T203744Z err=None preds=3 claims=3 verified=3 progfound=True http=58 search=6 t=94s
+     prog: ['https://infedu.vu.lt/', 'https://www.vu.lt/en/studies/bachelor-studies/bioinformatics', 'https://infedu.vu.lt/journal/INFEDU/article/613']
+     REJ: {'wrong_degree_level': 6, 'duplicate': 13, 'not_a_programme_page': 2}
+ on  20260927T203919Z err=None preds=3 claims=3 verified=3 progfound=True http=56 search=6 t=93s
+     prog: ['https://infedu.vu.lt/', 'https://www.vu.lt/en/studies/bachelor-studies/bioinformatics', 'https://infedu.vu.lt/journal/INFEDU/article/409']
+     REJ: {'wrong_degree_level': 8, 'duplicate': 13, 'not_a_programme_page': 5}
+ off 20260927T204054Z err=None preds=0 claims=0 verified=0 progfound=True http=58 search=6 t=92s
+     prog: ['https://infedu.vu.lt/', 'https://infedu.vu.lt/journal/INFEDU/article/613', 'https://www.vu.lt/en/studies/bachelor-studies/bioinformatics']
+     REJ: {'wrong_degree_level': 8, 'duplicate': 12, 'not_a_programme_page': 2}

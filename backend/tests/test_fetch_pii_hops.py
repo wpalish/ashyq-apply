@@ -32,6 +32,7 @@ import socket
 import unicodedata
 
 import httpx
+import pytest
 
 from app.adapters.fetching import (
     DEFAULT_DELAY_SECONDS,
@@ -420,3 +421,269 @@ class TestHopStreamHygiene:
         assert result.outcome is FetchOutcome.OK  # the chain itself still completes
         assert hop_stream.closed is True
         assert final_stream.closed is True
+
+
+async def test_a_crawl_delay_too_long_to_wait_is_honoured_by_not_reading(tmp_path, monkeypatch):
+    """Run 18: Aalto stalled its whole budget after two requests. A crawl
+    delay longer than the run will wait is refused at once — never waited out,
+    never ignored by reading faster."""
+    slept: list[float] = []
+
+    async def fake_sleep(seconds):
+        slept.append(seconds)
+
+    monkeypatch.setattr(asyncio, "sleep", fake_sleep)
+    monkeypatch.setattr("app.adapters.fetching.check_url", allow_all)
+    page_requests = 0
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        nonlocal page_requests
+        if request.url.path == "/robots.txt":
+            return httpx.Response(200, text="User-agent: *\nCrawl-delay: 120\nAllow: /\n")
+        page_requests += 1
+        return httpx.Response(200, headers={"content-type": "text/html"}, text="<html>p</html>")
+
+    async with Fetcher(tmp_path / "c", delay_seconds=0.0, respect_robots=True) as fetcher:
+        fetcher._client = httpx.AsyncClient(
+            transport=httpx.MockTransport(handler), follow_redirects=False
+        )
+        result = await fetcher.get("https://slow.example.com/page")
+
+    assert result.outcome is FetchOutcome.ROBOTS_CRAWL_DELAY
+    assert "120s crawl delay" in (result.error or "")
+    assert page_requests == 0
+    assert slept == []
+
+
+async def test_a_fetcher_without_a_ceiling_waits_the_delay_out(tmp_path, monkeypatch):
+    """The background source scan has no applicant waiting: it reads the page,
+    spacing requests by exactly what robots.txt asks."""
+    slept: list[float] = []
+
+    async def fake_sleep(seconds):
+        slept.append(seconds)
+
+    monkeypatch.setattr(asyncio, "sleep", fake_sleep)
+    monkeypatch.setattr("app.adapters.fetching.check_url", allow_all)
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        if request.url.path == "/robots.txt":
+            return httpx.Response(200, text="User-agent: *\nCrawl-delay: 120\nAllow: /\n")
+        return httpx.Response(200, headers={"content-type": "text/html"}, text="<html>p</html>")
+
+    async with Fetcher(
+        tmp_path / "c", delay_seconds=0.0, respect_robots=True, max_crawl_delay=None
+    ) as fetcher:
+        fetcher._client = httpx.AsyncClient(
+            transport=httpx.MockTransport(handler), follow_redirects=False
+        )
+        first = await fetcher.get("https://slow.example.com/a", use_cache=False)
+        second = await fetcher.get("https://slow.example.com/b", use_cache=False)
+
+    assert first.outcome is FetchOutcome.OK and second.outcome is FetchOutcome.OK
+    assert slept and max(slept) > 100
+
+
+class _Trickle(httpx.AsyncByteStream):
+    """A body that starts and never finishes: each read is well inside
+    httpx's per-read timeout, so only a whole-exchange deadline ends it."""
+
+    async def __aiter__(self):
+        while True:
+            await asyncio.sleep(0.01)
+            yield b"#"
+
+    async def aclose(self) -> None:
+        return None
+
+
+async def test_a_robots_txt_that_never_finishes_does_not_hold_the_host(tmp_path, monkeypatch):
+    """Run 19: Aalto's robots.txt started and never ended; the case lost 90 s."""
+    monkeypatch.setattr("app.adapters.fetching.check_url", allow_all)
+    monkeypatch.setattr("app.adapters.fetching.ROBOTS_DEADLINE_SECONDS", 0.2)
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        if request.url.path == "/robots.txt":
+            return httpx.Response(200, stream=_Trickle())
+        return httpx.Response(200, headers={"content-type": "text/html"}, text="<html>p</html>")
+
+    async with Fetcher(tmp_path / "c", delay_seconds=0.0, respect_robots=True) as fetcher:
+        fetcher._client = httpx.AsyncClient(
+            transport=httpx.MockTransport(handler), follow_redirects=False
+        )
+        result = await asyncio.wait_for(fetcher.get("https://slow.example.com/page"), 5)
+
+    # A host whose robots.txt never arrives is not waited on for its pages either.
+    assert result.outcome is FetchOutcome.TIMEOUT
+    assert "robots.txt never finished" in (result.error or "")
+
+
+async def test_a_page_that_never_finishes_is_a_timeout_not_a_hang(tmp_path, monkeypatch):
+    monkeypatch.setattr("app.adapters.fetching.check_url", allow_all)
+
+    calls = 0
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        nonlocal calls
+        calls += 1
+        return httpx.Response(200, headers={"content-type": "text/html"}, stream=_Trickle())
+
+    async with Fetcher(
+        tmp_path / "c", delay_seconds=0.0, respect_robots=False, timeout=0.05
+    ) as fetcher:
+        fetcher._client = httpx.AsyncClient(
+            transport=httpx.MockTransport(handler), follow_redirects=False
+        )
+        result = await asyncio.wait_for(fetcher.get("https://slow.example.com/page"), 5)
+
+    assert result.outcome is FetchOutcome.TIMEOUT
+    assert result.error
+    assert calls == 1, "a stalled exchange is not retried"
+
+    async with Fetcher(
+        tmp_path / "c2", delay_seconds=0.0, respect_robots=False, timeout=0.05
+    ) as fetcher:
+        fetcher._client = httpx.AsyncClient(
+            transport=httpx.MockTransport(handler), follow_redirects=False
+        )
+        await fetcher.get("https://slow.example.com/a")
+        again = await fetcher.get("https://slow.example.com/b")
+    assert again.outcome is FetchOutcome.TIMEOUT
+    assert "earlier in this run" in (again.error or "")
+    assert calls == 2, "the second page of a stalled host is never requested"
+
+
+async def test_a_slow_resolver_does_not_freeze_the_event_loop(tmp_path, monkeypatch):
+    """Name resolution is a blocking call. On the loop, it stopped every
+    deadline from firing; off it, the fetch gives up and other work runs."""
+    import time as _time
+
+    def slow_check(url):
+        _time.sleep(1.0)
+        raise AssertionError("should have been abandoned")
+
+    monkeypatch.setattr("app.adapters.fetching.check_url", slow_check)
+    monkeypatch.setattr("app.adapters.fetching.DNS_DEADLINE_SECONDS", 0.1)
+    ticks = 0
+
+    async def ticker():
+        nonlocal ticks
+        for _ in range(5):
+            await asyncio.sleep(0.01)
+            ticks += 1
+
+    async with Fetcher(tmp_path / "c", delay_seconds=0.0, respect_robots=False) as fetcher:
+        result, _ = await asyncio.gather(fetcher.get("https://slow-dns.example.com/p"), ticker())
+        again = await fetcher.get("https://slow-dns.example.com/q")
+
+    assert result.outcome is FetchOutcome.TIMEOUT
+    assert "name resolution" in (result.error or "")
+    assert ticks == 5
+    assert "earlier in this run" in (again.error or "")
+
+
+@pytest.mark.parametrize(
+    ("robots_status", "expected"),
+    [
+        (503, FetchOutcome.ROBOTS_DISALLOWED),  # unreachable: complete disallow
+        (500, FetchOutcome.ROBOTS_DISALLOWED),
+        (404, FetchOutcome.OK),  # unavailable: no restrictions
+        (403, FetchOutcome.OK),
+    ],
+)
+async def test_robots_txt_status_follows_rfc_9309(tmp_path, monkeypatch, robots_status, expected):
+    """RFC 9309 §2.3.1.3–4: a 4xx robots.txt means no restrictions; a 5xx or a
+    network failure means the crawler MUST assume the whole site is off limits.
+    Until 2026-09-23 both were read as "allowed"."""
+    monkeypatch.setattr("app.adapters.fetching.check_url", allow_all)
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        if request.url.path == "/robots.txt":
+            return httpx.Response(robots_status, text="")
+        return httpx.Response(200, headers={"content-type": "text/html"}, text="<html>p</html>")
+
+    async with Fetcher(tmp_path / "c", delay_seconds=0.0, respect_robots=True) as fetcher:
+        fetcher._client = httpx.AsyncClient(
+            transport=httpx.MockTransport(handler), follow_redirects=False
+        )
+        result = await fetcher.get("https://site.example.com/page")
+
+    assert result.outcome is expected
+    if expected is FetchOutcome.ROBOTS_DISALLOWED:
+        assert "RFC 9309" in (result.error or "")
+
+
+async def test_a_robots_txt_network_failure_disallows_the_site(tmp_path, monkeypatch):
+    monkeypatch.setattr("app.adapters.fetching.check_url", allow_all)
+    pages = 0
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        nonlocal pages
+        if request.url.path == "/robots.txt":
+            raise httpx.ConnectError("refused")
+        pages += 1
+        return httpx.Response(200, headers={"content-type": "text/html"}, text="<html>p</html>")
+
+    async with Fetcher(tmp_path / "c", delay_seconds=0.0, respect_robots=True) as fetcher:
+        fetcher._client = httpx.AsyncClient(
+            transport=httpx.MockTransport(handler), follow_redirects=False
+        )
+        result = await fetcher.get("https://site.example.com/page")
+
+    assert result.outcome is FetchOutcome.ROBOTS_DISALLOWED
+    assert pages == 0
+
+
+async def test_a_dead_address_falls_through_to_the_next_validated_one(tmp_path, monkeypatch):
+    """One bad edge must not make the whole host look down. Both addresses are
+    validated by the real network policy; only a refused connection moves on."""
+    from app.adapters.network_policy import check_url as real
+
+    second = "93.184.216.35"
+    monkeypatch.setattr(
+        "app.adapters.fetching.check_url",
+        lambda url, **_: real(url, resolver=resolver_returning(PUBLIC_ADDRESS, second)),
+    )
+    tried: list[str] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        tried.append(request.url.host)
+        if request.url.host == PUBLIC_ADDRESS:
+            raise httpx.ConnectError("no route")
+        assert request.headers["host"] == "multi.example.com"
+        assert request.extensions["sni_hostname"] == "multi.example.com"
+        return httpx.Response(200, headers={"content-type": "text/html"}, text="<html>p</html>")
+
+    async with Fetcher(tmp_path / "c", delay_seconds=0.0, respect_robots=False) as fetcher:
+        fetcher._client = httpx.AsyncClient(
+            transport=httpx.MockTransport(handler), follow_redirects=False
+        )
+        result = await fetcher.get("https://multi.example.com/page")
+
+    assert result.outcome is FetchOutcome.OK
+    assert tried == [PUBLIC_ADDRESS, second]
+
+
+async def test_an_address_that_answers_is_the_answer(tmp_path, monkeypatch):
+    """A 503 from the first address is the server's reply, not a dead edge."""
+    from app.adapters.network_policy import check_url as real
+
+    monkeypatch.setattr(
+        "app.adapters.fetching.check_url",
+        lambda url, **_: real(url, resolver=resolver_returning(PUBLIC_ADDRESS, "93.184.216.35")),
+    )
+    monkeypatch.setattr("app.adapters.fetching.MAX_ATTEMPTS", 1)
+    tried: list[str] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        tried.append(request.url.host)
+        return httpx.Response(503, text="busy")
+
+    async with Fetcher(tmp_path / "c", delay_seconds=0.0, respect_robots=False) as fetcher:
+        fetcher._client = httpx.AsyncClient(
+            transport=httpx.MockTransport(handler), follow_redirects=False
+        )
+        result = await fetcher.get("https://multi.example.com/page")
+
+    assert result.status_code == 503
+    assert tried == [PUBLIC_ADDRESS]

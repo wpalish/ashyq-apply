@@ -98,11 +98,12 @@ test('marketing language does not turn full tuition into a full ride', async () 
   await expect(asu.getByTitle(/Tuition is covered/)).toBeVisible();
 });
 
-test('a past deadline is flagged and blocks eligibility', async () => {
+test('a previous-cycle deadline is shown as a guide, not as passed', async () => {
   await openShortlist(page);
 
   const melbourne = rowFor(page, 'University of Melbourne');
-  await expect(melbourne).toContainText('passed');
+  await expect(melbourne).toContainText('previous cycle');
+  await expect(melbourne).not.toContainText('passed');
   await expect(melbourne).toContainText('Gap');
 });
 

@@ -124,6 +124,9 @@ function Requirements({ result }: { result: ProgramResult }) {
                 )}
               </div>
               <p className="xs muted" style={{ margin: '3px 0 0' }}>{c.explanation}</p>
+              {c.published_scope && (
+                <p className="xs faint" style={{ margin: '2px 0 0' }}>{c.published_scope}</p>
+              )}
             </dd>
           </div>
         ))}
@@ -134,6 +137,9 @@ function Requirements({ result }: { result: ProgramResult }) {
           {result.admission_deadline_timezone ? ` (${result.admission_deadline_timezone})` : ''}
         </span>
         {result.deadline_passed && <Chip tone="risk">deadline passed</Chip>}
+        {result.previous_cycle_deadline && (
+          <span className="xs muted"> Previous cycle: {date(result.previous_cycle_deadline)}</span>
+        )}
       </div>
     </div>
   );
@@ -186,6 +192,21 @@ function Funding({ result }: { result: ProgramResult }) {
                 {humanize(s.application_mode)}
               </Chip>
               {s.requires_extra_essays && <span className="xs muted"> · extra essays required</span>}
+              {s.offer_required === 'yes' && (
+                <p className="xs muted" style={{ margin: '3px 0 0' }}>
+                  An admission offer must be held before applying for this award.
+                </p>
+              )}
+              {s.offer_required === 'no' && (
+                <p className="xs muted" style={{ margin: '3px 0 0' }}>
+                  You can apply for this award before receiving an admission offer.
+                </p>
+              )}
+              {s.financial_need_required === 'yes' && (
+                <p className="xs muted" style={{ margin: '3px 0 0' }}>
+                  Decided on demonstrated financial need.
+                </p>
+              )}
             </dd>
             <dt>Deadline</dt>
             <dd className="num">

@@ -10,7 +10,7 @@ from __future__ import annotations
 import logging
 import os
 import socket
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, date, datetime, timedelta
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -19,7 +19,7 @@ from app.adapters.base import Candidate, CandidateProgram, PageOutcome
 from app.adapters.cost.web_costs import WebCostAdapter
 from app.adapters.discovery.catalog_walker import CatalogRenderer
 from app.adapters.discovery.fixture_discovery import FixtureDiscoveryAdapter
-from app.adapters.discovery.live_discovery import LiveDiscoveryAdapter
+from app.adapters.discovery.live_discovery import LiveDiscoveryAdapter, registry_campuses
 from app.adapters.documents.web_documents import WebDocumentsAdapter
 from app.adapters.fetching import Fetcher
 from app.adapters.government.web_government import WebGovernmentAdapter
@@ -27,11 +27,16 @@ from app.adapters.requirements.web_requirements import WebRequirementsAdapter
 from app.adapters.scholarship.web_scholarships import WebScholarshipAdapter
 from app.config import Settings
 from app.domain import dedupe, diagnostics
+from app.domain.campus import withhold_other_campuses
 from app.domain.citizenship import CitizenshipMatch, match_citizenship
 from app.domain.conflicts import enforce_source_hierarchy, find_conflicts
 from app.domain.costs import compute_funding_gap, total_cost
 from app.domain.dates import parse_published_date
-from app.domain.eligibility import evaluate_program
+from app.domain.eligibility import (
+    awards_needing_a_test_the_programme_made_optional,
+    evaluate_program,
+    population_deadlines,
+)
 from app.domain.enums import (
     ClaimStatus,
     ClaimType,
@@ -45,6 +50,7 @@ from app.domain.funding import (
     award_meets_shape,
     classify,
     funding_fit_for,
+    roll_up_availability,
     unmet_coverage_requirements,
 )
 from app.domain.ranking_v2 import rank_result
@@ -482,7 +488,6 @@ class ResearchRunner:
 
         errors: list[str] = []
         retry: list[str] = []
-        outcomes: list[PageOutcome] = []
         seen_keys: set[str] = set()
 
         for cand in targets:
@@ -529,20 +534,27 @@ class ResearchRunner:
                 ar = await req.verify(cand, prog, self.intake)
                 errors.extend(ar.errors)
                 retry.extend(ar.retry_urls)
-                outcomes.extend(ar.page_outcomes)
+                # Filed as they arrive, not only at the end of the stage. A
+                # live capture showed five of ten cases reporting *no* page
+                # outcomes at all: the run died inside this loop — a budget,
+                # a wall clock — and the whole local list went with it. The
+                # case that dies is exactly the case whose zero needs
+                # explaining, so its diagnosis must already be on the run.
+                self._record_page_outcomes(ar.page_outcomes)
                 self.run.pages_checked += ar.pages_checked
                 self.run.pages_failed += ar.pages_failed
 
                 cb, cr = await cost.fetch(cand)
                 errors.extend(cr.errors)
                 retry.extend(cr.retry_urls)
-                outcomes.extend(cr.page_outcomes)
+                self._record_page_outcomes(cr.page_outcomes)
                 self.run.pages_checked += cr.pages_checked
                 self.run.pages_failed += cr.pages_failed
                 result.costs = cb
 
                 if cand.country not in gov_cache:
                     gr = await gov.post_study_work(cand.country)
+                    self._record_page_outcomes(gr.page_outcomes)
                     self.run.pages_checked += gr.pages_checked
                     self.run.pages_failed += gr.pages_failed
                     gov_cache[cand.country] = (
@@ -556,6 +568,31 @@ class ResearchRunner:
                 result.post_study_work = government_value
 
                 all_claims = ar.claims + cr.claims
+                # ER-02 (owner 2026-09-28): the applicant named no campus, so a
+                # page that belongs to one campus answers another question.
+                campuses = registry_campuses(cand.domain) if cand.domain else {}
+                if campuses:
+                    all_claims, withheld = withhold_other_campuses(all_claims, campuses)
+                    if withheld:
+                        result.unresolved.append(
+                            UnresolvedQuestion(
+                                topic="campus",
+                                question=(
+                                    f"{cand.name} offers {prog.name} on more than one campus, "
+                                    "each a separate application. Which campus do you want?"
+                                ),
+                                why_it_matters=(
+                                    "Requirements, fees and deadlines can differ by campus. "
+                                    "What was read on the "
+                                    + ", ".join(withheld)
+                                    + " pages is not shown as this programme's."
+                                ),
+                                university=cand.name,
+                                program=prog.name,
+                                suggested_contact="admissions office",
+                                blocking=False,
+                            )
+                        )
                 all_claims, demotion_qs = enforce_source_hierarchy(all_claims)
                 all_claims = [
                     c.model_copy(
@@ -603,7 +640,6 @@ class ResearchRunner:
             self._save()
 
         self._record_diagnostics(errors)
-        self._record_page_outcomes(outcomes)
         self.run.retry_urls = sorted(set(list(self.run.retry_urls or []) + retry))[:200]
         st.finish(
             f"{self.run.programs_verified} programmes checked across "
@@ -659,6 +695,7 @@ class ResearchRunner:
             )
             scholarships, ar = await adapter.find(cand, prog, self.profile)
             errors.extend(ar.errors)
+            self._record_page_outcomes(ar.page_outcomes)
             self.run.pages_checked += ar.pages_checked
             self.run.pages_failed += ar.pages_failed
 
@@ -688,6 +725,17 @@ class ResearchRunner:
                 # imply. Classification reads the verdict, so an award the
                 # applicant cannot hold can never be classified as funding.
                 s.applicant_eligible = _applicant_eligible(s)
+                # Re-rolled from the verdict just settled. The adapter rolled
+                # availability up from its own, earlier reading of
+                # eligibility; left alone, an award this applicant cannot hold
+                # (a missed test minimum, a pending faculty restriction) kept
+                # saying it was available.
+                s.available_this_intake = roll_up_availability(
+                    opportunity_exists=s.opportunity_exists,
+                    applicant_eligible=s.applicant_eligible,
+                    application_window_open=s.application_window_open,
+                    award_current_for_intake=s.award_current_for_intake,
+                )
                 page_text = (
                     " ".join(
                         c.original_text_excerpt
@@ -867,7 +915,37 @@ class ResearchRunner:
                     )
                 )
 
+            by_population = population_deadlines(claims)
             dl = next((c for c in claims if c.claim_type == ClaimType.ADMISSION_DEADLINE), None)
+            if by_population:
+                dl = by_population[0][2]
+            if dl is not None and _previous_cycle(
+                [d for _, d, _ in by_population] or [_as_date(dl.normalized_value)],
+                self.profile.context.intake_term,
+                self.profile.context.intake_year,
+            ):
+                # Every stated date is too early for this intake: it is the
+                # previous cycle's, not a window this applicant missed.
+                result.previous_cycle_deadline = _as_date(dl.normalized_value)
+                result.unresolved.append(
+                    UnresolvedQuestion(
+                        topic="admission deadline",
+                        question=(
+                            f"{dl.source_url} states {dl.normalized_value} as the deadline, which "
+                            f"belongs to an earlier cycle than {self.intake}. When is the deadline "
+                            "for your intake?"
+                        ),
+                        why_it_matters=(
+                            "The page has not yet published the dates for your intake; the "
+                            "previous cycle's date is shown only as a guide."
+                        ),
+                        university=result.university,
+                        program=result.program,
+                        suggested_contact="admissions office",
+                        blocking=False,
+                    )
+                )
+                dl = None
             if dl is not None:
                 parsed = _as_date(dl.normalized_value)
                 result.admission_deadline = parsed
@@ -875,7 +953,14 @@ class ResearchRunner:
                 result.admission_deadline_timezone = (
                     dl.notes.replace("timezone: ", "") if dl.notes.startswith("timezone:") else None
                 )
-                result.deadline_passed = bool(parsed and parsed < today)
+                # The earliest row is shown; "passed" only when every
+                # population's row has, or one applicant would be told their
+                # window closed on another population's date.
+                result.deadline_passed = (
+                    all(d < today for _, d, _ in by_population)
+                    if by_population
+                    else bool(parsed and parsed < today)
+                )
 
             for s in result.scholarships:
                 if s.deadline and s.deadline < today:
@@ -889,6 +974,34 @@ class ResearchRunner:
                             hard=True,
                         )
                     )
+
+            # "Test optional" on the requirements page does not mean the test
+            # is irrelevant: an award may require it separately, and an
+            # applicant who skips the SAT on the strength of the first page
+            # loses the funding rather than the offer.
+            clashing = awards_needing_a_test_the_programme_made_optional(
+                claims, [(s.name, s.min_test_scores or {}) for s in result.scholarships]
+            )
+            for name in clashing:
+                result.unresolved.append(
+                    UnresolvedQuestion(
+                        topic="sat policy",
+                        question=(
+                            f"{result.program} is published as test-optional, but {name} "
+                            "requires an SAT score. Does the award's requirement still apply "
+                            "to applicants admitted without a test?"
+                        ),
+                        why_it_matters=(
+                            "Skipping the SAT on the strength of the admissions page can cost "
+                            "this award rather than the offer, and the two pages are published "
+                            "by different offices."
+                        ),
+                        university=result.university,
+                        program=result.program,
+                        suggested_contact="scholarships office",
+                        blocking=False,
+                    )
+                )
 
             fit, best, reason = funding_fit_for(result.scholarships)
             result.funding_fit = fit
@@ -1269,6 +1382,29 @@ def _scholarship_eligibility(s, profile: ApplicantProfileIn):
             )
         )
 
+    # A faculty or programme restriction the page states is an open question,
+    # never a verdict. The applicant's faculty is not in the profile at all,
+    # and deciding a programme restriction by comparing names is the trap NTU
+    # taught us — "Bachelor of Computing (Hons) in Computer Science" against
+    # "Computer Science". Refusing on a name mismatch would cost a real
+    # applicant real money; passing would recommend an award they cannot have.
+    for label, restrictions in (
+        ("faculty", s.faculty_restrictions),
+        ("programme", s.program_restrictions),
+    ):
+        for restriction in restrictions:
+            checks.append(
+                _check(
+                    f"Scholarship {label} restriction",
+                    restriction,
+                    None,
+                    EligibilityStatus.PENDING,
+                    f"The page limits this award to {restriction}. Whether this programme "
+                    f"belongs to it is not something the page settles — ask the admissions "
+                    f"office before counting on this award.",
+                )
+            )
+
     for test, minimum in (s.min_test_scores or {}).items():
         got = {
             "ielts": profile.academics.ielts.overall,
@@ -1435,6 +1571,25 @@ def _fit_label(actual: str | None, preferred: str, dimension: str = "") -> str:
     # A category that simply differs - an urban university for someone who
     # asked for a campus one. Not a disaster, and not a match either.
     return "weak"
+
+
+#: The earliest month a term starts in; a deadline more than 13 months before
+#: it cannot be for that intake (a deadline a year ahead is normal: Oxford
+#: closes in October for the next October).
+_TERM_START_MONTH = {"fall": 8, "winter": 1, "spring": 1, "summer": 5}
+
+
+def _previous_cycle(dates, intake_term: str, intake_year: int) -> bool:
+    """Whether every stated deadline is too early to belong to this intake."""
+    month = _TERM_START_MONTH.get(intake_term)
+    known = [d for d in dates if d is not None]
+    if month is None or not known:
+        return False
+    start = date(intake_year, month, 1)
+    cutoff = (
+        date(start.year - 1, start.month - 1, 1) if start.month > 1 else date(start.year - 2, 12, 1)
+    )
+    return all(d < cutoff for d in known)
 
 
 def _as_date(v):

@@ -19,8 +19,9 @@ from unittest.mock import patch
 
 from pydantic import HttpUrl
 
-from .mapping import evidence_scope, normalize_claim
-from .schema import Capture, Evidence, Observation, Prediction, Telemetry
+from .identities import IdentityMap
+from .mapping import evidence_scope, normalize_subject_claims
+from .schema import Capture, Evidence, Observation, PageOutcome, Prediction, Telemetry
 
 # Evaluation cohort IDs, not expected URLs/values. Registry remains production's input.
 COHORT = {
@@ -36,16 +37,82 @@ COHORT = {
     "kaist": "kaist.ac.kr",
 }
 
+#: Registry institutions outside the certified ten. They have no signed
+#: labels: a capture of one is scored by process measures and by hand, never
+#: by the corpus. They exist so that a rule tuned on the ten is tested
+#: somewhere it was not tuned (expert recovery protocol, 2026-09-27).
+HELDOUT = {
+    "nu": "nu.edu.kz",
+    "metu": "metu.edu.tr",
+    "sabanci": "sabanciuniv.edu",
+    "charles": "cuni.cz",
+    "masaryk": "muni.cz",
+    "tum": "tum.de",
+    "tartu": "ut.ee",
+    "polimi": "polimi.it",
+    "vilnius": "vu.lt",
+}
 
-async def capture_one(case_id: str, output: Path, max_pages: int) -> None:
+
+#: Award and document identities the owner approved on 2026-09-23. Scoring
+#: live with them is what lets a scholarship or document claim land on its
+#: certified key; without them every such claim stays ``unmapped.*``.
+REVIEWED_BINDINGS = Path(__file__).parent / "data" / "identity_bindings.reviewed.json"
+
+
+async def _jev_shadow(case_id: str, queued: list[str], profile: Any) -> None:
+    """Shadow only: where a decision model would rank the certified programme page.
+
+    Nothing the run reads changes. The line it prints is the Phase 4 experiment's
+    evidence: the gold page's rank in the heuristic queue beside its rank after the
+    model reorders the same candidates (analysis/v2/07, Experiment 2).
+    """
+    from app.adapters.decisions import get_decision_model
+    from app.adapters.decisions.link_ranker import LinkCandidate, rank_links
+
+    model = get_decision_model()
+    if model is None or not queued:
+        return
+    from .metrics import canonical_url
+    from .schema import Dataset
+
+    dataset = Dataset.model_validate_json(
+        (Path(__file__).parent / "data" / "ground_truth.reviewed.json").read_text(encoding="utf-8")
+    )
+    case = next((c for c in dataset.cases if c.id == case_id), None)
+    gold = {canonical_url(u) for u in (case.programme_urls if case else [])}
+    context = profile.context
+    ranked, model_id = await rank_links(
+        model,
+        [LinkCandidate(u) for u in queued[:48]],
+        field=", ".join(context.intended_fields),
+        degree=str(context.level),
+        target="programme page",
+    )
+
+    def rank(urls: list[str]) -> int | None:
+        return next((i + 1 for i, u in enumerate(urls) if canonical_url(u) in gold), None)
+
+    print(
+        f"jev shadow: gold programme rank heuristic={rank(queued[:48])} "
+        f"model={rank([r.url for r in ranked])} of {len(ranked)} ({model_id or 'unavailable'})",
+        flush=True,
+    )
+
+
+async def capture_one(
+    case_id: str, output: Path, max_pages: int, seconds: float | None = None
+) -> None:
     # Delayed imports keep ordinary offline evaluation entirely independent of I/O.
     from app.adapters import fetching
     from app.adapters.discovery.live_discovery import LiveDiscoveryAdapter, PageCategory
+    from app.adapters.search.exa import ExaSearchProvider
     from app.models.research import ClaimRow
     from scripts import canary_discovery as canary
 
     predictions: list[Prediction] = []
     raw_claims: list[dict[str, Any]] = []
+    identities = IdentityMap.model_validate_json(REVIEWED_BINDINGS.read_text(encoding="utf-8"))
     started = time.monotonic()
     observation = Observation(
         case_id=case_id,
@@ -60,14 +127,60 @@ async def capture_one(case_id: str, output: Path, max_pages: int) -> None:
         ),
     )
 
+    fetchers: list[Any] = []
+
     def checkpoint() -> None:
         observation.telemetry.latency_seconds = time.monotonic() - started
+        # Counted from the fetcher's own tier tally, never assumed: a zero
+        # that nothing increments is a counter invented after the fact.
+        observation.telemetry.browser_fetches = sum(
+            f.tier_counts.get("browser", 0) for f in fetchers if hasattr(f, "tier_counts")
+        )
         temporary = output.with_suffix(".pending")
         temporary.write_text(observation.model_dump_json(indent=2), encoding="utf-8")
         temporary.replace(output)
 
     checkpoint()
     original_request = fetching._pinned_request
+    # Every provider's search is counted, not only Exa's: runs 80-93 used
+    # Serper and recorded search_calls=0 while six queries ran per case.
+    from app.adapters.search.brave import BraveSearchProvider
+    from app.adapters.search.serper import SerperSearchProvider
+    from app.adapters.search.tavily import TavilySearchProvider
+
+    provider_classes = (
+        ExaSearchProvider,
+        TavilySearchProvider,
+        BraveSearchProvider,
+        SerperSearchProvider,
+    )
+    originals = {cls: cls.search for cls in provider_classes}
+
+    def counted_for(cls):
+        async def counted(provider, *args, **kwargs):
+            return await counted_search(originals[cls], provider, *args, **kwargs)
+
+        return counted
+
+    async def counted_search(original_search, provider, *args, **kwargs):
+        # Each search call is counted and timed into this case's own log: a
+        # case that runs out of wall clock after two fetches spent the time
+        # somewhere, and search is the first place to look.
+        observation.telemetry.search_calls = (observation.telemetry.search_calls or 0) + 1
+        began = time.monotonic()
+        try:
+            return await original_search(provider, *args, **kwargs)
+        except Exception as exc:
+            print(f"search failed after {time.monotonic() - began:.1f}s: {type(exc).__name__}")
+            raise
+        finally:
+            print(
+                f"search #{observation.telemetry.search_calls} took "
+                f"{time.monotonic() - began:.1f}s (t={time.monotonic() - started:.0f}s)",
+                flush=True,
+            )
+            checkpoint()
+
     original_confirm = LiveDiscoveryAdapter._confirm_programs
 
     def counted_request(*args, **kwargs):
@@ -82,20 +195,42 @@ async def capture_one(case_id: str, output: Path, max_pages: int) -> None:
                 queued.append(url)
         observation.ranked_urls = [HttpUrl(url) for url in queued]
         checkpoint()
+        await _jev_shadow(case_id, queued, profile)
         return await original_confirm(adapter, selected, ranked, trace, profile)
 
     class ObservedRunner(canary.CanaryRunner):
         def _make_fetcher(self):
             fetcher = super()._make_fetcher()
+            fetchers.append(fetcher)
             original = fetcher.get
             requests = 0
+            network_reads = 0
 
             async def bounded(url, **kwargs):
-                nonlocal requests
-                requests += 1
-                if requests > max_pages:
+                nonlocal requests, network_reads
+                # The budget bounds reads that reach a server. A page two
+                # stages both need is served from the cache the second time,
+                # and until 2026-09-23 that repeat still spent the budget: run
+                # 20 ended Delft, Vienna and UBC in the funding stage with up
+                # to a fifth of their 60 calls being cache hits.
+                if network_reads >= max_pages:
                     raise RuntimeError("BENCHMARK_PAGE_BUDGET_EXHAUSTED")
+                requests += 1
+                began = time.monotonic()
+                # Written before the read, so a read that never returns still
+                # names itself in the log.
+                print(f"get #{requests} start t={began - started:.0f}s {url[:120]}", flush=True)
                 result = await original(url, **kwargs)
+                # One line per page read, so a case that runs out of wall
+                # clock shows which reads took it: its own log is printed by
+                # the benchmark when the budget ends the case.
+                print(
+                    f"get #{requests} took {time.monotonic() - began:.1f}s "
+                    f"{getattr(result, 'outcome', '?')}",
+                    flush=True,
+                )
+                if not getattr(result, "from_cache", False):
+                    network_reads += 1
                 if result.ok and result.is_pdf and not result.from_cache:
                     observation.telemetry.pdf_fetches = (observation.telemetry.pdf_fetches or 0) + 1
                 checkpoint()
@@ -108,41 +243,70 @@ async def capture_one(case_id: str, output: Path, max_pages: int) -> None:
             try:
                 return await super().run_to_decision()
             finally:
+                # Why a page produced nothing, in the runner's own vocabulary.
+                # Read here rather than after the run, so a case killed by its
+                # budget still records what it managed to read — which is
+                # exactly the case whose zero needs explaining.
+                observation.page_outcomes = [
+                    PageOutcome(
+                        category=record["category"],
+                        url=record["url"],
+                        page_type=record.get("page_type") or "",
+                        detail=record.get("detail") or "",
+                        characters=int(record["characters"]) if record.get("characters") else None,
+                    )
+                    for record in canary.page_outcomes(self.run)
+                ]
                 for row in self.session.query(ClaimRow).filter(ClaimRow.run_id == self.run.id):
                     raw = row.payload
                     raw_claims.append(raw)
-                    key, value, programme, degree = normalize_claim(row.claim_type, raw)
+                    # With the owner-approved identity bindings (2026-09-23),
+                    # the same split the offline mapper makes: an award or a
+                    # document claim becomes the fields of the identity it is
+                    # bound to, and an unbound one stays under its raw key.
+                    mapped = normalize_subject_claims(row.claim_type, raw, identities)
                     excerpt = raw.get("original_text_excerpt")
-                    evidence = None
-                    if excerpt and str(row.source_url).startswith(("http://", "https://")):
-                        evidence = Evidence(
-                            url=row.source_url,
-                            excerpt=excerpt,
-                            scope=evidence_scope(
-                                raw,
-                                university=next(iter(self._candidates)).name
-                                if self._candidates
-                                else case_id,
-                                programme=programme,
-                                degree=degree,
-                            ),
-                            accessed_on=row.accessed_at.date(),
-                            source_type="official" if raw.get("official_domain") else "unknown",
-                        )
-                    predictions.append(
-                        Prediction(
-                            key=key,
-                            value=value,
-                            evidence=evidence,
-                        )
-                    )
+                    for key, value, programme, degree in mapped:
+                        evidence = None
+                        if excerpt and str(row.source_url).startswith(("http://", "https://")):
+                            evidence = Evidence(
+                                url=row.source_url,
+                                excerpt=excerpt,
+                                scope=evidence_scope(
+                                    raw,
+                                    university=next(iter(self._candidates)).name
+                                    if self._candidates
+                                    else case_id,
+                                    programme=programme,
+                                    degree=degree,
+                                ),
+                                accessed_on=row.accessed_at.date(),
+                                source_type="official" if raw.get("official_domain") else "unknown",
+                            )
+                        predictions.append(Prediction(key=key, value=value, evidence=evidence))
 
     with (
         patch.object(canary, "CanaryRunner", ObservedRunner),
         patch.object(fetching, "_pinned_request", counted_request),
+        patch.object(ExaSearchProvider, "search", counted_for(ExaSearchProvider)),
+        patch.object(TavilySearchProvider, "search", counted_for(TavilySearchProvider)),
+        patch.object(BraveSearchProvider, "search", counted_for(BraveSearchProvider)),
+        patch.object(SerperSearchProvider, "search", counted_for(SerperSearchProvider)),
         patch.object(LiveDiscoveryAdapter, "_confirm_programs", observed_confirm),
     ):
-        report = await canary.run_canary(COHORT[case_id], False)
+        try:
+            report = await asyncio.wait_for(
+                canary.run_canary({**COHORT, **HELDOUT}[case_id], False), seconds
+            )
+        except TimeoutError:
+            # The child stops itself just short of the parent's kill, so the
+            # claims already filed are kept: run_to_decision's finally reads
+            # them on cancellation, which a killed process never reaches.
+            # Runs 59-62: UBC filed nothing because the kill came mid-funding.
+            observation.predictions = predictions
+            observation.error = "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"
+            checkpoint()
+            return
     rows = report["institutions"]
     observation.programme_urls = [HttpUrl(url) for r in rows for url in r["programs"]]
     observation.predictions = predictions
@@ -160,15 +324,63 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--live", action="store_true", required=True)
     parser.add_argument("--out", type=Path, required=True)
-    parser.add_argument("--case", choices=list(COHORT))
+    parser.add_argument("--case", choices=[*COHORT, *HELDOUT])
     parser.add_argument("--seconds-per-case", type=int, default=120)
     parser.add_argument("--max-pages", type=int, default=40)
+    parser.add_argument(
+        "--search-first",
+        action="store_true",
+        help="experiment: search before the navigation fallback (default off)",
+    )
+    parser.add_argument(
+        "--skip-refused-hosts",
+        action="store_true",
+        help="experiment ER-04: search candidates on hosts that refused this run take no slot",
+    )
+    parser.add_argument(
+        "--reject-archive-hosts",
+        action="store_true",
+        help="experiment ER-06: mirror/repository/journal/archive hosts are not programme pages",
+    )
+    parser.add_argument(
+        "--admission-lexicon",
+        action="store_true",
+        help="experiment ER-05: links naming undergraduate admission become candidates",
+    )
+    parser.add_argument(
+        "--navigation-slot",
+        action="store_true",
+        help="experiment ER-07: one programme-page slot is kept for the navigation hop",
+    )
     parser.add_argument("--child", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args()
     if not 1 <= args.seconds_per_case <= 600 or not 1 <= args.max_pages <= 100:
         parser.error("Budget must be 1..600 seconds and 1..100 Fetcher.get calls per university")
     if args.child:
-        asyncio.run(capture_one(args.case, args.out, args.max_pages))
+        if args.search_first:
+            from app.adapters.discovery import live_discovery
+
+            live_discovery.SEARCH_BEFORE_NAVIGATION = True
+        if args.skip_refused_hosts:
+            from app.adapters.discovery import live_discovery
+
+            live_discovery.SKIP_REFUSED_SEARCH_HOSTS = True
+        if args.reject_archive_hosts:
+            from app.adapters.search import retrieval
+
+            retrieval.REJECT_ARCHIVE_HOSTS = True
+        if args.admission_lexicon:
+            from app.adapters.search import navigation
+
+            navigation.ADMISSION_LEXICON = True
+        if args.navigation_slot:
+            from app.adapters.discovery import live_discovery
+
+            live_discovery.NAVIGATION_SLOT = True
+        # A few seconds under the parent's timeout, so the child's own stop
+        # comes first and writes what it has.
+        soft = max(args.seconds_per_case - 5, 1)
+        asyncio.run(capture_one(args.case, args.out, args.max_pages, soft))
         return
     stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
     directory = args.out / stamp
@@ -200,6 +412,13 @@ def main() -> None:
                         str(output),
                         "--max-pages",
                         str(args.max_pages),
+                        "--seconds-per-case",
+                        str(args.seconds_per_case),
+                        *(["--search-first"] if args.search_first else []),
+                        *(["--skip-refused-hosts"] if args.skip_refused_hosts else []),
+                        *(["--reject-archive-hosts"] if args.reject_archive_hosts else []),
+                        *(["--admission-lexicon"] if args.admission_lexicon else []),
+                        *(["--navigation-slot"] if args.navigation_slot else []),
                     ],
                     env=environment,
                     stdout=log,
@@ -229,6 +448,12 @@ def main() -> None:
             config={
                 "seconds_per_case": args.seconds_per_case,
                 "max_fetcher_calls_per_case": args.max_pages,
+                "page_budget_counts": "network reads; cache hits are free (since 2026-09-23)",
+                "search_before_navigation": args.search_first,
+                "skip_refused_search_hosts": args.skip_refused_hosts,
+                "reject_archive_hosts": args.reject_archive_hosts,
+                "admission_lexicon": args.admission_lexicon,
+                "navigation_slot": args.navigation_slot,
                 "browser_enabled": False,
                 "cohort": list(COHORT),
                 "scope": "current production pipeline; HTTP-only bounded cold run",

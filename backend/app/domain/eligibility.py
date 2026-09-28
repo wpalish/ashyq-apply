@@ -10,6 +10,7 @@ Two asymmetries are deliberate:
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from dataclasses import dataclass, field
 from datetime import UTC, date, datetime
 
@@ -89,6 +90,24 @@ def _scope_verdict(claim: Claim, requested: RequestedScope) -> Verdict:
     if claim.scope is None:
         return Verdict.UNKNOWN
     return claim.scope.covers(requested)
+
+
+def _published_scope(claim: Claim | None) -> str:
+    """What the claim's page said about who its rule is for, for display.
+
+    Empty for a claim with no recorded scope and for one whose page stated
+    nothing: both mean "this line can tell you nothing", and inventing a
+    phrase for either would be the product asserting where it should show.
+    """
+    if claim is None or claim.scope is None:
+        return ""
+    stated = claim.scope.stated()
+    if not stated:
+        return ""
+    parts = [
+        f"{dimension.replace('_', ' ')} {getattr(claim.scope, dimension)}" for dimension in stated
+    ]
+    return "published for " + ", ".join(parts)
 
 
 def out_of_scope_claims(claims: list[Claim], requested: RequestedScope) -> list[OutOfScopeClaim]:
@@ -192,6 +211,7 @@ def _check_numeric_minimum(
             status=EligibilityStatus.NEEDS_OFFICIAL_CLARIFICATION,
             explanation=f"The published {label} could not be read as a number.",
             claim_ids=[claim.source_url],
+            published_scope=_published_scope(claim),
         )
     if applicant_value is None:
         return RequirementCheck(
@@ -203,6 +223,7 @@ def _check_numeric_minimum(
                 f"{label} value yet. Add it to resolve this check."
             ),
             claim_ids=[claim.source_url],
+            published_scope=_published_scope(claim),
         )
     ok = applicant_value >= published if higher_is_better else applicant_value <= published
     return RequirementCheck(
@@ -210,6 +231,7 @@ def _check_numeric_minimum(
         published_value=published,
         applicant_value=applicant_value,
         status=EligibilityStatus.MET if ok else EligibilityStatus.GAP,
+        published_scope=_published_scope(claim),
         is_hard_filter=hard and _confirmed(claim, requested) and not ok,
         explanation=(
             f"Published minimum {published:g}; applicant {applicant_value:g}."
@@ -249,11 +271,17 @@ def evaluate_program(
                 is_hard_filter=True,
                 explanation="The programme officially states it is not accepting applications for this intake.",
                 claim_ids=[intake_claim.source_url],
+                published_scope=_published_scope(intake_claim),
             )
         )
 
     # --- deadline -----------------------------------------------------
-    deadline_claim = _first(claims, ClaimType.ADMISSION_DEADLINE, requested)
+    by_population = population_deadlines(claims, requested)
+    if by_population:
+        checks.append(_population_deadline_check(by_population, today, requested))
+    deadline_claim = (
+        None if by_population else _first(claims, ClaimType.ADMISSION_DEADLINE, requested)
+    )
     if deadline_claim is not None:
         parsed = _as_date(deadline_claim.normalized_value)
         if parsed is None:
@@ -264,6 +292,7 @@ def evaluate_program(
                     status=EligibilityStatus.NEEDS_OFFICIAL_CLARIFICATION,
                     explanation="A deadline was published but could not be parsed into a date.",
                     claim_ids=[deadline_claim.source_url],
+                    published_scope=_published_scope(deadline_claim),
                 )
             )
         else:
@@ -275,6 +304,7 @@ def evaluate_program(
                     applicant_value=today.isoformat(),
                     status=EligibilityStatus.GAP if passed else EligibilityStatus.MET,
                     is_hard_filter=passed and _confirmed(deadline_claim, requested),
+                    published_scope=_published_scope(deadline_claim),
                     explanation=(
                         f"The published deadline {parsed.isoformat()} has passed."
                         if passed
@@ -397,10 +427,47 @@ def evaluate_program(
     return outcome
 
 
+def programme_is_test_optional(claims: list[Claim]) -> bool:
+    """Whether the programme publishes a test-optional or test-blind policy."""
+    policy = _first(claims, ClaimType.SAT_POLICY)
+    text = str(policy.normalized_value).lower() if policy else ""
+    return "optional" in text or "blind" in text or "not required" in text
+
+
+def awards_needing_a_test_the_programme_made_optional(
+    claims: list[Claim], awards: Iterable[tuple[str, dict[str, float]]]
+) -> list[str]:
+    """Awards that require a test the programme itself says is optional.
+
+    The phase guide states the trap outright: do not treat "test optional" as
+    "the test is irrelevant" when a scholarship separately requires it. An
+    applicant who reads the requirements tab, sees test-optional and does not
+    sit the SAT can lose the funding rather than the offer — and nothing in
+    the product told them the two pages disagree about their year.
+
+    Returns the award names, so the caller can name them; an empty list is
+    the common and correct answer.
+    """
+    if not programme_is_test_optional(claims):
+        return []
+    return [name for name, minimums in awards if minimums.get("sat")]
+
+
+def _english_waiver(claims: list[Claim]) -> Claim | None:
+    """A published exemption from the English test, if the page states one.
+
+    An empty value is the page settling it the other way — "no waivers are
+    granted" — and is not a waiver.
+    """
+    claim = _first(claims, ClaimType.ENGLISH_TEST_WAIVER)
+    return claim if claim is not None and claim.normalized_value else None
+
+
 def _english_checks(claims: list[Claim], profile: ApplicantProfileIn) -> list[RequirementCheck]:
     out: list[RequirementCheck] = []
     a = profile.academics
     requested = requested_scope(claims)
+    waiver = _english_waiver(claims)
 
     accepted = _first(claims, ClaimType.IELTS_ACCEPTED_TYPES, requested)
     if accepted is not None and isinstance(accepted.normalized_value, list):
@@ -422,10 +489,32 @@ def _english_checks(claims: list[Claim], profile: ApplicantProfileIn) -> list[Re
                 )
             )
 
+    if waiver is not None:
+        out.append(
+            RequirementCheck(
+                requirement="English test waiver",
+                published_value=waiver.normalized_value,
+                status=EligibilityStatus.NEEDS_OFFICIAL_CLARIFICATION,
+                explanation=(
+                    "This programme publishes conditions under which the English test is not "
+                    "required. Check them against your own schooling before booking a test — "
+                    "whether they cover you is not something this page settles."
+                ),
+                claim_ids=[waiver.source_url],
+                published_scope=_published_scope(waiver),
+            )
+        )
+
     overall = _first(claims, ClaimType.IELTS_MIN_OVERALL, requested)
     if overall is not None:
         out.append(
-            _check_numeric_minimum("IELTS overall", overall, a.ielts.overall, requested=requested)
+            _check_numeric_minimum(
+                "IELTS overall",
+                overall,
+                a.ielts.overall,
+                requested=requested,
+                hard=waiver is None,
+            )
         )
 
     # Subscore minimums are evaluated per band: passing overall proves nothing here.
@@ -469,7 +558,11 @@ def _english_checks(claims: list[Claim], profile: ApplicantProfileIn) -> list[Re
     if toefl is not None and a.ielts.overall is None:
         out.append(
             _check_numeric_minimum(
-                "TOEFL total", toefl, _to_float(a.toefl.total), requested=requested
+                "TOEFL total",
+                toefl,
+                _to_float(a.toefl.total),
+                requested=requested,
+                hard=waiver is None,
             )
         )
     return out
@@ -516,6 +609,77 @@ def _to_float(v: object) -> float | None:
         return float(v)  # type: ignore[arg-type]
     except (TypeError, ValueError):
         return None
+
+
+def population_deadlines(
+    claims: list[Claim], requested: RequestedScope | None = None
+) -> list[tuple[str, date, Claim]]:
+    """Deadlines a page publishes per fee population, when they differ.
+
+    ``(population, date, claim)``, earliest first — or nothing, when the page
+    published one deadline, or the same date for every population, in which
+    case there is no choice to make and the ordinary path answers.
+
+    The applicant's population at a given university is never inferred here
+    (``requested_scope`` refuses to for the same reason): it depends on the
+    institution's own fee rules, and guessing it would quietly pick a row.
+    """
+    rows: dict[str, tuple[date, Claim]] = {}
+    for c in claims:
+        if c.claim_type is not ClaimType.ADMISSION_DEADLINE or c.scope is None:
+            continue
+        population = c.scope.population
+        if not population or c.subject_key != population:
+            continue
+        if requested is not None and _scope_verdict(c, requested) is Verdict.NO:
+            continue
+        parsed = _as_date(c.normalized_value)
+        if parsed is not None and population not in rows:
+            rows[population] = (parsed, c)
+    if len(rows) < 2 or len({d for d, _ in rows.values()}) < 2:
+        return []
+    return sorted(((p, d, c) for p, (d, c) in rows.items()), key=lambda row: (row[1], row[0]))
+
+
+def _population_deadline_check(
+    rows: list[tuple[str, date, Claim]], today: date, requested: RequestedScope | None
+) -> RequirementCheck:
+    """One check for a deadline that depends on who the applicant is here.
+
+    Shown at the earliest date, so nobody is told they have more time than
+    they may have. Never a hard filter unless every row has passed: an
+    applicant whose own row is still open must not be eliminated by another
+    population's date.
+    """
+    listed = "; ".join(f"{p}: {d.isoformat()}" for p, d, _ in rows)
+    passed = [p for p, d, _ in rows if d < today]
+    earliest = rows[0][1]
+    if len(passed) == len(rows):
+        status = EligibilityStatus.GAP
+        hard = all(_confirmed(c, requested) for _, _, c in rows)
+        explanation = f"Every published deadline has passed ({listed})."
+    elif passed:
+        status, hard = EligibilityStatus.NEEDS_OFFICIAL_CLARIFICATION, False
+        explanation = (
+            f"The deadline depends on your fee population here ({listed}). "
+            f"The one for {', '.join(passed)} has passed; confirm which applies to you."
+        )
+    else:
+        status, hard = EligibilityStatus.MET, False
+        explanation = (
+            f"Applications close {earliest.isoformat()} at the earliest; the deadline "
+            f"depends on your fee population here ({listed})."
+        )
+    return RequirementCheck(
+        requirement="Admission deadline",
+        published_value=earliest.isoformat(),
+        applicant_value=today.isoformat(),
+        status=status,
+        is_hard_filter=hard,
+        explanation=explanation,
+        claim_ids=sorted({c.source_url for _, _, c in rows}),
+        published_scope=f"by fee population: {listed}",
+    )
 
 
 def _as_date(v: object) -> date | None:

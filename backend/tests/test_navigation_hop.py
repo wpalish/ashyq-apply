@@ -195,3 +195,24 @@ class TestItIsFusionInput:
         )
 
         assert [c.url for c in hop(html)] == [c.url for c in hop(html)]
+
+
+class TestER05AdmissionLexicon:
+    """ER-05: a link naming undergraduate admission, off until measured."""
+
+    HTML = (
+        '<a href="/content?menu=40">학부 입학</a>'
+        '<a href="/content?menu=41">대학원 입학</a>'
+        '<a href="/content?menu=132">학부발전기금</a>'
+    )
+
+    def test_off_by_default_the_link_is_navigation_chrome(self):
+        assert [c.url for c in hop(self.HTML)] == []
+
+    def test_on_it_follows_undergraduate_admission_and_nothing_else(self, monkeypatch):
+        from app.adapters.search import navigation
+
+        monkeypatch.setattr(navigation, "ADMISSION_LEXICON", True)
+        urls = [c.url for c in hop(self.HTML)]
+
+        assert urls == ["https://cs.example.edu/content?menu=40"]

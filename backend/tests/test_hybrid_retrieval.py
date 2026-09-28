@@ -683,3 +683,139 @@ class TestDiscoveryUsesSearchOnlyWhenOneIsConfigured:
         )
 
         assert selected[PageCategory.PROGRAM_PAGE] == ["https://nu.edu.kz/found-by-sitemap"]
+
+    async def test_search_is_asked_for_the_institution_not_its_homepage_host(
+        self, tmp_path, profile, monkeypatch
+    ):
+        """Run 53, Warsaw: en.uw.edu.pl kept informatorects.uw.edu.pl out of reach."""
+        import app.adapters.search as search_pkg
+        from app.adapters.discovery.live_discovery import DiscoveryTrace, PageCategory
+
+        asked: list[list[str]] = []
+
+        class _Recording(FakeSearchProvider):
+            async def search(self, *, query, domains=(), max_results=10):
+                asked.append(list(domains))
+                return await super().search(query=query, domains=domains, max_results=max_results)
+
+        monkeypatch.setattr(search_pkg, "get_search_provider", lambda: _Recording({}, now=NOW))
+        selected = {c: [] for c in vars(PageCategory).values() if isinstance(c, str)}
+        trace = DiscoveryTrace(institution="UW", domain="en.uw.edu.pl")
+
+        await self._adapter(tmp_path)._add_search_results(
+            {"name": "University of Warsaw"}, "en.uw.edu.pl", selected, trace, profile
+        )
+
+        assert asked and all(d == ["uw.edu.pl"] for d in asked)
+
+    async def _merge_with_refusal(self, tmp_path, profile, monkeypatch, *, skip: bool):
+        import app.adapters.discovery.live_discovery as live
+        import app.adapters.search as search_pkg
+        from app.adapters.discovery.live_discovery import DiscoveryTrace, PageCategory
+
+        intent = an_intent()
+        provider = FakeSearchProvider(
+            {
+                q.text: [
+                    ("https://blocked.nu.edu.kz/computer-science", "Computer Science", ""),
+                    ("https://open.nu.edu.kz/computer-science", "Computer Science", ""),
+                ]
+                for q in queries_for(intent, budget=99)
+            },
+            now=NOW,
+        )
+        monkeypatch.setattr(search_pkg, "get_search_provider", lambda: provider)
+        monkeypatch.setattr(live, "SKIP_REFUSED_SEARCH_HOSTS", skip)
+        adapter = self._adapter(tmp_path)
+        adapter.fetcher.refused_hosts = {"blocked.nu.edu.kz": "HTTP 403"}
+        selected: dict[str, list[str]] = {
+            c: [] for c in vars(PageCategory).values() if isinstance(c, str)
+        }
+        trace = DiscoveryTrace(institution="NU", domain="nu.edu.kz")
+        await adapter._add_search_results(
+            {"name": "Nazarbayev University"}, "nu.edu.kz", selected, trace, profile
+        )
+        return selected[PageCategory.PROGRAM_PAGE], trace
+
+    async def test_er04_off_keeps_a_refused_host_in_its_rank(self, tmp_path, profile, monkeypatch):
+        """The default is unchanged until the experiment is measured."""
+        pages, trace = await self._merge_with_refusal(tmp_path, profile, monkeypatch, skip=False)
+
+        assert "https://blocked.nu.edu.kz/computer-science" in pages
+        assert not any("skipped" in e for e in trace.errors)
+
+    async def test_er04_on_gives_the_slot_to_a_host_that_answered(
+        self, tmp_path, profile, monkeypatch
+    ):
+        """Toronto 2026-09-27: all three slots went to a host that had answered 403."""
+        pages, trace = await self._merge_with_refusal(tmp_path, profile, monkeypatch, skip=True)
+
+        assert "https://blocked.nu.edu.kz/computer-science" not in pages
+        assert "https://open.nu.edu.kz/computer-science" in pages
+        assert any("hosts that refused this run" in e for e in trace.errors)
+
+
+class TestRejectingKindsThatAreNotProgrammes:
+    """V2-30 — available, measured, and off until it is measured again.
+
+    The live probe kept finding publication and profile pages outranking the
+    programme page they competed with. Dropping them is one line; shipping
+    that drop unmeasured is the silent recall loss §12 forbids, so the switch
+    exists and the default does not move.
+    """
+
+    def _results(self):
+        from datetime import UTC, datetime
+
+        from app.adapters.search.base import SearchResult
+
+        now = datetime(2026, 9, 21, tzinfo=UTC)
+        return [
+            SearchResult(
+                url="https://research.aalto.fi/en/publications/a-paper",
+                title="A paper",
+                snippet="",
+                provider="fake",
+                rank=1,
+                retrieved_at=now,
+            ),
+            SearchResult(
+                url="https://www.aalto.fi/en/study-options/bachelor-computer-science",
+                title="Computer Science",
+                snippet="",
+                provider="fake",
+                rank=2,
+                retrieved_at=now,
+            ),
+        ]
+
+    def test_by_default_an_irrelevant_kind_is_kept(self):
+        from app.adapters.search.prefilter import prefilter
+
+        outcome = prefilter(self._results(), domain="aalto.fi", degree=DegreeLevel.BACHELOR)
+        assert len(outcome.kept) == 2, "the default must not change silently"
+
+    def test_when_asked_it_is_dropped_with_its_reason(self):
+        from app.adapters.search.prefilter import Rejection, prefilter
+
+        outcome = prefilter(
+            self._results(),
+            domain="aalto.fi",
+            degree=DegreeLevel.BACHELOR,
+            reject_irrelevant_kinds=True,
+        )
+        assert [c.url for c in outcome.kept] == [
+            "https://www.aalto.fi/en/study-options/bachelor-computer-science"
+        ]
+        assert outcome.rejected[0].reason is Rejection.NOT_A_PROGRAMME_PAGE
+
+    def test_a_programme_page_is_never_dropped_by_this(self):
+        from app.adapters.search.prefilter import prefilter
+
+        outcome = prefilter(
+            self._results()[1:],
+            domain="aalto.fi",
+            degree=DegreeLevel.BACHELOR,
+            reject_irrelevant_kinds=True,
+        )
+        assert len(outcome.kept) == 1

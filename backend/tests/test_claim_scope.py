@@ -155,7 +155,7 @@ class TestBuildingOneFromLooseData:
 
 
 class TestTheDimensionsAreTheGuides:
-    def test_all_nine_are_present_and_named(self):
+    def test_all_ten_of_the_guide_s_questions_are_present_and_named(self):
         assert SCOPE_DIMENSIONS == (
             "university",
             "faculty",
@@ -166,7 +166,13 @@ class TestTheDimensionsAreTheGuides:
             "population",
             "nationality",
             "residency",
+            "qualification",
         )
+
+    def test_a_qualification_is_one_of_them(self):
+        """V2-30: the guide's "this qualification?" had no field to answer it."""
+        assert "qualification" in SCOPE_DIMENSIONS
+        assert ClaimScope(qualification="attestat").stated() == ("qualification",)
 
     @pytest.mark.parametrize("dimension", SCOPE_DIMENSIONS)
     def test_every_dimension_can_refute_on_its_own(self, dimension):

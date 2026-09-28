@@ -396,3 +396,25 @@ def test_a_claim_written_before_scope_existed_is_captured_exactly_as_before():
     assert scope.intake == "fall 2027"
     assert scope.academic_year == "2026/27"
     assert scope.population is None
+
+
+def test_a_programme_pages_stated_language_is_mapped_to_the_one_key():
+    """Owner decision 2026-09-23: one key, `programme.language`."""
+    from evaluation.research.identities import IdentityMap
+    from evaluation.research.mapping import normalize_subject_claims
+
+    identities = IdentityMap(version="t", bindings=[])
+    raw = {
+        "claim_type": "program_exists",
+        "normalized_value": {"program": "BSc Computer Science", "language": "german"},
+        "source_url": "https://www.univie.ac.at/cs",
+    }
+    mapped = normalize_subject_claims("program_exists", raw, identities)
+    assert [(k, v) for k, v, _, _ in mapped] == [
+        ("programme.exists", True),
+        ("programme.language", "German"),
+    ]
+    silent = dict(raw, normalized_value={"program": "BSc Computer Science", "language": None})
+    assert [k for k, *_ in normalize_subject_claims("program_exists", silent, identities)] == [
+        "programme.exists"
+    ]

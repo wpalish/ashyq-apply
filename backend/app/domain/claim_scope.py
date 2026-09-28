@@ -47,6 +47,11 @@ SCOPE_DIMENSIONS = (
     "population",
     "nationality",
     "residency",
+    # Last of the "who" group: the qualification an applicant holds. The phase
+    # guide's §1 asks "this qualification?" alongside the other eight, and the
+    # benchmark's evidence schema has carried the key since the first capture,
+    # so a scope without it could not answer a question the measurement asks.
+    "qualification",
 )
 
 
@@ -73,6 +78,10 @@ class RequestedScope:
     population: str | None = None
     nationality: str | None = None
     residency: str | None = None
+    #: The school qualification a rule is written for — "attestat", "IB",
+    #: "A-levels". ``None`` is the honest answer for a page that names none,
+    #: and an unnamed qualification is never an equivalent one.
+    qualification: str | None = None
 
     def stated(self) -> tuple[str, ...]:
         return tuple(d for d in SCOPE_DIMENSIONS if getattr(self, d))
@@ -97,6 +106,10 @@ class ClaimScope:
     population: str | None = None
     nationality: str | None = None
     residency: str | None = None
+    #: The school qualification a rule is written for — "attestat", "IB",
+    #: "A-levels". ``None`` is the honest answer for a page that names none,
+    #: and an unnamed qualification is never an equivalent one.
+    qualification: str | None = None
 
     def stated(self) -> tuple[str, ...]:
         """Dimensions this scope actually records."""

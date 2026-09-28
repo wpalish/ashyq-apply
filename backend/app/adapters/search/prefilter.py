@@ -19,6 +19,7 @@ look identical in a metric.
 
 from __future__ import annotations
 
+import re
 from collections.abc import Sequence
 from dataclasses import dataclass
 from urllib.parse import urlparse
@@ -29,6 +30,7 @@ from app.adapters.discovery.live_discovery import (
     names_other_degree_level,
     same_institution,
 )
+from app.adapters.page_classifier import PageType, classify_url
 from app.adapters.search.base import SearchResult
 from app.domain.enums import DegreeLevel
 
@@ -81,6 +83,25 @@ class PrefilterOutcome:
         return counts
 
 
+#: Experiment ER-06: hosts and paths that hold archives, mirrors, research
+#: output or journals, not programmes. The 2026-09-27 captures chose
+#: ftp.kaist.ac.kr (a CTAN mirror PDF), pure.kaist.ac.kr (a clipping),
+#: an.kaist.ac.kr/courses/2006 and held-out journal articles as
+#: programme pages.
+_ARCHIVE_HOST_LABEL = re.compile(
+    r"^(ftp|mirror|mirrors|pure|research|repository|repozitorij|eprints|dspace|scholar"
+    r"|journal|journals|ojs|archive|arxiv)$"
+)
+_ARCHIVE_PATH = re.compile(r"/(ctan|pub/mirror|journal|article)s?/|/courses/(19|20)\d\d/", re.I)
+
+
+def is_archive_page(url: str) -> bool:
+    """A mirror, repository, journal or dated course archive: never a programme."""
+    parts = urlparse(url)
+    label = (parts.hostname or "").lower().removeprefix("www.").split(".", 1)[0]
+    return bool(_ARCHIVE_HOST_LABEL.match(label) or _ARCHIVE_PATH.search(parts.path or ""))
+
+
 def _is_pdf(url: str) -> bool:
     return (urlparse(url).path or "").lower().endswith(".pdf")
 
@@ -90,8 +111,21 @@ def prefilter(
     *,
     domain: str,
     degree: DegreeLevel,
+    reject_irrelevant_kinds: bool = False,
+    reject_archive_hosts: bool = False,
 ) -> PrefilterOutcome:
     """Drop what is cheap to know is wrong, and say why for the rest.
+
+    ``reject_irrelevant_kinds`` drops URLs the classifier already calls
+    IRRELEVANT — publications, person and organisation profiles, datasets,
+    theses — which the live probe repeatedly found outranking the programme
+    page they were competing with (Aalto's top result was a publication;
+    KAIST's was an organisation profile). It is **off by default on purpose**:
+    §12 of the brief allows a discovery change only when the benchmark
+    improves, this one cannot be measured without a live capture, and a
+    rejection that has never been measured is exactly the kind of silent
+    recall loss that rule exists to prevent. Turn it on for a measured run,
+    compare, and only then change the default.
 
     Deduplication keeps the first occurrence, which is the best-ranked one
     because results arrive in rank order within a response and queries are run
@@ -115,6 +149,12 @@ def prefilter(
             rejected.append(RejectedCandidate(url, Rejection.OTHER_INSTITUTION))
             continue
         if is_excluded_path(url):
+            rejected.append(RejectedCandidate(url, Rejection.NOT_A_PROGRAMME_PAGE))
+            continue
+        if reject_archive_hosts and is_archive_page(url):
+            rejected.append(RejectedCandidate(url, Rejection.NOT_A_PROGRAMME_PAGE))
+            continue
+        if reject_irrelevant_kinds and classify_url(url) is PageType.IRRELEVANT:
             rejected.append(RejectedCandidate(url, Rejection.NOT_A_PROGRAMME_PAGE))
             continue
         if names_other_degree_level(url, str(degree)):

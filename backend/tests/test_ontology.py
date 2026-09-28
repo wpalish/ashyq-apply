@@ -23,6 +23,7 @@ from app.adapters.search.ontology import (
     retrieval_candidates,
 )
 from app.domain.enums import DegreeLevel
+from app.domain.programme_identity import Verdict
 
 
 class TestAStrongAliasIsTheSameFieldAndARelatedOneIsNot:
@@ -251,3 +252,58 @@ class TestUrlOnlyClassification:
             classify_url("https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF/")
             is PageType.UNKNOWN
         )
+
+
+class TestATitleIsNotATerm:
+    """V2-28 — a programme title names a field inside a sentence about a degree.
+
+    Built because the benchmark scores a label's short name against the full
+    official title a page publishes as a wrong-scope claim.
+    """
+
+    def test_a_field_stated_inside_a_full_title_is_found(self):
+        from app.adapters.search.ontology import fields_named_in
+
+        assert fields_named_in("Bachelor of Computing (Hons) in Computer Science") == frozenset(
+            {"computer_science"}
+        )
+
+    def test_a_title_naming_no_known_field_names_nothing(self):
+        from app.adapters.search.ontology import fields_named_in
+
+        assert fields_named_in("Bachelor of Arts, Visual Studies") == frozenset()
+        assert fields_named_in("Bachelor's Open Day") == frozenset()
+
+    def test_the_same_programme_under_two_names_is_one_programme(self):
+        """NTU's real title against the corpus label it was scored against."""
+        from app.adapters.search.ontology import titles_name_same_programme
+
+        assert (
+            titles_name_same_programme(
+                "Bachelor of Computing (Hons) in Computer Science", "Computer Science"
+            )
+            is Verdict.YES
+        )
+
+    def test_a_joint_degree_is_not_resolved_by_this(self):
+        """ "Mathematical and Computer Sciences" may be a different degree; the
+        ontology has no entry for the plural, and inventing one would merge a
+        joint programme into a single-subject one."""
+        from app.adapters.search.ontology import titles_name_same_programme
+
+        assert (
+            titles_name_same_programme(
+                "Bachelor of Science in Mathematical and Computer Sciences", "Computer Science"
+            )
+            is Verdict.UNKNOWN
+        )
+
+    def test_a_related_field_is_refused_not_matched(self):
+        from app.adapters.search.ontology import titles_name_same_programme
+
+        assert titles_name_same_programme("BSc Data Science", "Computer Science") is Verdict.NO
+
+    def test_two_identical_titles_need_no_vocabulary(self):
+        from app.adapters.search.ontology import titles_name_same_programme
+
+        assert titles_name_same_programme("Visual Studies", "visual studies") is Verdict.YES

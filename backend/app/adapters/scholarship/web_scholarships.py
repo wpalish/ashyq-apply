@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import re
 from datetime import UTC, datetime
-from urllib.parse import urljoin, urlparse
+from urllib.parse import urljoin, urlparse, urlsplit, urlunsplit
 
 from bs4 import BeautifulSoup
 
@@ -18,7 +18,7 @@ from app.adapters.applicability import (
     assess_degree_applicability,
     assess_international_eligibility,
 )
-from app.adapters.base import AdapterResult, Candidate, CandidateProgram
+from app.adapters.base import AdapterResult, Candidate, CandidateProgram, PageOutcome
 from app.adapters.extraction import (
     ClaimBuilder,
     html_title,
@@ -27,8 +27,10 @@ from app.adapters.extraction import (
     parse_money,
     parse_timezone,
     readable_text,
+    verification_domains,
 )
-from app.adapters.fetching import Fetcher
+from app.adapters.fetching import Fetcher, FetchResult
+from app.adapters.html_parse import parse_html
 from app.adapters.page_classifier import PageType, classify_page
 from app.adapters.scope_reader import read_scope
 from app.domain.enums import (
@@ -38,6 +40,7 @@ from app.domain.enums import (
     ScholarshipType,
     SourceSpecificity,
 )
+from app.domain.funding import roll_up_availability
 from app.schemas.money import Money
 from app.schemas.result import Coverage, CoverageBreakdown, Scholarship
 
@@ -84,68 +87,289 @@ _TYPE_HINTS = (
 )
 
 
+#: A page saying the award is not on offer. `award_current_for_intake` and
+#: `currently_available` were dead fields — declared, never set, and ignored by
+#: the roll-up — so an award a page calls discontinued could still be reported
+#: as available for the intake.
+_AWARD_WITHDRAWN = re.compile(
+    r"\b(discontinued|withdrawn|no longer (?:offered|awarded|available)|suspended"
+    r"|not (?:being )?(?:offered|awarded)|paused|on hold)\b",
+    re.IGNORECASE,
+)
+#: There is deliberately **no** positive counterpart. I wrote one — "is/are
+#: offered", "applications are open" — and the demo caught it reading Delft's
+#: "30 awards are offered each year" as a statement about *this* cycle. A
+#: sentence about how many awards exist is not evidence that the scheme is
+#: running now, and `available_this_intake` needs only `!= no` from this
+#: dimension, so the positive branch bought nothing and could be wrong.
+
+
+#: "You must hold an offer" in the shapes award pages actually write it.
+_OFFER_REQUIRED = re.compile(
+    r"(must|need to|required to)\s+(hold|have|have received|have been given)\s+an?\s+"
+    r"(offer|admission offer|letter of (admission|offer))"
+    r"|only\s+(admitted|offer[- ]holding)\s+(students|applicants)"
+    r"|open only to (admitted|offer[- ]holding)",
+    re.IGNORECASE,
+)
+#: And the explicit denial, which is just as decisive and much rarer.
+_OFFER_NOT_REQUIRED = re.compile(
+    r"(no|without an?)\s+(admission\s+)?offer\s+(is\s+)?(required|needed)"
+    r"|you do not need an? (admission )?offer"
+    r"|apply before (you receive|receiving) an offer",
+    re.IGNORECASE,
+)
+_NEED_BASED = re.compile(
+    r"\bneed[- ]based\b|\bdemonstrated financial need\b|\bmeans[- ]tested\b"
+    r"|awarded on the basis of financial need",
+    re.IGNORECASE,
+)
+#: Only an explicit "merit only" denial. A page that says "merit-based" and
+#: nothing else has not said need is irrelevant — many awards are both.
+_MERIT_ONLY = re.compile(
+    r"regardless of (financial need|income)"
+    r"|financial need is not (considered|taken into account)"
+    r"|no (proof|evidence) of financial need",
+    re.IGNORECASE,
+)
+
+
 class WebScholarshipAdapter:
     name = "web-scholarships"
 
     def __init__(self, fetcher: Fetcher, academic_year: str) -> None:
         self.fetcher = fetcher
         self.academic_year = academic_year
+        #: Pages this adapter has already read, for its own lifetime — one
+        #: run. The funding stage calls ``find`` once per programme, so a
+        #: university with two programmes used to read its scholarship index
+        #: and every award page twice. Pages are memoised and claims are not:
+        #: a claim carries the programme it was built for, so the second
+        #: programme re-parses the same page rather than reusing its claims.
+        self._pages: dict[str, FetchResult] = {}
+        #: Which university ``_pages`` belongs to. The memo exists to stop the
+        #: second programme re-reading the first one's pages, and a university
+        #: is as far as that goes — holding every university's HTML for the
+        #: whole run would be tens of megabytes of dead weight for no gain.
+        self._pages_for: str | None = None
+
+    def _memo_for(self, candidate: Candidate) -> None:
+        """Point the page memo at this university, dropping the last one's."""
+        key = f"{candidate.name}::{candidate.country}"
+        if key != self._pages_for:
+            self._pages = {}
+            self._pages_for = key
+
+    async def _read(self, url: str) -> FetchResult:
+        """Fetch a page once per run, however many programmes ask for it."""
+        cached = self._pages.get(_page_key(url))
+        if cached is not None:
+            return cached
+        page = await self.fetcher.get(url)
+        if page.ok:
+            self._pages[_page_key(url)] = page
+        return page
 
     async def find(
         self, candidate: Candidate, program: CandidateProgram, profile
     ) -> tuple[list[Scholarship], AdapterResult]:
         out = AdapterResult()
-        if not candidate.scholarships_url:
+        self._memo_for(candidate)
+        primary = candidate.scholarships_url or ""
+        if not primary and not program.url:
             out.errors.append(
                 f"No official scholarship page is known for {candidate.name}; funding is reported "
                 "as unknown rather than assumed absent."
             )
             return [], out
-
-        index = await self.fetcher.get(candidate.scholarships_url)
-        out.pages_checked += 1
-        if not index.ok:
-            out.pages_failed += 1
+        if not primary:
+            # The one other candidate generator already in hand. It is read as
+            # an index only: a programme page is never an award page, and the
+            # classifier still has to say so before anything is recorded.
+            primary = program.url or ""
             out.errors.append(
-                f"{candidate.scholarships_url}: {index.outcome.value} — {index.error}"
-            )
-            out.retry_urls.append(candidate.scholarships_url)
-            return [], out
-
-        links = _award_links(index.text, candidate.scholarships_url)
-        if not links:
-            out.errors.append(
-                f"{candidate.scholarships_url}: no individual award pages were linked, so no award "
-                "can be verified in detail."
+                f"No official scholarship page is known for {candidate.name}; the programme page is "
+                "read as a funding index instead, and awards are recorded only from award pages."
             )
 
         scholarships: list[Scholarship] = []
-        for i, url in enumerate(links):
-            page = await self.fetcher.get(url)
-            out.pages_checked += 1
+        seen_pages: set[str] = set()
+        seen_translations: set[str] = set()
+        queue: list[tuple[str, int]] = [(primary, 0)]
+        indexes_read = 0
+        linked_an_award = False
+        fallback_used = primary == program.url
+
+        while queue:
+            url, depth = queue.pop(0)
+            key = _page_key(url)
+            if key in seen_pages:
+                continue
+            seen_pages.add(key)
+            # The same award page in another language adds nothing an
+            # English-reading applicant can act on, and costs a read each.
+            # Run 25: HKU read its scholarship list three times (en, zh-hant,
+            # zh-hans) and ran out of clock before the awards.
+            translation = _without_locale(key)
+            if depth > 0 and translation != key and translation in seen_translations:
+                continue
+            seen_translations.add(translation)
+
+            was_read_before = _page_key(url) in self._pages
+            page = await self._read(url)
+            if not was_read_before:
+                out.pages_checked += 1
             if not page.ok:
                 out.pages_failed += 1
                 out.errors.append(f"{url}: {page.outcome.value} — {page.error}")
                 out.retry_urls.append(url)
-                continue
-
-            classification = classify_page(url=url, html=page.text)
-            out.page_types.append((url, classification.page_type.value))
-            if classification.page_type is not PageType.SCHOLARSHIP_AWARD:
-                # An index, an FAQ or a navigation page is not an award. This is
-                # what turned "Scholarships", "Practical matters" and "Prizes
-                # and awards" into three separate scholarships.
-                out.errors.append(
-                    f"{url}: classified as {classification.page_type.value}, not an award page; "
-                    "no scholarship recorded."
+                out.page_outcomes.append(
+                    PageOutcome(
+                        url=url,
+                        category="fetch-failed",
+                        detail=f"{page.outcome.value} — {page.error}",
+                    )
                 )
-                continue
+            else:
+                classification = classify_page(url=url, html=page.text)
+                page_type = classification.page_type.value
+                if depth > 0:
+                    out.page_types.append((url, classification.page_type.value))
 
-            sch, claims = self._parse_award(
-                candidate, program, url, page.text, page.fetched_at, classification, index=i
-            )
-            scholarships.append(sch)
-            out.claims.extend(claims)
+                # A page that links several awards filed beneath its own path is
+                # a list of awards whatever the classifier calls it. Run 60: NTU's
+                # /scholarships/freshmen holds the Nanyang Scholarship link and was
+                # rejected as "not an award page".
+                is_index = classification.page_type is PageType.SCHOLARSHIP_INDEX or (
+                    depth > 0
+                    and classification.page_type is not PageType.SCHOLARSHIP_AWARD
+                    and _lists_awards_below(page.text, url)
+                )
+                if depth == 0 or (is_index and indexes_read < _MAX_INDEX_PAGES):
+                    # An index is discovery, never award proof: nothing is
+                    # recorded from the page itself, only from what it links.
+                    indexes_read += 1
+                    if depth > 0:
+                        out.errors.append(
+                            f"{url}: classified as {classification.page_type.value}; read as a "
+                            "funding index, and the awards it links are followed."
+                        )
+                    links = [
+                        link
+                        for link in _award_links(page.text, url)
+                        if _page_key(link) not in seen_pages
+                    ]
+                    if _is_international(profile, candidate):
+                        # Awards a university reserves for its own citizens are
+                        # not read for someone who is not one. Run 36: UBC spent
+                        # its last 30 s on eight Canadian-students award pages.
+                        for link in [x for x in links if _DOMESTIC_ONLY.search(x)]:
+                            links.remove(link)
+                            out.page_outcomes.append(
+                                PageOutcome(
+                                    url=link,
+                                    category="classifier-rejected",
+                                    detail="for domestic students only; not read for an "
+                                    "international applicant",
+                                )
+                            )
+                    if links:
+                        linked_an_award = True
+                    elif url == primary:
+                        out.errors.append(
+                            f"{url}: no individual award pages were linked, so no award "
+                            "can be verified in detail."
+                        )
+                    # Every index shares one award budget, ranked together: NTU's
+                    # bursaries index was read first and its 21 links took all
+                    # twelve slots, so the scholarships index's Nanyang link was
+                    # never read (run 57). Awards named as scholarships go first.
+                    pending = [q for q in queue if q[1] > 0]
+                    kept = [q for q in queue if q[1] == 0]
+                    known = {_page_key(q[0]) for q in pending}
+                    pending += [(link, depth + 1) for link in links if _page_key(link) not in known]
+                    pending.sort(key=lambda q: _award_priority(q[0]))
+                    room = max(_MAX_AWARD_PAGES - len(scholarships), 0)
+                    queue[:] = kept + pending[:room]
+                    queued = sum(1 for link in links if any(q[0] == link for q in queue))
+                    out.page_outcomes.append(
+                        PageOutcome(
+                            url=url,
+                            category="fetched-ok",
+                            page_type=page_type,
+                            detail=(
+                                f"read as a funding index; {len(links)} award links, "
+                                f"{queued} queued within the award budget"
+                            ),
+                        )
+                    )
+                elif is_index:
+                    # An index this deep is a site map, not a funding route.
+                    out.errors.append(
+                        f"{url}: classified as {classification.page_type.value}; not followed, "
+                        f"because {_MAX_INDEX_PAGES} index pages have already been read."
+                    )
+                    out.page_outcomes.append(
+                        PageOutcome(
+                            url=url,
+                            category="classifier-rejected",
+                            page_type=page_type,
+                            detail="index page beyond the index budget; not followed",
+                        )
+                    )
+                elif classification.page_type is PageType.SCHOLARSHIP_AWARD:
+                    sch, claims = self._parse_award(
+                        candidate,
+                        program,
+                        url,
+                        page.text,
+                        page.fetched_at,
+                        classification,
+                        index=len(scholarships),
+                    )
+                    scholarships.append(sch)
+                    out.claims.extend(claims)
+                    out.page_outcomes.append(
+                        PageOutcome(
+                            url=url,
+                            category="fetched-ok" if claims else "no-pattern-match",
+                            page_type=page_type,
+                            detail=f"award page; {len(claims)} claims read",
+                        )
+                    )
+                else:
+                    # An FAQ or a navigation page is not an award. This is what
+                    # turned "Scholarships", "Practical matters" and "Prizes
+                    # and awards" into three separate scholarships.
+                    out.errors.append(
+                        f"{url}: classified as {classification.page_type.value}, not an award page; "
+                        "no scholarship recorded."
+                    )
+                    out.page_outcomes.append(
+                        PageOutcome(
+                            url=url,
+                            category="classifier-rejected",
+                            page_type=page_type,
+                            detail=(
+                                "not an award page; no scholarship recorded "
+                                f"({_award_link_summary(page.text, url)})"
+                            ),
+                        )
+                    )
+
+            if (
+                not queue
+                and not linked_an_award
+                and not fallback_used
+                and program.url
+                and _page_key(program.url) not in seen_pages
+            ):
+                # The index existed and named no award. The programme page is
+                # the one other generator already in hand, so it is worth a
+                # fetch here and nowhere else.
+                fallback_used = True
+                queue.append((program.url, 0))
+
         return scholarships, out
 
     def _parse_award(
@@ -158,7 +382,7 @@ class WebScholarshipAdapter:
         classification,
         index: int,
     ) -> tuple[Scholarship, list]:
-        soup = BeautifulSoup(html, "lxml")
+        soup = parse_html(html)
         text = readable_text(html)
         low = text.lower()
         title = html_title(html)
@@ -184,6 +408,10 @@ class WebScholarshipAdapter:
             # requirements prose does, and an award claimed for the wrong one
             # is the most expensive wrong answer this product can give.
             scope=read_scope(text, title=title),
+            # The verifier's context (adversarial review, 2026-09-25): without
+            # it the verbatim and domain checks were skipped.
+            page_text=text,
+            allowed_domains=verification_domains(url, candidate.domain),
         )
         _plain_add = builder.add
 
@@ -248,6 +476,19 @@ class WebScholarshipAdapter:
                 notes="Award size is not published; it cannot be entered into the gap arithmetic.",
             )
 
+        # --- living allowance and duration in words ----------------------
+        living = _living_allowance(text)
+        if living is not None:
+            value, quote = living
+            builder.add(ClaimType.SCHOLARSHIP_LIVING_ALLOWANCE, value, quote)
+        normal = _NORMAL_DURATION.search(text)
+        if normal:
+            builder.add(
+                ClaimType.SCHOLARSHIP_DURATION,
+                "normal_programme_duration",
+                _excerpt(text, normal.start()),
+            )
+
         # --- coverage table (the only route to FULL_RIDE_CONFIRMED) -----
         sch.coverage, coverage_quote = _coverage_from_tables(soup)
         if sch.coverage:
@@ -269,6 +510,15 @@ class WebScholarshipAdapter:
         sch.opportunity_exists = True
 
         cit = re.search(r"open only to citizens of ([^.]+)\.", text, re.IGNORECASE)
+        open_to_all = _ALL_NATIONALITIES.search(text)
+        if open_to_all and not cit:
+            # The page's own statement that no citizenship is excluded.
+            builder.add(
+                ClaimType.SCHOLARSHIP_CITIZENSHIP_RESTRICTION,
+                "all",
+                _excerpt(text, open_to_all.start()),
+                confidence=0.9,
+            )
         if cit:
             sch.citizenship_restrictions = [
                 p.strip() for p in re.split(r",| and ", cit.group(1)) if p.strip()
@@ -278,6 +528,26 @@ class WebScholarshipAdapter:
                 sch.citizenship_restrictions,
                 _excerpt(text, cit.start()),
                 confidence=0.9,
+            )
+
+        faculty = _restricted_to(text, _FACULTY_RESTRICTION)
+        if faculty:
+            sch.faculty_restrictions = [faculty.group("subject").strip()]
+            builder.add(
+                ClaimType.SCHOLARSHIP_PROGRAM_RESTRICTION,
+                {"faculty": sch.faculty_restrictions[0]},
+                _excerpt(text, faculty.start()),
+                confidence=0.85,
+            )
+
+        programme = _restricted_to(text, _PROGRAMME_RESTRICTION)
+        if programme:
+            sch.program_restrictions = [programme.group("subject").strip()]
+            builder.add(
+                ClaimType.SCHOLARSHIP_PROGRAM_RESTRICTION,
+                {"programme": sch.program_restrictions[0]},
+                _excerpt(text, programme.start()),
+                confidence=0.85,
             )
 
         # A restriction list is not itself an answer about international
@@ -342,6 +612,13 @@ class WebScholarshipAdapter:
                 )
 
         # --- renewal ------------------------------------------------------
+        # A retention condition stated with its scale and review period is a
+        # renewal requirement whether or not the page says "renewable".
+        retention = _renewal_condition(text)
+        if retention is not None:
+            value, quote = retention
+            sch.renewal_requirements.append(quote)
+            builder.add(ClaimType.SCHOLARSHIP_RENEWAL_REQUIREMENT, value, quote)
         if "not renewable" in low or "one-time award" in low:
             sch.renewable = False
             builder.add(ClaimType.SCHOLARSHIP_RENEWABLE, False, _line_with(text, "renewable"))
@@ -357,6 +634,8 @@ class WebScholarshipAdapter:
                 )
             builder.add(ClaimType.SCHOLARSHIP_RENEWABLE, True, _line_with(text, "renewable"))
             for phrase in ("maintain", "remain in the top", "complete at least"):
+                if retention is not None:
+                    break
                 line = _line_with(text, phrase)
                 if line:
                     sch.renewal_requirements.append(line.strip())
@@ -375,6 +654,33 @@ class WebScholarshipAdapter:
                 _line_with(text, "combined") or _line_with(text, "held together"),
             )
 
+        # --- offer required, and need-based ------------------------------
+        # Both are decisions the guide lists separately, and both are refused
+        # unless the page says so outright: an applicant who assumes an offer
+        # is needed applies too late, and one who assumes it is not may never
+        # apply at all.
+        if _OFFER_REQUIRED.search(low):
+            sch.offer_required = "yes"
+        elif _OFFER_NOT_REQUIRED.search(low):
+            sch.offer_required = "no"
+        if sch.offer_required != "unknown":
+            builder.add(
+                ClaimType.SCHOLARSHIP_OFFER_REQUIRED,
+                sch.offer_required,
+                _line_with(text, "offer") or _line_with(text, "admitted"),
+            )
+
+        if _NEED_BASED.search(low):
+            sch.financial_need_required = "yes"
+        elif _MERIT_ONLY.search(low):
+            sch.financial_need_required = "no"
+        if sch.financial_need_required != "unknown":
+            builder.add(
+                ClaimType.SCHOLARSHIP_NEED_BASED,
+                sch.financial_need_required,
+                _line_with(text, "need") or _line_with(text, "merit"),
+            )
+
         cnt = re.search(r"(\d+)\s+awards? are offered", low)
         if cnt:
             sch.published_count = int(cnt.group(1))
@@ -388,6 +694,15 @@ class WebScholarshipAdapter:
                 {score.group(1): float(score.group(2))},
                 _excerpt(text, score.start()),
             )
+
+        # Is the award on offer at all? Read here, where the page and the
+        # builder are, and before the roll-up that consumes it: a withdrawn
+        # award needs no eligibility assessment.
+        withdrawn = _line_matching(text, _AWARD_WITHDRAWN)
+        if withdrawn:
+            sch.currently_available = "no"
+            sch.award_current_for_intake = "no"
+            builder.add(ClaimType.SCHOLARSHIP_EXISTS, False, withdrawn, confidence=0.7)
 
         self._derive_availability(sch)
         sch.claim_ids = [c.source_url for c in builder.claims]
@@ -413,20 +728,36 @@ class WebScholarshipAdapter:
 
         if sch.degree_applicability == "no" or sch.international_eligible == "no":
             sch.applicant_eligible = "no"
-        elif sch.degree_applicability == "yes" and sch.international_eligible == "yes":
+        elif (
+            sch.degree_applicability == "yes"
+            and sch.international_eligible == "yes"
+            # A faculty or programme restriction the page states but does not
+            # settle for this programme is an open question, and an open
+            # question is never a yes.
+            and not sch.faculty_restrictions
+            and not sch.program_restrictions
+        ):
             sch.applicant_eligible = "yes"
         else:
             sch.applicant_eligible = "unknown"
 
-        if sch.applicant_eligible == "no" or sch.application_window_open == "no":
-            sch.available_this_intake = "no"
-        elif sch.applicant_eligible == "yes" and sch.application_window_open == "yes":
-            sch.available_this_intake = "yes"
-        else:
-            sch.available_this_intake = "unknown"
+        sch.available_this_intake = roll_up_availability(
+            opportunity_exists=sch.opportunity_exists,
+            applicant_eligible=sch.applicant_eligible,
+            application_window_open=sch.application_window_open,
+            award_current_for_intake=sch.award_current_for_intake,
+        )
 
 
 #: A link worth following from a funding index page.
+#: How many award pages one candidate may cost. Unchanged from when a single
+#: index supplied them all; the walk below shares this budget rather than
+#: giving each index its own.
+_MAX_AWARD_PAGES = 12
+#: Including the first one. An index behind an index behind an index is a
+#: site map, not a funding route.
+_MAX_INDEX_PAGES = 3
+
 _AWARD_HINTS = (
     "scholarship",
     "grant",
@@ -456,6 +787,197 @@ _NAV_NOISE = (
 )
 
 
+#: "open to students in the Faculty of Engineering" and its neighbours. The
+#: subject is captured as the page wrote it: this is evidence, not a lookup,
+#: and a faculty name normalised by us is no longer the page's statement.
+_FACULTY_RESTRICTION = re.compile(
+    r"\b(?:open (?:only )?to|restricted to|available (?:only )?to|limited to)\b"
+    r"[^.]{0,60}?\b(?:students?|applicants?)?[^.]{0,20}?"
+    r"\b(?:in|of|from|within|enrolled in)\b\s+"
+    r"(?P<subject>(?:the\s+)?(?:faculty|school|college|department)\s+of\s+[A-Z][^.,;]{2,60})",
+    re.IGNORECASE,
+)
+#: The same shape, for a named programme rather than a faculty.
+_PROGRAMME_RESTRICTION = re.compile(
+    r"\b(?:open (?:only )?to|restricted to|available (?:only )?to|limited to)\b"
+    r"[^.]{0,60}?\b(?:students?|applicants?)?[^.]{0,20}?"
+    r"\b(?:in|of|on|enrolled (?:in|on))\b\s+"
+    r"(?P<subject>(?:the\s+)?(?:B\.?Sc|B\.?A|M\.?Sc|M\.?A|Bachelor|Master)[^.,;]{2,70}"
+    r"\s+(?:programme|program|degree|course))",
+    re.IGNORECASE,
+)
+
+
+def _restricted_to(text: str, pattern: re.Pattern[str]) -> re.Match[str] | None:
+    """The page's own restriction sentence, or nothing.
+
+    Deliberately narrow. A restriction we invent excludes a real applicant
+    from real money, and a restriction we miss leaves an open question that
+    the applicant is told to ask — the two failures are not symmetrical.
+    """
+    return pattern.search(" ".join((text or "").split()))
+
+
+#: A path that says an award or list is for the university's own citizens.
+_DOMESTIC_ONLY = re.compile(r"/[\w-]*\b(?:domestic|canadian|home)-students?\b", re.IGNORECASE)
+
+
+def _is_international(profile, candidate) -> bool:
+    """Whether the applicant plainly holds no citizenship of the university's country.
+
+    Only a clear "no" from :func:`match_citizenship` counts; an unresolvable
+    pair (a code, an unknown spelling) keeps every page, so nothing an
+    applicant might qualify for is skipped on a guess.
+    """
+    from app.domain.citizenship import CitizenshipMatch, match_citizenship
+
+    context = getattr(profile, "context", None)
+    country = getattr(candidate, "country", "") or ""
+    if context is None or not country:
+        return False
+    held = [getattr(context, "citizenship", None), getattr(context, "second_citizenship", None)]
+    if any(h and len(h.strip()) <= 3 for h in held):
+        # An ISO code ("CA") is not a name the matcher can compare with
+        # "Canada"; a Canadian written that way must not lose Canadian awards.
+        return False
+    verdict, _ = match_citizenship([country], held)
+    return verdict is CitizenshipMatch.NOT_APPLICABLE
+
+
+#: "for the normal duration of the programme", "normal candidature",
+#: "the minimum duration of the course" — a duration stated as the
+#: programme's own length rather than a number of years.
+_NORMAL_DURATION = re.compile(
+    r"\b(?:normal|standard|minimum)\s+(?:(?:programme|program|course|degree)\s+)?"
+    r"(?:candidature|duration|length|period)"
+    r"(?:\s+of\s+(?:the|their|your|his|her)?\s*(?:programme|program|course|study|studies|degree))?",
+    re.IGNORECASE,
+)
+_LIVING_LINE = re.compile(
+    r"[^.\n]*\b(?:living|maintenance|subsistence)\s+(?:allowance|stipend|subsidy)[^.\n]*",
+    re.IGNORECASE,
+)
+_PER_YEAR = re.compile(
+    r"\b(?:per|a|each)\s+(?:academic\s+)?(?:year|annum)\b|\bannual(?:ly)?\b", re.I
+)
+_PER_MONTH = re.compile(r"\b(?:per|a|each)\s+month\b|\bmonthly\b", re.I)
+
+
+_ALL_NATIONALITIES = re.compile(
+    r"\bopen to (?:applicants of |students of )?all nationalities\b", re.I
+)
+_RETENTION_GPA = re.compile(
+    r"(?:minimum|at least)\s+(?:a\s+)?(?:cumulative\s+)?(?:grade point average|c?gpa)"
+    r"(?:\s*\((?:c?gpa)\))?\s+of\s+(\d+(?:\.\d+)?)\s+(?:over|out of)\s+(\d+(?:\.\d+)?)",
+    re.I,
+)
+_REVIEW_PERIOD = (
+    (re.compile(r"reviewed\s+(?:every|each)\s+semester", re.I), "each_semester"),
+    (
+        re.compile(r"reviewed\s+(?:every|each)\s+(?:academic\s+)?year|reviewed\s+annually", re.I),
+        "each_year",
+    ),
+)
+
+
+def _renewal_condition(text: str) -> tuple[dict[str, object], str] | None:
+    """A minimum grade to keep the award, on its stated scale, or nothing.
+
+    The scale must be on the page ("3.5 over 5.0"): a bare 3.5 means nothing
+    to an applicant whose grades are on another scale. The review period is
+    added only when the page states it.
+    """
+    match = _RETENTION_GPA.search(text)
+    if match is None:
+        return None
+    value: dict[str, object] = {
+        "cgpa_gte": float(match.group(1)),
+        "scale": float(match.group(2)),
+    }
+    quote = _excerpt(text, match.start())
+    for pattern, period in _REVIEW_PERIOD:
+        review = pattern.search(text)
+        if review is not None:
+            value["review"] = period
+            break
+    return value, quote
+
+
+def _living_allowance(text: str) -> tuple[dict[str, object], str] | None:
+    """A living allowance with its amount, currency and period, or nothing.
+
+    All three must be on the page's own line: an amount without a period is
+    not an allowance anyone can plan with, so none is invented.
+    """
+    for match in _LIVING_LINE.finditer(text):
+        line = match.group(0).strip()
+        money = parse_money(line)
+        if not money:
+            continue
+        if _PER_MONTH.search(line):
+            period = "month"
+        elif _PER_YEAR.search(line):
+            period = "academic_year"
+        else:
+            continue
+        amount, currency = money
+        # S$6,500 is a whole amount; 6500.0 would not equal the page's figure
+        # anywhere a value is compared as written.
+        if float(amount).is_integer():
+            amount = int(amount)
+        return {"currency": currency, "amount": amount, "period": period}, line
+    return None
+
+
+#: Pages about an award rather than one award, or awards for someone else:
+#: FAQs, graduate study, enrolled students, exchanges and teaching prizes.
+#: Run 59: NTU's twelve award slots went to these, Nanyang Scholarship unread.
+_OFF_TARGET_AWARD = re.compile(
+    r"faqs?\b|/(post)?graduate/|(?<!under)graduate-|current-students?|student-exchanges?|"
+    r"inbound|teaching|/education/|diploma|staff|innovat|research|fellow|seed-?fund|"
+    r"grants-funding|accolade|life-at",
+    re.I,
+)
+
+
+#: How many award links under a page's own path make it a list of awards.
+_CHILD_AWARDS_FOR_INDEX = 3
+
+
+def _lists_awards_below(html: str, url: str) -> bool:
+    """True when the page links at least three awards filed beneath its own path."""
+    own = re.sub(r"(/index)?\.html?$", "", urlparse(url).path.rstrip("/").lower()) + "/"
+    below = [
+        link for link in _award_links(html, url) if urlparse(link).path.lower().startswith(own)
+    ]
+    return len(below) >= _CHILD_AWARDS_FOR_INDEX
+
+
+def _award_link_summary(html: str, url: str) -> str:
+    """How many award links a rejected page carries, and a few of them.
+
+    Run 61: NTU's /scholarships/freshmen stayed rejected and nothing said what
+    it linked, so the next fix would have been a guess.
+    """
+    links = _award_links(html, url)
+    own = re.sub(r"(/index)?\.html?$", "", urlparse(url).path.rstrip("/").lower()) + "/"
+    below = sum(1 for link in links if urlparse(link).path.lower().startswith(own))
+    sample = ", ".join(urlparse(link).path for link in links[:4])
+    return f"{len(links)} award links, {below} below it: {sample}"
+
+
+def _award_priority(url: str) -> tuple[int, int]:
+    """Lower reads first: a named scholarship, then awards, then need-based aid;
+    within each, a page for an incoming applicant before one for someone else."""
+    path = urlparse(url).path.lower()
+    off_target = 1 if _OFF_TARGET_AWARD.search(path) else 0
+    if "scholarship" in path:
+        return (off_target, 0)
+    if re.search(r"bursar|financial-?aid|loan|hardship", path):
+        return (off_target, 2)
+    return (off_target, 1)
+
+
 def _award_links(html: str, base: str) -> list[str]:
     """Links from a funding index page that plausibly describe one award.
 
@@ -463,7 +985,7 @@ def _award_links(html: str, base: str) -> list[str]:
     "Menu główne" and "Skip to main content" into scholarships, so a link now
     has to look like an award in its text or its path to be followed.
     """
-    soup = BeautifulSoup(html, "lxml")
+    soup = parse_html(html)
     seen: set[str] = set()
     out: list[str] = []
     base_host = urlparse(base).netloc
@@ -500,7 +1022,28 @@ def _award_links(html: str, base: str) -> list[str]:
 
         seen.add(url)
         out.append(url)
-    return out[:12]
+    return out
+
+
+_LOCALE_SEGMENT = re.compile(
+    r"^(?:zh(?:-han[st]|-cn|-tw|-hk)?|ko|ja|fr|de|es|it|nl|fi|sv|pl|pt|ru|ar|tr|vi|th|id|ms)$",
+    re.IGNORECASE,
+)
+
+
+def _without_locale(key: str) -> str:
+    """``/zh-hant/fees/x`` and ``/fees/x`` are one page in two languages."""
+    parts = urlsplit(key)
+    segments = parts.path.split("/")
+    if len(segments) > 2 and _LOCALE_SEGMENT.match(segments[1]):
+        path = "/" + "/".join(segments[2:])
+        return urlunsplit((parts.scheme, parts.netloc, path, parts.query, ""))
+    return key
+
+
+def _page_key(url: str) -> str:
+    """One page, one identity — a fragment and a trailing slash are neither."""
+    return url.split("#")[0].rstrip("/")
 
 
 def _coverage_from_tables(soup: BeautifulSoup) -> tuple[list[CoverageBreakdown], str]:
@@ -550,6 +1093,18 @@ def _first_sentence_with(text: str, needle: str) -> str:
     end = flat.find(".", index + len(needle))
     end = len(flat) if end < 0 else end + 1
     return flat[start:end].strip()[:400]
+
+
+def _line_matching(text: str, pattern: re.Pattern[str]) -> str:
+    """The first line a pattern matches, as the evidence for a claim.
+
+    Sibling of ``_line_with``: a claim must quote the page, and a regex-shaped
+    question needs a regex-shaped lookup rather than a second substring.
+    """
+    for line in text.splitlines():
+        if pattern.search(line):
+            return line.strip()[:300]
+    return ""
 
 
 def _line_with(text: str, needle: str) -> str:

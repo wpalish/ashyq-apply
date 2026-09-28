@@ -18,6 +18,7 @@ can explain cannot be debugged against a benchmark: "recall went from 1/10 to
 
 from __future__ import annotations
 
+import logging
 import math
 import re
 from collections.abc import Awaitable, Callable, Mapping, Sequence
@@ -41,6 +42,10 @@ from app.adapters.search.prefilter import PrefilterOutcome, prefilter
 #: A hop is a supplement to search, not a crawl: each one costs a fetch, and
 #: the entry point search is surest about is the one worth opening.
 DEFAULT_HOP_ENTRY_POINTS = 3
+#: Experiment ER-06, off until a paired capture says otherwise: search results
+#: on mirror, repository, journal or course-archive hosts are dropped before
+#: ranking. The benchmark harness flips it per capture.
+REJECT_ARCHIVE_HOSTS = False
 
 #: Standard BM25 constants. k1 bounds how much repeating a term helps; b is how
 #: strongly a long document is penalised. Not tuned — tuning them without a
@@ -74,6 +79,9 @@ _WANTED_PAGE_KINDS = frozenset(
     }
 )
 _UNWANTED_PAGE_KINDS = frozenset({PageType.NEWS, PageType.NAVIGATION, PageType.IRRELEVANT})
+
+
+log = logging.getLogger("unimatch.search.retrieval")
 
 
 def tokenize(text: str) -> list[str]:
@@ -377,7 +385,10 @@ async def discover_candidates(
                 domains=[intent.domain],
                 max_results=max_results_per_query,
             )
-        except SearchUnavailable:
+        except SearchUnavailable as exc:
+            # The reason, not only the count: "offered: none" on every case
+            # in run 47 could be a refused key, a quota or an empty index.
+            log.warning("search query failed (%s): %s", query.family, exc)
             failed.append(query.family)
             continue
         results.extend(response.results)
@@ -386,7 +397,12 @@ async def discover_candidates(
             if query.family not in seen_families:
                 seen_families.append(query.family)
 
-    outcome = prefilter(results, domain=intent.domain, degree=intent.degree)
+    outcome = prefilter(
+        results,
+        domain=intent.domain,
+        degree=intent.degree,
+        reject_archive_hosts=REJECT_ARCHIVE_HOSTS,
+    )
     ranked = rank_candidates(
         outcome, intent, found_by={url: tuple(f) for url, f in families.items()}
     )

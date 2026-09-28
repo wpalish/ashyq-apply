@@ -19,7 +19,9 @@ The frozen walker outcome vocabulary (T29 contract): the fetch layer reports
 with ``FetchOutcome.value`` verbatim; the walker layer uses ``program_detail``,
 ``intake_specific_program``, ``not_program_catalog``, ``reads_as_<page_type>``,
 ``degree_level_mismatch``, ``field_mismatch``, ``off_domain``, ``short_label``,
-``excluded_url``, ``walker_budget_exhausted`` and ``js_no_program_list``.
+``excluded_url``, ``walker_budget_exhausted`` and ``js_no_program_list``; and,
+since 2026-09-23, ``walker_no_signal`` for a link off the catalogue's own host
+that carries no programme signal at all, which is recorded and not read.
 """
 
 from __future__ import annotations
@@ -32,14 +34,13 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from urllib.parse import urljoin, urlparse
 
-from bs4 import BeautifulSoup
-
 from app.adapters.browser import BrowserFetcher
 from app.adapters.discovery.live_discovery import (
     _DEGREE_SLUGS,
     _URL_EXCLUSIONS,
     MAX_LINKS_SCANNED,
     canonical_url,
+    looks_like_catalogue,
     matches_degree,
     matches_field,
     matches_field_text,
@@ -49,6 +50,7 @@ from app.adapters.discovery.live_discovery import (
     same_institution,
 )
 from app.adapters.fetching import Fetcher, FetchResult
+from app.adapters.html_parse import parse_html
 from app.adapters.page_classifier import (
     PageClassification,
     PageType,
@@ -64,6 +66,15 @@ WALKER_TOP_N = 20
 
 #: Catalogues walked per institution, in discovery's own order of preference.
 WALKER_MAX_CATALOGS = 2
+#: Sub-catalogues the walk may descend into, found as leads of a catalogue.
+#: Two: Groningen's "Bachelor's degrees" is itself an index (A-Z, by subject,
+#: in English) and only the level below names the programmes (run 44).
+WALKER_MAX_DESCENTS = 2
+#: Descents per institution across every chain, so a walk stays bounded.
+WALKER_MAX_DESCENT_READS = 3
+#: Leads read in a descended sub-list. The applicant's own programme scores
+#: first there; twenty more reads spent UBC's and HKU's page budget (run 41).
+WALKER_DESCENT_TOP_N = 5
 
 #: A label shorter than this cannot say which programme it leads to. "Ask us"
 #: and "Learn more" are furniture, not leads.
@@ -176,7 +187,7 @@ def extract_links(
     institution's domain are reported through ``drops`` (as ``(url, reason)``
     pairs) so the walk can explain them instead of silently losing them.
     """
-    soup = BeautifulSoup(html, "lxml")
+    soup = parse_html(html)
     out: list[WalkerLink] = []
     seen: set[str] = set()
     for anchor in soup.find_all("a", href=True)[:MAX_LINKS_SCANNED]:
@@ -290,8 +301,29 @@ def score_link(url: str, label: str, degree: str, fields: list[str]) -> int | No
     return score
 
 
+def _host(url: str) -> str:
+    return urlparse(url).netloc.lower()
+
+
 def _parent_directory(url: str) -> str:
-    return (urlparse(url).path or "").rsplit("/", 1)[0]
+    """The list a link sits in: its host and the path above it.
+
+    The host is part of it, and a site root is in no list at all. Vienna's
+    catalogue footer links moodle, wiki, webmail and the library — each the
+    root of a different subdomain — and grouping them by path alone made them
+    "siblings" of one repeating list, so each earned the list bonus and was
+    read as a programme lead before search had started.
+    """
+    parsed = urlparse(url)
+    path = (parsed.path or "").rstrip("/")
+    parent = path.rsplit("/", 1)[0] if path else ""
+    if not parent:
+        # A page one level below the root sits in the site's menu, not in a
+        # list: UBC's JS catalogue at /programs shows only that menu in its
+        # HTML, and "Canadian students", "Contact us" and "Tours and events"
+        # each earned the list bonus and a read (run 68).
+        return ""
+    return f"{parsed.netloc.lower()}{parent}"
 
 
 def _drop_outcome(url: str, label: str) -> str:
@@ -302,6 +334,38 @@ def _drop_outcome(url: str, label: str) -> str:
     if _URL_EXCLUSIONS.search(urlparse(url).path or ""):
         return "excluded_url"
     return "degree_level_mismatch"
+
+
+def _without_query(url: str) -> str:
+    """A page without its query: ``/bachelors?lang=nl`` is ``/bachelors``."""
+    parsed = urlparse(url)
+    return f"{parsed.netloc.lower()}{(parsed.path or '/').rstrip('/')}"
+
+
+def _descent_lead(walk: CatalogWalk, seen: set[str]) -> str | None:
+    """The list one level down that this walk offered, strongest first.
+
+    A lead that reads as a catalogue, or whose URL names a list, comes first.
+    Failing that, a page directly below the catalogue it was found on that
+    was read and was not this applicant's programme: Groningen's
+    "Bachelor's degrees" offers ``/bachelors/alphabet``, whose title reads as
+    one page and whose body lists every programme (run 45). A language copy
+    of a page already walked (``?lang=nl``) is never a new list.
+    """
+    read = [
+        (url, outcome)
+        for url, outcome in walk.outcomes
+        if outcome.startswith("reads_as_") and _without_query(url) not in seen
+    ]
+    for url, outcome in read:
+        if outcome == f"reads_as_{PageType.PROGRAM_CATALOG.value}" or looks_like_catalogue(url):
+            return url
+    parent = _without_query(walk.catalogue_url) + "/"
+    for url, _outcome in read:
+        page = _without_query(url)
+        if page.startswith(parent) and "/" not in page[len(parent) :]:
+            return url
+    return None
 
 
 class CatalogRenderer(BrowserFetcher):
@@ -358,9 +422,16 @@ class CatalogWalker:
     async def walk(self, catalogue_urls: list[str]) -> list[CatalogWalk]:
         """Walk at most :data:`WALKER_MAX_CATALOGS` catalogues, in order given."""
         walks: list[CatalogWalk] = []
-        for catalogue_url in catalogue_urls[:WALKER_MAX_CATALOGS]:
+        # (url, depth): depth 0 is a catalogue discovery chose; each descent
+        # is one level deeper, bounded per chain and in total.
+        queue: list[tuple[str, int]] = [(u, 0) for u in catalogue_urls[:WALKER_MAX_CATALOGS]]
+        seen = {_without_query(u) for u, _ in queue}
+        descents = 0
+        while queue:
+            catalogue_url, depth = queue.pop(0)
+            top_n = WALKER_TOP_N if depth == 0 else WALKER_DESCENT_TOP_N
             try:
-                walks.append(await self.walk_catalog(catalogue_url))
+                walk = await self.walk_catalog(catalogue_url, top_n=top_n)
             except Exception as exc:  # one broken catalogue must not end discovery
                 log.warning(
                     "catalog walk of %s failed: %s: %s",
@@ -368,9 +439,36 @@ class CatalogWalker:
                     type(exc).__name__,
                     exc,
                 )
+                continue
+            walks.append(walk)
+            if walk.confirmed:
+                # The applicant's programme is found; the other catalogues are
+                # further reads for nothing. Run 64: Groningen confirmed
+                # Computing Science at t=53s, then walked science-shops and the
+                # faculty pages until its clock ran out and it filed nothing.
+                break
+            if (
+                walk.confirmed
+                or depth >= WALKER_MAX_DESCENTS
+                or descents >= WALKER_MAX_DESCENT_READS
+            ):
+                continue
+            # A lead that reads as a catalogue is the list one level down:
+            # Vienna's "Degree programmes" leads to "Bachelor/diploma
+            # programmes", and only that page names Computer Science. It was
+            # the walk's strongest lead and was dropped as "not a programme"
+            # (its title reads as one programme's name, so the classifier's
+            # verdict alone is not enough; the URL naming a list is).
+            child = _descent_lead(walk, seen)
+            if child is not None:
+                seen.add(_without_query(child))
+                # Deeper first: the list below this one is a more specific
+                # lead than another top-level catalogue.
+                queue.insert(0, (child, depth + 1))
+                descents += 1
         return walks
 
-    async def walk_catalog(self, catalogue_url: str) -> CatalogWalk:
+    async def walk_catalog(self, catalogue_url: str, top_n: int = WALKER_TOP_N) -> CatalogWalk:
         """Read one catalogue page and fetch its strongest leads.
 
         The rendered DOM is the truth when a renderer is attached (an HTTP
@@ -408,18 +506,40 @@ class CatalogWalker:
             walk.outcomes.append((catalogue_url, "js_no_program_list"))
             return walk
 
-        scored = self._score(list(candidates.values()), walk.outcomes)
+        scored = self._score(
+            list(candidates.values()),
+            walk.outcomes,
+            _host(catalogue_url),
+            site_root=urlparse(catalogue_url).path in ("", "/"),
+        )
         walk.candidates = scored
 
-        budget = scored[:WALKER_TOP_N]
-        for link in scored[WALKER_TOP_N:]:
+        if scored and max(link.score for link in scored) <= 0:
+            # Not one link on it says programme: a page whose HTML is only the
+            # site's navigation (UBC's JS catalogue at /programs) is not a list
+            # to walk. Run 70: reading its second-level menu cost UBC 50 s,
+            # and search, which runs after the walk, found the programme late.
+            for link in scored:
+                walk.outcomes.append((link.url, "walker_no_signal"))
+            walk.outcomes.append((catalogue_url, "js_no_program_list"))
+            return walk
+
+        budget = scored[:top_n]
+        for link in scored[top_n:]:
             walk.outcomes.append((link.url, "walker_budget_exhausted"))
 
         for link in budget:
             await self._read_lead(link, walk)
         return walk
 
-    def _score(self, links: list[WalkerLink], outcomes: list[tuple[str, str]]) -> list[WalkerLink]:
+    def _score(
+        self,
+        links: list[WalkerLink],
+        outcomes: list[tuple[str, str]],
+        catalogue_host: str = "",
+        *,
+        site_root: bool = False,
+    ) -> list[WalkerLink]:
         """Apply the frozen scorer plus the repeating-list bonus, strongest first."""
         siblings = Counter(_parent_directory(link.url) for link in links)
         scored: list[WalkerLink] = []
@@ -428,7 +548,27 @@ class CatalogWalker:
             if base is None:
                 outcomes.append((link.url, _drop_outcome(link.url, link.label)))
                 continue
-            repeating = siblings[_parent_directory(link.url)] >= REPEATING_LIST_MIN_SIBLINGS
+            parent = _parent_directory(link.url)
+            repeating = bool(parent) and siblings[parent] >= REPEATING_LIST_MIN_SIBLINGS
+            # On a home page every menu link shares the root as its parent, so
+            # "repeating" there is the menu itself, not a programme list
+            # (run 67: the site-root rule alone let UBC's menu through).
+            menu_item = not parent
+            if base <= 0 and (
+                site_root or menu_item or (not repeating and _host(link.url) != catalogue_host)
+            ):
+                # Nothing about it says programme, and it leaves the catalogue's
+                # own site: moodle, the wiki, webmail, the library. The T29
+                # contract reads a signal-less lead on the catalogue's site and
+                # records what it was; a link out of that site with no signal
+                # is furniture, and reading it spent Vienna's budget before
+                # search had started.
+                # A site's home page is not a catalogue either: its links are
+                # the site's menu. Run 66: UBC's walk of you.ubc.ca read
+                # "Indigenous", "Contact us" and the CLF terms page, 40 s of
+                # its clock, before search had started.
+                outcomes.append((link.url, "walker_no_signal"))
+                continue
             walk = WalkerLink(
                 url=link.url,
                 label=link.label,
@@ -450,10 +590,15 @@ class CatalogWalker:
             walk.outcomes.append((link.url, result.outcome.value))
             return
         assert page is not None
-        # The walker asks what the confirm stage asks, minus the subject
-        # refinement: a catalogue's own list is the university's statement of
-        # what it offers, and subject fit is judged downstream per programme.
-        reason = profile_rejects(page, self.degree, [])
+        # The walker asks exactly what the confirm stage asks, subject
+        # included. It used to pass no fields — trusting a catalogue's own
+        # list as the university's statement of what it offers — and that
+        # kept a BSc Mathematics for a computer-science applicant, which
+        # `test_r5_js_json_payload_yields_programs` encoded. One predicate for
+        # every stage is what the owner settled on 2026-09-22: a university
+        # listing a programme says the programme exists, not that it is the
+        # one this applicant asked about.
+        reason = profile_rejects(page, self.degree, self.fields)
         if reason is not None:
             mismatch = page.degree_level and page.degree_level != self.degree
             walk.outcomes.append(

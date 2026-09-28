@@ -17,21 +17,33 @@ import re
 from dataclasses import dataclass
 
 from app.adapters.base import AdapterResult, Candidate, CandidateProgram, PageOutcome
+from app.adapters.discovery.live_discovery import matches_field_text
+from app.adapters.document_ir import build_document_ir
 from app.adapters.extraction import (
     ClaimBuilder,
     excerpt_around,
+    extract_admission_route,
     extract_requirements,
     for_matching,
     html_title,
     is_official_domain,
     pdf_to_text,
     readable_text,
+    verification_domains,
 )
 from app.adapters.fetching import Fetcher
-from app.adapters.matching import program_matches
-from app.adapters.page_classifier import PageType, classify_page
+from app.adapters.matching import degree_matches, program_matches
+from app.adapters.page_classifier import (
+    PageType,
+    classify_page,
+    degree_level_of,
+    full_degree_titles,
+)
 from app.adapters.scope_reader import read_scope
+from app.adapters.search.ontology import titles_name_same_programme
+from app.adapters.structured_extraction import extract_table_requirements
 from app.domain.enums import ClaimType, FetchOutcome, SourceSpecificity
+from app.domain.programme_identity import Verdict
 
 #: An intake is open only when a page says so. Each pattern must capture the
 #: sentence it matched, which becomes the claim's excerpt.
@@ -59,6 +71,30 @@ _INTAKE_CLOSED_EVIDENCE = re.compile(
     r"|intake (?:is )?closed|not accepting applications)\b[^.]{0,80}\.",
     re.I,
 )
+#: A sentence that settles whether the English test can be skipped. Broad on
+#: purpose about *how* it is phrased and narrow about *what* it is about: the
+#: `_MENTIONS_ENGLISH` check below is what keeps a fee waiver out.
+_ENGLISH_WAIVER = re.compile(
+    r"[^.]*\b(exempt(?:ed|ions?)?|waive(?:d|s|r|rs)?|not required to (?:submit|provide|take)"
+    r"|do(?:es)? not need to (?:submit|provide|take))\b[^.]*\.",
+    re.IGNORECASE,
+)
+#: The denial, which must be its own pattern. Reusing the fee-waiver negation
+#: read "you do not need to submit IELTS if..." — a waiver in plain words — as
+#: a refusal of one, which is the most expensive way to be wrong here.
+_NO_ENGLISH_WAIVER = re.compile(
+    r"\bno\s+(?:waivers?|exemptions?)\b"
+    r"|\b(?:waivers?|exemptions?)\s+(?:are|is)\s+not\s+(?:granted|available|possible|offered)"
+    r"|\bcannot\s+be\s+waived\b"
+    r"|\bis\s+required\s+of\s+all\s+applicants\b",
+    re.IGNORECASE,
+)
+_MENTIONS_ENGLISH = re.compile(
+    r"\b(english|ielts|toefl|duolingo|pte|language (?:test|requirement|proficiency))\b",
+    re.IGNORECASE,
+)
+
+
 #: A "fee waiver" line only yields a claim when the page actually settles the
 #: question. Negation is positive evidence of absence and is claimed as False;
 #: a line that merely mentions waivers settles nothing — unknown stays
@@ -75,6 +111,34 @@ _WAIVER_OFFERED = re.compile(r"\b(available|offered|granted|waive[ds]?|waiving)\
 class _Target:
     url: str
     specificity: SourceSpecificity
+    #: Reached by following an English-requirement link from an official page.
+    language_follow: bool = False
+
+
+#: Language-requirement pages followed per programme, beyond the two targets.
+_MAX_LANGUAGE_FOLLOWS = 2
+_LANGUAGE_LINK = re.compile(
+    r"english[\s-]+(language|proficiency|competency|requirement)|language[\s-]+"
+    r"(requirement|proficiency|competency|admission)|\bielts\b",
+    re.I,
+)
+
+
+def _language_links(html: str, base: str, domain: str | None) -> list[str]:
+    """Official links on a page whose text or URL names an English requirement."""
+    if not domain:
+        return []
+    out: list[str] = []
+    for link in build_document_ir(html, base).links:
+        url = link.url.split("#")[0]
+        if not url.startswith(("https://", "http://", "fixture://")):
+            continue
+        if not (url.startswith("fixture://") or is_official_domain(url, [domain])):
+            continue
+        named = _LANGUAGE_LINK.search(link.text) or _LANGUAGE_LINK.search(url.replace("/", " "))
+        if named and url not in out and url.rstrip("/") != base.rstrip("/"):
+            out.append(url)
+    return out
 
 
 class WebRequirementsAdapter:
@@ -97,7 +161,11 @@ class WebRequirementsAdapter:
             if candidate.admissions_url
             else None,
         ]
-        for target in [t for t in targets if t]:
+        queue = [t for t in targets if t]
+        visited = {t.url for t in queue}
+        followed = 0
+        while queue:
+            target = queue.pop(0)
             res = await self.fetcher.get(target.url)
             out.pages_checked += 1
             if not res.ok:
@@ -136,25 +204,6 @@ class WebRequirementsAdapter:
             page = classify_page(url=target.url, html="" if res.is_pdf else res.text, text=text)
             out.page_types.append((target.url, page.page_type.value))
 
-            if not page.accepts("requirements"):
-                out.errors.append(
-                    f"{target.url}: classified as {page.page_type.value}; no requirement can be "
-                    "read from this kind of page."
-                )
-                out.page_outcomes.append(
-                    PageOutcome(
-                        url=target.url,
-                        category="classifier-rejected",
-                        page_type=page.page_type.value,
-                        readable_chars=len(text),
-                        detail=(
-                            f"classified as {page.page_type.value}; no requirement can be "
-                            "read from this kind of page."
-                        ),
-                    )
-                )
-                continue
-
             page_title = html_title(res.text) if not res.is_pdf else target.url.rsplit("/", 1)[-1]
             builder = ClaimBuilder(
                 source_url=target.url,
@@ -176,13 +225,114 @@ class WebRequirementsAdapter:
                 # answered, and recording the second as if it were the first
                 # is the whole of the wrong-scope failure.
                 scope=read_scope(text, title=page_title),
+                # The verifier's context: without it the verbatim, domain and
+                # page-type checks were silently skipped for every requirement
+                # claim (found in the owner's adversarial review, 2026-09-25).
+                page_text=text,
+                page_type=page.page_type.value,
+                allowed_domains=verification_domains(target.url, candidate.domain),
             )
+
+            if not page.accepts("requirements"):
+                # A catalogue listing confirms existence by the T29 contract
+                # (the university's own list); the verifier's page-type table
+                # admits existence only on programme pages, so that one check
+                # is lifted here while verbatim and domain still apply.
+                builder.page_type = None
+                if page.page_type in _LISTING_PAGE_TYPES and self._claim_listed_programme(
+                    program, builder, text
+                ):
+                    out.claims.extend(builder.claims)
+                    out.page_outcomes.append(
+                        PageOutcome(
+                            url=target.url,
+                            category="fetched-ok",
+                            page_type=page.page_type.value,
+                            readable_chars=len(text),
+                            detail="listing page: only the programme's existence was read",
+                        )
+                    )
+                    continue
+                if target.language_follow and not res.is_pdf:
+                    # The classifier's page type is a routing hint, not a permission
+                    # (both reviews, 2026-09-25): a page reached through an official
+                    # "English language requirements" link may state IELTS in a table
+                    # whatever type it reads as. Only the structural IELTS reader runs;
+                    # verbatim and domain checks still apply to what it reads.
+                    tabled = extract_table_requirements(
+                        build_document_ir(res.text, target.url), builder
+                    )
+                    if tabled:
+                        out.claims.extend(builder.claims)
+                        out.page_outcomes.append(
+                            PageOutcome(
+                                url=target.url,
+                                category="fetched-ok",
+                                page_type=page.page_type.value,
+                                readable_chars=len(text),
+                                detail=f"language page: {len(tabled)} claims read from its tables",
+                            )
+                        )
+                        continue
+                # An admission-route statement names admission itself ("admitted
+                # without a declared major"), so it is read from any official page;
+                # verbatim and domain checks still apply (KAIST's department page
+                # classifies as unknown and states the route, 2026-09-27 trace).
+                builder.page_type = None
+                if not res.is_pdf and extract_admission_route(text, builder):
+                    out.claims.extend(builder.claims)
+                    out.page_outcomes.append(
+                        PageOutcome(
+                            url=target.url,
+                            category="fetched-ok",
+                            page_type=page.page_type.value,
+                            readable_chars=len(text),
+                            detail="only the undergraduate admission route was read",
+                        )
+                    )
+                    continue
+                out.errors.append(
+                    f"{target.url}: classified as {page.page_type.value}; no requirement can be "
+                    "read from this kind of page."
+                )
+                out.page_outcomes.append(
+                    PageOutcome(
+                        url=target.url,
+                        category="classifier-rejected",
+                        page_type=page.page_type.value,
+                        readable_chars=len(text),
+                        detail=(
+                            f"classified as {page.page_type.value}; no requirement can be "
+                            "read from this kind of page. "
+                            # What the classifier saw, so a wrong call can be
+                            # diagnosed from a capture without the page itself.
+                            f"title={page.title[:80]!r} signals={'; '.join(page.signals[:3])!r} "
+                            f"chars={len(text)} degrees={full_degree_titles(text)[:3]!r}"
+                        ),
+                    )
+                )
+                continue
 
             self._claim_program_exists(page, program, builder, out, text)
             if page.accepts("requirements"):
+                # Structure first: a table row states the test, the column and the
+                # value together (V2-30C). A prose claim of a type the table
+                # already answered is dropped, so one page never states two
+                # IELTS minimums from two readings of itself.
+                tabled = (
+                    extract_table_requirements(build_document_ir(res.text, target.url), builder)
+                    if not res.is_pdf
+                    else []
+                )
+                before = len(builder.claims)
                 extract_requirements(text, builder)
+                answered = {c.claim_type for c in tabled}
+                builder.claims[before:] = [
+                    c for c in builder.claims[before:] if c.claim_type not in answered
+                ]
             self._claim_intake_state(page, text, intake, builder, out)
             self._claim_english_test_types(text, builder)
+            self._claim_english_waiver(text, builder)
             self._claim_fees(text, builder)
 
             out.claims.extend(builder.claims)
@@ -200,6 +350,24 @@ class WebRequirementsAdapter:
                     ),
                 )
             )
+            # The English requirement often lives on its own page that the
+            # programme or admissions page links to (UBC's English Language
+            # Admission Standard, Groningen's faculty language page). When no
+            # IELTS minimum has been read yet, follow at most
+            # _MAX_LANGUAGE_FOLLOWS such official links, once.
+            if (
+                followed < _MAX_LANGUAGE_FOLLOWS
+                and not res.is_pdf
+                and not any(c.claim_type is ClaimType.IELTS_MIN_OVERALL for c in out.claims)
+            ):
+                for url in _language_links(res.text, target.url, candidate.domain):
+                    if url in visited or followed >= _MAX_LANGUAGE_FOLLOWS:
+                        continue
+                    visited.add(url)
+                    followed += 1
+                    queue.append(
+                        _Target(url, SourceSpecificity.UNIVERSITY_ADMISSIONS, language_follow=True)
+                    )
 
         if not out.claims and out.pages_checked == 0:
             out.errors.append(
@@ -213,6 +381,10 @@ class WebRequirementsAdapter:
     def _claim_program_exists(self, page, program, builder, out, text: str) -> None:
         """Only a programme page whose own subject matches may confirm existence."""
         if not page.accepts("program_exists"):
+            if page.page_type in _LISTING_PAGE_TYPES and self._claim_listed_programme(
+                program, builder, text
+            ):
+                return
             out.errors.append(
                 f"{builder.meta['source_url']}: {page.page_type.value} pages cannot confirm that "
                 f"{program.name!r} exists."
@@ -226,6 +398,27 @@ class WebRequirementsAdapter:
             requested_degree=program.degree,
             page_degree=page.degree_level,
         )
+        if (
+            matched
+            and program.field
+            and _named_after_its_url(program)
+            and not matches_field_text(page.subject or "", [program.field])
+        ):
+            # The requested name can be discovery's placeholder from a URL slug,
+            # so it matches the page it came from. The applicant's field is the
+            # check that cannot: HKU's "Computing and Data Science", reached by
+            # search, confirmed itself for a computer science applicant (run 51).
+            matched, why = (
+                False,
+                (
+                    f"page subject {page.subject!r} does not name the requested field "
+                    f"{program.field!r}"
+                ),
+            )
+        if matched and _COURSE_LIST.search(page.subject or ""):
+            # A calendar section lists courses, not a programme one can apply
+            # to: Toronto's "Computer Science Topic Courses" (run 52).
+            matched, why = False, f"page subject {page.subject!r} names courses, not a programme"
         if not matched:
             out.errors.append(
                 f"{builder.meta['source_url']}: not confirming {program.name!r} — {why}"
@@ -244,7 +437,38 @@ class WebRequirementsAdapter:
             excerpt,
             confidence=0.9,
             section="Programme identity",
+            # The programme's own title states its degree; a stray "master's"
+            # elsewhere on the page must not re-scope it (run 76, HKU).
+            degree=str(page.degree_level) if page.degree_level else None,
         )
+
+    @staticmethod
+    def _claim_listed_programme(program, builder, text: str) -> bool:
+        """Confirm existence from a listing page, or do nothing.
+
+        Owner decision 2026-09-23: a school or listing page may confirm
+        **existence only**, and only by naming the requested programme by a
+        full degree title the ontology's strong aliases equate with it. HKU's
+        certified source is exactly such a page. Nothing else is read from it.
+        """
+        listed = _listed_programme(text, program)
+        if listed is None:
+            return False
+        title, degree = listed
+        builder.add(
+            ClaimType.PROGRAM_EXISTS,
+            {
+                "program": title,
+                "degree": degree,
+                "language": None,
+                "matched_because": "named by its full degree title on a listing page",
+            },
+            _first_sentence_containing(text, title) or title,
+            confidence=0.7,
+            section="Programme identity",
+            degree=str(degree) if degree else None,
+        )
+        return True
 
     def _claim_intake_state(self, page, text: str, intake: str, builder, out) -> None:
         """Open, closed, or no claim at all. Silence is never 'open'."""
@@ -291,6 +515,33 @@ class WebRequirementsAdapter:
             f"{builder.meta['source_url']}: no statement about the application window for "
             f"{intake}; intake status is unknown, not open."
         )
+
+    def _claim_english_waiver(self, text: str, builder) -> None:
+        """The published conditions under which no English test is required.
+
+        Recorded as the page's own sentence, not as a boolean: "a waiver
+        exists" is useless to an applicant who cannot tell whether it covers
+        them, and the conditions are the whole content of the fact. A
+        Kazakhstani applicant from an English-medium school lives or dies by
+        this sentence, and until now the pipeline read only *fee* waivers and
+        dropped it.
+
+        The sentence must be about the language requirement: a fee waiver
+        beside it is a different fact, and matching "waiver" alone would claim
+        an English exemption from a page offering to waive an application fee.
+        """
+        flat = for_matching(text)
+        for match in _ENGLISH_WAIVER.finditer(flat):
+            sentence = match.group(0).strip()
+            if not _MENTIONS_ENGLISH.search(sentence):
+                continue
+            if _NO_ENGLISH_WAIVER.search(sentence):
+                # "No waivers are granted" settles it the other way, and
+                # claiming a waiver here would be the worse error.
+                builder.add(ClaimType.ENGLISH_TEST_WAIVER, "", sentence, confidence=0.7)
+                return
+            builder.add(ClaimType.ENGLISH_TEST_WAIVER, sentence, sentence, confidence=0.75)
+            return
 
     def _claim_english_test_types(self, text: str, builder) -> None:
         flat = for_matching(text)
@@ -340,9 +591,55 @@ class WebRequirementsAdapter:
 # --- helpers ---------------------------------------------------------------
 
 
+#: A subject that names a list of courses rather than a programme.
+_COURSE_LIST = re.compile(r"\bcourses?\b(?!\s+of\s+study)", re.IGNORECASE)
+
+
+def _named_after_its_url(program: CandidateProgram) -> bool:
+    """Whether the requested name is only discovery's placeholder from the URL.
+
+    Such a name matches the page it came from by construction, so it cannot
+    say the page is the applicant's programme. A name from a catalogue or a
+    registry is the university's own and is trusted as before.
+    """
+    if not program.url:
+        return False
+    slug = program.url.rstrip("/").rsplit("/", 1)[-1]
+    slug_words = [w for w in re.split(r"[-_]+", slug.lower().replace(".html", "")) if w]
+    name_words = [w for w in re.split(r"[^a-z0-9]+", program.name.lower()) if w]
+    return bool(slug_words) and slug_words == name_words
+
+
 def _target_year(intake: str) -> int | None:
     match = re.search(r"\b(20\d{2})\b", intake or "")
     return int(match.group(1)) if match else None
+
+
+#: Pages that list programmes rather than describe one. Only these may name a
+#: programme into existence, and only by its full degree title.
+_LISTING_PAGE_TYPES = frozenset({PageType.PROGRAM_CATALOG, PageType.UNKNOWN})
+
+
+def _listed_programme(text: str, program) -> tuple[str, str | None] | None:
+    """The first full degree title on a listing page that names the requested
+    programme, and its degree — or ``None``.
+
+    Strict on both counts: the ontology must say YES (a strong alias, never a
+    related field), and a stated degree level must be the requested one.
+    """
+    for title in full_degree_titles(text):
+        # Against the requested field as well as the candidate's name: the
+        # name can be what a faculty page calls itself. Run 35: HKU's page,
+        # named "Computing and Data Science", listed "Bachelor of Engineering
+        # in Computer Science" for a request for computer science.
+        wanted = [n for n in (program.name, getattr(program, "field", "")) if n]
+        if not any(titles_name_same_programme(title, n) is Verdict.YES for n in wanted):
+            continue
+        degree = degree_level_of(title)
+        if degree_matches(program.degree, degree) is False:
+            continue
+        return title, degree
+    return None
 
 
 def _first_sentence_containing(text: str, needle: str | None) -> str:

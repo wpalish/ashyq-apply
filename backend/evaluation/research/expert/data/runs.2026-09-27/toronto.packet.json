@@ -1,0 +1,46 @@
+{
+  "schema_version": "1",
+  "dataset_version": "2026-09-23.reviewed",
+  "dataset_sha256": "d45d26fa10a1bd60271c63225c1ff453109d8cb6781782867c0d782ee63bedd0",
+  "capture_sha256": "932f8fa58d571bbf9190d080f23a97624b7a1452876fdb40270812076f2e4c5f",
+  "baseline_pipeline_sha": "ff23db09a2d506af68df2172e6ae7bcb5a93166a",
+  "baseline_captured_at": "20260927T165933Z",
+  "baseline_budget": {
+    "max_fetcher_calls": 60,
+    "max_elapsed_ms": 120000,
+    "browser_enabled": false
+  },
+  "cases": [
+    {
+      "case_id": "toronto",
+      "university": "University of Toronto",
+      "domain": "utoronto.ca",
+      "request": {
+        "university": "University of Toronto",
+        "programme": null,
+        "degree": "bachelor",
+        "field": "computer science",
+        "intake": "fall 2027",
+        "population": null,
+        "qualification": null,
+        "academic_year": null
+      },
+      "baseline": {
+        "ranked_urls": [],
+        "programme_urls": [
+          "https://future.utoronto.ca/data-computer-science",
+          "https://www.utm.utoronto.ca/math-cs-stats/undergraduate-students/topic-courses/computer-science-topic-courses",
+          "https://future.utoronto.ca/undergraduate-programs"
+        ],
+        "prediction_count": 0,
+        "error": null,
+        "telemetry": {
+          "http_fetches": 25,
+          "pdf_fetches": 0,
+          "browser_fetches": 0,
+          "latency_seconds": 28.45215453699999
+        }
+      }
+    }
+  ]
+}
