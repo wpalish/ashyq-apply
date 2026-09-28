@@ -198,6 +198,7 @@ export function ShortlistScreen() {
                         <td className="num" data-label="Deadline">
                           {r.admission_deadline ? date(r.admission_deadline) : <span className="xs muted">not found</span>}
                           {r.deadline_passed && <div><Chip tone="risk">passed</Chip></div>}
+                          {r.previous_cycle_deadline && <div className="xs muted">previous cycle: {date(r.previous_cycle_deadline)}</div>}
                         </td>
                         <td className="num" data-label="Match" title={FIT_DISCLAIMER}>
                           {ratio(r.ranking?.fit ?? null)}
