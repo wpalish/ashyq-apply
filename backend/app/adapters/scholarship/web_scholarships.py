@@ -31,7 +31,7 @@ from app.adapters.extraction import (
 )
 from app.adapters.fetching import Fetcher, FetchResult
 from app.adapters.html_parse import parse_html
-from app.adapters.page_classifier import PageType, classify_page
+from app.adapters.page_classifier import PageType, classify_page, main_content
 from app.adapters.scope_reader import read_scope
 from app.domain.enums import (
     ApplicationMode,
@@ -43,6 +43,9 @@ from app.domain.enums import (
 from app.domain.funding import roll_up_availability
 from app.schemas.money import Money
 from app.schemas.result import Coverage, CoverageBreakdown, Scholarship
+
+#: Experimental until equal-budget captures validate the fallback.
+SEARCH_FUNDING_FALLBACK = False
 
 _COVERAGE_LABELS = {
     "tuition": CostCategory.TUITION,
@@ -152,12 +155,14 @@ class WebScholarshipAdapter:
         #: is as far as that goes — holding every university's HTML for the
         #: whole run would be tens of megabytes of dead weight for no gain.
         self._pages_for: str | None = None
+        self._award_searches: dict[tuple[str, str], tuple[str, ...]] = {}
 
     def _memo_for(self, candidate: Candidate) -> None:
         """Point the page memo at this university, dropping the last one's."""
         key = f"{candidate.name}::{candidate.country}"
         if key != self._pages_for:
             self._pages = {}
+            self._award_searches = {}
             self._pages_for = key
 
     async def _read(self, url: str) -> FetchResult:
@@ -169,6 +174,58 @@ class WebScholarshipAdapter:
         if page.ok:
             self._pages[_page_key(url)] = page
         return page
+
+    async def _search_awards(self, candidate, program, out: AdapterResult) -> tuple[str, ...]:
+        """One bounded public-policy query when an index exposes no usable awards.
+
+        No applicant attributes enter the query. Search summaries cannot become
+        evidence; the ordinary queue fetches and classifies every returned URL.
+        """
+        from app.adapters.discovery.live_discovery import (
+            canonical_url,
+            names_other_degree_level,
+            registrable_domain,
+            same_institution,
+        )
+        from app.adapters.search import get_search_provider
+        from app.adapters.search.base import SearchError
+        from app.adapters.search.intent import DiscoveryIntent, queries_for
+
+        key = (str(program.degree), program.field)
+        if key in self._award_searches:
+            return self._award_searches[key]
+        self._award_searches[key] = ()
+        try:
+            intent = DiscoveryIntent(
+                institution=candidate.name,
+                domain=registrable_domain(candidate.domain) or candidate.domain,
+                degree=program.degree,
+                field=program.field or "degree programme",
+                population_marker="international",
+            )
+            provider = get_search_provider()
+            query = queries_for(intent, families=("scholarships",), budget=1)[0]
+            response = await provider.search(
+                query=query.text, domains=[intent.domain], max_results=5
+            )
+        except (SearchError, ValueError) as exc:
+            out.errors.append(f"Official scholarship search unavailable: {type(exc).__name__}")
+            return ()
+        urls: list[str] = []
+        for found in response.results:
+            url = canonical_url(found.url)
+            if urlparse(url).scheme not in ("http", "https"):
+                continue
+            if not same_institution(url, candidate.domain):
+                continue
+            if names_other_degree_level(url, str(program.degree)) or url in urls:
+                continue
+            urls.append(url)
+        self._award_searches[key] = tuple(urls[:3])
+        out.errors.append(
+            f"Official scholarship search supplied {len(urls[:3])} leads; facts require fetched award pages"
+        )
+        return self._award_searches[key]
 
     async def find(
         self, candidate: Candidate, program: CandidateProgram, profile
@@ -199,6 +256,7 @@ class WebScholarshipAdapter:
         indexes_read = 0
         linked_an_award = False
         fallback_used = primary == program.url
+        search_used = False
 
         while queue:
             url, depth = queue.pop(0)
@@ -369,6 +427,11 @@ class WebScholarshipAdapter:
                 # fetch here and nowhere else.
                 fallback_used = True
                 queue.append((program.url, 0))
+
+            if SEARCH_FUNDING_FALLBACK and not queue and not scholarships and not search_used:
+                search_used = True
+                leads = await self._search_awards(candidate, program, out)
+                queue.extend((u, 1) for u in leads if _page_key(u) not in seen_pages)
 
         return scholarships, out
 
@@ -986,6 +1049,8 @@ def _award_links(html: str, base: str) -> list[str]:
     has to look like an award in its text or its path to be followed.
     """
     soup = parse_html(html)
+    if SEARCH_FUNDING_FALLBACK:
+        soup = main_content(soup)
     seen: set[str] = set()
     out: list[str] = []
     base_host = urlparse(base).netloc

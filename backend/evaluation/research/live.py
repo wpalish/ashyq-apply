@@ -357,11 +357,20 @@ def main() -> None:
         action="store_true",
         help="experiment: verify search identities and backfill rejected programme leads",
     )
+    parser.add_argument(
+        "--search-funding-fallback",
+        action="store_true",
+        help="experiment: search official awards when index walking yields no scholarships",
+    )
     parser.add_argument("--child", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args()
     if not 1 <= args.seconds_per_case <= 600 or not 1 <= args.max_pages <= 100:
         parser.error("Budget must be 1..600 seconds and 1..100 Fetcher.get calls per university")
     if args.child:
+        if args.search_funding_fallback:
+            from app.adapters.scholarship import web_scholarships
+
+            web_scholarships.SEARCH_FUNDING_FALLBACK = True
         if args.recover_search_candidates:
             from app.adapters.discovery import live_discovery
 
@@ -428,6 +437,7 @@ def main() -> None:
                         *(["--reject-archive-hosts"] if args.reject_archive_hosts else []),
                         *(["--admission-lexicon"] if args.admission_lexicon else []),
                         *(["--navigation-slot"] if args.navigation_slot else []),
+                        *(["--search-funding-fallback"] if args.search_funding_fallback else []),
                         *(
                             ["--recover-search-candidates"]
                             if args.recover_search_candidates
@@ -465,6 +475,7 @@ def main() -> None:
                 "page_budget_counts": "network reads; cache hits are free (since 2026-09-23)",
                 "search_before_navigation": args.search_first,
                 "recover_search_candidates": args.recover_search_candidates,
+                "search_funding_fallback": args.search_funding_fallback,
                 "skip_refused_search_hosts": args.skip_refused_hosts,
                 "reject_archive_hosts": args.reject_archive_hosts,
                 "admission_lexicon": args.admission_lexicon,
