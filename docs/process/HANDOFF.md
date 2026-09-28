@@ -1683,6 +1683,9 @@ decisions) and the ru/kk vocabulary alone. Frontend only:
 5. Tests, review, video, docs (§28), PR.
 
 Progress on part 9: 1–4 `2b1db21`, 5 the docs commit. The report and defects I72–I81 are in the design doc §28.
+2026-09-28: main (PRs #21–#30) merged into the branch at `925ba5a`. The only conflict was this file, and
+both sides were kept. Follow-up `0d13f31`: main's previous-cycle deadline now shows on the redesign's cards,
+triage, comparison and board as well, never as "passed" (e2e asserts it on Melbourne's card).
 One privacy choice departs from the concept: the name is off by default, because the only name the profile
 has is the case's label, whose first word is the surname on a Kazakh document. **Next:** the owner reviews
 PR #20. Still waiting for the owner: the Russian vocabulary, the unlock step, a public link or friend's page
