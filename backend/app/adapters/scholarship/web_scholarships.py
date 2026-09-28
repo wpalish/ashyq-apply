@@ -155,7 +155,7 @@ class WebScholarshipAdapter:
         #: is as far as that goes — holding every university's HTML for the
         #: whole run would be tens of megabytes of dead weight for no gain.
         self._pages_for: str | None = None
-        self._award_searches: dict[tuple[str, str], tuple[str, ...]] = {}
+        self._award_searches: dict[str, tuple[str, ...]] = {}
 
     def _memo_for(self, candidate: Candidate) -> None:
         """Point the page memo at this university, dropping the last one's."""
@@ -175,7 +175,9 @@ class WebScholarshipAdapter:
             self._pages[_page_key(url)] = page
         return page
 
-    async def _search_awards(self, candidate, program, out: AdapterResult) -> tuple[str, ...]:
+    async def _search_awards(
+        self, candidate: Candidate, program: CandidateProgram, out: AdapterResult
+    ) -> tuple[str, ...]:
         """One bounded public-policy query when an index exposes no usable awards.
 
         No applicant attributes enter the query. Search summaries cannot become
@@ -191,7 +193,10 @@ class WebScholarshipAdapter:
         from app.adapters.search.base import SearchError
         from app.adapters.search.intent import DiscoveryIntent, queries_for
 
-        key = (str(program.degree), program.field)
+        # The scholarship query contains the degree, but no programme field.
+        # Programmes at the same level therefore share its discovery results;
+        # fetched awards are still re-parsed with each programme's own scope.
+        key = str(program.degree)
         if key in self._award_searches:
             return self._award_searches[key]
         self._award_searches[key] = ()

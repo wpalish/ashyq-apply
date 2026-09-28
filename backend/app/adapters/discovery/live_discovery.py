@@ -1303,6 +1303,10 @@ class LiveDiscoveryAdapter:
         pages = selected[PageCategory.PROGRAM_PAGE]
         if RECOVER_SEARCH_CANDIDATES:
             await self._recover_search_pages(report.candidates, pages, trace, profile)
+            trace.errors.append(
+                f"search identity recovery via {report.provider}; queries {len(report.queries_run)}, "
+                f"failed {len(report.failed_queries)}, rejected {dict(report.rejection_counts)}"
+            )
             return
         added = 0
         refused = getattr(self.fetcher, "refused_hosts", {})

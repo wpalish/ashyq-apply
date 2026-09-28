@@ -68,7 +68,11 @@ async def run(tmp_path, monkeypatch, provider, award_body=_AWARD.format(name="Gl
         site.install(fetcher)
         adapter = web_scholarships.WebScholarshipAdapter(fetcher, "2026/27")
         awards, result = await adapter.find(candidate, program, None)
-        await adapter.find(candidate, program, None)
+        await adapter.find(
+            candidate,
+            CandidateProgram(name="Mathematics", field="mathematics", degree=DegreeLevel.BACHELOR),
+            None,
+        )
     return awards, result, site
 
 
