@@ -510,6 +510,15 @@ class WebScholarshipAdapter:
         sch.opportunity_exists = True
 
         cit = re.search(r"open only to citizens of ([^.]+)\.", text, re.IGNORECASE)
+        open_to_all = _ALL_NATIONALITIES.search(text)
+        if open_to_all and not cit:
+            # The page's own statement that no citizenship is excluded.
+            builder.add(
+                ClaimType.SCHOLARSHIP_CITIZENSHIP_RESTRICTION,
+                "all",
+                _excerpt(text, open_to_all.start()),
+                confidence=0.9,
+            )
         if cit:
             sch.citizenship_restrictions = [
                 p.strip() for p in re.split(r",| and ", cit.group(1)) if p.strip()
@@ -603,6 +612,13 @@ class WebScholarshipAdapter:
                 )
 
         # --- renewal ------------------------------------------------------
+        # A retention condition stated with its scale and review period is a
+        # renewal requirement whether or not the page says "renewable".
+        retention = _renewal_condition(text)
+        if retention is not None:
+            value, quote = retention
+            sch.renewal_requirements.append(quote)
+            builder.add(ClaimType.SCHOLARSHIP_RENEWAL_REQUIREMENT, value, quote)
         if "not renewable" in low or "one-time award" in low:
             sch.renewable = False
             builder.add(ClaimType.SCHOLARSHIP_RENEWABLE, False, _line_with(text, "renewable"))
@@ -618,6 +634,8 @@ class WebScholarshipAdapter:
                 )
             builder.add(ClaimType.SCHOLARSHIP_RENEWABLE, True, _line_with(text, "renewable"))
             for phrase in ("maintain", "remain in the top", "complete at least"):
+                if retention is not None:
+                    break
                 line = _line_with(text, phrase)
                 if line:
                     sch.renewal_requirements.append(line.strip())
@@ -830,7 +848,8 @@ def _is_international(profile, candidate) -> bool:
 #: "the minimum duration of the course" — a duration stated as the
 #: programme's own length rather than a number of years.
 _NORMAL_DURATION = re.compile(
-    r"\b(?:normal|standard|minimum)\s+(?:candidature|duration|length|period)"
+    r"\b(?:normal|standard|minimum)\s+(?:(?:programme|program|course|degree)\s+)?"
+    r"(?:candidature|duration|length|period)"
     r"(?:\s+of\s+(?:the|their|your|his|her)?\s*(?:programme|program|course|study|studies|degree))?",
     re.IGNORECASE,
 )
@@ -842,6 +861,46 @@ _PER_YEAR = re.compile(
     r"\b(?:per|a|each)\s+(?:academic\s+)?(?:year|annum)\b|\bannual(?:ly)?\b", re.I
 )
 _PER_MONTH = re.compile(r"\b(?:per|a|each)\s+month\b|\bmonthly\b", re.I)
+
+
+_ALL_NATIONALITIES = re.compile(
+    r"\bopen to (?:applicants of |students of )?all nationalities\b", re.I
+)
+_RETENTION_GPA = re.compile(
+    r"(?:minimum|at least)\s+(?:a\s+)?(?:cumulative\s+)?(?:grade point average|c?gpa)"
+    r"(?:\s*\((?:c?gpa)\))?\s+of\s+(\d+(?:\.\d+)?)\s+(?:over|out of)\s+(\d+(?:\.\d+)?)",
+    re.I,
+)
+_REVIEW_PERIOD = (
+    (re.compile(r"reviewed\s+(?:every|each)\s+semester", re.I), "each_semester"),
+    (
+        re.compile(r"reviewed\s+(?:every|each)\s+(?:academic\s+)?year|reviewed\s+annually", re.I),
+        "each_year",
+    ),
+)
+
+
+def _renewal_condition(text: str) -> tuple[dict[str, object], str] | None:
+    """A minimum grade to keep the award, on its stated scale, or nothing.
+
+    The scale must be on the page ("3.5 over 5.0"): a bare 3.5 means nothing
+    to an applicant whose grades are on another scale. The review period is
+    added only when the page states it.
+    """
+    match = _RETENTION_GPA.search(text)
+    if match is None:
+        return None
+    value: dict[str, object] = {
+        "cgpa_gte": float(match.group(1)),
+        "scale": float(match.group(2)),
+    }
+    quote = _excerpt(text, match.start())
+    for pattern, period in _REVIEW_PERIOD:
+        review = pattern.search(text)
+        if review is not None:
+            value["review"] = period
+            break
+    return value, quote
 
 
 def _living_allowance(text: str) -> tuple[dict[str, object], str] | None:
@@ -862,6 +921,10 @@ def _living_allowance(text: str) -> tuple[dict[str, object], str] | None:
         else:
             continue
         amount, currency = money
+        # S$6,500 is a whole amount; 6500.0 would not equal the page's figure
+        # anywhere a value is compared as written.
+        if float(amount).is_integer():
+            amount = int(amount)
         return {"currency": currency, "amount": amount, "period": period}, line
     return None
 
