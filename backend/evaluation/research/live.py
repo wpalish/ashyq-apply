@@ -367,12 +367,19 @@ def main() -> None:
         default=web_scholarships.SEARCH_FUNDING_FALLBACK,
         help="experiment: search official awards when index walking yields no scholarships",
     )
+    parser.add_argument(
+        "--target-award-search",
+        action=argparse.BooleanOptionalAction,
+        default=web_scholarships.TARGET_AWARD_SEARCH,
+        help="experiment: target award policies instead of generic scholarship indices",
+    )
     parser.add_argument("--child", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args()
     if not 1 <= args.seconds_per_case <= 600 or not 1 <= args.max_pages <= 100:
         parser.error("Budget must be 1..600 seconds and 1..100 Fetcher.get calls per university")
     if args.child:
         web_scholarships.SEARCH_FUNDING_FALLBACK = args.search_funding_fallback
+        web_scholarships.TARGET_AWARD_SEARCH = args.target_award_search
         live_discovery.RECOVER_SEARCH_CANDIDATES = args.recover_search_candidates
         if args.search_first:
             from app.adapters.discovery import live_discovery
@@ -444,6 +451,9 @@ def main() -> None:
                             if args.recover_search_candidates
                             else ["--no-recover-search-candidates"]
                         ),
+                        "--target-award-search"
+                        if args.target_award_search
+                        else "--no-target-award-search",
                     ],
                     env=environment,
                     stdout=log,
@@ -477,6 +487,7 @@ def main() -> None:
                 "search_before_navigation": args.search_first,
                 "recover_search_candidates": args.recover_search_candidates,
                 "search_funding_fallback": args.search_funding_fallback,
+                "target_award_search": args.target_award_search,
                 "skip_refused_search_hosts": args.skip_refused_hosts,
                 "reject_archive_hosts": args.reject_archive_hosts,
                 "admission_lexicon": args.admission_lexicon,

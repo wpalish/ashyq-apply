@@ -50,10 +50,12 @@ async def run(
     provider,
     award_body=_AWARD.format(name="Global Scholarship"),
     allow_search=True,
+    target_awards=False,
 ):
     from app.adapters import search
 
     monkeypatch.setattr(web_scholarships, "SEARCH_FUNDING_FALLBACK", True)
+    monkeypatch.setattr(web_scholarships, "TARGET_AWARD_SEARCH", target_awards)
     monkeypatch.setattr(search, "get_search_provider", lambda: provider)
     index = "https://uni.edu/scholarships"
     award = "https://uni.edu/global-scholarship"
@@ -93,6 +95,21 @@ async def test_a_js_index_reaches_the_official_award_by_search(tmp_path, monkeyp
     assert len(provider.calls) == 1
     assert provider.calls[0]["domains"] == ["uni.edu"]
     assert "international" in provider.calls[0]["query"]
+
+
+@pytest.mark.asyncio
+async def test_award_policy_search_uses_degree_aliases_with_the_same_single_query(
+    tmp_path, monkeypatch
+):
+    provider = Provider(["https://uni.edu/global-scholarship"])
+    awards, _, _ = await run(tmp_path, monkeypatch, provider, target_awards=True)
+    assert awards
+    assert len(provider.calls) == 1
+    query = provider.calls[0]["query"]
+    assert "(bachelor OR undergraduate)" in query
+    assert "eligibility benefits" in query
+    assert "computer science" not in query.lower()
+    assert provider.calls[0]["max_results"] == 5
 
 
 @pytest.mark.asyncio

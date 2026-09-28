@@ -47,6 +47,8 @@ from app.schemas.result import Coverage, CoverageBreakdown, Scholarship
 
 #: One official-award query after an empty walk for a confirmed programme.
 SEARCH_FUNDING_FALLBACK = True
+#: Measured separately: generic scholarship queries can return only indices.
+TARGET_AWARD_SEARCH = False
 
 _COVERAGE_LABELS = {
     "tuition": CostCategory.TUITION,
@@ -210,7 +212,8 @@ class WebScholarshipAdapter:
                 population_marker="international",
             )
             provider = get_search_provider()
-            query = queries_for(intent, families=("scholarships",), budget=1)[0]
+            family = "award_policy" if TARGET_AWARD_SEARCH else "scholarships"
+            query = queries_for(intent, families=(family,), budget=1)[0]
             response = await provider.search(
                 query=query.text, domains=[intent.domain], max_results=5
             )
@@ -229,7 +232,8 @@ class WebScholarshipAdapter:
             urls.append(url)
         self._award_searches[key] = tuple(urls[:3])
         out.errors.append(
-            f"Official scholarship search supplied {len(urls[:3])} leads; facts require fetched award pages"
+            f"Official scholarship search ({family}) supplied {len(urls[:3])} leads; "
+            "facts require fetched award pages"
         )
         return self._award_searches[key]
 

@@ -251,6 +251,18 @@ def queries_for(
                 "scholarships",
             )
         )
+        award_degree = {
+            DegreeLevel.FOUNDATION: "foundation",
+            DegreeLevel.BACHELOR: "(bachelor OR undergraduate)",
+            DegreeLevel.MASTER: "(master OR postgraduate)",
+            DegreeLevel.PHD: "(phd OR doctoral)",
+        }[intent.degree]
+        candidates.append(
+            DiscoveryQuery(
+                f"{site} scholarship {intent.population_marker} {award_degree} eligibility benefits",
+                "award_policy",
+            )
+        )
 
     if families:
         wanted = set(families)
