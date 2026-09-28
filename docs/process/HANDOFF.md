@@ -1416,6 +1416,20 @@ Oracle: `toronto intake` now **recovered**; KAIST admission_route was fetch_fail
 so extraction capability is 10 certified facts (8 before #25) while one run shows 9. Live recall does not
 move because discovery does not reach web.cs.toronto.edu or KAIST menu=40 from the cloud.
 
+### Oracle mirrors the listing path; remaining oracle losses triaged, 2026-09-28 (claude-opus-5)
+The oracle only claimed `programme.exists` when the classifier named a subject, while the adapter also reads
+it from listing/unknown pages by a full degree title (owner decision 2026-09-23). HKU's certified fact was
+therefore reported missing although the pipeline reads it; the oracle now takes the case's field/degree and
+mirrors the listing path (tested; evaluation-only). Triage of the other oracle losses, left as they are:
+- Delft `programme.exists`: certified source is an OpenCourseWare page; the live pipeline already proves it
+  from the official programme page. Tuning extraction to OCW would be tuning to the label.
+- HKU `programme.faculty`: stated on the same listing page, and the owner decision says a listing page yields
+  existence only. Not read.
+- Groningen deadline: per-row deadlines exist; the EU/EEA row scores wrong-scope for a non-EU request. Whether
+  other-population claims should be shown is a policy question for the owner, not an extraction bug.
+- Vienna deadline: certified null; our 2026-05-04 claim is for the 2026 intake while the request is fall 2027 —
+  a wrong-year risk worth checking in the scope reader next.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
