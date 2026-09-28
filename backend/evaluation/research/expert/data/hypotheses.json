@@ -23,7 +23,7 @@
     },
     {
       "id": "ER-02",
-      "status": "candidate",
+      "status": "implemented",
       "case_ids": [
         "toronto",
         "ubc"
@@ -39,7 +39,8 @@
         "backend/evaluation/research/data/ground_truth.reviewed.json"
       ],
       "policy_guard": "Verified registry and official page evidence may establish campus relationships; snippets and hostname similarity are discovery hints only.",
-      "validation_artifact": null
+      "validation_artifact": "backend/tests/test_campus_identity.py",
+      "decision": "2026-09-28 owner: implement the recommendation. Registry `campuses` (verified hosts; Toronto only: Mississauga, Scarborough) + app/domain/campus.py; runner verify stage withholds campus-specific claims when the request names no campus and adds one non-blocking 'campus' question. Funding stage not yet covered. Default on (correctness rule, not a discovery switch); live effect to be measured on the next benchmark: toronto precision must not fall, exact programme recall must not fall."
     },
     {
       "id": "ER-03",

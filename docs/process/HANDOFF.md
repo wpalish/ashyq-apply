@@ -1440,6 +1440,13 @@ it in the new `ProgramResult.previous_cycle_deadline` (contract change, nullable
 re-captured 7e8d18… → d1403ce2… (proof beside GOLDEN_DEMO_SHA256: only Melbourne's 2026-01-15 moved; seed_demo
 order unchanged). Tests: tests/test_previous_cycle.py, seeded case (f) rewritten.
 
+Claude, 2026-09-28: ER-02 implemented (owner: "делай по своей рекомендации"). Campus is an identity dimension
+held in verified registry data (`campuses`, `campuses_verified_on`, `campuses_source` on Toronto only), never
+inferred from a hostname. `app/domain/campus.py` + runner verify stage: with no campus in the request, claims
+from a registered campus host are withheld and one non-blocking `campus` unresolved question names the
+campuses. Department and central hosts (web.cs, future.utoronto.ca) are untouched. Not yet in the funding
+stage. Golden demo unchanged. Also: oracle measures award facts (b4347cf, evaluation-only).
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 

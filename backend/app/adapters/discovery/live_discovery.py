@@ -1514,3 +1514,21 @@ def _harvest_links(html: str, base: str, domain: str) -> list[tuple[str, str]]:
         label = re.sub(r"\s+", " ", anchor.get_text(" ", strip=True))[:160]
         out.append((canonical, label))
     return out
+
+
+def registry_campuses(domain: str) -> dict[str, list[str]]:
+    """Campus name to its hosts, for the institution on this registrable domain.
+
+    Verified registry data (``campuses``); empty when the registry records none.
+    """
+    try:
+        entries = json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
+    except (OSError, ValueError):  # pragma: no cover - a broken registry is a deploy problem
+        return {}
+    target = registrable_domain(domain)
+    for entry in entries:
+        if not entry.get("campuses"):
+            continue
+        if registrable_domain(urlparse(entry.get("homepage") or "").hostname or "") == target:
+            return {c["name"]: list(c["hosts"]) for c in entry["campuses"]}
+    return {}
