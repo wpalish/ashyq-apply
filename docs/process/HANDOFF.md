@@ -1477,6 +1477,17 @@ renewal). Benchmark: claim_recall 9/62 (unchanged — end-to-end discovery does 
 into scored claims), claim_precision 11/12. ER-02: unmeasurable on this run — every Toronto page the oracle and
 pipeline tried answered 403 (the `intake` fact is from a reachable page); needs the self-hosted runner.
 
+Claude, 2026-09-28 (standing down; owner chose to leave extraction recovery to gpt-6-astra on
+`task/apply-extraction-recovery`): last live run on claude/greeting-16wj2z@563336e, run 36466967792.
+claim_recall **10/62** (first move off 9), claim_precision 10/11; per field programme.faculty 1/1,
+programme.exists 6/6. Oracle: recovered 17, value_missing 42, not_measured 8, fetch_failed 7.
+For the recovery branch: HKU faculty scores correct live only with e0d3a36 (faculty filed under the confirmed
+programme); without it run 36460381447 scored it 0/1. Groningen transcript completed/not_completed is still
+value_missing live although the reader matches the page sentence offline — the live page likely puts
+"Transcript" and its description on separate lines; read the oracle context in the run artifact before
+widening `_BY_COMPLETION`. Vienna/Warsaw programme.language now report value_missing with context (were
+not_measured). Claude made no further changes after 563336e.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
