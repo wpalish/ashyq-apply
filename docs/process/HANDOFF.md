@@ -1471,6 +1471,12 @@ housing, travel and bond want structured shapes with page-specific tokens (`subs
 (the mapping deliberately keeps a degree verdict apart from full-time applicability); the five scholarship
 documents have no identity binding in identity_bindings.reviewed.json. Confirm 5/16 on the next live oracle.
 
+Claude, 2026-09-28: live confirmation, run 36422912808 on 7283c51. Oracle: recovered 15 (was 12), value_missing 21,
+fetch_failed 21, not_measured 17. NTU Nanyang Global 5/16 confirmed live (exists, nationality, living, duration,
+renewal). Benchmark: claim_recall 9/62 (unchanged — end-to-end discovery does not yet open the award page's facts
+into scored claims), claim_precision 11/12. ER-02: unmeasurable on this run — every Toronto page the oracle and
+pipeline tried answered 403 (the `intake` fact is from a reachable page); needs the self-hosted runner.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
