@@ -63,6 +63,10 @@ class Target:
     value: object
     url: str
     excerpt: str
+    #: The case's requested field and degree: the adapter reads a listing
+    #: page's programme existence against the request, so the oracle must too.
+    field: str = ""
+    degree: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -96,6 +100,8 @@ def targets(dataset: Dataset) -> list[Target]:
                         value=label.value,
                         url=url,
                         excerpt=evidence.excerpt or "",
+                        field=case.request.field or "",
+                        degree=case.request.degree,
                     )
                 )
     return found
@@ -140,7 +146,9 @@ def excerpt_is_present(excerpt: str, text: str) -> bool:
     return False
 
 
-def _claims_on(url: str, html: str, fetched_at) -> tuple[str, list[tuple[str, object]], list]:
+def _claims_on(
+    url: str, html: str, fetched_at, field: str = "", degree: str | None = None
+) -> tuple[str, list[tuple[str, object]], list]:
     """The real extraction path on one page, normalised to the scorer's keys.
 
     Returns the page type, the claims the pipeline would keep (gated by the
@@ -181,6 +189,23 @@ def _claims_on(url: str, html: str, fetched_at) -> tuple[str, list[tuple[str, ob
         ungated.append(("programme.exists", True))
         if page.accepts("program_exists"):
             gated.append(("programme.exists", True))
+    elif field:
+        # The adapter's listing path (owner decision 2026-09-23): a listing or
+        # unclassified page confirms existence only, by a full degree title the
+        # ontology equates with the requested programme. Without this the
+        # oracle reported HKU's certified fact missing while the pipeline read it.
+        from types import SimpleNamespace
+
+        from app.adapters.requirements.web_requirements import (
+            _LISTING_PAGE_TYPES,
+            _listed_programme,
+        )
+
+        request = SimpleNamespace(name=field, field=field, degree=degree)
+        if _listed_programme(text, request) is not None:
+            ungated.append(("programme.exists", True))
+            if page.page_type in _LISTING_PAGE_TYPES:
+                gated.append(("programme.exists", True))
     return page.page_type.value, gated, ungated
 
 
@@ -213,7 +238,10 @@ async def probe(target: Target, fetcher) -> Finding:
 
     # Extraction is CPU-bound: run it off the loop so the wall clock can fire.
     text, (page_type, gated, ungated) = await asyncio.to_thread(
-        lambda: (readable_text(page.text), _claims_on(target.url, page.text, page.fetched_at))
+        lambda: (
+            readable_text(page.text),
+            _claims_on(target.url, page.text, page.fetched_at, target.field, target.degree),
+        )
     )
 
     def found(claims: list[tuple[str, object]]) -> bool:

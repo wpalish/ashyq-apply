@@ -378,6 +378,7 @@ export interface ProgramResult {
   admission_deadline_timezone: string | null;
   admission_deadline_raw: string | null;
   deadline_passed: boolean;
+  previous_cycle_deadline?: string | null;
   climate_fit: string;
   city_fit: string;
   workload_fit: string;

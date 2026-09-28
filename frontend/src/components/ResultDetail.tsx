@@ -110,6 +110,9 @@ function Requirements({ result }: { result: ProgramResult }) {
           {result.admission_deadline_timezone ? ` (${result.admission_deadline_timezone})` : ''}
         </span>
         {result.deadline_passed && <Chip tone="risk">deadline passed</Chip>}
+        {result.previous_cycle_deadline && (
+          <span className="xs muted"> Previous cycle: {date(result.previous_cycle_deadline)}</span>
+        )}
       </div>
     </div>
   );

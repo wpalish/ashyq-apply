@@ -246,10 +246,16 @@ class TestSeededFailureCases:
         assert "Dear Admissions Office" in conflict.question_for_admissions
 
     @pytest.mark.asyncio
-    async def test_a_past_deadline_is_flagged_and_blocks(self, session, completed_run):
+    async def test_a_previous_cycle_deadline_is_not_a_closed_window(self, session, completed_run):
+        """Owner decision 2026-09-28: 15 January 2026 cannot be the deadline for
+        a fall-2027 intake. It is kept as the previous cycle's date, the deadline
+        for this intake stays unknown, and the applicant is told why."""
         _, run = completed_run
         melbourne = results_of(session, run)["University of Melbourne"]
-        assert melbourne.deadline_passed
+        assert not melbourne.deadline_passed
+        assert melbourne.admission_deadline is None
+        assert str(melbourne.previous_cycle_deadline) == "2026-01-15"
+        assert any(q.topic == "admission deadline" for q in melbourne.unresolved)
         assert melbourne.eligibility is EligibilityStatus.GAP
 
     @pytest.mark.asyncio

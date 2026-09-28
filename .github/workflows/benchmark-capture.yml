@@ -43,7 +43,11 @@ on:
         required: false
         default: ''
       extra_args:
-        description: 'expert_baseline: extra evaluation.research.live flags'
+        description: 'expert_baseline: extra evaluation.research.live flags; expert_paired: the switch under test'
+        required: false
+        default: ''
+      base_args:
+        description: 'expert_paired: flags applied to BOTH arms, so only extra_args differs'
         required: false
         default: ''
       search_first:
@@ -439,13 +443,13 @@ jobs:
           mkdir -p out
           for c in ${{ inputs.case }}; do
             for arm in off on on off; do
-              flags=""; [ "$arm" = on ] && flags="${{ inputs.extra_args }}"
+              flags="${{ inputs.base_args }}"; [ "$arm" = on ] && flags="$flags ${{ inputs.extra_args }}"
               .venv/bin/python -m evaluation.research.live --live --out "out/$c-$arm" \
                 --case "$c" --seconds-per-case "${{ inputs.seconds_per_case }}" \
                 --max-pages "${{ inputs.max_pages }}" $flags | tail -n 2
             done
           done
-          echo "extra_args=${{ inputs.extra_args }}" > out/config.txt
+          echo "extra_args=${{ inputs.extra_args }} base_args=${{ inputs.base_args }}" > out/config.txt
 
       - name: Execute an expert plan
         if: inputs.mode == 'expert_actions'

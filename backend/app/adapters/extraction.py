@@ -770,7 +770,72 @@ def extract_requirements(text: str, builder: ClaimBuilder) -> list[Claim]:
             )
 
     _keep(found, extract_admission_route(text, builder))
+    for claim in extract_intake_terms(text, builder):
+        _keep(found, claim)
     return found
+
+
+_MONTH_SEASON = {
+    "august": "fall",
+    "september": "fall",
+    "october": "fall",
+    "january": "spring",
+    "february": "spring",
+    "march": "spring",
+}
+#: "Students beginning their studies in September 2027", "Program start Fall
+#: 2027", "applying for September 2027 admission". A start cue must sit next to
+#: the term; a deadline, a graduation or a fee sentence is never an intake.
+_TERM = (
+    r"(?:(?P<season>fall|autumn|spring)\s+(?P<sy>20\d\d)"
+    r"|(?P<month>august|september|october|january|february|march)\s+(?:\d{1,2},?\s+)?(?P<my>20\d\d))"
+)
+_START_CUE = (
+    r"(?:begin(?:s|ning)?|start(?:s|ing)?|commenc\w*|entering|entry|intake|enrol\w*|"
+    r"admission|program(?:me)?\s+start)"
+)
+_INTAKE_CUE_FIRST = re.compile(rf"\b{_START_CUE}\b[^.\n]{{0,60}}?\b{_TERM}\b", re.I)
+_INTAKE_TERM_FIRST = re.compile(rf"\b{_TERM}\s+(?:intake|entry|start)\b", re.I)
+_NOT_AN_INTAKE = re.compile(
+    r"deadline|due\b|apply by|closes?\b|graduat|convocation|tuition|fee", re.I
+)
+
+
+def extract_intake_terms(text: str, builder: ClaimBuilder) -> list[Claim]:
+    """Each intake term a page states as a start ("fall 2027"), once each.
+
+    V2-30A's INTAKE_TERM had no reader. Only a stated start counts: a date
+    beside "deadline" or "graduation" is a different fact, and a month is
+    mapped to a season only where the mapping is unambiguous for an academic
+    start (August-October fall, January-March spring).
+    """
+    flat = for_matching(text)
+    out: list[Claim] = []
+    seen: set[str] = set()
+    matches = sorted(
+        [*_INTAKE_CUE_FIRST.finditer(flat), *_INTAKE_TERM_FIRST.finditer(flat)],
+        key=lambda m: m.start(),
+    )
+    for m in matches:
+        start, end = _sentence_bounds(text, m.start(), m.end())
+        sentence = flat[start:end].strip()
+        if _NOT_AN_INTAKE.search(sentence):
+            continue
+        season = (
+            m.group("season") or _MONTH_SEASON.get((m.group("month") or "").lower(), "")
+        ).lower()
+        season = "fall" if season == "autumn" else season
+        year = m.group("sy") or m.group("my")
+        if not season or not year:
+            continue
+        value = f"{season} {year}"
+        if value in seen:
+            continue
+        seen.add(value)
+        claim = builder.add(ClaimType.INTAKE_TERM, value, sentence, confidence=0.7)
+        if claim is not None:
+            out.append(claim)
+    return out
 
 
 #: "Admitted without a declared major; the major is chosen later" (V2-30A

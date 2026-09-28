@@ -1396,6 +1396,50 @@ discovery still never opens that page (ER-05 finding). No hits on 103 repository
 real pages in the expert logs; "may change their major" and direct-entry sentences are tested negatives;
 golden demo unchanged. Next: give navigation evidence a discovery slot (the ER-05 root cause), then re-measure.
 
+### ER-07 paired test, 2026-09-27 (claude-opus-5)
+`NAVIGATION_SLOT` (8b68958, default off): the best navigation-hop candidate keeps one programme slot. Paired
+with the admission lexicon on in both arms (new `base_args` input). **Rejected**: claims equal in every pair on
+12 universities; KAIST's hop produced no candidate (cloud reads 7-9 pages instead of ~25), and elsewhere the
+slot often went to journal, research-portal or thesis pages. `runs.2026-09-27/er07.paired.txt`.
+State of the KAIST admission route: extraction works (oracle 9), discovery does not reach the page from the
+cloud. The remaining lever is access (self-hosted runner) — the owner has a setup prompt; until then the
+cloud runner's KAIST reads are too unstable to measure discovery changes there.
+
+### INTAKE_TERM reader + full benchmark, 2026-09-27 (claude-opus-5, 6a741f0)
+`extract_intake_terms`: a start cue next to a term ("beginning their studies in September 2027",
+"Program start Fall 2027", "the January 2028 intake"); deadline/graduation/fee sentences excluded; one claim
+per distinct term. Golden demo re-captured, proven additive (0 removed / 408 added, all inside 12 new
+intake_term claims; proof beside GOLDEN_DEMO_SHA256).
+Full 10-university benchmark (run 36359063164, cloud): claim_recall **9/62** (= best, run 78), precision
+**12/13** (run 78: 10/11); wrong-scope 1/13 is the known Groningen deadline population (EU/EEA vs non-EU).
+Oracle: `toronto intake` now **recovered**; KAIST admission_route was fetch_failed this time (runner network),
+so extraction capability is 10 certified facts (8 before #25) while one run shows 9. Live recall does not
+move because discovery does not reach web.cs.toronto.edu or KAIST menu=40 from the cloud.
+
+### Oracle mirrors the listing path; remaining oracle losses triaged, 2026-09-28 (claude-opus-5)
+The oracle only claimed `programme.exists` when the classifier named a subject, while the adapter also reads
+it from listing/unknown pages by a full degree title (owner decision 2026-09-23). HKU's certified fact was
+therefore reported missing although the pipeline reads it; the oracle now takes the case's field/degree and
+mirrors the listing path (tested; evaluation-only). Triage of the other oracle losses, left as they are:
+- Delft `programme.exists`: certified source is an OpenCourseWare page; the live pipeline already proves it
+  from the official programme page. Tuning extraction to OCW would be tuning to the label.
+- HKU `programme.faculty`: stated on the same listing page, and the owner decision says a listing page yields
+  existence only. Not read.
+- Groningen deadline: per-row deadlines exist; the EU/EEA row scores wrong-scope for a non-EU request. Whether
+  other-population claims should be shown is a policy question for the owner, not an extraction bug.
+- Vienna deadline: certified null; the 2026-05-04 claim ('Application period 2 March to 4 May 2026') carries no
+  intake or year, so for a fall-2027 applicant runner.py shows it with deadline_passed=True ('window closed'),
+  while it is the previous cycle's date. Proposal for the owner: a deadline that passed before the requested
+  intake's cycle is UNKNOWN for that intake, shown as 'previous cycle: <date>'. Touches runner.py and what the
+  applicant sees, so not changed without a decision.
+
+Claude, 2026-09-28: previous-cycle deadline (owner decision). A stated deadline earlier than one year and a
+month before the intake starts (fall 2027 → before 2026-07-01) is not this intake's deadline: runner.py keeps
+it in the new `ProgramResult.previous_cycle_deadline` (contract change, nullable, default null), leaves
+`admission_deadline` unknown, sets no `deadline_passed`, and adds one non-blocking unresolved question. Golden
+re-captured 7e8d18… → d1403ce2… (proof beside GOLDEN_DEMO_SHA256: only Melbourne's 2026-01-15 moved; seed_demo
+order unchanged). Tests: tests/test_previous_cycle.py, seeded case (f) rewritten.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
