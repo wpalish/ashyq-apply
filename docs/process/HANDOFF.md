@@ -1427,8 +1427,11 @@ mirrors the listing path (tested; evaluation-only). Triage of the other oracle l
   existence only. Not read.
 - Groningen deadline: per-row deadlines exist; the EU/EEA row scores wrong-scope for a non-EU request. Whether
   other-population claims should be shown is a policy question for the owner, not an extraction bug.
-- Vienna deadline: certified null; our 2026-05-04 claim is for the 2026 intake while the request is fall 2027 —
-  a wrong-year risk worth checking in the scope reader next.
+- Vienna deadline: certified null; the 2026-05-04 claim ('Application period 2 March to 4 May 2026') carries no
+  intake or year, so for a fall-2027 applicant runner.py shows it with deadline_passed=True ('window closed'),
+  while it is the previous cycle's date. Proposal for the owner: a deadline that passed before the requested
+  intake's cycle is UNKNOWN for that intake, shown as 'previous cycle: <date>'. Touches runner.py and what the
+  applicant sees, so not changed without a decision.
 
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
