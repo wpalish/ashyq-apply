@@ -1447,6 +1447,18 @@ from a registered campus host are withheld and one non-blocking `campus` unresol
 campuses. Department and central hosts (web.cs, future.utoronto.ca) are untouched. Not yet in the funding
 stage. Golden demo unchanged. Also: oracle measures award facts (b4347cf, evaluation-only).
 
+Claude, 2026-09-28: oracle award path measured live (run 36400210111 on b4347cf, before ER-02). Oracle totals:
+recovered 12, value_missing 26, fetch_failed 18, not_measured 15 (was 9/10/21/37 in run 113 — award facts are
+now measured instead of hidden). Benchmark: claim_recall 9/62, claim_precision 10/11.
+- NTU Nanyang Global (page reachable, classified scholarship_award): 1/16 recovered (`exists`). The reader
+  produces coverage.living {SGD 6500, academic_year}, applicability.international, applicability.degree, but
+  none equals the certified shape; tuition/housing/travel/bond/renewal/duration/application_mode and all five
+  scholarship documents (essay 250 words, teacher referee, no relatives) produce nothing. This is the largest
+  reachable, offline-fixable gap: write extractors against the certified excerpts (oracle prints context).
+- HKU: entrance scholarship page is scholarship_index (index pages are not parsed as awards), CDS award page is
+  `unknown` → 0 claims. Classification problem first.
+- KAIST scholarships (13 facts): robots.txt unreachable from GitHub runners — access, not extraction.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
