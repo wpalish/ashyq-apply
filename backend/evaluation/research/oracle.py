@@ -189,6 +189,10 @@ def _claims_on(
         ungated.append(("programme.exists", True))
         if page.accepts("program_exists"):
             gated.append(("programme.exists", True))
+            faculty = _faculty_on(url, html, text, fetched_at)
+            if faculty is not None:
+                gated.append(("programme.faculty", faculty))
+                ungated.append(("programme.faculty", faculty))
     elif field:
         # The adapter's listing path (owner decision 2026-09-23): a listing or
         # unclassified page confirms existence only, by a full degree title the
@@ -206,7 +210,26 @@ def _claims_on(
             ungated.append(("programme.exists", True))
             if page.page_type in _LISTING_PAGE_TYPES:
                 gated.append(("programme.exists", True))
+                faculty = _faculty_on(url, html, text, fetched_at)
+                if faculty is not None:
+                    gated.append(("programme.faculty", faculty))
+                    ungated.append(("programme.faculty", faculty))
     return page.page_type.value, gated, ungated
+
+
+def _faculty_on(url: str, html: str, text: str, fetched_at) -> str | None:
+    """The adapter's labelled-faculty reader, on a page that confirmed the programme."""
+    from app.adapters.extraction import ClaimBuilder, extract_programme_faculty, html_title
+
+    builder = ClaimBuilder(
+        source_url=url,
+        page_title=html_title(html),
+        official_domain=True,
+        extraction_method="html_rule",
+        accessed_at=fetched_at,
+    )
+    claim = extract_programme_faculty(text, builder)
+    return None if claim is None else str(claim.normalized_value)
 
 
 def _award_claims(

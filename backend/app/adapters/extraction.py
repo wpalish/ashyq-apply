@@ -1013,3 +1013,34 @@ def extract_costs(text: str, builder: ClaimBuilder) -> list[Claim]:
             ),
         )
     return found
+
+
+#: A faculty named the way universities name them; anything else under a
+#: "Faculty" label (a person, a staff list) is not the programme's faculty.
+_FACULTY_VALUE = re.compile(
+    r"^(?:the\s+)?(?:School|Faculty|College|Department|Division|Institute)\s+of\s+\S.{0,78}$", re.I
+)
+_FACULTY_LABEL = re.compile(r"^(?:faculty|school|offering\s+(?:faculty|school))\s*:?\s*(.*)$", re.I)
+
+
+def extract_programme_faculty(text: str, builder: ClaimBuilder) -> Claim | None:
+    """The faculty a programme page states in a labelled field ("FACULTY" / value).
+
+    Only a label on its own line (or "Faculty: X") counts, and only when the
+    page states exactly one such value: a listing that names several faculties
+    says nothing about which one teaches the requested programme.
+    """
+    lines = [line.strip() for line in text.splitlines()]
+    values: list[str] = []
+    for i, line in enumerate(lines):
+        label = _FACULTY_LABEL.match(line)
+        if label is None:
+            continue
+        value = label.group(1).strip()
+        if not value:
+            value = next((nxt for nxt in lines[i + 1 : i + 3] if nxt), "")
+        if _FACULTY_VALUE.match(value) and value not in values:
+            values.append(value)
+    if len(values) != 1:
+        return None
+    return builder.add(ClaimType.PROGRAM_FACULTY, values[0], values[0], confidence=0.8)
