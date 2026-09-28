@@ -15,10 +15,11 @@ const decide = vi.fn().mockResolvedValue(undefined);
 const saveNotes = vi.fn().mockResolvedValue(undefined);
 
 vi.mock('@/lib/store', () => ({
-  useStore: () => ({ results: [row], summary, shortlist: null, decide, saveNotes }),
+  useStore: () => ({ results: [row, ...others], summary, shortlist: null, decide, saveNotes }),
 }));
 
 let row: ProgramResult;
+let others: ProgramResult[] = [];
 // The filters are built from the summary the API returns, not from the rows.
 const summary = {
   total: 1,
@@ -63,6 +64,11 @@ beforeEach(() => {
   decide.mockClear();
   saveNotes.mockClear();
   row = makeRow();
+  others = [];
+  window.localStorage.removeItem('ashyq.compare');
+  // These tests read the table; the cards view is the default and has its
+  // own tests at the end.
+  window.localStorage.setItem('ashyq.shortlistView', 'table');
 });
 
 describe('rejecting a programme', () => {
@@ -203,5 +209,203 @@ describe('the v2 ranking on the shortlist', () => {
   it('keeps a row assessed before v2 in the ranked table', () => {
     render(<ShortlistScreen />);
     expect(screen.getByTestId('shortlist-table')).toBeInTheDocument();
+  });
+});
+
+describe('deciding one at a time', () => {
+  it('opens the triage on the undecided rows and returns to the list', () => {
+    render(<ShortlistScreen />);
+    fireEvent.click(screen.getByTestId('triage-start'));
+    expect(screen.getByTestId('triage-card-result-1')).toBeInTheDocument();
+    expect(screen.queryByTestId('shortlist-table')).toBeNull();
+    fireEvent.click(screen.getByTestId('triage-close'));
+    expect(screen.getByTestId('shortlist-table')).toBeInTheDocument();
+  });
+
+  it('gives focus back to the button that opened it', async () => {
+    render(<ShortlistScreen />);
+    fireEvent.click(screen.getByTestId('triage-start'));
+    fireEvent.click(screen.getByTestId('triage-close'));
+    await waitFor(() => expect(screen.getByTestId('triage-start')).toHaveFocus());
+  });
+
+  it('is not offered when every row already has an answer', () => {
+    row = makeRow({ user_decision: 'approved' });
+    render(<ShortlistScreen />);
+    expect(screen.queryByTestId('triage-start')).toBeNull();
+  });
+
+  it('shows no budget ladder without a saved budget', () => {
+    render(<ShortlistScreen />);
+    expect(screen.queryByTestId('budget-ladder')).toBeNull();
+  });
+});
+
+describe('the cards view', () => {
+  beforeEach(() => {
+    window.localStorage.removeItem('ashyq.shortlistView');
+    row = makeRow({
+      eligibility: 'PENDING',
+      admissions_fit: 'STRONGER_FIT',
+      best_funding_classification: 'FULL_RIDE_CONFIRMED',
+      requirement_checks: [
+        { requirement: 'Admission deadline', status: 'MET' },
+        { requirement: 'Minimum GPA', status: 'PENDING' },
+      ],
+      scholarships: [{ name: 'Groningen Talent Grant', classification: 'FULL_RIDE_CONFIRMED' }],
+      funding_gap: {
+        computable: true,
+        gap: { amount: 1848, currency: 'USD', academic_year: '2026/27' },
+        confirmed_aid: { amount: 30815, currency: 'USD', academic_year: '2026/27' },
+        reason: '',
+      },
+      source_urls: ['https://www.rug.nl/bachelors/computing-science/'],
+      last_verified: '2026-09-14T10:00:00Z',
+      admission_deadline: '2027-05-01',
+    } as Partial<ProgramResult>);
+  });
+
+  it('is the default, with the price a year as the headline', () => {
+    render(<ShortlistScreen />);
+    expect(screen.queryByTestId('shortlist-table')).toBeNull();
+    const card = screen.getByTestId('card-result-1');
+    expect(card).toHaveTextContent('1,848 USD');
+    expect(card).toHaveTextContent('a year after grants, if awarded');
+  });
+
+  it('keeps requirements, profile and money as three separate lines with their reasons', () => {
+    render(<ShortlistScreen />);
+    const card = screen.getByTestId('card-result-1');
+    expect(within(card).getByText('Requirements')).toBeInTheDocument();
+    expect(within(card).getByText('Your profile')).toBeInTheDocument();
+    expect(within(card).getByText('Money')).toBeInTheDocument();
+    expect(card).toHaveTextContent('waiting on: Minimum GPA');
+    expect(card).toHaveTextContent('selection is still competitive');
+    expect(card).toHaveTextContent('Groningen Talent Grant');
+    expect(card).toHaveTextContent('rug.nl');
+  });
+
+  it('never presents anything as a chance', () => {
+    render(<ShortlistScreen />);
+    expect(screen.getByTestId('card-result-1').textContent).not.toMatch(/%|chance|probab/i);
+  });
+
+  it('says why a cost is missing instead of showing a number', () => {
+    row = makeRow({ funding_gap: { computable: false, gap: null, reason: 'No official cost of attendance was found. More text.' } } as Partial<ProgramResult>);
+    render(<ShortlistScreen />);
+    const card = screen.getByTestId('card-result-1');
+    expect(card).toHaveTextContent('Cost not computed');
+    expect(card).toHaveTextContent('No official cost of attendance was found.');
+    expect(card).not.toHaveTextContent('More text.');
+  });
+
+  it('decides with the same controls as the table', async () => {
+    render(<ShortlistScreen />);
+    fireEvent.click(screen.getByTestId('approve-result-1'));
+    await waitFor(() => expect(decide).toHaveBeenCalledWith('result-1', 'approved', '', ''));
+  });
+
+  it('switches to the table and remembers it', () => {
+    render(<ShortlistScreen />);
+    fireEvent.click(screen.getByTestId('view-table'));
+    expect(screen.getByTestId('shortlist-table')).toBeInTheDocument();
+    expect(window.localStorage.getItem('ashyq.shortlistView')).toBe('table');
+  });
+});
+
+describe('comparing programmes', () => {
+  beforeEach(() => {
+    window.localStorage.removeItem('ashyq.shortlistView');
+    const gap = (amount: number) => ({
+      computable: true,
+      gap: { amount, currency: 'USD', academic_year: '2026/27' },
+      total_cost: { amount: amount + 10000, currency: 'USD', academic_year: '2026/27' },
+      confirmed_aid: { amount: 10000, currency: 'USD', academic_year: '2026/27' },
+      reason: '', warnings: [],
+    });
+    row = makeRow({ funding_gap: gap(1848) } as unknown as Partial<ProgramResult>);
+    others = [
+      makeRow({ id: 'result-2', university: 'TU Delft', funding_gap: gap(7554) } as unknown as Partial<ProgramResult>),
+      makeRow({ id: 'result-3', university: 'Leiden University', funding_gap: { computable: false, gap: null, reason: 'No cost.' } } as unknown as Partial<ProgramResult>),
+      makeRow({ id: 'result-4', university: 'Utrecht University' }),
+    ];
+  });
+
+  it('picks up to three and says how many are picked', () => {
+    render(<ShortlistScreen />);
+    expect(screen.queryByTestId('compare-tray')).toBeNull();
+    fireEvent.click(screen.getByTestId('compare-result-1'));
+    expect(screen.getByTestId('compare-result-1')).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByTestId('compare-tray')).toHaveTextContent('1 picked');
+    expect(screen.getByTestId('compare-go')).toBeDisabled();
+    fireEvent.click(screen.getByTestId('compare-result-2'));
+    fireEvent.click(screen.getByTestId('compare-result-3'));
+    expect(screen.getByTestId('compare-tray')).toHaveTextContent('3 picked');
+    expect(screen.getByTestId('compare-go')).toHaveTextContent('Compare 3 row by row');
+    expect(screen.getByTestId('compare-result-4')).toBeDisabled();
+    expect(JSON.parse(window.localStorage.getItem('ashyq.compare') ?? '[]')).toEqual(['result-1', 'result-2', 'result-3']);
+  });
+
+  it('shows the picks row by row, an unknown remainder as not computed', () => {
+    render(<ShortlistScreen />);
+    fireEvent.click(screen.getByTestId('compare-result-1'));
+    fireEvent.click(screen.getByTestId('compare-result-3'));
+    fireEvent.click(screen.getByTestId('compare-go'));
+    const view = screen.getByTestId('compare-view');
+    expect(within(view).getAllByRole('columnheader')).toHaveLength(2);
+    const left = within(view).getByRole('rowheader', { name: 'Left to pay a year' }).closest('tr')!;
+    expect(left).toHaveTextContent('1,848 USD');
+    expect(left).toHaveTextContent('not computed');
+    expect(view.textContent).not.toMatch(/%|chance|probab/i);
+  });
+
+  it('goes back to the list when a removal leaves one, and does not reopen by itself', () => {
+    render(<ShortlistScreen />);
+    fireEvent.click(screen.getByTestId('compare-result-1'));
+    fireEvent.click(screen.getByTestId('compare-result-2'));
+    fireEvent.click(screen.getByTestId('compare-go'));
+    fireEvent.click(screen.getByRole('button', { name: 'Remove TU Delft from the comparison' }));
+    expect(screen.queryByTestId('compare-view')).toBeNull();
+    fireEvent.click(screen.getByTestId('compare-result-4'));
+    expect(screen.queryByTestId('compare-view')).toBeNull();
+    expect(screen.getByTestId('compare-tray')).toHaveTextContent('2 picked');
+  });
+
+  it('drops a remembered pick whose row is gone', () => {
+    window.localStorage.setItem('ashyq.compare', JSON.stringify(['result-1', 'from-an-old-run']));
+    render(<ShortlistScreen />);
+    expect(screen.getByTestId('compare-tray')).toHaveTextContent('1 picked');
+  });
+});
+
+describe('region chips', () => {
+  beforeEach(() => {
+    window.localStorage.removeItem('ashyq.shortlistView');
+    row = makeRow({ id: 'result-1', university: 'University of Groningen', country: 'Netherlands' });
+    others = [
+      makeRow({ id: 'result-2', university: 'University of Toronto', country: 'Canada' }),
+      makeRow({ id: 'result-3', university: 'University of Tokyo', country: 'Japan' }),
+      makeRow({ id: 'result-4', university: 'KU Leuven', country: 'Belgium' }),
+    ];
+  });
+
+  it('counts every result by region', () => {
+    render(<ShortlistScreen />);
+    expect(screen.getByTestId('region-all')).toHaveTextContent('All 4');
+    expect(screen.getByTestId('region-europe')).toHaveTextContent('Europe 2');
+    expect(screen.getByTestId('region-americas')).toHaveTextContent('Americas 1');
+    expect(screen.getByTestId('region-asia_oceania')).toHaveTextContent('Asia & Oceania 1');
+    expect(screen.queryByTestId('region-other')).toBeNull();
+  });
+
+  it('filters the list to one region, and back', () => {
+    render(<ShortlistScreen />);
+    fireEvent.click(screen.getByTestId('region-europe'));
+    expect(screen.getByTestId('region-europe')).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByTestId('card-result-1')).toBeInTheDocument();
+    expect(screen.getByTestId('card-result-4')).toBeInTheDocument();
+    expect(screen.queryByTestId('card-result-2')).toBeNull();
+    fireEvent.click(screen.getByTestId('region-europe'));
+    expect(screen.getByTestId('card-result-2')).toBeInTheDocument();
   });
 });

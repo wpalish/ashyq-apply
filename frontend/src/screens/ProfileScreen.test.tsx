@@ -27,6 +27,9 @@ vi.mock('@/lib/store', () => ({
     capabilities: null,
     savedProfile: null,
     loading: false,
+    clearProfile: () => {
+      draft = { academics: { gpa: null }, activities: [], achievements: [] };
+    },
   }),
 }));
 
@@ -152,5 +155,25 @@ describe('reading a transcript', () => {
 
     expect(await screen.findByTestId('transcript-note')).toHaveTextContent('Upload the transcript as a PDF.');
     expect((draft.academics as { gpa: typeof GPA }).gpa.raw_value).toBe(4.8);
+  });
+});
+
+describe('optional sections', () => {
+  const folded = (id: string) => !(screen.getByTestId(id) as HTMLDetailsElement).open;
+
+  it('open for a profile that fills them and fold again for a blank one', () => {
+    draft = {
+      academics: { gpa: { ...GPA } },
+      activities: [{ name: 'Robotics club' }],
+      achievements: [],
+    };
+    render(<ProfileScreen onNext={() => {}} />);
+    expect(folded('fold-activities')).toBe(false);
+    expect(folded('fold-achievements')).toBe(true);
+
+    fireEvent.click(screen.getByTestId('clear-profile'));
+
+    expect(folded('fold-activities')).toBe(true);
+    expect(screen.getByTestId('fold-activities')).toHaveTextContent('optional');
   });
 });

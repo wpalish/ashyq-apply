@@ -8,7 +8,7 @@
 
 import { useEffect, useState } from 'react';
 import { ApiError, api } from '@/api/client';
-import { Chip, Field, Notice, Panel } from '@/components/primitives';
+import { Chip, Field, FoldPanel, Notice, Panel } from '@/components/primitives';
 import { castInput, get, setIn, type Path } from '@/lib/immutable';
 import { useStore } from '@/lib/store';
 import type { TranscriptSuggestion } from '@/types';
@@ -39,6 +39,22 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
   } = useStore();
   const [saved, setSaved] = useState(false);
   const [confirmingReplace, setConfirmingReplace] = useState<'demo' | 'clear' | null>(null);
+  // Bumped whenever the whole draft is replaced, so folded sections re-fold to
+  // what the new profile holds instead of what the last one did.
+  const [generation, setGeneration] = useState(0);
+  // Switching applicant (or starting a new case) replaces the draft too; the
+  // first save of a new profile only gives it an id, and must not re-fold
+  // a section the person has just opened.
+  const profileId = savedProfile?.id ?? null;
+  const [lastProfileId, setLastProfileId] = useState(profileId);
+  if (profileId !== lastProfileId) {
+    setLastProfileId(profileId);
+    if (lastProfileId !== null) setGeneration((value) => value + 1);
+  }
+  const replacing = (action: () => void) => () => {
+    action();
+    setGeneration((value) => value + 1);
+  };
   const [methods, setMethods] = useState<
     { key: string; description: string; source: string; caveat: string; to_scale: string }[]
   >([]);
@@ -123,6 +139,14 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
   const otherTests = (get(profileDraft, ['academics', 'other_tests']) as Record<string, unknown>[]) ?? [];
   const activities = (get(profileDraft, ['activities']) as Record<string, unknown>[]) ?? [];
   const achievements = (get(profileDraft, ['achievements']) as Record<string, unknown>[]) ?? [];
+  // A test counts as taken when it carries a score; a scale maximum on its own
+  // is a default, not an answer.
+  const scored = (test: string) => {
+    const values = get(profileDraft, ['academics', test]) as Record<string, unknown> | null | undefined;
+    return Boolean(values) && Object.entries(values as Record<string, unknown>)
+      .some(([key, value]) => key !== 'max_score' && typeof value === 'number');
+  };
+  const testsFilled = ['sat', 'act', 'toefl', 'duolingo'].some(scored) || otherTests.length > 0;
 
   const append = (path: Path, item: Record<string, unknown>) => {
     const current = (get(profileDraft, path) as Record<string, unknown>[]) ?? [];
@@ -136,7 +160,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
   return (
     <>
       <div className="screen__head">
-        <p className="screen__eyebrow">Step 01</p>
+        <p className="screen__eyebrow">Me · Profile</p>
         <h1 className="screen__title">Who is applying</h1>
         <p className="screen__lede">
           Nothing here is converted or inferred behind your back. Grades keep their original scale,
@@ -153,7 +177,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
                 not saved. Your saved profile on the server is untouched until you press Save.
               </div>
               <div className="row">
-                <button className="btn btn--sm" onClick={discardDraft} data-testid="discard-draft">
+                <button className="btn btn--sm" onClick={replacing(discardDraft)} data-testid="discard-draft">
                   Discard these edits
                 </button>
               </div>
@@ -178,14 +202,14 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
             <button
               className="btn btn--sm"
               data-testid="clear-profile"
-              onClick={() => (savedProfile ? setConfirmingReplace('clear') : clearProfile())}
+              onClick={savedProfile ? () => setConfirmingReplace('clear') : replacing(clearProfile)}
             >
               Blank profile
             </button>
             <button
               className="btn btn--sm"
               data-testid="load-demo-profile"
-              onClick={() => (savedProfile ? setConfirmingReplace('demo') : loadDemoProfile())}
+              onClick={savedProfile ? () => setConfirmingReplace('demo') : replacing(loadDemoProfile)}
             >
               Load synthetic demo
             </button>
@@ -205,6 +229,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
                     onClick={() => {
                       if (confirmingReplace === 'demo') loadDemoProfile();
                       else clearProfile();
+                      setGeneration((value) => value + 1);
                       setConfirmingReplace(null);
                     }}
                   >
@@ -281,9 +306,11 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
           </div>
         </Panel>
 
-        <Panel
+        <FoldPanel
           title="Read it off your transcript"
           hint="Optional. The file is read and discarded — it is never saved, and nothing is filled in until you say so."
+          hasData={Boolean(transcriptBusy || transcriptNote || suggestions.length)}
+          testId="fold-transcript" key={`transcript-${generation}`}
         >
           <div className="stack stack--tight">
             <Field label="Transcript (PDF)" htmlFor="transcript-file">
@@ -318,7 +345,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
               </div>
             ))}
           </div>
-        </Panel>
+        </FoldPanel>
 
         <Panel
           title="Grades"
@@ -411,7 +438,12 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
           </div>
         </Panel>
 
-        <Panel title="Standardised tests" hint="Leave blank if not taken — test-optional programmes are unaffected.">
+        <FoldPanel
+          title="Standardised tests"
+          hint="Leave blank if not taken — test-optional programmes are unaffected."
+          hasData={testsFilled}
+          testId="fold-tests" key={`tests-${generation}`}
+        >
           <div className="grid-3">
             <Field label="SAT total" htmlFor="sat"><input id="sat" type="number" {...bind(['academics', 'sat', 'total'], 'number')} /></Field>
             <Field label="SAT Math" htmlFor="satm"><input id="satm" type="number" {...bind(['academics', 'sat', 'math'], 'number')} /></Field>
@@ -467,9 +499,9 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
               name: '', score: null, max_score: null, dates: { taken_on: null, planned_retake_on: null },
             })}>+ Add another test</button>
           </div>
-        </Panel>
+        </FoldPanel>
 
-        <Panel title="Subject grades" hint="Keep the original transcript scale for every subject.">
+        <FoldPanel title="Subject grades" hint="Keep the original transcript scale for every subject." count={subjectGrades.length} hasData={subjectGrades.length > 0} testId="fold-subjects" key={`subjects-${generation}`}>
           <div className="stack stack--tight">
             {subjectGrades.map((_, index) => (
               <div className="panel panel--sunken" key={`subject-${index}`}>
@@ -486,9 +518,9 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
               subject: '', grade: { raw_value: null, raw_scale_max: null, raw_scale_label: '', status: 'applicant_confirmed' },
             })}>+ Add subject grade</button>
           </div>
-        </Panel>
+        </FoldPanel>
 
-        <Panel title="AP, IB and A-Level results" hint="Add achieved and predicted curriculum results exactly as reported.">
+        <FoldPanel title="AP, IB and A-Level results" hint="Add achieved and predicted curriculum results exactly as reported." count={curriculumResults.length} hasData={curriculumResults.length > 0} testId="fold-curriculum" key={`curriculum-${generation}`}>
           <div className="stack stack--tight">
             {curriculumResults.map((item, index) => (
               <div className="grid-3 panel panel--sunken" key={`curriculum-${index}`}>
@@ -508,9 +540,9 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
               framework: 'AP', subject: '', result: '', year: null, predicted: false,
             })}>+ Add curriculum result</button>
           </div>
-        </Panel>
+        </FoldPanel>
 
-        <Panel title="Extracurricular activities" hint="Depth, responsibility and measurable impact matter more than a long list.">
+        <FoldPanel title="Extracurricular activities" hint="Depth, responsibility and measurable impact matter more than a long list." count={activities.length} hasData={activities.length > 0} testId="fold-activities" key={`activities-${generation}`}>
           <div className="stack stack--tight">
             {activities.map((_, index) => (
               <div className="panel panel--sunken" key={`activity-${index}`}>
@@ -543,9 +575,9 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
               impact_on_others: null, evidence_links: [],
             })}>+ Add activity</button>
           </div>
-        </Panel>
+        </FoldPanel>
 
-        <Panel title="Achievements" hint="Include level, placement and how recipients were selected.">
+        <FoldPanel title="Achievements" hint="Include level, placement and how recipients were selected." count={achievements.length} hasData={achievements.length > 0} testId="fold-achievements" key={`achievements-${generation}`}>
           <div className="stack stack--tight">
             {achievements.map((_, index) => (
               <div className="grid-3 panel panel--sunken" key={`achievement-${index}`}>
@@ -571,7 +603,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
               selection_criterion: null, evidence_links: [],
             })}>+ Add achievement</button>
           </div>
-        </Panel>
+        </FoldPanel>
 
         {validation && (
           <Panel

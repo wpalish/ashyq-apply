@@ -38,6 +38,25 @@ const STORAGE_KEY = 'ashyq.locale';
  * from `ru` or `kk` renders this text rather than the raw key.
  */
 const EN = {
+  'tab.match': 'Match',
+  'tab.plan': 'Plan',
+  'tab.documents': 'Documents',
+  'tab.people': 'People',
+  'tab.me': 'Me',
+
+  'nav.start': 'Search',
+  // Short names for the sub-navigation, where a tab already says which part
+  // of the product this is: "Funding comparison" under Match is "Money".
+  'subnav.progress': 'Research',
+  'subnav.shortlist': 'Results',
+  'subnav.funding': 'Money',
+  'subnav.sources': 'Sources',
+  'subnav.profile': 'Profile',
+  'subnav.preferences': 'Preferences',
+  'subnav.me': 'Community profile',
+  'subnav.export': 'Data & export',
+  'subnav.moderation': 'Moderation',
+  'subnav.legal': 'Privacy & terms',
   'nav.group.prepare': 'Prepare',
   'nav.group.research': 'Research',
   'nav.group.decide': 'Decide',
@@ -295,6 +314,19 @@ export type MessageKey = keyof typeof EN;
  * from the glossary whose Russian equivalent a person has to choose.
  */
 const RU: Partial<Record<MessageKey, string>> = {
+  // "Match" is not here: it names the shortlist, an Open term in the glossary.
+  'tab.plan': 'План',
+  'tab.documents': 'Документы',
+  'tab.people': 'Люди',
+  'tab.me': 'Я',
+  'nav.start': 'Поиск',
+  // Results, Money, Sources, Preferences and Data & export name Open glossary
+  // terms (shortlist, funding, claim sources, export), as their long forms do.
+  'subnav.progress': 'Исследование',
+  'subnav.profile': 'Профиль',
+  'subnav.me': 'Профиль в сообществе',
+  'subnav.moderation': 'Модерация',
+  'subnav.legal': 'Конфиденциальность и условия',
   'nav.group.prepare': 'Подготовка',
   'nav.group.decide': 'Решение',
   'nav.group.community': 'Сообщество',
@@ -528,6 +560,16 @@ const RU: Partial<Record<MessageKey, string>> = {
 
 /** Kazakh, on the same rule. */
 const KK: Partial<Record<MessageKey, string>> = {
+  'tab.plan': 'Жоспар',
+  'tab.documents': 'Құжаттар',
+  'tab.people': 'Адамдар',
+  'tab.me': 'Мен',
+  'nav.start': 'Іздеу',
+  'subnav.progress': 'Зерттеу',
+  'subnav.profile': 'Профиль',
+  'subnav.me': 'Қауымдастықтағы профиль',
+  'subnav.moderation': 'Модерация',
+  'subnav.legal': 'Құпиялылық және шарттар',
   'nav.group.prepare': 'Дайындық',
   'nav.group.decide': 'Шешім',
   'nav.group.community': 'Қауымдастық',

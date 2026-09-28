@@ -10,6 +10,7 @@
  */
 
 import { expect, test, type Page } from '@playwright/test';
+import { goTo } from './helpers';
 
 test.describe.configure({ mode: 'serial' });
 
@@ -18,7 +19,7 @@ const RUN = `e2e${Date.now().toString().slice(-7)}`;
 /** Open the community profile, joining first if this database has no profile. */
 async function ensureJoined(page: Page): Promise<void> {
   await page.goto('/');
-  await page.getByTestId('nav-me').click();
+  await goTo(page, 'me');
 
   // The screen loads before it knows which of the two it is showing, so wait
   // for either rather than racing the spinner.
@@ -38,7 +39,7 @@ async function ensureJoined(page: Page): Promise<void> {
 test('joining publishes a profile that Discover can find', async ({ page }) => {
   await ensureJoined(page);
 
-  await page.getByTestId('nav-discover').click();
+  await goTo(page, 'discover');
   await page.getByLabel('City').fill('Astana');
   await page.getByLabel('University').click(); // blur commits the filter
 
@@ -47,7 +48,7 @@ test('joining publishes a profile that Discover can find', async ({ page }) => {
 
 test('a post shows the tags it will publish, then carries them into the feed', async ({ page }) => {
   await page.goto('/');
-  await page.getByTestId('nav-feed').click();
+  await goTo(page, 'feed');
 
   const composer = page.getByPlaceholder('Ask something, or say where you are applying');
   await composer.fill(`Кто сдаёт IELTS в #${RUN}?`);
@@ -64,7 +65,7 @@ test('a post shows the tags it will publish, then carries them into the feed', a
 
 test('an answer opens in place under its post and is counted', async ({ page }) => {
   await page.goto('/');
-  await page.getByTestId('nav-feed').click();
+  await goTo(page, 'feed');
 
   // Scoped to this run's own post: the database keeps earlier ones, and
   // "Answer" is a substring of another post's "1 answer".
@@ -80,25 +81,31 @@ test('an answer opens in place under its post and is counted', async ({ page }) 
 test('every community screen is reachable on a phone', async ({ page }) => {
   test.skip(
     (page.viewportSize()?.width ?? 0) >= 900,
-    'the wrapped navigation only applies below 900px',
+    'the bottom tab bar only applies below 900px',
   );
   await page.goto('/');
 
-  // The navigation used to be a 2223px strip in 343px of room: one item
-  // visible, and Community 1660px along it with nothing saying so.
-  const overflow = await page
-    .locator('.nav')
-    .evaluate((nav) => nav.scrollWidth - nav.clientWidth);
-  expect(overflow, 'the navigation must wrap, not hide items in a scroller').toBeLessThanOrEqual(1);
-
-  for (const label of ['Feed', 'Find applicants', 'My community profile']) {
-    await expect(page.getByRole('button', { name: label, exact: true })).toBeInViewport();
+  // The navigation once was a 2223px strip in 343px of room, with Community
+  // 1660px along it and nothing saying so. Now five tabs sit along the bottom
+  // edge, all of them on screen, and People holds the community.
+  const tabs = page.locator('.navtabs');
+  const overflow = await tabs.evaluate((nav) => nav.scrollWidth - nav.clientWidth);
+  expect(overflow, 'the tab bar must not hide a tab in a scroller').toBeLessThanOrEqual(1);
+  for (const tab of ['match', 'plan', 'documents', 'people', 'me']) {
+    await expect(page.getByTestId(`navtab-${tab}`)).toBeInViewport();
   }
+
+  await page.getByTestId('navtab-people').click();
+  for (const id of ['feed', 'discover', 'messages']) {
+    await expect(page.getByTestId(`nav-${id}`)).toBeInViewport();
+  }
+  await page.getByTestId('navtab-me').click();
+  await expect(page.getByTestId('nav-me')).toBeInViewport();
 });
 
 test('an over-long post cannot be sent', async ({ page }) => {
   await page.goto('/');
-  await page.getByTestId('nav-feed').click();
+  await goTo(page, 'feed');
 
   await page.getByPlaceholder('Ask something, or say where you are applying').fill('x'.repeat(501));
 
@@ -108,7 +115,7 @@ test('an over-long post cannot be sent', async ({ page }) => {
 
 test('a post can be taken back without leaving the community', async ({ page }) => {
   await page.goto('/');
-  await page.getByTestId('nav-feed').click();
+  await goTo(page, 'feed');
 
   const body = `Сказал не подумав ${RUN}`;
   await page.getByPlaceholder('Ask something, or say where you are applying').fill(body);
@@ -137,6 +144,6 @@ test('leaving the community is reversible from the same screen', async ({ page }
 
   // Back to the join form, with the account still signed in.
   await expect(page.getByRole('heading', { name: 'Join the community' })).toBeVisible();
-  await page.getByTestId('nav-discover').click();
+  await goTo(page, 'discover');
   await expect(page.getByText('Nobody has joined yet')).toBeVisible();
 });

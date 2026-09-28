@@ -1,17 +1,24 @@
 /**
- * Screen 07 — Approved universities.
+ * Screen 07 — the plan: deadlines and decisions.
  *
- * The decision ledger. Rejected rows stay visible with their reason, because
- * "why did I rule this out in March" is a real question in October.
+ * The departures board first - the nearest deadline among the kept and
+ * "maybe" programmes, then every one after it - and the decision ledger
+ * under it. Rejected rows stay visible with their reason, because "why did I
+ * rule this out in March" is a real question in October.
  */
 
+import { useState } from 'react';
+import { DeadlineBoard } from '@/components/DeadlineBoard';
 import { Chip, Empty, Notice, Panel, StatusChip } from '@/components/primitives';
+import { planDeadlines } from '@/lib/deadlines';
+import { doneKey, nextToStart, useDocsDone } from '@/lib/docs';
 import { date, eligibilityTone, fundingClassTone, money } from '@/lib/format';
 import { useStore } from '@/lib/store';
 import type { ProgramResult, UserDecision } from '@/types';
 
 export function ApprovedScreen({ onCollect }: { onCollect: () => void }) {
   const { results, run, collectDocuments, decide } = useStore();
+  const [done, toggle] = useDocsDone();
 
   const group = (d: UserDecision) => results.filter((r) => r.user_decision === d);
   const approved = group('approved');
@@ -29,15 +36,19 @@ export function ApprovedScreen({ onCollect }: { onCollect: () => void }) {
   return (
     <>
       <div className="screen__head">
-        <p className="screen__eyebrow">Step 07</p>
-        <h1 className="screen__title">Your decisions</h1>
+        <p className="screen__eyebrow">Plan</p>
+        <h1 className="screen__title">Your deadlines and decisions</h1>
         <p className="screen__lede">
-          Documents are collected only for what you shortlist. It is the slowest step, so it runs
-          on the handful you actually intend to apply to.
+          Every deadline on your list, nearest first. Documents are collected only for what you
+          keep: it is the slowest step, so it runs on the handful you intend to apply to.
         </p>
       </div>
 
       <div className="stack stack--loose">
+        <DeadlineBoard planned={planDeadlines(results)} done={done} />
+
+        <NextToStart results={results} done={done} toggle={toggle} />
+
         <Panel>
           <div className="row" style={{ justifyContent: 'space-between' }}>
             <div className="row">
@@ -55,7 +66,7 @@ export function ApprovedScreen({ onCollect }: { onCollect: () => void }) {
               }}
               data-testid="collect-documents"
             >
-              {collecting ? 'Collecting…' : `Collect documents for ${shortlisted} programmes`}
+              {collecting ? 'Collecting…' : `Collect documents for ${shortlisted} programme${shortlisted === 1 ? '' : 's'}`}
             </button>
           </div>
           {shortlisted === 0 && (
@@ -148,5 +159,73 @@ function DecidedRow({
       </div>
       {result.user_notes && <p className="xs faint" style={{ marginTop: 8 }}>{result.user_notes}</p>}
     </div>
+  );
+}
+
+/**
+ * Concept L's "this week", made useful on any day: the documents with the
+ * earliest start dates across the kept list, ticked here or on the documents
+ * screen alike. The ones due to start within seven days say so.
+ */
+function NextToStart({
+  results, done, toggle,
+}: {
+  results: ProgramResult[];
+  done: Record<string, boolean>;
+  toggle: (key: string) => void;
+}) {
+  // A document ticked here stays in place, struck through, until the next
+  // visit: vanishing on the tick left no way to undo a slip from this list.
+  const [tickedHere, setTickedHere] = useState<Set<string>>(() => new Set());
+  const kept = results.filter((r) => r.user_decision === 'approved' || r.user_decision === 'maybe');
+  if (kept.length === 0) return null;
+  const collected = kept.some((r) => r.checklist);
+  const settled = Object.fromEntries(Object.entries(done).filter(([key]) => !tickedHere.has(key)));
+  const tasks = nextToStart(results, settled);
+  const shown = tasks.slice(0, 3);
+  return (
+    <Panel title="Next to start" hint="From your document lists: each one's due date minus the time it takes.">
+      <div data-testid="next-to-start">
+        {!collected ? (
+          <p className="small muted">Collect documents for what you keep, and the first ones to start appear here.</p>
+        ) : shown.length === 0 ? (
+          <p className="small muted">Nothing left to start on the dates that are known.</p>
+        ) : (
+          <>
+            <ul className="next-docs">
+              {shown.map(({ result, item, timing }) => {
+                const key = doneKey(result, item);
+                const soon = timing.late || timing.daysToStart <= 7;
+                return (
+                  <li key={key} className={`next-docs__item${done[key] ? ' is-done' : ''}`}>
+                    <input
+                      type="checkbox"
+                      checked={Boolean(done[key])}
+                      onChange={() => {
+                        toggle(key);
+                        setTickedHere((prev) => new Set(prev).add(key));
+                      }}
+                      aria-label={`${item.name}, ${result.university}: ready`}
+                    />
+                    <span>
+                      <span className="next-docs__name">{item.name}</span>
+                      <span className="next-docs__where"> · {result.university} · due {date(timing.due)}</span>
+                    </span>
+                    <span className={`next-docs__when${soon ? ' next-docs__when--soon' : ''}`}>
+                      {timing.late ? 'start now' : timing.daysToStart <= 7 ? `this week · by ${date(timing.start)}` : `by ${date(timing.start)}`}
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+            {tasks.length > shown.length && (
+              <p className="xs muted" style={{ marginTop: 'var(--space-2)' }}>
+                and {tasks.length - shown.length} more on the documents screen
+              </p>
+            )}
+          </>
+        )}
+      </div>
+    </Panel>
   );
 }

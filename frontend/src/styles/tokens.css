@@ -1,65 +1,88 @@
 /*
- * Design tokens.
+ * Design tokens — «Горизонт», palette «Солнце».
  *
- * Direction: an editorial research dossier. This is a tool whose product is
- * evidence, so the surface reads like a case file - a serif display face for
- * structure, a grotesque for dense data, a mono for anything quoted from a
- * source. Warm paper in light, deep ink in dark, and status carried by colour
- * that means something rather than decorates.
+ * Direction (docs/design/redesign-concepts.md §17–§18): navy ink and a sun
+ * yellow main action on calm cloud-grey paper for work; a night palette for
+ * the moments (research running, results ready) and for the dark appearance.
+ * Headings are Montserrat, text and numbers Onest: both carry every Kazakh
+ * letter and the tenge sign, which the previous faces did not.
+ *
+ * Status colours keep one meaning each and follow the tones in
+ * src/lib/format.ts (ok, info, warn, risk, neutral). The sun yellow is the
+ * main button only; the warn status is always a pale amber pill with dark
+ * amber text, never solid yellow, so the two cannot be confused.
  */
 
 :root {
   color-scheme: light;
 
-  /* --- surfaces: warm paper, layered rather than shadowed --- */
-  --paper:            oklch(97.8% 0.008 85);
-  --surface:          oklch(100% 0 0);
-  --surface-sunken:   oklch(95.4% 0.010 85);
-  --surface-raised:   oklch(99.2% 0.005 85);
-  --surface-inverted: oklch(24% 0.020 265);
+  /* --- surfaces --- */
+  --paper:            #F6F7F9;   /* cloud 50 */
+  --surface:          #FFFFFF;
+  --surface-sunken:   #EEF1F5;   /* cloud 100 */
+  --surface-raised:   #FFFFFF;
+  --surface-inverted: #0F1E36;   /* navy 900 */
 
-  --ink:              oklch(23% 0.018 265);
-  --ink-muted:        oklch(45% 0.016 265);
-  --ink-faint:        oklch(45% 0.012 265);
-  --ink-inverted:     oklch(96% 0.006 85);
+  --ink:              #0F1E36;   /* navy 900 */
+  --ink-muted:        #5A6578;   /* slate 600: 5.1:1 on white */
+  --ink-faint:        #5A6578;
+  --ink-inverted:     #FFFFFF;
 
-  --rule:             oklch(89% 0.010 85);
-  --rule-strong:      oklch(80% 0.014 85);
+  --rule:             #E3E7ED;   /* cloud 150 */
+  --rule-strong:      #C2CAD6;   /* slate 300 */
 
-  /* --- accent: ink blue, used for action and focus only --- */
-  --accent:           oklch(42% 0.135 258);
-  --accent-hover:     oklch(39% 0.140 258);
-  --accent-soft:      oklch(94% 0.030 258);
-  --accent-border:    oklch(78% 0.070 258);
+  /* --- brand: the sun is the main action; routes are lines, never text --- */
+  --sun:              #FFC23D;
+  --sun-hover:        #F7B41F;
+  --sun-ink:          #0F1E36;
+  --route:            #E8A317;
+  --night:            #0B1628;   /* navy 950 */
+  --night-surface:    #16263F;
+  --night-line:       #2A3D61;
+  --night-ink:        #FFFFFF;
+  --night-muted:      #A7B1C2;
+  /* status words on the night board, in both appearances */
+  --night-ok:         #6BE3A4;
+  --night-act:        #FFD27A;
+  --night-ask:        #9CCBDC;
+  --night-passed:     #FF9C8F;
+  --flap:             #1C2E4D;
+  --kicker:           #8A5A00;   /* labels above titles: amber 700 */
+
+  /* --- accent: links and focus --- */
+  --accent:           #0B6F93;   /* teal 700: 5.7:1 on white */
+  --accent-hover:     #08587A;
+  --accent-soft:      #E3F1F6;
+  --accent-border:    #9CCBDC;
 
   /* --- semantic status: each maps to one product meaning --- */
-  --ok:               oklch(40% 0.115 152);   /* MET, FULL_RIDE_CONFIRMED */
-  --ok-soft:          oklch(94.5% 0.038 152);
-  --ok-border:        oklch(80% 0.070 152);
+  --ok:               #177A4C;   /* MET, STRONGER_FIT, FULL_RIDE_CONFIRMED */
+  --ok-soft:          #E4F5EC;
+  --ok-border:        #A9DCC0;
 
-  --info:             oklch(40% 0.115 245);   /* FULL_TUITION, PLAUSIBLE */
-  --info-soft:        oklch(94.5% 0.035 245);
-  --info-border:      oklch(80% 0.062 245);
+  --info:             #1D4F91;   /* PLAUSIBLE_FIT, FULL_TUITION, LARGE_GRANT */
+  --info-soft:        #E7F0FA;
+  --info-border:      #B5CCEA;
 
-  --warn:             oklch(39% 0.125 72);    /* PENDING, LARGE_GRANT */
-  --warn-soft:        oklch(95% 0.045 72);
-  --warn-border:      oklch(82% 0.080 72);
+  --warn:             #8A5A00;   /* PENDING, AMBITIOUS, PARTIAL */
+  --warn-soft:        #FFF3DB;
+  --warn-border:      #F0D08E;
 
-  --risk:             oklch(42% 0.165 27);    /* GAP, NOT_ELIGIBLE, passed */
-  --risk-soft:        oklch(95% 0.040 27);
-  --risk-border:      oklch(82% 0.075 27);
+  --risk:             #B42318;   /* GAP, NOT_ELIGIBLE, passed */
+  --risk-soft:        #FDECEA;
+  --risk-border:      #F2B8B0;
 
-  --unknown:          oklch(42% 0.008 265);   /* UNKNOWN, INSUFFICIENT_DATA */
-  --unknown-soft:     oklch(94% 0.005 265);
-  --unknown-border:   oklch(84% 0.006 265);
+  --unknown:          #5A6578;   /* UNKNOWN, INSUFFICIENT_DATA: dashed edge */
+  --unknown-soft:     #FFFFFF;
+  --unknown-border:   #9AA4B2;
 
-  --demo:             oklch(40% 0.115 320);   /* synthetic-fixture marker */
-  --demo-soft:        oklch(95% 0.035 320);
-  --demo-border:      oklch(83% 0.070 320);
+  --demo:             #7B3F9E;   /* synthetic-fixture marker */
+  --demo-soft:        #F4ECF9;
+  --demo-border:      #D7BEE8;
 
   /* --- type --- */
-  --font-display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
-  --font-ui: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Montserrat', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-ui: 'Onest', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 
   --text-xs:   0.75rem;
@@ -67,14 +90,13 @@
   --text-base: 0.9375rem;
   --text-md:   1.0625rem;
   --text-lg:   clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
-  --text-xl:   clamp(1.6rem, 1.3rem + 1.2vw, 2.25rem);
-  --text-display: clamp(2.1rem, 1.4rem + 3vw, 3.5rem);
+  --text-xl:   clamp(1.6rem, 1.3rem + 1.2vw, 2.125rem);
+  --text-display: clamp(1.9rem, 1.4rem + 2.4vw, 3rem);
 
-  --leading-tight: 1.15;
+  --leading-tight: 1.1;
   --leading-snug: 1.35;
-  --leading-normal: 1.6;
+  --leading-normal: 1.55;
 
-  /* --- rhythm: deliberately uneven, not one padding everywhere --- */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
@@ -84,127 +106,134 @@
   --space-7: 3rem;
   --space-8: clamp(3rem, 2rem + 4vw, 5.5rem);
 
-  --radius-sm: 3px;
-  --radius: 6px;
-  --radius-lg: 10px;
+  /* key 8 · field 14 · card 22 · pill */
+  --radius-sm: 8px;
+  --radius: 14px;
+  --radius-lg: 22px;
+  --radius-pill: 999px;
 
-  --shadow-sm: 0 1px 2px oklch(23% 0.018 265 / 0.06);
-  --shadow: 0 2px 6px oklch(23% 0.018 265 / 0.08), 0 1px 2px oklch(23% 0.018 265 / 0.05);
-  --shadow-lg: 0 12px 32px oklch(23% 0.018 265 / 0.13), 0 2px 8px oklch(23% 0.018 265 / 0.07);
+  --shadow-sm: 0 1px 2px rgba(15, 30, 54, 0.06);
+  --shadow: 0 6px 18px rgba(15, 30, 54, 0.10);
+  --shadow-lg: 0 16px 40px rgba(15, 30, 54, 0.14);
 
   --duration-fast: 120ms;
   --duration-normal: 220ms;
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 
-  --sidebar-width: 15.5rem;
+  --page-width: 76rem;
   --measure: 68ch;
 }
 
-:root[data-theme='dark'],
-:root:not([data-theme='light']) {
-  /* Default follows the system; an explicit choice wins via data-theme. */
-}
-
+/* The night palette doubles as the dark appearance. Default follows the
+   system; an explicit choice wins via data-theme. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
     color-scheme: dark;
 
-    --paper:            oklch(17.5% 0.018 265);
-    --surface:          oklch(21% 0.020 265);
-    --surface-sunken:   oklch(14.5% 0.016 265);
-    --surface-raised:   oklch(25% 0.022 265);
-    --surface-inverted: oklch(93% 0.008 85);
+    --paper:            #0B1628;
+    --surface:          #16263F;
+    --surface-sunken:   #0F1D33;
+    --surface-raised:   #1B2D4D;
+    --surface-inverted: #F6F7F9;
 
-    --ink:              oklch(93% 0.010 85);
-    --ink-muted:        oklch(74% 0.012 265);
-    --ink-faint:        oklch(72% 0.012 265);
-    --ink-inverted:     oklch(18% 0.018 265);
+    --ink:              #F2F4F8;
+    --ink-muted:        #A7B1C2;
+    --ink-faint:        #A7B1C2;
+    --ink-inverted:     #0F1E36;
 
-    --rule:             oklch(30% 0.018 265);
-    --rule-strong:      oklch(40% 0.020 265);
+    --rule:             #2A3D61;
+    --rule-strong:      #3C4E70;
 
-    --accent:           oklch(76% 0.115 250);
-    --accent-hover:     oklch(84% 0.110 250);
-    --accent-soft:      oklch(28% 0.055 255);
-    --accent-border:    oklch(45% 0.080 255);
+    --sun-hover:        #FFD06A;
+    --route:            #FFC23D;
+    --kicker:           #FFD27A;
 
-    --ok:               oklch(78% 0.120 152);
-    --ok-soft:          oklch(27% 0.050 152);
-    --ok-border:        oklch(42% 0.070 152);
+    --accent:           #8FD3F4;
+    --accent-hover:     #B7E4F9;
+    --accent-soft:      #173A55;
+    --accent-border:    #2F6A8E;
 
-    --info:             oklch(78% 0.100 245);
-    --info-soft:        oklch(27% 0.045 245);
-    --info-border:      oklch(42% 0.065 245);
+    --ok:               #6BE3A4;
+    --ok-soft:          #12352A;
+    --ok-border:        #245C44;
 
-    --warn:             oklch(81% 0.115 78);
-    --warn-soft:        oklch(29% 0.055 70);
-    --warn-border:      oklch(45% 0.080 72);
+    --info:             #9CC2FF;
+    --info-soft:        #182C4D;
+    --info-border:      #2F4F80;
 
-    --risk:             oklch(74% 0.140 27);
-    --risk-soft:        oklch(28% 0.060 27);
-    --risk-border:      oklch(45% 0.090 27);
+    --warn:             #FFD27A;
+    --warn-soft:        #3A2C0E;
+    --warn-border:      #6B5213;
 
-    --unknown:          oklch(70% 0.008 265);
-    --unknown-soft:     oklch(26% 0.010 265);
-    --unknown-border:   oklch(38% 0.010 265);
+    --risk:             #FF9C8F;
+    --risk-soft:        #3D1A18;
+    --risk-border:      #6E2E28;
 
-    --demo:             oklch(80% 0.105 320);
-    --demo-soft:        oklch(28% 0.055 320);
-    --demo-border:      oklch(45% 0.080 320);
+    --unknown:          #A7B1C2;
+    --unknown-soft:     #16263F;
+    --unknown-border:   #54698F;
 
-    --shadow-sm: 0 1px 2px oklch(0% 0 0 / 0.30);
-    --shadow: 0 2px 8px oklch(0% 0 0 / 0.38), 0 1px 2px oklch(0% 0 0 / 0.25);
-    --shadow-lg: 0 14px 38px oklch(0% 0 0 / 0.48), 0 2px 8px oklch(0% 0 0 / 0.30);
+    --demo:             #D9B3F0;
+    --demo-soft:        #2E1E3D;
+    --demo-border:      #5A3D75;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.30);
+    --shadow: 0 6px 18px rgba(0, 0, 0, 0.38);
+    --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.48);
   }
 }
 
 :root[data-theme='dark'] {
   color-scheme: dark;
 
-  --paper:            oklch(17.5% 0.018 265);
-  --surface:          oklch(21% 0.020 265);
-  --surface-sunken:   oklch(14.5% 0.016 265);
-  --surface-raised:   oklch(25% 0.022 265);
-  --surface-inverted: oklch(93% 0.008 85);
+  --paper:            #0B1628;
+  --surface:          #16263F;
+  --surface-sunken:   #0F1D33;
+  --surface-raised:   #1B2D4D;
+  --surface-inverted: #F6F7F9;
 
-  --ink:              oklch(93% 0.010 85);
-  --ink-muted:        oklch(74% 0.012 265);
-  --ink-faint:        oklch(72% 0.012 265);
-  --ink-inverted:     oklch(18% 0.018 265);
+  --ink:              #F2F4F8;
+  --ink-muted:        #A7B1C2;
+  --ink-faint:        #A7B1C2;
+  --ink-inverted:     #0F1E36;
 
-  --rule:             oklch(30% 0.018 265);
-  --rule-strong:      oklch(40% 0.020 265);
+  --rule:             #2A3D61;
+  --rule-strong:      #3C4E70;
 
-  --accent:           oklch(76% 0.115 250);
-  --accent-hover:     oklch(84% 0.110 250);
-  --accent-soft:      oklch(28% 0.055 255);
-  --accent-border:    oklch(45% 0.080 255);
+  --sun-hover:        #FFD06A;
+  --route:            #FFC23D;
+  --kicker:           #FFD27A;
 
-  --ok:               oklch(78% 0.120 152);
-  --ok-soft:          oklch(27% 0.050 152);
-  --ok-border:        oklch(42% 0.070 152);
+  --accent:           #8FD3F4;
+  --accent-hover:     #B7E4F9;
+  --accent-soft:      #173A55;
+  --accent-border:    #2F6A8E;
 
-  --info:             oklch(78% 0.100 245);
-  --info-soft:        oklch(27% 0.045 245);
-  --info-border:      oklch(42% 0.065 245);
+  --ok:               #6BE3A4;
+  --ok-soft:          #12352A;
+  --ok-border:        #245C44;
 
-  --warn:             oklch(81% 0.115 78);
-  --warn-soft:        oklch(29% 0.055 70);
-  --warn-border:      oklch(45% 0.080 72);
+  --info:             #9CC2FF;
+  --info-soft:        #182C4D;
+  --info-border:      #2F4F80;
 
-  --risk:             oklch(74% 0.140 27);
-  --risk-soft:        oklch(28% 0.060 27);
-  --risk-border:      oklch(45% 0.090 27);
+  --warn:             #FFD27A;
+  --warn-soft:        #3A2C0E;
+  --warn-border:      #6B5213;
 
-  --unknown:          oklch(70% 0.008 265);
-  --unknown-soft:     oklch(26% 0.010 265);
-  --unknown-border:   oklch(38% 0.010 265);
+  --risk:             #FF9C8F;
+  --risk-soft:        #3D1A18;
+  --risk-border:      #6E2E28;
 
-  --demo:             oklch(80% 0.105 320);
-  --demo-soft:        oklch(28% 0.055 320);
-  --demo-border:      oklch(45% 0.080 320);
+  --unknown:          #A7B1C2;
+  --unknown-soft:     #16263F;
+  --unknown-border:   #54698F;
 
-  --shadow-sm: 0 1px 2px oklch(0% 0 0 / 0.30);
-  --shadow: 0 2px 8px oklch(0% 0 0 / 0.38), 0 1px 2px oklch(0% 0 0 / 0.25);
-  --shadow-lg: 0 14px 38px oklch(0% 0 0 / 0.48), 0 2px 8px oklch(0% 0 0 / 0.30);
+  --demo:             #D9B3F0;
+  --demo-soft:        #2E1E3D;
+  --demo-border:      #5A3D75;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.30);
+  --shadow: 0 6px 18px rgba(0, 0, 0, 0.38);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.48);
 }

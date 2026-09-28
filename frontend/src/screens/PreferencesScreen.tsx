@@ -92,7 +92,7 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
   return (
     <>
       <div className="screen__head">
-        <p className="screen__eyebrow">Step 02</p>
+        <p className="screen__eyebrow">Me · Preferences</p>
         <h1 className="screen__title">What matters to you</h1>
         <p className="screen__lede">
           These shape the ordering, not the facts. Eligibility and funding are read from official

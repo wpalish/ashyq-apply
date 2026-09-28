@@ -15,8 +15,13 @@ const retryRun = vi.fn();
 const cancelRun = vi.fn();
 const recheckNow = vi.fn();
 
+let currentResults: unknown[] = [];
+let currentProfile: unknown = null;
+
 vi.mock('@/lib/store', () => ({
-  useStore: () => ({ run: currentRun, cancelRun, retryRun, recheckNow, results: [] }),
+  useStore: () => ({
+    run: currentRun, cancelRun, retryRun, recheckNow, results: currentResults, savedProfile: currentProfile,
+  }),
 }));
 
 const { deadJobCount } = vi.hoisted(() => ({ deadJobCount: vi.fn() }));
@@ -67,6 +72,8 @@ beforeEach(() => {
   deadJobCount.mockReset();
   deadJobCount.mockResolvedValue(0);
   currentRun = makeRun();
+  currentResults = [];
+  currentProfile = null;
 });
 
 describe('retry controls', () => {
@@ -240,5 +247,92 @@ describe('work the queue gave up on', () => {
 
     expect(await screen.findByText(/of stages complete/)).toBeInTheDocument();
     expect(screen.queryByTestId('dead-jobs')).toBeNull();
+  });
+});
+
+describe('the results reveal', () => {
+  const result = (id: string, country: string, eligibility: string, funding: string, gap: number | null) => ({
+    id, country, eligibility, best_funding_classification: funding,
+    funding_gap: gap === null
+      ? { computable: false, gap: null, reason: 'No official cost.' }
+      : { computable: true, gap: { amount: gap, currency: 'USD', academic_year: '2026/27' }, reason: '' },
+  });
+
+  beforeEach(() => {
+    currentRun = makeRun({ stage: 'awaiting_user_decision', progress: 1, claims_recorded: 414 });
+    currentResults = [
+      result('a', 'Netherlands', 'MET', 'FULL_RIDE_CONFIRMED', 1848),
+      result('b', 'Netherlands', 'PENDING', 'FULL_TUITION', 7554),
+      result('c', 'Japan', 'MET', 'PARTIAL', null),
+    ];
+  });
+
+  // Each tile is <dt>label</dt><dd>count</dd>; the number is drawn above.
+  it('counts what the run found from the results themselves', () => {
+    currentProfile = { funding: { max_annual_budget: 6000, budget_currency: 'USD' } };
+    render(<ProgressScreen onDone={() => {}} />);
+    const reveal = screen.getByTestId('results-reveal');
+    expect(reveal).toHaveTextContent('3 programmes in 2 countries');
+    expect(reveal).toHaveTextContent('meet every published requirement checked so far2');
+    expect(reveal).toHaveTextContent('have a published grant for tuition and living1');
+    expect(reveal).toHaveTextContent('facts, each with a link to its page414');
+    expect(reveal).toHaveTextContent('left to pay within 6,000 USD a year, if awarded1');
+    expect(reveal.textContent).not.toMatch(/%|chance|probab/i);
+  });
+
+  it('shows pages read instead of a budget count when there is no budget', () => {
+    render(<ProgressScreen onDone={() => {}} />);
+    expect(screen.getByTestId('results-reveal')).toHaveTextContent('official pages read72');
+  });
+
+  it('leads to the results with one button', () => {
+    const onDone = vi.fn();
+    render(<ProgressScreen onDone={onDone} />);
+    fireEvent.click(screen.getByTestId('to-shortlist'));
+    expect(onDone).toHaveBeenCalled();
+    expect(screen.getByTestId('to-shortlist')).toHaveTextContent('See 3 programmes');
+  });
+
+  it('is not shown while the research still runs', () => {
+    currentRun = makeRun({ stage: 'program_verification', job_running: true });
+    render(<ProgressScreen onDone={() => {}} />);
+    expect(screen.queryByTestId('results-reveal')).not.toBeInTheDocument();
+  });
+});
+
+describe('while the research runs', () => {
+  beforeEach(() => {
+    currentRun = makeRun({
+      stage: 'program_verification',
+      job_running: true,
+      pages_failed: 3,
+      errors: ['fixture://u-oslo/program-0.html: http_error — No bundled page'],
+      stages: [
+        { stage: 'program_verification', status: 'running', detail: '', error: '', items_done: 6, items_total: 20, started_at: null, finished_at: null },
+      ],
+    } as Partial<RunView>);
+    currentResults = [
+      { id: 'delft', university: 'Delft University of Technology', country: 'Netherlands', hard_filter_failures: ['IELTS writing'], source_urls: [], scholarships: [] },
+      { id: 'oslo', university: 'University of Oslo', country: 'Norway', hard_filter_failures: [], source_urls: ['fixture://u-oslo/program-0.html'], scholarships: [] },
+    ];
+  });
+
+  it('is a night moment: the stage in words, how far it has got, and four counters', () => {
+    render(<ProgressScreen onDone={() => {}} />);
+    const panel = screen.getByTestId('research-running');
+    expect(panel).toHaveTextContent('Reading official programme pages');
+    expect(panel).toHaveTextContent('6 of 20 in this stage');
+    expect(panel).toHaveTextContent('pages that could not be read3');
+    expect(screen.queryByTestId('results-reveal')).not.toBeInTheDocument();
+  });
+
+  it('lists what has been found so far, from the run itself', () => {
+    render(<ProgressScreen onDone={() => {}} />);
+    const found = screen.getByTestId('found-list');
+    expect(found).toHaveTextContent('Requirement not met');
+    expect(found).toHaveTextContent('Delft University of Technology');
+    expect(found).toHaveTextContent('Did not answer');
+    expect(found).toHaveTextContent('University of Oslo');
+    expect(screen.getByTestId('research-running').textContent).not.toMatch(/%\s*chance|probab/i);
   });
 });

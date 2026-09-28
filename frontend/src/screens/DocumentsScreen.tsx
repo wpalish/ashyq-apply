@@ -4,10 +4,17 @@
  * Grouped by who has to act, and ordered by lead time rather than by deadline.
  * A reference letter with a thirty-day lead time is the thing that actually
  * sinks an application, not the form you can fill in on the last evening.
+ *
+ * Round 7's documents screen: each programme says how much of its list is
+ * ready and how much is still missing, and each document says when to start
+ * it - its due date (its own, or the programme's admission deadline) minus
+ * the time it takes. "Ready" is the applicant's own tick: the product never
+ * uploads or submits anything.
  */
 
 import { useMemo, useState } from 'react';
 import { Chip, Empty, Notice, Panel } from '@/components/primitives';
+import { doneKey, itemsOf, timingOf, useDocsDone } from '@/lib/docs';
 import { date, dateTime } from '@/lib/format';
 import { api } from '@/api/client';
 import { useStore } from '@/lib/store';
@@ -20,33 +27,11 @@ const OWNER_LABEL: Record<string, string> = {
   third_party: 'A third party (translator, WES/ECE, notary)',
 };
 
-const DONE_KEY = 'ashyq.docsDone';
-
-function loadDone(): Record<string, boolean> {
-  try {
-    return JSON.parse(window.localStorage.getItem(DONE_KEY) ?? '{}');
-  } catch {
-    return {};
-  }
-}
-
 export function DocumentsScreen() {
   const { results, run } = useStore();
   const withChecklists = results.filter((r) => r.checklist);
   const [selected, setSelected] = useState<string>(withChecklists[0]?.id ?? '');
-  const [done, setDone] = useState<Record<string, boolean>>(loadDone);
-
-  const toggle = (key: string) => {
-    setDone((prev) => {
-      const next = { ...prev, [key]: !prev[key] };
-      try {
-        window.localStorage.setItem(DONE_KEY, JSON.stringify(next));
-      } catch {
-        /* progress ticks are a convenience; storage being unavailable is fine */
-      }
-      return next;
-    });
-  };
+  const [done, toggle] = useDocsDone();
 
   const deadlines = useMemo(() => {
     const items: { when: string; what: string; where: string; past: boolean }[] = [];
@@ -77,6 +62,21 @@ export function DocumentsScreen() {
     return items.sort((a, b) => a.when.localeCompare(b.when));
   }, [results]);
 
+  // The same test the plan's button uses: a queued job counts as collecting.
+  const collecting =
+    run?.job_status === 'queued' || run?.job_status === 'running' ||
+    (run?.stage === 'document_collection' && run.job_running);
+
+  if (withChecklists.length === 0 && collecting) {
+    // Opening this screen right after "Collect documents" used to say "run
+    // Collect documents" while the collection was already running.
+    return (
+      <Empty title="Collecting documents…">
+        Reading each kept programme's official list of what to send. It appears here when it is ready.
+      </Empty>
+    );
+  }
+
   if (withChecklists.length === 0) {
     return (
       <Empty title="No checklists yet">
@@ -90,7 +90,7 @@ export function DocumentsScreen() {
   return (
     <>
       <div className="screen__head">
-        <p className="screen__eyebrow">Step 08</p>
+        <p className="screen__eyebrow">Documents</p>
         <h1 className="screen__title">What to prepare, and when</h1>
         <p className="screen__lede">
           Ordered by lead time, not by deadline. The items at the top depend on other people, so
@@ -99,6 +99,36 @@ export function DocumentsScreen() {
       </div>
 
       <div className="stack stack--loose">
+        <div className="doc-progs" role="group" aria-label="Programmes with a document list">
+          {withChecklists.map((r) => {
+            const items = itemsOf(r);
+            const ready = items.filter((d) => done[doneKey(r, d)]).length;
+            const on = r.id === current.id;
+            return (
+              <button
+                key={r.id}
+                type="button"
+                className={`doc-prog${on ? ' is-on' : ''}`}
+                aria-pressed={on}
+                onClick={() => setSelected(r.id)}
+                data-testid={`doc-tab-${r.id}`}
+              >
+                <span className="doc-prog__uni">{r.university}</span>
+                <span className="doc-prog__name">{r.program}</span>
+                <span className="doc-prog__meter" aria-hidden="true">
+                  <span style={{ width: `${items.length ? (ready / items.length) * 100 : 0}%` }} />
+                </span>
+                <span className="doc-prog__count">
+                  {ready} of {items.length} ready
+                  {items.length - ready > 0 && <> · {items.length - ready} still missing</>}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        <ChecklistFor result={current} done={done} toggle={toggle} />
+
         <Panel
           title="Every deadline across your shortlist"
           sunken
@@ -119,32 +149,16 @@ export function DocumentsScreen() {
             {deadlines.map((d, i) => (
               <div key={i} className={`timeline__item ${d.past ? 'timeline__item--past' : ''}`}>
                 <span className="timeline__date">{date(d.when)}</span>
-                <div>
+                <div className="timeline__what">
                   <div className="small"><strong>{d.what}</strong></div>
                   <div className="xs muted">{d.where}</div>
                 </div>
-                {d.past && <Chip tone="risk">passed</Chip>}
+                {d.past && <span className="timeline__flag"><Chip tone="risk">passed</Chip></span>}
               </div>
             ))}
             {deadlines.length === 0 && <p className="muted small">No dated deadlines were found.</p>}
           </div>
         </Panel>
-
-        <div className="row">
-          {withChecklists.map((r) => (
-            <button
-              key={r.id}
-              className="btn btn--sm"
-              style={r.id === current.id ? { borderColor: 'var(--accent)', color: 'var(--accent)' } : undefined}
-              onClick={() => setSelected(r.id)}
-              data-testid={`doc-tab-${r.id}`}
-            >
-              {r.university}
-            </button>
-          ))}
-        </div>
-
-        <ChecklistFor result={current} done={done} toggle={toggle} />
       </div>
     </>
   );
@@ -173,14 +187,25 @@ function ChecklistFor({
   ).sort((a, b) => maxLead(b[1]) - maxLead(a[1]));
   const total = groups.reduce((n, [, items]) => n + items.length, 0);
   const completed = groups.reduce(
-    (n, [, items]) => n + items.filter((d) => done[`${result.id}::${d.name}`]).length, 0,
+    (n, [, items]) => n + items.filter((d) => done[doneKey(result, d)]).length, 0,
   );
+
+  // When to begin each document (lib/docs.ts): shared with the plan, so the
+  // two screens cannot disagree.
+  const today = new Date();
+  const timing = (d: DocumentItem) => timingOf(result, d, today);
+  const first = groups
+    .flatMap(([, items]) => items)
+    .filter((d) => !done[doneKey(result, d)])
+    .map((d) => ({ d, t: timing(d) }))
+    .filter((x): x is { d: DocumentItem; t: NonNullable<ReturnType<typeof timing>> } => x.t !== null)
+    .sort((a, b) => a.t.start.localeCompare(b.t.start))[0];
 
   return (
     <div className="stack">
       <Panel
         title={`${result.university} — ${result.program}`}
-        hint={`${completed} of ${total} items ticked off. Generated ${dateTime(c.generated_at)}.`}
+        hint={`${completed} of ${total} item${total === 1 ? '' : 's'} ticked off. Generated ${dateTime(c.generated_at)}.`}
         actions={
           <Chip tone={c.completeness === 'official' ? 'ok' : c.completeness === 'partial' ? 'warn' : 'risk'}>
             {c.completeness === 'official' ? 'from official pages'
@@ -192,12 +217,24 @@ function ChecklistFor({
           <div className="meter__fill" style={{ width: `${total ? (completed / total) * 100 : 0}%` }} />
         </div>
 
+        {total > 0 && completed === total ? (
+          <p className="doc-first" data-testid="doc-first">Everything on this list is ticked off.</p>
+        ) : first ? (
+          <p className="doc-first" data-testid="doc-first">
+            <strong>Start first: {first.d.name}.</strong>{' '}
+            {first.t.late
+              ? <>It takes about {first.d.lead_time_days} days and is due {date(first.t.due)}, so it needs starting now.</>
+              : <>It takes about {first.d.lead_time_days} days: begin by {date(first.t.start)} to have it by {date(first.t.due)}.</>}
+          </p>
+        ) : null}
+
         {groups.map(([owner, items]) =>
           items.length === 0 ? null : (
             <div key={owner} className="stack stack--tight" style={{ marginBottom: 'var(--space-5)' }}>
               <h3 style={{ fontSize: 'var(--text-base)' }}>{OWNER_LABEL[owner]}</h3>
               {items.map((d) => {
-                const key = `${result.id}::${d.name}`;
+                const key = doneKey(result, d);
+                const t = timing(d);
                 return (
                   <label key={key} className={`doc ${done[key] ? 'doc--done' : ''}`}>
                     <input type="checkbox" checked={Boolean(done[key])} onChange={() => toggle(key)} />
@@ -218,6 +255,11 @@ function ChecklistFor({
                           d.deadline ? `due ${date(d.deadline)}` : null,
                         ].filter(Boolean).join(' · ')}
                       </div>
+                      {t && !done[key] && (
+                        <div className={`doc__start${t.late ? ' doc__start--late' : ''}`}>
+                          {t.late ? 'start now' : `start by ${date(t.start)}`}
+                        </div>
+                      )}
                       {d.prompt_text && (
                         <p className="xs faint" style={{ margin: '4px 0 0' }}>{d.prompt_text}</p>
                       )}
