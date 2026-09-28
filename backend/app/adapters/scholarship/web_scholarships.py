@@ -48,7 +48,7 @@ from app.schemas.result import Coverage, CoverageBreakdown, Scholarship
 #: One official-award query after an empty walk for a confirmed programme.
 SEARCH_FUNDING_FALLBACK = True
 #: Measured separately: generic scholarship queries can return only indices.
-TARGET_AWARD_SEARCH = False
+TARGET_AWARD_SEARCH = True
 
 _COVERAGE_LABELS = {
     "tuition": CostCategory.TUITION,

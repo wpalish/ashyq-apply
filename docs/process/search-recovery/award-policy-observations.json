@@ -1,0 +1,4873 @@
+{
+  "pipeline_sha": "854cb7e11f6b1adc9e8cdc5cd4803b8fe0a21bdf",
+  "rule": "target_award_search",
+  "order": "off/on/on/off",
+  "seconds_per_case": 120,
+  "network_page_reads_per_case": 60,
+  "observations": [
+    {
+      "case": "hku",
+      "arm": "hku-off",
+      "at": "20260928T202311Z",
+      "error": null,
+      "urls": [
+        "https://admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science",
+        "https://www.cds.hku.hk/prospective-students/undergraduate/6200-computing-and-data-science-delta",
+        "https://www.cs.hku.hk/"
+      ],
+      "claims": 7,
+      "funding": [
+        {
+          "key": "unmapped.scholarship_exists",
+          "value": "International Postgraduate Scholarships for Computer Science",
+          "url": "https://scholar.aas.hku.hk/?action=showonesscheme&ss_id=599"
+        },
+        {
+          "key": "unmapped.scholarship_program_restriction",
+          "value": {
+            "degree": "bachelor",
+            "applies": "no"
+          },
+          "url": null
+        },
+        {
+          "key": "unmapped.scholarship_exists",
+          "value": "International Postgraduate Scholarships for Computer Science",
+          "url": "https://scholar.aas.hku.hk/?action=showonesscheme&ss_id=599"
+        },
+        {
+          "key": "unmapped.scholarship_program_restriction",
+          "value": {
+            "degree": "bachelor",
+            "applies": "no"
+          },
+          "url": null
+        }
+      ],
+      "telemetry": {
+        "http_fetches": 60,
+        "browser_fetches": 0,
+        "pdf_fetches": 1,
+        "search_calls": 7,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 95.54480962600002,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "metrics": {
+        "dataset_version": "2026-09-23.reviewed",
+        "dataset_sha256": "07337f811d3fdfd5535e1317698432fe9a2440c7f9484fe202485555d8ad578c",
+        "pipeline_sha": "854cb7e11f6b1adc9e8cdc5cd4803b8fe0a21bdf",
+        "provisional": false,
+        "mode": "live",
+        "captured_at": "20260928T202311Z",
+        "config": {
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "page_budget_counts": "network reads; cache hits are free (since 2026-09-23)",
+          "search_before_navigation": false,
+          "recover_search_candidates": true,
+          "search_funding_fallback": true,
+          "target_award_search": false,
+          "skip_refused_search_hosts": false,
+          "reject_archive_hosts": false,
+          "admission_lexicon": false,
+          "navigation_slot": false,
+          "browser_enabled": false,
+          "cohort": [
+            "groningen",
+            "delft",
+            "aalto",
+            "vienna",
+            "warsaw",
+            "ubc",
+            "toronto",
+            "hku",
+            "ntu",
+            "kaist"
+          ],
+          "scope": "current production pipeline; HTTP-only bounded cold run",
+          "rank_stage": "programme confirmation queue before catalogue walking",
+          "harness_sha256": "73ec803c1c1dcc5a8da0c8ebc673c6768c277e1b2cb12a41b396a9aa3deed373",
+          "mapping_sha256": "06e9d005d7f9093ca9f33c05bcb8fe1582b14e349adbb3720785b0fd239b082a"
+        },
+        "metrics": {
+          "programme_page_recall": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0
+          },
+          "programme_page_precision": {
+            "numerator": 1,
+            "denominator": 3,
+            "value": 0.3333333333333333
+          },
+          "recall_at_5": {
+            "numerator": 0,
+            "denominator": 1,
+            "value": 0.0
+          },
+          "recall_at_10": {
+            "numerator": 0,
+            "denominator": 1,
+            "value": 0.0
+          },
+          "recall_at_20": {
+            "numerator": 0,
+            "denominator": 1,
+            "value": 0.0
+          },
+          "claim_precision": {
+            "numerator": 3,
+            "denominator": 3,
+            "value": 1.0
+          },
+          "claim_recall": {
+            "numerator": 2,
+            "denominator": 4,
+            "value": 0.5
+          },
+          "claim_recall_same_page": {
+            "numerator": 2,
+            "denominator": 4,
+            "value": 0.5
+          },
+          "unsupported_claim_rate": {
+            "numerator": 1,
+            "denominator": 3,
+            "value": 0.3333333333333333
+          },
+          "wrong_scope_claim_rate": {
+            "numerator": 0,
+            "denominator": 3,
+            "value": 0.0
+          },
+          "critical_field_coverage": {
+            "numerator": 0,
+            "denominator": 21,
+            "value": 0.0
+          },
+          "scholarship_discovery_recall": {
+            "numerator": 0,
+            "denominator": 1,
+            "value": 0.0
+          },
+          "scholarship_applicability_precision": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "scholarship_applicability_recall": {
+            "numerator": 0,
+            "denominator": 1,
+            "value": 0.0
+          },
+          "scholarship_coverage_precision": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "primary_source_rate": {
+            "numerator": 5,
+            "denominator": 6,
+            "value": 0.8333333333333334
+          },
+          "verbatim_evidence_rate": {
+            "numerator": 2,
+            "denominator": 3,
+            "value": 0.6666666666666666
+          },
+          "current_evidence_rate": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "conflict_visibility_rate": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "support_adjudication_rate": {
+            "numerator": 3,
+            "denominator": 6,
+            "value": 0.5
+          },
+          "claim_adjudication_rate": {
+            "numerator": 3,
+            "denominator": 6,
+            "value": 0.5
+          },
+          "human_review_rate": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          }
+        },
+        "fields": {
+          "country_credential": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "deadline": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.admission": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.programme": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.scholarship": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "ielts.overall": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "ielts.subscores": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "intake": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "mandatory_fees": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "programme.exists": {
+            "precision": {
+              "numerator": 2,
+              "denominator": 2,
+              "value": 1.0
+            },
+            "coverage": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            }
+          },
+          "programme.faculty": {
+            "precision": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "coverage": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            }
+          },
+          "sat.minimum": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "sat.policy": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarship_applicability": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarship_coverage": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.computing_data_science.amount": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.computing_data_science.applicability.international": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.computing_data_science.coverage.tuition": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.computing_data_science.exists": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.entrance.applicability.application_mode": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.entrance.exists": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "tuition": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          }
+        },
+        "operations": {
+          "http_fetches": {
+            "sum": 60,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "browser_fetches": {
+            "sum": 0,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "pdf_fetches": {
+            "sum": 1,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "search_calls": {
+            "sum": 7,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "model_input_tokens": {
+            "sum": 0,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "jev_input_tokens": {
+            "sum": 0,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "latency_seconds": {
+            "sum": 95.54480962600002,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "cost_usd": {
+            "sum": null,
+            "measured_cases": 0,
+            "cases": 1
+          },
+          "human_review_required": {
+            "sum": null,
+            "measured_cases": 0,
+            "cases": 1
+          },
+          "latency_percentiles": {
+            "p50": 95.54480962600002,
+            "p95": 95.54480962600002
+          }
+        },
+        "cases": [
+          {
+            "case_id": "hku",
+            "country": "Hong Kong",
+            "site_types": [
+              "pdf_brochure_link"
+            ],
+            "programme_hit": true,
+            "correct_claims": 2,
+            "answerable_claims": 4,
+            "error": null
+          }
+        ],
+        "notes": [
+          "Exact value and evidence-scope matching; unlabelled predictions are unadjudicated, not correct.",
+          "Missing rank lists/telemetry yield null; per-case failures stay in recall denominators.",
+          "No overall accuracy score. Programme URLs measure identity, not intake confirmation."
+        ]
+      },
+      "run_id": "36478314618"
+    },
+    {
+      "case": "hku",
+      "arm": "hku-off",
+      "at": "20260928T202749Z",
+      "error": null,
+      "urls": [],
+      "claims": 0,
+      "funding": [],
+      "telemetry": {
+        "http_fetches": 49,
+        "browser_fetches": 0,
+        "pdf_fetches": 1,
+        "search_calls": 6,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 67.76012155599994,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "metrics": {
+        "dataset_version": "2026-09-23.reviewed",
+        "dataset_sha256": "07337f811d3fdfd5535e1317698432fe9a2440c7f9484fe202485555d8ad578c",
+        "pipeline_sha": "854cb7e11f6b1adc9e8cdc5cd4803b8fe0a21bdf",
+        "provisional": false,
+        "mode": "live",
+        "captured_at": "20260928T202749Z",
+        "config": {
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "page_budget_counts": "network reads; cache hits are free (since 2026-09-23)",
+          "search_before_navigation": false,
+          "recover_search_candidates": true,
+          "search_funding_fallback": true,
+          "target_award_search": false,
+          "skip_refused_search_hosts": false,
+          "reject_archive_hosts": false,
+          "admission_lexicon": false,
+          "navigation_slot": false,
+          "browser_enabled": false,
+          "cohort": [
+            "groningen",
+            "delft",
+            "aalto",
+            "vienna",
+            "warsaw",
+            "ubc",
+            "toronto",
+            "hku",
+            "ntu",
+            "kaist"
+          ],
+          "scope": "current production pipeline; HTTP-only bounded cold run",
+          "rank_stage": "programme confirmation queue before catalogue walking",
+          "harness_sha256": "73ec803c1c1dcc5a8da0c8ebc673c6768c277e1b2cb12a41b396a9aa3deed373",
+          "mapping_sha256": "06e9d005d7f9093ca9f33c05bcb8fe1582b14e349adbb3720785b0fd239b082a"
+        },
+        "metrics": {
+          "programme_page_recall": {
+            "numerator": 0,
+            "denominator": 1,
+            "value": 0.0
+          },
+          "programme_page_precision": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "recall_at_5": {
+            "numerator": 0,
+            "denominator": 1,
+            "value": 0.0
+          },
+          "recall_at_10": {
+            "numerator": 0,
+            "denominator": 1,
+            "value": 0.0
+          },
+          "recall_at_20": {
+            "numerator": 0,
+            "denominator": 1,
+            "value": 0.0
+          },
+          "claim_precision": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "claim_recall": {
+            "numerator": 0,
+            "denominator": 4,
+            "value": 0.0
+          },
+          "claim_recall_same_page": {
+            "numerator": 0,
+            "denominator": 4,
+            "value": 0.0
+          },
+          "unsupported_claim_rate": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "wrong_scope_claim_rate": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "critical_field_coverage": {
+            "numerator": 0,
+            "denominator": 21,
+            "value": 0.0
+          },
+          "scholarship_discovery_recall": {
+            "numerator": 0,
+            "denominator": 1,
+            "value": 0.0
+          },
+          "scholarship_applicability_precision": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "scholarship_applicability_recall": {
+            "numerator": 0,
+            "denominator": 1,
+            "value": 0.0
+          },
+          "scholarship_coverage_precision": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "primary_source_rate": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "verbatim_evidence_rate": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "current_evidence_rate": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "conflict_visibility_rate": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "support_adjudication_rate": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "claim_adjudication_rate": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "human_review_rate": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          }
+        },
+        "fields": {
+          "country_credential": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "deadline": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.admission": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.programme": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.scholarship": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "ielts.overall": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "ielts.subscores": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "intake": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "mandatory_fees": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "programme.exists": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "programme.faculty": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "sat.minimum": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "sat.policy": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarship_applicability": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarship_coverage": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.computing_data_science.amount": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.computing_data_science.applicability.international": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.computing_data_science.coverage.tuition": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.computing_data_science.exists": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.entrance.applicability.application_mode": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.entrance.exists": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "tuition": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          }
+        },
+        "operations": {
+          "http_fetches": {
+            "sum": 49,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "browser_fetches": {
+            "sum": 0,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "pdf_fetches": {
+            "sum": 1,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "search_calls": {
+            "sum": 6,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "model_input_tokens": {
+            "sum": 0,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "jev_input_tokens": {
+            "sum": 0,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "latency_seconds": {
+            "sum": 67.76012155599994,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "cost_usd": {
+            "sum": null,
+            "measured_cases": 0,
+            "cases": 1
+          },
+          "human_review_required": {
+            "sum": null,
+            "measured_cases": 0,
+            "cases": 1
+          },
+          "latency_percentiles": {
+            "p50": 67.76012155599994,
+            "p95": 67.76012155599994
+          }
+        },
+        "cases": [
+          {
+            "case_id": "hku",
+            "country": "Hong Kong",
+            "site_types": [
+              "pdf_brochure_link"
+            ],
+            "programme_hit": false,
+            "correct_claims": 0,
+            "answerable_claims": 4,
+            "error": null
+          }
+        ],
+        "notes": [
+          "Exact value and evidence-scope matching; unlabelled predictions are unadjudicated, not correct.",
+          "Missing rank lists/telemetry yield null; per-case failures stay in recall denominators.",
+          "No overall accuracy score. Programme URLs measure identity, not intake confirmation."
+        ]
+      },
+      "run_id": "36478314618"
+    },
+    {
+      "case": "hku",
+      "arm": "hku-on",
+      "at": "20260928T202448Z",
+      "error": null,
+      "urls": [
+        "https://admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science",
+        "https://www.cds.hku.hk/prospective-students/undergraduate/6999-computing-and-data-science",
+        "https://www.cds.hku.hk/prospective-students/undergraduate/6200-computing-and-data-science-delta"
+      ],
+      "claims": 3,
+      "funding": [],
+      "telemetry": {
+        "http_fetches": 62,
+        "browser_fetches": 0,
+        "pdf_fetches": 1,
+        "search_calls": 7,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 94.876454739,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "metrics": {
+        "dataset_version": "2026-09-23.reviewed",
+        "dataset_sha256": "07337f811d3fdfd5535e1317698432fe9a2440c7f9484fe202485555d8ad578c",
+        "pipeline_sha": "854cb7e11f6b1adc9e8cdc5cd4803b8fe0a21bdf",
+        "provisional": false,
+        "mode": "live",
+        "captured_at": "20260928T202448Z",
+        "config": {
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "page_budget_counts": "network reads; cache hits are free (since 2026-09-23)",
+          "search_before_navigation": false,
+          "recover_search_candidates": true,
+          "search_funding_fallback": true,
+          "target_award_search": true,
+          "skip_refused_search_hosts": false,
+          "reject_archive_hosts": false,
+          "admission_lexicon": false,
+          "navigation_slot": false,
+          "browser_enabled": false,
+          "cohort": [
+            "groningen",
+            "delft",
+            "aalto",
+            "vienna",
+            "warsaw",
+            "ubc",
+            "toronto",
+            "hku",
+            "ntu",
+            "kaist"
+          ],
+          "scope": "current production pipeline; HTTP-only bounded cold run",
+          "rank_stage": "programme confirmation queue before catalogue walking",
+          "harness_sha256": "73ec803c1c1dcc5a8da0c8ebc673c6768c277e1b2cb12a41b396a9aa3deed373",
+          "mapping_sha256": "06e9d005d7f9093ca9f33c05bcb8fe1582b14e349adbb3720785b0fd239b082a"
+        },
+        "metrics": {
+          "programme_page_recall": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0
+          },
+          "programme_page_precision": {
+            "numerator": 1,
+            "denominator": 3,
+            "value": 0.3333333333333333
+          },
+          "recall_at_5": {
+            "numerator": 0,
+            "denominator": 1,
+            "value": 0.0
+          },
+          "recall_at_10": {
+            "numerator": 0,
+            "denominator": 1,
+            "value": 0.0
+          },
+          "recall_at_20": {
+            "numerator": 0,
+            "denominator": 1,
+            "value": 0.0
+          },
+          "claim_precision": {
+            "numerator": 3,
+            "denominator": 3,
+            "value": 1.0
+          },
+          "claim_recall": {
+            "numerator": 2,
+            "denominator": 4,
+            "value": 0.5
+          },
+          "claim_recall_same_page": {
+            "numerator": 2,
+            "denominator": 4,
+            "value": 0.5
+          },
+          "unsupported_claim_rate": {
+            "numerator": 0,
+            "denominator": 2,
+            "value": 0.0
+          },
+          "wrong_scope_claim_rate": {
+            "numerator": 0,
+            "denominator": 3,
+            "value": 0.0
+          },
+          "critical_field_coverage": {
+            "numerator": 0,
+            "denominator": 21,
+            "value": 0.0
+          },
+          "scholarship_discovery_recall": {
+            "numerator": 0,
+            "denominator": 1,
+            "value": 0.0
+          },
+          "scholarship_applicability_precision": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "scholarship_applicability_recall": {
+            "numerator": 0,
+            "denominator": 1,
+            "value": 0.0
+          },
+          "scholarship_coverage_precision": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "primary_source_rate": {
+            "numerator": 3,
+            "denominator": 3,
+            "value": 1.0
+          },
+          "verbatim_evidence_rate": {
+            "numerator": 2,
+            "denominator": 3,
+            "value": 0.6666666666666666
+          },
+          "current_evidence_rate": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "conflict_visibility_rate": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "support_adjudication_rate": {
+            "numerator": 2,
+            "denominator": 3,
+            "value": 0.6666666666666666
+          },
+          "claim_adjudication_rate": {
+            "numerator": 3,
+            "denominator": 3,
+            "value": 1.0
+          },
+          "human_review_rate": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          }
+        },
+        "fields": {
+          "country_credential": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "deadline": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.admission": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.programme": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.scholarship": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "ielts.overall": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "ielts.subscores": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "intake": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "mandatory_fees": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "programme.exists": {
+            "precision": {
+              "numerator": 2,
+              "denominator": 2,
+              "value": 1.0
+            },
+            "coverage": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            }
+          },
+          "programme.faculty": {
+            "precision": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "coverage": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            }
+          },
+          "sat.minimum": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "sat.policy": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarship_applicability": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarship_coverage": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.computing_data_science.amount": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.computing_data_science.applicability.international": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.computing_data_science.coverage.tuition": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.computing_data_science.exists": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.entrance.applicability.application_mode": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.entrance.exists": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "tuition": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          }
+        },
+        "operations": {
+          "http_fetches": {
+            "sum": 62,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "browser_fetches": {
+            "sum": 0,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "pdf_fetches": {
+            "sum": 1,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "search_calls": {
+            "sum": 7,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "model_input_tokens": {
+            "sum": 0,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "jev_input_tokens": {
+            "sum": 0,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "latency_seconds": {
+            "sum": 94.876454739,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "cost_usd": {
+            "sum": null,
+            "measured_cases": 0,
+            "cases": 1
+          },
+          "human_review_required": {
+            "sum": null,
+            "measured_cases": 0,
+            "cases": 1
+          },
+          "latency_percentiles": {
+            "p50": 94.876454739,
+            "p95": 94.876454739
+          }
+        },
+        "cases": [
+          {
+            "case_id": "hku",
+            "country": "Hong Kong",
+            "site_types": [
+              "pdf_brochure_link"
+            ],
+            "programme_hit": true,
+            "correct_claims": 2,
+            "answerable_claims": 4,
+            "error": null
+          }
+        ],
+        "notes": [
+          "Exact value and evidence-scope matching; unlabelled predictions are unadjudicated, not correct.",
+          "Missing rank lists/telemetry yield null; per-case failures stay in recall denominators.",
+          "No overall accuracy score. Programme URLs measure identity, not intake confirmation."
+        ]
+      },
+      "run_id": "36478314618"
+    },
+    {
+      "case": "hku",
+      "arm": "hku-on",
+      "at": "20260928T202624Z",
+      "error": null,
+      "urls": [
+        "https://admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science",
+        "https://www.cds.hku.hk/prospective-students/undergraduate/6999-computing-and-data-science",
+        "https://www.cds.hku.hk/prospective-students/undergraduate/6200-computing-and-data-science-delta"
+      ],
+      "claims": 3,
+      "funding": [],
+      "telemetry": {
+        "http_fetches": 58,
+        "browser_fetches": 0,
+        "pdf_fetches": 1,
+        "search_calls": 7,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 83.20703483099999,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "metrics": {
+        "dataset_version": "2026-09-23.reviewed",
+        "dataset_sha256": "07337f811d3fdfd5535e1317698432fe9a2440c7f9484fe202485555d8ad578c",
+        "pipeline_sha": "854cb7e11f6b1adc9e8cdc5cd4803b8fe0a21bdf",
+        "provisional": false,
+        "mode": "live",
+        "captured_at": "20260928T202624Z",
+        "config": {
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "page_budget_counts": "network reads; cache hits are free (since 2026-09-23)",
+          "search_before_navigation": false,
+          "recover_search_candidates": true,
+          "search_funding_fallback": true,
+          "target_award_search": true,
+          "skip_refused_search_hosts": false,
+          "reject_archive_hosts": false,
+          "admission_lexicon": false,
+          "navigation_slot": false,
+          "browser_enabled": false,
+          "cohort": [
+            "groningen",
+            "delft",
+            "aalto",
+            "vienna",
+            "warsaw",
+            "ubc",
+            "toronto",
+            "hku",
+            "ntu",
+            "kaist"
+          ],
+          "scope": "current production pipeline; HTTP-only bounded cold run",
+          "rank_stage": "programme confirmation queue before catalogue walking",
+          "harness_sha256": "73ec803c1c1dcc5a8da0c8ebc673c6768c277e1b2cb12a41b396a9aa3deed373",
+          "mapping_sha256": "06e9d005d7f9093ca9f33c05bcb8fe1582b14e349adbb3720785b0fd239b082a"
+        },
+        "metrics": {
+          "programme_page_recall": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0
+          },
+          "programme_page_precision": {
+            "numerator": 1,
+            "denominator": 3,
+            "value": 0.3333333333333333
+          },
+          "recall_at_5": {
+            "numerator": 0,
+            "denominator": 1,
+            "value": 0.0
+          },
+          "recall_at_10": {
+            "numerator": 0,
+            "denominator": 1,
+            "value": 0.0
+          },
+          "recall_at_20": {
+            "numerator": 0,
+            "denominator": 1,
+            "value": 0.0
+          },
+          "claim_precision": {
+            "numerator": 3,
+            "denominator": 3,
+            "value": 1.0
+          },
+          "claim_recall": {
+            "numerator": 2,
+            "denominator": 4,
+            "value": 0.5
+          },
+          "claim_recall_same_page": {
+            "numerator": 2,
+            "denominator": 4,
+            "value": 0.5
+          },
+          "unsupported_claim_rate": {
+            "numerator": 0,
+            "denominator": 2,
+            "value": 0.0
+          },
+          "wrong_scope_claim_rate": {
+            "numerator": 0,
+            "denominator": 3,
+            "value": 0.0
+          },
+          "critical_field_coverage": {
+            "numerator": 0,
+            "denominator": 21,
+            "value": 0.0
+          },
+          "scholarship_discovery_recall": {
+            "numerator": 0,
+            "denominator": 1,
+            "value": 0.0
+          },
+          "scholarship_applicability_precision": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "scholarship_applicability_recall": {
+            "numerator": 0,
+            "denominator": 1,
+            "value": 0.0
+          },
+          "scholarship_coverage_precision": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "primary_source_rate": {
+            "numerator": 3,
+            "denominator": 3,
+            "value": 1.0
+          },
+          "verbatim_evidence_rate": {
+            "numerator": 2,
+            "denominator": 3,
+            "value": 0.6666666666666666
+          },
+          "current_evidence_rate": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "conflict_visibility_rate": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "support_adjudication_rate": {
+            "numerator": 2,
+            "denominator": 3,
+            "value": 0.6666666666666666
+          },
+          "claim_adjudication_rate": {
+            "numerator": 3,
+            "denominator": 3,
+            "value": 1.0
+          },
+          "human_review_rate": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          }
+        },
+        "fields": {
+          "country_credential": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "deadline": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.admission": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.programme": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.scholarship": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "ielts.overall": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "ielts.subscores": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "intake": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "mandatory_fees": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "programme.exists": {
+            "precision": {
+              "numerator": 2,
+              "denominator": 2,
+              "value": 1.0
+            },
+            "coverage": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            }
+          },
+          "programme.faculty": {
+            "precision": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "coverage": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            }
+          },
+          "sat.minimum": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "sat.policy": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarship_applicability": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarship_coverage": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.computing_data_science.amount": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.computing_data_science.applicability.international": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.computing_data_science.coverage.tuition": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.computing_data_science.exists": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.entrance.applicability.application_mode": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.entrance.exists": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "tuition": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          }
+        },
+        "operations": {
+          "http_fetches": {
+            "sum": 58,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "browser_fetches": {
+            "sum": 0,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "pdf_fetches": {
+            "sum": 1,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "search_calls": {
+            "sum": 7,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "model_input_tokens": {
+            "sum": 0,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "jev_input_tokens": {
+            "sum": 0,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "latency_seconds": {
+            "sum": 83.20703483099999,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "cost_usd": {
+            "sum": null,
+            "measured_cases": 0,
+            "cases": 1
+          },
+          "human_review_required": {
+            "sum": null,
+            "measured_cases": 0,
+            "cases": 1
+          },
+          "latency_percentiles": {
+            "p50": 83.20703483099999,
+            "p95": 83.20703483099999
+          }
+        },
+        "cases": [
+          {
+            "case_id": "hku",
+            "country": "Hong Kong",
+            "site_types": [
+              "pdf_brochure_link"
+            ],
+            "programme_hit": true,
+            "correct_claims": 2,
+            "answerable_claims": 4,
+            "error": null
+          }
+        ],
+        "notes": [
+          "Exact value and evidence-scope matching; unlabelled predictions are unadjudicated, not correct.",
+          "Missing rank lists/telemetry yield null; per-case failures stay in recall denominators.",
+          "No overall accuracy score. Programme URLs measure identity, not intake confirmation."
+        ]
+      },
+      "run_id": "36478314618"
+    },
+    {
+      "case": "ntu",
+      "arm": "ntu-off",
+      "at": "20260928T201942Z",
+      "error": null,
+      "urls": [
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-and-computer-sciences",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science-with-second-major-in-business-(international-trading)"
+      ],
+      "claims": 12,
+      "funding": [
+        {
+          "key": "scholarships.nanyang_global.exists",
+          "value": true,
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship"
+        },
+        {
+          "key": "scholarships.nanyang_global.coverage.living",
+          "value": {
+            "currency": "SGD",
+            "amount": 6500,
+            "period": "academic_year"
+          },
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship"
+        },
+        {
+          "key": "scholarships.nanyang_global.duration",
+          "value": "normal_programme_duration",
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship"
+        },
+        {
+          "key": "scholarships.nanyang_global.applicability.nationality",
+          "value": "all",
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship"
+        },
+        {
+          "key": "scholarships.nanyang_global.applicability.international",
+          "value": true,
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship"
+        },
+        {
+          "key": "scholarships.nanyang_global.applicability.degree",
+          "value": {
+            "degree": "bachelor",
+            "applies": "yes"
+          },
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship"
+        },
+        {
+          "key": "scholarships.nanyang_global.renewal",
+          "value": {
+            "cgpa_gte": 3.5,
+            "scale": 5.0,
+            "review": "each_semester"
+          },
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship"
+        },
+        {
+          "key": "unmapped.scholarship_exists",
+          "value": false,
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship"
+        }
+      ],
+      "telemetry": {
+        "http_fetches": 25,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 7,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 52.980230397999975,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "metrics": {
+        "dataset_version": "2026-09-23.reviewed",
+        "dataset_sha256": "c0f55080039a7ea9a3bff291f39b2668f1987963cd4a8f6f82abe201b821c57e",
+        "pipeline_sha": "854cb7e11f6b1adc9e8cdc5cd4803b8fe0a21bdf",
+        "provisional": false,
+        "mode": "live",
+        "captured_at": "20260928T201942Z",
+        "config": {
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "page_budget_counts": "network reads; cache hits are free (since 2026-09-23)",
+          "search_before_navigation": false,
+          "recover_search_candidates": true,
+          "search_funding_fallback": true,
+          "target_award_search": false,
+          "skip_refused_search_hosts": false,
+          "reject_archive_hosts": false,
+          "admission_lexicon": false,
+          "navigation_slot": false,
+          "browser_enabled": false,
+          "cohort": [
+            "groningen",
+            "delft",
+            "aalto",
+            "vienna",
+            "warsaw",
+            "ubc",
+            "toronto",
+            "hku",
+            "ntu",
+            "kaist"
+          ],
+          "scope": "current production pipeline; HTTP-only bounded cold run",
+          "rank_stage": "programme confirmation queue before catalogue walking",
+          "harness_sha256": "73ec803c1c1dcc5a8da0c8ebc673c6768c277e1b2cb12a41b396a9aa3deed373",
+          "mapping_sha256": "06e9d005d7f9093ca9f33c05bcb8fe1582b14e349adbb3720785b0fd239b082a"
+        },
+        "metrics": {
+          "programme_page_recall": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0
+          },
+          "programme_page_precision": {
+            "numerator": 1,
+            "denominator": 3,
+            "value": 0.3333333333333333
+          },
+          "recall_at_5": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0
+          },
+          "recall_at_10": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0
+          },
+          "recall_at_20": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0
+          },
+          "claim_precision": {
+            "numerator": 6,
+            "denominator": 7,
+            "value": 0.8571428571428571
+          },
+          "claim_recall": {
+            "numerator": 6,
+            "denominator": 21,
+            "value": 0.2857142857142857
+          },
+          "claim_recall_same_page": {
+            "numerator": 6,
+            "denominator": 21,
+            "value": 0.2857142857142857
+          },
+          "unsupported_claim_rate": {
+            "numerator": 1,
+            "denominator": 7,
+            "value": 0.14285714285714285
+          },
+          "wrong_scope_claim_rate": {
+            "numerator": 0,
+            "denominator": 7,
+            "value": 0.0
+          },
+          "critical_field_coverage": {
+            "numerator": 6,
+            "denominator": 39,
+            "value": 0.15384615384615385
+          },
+          "scholarship_discovery_recall": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0
+          },
+          "scholarship_applicability_precision": {
+            "numerator": 1,
+            "denominator": 2,
+            "value": 0.5
+          },
+          "scholarship_applicability_recall": {
+            "numerator": 1,
+            "denominator": 3,
+            "value": 0.3333333333333333
+          },
+          "scholarship_coverage_precision": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0
+          },
+          "primary_source_rate": {
+            "numerator": 12,
+            "denominator": 12,
+            "value": 1.0
+          },
+          "verbatim_evidence_rate": {
+            "numerator": 7,
+            "denominator": 7,
+            "value": 1.0
+          },
+          "current_evidence_rate": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "conflict_visibility_rate": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "support_adjudication_rate": {
+            "numerator": 7,
+            "denominator": 12,
+            "value": 0.5833333333333334
+          },
+          "claim_adjudication_rate": {
+            "numerator": 7,
+            "denominator": 12,
+            "value": 0.5833333333333334
+          },
+          "human_review_rate": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          }
+        },
+        "fields": {
+          "country_credential": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "country_credential.high_school_certificate.additional_qualification_required": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "country_credential.nis_grade12.minimum_grades": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "deadline": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.admission": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.programme": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.scholarship": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.scholarship.nanyang_global.essay.maximum_words": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.scholarship.nanyang_global.essay.required": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.scholarship.nanyang_global.referee.family_or_relative_allowed": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.scholarship.nanyang_global.referee.required": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.scholarship.nanyang_global.referee.role": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "english_evidence.ielts.minimum": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "english_evidence.sat.minimum": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "ielts.overall": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "ielts.subscores": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "intake": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "mandatory_fees": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "programme.exists": {
+            "precision": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "coverage": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            }
+          },
+          "sat.minimum": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "sat.policy": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarship_applicability": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarship_coverage": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.applicability.application_mode": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.applicability.degree": {
+            "precision": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "coverage": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.applicability.intake": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.applicability.nationality": {
+            "precision": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "coverage": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            }
+          },
+          "scholarships.nanyang_global.applicability.programme": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.bond": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.coverage.fees": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.coverage.housing": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.coverage.insurance": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.coverage.living": {
+            "precision": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "coverage": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            }
+          },
+          "scholarships.nanyang_global.coverage.travel": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.coverage.tuition": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.duration": {
+            "precision": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "coverage": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            }
+          },
+          "scholarships.nanyang_global.exists": {
+            "precision": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "coverage": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            }
+          },
+          "scholarships.nanyang_global.renewal": {
+            "precision": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "coverage": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            }
+          },
+          "tuition": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          }
+        },
+        "operations": {
+          "http_fetches": {
+            "sum": 25,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "browser_fetches": {
+            "sum": 0,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "pdf_fetches": {
+            "sum": 0,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "search_calls": {
+            "sum": 7,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "model_input_tokens": {
+            "sum": 0,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "jev_input_tokens": {
+            "sum": 0,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "latency_seconds": {
+            "sum": 52.980230397999975,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "cost_usd": {
+            "sum": null,
+            "measured_cases": 0,
+            "cases": 1
+          },
+          "human_review_required": {
+            "sum": null,
+            "measured_cases": 0,
+            "cases": 1
+          },
+          "latency_percentiles": {
+            "p50": 52.980230397999975,
+            "p95": 52.980230397999975
+          }
+        },
+        "cases": [
+          {
+            "case_id": "ntu",
+            "country": "Singapore",
+            "site_types": [
+              "large_navigation"
+            ],
+            "programme_hit": true,
+            "correct_claims": 6,
+            "answerable_claims": 21,
+            "error": null
+          }
+        ],
+        "notes": [
+          "Exact value and evidence-scope matching; unlabelled predictions are unadjudicated, not correct.",
+          "Missing rank lists/telemetry yield null; per-case failures stay in recall denominators.",
+          "No overall accuracy score. Programme URLs measure identity, not intake confirmation."
+        ]
+      },
+      "run_id": "36478314618"
+    },
+    {
+      "case": "ntu",
+      "arm": "ntu-off",
+      "at": "20260928T202221Z",
+      "error": null,
+      "urls": [
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-and-computer-sciences",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science-with-second-major-in-business-(international-trading)"
+      ],
+      "claims": 4,
+      "funding": [],
+      "telemetry": {
+        "http_fetches": 25,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 7,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 48.01630104899999,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "metrics": {
+        "dataset_version": "2026-09-23.reviewed",
+        "dataset_sha256": "c0f55080039a7ea9a3bff291f39b2668f1987963cd4a8f6f82abe201b821c57e",
+        "pipeline_sha": "854cb7e11f6b1adc9e8cdc5cd4803b8fe0a21bdf",
+        "provisional": false,
+        "mode": "live",
+        "captured_at": "20260928T202221Z",
+        "config": {
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "page_budget_counts": "network reads; cache hits are free (since 2026-09-23)",
+          "search_before_navigation": false,
+          "recover_search_candidates": true,
+          "search_funding_fallback": true,
+          "target_award_search": false,
+          "skip_refused_search_hosts": false,
+          "reject_archive_hosts": false,
+          "admission_lexicon": false,
+          "navigation_slot": false,
+          "browser_enabled": false,
+          "cohort": [
+            "groningen",
+            "delft",
+            "aalto",
+            "vienna",
+            "warsaw",
+            "ubc",
+            "toronto",
+            "hku",
+            "ntu",
+            "kaist"
+          ],
+          "scope": "current production pipeline; HTTP-only bounded cold run",
+          "rank_stage": "programme confirmation queue before catalogue walking",
+          "harness_sha256": "73ec803c1c1dcc5a8da0c8ebc673c6768c277e1b2cb12a41b396a9aa3deed373",
+          "mapping_sha256": "06e9d005d7f9093ca9f33c05bcb8fe1582b14e349adbb3720785b0fd239b082a"
+        },
+        "metrics": {
+          "programme_page_recall": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0
+          },
+          "programme_page_precision": {
+            "numerator": 1,
+            "denominator": 3,
+            "value": 0.3333333333333333
+          },
+          "recall_at_5": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0
+          },
+          "recall_at_10": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0
+          },
+          "recall_at_20": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0
+          },
+          "claim_precision": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0
+          },
+          "claim_recall": {
+            "numerator": 1,
+            "denominator": 21,
+            "value": 0.047619047619047616
+          },
+          "claim_recall_same_page": {
+            "numerator": 1,
+            "denominator": 21,
+            "value": 0.047619047619047616
+          },
+          "unsupported_claim_rate": {
+            "numerator": 0,
+            "denominator": 1,
+            "value": 0.0
+          },
+          "wrong_scope_claim_rate": {
+            "numerator": 0,
+            "denominator": 1,
+            "value": 0.0
+          },
+          "critical_field_coverage": {
+            "numerator": 0,
+            "denominator": 39,
+            "value": 0.0
+          },
+          "scholarship_discovery_recall": {
+            "numerator": 0,
+            "denominator": 1,
+            "value": 0.0
+          },
+          "scholarship_applicability_precision": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "scholarship_applicability_recall": {
+            "numerator": 0,
+            "denominator": 3,
+            "value": 0.0
+          },
+          "scholarship_coverage_precision": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "primary_source_rate": {
+            "numerator": 4,
+            "denominator": 4,
+            "value": 1.0
+          },
+          "verbatim_evidence_rate": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0
+          },
+          "current_evidence_rate": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "conflict_visibility_rate": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "support_adjudication_rate": {
+            "numerator": 1,
+            "denominator": 4,
+            "value": 0.25
+          },
+          "claim_adjudication_rate": {
+            "numerator": 1,
+            "denominator": 4,
+            "value": 0.25
+          },
+          "human_review_rate": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          }
+        },
+        "fields": {
+          "country_credential": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "country_credential.high_school_certificate.additional_qualification_required": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "country_credential.nis_grade12.minimum_grades": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "deadline": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.admission": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.programme": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.scholarship": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.scholarship.nanyang_global.essay.maximum_words": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.scholarship.nanyang_global.essay.required": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.scholarship.nanyang_global.referee.family_or_relative_allowed": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.scholarship.nanyang_global.referee.required": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.scholarship.nanyang_global.referee.role": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "english_evidence.ielts.minimum": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "english_evidence.sat.minimum": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "ielts.overall": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "ielts.subscores": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "intake": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "mandatory_fees": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "programme.exists": {
+            "precision": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "coverage": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            }
+          },
+          "sat.minimum": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "sat.policy": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarship_applicability": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarship_coverage": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.applicability.application_mode": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.applicability.degree": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.applicability.intake": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.applicability.nationality": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.applicability.programme": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.bond": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.coverage.fees": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.coverage.housing": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.coverage.insurance": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.coverage.living": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.coverage.travel": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.coverage.tuition": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.duration": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.exists": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.renewal": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "tuition": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          }
+        },
+        "operations": {
+          "http_fetches": {
+            "sum": 25,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "browser_fetches": {
+            "sum": 0,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "pdf_fetches": {
+            "sum": 0,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "search_calls": {
+            "sum": 7,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "model_input_tokens": {
+            "sum": 0,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "jev_input_tokens": {
+            "sum": 0,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "latency_seconds": {
+            "sum": 48.01630104899999,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "cost_usd": {
+            "sum": null,
+            "measured_cases": 0,
+            "cases": 1
+          },
+          "human_review_required": {
+            "sum": null,
+            "measured_cases": 0,
+            "cases": 1
+          },
+          "latency_percentiles": {
+            "p50": 48.01630104899999,
+            "p95": 48.01630104899999
+          }
+        },
+        "cases": [
+          {
+            "case_id": "ntu",
+            "country": "Singapore",
+            "site_types": [
+              "large_navigation"
+            ],
+            "programme_hit": true,
+            "correct_claims": 1,
+            "answerable_claims": 21,
+            "error": null
+          }
+        ],
+        "notes": [
+          "Exact value and evidence-scope matching; unlabelled predictions are unadjudicated, not correct.",
+          "Missing rank lists/telemetry yield null; per-case failures stay in recall denominators.",
+          "No overall accuracy score. Programme URLs measure identity, not intake confirmation."
+        ]
+      },
+      "run_id": "36478314618"
+    },
+    {
+      "case": "ntu",
+      "arm": "ntu-on",
+      "at": "20260928T202037Z",
+      "error": null,
+      "urls": [
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-and-computer-sciences",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science-with-second-major-in-business-(international-trading)"
+      ],
+      "claims": 17,
+      "funding": [
+        {
+          "key": "scholarships.nanyang_global.exists",
+          "value": true,
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship"
+        },
+        {
+          "key": "scholarships.nanyang_global.coverage.living",
+          "value": {
+            "currency": "SGD",
+            "amount": 6500,
+            "period": "academic_year"
+          },
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship"
+        },
+        {
+          "key": "scholarships.nanyang_global.duration",
+          "value": "normal_programme_duration",
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship"
+        },
+        {
+          "key": "scholarships.nanyang_global.applicability.nationality",
+          "value": "all",
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship"
+        },
+        {
+          "key": "scholarships.nanyang_global.applicability.international",
+          "value": true,
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship"
+        },
+        {
+          "key": "scholarships.nanyang_global.applicability.degree",
+          "value": {
+            "degree": "bachelor",
+            "applies": "yes"
+          },
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship"
+        },
+        {
+          "key": "scholarships.nanyang_global.renewal",
+          "value": {
+            "cgpa_gte": 3.5,
+            "scale": 5.0,
+            "review": "each_semester"
+          },
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship"
+        },
+        {
+          "key": "unmapped.scholarship_exists",
+          "value": false,
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship"
+        },
+        {
+          "key": "unmapped.scholarship_exists",
+          "value": "ASEAN Undergraduate Scholarship",
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/asean-undergraduate-scholarship"
+        },
+        {
+          "key": "unmapped.scholarship_living_allowance",
+          "value": {
+            "currency": "SGD",
+            "amount": 5800,
+            "period": "academic_year"
+          },
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/asean-undergraduate-scholarship"
+        },
+        {
+          "key": "unmapped.scholarship_duration",
+          "value": "normal_programme_duration",
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/asean-undergraduate-scholarship"
+        },
+        {
+          "key": "unmapped.scholarship_renewal_requirement",
+          "value": {
+            "cgpa_gte": 3.5,
+            "scale": 5.0,
+            "review": "each_semester"
+          },
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/asean-undergraduate-scholarship"
+        },
+        {
+          "key": "unmapped.scholarship_exists",
+          "value": false,
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/asean-undergraduate-scholarship"
+        }
+      ],
+      "telemetry": {
+        "http_fetches": 25,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 7,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 51.05381394499997,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "metrics": {
+        "dataset_version": "2026-09-23.reviewed",
+        "dataset_sha256": "c0f55080039a7ea9a3bff291f39b2668f1987963cd4a8f6f82abe201b821c57e",
+        "pipeline_sha": "854cb7e11f6b1adc9e8cdc5cd4803b8fe0a21bdf",
+        "provisional": false,
+        "mode": "live",
+        "captured_at": "20260928T202037Z",
+        "config": {
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "page_budget_counts": "network reads; cache hits are free (since 2026-09-23)",
+          "search_before_navigation": false,
+          "recover_search_candidates": true,
+          "search_funding_fallback": true,
+          "target_award_search": true,
+          "skip_refused_search_hosts": false,
+          "reject_archive_hosts": false,
+          "admission_lexicon": false,
+          "navigation_slot": false,
+          "browser_enabled": false,
+          "cohort": [
+            "groningen",
+            "delft",
+            "aalto",
+            "vienna",
+            "warsaw",
+            "ubc",
+            "toronto",
+            "hku",
+            "ntu",
+            "kaist"
+          ],
+          "scope": "current production pipeline; HTTP-only bounded cold run",
+          "rank_stage": "programme confirmation queue before catalogue walking",
+          "harness_sha256": "73ec803c1c1dcc5a8da0c8ebc673c6768c277e1b2cb12a41b396a9aa3deed373",
+          "mapping_sha256": "06e9d005d7f9093ca9f33c05bcb8fe1582b14e349adbb3720785b0fd239b082a"
+        },
+        "metrics": {
+          "programme_page_recall": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0
+          },
+          "programme_page_precision": {
+            "numerator": 1,
+            "denominator": 3,
+            "value": 0.3333333333333333
+          },
+          "recall_at_5": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0
+          },
+          "recall_at_10": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0
+          },
+          "recall_at_20": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0
+          },
+          "claim_precision": {
+            "numerator": 6,
+            "denominator": 7,
+            "value": 0.8571428571428571
+          },
+          "claim_recall": {
+            "numerator": 6,
+            "denominator": 21,
+            "value": 0.2857142857142857
+          },
+          "claim_recall_same_page": {
+            "numerator": 6,
+            "denominator": 21,
+            "value": 0.2857142857142857
+          },
+          "unsupported_claim_rate": {
+            "numerator": 1,
+            "denominator": 7,
+            "value": 0.14285714285714285
+          },
+          "wrong_scope_claim_rate": {
+            "numerator": 0,
+            "denominator": 7,
+            "value": 0.0
+          },
+          "critical_field_coverage": {
+            "numerator": 6,
+            "denominator": 39,
+            "value": 0.15384615384615385
+          },
+          "scholarship_discovery_recall": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0
+          },
+          "scholarship_applicability_precision": {
+            "numerator": 1,
+            "denominator": 2,
+            "value": 0.5
+          },
+          "scholarship_applicability_recall": {
+            "numerator": 1,
+            "denominator": 3,
+            "value": 0.3333333333333333
+          },
+          "scholarship_coverage_precision": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0
+          },
+          "primary_source_rate": {
+            "numerator": 17,
+            "denominator": 17,
+            "value": 1.0
+          },
+          "verbatim_evidence_rate": {
+            "numerator": 7,
+            "denominator": 7,
+            "value": 1.0
+          },
+          "current_evidence_rate": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "conflict_visibility_rate": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "support_adjudication_rate": {
+            "numerator": 7,
+            "denominator": 17,
+            "value": 0.4117647058823529
+          },
+          "claim_adjudication_rate": {
+            "numerator": 7,
+            "denominator": 17,
+            "value": 0.4117647058823529
+          },
+          "human_review_rate": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          }
+        },
+        "fields": {
+          "country_credential": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "country_credential.high_school_certificate.additional_qualification_required": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "country_credential.nis_grade12.minimum_grades": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "deadline": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.admission": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.programme": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.scholarship": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.scholarship.nanyang_global.essay.maximum_words": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.scholarship.nanyang_global.essay.required": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.scholarship.nanyang_global.referee.family_or_relative_allowed": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.scholarship.nanyang_global.referee.required": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.scholarship.nanyang_global.referee.role": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "english_evidence.ielts.minimum": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "english_evidence.sat.minimum": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "ielts.overall": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "ielts.subscores": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "intake": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "mandatory_fees": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "programme.exists": {
+            "precision": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "coverage": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            }
+          },
+          "sat.minimum": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "sat.policy": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarship_applicability": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarship_coverage": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.applicability.application_mode": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.applicability.degree": {
+            "precision": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "coverage": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.applicability.intake": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.applicability.nationality": {
+            "precision": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "coverage": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            }
+          },
+          "scholarships.nanyang_global.applicability.programme": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.bond": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.coverage.fees": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.coverage.housing": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.coverage.insurance": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.coverage.living": {
+            "precision": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "coverage": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            }
+          },
+          "scholarships.nanyang_global.coverage.travel": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.coverage.tuition": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.duration": {
+            "precision": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "coverage": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            }
+          },
+          "scholarships.nanyang_global.exists": {
+            "precision": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "coverage": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            }
+          },
+          "scholarships.nanyang_global.renewal": {
+            "precision": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "coverage": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            }
+          },
+          "tuition": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          }
+        },
+        "operations": {
+          "http_fetches": {
+            "sum": 25,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "browser_fetches": {
+            "sum": 0,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "pdf_fetches": {
+            "sum": 0,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "search_calls": {
+            "sum": 7,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "model_input_tokens": {
+            "sum": 0,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "jev_input_tokens": {
+            "sum": 0,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "latency_seconds": {
+            "sum": 51.05381394499997,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "cost_usd": {
+            "sum": null,
+            "measured_cases": 0,
+            "cases": 1
+          },
+          "human_review_required": {
+            "sum": null,
+            "measured_cases": 0,
+            "cases": 1
+          },
+          "latency_percentiles": {
+            "p50": 51.05381394499997,
+            "p95": 51.05381394499997
+          }
+        },
+        "cases": [
+          {
+            "case_id": "ntu",
+            "country": "Singapore",
+            "site_types": [
+              "large_navigation"
+            ],
+            "programme_hit": true,
+            "correct_claims": 6,
+            "answerable_claims": 21,
+            "error": null
+          }
+        ],
+        "notes": [
+          "Exact value and evidence-scope matching; unlabelled predictions are unadjudicated, not correct.",
+          "Missing rank lists/telemetry yield null; per-case failures stay in recall denominators.",
+          "No overall accuracy score. Programme URLs measure identity, not intake confirmation."
+        ]
+      },
+      "run_id": "36478314618"
+    },
+    {
+      "case": "ntu",
+      "arm": "ntu-on",
+      "at": "20260928T202130Z",
+      "error": null,
+      "urls": [
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-and-computer-sciences",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science-with-second-major-in-business-(international-trading)"
+      ],
+      "claims": 12,
+      "funding": [
+        {
+          "key": "scholarships.nanyang_global.exists",
+          "value": true,
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship"
+        },
+        {
+          "key": "scholarships.nanyang_global.coverage.living",
+          "value": {
+            "currency": "SGD",
+            "amount": 6500,
+            "period": "academic_year"
+          },
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship"
+        },
+        {
+          "key": "scholarships.nanyang_global.duration",
+          "value": "normal_programme_duration",
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship"
+        },
+        {
+          "key": "scholarships.nanyang_global.applicability.nationality",
+          "value": "all",
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship"
+        },
+        {
+          "key": "scholarships.nanyang_global.applicability.international",
+          "value": true,
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship"
+        },
+        {
+          "key": "scholarships.nanyang_global.applicability.degree",
+          "value": {
+            "degree": "bachelor",
+            "applies": "yes"
+          },
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship"
+        },
+        {
+          "key": "scholarships.nanyang_global.renewal",
+          "value": {
+            "cgpa_gte": 3.5,
+            "scale": 5.0,
+            "review": "each_semester"
+          },
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship"
+        },
+        {
+          "key": "unmapped.scholarship_exists",
+          "value": false,
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship"
+        }
+      ],
+      "telemetry": {
+        "http_fetches": 25,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 7,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 50.412075155,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "metrics": {
+        "dataset_version": "2026-09-23.reviewed",
+        "dataset_sha256": "c0f55080039a7ea9a3bff291f39b2668f1987963cd4a8f6f82abe201b821c57e",
+        "pipeline_sha": "854cb7e11f6b1adc9e8cdc5cd4803b8fe0a21bdf",
+        "provisional": false,
+        "mode": "live",
+        "captured_at": "20260928T202130Z",
+        "config": {
+          "seconds_per_case": 120,
+          "max_fetcher_calls_per_case": 60,
+          "page_budget_counts": "network reads; cache hits are free (since 2026-09-23)",
+          "search_before_navigation": false,
+          "recover_search_candidates": true,
+          "search_funding_fallback": true,
+          "target_award_search": true,
+          "skip_refused_search_hosts": false,
+          "reject_archive_hosts": false,
+          "admission_lexicon": false,
+          "navigation_slot": false,
+          "browser_enabled": false,
+          "cohort": [
+            "groningen",
+            "delft",
+            "aalto",
+            "vienna",
+            "warsaw",
+            "ubc",
+            "toronto",
+            "hku",
+            "ntu",
+            "kaist"
+          ],
+          "scope": "current production pipeline; HTTP-only bounded cold run",
+          "rank_stage": "programme confirmation queue before catalogue walking",
+          "harness_sha256": "73ec803c1c1dcc5a8da0c8ebc673c6768c277e1b2cb12a41b396a9aa3deed373",
+          "mapping_sha256": "06e9d005d7f9093ca9f33c05bcb8fe1582b14e349adbb3720785b0fd239b082a"
+        },
+        "metrics": {
+          "programme_page_recall": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0
+          },
+          "programme_page_precision": {
+            "numerator": 1,
+            "denominator": 3,
+            "value": 0.3333333333333333
+          },
+          "recall_at_5": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0
+          },
+          "recall_at_10": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0
+          },
+          "recall_at_20": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0
+          },
+          "claim_precision": {
+            "numerator": 6,
+            "denominator": 7,
+            "value": 0.8571428571428571
+          },
+          "claim_recall": {
+            "numerator": 6,
+            "denominator": 21,
+            "value": 0.2857142857142857
+          },
+          "claim_recall_same_page": {
+            "numerator": 6,
+            "denominator": 21,
+            "value": 0.2857142857142857
+          },
+          "unsupported_claim_rate": {
+            "numerator": 1,
+            "denominator": 7,
+            "value": 0.14285714285714285
+          },
+          "wrong_scope_claim_rate": {
+            "numerator": 0,
+            "denominator": 7,
+            "value": 0.0
+          },
+          "critical_field_coverage": {
+            "numerator": 6,
+            "denominator": 39,
+            "value": 0.15384615384615385
+          },
+          "scholarship_discovery_recall": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0
+          },
+          "scholarship_applicability_precision": {
+            "numerator": 1,
+            "denominator": 2,
+            "value": 0.5
+          },
+          "scholarship_applicability_recall": {
+            "numerator": 1,
+            "denominator": 3,
+            "value": 0.3333333333333333
+          },
+          "scholarship_coverage_precision": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0
+          },
+          "primary_source_rate": {
+            "numerator": 12,
+            "denominator": 12,
+            "value": 1.0
+          },
+          "verbatim_evidence_rate": {
+            "numerator": 7,
+            "denominator": 7,
+            "value": 1.0
+          },
+          "current_evidence_rate": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "conflict_visibility_rate": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "support_adjudication_rate": {
+            "numerator": 7,
+            "denominator": 12,
+            "value": 0.5833333333333334
+          },
+          "claim_adjudication_rate": {
+            "numerator": 7,
+            "denominator": 12,
+            "value": 0.5833333333333334
+          },
+          "human_review_rate": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          }
+        },
+        "fields": {
+          "country_credential": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "country_credential.high_school_certificate.additional_qualification_required": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "country_credential.nis_grade12.minimum_grades": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "deadline": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.admission": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.programme": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.scholarship": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.scholarship.nanyang_global.essay.maximum_words": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.scholarship.nanyang_global.essay.required": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.scholarship.nanyang_global.referee.family_or_relative_allowed": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.scholarship.nanyang_global.referee.required": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.scholarship.nanyang_global.referee.role": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "english_evidence.ielts.minimum": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "english_evidence.sat.minimum": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "ielts.overall": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "ielts.subscores": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "intake": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "mandatory_fees": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "programme.exists": {
+            "precision": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "coverage": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            }
+          },
+          "sat.minimum": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "sat.policy": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarship_applicability": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarship_coverage": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.applicability.application_mode": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.applicability.degree": {
+            "precision": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "coverage": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.applicability.intake": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.applicability.nationality": {
+            "precision": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "coverage": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            }
+          },
+          "scholarships.nanyang_global.applicability.programme": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.bond": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.coverage.fees": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.coverage.housing": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.coverage.insurance": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.coverage.living": {
+            "precision": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "coverage": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            }
+          },
+          "scholarships.nanyang_global.coverage.travel": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.coverage.tuition": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships.nanyang_global.duration": {
+            "precision": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "coverage": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            }
+          },
+          "scholarships.nanyang_global.exists": {
+            "precision": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "coverage": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            }
+          },
+          "scholarships.nanyang_global.renewal": {
+            "precision": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "coverage": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            }
+          },
+          "tuition": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          }
+        },
+        "operations": {
+          "http_fetches": {
+            "sum": 25,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "browser_fetches": {
+            "sum": 0,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "pdf_fetches": {
+            "sum": 0,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "search_calls": {
+            "sum": 7,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "model_input_tokens": {
+            "sum": 0,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "jev_input_tokens": {
+            "sum": 0,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "latency_seconds": {
+            "sum": 50.412075155,
+            "measured_cases": 1,
+            "cases": 1
+          },
+          "cost_usd": {
+            "sum": null,
+            "measured_cases": 0,
+            "cases": 1
+          },
+          "human_review_required": {
+            "sum": null,
+            "measured_cases": 0,
+            "cases": 1
+          },
+          "latency_percentiles": {
+            "p50": 50.412075155,
+            "p95": 50.412075155
+          }
+        },
+        "cases": [
+          {
+            "case_id": "ntu",
+            "country": "Singapore",
+            "site_types": [
+              "large_navigation"
+            ],
+            "programme_hit": true,
+            "correct_claims": 6,
+            "answerable_claims": 21,
+            "error": null
+          }
+        ],
+        "notes": [
+          "Exact value and evidence-scope matching; unlabelled predictions are unadjudicated, not correct.",
+          "Missing rank lists/telemetry yield null; per-case failures stay in recall denominators.",
+          "No overall accuracy score. Programme URLs measure identity, not intake confirmation."
+        ]
+      },
+      "run_id": "36478314618"
+    },
+    {
+      "case": "charles",
+      "arm": "charles-off",
+      "at": "20260928T201934Z",
+      "error": null,
+      "urls": [
+        "https://www.mff.cuni.cz/en/students/bachelor-of-computer-science"
+      ],
+      "claims": 6,
+      "funding": [
+        {
+          "key": "unmapped.scholarship_exists",
+          "value": "Scholarship and Bursary Rules",
+          "url": "https://cuni.cz/UKEN-727.html"
+        },
+        {
+          "key": "unmapped.scholarship_duration",
+          "value": "normal_programme_duration",
+          "url": "https://cuni.cz/UKEN-727.html"
+        },
+        {
+          "key": "unmapped.scholarship_program_restriction",
+          "value": {
+            "degree": "bachelor",
+            "applies": "yes"
+          },
+          "url": "https://cuni.cz/UKEN-727.html"
+        },
+        {
+          "key": "unmapped.scholarship_exists",
+          "value": false,
+          "url": "https://cuni.cz/UKEN-727.html"
+        }
+      ],
+      "telemetry": {
+        "http_fetches": 40,
+        "browser_fetches": 0,
+        "pdf_fetches": 3,
+        "search_calls": 7,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 70.27796737,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "metrics": null,
+      "run_id": "36478319826"
+    },
+    {
+      "case": "charles",
+      "arm": "charles-off",
+      "at": "20260928T202304Z",
+      "error": null,
+      "urls": [
+        "https://www.mff.cuni.cz/en/students/bachelor-of-computer-science"
+      ],
+      "claims": 6,
+      "funding": [
+        {
+          "key": "unmapped.scholarship_exists",
+          "value": "Scholarship and Bursary Rules",
+          "url": "https://cuni.cz/UKEN-727.html"
+        },
+        {
+          "key": "unmapped.scholarship_duration",
+          "value": "normal_programme_duration",
+          "url": "https://cuni.cz/UKEN-727.html"
+        },
+        {
+          "key": "unmapped.scholarship_program_restriction",
+          "value": {
+            "degree": "bachelor",
+            "applies": "yes"
+          },
+          "url": "https://cuni.cz/UKEN-727.html"
+        },
+        {
+          "key": "unmapped.scholarship_exists",
+          "value": false,
+          "url": "https://cuni.cz/UKEN-727.html"
+        }
+      ],
+      "telemetry": {
+        "http_fetches": 40,
+        "browser_fetches": 0,
+        "pdf_fetches": 3,
+        "search_calls": 7,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 63.467961237,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "metrics": null,
+      "run_id": "36478319826"
+    },
+    {
+      "case": "charles",
+      "arm": "charles-on",
+      "at": "20260928T202046Z",
+      "error": null,
+      "urls": [
+        "https://www.mff.cuni.cz/en/students/bachelor-of-computer-science"
+      ],
+      "claims": 6,
+      "funding": [
+        {
+          "key": "unmapped.scholarship_exists",
+          "value": "Scholarship and Bursary Rules",
+          "url": "https://cuni.cz/UKEN-727.html"
+        },
+        {
+          "key": "unmapped.scholarship_duration",
+          "value": "normal_programme_duration",
+          "url": "https://cuni.cz/UKEN-727.html"
+        },
+        {
+          "key": "unmapped.scholarship_program_restriction",
+          "value": {
+            "degree": "bachelor",
+            "applies": "yes"
+          },
+          "url": "https://cuni.cz/UKEN-727.html"
+        },
+        {
+          "key": "unmapped.scholarship_exists",
+          "value": false,
+          "url": "https://cuni.cz/UKEN-727.html"
+        }
+      ],
+      "telemetry": {
+        "http_fetches": 42,
+        "browser_fetches": 0,
+        "pdf_fetches": 2,
+        "search_calls": 7,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 67.67063488400001,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "metrics": null,
+      "run_id": "36478319826"
+    },
+    {
+      "case": "charles",
+      "arm": "charles-on",
+      "at": "20260928T202155Z",
+      "error": null,
+      "urls": [
+        "https://www.mff.cuni.cz/en/students/bachelor-of-computer-science"
+      ],
+      "claims": 6,
+      "funding": [
+        {
+          "key": "unmapped.scholarship_exists",
+          "value": "Scholarship and Bursary Rules",
+          "url": "https://cuni.cz/UKEN-727.html"
+        },
+        {
+          "key": "unmapped.scholarship_duration",
+          "value": "normal_programme_duration",
+          "url": "https://cuni.cz/UKEN-727.html"
+        },
+        {
+          "key": "unmapped.scholarship_program_restriction",
+          "value": {
+            "degree": "bachelor",
+            "applies": "yes"
+          },
+          "url": "https://cuni.cz/UKEN-727.html"
+        },
+        {
+          "key": "unmapped.scholarship_exists",
+          "value": false,
+          "url": "https://cuni.cz/UKEN-727.html"
+        }
+      ],
+      "telemetry": {
+        "http_fetches": 42,
+        "browser_fetches": 0,
+        "pdf_fetches": 2,
+        "search_calls": 7,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 67.42519192199998,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "metrics": null,
+      "run_id": "36478319826"
+    },
+    {
+      "case": "sabanci",
+      "arm": "sabanci-off",
+      "at": "20260928T202409Z",
+      "error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED",
+      "urls": [],
+      "claims": 0,
+      "funding": [],
+      "telemetry": {
+        "http_fetches": 80,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 6,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 115.01308867699998,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "metrics": null,
+      "run_id": "36478319826"
+    },
+    {
+      "case": "sabanci",
+      "arm": "sabanci-off",
+      "at": "20260928T202924Z",
+      "error": null,
+      "urls": [],
+      "claims": 0,
+      "funding": [],
+      "telemetry": {
+        "http_fetches": 69,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 6,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 81.10977734800008,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "metrics": null,
+      "run_id": "36478319826"
+    },
+    {
+      "case": "sabanci",
+      "arm": "sabanci-on",
+      "at": "20260928T202605Z",
+      "error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED",
+      "urls": [],
+      "claims": 0,
+      "funding": [],
+      "telemetry": {
+        "http_fetches": 82,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 6,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 115.00450184200002,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "metrics": null,
+      "run_id": "36478319826"
+    },
+    {
+      "case": "sabanci",
+      "arm": "sabanci-on",
+      "at": "20260928T202802Z",
+      "error": null,
+      "urls": [],
+      "claims": 0,
+      "funding": [],
+      "telemetry": {
+        "http_fetches": 69,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 6,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 80.94319852299998,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "metrics": null,
+      "run_id": "36478319826"
+    }
+  ]
+}

@@ -6,7 +6,7 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-Current recovery holder: **gpt-6-astra**, resumed 2026-09-28 20:15 UTC; branch `task/apply-extraction-recovery`, base `origin/main@c4bfd42`, verified code HEAD `0f5b99d`. Source implementation is ready for review in PR #32. Final capture/CI links and any owner merge decision belong in the PR. Prior branch-specific batons below are historical.
+Current recovery holder: **nobody**, source baton released 2026-09-28 20:37 UTC; branch `task/apply-extraction-recovery`, base `origin/main@c4bfd42`. HEAD when written `854cb7e`; this accompanying commit promotes the measured award-policy query with final local gates green. PR #32 remains draft while the selected-head cloud checks and default NTU capture finish; their final links/results belong in the PR. Prior branch-specific batons below are historical.
 
 **Current branch-specific baton (2026-09-27 UTC):** holder **nobody**;
 `task/research-expert-traces`, from `origin/main@07de4d9`. The table below is
@@ -30,7 +30,7 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
-**Owner-directed search/extraction recovery, in-progress (draft PR #32, 2026-09-28).** Third programme verification, bounded fetched-identity search recovery/catalogue backfill, explicit teaching languages, recovered faculty/document rules, official funding search with confirmed-programme guard, unrestricted nationality scope, course-page rejection, prior-degree applicability and compact listing quotes are implemented. Code HEAD `0f5b99d` passes 2428 tests, 94.89% coverage and unchanged golden demo. Paired evidence is preserved in `docs/process/search-recovery`; final same-code full capture 36475528223 and GitHub gates are still running at this documentation checkpoint. PR stays draft until final results are reviewed. Do not alter signed labels or other Claude branches.
+**Owner-directed search/extraction recovery, ready-for-review (PR #32, 2026-09-28).** All reproduced search/extraction fixes and measured defaults are implemented. Final local suite: 2429 passed, 94.89% coverage, unchanged golden demo; frontend 193 unit tests/typecheck/lint/build pass. Award-policy paired runs 36478314618 and 36478319826 justify the generic query promotion. Source capture 36475528223 retains negative whole-cohort results (7/10 programme URLs, 13/62 known facts, 0/3 awards before query promotion). Review selected-head cloud checks/default capture in PR before merge. Do not alter signed labels or other Claude branches.
 
 **Phase 2 is `ready-for-review (PR #16)`.** PR #15 was merged by the owner on 2026-09-21 at `cba911a`; a merged PR cannot track new work, so everything since is PR #16 from the same branch. **Phase 3 §10 — conditional wording is not a settled requirement (in-progress).** Previously: **Phase 3 §9 — a document that waits for another.** Previously: **Phase 3 §7 — the availability roll-up, and two dead fields.** Previously: **Phase 3 §4 — "test optional" is not "the test is irrelevant".** Previously: **Phase 3 §3 — the English-test waiver.** Previously: **Phase 3 §6 — two scholarship decisions the schema was missing.** Previously: **plan V2-30 — a requirement says who it is for, backend and screen.** Previously: **plan V2-23, the kind the first pass left out.** Previously: **plan V2-20 exit criterion — the evidence answers its own questions.** Previously: **EXTRA-4 — an optional prefilter rejection, off until measured.** Previously: **V2-29 — a degree word in a heading is not a programme.** Previously: **V2-24a — telling a real change from a re-render.** Previously: **V2-28 — a programme title is not a term.** Previously: **V2-27 — the scope rate says why.** Previously: **V2-22b — the registry read as identities.** Previously: **V2-20 — evidence history (done).** V2-20a shipped `SourceSnapshot`; V2-20b closes the claim half. See the numbering note in §5. Previously: **conflict model v2 (plan V2-23).** Previously: **V2-25 — all five claim-producing adapters read scope.** Previously: **V2-24 — a scope refusal is said out loud to the applicant.** Previously: **V2-23 — the assessment refuses a claim whose page is about something else.** Previously: **V2-22 — fill a claim's scope from what its page states.** V2-21/V2-21b gave scope a shape and put it on the claim; this fills it, from the page's own words only. Previously: **V2-21b — carry the scope on a claim.** Phase 1 is complete, measured and wired (PR #15); this starts Phase 2 on the failure Phase 1 never touched. Phase 1 so far is `ready-for-review (PR #15)`, which supersedes draft PR #14. Phase 1 retrieval was measured live: The owner approved the §6 exception and authorised the live probe; the Exa adapter works and the retrieval ceiling moved **1/10 → 9/10**. V2-01 was accepted 2026-09-21 and its record is below.
 **Owner-directed expert recovery protocol, ready-for-review (PR #21, 2026-09-27).**
@@ -81,6 +81,8 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+**Award-policy query:** `854cb7e` adds the public degree-alias/eligibility-benefits family and truthful positive/negative CLI/config. Paired development and held-out runs both completed; all sixteen observations are preserved. The accompanying commit promotes only TARGET_AWARD_SEARCH with full final local gates; final SHA and cloud/default-capture links are in PR #32.
 
 **Owner search recovery commits (2026-09-28):** `ebf46fe` recovered five earlier Claude fixes and third-programme/language/content recovery; `41a70bc` bounded official-award search; `5fdbdab` diagnostic trace/query memo; `9668f09` catalogue backfill and unrestricted nationality scope; `9f8a93d` measured defaults and confirmed-programme funding guard; `36f4e1b`/`fdc1a39` isolated legacy experimental fixtures and rejected professional courses; `a648578` rejected topic courses and prior-study award applicability with paired/full-cohort evidence; `0f5b99d` narrowed compact quotes to listing claims, restoring the unchanged golden. PR #32; all source changes pushed.
 
@@ -1641,6 +1643,10 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**Final source release (2026-09-28 20:37 UTC):** no further source changes planned. On this pushed head, dispatch benchmark-capture.yml with mode=benchmark, case=ntu, 120 seconds and 60 page reads; verify target_award_search=True without an extra flag, actual award/source results and negatives. Wait for all selected-head release-gates, update PR #32 with actual links/numbers and mark ready. Owner squash-merges under AGENTS §4. No deployed URL has been supplied; never report a public-site update merely from PR readiness.
+
+**Award-policy promotion write-ahead (2026-09-28 20:32 UTC):** paired runs 36478314618 / 36478319826 completed on 854cb7e. NTU on found Nanyang in both runs (6/21 known facts each), off found it once (6/21 then 1/21); all four used seven searches/25 HTTP reads and judged wrong scope 0. HKU on retains 2/4 twice; off 2/4 then 0/4 with source drift. Charles same six predictions in all four; Sabanci both arms zero with one wall-clock failure per arm. Promote only TARGET_AWARD_SEARCH to True in app/adapters/scholarship/web_scholarships.py, retain the one-query/5-result/3-lead bounds. Run full local gates and default NTU capture, review final head CI before marking PR ready. Preserve negative full-cohort metrics and weaker bachelor verdict; do not infer full-time degree or alter labels.
 
 **Final-capture funding query write-ahead (2026-09-28 20:15 UTC):** code 0f5b99d capture 36475528223 completed: programme-page recall 7/10, known-claim recall 13/62, precision 20/21. NTU fallback query returned scholarships index, SPMS index and freshmen JS index; no award, while the earlier on arm found Nanyang. Improve only the generic public award query with degree aliases plus award-policy terms (eligibility/benefits), preserving one query/five results/three fetched leads, Fetcher and confirmed-programme guards. Add a measured internal switch with truthful CLI/config, paired NTU/HKU and held-out capture, and keep the old query default until validated. Source code otherwise remains unchanged. Preserve the final negative result rather than treating the prior 18/62 as final.
 
@@ -3412,6 +3418,8 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**Final award-policy promotion (2026-09-28 20:37 UTC):** 2429 passed, one warning, 294.74s; coverage 94.89%. Ruff app/tests/evaluation check and 296-file format check pass; mypy app/tests/evaluation 296 files green. Frontend typecheck/lint/193 unit tests/build green. Isolated seed again gives Groningen #1 and UBC OUT_OF_BUDGET; golden hash unchanged. Alembic c5d01b7e4f83 single head. Selected-head CI/default capture are the remaining verification steps, with exact completion in PR #32.
+
 **Final verified code `0f5b99d`, 2026-09-28:** ruff check passed; ruff format 296 files unchanged; mypy app/tests/evaluation: 296 source files, no issues; pytest full suite **2428 passed**, 1 warning in 292.30s, **94.89% coverage**. Golden digest unchanged: `d1403ce29ee2e0f710a034b78afe222cc42b40059a6730a60fa5041490333c53`. Pipeline seed previously verified Groningen #1, UBC OUT_OF_BUDGET and the exact demo payload is re-proved by the final suite. Alembic exactly one head `c5d01b7e4f83`. Frontend typecheck/lint/unit/build/Playwright demo+auth and security/container checks passed on code run `36475520836`; SQLite/PostgreSQL jobs still running at this checkpoint. Final live capture `36475528223`; completion/details are recorded in PR #32, not invented here.
 
 **a648578 golden follow-up:** 2427 passed / 1 failed, coverage 94.90%; failure was demo byte identity after broad quote shortening. Narrowed to listing claims, focused listing/oracle/golden suite 11 passed. Final full suite and CI will rerun on the corrected code. Superseded full capture 36474876085 and a648578 CI were cancelled; no measurements from that incomplete capture are treated as final.
@@ -3809,7 +3817,7 @@ CI runs both on the PR.
 
 ## 7. Blockers / questions for the owner
 
-**Owner search recovery:** no code blocker after local gates. Await final cloud capture/gates. AGENTS §4 assigns squash-merge to the owner. No public ASHYQ Apply URL was identified in the Claude context or current browser inventory; README describes an unpublished release candidate. Owner was asked for a deployed URL. Existing OAuth lacks workflow-write scope, so no workflow change or permission expansion is in this PR. Source access failures and incomplete field coverage remain explicit in the measurement report.
+**Owner search recovery:** no code blocker after final local gates. Await selected-head cloud gates/default NTU capture; final status lives in PR #32. AGENTS §4 assigns squash-merge to the owner. No public ASHYQ Apply URL was identified in the Claude context or current browser inventory; README describes an unpublished release candidate. Owner was asked for a deployed URL. Existing OAuth lacks workflow-write scope, so no workflow change or permission expansion is in this PR. Source access failures and incomplete field coverage remain explicit in the measurement report.
 
 ### RESOLVED 2026-09-23 — the owner approved every recommendation ("Разрешаю твои рекомендации")
 Implemented in this order, each with its own gates and commit (hashes in §3):
@@ -4079,6 +4087,8 @@ next agent does not reopen it.
   they are; do not rewrite that history.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
+
+- Award search query family `award_policy` uses public degree aliases plus eligibility/benefits. TARGET_AWARD_SEARCH=True after paired validation; `--target-award-search` / `--no-target-award-search` records and forwards actual defaults. The one-query/five-result/three-official-lead bounds and confirmed-programme/Fetcher guards remain. No public API/schema change.
 
 **Owner search recovery, 2026-09-28:** internal `ClaimBuilder.add(programme=...)` override scopes a faculty to the confirmed title; shared pure `read_documents` preserves completion forms. `WebScholarshipAdapter.find(..., allow_search=True)` permits the bounded fallback only when runner sees PROGRAM_EXISTS. `RECOVER_SEARCH_CANDIDATES=True`, `SEARCH_FUNDING_FALLBACK=True`; CLI supports both positive and `--no-...` forms, with actual defaults recorded in captures. Legacy navigation/refused-host experiments must explicitly disable content recovery to isolate their old mechanism. No API/schema/migration/ranking/Fetcher/privacy/gold contract changed.
 
@@ -4480,3 +4490,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 | 2026-09-28 20:00 UTC | gpt-6-astra | c4bfd42 -> 0f5b99d + release metadata | PR #32 search recovery; 60 paired observations, ten-case candidate capture and negative results preserved. Final code 2428 passed / 94.89%, golden unchanged; final full capture and CI running, results in PR. Source baton released; owner merges. |
 
 | 2026-09-28 20:15 UTC | gpt-6-astra | 3f26e31 -> award-query follow-up | Final capture exposes a generic query returning only indices for NTU; source baton retaken for bounded query refinement, final negative metrics preserved. |
+
+| 2026-09-28 20:37 UTC | gpt-6-astra | `854cb7e` → accompanying query promotion | Source baton released; final 2429/94.89% plus frontend gates green. Sixteen paired award observations preserved, default query promoted. Next: selected-head CI/default NTU capture, owner merge under §4; no public deployment claim. |
