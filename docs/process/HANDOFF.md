@@ -1640,6 +1640,8 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+**Capture tooling correction (2026-09-28):** expert_baseline accepts one case, while expert_paired accepts a space-separated list. Run 36468904142 stopped at argparse before any reads because I passed the list to expert_baseline. The attempted workflow edit was refused by GitHub because this OAuth credential has no workflow scope; reverted the unpublished edit. Use ordinary benchmark mode with case blank after the measured defaults are selected; it already captures all ten. No credential scope change is required.
+
 **2026-09-28 measured-search follow-up:** full backend at 41a70bc: 2410 passed, 94.84%; unchanged frontend all gates passed; seed Groningen #1, UBC OUT_OF_BUDGET. Programme/funding paired captures are running. Preserve search provider/query metadata on content-recovery traces and memoise the degree-only award query across fields (offline cross-field test passes). Capture the combined candidate on all ten reviewed institutions before selecting production defaults; no gold labels or budgets change.
 
 **Funding search write-ahead (2026-09-28):** NTU `/scholarships/freshmen` now serves a JS catalogue with no award anchors; the current walk consumes global-menu links and never opens the Nanyang award. Add a bounded, privacy-safe official scholarship query fallback in `web_scholarships.py`, memoised per university/degree, and content-only award link discovery. Preserve the existing Fetcher and classifier gates. Keep the experiment off until paired captures validate it. Backend recovery snapshot ebf46fe: 2406 tests passed, 94.84% coverage; frontend gates passed, golden demo preserved.
