@@ -642,6 +642,9 @@ class TestDiscoveryUsesSearchOnlyWhenOneIsConfigured:
         from app.adapters.discovery.live_discovery import DiscoveryTrace, PageCategory
 
         intent = an_intent()
+        import app.adapters.discovery.live_discovery as live
+
+        monkeypatch.setattr(live, "RECOVER_SEARCH_CANDIDATES", False)
         provider = FakeSearchProvider(
             {
                 q.text: [("https://nu.edu.kz/programmes/found-by-search", "Computer Science", "")]
@@ -726,6 +729,7 @@ class TestDiscoveryUsesSearchOnlyWhenOneIsConfigured:
         )
         monkeypatch.setattr(search_pkg, "get_search_provider", lambda: provider)
         monkeypatch.setattr(live, "SKIP_REFUSED_SEARCH_HOSTS", skip)
+        monkeypatch.setattr(live, "RECOVER_SEARCH_CANDIDATES", False)
         adapter = self._adapter(tmp_path)
         adapter.fetcher.refused_hosts = {"blocked.nu.edu.kz": "HTTP 403"}
         selected: dict[str, list[str]] = {

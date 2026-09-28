@@ -419,6 +419,13 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
     if _IRRELEVANT.search(low_head):
         return PageClassification(PageType.IRRELEVANT, 0.8, ["title is off-topic"], title)
 
+    # An audience qualification is not a degree the continuing course offers.
+    course_identity = f"{identity} {title} {path.replace('-', ' ')}"
+    if re.search(r"\bcourses?\s+(?:for\s+)?(?:teachers?|professionals?)\b", course_identity, re.I):
+        return PageClassification(
+            PageType.IRRELEVANT, 0.9, ["continuing course for a professional audience"], title
+        )
+
     # The page's own title and first heading only: a "News" block in the
     # sidebar is not the page. Run 31: Vienna's admission-procedure page and
     # HKU's admissions home were both rejected as news on a secondary h2.

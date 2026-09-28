@@ -27,6 +27,24 @@ class TestLabelledTeachingLanguage:
         assert _language("Language: Polish\nLanguage: English") is None
 
 
+class TestContinuingCourses:
+    def test_a_teacher_course_is_not_a_degree_its_audience_holds(self):
+        page = classify_page(
+            url="https://uni.edu/lifelong/computer-science-courses-teachers-informatics/id",
+            html="<h1>Computer Science</h1><p>Courses for teachers of informatics. "
+            "Applicants hold a bachelor degree. Computer Science topics.</p>",
+        )
+        assert page.page_type is PageType.IRRELEVANT
+
+    def test_a_degree_is_preserved_when_it_mentions_a_teacher_course_in_the_body(self):
+        page = classify_page(
+            url="https://uni.edu/bachelors/computer-science",
+            html="<h1>BSc Computer Science</h1><p>A three-year degree. "
+            "We also offer courses for teachers.</p>",
+        )
+        assert page.page_type is PageType.PROGRAM_DETAIL
+
+
 class TestADegreeWordIsNotAProgramme:
     """V2-29 — headings a live run actually claimed a programme from.
 
