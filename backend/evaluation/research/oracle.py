@@ -209,6 +209,52 @@ def _claims_on(
     return page.page_type.value, gated, ungated
 
 
+def _award_claims(
+    url: str, html: str, fetched_at, field: str = "", degree: str | None = None
+) -> tuple[list[tuple[str, object]], list[tuple[str, object]]]:
+    """The scholarship adapter's own award reader on one page, mapped to keys.
+
+    The adapter parses only pages it classifies as a single award, so those
+    claims are the gated ones; the ungated ones read every page as an award, to
+    tell a classifier refusal from a pattern miss. Keys are bound through the
+    reviewed identity map, as live capture binds them, so an award is scored
+    only under the identity its reviewer certified.
+    """
+    from app.adapters.base import Candidate, CandidateProgram
+    from app.adapters.discovery.live_discovery import registrable_domain
+    from app.adapters.page_classifier import PageType, classify_page
+    from app.adapters.scholarship.web_scholarships import WebScholarshipAdapter
+    from app.domain.enums import DegreeLevel
+
+    from .identities import IdentityMap
+    from .live import REVIEWED_BINDINGS
+    from .mapping import normalize_subject_claims
+
+    page = classify_page(url=url, html=html)
+    try:
+        level = DegreeLevel(degree or "bachelor")
+    except ValueError:
+        level = DegreeLevel("bachelor")
+    candidate = Candidate(name="", country="", city="", domain=registrable_domain(url))
+    program = CandidateProgram(name=field, field=field, degree=level)
+    adapter = WebScholarshipAdapter(None, "")  # type: ignore[arg-type]  # reads no pages
+    _award, claims = adapter._parse_award(candidate, program, url, html, fetched_at, page, index=0)
+    identities = IdentityMap.model_validate_json(REVIEWED_BINDINGS.read_text(encoding="utf-8"))
+    ungated: list[tuple[str, object]] = []
+    for claim in claims:
+        payload = claim.model_dump(mode="json")
+        for key, value, _programme, _degree in normalize_subject_claims(
+            payload["claim_type"], payload, identities
+        ):
+            ungated.append((key, value))
+    gated = list(ungated) if page.page_type is PageType.SCHOLARSHIP_AWARD else []
+    return gated, ungated
+
+
+#: Keys the award reader fills; the oracle runs it only for these.
+_AWARD_PREFIXES = ("scholarships.", "documents.scholarship.")
+
+
 def _matches(expected: object, produced: object) -> bool:
     if expected is None:
         return False
@@ -250,13 +296,17 @@ async def probe(target: Target, fetcher) -> Finding:
     def finding(verdict: str, detail: str = "") -> Finding:
         return Finding(target.case_id, target.key, target.url, verdict, detail)
 
+    if target.key.startswith(_AWARD_PREFIXES):
+        gated, ungated = await asyncio.to_thread(
+            _award_claims, target.url, page.text, page.fetched_at, target.field, target.degree
+        )
     if found(gated):
         return finding(RECOVERED, f"[{page_type}]")
     if found(ungated):
         return finding(
             CLASSIFIER_GATED, f"[{page_type}] the patterns read it; the page was not accepted"
         )
-    if target.key not in _MEASURED_KEYS:
+    if target.key not in _MEASURED_KEYS and not target.key.startswith(_AWARD_PREFIXES):
         return finding(
             NOT_MEASURED,
             f"[{page_type}] outside the requirements path this oracle runs "

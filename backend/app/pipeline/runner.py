@@ -19,7 +19,7 @@ from app.adapters.base import Candidate, CandidateProgram, PageOutcome
 from app.adapters.cost.web_costs import WebCostAdapter
 from app.adapters.discovery.catalog_walker import CatalogRenderer
 from app.adapters.discovery.fixture_discovery import FixtureDiscoveryAdapter
-from app.adapters.discovery.live_discovery import LiveDiscoveryAdapter
+from app.adapters.discovery.live_discovery import LiveDiscoveryAdapter, registry_campuses
 from app.adapters.documents.web_documents import WebDocumentsAdapter
 from app.adapters.fetching import Fetcher
 from app.adapters.government.web_government import WebGovernmentAdapter
@@ -27,6 +27,7 @@ from app.adapters.requirements.web_requirements import WebRequirementsAdapter
 from app.adapters.scholarship.web_scholarships import WebScholarshipAdapter
 from app.config import Settings
 from app.domain import dedupe, diagnostics
+from app.domain.campus import withhold_other_campuses
 from app.domain.citizenship import CitizenshipMatch, match_citizenship
 from app.domain.conflicts import enforce_source_hierarchy, find_conflicts
 from app.domain.costs import compute_funding_gap, total_cost
@@ -567,6 +568,31 @@ class ResearchRunner:
                 result.post_study_work = government_value
 
                 all_claims = ar.claims + cr.claims
+                # ER-02 (owner 2026-09-28): the applicant named no campus, so a
+                # page that belongs to one campus answers another question.
+                campuses = registry_campuses(cand.domain) if cand.domain else {}
+                if campuses:
+                    all_claims, withheld = withhold_other_campuses(all_claims, campuses)
+                    if withheld:
+                        result.unresolved.append(
+                            UnresolvedQuestion(
+                                topic="campus",
+                                question=(
+                                    f"{cand.name} offers {prog.name} on more than one campus, "
+                                    "each a separate application. Which campus do you want?"
+                                ),
+                                why_it_matters=(
+                                    "Requirements, fees and deadlines can differ by campus. "
+                                    "What was read on the "
+                                    + ", ".join(withheld)
+                                    + " pages is not shown as this programme's."
+                                ),
+                                university=cand.name,
+                                program=prog.name,
+                                suggested_contact="admissions office",
+                                blocking=False,
+                            )
+                        )
                 all_claims, demotion_qs = enforce_source_hierarchy(all_claims)
                 all_claims = [
                     c.model_copy(
