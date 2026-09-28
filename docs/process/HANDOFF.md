@@ -6,7 +6,7 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-Current recovery holder: gpt-6-astra, 2026-09-28 UTC; branch `task/apply-extraction-recovery`, base `origin/main@c4bfd42`. Owner asked to investigate the Claude chat and fix the reported extraction bugs. Prior branch-specific batons below are historical.
+Current recovery holder: **nobody**, released 2026-09-28 20:00 UTC; branch `task/apply-extraction-recovery`, base `origin/main@c4bfd42`, verified code HEAD `0f5b99d`. Source implementation is ready for review in PR #32. Final capture/CI links and any owner merge decision belong in the PR. Prior branch-specific batons below are historical.
 
 **Current branch-specific baton (2026-09-27 UTC):** holder **nobody**;
 `task/research-expert-traces`, from `origin/main@07de4d9`. The table below is
@@ -30,7 +30,7 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
-**Owner-directed extraction recovery (in-progress, 2026-09-28).** Recover five commits from the already-merged Claude branch into a fresh PR, review faculty scope and completion-state documents, reproduce and fix the still-missing Vienna/Warsaw teaching language, then verify gates and a bounded live benchmark. Do not modify the other active Claude branches.
+**Owner-directed search/extraction recovery, ready-for-review (PR #32, 2026-09-28).** Third programme verification, bounded fetched-identity search recovery/catalogue backfill, explicit teaching languages, recovered faculty/document rules, official funding search with confirmed-programme guard, unrestricted nationality scope, course-page rejection, prior-degree applicability and compact listing quotes are implemented. Code HEAD `0f5b99d` passes 2428 tests, 94.89% coverage and unchanged golden demo. Paired evidence is preserved in `docs/process/search-recovery`; final same-code full capture 36475528223 and GitHub gates are still running at this documentation checkpoint. PR stays draft until final results are reviewed. Do not alter signed labels or other Claude branches.
 
 **Phase 2 is `ready-for-review (PR #16)`.** PR #15 was merged by the owner on 2026-09-21 at `cba911a`; a merged PR cannot track new work, so everything since is PR #16 from the same branch. **Phase 3 §10 — conditional wording is not a settled requirement (in-progress).** Previously: **Phase 3 §9 — a document that waits for another.** Previously: **Phase 3 §7 — the availability roll-up, and two dead fields.** Previously: **Phase 3 §4 — "test optional" is not "the test is irrelevant".** Previously: **Phase 3 §3 — the English-test waiver.** Previously: **Phase 3 §6 — two scholarship decisions the schema was missing.** Previously: **plan V2-30 — a requirement says who it is for, backend and screen.** Previously: **plan V2-23, the kind the first pass left out.** Previously: **plan V2-20 exit criterion — the evidence answers its own questions.** Previously: **EXTRA-4 — an optional prefilter rejection, off until measured.** Previously: **V2-29 — a degree word in a heading is not a programme.** Previously: **V2-24a — telling a real change from a re-render.** Previously: **V2-28 — a programme title is not a term.** Previously: **V2-27 — the scope rate says why.** Previously: **V2-22b — the registry read as identities.** Previously: **V2-20 — evidence history (done).** V2-20a shipped `SourceSnapshot`; V2-20b closes the claim half. See the numbering note in §5. Previously: **conflict model v2 (plan V2-23).** Previously: **V2-25 — all five claim-producing adapters read scope.** Previously: **V2-24 — a scope refusal is said out loud to the applicant.** Previously: **V2-23 — the assessment refuses a claim whose page is about something else.** Previously: **V2-22 — fill a claim's scope from what its page states.** V2-21/V2-21b gave scope a shape and put it on the claim; this fills it, from the page's own words only. Previously: **V2-21b — carry the scope on a claim.** Phase 1 is complete, measured and wired (PR #15); this starts Phase 2 on the failure Phase 1 never touched. Phase 1 so far is `ready-for-review (PR #15)`, which supersedes draft PR #14. Phase 1 retrieval was measured live: The owner approved the §6 exception and authorised the live probe; the Exa adapter works and the retrieval ceiling moved **1/10 → 9/10**. V2-01 was accepted 2026-09-21 and its record is below.
 **Owner-directed expert recovery protocol, ready-for-review (PR #21, 2026-09-27).**
@@ -81,6 +81,8 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+**Owner search recovery commits (2026-09-28):** `ebf46fe` recovered five earlier Claude fixes and third-programme/language/content recovery; `41a70bc` bounded official-award search; `5fdbdab` diagnostic trace/query memo; `9668f09` catalogue backfill and unrestricted nationality scope; `9f8a93d` measured defaults and confirmed-programme funding guard; `36f4e1b`/`fdc1a39` isolated legacy experimental fixtures and rejected professional courses; `a648578` rejected topic courses and prior-study award applicability with paired/full-cohort evidence; `0f5b99d` narrowed compact quotes to listing claims, restoring the unchanged golden. PR #32; all source changes pushed.
 
 **Catalogue walker: footer links are not leads (`35bf92a`).** Siblings are grouped by host and parent path,
 so a site root is in no list. A link with no programme signal that leaves the catalogue's own host is
@@ -1639,6 +1641,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**Release checkpoint, 2026-09-28 20:00 UTC:** no source changes remain planned. Wait for final full-cohort run `36475528223` (code `0f5b99d`), download its artifact and report strict metrics/negative cases in PR #32; wait for release-gates on this documentation head. The metadata commit changes no backend/frontend code after the verified code head. Mark PR ready only when results/checks are reviewed. Owner squash-merges under AGENTS §4. Public deployment URL is not identified; owner was asked for it. Never claim the public site has been updated merely because a PR exists.
 
 **Quote-bound golden correction write-ahead (2026-09-28):** a648578 final local suite: 2427 passed, 1 failed, 94.90%; only byte-identical demo payload failed after changing every programme quote. Narrow the 300-character quote bound to the listing-page existence route that produced HKU's unsupported quote. Preserve original programme-detail quoting and golden bytes; do not update the baseline. Re-prove listing support and byte-identical demo before pushing and taking the final live capture.
 
@@ -3406,6 +3410,8 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**Final verified code `0f5b99d`, 2026-09-28:** ruff check passed; ruff format 296 files unchanged; mypy app/tests/evaluation: 296 source files, no issues; pytest full suite **2428 passed**, 1 warning in 292.30s, **94.89% coverage**. Golden digest unchanged: `d1403ce29ee2e0f710a034b78afe222cc42b40059a6730a60fa5041490333c53`. Pipeline seed previously verified Groningen #1, UBC OUT_OF_BUDGET and the exact demo payload is re-proved by the final suite. Alembic exactly one head `c5d01b7e4f83`. Frontend typecheck/lint/unit/build/Playwright demo+auth and security/container checks passed on code run `36475520836`; SQLite/PostgreSQL jobs still running at this checkpoint. Final live capture `36475528223`; completion/details are recorded in PR #32, not invented here.
+
 **a648578 golden follow-up:** 2427 passed / 1 failed, coverage 94.90%; failure was demo byte identity after broad quote shortening. Narrowed to listing claims, focused listing/oracle/golden suite 11 passed. Final full suite and CI will rerun on the corrected code. Superseded full capture 36474876085 and a648578 CI were cancelled; no measurements from that incomplete capture are treated as final.
 
 **Owner search recovery, 2026-09-28:** fdc1a39 CI 36472045853 completed green (SQLite/PostgreSQL, frontend including Playwright demo/auth, security/container builds). Follow-up before the quote-only bound: 2427 passed, 94.90% coverage in 293.79s; ruff check/format and mypy 296 files green. Quote-bound focus 9 passed; final full suite running. Full-cohort 36471138628 at 9f8a93d: programme recall 6/10, known-claim recall 18/62, precision 25/27; negative cases and scorer caveats are in docs/process/search-recovery. No labels changed.
@@ -3801,6 +3807,8 @@ CI runs both on the PR.
 
 ## 7. Blockers / questions for the owner
 
+**Owner search recovery:** no code blocker after local gates. Await final cloud capture/gates. AGENTS §4 assigns squash-merge to the owner. No public ASHYQ Apply URL was identified in the Claude context or current browser inventory; README describes an unpublished release candidate. Owner was asked for a deployed URL. Existing OAuth lacks workflow-write scope, so no workflow change or permission expansion is in this PR. Source access failures and incomplete field coverage remain explicit in the measurement report.
+
 ### RESOLVED 2026-09-23 — the owner approved every recommendation ("Разрешаю твои рекомендации")
 Implemented in this order, each with its own gates and commit (hashes in §3):
 1. **Bindings:** the three draft identity bindings are approved; live scoring maps with them.
@@ -4069,6 +4077,8 @@ next agent does not reopen it.
   they are; do not rewrite that history.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
+
+**Owner search recovery, 2026-09-28:** internal `ClaimBuilder.add(programme=...)` override scopes a faculty to the confirmed title; shared pure `read_documents` preserves completion forms. `WebScholarshipAdapter.find(..., allow_search=True)` permits the bounded fallback only when runner sees PROGRAM_EXISTS. `RECOVER_SEARCH_CANDIDATES=True`, `SEARCH_FUNDING_FALLBACK=True`; CLI supports both positive and `--no-...` forms, with actual defaults recorded in captures. Legacy navigation/refused-host experiments must explicitly disable content recovery to isolate their old mechanism. No API/schema/migration/ranking/Fetcher/privacy/gold contract changed.
 
 **2026-09-27, current branch:** evaluation-only
 `backend/evaluation/research/expert/` adds `prepare`, `validate`, `diagnose`,
@@ -4464,3 +4474,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 | 2026-09-27 UTC | gpt-6-astra | 07de4d9 → f112dcd + this release handoff | Owner-directed expert recovery protocol: blinded packets, trace schema with provenance/budget guards, retrospective diagnosis, four existing rules, three candidate hypotheses and runner instructions. PR #21; 14 focused tests, Windows full backend exit 0 at 94.56%, CI 1866 passed on SQLite/PostgreSQL. No live blind trace or promoted rule. Baton released. |
 
 | 2026-09-28 UTC | gpt-6-astra | c4bfd42 -> extraction recovery | Owner-directed investigation of Claude chat; isolated clean clone, one Alembic head c5d01b7e4f83, five extraction/oracle commits missing from main after PR merge; fresh branch recovery. |
+
+| 2026-09-28 20:00 UTC | gpt-6-astra | c4bfd42 -> 0f5b99d + release metadata | PR #32 search recovery; 60 paired observations, ten-case candidate capture and negative results preserved. Final code 2428 passed / 94.89%, golden unchanged; final full capture and CI running, results in PR. Source baton released; owner merges. |
