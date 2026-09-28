@@ -1459,6 +1459,18 @@ now measured instead of hidden). Benchmark: claim_recall 9/62, claim_precision 1
   `unknown` → 0 claims. Classification problem first.
 - KAIST scholarships (13 facts): robots.txt unreachable from GitHub runners — access, not extraction.
 
+Claude, 2026-09-28: NTU Nanyang Global award reader, ONBOARDING item 1. Offline on the page text the live oracle
+captured (artifact of run 36400210111): 1/16 → 5/16. Fixed, all generic rules in web_scholarships.py:
+duration in words now reads "normal programme duration"; a whole allowance is an int (6500, not 6500.0, which
+the scorer's JSON comparison counted as a different value); "Open to all nationalities" → citizenship "all";
+a retention grade with its stated scale and review period → renewal {cgpa_gte, scale, review}, even when the
+page never says "renewable". Golden demo unchanged. Remaining 11 need an owner/contract decision, not a pattern:
+application_mode wants `separate_after_admission_application` (enum has only `separate`); coverage.tuition,
+housing, travel and bond want structured shapes with page-specific tokens (`subsidised_after_tuition_grant`,
+`NTU_hostel_residence`, `MOE_Tuition_Grant`) the reader must not hard-code; degree wants `bachelor_full_time`
+(the mapping deliberately keeps a degree verdict apart from full-time applicability); the five scholarship
+documents have no identity binding in identity_bindings.reviewed.json. Confirm 5/16 on the next live oracle.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 
