@@ -45,8 +45,8 @@ from app.domain.funding import roll_up_availability
 from app.schemas.money import Money
 from app.schemas.result import Coverage, CoverageBreakdown, Scholarship
 
-#: Experimental until equal-budget captures validate the fallback.
-SEARCH_FUNDING_FALLBACK = False
+#: One official-award query after an empty walk for a confirmed programme.
+SEARCH_FUNDING_FALLBACK = True
 
 _COVERAGE_LABELS = {
     "tuition": CostCategory.TUITION,
@@ -234,7 +234,7 @@ class WebScholarshipAdapter:
         return self._award_searches[key]
 
     async def find(
-        self, candidate: Candidate, program: CandidateProgram, profile
+        self, candidate: Candidate, program: CandidateProgram, profile, *, allow_search: bool = True
     ) -> tuple[list[Scholarship], AdapterResult]:
         out = AdapterResult()
         self._memo_for(candidate)
@@ -434,7 +434,13 @@ class WebScholarshipAdapter:
                 fallback_used = True
                 queue.append((program.url, 0))
 
-            if SEARCH_FUNDING_FALLBACK and not queue and not scholarships and not search_used:
+            if (
+                SEARCH_FUNDING_FALLBACK
+                and allow_search
+                and not queue
+                and not scholarships
+                and not search_used
+            ):
                 search_used = True
                 leads = await self._search_awards(candidate, program, out)
                 queue.extend((u, 1) for u in leads if _page_key(u) not in seen_pages)

@@ -84,8 +84,9 @@ MAX_PROGRAM_CANDIDATES_CHECKED = 8
 #: on only together with a capture that shows what it does.
 CONFIRM_SEARCH_PROGRAMMES = False
 #: Bounded content verification with backfill, unlike the older prune-only
-#: experiment. Remains off until equal-budget captures validate the change.
-RECOVER_SEARCH_CANDIDATES = False
+#: experiment. Programme variants and unresolved degrees are rejected, and
+#: matching catalogue links share the same candidate-read bound.
+RECOVER_SEARCH_CANDIDATES = True
 #: Whether search runs *before* the navigation fallback, and the fallback is
 #: skipped when search found a programme page. Off: appending search after the
 #: other generators is the measured default, and interleaving once cost whole
@@ -1415,7 +1416,7 @@ class LiveDiscoveryAdapter:
                     )
             if reason is not None:
                 trace.reject(found.url, reason)
-                if page.page_type is PageType.PROGRAM_CATALOG:
+                if page.page_type in _LISTING_PAGE_TYPES:
                     # A search result can be the catalogue, not its detail
                     # page. Follow its own matching links before trying more
                     # search noise, sharing the same overall read bound.

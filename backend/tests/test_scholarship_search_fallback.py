@@ -44,7 +44,13 @@ class Provider:
         )
 
 
-async def run(tmp_path, monkeypatch, provider, award_body=_AWARD.format(name="Global Scholarship")):
+async def run(
+    tmp_path,
+    monkeypatch,
+    provider,
+    award_body=_AWARD.format(name="Global Scholarship"),
+    allow_search=True,
+):
     from app.adapters import search
 
     monkeypatch.setattr(web_scholarships, "SEARCH_FUNDING_FALLBACK", True)
@@ -67,11 +73,12 @@ async def run(tmp_path, monkeypatch, provider, award_body=_AWARD.format(name="Gl
     async with Fetcher(tmp_path / "cache", offline=True) as fetcher:
         site.install(fetcher)
         adapter = web_scholarships.WebScholarshipAdapter(fetcher, "2026/27")
-        awards, result = await adapter.find(candidate, program, None)
+        awards, result = await adapter.find(candidate, program, None, allow_search=allow_search)
         await adapter.find(
             candidate,
             CandidateProgram(name="Mathematics", field="mathematics", degree=DegreeLevel.BACHELOR),
             None,
+            allow_search=allow_search,
         )
     return awards, result, site
 
@@ -105,6 +112,15 @@ async def test_provider_failure_stays_unknown_and_does_not_retry(tmp_path, monke
     assert result.claims == []
     assert len(provider.calls) == 1
     assert any("search unavailable" in e for e in result.errors)
+
+
+@pytest.mark.asyncio
+async def test_an_unconfirmed_programme_does_not_spend_an_additional_search(tmp_path, monkeypatch):
+    provider = Provider(["https://uni.edu/global-scholarship"])
+    awards, result, _ = await run(tmp_path, monkeypatch, provider, allow_search=False)
+    assert not awards
+    assert not result.claims
+    assert provider.calls == []
 
 
 def test_global_menu_awards_do_not_consume_the_content_budget(monkeypatch):

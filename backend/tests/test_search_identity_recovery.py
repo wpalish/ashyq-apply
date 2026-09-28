@@ -106,14 +106,15 @@ async def test_an_alternate_programme_is_not_the_requested_degree(tmp_path, prof
 
 
 @pytest.mark.asyncio
-async def test_a_search_catalogue_lead_reaches_its_matching_detail_page(tmp_path, profile):
+@pytest.mark.parametrize("heading", ["Degree programmes", "Computer science"])
+async def test_a_search_catalogue_lead_reaches_its_matching_detail_page(tmp_path, profile, heading):
     urls = ["https://uni.edu/programmes", "https://uni.edu/programmes/bsc-cs"]
     pages, _, requested = await recover(
         tmp_path,
         profile,
         urls,
         [
-            "<h1>Degree programmes</h1>"
+            f"<h1>{heading}</h1>"
             "<a href='/programmes/bsc-cs'>Computer Science bachelor</a>"
             "<a href='/programmes/msc-cs'>Computer Science master</a>",
             program_html(),

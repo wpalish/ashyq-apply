@@ -700,7 +700,12 @@ class ResearchRunner:
             prog = CandidateProgram(
                 name=result.program, field="", degree=result.degree, url=result.program_url
             )
-            scholarships, ar = await adapter.find(cand, prog, self.profile)
+            scholarships, ar = await adapter.find(
+                cand,
+                prog,
+                self.profile,
+                allow_search=any(c.claim_type is ClaimType.PROGRAM_EXISTS for c in result.claims),
+            )
             errors.extend(ar.errors)
             self._record_page_outcomes(ar.page_outcomes)
             self.run.pages_checked += ar.pages_checked

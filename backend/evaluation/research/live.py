@@ -321,6 +321,9 @@ async def capture_one(
 
 
 def main() -> None:
+    from app.adapters.discovery import live_discovery
+    from app.adapters.scholarship import web_scholarships
+
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--live", action="store_true", required=True)
     parser.add_argument("--out", type=Path, required=True)
@@ -354,12 +357,14 @@ def main() -> None:
     )
     parser.add_argument(
         "--recover-search-candidates",
-        action="store_true",
+        action=argparse.BooleanOptionalAction,
+        default=live_discovery.RECOVER_SEARCH_CANDIDATES,
         help="experiment: verify search identities and backfill rejected programme leads",
     )
     parser.add_argument(
         "--search-funding-fallback",
-        action="store_true",
+        action=argparse.BooleanOptionalAction,
+        default=web_scholarships.SEARCH_FUNDING_FALLBACK,
         help="experiment: search official awards when index walking yields no scholarships",
     )
     parser.add_argument("--child", action="store_true", help=argparse.SUPPRESS)
@@ -367,14 +372,8 @@ def main() -> None:
     if not 1 <= args.seconds_per_case <= 600 or not 1 <= args.max_pages <= 100:
         parser.error("Budget must be 1..600 seconds and 1..100 Fetcher.get calls per university")
     if args.child:
-        if args.search_funding_fallback:
-            from app.adapters.scholarship import web_scholarships
-
-            web_scholarships.SEARCH_FUNDING_FALLBACK = True
-        if args.recover_search_candidates:
-            from app.adapters.discovery import live_discovery
-
-            live_discovery.RECOVER_SEARCH_CANDIDATES = True
+        web_scholarships.SEARCH_FUNDING_FALLBACK = args.search_funding_fallback
+        live_discovery.RECOVER_SEARCH_CANDIDATES = args.recover_search_candidates
         if args.search_first:
             from app.adapters.discovery import live_discovery
 
@@ -437,11 +436,13 @@ def main() -> None:
                         *(["--reject-archive-hosts"] if args.reject_archive_hosts else []),
                         *(["--admission-lexicon"] if args.admission_lexicon else []),
                         *(["--navigation-slot"] if args.navigation_slot else []),
-                        *(["--search-funding-fallback"] if args.search_funding_fallback else []),
+                        "--search-funding-fallback"
+                        if args.search_funding_fallback
+                        else "--no-search-funding-fallback",
                         *(
                             ["--recover-search-candidates"]
                             if args.recover_search_candidates
-                            else []
+                            else ["--no-recover-search-candidates"]
                         ),
                     ],
                     env=environment,
