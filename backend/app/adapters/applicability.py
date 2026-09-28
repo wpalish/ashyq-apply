@@ -56,6 +56,7 @@ _INCLUSION = (
     r"who wish to pursue",
     r"enrolling in",
     r"enrolled in",
+    r"(?:enrolled|accepted)\s+(?:or\s+(?:enrolled|accepted)\s+)?(?:in|into)",
     r"pursuing",
     r"studying",
 )
@@ -72,6 +73,8 @@ _PRIOR_QUALIFICATION = re.compile(
     r"|\bin possession of\b",
     re.IGNORECASE,
 )
+# GPA values contain decimal points, which are not sentence boundaries.
+_CLAUSE_CHAR = r"(?:[^.]|(?<=\d)\.(?=\d))"
 
 
 #: Mirrors app.schemas.result.Tristate; declared here to keep this module free
@@ -93,11 +96,32 @@ def _pattern_for(degree: str) -> str:
 
 def _mentions_as_prior_qualification(sentence: str, degree_pattern: str) -> bool:
     """Is this degree named as something the applicant already has?"""
-    for match in re.finditer(rf"\b(?:{degree_pattern})\b", sentence, re.IGNORECASE):
-        window = sentence[max(0, match.start() - 90) : match.start()]
-        if _PRIOR_QUALIFICATION.search(window):
-            return True
-    return False
+    matches = list(re.finditer(rf"\b(?:{degree_pattern})\b", sentence, re.IGNORECASE))
+    return bool(matches) and all(_is_prior_qualification(sentence, m) for m in matches)
+
+
+def _is_prior_qualification(text: str, match: re.Match[str]) -> bool:
+    before = text[max(0, match.start() - 90) : match.start()]
+    after = text[match.end() : match.end() + 80]
+    if _PRIOR_QUALIFICATION.search(before):
+        return True
+    # "GPA required for undergraduate studies" and "average score of the
+    # Bachelor's diploma" describe earlier results, not the funded level.
+    # Decimal points may be inside a GPA, but prose sentence ends may not.
+    if re.search(
+        r"\b(?:gpa|grade point average|average (?:score|grade))"
+        r"(?:[^.;]|\.(?=\d)){0,90}$",
+        before,
+        re.I,
+    ):
+        return True
+    return bool(
+        re.search(
+            r"^(?:['’]s)?\)?\s*(?:(?:degree|diploma|transcript)\b[^.;]{0,30}|)\bmust be\b",
+            after,
+            re.I,
+        )
+    )
 
 
 def _mentioned(text: str) -> tuple[str, ...]:
@@ -112,7 +136,8 @@ def _positive_inclusion(text: str, degree_pattern: str) -> str:
     """A sentence stating the award is *for* this level, or empty."""
     for inclusion in _INCLUSION:
         match = re.search(
-            rf"[^.]*\b{inclusion}\b[^.]{{0,140}}?\b(?:{degree_pattern})\b[^.]{{0,80}}",
+            rf"{_CLAUSE_CHAR}*\b{inclusion}\b{_CLAUSE_CHAR}{{0,140}}?"
+            rf"\b(?:{degree_pattern})\b{_CLAUSE_CHAR}{{0,80}}",
             text,
             re.IGNORECASE,
         )
@@ -132,9 +157,7 @@ def _only_as_prior(text: str, degree_pattern: str) -> bool:
     matches = list(re.finditer(rf"\b(?:{degree_pattern})\b", text, re.IGNORECASE))
     if not matches:
         return False
-    return all(
-        _PRIOR_QUALIFICATION.search(text[max(0, m.start() - 90) : m.start()]) for m in matches
-    )
+    return all(_is_prior_qualification(text, m) for m in matches)
 
 
 def assess_degree_applicability(text: str, requested_degree: str) -> Applicability:
@@ -149,7 +172,10 @@ def assess_degree_applicability(text: str, requested_degree: str) -> Applicabili
     # An explicit exclusion of this level settles it.
     for negation in _NEGATION:
         match = re.search(
-            rf"[^.]*\b{negation}\b[^.]{{0,140}}?\b(?:{wanted})\b[^.]{{0,80}}", flat, re.IGNORECASE
+            rf"{_CLAUSE_CHAR}*\b{negation}\b{_CLAUSE_CHAR}{{0,140}}?"
+            rf"\b(?:{wanted})\b{_CLAUSE_CHAR}{{0,80}}",
+            flat,
+            re.IGNORECASE,
         )
         if match:
             return Applicability(
@@ -163,7 +189,10 @@ def assess_degree_applicability(text: str, requested_degree: str) -> Applicabili
     # sentence is describing a qualification the applicant must already hold.
     for inclusion in _INCLUSION:
         match = re.search(
-            rf"[^.]*\b{inclusion}\b[^.]{{0,140}}?\b(?:{wanted})\b[^.]{{0,80}}", flat, re.IGNORECASE
+            rf"{_CLAUSE_CHAR}*\b{inclusion}\b{_CLAUSE_CHAR}{{0,140}}?"
+            rf"\b(?:{wanted})\b{_CLAUSE_CHAR}{{0,80}}",
+            flat,
+            re.IGNORECASE,
         )
         if not match:
             continue

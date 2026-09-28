@@ -1,0 +1,315 @@
+{
+  "run_url": "https://github.com/wpalish/ashyq-apply/actions/runs/36471138628",
+  "commit": "9f8a93d",
+  "metrics": {
+    "claim_adjudication_rate": {
+      "denominator": 52,
+      "numerator": 27,
+      "value": 0.5192307692307693
+    },
+    "claim_precision": {
+      "denominator": 27,
+      "numerator": 25,
+      "value": 0.9259259259259259
+    },
+    "claim_recall": {
+      "denominator": 62,
+      "numerator": 18,
+      "value": 0.2903225806451613
+    },
+    "claim_recall_same_page": {
+      "denominator": 62,
+      "numerator": 9,
+      "value": 0.14516129032258066
+    },
+    "conflict_visibility_rate": {
+      "denominator": 0,
+      "numerator": 0,
+      "value": null
+    },
+    "critical_field_coverage": {
+      "denominator": 210,
+      "numerator": 12,
+      "value": 0.05714285714285714
+    },
+    "current_evidence_rate": {
+      "denominator": 0,
+      "numerator": 0,
+      "value": null
+    },
+    "human_review_rate": {
+      "denominator": 0,
+      "numerator": 0,
+      "value": null
+    },
+    "primary_source_rate": {
+      "denominator": 52,
+      "numerator": 50,
+      "value": 0.9615384615384616
+    },
+    "programme_page_precision": {
+      "denominator": 20,
+      "numerator": 6,
+      "value": 0.3
+    },
+    "programme_page_recall": {
+      "denominator": 10,
+      "numerator": 6,
+      "value": 0.6
+    },
+    "recall_at_10": {
+      "denominator": 10,
+      "numerator": 2,
+      "value": 0.2
+    },
+    "recall_at_20": {
+      "denominator": 10,
+      "numerator": 2,
+      "value": 0.2
+    },
+    "recall_at_5": {
+      "denominator": 10,
+      "numerator": 2,
+      "value": 0.2
+    },
+    "scholarship_applicability_precision": {
+      "denominator": 2,
+      "numerator": 1,
+      "value": 0.5
+    },
+    "scholarship_applicability_recall": {
+      "denominator": 7,
+      "numerator": 1,
+      "value": 0.14285714285714285
+    },
+    "scholarship_coverage_precision": {
+      "denominator": 1,
+      "numerator": 1,
+      "value": 1.0
+    },
+    "scholarship_discovery_recall": {
+      "denominator": 3,
+      "numerator": 1,
+      "value": 0.3333333333333333
+    },
+    "support_adjudication_rate": {
+      "denominator": 52,
+      "numerator": 14,
+      "value": 0.2692307692307692
+    },
+    "unsupported_claim_rate": {
+      "denominator": 14,
+      "numerator": 3,
+      "value": 0.21428571428571427
+    },
+    "verbatim_evidence_rate": {
+      "denominator": 27,
+      "numerator": 12,
+      "value": 0.4444444444444444
+    },
+    "wrong_scope_claim_rate": {
+      "denominator": 27,
+      "numerator": 1,
+      "value": 0.037037037037037035
+    }
+  },
+  "cases": [
+    {
+      "case": "aalto",
+      "duration_seconds": 22.7,
+      "run_error": "",
+      "access": "PARTIALLY_BLOCKED",
+      "pages_checked": 33,
+      "pages_failed": 31,
+      "selected_programmes": [
+        "https://www.aalto.fi/en/aalto-university-open-university/computer-science",
+        "https://www.aalto.fi/en/study-at-aalto/study-computer-science",
+        "https://www.aalto.fi/en/minors/computer-science-minor"
+      ],
+      "discovery_errors": [
+        "robots.txt unavailable: robots_disallowed",
+        "https://www.aalto.fi/sitemap.xml: robots_disallowed — robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed",
+        "https://www.aalto.fi/sitemap_index.xml: robots_disallowed — robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed",
+        "https://www.aalto.fi/sitemap-index.xml: robots_disallowed — robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed",
+        "https://www.aalto.fi/sitemap/sitemap.xml: robots_disallowed — robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed",
+        "navigation fallback: https://www.aalto.fi/en/study-options unreachable (robots_disallowed)",
+        "navigation fallback: https://www.aalto.fi/ unreachable (robots_disallowed)",
+        "search identity recovery: checked 8, confirmed 0",
+        "search identity recovery via serper; queries 6, failed 0, rejected {'not_a_programme_page': 12, 'wrong_degree_level': 10, 'duplicate': 12}"
+      ],
+      "claim_count": 0
+    },
+    {
+      "case": "delft",
+      "duration_seconds": 66.0,
+      "run_error": "",
+      "access": "REACHED",
+      "pages_checked": 47,
+      "pages_failed": 0,
+      "selected_programmes": [
+        "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+        "https://www.tudelft.nl/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bsc-computer-science-and-engineering"
+      ],
+      "discovery_errors": [
+        "search identity recovery: checked 8, confirmed 1",
+        "search identity recovery via serper; queries 6, failed 0, rejected {'wrong_degree_level': 6, 'duplicate': 10}"
+      ],
+      "claim_count": 6
+    },
+    {
+      "case": "groningen",
+      "duration_seconds": 102.9,
+      "run_error": "",
+      "access": "PARTIALLY_BLOCKED",
+      "pages_checked": 61,
+      "pages_failed": 2,
+      "selected_programmes": [
+        "https://www.rug.nl/bachelors/computing-science",
+        "https://www.rug.nl/bachelors/computing-science?lang=en"
+      ],
+      "discovery_errors": [
+        "https://www.rug.nl/sitemaps/publicSitemap-00001.xml: too_large — body exceeded the 5,000,000 byte limit while streaming",
+        "search identity recovery: checked 8, confirmed 1",
+        "search identity recovery via serper; queries 6, failed 0, rejected {'duplicate': 9, 'wrong_degree_level': 4}"
+      ],
+      "claim_count": 8
+    },
+    {
+      "case": "hku",
+      "duration_seconds": 104.2,
+      "run_error": "",
+      "access": "REACHED",
+      "pages_checked": 89,
+      "pages_failed": 1,
+      "selected_programmes": [
+        "https://admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science",
+        "https://www.cds.hku.hk/prospective-students/undergraduate/6200-computing-and-data-science-delta",
+        "https://www.cs.hku.hk/"
+      ],
+      "discovery_errors": [
+        "search identity recovery: checked 4, confirmed 3",
+        "search identity recovery via serper; queries 6, failed 0, rejected {'wrong_degree_level': 1, 'duplicate': 16, 'not_a_programme_page': 1}"
+      ],
+      "claim_count": 7
+    },
+    {
+      "case": "kaist",
+      "duration_seconds": 88.0,
+      "run_error": "",
+      "access": "PARTIALLY_BLOCKED",
+      "pages_checked": 33,
+      "pages_failed": 17,
+      "selected_programmes": [
+        "https://ee.kaist.ac.kr/en",
+        "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+        "https://bcs.kaist.ac.kr/sub020302"
+      ],
+      "discovery_errors": [
+        "https://www.kaist.ac.kr/sitemap_index.xml: http_error — HTTP 404",
+        "https://www.kaist.ac.kr/sitemap-index.xml: http_error — HTTP 404",
+        "https://www.kaist.ac.kr/sitemap/sitemap.xml: http_error — HTTP 404",
+        "search identity recovery: checked 8, confirmed 0",
+        "search identity recovery via serper; queries 6, failed 0, rejected {'not_a_programme_page': 14, 'wrong_degree_level': 6, 'duplicate': 4}"
+      ],
+      "claim_count": 0
+    },
+    {
+      "case": "ntu",
+      "duration_seconds": 49.9,
+      "run_error": "",
+      "access": "REACHED",
+      "pages_checked": 32,
+      "pages_failed": 3,
+      "selected_programmes": [
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-and-computer-sciences",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science-with-second-major-in-business-(international-trading)"
+      ],
+      "discovery_errors": [
+        "https://www.ntu.edu.sg/sitemap.xml: http_error — HTTP 404",
+        "https://www.ntu.edu.sg/sitemap_index.xml: http_error — HTTP 404",
+        "https://www.ntu.edu.sg/sitemap-index.xml: http_error — HTTP 404",
+        "search identity recovery: checked 0, confirmed 0",
+        "search identity recovery via serper; queries 6, failed 0, rejected {'not_a_programme_page': 4, 'wrong_degree_level': 2, 'duplicate': 15}"
+      ],
+      "claim_count": 12
+    },
+    {
+      "case": "toronto",
+      "duration_seconds": 29.8,
+      "run_error": "",
+      "access": "REACHED",
+      "pages_checked": 24,
+      "pages_failed": 17,
+      "selected_programmes": [
+        "https://www.utm.utoronto.ca/math-cs-stats/undergraduate-students/topic-courses/computer-science-topic-courses"
+      ],
+      "discovery_errors": [
+        "robots.txt unavailable: http_error",
+        "https://www.utoronto.ca/sitemap.xml: http_error — HTTP 403",
+        "https://www.utoronto.ca/sitemap_index.xml: http_error — HTTP 403",
+        "https://www.utoronto.ca/sitemap-index.xml: http_error — HTTP 403",
+        "https://www.utoronto.ca/sitemap/sitemap.xml: http_error — HTTP 403",
+        "navigation fallback: https://future.utoronto.ca/undergraduate-programs unreachable (http_error)",
+        "navigation fallback: https://www.utoronto.ca/ unreachable (http_error)",
+        "search identity recovery: checked 8, confirmed 1",
+        "search identity recovery via serper; queries 6, failed 0, rejected {'not_a_programme_page': 8, 'duplicate': 19}"
+      ],
+      "claim_count": 0
+    },
+    {
+      "case": "vienna",
+      "duration_seconds": 91.1,
+      "run_error": "",
+      "access": "REACHED",
+      "pages_checked": 62,
+      "pages_failed": 8,
+      "selected_programmes": [
+        "https://studieren.univie.ac.at/en/bachelordiploma-programmes/computer-science-bachelor-with-entrance-exam-procedure",
+        "https://aufnahmeverfahren.univie.ac.at/en/computer-science"
+      ],
+      "discovery_errors": [
+        "https://www.univie.ac.at/sitemap.xml: http_error — HTTP 404",
+        "https://www.univie.ac.at/sitemap_index.xml: http_error — HTTP 404",
+        "https://www.univie.ac.at/sitemap-index.xml: http_error — HTTP 404",
+        "https://www.univie.ac.at/sitemap/sitemap.xml: http_error — HTTP 404",
+        "search identity recovery: checked 8, confirmed 1",
+        "search identity recovery via serper; queries 6, failed 0, rejected {'wrong_degree_level': 6, 'duplicate': 9, 'not_a_programme_page': 6}"
+      ],
+      "claim_count": 4
+    },
+    {
+      "case": "warsaw",
+      "duration_seconds": 103.2,
+      "run_error": "",
+      "access": "PARTIALLY_BLOCKED",
+      "pages_checked": 70,
+      "pages_failed": 1,
+      "selected_programmes": [
+        "https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF"
+      ],
+      "discovery_errors": [
+        "search identity recovery: checked 8, confirmed 1",
+        "search identity recovery via serper; queries 6, failed 0, rejected {'not_a_programme_page': 28, 'wrong_degree_level': 1, 'duplicate': 6}"
+      ],
+      "claim_count": 1
+    },
+    {
+      "case": "ubc",
+      "error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED",
+      "telemetry": {
+        "http_fetches": 62,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 6,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 115.00482467900002,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "selected_programmes": [],
+      "prediction_count": 11
+    }
+  ]
+}

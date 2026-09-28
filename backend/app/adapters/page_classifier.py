@@ -425,6 +425,12 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
         return PageClassification(
             PageType.IRRELEVANT, 0.9, ["continuing course for a professional audience"], title
         )
+    if re.search(
+        r"\btopic courses?\b|\bcourse (?:descriptions?|syllabus)\b", course_identity, re.I
+    ):
+        return PageClassification(
+            PageType.IRRELEVANT, 0.9, ["individual course content, not a degree programme"], title
+        )
 
     # The page's own title and first heading only: a "News" block in the
     # sidebar is not the page. Run 31: Vienna's admission-procedure page and

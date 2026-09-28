@@ -105,6 +105,21 @@ async def test_a_search_summary_cannot_verify_an_unreachable_award(tmp_path, mon
 
 
 @pytest.mark.asyncio
+async def test_degree_applicability_does_not_read_the_global_navigation(tmp_path, monkeypatch):
+    body = (
+        "<nav>Scholarships for undergraduate students</nav>"
+        "<main><h1>Global Scholarship</h1>"
+        "<p>This scholarship is for Master's students. The award is worth EUR 5000.</p>"
+        "<p>Applications are open to international students.</p></main>"
+    )
+    awards, _, _ = await run(
+        tmp_path, monkeypatch, Provider(["https://uni.edu/global-scholarship"]), award_body=body
+    )
+    assert len(awards) == 1
+    assert awards[0].degree_applicability == "no"
+
+
+@pytest.mark.asyncio
 async def test_provider_failure_stays_unknown_and_does_not_retry(tmp_path, monkeypatch):
     provider = Provider([], fail=True)
     awards, result, _ = await run(tmp_path, monkeypatch, provider)

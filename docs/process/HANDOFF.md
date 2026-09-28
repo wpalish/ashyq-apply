@@ -1640,6 +1640,10 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+**Programme quote write-ahead (2026-09-28):** the full cohort reports HKU's correct full-title existence claim as unsupported because its verbatim quote exceeds the owner's 300-character support rule. Bound only programme identity quote context to 300 characters while retaining the complete title. Add a listing-claim regression with long surrounding prose and rerun the final backend gates. Vienna/Warsaw alternate copies have new verbatim source text absent from frozen signed evidence; do not rewrite those labels.
+
+**Full-cohort follow-up write-ahead (2026-09-28):** run 36471138628 completed: known claim recall 18/62, programme page recall 6/10. Toronto content recovery accepted a topic-course page; Groningen awards acquired bachelor applicability from prior-study GPA prose or navigation. Inspect actual sources through Fetcher, add classifier rejection for explicit individual/topic-course identity and read award applicability from main content with conservative prior-study contexts. Preserve all signed labels. The single reported Groningen deadline population mismatch is a valid separate EU/EEA table row beside the non-EU/EEA row, not a reason to overwrite source scope. Record remaining inaccessible sources and support-label gaps honestly.
+
 **Held-out false programme repair (2026-09-28):** Tartu course-for-teachers page was already in sitemap-confirmed pages, so recovery correctly preserved the earlier classifier error. Classify an explicitly named course for teachers/professionals as IRRELEVANT for degree discovery before body degree words can turn the audience qualification into a degree offering. Add positive degree and negative continuing-course regressions. Three hybrid-retrieval failures share the same rank-only None-return stub as ER-07; pin the older experiments off from content recovery, keeping all assertions. Final fresh suite and a Tartu source capture follow.
 
 **Final gate repair (2026-09-28):** candidate suite has two failures in `test_navigation_slot.py`: its deliberately rank-only ER-07 stub returns None instead of FetchResult and accidentally entered the newly-default content verifier. Pin RECOVER_SEARCH_CANDIDATES=False in that experiment fixture; preserve its assertions and the legacy flag path. The live harness now supports explicit --no-recover-search-candidates for isolated older rule trials. No production exception or None-return handling is added. Re-run the full candidate gates.
@@ -3399,6 +3403,8 @@ The steps codex left, unchanged and still next after this review:
    the compatibility shim. Do not buy a provider or deploy application infrastructure implicitly.
 
 ## 6. Gate status at last run
+
+**Owner search recovery, 2026-09-28:** fdc1a39 CI 36472045853 completed green (SQLite/PostgreSQL, frontend including Playwright demo/auth, security/container builds). Follow-up before the quote-only bound: 2427 passed, 94.90% coverage in 293.79s; ruff check/format and mypy 296 files green. Quote-bound focus 9 passed; final full suite running. Full-cohort 36471138628 at 9f8a93d: programme recall 6/10, known-claim recall 18/62, precision 25/27; negative cases and scorer caveats are in docs/process/search-recovery. No labels changed.
 
 Phase 3 §10, gates run by claude-opus-5 on 2026-09-22, read in full: `ruff check` exit 0; `ruff format
 --check` exit 0, 222 files; `pytest --cov=app --cov-fail-under=92` exit 0, **1957 collected**, 0

@@ -28,6 +28,14 @@ class TestLabelledTeachingLanguage:
 
 
 class TestContinuingCourses:
+    def test_topic_courses_are_not_a_degree_named_in_their_enrolment_rules(self):
+        page = classify_page(
+            url="https://uni.edu/undergraduate-students/topic-courses/computer-science-topic-courses",
+            html="<h1>Computer Science Topic Courses</h1><p>Fall 2026. "
+            "Senior undergraduate course. Priority for Computer Science Major students.</p>",
+        )
+        assert page.page_type is PageType.IRRELEVANT
+
     def test_a_teacher_course_is_not_a_degree_its_audience_holds(self):
         page = classify_page(
             url="https://uni.edu/lifelong/computer-science-courses-teachers-informatics/id",

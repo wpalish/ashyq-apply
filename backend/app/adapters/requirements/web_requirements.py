@@ -657,7 +657,10 @@ def _first_sentence_containing(text: str, needle: str | None) -> str:
     index = flat.lower().find(needle.lower())
     if index < 0:
         return ""
-    return excerpt_around(flat, index, index + len(needle))
+    # Keep the full programme title within the owner's 300-character support
+    # window; unrelated surrounding prose otherwise obscures listing evidence.
+    radius = max(0, (300 - len(needle)) // 2)
+    return excerpt_around(flat, index, index + len(needle), radius=radius)
 
 
 def _fee(line: str) -> dict[str, object] | None:

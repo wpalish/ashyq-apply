@@ -648,7 +648,10 @@ class WebScholarshipAdapter:
             sch.international_eligible = "unknown"
 
         # --- degree applicability -----------------------------------------
-        applicability = assess_degree_applicability(text, str(program.degree))
+        # Global navigation names other degree levels; only the award's own
+        # content can establish applicability (Groningen live capture).
+        award_text = readable_text(str(main_content(parse_html(html))))
+        applicability = assess_degree_applicability(award_text, str(program.degree))
         sch.degree_applicability = applicability.verdict
         sch.degree_applicability_reason = applicability.reason
         sch.applies_to_degrees = list(applicability.mentioned_degrees)

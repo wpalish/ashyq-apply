@@ -51,6 +51,22 @@ async def test_a_full_degree_title_on_a_listing_page_confirms_existence(monkeypa
 
 
 @pytest.mark.asyncio
+async def test_listing_evidence_keeps_the_full_title_within_the_support_window(
+    monkeypatch, tmp_path
+):
+    title = "Bachelor of Engineering in Computer Science"
+    prose = "Explore our students' interests and opportunities. " * 12
+    claims, _ = await _existence(
+        monkeypatch, tmp_path, _school(prose + f"The {title} covers algorithms. " + prose)
+    )
+    assert len(claims) == 1
+    quote = claims[0].original_text_excerpt
+    assert title in quote
+    assert len(quote) <= 300
+    assert quote in (prose + f"The {title} covers algorithms. " + prose)
+
+
+@pytest.mark.asyncio
 async def test_a_related_field_is_not_the_requested_programme(monkeypatch, tmp_path):
     claims, _ = await _existence(
         monkeypatch,
