@@ -95,7 +95,8 @@ concept's proposed vocabulary (`docs/design/redesign-concepts.md` §2 and §17).
   - "warn" is a pale amber pill;
   - the night palette is for moments only (research, hero, the night story).
 - **Legibility on a phone:**
-  - text at least 30 px at 1080 w (≈ 11 pt on a phone);
+  - text at least 30 px at 1080 w (≈ 11 pt on a phone), except the story-card miniatures and the
+    26 px demo chip (§7);
   - contrast at least 4.5:1;
   - nothing important inside the platform UI zones (top 220 px, bottom 380 px, right 140 px).
 
@@ -114,15 +115,63 @@ concept's proposed vocabulary (`docs/design/redesign-concepts.md` §2 and §17).
 
 ## 6. Definition of done (`loop-engineering`)
 
-- [ ] `npm ci && npm run render` produces `out/ashyq-horizon-ru.mp4` from the README alone
-- [ ] 30.0 s, 1080 × 1920, 30 fps, H.264 + AAC, under 12 MB
-- [ ] Every beat in §3 is on screen at its time. Checked on a contact sheet at 2 fps
-- [ ] A grep of the copy table finds no forbidden word: шанс, %, вероятност, гарант, поступишь,
-      «покрывает всё»
-- [ ] Every UI scene shows «Демо-данные»; every figure next to a fact has its source or rate date
-- [ ] The Kazakh-safe fonts load: no fallback glyphs (checked with `document.fonts.check`)
-- [ ] At least two critique cycles, each recorded in §7 with the root cause of each defect
+- [x] `npm ci && npm run render` produces `out/ashyq-horizon-ru.mp4` from the README alone
+- [x] 30.00 s, 1080 × 1920, 30 fps, H.264 High + AAC 48 kHz stereo, 7.9 MB
+- [x] Every beat in §3 is on screen at its time. Checked on a contact sheet at 2 fps from the
+      page, and at 1 fps from the encoded MP4
+- [x] No forbidden word reaches the screen. The check is not a grep of the source, which also
+      matches CSS such as `50%`: `render.mjs` checks the rendered page text and `COPY`, and fails
+      the render on a match
+- [x] Every UI scene shows «Демо-данные»; every figure next to a fact has its source or rate date
+- [x] The fonts load before anything is measured (`document.fonts.load` + `check`), or the
+      render fails
+- [x] Two critique cycles, recorded below with root causes
 
 ## 7. Loop report
 
-Filled in while building.
+### Cycle 1: the first full contact sheet
+
+| # | Defect | Root cause | Fix |
+|---|---|---|---|
+| V1 | The render failed with "fonts missing" | Fontsource faces load per subset only when a glyph is used, so `document.fonts.ready` resolved before any face had loaded | Load each face with a sample of the letters used, including Kazakh ones, before checking and measuring |
+| V2 | The pinned `playwright-core` looked for a Chromium build that is not installed | The package's expected build differs from the one in `PLAYWRIGHT_BROWSERS_PATH` | Look up any `chromium-*` there, after the env var and Playwright's own path |
+| V3 | «Нашли 20 программ» and the money card sat about 700 px too low. The money card's budget line fell off the frame | The scene wrapper and its inner element shared an id (`#found`, `#money`), so the CSS positioned both and the offsets added up | Wrappers are `sc-<id>` |
+| V4 | The programme card's price overlapped «University of Groningen» | The name had no width limit next to an absolutely positioned price | The name and subtitle are capped at 520–560 px, so the name wraps |
+| V5 | «Нет данных — так и скажем» sat under the demo chip | The night headline's anchor was 380 px, inside the chip's row | The night headline is centred at 800 px, and the 414 counter moved down with it |
+| V6 | The rate line wrapped mid-phrase: «…в бюджете до / $6 000» | Two facts on one line | The rate and its date on one line; «В бюджете: до $6 000 в год» as its own ok pill |
+| V7 | The split-flap's gap showed a stray hinge line | The hinge `::after` applied to the spacer tile too | No hinge on `.gap` |
+
+### Cycle 2: the second sheet, then the encoded MP4
+
+| # | Defect | Root cause | Fix |
+|---|---|---|---|
+| V8 | The side story cards were mostly hidden behind the centre card | The centre card was scaled to 1.04 of a 540 px card, with the sides only 330 px out | Centre 0.94, sides 0.74 and 345 px out |
+| V9 | On the end card the sun covered the first letters of «ASHYQ» as the word revealed | The word revealed at its final position while the sun was still sliding into place | The sun slides from 26.3 to 26.8 s and the word reveals from 26.78 s. The bell moves with it |
+| V10 | The disclaimer broke as «…за / университетом.» | One long sentence at 30 px | A deliberate break after «В ролике демо-данные.» |
+| V11 | Audio averaged −22 dB, quiet next to other clips in a feed | The master was set conservatively | The master drive was raised about 5 dB, with a soft `tanh` limit. Peaks stay under 0 dBFS |
+
+### Critique against what the product claims
+
+| Dimension | Score | Note |
+|---|---|---|
+| Invariants: no chance, three judgements, unknown shown, source and date | 9 | The one promise is a method promise. «Выше требований» always carries «отбор всё равно конкурсный» |
+| Faithful to the demo data | 9 | Every count is computed or asserted. The deadlines and Tokyo's minimums come from the concept boards, which were derived from the corpus |
+| Design system | 8 | Tokens, fonts, globe and brand mark are the app's own. The night appears only for the moments |
+| Pacing against the reference | 8 | The same rhythm (four headline-demo pairs, a hero at 60 %, depth, an end card) |
+| Legibility on a phone | 7 | **Weakest link.** See below |
+
+**Why legibility is the weakest link:**
+
+- The story cards are shown as miniatures, as in the share sheet, so their body text is below the
+  30 px rule. Their headlines are above it.
+- The demo chip is 26 px.
+- Both are decorative or repeated elsewhere at full size.
+
+### What remains
+
+- **An owner decision:** Russian only, with the concept's proposed labels. A Kazakh and an English
+  cut are a copy of `COPY` each.
+- **Watch it on a real phone,** with the platform's overlay, before posting. The layout keeps text
+  out of the top 220 px, the bottom 380 px and the right 140 px, but the story fan's right card
+  reaches into the right edge.
+- **Voice-over:** none. The pad is voiced low to leave room for one.

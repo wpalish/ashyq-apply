@@ -1,0 +1,16 @@
+{
+  "name": "ashyq-short-video",
+  "private": true,
+  "type": "module",
+  "description": "A 30-second vertical promo in the «Горизонт» design, rendered frame by frame.",
+  "scripts": {
+    "render": "node render.mjs",
+    "preview": "node render.mjs --preview",
+    "sheet": "node render.mjs --sheet"
+  },
+  "dependencies": {
+    "@fontsource/montserrat": "^5.3.0",
+    "@fontsource/onest": "^5.3.1",
+    "playwright-core": "^1.55.0"
+  }
+}
