@@ -63,6 +63,15 @@ describe('triage', () => {
     expect(screen.queryByTestId('triage-caveats')).not.toBeInTheDocument();
   });
 
+  it('shows an earlier cycle\'s deadline as a guide, never as passed', () => {
+    const r = { ...row('a'), admission_deadline: null, previous_cycle_deadline: '2026-01-15' } as ProgramResult;
+    render(<Triage queue={[r]} total={1} decide={vi.fn()} onClose={() => {}} />);
+    const card = screen.getByTestId('triage-card-a');
+    expect(card).toHaveTextContent('not found');
+    expect(card).toHaveTextContent(/previous cycle/);
+    expect(card).not.toHaveTextContent('passed');
+  });
+
   it('keeps and maybes go straight through decide(), keeping the notes', async () => {
     const decide = vi.fn().mockResolvedValue(undefined);
     render(<Triage queue={[row('a')]} total={1} decide={decide} onClose={() => {}} />);

@@ -212,6 +212,9 @@ export function Triage({
             <dd>
               {current.admission_deadline ? date(current.admission_deadline) : <span className="triage__muted">not found</span>}
               {current.deadline_passed && ' · passed'}
+              {current.previous_cycle_deadline && (
+                <span className="triage__sub">previous cycle {date(current.previous_cycle_deadline)}</span>
+              )}
             </dd>
           </div>
         </dl>

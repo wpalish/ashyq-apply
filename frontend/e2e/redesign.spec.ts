@@ -112,6 +112,11 @@ test('the shortlist reads as price cards, and a card opens its programme', async
   await page.screenshot({ path: shot('15-shortlist-cards.png'), fullPage: false });
   // The ladder folds into one line here, as the concept's budget sheet.
   await expect(page.getByTestId('budget-ladder')).toContainText('3 within 6,000 USD');
+  // An earlier cycle's date is a guide on the card too, never "passed" (as in the table).
+  // Melbourne misses a requirement, so its card sits with the ones set aside, outside the ranked list.
+  const melbourne = page.locator('main article[data-testid^="card-"]').filter({ hasText: 'University of Melbourne' }).first();
+  await expect(melbourne).toContainText('previous cycle');
+  await expect(melbourne.locator('.rcard__deadline')).not.toContainText('passed');
 });
 
 test('region chips count the list and filter it', async () => {

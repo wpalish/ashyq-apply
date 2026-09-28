@@ -95,6 +95,9 @@ export function CompareView({
         <>
           {r.admission_deadline ? date(r.admission_deadline) : <span className="compare__unknown">not found</span>}
           {r.deadline_passed && <strong className="rcard__passed"> · passed</strong>}
+          {r.previous_cycle_deadline && (
+            <span className="compare__sub">previous cycle {date(r.previous_cycle_deadline)}</span>
+          )}
         </>
       ),
     },

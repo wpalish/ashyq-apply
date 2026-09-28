@@ -207,6 +207,10 @@ export function DeadlineBoard({
                 </span>
                 <span className="board__prog">{rowText(p).detail}</span>
                 {p.beforeAdmission && <span className="board__note">before the admission deadline</span>}
+                {/* An earlier cycle's date is a guide; this intake's is still to be asked for. */}
+                {p.kind === 'admission' && !p.day && p.result.previous_cycle_deadline && (
+                  <span className="board__note">previous cycle {date(p.result.previous_cycle_deadline)}; this intake's date not published yet</span>
+                )}
               </span>
               <span className="board__left">
                 <span aria-hidden="true">{days(p)}</span>

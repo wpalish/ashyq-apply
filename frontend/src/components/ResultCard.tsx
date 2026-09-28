@@ -166,6 +166,8 @@ export function ResultCard({
         <span className="rcard__deadline">
           {r.admission_deadline ? <>Deadline {date(r.admission_deadline)}</> : 'Deadline not found'}
           {r.deadline_passed && <strong className="rcard__passed"> · passed</strong>}
+          {/* A date from an earlier cycle is a guide, not this intake's deadline. */}
+          {r.previous_cycle_deadline && <> · previous cycle {date(r.previous_cycle_deadline)}</>}
         </span>
       </div>
 
