@@ -1433,6 +1433,13 @@ mirrors the listing path (tested; evaluation-only). Triage of the other oracle l
   intake's cycle is UNKNOWN for that intake, shown as 'previous cycle: <date>'. Touches runner.py and what the
   applicant sees, so not changed without a decision.
 
+Claude, 2026-09-28: previous-cycle deadline (owner decision). A stated deadline earlier than one year and a
+month before the intake starts (fall 2027 → before 2026-07-01) is not this intake's deadline: runner.py keeps
+it in the new `ProgramResult.previous_cycle_deadline` (contract change, nullable, default null), leaves
+`admission_deadline` unknown, sets no `deadline_passed`, and adds one non-blocking unresolved question. Golden
+re-captured 7e8d18… → d1403ce2… (proof beside GOLDEN_DEMO_SHA256: only Melbourne's 2026-01-15 moved; seed_demo
+order unchanged). Tests: tests/test_previous_cycle.py, seeded case (f) rewritten.
+
 Owner, 2026-09-23: robots.txt may be bypassed **only** when almost no other route remains. Not used;
 order is: other allowed pages / hosts → official registries → honest UNKNOWN with the official link.
 

@@ -581,7 +581,17 @@ class TestSupersededExcluded:
 #: bucket, check, question or existing claim moved; the old dump re-hashes to
 #: the previous value. Previous value:
 #: 79dd02254ec44f2771b3f010402af4496fc483bb8d47f3fc7a0b9c93949e5848
-GOLDEN_DEMO_SHA256 = "7e8d18cbe086e05c68427d3840c89f35acbf0bb54dd1de5e8d6eb509030f897e"
+#:
+#: Re-captured for the previous-cycle deadline (owner decision 2026-09-28,
+#: Claude). NOT purely additive, by design, and fully accounted for: 16 results
+#: gain ``"previous_cycle_deadline": null``; Melbourne's 15 January 2026
+#: deadline, a year and a half before the fall-2027 intake, moves from
+#: ``admission_deadline`` to ``previous_cycle_deadline``, its
+#: ``deadline_passed`` becomes false and one non-blocking unresolved question
+#: says so. No eligibility, bucket, rank, check or other value moved; the demo
+#: order from seed_demo.py is unchanged. Previous value:
+#: 7e8d18cbe086e05c68427d3840c89f35acbf0bb54dd1de5e8d6eb509030f897e
+GOLDEN_DEMO_SHA256 = "d1403ce29ee2e0f710a034b78afe222cc42b40059a6730a60fa5041490333c53"
 
 #: The golden was captured with the real clock on 2026-09-07, and the baseline
 #: payload embeds that date: ``requirement_checks[*].applicant_value`` and

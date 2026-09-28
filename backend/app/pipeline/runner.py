@@ -10,7 +10,7 @@ from __future__ import annotations
 import logging
 import os
 import socket
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, date, datetime, timedelta
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -893,6 +893,33 @@ class ResearchRunner:
             dl = next((c for c in claims if c.claim_type == ClaimType.ADMISSION_DEADLINE), None)
             if by_population:
                 dl = by_population[0][2]
+            if dl is not None and _previous_cycle(
+                [d for _, d, _ in by_population] or [_as_date(dl.normalized_value)],
+                self.profile.context.intake_term,
+                self.profile.context.intake_year,
+            ):
+                # Every stated date is too early for this intake: it is the
+                # previous cycle's, not a window this applicant missed.
+                result.previous_cycle_deadline = _as_date(dl.normalized_value)
+                result.unresolved.append(
+                    UnresolvedQuestion(
+                        topic="admission deadline",
+                        question=(
+                            f"{dl.source_url} states {dl.normalized_value} as the deadline, which "
+                            f"belongs to an earlier cycle than {self.intake}. When is the deadline "
+                            "for your intake?"
+                        ),
+                        why_it_matters=(
+                            "The page has not yet published the dates for your intake; the "
+                            "previous cycle's date is shown only as a guide."
+                        ),
+                        university=result.university,
+                        program=result.program,
+                        suggested_contact="admissions office",
+                        blocking=False,
+                    )
+                )
+                dl = None
             if dl is not None:
                 parsed = _as_date(dl.normalized_value)
                 result.admission_deadline = parsed
@@ -1518,6 +1545,25 @@ def _fit_label(actual: str | None, preferred: str, dimension: str = "") -> str:
     # A category that simply differs - an urban university for someone who
     # asked for a campus one. Not a disaster, and not a match either.
     return "weak"
+
+
+#: The earliest month a term starts in; a deadline more than 13 months before
+#: it cannot be for that intake (a deadline a year ahead is normal: Oxford
+#: closes in October for the next October).
+_TERM_START_MONTH = {"fall": 8, "winter": 1, "spring": 1, "summer": 5}
+
+
+def _previous_cycle(dates, intake_term: str, intake_year: int) -> bool:
+    """Whether every stated deadline is too early to belong to this intake."""
+    month = _TERM_START_MONTH.get(intake_term)
+    known = [d for d in dates if d is not None]
+    if month is None or not known:
+        return False
+    start = date(intake_year, month, 1)
+    cutoff = (
+        date(start.year - 1, start.month - 1, 1) if start.month > 1 else date(start.year - 2, 12, 1)
+    )
+    return all(d < cutoff for d in known)
 
 
 def _as_date(v):

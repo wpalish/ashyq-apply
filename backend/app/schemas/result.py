@@ -360,6 +360,12 @@ class ProgramResult(Base):
     admission_deadline_timezone: str | None = None
     admission_deadline_raw: str | None = None
     deadline_passed: bool = False
+    #: A deadline the page states that is too early to belong to the intake
+    #: applied for: a previous cycle's date. The deadline for this intake is
+    #: then unknown, and this date is shown as "previous cycle" rather than as
+    #: a closed window (owner decision 2026-09-28, Vienna's 4 May 2026 for a
+    #: fall-2027 applicant).
+    previous_cycle_deadline: date | None = None
 
     climate_fit: str = "unknown"
     city_fit: str = "unknown"
