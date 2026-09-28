@@ -1640,6 +1640,8 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+**Search correction write-ahead (gpt-6-astra, owner steering 2026-09-28):** fix `runner.py` discarding the third discovery programme (`programs[:2]` vs three discovery slots). Add a measured `RECOVER_SEARCH_CANDIDATES` experiment to discovery: fetch bounded search leads, reject unrelated page content, retain full-title programme listings and backfill with later results. Keep verified existing pages, unavailable leads only as fallback; no claims from snippets. Add offline routing/regression tests and equal-budget paired captures on development plus held-out institutions before enabling it.
+
 **Current recovery write-ahead (gpt-6-astra, 2026-09-28):** replay d080fe2, 016991c, 284245c, e0d3a36, 563336e from the merged Claude branch into this task branch; reproduce language parsing using reviewed excerpts and captured oracle context; fix `backend/app/adapters/page_classifier.py` with conservative labelled-language rules and regression tests. Run backend gates, golden demo, unchanged frontend gates, then open a fresh PR and run benchmark-capture. These commits are absent from main; the failed e0d3a36 CI is the oracle measured-key assertion corrected by 563336e.
 
 Write-ahead (claude-opus-5, 2026-09-23, V2-32): **starting per-population tuition.** `extract_costs`

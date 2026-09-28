@@ -142,6 +142,46 @@ class TestLiveDiscoveryWiring:
 
 class TestPipelineShape:
     @pytest.mark.asyncio
+    async def test_a_correct_third_discovery_programme_is_verified(
+        self, session, settings, profile
+    ):
+        from app.adapters.base import CandidateProgram
+        from app.adapters.discovery.fixture_discovery import FixtureDiscoveryAdapter
+        from app.domain.enums import ClaimType
+
+        row = profile_row(session, profile)
+        run = ResearchRun(
+            profile_id=row.id,
+            stage=PipelineStage.QUEUED.value,
+            demo_mode=True,
+            stage_state=RunState.load(None).dump(),
+        )
+        session.add(run)
+        session.flush()
+        runner = ResearchRunner(session, run, profile, settings)
+        async with runner._make_fetcher() as fetcher:
+            candidates = await FixtureDiscoveryAdapter(fetcher).discover(profile)
+            candidate = next(c for c in candidates if c.name == "University of Groningen")
+            correct = candidate.programs[0]
+            candidate.programs = [
+                CandidateProgram(
+                    name=f"Unconfirmed {i}",
+                    field=correct.field,
+                    degree=correct.degree,
+                    url=f"fixture://missing/{i}",
+                )
+                for i in range(2)
+            ] + [correct]
+            runner._candidates = [candidate]
+            await runner._stage_verify(fetcher)
+        claims = session.query(ClaimRow).filter(ClaimRow.run_id == run.id).all()
+        assert any(
+            c.claim_type == ClaimType.PROGRAM_EXISTS.value
+            and c.payload.get("program") == correct.name
+            for c in claims
+        )
+
+    @pytest.mark.asyncio
     async def test_the_run_reaches_the_decision_stage(self, session, completed_run):
         _, run = completed_run
         assert run.stage == PipelineStage.AWAITING_USER_DECISION.value

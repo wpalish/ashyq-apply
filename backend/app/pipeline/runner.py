@@ -19,7 +19,11 @@ from app.adapters.base import Candidate, CandidateProgram, PageOutcome
 from app.adapters.cost.web_costs import WebCostAdapter
 from app.adapters.discovery.catalog_walker import CatalogRenderer
 from app.adapters.discovery.fixture_discovery import FixtureDiscoveryAdapter
-from app.adapters.discovery.live_discovery import LiveDiscoveryAdapter, registry_campuses
+from app.adapters.discovery.live_discovery import (
+    MAX_PAGES_PER_CATEGORY,
+    LiveDiscoveryAdapter,
+    registry_campuses,
+)
 from app.adapters.documents.web_documents import WebDocumentsAdapter
 from app.adapters.fetching import Fetcher
 from app.adapters.government.web_government import WebGovernmentAdapter
@@ -503,7 +507,10 @@ class ResearchRunner:
                     url=None,
                 )
             ]
-            for prog in programs[:2]:
+            # Discovery supplies up to three programme leads. Cutting that list
+            # to two silently lost the real programme behind two noisy search
+            # results (Warsaw, 2026-09-28).
+            for prog in programs[:MAX_PAGES_PER_CATEGORY]:
                 key = dedupe.program_key(
                     cand.name, prog.name, prog.degree, self.intake, cand.country
                 )

@@ -220,6 +220,13 @@ _LANGUAGE = re.compile(
     r"|\b(english|dutch|german|french|finnish|polish)[- ]taught\b",
     re.IGNORECASE,
 )
+#: Programme fact tables often use just "Language / German" or
+#: "Language: Polish", rather than the prose phrase "taught in".
+_LANGUAGE_LABEL = re.compile(
+    r"^[ \t]*(?:teaching language|language(?: of instruction)?)"
+    r"[ \t]*:?[ \t]*(?:\n[ \t]*)*(english|dutch|german|french|finnish|polish)[ \t]*$",
+    re.I | re.M,
+)
 
 #: URL path fragments that are strong evidence on their own.
 _PATH_HINTS: tuple[tuple[re.Pattern[str], PageType], ...] = (
@@ -648,6 +655,9 @@ def _degree_level(text: str) -> str | None:
 
 
 def _language(text: str) -> str | None:
+    labelled = {m.group(1).lower() for m in _LANGUAGE_LABEL.finditer(text)}
+    if labelled:
+        return next(iter(labelled)) if len(labelled) == 1 else None
     m = _LANGUAGE.search(text)
     if not m:
         return None

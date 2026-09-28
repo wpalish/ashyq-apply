@@ -23,6 +23,7 @@ from app.adapters.extraction import (
     ClaimBuilder,
     excerpt_around,
     extract_admission_route,
+    extract_programme_faculty,
     extract_requirements,
     for_matching,
     html_title,
@@ -242,6 +243,10 @@ class WebRequirementsAdapter:
                 if page.page_type in _LISTING_PAGE_TYPES and self._claim_listed_programme(
                     program, builder, text
                 ):
+                    # The page that confirms the programme may state its faculty
+                    # in a labelled field; one value only (HKU, 2026-09-28).
+                    if not res.is_pdf:
+                        extract_programme_faculty(text, builder)
                     out.claims.extend(builder.claims)
                     out.page_outcomes.append(
                         PageOutcome(
@@ -314,6 +319,8 @@ class WebRequirementsAdapter:
                 continue
 
             self._claim_program_exists(page, program, builder, out, text)
+            if page.accepts("program_exists") and not res.is_pdf:
+                extract_programme_faculty(text, builder)
             if page.accepts("requirements"):
                 # Structure first: a table row states the test, the column and the
                 # value together (V2-30C). A prose claim of a type the table

@@ -202,6 +202,7 @@ class ClaimBuilder:
         population: str | None = None,
         intake: str | None = None,
         degree: str | None = None,
+        programme: str | None = None,
     ) -> Claim | None:
         verdict = verify_claim(
             VerificationInput(
@@ -251,7 +252,12 @@ class ClaimBuilder:
         meta = dict(self.meta)
         row_scope = {
             k: v
-            for k, v in (("population", population), ("intake", intake), ("degree", degree))
+            for k, v in (
+                ("population", population),
+                ("intake", intake),
+                ("degree", degree),
+                ("programme", programme),
+            )
             if v
         }
         if row_scope:
@@ -1013,3 +1019,72 @@ def extract_costs(text: str, builder: ClaimBuilder) -> list[Claim]:
             ),
         )
     return found
+
+
+#: A faculty named the way universities name them; anything else under a
+#: "Faculty" label (a person, a staff list) is not the programme's faculty.
+_FACULTY_VALUE = re.compile(
+    r"^(?:the\s+)?(?:School|Faculty|College|Department|Division|Institute)\s+of\s+\S.{0,78}$", re.I
+)
+_FACULTY_LABEL = re.compile(r"^(?:faculty|school|offering\s+(?:faculty|school))\s*:?\s*(.*)$", re.I)
+
+
+def extract_programme_faculty(text: str, builder: ClaimBuilder) -> Claim | None:
+    """See :func:`_read_faculty`; the claim names the programme the page confirmed.
+
+    A faculty belongs to the programme whose existence the same page confirmed,
+    not to the name the pipeline searched for: run 36460381447 recorded HKU's
+    faculty against "Computing And Data Science", master, and scored it wrong.
+    """
+    confirmed = next(
+        (
+            c.normalized_value
+            for c in reversed(builder.claims)
+            if c.claim_type is ClaimType.PROGRAM_EXISTS and isinstance(c.normalized_value, dict)
+        ),
+        None,
+    )
+    if confirmed is None:
+        return None
+    title, level = confirmed.get("program"), confirmed.get("degree")
+    saved = builder.meta.get("program")
+    if title:
+        builder.meta["program"] = title
+    try:
+        return _read_faculty(
+            text, builder, degree=str(level) if level else None, programme=title or None
+        )
+    finally:
+        builder.meta["program"] = saved
+
+
+def _read_faculty(
+    text: str, builder: ClaimBuilder, *, degree: str | None, programme: str | None = None
+) -> Claim | None:
+    """The faculty a programme page states in a labelled field ("FACULTY" / value).
+
+    Only a label on its own line (or "Faculty: X") counts, and only when the
+    page states exactly one such value: a listing that names several faculties
+    says nothing about which one teaches the requested programme.
+    """
+    lines = [line.strip() for line in text.splitlines()]
+    values: list[str] = []
+    for i, line in enumerate(lines):
+        label = _FACULTY_LABEL.match(line)
+        if label is None:
+            continue
+        value = label.group(1).strip()
+        if not value:
+            value = next((nxt for nxt in lines[i + 1 : i + 3] if nxt), "")
+        if _FACULTY_VALUE.match(value) and value not in values:
+            values.append(value)
+    if len(values) != 1:
+        return None
+    return builder.add(
+        ClaimType.PROGRAM_FACULTY,
+        values[0],
+        values[0],
+        confidence=0.8,
+        degree=degree,
+        programme=programme,
+    )

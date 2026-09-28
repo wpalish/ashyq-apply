@@ -26,7 +26,7 @@ from collections import Counter
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
-from .mapping import CLAIM_KEYS, normalize_claim
+from .mapping import CLAIM_KEYS, DERIVED_KEYS, normalize_claim
 from .schema import Dataset
 
 #: What happened to one certified fact when we read its own source page.
@@ -187,8 +187,19 @@ def _claims_on(
     # the oracle has no request, so this is the most it can check.
     if page.subject:
         ungated.append(("programme.exists", True))
+        # The adapter's existence claim carries the stated teaching language,
+        # which the scorer files under programme.language (mapping.py).
+        language = (page.language_of_instruction or "").strip().title() or None
+        if language:
+            ungated.append(("programme.language", language))
         if page.accepts("program_exists"):
             gated.append(("programme.exists", True))
+            if language:
+                gated.append(("programme.language", language))
+            faculty = _faculty_on(url, html, text, fetched_at)
+            if faculty is not None:
+                gated.append(("programme.faculty", faculty))
+                ungated.append(("programme.faculty", faculty))
     elif field:
         # The adapter's listing path (owner decision 2026-09-23): a listing or
         # unclassified page confirms existence only, by a full degree title the
@@ -206,7 +217,28 @@ def _claims_on(
             ungated.append(("programme.exists", True))
             if page.page_type in _LISTING_PAGE_TYPES:
                 gated.append(("programme.exists", True))
+                faculty = _faculty_on(url, html, text, fetched_at)
+                if faculty is not None:
+                    gated.append(("programme.faculty", faculty))
+                    ungated.append(("programme.faculty", faculty))
     return page.page_type.value, gated, ungated
+
+
+def _faculty_on(url: str, html: str, text: str, fetched_at) -> str | None:
+    """The adapter's labelled-faculty reader, on a page that confirmed the programme."""
+    from app.adapters.extraction import ClaimBuilder, _read_faculty, html_title
+
+    builder = ClaimBuilder(
+        source_url=url,
+        page_title=html_title(html),
+        official_domain=True,
+        extraction_method="html_rule",
+        accessed_at=fetched_at,
+    )
+    # The oracle compares the value only; the programme it is filed under is
+    # the adapter's (extract_programme_faculty), checked by the scorer.
+    claim = _read_faculty(text, builder, degree=None)
+    return None if claim is None else str(claim.normalized_value)
 
 
 def _award_claims(
@@ -253,6 +285,44 @@ def _award_claims(
 
 #: Keys the award reader fills; the oracle runs it only for these.
 _AWARD_PREFIXES = ("scholarships.", "documents.scholarship.")
+#: Keys the document reader fills.
+_DOCUMENT_PREFIXES = ("documents.admission.", "documents.programme.")
+
+
+def _document_claims(
+    url: str, html: str, fetched_at
+) -> tuple[list[tuple[str, object]], list[tuple[str, object]]]:
+    """The documents adapter's own reader on one page, bound through the reviewed map.
+
+    The adapter reads the admissions and programme pages it is sent to without
+    a page-type gate, so gated and ungated are the same claims.
+    """
+    from app.adapters.documents.web_documents import read_documents
+    from app.adapters.extraction import ClaimBuilder, html_title, html_to_text
+    from app.domain.enums import DocumentPurpose
+
+    from .identities import IdentityMap
+    from .live import REVIEWED_BINDINGS
+    from .mapping import normalize_subject_claims
+
+    text = html_to_text(html)
+    builder = ClaimBuilder(
+        source_url=url,
+        page_title=html_title(html),
+        official_domain=True,
+        extraction_method="html_rule",
+        accessed_at=fetched_at,
+    )
+    read_documents(text, url, DocumentPurpose.ADMISSION, None, builder)
+    identities = IdentityMap.model_validate_json(REVIEWED_BINDINGS.read_text(encoding="utf-8"))
+    claims: list[tuple[str, object]] = []
+    for claim in builder.claims:
+        payload = claim.model_dump(mode="json")
+        for key, value, _programme, _degree in normalize_subject_claims(
+            payload["claim_type"], payload, identities
+        ):
+            claims.append((key, value))
+    return claims, list(claims)
 
 
 def _matches(expected: object, produced: object) -> bool:
@@ -300,13 +370,19 @@ async def probe(target: Target, fetcher) -> Finding:
         gated, ungated = await asyncio.to_thread(
             _award_claims, target.url, page.text, page.fetched_at, target.field, target.degree
         )
+    elif target.key.startswith(_DOCUMENT_PREFIXES):
+        gated, ungated = await asyncio.to_thread(
+            _document_claims, target.url, page.text, page.fetched_at
+        )
     if found(gated):
         return finding(RECOVERED, f"[{page_type}]")
     if found(ungated):
         return finding(
             CLASSIFIER_GATED, f"[{page_type}] the patterns read it; the page was not accepted"
         )
-    if target.key not in _MEASURED_KEYS and not target.key.startswith(_AWARD_PREFIXES):
+    if target.key not in _MEASURED_KEYS and not target.key.startswith(
+        _AWARD_PREFIXES + _DOCUMENT_PREFIXES
+    ):
         return finding(
             NOT_MEASURED,
             f"[{page_type}] outside the requirements path this oracle runs "
@@ -327,7 +403,7 @@ async def probe(target: Target, fetcher) -> Finding:
     )
 
 
-_MEASURED_KEYS = frozenset(CLAIM_KEYS.values())
+_MEASURED_KEYS = frozenset(CLAIM_KEYS.values()) | DERIVED_KEYS
 
 
 def summarise(findings: list[Finding]) -> str:

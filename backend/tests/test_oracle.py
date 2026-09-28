@@ -259,7 +259,9 @@ class TestTellingTheClassifierFromThePatterns:
         (corpus / "uni/cs.html").write_text(_PLAIN, encoding="utf-8")
         target = Target(
             "example",
-            "documents.admission.transcript.completed",
+            # Documents are measured since 2026-09-28 (the adapter's reader);
+            # a subject requirement still has no claim type at all.
+            "subjects.mathematics.required",
             True,
             "fixture://uni/cs.html",
             "IELTS Academic",

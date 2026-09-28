@@ -83,6 +83,9 @@ MAX_PROGRAM_CANDIDATES_CHECKED = 8
 #: precision fell too, so it removed correct pages rather than junk. Turn it
 #: on only together with a capture that shows what it does.
 CONFIRM_SEARCH_PROGRAMMES = False
+#: Bounded content verification with backfill, unlike the older prune-only
+#: experiment. Remains off until equal-budget captures validate the change.
+RECOVER_SEARCH_CANDIDATES = False
 #: Whether search runs *before* the navigation fallback, and the fallback is
 #: skipped when search found a programme page. Off: appending search after the
 #: other generators is the measured default, and interleaving once cost whole
@@ -1298,6 +1301,9 @@ class LiveDiscoveryAdapter:
             return
 
         pages = selected[PageCategory.PROGRAM_PAGE]
+        if RECOVER_SEARCH_CANDIDATES:
+            await self._recover_search_pages(report.candidates, pages, trace, profile)
+            return
         added = 0
         refused = getattr(self.fetcher, "refused_hosts", {})
         skipped: list[str] = []
@@ -1338,6 +1344,57 @@ class LiveDiscoveryAdapter:
             + f"; queries {len(report.queries_run)}, failed {len(report.failed_queries)}"
             + f", rejected {dict(report.rejection_counts)}"[:300]
         )
+
+    async def _recover_search_pages(self, candidates, pages, trace, profile) -> None:
+        """Fill programme slots from fetched identities rather than search snippets.
+
+        Existing confirmed catalogue/sitemap pages stay first. A rejected lead
+        frees a slot for the next search result. A host failure is kept as an
+        unresolved fallback, never preferred over a page that confirms identity.
+        """
+        from app.adapters.extraction import html_to_text
+        from app.adapters.requirements.web_requirements import (
+            _LISTING_PAGE_TYPES,
+            _listed_programme,
+        )
+
+        fields = list(profile.context.intended_fields)
+        level = str(profile.context.level)
+        pending: list[str] = []
+        checked = 0
+        added = 0
+        for found in candidates:
+            if len(pages) >= MAX_PAGES_PER_CATEGORY or checked >= MAX_PROGRAM_CANDIDATES_CHECKED:
+                break
+            if found.url in pages:
+                continue
+            checked += 1
+            result = await self.fetcher.get(found.url)
+            if not result.ok:
+                pending.append(found.url)
+                trace.reject(found.url, f"search lead unresolved ({result.outcome.value})")
+                continue
+            page = classify_page(url=found.url, html=result.text)
+            reason = profile_rejects(page, level, fields)
+            if reason is not None and page.page_type in _LISTING_PAGE_TYPES:
+                program = CandidateProgram(
+                    name=found.title,
+                    field=fields[0] if fields else "",
+                    degree=profile.context.level,
+                    url=found.url,
+                )
+                if _listed_programme(html_to_text(result.text), program) is not None:
+                    reason = None
+            if reason is not None:
+                trace.reject(found.url, reason)
+                continue
+            pages.append(found.url)
+            added += 1
+        # Unavailable pages remain leads only when no source confirmed the
+        # programme. Their failure is explicit in the trace and downstream.
+        if not pages:
+            pages.extend(pending[:MAX_PAGES_PER_CATEGORY])
+        trace.errors.append(f"search identity recovery: checked {checked}, confirmed {added}")
 
     def _apply(
         self,

@@ -5,6 +5,28 @@ from __future__ import annotations
 from app.adapters.page_classifier import PageType, classify_page
 
 
+class TestLabelledTeachingLanguage:
+    def test_warsaws_language_field_is_read(self):
+        from app.adapters.page_classifier import _language
+
+        assert _language("full-time, 3-year studies\nLanguage: Polish\nJump to:") == "polish"
+
+    def test_viennas_label_and_value_may_be_on_separate_lines(self):
+        from app.adapters.page_classifier import _language
+
+        assert _language("Language\n\nGerman\n\nTest language\nEnglish") == "german"
+
+    def test_a_foreign_language_exam_is_not_the_teaching_language(self):
+        from app.adapters.page_classifier import _language
+
+        assert _language("Foreign language exam (B2)\nPolish\nGerman proficiency: A2") is None
+
+    def test_conflicting_language_fields_are_not_reduced_to_one(self):
+        from app.adapters.page_classifier import _language
+
+        assert _language("Language: Polish\nLanguage: English") is None
+
+
 class TestADegreeWordIsNotAProgramme:
     """V2-29 — headings a live run actually claimed a programme from.
 
