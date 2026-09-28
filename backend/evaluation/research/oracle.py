@@ -283,6 +283,44 @@ def _award_claims(
 
 #: Keys the award reader fills; the oracle runs it only for these.
 _AWARD_PREFIXES = ("scholarships.", "documents.scholarship.")
+#: Keys the document reader fills.
+_DOCUMENT_PREFIXES = ("documents.admission.", "documents.programme.")
+
+
+def _document_claims(
+    url: str, html: str, fetched_at
+) -> tuple[list[tuple[str, object]], list[tuple[str, object]]]:
+    """The documents adapter's own reader on one page, bound through the reviewed map.
+
+    The adapter reads the admissions and programme pages it is sent to without
+    a page-type gate, so gated and ungated are the same claims.
+    """
+    from app.adapters.documents.web_documents import read_documents
+    from app.adapters.extraction import ClaimBuilder, html_title, html_to_text
+    from app.domain.enums import DocumentPurpose
+
+    from .identities import IdentityMap
+    from .live import REVIEWED_BINDINGS
+    from .mapping import normalize_subject_claims
+
+    text = html_to_text(html)
+    builder = ClaimBuilder(
+        source_url=url,
+        page_title=html_title(html),
+        official_domain=True,
+        extraction_method="html_rule",
+        accessed_at=fetched_at,
+    )
+    read_documents(text, url, DocumentPurpose.ADMISSION, None, builder)
+    identities = IdentityMap.model_validate_json(REVIEWED_BINDINGS.read_text(encoding="utf-8"))
+    claims: list[tuple[str, object]] = []
+    for claim in builder.claims:
+        payload = claim.model_dump(mode="json")
+        for key, value, _programme, _degree in normalize_subject_claims(
+            payload["claim_type"], payload, identities
+        ):
+            claims.append((key, value))
+    return claims, list(claims)
 
 
 def _matches(expected: object, produced: object) -> bool:
@@ -330,13 +368,19 @@ async def probe(target: Target, fetcher) -> Finding:
         gated, ungated = await asyncio.to_thread(
             _award_claims, target.url, page.text, page.fetched_at, target.field, target.degree
         )
+    elif target.key.startswith(_DOCUMENT_PREFIXES):
+        gated, ungated = await asyncio.to_thread(
+            _document_claims, target.url, page.text, page.fetched_at
+        )
     if found(gated):
         return finding(RECOVERED, f"[{page_type}]")
     if found(ungated):
         return finding(
             CLASSIFIER_GATED, f"[{page_type}] the patterns read it; the page was not accepted"
         )
-    if target.key not in _MEASURED_KEYS and not target.key.startswith(_AWARD_PREFIXES):
+    if target.key not in _MEASURED_KEYS and not target.key.startswith(
+        _AWARD_PREFIXES + _DOCUMENT_PREFIXES
+    ):
         return finding(
             NOT_MEASURED,
             f"[{page_type}] outside the requirements path this oracle runs "

@@ -219,54 +219,63 @@ class WebDocumentsAdapter:
             allowed_domains=verification_domains(url, candidate.domain),
         )
 
-        items: list[DocumentItem] = []
-        seen: set[str] = set()
-        for line in text.splitlines():
-            low = line.lower().strip()
-            if not low or len(low) > 300:
-                continue
-            for needle, name, owner, flags in _DOC_RULES:
-                if needle not in low or name in seen:
-                    continue
-                seen.add(name)
-                words = _WORDS.search(line)
-                pages = _PAGES.search(line)
-                size = _SIZE.search(line)
-                item = DocumentItem(
-                    name=name,
-                    purpose=purpose,
-                    owner=owner,
-                    format_notes=", ".join(sorted(set(_FORMAT.findall(line)))) or "",
-                    max_pages=int(pages.group(1)) if pages else None,
-                    max_file_size_mb=float(size.group(1)) if size else None,
-                    word_limit=int(words.group(1) or words.group(2)) if words else None,
-                    prompt_text=line.strip()[:280]
-                    if purpose == DocumentPurpose.SCHOLARSHIP
-                    else None,
-                    source_url=url,
-                    claim_ids=[url],
-                    scope=page_scope,
-                    **flags,
-                )
-                items.append(item)
-                builder.add(ClaimType.REQUIRED_DOCUMENT, name, line.strip()[:300], confidence=0.75)
-                if item.word_limit:
-                    builder.add(
-                        ClaimType.ESSAY_PROMPT,
-                        {"document": name, "word_limit": item.word_limit},
-                        line.strip()[:300],
-                        confidence=0.8,
-                    )
-                if owner == DocumentOwner.RECOMMENDER:
-                    builder.add(
-                        ClaimType.RECOMMENDATION_REQUIREMENT,
-                        name,
-                        line.strip()[:300],
-                        confidence=0.75,
-                    )
-                break
+        items = read_documents(text, url, purpose, page_scope, builder)
         out.claims.extend(builder.claims)
         return items
+
+
+def read_documents(
+    text: str, url: str, purpose: DocumentPurpose, page_scope, builder: ClaimBuilder
+) -> list[DocumentItem]:
+    """Checklist rows and document claims from one page's readable text.
+
+    Pure: no fetch. The adapter and the evaluation oracle both call it.
+    """
+    items: list[DocumentItem] = []
+    seen: set[str] = set()
+    for line in text.splitlines():
+        low = line.lower().strip()
+        if not low or len(low) > 300:
+            continue
+        for needle, name, owner, flags in _DOC_RULES:
+            if needle not in low or name in seen:
+                continue
+            seen.add(name)
+            words = _WORDS.search(line)
+            pages = _PAGES.search(line)
+            size = _SIZE.search(line)
+            item = DocumentItem(
+                name=name,
+                purpose=purpose,
+                owner=owner,
+                format_notes=", ".join(sorted(set(_FORMAT.findall(line)))) or "",
+                max_pages=int(pages.group(1)) if pages else None,
+                max_file_size_mb=float(size.group(1)) if size else None,
+                word_limit=int(words.group(1) or words.group(2)) if words else None,
+                prompt_text=line.strip()[:280] if purpose == DocumentPurpose.SCHOLARSHIP else None,
+                source_url=url,
+                claim_ids=[url],
+                scope=page_scope,
+                **flags,
+            )
+            items.append(item)
+            builder.add(ClaimType.REQUIRED_DOCUMENT, name, line.strip()[:300], confidence=0.75)
+            if item.word_limit:
+                builder.add(
+                    ClaimType.ESSAY_PROMPT,
+                    {"document": name, "word_limit": item.word_limit},
+                    line.strip()[:300],
+                    confidence=0.8,
+                )
+            if owner == DocumentOwner.RECOMMENDER:
+                builder.add(
+                    ClaimType.RECOMMENDATION_REQUIREMENT,
+                    name,
+                    line.strip()[:300],
+                    confidence=0.75,
+                )
+            break
+    return items
 
 
 def _order_steps(items: list[DocumentItem]) -> list[str]:
