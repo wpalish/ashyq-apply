@@ -26,7 +26,7 @@ from collections import Counter
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
-from .mapping import CLAIM_KEYS, normalize_claim
+from .mapping import CLAIM_KEYS, DERIVED_KEYS, normalize_claim
 from .schema import Dataset
 
 #: What happened to one certified fact when we read its own source page.
@@ -226,7 +226,7 @@ def _claims_on(
 
 def _faculty_on(url: str, html: str, text: str, fetched_at) -> str | None:
     """The adapter's labelled-faculty reader, on a page that confirmed the programme."""
-    from app.adapters.extraction import ClaimBuilder, extract_programme_faculty, html_title
+    from app.adapters.extraction import ClaimBuilder, _read_faculty, html_title
 
     builder = ClaimBuilder(
         source_url=url,
@@ -235,7 +235,9 @@ def _faculty_on(url: str, html: str, text: str, fetched_at) -> str | None:
         extraction_method="html_rule",
         accessed_at=fetched_at,
     )
-    claim = extract_programme_faculty(text, builder)
+    # The oracle compares the value only; the programme it is filed under is
+    # the adapter's (extract_programme_faculty), checked by the scorer.
+    claim = _read_faculty(text, builder, degree=None)
     return None if claim is None else str(claim.normalized_value)
 
 
@@ -401,7 +403,7 @@ async def probe(target: Target, fetcher) -> Finding:
     )
 
 
-_MEASURED_KEYS = frozenset(CLAIM_KEYS.values())
+_MEASURED_KEYS = frozenset(CLAIM_KEYS.values()) | DERIVED_KEYS
 
 
 def summarise(findings: list[Finding]) -> str:
