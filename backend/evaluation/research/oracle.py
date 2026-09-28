@@ -187,8 +187,15 @@ def _claims_on(
     # the oracle has no request, so this is the most it can check.
     if page.subject:
         ungated.append(("programme.exists", True))
+        # The adapter's existence claim carries the stated teaching language,
+        # which the scorer files under programme.language (mapping.py).
+        language = (page.language_of_instruction or "").strip().title() or None
+        if language:
+            ungated.append(("programme.language", language))
         if page.accepts("program_exists"):
             gated.append(("programme.exists", True))
+            if language:
+                gated.append(("programme.language", language))
             faculty = _faculty_on(url, html, text, fetched_at)
             if faculty is not None:
                 gated.append(("programme.faculty", faculty))
