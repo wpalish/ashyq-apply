@@ -9,9 +9,11 @@ cause of a missed deadline.
 from __future__ import annotations
 
 import re
+from dataclasses import replace
 from datetime import UTC, datetime
 
 from app.adapters.base import AdapterResult, Candidate, CandidateProgram
+from app.adapters.document_ir import DocumentIR, build_document_ir
 from app.adapters.extraction import (
     ClaimBuilder,
     html_title,
@@ -21,8 +23,9 @@ from app.adapters.extraction import (
 )
 from app.adapters.fetching import Fetcher
 from app.adapters.scope_reader import read_scope
+from app.domain.claim_scope import ClaimScope
 from app.domain.enums import ClaimType, DocumentOwner, DocumentPurpose, SourceSpecificity
-from app.schemas.claim import UnresolvedQuestion
+from app.schemas.claim import MAX_EXCERPT_CHARS, UnresolvedQuestion
 from app.schemas.result import DocumentChecklist, DocumentItem, Scholarship
 
 #: Phrases that identify a document, and how it should be classified.
@@ -219,7 +222,9 @@ class WebDocumentsAdapter:
             allowed_domains=verification_domains(url, candidate.domain),
         )
 
-        items = read_documents(text, url, purpose, page_scope, builder)
+        items = read_documents(
+            text, url, purpose, page_scope, builder, document=build_document_ir(res.text, url)
+        )
         out.claims.extend(builder.claims)
         return items
 
@@ -237,6 +242,7 @@ _LABEL_DOCUMENT = (
     (re.compile(r"transcript", re.I), "Full academic transcript"),
     (re.compile(r"diploma", re.I), "Secondary school diploma (certified copy)"),
 )
+_COMPLETION_LABEL = re.compile(r"transcripts?|(?:secondary\s+school\s+)?diplomas?", re.I)
 #: The forms a document takes, in the page's words, to one vocabulary.
 _FORMS = (
     (
@@ -268,21 +274,80 @@ def _completion_forms(text: str, builder: ClaimBuilder) -> None:
         match = _BY_COMPLETION.match(line.strip())
         if match is None:
             continue
-        name = next((n for p, n in _LABEL_DOCUMENT if p.search(match.group("label"))), None)
-        done, pending = _form_of(match.group("done")), _form_of(match.group("pending"))
-        if name is None or done is None or pending is None or done == pending:
-            continue
-        for status, form in (("completed", done), ("not_completed", pending)):
-            builder.add(
-                ClaimType.DOCUMENT_BY_COMPLETION,
-                {"document": name, "status": status, "form": form},
-                line.strip()[:300],
-                confidence=0.75,
+        _add_completion_forms(match, builder, line.strip()[:300])
+
+
+def _add_completion_forms(
+    match: re.Match[str], builder: ClaimBuilder, excerpt: str, section: str = ""
+) -> None:
+    name = next((n for p, n in _LABEL_DOCUMENT if p.search(match.group("label"))), None)
+    done, pending = _form_of(match.group("done")), _form_of(match.group("pending"))
+    if name is None or done is None or pending is None or done == pending:
+        return
+    for status, form in (("completed", done), ("not_completed", pending)):
+        builder.add(
+            ClaimType.DOCUMENT_BY_COMPLETION,
+            {"document": name, "status": status, "form": form},
+            excerpt,
+            section=section,
+            confidence=0.75,
+        )
+
+
+def _structured_completion_forms(document: DocumentIR, builder: ClaimBuilder) -> None:
+    """An explicit label and one block containing both forms; no text windows."""
+    page_scope = builder.meta.get("scope")
+    try:
+        for block in document.blocks:
+            if block.kind not in {"table_cell", "key_value", "paragraph", "list_item"}:
+                continue
+            if len(block.text) > MAX_EXCERPT_CHARS:
+                continue
+            context = (
+                block.row_headers
+                if block.kind == "table_cell"
+                else (block.label,)
+                if block.kind == "key_value"
+                else block.section_path[-1:]
             )
+            labels = {label for label in context if _COMPLETION_LABEL.fullmatch(label)}
+            if len(labels) > 1:
+                continue
+            match = _BY_COMPLETION.match(block.text)
+            if match is not None and labels:
+                labelled = next(iter(labels))
+                labelled_name = next(n for p, n in _LABEL_DOCUMENT if p.search(labelled))
+                own_name = next(n for p, n in _LABEL_DOCUMENT if p.search(match.group("label")))
+                if labelled_name != own_name:
+                    continue
+            if match is None and labels:
+                # The label is structural context, not part of the quoted body.
+                match = _BY_COMPLETION.match(f"{next(iter(labels))} {block.text}")
+            if match is None:
+                continue
+            if isinstance(page_scope, ClaimScope):
+                local = read_scope(
+                    " ".join([*block.section_path, block.caption, *block.row_headers])
+                )
+                builder.meta["scope"] = replace(page_scope, population=local.population)
+            _add_completion_forms(
+                match,
+                builder,
+                block.text,
+                " / ".join([*block.section_path, *context]),
+            )
+    finally:
+        builder.meta["scope"] = page_scope
 
 
 def read_documents(
-    text: str, url: str, purpose: DocumentPurpose, page_scope, builder: ClaimBuilder
+    text: str,
+    url: str,
+    purpose: DocumentPurpose,
+    page_scope,
+    builder: ClaimBuilder,
+    *,
+    document: DocumentIR | None = None,
 ) -> list[DocumentItem]:
     """Checklist rows and document claims from one page's readable text.
 
@@ -332,7 +397,12 @@ def read_documents(
                     confidence=0.75,
                 )
             break
-    _completion_forms(text, builder)
+    if document is None or not document.blocks:
+        # Fetcher also accepts plain text. With no structural blocks, preserve
+        # the explicit one-line reader; never fall back across parsed blocks.
+        _completion_forms(text, builder)
+    else:
+        _structured_completion_forms(document, builder)
     return items
 
 

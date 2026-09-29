@@ -297,6 +297,7 @@ def _document_claims(
     The adapter reads the admissions and programme pages it is sent to without
     a page-type gate, so gated and ungated are the same claims.
     """
+    from app.adapters.document_ir import build_document_ir
     from app.adapters.documents.web_documents import read_documents
     from app.adapters.extraction import ClaimBuilder, html_title, html_to_text
     from app.domain.enums import DocumentPurpose
@@ -313,7 +314,9 @@ def _document_claims(
         extraction_method="html_rule",
         accessed_at=fetched_at,
     )
-    read_documents(text, url, DocumentPurpose.ADMISSION, None, builder)
+    read_documents(
+        text, url, DocumentPurpose.ADMISSION, None, builder, document=build_document_ir(html, url)
+    )
     identities = IdentityMap.model_validate_json(REVIEWED_BINDINGS.read_text(encoding="utf-8"))
     claims: list[tuple[str, object]] = []
     for claim in builder.claims:
