@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="ru" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="assets/vendor/gsap.min.js"></script>
+    <script src="assets/globe-data.js"></script>
+    <script src="assets/timing.js"></script>
+    <style>
+      /* The app's faces (PR #20): Montserrat 800 for headings, Onest for text. Self-hosted. */
+      @font-face { font-family: 'Montserrat'; font-weight: 800; font-display: block; src: url(assets/fonts/montserrat-cyrillic-800-normal.woff2) format('woff2'); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+      @font-face { font-family: 'Montserrat'; font-weight: 800; font-display: block; src: url(assets/fonts/montserrat-latin-800-normal.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+      @font-face { font-family: 'Onest'; font-weight: 500; font-display: block; src: url(assets/fonts/onest-cyrillic-500-normal.woff2) format('woff2'); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+      @font-face { font-family: 'Onest'; font-weight: 500; font-display: block; src: url(assets/fonts/onest-latin-500-normal.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+      @font-face { font-family: 'Onest'; font-weight: 600; font-display: block; src: url(assets/fonts/onest-cyrillic-600-normal.woff2) format('woff2'); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+      @font-face { font-family: 'Onest'; font-weight: 600; font-display: block; src: url(assets/fonts/onest-latin-600-normal.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+      @font-face { font-family: 'Onest'; font-weight: 700; font-display: block; src: url(assets/fonts/onest-cyrillic-700-normal.woff2) format('woff2'); unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+      @font-face { font-family: 'Onest'; font-weight: 700; font-display: block; src: url(assets/fonts/onest-latin-700-normal.woff2) format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+
+      /* «Солнце» tokens, by value from frontend/src/styles/tokens.css (PR #20). */
+      :root {
+        --paper: #F6F7F9; --ink: #0F1E36; --muted: #5A6578; --rule: #E3E7ED; --sun: #FFC23D; --route: #E8A317;
+        --ok: #177A4C; --ok-soft: #E4F5EC; --ok-border: #A9DCC0; --risk: #B42318; --risk-soft: #FDECEA; --risk-border: #F2B8B0;
+        --link: #0B6F93; --kicker: #8A5A00; --unknown: #5A6578; --unknown-border: #9AA4B2;
+        --demo: #7B3F9E; --demo-soft: #F4ECF9; --demo-border: #D7BEE8;
+        --display: 'Montserrat', sans-serif; --ui: 'Onest', sans-serif;
+        --shadow: 0 30px 80px rgba(15, 30, 54, 0.16);
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--paper); }
+      body { font-family: var(--ui); color: var(--ink); font-variant-numeric: tabular-nums; -webkit-font-smoothing: antialiased; }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden;
+        background: radial-gradient(900px 700px at 80% 8%, rgba(255, 194, 61, 0.18), transparent 70%), var(--paper); }
+      .layer { position: absolute; inset: 0; }
+      #s2, #s3, #s4, #s5, #s6, #s7 { opacity: 0; visibility: hidden; }
+      .card { position: absolute; left: 80px; width: 860px; background: #fff; border-radius: 44px; box-shadow: var(--shadow); }
+      .kicker { font: 700 28px/1 var(--ui); letter-spacing: 0.08em; text-transform: uppercase; color: var(--kicker); }
+      .pill { display: inline-flex; align-items: center; gap: 12px; border-radius: 999px; padding: 12px 26px; font: 600 32px/1.2 var(--ui); border: 2px solid transparent; white-space: nowrap; }
+      .pill.ok { background: var(--ok-soft); color: var(--ok); border-color: var(--ok-border); }
+
+      #demo { position: absolute; left: 80px; top: 236px; padding: 12px 24px; border-radius: 999px; font: 700 28px/1 var(--ui);
+        background: var(--demo-soft); color: var(--demo); border: 2px solid var(--demo-border); opacity: 0; }
+
+      /* 1–2: the grant, the stamp, the receipt */
+      #grant { top: 470px; padding: 44px 48px; }
+      #grant h2 { font: 800 60px/1.08 var(--display); letter-spacing: -0.03em; margin: 18px 0 24px; }
+      #grant small { display: block; margin-top: 20px; font: 500 30px/1.3 var(--ui); color: var(--muted); }
+      #free { position: absolute; left: 0; right: 0; top: 990px; text-align: center; font: 800 146px/1 var(--display); letter-spacing: -0.05em; color: var(--ink); }
+      #free span { background: linear-gradient(transparent 58%, var(--sun) 58%, var(--sun) 90%, transparent 90%); padding: 0 10px; }
+      #receipt { top: 640px; padding: 36px 48px 28px; border-radius: 12px 12px 44px 44px; }
+      .row { display: flex; align-items: center; justify-content: space-between; height: 92px; font: 500 40px/1 var(--ui); border-bottom: 2px dashed var(--rule); }
+      .row:last-child { border-bottom: 0; }
+      .row b { font-weight: 600; margin-left: auto; margin-right: 28px; }
+      .row i { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font: 800 30px/1 var(--display); font-style: normal; }
+      .row.yes i { background: var(--ok-soft); color: var(--ok); }
+      .row.no { color: var(--risk); } .row.no i { background: var(--risk); color: #fff; }
+
+      /* 3: the arithmetic */
+      #brand { position: absolute; left: 0; right: 0; top: 300px; display: flex; align-items: center; justify-content: center; gap: 18px; font: 800 56px/1 var(--display); letter-spacing: -0.03em; }
+      #brand small { font: 600 34px/1 var(--ui); color: var(--muted); letter-spacing: 0; }
+      #calc { top: 440px; padding: 48px 52px; }
+      .mrow { display: flex; justify-content: space-between; align-items: center; height: 84px; font: 500 42px/1 var(--ui); }
+      .mrow b { font-weight: 600; }
+      .mrow.grant { color: var(--ok); }
+      .mrow.rest { border-top: 4px solid var(--ink); margin-top: 10px; height: 100px; font-weight: 700; }
+      .mrow.rest b { font: 800 64px/1 var(--display); letter-spacing: -0.03em; }
+      #usd { margin-top: 24px; font: 800 150px/1 var(--display); letter-spacing: -0.05em; }
+      #usd small { font: 600 44px/1 var(--ui); letter-spacing: 0; color: var(--muted); }
+      #rate { margin-top: 18px; font: 500 30px/1.3 var(--ui); color: var(--muted); }
+
+      /* 4: the globe */
+      #globe { position: absolute; inset: 0; }
+      #count { position: absolute; left: 0; right: 0; top: 300px; text-align: center; font: 800 76px/1.05 var(--display); letter-spacing: -0.03em; }
+      #count em { font-style: normal; color: var(--kicker); }
+      #chips { position: absolute; left: 0; right: 0; top: 410px; display: flex; justify-content: center; gap: 16px; }
+      #chips span { padding: 14px 28px; border-radius: 999px; background: #fff; box-shadow: 0 6px 18px rgba(15,30,54,.10); font: 600 32px/1 var(--ui); }
+
+      /* 5: the source */
+      #quote { top: 430px; padding: 50px 52px; }
+      #quote h3 { font: 800 52px/1.1 var(--display); letter-spacing: -0.03em; margin: 18px 0 28px; }
+      #quote blockquote { font: 500 46px/1.42 var(--ui); }
+      #quote mark { color: inherit; background: linear-gradient(transparent 12%, #FFE7A6 12%, #FFE7A6 92%, transparent 92%) no-repeat 0 0 / 0% 100%; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+      #stamp { margin-top: 34px; display: inline-flex; align-items: center; gap: 14px; padding: 18px 30px; border-radius: 999px; background: #E3F1F6; border: 2px solid #9CCBDC; color: var(--link); font: 600 32px/1.2 var(--ui); transform-origin: left center; }
+      #stamp::before { content: ''; width: 14px; height: 14px; border-radius: 50%; background: currentColor; }
+
+      /* 6: what we cannot know */
+      #nodata { top: 620px; padding: 52px; border: 4px dashed var(--unknown-border); box-shadow: none; background: rgba(255,255,255,.92); }
+      #nodata .q { font: 800 120px/1 var(--display); color: var(--unknown-border); }
+      #nodata b { display: block; margin-top: 22px; font: 700 46px/1.2 var(--ui); }
+      #nodata p { margin-top: 14px; font: 500 38px/1.35 var(--ui); color: var(--unknown); }
+
+      /* 7: the end card */
+      #end-row { position: absolute; left: 0; right: 0; top: 700px; display: flex; align-items: center; justify-content: center; gap: 30px; }
+      #end-row b { font: 800 132px/1 var(--display); letter-spacing: -0.04em; }
+      #end-row small { font: 600 64px/1 var(--ui); color: var(--muted); margin-left: 16px; }
+      #tag { position: absolute; left: 90px; right: 90px; top: 900px; text-align: center; font: 800 76px/1.08 var(--display); letter-spacing: -0.03em; }
+      #tag span { background: linear-gradient(transparent 60%, var(--sun) 60%, var(--sun) 92%, transparent 92%); }
+      #disc { position: absolute; left: 110px; right: 110px; top: 1150px; text-align: center; font: 500 30px/1.4 var(--ui); color: var(--muted); }
+
+      /* captions: above the platform's bottom bar, clear of the right-hand buttons */
+      #cap { position: absolute; left: 80px; width: 860px; top: 1330px; height: 210px; display: flex; align-items: flex-start; justify-content: center; }
+      #cap .box { text-align: center; font: 700 50px/1.22 var(--ui); color: var(--ink); }
+      #cap .w { display: inline-block; opacity: 0.28; }
+      #cap .w.on { opacity: 1; }
+      #cap .w.acc { background: var(--sun); border-radius: 10px; padding: 0 8px; margin: 0 -4px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="29.81" data-width="1080" data-height="1920">
+      <canvas id="globe" class="layer" width="1080" height="1920"></canvas>
+
+      <div id="s1" class="layer">
+        <div class="card" id="grant">
+          <div class="kicker">Грант · University of Groningen</div>
+          <h2>Groningen Talent Grant</h2>
+          <span class="pill ok">Грант: учёба и проживание</span>
+          <small>€28 350 в год · 2026/27</small>
+        </div>
+        <div id="free"><span>Бесплатно?</span></div>
+      </div>
+
+      <div id="s2" class="layer">
+        <div class="card" id="receipt">
+          <div class="row yes"><span>Обучение</span><b>€16 500</b><i>✓</i></div>
+          <div class="row yes"><span>Сборы</span><b>€600</b><i>✓</i></div>
+          <div class="row yes"><span>Жильё</span><b>€7 200</b><i>✓</i></div>
+          <div class="row yes"><span>Питание</span><b>€3 600</b><i>✓</i></div>
+          <div class="row no"><span>Страховка</span><b>€1 450</b><i>✕</i></div>
+          <div class="row no"><span>Книги</span><b>€700</b><i>✕</i></div>
+        </div>
+      </div>
+
+      <div id="s3" class="layer">
+        <div id="brand"><svg width="72" height="72" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#FFC23D"/><path d="M10.5 32V22.5a5.5 5.5 0 0 1 11 0V32Z" fill="#0F1E36"/></svg><span>ASHYQ <small>Apply</small></span></div>
+        <div class="card" id="calc">
+          <div class="kicker">Деньги за год · Гронинген</div>
+          <div style="height: 20px"></div>
+          <div class="mrow"><span>Расходы</span><b>€30 050</b></div>
+          <div class="mrow grant"><span>Грант</span><b>− €28 350</b></div>
+          <div class="mrow rest"><span>Остаётся</span><b id="restV">€30 050</b></div>
+          <div id="usd">$1 848 <small>в год</small></div>
+          <div id="rate">По курсу $1 = €0.92 на 1 августа 2026</div>
+        </div>
+      </div>
+
+      <div id="s4" class="layer">
+        <div id="count"><span id="nProg">0</span> программ · <em><span id="nCountry">0</span> стран</em></div>
+        <div id="chips"><span>по оценкам</span><span>по бюджету</span></div>
+      </div>
+
+      <div id="s5" class="layer">
+        <div class="card" id="quote">
+          <div class="kicker">Цитата со страницы гранта</div>
+          <h3>Groningen Talent Grant</h3>
+          <blockquote><mark id="hl">«Covers tuition, all mandatory university fees, university housing and a meal allowance.»</mark></blockquote>
+          <div id="stamp">rug.nl · проверено 14 сентября</div>
+        </div>
+      </div>
+
+      <div id="s6" class="layer">
+        <div class="card" id="nodata">
+          <div class="q">?</div>
+          <b>University of Vienna · итог не посчитан</b>
+          <p>На сайте нет цены за питание. Угадывать не будем.</p>
+        </div>
+      </div>
+
+      <div id="s7" class="layer">
+        <div id="end-row"><svg id="endSun" width="150" height="150" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#FFC23D"/><path d="M10.5 32V22.5a5.5 5.5 0 0 1 11 0V32Z" fill="#0F1E36"/></svg><b>ASHYQ<small>Apply</small></b></div>
+        <div id="tag"><span>Узнай настоящую</span><br><span>цену учёбы</span></div>
+        <div id="disc">В ролике демо-данные.<br>Решение о приёме и гранте — за университетом.</div>
+      </div>
+
+      <div id="demo">Пример на демо-данных</div>
+      <div id="cap"><div class="box" id="capBox"></div></div>
+
+      <audio id="vo" class="clip" src="assets/vo.wav" data-start="0" data-duration="29.81" data-track-index="1" data-volume="1"></audio>
+      <audio id="bgm" class="clip" src="assets/bgm.wav" data-start="0" data-duration="29.81" data-track-index="2" data-volume="0.55"></audio>
+    </div>
+
+    <script>
+      /*
+       * One paused root timeline. Scene times come from assets/timing.js (the real voice lengths),
+       * so a re-voiced line moves its scene with it. Canvas, counters and captions are drawn from
+       * the timeline's own time on every update: a pure function of t, safe to seek anywhere.
+       */
+      const T = window.TIMING.lines;
+      const at = (i, f = 0) => T[i].start + T[i].dur * f;
+      const end = (i) => T[i].start + T[i].dur;
+      const tl = gsap.timeline({ paused: true });
+      const ease = 'expo.out';
+
+      // 1 — the grant, then the stamp as the voice reaches «бесплатно». Scenes 2–7 start hidden in CSS.
+      tl.fromTo('#grant', { y: 260, autoAlpha: 0, rotation: -3 }, { y: 0, autoAlpha: 1, rotation: 0, duration: 0.7, ease }, 0.05);
+      tl.fromTo('#free', { scale: 2.4, autoAlpha: 0, rotation: -12 }, { scale: 1, autoAlpha: 1, rotation: -5, duration: 0.35, ease: 'back.out(2.2)' }, at(0, 0.68));
+      tl.fromTo('#grant', { x: 0 }, { x: 14, duration: 0.05, yoyo: true, repeat: 3, ease: 'none' }, at(0, 0.68) + 0.3);
+
+      // 2 — the stamp lifts away, the grant rises, the receipt unrolls; two rows turn red.
+      tl.to('#free', { y: -520, scale: 0.42, autoAlpha: 0, duration: 0.5, ease: 'power3.in' }, at(1) - 0.1);
+      tl.to('#grant', { y: -220, scale: 0.86, duration: 0.6, ease: 'power3.inOut' }, at(1) - 0.1);
+      tl.set('#s2', { autoAlpha: 1 }, at(1));
+      tl.fromTo('#receipt', { clipPath: 'inset(0 0 100% 0)' }, { clipPath: 'inset(0 0 0% 0)', duration: 0.8, ease: 'power2.out' }, at(1) + 0.1);
+      document.querySelectorAll('#receipt .row').forEach((row, k) => {
+        tl.fromTo(row, { x: -40, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.4, ease }, at(1) + 0.15 + k * 0.12);
+      });
+      document.querySelectorAll('#receipt .row.no').forEach((row, k) => {
+        tl.fromTo(row, { backgroundColor: 'rgba(253,236,234,0)' }, { backgroundColor: 'rgba(253,236,234,1)', duration: 0.3 }, at(1, 0.55) + k * 0.15);
+        tl.fromTo(row.querySelector('i'), { scale: 0.4 }, { scale: 1, duration: 0.35, ease: 'back.out(3)' }, at(1, 0.55) + k * 0.15);
+      });
+      tl.to(['#s1', '#s2'], { autoAlpha: 0, y: -60, duration: 0.3, ease: 'power2.in' }, at(2) - 0.35);
+
+      // 3 — the arithmetic: the remainder counts down to what is left, then the dollar figure.
+      tl.set('#s3', { autoAlpha: 1 }, at(2) - 0.05);
+      tl.fromTo('#brand', { y: -40, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.5, ease }, at(2));
+      tl.fromTo('#calc', { y: 220, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.7, ease }, at(2) + 0.1);
+      tl.fromTo('#calc .mrow.grant', { x: 120, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.5, ease }, at(2, 0.3));
+      tl.fromTo('#usd', { scale: 0.8, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.5, ease: 'back.out(2)', transformOrigin: 'left center' }, at(2, 0.72));
+      tl.fromTo('#rate', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.3 }, at(2, 0.8));
+      tl.to('#s3', { autoAlpha: 0, y: -80, duration: 0.3, ease: 'power2.in' }, at(3) - 0.35);
+
+      // 4 — the world: the globe is drawn in draw(); here only the words.
+      tl.set('#s4', { autoAlpha: 1 }, at(3) - 0.1);
+      tl.fromTo('#count', { y: 40, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.5, ease }, at(3));
+      tl.fromTo('#chips span', { y: 30, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.45, ease, stagger: 0.18 }, at(3, 0.35));
+      tl.to('#s4', { autoAlpha: 0, duration: 0.25 }, at(4) - 0.3);
+
+      // 5 — the grant's own words, highlighted, then stamped with where and when they were read.
+      tl.set('#s5', { autoAlpha: 1 }, at(4) - 0.05);
+      tl.fromTo('#quote', { y: 220, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.6, ease }, at(4) - 0.05);
+      tl.fromTo('#hl', { backgroundSize: '0% 100%' }, { backgroundSize: '100% 100%', duration: T[4].dur * 0.45, ease: 'power1.inOut' }, at(4, 0.1));
+      tl.fromTo('#stamp', { scale: 1.3, rotation: -5, autoAlpha: 0 }, { scale: 1, rotation: 0, autoAlpha: 1, duration: 0.35, ease: 'back.out(2.5)' }, at(4, 0.62));
+      tl.to('#s5', { autoAlpha: 0, y: -80, duration: 0.25, ease: 'power2.in' }, at(5) - 0.3);
+
+      // 6 — what we cannot know is shown, dashed, not hidden.
+      tl.set('#s6', { autoAlpha: 1 }, at(5) - 0.05);
+      tl.fromTo('#nodata', { y: 160, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.6, ease }, at(5) - 0.05);
+      tl.to('#s6', { autoAlpha: 0, scale: 0.96, duration: 0.25, ease: 'power2.in' }, at(6) - 0.3);
+
+      // 7 — the sun rises, the name, the line.
+      tl.set('#s7', { autoAlpha: 1 }, at(6) - 0.05);
+      tl.fromTo('#endSun', { scale: 0, rotation: -90 }, { scale: 1, rotation: 0, duration: 0.6, ease: 'back.out(1.8)' }, at(6) - 0.05);
+      tl.fromTo('#end-row b', { x: -40, autoAlpha: 0, clipPath: 'inset(0 100% 0 0)' }, { x: 0, autoAlpha: 1, clipPath: 'inset(0 0% 0 0)', duration: 0.6, ease }, at(6) + 0.25);
+      tl.fromTo('#tag', { y: 40, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.6, ease }, at(6, 0.45));
+      tl.fromTo('#disc', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.5 }, at(6, 0.8));
+
+      // Demo label on every scene that shows a figure (2–6).
+      tl.to('#demo', { autoAlpha: 1, duration: 0.25 }, at(1));
+      tl.to('#demo', { autoAlpha: 0, duration: 0.25 }, at(6) - 0.2);
+
+      // Hold the end card until the file ends.
+      tl.set({}, {}, window.TIMING.total);
+
+      /* ---- drawn from time: globe, counters, captions ---- */
+      const RAD = Math.PI / 180;
+      const LAND = (() => {
+        const bin = atob(window.GLOBE.land);
+        const bytes = new Uint8Array(bin.length);
+        for (let i = 0; i < bin.length; i += 1) bytes[i] = bin.charCodeAt(i);
+        const packed = new Int16Array(bytes.buffer);
+        const out = new Float32Array(packed.length);
+        for (let i = 0; i < packed.length; i += 1) out[i] = (packed[i] / 100) * RAD;
+        return out;
+      })();
+      const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+      const prog = (t, a, b) => clamp((t - a) / (b - a));
+      const lerp = (a, b, x) => a + (b - a) * x;
+      const eo = (x) => 1 - Math.pow(1 - x, 3);
+      const eio = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+      function proj(lat, lon, c, lift = 0) {
+        const la = lat * RAD, lo = lon * RAD, l0 = c.lat * RAD, o0 = c.lon * RAD, cl = Math.cos(la), dl = lo - o0, r = 1 + lift;
+        return { x: r * cl * Math.sin(dl), y: r * (Math.cos(l0) * Math.sin(la) - Math.sin(l0) * cl * Math.cos(dl)), z: r * (Math.sin(l0) * Math.sin(la) + Math.cos(l0) * cl * Math.cos(dl)) };
+      }
+      function arc(a, b, steps = 72) {
+        const v = (p) => [Math.cos(p.lat * RAD) * Math.cos(p.lon * RAD), Math.cos(p.lat * RAD) * Math.sin(p.lon * RAD), Math.sin(p.lat * RAD)];
+        const va = v(a), vb = v(b), om = Math.acos(clamp(va[0] * vb[0] + va[1] * vb[1] + va[2] * vb[2], -1, 1)), s = Math.sin(om), out = [];
+        for (let i = 0; i <= steps; i += 1) {
+          const t = i / steps, wa = Math.sin((1 - t) * om) / s, wb = Math.sin(t * om) / s;
+          const w = [wa * va[0] + wb * vb[0], wa * va[1] + wb * vb[1], wa * va[2] + wb * vb[2]];
+          out.push({ lat: Math.asin(clamp(w[2], -1, 1)) / RAD, lon: Math.atan2(w[1], w[0]) / RAD, lift: 0.18 * Math.sin(Math.PI * t) * Math.min(1, om / 1.2) });
+        }
+        return out;
+      }
+      const ctx = document.getElementById('globe').getContext('2d');
+      const HOME = window.GLOBE.home, RES = window.GLOBE.results, GRON = RES.find((r) => r.city === 'Groningen');
+      const ROUTE = arc(HOME, GRON);
+
+      function drawGlobe(t) {
+        ctx.clearRect(0, 0, 1080, 1920);
+        const a = at(3) - 0.3, b = at(4);
+        if (t < a || t > b) return;
+        const vis = prog(t, a, a + 0.5) * (1 - prog(t, b - 0.3, b));
+        const turn = eio(prog(t, a, end(3)));
+        const g = { cx: 540, cy: lerp(1150, 900, eo(prog(t, a, a + 0.9))), R: 470, c: { lat: lerp(38, 46, turn), lon: lerp(70, 30, turn) } };
+        ctx.globalAlpha = vis;
+        const grad = ctx.createRadialGradient(g.cx - 140, g.cy - 160, 40, g.cx, g.cy, g.R);
+        grad.addColorStop(0, '#FFFFFF'); grad.addColorStop(1, '#E9EDF3');
+        ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(g.cx, g.cy, g.R, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#9AA4B2';
+        ctx.beginPath();
+        for (let i = 0; i < LAND.length; i += 2) {
+          const la = LAND[i] / RAD, lo = LAND[i + 1] / RAD;
+          const p = proj(la, lo, g.c);
+          if (p.z <= 0.05) continue;
+          const x = g.cx + g.R * p.x, y = g.cy - g.R * p.y, r = 2.4 * (0.5 + 0.5 * p.z);
+          ctx.moveTo(x + r, y); ctx.arc(x, y, r, 0, Math.PI * 2);
+        }
+        ctx.fill();
+        // The route home → Groningen.
+        const k = eio(prog(t, a + 0.3, a + 1.3));
+        ctx.strokeStyle = '#E8A317'; ctx.lineWidth = 7; ctx.lineCap = 'round'; ctx.beginPath();
+        const n = Math.floor(k * (ROUTE.length - 1));
+        for (let i = 0; i <= n; i += 1) { const q = ROUTE[i], p = proj(q.lat, q.lon, g.c, q.lift), x = g.cx + g.R * p.x, y = g.cy - g.R * p.y; if (i) ctx.lineTo(x, y); else ctx.moveTo(x, y); }
+        if (k > 0) ctx.stroke();
+        // The results light up where the globe faces them.
+        RES.forEach((r, i) => {
+          const p = proj(r.lat, r.lon, g.c);
+          const s = eo(prog(t, a + 1.0 + i * 0.05, a + 1.3 + i * 0.05));
+          if (p.z <= 0.05 || s <= 0) return;
+          const x = g.cx + g.R * p.x, y = g.cy - g.R * p.y;
+          ctx.fillStyle = 'rgba(232,163,23,0.22)'; ctx.beginPath(); ctx.arc(x, y, 22 * s, 0, Math.PI * 2); ctx.fill();
+          ctx.fillStyle = '#E8A317'; ctx.beginPath(); ctx.arc(x, y, 9 * s, 0, Math.PI * 2); ctx.fill();
+        });
+        const h = proj(HOME.lat, HOME.lon, g.c);
+        if (h.z > 0) { ctx.fillStyle = '#0F1E36'; ctx.beginPath(); ctx.arc(g.cx + g.R * h.x, g.cy - g.R * h.y, 13, 0, Math.PI * 2); ctx.fill(); }
+        ctx.globalAlpha = 1;
+      }
+
+      const eur = (v) => '€' + String(v).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+      function drawNumbers(t) {
+        const k = eo(prog(t, at(2, 0.35), at(2, 0.7)));
+        document.getElementById('restV').textContent = eur(Math.round(lerp(30050, 1700, k) / 50) * 50);
+        const c = eo(prog(t, at(3, 0.1), at(3, 0.7)));
+        document.getElementById('nProg').textContent = Math.round(20 * c);
+        document.getElementById('nCountry').textContent = Math.round(15 * c);
+      }
+
+      // Captions: the line being spoken, each word lit as the voice reaches it (by letter count).
+      const capBox = document.getElementById('capBox');
+      const CAPS = T.map((l) => {
+        const words = l.caption.split(' ');
+        const total = words.reduce((s, w) => s + w.length + 1, 0);
+        let acc = 0;
+        return words.map((w) => { const from = acc / total; acc += w.length + 1; return { w, from, acc: l.accent.includes(w) }; });
+      });
+      let shown = -2;
+      function drawCaptions(t) {
+        let i = T.findIndex((l, k) => t >= l.start - 0.05 && t < (T[k + 1] ? T[k + 1].start - 0.05 : l.start + l.dur + 0.4));
+        if (i !== shown) {
+          capBox.innerHTML = i < 0 ? '' : CAPS[i].map((c, k) => `<span class="w${c.acc ? ' acc' : ''}" data-k="${k}">${c.w}</span>`).join(' ');
+          shown = i;
+        }
+        if (i < 0) return;
+        const f = (t - T[i].start) / (T[i].dur * 0.95);
+        capBox.querySelectorAll('.w').forEach((el, k) => el.classList.toggle('on', f >= CAPS[i][k].from));
+      }
+
+      function draw() { const t = tl.time(); drawGlobe(t); drawNumbers(t); drawCaptions(t); }
+      tl.eventCallback('onUpdate', draw);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines['main'] = tl;
+      tl.seek(0);
+      draw();
+    </script>
+  </body>
+</html>
