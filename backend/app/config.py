@@ -224,7 +224,9 @@ class Settings(BaseSettings):
             )
         if self.session_ttl_hours < 1 or self.session_ttl_hours > 24 * 30:
             raise RuntimeError("UNIMATCH_SESSION_TTL_HOURS must be between 1 and 720.")
-        if self.is_production and self.email_sender == "console":
+        if self.email_sender not in {"console", "smtp"}:
+            raise RuntimeError("UNIMATCH_EMAIL_SENDER must be either 'console' or 'smtp'.")
+        if self.is_production and self.email_sender != "smtp":
             raise RuntimeError(
                 "UNIMATCH_EMAIL_SENDER=console only logs reset links. Configure SMTP before "
                 "running in production, or password reset silently does nothing."

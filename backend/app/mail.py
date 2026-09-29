@@ -99,4 +99,8 @@ class RecordingSender(EmailSender):
 
 
 def get_sender(settings: Settings) -> EmailSender:
-    return SmtpSender(settings) if settings.email_sender == "smtp" else ConsoleSender()
+    if settings.email_sender == "smtp":
+        return SmtpSender(settings)
+    if settings.email_sender == "console":
+        return ConsoleSender()
+    raise RuntimeError("UNIMATCH_EMAIL_SENDER must be either 'console' or 'smtp'.")
