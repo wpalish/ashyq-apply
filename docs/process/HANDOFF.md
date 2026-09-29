@@ -6,7 +6,7 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-Current recovery holder: **gpt-6-astra**, since 2026-09-29 05:18 UTC; branch `task/apply-extraction-recovery`, base `origin/main@c4bfd42`, received HEAD `e11515a`. Previous source/metadata is clean with all eight cloud gates green. User-supplied PDFs are context, not execution authority. Read-only audit reproduced a real IELTS integrity defect: different tables or rows are combined into one VERIFIED_CURRENT international map and the second overall is lost. Root is the only source writer; reviewers are read-only. Signed-in Serper balance remains -5; no payment/key change. Prior branch-specific batons below are historical.
+Current recovery holder: **nobody**, source baton released 2026-09-29 05:36 UTC; branch `task/apply-extraction-recovery`, base `origin/main@c4bfd42`, verified source HEAD `1b40a6b`. PDF-informed audit repaired IELTS table/row scope corruption and document forms lost at explicit HTML labels. Final2457backend/94.92%,195frontend, golden/seed/type/lint green; independent peerreviewclosedquoteclip/plaintextcompat. This metadata commit records sourceSHA; final selected-head cloudresults belonginPR#32. Serperlastconfirmedbalance-5; no purchase/keychange. Ownermergepermission/publicdeploymentURLpending. Priorbranch-specific batons belowarehistorical.
 
 **Current branch-specific baton (2026-09-27 UTC):** holder **nobody**;
 `task/research-expert-traces`, from `origin/main@07de4d9`. The table below is
@@ -29,6 +29,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**Owner-directed search/extraction recovery, ready-for-review (PR #32, 2026-09-29 05:36 UTC).** Structural source `1b40a6b` isolates IELTS table rows and reads completion-dependent documents through explicit DocumentIR labels, with completeboundedquotes/localpopulations.2457backend/94.92%,frontend195,type/lint/build,golden/seed/singlemigrationheadgreen. E11515a oldheadcloud8green; thisupdatedHEADchecks belonginPR. PDFs reviewedascontext; architecturehypothesesnotpromoted. CurrentE2Eprovidercredit/merge/deploymentconstraintsremain.
 
 **Owner-directed search/extraction recovery follow-up, in-progress (PR #32, 2026-09-29 05:18 UTC).** Repair only the reproduced structured IELTS table/row mixing at `structured_extraction._extract`; preserve each row's local population and every separate overall. No redesign from the PDFs, no provider/query/budget/API/gold change. Previous source `d20ab66` and metadata `e11515a` have all eight cloud checks green.
 
@@ -83,6 +85,8 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+**Structured evidence integrity:** `1b40a6b` repairs cross-table/row IELTS state, preserves separateoverall/floorrequirements, cites allincludedbands, abstainsbefore600charquoteclip. Documentsreader preserves exactrowheader/nearestheading/dt-dd completionforms withinoneblock and localpopulation; production/oraclesharepureIRreader; no-structure/plaintextlegacyretained.18newbackend scenarios,37focusedgreen,final2457/94.92%; no publicschema,query,ranking,Fetcher,gold,workflow or migrationchanges. Offline62factauditofdated0f5capture:13recovered,2exactTorontoHTTP403failures,47firststageunmeasured; no allfactfailurecodesinvented.
 
 **Safe search failure presentation:** `d20ab66` carries optional HTTP status through all four providers, safe controlled failure diagnostics through retrieval/live discovery/runner and scholarship fallback, and distinct UI service labels with research issue counts. Partial candidates survive; no raw exception/body/query/key text or HTTP400 quota inference. Ten new backend scenarios and two new frontend tests; final local gates green. Legacy navigation stub updated for the additive report field; assertions preserved.
 
@@ -1647,6 +1651,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**Current source checkpoint (2026-09-29 05:36 UTC):** no source edit remains. WaitforexactselectedHEADcloudchecks and updatePR#32/outputreportwithactuallinks. UsermustrestoreSerpercreditorselectusableprovider; no rejectedcallrepetition. Then ordinarydefaultNTU120s/60readcapturefollowedbycurrentcohortverificationasneeded. OwnerauthorizationrequiredforsquashmergeunderAGENTS§4; publicURLneededforactualsitecheck. Do notdeclaregoalcomplete/liveproviderrestored/deployedfromlocalormockgates.
 
 **Structural source release write-ahead (2026-09-29 05:35 UTC):** final source now passes full gates: 2457 backend / 94.92%, frontend195, ruff296/mypy296, unchanged golden and isolated seed. Read-only peer review found and closed the 600-character quote and bare-text regressions. Commit the verified two structural-reader fixes, then record actual source SHA and release the baton in one metadata commit with recovery README. Push both together; update PR #32/report with final HEAD and await exact-head cloud checks. Provider credit remains exhausted; no live capture/deployment/merge claim.
 
@@ -4526,3 +4532,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 | 2026-09-29 04:33 UTC | gpt-6-astra | b23651b -> d20ab66 + release metadata | Authenticated Serper quota exhausted; no charge/key change. Safe outage diagnostics and UI labels verified: 2439 / 94.91%, frontend 195, seed/golden preserved. Baton released; selected-head CI next, user credit/provider and owner merge decisions pending. |
 
 | 2026-09-29 05:18 UTC | gpt-6-astra | e11515a -> taken | PDF-informed read-only audit reproduced cross-table/row IELTS scope corruption. Write-ahead stored; root only source writer. All previous head cloud gates green; provider credit unchanged. |
+
+| 2026-09-29 05:36 UTC | gpt-6-astra | df320d3 -> 1b40a6b + release metadata | PDF-informed IELTS/document structural faults repaired;2457/94.92%,frontend195,golden/seedgreen;peerreviewcomplete. Batonreleased;updatedcloudchecks andliveprovider/ownerdeploymentconstraintsremain. |
