@@ -6,7 +6,7 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-Current recovery holder: **nobody**, source baton released 2026-09-29 05:36 UTC; branch `task/apply-extraction-recovery`, base `origin/main@c4bfd42`, verified source HEAD `1b40a6b`. The PDF-informed audit repaired IELTS table/row scope corruption and document forms lost at explicit HTML labels. Final gates: 2457 backend / 94.92%, 195 frontend, golden, seed, types and lint green. Independent review caught and closed quote clipping and plain-text compatibility. Final selected-head cloud results belong in PR #32. Serper's last confirmed balance is -5; no purchase or key change. Owner merge permission and public deployment URL remain pending. Prior branch-specific batons below are historical.
+Current recovery holder: **gpt-6-astra**, resumed 2026-09-29 06:07 UTC; branch `task/apply-extraction-recovery`, HEAD when taken `1af7da7`, base `origin/main@c4bfd42`. The bounded current official Groningen fetch confirmed the new reader recovers two unique transcript forms (20 claims from ten source blocks; not 20 facts), but read-only review found `ResearchRunner.collect_documents` drops adapter claims from SQL and result payload. Root alone will repair this evidence-persistence seam. Previous 2457 / 94.92% plus all eight exact-head cloud checks are green. Provider credit remains -5; no purchase/key/provider change. Prior branch-specific batons below are historical.
 
 **Current branch-specific baton (2026-09-27 UTC):** holder **nobody**;
 `task/research-expert-traces`, from `origin/main@07de4d9`. The table below is
@@ -29,6 +29,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**Owner-directed search/extraction recovery follow-up, in-progress (PR #32).** Preserve document-adapter evidence through `ResearchRunner.collect_documents` into result payload and ClaimRow persistence, including source URLs and truthful counts. Check retries preserve existing evidence and do not append duplicates. No ranking/schema/search/provider/Fetcher/gold change.
 
 **Owner-directed search/extraction recovery, ready-for-review (PR #32, 2026-09-29).** Structural source `1b40a6b` isolates IELTS table rows and reads completion-dependent documents through explicit DocumentIR labels, with complete bounded quotes and local populations. All 2457 backend tests / 94.92%, 195 frontend tests, type/lint/build, golden, seed and single migration head pass. Previous head e11515a had eight green cloud checks; final updated-head results belong in PR #32. The PDFs were reviewed as context; architecture hypotheses were not promoted. Provider credit, owner merge permission and deployment constraints remain.
 
@@ -1651,6 +1653,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**Document persistence write-ahead (2026-09-29 06:07 UTC):** reproduce the dropped `AdapterResult.claims` in an isolated `collect_documents` regression; pass verified document claims through the existing `_update_result(..., extra_claims=...)` storage seam and append stable ClaimOut evidence/source URLs/counts. Preserve earlier claims and user decisions; bound duplicate behaviour on repeat collection without deleting unrelated or superseded evidence. Check persisted SQL rows and API payload, not merely the adapter. Keep ranking/scoring, public/persisted schema, Fetcher, search configuration, corpus/gold and workflow permissions unchanged. Run required backend/frontend gates and isolated seed before source commit, then exact-head CI.
 
 **Current source checkpoint (2026-09-29 05:36 UTC):** no source edit remains. Wait for exact selected-head cloud checks and update PR #32 and the output report with actual links. The user must restore Serper credit or select a usable provider; do not repeat rejected calls. Then run one ordinary-default NTU capture (120 seconds / 60 reads), followed by current-cohort verification as needed. Owner authorization is required for squash-merge under AGENTS §4; a public URL is needed to check the actual site. Do not declare the goal complete, live search restored or the site deployed from local/mock gates.
 
@@ -4534,3 +4538,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 | 2026-09-29 05:18 UTC | gpt-6-astra | e11515a -> taken | PDF-informed read-only audit reproduced cross-table/row IELTS scope corruption. Write-ahead stored; root only source writer. All previous head cloud gates green; provider credit unchanged. |
 
 | 2026-09-29 05:36 UTC | gpt-6-astra | df320d3 -> 1b40a6b + release metadata | PDF-informed IELTS/document faults repaired; 2457 / 94.92%, frontend 195, golden/seed green; peer review complete. Baton released; updated cloud checks and provider/owner deployment constraints remain. |
+
+| 2026-09-29 06:07 UTC | gpt-6-astra | 1af7da7 -> document evidence follow-up | Current official source verifies the reader; pipeline document stage drops adapter evidence. Baton retaken for the existing persistence seam, regression and required gates. Provider/owner deployment constraints remain. |
