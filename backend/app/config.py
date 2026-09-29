@@ -147,6 +147,8 @@ class Settings(BaseSettings):
     #: Web search layer for discovery. ``none`` means this deployment has no
     #: search provider at all, which is a supported configuration: the registry,
     #: sitemaps and the catalogue walker do not need one.
+    #: exa_mcp is an explicit keyless, rate-limited hosted search alternative.
+    #: Provider quotas still cause visible SearchUnavailable; no automatic retries.
     search_provider: str = "none"
 
     #: SecretStr like every other credential. Read from UNIMATCH_EXA_API_KEY

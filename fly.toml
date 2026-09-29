@@ -1,6 +1,6 @@
 # Replace `app` only if this globally unique name is unavailable.
 app = "ashyq-apply-alisher"
-primary_region = "waw"
+primary_region = "ams"
 
 [build]
   dockerfile = "Dockerfile.fly"
@@ -14,7 +14,11 @@ primary_region = "waw"
   UNIMATCH_AUTH_REGISTRATION_ENABLED = "true"
   UNIMATCH_COOKIE_SECURE = "true"
   UNIMATCH_AUTO_MIGRATE = "false"
-  UNIMATCH_DEMO_MODE = "true"
+  UNIMATCH_DEMO_MODE = "false"
+  UNIMATCH_SEARCH_PROVIDER = "exa_mcp"
+  UNIMATCH_PUBLIC_BASE_URL = "https://ashyq-apply-alisher.fly.dev"
+  # SMTP and PostgreSQL credentials must be supplied as deployment secrets.
+  UNIMATCH_EMAIL_SENDER = "smtp"
   UNIMATCH_RESPECT_ROBOTS = "true"
   UNIMATCH_CORS_ORIGINS = "https://ashyq-apply-alisher.fly.dev"
   # Only Fly's edge can reach this app, and it rewrites X-Forwarded-For.

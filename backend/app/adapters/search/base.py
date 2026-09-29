@@ -65,7 +65,7 @@ def search_failure_diagnostic(provider: str, error: Exception) -> str:
     """
     name = (
         provider
-        if provider in {"exa", "tavily", "brave", "serper", "fake"}
+        if provider in {"exa", "exa_mcp", "tavily", "brave", "serper", "fake"}
         else "configured search provider"
     )
     status = error.http_status if isinstance(error, SearchUnavailable) else None

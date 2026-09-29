@@ -241,7 +241,15 @@ class TestNobodySearchesByAccident:
             settings._validate_search()
 
     def test_every_known_name_is_one_this_build_can_actually_build(self):
-        assert set(KNOWN_SEARCH_PROVIDERS) == {"none", "fake", "exa", "tavily", "brave", "serper"}
+        assert set(KNOWN_SEARCH_PROVIDERS) == {
+            "none",
+            "fake",
+            "exa",
+            "exa_mcp",
+            "tavily",
+            "brave",
+            "serper",
+        }
 
 
 class TestTheContractItself:

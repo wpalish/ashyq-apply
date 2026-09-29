@@ -508,6 +508,185 @@ def test_live_parent_records_timeout_without_calling_real_network(tmp_path, monk
     assert bool(capture.observations[0].ranked_urls) == partial
 
 
+@pytest.mark.parametrize("override", [None, "tavily", "none", "fake"])
+def test_live_provider_selection_reaches_child_and_capture(tmp_path, monkeypatch, capsys, override):
+    import subprocess
+    import sys
+
+    from app.config import Settings
+    from evaluation.research import live
+    from evaluation.research.schema import Observation
+
+    secret = "synthetic-provider-key-never-print"
+    monkeypatch.setenv("UNIMATCH_SEARCH_PROVIDER", "serper")
+    monkeypatch.setenv("UNIMATCH_TAVILY_API_KEY", secret)
+    monkeypatch.setenv("UNIMATCH_SERPER_API_KEY", secret)
+    monkeypatch.setenv("UNIMATCH_DECISION_PROVIDER", "none")
+    monkeypatch.setenv("UNIMATCH_ENVIRONMENT", "development")
+    command = ["live", "--live", "--case", "groningen", "--out", str(tmp_path)]
+    if override:
+        command.extend(["--search-provider", override])
+    else:
+        # Ordinary captures retain their existing startup behavior.
+        monkeypatch.setattr(
+            Settings,
+            "_validate_search",
+            lambda self: pytest.fail("implicit provider must not add a new validation gate"),
+        )
+    monkeypatch.setattr(sys, "argv", command)
+    monkeypatch.setattr(subprocess, "check_output", lambda *args, **kwargs: "synthetic-sha")
+    expected = override or "serper"
+
+    def child(command, **kwargs):
+        assert kwargs["env"]["UNIMATCH_SEARCH_PROVIDER"] == expected
+        assert ("--search-provider" in command) == bool(override)
+        if override:
+            assert command[command.index("--search-provider") + 1] == expected
+        output = Path(command[command.index("--out") + 1])
+        output.write_text(Observation(case_id="groningen").model_dump_json(), encoding="utf-8")
+        return subprocess.CompletedProcess(command, 0)
+
+    monkeypatch.setattr(subprocess, "run", child)
+    live.main()
+    capture_path = next(tmp_path.rglob("capture.json"))
+    capture_text = capture_path.read_text(encoding="utf-8")
+    capture = Capture.model_validate_json(capture_text)
+    stdout = capsys.readouterr().out
+    assert capture.config["search_provider"] == expected
+    assert f"search provider: {expected}" in stdout
+    assert stdout.splitlines()[-1] == str(capture_path)
+    assert secret not in stdout + capture_text
+
+
+@pytest.mark.parametrize(
+    ("provider", "environment", "message"),
+    [
+        ("unknown", "development", "invalid choice"),
+        ("tavily", "development", "needs UNIMATCH_TAVILY_API_KEY"),
+        ("fake", "production", "must not be 'fake' in production"),
+    ],
+)
+def test_live_explicit_provider_fails_before_capture(
+    tmp_path, monkeypatch, capsys, provider, environment, message
+):
+    import subprocess
+    import sys
+
+    from evaluation.research import live
+
+    monkeypatch.setenv("UNIMATCH_SEARCH_PROVIDER", "serper")
+    monkeypatch.setenv("UNIMATCH_SERPER_API_KEY", "synthetic-unrelated-key")
+    monkeypatch.setenv("UNIMATCH_TAVILY_API_KEY", "")
+    monkeypatch.setenv("UNIMATCH_DECISION_PROVIDER", "none")
+    monkeypatch.setenv("UNIMATCH_ENVIRONMENT", environment)
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["live", "--live", "--out", str(tmp_path), "--search-provider", provider],
+    )
+    monkeypatch.setattr(
+        subprocess, "run", lambda *args, **kwargs: pytest.fail("must not start capture")
+    )
+    monkeypatch.setattr(
+        subprocess, "check_output", lambda *args, **kwargs: pytest.fail("must fail before git")
+    )
+    with pytest.raises(SystemExit) as error:
+        live.main()
+    assert error.value.code == 2
+    assert message in capsys.readouterr().err
+    assert not list(tmp_path.iterdir())
+
+
+def test_live_child_provider_override_replaces_cached_settings(tmp_path, monkeypatch, capsys):
+    import sys
+
+    from app.config import Settings, get_settings
+    from evaluation.research import live
+
+    monkeypatch.setenv("UNIMATCH_SEARCH_PROVIDER", "serper")
+    monkeypatch.setenv("UNIMATCH_SERPER_API_KEY", "synthetic-serper-key")
+    monkeypatch.setenv("UNIMATCH_TAVILY_API_KEY", "synthetic-tavily-key")
+    monkeypatch.setenv("UNIMATCH_DECISION_PROVIDER", "none")
+    get_settings.cache_clear()
+    assert get_settings().search_provider == "serper"
+    calls = []
+
+    async def capture(case_id, output, max_pages, seconds):
+        calls.append(case_id)
+        assert Settings().search_provider == "tavily"
+        assert get_settings().search_provider == "tavily"
+
+    monkeypatch.setattr(live, "capture_one", capture)
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "live",
+            "--live",
+            "--child",
+            "--case",
+            "groningen",
+            "--out",
+            str(tmp_path),
+            "--search-provider",
+            "tavily",
+        ],
+    )
+    try:
+        live.main()
+        assert calls == ["groningen"]
+        assert "search provider: tavily" in capsys.readouterr().out
+        assert Settings().search_provider == "serper"
+    finally:
+        get_settings.cache_clear()
+
+
+def test_live_provider_choices_follow_factory_allowlist(tmp_path, monkeypatch):
+    import subprocess
+    import sys
+
+    from app.adapters import search
+    from app.config import Settings
+    from evaluation.research import live
+    from evaluation.research.schema import Observation
+
+    provider = "future_provider"
+    monkeypatch.setattr(
+        search, "KNOWN_SEARCH_PROVIDERS", search.KNOWN_SEARCH_PROVIDERS | {provider}
+    )
+    validated = []
+    monkeypatch.setattr(
+        Settings, "_validate_search", lambda self: validated.append(self.search_provider)
+    )
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "live",
+            "--live",
+            "--case",
+            "groningen",
+            "--out",
+            str(tmp_path),
+            "--search-provider",
+            provider,
+        ],
+    )
+    monkeypatch.setattr(subprocess, "check_output", lambda *args, **kwargs: "synthetic-sha")
+
+    def child(command, **kwargs):
+        assert kwargs["env"]["UNIMATCH_SEARCH_PROVIDER"] == provider
+        output = Path(command[command.index("--out") + 1])
+        output.write_text(Observation(case_id="groningen").model_dump_json(), encoding="utf-8")
+        return subprocess.CompletedProcess(command, 0)
+
+    monkeypatch.setattr(subprocess, "run", child)
+    live.main()
+    assert validated == [provider]
+    capture = Capture.model_validate_json(next(tmp_path.rglob("capture.json")).read_text())
+    assert capture.config["search_provider"] == provider
+
+
 @pytest.mark.asyncio
 async def test_capture_reads_canary_output_without_loading_ground_truth(tmp_path, monkeypatch):
     from evaluation.research.live import capture_one
@@ -532,23 +711,28 @@ async def test_capture_reads_canary_output_without_loading_ground_truth(tmp_path
 
 
 @pytest.mark.asyncio
-async def test_capture_counts_the_search_calls_it_used_to_report_as_zero(tmp_path, monkeypatch):
+@pytest.mark.parametrize("provider_name", ["exa", "exa_mcp"])
+async def test_capture_counts_the_search_calls_it_used_to_report_as_zero(
+    tmp_path, monkeypatch, provider_name
+):
     """`search_calls` was initialised to 0 and never incremented, so a case
     that spent its wall clock on search reported that it had searched nothing."""
     from app.adapters.search.exa import ExaSearchProvider
+    from app.adapters.search.exa_mcp import ExaMcpSearchProvider
     from evaluation.research.live import capture_one
     from scripts import canary_discovery as canary
 
     async def quiet_search(provider, *args, **kwargs):
         return []
 
-    monkeypatch.setattr(ExaSearchProvider, "search", quiet_search)
+    provider_class = {"exa": ExaSearchProvider, "exa_mcp": ExaMcpSearchProvider}[provider_name]
+    monkeypatch.setattr(provider_class, "search", quiet_search)
     wrapped: list[object] = []
 
     async def fake_canary(selector, verbose):
-        wrapped.append(ExaSearchProvider.search)
-        await ExaSearchProvider.search(None, query="computer science")
-        await ExaSearchProvider.search(None, query="admissions")
+        wrapped.append(provider_class.search)
+        await provider_class.search(None, query="computer science")
+        await provider_class.search(None, query="admissions")
         return {"institutions": [{"programs": []}], "run_error": ""}
 
     monkeypatch.setattr(canary, "run_canary", fake_canary)
@@ -559,7 +743,7 @@ async def test_capture_counts_the_search_calls_it_used_to_report_as_zero(tmp_pat
     observation = Observation.model_validate_json(output.read_text())
     assert observation.telemetry.search_calls == 2
     assert wrapped[0] is not quiet_search
-    assert ExaSearchProvider.search is quiet_search
+    assert provider_class.search is quiet_search
 
 
 class TestWhichWayAQuoteSupports:
