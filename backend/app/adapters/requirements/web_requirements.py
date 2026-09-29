@@ -45,6 +45,7 @@ from app.adapters.search.ontology import titles_name_same_programme
 from app.adapters.structured_extraction import extract_table_requirements
 from app.domain.enums import ClaimType, FetchOutcome, SourceSpecificity
 from app.domain.programme_identity import Verdict
+from app.schemas.claim import MAX_EXCERPT_CHARS
 
 #: An intake is open only when a page says so. Each pattern must capture the
 #: sentence it matched, which becomes the claim's excerpt.
@@ -433,12 +434,19 @@ class WebRequirementsAdapter:
             return
 
         excerpt = _first_sentence_containing(text, page.subject) or page.subject or ""
+        language = page.language_of_instruction
+        if page.language_evidence is not None:
+            proof = _complete_language_excerpt(text, page.language_evidence)
+            if proof:
+                excerpt = proof
+            else:
+                language = None
         builder.add(
             ClaimType.PROGRAM_EXISTS,
             {
                 "program": page.subject,
                 "degree": page.degree_level,
-                "language": page.language_of_instruction,
+                "language": language,
                 "matched_because": why,
             },
             excerpt,
@@ -647,6 +655,17 @@ def _listed_programme(text: str, program) -> tuple[str, str | None] | None:
             continue
         return title, degree
     return None
+
+
+def _complete_language_excerpt(text: str, evidence: str) -> str:
+    """Locate the whole main-content proof in the reader's original text."""
+    if not evidence:
+        return ""
+    pattern = re.compile(r"\s+".join(re.escape(word) for word in evidence.split()), re.I)
+    match = pattern.search(text)
+    if match is None or match.end() - match.start() > MAX_EXCERPT_CHARS:
+        return ""
+    return match.group()
 
 
 def _first_sentence_containing(

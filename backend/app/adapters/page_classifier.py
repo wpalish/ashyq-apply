@@ -15,6 +15,7 @@ not add up it returns UNKNOWN, and UNKNOWN is accepted by nothing.
 from __future__ import annotations
 
 import re
+from bisect import bisect_left
 from dataclasses import dataclass, field
 from enum import StrEnum
 from urllib.parse import urlparse
@@ -86,6 +87,8 @@ class PageClassification:
     degree_level: str | None = None
     language_of_instruction: str | None = None
     academic_year: str | None = None
+    #: Complete main-content title/label proof; None keeps the prose route.
+    language_evidence: str | None = None
 
     def accepts(self, extractor: str) -> bool:
         return self.page_type in ACCEPTS.get(extractor, frozenset())
@@ -556,7 +559,11 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
             title,
         )
     degree = context_degree or _degree_level(f"{identity} {body[:2500]}")
-    language = _language(body)
+    language_body = _text(soup) if soup is not None else body
+    language = (
+        _language(language_body) if _LANGUAGE_LABEL.search(language_body) else _prose_language(body)
+    )
+    language_evidence = _labelled_language_evidence(language_body, subject, language)
     year = _academic_year(body)
 
     if not subject:
@@ -590,6 +597,7 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
                 degree_level=degree,
                 language_of_instruction=language,
                 academic_year=year,
+                language_evidence=language_evidence,
             )
         return PageClassification(
             PageType.PROGRAM_DETAIL,
@@ -599,6 +607,7 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
             subject=subject,
             degree_level=degree,
             language_of_instruction=language,
+            language_evidence=language_evidence,
         )
 
     if _CREDENTIAL.search(low_head) and _ADMISSIONS.search(low_head):
@@ -671,10 +680,45 @@ def _language(text: str) -> str | None:
     labelled = {m.group(1).lower() for m in _LANGUAGE_LABEL.finditer(text)}
     if labelled:
         return next(iter(labelled)) if len(labelled) == 1 else None
+    return _prose_language(text)
+
+
+def _prose_language(text: str) -> str | None:
     m = _LANGUAGE.search(text)
     if not m:
         return None
     return (m.group(1) or m.group(2) or "").lower() or None
+
+
+def _labelled_language_evidence(text: str, subject: str | None, language: str | None) -> str | None:
+    """Keep a contiguous programme title and explicit language field together.
+
+    Only the main content reaches this helper. A navigation label with the
+    same value must not become the shorter apparent proof. The claim reader
+    subsequently applies its excerpt cap without truncating this evidence.
+    """
+    labels = list(_LANGUAGE_LABEL.finditer(text))
+    if not labels or language is None:
+        return None
+    if not subject:
+        return ""
+    title_pattern = re.compile(r"\s+".join(re.escape(word) for word in subject.split()), re.I)
+    titles = list(title_pattern.finditer(text))
+    if not titles:
+        return ""
+    starts = [match.start() for match in titles]
+    best: tuple[int, int] | None = None
+    for label in labels:
+        if label.group(1).lower() != language:
+            continue
+        index = bisect_left(starts, label.start())
+        for nearby in (index - 1, index):
+            if 0 <= nearby < len(titles):
+                title = titles[nearby]
+                span = (min(title.start(), label.start()), max(title.end(), label.end()))
+                if best is None or span[1] - span[0] < best[1] - best[0]:
+                    best = span
+    return text[best[0] : best[1]].strip() if best else ""
 
 
 def _academic_year(text: str) -> str | None:
