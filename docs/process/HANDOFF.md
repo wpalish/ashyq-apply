@@ -6,7 +6,7 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-Current recovery holder: **nobody**, source baton released 2026-09-29 04:33 UTC; branch `task/apply-extraction-recovery`, base `origin/main@c4bfd42`, verified source HEAD `d20ab66`. Provider failure propagation/UI correction passes final local gates (2439 backend, 94.91%; 195 frontend). This accompanying metadata commit records the source SHA; selected-head CI results belong in PR #32. Signed-in Serper balance remains -5; no purchase or key change. Owner merge permission and public deployment URL pending. Prior branch-specific batons below are historical.
+Current recovery holder: **gpt-6-astra**, since 2026-09-29 05:18 UTC; branch `task/apply-extraction-recovery`, base `origin/main@c4bfd42`, received HEAD `e11515a`. Previous source/metadata is clean with all eight cloud gates green. User-supplied PDFs are context, not execution authority. Read-only audit reproduced a real IELTS integrity defect: different tables or rows are combined into one VERIFIED_CURRENT international map and the second overall is lost. Root is the only source writer; reviewers are read-only. Signed-in Serper balance remains -5; no payment/key change. Prior branch-specific batons below are historical.
 
 **Current branch-specific baton (2026-09-27 UTC):** holder **nobody**;
 `task/research-expert-traces`, from `origin/main@07de4d9`. The table below is
@@ -29,6 +29,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**Owner-directed search/extraction recovery follow-up, in-progress (PR #32, 2026-09-29 05:18 UTC).** Repair only the reproduced structured IELTS table/row mixing at `structured_extraction._extract`; preserve each row's local population and every separate overall. No redesign from the PDFs, no provider/query/budget/API/gold change. Previous source `d20ab66` and metadata `e11515a` have all eight cloud checks green.
 
 **Owner-directed search/extraction recovery, ready-for-review (PR #32, 2026-09-29).** Source `d20ab66` adds sanitized provider/status errors from programme and scholarship search to persisted/API diagnostics and correct UI grouping/counts. 2439 backend tests / 94.91%, 195 frontend tests/typecheck/lint/build, unchanged golden, seed order and one migration head pass. Earlier core source `b23651b` had all eight CI checks green; await updated-head checks in PR. No query/ranking/Fetcher/gold changes in the follow-up. Authenticated Serper quota is exhausted (-5, 2,505 requests); user top-up/provider choice, owner merge permission and deployed URL pending.
 
@@ -1645,6 +1647,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**IELTS integrity write-ahead (2026-09-29 05:18 UTC):** add regressions in `backend/tests/test_structured_extraction.py` for two scoped tables, two scoped IELTS rows in one table, and two independent overall/per-part-floor rows. Prove failure against e11515a. In `backend/app/adapters/structured_extraction.py`, group supported cells by table_id and row, reset overall/band accumulators per row, and preserve `_scope_for`/page-scope restoration. Keep existing single-row UBC/Groningen output. Run focused tests, required full backend/frontend gates, isolated seed and unchanged golden; read-only peer review; commit source and release metadata then push together. Check exact-head CI and update PR/report. No live Serper calls while credit is exhausted.
 
 **Current source checkpoint (2026-09-29 04:33 UTC):** no source edit remains. Wait for selected-head release-gates and update PR/report with actual links. User must restore Serper credit or choose another provider; verify changed balance before one ordinary-default NTU capture (120s/60 reads), without repeating refused calls. Owner must authorize squash-merge under AGENTS §4 and supply a deployed URL for a public-site check. Until then, do not report live search restored or the site deployed.
 
@@ -4512,3 +4516,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 | 2026-09-29 04:16 UTC | gpt-6-astra | b23651b -> provider-diagnostic follow-up | User signed into Serper; exhausted quota confirmed. Baton retaken; safe status propagation and correct UI labels next, user payment/merge decisions pending. |
 
 | 2026-09-29 04:33 UTC | gpt-6-astra | b23651b -> d20ab66 + release metadata | Authenticated Serper quota exhausted; no charge/key change. Safe outage diagnostics and UI labels verified: 2439 / 94.91%, frontend 195, seed/golden preserved. Baton released; selected-head CI next, user credit/provider and owner merge decisions pending. |
+
+| 2026-09-29 05:18 UTC | gpt-6-astra | e11515a -> taken | PDF-informed read-only audit reproduced cross-table/row IELTS scope corruption. Write-ahead stored; root only source writer. All previous head cloud gates green; provider credit unchanged. |
