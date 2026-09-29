@@ -25,7 +25,11 @@ from app.adapters.discovery.live_discovery import (
     LiveDiscoveryAdapter,
     registry_campuses,
 )
-from app.adapters.documents.web_documents import DOCUMENT_CLAIM_TYPES, WebDocumentsAdapter
+from app.adapters.documents.web_documents import (
+    DOCUMENT_CLAIM_TYPES,
+    WebDocumentsAdapter,
+    retain_failed_documents,
+)
 from app.adapters.fetching import Fetcher
 from app.adapters.government.web_government import WebGovernmentAdapter
 from app.adapters.requirements.web_requirements import WebRequirementsAdapter
@@ -1114,13 +1118,19 @@ class ResearchRunner:
                 self.run.pages_checked += ar.pages_checked
                 self.run.pages_failed += ar.pages_failed
                 errors.extend(ar.errors)
-                result.checklist = checklist
-                row.checklist = checklist.model_dump(mode="json")
                 read_urls = {
                     page.url
                     for page in ar.page_outcomes
                     if page.category in {"fetched-ok", "no-pattern-match"}
                 }
+                failed_urls = {
+                    page.url
+                    for page in ar.page_outcomes
+                    if page.category in {"fetch-failed", "unreadable"}
+                } - read_urls
+                retain_failed_documents(checklist, result.checklist, failed_urls)
+                result.checklist = checklist
+                row.checklist = checklist.model_dump(mode="json")
                 added_claims = self._merge_document_claims(row.id, result, ar.claims, read_urls)
                 self.run.claims_recorded += added_claims
                 result.source_urls = sorted(

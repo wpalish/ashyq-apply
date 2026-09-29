@@ -43,6 +43,7 @@ from app.adapters.page_classifier import (
 from app.adapters.scope_reader import read_scope
 from app.adapters.search.ontology import titles_name_same_programme
 from app.adapters.structured_extraction import extract_table_requirements
+from app.domain.claim_verifier import is_verbatim_excerpt
 from app.domain.enums import ClaimType, FetchOutcome, SourceSpecificity
 from app.domain.programme_identity import Verdict
 from app.schemas.claim import MAX_EXCERPT_CHARS
@@ -319,7 +320,7 @@ class WebRequirementsAdapter:
                 )
                 continue
 
-            self._claim_program_exists(page, program, builder, out, text)
+            self._claim_program_exists(page, program, builder, out, text, identity_text=page_title)
             if page.accepts("program_exists") and not res.is_pdf:
                 extract_programme_faculty(text, builder)
             if page.accepts("requirements"):
@@ -386,7 +387,9 @@ class WebRequirementsAdapter:
 
     # --- individual claims ------------------------------------------------
 
-    def _claim_program_exists(self, page, program, builder, out, text: str) -> None:
+    def _claim_program_exists(
+        self, page, program, builder, out, text: str, *, identity_text: str | None = None
+    ) -> None:
         """Only a programme page whose own subject matches may confirm existence."""
         if not page.accepts("program_exists"):
             if page.page_type in _LISTING_PAGE_TYPES and self._claim_listed_programme(
@@ -435,27 +438,49 @@ class WebRequirementsAdapter:
 
         excerpt = _first_sentence_containing(text, page.subject) or page.subject or ""
         language = page.language_of_instruction
-        if page.language_evidence is not None:
+        identity_only = (
+            not is_verbatim_excerpt(excerpt, text)
+            and bool(identity_text)
+            and is_verbatim_excerpt(page.subject or "", identity_text or "")
+        )
+        if identity_only:
+            # This is the actual fetched title (or h1 fallback), outside the
+            # selected article. It proves identity only; never join it to body
+            # text to manufacture language or requirement evidence.
+            excerpt = identity_text or ""
+            language = None
+        if not identity_only and page.language_evidence is not None:
             proof = _complete_language_excerpt(text, page.language_evidence)
             if proof:
                 excerpt = proof
             else:
                 language = None
-        builder.add(
-            ClaimType.PROGRAM_EXISTS,
-            {
-                "program": page.subject,
-                "degree": page.degree_level,
-                "language": language,
-                "matched_because": why,
-            },
-            excerpt,
-            confidence=0.9,
-            section="Programme identity",
-            # The programme's own title states its degree; a stray "master's"
-            # elsewhere on the page must not re-scope it (run 76, HKU).
-            degree=str(page.degree_level) if page.degree_level else None,
-        )
+        reading_context = builder.page_text
+        try:
+            if identity_only:
+                builder.page_text = identity_text
+            claim = builder.add(
+                ClaimType.PROGRAM_EXISTS,
+                {
+                    "program": page.subject,
+                    "degree": page.degree_level,
+                    "language": language,
+                    "matched_because": why,
+                },
+                excerpt,
+                confidence=0.9,
+                section="Programme identity",
+                # The programme's own title states its degree; a stray "master's"
+                # elsewhere on the page must not re-scope it (run 76, HKU).
+                degree=str(page.degree_level) if page.degree_level else None,
+            )
+        finally:
+            builder.page_text = reading_context
+        if claim is None and builder.rejected:
+            out.errors.append(
+                f"{builder.meta['source_url']}: programme identity rejected: "
+                f"{builder.rejected[-1][2].value}"
+            )
 
     @staticmethod
     def _claim_listed_programme(program, builder, text: str) -> bool:

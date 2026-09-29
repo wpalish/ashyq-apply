@@ -840,11 +840,15 @@ def _award_name(identity: str) -> str | None:
 def _award_link_count(soup: BeautifulSoup | None) -> int:
     if soup is None:
         return 0
-    return sum(
-        1
-        for a in soup.find_all("a", href=True)
-        if _SCHOLARSHIP_WORD.search(a.get_text(" ", strip=True) or "")
-        and not _FAQ.search(a.get_text(" ", strip=True) or "")
+    # A breadcrumb/category link and a detail link often name the same award.
+    # Multiple links prove an index only when they name different awards.
+    return len(
+        {
+            re.sub(r"\s+", " ", a.get_text(" ", strip=True)).casefold()
+            for a in soup.find_all("a", href=True)
+            if _SCHOLARSHIP_WORD.search(a.get_text(" ", strip=True) or "")
+            and not _FAQ.search(a.get_text(" ", strip=True) or "")
+        }
     )
 
 

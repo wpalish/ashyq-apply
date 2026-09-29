@@ -9,6 +9,7 @@ cause of a missed deadline.
 from __future__ import annotations
 
 import re
+from collections.abc import Iterator
 from dataclasses import replace
 from datetime import UTC, datetime
 
@@ -57,7 +58,14 @@ _DOC_RULES: tuple[tuple[str, str, DocumentOwner, dict], ...] = (
         DocumentOwner.THIRD_PARTY,
         {"needs_translation": True, "lead_time_days": 14},
     ),
+    (
+        "passport-size photo",
+        "Passport-size photograph (digital image)",
+        DocumentOwner.APPLICANT,
+        {"lead_time_days": 1},
+    ),
     ("passport", "Passport identity page (copy)", DocumentOwner.APPLICANT, {"lead_time_days": 1}),
+    ("personal essay", "Personal Essay", DocumentOwner.APPLICANT, {"lead_time_days": 14}),
     ("personal statement", "Personal statement", DocumentOwner.APPLICANT, {"lead_time_days": 14}),
     (
         "statement of motivation",
@@ -71,6 +79,7 @@ _DOC_RULES: tuple[tuple[str, str, DocumentOwner, dict], ...] = (
         DocumentOwner.APPLICANT,
         {"lead_time_days": 10},
     ),
+    ("referee's appraisal", "Referee appraisal", DocumentOwner.RECOMMENDER, {"lead_time_days": 30}),
     ("reference", "Academic reference", DocumentOwner.RECOMMENDER, {"lead_time_days": 30}),
     (
         "recommendation",
@@ -95,10 +104,69 @@ _DOC_RULES: tuple[tuple[str, str, DocumentOwner, dict], ...] = (
     ("financial", "Proof of financial resources", DocumentOwner.APPLICANT, {"lead_time_days": 10}),
 )
 
-_WORDS = re.compile(r"maximum (\d{2,4}) words|(\d{2,4})[- ]word (?:limit|maximum)", re.IGNORECASE)
+_WORDS = re.compile(
+    r"(?:maximum|not more than) (\d{2,4}) words|(\d{2,4})[- ]word (?:limit|maximum)",
+    re.IGNORECASE,
+)
 _PAGES = re.compile(r"maximum (\d{1,2}) pages?", re.IGNORECASE)
 _SIZE = re.compile(r"max(?:imum)? (\d{1,3})\s*MB", re.IGNORECASE)
 _FORMAT = re.compile(r"\b(PDF|DOCX?|JPE?G|PNG)\b")
+_DOCUMENT_LIST = re.compile(
+    r"^(?:(?:required|supporting|application)\s+)?documents(?:\s+(?:required|checklist|to submit))?$",
+    re.I,
+)
+_OPTIONAL_DOCUMENT = re.compile(
+    r"\boptional(?:ly)?\b|\bnot\s+(?:required|mandatory|compulsory)\b|"
+    r"\b(?:do|does|need)\s+not\s+(?:submit|upload|provide|attach)\b",
+    re.I,
+)
+_DOCUMENT_ACTION = re.compile(
+    r"^(?:please\s+)?(?:submit|upload|provide|attach)\b|"
+    r"\b(?:must|are required to|is required to|need to)\s+(?:submit|upload|provide|attach)\b|"
+    r"\b(?:submit|upload|provide|attach)[^.!?]{0,100}\b(?:required|mandatory)\b",
+    re.I,
+)
+_REQUIRED_WORD = re.compile(r"\b(?:required|mandatory|compulsory)\b", re.I)
+_QUALIFICATION_WORD = re.compile(r"\b(?:possess|hold|qualifications?|achievements?)\b", re.I)
+
+
+def _document_statements(text: str, document: DocumentIR | None) -> Iterator[tuple[str, bool]]:
+    """Local complete clauses, with an explicit document-list context only.
+
+    A long application paragraph can contain a short required essay or
+    appraisal statement. Splitting at sentence boundaries preserves its whole
+    proof; it never clips a requirement to fit the claim's quote cap.
+    """
+    if document is None or not document.blocks:
+        # Plain-text responses retain their explicit one-line reader.
+        for line in text.splitlines():
+            if line.strip() and len(line) <= 300:
+                yield line.strip(), True
+        return
+    for block in document.blocks:
+        if block.kind not in {"paragraph", "list_item", "key_value", "table_cell"}:
+            continue
+        listed = block.kind in {"list_item", "table_cell", "key_value"} and any(
+            _DOCUMENT_LIST.fullmatch(heading) for heading in block.section_path
+        )
+        clauses = re.split(r"(?<=[.!?])\s+", block.text)
+        for i, clause in enumerate(clauses):
+            if "referee's appraisal" in clause.casefold() and i + 1 < len(clauses):
+                following = clauses[i + 1]
+                if following.casefold().startswith("the appraisal"):
+                    clause += " " + following
+            if clause and len(clause) <= MAX_EXCERPT_CHARS:
+                yield clause, listed
+
+
+def _required_document_statement(line: str, listed: bool) -> bool:
+    if _OPTIONAL_DOCUMENT.search(line):
+        return False
+    return bool(
+        listed
+        or _DOCUMENT_ACTION.search(line)
+        or (_REQUIRED_WORD.search(line) and not _QUALIFICATION_WORD.search(line))
+    )
 
 
 #: What a scholarship submission waits for when the award requires an offer.
@@ -167,15 +235,7 @@ class WebDocumentsAdapter:
                 )
 
         everything = checklist.admission_documents + checklist.scholarship_documents
-        checklist.applicant_actions = [d for d in everything if d.owner == DocumentOwner.APPLICANT]
-        checklist.school_actions = [d for d in everything if d.owner == DocumentOwner.SCHOOL]
-        checklist.recommender_actions = [
-            d for d in everything if d.owner == DocumentOwner.RECOMMENDER
-        ]
-        checklist.certification_actions = [
-            d for d in everything if d.owner == DocumentOwner.THIRD_PARTY
-        ]
-        checklist.ordered_steps = _order_steps(everything)
+        _populate_actions(checklist)
 
         if not everything:
             checklist.completeness = "unavailable"
@@ -378,14 +438,17 @@ def read_documents(
     """
     items: list[DocumentItem] = []
     seen: set[str] = set()
-    for line in text.splitlines():
+    for line, listed in _document_statements(text, document):
         low = line.lower().strip()
-        if not low or len(low) > 300:
+        if not _required_document_statement(line, listed):
             continue
         for needle, name, owner, flags in _DOC_RULES:
-            if needle not in low or name in seen:
+            if needle not in low:
                 continue
-            seen.add(name)
+            if name in seen:
+                # A repeated specific document must not fall through into a
+                # broader overlapping rule (photo -> passport identity copy).
+                break
             words = _WORDS.search(line)
             pages = _PAGES.search(line)
             size = _SIZE.search(line)
@@ -403,30 +466,96 @@ def read_documents(
                 scope=page_scope,
                 **flags,
             )
+            claim = builder.add(ClaimType.REQUIRED_DOCUMENT, name, line, confidence=0.75)
+            if claim is None:
+                continue
+            seen.add(name)
             items.append(item)
-            builder.add(ClaimType.REQUIRED_DOCUMENT, name, line.strip()[:300], confidence=0.75)
             if item.word_limit:
                 builder.add(
                     ClaimType.ESSAY_PROMPT,
                     {"document": name, "word_limit": item.word_limit},
-                    line.strip()[:300],
+                    line,
                     confidence=0.8,
                 )
             if owner == DocumentOwner.RECOMMENDER:
                 builder.add(
                     ClaimType.RECOMMENDATION_REQUIREMENT,
                     name,
-                    line.strip()[:300],
+                    line,
                     confidence=0.75,
                 )
             break
+    before_forms = len(builder.claims)
     if document is None or not document.blocks:
         # Fetcher also accepts plain text. With no structural blocks, preserve
         # the explicit one-line reader; never fall back across parsed blocks.
         _completion_forms(text, builder)
     else:
         _structured_completion_forms(document, builder)
+    # A structural document label with both completion-dependent forms is
+    # already source-backed evidence. Keep its checklist item even when the
+    # body names the forms rather than repeating "Transcript" from the h3.
+    for claim in builder.claims[before_forms:]:
+        if claim.claim_type is not ClaimType.DOCUMENT_BY_COMPLETION:
+            continue
+        if _OPTIONAL_DOCUMENT.search(claim.original_text_excerpt):
+            continue
+        name = claim.normalized_value["document"]
+        if name in seen:
+            continue
+        rule = next((rule for rule in _DOC_RULES if rule[1] == name), None)
+        if rule is None:
+            continue
+        seen.add(name)
+        items.append(
+            DocumentItem(
+                name=name,
+                purpose=purpose,
+                owner=rule[2],
+                source_url=url,
+                claim_ids=[url],
+                scope=claim.scope,
+                **rule[3],
+            )
+        )
     return items
+
+
+def _populate_actions(checklist: DocumentChecklist) -> None:
+    everything = checklist.admission_documents + checklist.scholarship_documents
+    checklist.applicant_actions = [d for d in everything if d.owner == DocumentOwner.APPLICANT]
+    checklist.school_actions = [d for d in everything if d.owner == DocumentOwner.SCHOOL]
+    checklist.recommender_actions = [d for d in everything if d.owner == DocumentOwner.RECOMMENDER]
+    checklist.certification_actions = [
+        d for d in everything if d.owner == DocumentOwner.THIRD_PARTY
+    ]
+    checklist.ordered_steps = _order_steps(everything)
+
+
+def retain_failed_documents(
+    checklist: DocumentChecklist, previous: DocumentChecklist | None, failed_urls: set[str]
+) -> None:
+    """An unreadable source cannot withdraw its previously read checklist.
+
+    Successful reads, including an empty document list, replace their old
+    items normally. No claim or verification date is refreshed here.
+    """
+    if previous is None or not failed_urls:
+        return
+    retained = False
+    for field in ("admission_documents", "scholarship_documents"):
+        current: list[DocumentItem] = getattr(checklist, field)
+        present = {item.model_dump_json() for item in current}
+        for item in getattr(previous, field):
+            identity = item.model_dump_json()
+            if item.source_url in failed_urls and identity not in present:
+                current.append(item)
+                present.add(identity)
+                retained = True
+    if retained:
+        checklist.completeness = "partial"
+        _populate_actions(checklist)
 
 
 def _order_steps(items: list[DocumentItem]) -> list[str]:
