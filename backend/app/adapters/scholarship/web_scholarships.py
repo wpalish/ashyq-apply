@@ -42,6 +42,7 @@ from app.domain.enums import (
     SourceSpecificity,
 )
 from app.domain.funding import roll_up_availability
+from app.schemas.claim import MAX_EXCERPT_CHARS
 from app.schemas.money import Money
 from app.schemas.result import Coverage, CoverageBreakdown, Scholarship
 
@@ -658,7 +659,9 @@ class WebScholarshipAdapter:
         # --- degree applicability -----------------------------------------
         # Global navigation names other degree levels; only the award's own
         # content can establish applicability (Groningen live capture).
-        award_text = readable_text(str(main_content(parse_html(html))))
+        award_content = main_content(parse_html(html))
+        award_text = readable_text(str(award_content))
+        policy_statements = _award_policy_statements(award_content)
         applicability = assess_degree_applicability(award_text, str(program.degree))
         sch.degree_applicability = applicability.verdict
         sch.degree_applicability_reason = applicability.reason
@@ -692,19 +695,49 @@ class WebScholarshipAdapter:
             )
 
         # --- application mode ------------------------------------------
+        application_order = _admission_application_first(policy_statements)
         if "nominated by the department" in low or "direct applications are not accepted" in low:
             sch.application_mode = ApplicationMode.NOMINATION
         elif "no separate application is required" in low or "considered automatically" in low:
             sch.application_mode = ApplicationMode.AUTOMATIC
-        elif "separate scholarship application" in low or "must be submitted in addition" in low:
+        elif (
+            "separate scholarship application" in low
+            or "must be submitted in addition" in low
+            or application_order
+        ):
             sch.application_mode = ApplicationMode.SEPARATE
         if sch.application_mode != ApplicationMode.UNKNOWN:
+            ordered_separate = bool(
+                application_order and sch.application_mode is ApplicationMode.SEPARATE
+            )
             builder.add(
                 ClaimType.SCHOLARSHIP_APPLICATION_MODE,
                 sch.application_mode.value,
-                _line_with(text, "how to apply") or _line_with(text, "application"),
+                application_order
+                if ordered_separate
+                else _line_with(text, "how to apply") or _line_with(text, "application"),
+                notes=(
+                    "The admission application must be submitted before the scholarship application."
+                    if ordered_separate
+                    else ""
+                ),
             )
-        sch.requires_extra_essays = "additional essays" in low or "statement of motivation" in low
+        sch.requires_extra_essays = _required_extra_essay(policy_statements)
+
+        grant_bond = _tuition_grant_bond(policy_statements, name)
+        if grant_bond:
+            value, quote = grant_bond
+            builder.add(
+                ClaimType.SCHOLARSHIP_BOND,
+                value,
+                quote,
+                population="Singapore PRs and international students",
+                notes=(
+                    "The scholarship has no separate award bond; the stated three-year obligation "
+                    "belongs to the MOE Tuition Grant Scheme for Singapore PRs and international "
+                    "students."
+                ),
+            )
 
         # --- deadline ----------------------------------------------------
         dl_line = _line_with(text, "scholarship deadline") or _line_with(text, "deadline is")
@@ -998,6 +1031,92 @@ _PER_YEAR = re.compile(
     r"\b(?:per|a|each)\s+(?:academic\s+)?(?:year|annum)\b|\bannual(?:ly)?\b", re.I
 )
 _PER_MONTH = re.compile(r"\b(?:per|a|each)\s+month\b|\bmonthly\b", re.I)
+
+_ADMISSION_APPLICATION_FIRST = re.compile(
+    r"^applicants\s+(?:are required to|must)\s+submit their application for admission\s+"
+    r"before submitting their application for scholarship\b",
+    re.I,
+)
+_EXTRA_ESSAY = re.compile(
+    r"\b(?:personal essay|additional essays?|statement of motivation)\b", re.I
+)
+_ESSAY_REQUIRED = re.compile(r"\b(?:requires?|required|must|compulsory|mandatory)\b", re.I)
+_OPTIONAL_POLICY = re.compile(
+    r"\b(?:optional|voluntary|may|might|could)\b"
+    r"|\b(?:not|never)\s+(?:required|compulsory|mandatory)\b"
+    r"|\b(?:do|does)\s+not\s+(?:require|need|submit)\b"
+    r"|\bno\s+requirement\b",
+    re.I,
+)
+_TUITION_GRANT_BOND = re.compile(
+    r"^no bond is attached to (?P<award>.+?) apart from the (?:three|3)[- ]year bond "
+    r"applicable to all Singapore PRs and international students under the "
+    r"MOE Tuition Grant Scheme\b",
+    re.I,
+)
+
+
+def _award_policy_statements(content: BeautifulSoup) -> list[str]:
+    """Complete sentences from the award's own paragraphs and list items.
+
+    A wrapped clause belongs to its HTML block. A complete statement above
+    the evidence cap is omitted, rather than losing an exception to clipping.
+    """
+    out: list[str] = []
+    for block in content.find_all(["p", "li"]):
+        text = " ".join(block.get_text(" ", strip=True).split())
+        for statement in re.split(r"(?<=[.!?])\s+", text):
+            if statement and len(statement) <= MAX_EXCERPT_CHARS and statement not in out:
+                out.append(statement)
+    return out
+
+
+def _admission_application_first(statements: list[str]) -> str:
+    """Two submitted applications establish order, not an admission offer."""
+    for statement in statements:
+        if (
+            _ADMISSION_APPLICATION_FIRST.search(statement)
+            and not _OPTIONAL_POLICY.search(statement)
+            and not re.search(r"\b(?:if|when|unless)\b", statement, re.I)
+        ):
+            return statement
+    return ""
+
+
+def _required_extra_essay(statements: list[str]) -> bool:
+    for statement in statements:
+        if (
+            _EXTRA_ESSAY.search(statement)
+            and _ESSAY_REQUIRED.search(statement)
+            and not _OPTIONAL_POLICY.search(statement)
+            and not re.search(r"\b(?:if|when|unless)\b", statement, re.I)
+            and not re.search(r"\b(?:must|shall|should)\s+not\b", statement, re.I)
+            and not re.search(
+                r"\bno\s+(?:(?:required|compulsory|mandatory)\s+)?"
+                r"(?:personal essay|additional essays?|statement of motivation)\b",
+                statement,
+                re.I,
+            )
+        ):
+            return True
+    return False
+
+
+def _tuition_grant_bond(statements: list[str], name: str) -> tuple[dict[str, object], str] | None:
+    """Keep the grant exception when the award itself has no service bond."""
+    for statement in statements:
+        match = _TUITION_GRANT_BOND.search(statement)
+        if (
+            match
+            and match.group("award").casefold() in (name.casefold(), "the " + name.casefold())
+            and not _OPTIONAL_POLICY.search(statement)
+        ):
+            return {
+                "years": 3,
+                "basis": "MOE_Tuition_Grant",
+                "population": ["Singapore_PR", "international"],
+            }, statement
+    return None
 
 
 _ALL_NATIONALITIES = re.compile(

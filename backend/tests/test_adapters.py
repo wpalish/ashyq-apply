@@ -475,7 +475,10 @@ class TestVerificationCompleteness:
         assert _completeness(claims) < 0.25
 
     def test_answering_every_core_question_reads_as_complete(self):
+        from app.domain.enums import CostCategory
         from app.pipeline.runner import _completeness
+        from app.schemas.money import Money
+        from app.schemas.result import CostBreakdown
         from tests.conftest import make_claim
 
         claims = [
@@ -486,7 +489,8 @@ class TestVerificationCompleteness:
             make_claim("scholarship_exists", "Talent Grant"),
             make_claim("scholarship_international_eligible", True),
         ]
-        assert _completeness(claims) == 1.0
+        costs = CostBreakdown(items={CostCategory.TUITION: Money(amount=20000, currency="EUR")})
+        assert _completeness(claims, costs) == 1.0
 
     def test_nothing_verified_reads_as_nothing(self):
         from app.pipeline.runner import _completeness

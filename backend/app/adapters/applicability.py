@@ -226,7 +226,11 @@ def assess_degree_applicability(text: str, requested_degree: str) -> Applicabili
     # The page talks about other levels and never this one, other than as a
     # qualification the applicant must already hold.
     target_mentioned_for_real = requested_degree in mentioned and not _only_as_prior(flat, wanted)
-    others = [level for level in mentioned if level != requested_degree]
+    others = [
+        level
+        for level in mentioned
+        if level != requested_degree and not _only_as_prior(flat, _pattern_for(level))
+    ]
     if others and not target_mentioned_for_real:
         return Applicability(
             "no",
