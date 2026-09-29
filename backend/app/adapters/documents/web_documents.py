@@ -12,7 +12,7 @@ import re
 from dataclasses import replace
 from datetime import UTC, datetime
 
-from app.adapters.base import AdapterResult, Candidate, CandidateProgram
+from app.adapters.base import AdapterResult, Candidate, CandidateProgram, PageOutcome
 from app.adapters.document_ir import DocumentIR, build_document_ir
 from app.adapters.extraction import (
     ClaimBuilder,
@@ -27,6 +27,15 @@ from app.domain.claim_scope import ClaimScope
 from app.domain.enums import ClaimType, DocumentOwner, DocumentPurpose, SourceSpecificity
 from app.schemas.claim import MAX_EXCERPT_CHARS, UnresolvedQuestion
 from app.schemas.result import DocumentChecklist, DocumentItem, Scholarship
+
+DOCUMENT_CLAIM_TYPES = frozenset(
+    {
+        ClaimType.REQUIRED_DOCUMENT,
+        ClaimType.ESSAY_PROMPT,
+        ClaimType.RECOMMENDATION_REQUIREMENT,
+        ClaimType.DOCUMENT_BY_COMPLETION,
+    }
+)
 
 #: Phrases that identify a document, and how it should be classified.
 _DOC_RULES: tuple[tuple[str, str, DocumentOwner, dict], ...] = (
@@ -200,9 +209,16 @@ class WebDocumentsAdapter:
             out.pages_failed += 1
             out.errors.append(f"{url}: {res.outcome.value} — {res.error}")
             out.retry_urls.append(url)
+            out.page_outcomes.append(PageOutcome(url, "fetch-failed"))
             return []
 
         text = html_to_text(res.text)
+        if not text.strip():
+            out.pages_failed += 1
+            out.errors.append(f"{url}: unreadable — empty response after extracting document text.")
+            out.retry_urls.append(url)
+            out.page_outcomes.append(PageOutcome(url, "unreadable"))
+            return []
         # Read once and given to both: the claims and the checklist rows from
         # this page describe the same population, and §9 asks the checklist to
         # store it too.
@@ -226,6 +242,13 @@ class WebDocumentsAdapter:
             text, url, purpose, page_scope, builder, document=build_document_ir(res.text, url)
         )
         out.claims.extend(builder.claims)
+        out.page_outcomes.append(
+            PageOutcome(
+                url,
+                "fetched-ok" if builder.claims else "no-pattern-match",
+                readable_chars=len(text),
+            )
+        )
         return items
 
 
