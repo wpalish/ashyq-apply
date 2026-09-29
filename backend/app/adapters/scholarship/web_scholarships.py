@@ -663,14 +663,32 @@ class WebScholarshipAdapter:
         sch.degree_applicability = applicability.verdict
         sch.degree_applicability_reason = applicability.reason
         sch.applies_to_degrees = list(applicability.mentioned_degrees)
+        study_mode = _study_mode_restriction(award_text)
+        if study_mode:
+            # The current programme/profile has no confirmed study mode.
+            # Keep this as an unresolved programme condition; level yes alone
+            # is insufficient to call the applicant eligible.
+            sch.program_restrictions.append(study_mode)
         if applicability.verdict != "unknown":
+            evidence = applicability.evidence
+            reason = applicability.reason
+            if study_mode:
+                reason += "; study mode must be confirmed: " + study_mode
+                if (
+                    applicability.verdict == "yes"
+                    and str(program.degree)
+                    in assess_degree_applicability(
+                        study_mode, str(program.degree)
+                    ).mentioned_degrees
+                ):
+                    evidence = study_mode
             # Only real page text goes in the excerpt; the rationale is a note.
             builder.add(
                 ClaimType.SCHOLARSHIP_PROGRAM_RESTRICTION,
                 {"degree": str(program.degree), "applies": applicability.verdict},
-                applicability.evidence,
-                confidence=0.85 if applicability.evidence else 0.6,
-                notes=applicability.reason,
+                evidence,
+                confidence=0.85 if evidence else 0.6,
+                notes=reason,
             )
 
         # --- application mode ------------------------------------------
@@ -791,7 +809,7 @@ class WebScholarshipAdapter:
         # Is the award on offer at all? Read here, where the page and the
         # builder are, and before the roll-up that consumes it: a withdrawn
         # award needs no eligibility assessment.
-        withdrawn = _line_matching(text, _AWARD_WITHDRAWN)
+        withdrawn = _withdrawn_award_quote(text)
         if withdrawn:
             sch.currently_available = "no"
             sch.award_current_for_intake = "no"
@@ -909,6 +927,32 @@ def _restricted_to(text: str, pattern: re.Pattern[str]) -> re.Match[str] | None:
     the applicant is told to ask — the two failures are not symmetrical.
     """
     return pattern.search(" ".join((text or "").split()))
+
+
+def _study_mode_restriction(text: str) -> str:
+    """Retain an explicit awardee programme-mode condition in its own words."""
+    flat = " ".join(text.split())
+    requirement = re.compile(
+        r"\b(?:successful\s+awardees?|scholarship\s+holders?|recipients?|applicants?)\s+"
+        r"(?:must|should|(?:are|is)\s+required\s+to)\s+"
+        r"(?:read|pursue|be\s+enrolled\s+in)\s+"
+        r"(?:an?\s+)?full[- ]time\s+"
+        r"(?:undergraduate|bachelor['’]?s?|master['’]?s?|postgraduate|doctoral)\s+"
+        r"(?:degree\s+)?(?:programmes?|programs?|degrees?|courses?)\b",
+        re.I,
+    )
+    for sentence in re.split(r"(?<=[.!?])\s+", flat):
+        if len(sentence) > 300 or re.search(r"\b(?:if|when|unless)\b", sentence, re.I):
+            continue
+        match = requirement.search(sentence)
+        if match and not re.search(
+            r"\b(?:not\s+(?:required|necessary|obligatory)|no\s+requirement)\s+"
+            r"(?:(?:that|for)\s+)?$",
+            sentence[: match.start()],
+            re.I,
+        ):
+            return sentence
+    return ""
 
 
 #: A path that says an award or list is for the university's own citizens.
@@ -1199,6 +1243,55 @@ def _line_matching(text: str, pattern: re.Pattern[str]) -> str:
     for line in text.splitlines():
         if pattern.search(line):
             return line.strip()[:300]
+    return ""
+
+
+def _withdrawn_award_quote(text: str) -> str:
+    """Read scheme closure without treating a holder's revocation as closure.
+
+    Evaluate each statement independently: a retention condition cannot hide
+    a later actual cancellation on the same page. A wrapped if/when/unless
+    clause belongs to the preceding statement, rather than a different award.
+    """
+    statements = [part.strip() for part in re.split(r"(?<=[.!?])\s+|\n+", text) if part.strip()]
+    for index, statement in enumerate(statements):
+        context = statement
+        if (
+            not statement.endswith((".", "!", "?"))
+            and index + 1 < len(statements)
+            and re.match(r"^(?:if|when|unless)\b", statements[index + 1], re.I)
+        ):
+            context += " " + statements[index + 1]
+        for match in _AWARD_WITHDRAWN.finditer(statement):
+            prefix = statement[: match.start()]
+            denied = re.search(
+                r"\b(?:not|never)\s+(?:(?:been|ever|previously|actually|formally|yet)\s+){0,3}$",
+                prefix,
+                re.I,
+            )
+            if denied:
+                continue
+            if match.group().lower() == "withdrawn":
+                # Possible or conditional holder withdrawal does not say
+                # that the entire scholarship scheme has closed.
+                possible = re.search(r"\b(?:may|might|can|could|would)\b.{0,120}$", prefix, re.I)
+                conditional = re.search(r"\b(?:if|when|unless)\b", context, re.I)
+                individual = re.search(
+                    r"\b(?:your|his|her|their)\s+(?:scholarship|award|offer)\b"
+                    r"|\b(?:scholarship|award|admission)\s+offer\b",
+                    prefix,
+                    re.I,
+                ) or re.search(
+                    r"\bfrom\s+(?:(?:an?|the)\s+)?(?:holder|recipient|student|scholar)\b",
+                    statement[match.end() :],
+                    re.I,
+                )
+                if possible or conditional or individual:
+                    continue
+            # Keep the complete decisive statement in the existing quote cap.
+            # Truncating away its predicate would manufacture closure evidence.
+            if len(statement) <= 300:
+                return statement
     return ""
 
 

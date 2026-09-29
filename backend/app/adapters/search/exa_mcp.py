@@ -25,6 +25,9 @@ PROTOCOL_VERSION = "2025-03-26"
 DEFAULT_TIMEOUT_SECONDS = 15.0
 MAX_RESPONSE_BYTES = 1024 * 1024
 MAX_RESULTS_PER_QUERY = 25
+EMPTY_SEARCH_MESSAGE = (
+    "No search results found. Please try a different query or adjust your filters."
+)
 
 
 def _rpc_message(body: bytes, request_id: int) -> dict[str, Any]:
@@ -66,6 +69,16 @@ def _search_rows(result: dict[str, Any]) -> list[Any]:
         return structured["results"]
     blocks = result.get("content")
     if isinstance(blocks, list):
+        # The official advanced tool has a non-JSON empty-response branch.
+        # Recognize only its exact single, non-error block; arbitrary vendor
+        # text or mixed content must not silently masquerade as empty search.
+        if (
+            len(blocks) == 1
+            and isinstance(blocks[0], dict)
+            and blocks[0].get("type") == "text"
+            and blocks[0].get("text") == EMPTY_SEARCH_MESSAGE
+        ):
+            return []
         for block in blocks:
             if not isinstance(block, dict) or block.get("type") != "text":
                 continue

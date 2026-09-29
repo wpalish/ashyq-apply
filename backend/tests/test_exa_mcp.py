@@ -32,6 +32,9 @@ ROWS = [
     {"url": "https://uni.edu/faq", "title": "FAQ"},
 ]
 PRIVATE_MARKER = "private-query-and-provider-secret"
+EMPTY_RESULT_MARKER = (
+    "No search results found. Please try a different query or adjust your filters."
+)
 Reply = Callable[[httpx.Request], httpx.Response]
 
 
@@ -57,6 +60,41 @@ def tool_result(rows: list[Any], *, structured: bool = False) -> dict[str, Any]:
     if structured:
         return {"structuredContent": {"results": rows}, "content": []}
     return {"content": [{"type": "text", "text": json.dumps({"results": rows})}]}
+
+
+async def test_official_single_text_empty_marker_is_legitimate_empty(make_provider):
+    server = McpServer(result={"content": [{"type": "text", "text": EMPTY_RESULT_MARKER}]})
+    response = await make_provider(server).search(query="public programme query")
+
+    assert response.provider == "exa_mcp"
+    assert response.results == ()
+    assert server.methods == ["initialize", "notifications/initialized", "tools/call"]
+
+
+async def test_error_flag_keeps_empty_marker_unavailable(make_provider):
+    server = McpServer(
+        result={"isError": True, "content": [{"type": "text", "text": EMPTY_RESULT_MARKER}]}
+    )
+    with pytest.raises(SearchUnavailable):
+        await make_provider(server).search(query="public programme query")
+
+    assert server.methods == ["initialize", "notifications/initialized", "tools/call"]
+
+
+async def test_empty_marker_does_not_hide_unknown_mixed_content(make_provider):
+    server = McpServer(
+        result={
+            "content": [
+                {"type": "text", "text": EMPTY_RESULT_MARKER},
+                {"type": "text", "text": PRIVATE_MARKER},
+            ]
+        }
+    )
+    with pytest.raises(SearchUnavailable) as caught:
+        await make_provider(server).search(query="public programme query")
+
+    assert PRIVATE_MARKER not in str(caught.value)
+    assert server.methods == ["initialize", "notifications/initialized", "tools/call"]
 
 
 class McpServer:
