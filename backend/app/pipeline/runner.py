@@ -449,6 +449,13 @@ class ResearchRunner:
 
         adapter = self._make_discovery_adapter(fetcher)
         self._candidates = await adapter.discover(self.profile, self.candidate_limit)
+        if isinstance(adapter, LiveDiscoveryAdapter):
+            failures = dict.fromkeys(
+                message for trace in adapter.traces for message in trace.search_failures
+            )
+            self._record_diagnostics(
+                [message for message in failures if message not in (self.run.errors or [])]
+            )
         # An adapter that over-delivers must not silently widen the run.
         if len(self._candidates) > self.candidate_limit:
             self._candidates = self._candidates[: self.candidate_limit]

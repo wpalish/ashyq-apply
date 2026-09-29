@@ -52,6 +52,28 @@ class SearchUnavailable(SearchError):
     is a deployment that was never asked to search at all.
     """
 
+    def __init__(self, message: str, *, http_status: int | None = None) -> None:
+        super().__init__(message)
+        self.http_status = http_status
+
+
+def search_failure_diagnostic(provider: str, error: Exception) -> str:
+    """Public failure metadata, never arbitrary transport or response text.
+
+    A status alone does not establish the cause (for example, exhausted credit).
+    Keep that distinction and exclude keys, queries and vendor response bodies.
+    """
+    name = (
+        provider
+        if provider in {"exa", "tavily", "brave", "serper", "fake"}
+        else "configured search provider"
+    )
+    status = error.http_status if isinstance(error, SearchUnavailable) else None
+    detail = (
+        f"; HTTP {status}" if type(status) is int and 100 <= status <= 599 and status != 200 else ""
+    )
+    return f"Search service unavailable ({name}{detail})."
+
 
 @dataclass(frozen=True, slots=True)
 class SearchResult:

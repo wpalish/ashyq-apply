@@ -31,6 +31,7 @@ async def _merge(monkeypatch, profile, tmp_path, *, slot: bool) -> tuple[list[st
             provider="fake",
             queries_run=(),
             failed_queries=(),
+            failure_diagnostics=(),
             rejection_counts={},
         )
 

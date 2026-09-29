@@ -31,7 +31,12 @@ from app.adapters.discovery.live_discovery import (
     looks_like_catalogue,
 )
 from app.adapters.page_classifier import PageType, classify_url
-from app.adapters.search.base import SearchProvider, SearchResult, SearchUnavailable
+from app.adapters.search.base import (
+    SearchProvider,
+    SearchResult,
+    SearchUnavailable,
+    search_failure_diagnostic,
+)
 from app.adapters.search.fusion import SourcedCandidate, fuse
 from app.adapters.search.intent import DiscoveryIntent, DiscoveryQuery, queries_for
 from app.adapters.search.navigation import navigation_candidates
@@ -177,6 +182,8 @@ class RetrievalReport:
     #: opened pages and the cause was a refused connection, not an empty
     #: shortlist; two different facts deserve two counters.
     hop_entry_points_unreachable: int = 0
+    #: Safe provider/status messages for presentation; never vendor error text.
+    failure_diagnostics: tuple[str, ...] = ()
 
 
 def rank_candidates(
@@ -374,6 +381,7 @@ async def discover_candidates(
 
     results: list[SearchResult] = []
     failed: list[str] = []
+    failures: list[str] = []
     # URL to the families that returned it. Kept here rather than on
     # SearchResult: a provider reports what it returned, and which of our
     # queries asked for it is our bookkeeping, not part of its contract.
@@ -388,8 +396,11 @@ async def discover_candidates(
         except SearchUnavailable as exc:
             # The reason, not only the count: "offered: none" on every case
             # in run 47 could be a refused key, a quota or an empty index.
-            log.warning("search query failed (%s): %s", query.family, exc)
+            diagnostic = search_failure_diagnostic(provider.name, exc)
+            log.warning("search query failed (%s): %s", query.family, diagnostic)
             failed.append(query.family)
+            if diagnostic not in failures:
+                failures.append(diagnostic)
             continue
         results.extend(response.results)
         for result in response.results:
@@ -477,6 +488,7 @@ async def discover_candidates(
         ontology_version=ontology_version(),
         rejection_counts=outcome.rejection_counts,
         failed_queries=tuple(failed),
+        failure_diagnostics=tuple(failures),
         hop_entry_points=tuple(opened),
         hop_candidates=len(hopped),
         hop_entry_points_unreachable=unreachable,

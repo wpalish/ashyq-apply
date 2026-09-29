@@ -1644,6 +1644,10 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+**Diagnostic source release write-ahead (2026-09-29 04:32 UTC):** commit the fully verified provider diagnostics, then record that source SHA in HANDOFF/README and release the baton in a metadata commit. Push both as one checkpoint; wait for all eight selected-head release-gates. Update PR #32 and output report with actual SHA/check links. No additional live query or query change while authenticated Serper balance is -5; resume one ordinary NTU capture only after credits restored. Owner merge permission and deployed URL remain pending.
+
+**Diagnostic fixture repair write-ahead (2026-09-29):** full gate exposed two legacy navigation-slot tests whose SimpleNamespace retrieval stub lacks the new defaulted failure_diagnostics field. Update only that fixture to an empty tuple; preserve its assertions and rank-only experiment. Do not add a production fallback for invalid report objects. Confirm focused slot tests, finish this diagnostic full run and rerun the required backend gate if these are its only failures.
+
 **Provider-failure diagnostics write-ahead (2026-09-29 04:16 UTC):** in `search/base.py`, add optional structured HTTP status and an allowlisted safe diagnostic that never echoes exception/body/query/key text; attach status in four real-provider non-200 branches. Add safe failure diagnostics to RetrievalReport and DiscoveryTrace; persist only those from live discovery through runner._stage_discover. Preserve disabled-provider/demo contracts. Use the same safe diagnostic for scholarship fallback failures. In ProgressScreen, label search outages distinctly and count research issues rather than failed pages. Add hostile-body/status, partial-search propagation, persisted-run and mixed UI regressions. Run focused tests then full required backend/frontend/seed/golden gates, push small checkpoint and selected-head CI, update PR/report. Do not make more live Serper requests until balance restored; no payment authorization.
 
 **Final source release (2026-09-28 20:37 UTC):** no further source changes planned. On this pushed head, dispatch benchmark-capture.yml with mode=benchmark, case=ntu, 120 seconds and 60 page reads; verify target_award_search=True without an extra flag, actual award/source results and negatives. Wait for all selected-head release-gates, update PR #32 with actual links/numbers and mark ready. Owner squash-merges under AGENTS §4. No deployed URL has been supplied; never report a public-site update merely from PR readiness.
@@ -3420,6 +3424,8 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**Provider diagnostic final local gate (2026-09-29 04:32 UTC):** 2439 passed, 1 warning in 307.04s; 94.91% coverage. Ruff check / 296-file format check and mypy app/tests/evaluation (296 files) green. Frontend typecheck/lint/195 tests/build green. Isolated seed: Groningen #1 PLAUSIBLE, UBC #11 OUT_OF_BUDGET; golden digest unchanged, one Alembic head c5d01b7e4f83. First full attempt had 2437 passed / two legacy navigation stub failures (94.88%); the stub gained the new empty diagnostic field, no assertions weakened, final full rerun green. Read-only peer diff review found no material issue. Selected-head cloud checks still pending.
+
 **Final award-policy promotion (2026-09-28 20:37 UTC):** 2429 passed, one warning, 294.74s; coverage 94.89%. Ruff app/tests/evaluation check and 296-file format check pass; mypy app/tests/evaluation 296 files green. Frontend typecheck/lint/193 unit tests/build green. Isolated seed again gives Groningen #1 and UBC OUT_OF_BUDGET; golden hash unchanged. Alembic c5d01b7e4f83 single head. Selected-head CI/default capture are the remaining verification steps, with exact completion in PR #32.
 
 **Final verified code `0f5b99d`, 2026-09-28:** ruff check passed; ruff format 296 files unchanged; mypy app/tests/evaluation: 296 source files, no issues; pytest full suite **2428 passed**, 1 warning in 292.30s, **94.89% coverage**. Golden digest unchanged: `d1403ce29ee2e0f710a034b78afe222cc42b40059a6730a60fa5041490333c53`. Pipeline seed previously verified Groningen #1, UBC OUT_OF_BUDGET and the exact demo payload is re-proved by the final suite. Alembic exactly one head `c5d01b7e4f83`. Frontend typecheck/lint/unit/build/Playwright demo+auth and security/container checks passed on code run `36475520836`; SQLite/PostgreSQL jobs still running at this checkpoint. Final live capture `36475528223`; completion/details are recorded in PR #32, not invented here.
@@ -4091,6 +4097,8 @@ next agent does not reopen it.
   they are; do not rewrite that history.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
+
+- Provider diagnostics (2026-09-29): `SearchUnavailable.http_status` optionally carries numeric HTTP status. RetrievalReport.failure_diagnostics and DiscoveryTrace.search_failures carry controlled provider/status text; only these live-search failures are deduplicated into existing run.errors. Scholarship fallback uses the same sanitizer. API/schema/demo/ranking/Fetcher/query contracts unchanged; UI labels the research issue rather than claiming each error is a failed page.
 
 - Award search query family `award_policy` uses public degree aliases plus eligibility/benefits. TARGET_AWARD_SEARCH=True after paired validation; `--target-award-search` / `--no-target-award-search` records and forwards actual defaults. The one-query/five-result/three-official-lead bounds and confirmed-programme/Fetcher guards remain. No public API/schema change.
 

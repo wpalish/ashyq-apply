@@ -738,6 +738,8 @@ class DiscoveryTrace:
     selected: dict[str, list[str]] = field(default_factory=dict)
     rejected: list[tuple[str, str]] = field(default_factory=list)
     errors: list[str] = field(default_factory=list)
+    #: Safe search failures only; informational trace entries stay out of run.errors.
+    search_failures: list[str] = field(default_factory=list)
     used_navigation_fallback: bool = False
     #: (url, link text) for leads found by a catalogue's own wording rather
     #: than by the URL, so the report can show what the wording was.
@@ -764,6 +766,7 @@ class DiscoveryTrace:
             "rejected_sample": self.rejected[:40],
             "rejected_total": len(self.rejected),
             "errors": self.errors,
+            "search_failures": self.search_failures,
             "used_navigation_fallback": self.used_navigation_fallback,
             "kept_by_link_text": self.kept_by_link_text,
             "walker": dict(self.walker),
@@ -1259,6 +1262,7 @@ class LiveDiscoveryAdapter:
         keeps everything the other generators produced.
         """
         from app.adapters.search import SearchError, get_search_provider
+        from app.adapters.search.base import search_failure_diagnostic
         from app.adapters.search.intent import DiscoveryIntent
         from app.adapters.search.retrieval import discover_candidates
 
@@ -1298,9 +1302,10 @@ class LiveDiscoveryAdapter:
         try:
             report = await discover_candidates(provider, intent, fetch=read, top_k=10)
         except SearchError as exc:
-            trace.errors.append(f"search unavailable: {exc}")
+            trace.search_failures.append(search_failure_diagnostic(provider.name, exc))
             return
 
+        trace.search_failures.extend(report.failure_diagnostics)
         pages = selected[PageCategory.PROGRAM_PAGE]
         if RECOVER_SEARCH_CANDIDATES:
             await self._recover_search_pages(report.candidates, pages, trace, profile)

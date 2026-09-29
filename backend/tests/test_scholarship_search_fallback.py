@@ -24,7 +24,7 @@ class Provider:
     async def search(self, **kwargs):
         self.calls.append(kwargs)
         if self.fail:
-            raise SearchUnavailable("quota")
+            raise SearchUnavailable("private key and response body", http_status=400)
         now = datetime.now(UTC)
         return SearchResponse(
             kwargs["query"],
@@ -143,7 +143,10 @@ async def test_provider_failure_stays_unknown_and_does_not_retry(tmp_path, monke
     assert awards == []
     assert result.claims == []
     assert len(provider.calls) == 1
-    assert any("search unavailable" in e for e in result.errors)
+    assert (
+        "Official scholarship search: Search service unavailable (fake; HTTP 400)." in result.errors
+    )
+    assert not any("private key" in e or "response body" in e for e in result.errors)
 
 
 @pytest.mark.asyncio

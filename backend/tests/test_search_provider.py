@@ -23,10 +23,19 @@ from app.adapters.search import (
     SearchUnavailable,
     get_search_provider,
 )
+from app.adapters.search.base import search_failure_diagnostic
 from app.adapters.search.fake import FakeSearchProvider
 from app.config import Settings
 
 NOW = datetime(2026, 9, 21, 12, 0, tzinfo=UTC)
+
+
+@pytest.mark.parametrize("status", [None, 99, 200, 600, True])
+def test_public_failure_message_excludes_arbitrary_exception_and_provider_text(status):
+    message = search_failure_diagnostic(
+        "secret-provider-key", SearchUnavailable("secret body and query", http_status=status)
+    )
+    assert message == "Search service unavailable (configured search provider)."
 
 
 def a_result(**kw) -> SearchResult:

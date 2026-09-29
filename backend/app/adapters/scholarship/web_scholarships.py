@@ -193,7 +193,7 @@ class WebScholarshipAdapter:
             same_institution,
         )
         from app.adapters.search import get_search_provider
-        from app.adapters.search.base import SearchError
+        from app.adapters.search.base import SearchError, search_failure_diagnostic
         from app.adapters.search.intent import DiscoveryIntent, queries_for
 
         # The scholarship query contains the degree, but no programme field.
@@ -203,6 +203,7 @@ class WebScholarshipAdapter:
         if key in self._award_searches:
             return self._award_searches[key]
         self._award_searches[key] = ()
+        provider_name = "configured search provider"
         try:
             intent = DiscoveryIntent(
                 institution=candidate.name,
@@ -212,13 +213,16 @@ class WebScholarshipAdapter:
                 population_marker="international",
             )
             provider = get_search_provider()
+            provider_name = provider.name
             family = "award_policy" if TARGET_AWARD_SEARCH else "scholarships"
             query = queries_for(intent, families=(family,), budget=1)[0]
             response = await provider.search(
                 query=query.text, domains=[intent.domain], max_results=5
             )
         except (SearchError, ValueError) as exc:
-            out.errors.append(f"Official scholarship search unavailable: {type(exc).__name__}")
+            out.errors.append(
+                f"Official scholarship search: {search_failure_diagnostic(provider_name, exc)}"
+            )
             return ()
         urls: list[str] = []
         for found in response.results:
