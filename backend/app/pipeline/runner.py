@@ -78,7 +78,7 @@ from app.models.base import ensure_utc
 from app.pipeline.state import IN_PROGRESS_STAGES, RunState
 from app.schemas.claim import Claim, ClaimOut, UnresolvedQuestion
 from app.schemas.profile import ApplicantProfileIn
-from app.schemas.result import ProgramResult, Tristate
+from app.schemas.result import CostBreakdown, ProgramResult, Tristate
 
 log = logging.getLogger("unimatch.pipeline")
 
@@ -1044,7 +1044,7 @@ class ResearchRunner:
             result.preference_score = score_result(result, self.profile)
             result.preference_score.components.append(_explanation_component(fit_reason))
             result.ranking = rank_result(result, self.profile, gamma=self.settings.ranking_gamma)
-            result.verification_completeness = _completeness(claims)
+            result.verification_completeness = _completeness(claims, result.costs)
             result.career_notes = result.career_notes or ""
 
             self._update_result(row, result)
@@ -1620,14 +1620,43 @@ CORE_QUESTIONS: tuple[tuple[ClaimType, ...], ...] = (
 )
 
 
-def _completeness(claims) -> float:
-    """Share of the core questions answered by a current, official claim."""
+def _completeness(claims, costs: CostBreakdown | None = None) -> float:
+    """Core questions answered by accepted evidence and applicant cost projection.
+
+    A published tariff remains evidence when its applicant applicability is
+    unknown. It only answers the cost question alongside the matching tuition
+    item or total actually projected into the applicant's cost breakdown.
+    """
     from app.domain.enums import ClaimStatus
+
+    def has_cost_projection(claim: Claim) -> bool:
+        if claim.claim_type not in (ClaimType.TUITION, ClaimType.TOTAL_COST_OF_ATTENDANCE):
+            return True
+        if costs is None:
+            return False
+        money = (
+            costs.items.get(CostCategory.TUITION)
+            if claim.claim_type is ClaimType.TUITION
+            else costs.total
+        )
+        value = claim.normalized_value
+        if money is None or not isinstance(value, dict):
+            return False
+        return (
+            value.get("amount") == money.amount
+            and value.get("currency") == money.currency
+            and (
+                not claim.academic_year
+                or not money.academic_year
+                or claim.academic_year == money.academic_year
+            )
+        )
 
     verified = {
         c.claim_type
         for c in claims
         if c.status in (ClaimStatus.VERIFIED_CURRENT, ClaimStatus.POSSIBLY_STALE)
+        and has_cost_projection(c)
     }
     answered = sum(1 for group in CORE_QUESTIONS if verified & set(group))
     return round(answered / len(CORE_QUESTIONS), 3)

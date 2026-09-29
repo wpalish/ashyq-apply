@@ -513,6 +513,7 @@ def test_configuration_and_factory_allow_keyless_mcp_in_production(monkeypatch):
         public_base_url="https://apply.example",
         email_sender="smtp",
         smtp_host="smtp.example",
+        smtp_from="no-reply@example.test",
         metrics_enabled=False,
         payments_enabled=False,
     )

@@ -65,6 +65,25 @@ def test_valid_production_smtp_remains_allowed() -> None:
 
 
 @pytest.mark.parametrize(
+    "sender",
+    ["", "   ", "no-reply@ashyq.example", "not-an-email", "no-reply@", "no-reply@EXAMPLE"],
+)
+def test_production_refuses_unusable_smtp_from(sender: str) -> None:
+    with pytest.raises(RuntimeError, match="UNIMATCH_SMTP_FROM"):
+        _settings(smtp_from=sender).validate_runtime()
+
+
+def test_production_accepts_explicit_display_name_sender() -> None:
+    _settings(smtp_from="ASHYQ Apply <no-reply@example.test>").validate_runtime()
+
+
+def test_development_console_keeps_its_placeholder_sender() -> None:
+    _settings(
+        environment="development", email_sender="console", smtp_from="no-reply@ashyq.example"
+    ).validate_runtime()
+
+
+@pytest.mark.parametrize(
     ("overrides", "message"),
     [
         ({"auth_enabled": False}, "UNIMATCH_AUTH_ENABLED"),

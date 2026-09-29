@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
+from email.utils import parseaddr
 from functools import lru_cache
 from pathlib import Path
 
-from pydantic import SecretStr
+from pydantic import SecretStr, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BACKEND_ROOT = Path(__file__).resolve().parent.parent
@@ -17,6 +18,15 @@ MIN_WEBHOOK_SECRET_CHARS = 16
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="UNIMATCH_", env_file=".env", extra="ignore")
+
+    @field_validator("database_url")
+    @classmethod
+    def _installed_postgres_driver(cls, url: str) -> str:
+        """Provider URLs use the psycopg3 driver installed by this application."""
+        for prefix in ("postgresql://", "postgres://"):
+            if url.startswith(prefix):
+                return "postgresql+psycopg://" + url.removeprefix(prefix)
+        return url
 
     #: Demo mode uses the bundled synthetic corpus and never touches the network.
     demo_mode: bool = True
@@ -233,6 +243,23 @@ class Settings(BaseSettings):
             )
         if self.email_sender == "smtp" and not self.smtp_host:
             raise RuntimeError("UNIMATCH_SMTP_HOST is required when the sender is smtp.")
+        if self.is_production:
+            sender = parseaddr(self.smtp_from)[1]
+            local, separator, domain = sender.rpartition("@")
+            if (
+                not local
+                or not separator
+                or not domain
+                or domain.casefold() == "example"
+                or domain.casefold().endswith(".example")
+                or any(character.isspace() for character in sender)
+                or "\n" in self.smtp_from
+                or "\r" in self.smtp_from
+            ):
+                raise RuntimeError(
+                    "UNIMATCH_SMTP_FROM must be an explicit sender address in production; "
+                    "the default .example address cannot deliver password reset mail."
+                )
         if self.is_production and not self.public_base_url.startswith("https://"):
             raise RuntimeError("UNIMATCH_PUBLIC_BASE_URL must be an HTTPS origin in production.")
         if self.is_production and self.password_scrypt_log2 < 17:

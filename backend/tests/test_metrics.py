@@ -237,6 +237,7 @@ class TestTheProductionGuard:
             cors_origins="https://apply.example.com",
             email_sender="smtp",
             smtp_host="smtp.example.com",
+            smtp_from="no-reply@example.test",
             public_base_url="https://apply.example.com",
             metrics_enabled=True,
             metrics_token="",
@@ -255,6 +256,7 @@ class TestTheProductionGuard:
             "cors_origins": "https://apply.example.com",
             "email_sender": "smtp",
             "smtp_host": "smtp.example.com",
+            "smtp_from": "no-reply@example.test",
             "public_base_url": "https://apply.example.com",
         }
         Settings(
