@@ -145,11 +145,13 @@ async def capture_one(
     # Every provider's search is counted, not only Exa's: runs 80-93 used
     # Serper and recorded search_calls=0 while six queries ran per case.
     from app.adapters.search.brave import BraveSearchProvider
+    from app.adapters.search.exa_mcp import ExaMcpSearchProvider
     from app.adapters.search.serper import SerperSearchProvider
     from app.adapters.search.tavily import TavilySearchProvider
 
     provider_classes = (
         ExaSearchProvider,
+        ExaMcpSearchProvider,
         TavilySearchProvider,
         BraveSearchProvider,
         SerperSearchProvider,
@@ -289,6 +291,7 @@ async def capture_one(
         patch.object(canary, "CanaryRunner", ObservedRunner),
         patch.object(fetching, "_pinned_request", counted_request),
         patch.object(ExaSearchProvider, "search", counted_for(ExaSearchProvider)),
+        patch.object(ExaMcpSearchProvider, "search", counted_for(ExaMcpSearchProvider)),
         patch.object(TavilySearchProvider, "search", counted_for(TavilySearchProvider)),
         patch.object(BraveSearchProvider, "search", counted_for(BraveSearchProvider)),
         patch.object(SerperSearchProvider, "search", counted_for(SerperSearchProvider)),
@@ -321,12 +324,22 @@ async def capture_one(
 
 
 def main() -> None:
+    from app.adapters.discovery import live_discovery
+    from app.adapters.scholarship import web_scholarships
+    from app.adapters.search import KNOWN_SEARCH_PROVIDERS
+    from app.config import Settings, get_settings
+
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--live", action="store_true", required=True)
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--case", choices=[*COHORT, *HELDOUT])
     parser.add_argument("--seconds-per-case", type=int, default=120)
     parser.add_argument("--max-pages", type=int, default=40)
+    parser.add_argument(
+        "--search-provider",
+        choices=sorted(KNOWN_SEARCH_PROVIDERS),
+        help="search provider for this capture (default: configured provider)",
+    )
     parser.add_argument(
         "--search-first",
         action="store_true",
@@ -352,11 +365,42 @@ def main() -> None:
         action="store_true",
         help="experiment ER-07: one programme-page slot is kept for the navigation hop",
     )
+    parser.add_argument(
+        "--recover-search-candidates",
+        action=argparse.BooleanOptionalAction,
+        default=live_discovery.RECOVER_SEARCH_CANDIDATES,
+        help="experiment: verify search identities and backfill rejected programme leads",
+    )
+    parser.add_argument(
+        "--search-funding-fallback",
+        action=argparse.BooleanOptionalAction,
+        default=web_scholarships.SEARCH_FUNDING_FALLBACK,
+        help="experiment: search official awards when index walking yields no scholarships",
+    )
+    parser.add_argument(
+        "--target-award-search",
+        action=argparse.BooleanOptionalAction,
+        default=web_scholarships.TARGET_AWARD_SEARCH,
+        help="experiment: target award policies instead of generic scholarship indices",
+    )
     parser.add_argument("--child", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args()
     if not 1 <= args.seconds_per_case <= 600 or not 1 <= args.max_pages <= 100:
         parser.error("Budget must be 1..600 seconds and 1..100 Fetcher.get calls per university")
+    settings = (
+        Settings(search_provider=args.search_provider) if args.search_provider else Settings()
+    )
+    if args.search_provider:
+        try:
+            settings._validate_search()
+        except RuntimeError as exc:
+            parser.error(str(exc))
+    search_provider = settings.search_provider
+    print(f"search provider: {search_provider}", flush=True)
     if args.child:
+        web_scholarships.SEARCH_FUNDING_FALLBACK = args.search_funding_fallback
+        web_scholarships.TARGET_AWARD_SEARCH = args.target_award_search
+        live_discovery.RECOVER_SEARCH_CANDIDATES = args.recover_search_candidates
         if args.search_first:
             from app.adapters.discovery import live_discovery
 
@@ -380,7 +424,14 @@ def main() -> None:
         # A few seconds under the parent's timeout, so the child's own stop
         # comes first and writes what it has.
         soft = max(args.seconds_per_case - 5, 1)
-        asyncio.run(capture_one(args.case, args.out, args.max_pages, soft))
+        # Apply the selection before the pipeline constructs Settings. Clearing
+        # the cache also covers direct --child invocation in an existing process.
+        with patch.dict(os.environ, {"UNIMATCH_SEARCH_PROVIDER": search_provider}):
+            get_settings.cache_clear()
+            try:
+                asyncio.run(capture_one(args.case, args.out, args.max_pages, soft))
+            finally:
+                get_settings.cache_clear()
         return
     stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
     directory = args.out / stamp
@@ -395,6 +446,7 @@ def main() -> None:
             UNIMATCH_DEMO_MODE="false",
             UNIMATCH_ENABLE_BROWSER_TIER="false",
             UNIMATCH_FETCH_CONTACT="https://github.com/wpalish/ashyq-apply",
+            UNIMATCH_SEARCH_PROVIDER=search_provider,
             PYTHONIOENCODING="utf-8",
         )
         with (directory / f"{case_id}.log").open("w", encoding="utf-8") as log:
@@ -414,11 +466,23 @@ def main() -> None:
                         str(args.max_pages),
                         "--seconds-per-case",
                         str(args.seconds_per_case),
+                        *(["--search-provider", search_provider] if args.search_provider else []),
                         *(["--search-first"] if args.search_first else []),
                         *(["--skip-refused-hosts"] if args.skip_refused_hosts else []),
                         *(["--reject-archive-hosts"] if args.reject_archive_hosts else []),
                         *(["--admission-lexicon"] if args.admission_lexicon else []),
                         *(["--navigation-slot"] if args.navigation_slot else []),
+                        "--search-funding-fallback"
+                        if args.search_funding_fallback
+                        else "--no-search-funding-fallback",
+                        *(
+                            ["--recover-search-candidates"]
+                            if args.recover_search_candidates
+                            else ["--no-recover-search-candidates"]
+                        ),
+                        "--target-award-search"
+                        if args.target_award_search
+                        else "--no-target-award-search",
                     ],
                     env=environment,
                     stdout=log,
@@ -446,10 +510,14 @@ def main() -> None:
             captured_at=stamp,
             mode="live",
             config={
+                "search_provider": search_provider,
                 "seconds_per_case": args.seconds_per_case,
                 "max_fetcher_calls_per_case": args.max_pages,
                 "page_budget_counts": "network reads; cache hits are free (since 2026-09-23)",
                 "search_before_navigation": args.search_first,
+                "recover_search_candidates": args.recover_search_candidates,
+                "search_funding_fallback": args.search_funding_fallback,
+                "target_award_search": args.target_award_search,
                 "skip_refused_search_hosts": args.skip_refused_hosts,
                 "reject_archive_hosts": args.reject_archive_hosts,
                 "admission_lexicon": args.admission_lexicon,

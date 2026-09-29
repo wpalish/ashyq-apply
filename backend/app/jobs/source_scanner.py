@@ -36,6 +36,7 @@ from typing import Any
 from sqlalchemy.orm import Session
 
 from app.adapters.base import Candidate, CandidateProgram
+from app.adapters.documents.web_documents import DOCUMENT_CLAIM_TYPES
 from app.adapters.fetching import Fetcher, FetchOutcome, FetchResult
 from app.adapters.requirements.web_requirements import WebRequirementsAdapter
 from app.config import Settings
@@ -202,13 +203,16 @@ async def reextract_page(
 
     The fetch and the claim extraction are the runner's own (the requirements
     adapter classifies the page and runs the same html-rule extractors); what
-    surrounds them is supersession: in the job's one transaction, every live
-    claim of this run over this URL flips to SUPERSEDED (column and embedded
+    surrounds them is supersession: in the job's one transaction, changed live
+    requirements of this run over this URL flip to SUPERSEDED (column and embedded
     payload — GET /claims reads the payload), keeps its value and gains the
     source-page link, and the fresh claims are appended next to them. A page
     that now yields nothing supersedes anyway: history is what the page no
     longer says, and keeping a VERIFIED_CURRENT row the page contradicts is
     the one thing this must never do.
+
+    Document proof belongs to the documents reader. This requirements-only
+    refresh neither retires it nor advances its original verification date.
 
     Anything raised here rolls the whole attempt back and lets the queue's
     backoff retry it — a half-applied supersession is worse than a late one.
@@ -279,6 +283,7 @@ async def reextract_page(
             ClaimRow.run_id == run.id,
             ClaimRow.source_url == url,
             ClaimRow.status != ClaimStatus.SUPERSEDED.value,
+            ClaimRow.claim_type.not_in([kind.value for kind in DOCUMENT_CLAIM_TYPES]),
         )
         .all()
     )

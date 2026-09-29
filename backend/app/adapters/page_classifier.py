@@ -15,6 +15,7 @@ not add up it returns UNKNOWN, and UNKNOWN is accepted by nothing.
 from __future__ import annotations
 
 import re
+from bisect import bisect_left
 from dataclasses import dataclass, field
 from enum import StrEnum
 from urllib.parse import urlparse
@@ -86,6 +87,8 @@ class PageClassification:
     degree_level: str | None = None
     language_of_instruction: str | None = None
     academic_year: str | None = None
+    #: Complete main-content title/label proof; None keeps the prose route.
+    language_evidence: str | None = None
 
     def accepts(self, extractor: str) -> bool:
         return self.page_type in ACCEPTS.get(extractor, frozenset())
@@ -219,6 +222,13 @@ _LANGUAGE = re.compile(
     r"\b(?:taught|instruction|language of instruction)\b[^.]{0,40}?\b(english|dutch|german|french|finnish|polish)\b"
     r"|\b(english|dutch|german|french|finnish|polish)[- ]taught\b",
     re.IGNORECASE,
+)
+#: Programme fact tables often use just "Language / German" or
+#: "Language: Polish", rather than the prose phrase "taught in".
+_LANGUAGE_LABEL = re.compile(
+    r"^[ \t]*(?:teaching language|language(?: of instruction)?)"
+    r"[ \t]*:?[ \t]*(?:\n[ \t]*)*(english|dutch|german|french|finnish|polish)[ \t]*$",
+    re.I | re.M,
 )
 
 #: URL path fragments that are strong evidence on their own.
@@ -412,6 +422,19 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
     if _IRRELEVANT.search(low_head):
         return PageClassification(PageType.IRRELEVANT, 0.8, ["title is off-topic"], title)
 
+    # An audience qualification is not a degree the continuing course offers.
+    course_identity = f"{identity} {title} {path.replace('-', ' ')}"
+    if re.search(r"\bcourses?\s+(?:for\s+)?(?:teachers?|professionals?)\b", course_identity, re.I):
+        return PageClassification(
+            PageType.IRRELEVANT, 0.9, ["continuing course for a professional audience"], title
+        )
+    if re.search(
+        r"\btopic courses?\b|\bcourse (?:descriptions?|syllabus)\b", course_identity, re.I
+    ):
+        return PageClassification(
+            PageType.IRRELEVANT, 0.9, ["individual course content, not a degree programme"], title
+        )
+
     # The page's own title and first heading only: a "News" block in the
     # sidebar is not the page. Run 31: Vienna's admission-procedure page and
     # HKU's admissions home were both rejected as news on a secondary h2.
@@ -536,7 +559,11 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
             title,
         )
     degree = context_degree or _degree_level(f"{identity} {body[:2500]}")
-    language = _language(body)
+    language_body = _text(soup) if soup is not None else body
+    language = (
+        _language(language_body) if _LANGUAGE_LABEL.search(language_body) else _prose_language(body)
+    )
+    language_evidence = _labelled_language_evidence(language_body, subject, language)
     year = _academic_year(body)
 
     if not subject:
@@ -570,6 +597,7 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
                 degree_level=degree,
                 language_of_instruction=language,
                 academic_year=year,
+                language_evidence=language_evidence,
             )
         return PageClassification(
             PageType.PROGRAM_DETAIL,
@@ -579,6 +607,7 @@ def classify_page(*, url: str, html: str = "", text: str = "") -> PageClassifica
             subject=subject,
             degree_level=degree,
             language_of_instruction=language,
+            language_evidence=language_evidence,
         )
 
     if _CREDENTIAL.search(low_head) and _ADMISSIONS.search(low_head):
@@ -648,10 +677,48 @@ def _degree_level(text: str) -> str | None:
 
 
 def _language(text: str) -> str | None:
+    labelled = {m.group(1).lower() for m in _LANGUAGE_LABEL.finditer(text)}
+    if labelled:
+        return next(iter(labelled)) if len(labelled) == 1 else None
+    return _prose_language(text)
+
+
+def _prose_language(text: str) -> str | None:
     m = _LANGUAGE.search(text)
     if not m:
         return None
     return (m.group(1) or m.group(2) or "").lower() or None
+
+
+def _labelled_language_evidence(text: str, subject: str | None, language: str | None) -> str | None:
+    """Keep a contiguous programme title and explicit language field together.
+
+    Only the main content reaches this helper. A navigation label with the
+    same value must not become the shorter apparent proof. The claim reader
+    subsequently applies its excerpt cap without truncating this evidence.
+    """
+    labels = list(_LANGUAGE_LABEL.finditer(text))
+    if not labels or language is None:
+        return None
+    if not subject:
+        return ""
+    title_pattern = re.compile(r"\s+".join(re.escape(word) for word in subject.split()), re.I)
+    titles = list(title_pattern.finditer(text))
+    if not titles:
+        return ""
+    starts = [match.start() for match in titles]
+    best: tuple[int, int] | None = None
+    for label in labels:
+        if label.group(1).lower() != language:
+            continue
+        index = bisect_left(starts, label.start())
+        for nearby in (index - 1, index):
+            if 0 <= nearby < len(titles):
+                title = titles[nearby]
+                span = (min(title.start(), label.start()), max(title.end(), label.end()))
+                if best is None or span[1] - span[0] < best[1] - best[0]:
+                    best = span
+    return text[best[0] : best[1]].strip() if best else ""
 
 
 def _academic_year(text: str) -> str | None:

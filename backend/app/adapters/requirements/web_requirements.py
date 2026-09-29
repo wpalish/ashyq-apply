@@ -23,6 +23,7 @@ from app.adapters.extraction import (
     ClaimBuilder,
     excerpt_around,
     extract_admission_route,
+    extract_programme_faculty,
     extract_requirements,
     for_matching,
     html_title,
@@ -44,6 +45,7 @@ from app.adapters.search.ontology import titles_name_same_programme
 from app.adapters.structured_extraction import extract_table_requirements
 from app.domain.enums import ClaimType, FetchOutcome, SourceSpecificity
 from app.domain.programme_identity import Verdict
+from app.schemas.claim import MAX_EXCERPT_CHARS
 
 #: An intake is open only when a page says so. Each pattern must capture the
 #: sentence it matched, which becomes the claim's excerpt.
@@ -242,6 +244,10 @@ class WebRequirementsAdapter:
                 if page.page_type in _LISTING_PAGE_TYPES and self._claim_listed_programme(
                     program, builder, text
                 ):
+                    # The page that confirms the programme may state its faculty
+                    # in a labelled field; one value only (HKU, 2026-09-28).
+                    if not res.is_pdf:
+                        extract_programme_faculty(text, builder)
                     out.claims.extend(builder.claims)
                     out.page_outcomes.append(
                         PageOutcome(
@@ -314,6 +320,8 @@ class WebRequirementsAdapter:
                 continue
 
             self._claim_program_exists(page, program, builder, out, text)
+            if page.accepts("program_exists") and not res.is_pdf:
+                extract_programme_faculty(text, builder)
             if page.accepts("requirements"):
                 # Structure first: a table row states the test, the column and the
                 # value together (V2-30C). A prose claim of a type the table
@@ -426,12 +434,19 @@ class WebRequirementsAdapter:
             return
 
         excerpt = _first_sentence_containing(text, page.subject) or page.subject or ""
+        language = page.language_of_instruction
+        if page.language_evidence is not None:
+            proof = _complete_language_excerpt(text, page.language_evidence)
+            if proof:
+                excerpt = proof
+            else:
+                language = None
         builder.add(
             ClaimType.PROGRAM_EXISTS,
             {
                 "program": page.subject,
                 "degree": page.degree_level,
-                "language": page.language_of_instruction,
+                "language": language,
                 "matched_because": why,
             },
             excerpt,
@@ -463,7 +478,7 @@ class WebRequirementsAdapter:
                 "language": None,
                 "matched_because": "named by its full degree title on a listing page",
             },
-            _first_sentence_containing(text, title) or title,
+            _first_sentence_containing(text, title, max_characters=300) or title,
             confidence=0.7,
             section="Programme identity",
             degree=str(degree) if degree else None,
@@ -642,7 +657,20 @@ def _listed_programme(text: str, program) -> tuple[str, str | None] | None:
     return None
 
 
-def _first_sentence_containing(text: str, needle: str | None) -> str:
+def _complete_language_excerpt(text: str, evidence: str) -> str:
+    """Locate the whole main-content proof in the reader's original text."""
+    if not evidence:
+        return ""
+    pattern = re.compile(r"\s+".join(re.escape(word) for word in evidence.split()), re.I)
+    match = pattern.search(text)
+    if match is None or match.end() - match.start() > MAX_EXCERPT_CHARS:
+        return ""
+    return match.group()
+
+
+def _first_sentence_containing(
+    text: str, needle: str | None, *, max_characters: int | None = None
+) -> str:
     """A real quote from the page, or empty. Never a sentence we wrote."""
     if not needle:
         return ""
@@ -650,7 +678,12 @@ def _first_sentence_containing(text: str, needle: str | None) -> str:
     index = flat.lower().find(needle.lower())
     if index < 0:
         return ""
-    return excerpt_around(flat, index, index + len(needle))
+    if max_characters is None:
+        return excerpt_around(flat, index, index + len(needle))
+    # Keep the full programme title within the owner's 300-character support
+    # window; unrelated surrounding prose otherwise obscures listing evidence.
+    radius = max(0, (max_characters - len(needle)) // 2)
+    return excerpt_around(flat, index, index + len(needle), radius=radius)
 
 
 def _fee(line: str) -> dict[str, object] | None:

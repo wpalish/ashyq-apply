@@ -9,9 +9,11 @@ cause of a missed deadline.
 from __future__ import annotations
 
 import re
+from dataclasses import replace
 from datetime import UTC, datetime
 
-from app.adapters.base import AdapterResult, Candidate, CandidateProgram
+from app.adapters.base import AdapterResult, Candidate, CandidateProgram, PageOutcome
+from app.adapters.document_ir import DocumentIR, build_document_ir
 from app.adapters.extraction import (
     ClaimBuilder,
     html_title,
@@ -21,9 +23,19 @@ from app.adapters.extraction import (
 )
 from app.adapters.fetching import Fetcher
 from app.adapters.scope_reader import read_scope
+from app.domain.claim_scope import ClaimScope
 from app.domain.enums import ClaimType, DocumentOwner, DocumentPurpose, SourceSpecificity
-from app.schemas.claim import UnresolvedQuestion
+from app.schemas.claim import MAX_EXCERPT_CHARS, UnresolvedQuestion
 from app.schemas.result import DocumentChecklist, DocumentItem, Scholarship
+
+DOCUMENT_CLAIM_TYPES = frozenset(
+    {
+        ClaimType.REQUIRED_DOCUMENT,
+        ClaimType.ESSAY_PROMPT,
+        ClaimType.RECOMMENDATION_REQUIREMENT,
+        ClaimType.DOCUMENT_BY_COMPLETION,
+    }
+)
 
 #: Phrases that identify a document, and how it should be classified.
 _DOC_RULES: tuple[tuple[str, str, DocumentOwner, dict], ...] = (
@@ -197,9 +209,16 @@ class WebDocumentsAdapter:
             out.pages_failed += 1
             out.errors.append(f"{url}: {res.outcome.value} — {res.error}")
             out.retry_urls.append(url)
+            out.page_outcomes.append(PageOutcome(url, "fetch-failed"))
             return []
 
         text = html_to_text(res.text)
+        if not text.strip():
+            out.pages_failed += 1
+            out.errors.append(f"{url}: unreadable — empty response after extracting document text.")
+            out.retry_urls.append(url)
+            out.page_outcomes.append(PageOutcome(url, "unreadable"))
+            return []
         # Read once and given to both: the claims and the checklist rows from
         # this page describe the same population, and §9 asks the checklist to
         # store it too.
@@ -219,54 +238,195 @@ class WebDocumentsAdapter:
             allowed_domains=verification_domains(url, candidate.domain),
         )
 
-        items: list[DocumentItem] = []
-        seen: set[str] = set()
-        for line in text.splitlines():
-            low = line.lower().strip()
-            if not low or len(low) > 300:
-                continue
-            for needle, name, owner, flags in _DOC_RULES:
-                if needle not in low or name in seen:
-                    continue
-                seen.add(name)
-                words = _WORDS.search(line)
-                pages = _PAGES.search(line)
-                size = _SIZE.search(line)
-                item = DocumentItem(
-                    name=name,
-                    purpose=purpose,
-                    owner=owner,
-                    format_notes=", ".join(sorted(set(_FORMAT.findall(line)))) or "",
-                    max_pages=int(pages.group(1)) if pages else None,
-                    max_file_size_mb=float(size.group(1)) if size else None,
-                    word_limit=int(words.group(1) or words.group(2)) if words else None,
-                    prompt_text=line.strip()[:280]
-                    if purpose == DocumentPurpose.SCHOLARSHIP
-                    else None,
-                    source_url=url,
-                    claim_ids=[url],
-                    scope=page_scope,
-                    **flags,
-                )
-                items.append(item)
-                builder.add(ClaimType.REQUIRED_DOCUMENT, name, line.strip()[:300], confidence=0.75)
-                if item.word_limit:
-                    builder.add(
-                        ClaimType.ESSAY_PROMPT,
-                        {"document": name, "word_limit": item.word_limit},
-                        line.strip()[:300],
-                        confidence=0.8,
-                    )
-                if owner == DocumentOwner.RECOMMENDER:
-                    builder.add(
-                        ClaimType.RECOMMENDATION_REQUIREMENT,
-                        name,
-                        line.strip()[:300],
-                        confidence=0.75,
-                    )
-                break
+        items = read_documents(
+            text, url, purpose, page_scope, builder, document=build_document_ir(res.text, url)
+        )
         out.claims.extend(builder.claims)
+        out.page_outcomes.append(
+            PageOutcome(
+                url,
+                "fetched-ok" if builder.claims else "no-pattern-match",
+                readable_chars=len(text),
+            )
+        )
         return items
+
+
+#: A document whose form depends on whether schooling is finished, stated on
+#: one line: "Transcript: scan of your academic record and/or if not yet
+#: completed: school-issued list of your courses" (Groningen, 2026-09-28).
+_BY_COMPLETION = re.compile(
+    r"^(?P<label>transcripts?|(?:secondary\s+school\s+)?diplomas?)\b(?P<done>.*?)"
+    r"(?:and/?or|or)?\s*if\s+(?:you\s+have\s+)?not\s+yet\s+(?:completed|finished|graduated)"
+    r"\s*[:,]?\s*(?P<pending>.+)$",
+    re.I,
+)
+_LABEL_DOCUMENT = (
+    (re.compile(r"transcript", re.I), "Full academic transcript"),
+    (re.compile(r"diploma", re.I), "Secondary school diploma (certified copy)"),
+)
+_COMPLETION_LABEL = re.compile(r"transcripts?|(?:secondary\s+school\s+)?diplomas?", re.I)
+#: The forms a document takes, in the page's words, to one vocabulary.
+_FORMS = (
+    (
+        re.compile(r"academic record|final grade list|report card|grade transcript", re.I),
+        "academic_record",
+    ),
+    (re.compile(r"list of (?:your )?courses|course list", re.I), "school_course_list"),
+    (
+        re.compile(
+            r"(?:statement|proof|certificate) of enrol?ment|enrol?ment (?:statement|certificate)",
+            re.I,
+        ),
+        "school_enrolment_statement",
+    ),
+    (re.compile(r"\bdiploma\b", re.I), "diploma"),
+)
+
+
+def _form_of(words: str) -> str | None:
+    return next((form for pattern, form in _FORMS if pattern.search(words)), None)
+
+
+def _completion_forms(text: str, builder: ClaimBuilder) -> None:
+    """Each document the page names in a completed and a not-yet-completed form.
+
+    Both forms must be recognised; a half-read line says nothing.
+    """
+    for line in text.splitlines():
+        match = _BY_COMPLETION.match(line.strip())
+        if match is None:
+            continue
+        _add_completion_forms(match, builder, line.strip()[:300])
+
+
+def _add_completion_forms(
+    match: re.Match[str], builder: ClaimBuilder, excerpt: str, section: str = ""
+) -> None:
+    name = next((n for p, n in _LABEL_DOCUMENT if p.search(match.group("label"))), None)
+    done, pending = _form_of(match.group("done")), _form_of(match.group("pending"))
+    if name is None or done is None or pending is None or done == pending:
+        return
+    for status, form in (("completed", done), ("not_completed", pending)):
+        builder.add(
+            ClaimType.DOCUMENT_BY_COMPLETION,
+            {"document": name, "status": status, "form": form},
+            excerpt,
+            section=section,
+            confidence=0.75,
+        )
+
+
+def _structured_completion_forms(document: DocumentIR, builder: ClaimBuilder) -> None:
+    """An explicit label and one block containing both forms; no text windows."""
+    page_scope = builder.meta.get("scope")
+    try:
+        for block in document.blocks:
+            if block.kind not in {"table_cell", "key_value", "paragraph", "list_item"}:
+                continue
+            if len(block.text) > MAX_EXCERPT_CHARS:
+                continue
+            context = (
+                block.row_headers
+                if block.kind == "table_cell"
+                else (block.label,)
+                if block.kind == "key_value"
+                else block.section_path[-1:]
+            )
+            labels = {label for label in context if _COMPLETION_LABEL.fullmatch(label)}
+            if len(labels) > 1:
+                continue
+            match = _BY_COMPLETION.match(block.text)
+            if match is not None and labels:
+                labelled = next(iter(labels))
+                labelled_name = next(n for p, n in _LABEL_DOCUMENT if p.search(labelled))
+                own_name = next(n for p, n in _LABEL_DOCUMENT if p.search(match.group("label")))
+                if labelled_name != own_name:
+                    continue
+            if match is None and labels:
+                # The label is structural context, not part of the quoted body.
+                match = _BY_COMPLETION.match(f"{next(iter(labels))} {block.text}")
+            if match is None:
+                continue
+            if isinstance(page_scope, ClaimScope):
+                local = read_scope(
+                    " ".join([*block.section_path, block.caption, *block.row_headers])
+                )
+                builder.meta["scope"] = replace(page_scope, population=local.population)
+            _add_completion_forms(
+                match,
+                builder,
+                block.text,
+                " / ".join([*block.section_path, *context]),
+            )
+    finally:
+        builder.meta["scope"] = page_scope
+
+
+def read_documents(
+    text: str,
+    url: str,
+    purpose: DocumentPurpose,
+    page_scope,
+    builder: ClaimBuilder,
+    *,
+    document: DocumentIR | None = None,
+) -> list[DocumentItem]:
+    """Checklist rows and document claims from one page's readable text.
+
+    Pure: no fetch. The adapter and the evaluation oracle both call it.
+    """
+    items: list[DocumentItem] = []
+    seen: set[str] = set()
+    for line in text.splitlines():
+        low = line.lower().strip()
+        if not low or len(low) > 300:
+            continue
+        for needle, name, owner, flags in _DOC_RULES:
+            if needle not in low or name in seen:
+                continue
+            seen.add(name)
+            words = _WORDS.search(line)
+            pages = _PAGES.search(line)
+            size = _SIZE.search(line)
+            item = DocumentItem(
+                name=name,
+                purpose=purpose,
+                owner=owner,
+                format_notes=", ".join(sorted(set(_FORMAT.findall(line)))) or "",
+                max_pages=int(pages.group(1)) if pages else None,
+                max_file_size_mb=float(size.group(1)) if size else None,
+                word_limit=int(words.group(1) or words.group(2)) if words else None,
+                prompt_text=line.strip()[:280] if purpose == DocumentPurpose.SCHOLARSHIP else None,
+                source_url=url,
+                claim_ids=[url],
+                scope=page_scope,
+                **flags,
+            )
+            items.append(item)
+            builder.add(ClaimType.REQUIRED_DOCUMENT, name, line.strip()[:300], confidence=0.75)
+            if item.word_limit:
+                builder.add(
+                    ClaimType.ESSAY_PROMPT,
+                    {"document": name, "word_limit": item.word_limit},
+                    line.strip()[:300],
+                    confidence=0.8,
+                )
+            if owner == DocumentOwner.RECOMMENDER:
+                builder.add(
+                    ClaimType.RECOMMENDATION_REQUIREMENT,
+                    name,
+                    line.strip()[:300],
+                    confidence=0.75,
+                )
+            break
+    if document is None or not document.blocks:
+        # Fetcher also accepts plain text. With no structural blocks, preserve
+        # the explicit one-line reader; never fall back across parsed blocks.
+        _completion_forms(text, builder)
+    else:
+        _structured_completion_forms(document, builder)
+    return items
 
 
 def _order_steps(items: list[DocumentItem]) -> list[str]:

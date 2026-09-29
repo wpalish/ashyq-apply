@@ -72,6 +72,87 @@ def results_of(session, run) -> dict[str, ProgramResult]:
 class TestLiveDiscoveryWiring:
     """Production runner wiring for the T29 catalogue and T28 recorder seams."""
 
+    @pytest.mark.asyncio
+    @pytest.mark.parametrize("failed_calls", [0, 1, 6])
+    async def test_search_outage_reaches_persisted_api_without_losing_other_candidates(
+        self, session, settings, profile, tmp_path, monkeypatch, caplog, failed_calls
+    ):
+        import json
+        from datetime import UTC, datetime
+
+        from app.adapters import search
+        from app.adapters.discovery.live_discovery import LiveDiscoveryAdapter
+        from app.adapters.fetching import Fetcher
+        from app.adapters.search.base import SearchResponse, SearchResult, SearchUnavailable
+        from app.api.routes_research import _view
+        from tests.test_live_discovery import StubSite, program_html, sitemap_xml
+
+        url = "https://uni.edu/programmes/bachelors/computer-science"
+
+        class Provider:
+            name = "serper"
+            calls = 0
+
+            async def search(self, **kwargs):
+                self.calls += 1
+                if self.calls <= failed_calls:
+                    raise SearchUnavailable("secret-key private-query quota", http_status=400)
+                now = datetime.now(UTC)
+                return SearchResponse(
+                    kwargs["query"],
+                    self.name,
+                    now,
+                    (SearchResult(url, "BSc Computer Science", self.name, 1, now),),
+                )
+
+        provider = Provider()
+        monkeypatch.setattr(search, "get_search_provider", lambda: provider)
+        registry = tmp_path / "registry.json"
+        registry.write_text(
+            json.dumps(
+                [{"name": "Test University", "country": "Testland", "homepage": "https://uni.edu/"}]
+            )
+        )
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/s.xml",
+                "https://uni.edu/s.xml": sitemap_xml(url),
+                url: program_html(),
+            }
+        )
+        row = profile_row(session, profile)
+        run = ResearchRun(
+            profile_id=row.id,
+            stage=PipelineStage.QUEUED.value,
+            demo_mode=False,
+            stage_state=RunState.load(None).dump(),
+        )
+        session.add(run)
+        session.flush()
+        runner = ResearchRunner(session, run, profile, settings)
+        async with Fetcher(tmp_path / "search-cache", offline=True) as fetcher:
+            site.install(fetcher)
+            adapter = LiveDiscoveryAdapter(fetcher, registry_path=registry)
+            monkeypatch.setattr(runner, "_make_discovery_adapter", lambda _: adapter)
+            await runner._stage_discover(fetcher)
+
+        assert provider.calls == 6
+        assert runner._candidates[0].programs[0].url == url
+        run_id = run.id
+        session.expire_all()
+        saved = session.get(ResearchRun, run_id)
+        assert saved is not None
+        view = _view(session, saved, counts=(0, 0))
+        expected = ["Search service unavailable (serper; HTTP 400)."] if failed_calls else []
+        assert saved.errors == view.errors == expected
+        assert view.unknowns == []
+        assert view.pages_failed == 0
+        assert RunState.load(saved.stage_state)[PipelineStage.CANDIDATE_DISCOVERY].status == "done"
+        assert not any("secret" in e or "private" in e or "quota" in e for e in view.errors)
+        assert "secret-key" not in caplog.text
+        assert "private-query" not in caplog.text
+        assert "quota" not in caplog.text
+
     def test_live_runner_builds_the_catalog_renderer(self, session, settings, profile, tmp_path):
         from app.adapters.discovery.catalog_walker import CatalogRenderer
 
@@ -141,6 +222,46 @@ class TestLiveDiscoveryWiring:
 
 
 class TestPipelineShape:
+    @pytest.mark.asyncio
+    async def test_a_correct_third_discovery_programme_is_verified(
+        self, session, settings, profile
+    ):
+        from app.adapters.base import CandidateProgram
+        from app.adapters.discovery.fixture_discovery import FixtureDiscoveryAdapter
+        from app.domain.enums import ClaimType
+
+        row = profile_row(session, profile)
+        run = ResearchRun(
+            profile_id=row.id,
+            stage=PipelineStage.QUEUED.value,
+            demo_mode=True,
+            stage_state=RunState.load(None).dump(),
+        )
+        session.add(run)
+        session.flush()
+        runner = ResearchRunner(session, run, profile, settings)
+        async with runner._make_fetcher() as fetcher:
+            candidates = await FixtureDiscoveryAdapter(fetcher).discover(profile)
+            candidate = next(c for c in candidates if c.name == "University of Groningen")
+            correct = candidate.programs[0]
+            candidate.programs = [
+                CandidateProgram(
+                    name=f"Unconfirmed {i}",
+                    field=correct.field,
+                    degree=correct.degree,
+                    url=f"fixture://missing/{i}",
+                )
+                for i in range(2)
+            ] + [correct]
+            runner._candidates = [candidate]
+            await runner._stage_verify(fetcher)
+        claims = session.query(ClaimRow).filter(ClaimRow.run_id == run.id).all()
+        assert any(
+            c.claim_type == ClaimType.PROGRAM_EXISTS.value
+            and c.payload.get("program") == correct.name
+            for c in claims
+        )
+
     @pytest.mark.asyncio
     async def test_the_run_reaches_the_decision_stage(self, session, completed_run):
         _, run = completed_run

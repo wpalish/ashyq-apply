@@ -362,6 +362,175 @@ class TestRetry:
         )
 
 
+class TestDocumentEvidence:
+    @pytest.mark.parametrize(
+        "second_fetch", ["refresh", "failure", "unreadable", "changed", "removed"]
+    )
+    def test_document_proof_survives_save_reload_and_repeat_collection(
+        self, client, finished_run, monkeypatch, second_fetch
+    ):
+        from datetime import UTC, datetime, timedelta
+
+        from app.adapters.fetching import Fetcher, FetchOutcome, FetchResult
+        from app.db import SessionLocal
+        from app.jobs.store import JobStore
+        from app.models import ClaimRow
+        from tests.conftest import make_claim
+
+        _, run = finished_run
+        base = f"/api/runs/{run['id']}"
+        before = client.get(f"{base}/results").json()
+        target = next(r for r in before if r["university"] == "University of Groningen")
+        result_url = f"{base}/results/{target['id']}"
+        evidence_url = f"{base}/claims?result_id={target['id']}&limit=500"
+        old_evidence = client.get(evidence_url).json()
+        initial_count = client.get(base).json()["claims_recorded"]
+        old_ids = {c["id"] for c in old_evidence}
+        with SessionLocal() as session:
+            historical = make_claim("required_document", "Old document", status="SUPERSEDED")
+            saved_history = ClaimRow(
+                run_id=run["id"],
+                result_id=target["id"],
+                claim_type=historical.claim_type.value,
+                status=historical.status.value,
+                source_url=historical.source_url,
+                source_specificity=historical.source_specificity.value,
+                accessed_at=historical.accessed_at,
+                payload=historical.model_dump(mode="json"),
+            )
+            session.add(saved_history)
+            session.commit()
+            history_id = saved_history.id
+
+        body = (
+            "Scan of your academic record or if not yet completed: "
+            "school-issued list of your courses"
+        )
+        html = (
+            "<h2>International applicants</h2><h3>Transcript</h3>"
+            f"<p>{body}</p><h3>Transcript</h3><p>{body}</p>"
+            f"<h2>Domestic applicants</h2><h3>Transcript</h3><p>{body}</p>"
+        )
+        fetched_at = datetime.now(UTC).replace(microsecond=0)
+        failed = False
+        original_get = Fetcher.get
+
+        async def page(fetcher, url, **kwargs):
+            if url != target["program_url"]:
+                return await original_get(fetcher, url, **kwargs)
+            if failed:
+                return FetchResult(url=url, outcome=FetchOutcome.HTTP_ERROR, status_code=503)
+            return FetchResult(url=url, outcome=FetchOutcome.OK, text=html, fetched_at=fetched_at)
+
+        monkeypatch.setattr(Fetcher, "get", page)
+        assert (
+            client.post(f"{result_url}/decision", json={"decision": "approved"}).status_code == 200
+        )
+
+        def collect(retry=False):
+            if retry:
+                # A worker retry executes again even when the shortlist is
+                # unchanged; the public button itself deliberately does not.
+                with SessionLocal() as session:
+                    JobStore(session).enqueue(
+                        "documents", run_id=run["id"], idempotency_key="document-proof-retry"
+                    )
+                    session.commit()
+            else:
+                assert client.post(f"{base}/collect-documents").status_code == 202
+            assert asyncio.run(drain_queue()) == 1
+            return client.get(result_url).json(), client.get(evidence_url).json()
+
+        first, first_sql = collect()
+        completion = [c for c in first["claims"] if c["claim_type"] == "document_by_completion"]
+        assert len(completion) == 4, (
+            "keep both forms in each scope; identical blocks add no duplicates"
+        )
+        assert {
+            (c["scope"]["population"], c["normalized_value"]["status"]) for c in completion
+        } == {
+            (population, status)
+            for population in ("international", "domestic")
+            for status in ("completed", "not_completed")
+        }
+        first_completion_sql = [c for c in first_sql if c["claim_type"] == "document_by_completion"]
+        assert {c["id"] for c in completion} == {c["id"] for c in first_completion_sql}
+        assert all(c["original_text_excerpt"] == body for c in completion)
+        assert old_ids <= {c["id"] for c in first_sql}
+        assert any(c["id"] == history_id and c["status"] == "SUPERSEDED" for c in first_sql)
+        added = len(first_sql) - len(old_evidence) - 1
+        assert client.get(base).json()["claims_recorded"] == initial_count + added
+        failures_before_retry = client.get(base).json()["pages_failed"]
+
+        failed = second_fetch == "failure"
+        if second_fetch == "changed":
+            html = html.replace("school-issued list of your courses", "statement of enrolment")
+        elif second_fetch == "removed":
+            html = "<h3>Applications</h3><p>General information for applicants.</p>"
+        elif second_fetch == "unreadable":
+            html = "<script>loadDocuments()</script>"
+        fetched_at += timedelta(days=1)
+        second, second_sql = collect(retry=True)
+        fresh_count = 4 if second_fetch == "changed" else 0
+        assert len(second_sql) == len(first_sql) + fresh_count
+        assert client.get(base).json()["claims_recorded"] == initial_count + added + fresh_count
+        repeated = [
+            c
+            for c in second["claims"]
+            if c["claim_type"] == "document_by_completion" and c["status"] != "SUPERSEDED"
+        ]
+        old_completion_ids = {c["id"] for c in completion}
+        if second_fetch in {"changed", "removed"}:
+            assert all(
+                c["status"] == "SUPERSEDED"
+                for c in second["claims"]
+                if c["id"] in old_completion_ids
+            )
+            assert all(
+                c["status"] == "SUPERSEDED" for c in second_sql if c["id"] in old_completion_ids
+            )
+            assert len(repeated) == fresh_count
+            if second_fetch == "changed":
+                assert {c["normalized_value"]["form"] for c in repeated} == {
+                    "academic_record",
+                    "school_enrolment_statement",
+                }
+                with SessionLocal() as session:
+                    superseded = (
+                        session.query(ClaimRow).filter(ClaimRow.id.in_(old_completion_ids)).all()
+                    )
+                    assert all(c.superseded_at is not None for c in superseded)
+                    assert {c.superseded_by_id for c in superseded} == {c["id"] for c in repeated}
+            else:
+                with SessionLocal() as session:
+                    superseded = (
+                        session.query(ClaimRow).filter(ClaimRow.id.in_(old_completion_ids)).all()
+                    )
+                    assert all(
+                        c.superseded_at is not None and c.superseded_by_id is None
+                        for c in superseded
+                    )
+        else:
+            assert {c["id"] for c in repeated} == old_completion_ids
+        unconfirmed = second_fetch in {"failure", "unreadable"}
+        if unconfirmed:
+            state = client.get(base).json()
+            assert state["pages_failed"] == failures_before_retry + 1
+            assert any(target["program_url"] in error for error in state["errors"])
+            assert second["checklist"]["completeness"] == "partial"
+        expected_date = fetched_at - timedelta(days=1) if unconfirmed else fetched_at
+        assert all(datetime.fromisoformat(c["accessed_at"]) == expected_date for c in repeated)
+        assert all(
+            datetime.fromisoformat(c["accessed_at"]) == expected_date
+            for c in second_sql
+            if c["claim_type"] == "document_by_completion" and c["status"] != "SUPERSEDED"
+        )
+        assert old_ids <= {c["id"] for c in second_sql}
+        assert any(c["id"] == history_id and c["status"] == "SUPERSEDED" for c in second_sql)
+        assert second["ranking"] == first["ranking"] == target["ranking"]
+        assert second["user_decision"] == "approved"
+
+
 class TestExports:
     def test_csv_carries_the_disclaimer_sources_and_data_origin(self, client, finished_run):
         _, run = finished_run

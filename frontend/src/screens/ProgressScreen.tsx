@@ -24,6 +24,7 @@ const STAGE_LABELS: Record<string, string> = {
 
 function errorCategory(message: string): string {
   const value = message.toLowerCase();
+  if (/search service unavailable|official scholarship search unavailable|searchunavailable/.test(value)) return 'Search service unavailable';
   if (/timeout|429|rate limit|temporar|network|server error/.test(value)) return 'Temporary fetch issue';
   if (/no known|no .*url|not found|missing page/.test(value)) return 'Official page not located';
   if (/not applicable|degree|intake|citizenship/.test(value)) return 'Page not applicable to this applicant';
@@ -227,8 +228,8 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
         )}
 
         {run.errors.length > 0 && (
-          <Panel title="Fetch failures" data-testid="failures-panel"
-            hint={`${run.errors.length} pages could not be read at all. Anything that depended on them is unknown, never guessed.`}>
+          <Panel title="Research failures" data-testid="failures-panel"
+            hint={`${run.errors.length} issues limited this research. Affected information remains unknown.`}>
             <div className="stack stack--tight">
               {Object.entries(groupedErrors).map(([category, messages]) => (
                 <details key={category}>

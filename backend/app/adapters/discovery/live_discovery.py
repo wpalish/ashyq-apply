@@ -83,6 +83,10 @@ MAX_PROGRAM_CANDIDATES_CHECKED = 8
 #: precision fell too, so it removed correct pages rather than junk. Turn it
 #: on only together with a capture that shows what it does.
 CONFIRM_SEARCH_PROGRAMMES = False
+#: Bounded content verification with backfill, unlike the older prune-only
+#: experiment. Programme variants and unresolved degrees are rejected, and
+#: matching catalogue links share the same candidate-read bound.
+RECOVER_SEARCH_CANDIDATES = True
 #: Whether search runs *before* the navigation fallback, and the fallback is
 #: skipped when search found a programme page. Off: appending search after the
 #: other generators is the measured default, and interleaving once cost whole
@@ -734,6 +738,8 @@ class DiscoveryTrace:
     selected: dict[str, list[str]] = field(default_factory=dict)
     rejected: list[tuple[str, str]] = field(default_factory=list)
     errors: list[str] = field(default_factory=list)
+    #: Safe search failures only; informational trace entries stay out of run.errors.
+    search_failures: list[str] = field(default_factory=list)
     used_navigation_fallback: bool = False
     #: (url, link text) for leads found by a catalogue's own wording rather
     #: than by the URL, so the report can show what the wording was.
@@ -760,6 +766,7 @@ class DiscoveryTrace:
             "rejected_sample": self.rejected[:40],
             "rejected_total": len(self.rejected),
             "errors": self.errors,
+            "search_failures": self.search_failures,
             "used_navigation_fallback": self.used_navigation_fallback,
             "kept_by_link_text": self.kept_by_link_text,
             "walker": dict(self.walker),
@@ -1255,6 +1262,7 @@ class LiveDiscoveryAdapter:
         keeps everything the other generators produced.
         """
         from app.adapters.search import SearchError, get_search_provider
+        from app.adapters.search.base import search_failure_diagnostic
         from app.adapters.search.intent import DiscoveryIntent
         from app.adapters.search.retrieval import discover_candidates
 
@@ -1294,10 +1302,18 @@ class LiveDiscoveryAdapter:
         try:
             report = await discover_candidates(provider, intent, fetch=read, top_k=10)
         except SearchError as exc:
-            trace.errors.append(f"search unavailable: {exc}")
+            trace.search_failures.append(search_failure_diagnostic(provider.name, exc))
             return
 
+        trace.search_failures.extend(report.failure_diagnostics)
         pages = selected[PageCategory.PROGRAM_PAGE]
+        if RECOVER_SEARCH_CANDIDATES:
+            await self._recover_search_pages(report.candidates, pages, trace, profile)
+            trace.errors.append(
+                f"search identity recovery via {report.provider}; queries {len(report.queries_run)}, "
+                f"failed {len(report.failed_queries)}, rejected {dict(report.rejection_counts)}"
+            )
+            return
         added = 0
         refused = getattr(self.fetcher, "refused_hosts", {})
         skipped: list[str] = []
@@ -1338,6 +1354,98 @@ class LiveDiscoveryAdapter:
             + f"; queries {len(report.queries_run)}, failed {len(report.failed_queries)}"
             + f", rejected {dict(report.rejection_counts)}"[:300]
         )
+
+    async def _recover_search_pages(self, candidates, pages, trace, profile) -> None:
+        """Fill programme slots from fetched identities rather than search snippets.
+
+        Existing confirmed catalogue/sitemap pages stay first. A rejected lead
+        frees a slot for the next search result. A host failure is kept as an
+        unresolved fallback, never preferred over a page that confirms identity.
+        """
+        from app.adapters.discovery.catalog_walker import extract_links, score_link
+        from app.adapters.extraction import html_to_text
+        from app.adapters.requirements.web_requirements import (
+            _LISTING_PAGE_TYPES,
+            _listed_programme,
+        )
+
+        fields = list(profile.context.intended_fields)
+        level = str(profile.context.level)
+        pending: list[str] = []
+        queue = list(candidates)
+        visited = set(pages)
+        checked = 0
+        added = 0
+        while queue:
+            if len(pages) >= MAX_PAGES_PER_CATEGORY or checked >= MAX_PROGRAM_CANDIDATES_CHECKED:
+                break
+            found = queue.pop(0)
+            if found.url in visited:
+                continue
+            visited.add(found.url)
+            checked += 1
+            result = await self.fetcher.get(found.url)
+            if not result.ok:
+                pending.append(found.url)
+                trace.reject(found.url, f"search lead unresolved ({result.outcome.value})")
+                continue
+            page = classify_page(url=found.url, html=result.text)
+            reason = profile_rejects(page, level, fields)
+            stated_level = page.degree_level
+            if reason is not None and page.page_type in _LISTING_PAGE_TYPES:
+                program = CandidateProgram(
+                    name=found.title,
+                    field=fields[0] if fields else "",
+                    degree=profile.context.level,
+                    url=found.url,
+                )
+                listed = _listed_programme(html_to_text(result.text), program)
+                if listed is not None:
+                    reason = None
+                    stated_level = listed[1]
+            if reason is None:
+                if stated_level != level:
+                    reason = "page does not state the requested degree level"
+                variants = re.findall(
+                    r"\b(?:teacher (?:education|training)|teaching (?:education|subject)"
+                    r"|digital literacy|minor|certificate|speciali[sz]ations?|second major"
+                    r"|double degree|final examination|final exam|degree plans?"
+                    r"|courses? for teachers?|recommended path|why computer science)\b",
+                    (page.subject or "") + " " + urlparse(found.url).path.replace("-", " "),
+                    flags=re.I,
+                )
+                if any(not any(v.lower() in f.lower() for f in fields) for v in variants):
+                    reason = (
+                        "page names an alternate programme variant not requested: "
+                        + ", ".join(variants)
+                    )
+            if reason is not None:
+                trace.reject(found.url, reason)
+                if page.page_type in _LISTING_PAGE_TYPES:
+                    # A search result can be the catalogue, not its detail
+                    # page. Follow its own matching links before trying more
+                    # search noise, sharing the same overall read bound.
+                    from app.adapters.search.retrieval import RankedCandidate
+
+                    leads = []
+                    for link in extract_links(result.text, found.url, trace.domain):
+                        value = score_link(link.url, link.label, level, fields)
+                        if value is None or not matches_field_text(link.label, fields):
+                            continue
+                        if link.url not in visited:
+                            leads.append(
+                                RankedCandidate(link.url, link.label, value, "search-catalogue")
+                            )
+                    leads.sort(key=lambda lead: (-lead.score, lead.url))
+                    queue[:0] = leads[: MAX_PROGRAM_CANDIDATES_CHECKED - checked]
+                continue
+            pages.append(found.url)
+            added += 1
+        # Unavailable pages remain leads only when no source confirmed the
+        # programme. Their failure is explicit in the trace and downstream.
+        if not pages:
+            pages.extend(pending[:MAX_PAGES_PER_CATEGORY])
+        trace.errors.append(f"search identity recovery: checked {checked}, confirmed {added}")
 
     def _apply(
         self,

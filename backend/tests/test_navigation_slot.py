@@ -31,12 +31,17 @@ async def _merge(monkeypatch, profile, tmp_path, *, slot: bool) -> tuple[list[st
             provider="fake",
             queries_run=(),
             failed_queries=(),
+            failure_diagnostics=(),
             rejection_counts={},
         )
 
     monkeypatch.setattr(search_pkg, "get_search_provider", lambda: object())
     monkeypatch.setattr(retrieval, "discover_candidates", fake_discover)
     monkeypatch.setattr(live, "NAVIGATION_SLOT", slot)
+    # This fixture isolates the earlier rank-only slot experiment and has no
+    # fetched page bodies. Content recovery is tested with real FetchResults
+    # in test_search_identity_recovery.py.
+    monkeypatch.setattr(live, "RECOVER_SEARCH_CANDIDATES", False)
 
     class _Fetcher:
         async def get(self, url):

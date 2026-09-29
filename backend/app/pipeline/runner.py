@@ -7,6 +7,7 @@ than from the beginning.
 
 from __future__ import annotations
 
+import json
 import logging
 import os
 import socket
@@ -19,8 +20,12 @@ from app.adapters.base import Candidate, CandidateProgram, PageOutcome
 from app.adapters.cost.web_costs import WebCostAdapter
 from app.adapters.discovery.catalog_walker import CatalogRenderer
 from app.adapters.discovery.fixture_discovery import FixtureDiscoveryAdapter
-from app.adapters.discovery.live_discovery import LiveDiscoveryAdapter, registry_campuses
-from app.adapters.documents.web_documents import WebDocumentsAdapter
+from app.adapters.discovery.live_discovery import (
+    MAX_PAGES_PER_CATEGORY,
+    LiveDiscoveryAdapter,
+    registry_campuses,
+)
+from app.adapters.documents.web_documents import DOCUMENT_CLAIM_TYPES, WebDocumentsAdapter
 from app.adapters.fetching import Fetcher
 from app.adapters.government.web_government import WebGovernmentAdapter
 from app.adapters.requirements.web_requirements import WebRequirementsAdapter
@@ -67,7 +72,7 @@ from app.models import (
 )
 from app.models.base import ensure_utc
 from app.pipeline.state import IN_PROGRESS_STAGES, RunState
-from app.schemas.claim import ClaimOut, UnresolvedQuestion
+from app.schemas.claim import Claim, ClaimOut, UnresolvedQuestion
 from app.schemas.profile import ApplicantProfileIn
 from app.schemas.result import ProgramResult, Tristate
 
@@ -445,6 +450,13 @@ class ResearchRunner:
 
         adapter = self._make_discovery_adapter(fetcher)
         self._candidates = await adapter.discover(self.profile, self.candidate_limit)
+        if isinstance(adapter, LiveDiscoveryAdapter):
+            failures = dict.fromkeys(
+                message for trace in adapter.traces for message in trace.search_failures
+            )
+            self._record_diagnostics(
+                [message for message in failures if message not in (self.run.errors or [])]
+            )
         # An adapter that over-delivers must not silently widen the run.
         if len(self._candidates) > self.candidate_limit:
             self._candidates = self._candidates[: self.candidate_limit]
@@ -503,7 +515,10 @@ class ResearchRunner:
                     url=None,
                 )
             ]
-            for prog in programs[:2]:
+            # Discovery supplies up to three programme leads. Cutting that list
+            # to two silently lost the real programme behind two noisy search
+            # results (Warsaw, 2026-09-28).
+            for prog in programs[:MAX_PAGES_PER_CATEGORY]:
                 key = dedupe.program_key(
                     cand.name, prog.name, prog.degree, self.intake, cand.country
                 )
@@ -693,7 +708,12 @@ class ResearchRunner:
             prog = CandidateProgram(
                 name=result.program, field="", degree=result.degree, url=result.program_url
             )
-            scholarships, ar = await adapter.find(cand, prog, self.profile)
+            scholarships, ar = await adapter.find(
+                cand,
+                prog,
+                self.profile,
+                allow_search=any(c.claim_type is ClaimType.PROGRAM_EXISTS for c in result.claims),
+            )
             errors.extend(ar.errors)
             self._record_page_outcomes(ar.page_outcomes)
             self.run.pages_checked += ar.pages_checked
@@ -1093,10 +1113,27 @@ class ResearchRunner:
                 checklist.result_id = result.id
                 self.run.pages_checked += ar.pages_checked
                 self.run.pages_failed += ar.pages_failed
+                errors.extend(ar.errors)
                 result.checklist = checklist
                 row.checklist = checklist.model_dump(mode="json")
+                read_urls = {
+                    page.url
+                    for page in ar.page_outcomes
+                    if page.category in {"fetched-ok", "no-pattern-match"}
+                }
+                added_claims = self._merge_document_claims(row.id, result, ar.claims, read_urls)
+                self.run.claims_recorded += added_claims
+                result.source_urls = sorted(
+                    set(result.source_urls) | {c.source_url for c in ar.claims}
+                )
                 self._update_result(row, result)
-                self._audit("checklist_built", "result", row.id, documents=len(ar.claims))
+                self._audit(
+                    "checklist_built",
+                    "result",
+                    row.id,
+                    documents=len(ar.claims),
+                    added_claims=added_claims,
+                )
                 built += 1
                 st.items_done = i + 1
                 self._save()
@@ -1273,20 +1310,94 @@ class ResearchRunner:
             synchronize_session=False
         )
 
-    def _store_claims(self, result_id: str, claims) -> None:
-        for c in claims:
-            self.session.add(
-                ClaimRow(
-                    run_id=self.run.id,
-                    result_id=result_id,
-                    claim_type=c.claim_type.value,
-                    status=c.status.value,
-                    source_url=c.source_url,
-                    source_specificity=c.source_specificity.value,
-                    accessed_at=c.accessed_at,
-                    payload=c.model_dump(mode="json"),
-                )
+    def _merge_document_claims(
+        self, result_id: str, result: ProgramResult, claims: list[Claim], read_urls: set[str]
+    ) -> int:
+        """Persist document proof, refreshing identical reads without losing history.
+
+        A read timestamp does not make a new fact. The remaining value, scope
+        and provenance do: never collapse different forms or populations.
+        Failed reads add nothing and leave earlier evidence untouched.
+        """
+        stored_by_key = {
+            _document_claim_key(Claim.model_validate(row.payload)): row
+            for row in self.session.query(ClaimRow).filter(
+                ClaimRow.result_id == result_id,
+                ClaimRow.claim_type.in_([kind.value for kind in DOCUMENT_CLAIM_TYPES]),
+                ClaimRow.status != ClaimStatus.SUPERSEDED.value,
             )
+        }
+        indices = {
+            _document_claim_key(_from_out(claim)): index
+            for index, claim in enumerate(result.claims)
+            if claim.claim_type in DOCUMENT_CLAIM_TYPES
+            and claim.status is not ClaimStatus.SUPERSEDED
+        }
+        previous = dict(stored_by_key)
+        reread: dict[str, ClaimRow] = {}
+        added = 0
+        for claim in claims:
+            key = _document_claim_key(claim)
+            stored = stored_by_key.get(key)
+            if stored is None:
+                stored = self._store_claims(result_id, [claim])[0]
+                stored_by_key[key] = stored
+                added += 1
+            else:
+                stored.accessed_at = claim.accessed_at
+                stored.payload = claim.model_dump(mode="json")
+            reread[key] = stored
+            out = _to_out(claim, stored.id)
+            if key in indices:
+                result.claims[indices[key]] = out
+            else:
+                indices[key] = len(result.claims)
+                result.claims.append(out)
+        if added:
+            # The self-FK requires new successors to exist before history
+            # rows can point at them, including on PostgreSQL.
+            self.session.flush()
+        for key, stored in previous.items():
+            if key in reread or stored.source_url not in read_urls:
+                continue
+            old = Claim.model_validate(stored.payload)
+            stored.status = ClaimStatus.SUPERSEDED.value
+            stored.payload = old.model_copy(update={"status": ClaimStatus.SUPERSEDED}).model_dump(
+                mode="json"
+            )
+            stored.superseded_at = datetime.now(UTC)
+            successors = [
+                row
+                for row in reread.values()
+                if _document_subject(Claim.model_validate(row.payload)) == _document_subject(old)
+            ]
+            # Several source blocks can name this subject. A lineage link is
+            # safe only when this read states exactly one replacement.
+            if len(successors) == 1:
+                stored.superseded_by_id = successors[0].id
+            if key in indices:
+                result.claims[indices[key]] = result.claims[indices[key]].model_copy(
+                    update={"status": ClaimStatus.SUPERSEDED}
+                )
+        return added
+
+    def _store_claims(self, result_id: str, claims) -> list[ClaimRow]:
+        rows = []
+        for c in claims:
+            row = ClaimRow(
+                id=new_id(),
+                run_id=self.run.id,
+                result_id=result_id,
+                claim_type=c.claim_type.value,
+                status=c.status.value,
+                source_url=c.source_url,
+                source_specificity=c.source_specificity.value,
+                accessed_at=c.accessed_at,
+                payload=c.model_dump(mode="json"),
+            )
+            self.session.add(row)
+            rows.append(row)
+        return rows
 
     def _store_conflicts(self, result_id: str, conflicts) -> None:
         for c in conflicts:
@@ -1302,6 +1413,29 @@ class ResearchRunner:
 
 
 # --- small helpers ------------------------------------------------------
+
+
+def _document_claim_key(claim: Claim) -> str:
+    return json.dumps(
+        claim.model_dump(mode="json", exclude={"accessed_at"}),
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+
+
+def _document_subject(claim: Claim) -> tuple:
+    value = claim.normalized_value
+    subject = (value.get("document"), value.get("status")) if isinstance(value, dict) else value
+    return (
+        claim.claim_type,
+        claim.source_url,
+        claim.subject_key,
+        subject,
+        claim.program,
+        claim.intake,
+        claim.academic_year,
+        claim.scope,
+    )
 
 
 def _to_out(claim, claim_id: str) -> ClaimOut:

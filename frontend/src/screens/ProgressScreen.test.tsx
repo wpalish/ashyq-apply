@@ -179,7 +179,7 @@ describe('diagnostics', () => {
 
     expect(screen.getByText('What could not be confirmed')).toBeInTheDocument();
     expect(screen.getByText(/This is normal/)).toBeInTheDocument();
-    expect(screen.getByText('Fetch failures')).toBeInTheDocument();
+    expect(screen.getByText('Research failures')).toBeInTheDocument();
   });
 
   it('shows no failure panel on a clean run, however many unknowns there are', () => {
@@ -192,7 +192,7 @@ describe('diagnostics', () => {
     render(<ProgressScreen onDone={() => {}} />);
 
     expect(screen.getByTestId('unknowns-panel')).toHaveTextContent('47');
-    expect(screen.queryByText('Fetch failures')).toBeNull();
+    expect(screen.queryByText('Research failures')).toBeNull();
   });
 
   it('still renders an older run that predates the split', () => {
@@ -204,7 +204,7 @@ describe('diagnostics', () => {
     delete (currentRun as { unknowns?: unknown }).unknowns;
     render(<ProgressScreen onDone={() => {}} />);
 
-    expect(screen.getByText('Fetch failures')).toBeInTheDocument();
+    expect(screen.getByText('Research failures')).toBeInTheDocument();
   });
 });
 
@@ -240,5 +240,33 @@ describe('work the queue gave up on', () => {
 
     expect(await screen.findByText(/of stages complete/)).toBeInTheDocument();
     expect(screen.queryByTestId('dead-jobs')).toBeNull();
+  });
+});
+
+
+describe('search provider failures', () => {
+  it('shows a degraded completed search separately from unread pages and unknown facts', () => {
+    currentRun = makeRun({
+      stage: 'awaiting_user_decision',
+      stages: makeRun().stages.map((s) => ({ ...s, status: 'done' })),
+      errors: ['Search service unavailable (serper; HTTP 400).', 'programme page: timeout'],
+      unknowns: ['award page does not state the deadline'],
+    });
+    render(<ProgressScreen onDone={() => {}} />);
+
+    const failuresPanel = screen.getByText('Research failures').closest('section');
+    expect(failuresPanel).toHaveTextContent('2 issues limited this research');
+    expect(screen.getByText('Search service unavailable')).toBeInTheDocument();
+    expect(screen.getByText('Temporary fetch issue')).toBeInTheDocument();
+    expect(screen.getByTestId('unknowns-panel')).toHaveTextContent('award page does not state');
+    expect(screen.queryByText('Page could not be interpreted')).toBeNull();
+    expect(failuresPanel).not.toHaveTextContent('2 pages');
+    expect(failuresPanel).not.toHaveTextContent('quota');
+  });
+
+  it('recognizes the safe diagnostic stored by older funding runs', () => {
+    currentRun = makeRun({ errors: ['Official scholarship search unavailable: SearchUnavailable'] });
+    render(<ProgressScreen onDone={() => {}} />);
+    expect(screen.getByText('Search service unavailable')).toBeInTheDocument();
   });
 });
