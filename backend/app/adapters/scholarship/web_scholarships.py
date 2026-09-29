@@ -33,6 +33,7 @@ from app.adapters.extraction import (
 from app.adapters.fetching import Fetcher, FetchResult
 from app.adapters.html_parse import parse_html
 from app.adapters.page_classifier import PageType, classify_page, main_content
+from app.adapters.scholarship.conditional_benefits import read_conditional_policy
 from app.adapters.scope_reader import read_scope
 from app.domain.enums import (
     ApplicationMode,
@@ -594,6 +595,22 @@ class WebScholarshipAdapter:
             )
             for c in sch.coverage:
                 c.claim_ids.append(url)
+
+        # Keep conditional scheme evidence without turning it into aid the
+        # applicant can count on. Only the existing table route sets coverage.
+        if not sch.coverage:
+            policy = read_conditional_policy(html, builder.claims)
+            if policy is not None:
+                builder.add(
+                    ClaimType.SCHOLARSHIP_COVERAGE,
+                    policy.value,
+                    policy.quote,
+                    section="Benefits of award",
+                    notes=(
+                        "These conditional benefits are stated by the scheme. Applicant eligibility "
+                        "and other award terms must be checked separately before counting them as aid."
+                    ),
+                )
 
         # --- eligibility -------------------------------------------------
         # This award page exists and names an award; that alone is the only
