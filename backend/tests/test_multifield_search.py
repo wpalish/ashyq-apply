@@ -15,6 +15,7 @@ from app.adapters.discovery.live_discovery import (
     DiscoveryTrace,
     LiveDiscoveryAdapter,
     PageCategory,
+    matches_field_text,
 )
 from app.adapters.fetching import Fetcher
 from app.adapters.requirements.web_requirements import WebRequirementsAdapter
@@ -158,6 +159,34 @@ async def test_unrelated_listing_title_cannot_fill_a_programme_slot(tmp_path, pr
 
 
 @pytest.mark.asyncio
+async def test_unreadable_search_leads_cannot_become_multifield_programmes(
+    tmp_path, profile, monkeypatch
+):
+    profile.context.intended_fields = ["Computer Science", "Mathematics"]
+    computer_url = "https://uni.edu/programmes/bsc-computer-science"
+    provider, _site, selected, trace, candidate, claims = await _search(
+        tmp_path,
+        profile,
+        monkeypatch,
+        {
+            _query(profile, "Computer Science"): [(computer_url, "BSc Computer Science", "")],
+            _query(profile, "Mathematics"): [(MATH_URL, "BSc Mathematics", "")],
+        },
+        {},
+    )
+
+    assert len(provider.calls) == 6
+    assert selected[PageCategory.PROGRAM_PAGE] == []
+    assert candidate.programs == []
+    assert claims == []
+    assert trace.field_sources == {}
+    assert trace.search_coverage == {"requested": 2, "queried": 2, "represented": 0}
+    assert any("confirmed 0" in error for error in trace.errors)
+    assert any("unresolved" in reason for _url, reason in trace.rejected)
+    assert any("could not be read" in message for message in trace.search_limitations)
+
+
+@pytest.mark.asyncio
 async def test_official_listing_title_can_confirm_the_second_field(tmp_path, profile, monkeypatch):
     profile.context.intended_fields = ["Computer Science", "Mathematics"]
     listing_url = "https://uni.edu/school"
@@ -179,6 +208,27 @@ async def test_official_listing_title_can_confirm_the_second_field(tmp_path, pro
     assert candidate.programs[0].field == "Mathematics"
     assert trace.field_sources[listing_url]["basis"] == "full_degree_title_on_listing"
     assert any(claim.claim_type == ClaimType.PROGRAM_EXISTS for claim in claims)
+
+
+@pytest.mark.asyncio
+async def test_mathematical_sciences_official_page_matches_mathematics(
+    tmp_path, profile, monkeypatch
+):
+    profile.context.intended_fields = ["Computer Science", "Mathematics"]
+    maths_url = "https://uni.edu/programmes/bsc-mathematical-sciences"
+    _provider, _site, selected, trace, candidate, claims = await _search(
+        tmp_path,
+        profile,
+        monkeypatch,
+        {_query(profile, "Mathematics"): [(maths_url, "BSc in Mathematical Sciences", "")]},
+        {maths_url: program_html("BSc in Mathematical Sciences")},
+    )
+
+    assert selected[PageCategory.PROGRAM_PAGE] == [maths_url]
+    assert candidate.programs[0].field == "Mathematics"
+    assert trace.field_sources[maths_url]["subject"] == "BSc in Mathematical Sciences"
+    assert any(claim.claim_type == ClaimType.PROGRAM_EXISTS for claim in claims)
+    assert not matches_field_text("BSc in Applied Mathematical Sciences", ["Mathematics"])
 
 
 @pytest.mark.asyncio

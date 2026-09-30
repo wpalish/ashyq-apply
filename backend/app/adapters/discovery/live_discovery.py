@@ -1645,8 +1645,9 @@ class LiveDiscoveryAdapter:
         """Fill programme slots from fetched identities rather than search snippets.
 
         Existing confirmed catalogue/sitemap pages stay first. A rejected lead
-        frees a slot for the next search result. A host failure is kept as an
-        unresolved fallback, never preferred over a page that confirms identity.
+        frees a slot for the next search result. The legacy single-field path
+        keeps host failures as unresolved leads; a multi-field result requires
+        source-backed field identity before it can become a programme.
         """
         from app.adapters.discovery.catalog_walker import extract_links, score_link
         from app.adapters.extraction import html_to_text
@@ -1767,10 +1768,17 @@ class LiveDiscoveryAdapter:
                     basis=basis,
                     source_url=result.final_url or found.url,
                 )
-        # Unavailable pages remain leads only when no source confirmed the
-        # programme. Their failure is explicit in the trace and downstream.
-        if not pages:
+        # Preserve the legacy single-field lead fallback. In a multi-field
+        # run, a search title cannot establish which subject an unreadable
+        # page actually covers, so keep the failure only in diagnostics.
+        if not pages and not multi_requested:
             pages.extend(pending[:MAX_PAGES_PER_CATEGORY])
+        if multi_requested and pending:
+            trace.search_limitations.append(
+                f"Search coverage limited at {trace.institution}: "
+                f"{len(pending)} programme lead(s) could not be read, so their "
+                "subjects were not confirmed from the source page."
+            )
         trace.errors.append(f"search identity recovery: checked {checked}, confirmed {added}")
 
     def _apply(
