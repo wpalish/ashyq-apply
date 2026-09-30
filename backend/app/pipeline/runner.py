@@ -458,8 +458,15 @@ class ResearchRunner:
             failures = dict.fromkeys(
                 message for trace in adapter.traces for message in trace.search_failures
             )
+            limitations = dict.fromkeys(
+                message for trace in adapter.traces for message in trace.search_limitations
+            )
             self._record_diagnostics(
-                [message for message in failures if message not in (self.run.errors or [])]
+                [
+                    message
+                    for message in (*failures, *limitations)
+                    if message not in (self.run.errors or [])
+                ]
             )
         # An adapter that over-delivers must not silently widen the run.
         if len(self._candidates) > self.candidate_limit:

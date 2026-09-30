@@ -461,16 +461,10 @@ class TestVerifyClaim:
 
 
 class TestMultiPartPublicSuffixAgreement:
-    """``claim_verifier._MULTIPART_PUBLIC_SUFFIXES`` and the discovery layer's
-    ``live_discovery.MULTIPART_SUFFIXES`` must agree. For a host under a
-    multi-part suffix the verifier does not list, ``registrable_domain``
-    returns the public suffix itself, so two different universities under the
-    same suffix collapse into one "registrable domain":
+    """The shared PSL keeps historical multi-part university suffixes distinct.
 
-    registrable_domain("uw.edu.pl") -> "edu.pl" == registrable_domain("pw.edu.pl")
-    -> url_matches_domains True -> is_official_domain True -> VERIFIED_CURRENT
-    claims published from a DIFFERENT institution's page. For *.edu.kz (the
-    home market) the official-domain check is entirely vacuous.
+    Two universities under ``edu.pl`` or ``edu.kz`` must never collapse into
+    one official domain, including if the bundled suffix data changes.
     """
 
     def test_a_sibling_university_under_edu_pl_is_not_the_allowed_domain(self):
@@ -498,19 +492,12 @@ class TestMultiPartPublicSuffixAgreement:
         assert url_matches_domains("https://www.ox.ac.uk/x", ["ox.ac.uk"]) is True
 
     def test_the_verifier_suffix_table_covers_the_discovery_table(self):
-        """Structural guard against future divergence, both sides imported:
-        every multi-part suffix the discovery layer knows must also be known
-        to the verifier. domain/ may not import app.adapters.*, so the test
-        holds the two tables next to each other (the same pattern as the
-        page-type mirror guard above)."""
+        """Every historically protected suffix resolves through the shared PSL."""
         from app.adapters.discovery.live_discovery import MULTIPART_SUFFIXES
-        from app.domain import claim_verifier
 
-        missing = sorted(set(MULTIPART_SUFFIXES) - set(claim_verifier._MULTIPART_PUBLIC_SUFFIXES))
-        assert not missing, (
-            "claim_verifier._MULTIPART_PUBLIC_SUFFIXES is missing multi-part "
-            f"public suffixes known to live_discovery.MULTIPART_SUFFIXES: {missing}"
-        )
+        for suffix in MULTIPART_SUFFIXES:
+            assert registrable_domain(f"www.university.{suffix}") == f"university.{suffix}"
+            assert not url_matches_domains(f"https://attacker.{suffix}/", [f"university.{suffix}"])
 
     @pytest.mark.asyncio
     async def test_a_sibling_university_page_is_never_verified_current(self, tmp_path, monkeypatch):

@@ -49,7 +49,7 @@ from app.adapters.discovery.live_discovery import (
     registrable_domain,
     same_institution,
 )
-from app.adapters.fetching import Fetcher, FetchResult
+from app.adapters.fetching import Fetcher, FetchResult, same_source_site
 from app.adapters.html_parse import parse_html
 from app.adapters.page_classifier import (
     PageClassification,
@@ -155,6 +155,8 @@ class CatalogWalk:
     candidates: list[WalkerLink] = field(default_factory=list)
     #: Pages read and confirmed as programme pages for this applicant.
     confirmed: list[str] = field(default_factory=list)
+    #: The classified subject of each confirmed official page, for field attribution.
+    confirmed_subjects: dict[str, str] = field(default_factory=dict)
     #: (url, frozen outcome) for every link the walk decided something about.
     outcomes: list[tuple[str, str]] = field(default_factory=list)
 
@@ -490,7 +492,10 @@ class CatalogWalker:
             walk.outcomes.append((url, outcome))
 
         candidates: dict[str, WalkerLink] = {}
-        for _response_url, _content_type, body in payloads:
+        for response_url, _content_type, body in payloads:
+            if not same_institution(response_url, self.domain):
+                walk.outcomes.append((response_url, "off_domain_json"))
+                continue
             for name, url in parse_catalog_json(body, base_url=catalogue_url):
                 if not same_institution(url, self.domain):
                     walk.outcomes.append((url, "off_domain"))
@@ -582,6 +587,9 @@ class CatalogWalker:
     async def _read_lead(self, link: WalkerLink, walk: CatalogWalk) -> None:
         """Fetch, classify and judge one lead; record exactly one outcome."""
         result = await self.fetcher.get(link.url)
+        if result.ok and not same_source_site(link.url, result.final_url or link.url):
+            walk.outcomes.append((link.url, "off_domain_redirect"))
+            return
         page: PageClassification | None = None
         if result.ok:
             page = classify_page(url=result.final_url or link.url, html=result.text)
@@ -609,6 +617,7 @@ class CatalogWalker:
             )
             return
         walk.confirmed.append(link.url)
+        walk.confirmed_subjects[link.url] = page.subject or ""
         walk.outcomes.append((link.url, page.page_type.value))
 
     async def _read_catalogue(
@@ -632,10 +641,14 @@ class CatalogWalker:
                 log.warning("catalogue render failed for %s: %s", catalogue_url[:120], exc)
             else:
                 if rendered.ok:
+                    if not same_source_site(catalogue_url, rendered.final_url or catalogue_url):
+                        return "", [], "off_domain_redirect"
                     return rendered.text, list(payloads), None
         result = await self.fetcher.get(catalogue_url)
         if not result.ok:
             return "", [], result.outcome.value
+        if not same_source_site(catalogue_url, result.final_url or catalogue_url):
+            return "", [], "off_domain_redirect"
         html = result.text
         page = classify_page(url=result.final_url or catalogue_url, html=html)
         if page.page_type in _NOT_CATALOGUE_TYPES:

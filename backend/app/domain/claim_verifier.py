@@ -48,6 +48,8 @@ from typing import Final, cast
 from urllib.parse import urlparse
 
 from app.domain.enums import ClaimType
+from app.domain.site_identity import hosts_share_site
+from app.domain.site_identity import registrable_domain as site_domain
 
 __all__ = [
     "CLAIM_TYPE_PAGE_TYPES",
@@ -204,21 +206,12 @@ def value_in_range(claim_type: ClaimType, value: object, *, today: date) -> bool
 
 # --- domain matching --------------------------------------------------------
 #
-# There is no public-suffix list dependency in this project, so the
-# "registrable domain" is computed conservatively: two labels, or three when
-# the last two are a known multi-part public suffix. That covers every shape
-# this pipeline meets — university hosts, the official-TLD rule below, and
-# attacker hosts like narxoz.kz.attacker.example (whose registrable domain
-# is attacker.example, whatever the label says).
+# The actual registrable-domain comparison uses the shared bundled PSL in
+# app.domain.site_identity, including private hosting suffixes. It performs
+# no network update or user-cache write.
 
-# Kept as domain-level data even though the discovery layer carries its own
-# copy (live_discovery.MULTIPART_SUFFIXES): domain/ must not import from
-# app.adapters.*. The duplication is deliberate, and
-# test_claim_verifier.TestMultiPartPublicSuffixAgreement.
-# test_the_verifier_suffix_table_covers_the_discovery_table is the divergence
-# guard — it fails if the discovery table grows without this table following.
-# The reverse direction (an entry here that discovery lacks, e.g. govt.nz) is
-# intentionally allowed: this table only has to be at least as wide.
+# This historical suffix coverage table remains for the regression tests and
+# earlier audit record. It no longer makes host identity decisions.
 _MULTIPART_PUBLIC_SUFFIXES: Final[frozenset[str]] = frozenset(
     {
         "ac.at",
@@ -371,11 +364,7 @@ def states_a_requirement_without_settling_it(excerpt: str, value: object = None)
 def registrable_domain(host: str) -> str:
     """The host reduced to its registrable domain (``www.narxoz.kz`` ->
     ``narxoz.kz``; ``narxoz.kz.attacker.example`` -> ``attacker.example``)."""
-    labels = [part for part in host.lower().strip().rstrip(".").split(".") if part]
-    if len(labels) <= 2:
-        return ".".join(labels)
-    keep = 3 if ".".join(labels[-2:]) in _MULTIPART_PUBLIC_SUFFIXES else 2
-    return ".".join(labels[-keep:])
+    return site_domain(host)
 
 
 def url_matches_domains(url: str, allowed_domains: Iterable[str]) -> bool:
@@ -384,9 +373,12 @@ def url_matches_domains(url: str, allowed_domains: Iterable[str]) -> bool:
     Only the host decides: the university's name inside a query parameter or
     a path segment is a spoof, not a source.
     """
-    host = urlparse(url).hostname or ""
-    registrable = registrable_domain(host)
-    return any(registrable == registrable_domain(d) for d in allowed_domains if d)
+    try:
+        if urlparse(url).scheme not in ("http", "https", "fixture"):
+            return False
+    except ValueError:
+        return False
+    return any(hosts_share_site(url, d) for d in allowed_domains if d)
 
 
 # --- the page-type table ----------------------------------------------------
