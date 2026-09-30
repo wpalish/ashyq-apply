@@ -32,7 +32,7 @@ from app.adapters.extraction import (
     readable_text,
     verification_domains,
 )
-from app.adapters.fetching import Fetcher
+from app.adapters.fetching import Fetcher, same_source_site
 from app.adapters.matching import degree_matches, program_matches
 from app.adapters.page_classifier import (
     PageType,
@@ -188,6 +188,19 @@ class WebRequirementsAdapter:
                 ):
                     out.retry_urls.append(target.url)
                 continue
+            if not same_source_site(target.url, res.final_url or target.url):
+                out.pages_failed += 1
+                out.errors.append(
+                    f"{target.url}: redirected off the source site; no requirements verified"
+                )
+                out.page_outcomes.append(
+                    PageOutcome(
+                        url=target.url,
+                        category="fetch-failed",
+                        detail="redirected off the source site",
+                    )
+                )
+                continue
 
             text = pdf_to_text(res.content) if res.is_pdf else readable_text(res.text)
             if not text.strip():
@@ -204,12 +217,35 @@ class WebRequirementsAdapter:
                 )
                 continue
 
-            page = classify_page(url=target.url, html="" if res.is_pdf else res.text, text=text)
+            page_url = res.final_url or target.url
+            page = classify_page(url=page_url, html="" if res.is_pdf else res.text, text=text)
             out.page_types.append((target.url, page.page_type.value))
 
-            page_title = html_title(res.text) if not res.is_pdf else target.url.rsplit("/", 1)[-1]
+            if (
+                target.url == program.url
+                and page.accepts("program_exists")
+                and page.degree_level
+                and program.degree
+                and str(page.degree_level) != str(program.degree)
+            ):
+                out.errors.append(
+                    f"{target.url}: final page {page_url} names {page.degree_level}; "
+                    f"cannot verify the requested {program.degree} programme"
+                )
+                out.page_outcomes.append(
+                    PageOutcome(
+                        url=target.url,
+                        category="classifier-rejected",
+                        page_type=page.page_type.value,
+                        readable_chars=len(text),
+                        detail="final page names a different degree level",
+                    )
+                )
+                continue
+
+            page_title = html_title(res.text) if not res.is_pdf else page_url.rsplit("/", 1)[-1]
             builder = ClaimBuilder(
-                source_url=target.url,
+                source_url=page_url,
                 page_title=page_title,
                 specificity=(
                     SourceSpecificity.PROGRAM_INTAKE
@@ -219,8 +255,8 @@ class WebRequirementsAdapter:
                 program=program.name,
                 intake=intake,
                 academic_year=page.academic_year or self.academic_year,
-                official_domain=target.url.startswith("fixture://")
-                or is_official_domain(target.url, [candidate.domain]),
+                official_domain=page_url.startswith("fixture://")
+                or is_official_domain(page_url, [candidate.domain]),
                 extraction_method="fixture" if target.url.startswith("fixture://") else "html_rule",
                 accessed_at=res.fetched_at,
                 # Read from the page's own words only. The programme, intake
@@ -233,7 +269,7 @@ class WebRequirementsAdapter:
                 # claim (found in the owner's adversarial review, 2026-09-25).
                 page_text=text,
                 page_type=page.page_type.value,
-                allowed_domains=verification_domains(target.url, candidate.domain),
+                allowed_domains=verification_domains(page_url, candidate.domain),
             )
 
             if not page.accepts("requirements"):
@@ -267,7 +303,7 @@ class WebRequirementsAdapter:
                     # whatever type it reads as. Only the structural IELTS reader runs;
                     # verbatim and domain checks still apply to what it reads.
                     tabled = extract_table_requirements(
-                        build_document_ir(res.text, target.url), builder
+                        build_document_ir(res.text, page_url), builder
                     )
                     if tabled:
                         out.claims.extend(builder.claims)
@@ -329,7 +365,7 @@ class WebRequirementsAdapter:
                 # already answered is dropped, so one page never states two
                 # IELTS minimums from two readings of itself.
                 tabled = (
-                    extract_table_requirements(build_document_ir(res.text, target.url), builder)
+                    extract_table_requirements(build_document_ir(res.text, page_url), builder)
                     if not res.is_pdf
                     else []
                 )
@@ -369,7 +405,7 @@ class WebRequirementsAdapter:
                 and not res.is_pdf
                 and not any(c.claim_type is ClaimType.IELTS_MIN_OVERALL for c in out.claims)
             ):
-                for url in _language_links(res.text, target.url, candidate.domain):
+                for url in _language_links(res.text, page_url, candidate.domain):
                     if url in visited or followed >= _MAX_LANGUAGE_FOLLOWS:
                         continue
                     visited.add(url)

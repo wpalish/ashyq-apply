@@ -17,8 +17,9 @@ import logging
 from collections.abc import Callable
 from datetime import UTC, datetime
 from typing import Any
+from urllib.parse import urlparse
 
-from app.adapters.fetching import Fetcher, FetchResult, assert_no_pii
+from app.adapters.fetching import Fetcher, FetchResult, assert_no_pii, same_source_site
 from app.adapters.network_policy import BlockedRequest, check_url, is_allowed
 from app.domain.enums import FetchOutcome
 
@@ -217,6 +218,7 @@ class BrowserFetcher:
                 except (AttributeError, PlaywrightError):
                     await page.wait_for_timeout(1200)  # let late content settle
                 html = await page.content()
+                final_url = str(getattr(page, "url", url) or url)
             except Exception as exc:
                 log.info("browser render failed for %s: %s", url, exc)
                 return FetchResult(url=url, outcome=FetchOutcome.TIMEOUT, error=str(exc)[:300])
@@ -234,6 +236,14 @@ class BrowserFetcher:
                     outcome=FetchOutcome.UNPARSEABLE,
                     error="browser navigation returned no response (no status to trust)",
                 )
+            if not same_source_site(url, final_url):
+                log.warning("browser tier left the requested host %s", urlparse(url).hostname)
+                return FetchResult(
+                    url=url,
+                    outcome=FetchOutcome.BLOCKED,
+                    error="browser navigation left the requested site's domain",
+                    final_url=final_url,
+                )
             if resp.status >= 400:
                 log.info("browser tier got HTTP %s for %s", resp.status, url)
                 return FetchResult(
@@ -241,7 +251,7 @@ class BrowserFetcher:
                     outcome=FetchOutcome.HTTP_ERROR,
                     status_code=resp.status,
                     error=f"HTTP {resp.status} on the rendered page",
-                    final_url=url,
+                    final_url=final_url,
                 )
 
             return FetchResult(
@@ -252,7 +262,7 @@ class BrowserFetcher:
                 text=html,
                 content_type="text/html; charset=utf-8",
                 fetched_at=datetime.now(UTC),
-                final_url=url,
+                final_url=final_url,
             )
 
 

@@ -41,7 +41,7 @@ from urllib.parse import urljoin, urlparse, urlunparse
 from xml.etree import ElementTree
 
 from app.adapters.base import Candidate, CandidateProgram, PageOutcome
-from app.adapters.fetching import Fetcher
+from app.adapters.fetching import Fetcher, same_source_site
 from app.adapters.html_parse import parse_html
 from app.adapters.page_classifier import (
     PageClassification,
@@ -49,6 +49,8 @@ from app.adapters.page_classifier import (
     classify_page,
 )
 from app.adapters.search.ontology import canonical_field, load_ontology
+from app.domain.site_identity import hosts_share_site
+from app.domain.site_identity import registrable_domain as site_domain
 from app.schemas.profile import ApplicantProfileIn
 from app.schemas.result import RankingEntry
 
@@ -120,9 +122,8 @@ SITEMAP_FALLBACK_PATHS = (
     "/sitemap/sitemap.xml",
 )
 
-#: Multi-part public suffixes common among universities. Used to work out the
-#: registrable domain without depending on the full public suffix list: "same
-#: domain" must mean rug.nl and www.rug.nl, not ac.uk and anything under it.
+#: Historical suffix coverage pinned by test_claim_verifier. Actual host
+#: identity now uses the shared bundled PSL, including private hosting suffixes.
 MULTIPART_SUFFIXES = frozenset(
     {
         "ac.uk",
@@ -344,28 +345,18 @@ def registrable_domain(host_or_url: str) -> str:
     every comparison would answer "different institution" and discovery would
     quietly find nothing.
     """
-    host = (host_or_url or "").strip().lower().rstrip(".")
-    if not host:
-        return ""
-    if "/" in host or ":" in host:
-        host = urlparse(host if "//" in host else f"//{host}").hostname or ""
-        if not host:
-            return ""
-    labels = host.split(".")
-    if len(labels) <= 2:
-        return host
-    if ".".join(labels[-2:]) in MULTIPART_SUFFIXES:
-        return ".".join(labels[-3:])
-    return ".".join(labels[-2:])
+    return site_domain(host_or_url)
 
 
 def same_institution(url: str, domain: str) -> bool:
     """Whether a URL belongs to the institution that owns ``domain``."""
     try:
-        host = urlparse(url).hostname or ""
+        scheme = urlparse(url).scheme
     except ValueError:
         return False
-    return bool(host) and registrable_domain(host) == registrable_domain(domain)
+    if scheme not in ("http", "https"):
+        return False
+    return hosts_share_site(url, domain)
 
 
 #: Query parameters that identify a referral rather than select content.
@@ -611,7 +602,57 @@ def matches_field_text(label: str, fields: list[str]) -> bool:
     return False
 
 
-#: Words a programme title carries besides its subject: level, form, and the
+def _distinct_fields(fields: list[str]) -> list[str]:
+    """Keep applicant order while avoiding duplicate paid subject searches."""
+    distinct: list[str] = []
+    seen: set[str] = set()
+    for raw in fields:
+        field_name = raw.strip()
+        key = field_name.casefold()
+        if field_name and key not in seen:
+            seen.add(key)
+            distinct.append(field_name)
+    return distinct
+
+
+def _public_requested_fields(profile: ApplicantProfileIn, trace: DiscoveryTrace) -> list[str]:
+    """Use only privacy-validated subjects for page matching and attribution.
+
+    The search intent rejects profile-like text before sending it to a provider.
+    The same boundary must hold for sitemap, navigation, and fetched-page
+    identity; otherwise a rejected field could still become a claim or trace.
+    """
+    if trace.public_fields is None:
+        from app.adapters.search.intent import _reject_applicant_data
+
+        raw = list(profile.context.intended_fields)
+        candidates = _distinct_fields(raw) if len(raw) > 1 else raw
+        trace.public_fields = []
+        for field_name in candidates:
+            try:
+                if not field_name.strip():
+                    continue
+                _reject_applicant_data("field", field_name)
+            except ValueError:
+                # QueryPrivacyError embeds the raw value. Never log it here.
+                continue
+            trace.public_fields.append(field_name)
+    return trace.public_fields
+
+
+def _field_named_by_subject(subject: str, fields: list[str]) -> str:
+    """Name a requested field only when the fetched page's own subject does."""
+    return next(
+        (
+            field_name
+            for field_name in _distinct_fields(fields)
+            if matches_field_text(subject, [field_name])
+        ),
+        "",
+    )
+
+
+#: Words a programme title carries besides its subject: level, form, and the
 #: procedure notes Vienna appends ("with entrance exam procedure").
 _TITLE_FILLER = frozenset(
     {
@@ -680,7 +721,9 @@ def profile_rejects(
         return f"reads as {page.page_type.value}, not a programme page"
     if page.degree_level and page.degree_level != requested_level:
         return f"page names degree level {page.degree_level}, not {requested_level}"
-    if fields and not matches_field_text(page.subject or "", fields):
+    if not fields:
+        return "no privacy-safe requested subject to confirm"
+    if not matches_field_text(page.subject or "", fields):
         return f"page subject {page.subject!r} does not match requested fields {fields!r}"
     return None
 
@@ -740,6 +783,17 @@ class DiscoveryTrace:
     errors: list[str] = field(default_factory=list)
     #: Safe search failures only; informational trace entries stay out of run.errors.
     search_failures: list[str] = field(default_factory=list)
+    #: Query/slot limits are research limitations, not vendor outages.
+    search_limitations: list[str] = field(default_factory=list)
+    #: Fetched official programme subjects, keyed by canonical URL.
+    field_sources: dict[str, dict[str, str]] = field(default_factory=dict)
+    #: A search query's field for an unreadable lead; never source evidence.
+    field_hints: dict[str, str] = field(default_factory=dict)
+    #: Validated public fields only; internal, never serialised with the trace.
+    public_fields: list[str] | None = None
+    #: Subjects assigned a provider query in this run, for coverage accounting.
+    queried_fields: list[str] = field(default_factory=list)
+    search_coverage: dict[str, int] = field(default_factory=dict)
     used_navigation_fallback: bool = False
     #: (url, link text) for leads found by a catalogue's own wording rather
     #: than by the URL, so the report can show what the wording was.
@@ -767,9 +821,32 @@ class DiscoveryTrace:
             "rejected_total": len(self.rejected),
             "errors": self.errors,
             "search_failures": self.search_failures,
+            "search_limitations": self.search_limitations,
+            "field_sources": self.field_sources,
+            "search_coverage": self.search_coverage,
             "used_navigation_fallback": self.used_navigation_fallback,
             "kept_by_link_text": self.kept_by_link_text,
             "walker": dict(self.walker),
+        }
+
+
+def _remember_field_source(
+    trace: DiscoveryTrace,
+    *,
+    url: str,
+    subject: str,
+    fields: list[str],
+    basis: str,
+    source_url: str = "",
+) -> None:
+    """Retain which official page named the applicant's field."""
+    matched = _field_named_by_subject(subject, fields)
+    if matched:
+        trace.field_sources[canonical_url(url)] = {
+            "field": matched,
+            "source_url": source_url or url,
+            "subject": subject,
+            "basis": basis,
         }
 
 
@@ -866,6 +943,9 @@ class SitemapReader:
             if not result.ok:
                 trace.errors.append(f"{url}: {result.outcome.value} — {result.error}"[:300])
                 continue
+            if not same_source_site(url, result.final_url or url):
+                trace.reject(url, "sitemap redirected off the institution's site")
+                continue
             trace.sitemaps_read.append(url)
 
             children, locations = parse_sitemap(decode_sitemap(result.content, url))
@@ -895,9 +975,13 @@ class SitemapReader:
         return pages
 
     async def _declared_sitemaps(self, origin: str, trace: DiscoveryTrace) -> list[str]:
-        result = await self.fetcher.get(urljoin(origin, "/robots.txt"))
+        robots_url = urljoin(origin, "/robots.txt")
+        result = await self.fetcher.get(robots_url)
         if not result.ok:
             trace.errors.append(f"robots.txt unavailable: {result.outcome.value}")
+            return []
+        if not same_source_site(robots_url, result.final_url or robots_url):
+            trace.errors.append("robots.txt redirected off the institution's site")
             return []
         declared = parse_sitemap_directives(result.text)
         trace.sitemaps_declared = declared
@@ -993,7 +1077,7 @@ class LiveDiscoveryAdapter:
         #    whole sitemap is collected: a university publishes far more news
         #    than programmes, and a bound applied to raw URLs stops in the news.
         ranked: dict[str, list[tuple[int, str]]] = {c: [] for c in PageCategory.ALL}
-        fields = list(profile.context.intended_fields)
+        fields = _public_requested_fields(profile, trace)
         degree = str(profile.context.level)
 
         def keep(url: str) -> bool:
@@ -1092,7 +1176,7 @@ class LiveDiscoveryAdapter:
 
         confirmed: list[str] = []
         requested_level = str(profile.context.level)
-        fields = list(profile.context.intended_fields)
+        fields = _public_requested_fields(profile, trace)
         for url in queued[:MAX_PROGRAM_CANDIDATES_CHECKED]:
             if len(confirmed) >= MAX_PAGES_PER_CATEGORY:
                 break
@@ -1100,12 +1184,24 @@ class LiveDiscoveryAdapter:
             if not result.ok:
                 trace.reject(url, f"could not be read ({result.outcome.value})")
                 continue
-            page = classify_page(url=url, html=result.text)
+            if not same_source_site(url, result.final_url or url):
+                trace.reject(url, "programme redirected off the institution's site")
+                continue
+            page = classify_page(url=result.final_url or url, html=result.text)
             reason = profile_rejects(page, requested_level, fields)
             if reason is not None:
                 trace.reject(url, reason)
                 continue
             confirmed.append(url)
+            if len(_distinct_fields(list(profile.context.intended_fields))) > 1:
+                _remember_field_source(
+                    trace,
+                    url=url,
+                    subject=page.subject or "",
+                    fields=fields,
+                    basis="classified_programme_page",
+                    source_url=result.final_url or url,
+                )
 
         if confirmed or selected[PageCategory.PROGRAM_PAGE]:
             # Only replace the list when something was actually checked; an
@@ -1136,7 +1232,7 @@ class LiveDiscoveryAdapter:
             return
 
         requested_level = str(profile.context.level)
-        fields = list(profile.context.intended_fields)
+        fields = _public_requested_fields(profile, trace)
         refused: set[str] = set()
         # Anything past the cap stays unconfirmed rather than being dropped:
         # losing a lead unread is the worse failure, and MAX_PAGES_PER_CATEGORY
@@ -1146,11 +1242,26 @@ class LiveDiscoveryAdapter:
             result = await self.fetcher.get(url)
             if not result.ok:
                 continue
-            page = classify_page(url=url, html=result.text)
+            if not same_source_site(url, result.final_url or url):
+                trace.reject(url, "programme redirected off the institution's site")
+                refused.add(url)
+                trace.field_sources.pop(canonical_url(url), None)
+                continue
+            page = classify_page(url=result.final_url or url, html=result.text)
             reason = profile_rejects(page, requested_level, fields)
             if reason is not None:
                 trace.reject(url, reason)
                 refused.add(url)
+                trace.field_sources.pop(canonical_url(url), None)
+            elif len(_distinct_fields(list(profile.context.intended_fields))) > 1:
+                _remember_field_source(
+                    trace,
+                    url=url,
+                    subject=page.subject or "",
+                    fields=fields,
+                    basis="classified_programme_page",
+                    source_url=result.final_url or url,
+                )
 
         if refused:
             selected[PageCategory.PROGRAM_PAGE] = [
@@ -1200,7 +1311,7 @@ class LiveDiscoveryAdapter:
             fetcher=self.fetcher,
             domain=trace.domain,
             degree=str(profile.context.level),
-            fields=list(profile.context.intended_fields),
+            fields=_public_requested_fields(profile, trace),
             page_recorder=self.page_recorder,
         )
         try:
@@ -1235,6 +1346,14 @@ class LiveDiscoveryAdapter:
                     break
                 if url not in selected[PageCategory.PROGRAM_PAGE]:
                     selected[PageCategory.PROGRAM_PAGE].append(url)
+                    if len(_distinct_fields(list(profile.context.intended_fields))) > 1:
+                        _remember_field_source(
+                            trace,
+                            url=url,
+                            subject=walk.confirmed_subjects.get(url, ""),
+                            fields=_public_requested_fields(profile, trace),
+                            basis="classified_programme_page",
+                        )
 
     async def _add_search_results(
         self,
@@ -1274,6 +1393,11 @@ class LiveDiscoveryAdapter:
         fields = list(profile.context.intended_fields)
         if not fields:
             return
+        if len(_distinct_fields(fields)) > 1:
+            await self._add_multi_field_search_results(
+                entry, domain, selected, trace, profile, provider
+            )
+            return
 
         try:
             intent = DiscoveryIntent(
@@ -1286,18 +1410,20 @@ class LiveDiscoveryAdapter:
                 degree=profile.context.level,
                 field=fields[0],
             )
-        except ValueError as exc:
+        except ValueError:
             # A registry entry or a field the intent refuses — for instance one
             # carrying something that looks like applicant data. Skip search for
             # this institution rather than sending it.
-            trace.errors.append(f"search skipped: {exc}")
+            trace.errors.append("search skipped: invalid public discovery intent")
             return
 
         async def read(url: str) -> str:
             # The adapter's own Fetcher, so robots, rate limits, the PII guard
             # and the SSRF protections apply exactly as they do everywhere else.
             result = await self.fetcher.get(url)
-            return result.text if result else ""
+            return (
+                result.text if result.ok and same_source_site(url, result.final_url or url) else ""
+            )
 
         try:
             report = await discover_candidates(provider, intent, fetch=read, top_k=10)
@@ -1355,6 +1481,166 @@ class LiveDiscoveryAdapter:
             + f", rejected {dict(report.rejection_counts)}"[:300]
         )
 
+    async def _add_multi_field_search_results(
+        self, entry, domain, selected, trace, profile, provider
+    ) -> None:
+        """Search distinct subjects under one institution-wide paid/read budget."""
+        from app.adapters.search import SearchError
+        from app.adapters.search.base import search_failure_diagnostic
+        from app.adapters.search.intent import DEFAULT_QUERY_BUDGET, DiscoveryIntent
+        from app.adapters.search.retrieval import DEFAULT_HOP_ENTRY_POINTS, discover_candidates
+
+        fields = _distinct_fields(list(profile.context.intended_fields))
+        public_fields = _public_requested_fields(profile, trace)
+        skipped = len(fields) - len(public_fields)
+        intents = []
+        for field_name in public_fields:
+            try:
+                intents.append(
+                    DiscoveryIntent(
+                        institution=entry["name"],
+                        domain=registrable_domain(domain) or domain,
+                        degree=profile.context.level,
+                        field=field_name,
+                    )
+                )
+            except ValueError:
+                # A registry value can also fail public-query validation;
+                # sitemap and catalogue matching still use the safe field.
+                continue
+        if skipped:
+            trace.search_limitations.append(
+                f"Search coverage limited at {entry['name']}: {skipped} requested subject(s) "
+                "failed query privacy validation and were not searched."
+            )
+        chosen = intents[:DEFAULT_QUERY_BUDGET]
+        trace.queried_fields = [intent.field for intent in chosen]
+        if len(intents) > len(chosen):
+            trace.search_limitations.append(
+                f"Search coverage limited at {entry['name']}: {len(chosen)} of "
+                f"{len(fields)} requested subjects were queried; "
+                f"{len(intents) - len(chosen)} were not searched because of the "
+                "six-query budget. Search remaining subjects in a separate run."
+            )
+        if len(fields) > MAX_PAGES_PER_CATEGORY:
+            trace.search_limitations.append(
+                f"Search coverage limited at {entry['name']}: up to "
+                f"{MAX_PAGES_PER_CATEGORY} programmes can be shown per university, "
+                "so not every requested subject can appear in this run."
+            )
+        trace.search_coverage = {
+            "requested": len(fields),
+            "queried": len(chosen),
+            "represented": 0,
+        }
+        if not chosen:
+            return
+
+        query_budgets = [1] * len(chosen)
+        for slot in range(DEFAULT_QUERY_BUDGET - len(chosen)):
+            query_budgets[slot % len(chosen)] += 1
+        hop_budgets = [0] * len(chosen)
+        for slot in range(DEFAULT_HOP_ENTRY_POINTS):
+            hop_budgets[slot % len(chosen)] += 1
+
+        async def read(url: str) -> str:
+            result = await self.fetcher.get(url)
+            return (
+                result.text if result.ok and same_source_site(url, result.final_url or url) else ""
+            )
+
+        reports = []
+        query_count = 0
+        failed_count = 0
+        rejection_counts: dict[object, int] = {}
+        for intent, query_budget, hop_budget in zip(
+            chosen, query_budgets, hop_budgets, strict=True
+        ):
+            try:
+                report = await discover_candidates(
+                    provider,
+                    intent,
+                    query_budget=query_budget,
+                    fetch=read,
+                    hop_entry_points=hop_budget,
+                    top_k=10,
+                )
+            except SearchError as exc:
+                trace.search_failures.append(search_failure_diagnostic(provider.name, exc))
+                continue
+            reports.append((intent.field, report))
+            trace.search_failures.extend(report.failure_diagnostics)
+            query_count += len(report.queries_run)
+            failed_count += len(report.failed_queries)
+            for reason, count in report.rejection_counts.items():
+                rejection_counts[reason] = rejection_counts.get(reason, 0) + count
+
+        # A previously confirmed sitemap/walker page already occupies a slot.
+        # Give an as-yet-unrepresented field first access to the remaining
+        # slots, while keeping each report's own rank order.
+        represented_before = {
+            trace.field_sources.get(canonical_url(url), {}).get("field", "")
+            for url in selected[PageCategory.PROGRAM_PAGE]
+        }
+        reports.sort(key=lambda item: item[0] in represented_before)
+
+        # Scores are relative to one field's intent, so preserve per-field
+        # ranking and take turns rather than comparing scores across fields.
+        merged = []
+        seen: set[str] = set()
+        longest = max((len(report.candidates) for _, report in reports), default=0)
+        for rank in range(longest):
+            for field_name, report in reports:
+                if rank >= len(report.candidates):
+                    continue
+                found = report.candidates[rank]
+                key = canonical_url(found.url)
+                if key in seen:
+                    continue
+                seen.add(key)
+                trace.field_hints[key] = field_name
+                merged.append(found)
+
+        pages = selected[PageCategory.PROGRAM_PAGE]
+        if RECOVER_SEARCH_CANDIDATES:
+            await self._recover_search_pages(merged, pages, trace, profile)
+            trace.errors.append(
+                f"search identity recovery via {provider.name}; queries {query_count}, "
+                f"failed {failed_count}, rejected {rejection_counts}"
+            )
+            return
+        added = 0
+        refused = getattr(self.fetcher, "refused_hosts", {})
+        skipped_hosts: list[str] = []
+        navigation = next(
+            (c for c in merged if c.provider == "navigation" and c.url not in pages), None
+        )
+        limit = MAX_PAGES_PER_CATEGORY - (1 if NAVIGATION_SLOT and navigation else 0)
+        for found in merged:
+            if len(pages) >= limit:
+                break
+            if found.url in pages:
+                continue
+            if SKIP_REFUSED_SEARCH_HOSTS and (urlparse(found.url).hostname or "") in refused:
+                skipped_hosts.append(found.url)
+                continue
+            pages.append(found.url)
+            added += 1
+        if NAVIGATION_SLOT and navigation is not None and navigation.url not in pages:
+            pages.append(navigation.url)
+            added += 1
+            trace.errors.append(f"navigation slot: {navigation.url}")
+        if skipped_hosts:
+            trace.errors.append(
+                f"search skipped {len(skipped_hosts)} candidate(s) on hosts that refused this run: "
+                + ", ".join(skipped_hosts)[:400]
+            )
+        offered = ", ".join(c.url for c in merged[:5]) or "none"
+        trace.errors.append(
+            f"search added {added} programme page(s) via {provider.name}; offered: {offered}"[:600]
+            + f"; queries {query_count}, failed {failed_count}, rejected {rejection_counts}"[:300]
+        )
+
     async def _recover_search_pages(self, candidates, pages, trace, profile) -> None:
         """Fill programme slots from fetched identities rather than search snippets.
 
@@ -1369,7 +1655,8 @@ class LiveDiscoveryAdapter:
             _listed_programme,
         )
 
-        fields = list(profile.context.intended_fields)
+        fields = _public_requested_fields(profile, trace)
+        multi_requested = len(_distinct_fields(list(profile.context.intended_fields))) > 1
         level = str(profile.context.level)
         pending: list[str] = []
         queue = list(candidates)
@@ -1389,20 +1676,43 @@ class LiveDiscoveryAdapter:
                 pending.append(found.url)
                 trace.reject(found.url, f"search lead unresolved ({result.outcome.value})")
                 continue
-            page = classify_page(url=found.url, html=result.text)
+            if not same_source_site(found.url, result.final_url or found.url):
+                trace.reject(found.url, "search lead redirected off the institution's site")
+                continue
+            page = classify_page(url=result.final_url or found.url, html=result.text)
             reason = profile_rejects(page, level, fields)
             stated_level = page.degree_level
+            matched_subject = page.subject or ""
+            basis = "classified_programme_page"
             if reason is not None and page.page_type in _LISTING_PAGE_TYPES:
-                program = CandidateProgram(
-                    name=found.title,
-                    field=fields[0] if fields else "",
-                    degree=profile.context.level,
-                    url=found.url,
-                )
-                listed = _listed_programme(html_to_text(result.text), program)
+                if multi_requested:
+                    # A search title is an unverified hint. It can name an
+                    # unrelated degree on an otherwise official listing.
+                    listed = None
+                    for field_name in _distinct_fields(fields):
+                        program = CandidateProgram(
+                            name=field_name,
+                            field=field_name,
+                            degree=profile.context.level,
+                            url=found.url,
+                        )
+                        candidate_title = _listed_programme(html_to_text(result.text), program)
+                        if candidate_title and matches_field_text(candidate_title[0], [field_name]):
+                            listed = candidate_title
+                            break
+                else:
+                    program = CandidateProgram(
+                        name=found.title,
+                        field=fields[0] if fields else "",
+                        degree=profile.context.level,
+                        url=found.url,
+                    )
+                    listed = _listed_programme(html_to_text(result.text), program)
                 if listed is not None:
                     reason = None
                     stated_level = listed[1]
+                    matched_subject = listed[0]
+                    basis = "full_degree_title_on_listing"
             if reason is None:
                 if stated_level != level:
                     reason = "page does not state the requested degree level"
@@ -1437,10 +1747,26 @@ class LiveDiscoveryAdapter:
                                 RankedCandidate(link.url, link.label, value, "search-catalogue")
                             )
                     leads.sort(key=lambda lead: (-lead.score, lead.url))
-                    queue[:0] = leads[: MAX_PROGRAM_CANDIDATES_CHECKED - checked]
+                    followups = leads[: MAX_PROGRAM_CANDIDATES_CHECKED - checked]
+                    if multi_requested:
+                        # Another requested field's direct search result is
+                        # already waiting. Do not let one catalogue's many
+                        # links consume the shared read cap ahead of it.
+                        queue.extend(followups)
+                    else:
+                        queue[:0] = followups
                 continue
             pages.append(found.url)
             added += 1
+            if multi_requested:
+                _remember_field_source(
+                    trace,
+                    url=found.url,
+                    subject=matched_subject,
+                    fields=fields,
+                    basis=basis,
+                    source_url=result.final_url or found.url,
+                )
         # Unavailable pages remain leads only when no source confirmed the
         # programme. Their failure is explicit in the trace and downstream.
         if not pages:
@@ -1459,16 +1785,45 @@ class LiveDiscoveryAdapter:
         candidate.costs_url = _first(selected[PageCategory.COSTS])
         candidate.scholarships_url = _first(selected[PageCategory.SCHOLARSHIPS])
 
-        fields = list(profile.context.intended_fields)
+        fields = _public_requested_fields(profile, trace)
         for url in selected[PageCategory.PROGRAM_PAGE][:MAX_PAGES_PER_CATEGORY]:
+            if profile.context.intended_fields and not fields:
+                break
+            field_name = fields[0] if fields else ""
+            if len(_distinct_fields(list(profile.context.intended_fields))) > 1:
+                field_name = (
+                    trace.field_sources.get(canonical_url(url), {}).get("field")
+                    or trace.field_hints.get(canonical_url(url))
+                    or field_name
+                )
             candidate.programs.append(
                 CandidateProgram(
                     name=_program_name_from_url(url, fields, profile.context.level),
-                    field=fields[0] if fields else "",
+                    field=field_name,
                     degree=profile.context.level,
                     url=url,
                 )
             )
+        if trace.search_coverage:
+            queried_fields = set(trace.queried_fields)
+            represented = {
+                trace.field_sources[canonical_url(program.url)]["field"]
+                for program in candidate.programs
+                if program.url
+                and canonical_url(program.url) in trace.field_sources
+                and trace.field_sources[canonical_url(program.url)]["field"] in queried_fields
+            }
+            trace.search_coverage["represented"] = len(represented)
+            if len(candidate.programs) >= MAX_PAGES_PER_CATEGORY and len(represented) < min(
+                trace.search_coverage["queried"], MAX_PAGES_PER_CATEGORY
+            ):
+                trace.search_limitations.append(
+                    f"Search coverage limited at {trace.institution}: all "
+                    f"{MAX_PAGES_PER_CATEGORY} programme slots are filled; "
+                    f"only {len(represented)} of {trace.search_coverage['queried']} "
+                    "queried subjects have source-confirmed programme pages. "
+                    "Search remaining subjects in a separate run."
+                )
         # A catalogue is a lead, not a programme. It is offered only when no
         # programme page was found, and downstream classification will reject it
         # as a source of requirements — which is the correct outcome.
@@ -1498,7 +1853,7 @@ class LiveDiscoveryAdapter:
         look than the global menu. The homepage is the last resort.
         """
         degree = str(profile.context.level)
-        fields = list(profile.context.intended_fields)
+        fields = _public_requested_fields(profile, trace)
         # Catalogues first, deepest lead first; the homepage is the last resort
         # rather than a queue entry. Putting it in the queue let HKU's two
         # Chinese copies of the same catalogue consume the budget before the
@@ -1525,6 +1880,9 @@ class LiveDiscoveryAdapter:
                 trace.errors.append(
                     f"navigation fallback: {start} unreachable ({result.outcome.value})"
                 )
+                continue
+            if not same_source_site(start, result.final_url or start):
+                trace.reject(start, "navigation page redirected off the institution's site")
                 continue
             from_catalogue = start in selected[PageCategory.PROGRAM_CATALOG]
             for url, label in _harvest_links(result.text, result.final_url or start, domain):

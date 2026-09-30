@@ -44,6 +44,7 @@ from app.adapters.network_policy import (
     check_url,
 )
 from app.domain.enums import FetchOutcome
+from app.domain.site_identity import hosts_share_site
 
 log = logging.getLogger("unimatch.fetch")
 
@@ -123,6 +124,22 @@ class PIILeakError(RuntimeError):
 #: Below this many characters of extractable text, a "successful" HTML fetch is
 #: an empty shell worth escalating to a browser.
 MIN_USEFUL_TEXT = 400
+
+
+def same_source_site(requested_url: str, final_url: str) -> bool:
+    """Whether a fetched body stayed on the requested registrable domain.
+
+    A redirect to a different organisation cannot be cited under the URL that
+    initiated it, even when both hosts pass the network/SSRF policy.
+    """
+    try:
+        requested = urlparse(requested_url)
+        final = urlparse(final_url)
+    except ValueError:
+        return False
+    if requested.scheme not in ("http", "https") or final.scheme not in ("http", "https"):
+        return requested_url == final_url and requested.scheme == "fixture"
+    return hosts_share_site(requested_url, final_url)
 
 
 @dataclass
@@ -580,58 +597,58 @@ class Fetcher:
             raise RuntimeError("Fetcher must be used as an async context manager")
         current = url
         validators = dict(validators) if validators else None
+        network_budget = self.timeout * ATTEMPT_DEADLINE_FACTOR
         for _hop in range(MAX_REDIRECTS + 1):
+            resolve_started = time.monotonic()
             target = await _resolve_checked(current)
-            # ``get()`` buffers the entire body before returning, which would
-            # make the byte cap below cosmetic (and lets an endless response
-            # exhaust memory). Keep the response streaming from the socket.
-            response = await self._send_to_any_address(target, current, validators)
+            network_budget -= time.monotonic() - resolve_started
+            if network_budget <= 0:
+                raise TimeoutError("redirect chain exhausted its network deadline")
+            hop_result, network_used = await self._request_one_hop(
+                url, current, target, validators, network_budget
+            )
+            network_budget -= network_used
             # Validators ride the caller's request only: a hop can land on
             # another host, and an entity tag minted by one origin must not be
             # replayed to another.
             validators = None
-
-            # A 304 is a 3xx but not a redirect: it is the answer to a
-            # conditional request, and httpx counts every 3xx as is_redirect.
-            # Hand it to _read_response, which tests it before any of the
-            # content-type, size or body branches.
-            if response.status_code == 304 or not response.is_redirect:
-                return await self._read_response(url, current, response)
-
-            if response.is_redirect:
-                location = response.headers.get("location")
-                if not location:
-                    await response.aclose()
-                    return FetchResult(
-                        url=url,
-                        outcome=FetchOutcome.HTTP_ERROR,
-                        status_code=response.status_code,
-                        error="redirect without a Location header",
-                        final_url=current,
-                    )
-                # The hop was streamed, so its body is an open socket: close
-                # it before chasing the next Location, or every redirect
-                # leaks one connection.
-                await response.aclose()
-                current = str(httpx.URL(current).join(location))
-                # The same privacy guard that ran on the caller's URL runs on
-                # every hop discovered here, before the next check_url: the
-                # URL is refused before it can even reach DNS. It returns
-                # rather than raises — a crawl-discovered link is skipped, not
-                # fatal — and the hop's response is already closed above.
-                leak = find_pii(current)
-                if leak is not None:
-                    log.warning("refusing %s: looks like %s", current[:120], leak)
-                    return FetchResult(
-                        url=url,
-                        outcome=FetchOutcome.REFUSED_PRIVACY,
-                        error=(
-                            f"Refused: the URL contains what looks like a {leak}. "
-                            "It was not fetched."
-                        ),
-                        final_url=current,
-                    )
-                continue
+            if isinstance(hop_result, FetchResult):
+                return hop_result
+            status_code, location = hop_result
+            if not location:
+                return FetchResult(
+                    url=url,
+                    outcome=FetchOutcome.HTTP_ERROR,
+                    status_code=status_code,
+                    error="redirect without a Location header",
+                    final_url=current,
+                )
+            current = str(httpx.URL(current).join(location))
+            # Refuse unsafe URLs before DNS or the destination's robots lookup.
+            leak = find_pii(current)
+            if leak is not None:
+                log.warning("refusing %s: looks like %s", current[:120], leak)
+                return FetchResult(
+                    url=url,
+                    outcome=FetchOutcome.REFUSED_PRIVACY,
+                    error=f"Refused: the URL contains what looks like a {leak}. It was not fetched.",
+                    final_url=current,
+                )
+            if not same_source_site(url, current):
+                log.warning(
+                    "refusing cross-site redirect from %s to %s",
+                    urlparse(url).hostname,
+                    urlparse(current).hostname,
+                )
+                return FetchResult(
+                    url=url,
+                    outcome=FetchOutcome.BLOCKED,
+                    error=(
+                        "redirect left the requested site's domain for "
+                        f"{urlparse(current).hostname}; no source was read"
+                    ),
+                    final_url=current,
+                )
 
         return FetchResult(
             url=url,
@@ -639,6 +656,75 @@ class Fetcher:
             final_url=current,
             error=f"more than {MAX_REDIRECTS} redirects",
         )
+
+    async def _request_one_hop(
+        self,
+        requested_url: str,
+        current: str,
+        target: ResolvedTarget,
+        validators: dict[str, str] | None,
+        network_budget: float,
+    ) -> tuple[FetchResult | tuple[int, str | None], float]:
+        """Apply per-host policy and stream one response inside its host limit."""
+        async with self._semaphore(target.host):
+            refused = await self._redirect_policy(requested_url, current, target.host)
+            if refused is not None:
+                return refused, 0.0
+
+            async def exchange() -> FetchResult | tuple[int, str | None]:
+                # The whole network/body exchange is bounded, including a
+                # trickling response. Robots and permitted Crawl-delay above
+                # do not spend this network budget.
+                response = await self._send_to_any_address(target, current, validators)
+                try:
+                    # A 304 is terminal despite being in the 3xx family.
+                    if response.status_code == 304 or not response.is_redirect:
+                        return await self._read_response(requested_url, current, response)
+                    return response.status_code, response.headers.get("location")
+                finally:
+                    await response.aclose()
+
+            network_started = time.monotonic()
+            result = await asyncio.wait_for(exchange(), network_budget)
+            return result, time.monotonic() - network_started
+
+    async def _redirect_policy(
+        self, requested_url: str, redirect_url: str, host: str
+    ) -> FetchResult | None:
+        """Apply the destination's robots and pacing before following a hop."""
+        assert self._client is not None
+        if host in self._stalled_hosts or host in self.robots.stalled:
+            return FetchResult(
+                url=requested_url,
+                outcome=FetchOutcome.TIMEOUT,
+                error="redirect host stopped responding earlier in this run",
+                final_url=redirect_url,
+            )
+        allowed, reason = await self.robots.allowed(redirect_url, self._client)
+        if host in self.robots.stalled:
+            return FetchResult(
+                url=requested_url,
+                outcome=FetchOutcome.TIMEOUT,
+                error="redirect host robots.txt never finished arriving",
+                final_url=redirect_url,
+            )
+        if not allowed:
+            return FetchResult(
+                url=requested_url,
+                outcome=FetchOutcome.ROBOTS_DISALLOWED,
+                error=reason,
+                final_url=redirect_url,
+            )
+        asked = await self.robots.crawl_delay(redirect_url)
+        if asked is not None and self.max_crawl_delay is not None and asked > self.max_crawl_delay:
+            return FetchResult(
+                url=requested_url,
+                outcome=FetchOutcome.ROBOTS_CRAWL_DELAY,
+                error=f"robots.txt asks for a {asked:.0f}s crawl delay on redirect host",
+                final_url=redirect_url,
+            )
+        await self._space_requests(host, redirect_url)
+        return None
 
     async def _read_response(self, url: str, final_url: str, response) -> FetchResult:
         """Read a response, refusing what is too large or not worth parsing."""
@@ -747,6 +833,9 @@ class Fetcher:
                 rendered.status_code,
                 result.url[:120],
             )
+            return result
+        if rendered.ok and not same_source_site(result.url, rendered.final_url or rendered.url):
+            log.warning("browser tier left the requested host %s", urlparse(result.url).hostname)
             return result
         if rendered.ok and len(html_to_text(rendered.text)) > len(html_to_text(result.text)):
             rendered.fetch_tier = "browser"
@@ -907,9 +996,13 @@ class Fetcher:
         if use_cache and not validators:
             cached = self.cache.get(url)
             if cached is not None:
-                self.stats[FetchOutcome.CACHED.value] += 1
-                self.tier_counts[cached.fetch_tier] = self.tier_counts.get(cached.fetch_tier, 0) + 1
-                return cached
+                if same_source_site(url, cached.final_url or url):
+                    self.stats[FetchOutcome.CACHED.value] += 1
+                    self.tier_counts[cached.fetch_tier] = (
+                        self.tier_counts.get(cached.fetch_tier, 0) + 1
+                    )
+                    return cached
+                log.warning("ignoring cached cross-site response for %s", urlparse(url).hostname)
 
         if self.offline:
             self.stats[FetchOutcome.NETWORK_UNAVAILABLE.value] += 1
@@ -946,97 +1039,69 @@ class Fetcher:
             return FetchResult(url=url, outcome=FetchOutcome.BLOCKED, error=str(exc))
 
         host = target.host
-        async with self._semaphore(host):
-            allowed, reason = await self.robots.allowed(url, self._client)
-            if host in self.robots.stalled:
+        for attempt in range(1, MAX_ATTEMPTS + 1):
+            try:
+                result = await self._request_with_redirects(url, validators=validators)
+            except BlockedRequest as exc:
+                log.warning("blocked mid-redirect: %s", exc)
+                self.stats[FetchOutcome.BLOCKED.value] += 1
+                return FetchResult(url=url, outcome=FetchOutcome.BLOCKED, error=str(exc))
+            except TimeoutError:
+                # The whole exchange overran: a server that trickles will
+                # trickle again, so this is not retried, nor is the host.
+                self._stalled_hosts.add(host)
                 self.stats[FetchOutcome.TIMEOUT.value] += 1
                 return FetchResult(
                     url=url,
                     outcome=FetchOutcome.TIMEOUT,
-                    error="robots.txt never finished arriving; the host is not waited on again",
+                    error="no complete response within the deadline",
                 )
-            if not allowed:
-                log.warning("robots.txt disallows %s", url)
-                self.stats[FetchOutcome.ROBOTS_DISALLOWED.value] += 1
-                return FetchResult(url=url, outcome=FetchOutcome.ROBOTS_DISALLOWED, error=reason)
-
-            asked = await self.robots.crawl_delay(url)
-            limit = self.max_crawl_delay
-            if asked is not None and limit is not None and asked > limit:
-                # The site's own request is honoured by not reading it, never by
-                # reading it faster: waiting that long per request is a hang.
-                # Aalto stalled a whole run here, 2 requests in 90 s. It is not
-                # a refusal, so it is not reported as one.
-                log.warning("robots.txt crawl-delay %.0fs for %s: not read", asked, host)
-                self.stats[FetchOutcome.ROBOTS_CRAWL_DELAY.value] += 1
-                return FetchResult(
-                    url=url,
-                    outcome=FetchOutcome.ROBOTS_CRAWL_DELAY,
-                    error=(
-                        f"robots.txt asks for a {asked:.0f}s crawl delay; this run waits at most "
-                        f"{limit:.0f}s between requests, so the page was not read"
-                    ),
-                )
-
-            for attempt in range(1, MAX_ATTEMPTS + 1):
-                await self._space_requests(host, url)
-                try:
-                    result = await asyncio.wait_for(
-                        self._request_with_redirects(url, validators=validators),
-                        self.timeout * ATTEMPT_DEADLINE_FACTOR,
-                    )
-                except BlockedRequest as exc:
-                    log.warning("blocked mid-redirect: %s", exc)
-                    self.stats[FetchOutcome.BLOCKED.value] += 1
-                    return FetchResult(url=url, outcome=FetchOutcome.BLOCKED, error=str(exc))
-                except TimeoutError:
-                    # The whole exchange overran: a server that trickles will
-                    # trickle again, so this is not retried, nor is the host.
-                    self._stalled_hosts.add(host)
+            except httpx.TimeoutException as exc:
+                if attempt == MAX_ATTEMPTS:
                     self.stats[FetchOutcome.TIMEOUT.value] += 1
+                    return FetchResult(url=url, outcome=FetchOutcome.TIMEOUT, error=str(exc))
+            except (httpx.HTTPError, OSError) as exc:
+                if attempt == MAX_ATTEMPTS:
+                    self.stats[FetchOutcome.NETWORK_UNAVAILABLE.value] += 1
                     return FetchResult(
-                        url=url,
-                        outcome=FetchOutcome.TIMEOUT,
-                        error="no complete response within the deadline",
+                        url=url, outcome=FetchOutcome.NETWORK_UNAVAILABLE, error=str(exc)
                     )
-                except httpx.TimeoutException as exc:
-                    if attempt == MAX_ATTEMPTS:
-                        self.stats[FetchOutcome.TIMEOUT.value] += 1
-                        return FetchResult(url=url, outcome=FetchOutcome.TIMEOUT, error=str(exc))
-                except (httpx.HTTPError, OSError) as exc:
-                    if attempt == MAX_ATTEMPTS:
-                        self.stats[FetchOutcome.NETWORK_UNAVAILABLE.value] += 1
+            else:
+                if result.outcome is FetchOutcome.OK:
+                    if not same_source_site(url, result.final_url or url):
+                        self.stats[FetchOutcome.BLOCKED.value] += 1
                         return FetchResult(
-                            url=url, outcome=FetchOutcome.NETWORK_UNAVAILABLE, error=str(exc)
+                            url=url,
+                            outcome=FetchOutcome.BLOCKED,
+                            error="response left the requested site's domain",
+                            final_url=result.final_url,
                         )
-                else:
-                    if result.outcome is FetchOutcome.OK:
-                        self.cache.put(result)
-                        self.stats[FetchOutcome.OK.value] += 1
-                        self.tier_counts["pdf" if result.is_pdf else "http"] += 1
-                        try:
-                            return await self._maybe_render(result)
-                        except Exception as exc:
-                            # The escalation sits outside the retry excepts
-                            # above, so an infra failure in the browser tier
-                            # must be contained here: it becomes a diagnostic
-                            # result, never an exception out of get().
-                            log.warning("browser tier failed for %s: %s", url, exc)
-                            self.stats[FetchOutcome.UNPARSEABLE.value] += 1
-                            return FetchResult(
-                                url=url,
-                                outcome=FetchOutcome.UNPARSEABLE,
-                                error=f"browser tier failed: {exc}"[:300],
-                            )
-                    # Retry only what is worth retrying.
-                    retryable = result.status_code == 429 or (
-                        result.status_code is not None and 500 <= result.status_code < 600
-                    )
-                    if not retryable or attempt == MAX_ATTEMPTS:
-                        self.stats[result.outcome.value] += 1
-                        return result
-                # Exponential backoff: 2s, 4s.
-                await asyncio.sleep(2**attempt)
+                    self.cache.put(result)
+                    self.stats[FetchOutcome.OK.value] += 1
+                    self.tier_counts["pdf" if result.is_pdf else "http"] += 1
+                    try:
+                        return await self._maybe_render(result)
+                    except Exception as exc:
+                        # The escalation sits outside the retry excepts
+                        # above, so an infra failure in the browser tier
+                        # must be contained here: it becomes a diagnostic
+                        # result, never an exception out of get().
+                        log.warning("browser tier failed for %s: %s", url, exc)
+                        self.stats[FetchOutcome.UNPARSEABLE.value] += 1
+                        return FetchResult(
+                            url=url,
+                            outcome=FetchOutcome.UNPARSEABLE,
+                            error=f"browser tier failed: {exc}"[:300],
+                        )
+                # Retry only what is worth retrying.
+                retryable = result.status_code == 429 or (
+                    result.status_code is not None and 500 <= result.status_code < 600
+                )
+                if not retryable or attempt == MAX_ATTEMPTS:
+                    self.stats[result.outcome.value] += 1
+                    return result
+            # Exponential backoff: 2s, 4s.
+            await asyncio.sleep(2**attempt)
 
         self.stats[FetchOutcome.HTTP_ERROR.value] += 1
         return FetchResult(url=url, outcome=FetchOutcome.HTTP_ERROR, error="exhausted attempts")
