@@ -108,6 +108,8 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**Unimatch cloud E2E and responsive/accessibility repair (source in this commit):** adapted all existing desktop/mobile journey tests to the five-area navigation, staged profile and Find evidence disclosure without dropping behavioral assertions. Fixed the 320 px top bar/Explore overflow, the 768 px advanced-table overflow, low contrast accent text and faded completed-stage captions. Local Playwright **77 passed, 1 intentional desktop-only skip** across both projects; frontend typecheck/lint, 227 unit tests and build pass. The backend remains unchanged from the `4f5a67b` full 2,844/94.92% gate. `design-qa.md` records these findings. Final exact-head cloud CI, squash merge, actual-main checks and public deployment remain pending.
+
 **Unimatch comparison wording (`c992764`):** comparison now shows the existing qualitative portfolio bucket for preference fit instead of an unexplained decimal. The separate evidence-coverage percentage is labeled and explained. Frontend typecheck/lint, 227 tests/27 files and build pass; backend source unchanged.
 
 **Unimatch visual QA and student discovery (`08333a5`):** Find mobile hero was compressed so search and filters remain visible; Community and Find students now use a responsive second column with the generated mascot and a working discovery CTA. The shared relative-time formatter now follows the selected language. `design-qa.md` stores paired reference/browser captures and a 390px mobile capture. Local browser community profile/post and CTA worked against the isolated `/tmp` database. Frontend typecheck/lint, 227 tests/27 files and build passed; backend source unchanged from the prior full green gate. Public deploy remains separately unverified.
@@ -1717,6 +1719,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**2026-10-02 exact-head/release write-ahead:** push the green E2E and responsive/accessibility repair to PR #37. Wait for both push and PR release-gates matrices on the final head; repair any failures. After all required jobs succeed, perform the owner-authorized squash merge to `main` with `--match-head-commit`, verify actual-main CI, then deploy that merged tree to the existing Fly app/worker with no extra machines. Verify public health, browser sign-in where an authorized session exists, and a live search; record provider/source-access limits exactly.
 
 **2026-10-02 PR #37/release write-ahead:** PR #37 is open and attached. Wait for all exact-head CI checks on the final metadata commit, repair failures without weakening tests, then perform the owner-authorized squash merge to `main` with the checked head and verify post-merge checks. Inspect existing Fly API/worker status and deploy the tested merged source to the existing app if release gates permit; verify public browser access and live search with explicit provider/source-access limits. Keep credentials and purchases outside Git.
 
@@ -3604,6 +3608,8 @@ The steps codex left, unchanged and still next after this review:
    the compatibility shim. Do not buy a provider or deploy application infrastructure implicitly.
 
 ## 6. Gate status at last run
+
+**Unimatch final local candidate, 2026-10-02:** frontend typecheck/lint pass, 227 unit tests/27 files and production build pass. Full Playwright suite: **77 passed, 1 intentional desktop-only skip** across desktop and mobile; axe serious/critical violations zero on eight reachable workflow screens, no document overflow at 320/768/1024/1440 px, console error check green. Backend source unchanged since the green `4f5a67b` Ruff/check-format/mypy and pytest 2,844/94.92% gate. `git diff --check` clean. These are local and isolated-demo results, not public provider acceptance.
 
 **Unimatch visual QA, 2026-10-02:** frontend typecheck/lint pass, **227 tests across 27 files** and production build pass after the final CSS/community/localization edits. The prior `4f5a67b` backend gate remains applicable (2,844 passed/94.92%, Ruff/mypy); this commit changes no backend files. Browser checked light/dark, 390px Find/discovery with no horizontal overflow, Community profile creation and post, and zero console errors. The local QA post is synthetic and isolated; no production post was made.
 

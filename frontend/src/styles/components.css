@@ -105,7 +105,7 @@
   text-decoration-color: transparent;
   transition: text-decoration-color var(--duration-fast);
 }
-.uni-cell__name:hover { text-decoration-color: var(--accent); color: var(--accent); }
+.uni-cell__name:hover { text-decoration-color: var(--accent); color: var(--accent-text); }
 .uni-cell__meta { font-size: var(--text-xs); color: var(--ink-faint); }
 .uni-cell__prog { font-size: var(--text-xs); color: var(--ink-muted); }
 
@@ -152,7 +152,7 @@
   transition: color var(--duration-fast), border-color var(--duration-fast);
 }
 .tab:hover { color: var(--ink); }
-.tab[aria-selected='true'] { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+.tab[aria-selected='true'] { color: var(--accent-text); border-bottom-color: var(--accent); font-weight: 600; }
 
 .kv { display: grid; grid-template-columns: minmax(9rem, auto) 1fr; gap: var(--space-2) var(--space-4); font-size: var(--text-sm); }
 .kv dt { color: var(--ink-muted); font-weight: 500; }
@@ -202,7 +202,7 @@
   background: var(--surface);
 }
 .stage--running { border-color: var(--accent-border); background: var(--accent-soft); }
-.stage--done { opacity: 0.82; }
+.stage--done { opacity: 1; }
 .stage--failed { border-color: var(--risk-border); background: var(--risk-soft); }
 .stage__dot {
   width: 0.7rem; height: 0.7rem; border-radius: 50%;
@@ -447,7 +447,7 @@
   overflow-wrap: anywhere;
 }
 .post__foot { padding-left: calc(2rem + var(--space-3)); margin-top: var(--space-2); }
-.tagref { font-family: var(--font-mono); font-weight: 500; color: var(--accent); }
+.tagref { font-family: var(--font-mono); font-weight: 500; color: var(--accent-text); }
 
 .byline { display: flex; gap: var(--space-3); align-items: center; }
 .byline__who { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
@@ -477,7 +477,7 @@
 .linkish {
   background: none; border: 0; padding: 0;
   font: inherit; font-size: var(--text-sm); font-weight: 600;
-  color: var(--accent); cursor: pointer;
+  color: var(--accent-text); cursor: pointer;
   text-align: left;
 }
 .linkish:hover { text-decoration: underline; }

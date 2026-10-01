@@ -17,7 +17,7 @@
 
   --ink:              #0B132C;
   --ink-muted:        #566789;
-  --ink-faint:        #6B7280;
+  --ink-faint:        #4F5B6C;
   --ink-inverted:     #FFFFFF;
 
   --rule:             #E7EAF0;
@@ -25,6 +25,7 @@
 
   /* Yellow marks a primary action; evidence statuses use separate tokens. */
   --accent:           #F7C948;
+  --accent-text:      #895400;
   --accent-hover:     #EAB934;
   --accent-soft:      #FFF4D5;
   --accent-border:    #F7D97F;
@@ -121,6 +122,7 @@
     --rule-strong:      oklch(40% 0.020 265);
 
     --accent:           #F7C948;
+    --accent-text:      #F7C948;
     --accent-hover:     #EAB934;
     --accent-soft:      #4A3B1C;
     --accent-border:    #806824;
@@ -173,6 +175,7 @@
   --rule-strong:      oklch(40% 0.020 265);
 
   --accent:           #F7C948;
+  --accent-text:      #F7C948;
   --accent-hover:     #EAB934;
   --accent-soft:      #4A3B1C;
   --accent-border:    #806824;

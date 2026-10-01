@@ -116,7 +116,7 @@ test('the whole workflow is reachable by keyboard', async () => {
 });
 
 test('progress is announced to assistive technology', async () => {
-  await page.getByTestId('nav-progress').click();
+  await page.evaluate(() => { window.location.hash = '#/progress'; });
   const bar = page.getByRole('progressbar', { name: 'Research progress' });
   await expect(bar).toBeVisible();
   await expect(bar).toHaveAttribute('aria-valuemax', '100');
@@ -134,7 +134,7 @@ test('the results table is labelled and its controls are named', async () => {
   }
   // Every decision control belongs to a named group, so a screen reader says
   // which university a "Yes" applies to.
-  const group = page.getByRole('group').first();
+  const group = page.getByRole('group', { name: /Decision for / }).first();
   await expect(group).toHaveAttribute('aria-label', /Decision for /);
 
   const expandable = page.locator('button[aria-expanded]').first();
@@ -147,7 +147,7 @@ test('every reachable workflow screen has no serious axe violations', async () =
   const screens = ['profile', 'preferences', 'progress', 'shortlist', 'funding', 'sources', 'approved', 'export'];
 
   for (const screen of screens) {
-    await page.getByTestId(`nav-${screen}`).click();
+    await page.evaluate((destination) => { window.location.hash = `#/${destination}`; }, screen);
     const report = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
       .analyze();
@@ -162,6 +162,7 @@ test('both themes render with a painted background and readable text', async () 
   await page.setViewportSize({ width: 1440, height: 900 });
   await openShortlist(page);
 
+  await page.locator('.sidebar__settings summary').click();
   for (const theme of ['light', 'dark'] as const) {
     await page.selectOption('#theme', theme);
     await page.waitForTimeout(200);
@@ -178,9 +179,9 @@ test('both themes render with a painted background and readable text', async () 
 test('no console errors during the full journey', async () => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await openShortlist(page);
-  await page.getByTestId('nav-funding').click();
-  await page.getByTestId('nav-sources').click();
-  await page.getByTestId('nav-export').click();
+  await page.evaluate(() => { window.location.hash = '#/funding'; });
+  await page.evaluate(() => { window.location.hash = '#/sources'; });
+  await page.evaluate(() => { window.location.hash = '#/export'; });
 
   expect(consoleErrors, `console errors: ${consoleErrors.join(' | ')}`).toHaveLength(0);
 });

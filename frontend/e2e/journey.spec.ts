@@ -22,27 +22,33 @@ test.afterAll(async () => {
 });
 
 test('profile screen states the cost of every gap', async () => {
-  await page.goto('/');
-  await expect(page.getByRole('heading', { name: 'Who is applying' })).toBeVisible();
+  await page.goto('/#/profile');
+  await expect(page.getByRole('heading', { name: /Tell us about yourself/ })).toBeVisible();
   await expect(page.locator('.topbar').getByText('Demo data')).toBeVisible();
   await expect(page.getByLabel('Field of study')).toHaveValue('');
+  await page.getByRole('navigation', { name: 'Profile steps' }).getByRole('button').nth(2).click();
   await expect(page.getByTestId('ielts-overall')).toHaveValue('');
+  await page.getByRole('navigation', { name: 'Profile steps' }).getByRole('button').nth(0).click();
   await page.getByTestId('load-demo-profile').click();
+  await page.getByRole('navigation', { name: 'Profile steps' }).getByRole('button').nth(2).click();
   await page.screenshot({ path: shot('01-profile.png'), fullPage: true });
 
   // Removing the English scores must produce a gap that explains the consequence.
   await page.getByTestId('ielts-overall').fill('');
+  await page.getByRole('navigation', { name: 'Profile steps' }).getByRole('button').nth(4).click();
   await expect(page.getByTestId('gap-list')).toContainText('English-language minimums', {
     timeout: 10_000,
   });
+  await page.getByRole('navigation', { name: 'Profile steps' }).getByRole('button').nth(2).click();
   await page.getByTestId('ielts-overall').fill('7');
 });
 
 test('preferences screen exposes the scoring weights and warns about live mode', async () => {
-  await page.goto('/');
+  await page.goto('/#/profile');
+  await page.getByRole('navigation', { name: 'Profile steps' }).getByRole('button').nth(0).click();
   await page.getByTestId('load-demo-profile').click();
-  await page.getByTestId('to-preferences').click();
-  await expect(page.getByRole('heading', { name: 'What matters to you' })).toBeVisible();
+  await page.evaluate(() => { window.location.hash = '#/preferences'; });
+  await expect(page.getByRole('heading', { name: /Shape your perfect match/ })).toBeVisible();
   await expect(page.getByText('It is not a probability of admission')).toBeVisible();
 
   await page.getByTestId('demo-toggle').uncheck();
@@ -52,14 +58,14 @@ test('preferences screen exposes the scoring weights and warns about live mode',
 });
 
 test('research runs to completion and reports what it could not read', async () => {
-  await page.getByTestId('nav-preferences').click();
+  await page.evaluate(() => { window.location.hash = '#/preferences'; });
   await page.getByTestId('start-research').click();
 
   await expect(page.getByTestId('stage-list')).toBeVisible();
   await page.screenshot({ path: shot('03-progress-running.png'), fullPage: true });
 
   await waitForResults(page);
-  await expect(page.getByText('Research complete')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Your opportunities are ready.' })).toBeVisible();
   // Unreadable pages are surfaced, not swallowed.
   await expect(page.getByText(/Pages that could not be read/)).toBeVisible();
   await page.screenshot({ path: shot('04-progress-complete.png'), fullPage: true });
@@ -160,9 +166,9 @@ test('missing scholarship data reads as unknown, not as no funding', async () =>
 
 test('conflicting official sources are shown with a drafted question', async () => {
   await openShortlist(page);
-  await page.getByTestId('nav-sources').click();
+  await page.evaluate(() => { window.location.hash = '#/sources'; });
 
-  await expect(page.getByRole('heading', { name: 'What we could not settle' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /See the proof behind every match/ })).toBeVisible();
   await expect(page.getByTestId('conflict-list')).toContainText('minimum overall IELTS band');
   await expect(page.getByTestId('conflict-list')).toContainText('more specific source');
 
@@ -173,7 +179,7 @@ test('conflicting official sources are shown with a drafted question', async () 
 
 test('funding comparison hatches what it cannot compare', async () => {
   await openShortlist(page);
-  await page.getByTestId('nav-funding').click();
+  await page.evaluate(() => { window.location.hash = '#/funding'; });
 
   await expect(page.getByRole('heading', { name: 'What you would actually pay' })).toBeVisible();
   await expect(page.locator('.fund-bar__unknown').first()).toBeVisible();
@@ -189,12 +195,12 @@ test('approve, collect documents, and export', async () => {
   await rows.nth(1).locator('.decision-btn--approve').click();
   await expect(rows.nth(0).locator('.decision-btn--approve')).toHaveAttribute('aria-pressed', 'true');
 
-  await page.getByTestId('nav-approved').click();
+  await page.evaluate(() => { window.location.hash = '#/approved'; });
   await expect(page.getByText('2 approved')).toBeVisible();
   await page.screenshot({ path: shot('10-approved.png'), fullPage: true });
 
   await page.getByTestId('collect-documents').click();
-  await expect(page.getByRole('heading', { name: 'What to prepare, and when' })).toBeVisible({
+  await expect(page.getByRole('heading', { name: /Prepare with confidence/ })).toBeVisible({
     timeout: 60_000,
   });
   await expect(page.locator('.doc').first()).toBeVisible({ timeout: 30_000 });
@@ -202,7 +208,7 @@ test('approve, collect documents, and export', async () => {
   await expect(page.locator('.doc').first()).toContainText(/reference|transcript|diploma|statement/i);
   await page.screenshot({ path: shot('11-documents.png'), fullPage: true });
 
-  await page.getByTestId('nav-export').click();
+  await page.evaluate(() => { window.location.hash = '#/export'; });
   await expect(page.getByRole('heading', { name: 'Take it with you, or erase it' })).toBeVisible();
   const download = page.waitForEvent('download');
   await page.getByTestId('export-csv').click();
@@ -229,7 +235,7 @@ test('rejection is remembered with the row kept', async () => {
   await expect(first).toHaveClass(/is-rejected/);
   await expect(first).toContainText('Rejected: no funding');
 
-  await page.getByTestId('nav-approved').click();
+  await page.evaluate(() => { window.location.hash = '#/approved'; });
   await expect(page.getByText('Rejected (1)')).toBeVisible();
   await expect(page.getByText(name)).toBeVisible();
   await expect(page.getByText('no funding')).toBeVisible();
@@ -237,7 +243,7 @@ test('rejection is remembered with the row kept', async () => {
 
   // And it survives a reload: the reason lives on the server, not in the tab.
   await page.reload();
-  await page.getByTestId('nav-approved').click();
+  await page.evaluate(() => { window.location.hash = '#/approved'; });
   await expect(page.getByText('no funding')).toBeVisible();
 });
 
@@ -245,12 +251,12 @@ test('screens have addresses: back, forward, reload and a gated link', async () 
   await openShortlist(page);
   await expect(page).toHaveURL(/#\/shortlist$/);
 
-  await page.getByTestId('nav-funding').click();
+  await page.evaluate(() => { window.location.hash = '#/funding'; });
   await expect(page).toHaveURL(/#\/funding$/);
 
   await page.goBack();
   await expect(page).toHaveURL(/#\/shortlist$/);
-  await expect(page.getByRole('heading', { name: 'The shortlist' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /Find your best matches/ })).toBeVisible();
 
   await page.goForward();
   await expect(page).toHaveURL(/#\/funding$/);
@@ -264,7 +270,7 @@ test('screens have addresses: back, forward, reload and a gated link', async () 
 test('a link to a screen that is not reachable yet explains itself', async ({ browser }) => {
   // A bookmark made before there were any results, opened in a clean session.
   const fresh = await browser.newPage();
-  await fresh.goto('/#/shortlist');
+  await fresh.goto('/#/funding');
   await expect(fresh.getByTestId('redirect-notice')).toBeVisible();
   await expect(fresh.getByTestId('redirect-notice')).toContainText('No results yet');
   await expect(fresh).toHaveURL(/#\/profile$/);

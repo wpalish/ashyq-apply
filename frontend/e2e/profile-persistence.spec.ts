@@ -17,7 +17,7 @@ import { expect, test } from '@playwright/test';
 test.describe.configure({ mode: 'serial' });
 
 test('a saved profile is restored into the form after a reload', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/#/profile');
 
   // Start from a blank profile so nothing synthetic is in play.
   await page.getByTestId('clear-profile').click();
@@ -26,6 +26,7 @@ test('a saved profile is restored into the form after a reload', async ({ page }
 
   await page.getByLabel('Citizenship').fill('Uzbekistan');
   await page.getByLabel('Field of study').fill('civil engineering');
+  await page.getByRole('navigation', { name: 'Profile steps' }).getByRole('button').nth(2).click();
   await page.getByTestId('ielts-overall').fill('7');
   await page.getByTestId('save-profile').click();
   await expect(page.getByText('Saved', { exact: true })).toBeVisible();
@@ -34,17 +35,21 @@ test('a saved profile is restored into the form after a reload', async ({ page }
 
   await expect(page.getByLabel('Citizenship')).toHaveValue('Uzbekistan', { timeout: 15_000 });
   await expect(page.getByLabel('Field of study')).toHaveValue('civil engineering');
+  await page.getByRole('navigation', { name: 'Profile steps' }).getByRole('button').nth(2).click();
   await expect(page.getByTestId('ielts-overall')).toHaveValue('7');
 });
 
 test('demo data is only ever loaded on request, and is labelled when it is', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/#/profile');
 
   await expect(page.getByLabel('Field of study')).toHaveValue('');
   await expect(page.getByLabel('Citizenship')).toHaveValue('');
+  await page.getByRole('navigation', { name: 'Profile steps' }).getByRole('button').nth(1).click();
   await expect(page.getByLabel('GPA / average')).toHaveValue('');
+  await page.getByRole('navigation', { name: 'Profile steps' }).getByRole('button').nth(2).click();
   await expect(page.getByLabel('SAT total')).toHaveValue('');
   await expect(page.getByTestId('ielts-overall')).toHaveValue('');
+  await page.getByRole('navigation', { name: 'Profile steps' }).getByRole('button').nth(0).click();
   await expect(page.getByText('synthetic demo data')).toBeHidden();
 
   await page.getByTestId('load-demo-profile').click();
@@ -56,7 +61,7 @@ test('demo data is only ever loaded on request, and is labelled when it is', asy
 });
 
 test('replacing a saved profile asks first', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/#/profile');
   await page.getByTestId('clear-profile').click();
   const confirm = page.getByTestId('confirm-replace');
   if (await confirm.isVisible().catch(() => false)) await confirm.click();
@@ -72,18 +77,19 @@ test('replacing a saved profile asks first', async ({ page }) => {
 });
 
 test('typing multiple subjects and countries keeps separators and saves complete lists', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/#/profile');
   const field = page.getByLabel('Field of study');
   await field.pressSequentially('Computer Science, Mathematics, ');
   await expect(field).toHaveValue('Computer Science, Mathematics, ');
-  await page.getByTestId('to-preferences').click();
+  await page.evaluate(() => { window.location.hash = '#/preferences'; });
 
+  await page.getByText('Other countries and location preferences').click();
   const excluded = page.getByLabel('Excluded countries');
   await excluded.pressSequentially('Austria, Canada, Czech Republic, ');
   await expect(excluded).toHaveValue('Austria, Canada, Czech Republic, ');
   await page.getByLabel('Preferred countries').pressSequentially('Singapore, United Kingdom');
   await page.getByLabel('Research interests').pressSequentially('machine learning, data science');
-  await page.getByTestId('nav-profile').click();
+  await page.evaluate(() => { window.location.hash = '#/profile'; });
 
   const profileRequest = page.waitForRequest((request) =>
     request.method() === 'POST' && request.url().endsWith('/api/profiles'));
@@ -99,6 +105,7 @@ test('typing multiple subjects and countries keeps separators and saves complete
   await expect(page.getByText('Saved', { exact: true })).toBeVisible();
   await page.reload();
   await expect(field).toHaveValue('Computer Science, Mathematics');
-  await page.getByTestId('to-preferences').click();
+  await page.evaluate(() => { window.location.hash = '#/preferences'; });
+  await page.getByText('Other countries and location preferences').click();
   await expect(excluded).toHaveValue('Austria, Canada, Czech Republic');
 });

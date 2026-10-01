@@ -18,7 +18,7 @@ const RUN = `e2e${Date.now().toString().slice(-7)}`;
 /** Open the community profile, joining first if this database has no profile. */
 async function ensureJoined(page: Page): Promise<void> {
   await page.goto('/');
-  await page.getByTestId('nav-me').click();
+  await page.goto('/#/me');
 
   // The screen loads before it knows which of the two it is showing, so wait
   // for either rather than racing the spinner.
@@ -38,7 +38,7 @@ async function ensureJoined(page: Page): Promise<void> {
 test('joining publishes a profile that Discover can find', async ({ page }) => {
   await ensureJoined(page);
 
-  await page.getByTestId('nav-discover').click();
+  await page.goto('/#/discover');
   await page.getByLabel('City').fill('Astana');
   await page.getByLabel('University').click(); // blur commits the filter
 
@@ -47,7 +47,7 @@ test('joining publishes a profile that Discover can find', async ({ page }) => {
 
 test('a post shows the tags it will publish, then carries them into the feed', async ({ page }) => {
   await page.goto('/');
-  await page.getByTestId('nav-feed').click();
+  await page.goto('/#/feed');
 
   const composer = page.getByPlaceholder('Ask something, or say where you are applying');
   await composer.fill(`Кто сдаёт IELTS в #${RUN}?`);
@@ -64,7 +64,7 @@ test('a post shows the tags it will publish, then carries them into the feed', a
 
 test('an answer opens in place under its post and is counted', async ({ page }) => {
   await page.goto('/');
-  await page.getByTestId('nav-feed').click();
+  await page.goto('/#/feed');
 
   // Scoped to this run's own post: the database keeps earlier ones, and
   // "Answer" is a substring of another post's "1 answer".
@@ -84,21 +84,20 @@ test('every community screen is reachable on a phone', async ({ page }) => {
   );
   await page.goto('/');
 
-  // The navigation used to be a 2223px strip in 343px of room: one item
-  // visible, and Community 1660px along it with nothing saying so.
-  const overflow = await page
-    .locator('.nav')
-    .evaluate((nav) => nav.scrollWidth - nav.clientWidth);
-  expect(overflow, 'the navigation must wrap, not hide items in a scroller').toBeLessThanOrEqual(1);
-
+  // The compact five-area navigation stays usable on a phone; contextual
+  // community destinations are available through Explore.
+  const overflow = await page.locator('.nav').evaluate((nav) => nav.scrollWidth - nav.clientWidth);
+  expect(overflow, 'the navigation must not hide primary areas in a scroller').toBeLessThanOrEqual(1);
+  await expect(page.getByTestId('nav-feed')).toBeInViewport();
+  await page.locator('.journey-menu summary').click();
   for (const label of ['Feed', 'Find applicants', 'My community profile']) {
-    await expect(page.getByRole('button', { name: label, exact: true })).toBeInViewport();
+    await expect(page.locator('.journey-menu').getByRole('button', { name: label, exact: true })).toBeVisible();
   }
 });
 
 test('an over-long post cannot be sent', async ({ page }) => {
   await page.goto('/');
-  await page.getByTestId('nav-feed').click();
+  await page.goto('/#/feed');
 
   await page.getByPlaceholder('Ask something, or say where you are applying').fill('x'.repeat(501));
 
@@ -108,7 +107,7 @@ test('an over-long post cannot be sent', async ({ page }) => {
 
 test('a post can be taken back without leaving the community', async ({ page }) => {
   await page.goto('/');
-  await page.getByTestId('nav-feed').click();
+  await page.goto('/#/feed');
 
   const body = `Сказал не подумав ${RUN}`;
   await page.getByPlaceholder('Ask something, or say where you are applying').fill(body);
@@ -137,6 +136,6 @@ test('leaving the community is reversible from the same screen', async ({ page }
 
   // Back to the join form, with the account still signed in.
   await expect(page.getByRole('heading', { name: 'Join the community' })).toBeVisible();
-  await page.getByTestId('nav-discover').click();
+  await page.goto('/#/discover');
   await expect(page.getByText('Nobody has joined yet')).toBeVisible();
 });

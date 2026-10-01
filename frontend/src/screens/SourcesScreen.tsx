@@ -75,7 +75,7 @@ export function SourcesScreen() {
             <button
               key={id}
               className="btn btn--sm"
-              style={filter === id ? { borderColor: 'var(--accent)', color: 'var(--accent)' } : undefined}
+              style={filter === id ? { borderColor: 'var(--accent)', color: 'var(--accent-text)' } : undefined}
               onClick={() => setFilter(id)}
               data-testid={`filter-${id}`}
             >
