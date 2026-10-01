@@ -1,10 +1,13 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import { ApiError, api } from '@/api/client';
 import type { AuthStatus } from '@/types';
+import { PublicLanding } from '@/components/PublicLanding';
+import { LegalScreen } from '@/screens/LegalScreen';
 
 export function AuthGate({ children }: { children: ReactNode }) {
   const [status, setStatus] = useState<AuthStatus | null>(null);
-  const [mode, setMode] = useState<'login' | 'register'>('login');
+  const [mode, setMode] = useState<'login' | 'register'>(() => window.location.hash.includes('create=1') ? 'register' : 'login');
+  const [route, setRoute] = useState(() => window.location.hash);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
@@ -19,14 +22,40 @@ export function AuthGate({ children }: { children: ReactNode }) {
   );
 
   useEffect(() => {
+    if (!status?.authenticated) document.documentElement.setAttribute('data-theme', 'light');
+  }, [status?.authenticated]);
+
+  useEffect(() => {
     api.authStatus().then(setStatus).catch((e) => setError(e instanceof Error ? e.message : String(e)));
   }, []);
+
+  useEffect(() => {
+    const onHashChange = () => setRoute(window.location.hash);
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
+  }, []);
+
+  useEffect(() => {
+    if (route.startsWith('#/sign-in?create=1')) setMode('register');
+  }, [route]);
+
+  if (route.startsWith('#/legal')) {
+    return (
+      <div className="public-legal">
+        <header><a className="landing__brand" href={status?.authenticated ? '#/home' : '#/welcome'}><img src="/brand/unimatch-mark.png" alt="" /> Unimatch</a><a href={status?.authenticated ? '#/home' : '#/welcome'}>Back</a></header>
+        <main><LegalScreen /></main>
+      </div>
+    );
+  }
+  if (!status?.authenticated && (!route || route === '#/welcome' || route.startsWith('#how-it-works') || route.startsWith('#why-unimatch'))) {
+    return <PublicLanding />;
+  }
 
   if (!status) {
     return (
       <main className="auth-shell">
         <div className="panel auth-card" role="status">
-          <h1>ASHYQ Apply</h1>
+          <h1>Unimatch</h1>
           <p className="muted">Connecting securely…</p>
           {error && <div className="notice notice--risk">{error}</div>}
         </div>
@@ -37,7 +66,8 @@ export function AuthGate({ children }: { children: ReactNode }) {
   // Older servers do not advertise this capability and support recovery.
   const passwordResetEnabled = status.password_reset_enabled !== false;
   const backToSignIn = () => {
-    window.location.hash = '';
+    window.location.hash = '#/sign-in';
+    setRoute('#/sign-in');
     setResetToken('');
   };
 
@@ -129,11 +159,24 @@ export function AuthGate({ children }: { children: ReactNode }) {
   };
 
   return (
-    <main className="auth-shell">
+    <main className="auth-shell auth-shell--unimatch">
+      <div className="auth-experience">
+        <div className="auth-experience__visual">
+          <img src="/brand/unimatch-journey.png" alt="A small Unimatch robot overlooks a university and a mountain lake" />
+          <div>
+            <span className="home-eyebrow">SAME STUDENTS. BIGGER HORIZONS.</span>
+            <h1>Global opportunities<br />start with <em>you.</em></h1>
+            <p>Personalized research. Real information. A clearer path.</p>
+          </div>
+        </div>
       <form className="panel auth-card stack" onSubmit={submit}>
         <div>
-          <p className="screen__eyebrow">Private applicant workspace</p>
-          <h1>{mode === 'login' ? 'Sign in to ASHYQ Apply' : 'Create your workspace'}</h1>
+          <a className="landing__brand" href="#/welcome"><img src="/brand/unimatch-mark.png" alt="" /> Unimatch</a>
+          <div className="auth-tabs" role="tablist" aria-label="Account">
+            <button type="button" role="tab" aria-selected={mode === 'login'} onClick={() => setMode('login')}>Sign in</button>
+            {status.registration_enabled && <button type="button" role="tab" aria-selected={mode === 'register'} onClick={() => setMode('register')}>Create account</button>}
+          </div>
+          <h1>{mode === 'login' ? 'Welcome back.' : 'Start your journey.'}</h1>
           <p className="muted small" style={{ marginTop: 'var(--space-3)' }}>
             Applicant records stay isolated inside your organization. University research never
             sends profile data to third-party websites.
@@ -188,7 +231,9 @@ export function AuthGate({ children }: { children: ReactNode }) {
             {mode === 'login' ? 'Create a new workspace' : 'I already have an account'}
           </button>
         )}
+        <a className="auth-legal-link" href="#/legal">Privacy &amp; terms · Drafts awaiting legal review</a>
       </form>
+      </div>
     </main>
   );
 }

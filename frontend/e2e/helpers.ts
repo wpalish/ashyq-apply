@@ -45,16 +45,19 @@ export async function waitForResults(page: Page, timeout = 120_000): Promise<voi
 }
 
 export async function runDemoResearch(page: Page): Promise<void> {
-  await page.goto('/');
+  await page.goto('/#/profile');
   await page.getByTestId('load-demo-profile').click();
-  await page.getByTestId('to-preferences').click();
+  await page.goto('/#/preferences');
   await expect(page.getByTestId('start-research')).toBeEnabled();
   await page.getByTestId('start-research').click();
   await waitForResults(page);
 }
 
 export async function openShortlist(page: Page): Promise<void> {
-  await page.getByTestId('nav-shortlist').click();
+  await page.goto('/#/shortlist');
+  await expect(page.locator('.find-card').first()).toBeVisible();
+  const advanced = page.locator('.find-advanced');
+  if (!(await advanced.evaluate((element: HTMLDetailsElement) => element.open))) await advanced.locator('summary').first().click();
   await expect(page.getByTestId('shortlist-table')).toBeVisible();
 
   // Out-of-budget, needs-clarification and excluded rows sit in sections that
@@ -81,6 +84,11 @@ export function rowFor(page: Page, name: string) {
 export async function expandRow(page: Page, name: string) {
   const row = rowFor(page, name);
   await expect(row).toBeVisible();
+  if ((page.viewportSize()?.width ?? 0) <= 700) {
+    const card = page.locator('.find-card').filter({ has: page.getByRole('heading', { name, exact: true }) }).first();
+    await card.getByRole('button', { name: 'View details' }).click();
+    return row;
+  }
   await row.getByRole('button', { name, exact: true }).click();
   return row;
 }

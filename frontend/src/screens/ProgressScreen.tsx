@@ -12,6 +12,7 @@ import { dateTime } from '@/lib/format';
 import { useStore } from '@/lib/store';
 
 const STAGE_LABELS: Record<string, string> = {
+  queued: 'Preparing the research queue',
   profile_validation: 'Checking your profile',
   candidate_discovery: 'Finding candidate universities',
   program_verification: 'Reading official programme pages',
@@ -81,26 +82,32 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
   return (
     <>
       <div className="screen__head">
-        <p className="screen__eyebrow">Step 03</p>
+        <p className="screen__eyebrow">Unimatch research</p>
         <h1 className="screen__title">
-          {failed ? 'Research failed' : cancelled ? 'Research cancelled' : finished ? 'Research complete' : 'Researching'}
+          {failed ? 'Research needs attention.' : cancelled ? 'Research cancelled.' : finished ? 'Your opportunities are ready.' : 'We’re researching your opportunities.'}
         </h1>
-        <p className="screen__lede">{STAGE_LABELS[run.stage] ?? run.stage.replace(/_/g, ' ')}</p>
+        <p className="screen__lede">{STAGE_LABELS[run.stage] ?? run.stage.replace(/_/g, ' ')}. We show what the official pages confirm and keep missing facts open.</p>
       </div>
 
       <div className="stack stack--loose">
-        <div className="stack stack--tight">
+        <div className="research-hero">
+          <div className="research-hero__copy">
+            <span className="home-eyebrow">{run.demo_mode ? 'SYNTHETIC DEMO RESEARCH' : 'REAL INFORMATION · BRIGHTER CHOICES'}</span>
+            <strong>{Math.round(run.progress * 100)}%</strong>
+            <p>{finished ? 'Your research has finished.' : failed || cancelled ? 'You can review what was saved.' : 'Research in progress'}</p>
           <div className="meter" role="progressbar" aria-valuenow={Math.round(run.progress * 100)}
                aria-valuemin={0} aria-valuemax={100} aria-label="Research progress">
             <div className="meter__fill" style={{ width: `${Math.max(3, run.progress * 100)}%` }} />
           </div>
           <div className="row" style={{ justifyContent: 'space-between' }}>
-            <span className="xs muted">{Math.round(run.progress * 100)}% of stages complete</span>
+            <span className="xs muted">{Math.round(run.progress * 100)}% of stages complete · {STAGE_LABELS[run.stage] ?? run.stage.replace(/_/g, ' ')}</span>
             <span className="xs faint">
-              started {dateTime(run.started_at)}
+              {run.started_at ? `started ${dateTime(run.started_at)}` : 'Waiting for the worker'}
               {run.finished_at && ` · finished ${dateTime(run.finished_at)}`}
             </span>
           </div>
+          </div>
+          <img src="/brand/unimatch-journey.png" alt="Unimatch mascot looking towards a mountain landscape" />
         </div>
 
         {abandoned && (
@@ -148,6 +155,8 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
           </Notice>
         )}
 
+        <details className="research-metrics">
+          <summary>Research activity and page counts</summary>
         <div className="statband">
           <Stat value={run.candidates_found} label="Candidates found" />
           <Stat value={run.programs_verified} label="Programmes checked" />
@@ -156,6 +165,7 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
           <Stat value={run.claims_recorded} label="Claims recorded" />
           <Stat value={results.length} label="Results ready" />
         </div>
+        </details>
 
         {finished && (
           <p className="small muted">

@@ -43,6 +43,7 @@ it('keeps typed separators and submits each complete list without inventing entr
     <PreferencesScreen onStarted={() => {}} />
   </StoreProvider>);
   await waitFor(() => expect(screen.getByTestId('demo-toggle')).toBeEnabled());
+  fireEvent.click(screen.getByRole('button', { name: '4 Activities & achievements' }));
   fireEvent.click(screen.getByRole('button', { name: '+ Add activity' }));
   fireEvent.click(screen.getByRole('button', { name: '+ Add achievement' }));
 

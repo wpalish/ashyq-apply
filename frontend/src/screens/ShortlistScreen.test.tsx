@@ -140,6 +140,28 @@ describe('filter labels', () => {
   });
 });
 
+describe('Find search', () => {
+  it('filters by university, programme and country without changing the saved results', () => {
+    render(<ShortlistScreen />);
+    const search = screen.getByPlaceholderText('Search universities, programmes or countries…');
+    expect(screen.getByTestId('card-result-1')).toBeInTheDocument();
+    fireEvent.change(search, { target: { value: 'Toronto' } });
+    expect(screen.queryByTestId('card-result-1')).not.toBeInTheDocument();
+    expect(screen.getByText('Nothing matches these filters yet.')).toBeInTheDocument();
+    fireEvent.change(search, { target: { value: 'netherlands' } });
+    expect(screen.getByTestId('card-result-1')).toBeInTheDocument();
+  });
+
+  it('opens a source-backed result and compares only selected programmes', () => {
+    render(<ShortlistScreen />);
+    fireEvent.click(screen.getByTestId('card-expand-result-1'));
+    expect(screen.getByTestId('card-expand-result-1')).toHaveAttribute('aria-expanded', 'true');
+    fireEvent.click(screen.getByRole('button', { name: /^Compare$/ }));
+    expect(screen.getByRole('button', { name: 'Compare (1)' })).toBeEnabled();
+    expect(screen.getByRole('region', { name: 'Compare selected programmes' })).toHaveTextContent('University of Groningen');
+  });
+});
+
 describe('notes', () => {
   it('saves a note without deciding the row', async () => {
     render(<ShortlistScreen />);

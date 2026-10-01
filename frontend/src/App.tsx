@@ -10,7 +10,6 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useStore } from '@/lib/store';
 import { PaywallNotice } from '@/components/PaywallNotice';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
-import { AccountMenu } from '@/components/AccountMenu';
 import { ProfileScreen } from '@/screens/ProfileScreen';
 import { PreferencesScreen } from '@/screens/PreferencesScreen';
 import { ProgressScreen } from '@/screens/ProgressScreen';
@@ -26,16 +25,21 @@ import { DiscoverScreen } from '@/screens/DiscoverScreen';
 import { PersonScreen } from '@/screens/PersonScreen';
 import { MessagesScreen } from '@/screens/MessagesScreen';
 import { ModerationScreen } from '@/screens/ModerationScreen';
+import { HomeScreen } from '@/screens/HomeScreen';
+import { SettingsScreen } from '@/screens/SettingsScreen';
+import { BillingScreen } from '@/screens/BillingScreen';
 import { Chip } from '@/components/primitives';
 import { api } from '@/api/client';
 import { LOCALES, t as translate, type Locale, type MessageKey } from '@/lib/i18n';
 import { useTranslation } from '@/lib/useTranslation';
 import type { PersonCard } from '@/types';
+import { Files, House, ListChecks, MagnifyingGlass, UsersThree } from '@phosphor-icons/react';
 
 export type ScreenId =
-  | 'profile' | 'preferences' | 'progress' | 'shortlist' | 'funding'
+  | 'home' | 'profile' | 'preferences' | 'progress' | 'shortlist' | 'funding'
   | 'approved' | 'documents' | 'sources' | 'export'
-  | 'feed' | 'discover' | 'messages' | 'me' | 'person' | 'moderation' | 'legal';
+  | 'feed' | 'discover' | 'messages' | 'me' | 'person' | 'moderation' | 'legal'
+  | 'settings' | 'billing';
 
 /**
  * The numbers are not decoration: the case screens are a sequence, and 04
@@ -65,7 +69,7 @@ const SCREENS: { id: ScreenId; num?: string; label: MessageKey; group: MessageKe
 /** The screen named by `#/…`, if it names one at all. */
 function screenFromHash(): ScreenId | null {
   const id = window.location.hash.replace(/^#\/?/, '').split('?')[0];
-  return SCREENS.some((s) => s.id === id) ? (id as ScreenId) : null;
+  return id === 'home' || id === 'settings' || id === 'billing' || SCREENS.some((s) => s.id === id) ? (id as ScreenId) : null;
 }
 
 /**
@@ -77,17 +81,22 @@ function screenFromHash(): ScreenId | null {
  * just as live as the hook.
  */
 function label(id: ScreenId): string {
+  if (id === 'home') return 'Home';
+  if (id === 'settings') return 'Settings';
+  if (id === 'billing') return 'Billing';
   const entry = SCREENS.find((s) => s.id === id);
   return entry ? translate(entry.label) : id;
 }
 
-/** "1 conflict", not "1 conflicts". */
-function plural(n: number, noun: string): string {
-  return `${n} ${noun}${n === 1 ? '' : 's'}`;
-}
-
-const THEME_KEY = 'ashyq.theme';
+const THEME_KEY = 'unimatch.theme';
 type Theme = 'system' | 'light' | 'dark';
+const PRIMARY_NAV = [
+  { id: 'home', label: 'Home', icon: House },
+  { id: 'shortlist', label: 'Find', icon: MagnifyingGlass },
+  { id: 'approved', label: 'Plan', icon: ListChecks },
+  { id: 'documents', label: 'Documents', icon: Files },
+  { id: 'feed', label: 'Community', icon: UsersThree },
+] as const;
 
 export default function App() {
   const {
@@ -95,7 +104,8 @@ export default function App() {
     cases, savedProfile, switchCase, newCase, dirty, hydrated,
   } = useStore();
   const { t, locale, setLocale } = useTranslation();
-  const [screen, setScreenState] = useState<ScreenId>(() => screenFromHash() ?? 'profile');
+  const [screen, setScreenState] = useState<ScreenId>(() => screenFromHash() ?? 'home');
+  const [role, setRole] = useState<string | null>(null);
   const [redirected, setRedirected] = useState<string | null>(null);
   /** Ask before throwing away typing the applicant has not saved. */
   const confirmDiscard = () =>
@@ -113,9 +123,9 @@ export default function App() {
   const [unread, setUnread] = useState(0);
   const [theme, setTheme] = useState<Theme>(() => {
     try {
-      return (window.localStorage.getItem(THEME_KEY) as Theme) ?? 'system';
+      return (window.localStorage.getItem(THEME_KEY) as Theme) ?? 'light';
     } catch {
-      return 'system';
+      return 'light';
     }
   });
 
@@ -131,6 +141,7 @@ export default function App() {
   }, [theme]);
 
   useEffect(() => {
+    api.authStatus().then((status) => setRole(status.principal?.role ?? null)).catch(() => {});
     api.socialMe()
       .then((state) => { setJoined(state.joined); setMe(state.profile); })
       .catch(() => { /* the community is optional; its absence must not block the case */ });
@@ -165,28 +176,19 @@ export default function App() {
   const maybeCount = results.filter((r) => r.user_decision === 'maybe').length;
   const withChecklists = results.filter((r) => r.checklist).length;
 
-  const collectingDocuments = Boolean(
-    run
-      && (run.stage === 'document_collection'
-        || ((run.job_status === 'queued' || run.job_status === 'running')
-          && approvedCount + maybeCount > 0)),
-  );
-
   const gate: Record<ScreenId, string | null> = {
+    home: null,
     profile: null,
     preferences: null,
     progress: run ? null : 'Start research first',
-    shortlist: hasResults ? null : 'No results yet',
+    shortlist: null,
     funding: hasResults ? null : 'No results yet',
     sources: hasResults ? null : 'No results yet',
-    approved: hasResults ? null : 'No results yet',
+    approved: null,
     // Also open while collection is in flight: the applicant pressed Collect
     // and the worker has not finished yet. Bouncing them off the screen they
     // just asked for would be the redirect fighting the workflow.
-    documents:
-      withChecklists > 0 || collectingDocuments
-        ? null
-        : 'Approve programmes, then collect documents',
+    documents: null,
     export: run ? null : 'Start research first',
     // The community does not depend on a research run, so nothing gates it.
     feed: null,
@@ -197,6 +199,8 @@ export default function App() {
     person: null,
     // A privacy policy nobody can reach before signing up is not a policy.
     legal: null,
+    settings: null,
+    billing: null,
   };
 
   // The hash is the address of the screen: back and forward work, a reload
@@ -208,6 +212,10 @@ export default function App() {
     const target = `#/${next}`;
     if (window.location.hash !== target) window.location.hash = target;
   }, []);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [screen]);
 
   // Only an address typed, bookmarked or arrived at through history is checked
   // against the gates. In-app navigation is already gated by the disabled nav
@@ -272,48 +280,35 @@ export default function App() {
     messages: unread || undefined,
   };
 
-  let groupSeen = '';
-
   return (
     <div className="app">
       <aside className="sidebar">
         <div className="brand">
-          <span className="brand__mark">ASHYQ Apply</span>
-          <span className="brand__tag">
-            {t('brand.tagline')}
-          </span>
+          <img className="brand__icon" src="/brand/unimatch-mark.png" alt="" />
+          <span className="brand__mark">Unimatch</span>
         </div>
 
-        <nav className="nav" aria-label="Workflow">
-          {SCREENS.map((s) => {
-            const header = s.group !== groupSeen ? ((groupSeen = s.group), s.group) : null;
-            const blocked = gate[s.id];
-            return (
-              <div key={s.id}>
-                {header && <div className="nav__group-label">{t(header)}</div>}
-                <button
-                  type="button"
-                  className="nav__item"
-                  aria-current={screen === s.id ? 'page' : undefined}
-                  disabled={Boolean(blocked)}
-                  title={blocked ?? undefined}
-                  data-testid={`nav-${s.id}`}
-                  onClick={() => {
-                    // A deliberate move answers the explanation, so it goes.
-                    setRedirected(null);
-                    setScreen(s.id);
-                  }}
-                >
-                  <span className="nav__num">{s.num ?? ''}</span>
-                  <span>{t(s.label)}</span>
-                  {badges[s.id] !== undefined && <span className="nav__badge">{badges[s.id]}</span>}
-                </button>
-              </div>
-            );
-          })}
+        <nav className="nav" aria-label="Main navigation">
+          {PRIMARY_NAV.map((item) => (
+            <button
+              key={item.id}
+              type="button"
+              className="nav__item"
+              aria-current={screen === item.id ? 'page' : undefined}
+              data-testid={`nav-${item.id}`}
+              onClick={() => { setRedirected(null); setScreen(item.id); }}
+            >
+              <item.icon size={21} weight={screen === item.id ? 'fill' : 'regular'} aria-hidden="true" />
+              <span>{item.label}</span>
+              {badges[item.id] !== undefined && <span className="nav__badge">{badges[item.id]}</span>}
+            </button>
+          ))}
         </nav>
 
-        <div className="stack stack--tight" style={{ marginTop: 'auto' }}>
+        <div className="sidebar__footer">
+          <p>Same students.<br /><strong>Bigger horizons.</strong></p>
+          <details className="sidebar__settings">
+            <summary>Preferences</summary>
           <div className="field">
             <label className="field__label xs" htmlFor="theme">{t('appearance.label')}</label>
             <select
@@ -345,24 +340,28 @@ export default function App() {
           <p className="xs faint" style={{ margin: 0 }}>
             {t('brand.disclaimer')}
           </p>
+          </details>
         </div>
       </aside>
 
       <div className="main">
         <header className="topbar">
+          <span className="topbar__brand"><img src="/brand/unimatch-mark.png" alt="" />Unimatch</span>
           <Chip tone={capabilities?.demo_mode ? 'demo' : 'accent'}>
             {capabilities ? (capabilities.demo_mode ? 'Demo data' : 'Live sources') : 'connecting…'}
           </Chip>
-          {run && (
-            <>
-              <Chip tone="neutral" mono>run {run.id.slice(0, 8)}</Chip>
-              <Chip tone={run.stage === 'failed' ? 'risk' : 'neutral'}>
-                {run.stage.replace(/_/g, ' ')}
-              </Chip>
-            </>
-          )}
+          <details className="journey-menu">
+            <summary>Explore</summary>
+            <div className="journey-menu__list">
+              {SCREENS.filter((item) => item.id !== 'moderation' || role === 'moderator').map((item) => (
+                <button key={item.id} type="button" onClick={() => setScreen(item.id)} disabled={Boolean(gate[item.id])}>
+                  {t(item.label)}
+                </button>
+              ))}
+            </div>
+          </details>
           <div className="topbar__spacer" />
-          <label className="row row--tight xs muted" htmlFor="case-switcher">
+          <label className="row row--tight xs muted topbar__case" htmlFor="case-switcher">
             Applicant
             <select
               id="case-switcher"
@@ -386,18 +385,12 @@ export default function App() {
               ))}
             </select>
           </label>
-          <button className="btn btn--sm" type="button" onClick={() => {
+          <button className="btn btn--sm topbar__new-case" type="button" onClick={() => {
             if (!confirmDiscard()) return;
             newCase(); setScreen('profile');
           }}>{t('topbar.newCase')}</button>
-          {summary && (
-            <span className="xs muted">
-              {plural(summary.total, 'programme')} · {plural(summary.with_conflicts, 'conflict')} ·{' '}
-              {plural(summary.with_open_questions, 'open question')}
-            </span>
-          )}
-          <AccountMenu onSignedOut={() => window.location.reload()} />
-          <button className="btn btn--sm btn--ghost" data-testid="sign-out" type="button" onClick={async () => {
+          <button className="btn btn--sm btn--ghost topbar__settings" type="button" onClick={() => setScreen('settings')}>Settings</button>
+          <button className="btn btn--sm btn--ghost topbar__signout" data-testid="sign-out" type="button" onClick={async () => {
             await api.logout(); window.location.reload();
           }}>{t('topbar.signOut')}</button>
         </header>
@@ -435,22 +428,26 @@ export default function App() {
           {/* Scoped to the screen, so one broken screen cannot take the
               sidebar and the case switcher down with it. */}
           <ErrorBoundary label={`the ${screen} screen`} key={screen}>
+          {screen === 'home' && <HomeScreen onNavigate={setScreen} />}
           {screen === 'profile' && <ProfileScreen onNext={() => setScreen('preferences')} />}
           {screen === 'preferences' && <PreferencesScreen onStarted={() => setScreen('progress')} />}
           {screen === 'progress' && <ProgressScreen onDone={() => setScreen('shortlist')} />}
-          {screen === 'shortlist' && <ShortlistScreen />}
+          {screen === 'shortlist' && <ShortlistScreen onStart={() => setScreen(savedProfile ? 'preferences' : 'profile')} />}
           {screen === 'funding' && <FundingScreen />}
           {screen === 'sources' && <SourcesScreen />}
           {screen === 'approved' && <ApprovedScreen onCollect={() => setScreen('documents')} />}
           {screen === 'documents' && <DocumentsScreen />}
           {screen === 'export' && <ExportScreen />}
           {screen === 'legal' && <LegalScreen />}
+          {screen === 'settings' && <SettingsScreen theme={theme} setTheme={setTheme} locale={locale} setLocale={setLocale} onNavigate={setScreen} onSignedOut={() => window.location.reload()} />}
+          {screen === 'billing' && <BillingScreen />}
           {screen === 'feed' && (
             <FeedScreen
               joined={joined}
               myUserId={me?.user_id ?? null}
               onOpenPerson={(id) => { setPersonId(id); setScreen('person'); }}
               onJoin={() => setScreen('me')}
+              onDiscover={() => setScreen('discover')}
             />
           )}
           {screen === 'discover' && (

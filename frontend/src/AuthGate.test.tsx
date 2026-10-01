@@ -19,7 +19,7 @@ function renderGate() {
 
 beforeEach(() => {
   vi.restoreAllMocks();
-  window.location.hash = '';
+  window.location.hash = '#/sign-in';
   vi.spyOn(api, 'authStatus').mockResolvedValue({ ...signedOut, password_reset_enabled: false });
   vi.spyOn(api, 'login').mockResolvedValue(principal);
   vi.spyOn(api, 'register').mockResolvedValue(principal);
@@ -70,8 +70,8 @@ describe('password recovery capability', () => {
     expect(screen.queryByTestId('reset-password')).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Set password and sign in' })).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'Back to sign in' }));
-    expect(await screen.findByRole('heading', { name: 'Sign in to ASHYQ Apply' })).toBeInTheDocument();
-    expect(window.location.hash).toBe('');
+    expect(await screen.findByRole('heading', { name: 'Welcome back.' })).toBeInTheDocument();
+    expect(window.location.hash).toBe('#/sign-in');
     expect(api.confirmPasswordReset).not.toHaveBeenCalled();
     expect(api.requestPasswordReset).not.toHaveBeenCalled();
   });
@@ -97,5 +97,20 @@ describe('password recovery capability', () => {
     await waitFor(() => expect(api.confirmPasswordReset).toHaveBeenCalledWith('emailed-token', 'new password 123'));
     expect(await screen.findByText('Search workspace')).toBeInTheDocument();
     expect(window.location.hash).toBe('');
+  });
+});
+
+describe('public routes', () => {
+  it('shows a public landing before authentication', async () => {
+    window.location.hash = '#/welcome';
+    renderGate();
+    expect(screen.getByRole('heading', { name: /Find a university/ })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Sign in' })).toHaveAttribute('href', '#/sign-in');
+  });
+
+  it('makes the legal draft available before authentication', async () => {
+    window.location.hash = '#/legal';
+    renderGate();
+    expect(screen.getByTestId('legal-draft')).toHaveTextContent('not reviewed by a lawyer');
   });
 });

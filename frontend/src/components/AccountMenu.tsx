@@ -11,8 +11,8 @@ import { ApiError, api } from '@/api/client';
 
 type Workspace = { id: string; name: string; role: string; current: boolean };
 
-export function AccountMenu({ onSignedOut }: { onSignedOut: () => void }) {
-  const [open, setOpen] = useState(false);
+export function AccountMenu({ onSignedOut, initiallyOpen = false }: { onSignedOut: () => void; initiallyOpen?: boolean }) {
+  const [open, setOpen] = useState(initiallyOpen);
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   const [panel, setPanel] = useState<'none' | 'password' | 'delete'>('none');
   const [currentPassword, setCurrentPassword] = useState('');

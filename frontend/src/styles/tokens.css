@@ -1,36 +1,34 @@
 /*
  * Design tokens.
  *
- * Direction: an editorial research dossier. This is a tool whose product is
- * evidence, so the surface reads like a case file - a serif display face for
- * structure, a grotesque for dense data, a mono for anything quoted from a
- * source. Warm paper in light, deep ink in dark, and status carried by colour
- * that means something rather than decorates.
+ * Unimatch: clear navy typography, warm cream surfaces and a restrained
+ * yellow orbit accent. Semantic evidence colours retain their own meaning.
  */
 
 :root {
   color-scheme: light;
 
   /* --- surfaces: warm paper, layered rather than shadowed --- */
-  --paper:            oklch(97.8% 0.008 85);
+  --paper:            #FAF8F3;
   --surface:          oklch(100% 0 0);
-  --surface-sunken:   oklch(95.4% 0.010 85);
-  --surface-raised:   oklch(99.2% 0.005 85);
-  --surface-inverted: oklch(24% 0.020 265);
+  --surface-sunken:   #F5F3EE;
+  --surface-raised:   #FFFFFF;
+  --surface-inverted: #0B132C;
 
-  --ink:              oklch(23% 0.018 265);
-  --ink-muted:        oklch(45% 0.016 265);
-  --ink-faint:        oklch(45% 0.012 265);
-  --ink-inverted:     oklch(96% 0.006 85);
+  --ink:              #0B132C;
+  --ink-muted:        #566789;
+  --ink-faint:        #4F5B6C;
+  --ink-inverted:     #FFFFFF;
 
-  --rule:             oklch(89% 0.010 85);
-  --rule-strong:      oklch(80% 0.014 85);
+  --rule:             #E7EAF0;
+  --rule-strong:      #D3DCE9;
 
-  /* --- accent: ink blue, used for action and focus only --- */
-  --accent:           oklch(42% 0.135 258);
-  --accent-hover:     oklch(39% 0.140 258);
-  --accent-soft:      oklch(94% 0.030 258);
-  --accent-border:    oklch(78% 0.070 258);
+  /* Yellow marks a primary action; evidence statuses use separate tokens. */
+  --accent:           #F7C948;
+  --accent-text:      #895400;
+  --accent-hover:     #EAB934;
+  --accent-soft:      #FFF4D5;
+  --accent-border:    #F7D97F;
 
   /* --- semantic status: each maps to one product meaning --- */
   --ok:               oklch(40% 0.115 152);   /* MET, FULL_RIDE_CONFIRMED */
@@ -58,17 +56,17 @@
   --demo-border:      oklch(83% 0.070 320);
 
   /* --- type --- */
-  --font-display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+  --font-display: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-ui: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 
   --text-xs:   0.75rem;
-  --text-sm:   0.8125rem;
-  --text-base: 0.9375rem;
-  --text-md:   1.0625rem;
+  --text-sm:   0.875rem;
+  --text-base: 1rem;
+  --text-md:   1.125rem;
   --text-lg:   clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
-  --text-xl:   clamp(1.6rem, 1.3rem + 1.2vw, 2.25rem);
-  --text-display: clamp(2.1rem, 1.4rem + 3vw, 3.5rem);
+  --text-xl:   clamp(1.8rem, 1.5rem + 1.2vw, 2.5rem);
+  --text-display: clamp(2.3rem, 1.5rem + 3vw, 4rem);
 
   --leading-tight: 1.15;
   --leading-snug: 1.35;
@@ -84,9 +82,9 @@
   --space-7: 3rem;
   --space-8: clamp(3rem, 2rem + 4vw, 5.5rem);
 
-  --radius-sm: 3px;
-  --radius: 6px;
-  --radius-lg: 10px;
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-lg: 20px;
 
   --shadow-sm: 0 1px 2px oklch(23% 0.018 265 / 0.06);
   --shadow: 0 2px 6px oklch(23% 0.018 265 / 0.08), 0 1px 2px oklch(23% 0.018 265 / 0.05);
@@ -96,7 +94,7 @@
   --duration-normal: 220ms;
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 
-  --sidebar-width: 15.5rem;
+  --sidebar-width: 13rem;
   --measure: 68ch;
 }
 
@@ -123,10 +121,11 @@
     --rule:             oklch(30% 0.018 265);
     --rule-strong:      oklch(40% 0.020 265);
 
-    --accent:           oklch(76% 0.115 250);
-    --accent-hover:     oklch(84% 0.110 250);
-    --accent-soft:      oklch(28% 0.055 255);
-    --accent-border:    oklch(45% 0.080 255);
+    --accent:           #F7C948;
+    --accent-text:      #F7C948;
+    --accent-hover:     #EAB934;
+    --accent-soft:      #4A3B1C;
+    --accent-border:    #806824;
 
     --ok:               oklch(78% 0.120 152);
     --ok-soft:          oklch(27% 0.050 152);
@@ -175,10 +174,11 @@
   --rule:             oklch(30% 0.018 265);
   --rule-strong:      oklch(40% 0.020 265);
 
-  --accent:           oklch(76% 0.115 250);
-  --accent-hover:     oklch(84% 0.110 250);
-  --accent-soft:      oklch(28% 0.055 255);
-  --accent-border:    oklch(45% 0.080 255);
+  --accent:           #F7C948;
+  --accent-text:      #F7C948;
+  --accent-hover:     #EAB934;
+  --accent-soft:      #4A3B1C;
+  --accent-border:    #806824;
 
   --ok:               oklch(78% 0.120 152);
   --ok-soft:          oklch(27% 0.050 152);

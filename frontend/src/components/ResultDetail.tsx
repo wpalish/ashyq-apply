@@ -30,6 +30,26 @@ export function ResultDetail({ result }: { result: ProgramResult }) {
 
   return (
     <div className="detail" data-testid={`detail-${result.id}`}>
+      <header className="programme-hero">
+        <div>
+          <span className="home-eyebrow">PROGRAMME DETAILS · {result.country}</span>
+          <h2>{result.university}</h2>
+          <p className="programme-hero__programme">{result.program}</p>
+          <p className="programme-hero__place">{result.city}, {result.country}{result.degree ? ` · ${humanize(result.degree)}` : ''}</p>
+          {result.program_url && <SourceLink url={result.program_url} />}
+        </div>
+        <div className="programme-hero__status">
+          <span className="home-eyebrow">YOUR ASSESSMENT</span>
+          <StatusChip status={result.eligibility} tone={eligibilityTone[result.eligibility]} />
+          <p>Eligibility is separate from admissions fit. Neither is a probability of admission.</p>
+        </div>
+      </header>
+      <div className="programme-facts">
+        <div><span>Funding</span><StatusChip status={result.best_funding_classification} tone={fundingClassTone[result.best_funding_classification]} /></div>
+        <div><span>Remaining per year</span><strong>{result.funding_gap?.computable && result.funding_gap.gap ? money(result.funding_gap.gap) : 'Not enough comparable data'}</strong></div>
+        <div><span>Deadline</span><strong>{result.admission_deadline ? date(result.admission_deadline) : 'Not confirmed'}</strong></div>
+        <div><span>Evidence</span><strong>{result.conflicts.length} conflict{result.conflicts.length === 1 ? '' : 's'} · {result.unresolved.length} open question{result.unresolved.length === 1 ? '' : 's'}</strong></div>
+      </div>
       <div className="tabs" role="tablist" aria-label={`${result.university} details`}>
         {TABS.map((t) => (
           <button

@@ -10,6 +10,7 @@
 
 import { Fragment, useMemo, useState } from 'react';
 import { ResultDetail } from '@/components/ResultDetail';
+import { ComparePanel } from '@/components/ComparePanel';
 import { Chip, Empty, Field, Notice, Panel, StatusChip } from '@/components/primitives';
 import {
   FIT_DISCLAIMER, STATUS_LABEL, admissionsFitTone, bucketTone, date, eligibilityTone,
@@ -36,10 +37,14 @@ const SET_ASIDE_HINT: Record<string, string> = {
 //: stays available because these will never cover every case.
 const REJECTION_REASONS = ['cost', 'deadline passed', 'no funding', 'not a fit'];
 
-export function ShortlistScreen() {
+export function ShortlistScreen({ onStart }: { onStart?: () => void }) {
   const { results, summary, shortlist, decide, saveNotes } = useStore();
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [cardExpanded, setCardExpanded] = useState<string | null>(null);
   const [sort, setSort] = useState<SortKey>('key');
+  const [query, setQuery] = useState('');
+  const [tab, setTab] = useState<'all' | 'priority' | 'saved' | 'exploring'>('all');
+  const [compareIds, setCompareIds] = useState<string[]>([]);
   const [country, setCountry] = useState('');
   const [eligibility, setEligibility] = useState('');
   const [funding, setFunding] = useState('');
@@ -57,6 +62,11 @@ export function ShortlistScreen() {
   const rows = useMemo(() => {
     const filtered = results.filter(
       (r) =>
+        (!query.trim() || `${r.university} ${r.program} ${r.country} ${r.city}`.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase())) &&
+        (tab === 'all' ||
+          (tab === 'priority' && r.ranking?.bucket === 'WELL_PLACED') ||
+          (tab === 'saved' && (r.user_decision === 'approved' || r.user_decision === 'maybe')) ||
+          (tab === 'exploring' && r.user_decision === 'undecided')) &&
         (!country || r.country === country) &&
         (!eligibility || r.eligibility === eligibility) &&
         (!funding || r.best_funding_classification === funding) &&
@@ -76,14 +86,19 @@ export function ShortlistScreen() {
       const key = (r: ProgramResult) => r.ranking?.sort_key ?? r.preference_score?.total ?? 0;
       return key(b) - key(a) || a.id.localeCompare(b.id);
     });
-  }, [results, country, eligibility, funding, hideRejected, sort]);
+  }, [results, query, tab, country, eligibility, funding, hideRejected, sort]);
 
   // A row with no ranking is one assessed under v1; it still belongs in the
   // list rather than in a set-aside section it was never scored for.
   const ranked = rows.filter((r) => !r.ranking || RANKED.includes(r.ranking.bucket));
 
   if (results.length === 0) {
-    return <Empty title="No results yet">Run the research first.</Empty>;
+    return (
+      <div className="find-page">
+        <div className="screen__head"><p className="screen__eyebrow">FIND YOUR PATH</p><h1 className="screen__title">Find your best <span className="find-yellow">matches.</span></h1><p className="screen__lede">Research begins with your profile and preferences.</p></div>
+        <div className="find-empty"><Empty title="No results yet">Start research to find programmes supported by available sources.</Empty>{onStart && <button className="btn btn--primary" type="button" onClick={onStart}>Start research →</button>}</div>
+      </div>
+    );
   }
 
   const decideRow = (r: ProgramResult, d: UserDecision) => {
@@ -339,16 +354,16 @@ export function ShortlistScreen() {
   );
 
   return (
-    <>
-      <div className="screen__head">
-        <p className="screen__eyebrow">Step 04</p>
-        <h1 className="screen__title">The shortlist</h1>
-        <p className="screen__lede">
-          Three independent judgements per row. <strong>Eligibility</strong> is about published
-          requirements, <strong>fit</strong> is how your profile sits against them, and{' '}
-          <strong>funding</strong> is what an official page says an award covers. None of them
-          predicts a decision.
-        </p>
+    <div className="find-page">
+      <div className="find-hero">
+        <div className="screen__head">
+          <p className="screen__eyebrow">GLOBAL OPPORTUNITIES. REAL MATCHES.</p>
+          <h1 className="screen__title">Find your best <span className="find-yellow">matches.</span></h1>
+          <p className="screen__lede">
+            Explore programmes that fit your goals, budget and future. Open any result to see the evidence and what is still unknown.
+          </p>
+        </div>
+        <img src="/brand/unimatch-journey.png" alt="Unimatch mascot exploring a mountain landscape" />
       </div>
 
       <div className="stack stack--loose">
@@ -361,6 +376,17 @@ export function ShortlistScreen() {
           </Notice>
         )}
 
+        <div className="find-toolbar">
+          <label className="find-search"><span className="visually-hidden">Search universities, programmes or countries</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search universities, programmes or countries…" /></label>
+          <button type="button" className="btn" onClick={() => document.getElementById('find-filters')?.toggleAttribute('open')}>Filters</button>
+          <button type="button" className="btn btn--dark" disabled={compareIds.length === 0} onClick={() => document.getElementById('find-compare')?.scrollIntoView({ behavior: 'smooth' })}>Compare ({compareIds.length})</button>
+        </div>
+        <div className="find-tabs" role="tablist" aria-label="Match list">
+          {(['all', 'priority', 'saved', 'exploring'] as const).map((value) => <button key={value} type="button" role="tab" aria-selected={tab === value} onClick={() => setTab(value)}>{value.charAt(0).toUpperCase() + value.slice(1)}</button>)}
+        </div>
+
+        <details id="find-filters" className="find-filters">
+          <summary>Filter and sort results</summary>
         <Panel sunken>
           <div className="filters">
             <Field label="Country" htmlFor="f-country">
@@ -402,7 +428,53 @@ export function ShortlistScreen() {
             </label>
           </div>
         </Panel>
+        </details>
 
+        <div className="find-results" aria-live="polite">
+          <p className="find-results__count">{rows.length} result{rows.length === 1 ? '' : 's'} from this research run</p>
+          {rows.length === 0 && <div className="find-empty"><Empty title="Nothing matches these filters yet.">Try another search or clear the filters.</Empty><button type="button" className="btn" onClick={() => { setQuery(''); setTab('all'); setCountry(''); setEligibility(''); setFunding(''); setHideRejected(false); }}>Clear filters</button></div>}
+          {rows.map((result) => {
+            const open = cardExpanded === result.id;
+            const selected = compareIds.includes(result.id);
+            const gap = result.funding_gap;
+            return (
+              <article className="find-card" key={result.id} data-testid={`card-${result.id}`}>
+                <div className="find-card__body">
+                  <span className="find-card__eyebrow">{result.country} · {result.city}</span>
+                  <h2>{result.university}</h2>
+                  <p>{result.program}</p>
+                  <div className="find-card__signals">
+                    {result.ranking && <Chip tone={bucketTone[result.ranking.bucket]}>{STATUS_LABEL[result.ranking.bucket] ?? humanize(result.ranking.bucket)}</Chip>}
+                    <StatusChip status={result.eligibility} tone={eligibilityTone[result.eligibility]} />
+                    <StatusChip status={result.best_funding_classification} tone={fundingClassTone[result.best_funding_classification]} />
+                  </div>
+                  <div className="find-card__facts">
+                    <span><small>Remaining / year</small><strong>{gap?.computable && gap.gap ? money({ ...gap.gap, academic_year: null }) : 'Not enough comparable data'}</strong></span>
+                    <span><small>Deadline</small><strong>{result.admission_deadline ? date(result.admission_deadline) : 'Not confirmed'}</strong></span>
+                  </div>
+                  {(result.conflicts.length > 0 || result.unresolved.length > 0) && <p className="find-card__caution">{result.conflicts.length} conflict{result.conflicts.length === 1 ? '' : 's'} · {result.unresolved.length} open question{result.unresolved.length === 1 ? '' : 's'}</p>}
+                </div>
+                <div className="find-card__actions">
+                  <button type="button" className="btn btn--dark" onClick={() => setCardExpanded(open ? null : result.id)} aria-expanded={open} data-testid={`card-expand-${result.id}`}>{open ? 'Hide details' : 'View details'}</button>
+                  <button type="button" className="btn" onClick={() => decideRow(result, 'maybe')} aria-pressed={result.user_decision === 'maybe' || result.user_decision === 'approved'}>{result.user_decision === 'maybe' || result.user_decision === 'approved' ? 'Saved' : 'Save'}</button>
+                  <button type="button" className="btn" onClick={() => setCompareIds((current) => selected ? current.filter((id) => id !== result.id) : current.length < 3 ? [...current, result.id] : current)} aria-pressed={selected} disabled={!selected && compareIds.length >= 3}>{selected ? 'Remove' : 'Compare'}</button>
+                </div>
+                {open && <div className="find-card__detail"><ResultDetail result={result} /></div>}
+              </article>
+            );
+          })}
+        </div>
+
+        {compareIds.length > 0 && (
+          <ComparePanel
+            results={compareIds.map((id) => results.find((item) => item.id === id)).filter((item): item is ProgramResult => Boolean(item))}
+            onRemove={(id) => setCompareIds((current) => current.filter((item) => item !== id))}
+            onClear={() => setCompareIds([])}
+          />
+        )}
+
+        <details className="find-advanced">
+          <summary>Detailed evidence table</summary>
         {shortlist && shortlist.chosen.length > 0 && (
           <Panel
             title="A balanced shortlist"
@@ -468,6 +540,7 @@ export function ShortlistScreen() {
             </details>
           );
         })}
+        </details>
 
 
         <p className="xs faint">
@@ -475,6 +548,6 @@ export function ShortlistScreen() {
           same programme is not proposed again without new information.
         </p>
       </div>
-    </>
+    </div>
   );
 }

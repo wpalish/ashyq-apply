@@ -536,7 +536,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       setCases(nextCases);
       setLocalCaseKey(null);
       writePointer('profile', saved.id);
-      setBaseline(JSON.stringify(toDraft(saved)));
+      const canonicalDraft = toDraft(saved);
+      setBaseline(JSON.stringify(canonicalDraft));
+      // The server may normalize or fill fields. Align the form with the saved
+      // version only if the user did not keep typing while the request ran.
+      setDraft((current) => JSON.stringify(current) === JSON.stringify(profileDraft) ? canonicalDraft : current);
       setDraftRestored(false);
       if (previousCaseKey !== null) clearDraftSlot(previousCaseKey);
     } catch (e) {

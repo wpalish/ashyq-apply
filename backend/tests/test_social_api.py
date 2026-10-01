@@ -638,6 +638,7 @@ class TestTheTenantBoundary:
             # a "Message" button would lead anywhere. It says how this person
             # can be reached, never anything about them.
             "dm_policy",
+            "can_message",
             "bio",
         }
         # No email, no organization, and nothing that names a case or a run.
