@@ -8,6 +8,7 @@
 
 import { useEffect, useState } from 'react';
 import { ApiError, api } from '@/api/client';
+import { CommaSeparatedInput } from '@/components/CommaSeparatedInput';
 import { Chip, Field, Notice, Panel } from '@/components/primitives';
 import { castInput, get, setIn, type Path } from '@/lib/immutable';
 import { useStore } from '@/lib/store';
@@ -56,6 +57,14 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
     value: String(get(profileDraft, path) ?? ''),
     onChange: (e: { target: { value: string } }) => {
       setProfileDraft((d) => setIn(d, path, castInput(e.target.value, cast)));
+      setSaved(false);
+    },
+  });
+
+  const bindList = (path: Path) => ({
+    items: get(profileDraft, path) as string[] | undefined,
+    onItemsChange: (items: string[]) => {
+      setProfileDraft((d) => setIn(d, path, items));
       setSaved(false);
     },
   });
@@ -230,16 +239,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
               </select>
             </Field>
             <Field label="Field of study" htmlFor="field" hint="Drives which programmes are searched.">
-              <input
-                id="field"
-                value={((get(profileDraft, ['context', 'intended_fields']) as string[]) ?? []).join(', ')}
-                onChange={(e) =>
-                  setProfileDraft((d) =>
-                    setIn(d, ['context', 'intended_fields'],
-                      e.target.value.split(',').map((s) => s.trim()).filter(Boolean)),
-                  )
-                }
-              />
+              <CommaSeparatedInput id="field" {...bindList(['context', 'intended_fields'])} />
             </Field>
             <Field label="Intake term" htmlFor="term">
               <select id="term" {...bind(['context', 'intake_term'])}>
@@ -447,9 +447,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
               <input id="duolingo-max" type="number" {...bind(['academics', 'duolingo', 'max_score'], 'float')} />
             </Field>
             <Field label="Planned retakes" htmlFor="planned-retakes" hint="Comma-separated.">
-              <input id="planned-retakes"
-                value={((get(profileDraft, ['academics', 'planned_retakes']) as string[]) ?? []).join(', ')}
-                onChange={(event) => setProfileDraft((draft) => setIn(draft, ['academics', 'planned_retakes'], event.target.value.split(',').map((value) => value.trim()).filter(Boolean)))} />
+              <CommaSeparatedInput id="planned-retakes" {...bindList(['academics', 'planned_retakes'])} />
             </Field>
           </div>
           <div className="stack stack--tight" style={{ marginTop: 'var(--space-4)' }}>
@@ -529,9 +527,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
                   <Field label="Measurable outcome" htmlFor={`activity-outcome-${index}`}><textarea id={`activity-outcome-${index}`} {...bind(['activities', index, 'measurable_outcome'])} /></Field>
                   <Field label="Impact on others" htmlFor={`activity-impact-${index}`}><textarea id={`activity-impact-${index}`} {...bind(['activities', index, 'impact_on_others'])} /></Field>
                   <Field label="Evidence links" htmlFor={`activity-links-${index}`} hint="Comma-separated URLs.">
-                    <input id={`activity-links-${index}`}
-                      value={((get(profileDraft, ['activities', index, 'evidence_links']) as string[]) ?? []).join(', ')}
-                      onChange={(event) => setProfileDraft((draft) => setIn(draft, ['activities', index, 'evidence_links'], event.target.value.split(',').map((value) => value.trim()).filter(Boolean)))} />
+                    <CommaSeparatedInput id={`activity-links-${index}`} {...bindList(['activities', index, 'evidence_links'])} />
                   </Field>
                 </div>
                 <button className="btn btn--sm btn--danger" type="button" onClick={() => remove(['activities'], index)}>Remove activity</button>
@@ -559,9 +555,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
                 <Field label="Placement" htmlFor={`achievement-place-${index}`}><input id={`achievement-place-${index}`} {...bind(['achievements', index, 'placement'])} /></Field>
                 <Field label="Selection criterion" htmlFor={`achievement-select-${index}`}><textarea id={`achievement-select-${index}`} {...bind(['achievements', index, 'selection_criterion'])} /></Field>
                 <Field label="Evidence links" htmlFor={`achievement-links-${index}`} hint="Comma-separated URLs.">
-                  <input id={`achievement-links-${index}`}
-                    value={((get(profileDraft, ['achievements', index, 'evidence_links']) as string[]) ?? []).join(', ')}
-                    onChange={(event) => setProfileDraft((draft) => setIn(draft, ['achievements', index, 'evidence_links'], event.target.value.split(',').map((value) => value.trim()).filter(Boolean)))} />
+                  <CommaSeparatedInput id={`achievement-links-${index}`} {...bindList(['achievements', index, 'evidence_links'])} />
                 </Field>
                 <button className="btn btn--sm btn--danger" type="button" onClick={() => remove(['achievements'], index)}>Remove</button>
               </div>

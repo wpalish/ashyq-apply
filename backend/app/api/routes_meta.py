@@ -92,11 +92,7 @@ def capabilities() -> dict:
                 else ""
             ),
         },
-        # What live mode can actually reach today. The number matters: a user
-        # switching demo mode off imagines the open web and gets a curated list
-        # of ten institutions, with programme-page recall of one in ten. Saying
-        # so here is cheaper than letting them discover it from an empty
-        # shortlist.
+        # Keep the scope tied to the current registry and make evidence limits visible.
         "live_coverage": live_coverage(),
         "guarantees": [
             "robots.txt is honoured before every fetch, including the browser tier",
@@ -190,9 +186,8 @@ def live_coverage() -> dict:
         "countries": countries,
         "recall_note": (
             f"Live mode searches {len(entries)} curated institutions in "
-            f"{len(countries)} countries, not the open web. Category pages "
-            f"(fees, scholarships, admissions) are read reliably; an individual "
-            f"programme page is reached at about one site in ten today. See "
-            f"docs/LIVE_DISCOVERY_REPORT.md."
+            f"{len(countries)} countries. Results depend on the selected fields "
+            "and which official pages can be accessed. Missing or unverified "
+            "evidence stays visible in the results."
         ),
     }

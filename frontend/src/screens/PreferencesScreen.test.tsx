@@ -2,10 +2,8 @@
  * Turning demo mode off must say how far live mode actually reaches.
  *
  * The audited defect: the toggle offered "live" against an implied open web.
- * What it really searches is a curated registry of ten institutions, with an
- * individual programme page reached at about one site in ten. An applicant
- * who switches demo off and waits through a slow run deserves to know the
- * size of the search before it starts, not to infer it from a thin result.
+ * Coverage must come from the server's current registry, without turning a
+ * historical benchmark into a claim about the run someone is about to start.
  */
 
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';

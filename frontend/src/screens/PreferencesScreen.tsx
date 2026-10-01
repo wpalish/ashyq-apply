@@ -6,6 +6,7 @@
  */
 
 import { useState } from 'react';
+import { CommaSeparatedInput } from '@/components/CommaSeparatedInput';
 import { Chip, Field, Notice, Panel } from '@/components/primitives';
 import { castInput, get, setIn, type Path } from '@/lib/immutable';
 import { useStore } from '@/lib/store';
@@ -62,11 +63,8 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
   });
 
   const bindList = (path: Path) => ({
-    value: ((get(profileDraft, path) as string[]) ?? []).join(', '),
-    onChange: (e: { target: { value: string } }) =>
-      setProfileDraft((d) =>
-        setIn(d, path, e.target.value.split(',').map((s) => s.trim()).filter(Boolean)),
-      ),
+    items: get(profileDraft, path) as string[] | undefined,
+    onItemsChange: (items: string[]) => setProfileDraft((d) => setIn(d, path, items)),
   });
 
   const bindBool = (path: Path) => ({
@@ -108,10 +106,10 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
         <Panel title="Where" hint="Countries you would actually move to, and any you would not.">
           <div className="grid-2">
             <Field label="Preferred countries" htmlFor="pref-countries" hint="Comma-separated.">
-              <input id="pref-countries" data-testid="preferred-countries" {...bindList(['preferences', 'preferred_countries'])} />
+              <CommaSeparatedInput id="pref-countries" data-testid="preferred-countries" {...bindList(['preferences', 'preferred_countries'])} />
             </Field>
             <Field label="Excluded countries" htmlFor="excl-countries" hint="These are never proposed.">
-              <input id="excl-countries" {...bindList(['preferences', 'excluded_countries'])} />
+              <CommaSeparatedInput id="excl-countries" {...bindList(['preferences', 'excluded_countries'])} />
             </Field>
             <Field label="City size" htmlFor="citysize">
               <select id="citysize" {...bind(['preferences', 'city_size'])}>
@@ -144,7 +142,7 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
               </select>
             </Field>
             <Field label="Research interests" htmlFor="research-interests" hint="Comma-separated.">
-              <input id="research-interests" {...bindList(['preferences', 'research_interests'])} />
+              <CommaSeparatedInput id="research-interests" {...bindList(['preferences', 'research_interests'])} />
             </Field>
             {/*
               Safety, diversity and housing-guarantee priorities used to be
@@ -338,13 +336,10 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
               <Notice kind="warn">
                 <div data-testid="live-mode-notice">
                   <strong>Live mode fetches real university websites.</strong> It honours robots.txt,
-                  rate-limits per host, and never sends any part of your profile off this machine.
-                  It is slower, and pages that cannot be read are reported as not found rather than
-                  guessed.
+                  and limits requests to each website. Only non-personal search terms are sent to
+                  search providers. Unreadable pages and missing evidence are reported in each run.
                   {capabilities?.live_coverage && (
-                    // Without this, "live" reads as "the open web". It is ten
-                    // curated institutions, and the applicant deserves to know
-                    // the size of the search before they wait for it.
+                    // Coverage comes from the server's current institution registry.
                     <div className="stack stack--tight" data-testid="live-coverage">
                       <div><strong>{capabilities.live_coverage.recall_note}</strong></div>
                       {capabilities.live_coverage.countries.length > 0 && (

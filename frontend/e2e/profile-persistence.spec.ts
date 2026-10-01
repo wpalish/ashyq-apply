@@ -70,3 +70,35 @@ test('replacing a saved profile asks first', async ({ page }) => {
   await page.getByRole('button', { name: 'Keep editing' }).click();
   await expect(page.getByLabel('Citizenship')).toHaveValue('Georgia');
 });
+
+test('typing multiple subjects and countries keeps separators and saves complete lists', async ({ page }) => {
+  await page.goto('/');
+  const field = page.getByLabel('Field of study');
+  await field.pressSequentially('Computer Science, Mathematics, ');
+  await expect(field).toHaveValue('Computer Science, Mathematics, ');
+  await page.getByTestId('to-preferences').click();
+
+  const excluded = page.getByLabel('Excluded countries');
+  await excluded.pressSequentially('Austria, Canada, Czech Republic, ');
+  await expect(excluded).toHaveValue('Austria, Canada, Czech Republic, ');
+  await page.getByLabel('Preferred countries').pressSequentially('Singapore, United Kingdom');
+  await page.getByLabel('Research interests').pressSequentially('machine learning, data science');
+  await page.getByTestId('nav-profile').click();
+
+  const profileRequest = page.waitForRequest((request) =>
+    request.method() === 'POST' && request.url().endsWith('/api/profiles'));
+  await page.getByTestId('save-profile').click();
+  expect((await profileRequest).postDataJSON()).toMatchObject({
+    context: { intended_fields: ['Computer Science', 'Mathematics'] },
+    preferences: {
+      preferred_countries: ['Singapore', 'United Kingdom'],
+      excluded_countries: ['Austria', 'Canada', 'Czech Republic'],
+      research_interests: ['machine learning', 'data science'],
+    },
+  });
+  await expect(page.getByText('Saved', { exact: true })).toBeVisible();
+  await page.reload();
+  await expect(field).toHaveValue('Computer Science, Mathematics');
+  await page.getByTestId('to-preferences').click();
+  await expect(excluded).toHaveValue('Austria, Canada, Czech Republic');
+});
