@@ -11,7 +11,7 @@ import { claimStatusTone, dateTime } from '@/lib/format';
 import { useStore } from '@/lib/store';
 
 export function SourcesScreen() {
-  const { results } = useStore();
+  const { results, summary } = useStore();
   const [copied, setCopied] = useState<string | null>(null);
   const [filter, setFilter] = useState<'all' | 'conflicts' | 'questions' | 'stale'>('all');
 
@@ -27,6 +27,7 @@ export function SourcesScreen() {
     () => results.flatMap((r) => r.claims.filter((c) => c.is_stale).map((c) => ({ result: r, claim: c }))),
     [results],
   );
+  const verified = results.reduce((count, result) => count + result.claims.filter((claim) => claim.status === 'VERIFIED_CURRENT').length, 0);
   const allSources = useMemo(() => {
     const map = new Map<string, number>();
     for (const r of results) for (const u of r.source_urls) map.set(u, (map.get(u) ?? 0) + 1);
@@ -48,16 +49,22 @@ export function SourcesScreen() {
   return (
     <>
       <div className="screen__head">
-        <p className="screen__eyebrow">Step 06</p>
-        <h1 className="screen__title">What we could not settle</h1>
+        <p className="screen__eyebrow">Sources & evidence</p>
+        <h1 className="screen__title">See the proof behind every <span className="find-yellow">match.</span></h1>
         <p className="screen__lede">
-          When two official pages disagree, Unimatch shows both and marks the more specific one as
-          preferred — it does not pick a winner. Each contradiction comes with a ready-to-send
-          question for the admissions office.
+          Explore verified claims, conflicting pages and unanswered questions. Open the original source whenever you need a closer look.
         </p>
       </div>
 
       <div className="stack stack--loose">
+        {summary?.demo_data && (
+          <Notice kind="demo"><strong>Demo data.</strong> These claims and source addresses come from a bundled synthetic corpus.</Notice>
+        )}
+        <div className="evidence-overview" aria-label="Evidence status">
+          <div><strong>{verified}</strong><span>current verified claims</span></div>
+          <div><strong>{conflicts.length}</strong><span>conflicts to review</span></div>
+          <div><strong>{questions.length}</strong><span>open questions</span></div>
+        </div>
         <div className="row">
           {([
             ['all', `All (${conflicts.length + questions.length})`],
@@ -95,11 +102,11 @@ export function SourcesScreen() {
                     <div className="stack stack--tight" style={{ marginTop: 'var(--space-3)' }}>
                       {conflict.values.map((v, j) => (
                         <div key={j} className="row row--tight">
-                          <Chip mono tone={conflict.source_urls[j] === conflict.preferred_claim_id ? 'accent' : 'neutral'}>
+                          <Chip mono tone={conflict.claim_ids[j] === conflict.preferred_claim_id ? 'accent' : 'neutral'}>
                             {String(v)}
                           </Chip>
                           <SourceLink url={conflict.source_urls[j] ?? ''} />
-                          {conflict.source_urls[j] === conflict.preferred_claim_id && (
+                          {conflict.claim_ids[j] === conflict.preferred_claim_id && (
                             <Chip tone="accent">more specific source</Chip>
                           )}
                         </div>

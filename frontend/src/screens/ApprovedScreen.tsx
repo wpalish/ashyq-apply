@@ -18,6 +18,10 @@ export function ApprovedScreen({ onCollect }: { onCollect: () => void }) {
   const maybe = group('maybe');
   const rejected = group('rejected');
   const shortlisted = approved.length + maybe.length;
+  const today = new Date().toISOString().slice(0, 10);
+  const nextDeadline = [...approved, ...maybe]
+    .filter((result) => result.admission_deadline && result.admission_deadline >= today)
+    .sort((a, b) => (a.admission_deadline ?? '').localeCompare(b.admission_deadline ?? ''))[0];
   // A queued job counts as collecting: the worker has not claimed it yet, but
   // the request has been made and the button must not invite a second one.
   const collecting =
@@ -29,15 +33,22 @@ export function ApprovedScreen({ onCollect }: { onCollect: () => void }) {
   return (
     <>
       <div className="screen__head">
-        <p className="screen__eyebrow">Step 07</p>
-        <h1 className="screen__title">Your decisions</h1>
+        <p className="screen__eyebrow">Your application journey</p>
+        <h1 className="screen__title">A clearer plan. A brighter <span className="find-yellow">you.</span></h1>
         <p className="screen__lede">
-          Documents are collected only for what you shortlist. It is the slowest step, so it runs
-          on the handful you actually intend to apply to.
+          Keep your chosen programmes together, check their deadlines and prepare what each one asks for.
         </p>
       </div>
 
       <div className="stack stack--loose">
+        <section className="plan-hero" aria-label="Your next step">
+          <div>
+            <span className="home-eyebrow">NEXT STEP</span>
+            <h2>{shortlisted === 0 ? 'Choose a programme to plan for.' : nextDeadline ? `Next deadline: ${nextDeadline.university}` : 'Prepare your application documents.'}</h2>
+            <p>{nextDeadline?.admission_deadline ? `${date(nextDeadline.admission_deadline)} · ${nextDeadline.program}` : shortlisted === 0 ? 'Save a promising result from Find to begin.' : 'No future admission deadline has been confirmed for these programmes.'}</p>
+          </div>
+          <div className="plan-hero__count"><strong>{shortlisted}</strong><span>programmes in your plan</span></div>
+        </section>
         <Panel>
           <div className="row" style={{ justifyContent: 'space-between' }}>
             <div className="row">

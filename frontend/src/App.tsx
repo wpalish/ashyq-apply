@@ -10,7 +10,6 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useStore } from '@/lib/store';
 import { PaywallNotice } from '@/components/PaywallNotice';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
-import { AccountMenu } from '@/components/AccountMenu';
 import { ProfileScreen } from '@/screens/ProfileScreen';
 import { PreferencesScreen } from '@/screens/PreferencesScreen';
 import { ProgressScreen } from '@/screens/ProgressScreen';
@@ -27,6 +26,8 @@ import { PersonScreen } from '@/screens/PersonScreen';
 import { MessagesScreen } from '@/screens/MessagesScreen';
 import { ModerationScreen } from '@/screens/ModerationScreen';
 import { HomeScreen } from '@/screens/HomeScreen';
+import { SettingsScreen } from '@/screens/SettingsScreen';
+import { BillingScreen } from '@/screens/BillingScreen';
 import { Chip } from '@/components/primitives';
 import { api } from '@/api/client';
 import { LOCALES, t as translate, type Locale, type MessageKey } from '@/lib/i18n';
@@ -37,7 +38,8 @@ import { Files, House, ListChecks, MagnifyingGlass, UsersThree } from '@phosphor
 export type ScreenId =
   | 'home' | 'profile' | 'preferences' | 'progress' | 'shortlist' | 'funding'
   | 'approved' | 'documents' | 'sources' | 'export'
-  | 'feed' | 'discover' | 'messages' | 'me' | 'person' | 'moderation' | 'legal';
+  | 'feed' | 'discover' | 'messages' | 'me' | 'person' | 'moderation' | 'legal'
+  | 'settings' | 'billing';
 
 /**
  * The numbers are not decoration: the case screens are a sequence, and 04
@@ -67,7 +69,7 @@ const SCREENS: { id: ScreenId; num?: string; label: MessageKey; group: MessageKe
 /** The screen named by `#/…`, if it names one at all. */
 function screenFromHash(): ScreenId | null {
   const id = window.location.hash.replace(/^#\/?/, '').split('?')[0];
-  return id === 'home' || SCREENS.some((s) => s.id === id) ? (id as ScreenId) : null;
+  return id === 'home' || id === 'settings' || id === 'billing' || SCREENS.some((s) => s.id === id) ? (id as ScreenId) : null;
 }
 
 /**
@@ -80,6 +82,8 @@ function screenFromHash(): ScreenId | null {
  */
 function label(id: ScreenId): string {
   if (id === 'home') return 'Home';
+  if (id === 'settings') return 'Settings';
+  if (id === 'billing') return 'Billing';
   const entry = SCREENS.find((s) => s.id === id);
   return entry ? translate(entry.label) : id;
 }
@@ -195,6 +199,8 @@ export default function App() {
     person: null,
     // A privacy policy nobody can reach before signing up is not a policy.
     legal: null,
+    settings: null,
+    billing: null,
   };
 
   // The hash is the address of the screen: back and forward work, a reload
@@ -206,6 +212,10 @@ export default function App() {
     const target = `#/${next}`;
     if (window.location.hash !== target) window.location.hash = target;
   }, []);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [screen]);
 
   // Only an address typed, bookmarked or arrived at through history is checked
   // against the gates. In-app navigation is already gated by the disabled nav
@@ -351,7 +361,7 @@ export default function App() {
             </div>
           </details>
           <div className="topbar__spacer" />
-          <label className="row row--tight xs muted" htmlFor="case-switcher">
+          <label className="row row--tight xs muted topbar__case" htmlFor="case-switcher">
             Applicant
             <select
               id="case-switcher"
@@ -375,12 +385,12 @@ export default function App() {
               ))}
             </select>
           </label>
-          <button className="btn btn--sm" type="button" onClick={() => {
+          <button className="btn btn--sm topbar__new-case" type="button" onClick={() => {
             if (!confirmDiscard()) return;
             newCase(); setScreen('profile');
           }}>{t('topbar.newCase')}</button>
-          <AccountMenu onSignedOut={() => window.location.reload()} />
-          <button className="btn btn--sm btn--ghost" data-testid="sign-out" type="button" onClick={async () => {
+          <button className="btn btn--sm btn--ghost topbar__settings" type="button" onClick={() => setScreen('settings')}>Settings</button>
+          <button className="btn btn--sm btn--ghost topbar__signout" data-testid="sign-out" type="button" onClick={async () => {
             await api.logout(); window.location.reload();
           }}>{t('topbar.signOut')}</button>
         </header>
@@ -429,6 +439,8 @@ export default function App() {
           {screen === 'documents' && <DocumentsScreen />}
           {screen === 'export' && <ExportScreen />}
           {screen === 'legal' && <LegalScreen />}
+          {screen === 'settings' && <SettingsScreen theme={theme} setTheme={setTheme} locale={locale} setLocale={setLocale} onNavigate={setScreen} onSignedOut={() => window.location.reload()} />}
+          {screen === 'billing' && <BillingScreen />}
           {screen === 'feed' && (
             <FeedScreen
               joined={joined}

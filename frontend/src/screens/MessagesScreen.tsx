@@ -45,7 +45,7 @@ function Conversation({
   useEffect(() => { void load(); }, [load]);
 
   return (
-    <div className="stack">
+    <div className="stack conversation-view">
       <div className="row">
         <button type="button" className="btn btn--sm" onClick={onBack}>
           {t('messages.back')}
@@ -135,22 +135,13 @@ export function MessagesScreen({
 
   useEffect(() => { void load(); }, [load]);
 
-  if (openWith) {
-    return (
-      <div className="stack community-column">
-        <Conversation
-          userId={openWith}
-          onBack={() => { onOpenChange(null); onReadSomething(); void load(); }}
-        />
-      </div>
-    );
-  }
-
   return (
-    <div className="stack community-column">
+    <div className={`messages-page${openWith ? ' messages-page--open' : ''}`}>
+      <div className="messages-page__list">
       <div className="screen__head">
-        <h1 className="screen__title">{t('messages.title')}</h1>
-        <p className="screen__lede">{t('messages.lede')}</p>
+        <p className="screen__eyebrow">COMMUNITY</p>
+        <h1 className="screen__title">Messages</h1>
+        <p className="screen__lede">Real conversations with other students.</p>
       </div>
 
       {error && <Notice kind="risk">{error}</Notice>}
@@ -193,6 +184,12 @@ export function MessagesScreen({
             </button>
           );
         })}
+      </div>
+      </div>
+      <div className="messages-page__thread">
+        {openWith ? <Conversation userId={openWith} onBack={() => { onOpenChange(null); onReadSomething(); void load(); }} /> : (
+          <div className="messages-page__welcome"><img src="/brand/unimatch-mark.png" alt="" /><h2>Select a conversation</h2><p>Ask clearly. Plan confidently. Your messages stay between you and the other student unless one of you reports them.</p></div>
+        )}
       </div>
     </div>
   );

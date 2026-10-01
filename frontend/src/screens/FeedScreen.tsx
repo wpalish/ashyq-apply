@@ -145,9 +145,12 @@ export function FeedScreen({
   return (
     <div className="stack community-column">
       <div className="screen__head">
-        <h1 className="screen__title">{t('community.title')}</h1>
-        <p className="screen__lede">{t('community.lede')}</p>
+        <p className="screen__eyebrow">COMMUNITY</p>
+        <h1 className="screen__title">Student <span className="find-yellow">experiences.</span></h1>
+        <p className="screen__lede">Real stories and practical advice from other students.</p>
       </div>
+
+      <Notice kind="info">Student experiences are personal opinions, not official university information.</Notice>
 
       {!joined && (
         <Notice kind="info">

@@ -12,6 +12,7 @@ import { dateTime } from '@/lib/format';
 import { useStore } from '@/lib/store';
 
 const STAGE_LABELS: Record<string, string> = {
+  queued: 'Preparing the research queue',
   profile_validation: 'Checking your profile',
   candidate_discovery: 'Finding candidate universities',
   program_verification: 'Reading official programme pages',
@@ -91,7 +92,7 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
       <div className="stack stack--loose">
         <div className="research-hero">
           <div className="research-hero__copy">
-            <span className="home-eyebrow">REAL INFORMATION · BRIGHTER CHOICES</span>
+            <span className="home-eyebrow">{run.demo_mode ? 'SYNTHETIC DEMO RESEARCH' : 'REAL INFORMATION · BRIGHTER CHOICES'}</span>
             <strong>{Math.round(run.progress * 100)}%</strong>
             <p>{finished ? 'Your research has finished.' : failed || cancelled ? 'You can review what was saved.' : 'Research in progress'}</p>
           <div className="meter" role="progressbar" aria-valuenow={Math.round(run.progress * 100)}
@@ -101,7 +102,7 @@ export function ProgressScreen({ onDone }: { onDone: () => void }) {
           <div className="row" style={{ justifyContent: 'space-between' }}>
             <span className="xs muted">{Math.round(run.progress * 100)}% of stages complete · {STAGE_LABELS[run.stage] ?? run.stage.replace(/_/g, ' ')}</span>
             <span className="xs faint">
-              started {dateTime(run.started_at)}
+              {run.started_at ? `started ${dateTime(run.started_at)}` : 'Waiting for the worker'}
               {run.finished_at && ` · finished ${dateTime(run.finished_at)}`}
             </span>
           </div>

@@ -348,7 +348,7 @@ describe('renaming the storage keys', () => {
 
 describe('unsaved edits', () => {
   function DirtyProbe() {
-    const { profileDraft, setProfileDraft, dirty, draftRestored, discardDraft } = useStore();
+    const { profileDraft, setProfileDraft, saveProfile, dirty, draftRestored, discardDraft } = useStore();
     const context = profileDraft.context as Record<string, unknown>;
     return (
       <div>
@@ -359,6 +359,7 @@ describe('unsaved edits', () => {
           ...d, context: { ...(d.context as object), citizenship: 'Georgia' },
         }))}>edit</button>
         <button onClick={discardDraft}>discard</button>
+        <button onClick={() => void saveProfile()}>save profile</button>
       </div>
     );
   }
@@ -373,6 +374,23 @@ describe('unsaved edits', () => {
 
     await act(async () => { screen.getByText('edit').click(); });
     expect(screen.getByTestId('dirty')).toHaveTextContent('true');
+  });
+
+  it('aligns a saved form with the server-normalized profile', async () => {
+    window.localStorage.setItem('ashyq.activeProfile', REAL_PROFILE.id);
+    vi.spyOn(api, 'getProfile').mockResolvedValue(REAL_PROFILE);
+    vi.spyOn(api, 'updateProfile').mockImplementation(async (_id, draft) => ({
+      ...REAL_PROFILE,
+      context: { ...((draft as StoredProfile).context as object), citizenship: 'Republic of Georgia' },
+    } as StoredProfile));
+
+    render(<StoreProvider><DirtyProbe /></StoreProvider>);
+    await waitFor(() => expect(screen.getByTestId('citizenship')).toHaveTextContent('Uzbekistan'));
+    await act(async () => { screen.getByText('edit').click(); });
+    expect(screen.getByTestId('dirty')).toHaveTextContent('true');
+    await act(async () => { screen.getByText('save profile').click(); });
+    await waitFor(() => expect(screen.getByTestId('citizenship')).toHaveTextContent('Republic of Georgia'));
+    expect(screen.getByTestId('dirty')).toHaveTextContent('false');
   });
 
   it('restores an unsaved draft after a reload without touching the saved profile', async () => {

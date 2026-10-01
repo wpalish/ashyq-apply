@@ -79,9 +79,10 @@ export function DocumentsScreen() {
 
   if (withChecklists.length === 0) {
     return (
-      <Empty title="No checklists yet">
-        Approve programmes on the shortlist, then run “Collect documents” from the approved screen.
-      </Empty>
+      <div className="find-page">
+        <div className="screen__head"><p className="screen__eyebrow">DOCUMENTS & DEADLINES</p><h1 className="screen__title">Prepare with <span className="find-yellow">confidence.</span></h1><p className="screen__lede">Your document checklist appears after you save programmes in Plan and collect their official requirements.</p></div>
+        <div className="find-empty"><Empty title="No checklists yet">Choose a programme in Find, then collect documents from Plan.</Empty></div>
+      </div>
     );
   }
 
@@ -90,8 +91,8 @@ export function DocumentsScreen() {
   return (
     <>
       <div className="screen__head">
-        <p className="screen__eyebrow">Step 08</p>
-        <h1 className="screen__title">What to prepare, and when</h1>
+        <p className="screen__eyebrow">Documents & deadlines</p>
+        <h1 className="screen__title">Prepare with <span className="find-yellow">confidence.</span></h1>
         <p className="screen__lede">
           Ordered by lead time, not by deadline. The items at the top depend on other people, so
           they are the ones that need starting first.
@@ -99,6 +100,8 @@ export function DocumentsScreen() {
       </div>
 
       <div className="stack stack--loose">
+        <details className="documents-deadlines">
+          <summary>Calendar and deadlines across your shortlist ({deadlines.length})</summary>
         <Panel
           title="Every deadline across your shortlist"
           sunken
@@ -129,6 +132,7 @@ export function DocumentsScreen() {
             {deadlines.length === 0 && <p className="muted small">No dated deadlines were found.</p>}
           </div>
         </Panel>
+        </details>
 
         <div className="row">
           {withChecklists.map((r) => (

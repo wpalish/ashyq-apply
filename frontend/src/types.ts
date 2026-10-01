@@ -591,6 +591,7 @@ export interface PersonCard {
   /** How this person can be reached — never anything about them. */
   dm_policy: DirectMessagePolicy;
   bio: string;
+  can_message?: boolean | null;
 }
 
 export interface MyProfile {

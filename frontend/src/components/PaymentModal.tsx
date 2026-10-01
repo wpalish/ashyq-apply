@@ -9,6 +9,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { api } from '@/api/client';
 import type { OrderView, PaymentMethod } from '@/types';
+import { QRCodeSVG } from 'qrcode.react';
 
 const PHONE = /^8\d{10}$/;
 const POLL_MS = 2000;
@@ -140,8 +141,12 @@ export function PaymentModal({ profileId, priceKzt, onClose, onPaid }: Props) {
         )}
 
         {order?.method === 'qr' && order.qr_payload && (
-          <div className="notice notice--info">
-            Отсканируйте в приложении Kaspi: <code>{order.qr_payload}</code>
+          <div className="payment-qr">
+            <strong>Сканируйте QR-код в приложении Kaspi</strong>
+            <div role="img" aria-label="QR-код для оплаты в Kaspi">
+              <QRCodeSVG value={order.qr_payload} size={212} marginSize={2} />
+            </div>
+            <p className="small muted">После оплаты доступ откроется автоматически.</p>
           </div>
         )}
 

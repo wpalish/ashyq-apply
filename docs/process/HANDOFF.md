@@ -108,6 +108,10 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**Unimatch workflow screen migration (source in this commit):** Programme Detail, Compare, Plan, Documents, Sources, Community, Messages, Settings, Billing and Legal retain backend data and disclosures while using the shared Unimatch visual system. A viewer-specific `can_message` flag keeps unreachable private messages off the person page; saved profiles clear their dirty state after server normalization. The isolated browser demo completed search → save → compare → detail → Plan → document collection with six checklist items. Full backend and frontend gates below pass. This remains a design and local runtime checkpoint, not a public live-search acceptance.
+
+**Unimatch design foundation (`6d2bfb2`):** pushed the brand assets, responsive five-area shell, public/auth presentation, Home, staged profile, preferences, research progress and searchable Find. Full gates at that checkpoint passed. The second screen migration below is still uncommitted until its gates pass.
+
 **Unimatch redesign checkpoint (source in this commit):** generated Unimatch mascot imagery; new branded tokens, five-area shell, public landing/auth/legal, home, five-step profile, preferences, research presentation, and searchable Find cards with real-data comparison. Existing backend API and detailed disclosures remain. Current local gates: backend 2,844 passed/94.91%, Ruff/mypy pass; frontend typecheck/lint, 221 tests, build pass. In-app browser inspected desktop/mobile and a theme contrast bug was fixed. This is an interim redesign checkpoint, not full product acceptance.
 
 **Typed-list and verified-name corrections (source in this commit):** comma-separated inputs preserve raw unfinished spaces/separators while saving parsed arrays; all seven profile/preferences lists handle external case/demo/clear replacement. Multi-field CandidateProgram names retain their fetched verified source subject; the exact NTU matriculation-year URL now reaches downstream PROGRAM_EXISTS while wrong degree/subject and unknown2027 intake guards remain. Live coverage/privacy copy describes real scope and server operation. Red typing/API and exact Math handoff regressions proved both bugs; independent review found no material issue.
@@ -1709,6 +1713,9 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**2026-10-02 Unimatch second migration write-ahead:** finish and verify `ResultDetail`, `ComparePanel`, Plan, Documents, Sources, Messages, Settings, Billing and Legal on the existing API. Preserve demo labeling and the existing evidence disclosures. `PersonCard.can_message` must express actual viewer permission without exposing private case data; update its strict API contract test. Validate the exact local demo sequence profile → research → Find search/save/compare/detail → Plan → Documents and responsive mobile. Run full backend Ruff/format/mypy/pytest coverage and frontend typecheck/lint/tests/build, then commit and push the green step. Afterward inspect remaining brief gaps, accessibility, visual QA and release state; do not claim live public deployment from the isolated demo.
+
 
 **Current redesign write-ahead (2026-10-02):** migrate the programme detail, compare, plan, documents and evidence screens in that order. Keep official-source/provenance, unknown/conflict, eligibility-versus-fit, document statuses and payment semantics; put the primary decision first and advanced detail behind disclosure. Run relevant frontend tests, typecheck/lint/build, desktop/mobile and accessibility inspection after each feature. Then cover community/messages/settings/billing/legal/moderation and final responsive QA.
 
@@ -3590,6 +3597,8 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**Unimatch second migration, 2026-10-02:** Ruff check/format and mypy pass across 295 backend files. Full pytest: **2,844 passed, 2 warnings, 94.92% coverage**. Frontend typecheck/lint, **226 tests in 27 files** and production build pass. `npm audit --audit-level=high` exits zero (two moderate dev/test advisories); one Alembic head `c5d01b7e4f83`, `git diff --check` clean. Isolated demo API/worker and browser verified search, saving, compare, detail, Plan and document checklist; 390px mobile settings/billing/find show no horizontal overflow. Actual public live-provider search and production deployment are separate pending evidence.
+
 **Unimatch redesign interim checkpoint, 2026-10-02:** backend Ruff check/format and mypy pass; pytest 2,844 passed, 94.91% coverage. Frontend typecheck/lint, 221 tests and build pass. Browser on localhost:5173 with isolated demo API localhost:8099 inspected desktop and 390px mobile; old system-dark token conflict was corrected. Production deployment, full search and remaining redesigned screens are not yet verified.
 
 **2026-10-01 final typed-list/name correction gates:** Ruff/check-format/mypy317 app/tests/evaluation files pass. Full pytest **2844passed,2warnings,94.91%coverage,332.65s**, exit0. Frontend typecheck/lint/build, **217tests/25files**, real-browser E2E **77passed+1intentional desktop exclusion**, authenticated E2E **6/6** pass. Fresh isolated demo20results/Groningen first preserves baseline. Previous source6178402 cloud matrices progressed to7/8success by06:32UTC; they are historical after this source correction. Final selected-head cloud gates, immutable build/deploy and the same two-field UI acceptance are next.
@@ -4315,6 +4324,8 @@ next agent does not reopen it.
   they are; do not rewrite that history.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
+
+- 2026-10-02: `GET /api/social/people/{id}` PersonCard now includes viewer-specific `can_message: boolean`; it reveals only whether the current viewer can start or continue a conversation. It does not expose private applicant case fields. No migration.
 
 - 2026-10-01: multi-field CandidateProgram.name now preserves the already validated official page subject instead of regenerating a display name from its URL; source identity gates, budgets, result schema and single-field fallback unchanged. List input raw text is local UI state; API payloads remain trimmed string arrays.
 

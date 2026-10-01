@@ -19,8 +19,8 @@ export function LegalScreen() {
   return (
     <>
       <div className="screen__head">
-        <p className="screen__eyebrow">About</p>
-        <h1 className="screen__title">Privacy &amp; terms</h1>
+        <p className="screen__eyebrow">LEGAL / PRIVACY</p>
+        <h1 className="screen__title">Privacy with <span className="find-yellow">clarity.</span></h1>
         <p className="screen__lede">
           What Unimatch stores, what it never does, and what is still owed to you.
         </p>
@@ -153,6 +153,20 @@ export function LegalScreen() {
               on a person opening the queue. If you need something to stop now rather than soon,
               blocking is the tool that works without waiting for anybody.
             </p>
+          </div>
+        </Panel>
+        <Panel title="Community guidelines (draft)">
+          <div className="stack stack--tight small">
+            <p>Share your own experience and treat other students respectfully. Do not post another person&apos;s private information, impersonate anyone, harass others, or present a rumour about university requirements as official fact.</p>
+            <p>Posts, replies, messages and profiles can be reported. Moderators review reports manually; urgent unwanted contact can be blocked immediately.</p>
+            <p>Community experiences are personal opinions, not official university information. Confirm admissions, cost and scholarship facts against the linked official sources in your research results.</p>
+          </div>
+        </Panel>
+        <Panel title="Data processing (draft)">
+          <div className="stack stack--tight small">
+            <p>Your private applicant case and research evidence are stored within your workspace. Public community information is created separately and only when you choose to join.</p>
+            <p>Research requests read public university sources without placing applicant data in outbound URLs. A complete case record can be exported, and cases or accounts can be deleted using the controls in the app.</p>
+            <p>These statements describe current product behavior. They still require legal review for the deployment and the jurisdictions where applicants live.</p>
           </div>
         </Panel>
       </div>

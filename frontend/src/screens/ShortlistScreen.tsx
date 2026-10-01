@@ -10,6 +10,7 @@
 
 import { Fragment, useMemo, useState } from 'react';
 import { ResultDetail } from '@/components/ResultDetail';
+import { ComparePanel } from '@/components/ComparePanel';
 import { Chip, Empty, Field, Notice, Panel, StatusChip } from '@/components/primitives';
 import {
   FIT_DISCLAIMER, STATUS_LABEL, admissionsFitTone, bucketTone, date, eligibilityTone,
@@ -354,12 +355,15 @@ export function ShortlistScreen({ onStart }: { onStart?: () => void }) {
 
   return (
     <div className="find-page">
-      <div className="screen__head">
-        <p className="screen__eyebrow">GLOBAL OPPORTUNITIES. REAL MATCHES.</p>
-        <h1 className="screen__title">Find your best <span className="find-yellow">matches.</span></h1>
-        <p className="screen__lede">
-          Explore programmes that fit your goals, budget and future. Open any result to see the evidence and what is still unknown.
-        </p>
+      <div className="find-hero">
+        <div className="screen__head">
+          <p className="screen__eyebrow">GLOBAL OPPORTUNITIES. REAL MATCHES.</p>
+          <h1 className="screen__title">Find your best <span className="find-yellow">matches.</span></h1>
+          <p className="screen__lede">
+            Explore programmes that fit your goals, budget and future. Open any result to see the evidence and what is still unknown.
+          </p>
+        </div>
+        <img src="/brand/unimatch-journey.png" alt="Unimatch mascot exploring a mountain landscape" />
       </div>
 
       <div className="stack stack--loose">
@@ -461,7 +465,13 @@ export function ShortlistScreen({ onStart }: { onStart?: () => void }) {
           })}
         </div>
 
-        {compareIds.length > 0 && <section className="find-compare" id="find-compare" aria-label="Compare selected programmes"><div className="find-compare__head"><div><span className="home-eyebrow">COMPARE WITH CLARITY</span><h2>Side by side</h2></div><button type="button" className="btn btn--ghost" onClick={() => setCompareIds([])}>Clear</button></div><div className="find-compare__grid">{compareIds.map((id) => { const result = results.find((item) => item.id === id); if (!result) return null; return <div className="find-compare__column" key={id}><h3>{result.university}</h3><p>{result.program}</p><dl><dt>Country</dt><dd>{result.country}</dd><dt>Eligibility</dt><dd>{STATUS_LABEL[result.eligibility] ?? humanize(result.eligibility)}</dd><dt>Remaining cost</dt><dd>{result.funding_gap?.computable && result.funding_gap.gap ? money(result.funding_gap.gap) : 'Not enough comparable data'}</dd><dt>Deadline</dt><dd>{result.admission_deadline ? date(result.admission_deadline) : 'Not confirmed'}</dd></dl><button type="button" className="btn" onClick={() => setCompareIds((current) => current.filter((item) => item !== id))}>Remove</button></div>; })}</div></section>}
+        {compareIds.length > 0 && (
+          <ComparePanel
+            results={compareIds.map((id) => results.find((item) => item.id === id)).filter((item): item is ProgramResult => Boolean(item))}
+            onRemove={(id) => setCompareIds((current) => current.filter((item) => item !== id))}
+            onClear={() => setCompareIds([])}
+          />
+        )}
 
         <details className="find-advanced">
           <summary>Detailed evidence table</summary>

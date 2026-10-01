@@ -372,7 +372,15 @@ def person(
     )
     if profile is None:
         raise HTTPException(404, "This applicant has no social profile.")
-    return _card(profile)
+    can_message = (
+        user_id != principal.user_id
+        and session.get(SocialProfile, principal.user_id) is not None
+        and (
+            _conversation(session, principal.user_id, user_id) is not None
+            or _may_open(session, principal.user_id, profile)
+        )
+    )
+    return _card(profile).model_copy(update={"can_message": can_message})
 
 
 def _split(rows: list, limit: int, key) -> tuple[list, str | None]:
