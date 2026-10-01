@@ -11,7 +11,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { StoreProvider, blankProfile, toDraft, useStore } from './store';
 import { DEFAULT_PROFILE } from './defaultProfile';
 import { ApiError, api } from '@/api/client';
-import type { RunView, StoredProfile } from '@/types';
+import type { ApplicantCase, RunView, StoredProfile } from '@/types';
 
 // The spread comes first: anything after it is the part that makes this
 // profile distinguishable from the synthetic demo one.
@@ -49,6 +49,7 @@ beforeEach(() => {
   window.sessionStorage.clear();
   vi.restoreAllMocks();
   vi.spyOn(api, 'capabilities').mockResolvedValue({} as never);
+  vi.spyOn(api, 'cases').mockResolvedValue([]);
   vi.spyOn(api, 'validateProfile').mockResolvedValue({
     gaps: [], can_proceed: true, blocking_count: 0, summary: 'ok',
   });
@@ -140,16 +141,119 @@ describe('blankProfile', () => {
   it('is distinguishable from the demo profile', () => {
     expect(blankProfile()).not.toEqual(structuredClone(DEFAULT_PROFILE));
   });
+
+  it('carries no invented preferences or family budget into a cleared or new case', () => {
+    expectNeutralProfile(blankProfile());
+  });
+});
+
+function expectNeutralProfile(payload: unknown, fields: string[] = []) {
+  const draft = payload as Record<string, unknown>;
+  expect(draft.display_name).toBe('New applicant');
+  expect(draft.context).toMatchObject({
+    intended_fields: fields, citizenship: '', country_of_residence: '', education_country: '',
+    education_system: '', graduation_date: null, second_citizenship: null,
+  });
+  expect(draft.academics).toMatchObject({
+    gpa: null, class_rank: null, class_size: null, planned_retakes: [], subject_grades: [],
+    sat: { total: null, math: null, reading_writing: null },
+    ielts: { overall: null, listening: null, reading: null, writing: null, speaking: null },
+  });
+  expect(draft.activities).toEqual([]);
+  expect(draft.achievements).toEqual([]);
+  expect(draft.preferences).toMatchObject({
+    preferred_countries: [], excluded_countries: [], research_interests: [],
+    city_size: 'any', climate: 'any', university_size: 'any', campus_type: 'any',
+    acceptable_workload: 'any', target_ranking_band: 'any',
+    needs_work_during_study: false, needs_post_study_work: false,
+    safety_priority: 'medium', diversity_priority: 'medium', housing_guarantee_priority: 'medium',
+  });
+  expect(draft.funding).toMatchObject({
+    max_annual_budget: null, max_family_contribution: null, max_acceptable_gap: null,
+  });
+}
+
+describe('a fresh browser opens a new applicant', () => {
+  function FreshProbe() {
+    const store = useStore();
+    return (
+      <div>
+        <output data-testid="draft">{JSON.stringify(store.profileDraft)}</output>
+        <span data-testid="hydrated">{String(store.hydrated)}</span>
+        <span data-testid="cases">{store.cases.length}</span>
+        <span data-testid="saved">{store.savedProfile?.id ?? 'none'}</span>
+        <button onClick={() => store.setProfileDraft((d) => ({
+          ...d, context: { ...(d.context as object), intended_fields: ['biology'] },
+        }))}>choose field</button>
+        <button onClick={() => store.saveProfile()}>save</button>
+        <button onClick={() => store.startRun(false)}>start live</button>
+        <button onClick={() => store.switchCase('saved-demo')}>open saved demo</button>
+      </div>
+    );
+  }
+
+  const savedDemoCase: ApplicantCase = {
+    id: 'saved-demo', profile_id: 'saved-demo', display_name: DEFAULT_PROFILE.display_name,
+    status: 'draft', run_count: 0, created_at: '2026-10-01T00:00:00Z',
+    updated_at: '2026-10-01T00:00:00Z',
+  };
+
+  it.each([false, true])('starts neutral when saved cases exist=%s', async (hasCases) => {
+    vi.mocked(api.cases).mockResolvedValue(hasCases ? [savedDemoCase] : []);
+    const getProfile = vi.spyOn(api, 'getProfile');
+    render(<StoreProvider><FreshProbe /></StoreProvider>);
+
+    await waitFor(() => expect(screen.getByTestId('hydrated')).toHaveTextContent('true'));
+    expectNeutralProfile(JSON.parse(screen.getByTestId('draft').textContent!));
+    expect(screen.getByTestId('cases')).toHaveTextContent(hasCases ? '1' : '0');
+    expect(screen.getByTestId('saved')).toHaveTextContent('none');
+    expect(getProfile).not.toHaveBeenCalled();
+  });
+
+  it.each(['save', 'start live'])('does not submit demo data when the applicant clicks %s', async (action) => {
+    const createProfile = vi.spyOn(api, 'createProfile').mockImplementation(async (draft) => ({
+      ...(draft as Record<string, unknown>), id: 'new-profile', created_at: '2026-10-01T00:00:00Z',
+      updated_at: '2026-10-01T00:00:00Z',
+    }) as StoredProfile);
+    const startRun = vi.spyOn(api, 'startRun').mockResolvedValue({ id: 'new-run' } as RunView);
+    render(<StoreProvider><FreshProbe /></StoreProvider>);
+
+    await waitFor(() => expect(screen.getByTestId('hydrated')).toHaveTextContent('true'));
+    await act(async () => { screen.getByText('choose field').click(); });
+    await act(async () => { screen.getByText(action).click(); });
+
+    expect(createProfile).toHaveBeenCalledOnce();
+    expectNeutralProfile(createProfile.mock.calls[0]![0], ['biology']);
+    if (action === 'start live') {
+      expect(startRun).toHaveBeenCalledWith('new-profile', false, expect.any(String));
+    } else {
+      expect(startRun).not.toHaveBeenCalled();
+    }
+  });
+
+  it('still opens an explicitly selected saved synthetic case unchanged', async () => {
+    vi.mocked(api.cases).mockResolvedValue([savedDemoCase]);
+    vi.spyOn(api, 'getProfile').mockResolvedValue({
+      ...structuredClone(DEFAULT_PROFILE), id: savedDemoCase.profile_id,
+      created_at: savedDemoCase.created_at, updated_at: savedDemoCase.updated_at,
+    } as unknown as StoredProfile);
+    vi.spyOn(api, 'listRuns').mockResolvedValue([]);
+    render(<StoreProvider><FreshProbe /></StoreProvider>);
+
+    await waitFor(() => expect(screen.getByTestId('hydrated')).toHaveTextContent('true'));
+    await act(async () => { screen.getByText('open saved demo').click(); });
+    expect(JSON.parse(screen.getByTestId('draft').textContent!)).toEqual(DEFAULT_PROFILE);
+    expect(screen.getByTestId('saved')).toHaveTextContent(savedDemoCase.profile_id);
+  });
 });
 
 describe('explicit demo loading', () => {
   it('only puts demo data in the draft when asked', async () => {
     function DemoProbe() {
       const { profileDraft, loadDemoProfile, clearProfile } = useStore();
-      const context = profileDraft.context as Record<string, unknown>;
       return (
         <div>
-          <span data-testid="fields">{JSON.stringify(context.intended_fields)}</span>
+          <output data-testid="draft">{JSON.stringify(profileDraft)}</output>
           <button onClick={clearProfile}>clear</button>
           <button onClick={loadDemoProfile}>demo</button>
         </div>
@@ -157,11 +261,13 @@ describe('explicit demo loading', () => {
     }
     render(<StoreProvider><DemoProbe /></StoreProvider>);
 
-    await act(async () => { screen.getByText('clear').click(); });
-    expect(screen.getByTestId('fields')).toHaveTextContent('[]');
+    expectNeutralProfile(JSON.parse(screen.getByTestId('draft').textContent!));
 
     await act(async () => { screen.getByText('demo').click(); });
-    expect(screen.getByTestId('fields')).toHaveTextContent('computer science');
+    expect(JSON.parse(screen.getByTestId('draft').textContent!)).toEqual(DEFAULT_PROFILE);
+
+    await act(async () => { screen.getByText('clear').click(); });
+    expectNeutralProfile(JSON.parse(screen.getByTestId('draft').textContent!));
   });
 });
 

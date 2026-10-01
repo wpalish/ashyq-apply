@@ -39,11 +39,12 @@ test('a saved profile is restored into the form after a reload', async ({ page }
 
 test('demo data is only ever loaded on request, and is labelled when it is', async ({ page }) => {
   await page.goto('/');
-  await page.getByTestId('clear-profile').click();
-  const confirm = page.getByTestId('confirm-replace');
-  if (await confirm.isVisible().catch(() => false)) await confirm.click();
 
   await expect(page.getByLabel('Field of study')).toHaveValue('');
+  await expect(page.getByLabel('Citizenship')).toHaveValue('');
+  await expect(page.getByLabel('GPA / average')).toHaveValue('');
+  await expect(page.getByLabel('SAT total')).toHaveValue('');
+  await expect(page.getByTestId('ielts-overall')).toHaveValue('');
   await expect(page.getByText('synthetic demo data')).toBeHidden();
 
   await page.getByTestId('load-demo-profile').click();

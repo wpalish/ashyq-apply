@@ -580,6 +580,7 @@ class ResearchRunner:
 
                 if cand.country not in gov_cache:
                     gr = await gov.post_study_work(cand.country)
+                    errors.extend(gr.errors)
                     self._record_page_outcomes(gr.page_outcomes)
                     self.run.pages_checked += gr.pages_checked
                     self.run.pages_failed += gr.pages_failed

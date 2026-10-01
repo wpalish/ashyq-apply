@@ -104,46 +104,78 @@ export function toDraft(stored: StoredProfile): Record<string, unknown> {
   return draft;
 }
 
-/** An empty profile: the shape of DEFAULT_PROFILE with nothing filled in. */
+/**
+ * A new applicant has no scores, history, budget or stated preferences.
+ * Keep this separate from the demo seed so adding a demo fact can never
+ * silently turn it into information about a real applicant. Select controls
+ * retain the ordinary visible form defaults; other defaults match the schema.
+ */
 export function blankProfile(): Record<string, unknown> {
-  const base = structuredClone(DEFAULT_PROFILE) as Record<string, unknown>;
-  const context = base.context as Record<string, unknown>;
   return {
-    ...base,
-    display_name: "New applicant",
+    display_name: 'New applicant',
     context: {
-      ...context,
+      level: 'bachelor',
       intended_fields: [],
+      intake_term: 'fall',
+      intake_year: 2027,
       citizenship: '',
       country_of_residence: '',
       education_country: '',
       education_system: '',
+      curriculum_type: 'national',
       graduation_date: null,
       second_citizenship: null,
     },
     academics: {
-      ...(base.academics as Record<string, unknown>),
       gpa: null,
+      subject_grades: [],
       class_rank: null,
       class_size: null,
       sat: { total: null, math: null, reading_writing: null,
              dates: { taken_on: null, planned_retake_on: null },
-             status: "applicant_confirmed" },
+             status: 'applicant_confirmed' },
+      act: { composite: null, english: null, math: null, reading: null, science: null,
+             dates: { taken_on: null, planned_retake_on: null }, status: 'applicant_confirmed' },
       ielts: { overall: null, listening: null, reading: null, writing: null, speaking: null,
-               test_type: "academic", dates: { taken_on: null, planned_retake_on: null },
-               status: "applicant_confirmed" },
+               test_type: 'academic', dates: { taken_on: null, planned_retake_on: null },
+               status: 'applicant_confirmed' },
+      toefl: { total: null, reading: null, listening: null, speaking: null, writing: null,
+               dates: { taken_on: null, planned_retake_on: null }, status: 'applicant_confirmed' },
+      duolingo: null,
+      other_tests: [],
+      curriculum_results: [],
       planned_retakes: [],
     },
     activities: [],
     achievements: [],
+    preferences: {
+      preferred_countries: [], excluded_countries: [],
+      city_size: 'any', climate: 'any', university_size: 'any', campus_type: 'any',
+      acceptable_workload: 'any', target_ranking_band: 'any', research_interests: [],
+      values_internships: true, values_coop: false,
+      needs_work_during_study: false, needs_post_study_work: false,
+      safety_priority: 'medium', diversity_priority: 'medium', housing_guarantee_priority: 'medium',
+      priorities: [], research_privacy: 'preferences_only',
+    },
+    funding: {
+      requires_full_ride: false, accepts_full_tuition: true, accepts_partial: true,
+      max_annual_budget: null, max_family_contribution: null, max_acceptable_gap: null,
+      budget_currency: 'USD', willing_to_submit_need_documents: true,
+      must_cover_housing: true, must_cover_meals: true, must_cover_health_insurance: false,
+      must_cover_books: false, must_cover_travel: false, funding_criticality: 'decisive',
+    },
+    weights: {
+      academic_fit: 1.0, funding_fit: 1.5, extracurricular_alignment: 0.6, program_quality: 0.8,
+      country_preference: 1.0, city_fit: 0.4, climate_fit: 0.3, workload_fit: 0.3,
+      university_size_fit: 0.3, campus_fit: 0.3, career_outcomes: 0.7, post_study_work: 0.5,
+    },
+    weights_override: false,
   };
 }
 
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [capabilities, setCapabilities] = useState<Capabilities | null>(null);
-  const [profileDraft, setDraft] = useState<Record<string, unknown>>(
-    () => structuredClone(DEFAULT_PROFILE) as Record<string, unknown>,
-  );
+  const [profileDraft, setDraft] = useState<Record<string, unknown>>(blankProfile);
   const [savedProfile, setSavedProfile] = useState<StoredProfile | null>(null);
   const [cases, setCases] = useState<ApplicantCase[]>([]);
   const [validation, setValidation] = useState<ProfileValidationReport | null>(null);
