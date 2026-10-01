@@ -1,5 +1,5 @@
 import { Chip, SourceLink, StatusChip } from '@/components/primitives';
-import { FIT_DISCLAIMER, STATUS_LABEL, admissionsFitTone, date, eligibilityTone, fundingClassTone, humanize, money, percent, ratio } from '@/lib/format';
+import { FIT_DISCLAIMER, STATUS_LABEL, admissionsFitTone, date, eligibilityTone, fundingClassTone, humanize, money, percent } from '@/lib/format';
 import type { ProgramResult } from '@/types';
 
 export function ComparePanel({ results, onRemove, onClear }: {
@@ -26,8 +26,8 @@ export function ComparePanel({ results, onRemove, onClear }: {
               <dt>Funding</dt><dd><StatusChip status={result.best_funding_classification} tone={fundingClassTone[result.best_funding_classification]} /></dd>
               <dt>Remaining per year</dt><dd>{result.funding_gap?.computable && result.funding_gap.gap ? money(result.funding_gap.gap) : 'Not enough comparable data'}</dd>
               <dt>Deadline</dt><dd>{result.admission_deadline ? date(result.admission_deadline) : 'Not confirmed'}</dd>
-              <dt title={FIT_DISCLAIMER}>Preference fit</dt><dd>{ratio(result.ranking?.fit ?? null)}</dd>
-              <dt>Confirmed data</dt><dd>{percent(result.ranking?.coverage ?? null)}</dd>
+              <dt title={FIT_DISCLAIMER}>Preference fit</dt><dd>{result.ranking ? (STATUS_LABEL[result.ranking.bucket] ?? humanize(result.ranking.bucket)) : 'Not assessed'}</dd>
+              <dt title="How much of the evidence needed for this assessment was confirmed">Evidence coverage</dt><dd>{percent(result.ranking?.coverage ?? null)}</dd>
             </dl>
             <div className="find-compare__foot">
               {(result.conflicts.length > 0 || result.unresolved.length > 0) && <Chip tone="warn">{result.conflicts.length + result.unresolved.length} to clarify</Chip>}

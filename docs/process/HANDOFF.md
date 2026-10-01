@@ -108,6 +108,8 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**Unimatch comparison wording (source in this commit):** comparison now shows the existing qualitative portfolio bucket for preference fit instead of an unexplained decimal. The separate evidence-coverage percentage is labeled and explained. Frontend typecheck/lint, 227 tests/27 files and build pass; backend source unchanged.
+
 **Unimatch visual QA and student discovery (source in this commit):** Find mobile hero was compressed so search and filters remain visible; Community and Find students now use a responsive second column with the generated mascot and a working discovery CTA. The shared relative-time formatter now follows the selected language. `design-qa.md` stores paired reference/browser captures and a 390px mobile capture. Local browser community profile/post and CTA worked against the isolated `/tmp` database. Frontend typecheck/lint, 227 tests/27 files and build passed; backend source unchanged from the prior full green gate. Public deploy remains separately unverified.
 
 **Unimatch workflow screen migration (source in this commit):** Programme Detail, Compare, Plan, Documents, Sources, Community, Messages, Settings, Billing and Legal retain backend data and disclosures while using the shared Unimatch visual system. A viewer-specific `can_message` flag keeps unreachable private messages off the person page; saved profiles clear their dirty state after server normalization. The isolated browser demo completed search → save → compare → detail → Plan → document collection with six checklist items. Full backend and frontend gates below pass. This remains a design and local runtime checkpoint, not a public live-search acceptance.
@@ -1715,6 +1717,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**2026-10-02 review and release write-ahead:** open one Unimatch redesign PR from the pushed final branch with the actual local gates, design QA and explicit public-live limitations. Attach the PR to this task. Wait for all exact-head CI checks, repair any failures without weakening tests, then perform the owner-authorized merge to `main` with the checked head and verify post-merge checks. Separately inspect the existing Fly API/worker image and supported deployment commands, publish the tested merged source to the existing app if release gates permit, and verify browser sign-in plus live search without making unverifiable provider claims. Keep any outstanding provider/source-access limits explicit.
 
 **2026-10-02 visual/accessibility QA write-ahead:** compare the supplied Find and Community reference images with equal-width local browser captures; retain data honesty rather than copy mock values. Make the Community empty/feed state use its available desktop width with a real-brand image and a working Find students CTA, while keeping the content single-column on mobile. Check text contrast, keyboard access, no overflow and browser console. Save project-root `design-qa.md` with evidence and residual findings. Run the required frontend gates after source changes; backend is unchanged from the 2,844/94.92% green gate on `4f5a67b`. Push this small green step, then open PR, check selected-head CI and determine public deployment status separately.
 
