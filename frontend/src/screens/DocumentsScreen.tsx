@@ -247,7 +247,7 @@ function ChecklistFor({
 
       <Notice kind="info">
         <div>
-          ASHYQ Apply prepares this list. It does not upload documents, submit an application, sign
+          Unimatch prepares this list. It does not upload documents, submit an application, sign
           anything on your behalf, or pay a fee. Those steps stay with you.
         </div>
       </Notice>

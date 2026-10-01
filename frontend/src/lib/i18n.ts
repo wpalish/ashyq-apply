@@ -75,7 +75,7 @@ const EN = {
 
   'brand.tagline': 'Evidence-backed university & scholarship shortlisting',
   'brand.disclaimer':
-    'Published criteria only. ASHYQ Apply never predicts admission or funding outcomes.',
+    'Published criteria only. Unimatch never predicts admission or funding outcomes.',
 
   // --- Community -------------------------------------------------------
   // These are ordinary words - post, answer, city, major - not the admissions

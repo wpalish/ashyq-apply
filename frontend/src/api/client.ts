@@ -138,7 +138,7 @@ async function requestWithHeaders<T>(
     });
   } catch {
     // A network-level failure has no HTTP status; say what to check instead.
-    throw new ApiError(0, 'Cannot reach the ASHYQ Apply API. Is the backend running on port 8099?');
+    throw new ApiError(0, 'Cannot reach the Unimatch API. Is the backend running on port 8099?');
   }
 
   if (!response.ok) throw await failureFrom(response);

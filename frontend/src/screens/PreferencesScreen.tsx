@@ -29,6 +29,7 @@ const PRIORITY_LABELS: Record<PriorityGroup, string> = {
 };
 
 const DEFAULT_PRIORITIES = Object.keys(PRIORITY_LABELS) as PriorityGroup[];
+const SUGGESTED_COUNTRIES = ['Canada', 'United States', 'United Kingdom', 'Germany', 'Netherlands', 'Australia', 'Japan'];
 
 const WEIGHT_LABELS: Record<string, string> = {
   academic_fit: 'Academic fit',
@@ -74,6 +75,14 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
   });
 
   const weights = (get(profileDraft, ['weights']) ?? {}) as Record<string, number>;
+  const preferredCountries = (get(profileDraft, ['preferences', 'preferred_countries']) ?? []) as string[];
+  const fundingCriticality = String(get(profileDraft, ['funding', 'funding_criticality']) ?? 'important');
+  const toggleCountry = (country: string) => {
+    const next = preferredCountries.includes(country)
+      ? preferredCountries.filter((value) => value !== country)
+      : [...preferredCountries, country];
+    setProfileDraft((draft) => setIn(draft, ['preferences', 'preferred_countries'], next));
+  };
 
   const stored = (get(profileDraft, ['preferences', 'priorities']) ?? []) as PriorityGroup[];
   // A partial ordering is normal - move one card and stop - so the rest keeps
@@ -94,16 +103,30 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
   return (
     <>
       <div className="screen__head">
-        <p className="screen__eyebrow">Step 02</p>
-        <h1 className="screen__title">What matters to you</h1>
+        <p className="screen__eyebrow">Your journey · Preferences</p>
+        <h1 className="screen__title">Shape your perfect <span className="find-yellow">match.</span></h1>
         <p className="screen__lede">
-          These shape the ordering, not the facts. Eligibility and funding are read from official
-          pages either way — preferences only decide which of the qualifying options rise first.
+          Tell us where you want to go and what you can afford. You can change these choices later.
         </p>
       </div>
 
       <div className="stack stack--loose">
-        <Panel title="Where" hint="Countries you would actually move to, and any you would not.">
+        <Panel title="Target countries and regions" hint="Choose the places you would consider studying. Select more than one.">
+          <div className="preference-country-grid" aria-label="Suggested countries">
+            {SUGGESTED_COUNTRIES.map((country) => (
+              <button
+                key={country}
+                type="button"
+                className="preference-country"
+                aria-pressed={preferredCountries.includes(country)}
+                onClick={() => toggleCountry(country)}
+              >
+                <span>{country}</span><span aria-hidden="true">{preferredCountries.includes(country) ? '✓' : '+'}</span>
+              </button>
+            ))}
+          </div>
+          <details className="preference-more">
+            <summary>Other countries and location preferences</summary>
           <div className="grid-2">
             <Field label="Preferred countries" htmlFor="pref-countries" hint="Comma-separated.">
               <CommaSeparatedInput id="pref-countries" data-testid="preferred-countries" {...bindList(['preferences', 'preferred_countries'])} />
@@ -168,13 +191,14 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
               <input type="checkbox" {...bindBool(['preferences', 'needs_work_during_study'])} /> Need to work while studying
             </label>
           </div>
+          </details>
         </Panel>
 
         <Panel
           title="Budget"
           hint="Used to compute what is left after funding — never to hide options that cost more."
         >
-          <div className="grid-2">
+          <div className="grid-2 preference-budget-main">
             <Field label="Maximum you can pay per year" htmlFor="budget">
               <input id="budget" data-testid="max-budget" type="number" {...bind(['funding', 'max_annual_budget'], 'float')} />
             </Field>
@@ -185,18 +209,30 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
                 ))}
               </select>
             </Field>
+          </div>
+          <div className="preference-funding">
+            <h3>How important is funding to you?</h3>
+            <div className="preference-funding__choices">
+              {([
+                ['decisive', 'Very important', 'Prioritize scholarships and funded programmes.'],
+                ['important', 'Somewhat important', 'Show funded and self-funded options.'],
+                ['nice_to_have', 'Not a priority', 'Funding is useful, but not decisive.'],
+              ] as const).map(([value, label, description]) => (
+                <button key={value} type="button" aria-pressed={fundingCriticality === value}
+                  onClick={() => setProfileDraft((draft) => setIn(draft, ['funding', 'funding_criticality'], value))}>
+                  <strong>{label}</strong><span>{description}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+          <details className="preference-more">
+            <summary>More budget and funding details</summary>
+          <div className="grid-2">
             <Field label="Largest annual shortfall you could absorb" htmlFor="gap">
               <input id="gap" type="number" {...bind(['funding', 'max_acceptable_gap'], 'float')} />
             </Field>
             <Field label="Maximum family contribution" htmlFor="family-contribution">
               <input id="family-contribution" type="number" {...bind(['funding', 'max_family_contribution'], 'float')} />
-            </Field>
-            <Field label="How decisive is funding?" htmlFor="crit">
-              <select id="crit" {...bind(['funding', 'funding_criticality'])}>
-                <option value="nice_to_have">Nice to have</option>
-                <option value="important">Important</option>
-                <option value="decisive">Decisive</option>
-              </select>
             </Field>
           </div>
           <div className="row" style={{ marginTop: 'var(--space-4)' }}>
@@ -228,20 +264,21 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
               <input type="checkbox" {...bindBool(['funding', 'willing_to_submit_need_documents'])} /> Willing to file financial-need documents
             </label>
           </div>
+          </details>
         </Panel>
 
         <Panel
-          title="What matters more?"
+          title="What matters most to you?"
           hint="Put them in your order. The first one counts for about four times what the last one does; nothing here predicts an admission."
         >
           <p className="small muted">
             The order only decides which of the qualifying options rise first.
             It is not a probability of admission.
           </p>
-          <ol className="stack stack--tight" data-testid="priorities">
+          <ol className="preference-priorities" data-testid="priorities">
             {priorities.map((group, i) => (
-              <li key={group} className="row row--tight" data-testid={`priority-${group}`}>
-                <span className="mono xs muted" style={{ minWidth: '1.5rem' }}>{i + 1}</span>
+              <li key={group} className="preference-priority" data-testid={`priority-${group}`}>
+                <span className="preference-priority__number">{i + 1}</span>
                 <span className="small" style={{ flex: 1 }}>{PRIORITY_LABELS[group]}</span>
                 <button
                   type="button"
@@ -312,7 +349,7 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
           </details>
         </Panel>
 
-        <Panel title="Run the research">
+        <Panel title="Find your opportunities" hint="We check official sources and show what is confirmed, uncertain, or unavailable.">
           <div className="stack">
             <label className="row row--tight">
               <input

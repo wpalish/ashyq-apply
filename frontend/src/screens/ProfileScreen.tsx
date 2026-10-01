@@ -32,13 +32,16 @@ const SEVERITY_LABEL: Record<string, string> = {
   medium: 'Noticeable effect',
   low: 'Minor effect',
 };
+const PROFILE_STEPS = ['Personal details', 'Academic background', 'Tests & scores', 'Activities & achievements', 'Review'] as const;
 
 export function ProfileScreen({ onNext }: { onNext: () => void }) {
   const {
     profileDraft, setProfileDraft, validation, saveProfile, loading,
-    savedProfile, restored, loadDemoProfile, clearProfile, draftRestored, discardDraft,
+    savedProfile, restored, loadDemoProfile, clearProfile, draftRestored, discardDraft, dirty,
   } = useStore();
   const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [step, setStep] = useState(1);
   const [confirmingReplace, setConfirmingReplace] = useState<'demo' | 'clear' | null>(null);
   const [methods, setMethods] = useState<
     { key: string; description: string; source: string; caveat: string; to_scale: string }[]
@@ -52,6 +55,15 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
     if (!scaleLabel) return;
     api.conversionMethods(scaleLabel).then((r) => setMethods(r.methods)).catch(() => setMethods([]));
   }, [scaleLabel]);
+
+  useEffect(() => {
+    if (!savedProfile || !dirty || loading) return;
+    const timer = window.setTimeout(() => {
+      setSaving(true);
+      void saveProfile().then(() => setSaved(true)).catch(() => setSaved(false)).finally(() => setSaving(false));
+    }, 1500);
+    return () => window.clearTimeout(timer);
+  }, [savedProfile, dirty, loading, profileDraft, saveProfile]);
 
   const bind = (path: Path, cast: 'string' | 'number' | 'float' = 'string') => ({
     value: String(get(profileDraft, path) ?? ''),
@@ -145,13 +157,16 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
   return (
     <>
       <div className="screen__head">
-        <p className="screen__eyebrow">Step 01</p>
-        <h1 className="screen__title">Who is applying</h1>
+        <p className="screen__eyebrow">CREATE YOUR PROFILE · {String(step).padStart(2, '0')} / 05</p>
+        <h1 className="screen__title">Tell us about <span className="find-yellow">yourself.</span></h1>
         <p className="screen__lede">
-          Nothing here is converted or inferred behind your back. Grades keep their original scale,
-          and every blank below is listed with exactly what it costs you in the results.
+          A few simple details help us find the right matches for you. Your information stays editable.
         </p>
       </div>
+
+      <nav className="profile-steps" aria-label="Profile steps">
+        {PROFILE_STEPS.map((name, index) => <button key={name} type="button" aria-current={step === index + 1 ? 'step' : undefined} onClick={() => setStep(index + 1)}><span>{index + 1}</span>{name}</button>)}
+      </nav>
 
       <div className="stack stack--loose">
         {draftRestored && (
@@ -179,6 +194,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
           </Notice>
         )}
 
+        <div className="profile-step-content" hidden={step !== 1}>
         <Panel
           title="Start from"
           hint="Demo data is never loaded on your behalf. Choose it explicitly, and it is clearly labelled everywhere it appears."
@@ -280,7 +296,9 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
             </Field>
           </div>
         </Panel>
+        </div>
 
+        <div className="profile-step-content" hidden={step !== 2}>
         <Panel
           title="Read it off your transcript"
           hint="Optional. The file is read and discarded — it is never saved, and nothing is filled in until you say so."
@@ -322,7 +340,7 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
 
         <Panel
           title="Grades"
-          hint="Enter the grade exactly as it appears on your transcript. ASHYQ Apply does not convert it silently."
+          hint="Enter the grade exactly as it appears on your transcript. Unimatch does not convert it silently."
         >
           <div className="grid-2">
             <Field label="GPA / average" htmlFor="gpa">
@@ -384,7 +402,9 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
             </div>
           )}
         </Panel>
+        </div>
 
+        <div className="profile-step-content" hidden={step !== 3}>
         <Panel
           title="English language"
           hint="Subscores matter: many programmes publish a per-section minimum on top of the overall band."
@@ -466,7 +486,9 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
             })}>+ Add another test</button>
           </div>
         </Panel>
+        </div>
 
+        <div className="profile-step-content" hidden={step !== 2}>
         <Panel title="Subject grades" hint="Keep the original transcript scale for every subject.">
           <div className="stack stack--tight">
             {subjectGrades.map((_, index) => (
@@ -507,7 +529,9 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
             })}>+ Add curriculum result</button>
           </div>
         </Panel>
+        </div>
 
+        <div className="profile-step-content" hidden={step !== 4}>
         <Panel title="Extracurricular activities" hint="Depth, responsibility and measurable impact matter more than a long list.">
           <div className="stack stack--tight">
             {activities.map((_, index) => (
@@ -566,7 +590,9 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
             })}>+ Add achievement</button>
           </div>
         </Panel>
+        </div>
 
+        <div className="profile-step-content" hidden={step !== 5}>
         {validation && (
           <Panel
             title="What is missing, and what it costs you"
@@ -594,22 +620,26 @@ export function ProfileScreen({ onNext }: { onNext: () => void }) {
             )}
           </Panel>
         )}
+        {!validation && <Panel title="Ready to review"><p className="muted">Save your profile to check which information is blocking, recommended or optional.</p></Panel>}
+        </div>
 
-        <div className="row">
+        <div className="profile-step-actions">
+          {step > 1 && <button className="btn" type="button" onClick={() => setStep(step - 1)}>← Back</button>}
           <button
             className="btn"
-            disabled={loading}
+            disabled={loading || saving}
             data-testid="save-profile"
             onClick={async () => {
               await saveProfile();
               setSaved(true);
             }}
           >
-            {loading ? 'Saving…' : 'Save profile'}
+            {loading || saving ? 'Saving…' : 'Save profile'}
           </button>
-          {saved && <Chip tone="ok">Saved</Chip>}
-          <button className="btn btn--primary" onClick={onNext} data-testid="to-preferences">
-            Next: preferences &amp; budget →
+          {saved && !dirty && !saving && <Chip tone="ok">Saved</Chip>}
+          {dirty && !saving && <span className="xs muted">Unsaved changes stay on this device</span>}
+          <button className="btn btn--primary" onClick={() => step < PROFILE_STEPS.length ? setStep(step + 1) : onNext()} data-testid="to-preferences">
+            {step < PROFILE_STEPS.length ? 'Continue →' : 'Continue to preferences →'}
           </button>
         </div>
       </div>

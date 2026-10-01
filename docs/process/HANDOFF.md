@@ -108,6 +108,8 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**Unimatch redesign checkpoint (source in this commit):** generated Unimatch mascot imagery; new branded tokens, five-area shell, public landing/auth/legal, home, five-step profile, preferences, research presentation, and searchable Find cards with real-data comparison. Existing backend API and detailed disclosures remain. Current local gates: backend 2,844 passed/94.91%, Ruff/mypy pass; frontend typecheck/lint, 221 tests, build pass. In-app browser inspected desktop/mobile and a theme contrast bug was fixed. This is an interim redesign checkpoint, not full product acceptance.
+
 **Typed-list and verified-name corrections (source in this commit):** comma-separated inputs preserve raw unfinished spaces/separators while saving parsed arrays; all seven profile/preferences lists handle external case/demo/clear replacement. Multi-field CandidateProgram names retain their fetched verified source subject; the exact NTU matriculation-year URL now reaches downstream PROGRAM_EXISTS while wrong degree/subject and unknown2027 intake guards remain. Live coverage/privacy copy describes real scope and server operation. Red typing/API and exact Math handoff regressions proved both bugs; independent review found no material issue.
 
 **Public canary corrections (source in this commit):** new applicant drafts are independent neutral schema defaults; demo loads only explicitly. Current running Job lease governs liveness, so a slow stage is not falsely stale; recovery/fencing unchanged. Government fixture defaults require an offline corpus; absent live mappings become visible unknowns. ExaMCP failures carry only allowlisted operational categories, never raw vendor text. Parent reviewed lease fix; independent reviewer found no substantive issue in government/provider/frontend changes. Initial public canary report and before-fix screenshot remain outside Git under workspace outputs.
@@ -1707,6 +1709,10 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**Current redesign write-ahead (2026-10-02):** migrate the programme detail, compare, plan, documents and evidence screens in that order. Keep official-source/provenance, unknown/conflict, eligibility-versus-fit, document statuses and payment semantics; put the primary decision first and advanced detail behind disclosure. Run relevant frontend tests, typecheck/lint/build, desktop/mobile and accessibility inspection after each feature. Then cover community/messages/settings/billing/legal/moderation and final responsive QA.
+
+**Profile wizard write-ahead (2026-10-01 UTC):** in `frontend/src/screens/ProfileScreen.tsx`, group the existing fields into five visible stages without changing backend schema or transcript confirmation behavior. Keep unsaved draft preservation and a visible server-save action; autosave edits only after a profile already exists, with a debounce and a saved/saving state. Verify field entry, transcript suggestions, and progression in focused frontend tests. Next handle preferences and research presentation.
 
 **Unimatch redesign write-ahead (2026-10-01 UTC):** map `frontend/src/App.tsx`, `AuthGate.tsx`, `styles/*`, `screens/*`, `api/client.ts` and backend routes to the supplied brief. First implement shared Unimatch tokens/brand shell with five primary areas and contextual access to existing screens, preserving all route gates and current data flow. Add public landing and draft legal routes without auth and rebrand the auth screen. Verify typecheck/lint/unit/build and browser desktop/mobile. Record precise follow-up in this section before each next screen migration. Do not fabricate screenshot metrics, prices, claims or additional backend capabilities.
 
@@ -3583,6 +3589,8 @@ The steps codex left, unchanged and still next after this review:
    the compatibility shim. Do not buy a provider or deploy application infrastructure implicitly.
 
 ## 6. Gate status at last run
+
+**Unimatch redesign interim checkpoint, 2026-10-02:** backend Ruff check/format and mypy pass; pytest 2,844 passed, 94.91% coverage. Frontend typecheck/lint, 221 tests and build pass. Browser on localhost:5173 with isolated demo API localhost:8099 inspected desktop and 390px mobile; old system-dark token conflict was corrected. Production deployment, full search and remaining redesigned screens are not yet verified.
 
 **2026-10-01 final typed-list/name correction gates:** Ruff/check-format/mypy317 app/tests/evaluation files pass. Full pytest **2844passed,2warnings,94.91%coverage,332.65s**, exit0. Frontend typecheck/lint/build, **217tests/25files**, real-browser E2E **77passed+1intentional desktop exclusion**, authenticated E2E **6/6** pass. Fresh isolated demo20results/Groningen first preserves baseline. Previous source6178402 cloud matrices progressed to7/8success by06:32UTC; they are historical after this source correction. Final selected-head cloud gates, immutable build/deploy and the same two-field UI acceptance are next.
 

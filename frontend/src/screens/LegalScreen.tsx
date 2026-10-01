@@ -22,7 +22,7 @@ export function LegalScreen() {
         <p className="screen__eyebrow">About</p>
         <h1 className="screen__title">Privacy &amp; terms</h1>
         <p className="screen__lede">
-          What ASHYQ Apply stores, what it never does, and what is still owed to you.
+          What Unimatch stores, what it never does, and what is still owed to you.
         </p>
       </div>
 
