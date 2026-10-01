@@ -46,7 +46,11 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
   const {
     profileDraft, setProfileDraft, startRun, loading, capabilities, validation, run, rerank,
   } = useStore();
-  const [demoMode, setDemoMode] = useState(true);
+  const [demoModeOverride, setDemoModeOverride] = useState<boolean | null>(null);
+  // The deployment chooses the default once its capabilities arrive. Keep
+  // only the user's explicit override in state so a late response cannot
+  // silently switch their research back to the synthetic corpus.
+  const demoMode = demoModeOverride ?? capabilities?.demo_mode;
   const [showAdvancedWeights, setShowAdvancedWeights] = useState(false);
   const [recomputed, setRecomputed] = useState(false);
 
@@ -316,8 +320,9 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
               <input
                 type="checkbox"
                 data-testid="demo-toggle"
-                checked={demoMode}
-                onChange={(e) => setDemoMode(e.target.checked)}
+                checked={demoMode ?? false}
+                disabled={demoMode === undefined}
+                onChange={(e) => setDemoModeOverride(e.target.checked)}
               />
               <span className="small">
                 <strong>Demo mode</strong> — use the bundled synthetic corpus. No network access,
@@ -325,7 +330,11 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
               </span>
             </label>
 
-            {!demoMode && (
+            {demoMode === undefined && (
+              <p className="small muted" role="status">Loading research settings…</p>
+            )}
+
+            {demoMode === false && (
               <Notice kind="warn">
                 <div data-testid="live-mode-notice">
                   <strong>Live mode fetches real university websites.</strong> It honours robots.txt,
@@ -361,8 +370,9 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
               <button
                 className="btn btn--primary"
                 data-testid="start-research"
-                disabled={loading || (validation ? !validation.can_proceed : false)}
+                disabled={demoMode === undefined || loading || (validation ? !validation.can_proceed : false)}
                 onClick={async () => {
+                  if (demoMode === undefined) return;
                   await startRun(demoMode);
                   onStarted();
                 }}

@@ -2,9 +2,9 @@
 
 ``get_sender`` returns one of two senders and no third. The console sender
 logs the message and is what development and the demo use; the SMTP sender is
-what production must be configured with, and startup refuses `console` there —
-a reset link that is silently written to a log nobody reads is worse than no
-reset at all. The one other class here, ``RecordingSender``, is a test sink:
+what production requires when password recovery is enabled. Explicitly disabled
+recovery rejects both reset endpoints before a sender is resolved; it never
+writes reset links to logs instead of sending them. ``RecordingSender`` is a test sink:
 it keeps the messages instead of sending them, and ``get_sender`` never
 selects it — a test has to install it explicitly at the seam the routes use.
 

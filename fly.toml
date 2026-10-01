@@ -17,7 +17,10 @@ primary_region = "ams"
   UNIMATCH_DEMO_MODE = "false"
   UNIMATCH_SEARCH_PROVIDER = "exa_mcp"
   UNIMATCH_PUBLIC_BASE_URL = "https://ashyq-apply-alisher.fly.dev"
-  # SMTP and PostgreSQL credentials must be supplied as deployment secrets.
+  # Search and password login work without mail. Recovery stays visibly
+  # unavailable until an authorized SMTP sender is configured, then enable it.
+  UNIMATCH_PASSWORD_RESET_ENABLED = "false"
+  # PostgreSQL credentials must be supplied as deployment secrets.
   UNIMATCH_EMAIL_SENDER = "smtp"
   UNIMATCH_RESPECT_ROBOTS = "true"
   UNIMATCH_CORS_ORIGINS = "https://ashyq-apply-alisher.fly.dev"

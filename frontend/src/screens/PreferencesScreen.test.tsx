@@ -8,8 +8,8 @@
  * size of the search before it starts, not to infer it from a thin result.
  */
 
-import { fireEvent, render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { PreferencesScreen } from './PreferencesScreen';
 import type { Capabilities } from '@/types';
 
@@ -21,17 +21,25 @@ const COVERAGE: Capabilities['live_coverage'] = {
 };
 
 const CAPABILITIES = {
+  demo_mode: true,
   currency: { supported: ['KZT', 'EUR', 'USD'], rate_date: '2026-09-01', rate_source: 'ECB' },
   live_coverage: COVERAGE,
 } as Capabilities;
 
 let capabilities: Capabilities | null;
+const startRun = vi.fn();
+
+beforeEach(() => {
+  capabilities = CAPABILITIES;
+  startRun.mockReset();
+  startRun.mockResolvedValue(undefined);
+});
 
 vi.mock('@/lib/store', () => ({
   useStore: () => ({
     profileDraft: { preferences: {}, funding: {} },
     setProfileDraft: vi.fn(),
-    startRun: vi.fn(),
+    startRun,
     loading: false,
     capabilities,
     validation: null,
@@ -63,13 +71,63 @@ describe('the live-mode disclosure', () => {
   });
 
   it('still warns about live mode when coverage is unknown', () => {
-    // A capabilities call that has not landed yet must not take the warning
-    // down with it — the weaker statement is still true.
-    capabilities = null;
+    capabilities = { demo_mode: true, currency: CAPABILITIES.currency } as Capabilities;
     renderLive();
     expect(screen.queryByTestId('live-coverage')).not.toBeInTheDocument();
     expect(screen.getByTestId('live-mode-notice')).toHaveTextContent(
       'fetches real university websites',
     );
+  });
+});
+
+describe('the deployment research mode', () => {
+  it('starts live research by default on a live server', async () => {
+    capabilities = { ...CAPABILITIES, demo_mode: false };
+    const onStarted = vi.fn();
+    render(<PreferencesScreen onStarted={onStarted} />);
+
+    expect(screen.getByTestId('demo-toggle')).not.toBeChecked();
+    expect(screen.getByTestId('live-mode-notice')).toBeVisible();
+    fireEvent.click(screen.getByTestId('start-research'));
+
+    expect(startRun).toHaveBeenCalledWith(false);
+    await waitFor(() => expect(onStarted).toHaveBeenCalledOnce());
+  });
+
+  it('keeps demo research as the default on a demo server', () => {
+    render(<PreferencesScreen onStarted={() => {}} />);
+    expect(screen.getByTestId('demo-toggle')).toBeChecked();
+    fireEvent.click(screen.getByTestId('start-research'));
+    expect(startRun).toHaveBeenCalledWith(true);
+  });
+
+  it('waits for server settings before allowing a search, then uses live mode', () => {
+    capabilities = null;
+    const { rerender } = render(<PreferencesScreen onStarted={() => {}} />);
+
+    expect(screen.getByTestId('demo-toggle')).toBeDisabled();
+    expect(screen.getByTestId('start-research')).toBeDisabled();
+    expect(screen.queryByTestId('live-mode-notice')).not.toBeInTheDocument();
+    fireEvent.click(screen.getByTestId('start-research'));
+    expect(startRun).not.toHaveBeenCalled();
+
+    capabilities = { ...CAPABILITIES, demo_mode: false };
+    rerender(<PreferencesScreen onStarted={() => {}} />);
+    expect(screen.getByTestId('demo-toggle')).not.toBeChecked();
+    expect(screen.getByTestId('start-research')).toBeEnabled();
+    fireEvent.click(screen.getByTestId('start-research'));
+    expect(startRun).toHaveBeenCalledWith(false);
+  });
+
+  it.each([true, false])('preserves an explicit override of server demo_mode=%s', (serverMode) => {
+    capabilities = { ...CAPABILITIES, demo_mode: serverMode };
+    const { rerender } = render(<PreferencesScreen onStarted={() => {}} />);
+    fireEvent.click(screen.getByTestId('demo-toggle'));
+
+    capabilities = { ...CAPABILITIES, demo_mode: serverMode };
+    rerender(<PreferencesScreen onStarted={() => {}} />);
+    expect((screen.getByTestId('demo-toggle') as HTMLInputElement).checked).toBe(!serverMode);
+    fireEvent.click(screen.getByTestId('start-research'));
+    expect(startRun).toHaveBeenCalledWith(!serverMode);
   });
 });

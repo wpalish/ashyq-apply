@@ -97,11 +97,15 @@ class Settings(BaseSettings):
     #: Public origin of the frontend, used to build links a person clicks from
     #: their email. HTTPS in production, where startup refuses anything else.
     public_base_url: str = "http://127.0.0.1:5173"
+    #: Explicitly disabling recovery disables both reset endpoints and is exposed
+    #: to the sign-in screen. Authentication and password changes still work;
+    #: no mail configuration is needed while no recovery mail can be requested.
+    password_reset_enabled: bool = True
     #: Password reset. The link is single-use and short-lived on purpose.
     password_reset_ttl_minutes: int = 60
     #: Where reset links are sent. "console" logs them (development and the
-    #: demo); "smtp" uses the settings below. There is no third option, and
-    #: production refuses to start on "console".
+    #: demo); "smtp" uses the settings below. Production requires SMTP whenever
+    #: password recovery is enabled; explicitly disabled recovery sends no mail.
     email_sender: str = "console"
     smtp_host: str = ""
     smtp_port: int = 587
@@ -236,14 +240,14 @@ class Settings(BaseSettings):
             raise RuntimeError("UNIMATCH_SESSION_TTL_HOURS must be between 1 and 720.")
         if self.email_sender not in {"console", "smtp"}:
             raise RuntimeError("UNIMATCH_EMAIL_SENDER must be either 'console' or 'smtp'.")
-        if self.is_production and self.email_sender != "smtp":
+        if self.password_reset_enabled and self.is_production and self.email_sender != "smtp":
             raise RuntimeError(
                 "UNIMATCH_EMAIL_SENDER=console only logs reset links. Configure SMTP before "
                 "running in production, or password reset silently does nothing."
             )
-        if self.email_sender == "smtp" and not self.smtp_host:
+        if self.password_reset_enabled and self.email_sender == "smtp" and not self.smtp_host:
             raise RuntimeError("UNIMATCH_SMTP_HOST is required when the sender is smtp.")
-        if self.is_production:
+        if self.password_reset_enabled and self.is_production:
             sender = parseaddr(self.smtp_from)[1]
             local, separator, domain = sender.rpartition("@")
             if (

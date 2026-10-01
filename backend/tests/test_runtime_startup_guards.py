@@ -83,6 +83,60 @@ def test_development_console_keeps_its_placeholder_sender() -> None:
     ).validate_runtime()
 
 
+@pytest.mark.parametrize("sender", ["console", "smtp"])
+def test_production_can_explicitly_disable_password_recovery_without_mail(sender: str) -> None:
+    _settings(
+        password_reset_enabled=False,
+        email_sender=sender,
+        smtp_host="",
+        smtp_from="no-reply@ashyq.example",
+    ).validate_runtime()
+
+
+@pytest.mark.parametrize(
+    ("overrides", "message"),
+    [
+        ({"email_sender": "console"}, "UNIMATCH_EMAIL_SENDER"),
+        ({"smtp_host": ""}, "UNIMATCH_SMTP_HOST"),
+        ({"smtp_from": "no-reply@ashyq.example"}, "UNIMATCH_SMTP_FROM"),
+    ],
+)
+def test_enabled_password_recovery_still_requires_production_mail(
+    overrides: dict[str, object], message: str
+) -> None:
+    settings = _settings(**overrides)
+    assert settings.password_reset_enabled is True
+    with pytest.raises(RuntimeError, match=message):
+        settings.validate_runtime()
+
+
+@pytest.mark.parametrize(
+    ("overrides", "message"),
+    [
+        ({"auth_enabled": False}, "UNIMATCH_AUTH_ENABLED"),
+        ({"cookie_secure": False}, "UNIMATCH_COOKIE_SECURE"),
+        ({"database_url": "sqlite:///:memory:"}, "PostgreSQL"),
+        ({"cors_origins": "*"}, "CORS"),
+        ({"email_sender": "smpt"}, "UNIMATCH_EMAIL_SENDER"),
+        ({"public_base_url": "http://apply.example.test"}, "UNIMATCH_PUBLIC_BASE_URL"),
+        ({"password_scrypt_log2": 14}, "password hashing"),
+        ({"metrics_enabled": True, "metrics_token": ""}, "UNIMATCH_METRICS_TOKEN"),
+    ],
+)
+def test_disabled_recovery_does_not_disable_other_production_guards(
+    overrides: dict[str, object], message: str
+) -> None:
+    values: dict[str, object] = {
+        "password_reset_enabled": False,
+        "email_sender": "console",
+        "smtp_host": "",
+        "smtp_from": "no-reply@ashyq.example",
+        **overrides,
+    }
+    with pytest.raises(RuntimeError, match=message):
+        _settings(**values).validate_runtime()
+
+
 @pytest.mark.parametrize(
     ("overrides", "message"),
     [
@@ -123,11 +177,17 @@ def test_worker_refuses_unsafe_settings_before_startup_side_effects(
     install_loop.assert_not_called()
 
 
+@pytest.mark.parametrize("recovery_enabled", [True, False])
 def test_worker_validates_before_logging_and_schema_wait(
     monkeypatch: pytest.MonkeyPatch,
+    recovery_enabled: bool,
 ) -> None:
     """A valid worker still honours the schema-wait failure without running jobs."""
-    settings = _settings()
+    settings = _settings(
+        password_reset_enabled=recovery_enabled,
+        smtp_host="smtp.example.test" if recovery_enabled else "",
+        smtp_from="no-reply@example.test" if recovery_enabled else "no-reply@ashyq.example",
+    )
     order: list[str] = []
     original_validate = Settings.validate_runtime
 

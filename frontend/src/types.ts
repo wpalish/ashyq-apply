@@ -525,6 +525,7 @@ export interface AuthPrincipal {
 export interface AuthStatus {
   enabled: boolean;
   registration_enabled: boolean;
+  password_reset_enabled?: boolean;
   authenticated: boolean;
   principal: AuthPrincipal | null;
 }

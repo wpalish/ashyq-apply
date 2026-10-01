@@ -34,6 +34,12 @@ export function AuthGate({ children }: { children: ReactNode }) {
     );
   }
   if (status.authenticated) return <>{children}</>;
+  // Older servers do not advertise this capability and support recovery.
+  const passwordResetEnabled = status.password_reset_enabled !== false;
+  const backToSignIn = () => {
+    window.location.hash = '';
+    setResetToken('');
+  };
 
   const submit = async (event: FormEvent) => {
     event.preventDefault();
@@ -53,6 +59,19 @@ export function AuthGate({ children }: { children: ReactNode }) {
   };
 
   if (resetToken) {
+    if (!passwordResetEnabled) {
+      return (
+        <main className="auth-shell">
+          <div className="panel auth-card stack">
+            <h1>Password recovery</h1>
+            <p className="muted">Password recovery is currently unavailable.</p>
+            <button className="btn btn--ghost" type="button" onClick={backToSignIn}>
+              Back to sign in
+            </button>
+          </div>
+        </main>
+      );
+    }
     const finishReset = async (event: FormEvent) => {
       event.preventDefault();
       setBusy(true);
@@ -84,10 +103,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
           <button className="btn btn--primary" disabled={busy} type="submit">
             {busy ? 'Please wait…' : 'Set password and sign in'}
           </button>
-          <button className="btn btn--ghost" type="button" onClick={() => {
-            window.location.hash = '';
-            setResetToken('');
-          }}>Back to sign in</button>
+          <button className="btn btn--ghost" type="button" onClick={backToSignIn}>Back to sign in</button>
         </form>
       </main>
     );
@@ -146,12 +162,18 @@ export function AuthGate({ children }: { children: ReactNode }) {
                  onChange={(e) => setPassword(e.target.value)} />
           {mode === 'register' && <span className="field__hint">At least 12 characters.</span>}
         </label>
+        {!passwordResetEnabled && (
+          <div className="notice small">
+            <p>Password recovery is currently unavailable.</p>
+            {mode === 'register' && <p>Save your password somewhere safe. You will need it to sign in.</p>}
+          </div>
+        )}
         {error && <div className="notice notice--risk" role="alert">{error}</div>}
         {notice && <div className="notice notice--ok small" data-testid="reset-notice">{notice}</div>}
         <button className="btn btn--primary" data-testid="auth-submit" disabled={busy} type="submit">
           {busy ? 'Please wait…' : mode === 'login' ? 'Sign in' : 'Create workspace'}
         </button>
-        {mode === 'login' && (
+        {mode === 'login' && passwordResetEnabled && (
           <button
             className="btn btn--ghost btn--sm" type="button" disabled={busy || !email}
             onClick={requestReset} data-testid="forgot-password"

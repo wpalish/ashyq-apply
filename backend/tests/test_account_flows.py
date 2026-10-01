@@ -8,6 +8,7 @@ is one of those, plus the negative case that makes it safe.
 from __future__ import annotations
 
 import copy
+from unittest.mock import Mock
 
 import pytest
 from fastapi.testclient import TestClient
@@ -291,6 +292,100 @@ class TestPasswordReset:
             "/api/auth/password/reset-request", json={"email": "prod-user@example.test"}
         ).json()
         assert "reset_link" not in body
+
+
+class TestDisabledPasswordReset:
+    @pytest.mark.parametrize("enabled", [True, False])
+    def test_auth_status_exposes_the_recovery_capability(self, auth_client, enabled):
+        client, settings = auth_client
+        settings.password_reset_enabled = enabled
+        body = client.get("/api/auth/status").json()
+        assert body["password_reset_enabled"] is enabled
+
+    def test_disabled_requests_create_no_token_and_never_resolve_mail_sender(
+        self, auth_client, monkeypatch, caplog
+    ):
+        client, settings = auth_client
+        register(client, "disabled-reset")
+        client.post("/api/auth/logout")
+        settings.password_reset_enabled = False
+
+        import app.api.routes_account as routes_account
+        from app.db import SessionLocal
+        from app.models import AuditEvent, PasswordResetToken
+
+        sender = Mock(side_effect=AssertionError("disabled recovery must not resolve a sender"))
+        token_factory = Mock(side_effect=AssertionError("disabled recovery must not issue a token"))
+        monkeypatch.setattr(routes_account, "get_sender", sender)
+        monkeypatch.setattr(routes_account.secrets, "token_urlsafe", token_factory)
+        responses = [
+            client.post("/api/auth/password/reset-request", json={"email": email})
+            for email in ["disabled-reset@example.test", "unknown@example.test", "invalid"]
+        ]
+        for response in responses:
+            assert response.status_code == 403
+            assert response.json() == {"detail": "Password recovery is disabled on this site."}
+        sender.assert_not_called()
+        token_factory.assert_not_called()
+        with SessionLocal() as session:
+            assert session.query(PasswordResetToken).count() == 0
+            assert (
+                session.query(AuditEvent)
+                .filter(AuditEvent.action == "password_reset_requested")
+                .count()
+                == 0
+            )
+        assert "email not sent" not in caplog.text
+
+    def test_existing_reset_token_cannot_change_password_while_recovery_is_disabled(
+        self, mail_sink
+    ):
+        client, settings, sink = mail_sink
+        principal = register(client, "disabled-token")
+        response = client.post(
+            "/api/auth/password/reset-request", json={"email": "disabled-token@example.test"}
+        )
+        assert response.status_code == 202
+        token = reset_token_from_letter(sink.messages[0])
+        settings.password_reset_enabled = False
+
+        from app.db import SessionLocal
+        from app.models import AuthSession, PasswordResetToken, User
+
+        with SessionLocal() as session:
+            before_hash = session.get(User, principal["user_id"]).password_hash
+            before_sessions = session.query(AuthSession).count()
+
+        response = client.post(
+            "/api/auth/password/reset", json={"token": token, "new_password": NEW_PASSWORD}
+        )
+        assert response.status_code == 403
+        assert response.json() == {"detail": "Password recovery is disabled on this site."}
+        assert "set-cookie" not in response.headers
+        with SessionLocal() as session:
+            assert session.get(User, principal["user_id"]).password_hash == before_hash
+            assert session.query(AuthSession).count() == before_sessions
+            assert session.query(PasswordResetToken).one().used_at is None
+        assert client.get("/api/auth/me").status_code == 200
+        assert len(sink.messages) == 1
+
+    def test_authenticated_password_change_still_works_without_recovery(self, auth_client):
+        client, settings = auth_client
+        settings.password_reset_enabled = False
+        register(client, "disabled-self-service")
+        response = client.post(
+            "/api/auth/password",
+            json={"current_password": PASSWORD, "new_password": NEW_PASSWORD},
+        )
+        assert response.status_code == 200
+        client.post("/api/auth/logout")
+        assert (
+            client.post(
+                "/api/auth/login",
+                json={"email": "disabled-self-service@example.test", "password": NEW_PASSWORD},
+            ).status_code
+            == 200
+        )
 
 
 class TestResetTokenNeverLeavesTheMailbox:
