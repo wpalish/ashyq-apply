@@ -108,6 +108,8 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**Unimatch visual QA and student discovery (source in this commit):** Find mobile hero was compressed so search and filters remain visible; Community and Find students now use a responsive second column with the generated mascot and a working discovery CTA. The shared relative-time formatter now follows the selected language. `design-qa.md` stores paired reference/browser captures and a 390px mobile capture. Local browser community profile/post and CTA worked against the isolated `/tmp` database. Frontend typecheck/lint, 227 tests/27 files and build passed; backend source unchanged from the prior full green gate. Public deploy remains separately unverified.
+
 **Unimatch workflow screen migration (source in this commit):** Programme Detail, Compare, Plan, Documents, Sources, Community, Messages, Settings, Billing and Legal retain backend data and disclosures while using the shared Unimatch visual system. A viewer-specific `can_message` flag keeps unreachable private messages off the person page; saved profiles clear their dirty state after server normalization. The isolated browser demo completed search → save → compare → detail → Plan → document collection with six checklist items. Full backend and frontend gates below pass. This remains a design and local runtime checkpoint, not a public live-search acceptance.
 
 **Unimatch design foundation (`6d2bfb2`):** pushed the brand assets, responsive five-area shell, public/auth presentation, Home, staged profile, preferences, research progress and searchable Find. Full gates at that checkpoint passed. The second screen migration below is still uncommitted until its gates pass.
@@ -1713,6 +1715,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**2026-10-02 visual/accessibility QA write-ahead:** compare the supplied Find and Community reference images with equal-width local browser captures; retain data honesty rather than copy mock values. Make the Community empty/feed state use its available desktop width with a real-brand image and a working Find students CTA, while keeping the content single-column on mobile. Check text contrast, keyboard access, no overflow and browser console. Save project-root `design-qa.md` with evidence and residual findings. Run the required frontend gates after source changes; backend is unchanged from the 2,844/94.92% green gate on `4f5a67b`. Push this small green step, then open PR, check selected-head CI and determine public deployment status separately.
 
 **2026-10-02 Unimatch second migration write-ahead:** finish and verify `ResultDetail`, `ComparePanel`, Plan, Documents, Sources, Messages, Settings, Billing and Legal on the existing API. Preserve demo labeling and the existing evidence disclosures. `PersonCard.can_message` must express actual viewer permission without exposing private case data; update its strict API contract test. Validate the exact local demo sequence profile → research → Find search/save/compare/detail → Plan → Documents and responsive mobile. Run full backend Ruff/format/mypy/pytest coverage and frontend typecheck/lint/tests/build, then commit and push the green step. Afterward inspect remaining brief gaps, accessibility, visual QA and release state; do not claim live public deployment from the isolated demo.
 
@@ -3596,6 +3600,8 @@ The steps codex left, unchanged and still next after this review:
    the compatibility shim. Do not buy a provider or deploy application infrastructure implicitly.
 
 ## 6. Gate status at last run
+
+**Unimatch visual QA, 2026-10-02:** frontend typecheck/lint pass, **227 tests across 27 files** and production build pass after the final CSS/community/localization edits. The prior `4f5a67b` backend gate remains applicable (2,844 passed/94.92%, Ruff/mypy); this commit changes no backend files. Browser checked light/dark, 390px Find/discovery with no horizontal overflow, Community profile creation and post, and zero console errors. The local QA post is synthetic and isolated; no production post was made.
 
 **Unimatch second migration, 2026-10-02:** Ruff check/format and mypy pass across 295 backend files. Full pytest: **2,844 passed, 2 warnings, 94.92% coverage**. Frontend typecheck/lint, **226 tests in 27 files** and production build pass. `npm audit --audit-level=high` exits zero (two moderate dev/test advisories); one Alembic head `c5d01b7e4f83`, `git diff --check` clean. Isolated demo API/worker and browser verified search, saving, compare, detail, Plan and document checklist; 390px mobile settings/billing/find show no horizontal overflow. Actual public live-provider search and production deployment are separate pending evidence.
 

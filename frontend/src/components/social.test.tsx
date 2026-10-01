@@ -9,7 +9,22 @@
 
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { Body, Composer, POST_MAX_CHARS, Retract, StatusChip, initials, statusLabel } from './social';
+import { Body, Composer, POST_MAX_CHARS, Retract, StatusChip, initials, statusLabel, when } from './social';
+import { setLocale } from '@/lib/i18n';
+
+it('uses the selected language for relative post times', () => {
+  vi.useFakeTimers();
+  try {
+    vi.setSystemTime(new Date('2026-10-02T00:00:00Z'));
+    setLocale('en');
+    expect(when('2026-10-01T23:59:00Z').label).toBe('1 minute ago');
+    setLocale('ru');
+    expect(when('2026-10-01T23:59:00Z').label).toBe('1 минуту назад');
+  } finally {
+    setLocale('en');
+    vi.useRealTimers();
+  }
+});
 
 function type(value: string): HTMLTextAreaElement {
   const box = screen.getByRole('textbox') as HTMLTextAreaElement;

@@ -14,7 +14,7 @@ import { ReportButton } from '@/components/moderation';
 import type { Tone } from '@/lib/format';
 // `t` rather than the hook: these are leaf components, and the screens above
 // them subscribe to the locale, so a language change re-renders them anyway.
-import { t } from '@/lib/i18n';
+import { getLocale, t } from '@/lib/i18n';
 import type { ApplicantStatus, AuthorRef, PersonCard, PostView } from '@/types';
 
 /** Mirrors POST_MAX_CHARS in `backend/app/domain/social.py`.
@@ -94,7 +94,8 @@ export function Avatar({
 /** "4 minutes ago", and a full timestamp on hover. */
 export function when(iso: string): { label: string; exact: string } {
   const at = new Date(iso);
-  const exact = at.toLocaleString();
+  const locale = getLocale();
+  const exact = at.toLocaleString(locale);
   const seconds = Math.round((at.getTime() - Date.now()) / 1000);
   const steps: [Intl.RelativeTimeFormatUnit, number][] = [
     ['second', 60], ['minute', 60], ['hour', 24], ['day', 7], ['week', 4.35], ['month', 12],
@@ -102,11 +103,11 @@ export function when(iso: string): { label: string; exact: string } {
   let value = seconds;
   for (const [unit, size] of steps) {
     if (Math.abs(value) < size) {
-      return { label: new Intl.RelativeTimeFormat(undefined, { numeric: 'auto' }).format(Math.round(value), unit), exact };
+      return { label: new Intl.RelativeTimeFormat(locale, { numeric: 'auto' }).format(Math.round(value), unit), exact };
     }
     value /= size;
   }
-  return { label: new Intl.RelativeTimeFormat(undefined, { numeric: 'auto' }).format(Math.round(value), 'year'), exact };
+  return { label: new Intl.RelativeTimeFormat(locale, { numeric: 'auto' }).format(Math.round(value), 'year'), exact };
 }
 
 export function Byline({

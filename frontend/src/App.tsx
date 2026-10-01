@@ -346,7 +346,7 @@ export default function App() {
 
       <div className="main">
         <header className="topbar">
-          <span className="topbar__brand">Unimatch</span>
+          <span className="topbar__brand"><img src="/brand/unimatch-mark.png" alt="" />Unimatch</span>
           <Chip tone={capabilities?.demo_mode ? 'demo' : 'accent'}>
             {capabilities ? (capabilities.demo_mode ? 'Demo data' : 'Live sources') : 'connecting…'}
           </Chip>
@@ -447,6 +447,7 @@ export default function App() {
               myUserId={me?.user_id ?? null}
               onOpenPerson={(id) => { setPersonId(id); setScreen('person'); }}
               onJoin={() => setScreen('me')}
+              onDiscover={() => setScreen('discover')}
             />
           )}
           {screen === 'discover' && (

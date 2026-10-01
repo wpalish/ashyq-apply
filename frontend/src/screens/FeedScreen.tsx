@@ -98,12 +98,13 @@ function Thread({
 }
 
 export function FeedScreen({
-  joined, myUserId, onOpenPerson, onJoin,
+  joined, myUserId, onOpenPerson, onJoin, onDiscover,
 }: {
   joined: boolean;
   myUserId: string | null;
   onOpenPerson: (id: string) => void;
   onJoin: () => void;
+  onDiscover: () => void;
 }) {
   const { t } = useTranslation();
   const [filters, setFilters] = useState<FeedFilters>({});
@@ -143,6 +144,7 @@ export function FeedScreen({
     count === 0 ? t('community.answer') : `${t('community.answer')} (${count})`;
 
   return (
+    <div className="community-page">
     <div className="stack community-column">
       <div className="screen__head">
         <p className="screen__eyebrow">COMMUNITY</p>
@@ -286,6 +288,16 @@ export function FeedScreen({
           {t('community.olderPosts')}
         </button>
       )}
+    </div>
+    <aside className="community-aside" aria-label="Explore the student community">
+      <img src="/brand/unimatch-journey.png" alt="Unimatch mascot looking toward a mountain campus" />
+      <div>
+        <p className="screen__eyebrow">SAME STUDENTS. BIGGER HORIZONS.</p>
+        <h2>Meet students on a similar path.</h2>
+        <p>Find people by their university, field and destination. Public stories help you start a conversation.</p>
+        <button type="button" className="btn btn--primary" onClick={onDiscover}>Find students →</button>
+      </div>
+    </aside>
     </div>
   );
 }
