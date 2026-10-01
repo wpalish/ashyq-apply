@@ -6,6 +6,7 @@
  */
 
 import { useState } from 'react';
+import { CommaSeparatedInput } from '@/components/CommaSeparatedInput';
 import { Chip, Field, Notice, Panel } from '@/components/primitives';
 import { castInput, get, setIn, type Path } from '@/lib/immutable';
 import { useStore } from '@/lib/store';
@@ -46,7 +47,11 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
   const {
     profileDraft, setProfileDraft, startRun, loading, capabilities, validation, run, rerank,
   } = useStore();
-  const [demoMode, setDemoMode] = useState(true);
+  const [demoModeOverride, setDemoModeOverride] = useState<boolean | null>(null);
+  // The deployment chooses the default once its capabilities arrive. Keep
+  // only the user's explicit override in state so a late response cannot
+  // silently switch their research back to the synthetic corpus.
+  const demoMode = demoModeOverride ?? capabilities?.demo_mode;
   const [showAdvancedWeights, setShowAdvancedWeights] = useState(false);
   const [recomputed, setRecomputed] = useState(false);
 
@@ -58,11 +63,8 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
   });
 
   const bindList = (path: Path) => ({
-    value: ((get(profileDraft, path) as string[]) ?? []).join(', '),
-    onChange: (e: { target: { value: string } }) =>
-      setProfileDraft((d) =>
-        setIn(d, path, e.target.value.split(',').map((s) => s.trim()).filter(Boolean)),
-      ),
+    items: get(profileDraft, path) as string[] | undefined,
+    onItemsChange: (items: string[]) => setProfileDraft((d) => setIn(d, path, items)),
   });
 
   const bindBool = (path: Path) => ({
@@ -104,10 +106,10 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
         <Panel title="Where" hint="Countries you would actually move to, and any you would not.">
           <div className="grid-2">
             <Field label="Preferred countries" htmlFor="pref-countries" hint="Comma-separated.">
-              <input id="pref-countries" data-testid="preferred-countries" {...bindList(['preferences', 'preferred_countries'])} />
+              <CommaSeparatedInput id="pref-countries" data-testid="preferred-countries" {...bindList(['preferences', 'preferred_countries'])} />
             </Field>
             <Field label="Excluded countries" htmlFor="excl-countries" hint="These are never proposed.">
-              <input id="excl-countries" {...bindList(['preferences', 'excluded_countries'])} />
+              <CommaSeparatedInput id="excl-countries" {...bindList(['preferences', 'excluded_countries'])} />
             </Field>
             <Field label="City size" htmlFor="citysize">
               <select id="citysize" {...bind(['preferences', 'city_size'])}>
@@ -140,7 +142,7 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
               </select>
             </Field>
             <Field label="Research interests" htmlFor="research-interests" hint="Comma-separated.">
-              <input id="research-interests" {...bindList(['preferences', 'research_interests'])} />
+              <CommaSeparatedInput id="research-interests" {...bindList(['preferences', 'research_interests'])} />
             </Field>
             {/*
               Safety, diversity and housing-guarantee priorities used to be
@@ -316,8 +318,9 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
               <input
                 type="checkbox"
                 data-testid="demo-toggle"
-                checked={demoMode}
-                onChange={(e) => setDemoMode(e.target.checked)}
+                checked={demoMode ?? false}
+                disabled={demoMode === undefined}
+                onChange={(e) => setDemoModeOverride(e.target.checked)}
               />
               <span className="small">
                 <strong>Demo mode</strong> — use the bundled synthetic corpus. No network access,
@@ -325,17 +328,18 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
               </span>
             </label>
 
-            {!demoMode && (
+            {demoMode === undefined && (
+              <p className="small muted" role="status">Loading research settings…</p>
+            )}
+
+            {demoMode === false && (
               <Notice kind="warn">
                 <div data-testid="live-mode-notice">
                   <strong>Live mode fetches real university websites.</strong> It honours robots.txt,
-                  rate-limits per host, and never sends any part of your profile off this machine.
-                  It is slower, and pages that cannot be read are reported as not found rather than
-                  guessed.
+                  and limits requests to each website. Only non-personal search terms are sent to
+                  search providers. Unreadable pages and missing evidence are reported in each run.
                   {capabilities?.live_coverage && (
-                    // Without this, "live" reads as "the open web". It is ten
-                    // curated institutions, and the applicant deserves to know
-                    // the size of the search before they wait for it.
+                    // Coverage comes from the server's current institution registry.
                     <div className="stack stack--tight" data-testid="live-coverage">
                       <div><strong>{capabilities.live_coverage.recall_note}</strong></div>
                       {capabilities.live_coverage.countries.length > 0 && (
@@ -361,8 +365,9 @@ export function PreferencesScreen({ onStarted }: { onStarted: () => void }) {
               <button
                 className="btn btn--primary"
                 data-testid="start-research"
-                disabled={loading || (validation ? !validation.can_proceed : false)}
+                disabled={demoMode === undefined || loading || (validation ? !validation.can_proceed : false)}
                 onClick={async () => {
+                  if (demoMode === undefined) return;
                   await startRun(demoMode);
                   onStarted();
                 }}

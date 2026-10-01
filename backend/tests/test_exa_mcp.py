@@ -12,7 +12,11 @@ import pytest
 
 import app.adapters.search.exa_mcp as module
 from app.adapters.network_policy import BlockedRequest
-from app.adapters.search.base import SearchUnavailable, search_failure_diagnostic
+from app.adapters.search.base import (
+    SearchFailureReason,
+    SearchUnavailable,
+    search_failure_diagnostic,
+)
 from app.adapters.search.exa_mcp import (
     EXA_MCP_URL,
     MAX_RESPONSE_BYTES,
@@ -266,8 +270,9 @@ async def test_unsupported_protocol_stops_before_notification_or_query(make_prov
             )
         }
     )
-    with pytest.raises(SearchUnavailable, match="unsupported protocol"):
+    with pytest.raises(SearchUnavailable, match="unsupported protocol") as caught:
         await make_provider(server).search(query="q")
+    assert caught.value.reason is SearchFailureReason.UNSUPPORTED_PROTOCOL
     assert server.methods == ["initialize"]
 
 
@@ -308,6 +313,7 @@ async def test_initialized_notification_requires_accepted_status(make_provider):
     with pytest.raises(SearchUnavailable) as caught:
         await make_provider(server).search(query="q")
     assert caught.value.http_status == 200
+    assert caught.value.reason is SearchFailureReason.UNEXPECTED_STATUS
     assert server.methods == ["initialize", "notifications/initialized"]
 
 
@@ -321,7 +327,7 @@ async def test_transport_failure_has_no_vendor_text_or_retry(make_provider, meth
         await make_provider(server).search(query="q")
     assert PRIVATE_MARKER not in str(caught.value)
     assert search_failure_diagnostic("exa_mcp", caught.value) == (
-        "Search service unavailable (exa_mcp)."
+        "Search service unavailable (exa_mcp; transport error)."
     )
     assert server.methods.count(method) == 1
 
@@ -344,6 +350,11 @@ async def test_malformed_or_rpc_failure_is_unavailable_not_empty(make_provider, 
     with pytest.raises(SearchUnavailable) as caught:
         await make_provider(server).search(query="q")
     assert caught.value.http_status is None
+    assert caught.value.reason is (
+        SearchFailureReason.RPC_ERROR
+        if b'"error"' in body
+        else SearchFailureReason.MALFORMED_RESPONSE
+    )
     assert PRIVATE_MARKER not in str(caught.value)
     assert server.methods.count("tools/call") == 1
 
@@ -363,6 +374,27 @@ async def test_tool_errors_or_unreadable_results_are_not_legitimate_empty(make_p
     with pytest.raises(SearchUnavailable) as caught:
         await make_provider(server).search(query="q")
     assert PRIVATE_MARKER not in str(caught.value)
+    expected = (
+        SearchFailureReason.TOOL_ERROR
+        if result.get("isError")
+        else SearchFailureReason.MALFORMED_RESPONSE
+    )
+    assert caught.value.reason is expected
+
+
+async def test_tool_error_text_cannot_invent_http_status_or_reveal_private_content(make_provider):
+    server = McpServer(
+        result={
+            "isError": True,
+            "content": [{"type": "text", "text": f"429 quota {PRIVATE_MARKER}"}],
+        }
+    )
+    with pytest.raises(SearchUnavailable) as caught:
+        await make_provider(server).search(query=PRIVATE_MARKER)
+    assert caught.value.http_status is None
+    assert search_failure_diagnostic("exa_mcp", caught.value) == (
+        "Search service unavailable (exa_mcp; MCP tool error)."
+    )
 
 
 @pytest.mark.parametrize("structured", [False, True])
@@ -446,6 +478,7 @@ async def test_blocked_endpoint_never_reaches_transport(make_provider, monkeypat
     assert checked == [EXA_MCP_URL]
     assert server.calls == []
     assert PRIVATE_MARKER not in str(caught.value)
+    assert caught.value.reason is SearchFailureReason.NETWORK_POLICY
 
 
 async def test_timeout_bounds_the_entire_handshake_not_each_post(make_provider):
@@ -458,9 +491,24 @@ async def test_timeout_bounds_the_entire_handshake_not_each_post(make_provider):
         await asyncio.sleep(0.03)
         return server(request)
 
-    with pytest.raises(SearchUnavailable, match="did not answer"):
+    with pytest.raises(SearchUnavailable, match="did not answer") as caught:
         await make_provider(delayed, timeout_seconds=0.05).search(query="q")
+    assert caught.value.reason is SearchFailureReason.TIMEOUT
     assert calls == ["initialize", "notifications/initialized"]
+
+
+async def test_http_client_timeout_remains_distinct_from_transport_failure(make_provider):
+    def timed_out(request):
+        raise httpx.ReadTimeout(PRIVATE_MARKER, request=request)
+
+    server = McpServer(overrides={"tools/call": timed_out})
+    with pytest.raises(SearchUnavailable) as caught:
+        await make_provider(server).search(query="q")
+    assert caught.value.reason is SearchFailureReason.TIMEOUT
+    assert search_failure_diagnostic("exa_mcp", caught.value) == (
+        "Search service unavailable (exa_mcp; timeout)."
+    )
+    assert server.methods.count("tools/call") == 1
 
 
 class ChunkStream(httpx.AsyncByteStream):
@@ -481,8 +529,9 @@ class ChunkStream(httpx.AsyncByteStream):
 async def test_streamed_byte_limit_stops_reading_and_closes_response(make_provider, method):
     stream = ChunkStream()
     server = McpServer(overrides={method: lambda request: httpx.Response(200, stream=stream)})
-    with pytest.raises(SearchUnavailable, match="byte limit"):
+    with pytest.raises(SearchUnavailable, match="byte limit") as caught:
         await make_provider(server).search(query="q")
+    assert caught.value.reason is SearchFailureReason.RESPONSE_TOO_LARGE
     assert stream.reads == 2
     assert stream.closed is True
     assert server.methods.count(method) == 1

@@ -136,12 +136,12 @@ def _view(
     # "Running" is a property of the job, not of the stage the run stopped at.
     job_running = job is not None and job.status == JobStatus.RUNNING.value
     lease_expiry = ensure_utc(job.lease_expires_at) if job else None
-    stale = is_lease_expired(run.stage, run.heartbeat_at, lease_seconds=lease_seconds) or (
-        job is not None
-        and job.status == JobStatus.RUNNING.value
-        and lease_expiry is not None
-        and lease_expiry < datetime.now(UTC)
-    )
+    if job_running and lease_expiry is not None:
+        # A slow stage may not have saved progress yet, while the worker keeps
+        # renewing its fenced job lease. That lease decides whether it is alive.
+        stale = lease_expiry < now
+    else:
+        stale = is_lease_expired(run.stage, run.heartbeat_at, lease_seconds=lease_seconds, now=now)
     if counts is None:
         results = session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run.id)
         counts = (

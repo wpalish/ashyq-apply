@@ -211,24 +211,59 @@ async def test_official_listing_title_can_confirm_the_second_field(tmp_path, pro
 
 
 @pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "maths_path",
+    [
+        "programmes/bsc-mathematical-sciences",
+        "spms/about-us/mathematics/undergrad/degree-programmes/math-(matric-yr-2025)",
+    ],
+)
 async def test_mathematical_sciences_official_page_matches_mathematics(
-    tmp_path, profile, monkeypatch
+    tmp_path, profile, monkeypatch, maths_path
 ):
     profile.context.intended_fields = ["Computer Science", "Mathematics"]
-    maths_url = "https://uni.edu/programmes/bsc-mathematical-sciences"
+    maths_url = f"https://uni.edu/{maths_path}"
     _provider, _site, selected, trace, candidate, claims = await _search(
         tmp_path,
         profile,
         monkeypatch,
-        {_query(profile, "Mathematics"): [(maths_url, "BSc in Mathematical Sciences", "")]},
-        {maths_url: program_html("BSc in Mathematical Sciences")},
+        {_query(profile, "Mathematics"): [(maths_url, "MATH (Matric Yr 2025)", "")]},
+        {
+            maths_url: program_html("BSc in Mathematical Sciences").replace(
+                "</main>", "<p>Curriculum for matriculation year 2025.</p></main>"
+            )
+        },
     )
 
     assert selected[PageCategory.PROGRAM_PAGE] == [maths_url]
     assert candidate.programs[0].field == "Mathematics"
     assert trace.field_sources[maths_url]["subject"] == "BSc in Mathematical Sciences"
     assert any(claim.claim_type == ClaimType.PROGRAM_EXISTS for claim in claims)
+    assert candidate.programs[0].name == "BSc in Mathematical Sciences"
+    assert not any(claim.claim_type == ClaimType.INTAKE_OPEN for claim in claims)
     assert not matches_field_text("BSc in Applied Mathematical Sciences", ["Mathematics"])
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "subject", ["MSc Mathematical Sciences", "BSc Physics", "BSc Applied Mathematical Sciences"]
+)
+async def test_matriculation_page_retains_wrong_degree_and_subject_guards(
+    tmp_path, profile, monkeypatch, subject
+):
+    profile.context.intended_fields = ["Computer Science", "Mathematics"]
+    url = "https://uni.edu/spms/mathematics/degree-programmes/math-(matric-yr-2025)"
+    _provider, _site, _selected_pages, trace, candidate, claims = await _search(
+        tmp_path,
+        profile,
+        monkeypatch,
+        {_query(profile, "Mathematics"): [(url, "BSc in Mathematical Sciences", "")]},
+        {url: program_html(subject)},
+    )
+
+    assert trace.field_sources == {}
+    assert candidate.programs == []
+    assert claims == []
 
 
 @pytest.mark.asyncio

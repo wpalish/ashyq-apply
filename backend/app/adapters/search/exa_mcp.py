@@ -18,7 +18,12 @@ from urllib.parse import urlparse
 import httpx
 
 from app.adapters.network_policy import BlockedRequest, check_url
-from app.adapters.search.base import SearchResponse, SearchResult, SearchUnavailable
+from app.adapters.search.base import (
+    SearchFailureReason,
+    SearchResponse,
+    SearchResult,
+    SearchUnavailable,
+)
 
 EXA_MCP_URL = "https://mcp.exa.ai/mcp?tools=web_search_advanced_exa"
 PROTOCOL_VERSION = "2025-03-26"
@@ -50,20 +55,33 @@ def _rpc_message(body: bytes, request_id: int) -> dict[str, Any]:
         for message in messages:
             if not isinstance(message, dict) or message.get("id") != request_id:
                 continue
-            if message.get("jsonrpc") != "2.0" or "error" in message:
-                raise SearchUnavailable("Exa MCP refused the request")
+            if message.get("jsonrpc") != "2.0":
+                raise SearchUnavailable(
+                    "Exa MCP returned an invalid JSON-RPC response",
+                    reason=SearchFailureReason.MALFORMED_RESPONSE,
+                )
+            if "error" in message:
+                raise SearchUnavailable(
+                    "Exa MCP refused the request", reason=SearchFailureReason.RPC_ERROR
+                )
             result = message.get("result")
             if not isinstance(result, dict):
                 break
             return result
     except (UnicodeError, ValueError, TypeError) as exc:
-        raise SearchUnavailable("Exa MCP returned an unreadable response") from exc
-    raise SearchUnavailable("Exa MCP returned no matching result")
+        raise SearchUnavailable(
+            "Exa MCP returned an unreadable response", reason=SearchFailureReason.MALFORMED_RESPONSE
+        ) from exc
+    raise SearchUnavailable(
+        "Exa MCP returned no matching result", reason=SearchFailureReason.MALFORMED_RESPONSE
+    )
 
 
 def _search_rows(result: dict[str, Any]) -> list[Any]:
     if result.get("isError"):
-        raise SearchUnavailable("Exa MCP could not complete the search")
+        raise SearchUnavailable(
+            "Exa MCP could not complete the search", reason=SearchFailureReason.TOOL_ERROR
+        )
     structured = result.get("structuredContent")
     if isinstance(structured, dict) and isinstance(structured.get("results"), list):
         return structured["results"]
@@ -88,7 +106,9 @@ def _search_rows(result: dict[str, Any]) -> list[Any]:
                 continue
             if isinstance(body, dict) and isinstance(body.get("results"), list):
                 return body["results"]
-    raise SearchUnavailable("Exa MCP returned no readable search results")
+    raise SearchUnavailable(
+        "Exa MCP returned no readable search results", reason=SearchFailureReason.MALFORMED_RESPONSE
+    )
 
 
 class ExaMcpSearchProvider:
@@ -128,12 +148,19 @@ class ExaMcpSearchProvider:
             expected_status = 200 if "id" in payload else 202
             if response.status_code != expected_status:
                 raise SearchUnavailable(
-                    f"Exa MCP answered {response.status_code}", http_status=response.status_code
+                    f"Exa MCP answered {response.status_code}",
+                    http_status=response.status_code,
+                    reason=SearchFailureReason.UNEXPECTED_STATUS
+                    if response.status_code == 200
+                    else None,
                 )
             body = bytearray()
             async for chunk in response.aiter_bytes():
                 if len(body) + len(chunk) > MAX_RESPONSE_BYTES:
-                    raise SearchUnavailable("Exa MCP response exceeded its byte limit")
+                    raise SearchUnavailable(
+                        "Exa MCP response exceeded its byte limit",
+                        reason=SearchFailureReason.RESPONSE_TOO_LARGE,
+                    )
                 body.extend(chunk)
             if payload.get("method") == "initialize":
                 session = response.headers.get("mcp-session-id")
@@ -161,7 +188,10 @@ class ExaMcpSearchProvider:
                 },
             )
             if result.get("protocolVersion") != PROTOCOL_VERSION:
-                raise SearchUnavailable("Exa MCP negotiated an unsupported protocol")
+                raise SearchUnavailable(
+                    "Exa MCP negotiated an unsupported protocol",
+                    reason=SearchFailureReason.UNSUPPORTED_PROTOCOL,
+                )
             await self._post(client, {"jsonrpc": "2.0", "method": "notifications/initialized"})
             self._initialized = True
 
@@ -179,7 +209,10 @@ class ExaMcpSearchProvider:
         try:
             check_url(EXA_MCP_URL)
         except BlockedRequest as exc:
-            raise SearchUnavailable("The Exa MCP endpoint is refused by network policy") from exc
+            raise SearchUnavailable(
+                "The Exa MCP endpoint is refused by network policy",
+                reason=SearchFailureReason.NETWORK_POLICY,
+            ) from exc
 
         limit = min(max_results, MAX_RESULTS_PER_QUERY)
         wanted_domains = tuple(d.lower().strip().strip(".") for d in domains if d.strip())
@@ -210,8 +243,16 @@ class ExaMcpSearchProvider:
                         "params": {"name": "web_search_advanced_exa", "arguments": arguments},
                     },
                 )
-        except (httpx.HTTPError, TimeoutError) as exc:
-            raise SearchUnavailable("Exa MCP did not answer within the search bounds") from exc
+        except (httpx.TimeoutException, TimeoutError) as exc:
+            raise SearchUnavailable(
+                "Exa MCP did not answer within the search bounds",
+                reason=SearchFailureReason.TIMEOUT,
+            ) from exc
+        except httpx.HTTPError as exc:
+            raise SearchUnavailable(
+                "Exa MCP did not answer within the search bounds",
+                reason=SearchFailureReason.TRANSPORT,
+            ) from exc
         finally:
             if owns_client:
                 await client.aclose()

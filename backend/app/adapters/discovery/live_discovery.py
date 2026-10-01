@@ -1798,15 +1798,19 @@ class LiveDiscoveryAdapter:
             if profile.context.intended_fields and not fields:
                 break
             field_name = fields[0] if fields else ""
+            program_name = _program_name_from_url(url, fields, profile.context.level)
             if len(_distinct_fields(list(profile.context.intended_fields))) > 1:
+                source = trace.field_sources.get(canonical_url(url), {})
                 field_name = (
-                    trace.field_sources.get(canonical_url(url), {}).get("field")
-                    or trace.field_hints.get(canonical_url(url))
-                    or field_name
+                    source.get("field") or trace.field_hints.get(canonical_url(url)) or field_name
                 )
+                # A curriculum slug can name its matriculation year rather
+                # than its degree. Retain the already fetched programme
+                # subject so downstream verification checks the same identity.
+                program_name = source.get("subject") or program_name
             candidate.programs.append(
                 CandidateProgram(
-                    name=_program_name_from_url(url, fields, profile.context.level),
+                    name=program_name,
                     field=field_name,
                     degree=profile.context.level,
                     url=url,

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
+
 from app.adapters.base import AdapterResult, PageOutcome
 from app.adapters.extraction import ClaimBuilder, html_title, html_to_text
 from app.adapters.fetching import Fetcher
@@ -12,17 +14,27 @@ from app.domain.enums import ClaimType, SourceSpecificity
 class WebGovernmentAdapter:
     name = "web-government"
 
-    def __init__(self, fetcher: Fetcher, url_for_country=None) -> None:
+    def __init__(
+        self, fetcher: Fetcher, url_for_country: Callable[[str], str | None] | None = None
+    ) -> None:
         self.fetcher = fetcher
-        self._url_for_country = url_for_country or (
-            lambda c: f"fixture://government/{c.lower().replace(' ', '-')}.html"
-        )
+        if url_for_country is not None:
+            self._url_for_country = url_for_country
+        elif fetcher.offline and fetcher.corpus_dir is not None:
+            self._url_for_country = (
+                lambda c: f"fixture://government/{c.lower().replace(' ', '-')}.html"
+            )
+        else:
+            self._url_for_country = lambda c: None
 
     async def post_study_work(self, country: str) -> AdapterResult:
         out = AdapterResult()
         url = self._url_for_country(country)
         if not url:
-            out.errors.append(f"No government source is configured for {country}.")
+            out.errors.append(
+                f"No official government source is configured for {country}; "
+                "post-study work rules remain unknown."
+            )
             return out
         res = await self.fetcher.get(url)
         out.pages_checked += 1

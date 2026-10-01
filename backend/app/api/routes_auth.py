@@ -76,6 +76,7 @@ def auth_status(
     return {
         "enabled": settings.auth_enabled,
         "registration_enabled": settings.auth_registration_enabled,
+        "password_reset_enabled": settings.password_reset_enabled,
         "authenticated": principal is not None,
         "principal": _view(session, principal).model_dump() if principal else None,
     }
