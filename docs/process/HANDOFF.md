@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**Current holder: gpt-6-astra, 2026-10-01 UTC, branch `task/unimatch-redesign` from `origin/main@e24231e`.** Owner supplied the full 46-section Unimatch redesign brief and 18 reference images; this explicit new request supersedes the prior public-search-only task scope. PR #36 is merged and the branch tree matches main at takeover. Preserve real API/data semantics; do not import mockup facts as product data.
+
 **Current holder: gpt-6-astra, resumed 2026-10-01 05:37 UTC.** Branch `task/public-search-runtime` starts from verified `origin/main@2de4d7654b7aaeb745af32860d4a2ea4d716f778`. The owner explicitly asks to finish public search end to end; source-only completion was insufficient. PR #35 is merged, selected-head 8/8 and actual-main run36770522281 4/4 passed; the merged tree equals the previously verified tree. Older source/review status below is historical.
 
 **Current source holder: gpt-6-astra, since 2026-09-29 16:51 UTC.** Branch `task/multifield-search` starts at `origin/main@a44a54b0aa6bf01d4855637564551e887b9c5ad8` after PR #34 merged. The owner-directed search repair has source-backed multi-field discovery within six queries, visible incomplete coverage, and final-source/redirect checks. Fresh bounded Exa MCP captures now include the Groningen host-refusal case and NTU positive two-field full/search-stage cases; details and limits are in §3/§6. The previous conditional-award baton below is historical. No gold/schema/decision change or public deployment is part of this source step; latest `scripts/handoff_check.py` reports zero unpushed/uncommitted changes and one Alembic head `c5d01b7e4f83`.
@@ -35,6 +37,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**Owner-directed Unimatch full product redesign, in progress.** Implement the supplied visual direction in the existing React/FastAPI product, screen by screen, retaining authenticated search, evidence, profile, documents, community, billing and account capabilities. Start with design tokens, five-area shell and public landing/auth/legal; then migrate key workflow screens and verify responsive UI and live API behavior. The supplied mockups are visual references only: their sample counts, prices, deadlines, scores and payment methods are not facts. Prior public-search task records below are historical.
 
 **Public search runtime source ready-for-review (PR #36); public release in-progress.** Publish corrected search as a usable authenticated public flow with real worker/provider results. Fresh audit found `PreferencesScreen` always defaults each run to demo despite a live server. Fix mode initialization and prove the live UI request. Confirm production mail capability explicitly rather than fake SMTP, deploy the already authorized one-API/one-worker/BasicPG footprint, then test browser registration/login/profile/search/results. Exa MCP passes one current public NTU query; unrestricted service capacity remains unproved. Do not mark complete on CI or a bounded source-stage capture alone.
 
@@ -1703,6 +1707,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**Unimatch redesign write-ahead (2026-10-01 UTC):** map `frontend/src/App.tsx`, `AuthGate.tsx`, `styles/*`, `screens/*`, `api/client.ts` and backend routes to the supplied brief. First implement shared Unimatch tokens/brand shell with five primary areas and contextual access to existing screens, preserving all route gates and current data flow. Add public landing and draft legal routes without auth and rebrand the auth screen. Verify typecheck/lint/unit/build and browser desktop/mobile. Record precise follow-up in this section before each next screen migration. Do not fabricate screenshot metrics, prices, claims or additional backend capabilities.
 
 **2026-10-01 confirmed Mathematics handoff correction (write-ahead):** browser run90bac5910b254d0da9766f88ba21298b found and source-confirmed NTU `BSc in Mathematical Sciences` on a `math-(matric-yr-2025)` page, but `_apply` regenerated `CandidateProgram.name` from the URL as `Math (Matric Yr 2025)`. Downstream verification then rejected the actual source subject, so discovery coverage was not end-to-end coverage. In `live_discovery.py::_apply`, use the already fetched/validated `trace.field_sources.subject` as the multi-field programme name, with the existing URL fallback when no confirmed source exists. Add an exact matric-yr URL regression through downstream PROGRAM_EXISTS verification in test_multifield_search.py. Preserve single-field behavior, degree/field/source checks, budgets and unknown2027 intake; a2025 curriculum cannot certify2027 admissions. Re-run full source gates before final commit/deploy.
 
@@ -4652,6 +4658,8 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 `[0.8]` → `[1.1]` → `[1.2]` → `[1.3]` → `[1.4]` → `[2.1]` → `[2.2]` → `[2.3]` → `[3.1]` → `[3.2]` → `[4.1]` → `[4.2]` → `[5]`
 
 ## 11. Session log (one line per session, newest last)
+
+| 2026-10-01 UTC | gpt-6-astra | merged main e24231e → task/unimatch-redesign takeover | Owner provided 46-section Unimatch full redesign request and 18 references. Current tree matches main; source write-ahead recorded before UI edits. |
 
 | Session (UTC) | Agent | From → to | Summary |
 |---|---|---|---|
