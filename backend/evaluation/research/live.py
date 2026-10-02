@@ -58,6 +58,7 @@ HELDOUT = {
 #: live with them is what lets a scholarship or document claim land on its
 #: certified key; without them every such claim stays ``unmapped.*``.
 REVIEWED_BINDINGS = Path(__file__).parent / "data" / "identity_bindings.reviewed.json"
+CURRENT_BINDINGS = Path(__file__).parent / "data" / "identity_bindings.2026-10-02.observed.json"
 
 
 async def _jev_shadow(case_id: str, queued: list[str], profile: Any) -> None:
@@ -112,7 +113,7 @@ async def capture_one(
 
     predictions: list[Prediction] = []
     raw_claims: list[dict[str, Any]] = []
-    identities = IdentityMap.model_validate_json(REVIEWED_BINDINGS.read_text(encoding="utf-8"))
+    identities = IdentityMap.model_validate_json(CURRENT_BINDINGS.read_text(encoding="utf-8"))
     started = time.monotonic()
     observation = Observation(
         case_id=case_id,
@@ -333,7 +334,11 @@ def main() -> None:
     parser.add_argument("--live", action="store_true", required=True)
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--case", choices=[*COHORT, *HELDOUT])
-    parser.add_argument("--admission-obligations", action="store_true")
+    parser.add_argument(
+        "--admission-obligations",
+        action=argparse.BooleanOptionalAction,
+        default=live_discovery.ADMISSION_OBLIGATIONS,
+    )
     parser.add_argument("--seconds-per-case", type=int, default=120)
     parser.add_argument("--max-pages", type=int, default=40)
     parser.add_argument(
@@ -460,7 +465,9 @@ def main() -> None:
                         "evaluation.research.live",
                         "--live",
                         "--child",
-                        *(["--admission-obligations"] if args.admission_obligations else []),
+                        "--admission-obligations"
+                        if args.admission_obligations
+                        else "--no-admission-obligations",
                         "--case",
                         case_id,
                         "--out",
@@ -530,6 +537,10 @@ def main() -> None:
                 "cohort": list(COHORT),
                 "scope": "current production pipeline; HTTP-only bounded cold run",
                 "rank_stage": "programme confirmation queue before catalogue walking",
+                "identity_bindings_file": CURRENT_BINDINGS.name,
+                "identity_bindings_sha256": hashlib.sha256(
+                    CURRENT_BINDINGS.read_bytes()
+                ).hexdigest(),
                 "harness_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
                 "mapping_sha256": hashlib.sha256(
                     Path(__file__).with_name("mapping.py").read_bytes()

@@ -111,7 +111,7 @@ SKIP_REFUSED_SEARCH_HOSTS = False
 #: linked from the department's own navigation, was never opened.
 NAVIGATION_SLOT = False
 #: ER-08: keep admission evidence separate from programme confirmation.
-ADMISSION_OBLIGATIONS = False
+ADMISSION_OBLIGATIONS = True
 #: Pages walked during the navigation fallback. Universities routinely nest
 #: "Degree programmes" -> "Bachelor programmes" -> a programme, so one hop is
 #: not enough; an unbounded walk would be a crawl.

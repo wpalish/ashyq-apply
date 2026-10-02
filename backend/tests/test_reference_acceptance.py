@@ -75,3 +75,27 @@ def test_unsigned_labels_are_rejected():
     dataset, capture, _ = inputs()
     with pytest.raises(ValueError, match="human verification"):
         assess(dataset, capture)
+
+
+def test_current_award_aliases_preserve_exact_identity_and_do_not_bind_faqs():
+    from evaluation.research.identities import IdentityMap
+    from evaluation.research.live import CURRENT_BINDINGS, REVIEWED_BINDINGS
+
+    old = IdentityMap.model_validate_json(REVIEWED_BINDINGS.read_text())
+    current = IdentityMap.model_validate_json(CURRENT_BINDINGS.read_text())
+    assert current.bindings[: len(old.bindings)] == old.bindings
+    for path in ("ug/scholarships", "undergraduate/scholarships-and-awards"):
+        url = f"https://www.ntu.edu.sg/admissions/{path}/scholarship-opportunities/detail/nanyang-scholarship"
+        assert (
+            current.resolve("award", url, "Nanyang Global Scholarship")
+            == "scholarships.nanyang_global"
+        )
+        assert current.resolve("award", url, "ASEAN Undergraduate Scholarship") is None
+    assert (
+        current.resolve(
+            "award",
+            "https://www.ntu.edu.sg/admissions/ug/scholarships/faq",
+            "Nanyang Global Scholarship",
+        )
+        is None
+    )
