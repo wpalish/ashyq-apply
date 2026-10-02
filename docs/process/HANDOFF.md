@@ -6,6 +6,9 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**Current holder: nobody; public search release acceptance recorded, 2026-10-02 UTC, task/search-release-acceptance from main1aa188e.** PR #39 is merged after8 exact-head checks. Fly v5 runs the verified source on the original API/worker; catalogue501 and real UI-selected NTU search completed successfully (3 programmes,51 Claim records,21 pages,0 unreadable,about157s). Browser result reload, evidence and Save flow verified. Full details/limits: UNIMATCH_SEARCH_RELEASE_2026-10-02.md. Postmerge CI run36972183803 is linked there; metadata-only changes in this branch do not change the deployed application.
+
+
 **Current holder: gpt-6-astra, 2026-10-02 UTC, `task/local-university-search` from `origin/main@4de769d`.** Owner explicitly authorizes finishing search, including the supplied 500-university local knowledge layer. Takeover `5336006`; catalogue checkpoint `3980a46`, final local gates green, PR #39 ready for review, migration head `d8e412c6a901`. Preserve curated identities, scoped official claims and all ranking/privacy invariants.
 
 **Current holder: gpt-6-astra, 2026-10-02 UTC, branch `task/unimatch-release-evidence` from merged `origin/main@5a6edc9`.** PR #37 is merged and Fly v4 runs that exact tree. This branch records the release and its remaining acceptance limit. The prior `task/unimatch-redesign` baton below is historical. No product code changes are planned without a reproduced postrelease fault.
@@ -41,6 +44,9 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**Local university search: deployed and public workflow verified (PR #39, main1aa188e, Fly v5).** Complete runtime acceptance is recorded in UNIMATCH_SEARCH_RELEASE_2026-10-02.md; this does not assert complete official admission facts for501 universities.
+
 
 **Local university search, ready-for-review (PR #39); production acceptance pending.** Integrate the owner-supplied 500-row JSON as an idempotent, provenance-preserving catalogue; keep existing universities (19 curated, 18 overlapping) and unverified seed observations separate from official facts. Serve preliminary candidates without an external provider, connect selected candidates to bounded existing live research, display unavailable/missing data honestly, and verify provider outage, deduplication, scoped evidence precedence, tests/CI and public workflow before claiming completion.
 
@@ -113,6 +119,9 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+**Search release evidence:** tested dbbf396 → merged1aa188e, identical tree6534f52;8 exact-head CI jobs passed. Fly v5/ce0acb2a image verified on both existing machines. Public catalogue filters and UI-selected run9307186a completed; results/evidence survive reload and Save works in the isolated synthetic case.
+
 
 **Local search completion (on top of `3980a46`, this commit):** bounded sitemap attempts/oversize exit, 300s institution discovery deadline, identity acronym/host checks, cross-region countries, selected-case UI reset, canary adapter routing and academic-eligibility honesty. 501 identities preserve 19 curated entries; the 500-row snapshot remains unverified, never scoring evidence.
 
@@ -1730,6 +1739,12 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**After this documentation checkpoint:** inspect postmerge CI36972183803 and merge this metadata-only release record through its PR using the owner's standing merge authorization. No runtime edits are pending. Future product changes require a reproduced fault; partial official-data coverage is explicitly documented, not a completed universal knowledge base. Do not duplicate the synthetic NTU acceptance run or change production credentials.
+
+
+**Release acceptance write-ahead:** finish the already-running public NTU request9307186a015a43529cdd4ec2c6d98e19 without duplicate submissions. Inspect persisted result/source/unknown states, reload the UI, verify catalogue filter and source presentation, then record exact release evidence in docs/process/UNIMATCH_SEARCH_RELEASE_2026-10-02.md and this HANDOFF. Monitor actual-main CI36972183803; no product edits unless a reproduced fault requires them. Keep private synthetic auth material out of Git and release it after acceptance.
+
 
 **Release next:** push this green source; update/ready PR #39, require exact-head push+PR CI, then owner-authorized squash merge and verify actual-main checks/tree. Build/deploy to existing Fly app ashyq-apply-alisher with --ha=false (one API, one worker), migration d8e412c6a901. Verify public catalogue, filters, selected live run, persisted results and truthful unknowns through authenticated API and browser. User-account sign-in pending; an isolated synthetic account via normal public registration may verify the product without changing user credentials. No purchases/new service footprint.
 
@@ -3636,6 +3651,9 @@ The steps codex left, unchanged and still next after this review:
    the compatibility shim. Do not buy a provider or deploy application infrastructure implicitly.
 
 ## 6. Gate status at last run
+
+**Public release acceptance:** PR39 source exact-head CI8/8; Fly v5 complete/health ok/demo false; local catalogue501 and country/name/empty queries pass; real UI run completed inabout157s,3 programmes,51 Claim records,21 page checks,0 unreadable. Result/evidence persistence and Saved filtering verified. Full source gates remain2873/94.89%,frontend232,E2E79+6 with1 intentional skip. Postmerge run36972183803 provides the main check status.
+
 
 **Final local-search gates, 2026-10-02:** Ruff check+format app/tests/evaluation pass; mypy324 pass. Full pytest **2873 passed, 94.89% coverage**, 403.21s. Frontend typecheck/lint/build pass, **232 tests**. Desktop/mobile Playwright **79 passed, 1 intentional skip**; auth **6 passed**. Demo SQL asserts Groningen first/PLAUSIBLE and UBC OUT_OF_BUDGET. Single Alembic head d8e412c6a901. Live Groningen postrepair:70 successful reads/9 failures,3 official Claims,17% completeness; MIT homepage identity verified through Fetcher. Replaying those real deadline/existence Claims now yields NEEDS_OFFICIAL_CLARIFICATION and academic UNKNOWN, not MET. Full official-data coverage is not claimed. Final-source CI and public deployment remain pending.
 
