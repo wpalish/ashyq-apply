@@ -1744,6 +1744,8 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+**Experiment ER-08 write-ahead:** Fresh KAIST baseline (87.6s,25 adapter reads,3 claims) loses the department's explicit undergraduate-admissions navigation before verification; admissions selection is truncated to one URL. Add an opt-in bounded admissions-obligation route in discovery, preserve up to three admissions leads in Candidate, and pass them through unchanged Fetcher/classifier/scope verification. Reuse existing multilingual route vocabulary, no signed URL/value lookup. Evaluate equal 300s/60-network-read captures and held-out cases; keep off unless correct reference recall improves without scope regressions.
+
 **Next (2026-10-02):** Run fresh Exa MCP captures for KAIST, Toronto and Aalto at fixed 300 seconds/60 network reads each, keep raw observations and failures, validate harness identity mapping and score immutable gold. Inspect production discovery/extraction only after recording baseline. Add regression coverage for reproduced general defects; compare equal-budget candidate and held-out results before promotion.
 
 **After this documentation checkpoint:** inspect postmerge CI36972183803 and merge this metadata-only release record through its PR using the owner's standing merge authorization. No runtime edits are pending. Future product changes require a reproduced fault; partial official-data coverage is explicitly documented, not a completed universal knowledge base. Do not duplicate the synthetic NTU acceptance run or change production credentials.

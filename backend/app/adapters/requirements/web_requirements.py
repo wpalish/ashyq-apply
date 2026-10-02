@@ -166,6 +166,20 @@ class WebRequirementsAdapter:
         ]
         queue = [t for t in targets if t]
         visited = {t.url for t in queue}
+        # Discovery may retain several admission obligations. Preserve their
+        # original sources and normal verification, with a three-page cap.
+        admission_urls = list(
+            dict.fromkeys(
+                ([candidate.admissions_url] if candidate.admissions_url else [])
+                + candidate.admissions_urls
+            )
+        )[:3]
+        for url in admission_urls:
+            if url not in visited and (
+                url.startswith("fixture://") or is_official_domain(url, [candidate.domain])
+            ):
+                queue.append(_Target(url, SourceSpecificity.UNIVERSITY_ADMISSIONS))
+                visited.add(url)
         followed = 0
         while queue:
             target = queue.pop(0)

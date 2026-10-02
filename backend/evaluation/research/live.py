@@ -333,6 +333,7 @@ def main() -> None:
     parser.add_argument("--live", action="store_true", required=True)
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--case", choices=[*COHORT, *HELDOUT])
+    parser.add_argument("--admission-obligations", action="store_true")
     parser.add_argument("--seconds-per-case", type=int, default=120)
     parser.add_argument("--max-pages", type=int, default=40)
     parser.add_argument(
@@ -398,6 +399,7 @@ def main() -> None:
     search_provider = settings.search_provider
     print(f"search provider: {search_provider}", flush=True)
     if args.child:
+        live_discovery.ADMISSION_OBLIGATIONS = args.admission_obligations
         web_scholarships.SEARCH_FUNDING_FALLBACK = args.search_funding_fallback
         web_scholarships.TARGET_AWARD_SEARCH = args.target_award_search
         live_discovery.RECOVER_SEARCH_CANDIDATES = args.recover_search_candidates
@@ -458,6 +460,7 @@ def main() -> None:
                         "evaluation.research.live",
                         "--live",
                         "--child",
+                        *(["--admission-obligations"] if args.admission_obligations else []),
                         "--case",
                         case_id,
                         "--out",
@@ -522,6 +525,7 @@ def main() -> None:
                 "reject_archive_hosts": args.reject_archive_hosts,
                 "admission_lexicon": args.admission_lexicon,
                 "navigation_slot": args.navigation_slot,
+                "admission_obligations": args.admission_obligations,
                 "browser_enabled": False,
                 "cohort": list(COHORT),
                 "scope": "current production pipeline; HTTP-only bounded cold run",

@@ -110,6 +110,8 @@ SKIP_REFUSED_SEARCH_HOSTS = False
 #: search and never reach a slot, so KAIST's undergraduate-admission page,
 #: linked from the department's own navigation, was never opened.
 NAVIGATION_SLOT = False
+#: ER-08: keep admission evidence separate from programme confirmation.
+ADMISSION_OBLIGATIONS = False
 #: Pages walked during the navigation fallback. Universities routinely nest
 #: "Degree programmes" -> "Bachelor programmes" -> a programme, so one hop is
 #: not enough; an unbounded walk would be a crawl.
@@ -1167,9 +1169,42 @@ class LiveDiscoveryAdapter:
         if CONFIRM_SEARCH_PROGRAMMES:
             await self._confirm_added_programs(selected, confirmed_so_far, trace, profile)
 
+        if ADMISSION_OBLIGATIONS:
+            await self._add_admission_obligations(selected, trace, profile)
+
         trace.selected = {k: list(v) for k, v in selected.items() if v}
         self._apply(candidate, selected, profile, trace)
         return candidate, trace
+
+    async def _add_admission_obligations(
+        self,
+        selected: dict[str, list[str]],
+        trace: DiscoveryTrace,
+        profile: ApplicantProfileIn,
+    ) -> None:
+        """Route explicit undergraduate-admission links to requirements.
+
+        Department catalogue navigation can name an admission route without
+        describing a programme. Such evidence must not compete for programme
+        slots or depend on passing the programme identity classifier.
+        """
+        from app.adapters.search.navigation import _names_admission_route, links_from
+
+        if str(profile.context.level) != "bachelor":
+            return
+        admissions = selected[PageCategory.ADMISSIONS]
+        for url in selected[PageCategory.PROGRAM_CATALOG][:2]:
+            if len(admissions) >= MAX_PAGES_PER_CATEGORY:
+                break
+            result = await self.fetcher.get(url)
+            if not result.ok or result.is_pdf or not same_source_site(url, result.final_url or url):
+                continue
+            for link in links_from(result.text, result.final_url or url):
+                if len(admissions) >= MAX_PAGES_PER_CATEGORY:
+                    break
+                if _names_admission_route(link.text) and link.url not in admissions:
+                    admissions.append(link.url)
+                    trace.kept_by_link_text.append((link.url, link.text))
 
     async def _confirm_programs(
         self,
@@ -1801,6 +1836,8 @@ class LiveDiscoveryAdapter:
     ) -> None:
         """Attach what was found. A category with nothing stays None."""
         candidate.admissions_url = _first(selected[PageCategory.ADMISSIONS])
+        if ADMISSION_OBLIGATIONS:
+            candidate.admissions_urls = selected[PageCategory.ADMISSIONS][:MAX_PAGES_PER_CATEGORY]
         candidate.costs_url = _first(selected[PageCategory.COSTS])
         candidate.scholarships_url = _first(selected[PageCategory.SCHOLARSHIPS])
 

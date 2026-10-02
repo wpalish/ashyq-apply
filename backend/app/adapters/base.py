@@ -40,6 +40,7 @@ class Candidate:
     attributes: dict[str, str] = field(default_factory=dict)
     discovery_source: str = ""
     notes: str = ""
+    admissions_urls: list[str] = field(default_factory=list)
 
     @property
     def verifiable(self) -> bool:
