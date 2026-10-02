@@ -149,3 +149,19 @@ Finish human review, detailed labels, award/document identity mapping and eviden
 adjudication before accepting V2-01. The next roadmap task **after acceptance**
 is V2-10: provider-neutral SearchProvider with a fake adapter and benchmark comparison.
 No Jev or discovery improvement belongs in this task.
+
+## Reviewed-fact acceptance (2026-10-02)
+
+A successful capture is not completion. Run the explicit acceptance gate:
+
+```sh
+python -m evaluation.research.reference_acceptance --capture CAPTURE.json --out acceptance.json
+```
+
+It uses the unchanged reviewed dataset, rejects incomplete captures and missed
+known facts, and exits 2 when the reference target is not met. UNKNOWN labels
+remain unknown. It does not certify extra unadjudicated claims or live-source
+freshness. See `docs/process/REFERENCE_FACT_RECOVERY_2026-10-02.md` for the
+11/62 original-mapping baseline and separately labelled 16/62 identity replay.
+Live captures now record the exact version/hash of the observed source aliases.
+Use `--no-admission-obligations` to measure the prior routing under equal budgets.

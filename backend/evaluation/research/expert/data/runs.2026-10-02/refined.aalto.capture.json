@@ -1,0 +1,164 @@
+{
+  "schema_version": "1",
+  "pipeline_sha": "d09697ff0ae6c6b29d08dc17d2251a70d98f5532",
+  "captured_at": "20261002T155413Z",
+  "mode": "live",
+  "config": {
+    "search_provider": "exa_mcp",
+    "seconds_per_case": 300,
+    "max_fetcher_calls_per_case": 60,
+    "page_budget_counts": "network reads; cache hits are free (since 2026-09-23)",
+    "search_before_navigation": false,
+    "recover_search_candidates": true,
+    "search_funding_fallback": true,
+    "target_award_search": true,
+    "skip_refused_search_hosts": false,
+    "reject_archive_hosts": false,
+    "admission_lexicon": false,
+    "navigation_slot": false,
+    "admission_obligations": true,
+    "browser_enabled": false,
+    "cohort": [
+      "groningen",
+      "delft",
+      "aalto",
+      "vienna",
+      "warsaw",
+      "ubc",
+      "toronto",
+      "hku",
+      "ntu",
+      "kaist"
+    ],
+    "scope": "current production pipeline; HTTP-only bounded cold run",
+    "rank_stage": "programme confirmation queue before catalogue walking",
+    "harness_sha256": "20713b664ef23b7324823ce39dc0f504fdab03a216cacc25354ec4f88f436e00",
+    "mapping_sha256": "06e9d005d7f9093ca9f33c05bcb8fe1582b14e349adbb3720785b0fd239b082a"
+  },
+  "observations": [
+    {
+      "case_id": "aalto",
+      "programme_urls": [],
+      "ranked_urls": [
+        "https://www.aalto.fi/en/sgt-programme/people",
+        "https://www.aalto.fi/en/wit-programme/about-us",
+        "https://www.aalto.fi/en/wit-programme/coaching",
+        "https://www.aalto.fi/sv/program/fortsatta-studier-i-ett-magisterprogram-vid-hogskolan-for-elektroteknik",
+        "https://www.aalto.fi/en/wood-program/saie-project-information",
+        "https://www.aalto.fi/en/wood-program/kokoon-project-information",
+        "https://www.aalto.fi/en/wood-program/alava-project-information",
+        "https://www.aalto.fi/en/wit-programme/wit-programme-bridging-capacities-to-advance-resilience-of-vulnerable-communities",
+        "https://www.aalto.fi/en/wit-programme/three-ways-systems-thinking-supports-practicing-of-humanitarian-architecture",
+        "https://www.aalto.fi/en/wit-programme/taru-niskanen",
+        "https://www.aalto.fi/en/wit-programme/systemsresilience-thinking",
+        "https://www.aalto.fi/en/wit-programme/sustainable-business-models",
+        "https://www.aalto.fi/en/wit-programme/study-structure",
+        "https://www.aalto.fi/en/wit-programme/saija-hollmen",
+        "https://www.aalto.fi/en/wit-programme/resilience-thinking",
+        "https://www.aalto.fi/en/wit-programme/programme-description",
+        "https://www.aalto.fi/en/wit-programme/our-partners",
+        "https://www.aalto.fi/en/wit-programme/matleena-muhonen",
+        "https://www.aalto.fi/en/wit-programme/life-coaching-in-humanitarian-architecture-training",
+        "https://www.aalto.fi/en/wit-programme/kristjana-adalgeirsdottir",
+        "https://www.aalto.fi/en/wit-programme/katri-liisa-pulkkinen",
+        "https://www.aalto.fi/en/wit-programme/inclusive-play-kenya",
+        "https://www.aalto.fi/en/wit-programme/humanitarian-architecture-what-does-it-mean",
+        "https://www.aalto.fi/en/wit-programme/humanitarian-architecture",
+        "https://www.aalto.fi/en/wit-programme/hani-tarabichi",
+        "https://www.aalto.fi/en/wit-programme/decolonising-sustainability-reshaping-our-approach",
+        "https://www.aalto.fi/en/wit-programme/decolonising-sustainability",
+        "https://www.aalto.fi/en/wit-programme/cultural-tourism-nepal",
+        "https://www.aalto.fi/en/wit-programme/course-publications",
+        "https://www.aalto.fi/en/wit-programme/coaching-for-goal-setting-and-time-management-in-humanitarian-architecture",
+        "https://www.aalto.fi/en/wit-programme/case-5-kigali-rwanda",
+        "https://www.aalto.fi/en/wit-programme/case-4-nairobi-rivers-kenya",
+        "https://www.aalto.fi/en/wit-programme/case-3-iringa-tanzania",
+        "https://www.aalto.fi/en/wit-programme/case-2-stone-town-zanzibar",
+        "https://www.aalto.fi/en/wit-programme/case-1-madesh-and-sudurpaschim-province-nepal",
+        "https://www.aalto.fi/en/wit-programme/application",
+        "https://www.aalto.fi/en/wit-programme/anna-koskinen",
+        "https://www.aalto.fi/en/wit-programme/ali-haji-khamis",
+        "https://www.aalto.fi/en/sgt-programme/sgt-studio-studio-projects-from-2007-to-2026",
+        "https://www.aalto.fi/en/sgt-programme/sgt-programme-structure"
+      ],
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": 59,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 6,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 97.27025929198135,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [
+        {
+          "category": "classifier-rejected",
+          "url": "https://www.aalto.fi/en/admission-services",
+          "page_type": "irrelevant",
+          "detail": "classified as irrelevant; no requirement can be read from this kind of page. title='Admission Services | Aalto University' signals='title is off-topic' chars=3270 degrees=[]",
+          "characters": 3270
+        },
+        {
+          "category": "classifier-rejected",
+          "url": "https://www.aalto.fi/en/international-students/tuition-fees-and-scholarships",
+          "page_type": "costs",
+          "detail": "not an award page; no scholarship recorded (5 award links, 0 below it: /en/node/30591, /en/international-students/scholarships-study-right-started-on-or-before-1-august-2024, /en/international-students/scholarships-study-right-started-on-or-after-1-august-2025, /en/international-students/external-scholarships)",
+          "characters": null
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://www.aalto.fi/en/node/1008496",
+          "page_type": "unclassified",
+          "detail": "robots_disallowed — robots.txt disallows this path",
+          "characters": null
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://www.aalto.fi/en/node/835691",
+          "page_type": "unclassified",
+          "detail": "robots_disallowed — robots.txt disallows this path",
+          "characters": null
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://www.aalto.fi/en/node/30591",
+          "page_type": "unclassified",
+          "detail": "robots_disallowed — robots.txt disallows this path",
+          "characters": null
+        },
+        {
+          "category": "no-pattern-match",
+          "url": "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees",
+          "page_type": "costs",
+          "detail": "page was read but no cost figures could be extracted",
+          "characters": 29558
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees",
+          "page_type": "costs",
+          "detail": "read as a funding index; 2 award links, 2 queued within the award budget",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.aalto.fi/en/international-students/scholarships-study-right-started-on-or-after-1-august-2025",
+          "page_type": "scholarship_index",
+          "detail": "read as a funding index; 5 award links, 5 queued within the award budget",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.aalto.fi/en/grants-and-awards",
+          "page_type": "scholarship_index",
+          "detail": "read as a funding index; 0 award links, 0 queued within the award budget",
+          "characters": null
+        }
+      ],
+      "error": null
+    }
+  ]
+}

@@ -47,6 +47,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
+**Reference calibration checkpoint, in progress (not ready for production release).** Current exact-source full repeatbc84ccf scored13/62, compared with11/62 original mapping and16/62 same-raw identity replay. ProviderHTTP429 removed Warsaw search; Groningen timed out after reading a correct page. Unit gates pass but fact acceptance fails. No claim of full-cohort improvement or product completion; continue offline budget recovery while provider access is pending.
+
 **Certified reference fact recovery, in progress.** Measure current production capture against immutable reviewed corpus; diagnose first lost-evidence stage, implement general source-backed recovery only if equal-budget evaluation supports it. Preserve scope, abstention, Fetcher and ranking invariants. Attached expert documents are methodological reference; no new blind expert run is claimed.
 
 **Local university search: deployed and public workflow verified (PR #39, main1aa188e, Fly v5).** Complete runtime acceptance is recorded in UNIMATCH_SEARCH_RELEASE_2026-10-02.md; this does not assert complete official admission facts for501 universities.
@@ -123,6 +125,8 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+**Reference recovery checkpoints:** bc78824 baton; a31adb6 bounded experimental routing; a64492f claim-local undergraduate scope and regression tests; d09697f strict reference acceptance CLI and narrowed extra reads; bc84ccf promoted admission obligations and versioned observed NTU aliases. Full baseline11/62; unchanged-raw identity replay16/62; KAIST same-budget0/10→1/10. See REFERENCE_FACT_RECOVERY_2026-10-02.md. Full final capture and source gates are still running; no deployment or complete-reference acceptance is claimed.
 
 **Search release evidence:** tested dbbf396 → merged1aa188e, identical tree6534f52;8 exact-head CI jobs passed. Fly v5/ce0acb2a image verified on both existing machines. Public catalogue filters and UI-selected run9307186a completed; results/evidence survive reload and Save works in the isolated synthetic case.
 
@@ -1743,6 +1747,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**Next exact step ER-09:** Production `_recover_search_pages` continues reading alternatives/old PDFs after a fetched exact single-field identity is confirmed. With immutable bc84ccf baseline retained, add an opt-in early completion rule only after ontology identity YES and the requested degree are proven by page contents; preserve multi-field and ambiguous identities. Prove against frozen fetched pages and adversarial regressions, then run live paired/held-out only when the provider is available. Do not rerun throttled Exa or switch identities to evade429.
 
 **Promotion write-ahead:** Refined ER-08 cold captures complete KAIST (4 predictions; admission-route exact-page reference hit) and Aalto (0 claims, no budget error). Original NU paired runs retain identical claims; METU is bounded and unavailable within the clock. Enable the narrowed admission-obligation rule, keep --no-admission-obligations for comparisons, and default live evaluation to the versioned observed identity aliases. The old reviewed gold/binding files remain byte-identical. Full 10-case baseline is11/62 with old mapping; pure NTU replay is16/62 with observed aliases (not new discovery). Repeat final gates before publishing a PR; search completeness remains FAIL.
 
@@ -3672,6 +3678,10 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**Latest gates:** final sourcebc84ccf backend2894passed/94.91%, Ruff/format327, mypy327. Additional reference-acceptance exact-alias test brings focused suite10passed (added after full-suite collection). Frontend232/type/lint/build passed; isolated demo Groningen top, one head d8e412c6a901. Exact-source reference13/62 FAIL; signedgold and oldreviewedbindings unchanged.
+
+**2026-10-02 reference checkpoint gates:** Initial full backend2885 passed/94.89%; Ruff325, mypy325; frontend typecheck/lint232 tests/build passed. New acceptance suite10 passed separately. Final promoted-source backend suite/mypy327 in progress. Isolated demo Groningen top; Alembic d8e412c6a901 one head. Strict ten-case reference gate exits2 at11/62, and at16/62 after separately labelled NTU identity replay. These are factual-quality failures, not failing unit tests.
+
 **Public release acceptance:** PR39 source exact-head CI8/8; Fly v5 complete/health ok/demo false; local catalogue501 and country/name/empty queries pass; real UI run completed inabout157s,3 programmes,51 Claim records,21 page checks,0 unreadable. Result/evidence persistence and Saved filtering verified. Full source gates remain2873/94.89%,frontend232,E2E79+6 with1 intentional skip. Postmerge run36972183803 provides the main check status.
 
 
@@ -4130,6 +4140,10 @@ CI runs both on the PR.
 
 ## 7. Blockers / questions for the owner
 
+**Current external constraints:** Exa MCP returnedHTTP429 in finalVienna/Warsaw. All alternative local provider keys absent (boolean presence checked only). No more live probes started; owner async question asks provider configuration through app secrets versus offline continuation. GitHubworkflow-scope restriction remains; proposed patch saved, gate not automatically enforced. Neither condition is a reason to alter validated queries or fabricate facts.
+
+**Reference task limits:** GitHub OAuth rejected workflow edit (missing workflow scope). Proposed patch retained; automatic reference enforcement NOT installed. The CLI gate works. METU both bounded arms time out, no positive quality claim. Signed corpus and reviewed binding file are unchanged. Document-phase facts are outside the current pre-decision canary; current mapping ceiling51/62 and remaining mismatches are recorded, not silently waived.
+
 **Current public runtime follow-up (2026-10-01):** Source fixes are prepared for the actual live-mode UI bug and explicit recovery capability. Recovery-off is the stated launch assumption after the optional owner preference question. Existing authenticated Exa account shows free-tier balance $13.17 and no payment method; no credits purchased. Existing API-key transfer to encrypted Fly secret `UNIMATCH_EXA_API_KEY` awaits the required browser confirmation. Until then use the already-configured keyless Exa only for a bounded deployment canary, not a claim of sustained public capacity. Prior SMTP-only blocking status is superseded by the explicit capability once this patch is deployed; public search is still not verified.
 
 **Current PR #35 search release status (2026-09-30 19:49UTC):** final source `09ebed70630f2860f0cdbb8c1a72679c63e1af00` is pushed, PR #35 is open and all local gates are green. Fresh Exa MCP pilot search was available: Groningen six successful queries but host stall/no confirmed pages; NTU six successful queries, both fields confirmed from official pages in the full pipeline and in an isolated search stage. Exact selected-head CI, squash merge and actual-main CI remain. No signed two-field recall percentage or public-site deployment is claimed. The Fly app still has no API/worker machines and only staged `UNIMATCH_DATABASE_URL`; production runtime needs real SMTP host, authorized From and secure credentials. No paid provider purchase or Vercel cleanup is in scope.
@@ -4414,6 +4428,8 @@ next agent does not reopen it.
   they are; do not rewrite that history.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
+
+**Reference recovery contracts:** Candidate.admissions_urls carries up to two explicitly discovered extra admission obligations; DiscoveryTrace.admission_obligations records provenance. Live capture adds --[no-]admission-obligations and identity_bindings_file/hash metadata; its default identity map is versioned observed-aliases, while old reviewed bindings remain available. New offline reference_acceptance CLI returns2 when the unchanged reviewed-fact target is unmet. No API/schema/migration/ranking change.
 
 **2026-10-02 eligibility integrity:** a future admission window or optional-test policy alone cannot establish overall MET. Individual date/policy checks remain unchanged; missing assessable entry requirements produce NEEDS_OFFICIAL_CLARIFICATION with an explicit academic requirements unknown. Ranking formula/v1 untouched.
 

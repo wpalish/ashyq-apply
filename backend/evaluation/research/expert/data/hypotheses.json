@@ -135,6 +135,28 @@
       ],
       "policy_guard": "Reads via Fetcher only; slot changes discovery order, never evidence rules.",
       "validation_artifact": "backend/evaluation/research/expert/data/runs.2026-09-27/er07.paired.txt"
+    },
+    {
+      "id": "ER-08",
+      "status": "tested",
+      "case_ids": [
+        "kaist",
+        "aalto",
+        "toronto"
+      ],
+      "observation": "2026-10-02 fresh Exa MCP baseline: explicit undergraduate admission links in catalogue navigation never reached requirement verification. Routing-only arm recovered the quote but omitted Korean undergraduate scope (0/10,1 wrong scope); claim-local scope repair yielded paired 0/10 off to1/10 on with exact-page support and no wrong scope. NU paired claims unchanged; METU both timeouts. Initial all-admissions-list arm exhausted Aalto budget; narrowed explicit-obligation-only repeat completed with no extra claims. See retained failed and refined captures.",
+      "proposed_rule": "Route a bounded number of explicit undergraduate admission links from selected catalogue roots into requirement verification independently of programme identity; derive undergraduate scope only from the quoted admission sentence.",
+      "integration_seam": "Candidate.admissions_urls; LiveDiscoveryAdapter._add_admission_obligations; WebRequirementsAdapter.verify; extract_admission_route. Branch default on; public release pending final exact-source gates and capture.",
+      "counterexample": "Generic extra admission pages consume budget without useful facts; mixed-degree prose and department names do not establish bachelor scope.",
+      "falsification": "Compare equal300s/60-network-read off/on captures and held-out claims, retaining all failed trials. Reject a source/scope regression or budget expansion. Repeated KAIST recovery proves one fact only, not full-corpus readiness.",
+      "evidence_artifacts": [
+        "backend/evaluation/research/expert/data/runs.2026-10-02/paired.kaist-off.capture.json",
+        "backend/evaluation/research/expert/data/runs.2026-10-02/paired.kaist-on.capture.json",
+        "backend/evaluation/research/expert/data/runs.2026-10-02/refined.kaist.capture.json",
+        "backend/evaluation/research/expert/data/runs.2026-10-02/refined.aalto.capture.json"
+      ],
+      "policy_guard": "All reads remain behind Fetcher; no expected URLs/values imported into production, no gold edits, no new blind trace claimed.",
+      "validation_artifact": "docs/process/REFERENCE_FACT_RECOVERY_2026-10-02.md"
     }
   ]
 }

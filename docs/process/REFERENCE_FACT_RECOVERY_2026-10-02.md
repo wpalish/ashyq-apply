@@ -1,0 +1,132 @@
+# Reference fact recovery — 2026-10-02
+
+## Acceptance target
+
+The owner asks to configure search against the reviewed facts. The unchanged
+`2026-09-23.reviewed` development corpus contains **62 known facts**, with the
+other 158 labels UNKNOWN. Neither catalogue counts nor a successful job is
+acceptance. The offline command below exits **2** on missing cases, incomplete
+captures, missing known facts or scored value/scope/support failures:
+
+```sh
+cd backend
+.venv/bin/python -m evaluation.research.reference_acceptance \
+  --capture PATH_TO_CAPTURE --out PATH_TO_ACCEPTANCE_REPORT
+```
+
+A pass concerns this fixed corpus only. Unadjudicated extra claims, currentness,
+held-out generalization and public runtime acceptance remain separate. Original
+reviewed gold and reviewed identity bindings are byte-identical to main.
+
+## Measurements completed
+
+All live comparisons use the configured Exa MCP provider, 300 seconds and at
+most 60 non-cached page reads per case, HTTP only, production Fetcher policies.
+HTTP wire attempts (robots/retries) are a separate counter. All profiles are
+synthetic and all databases isolated. This is a controller diagnosis using the
+previous expert findings; **no new blind expert trace is claimed**.
+
+The ten-case baseline recovered **11/62** under the original exact identity
+bindings. UBC recovered 3/3 but exhausted its budget; the acceptance command
+correctly fails. This first series spans the recorded source revisions in its
+per-case metadata; it is not relabelled as one exact-head release measurement.
+
+| Case | Correct reviewed facts |
+|---|---:|
+| Groningen | 2/11 |
+| Delft | 1/1 |
+| Aalto | 0/2 |
+| Vienna | 1/4 |
+| Warsaw | 2/2 |
+| UBC | 3/3, budget exhausted |
+| Toronto | 0/4 |
+| HKU | 1/4 |
+| NTU | 1/21 |
+| KAIST | 0/10 |
+
+### ER-08: admissions are an independent evidence obligation
+
+A programme classifier rejected the department's admission navigation before
+verification. The new bounded route retains explicit undergraduate-admission
+links from at most two already-selected catalogue roots. It adds at most two
+extra admission pages, preserves existing slots and never turns the link into
+a programme or a claim. Reads and claims retain normal Fetcher, official-site,
+classifier, verbatim and scope guards. A quote saying undergraduate students
+(English or Korean) may supply the claim's own degree; a department name or
+mixed graduate/undergraduate sentence cannot.
+
+The first arm reached the real page but scored **0/10** because the Korean
+undergraduate scope was missing. This failed trial remains preserved. The
+subsequent same-budget pair scored **0/10 off → 1/10 on**, with exact-page quote
+support and 0/1 wrong-scope claims. A repeat of the narrowed rule recovered the
+same fact. This is one recovered fact, not 10/10 or proof of a programme.
+
+The initial broader admission-list arm exhausted Aalto's page budget while
+adding no fact. It was narrowed to only the explicitly discovered obligation
+links. The narrowed Aalto repeat completed with zero claims and no budget error.
+NU's paired output retained the same claims. Both METU arms exhausted their
+300-second wall clock with zero predictions: this is an availability limit,
+not a positive held-out quality result. Further full-cohort verification is
+running on the promoted source; do not infer broad accuracy from these pilots.
+
+### NTU: measurement repair, distinct from discovery improvement
+
+The live pipeline already found the named Nanyang Global Scholarship at an
+`/admissions/ug/scholarships/` URL. The old registry recognized only the earlier
+`/admissions/undergraduate/scholarships/` URL. A separate Fetcher diagnostic of
+that older URL followed its current redirect to `scholarships-and-awards`;
+both current official pages explicitly name the same award. Exact source/name
+aliases are recorded in `identity_bindings.2026-10-02.observed.json`.
+
+The original signed file is unchanged. The added aliases are AI-observed
+identities under the owner's calibration request, **not a new human signoff**.
+They contain no expected values or applicability verdicts. The same frozen
+capture re-scored with the observed aliases yields **16/62**. These five extra
+credits are a mapping correction, not five newly discovered facts. Both scores
+and Fetcher URL/title/body hashes are retained.
+
+## Remaining work
+
+The reference acceptance is still **FAIL**. The mapper can express only 51/62
+known keys: ten document/award identities and one translation-condition field
+have no supported mapping. Document collection also occurs after shortlist
+approval; the pre-decision canary does not exercise it. Several returned values
+carry narrower or more detailed conditions than the frozen label vocabulary.
+Those differences require source-backed diagnosis, not removal of conditions
+or rewriting the gold to make a score green. Funding eligibility, exact scope,
+country credentials and unavailable sources remain part of ongoing recovery.
+
+## Artifacts and automation
+
+Committed reports, exact pilot captures and proof hashes:
+`backend/evaluation/research/expert/data/runs.2026-10-02/`.
+Raw captures, logs, Fetcher bodies and a manifest are retained under ignored
+`artifacts/reference-facts-2026-10-02/`. Failed trials remain included.
+
+GitHub rejected the benchmark-workflow edit because this OAuth connection lacks
+`workflow` scope. The proposed workflow change is saved as
+`artifacts/reference-facts-2026-10-02/workflow-proposal.patch`; the CLI gate works
+locally. **Automatic GitHub enforcement has not been installed.** Ordinary CI
+success must not be reported as a pass of the reference-fact acceptance.
+
+## Exact-source full repeat (bc84ccf)
+
+The repeat completed all ten observations on source `bc84ccfd11168db9124d088c49b80e9a99fdd54b`
+and the observed-alias map: **13/62**. NTU is6/21 and KAIST1/10. Groningen lost
+its two baseline credits because the 295-second child deadline fired after it
+had read the correct programme but before discovery/verification finished.
+Warsaw lost its two credits after the search provider began returning **HTTP429**;
+Vienna also records that provider failure. UBC again exhausted its page budget.
+This repeat is **not evidence of a full-cohort improvement**. Both positive and
+negative outcomes are committed in `final.capture.json`/`final.acceptance.json`.
+
+Further live probing is stopped after the provider throttle; no alternative API
+key is configured locally. The owner was asked to configure provider access
+through application secrets (no credential requested in chat). Work continues
+offline on the first reproduced budget loss: a confirmed exact single-field
+programme should not be followed by unnecessary alternative/PDF confirmation.
+
+Final local source gates at this checkpoint: Ruff/format, mypy327, **2894 backend
+passed /94.91%**; the10-test reference-acceptance suite including the subsequently
+added exact-alias check also passed. Frontend232/type/lint/build and isolated
+demo/one migration head passed. These do not override the failed reference gate.

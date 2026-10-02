@@ -1,0 +1,662 @@
+{
+  "schema_version": "1",
+  "pipeline_sha": "a64492ff72fdb4f57713aeec6202978b9b610621",
+  "captured_at": "20261002T154229Z",
+  "mode": "live",
+  "config": {
+    "search_provider": "exa_mcp",
+    "seconds_per_case": 300,
+    "max_fetcher_calls_per_case": 60,
+    "page_budget_counts": "network reads; cache hits are free (since 2026-09-23)",
+    "search_before_navigation": false,
+    "recover_search_candidates": true,
+    "search_funding_fallback": true,
+    "target_award_search": true,
+    "skip_refused_search_hosts": false,
+    "reject_archive_hosts": false,
+    "admission_lexicon": false,
+    "navigation_slot": false,
+    "admission_obligations": false,
+    "browser_enabled": false,
+    "cohort": [
+      "groningen",
+      "delft",
+      "aalto",
+      "vienna",
+      "warsaw",
+      "ubc",
+      "toronto",
+      "hku",
+      "ntu",
+      "kaist"
+    ],
+    "scope": "current production pipeline; HTTP-only bounded cold run",
+    "rank_stage": "programme confirmation queue before catalogue walking",
+    "harness_sha256": "20713b664ef23b7324823ce39dc0f504fdab03a216cacc25354ec4f88f436e00",
+    "mapping_sha256": "06e9d005d7f9093ca9f33c05bcb8fe1582b14e349adbb3720785b0fd239b082a"
+  },
+  "observations": [
+    {
+      "case_id": "nu",
+      "programme_urls": [
+        "https://scai.nu.edu.kz/bsc-cs",
+        "https://nu.edu.kz/sprogram/bachelor-of-science-in-computer-science"
+      ],
+      "ranked_urls": [
+        "https://scai.nu.edu.kz/bsc-rob",
+        "https://scai.nu.edu.kz/bsc-math",
+        "https://scai.nu.edu.kz/bsc-cs"
+      ],
+      "predictions": [
+        {
+          "key": "programme.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://scai.nu.edu.kz/bsc-cs",
+            "excerpt": "Bachelor of Science in Computer Science Bachelor of Science in Computer Science Click here — we’re al",
+            "scope": {
+              "university": "Nazarbayev University",
+              "programme": "Bachelor of Science in Computer Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-02",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "ielts.overall",
+          "value": 5.5,
+          "evidence": {
+            "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+            "excerpt": "age of instruction are exempt from submitting IELTS/TOEFL results. Confirmation should be provided by an applicant received from a university. *An overall IELTS score of 5.5 (with no subscore below 5.5) may be considered for conditional admission. Applicable only to regular admission. The following requirements apply for enroll",
+            "scope": {
+              "university": "Nazarbayev University",
+              "programme": "Bsc Cs",
+              "degree": null,
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-02",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "ielts.subscores",
+          "value": {
+            "writing": 6.0,
+            "speaking": 5.5
+          },
+          "evidence": {
+            "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+            "excerpt": "required to enroll in NU’s undergraduate programs The undergraduate program is a four-year higher education program leading to an academic bachelor’s degree. Entry requirements Notes English Proficiency Test IELTS – 6.0;* writing -6.0; reading & listening & speaking – 5.5 or the equivalent TOEFL score as posted on the ETS website; IELTS/TOEFL tests are considered without superscoring. IELTS/TOEFL tests must be taken in person at the test center (not remotely) IELTS Online, TOEFL iBT Home Edition, and TOEFL PDT results are not considered",
+            "scope": {
+              "university": "Nazarbayev University",
+              "programme": "Bsc Cs",
+              "degree": null,
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-02",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.min_gpa",
+          "value": 2.0,
+          "evidence": {
+            "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+            "excerpt": "PA and IELTS/TOEFL results , and the respective School will determine the course of study and possible credit transfer . Minimum admission requirements: Minimum CGPA: 2.0 out of 4.0* English language requirement**: IELTS: no less than 6.0 overall (Writing – 6.0, Listening – 5.5, Reading – 5.5, Speaking – 5.5) ; or TOEFL: an",
+            "scope": {
+              "university": "Nazarbayev University",
+              "programme": "Bsc Cs",
+              "degree": null,
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-02",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.gpa_scale",
+          "value": 4.0,
+          "evidence": {
+            "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+            "excerpt": "PA and IELTS/TOEFL results , and the respective School will determine the course of study and possible credit transfer . Minimum admission requirements: Minimum CGPA: 2.0 out of 4.0* English language requirement**: IELTS: no less than 6.0 overall (Writing – 6.0, Listening – 5.5, Reading – 5.5, Speaking – 5.5) ; or TOEFL: an",
+            "scope": {
+              "university": "Nazarbayev University",
+              "programme": "Bsc Cs",
+              "degree": null,
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-02",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.superscore_policy",
+          "value": "superscoring",
+          "evidence": {
+            "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+            "excerpt": "ber of certificates, but only the last certificate uploaded to their personal account will be considered. IELTS/TOEFL certificates are considered without superscoring. Important information about codes for submitting test results through the Test Administrator or Test Center : Code for IELTS: NU, Admissions Office Code",
+            "scope": {
+              "university": "Nazarbayev University",
+              "programme": "Bsc Cs",
+              "degree": null,
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-02",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "deadline",
+          "value": "2026-11-28",
+          "evidence": {
+            "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+            "excerpt": "spring semester of the undergraduate programs on a fee-paying basis do not participate in selection for awarding an educational grant “NU” and other grants. Deadline for submission of application: November 28, 2026 (2 p.m. Astana time) Deadline for submission of test results to NU: IELTS/TOEFL & SAT/ACT – November 28, 2026 (11:59 p.m Astana time) The test",
+            "scope": {
+              "university": "Nazarbayev University",
+              "programme": "Bsc Cs",
+              "degree": null,
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-02",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "intake",
+          "value": "fall 2027",
+          "evidence": {
+            "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+            "excerpt": "Tests taken remotely, such as IELTS Online, TOEFL iBT Home Edition, and TOEFL PDT, are not considered in the admission process;   All provided certificates must be valid by  August 1, 2027",
+            "scope": {
+              "university": "Nazarbayev University",
+              "programme": "Bsc Cs",
+              "degree": null,
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-02",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "intake",
+          "value": "fall 2026",
+          "evidence": {
+            "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+            "excerpt": "For the 2026–2027 academic year (Mid-year intake):   Application submission period:   August 18, 2026 – November 28, 2026 (until 14:00 Astana time)",
+            "scope": {
+              "university": "Nazarbayev University",
+              "programme": "Bsc Cs",
+              "degree": null,
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-02",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "intake.open",
+          "value": true,
+          "evidence": {
+            "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+            "excerpt": "The application fee is increased 3 times from the established amount when paid within the last two weeks preceding the first officially approved application deadline or during the extension period for accepting applications for participation in the admission process (30,000 tenge).",
+            "scope": {
+              "university": "Nazarbayev University",
+              "programme": "Bsc Cs",
+              "degree": null,
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-02",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "programme.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://nu.edu.kz/sprogram/bachelor-of-science-in-computer-science/",
+            "excerpt": "Bachelor of Science in Computer Science\n\n \n \nSchool of Computing and Artificial Intelligence\n \nLevel:\n Undergraduate\n \nLanguage:\n English",
+            "scope": {
+              "university": "Nazarbayev University",
+              "programme": "Bachelor of Science in Computer Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-02",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "programme.language",
+          "value": "English",
+          "evidence": {
+            "url": "https://nu.edu.kz/sprogram/bachelor-of-science-in-computer-science/",
+            "excerpt": "Bachelor of Science in Computer Science\n\n \n \nSchool of Computing and Artificial Intelligence\n \nLevel:\n Undergraduate\n \nLanguage:\n English",
+            "scope": {
+              "university": "Nazarbayev University",
+              "programme": "Bachelor of Science in Computer Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-02",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "ielts.overall",
+          "value": 5.5,
+          "evidence": {
+            "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+            "excerpt": "age of instruction are exempt from submitting IELTS/TOEFL results. Confirmation should be provided by an applicant received from a university. *An overall IELTS score of 5.5 (with no subscore below 5.5) may be considered for conditional admission. Applicable only to regular admission. The following requirements apply for enroll",
+            "scope": {
+              "university": "Nazarbayev University",
+              "programme": "Bachelor Of Science In Computer Science",
+              "degree": null,
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-02",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "ielts.subscores",
+          "value": {
+            "writing": 6.0,
+            "speaking": 5.5
+          },
+          "evidence": {
+            "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+            "excerpt": "required to enroll in NU’s undergraduate programs The undergraduate program is a four-year higher education program leading to an academic bachelor’s degree. Entry requirements Notes English Proficiency Test IELTS – 6.0;* writing -6.0; reading & listening & speaking – 5.5 or the equivalent TOEFL score as posted on the ETS website; IELTS/TOEFL tests are considered without superscoring. IELTS/TOEFL tests must be taken in person at the test center (not remotely) IELTS Online, TOEFL iBT Home Edition, and TOEFL PDT results are not considered",
+            "scope": {
+              "university": "Nazarbayev University",
+              "programme": "Bachelor Of Science In Computer Science",
+              "degree": null,
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-02",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.min_gpa",
+          "value": 2.0,
+          "evidence": {
+            "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+            "excerpt": "PA and IELTS/TOEFL results , and the respective School will determine the course of study and possible credit transfer . Minimum admission requirements: Minimum CGPA: 2.0 out of 4.0* English language requirement**: IELTS: no less than 6.0 overall (Writing – 6.0, Listening – 5.5, Reading – 5.5, Speaking – 5.5) ; or TOEFL: an",
+            "scope": {
+              "university": "Nazarbayev University",
+              "programme": "Bachelor Of Science In Computer Science",
+              "degree": null,
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-02",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.gpa_scale",
+          "value": 4.0,
+          "evidence": {
+            "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+            "excerpt": "PA and IELTS/TOEFL results , and the respective School will determine the course of study and possible credit transfer . Minimum admission requirements: Minimum CGPA: 2.0 out of 4.0* English language requirement**: IELTS: no less than 6.0 overall (Writing – 6.0, Listening – 5.5, Reading – 5.5, Speaking – 5.5) ; or TOEFL: an",
+            "scope": {
+              "university": "Nazarbayev University",
+              "programme": "Bachelor Of Science In Computer Science",
+              "degree": null,
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-02",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.superscore_policy",
+          "value": "superscoring",
+          "evidence": {
+            "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+            "excerpt": "ber of certificates, but only the last certificate uploaded to their personal account will be considered. IELTS/TOEFL certificates are considered without superscoring. Important information about codes for submitting test results through the Test Administrator or Test Center : Code for IELTS: NU, Admissions Office Code",
+            "scope": {
+              "university": "Nazarbayev University",
+              "programme": "Bachelor Of Science In Computer Science",
+              "degree": null,
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-02",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "deadline",
+          "value": "2026-11-28",
+          "evidence": {
+            "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+            "excerpt": "spring semester of the undergraduate programs on a fee-paying basis do not participate in selection for awarding an educational grant “NU” and other grants. Deadline for submission of application: November 28, 2026 (2 p.m. Astana time) Deadline for submission of test results to NU: IELTS/TOEFL & SAT/ACT – November 28, 2026 (11:59 p.m Astana time) The test",
+            "scope": {
+              "university": "Nazarbayev University",
+              "programme": "Bachelor Of Science In Computer Science",
+              "degree": null,
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-02",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "intake",
+          "value": "fall 2027",
+          "evidence": {
+            "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+            "excerpt": "Tests taken remotely, such as IELTS Online, TOEFL iBT Home Edition, and TOEFL PDT, are not considered in the admission process;   All provided certificates must be valid by  August 1, 2027",
+            "scope": {
+              "university": "Nazarbayev University",
+              "programme": "Bachelor Of Science In Computer Science",
+              "degree": null,
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-02",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "intake",
+          "value": "fall 2026",
+          "evidence": {
+            "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+            "excerpt": "For the 2026–2027 academic year (Mid-year intake):   Application submission period:   August 18, 2026 – November 28, 2026 (until 14:00 Astana time)",
+            "scope": {
+              "university": "Nazarbayev University",
+              "programme": "Bachelor Of Science In Computer Science",
+              "degree": null,
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-02",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "intake.open",
+          "value": true,
+          "evidence": {
+            "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions/",
+            "excerpt": "The application fee is increased 3 times from the established amount when paid within the last two weeks preceding the first officially approved application deadline or during the extension period for accepting applications for participation in the admission process (30,000 tenge).",
+            "scope": {
+              "university": "Nazarbayev University",
+              "programme": "Bachelor Of Science In Computer Science",
+              "degree": null,
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-02",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        }
+      ],
+      "telemetry": {
+        "http_fetches": 62,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 7,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 137.97898800001713,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [
+        {
+          "category": "classifier-rejected",
+          "url": "https://nu.edu.kz/admissions/international-admission/international-admission_general",
+          "page_type": "unknown",
+          "detail": "not an award page; no scholarship recorded (0 award links, 0 below it: )",
+          "characters": null
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://apply.nu.edu.kz/en/admissions",
+          "page_type": "unclassified",
+          "detail": "http_error — HTTP 404",
+          "characters": null
+        },
+        {
+          "category": "classifier-rejected",
+          "url": "https://nu.edu.kz/admissions/international-admission/international-admission_general",
+          "page_type": "unknown",
+          "detail": "not an award page; no scholarship recorded (0 award links, 0 below it: )",
+          "characters": null
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://apply.nu.edu.kz/en/admissions",
+          "page_type": "unclassified",
+          "detail": "http_error — HTTP 404",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://scai.nu.edu.kz/bsc-cs",
+          "page_type": "program_detail",
+          "detail": "1 claims read from this page",
+          "characters": 93463
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions",
+          "page_type": "intake_specific_program",
+          "detail": "9 claims read from this page",
+          "characters": 29543
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://nu.edu.kz/sprogram/bachelor-of-science-in-computer-science",
+          "page_type": "program_detail",
+          "detail": "1 claims read from this page",
+          "characters": 539
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/regular-admissions",
+          "page_type": "intake_specific_program",
+          "detail": "9 claims read from this page",
+          "characters": 29543
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/financial-aid-end-scholarships",
+          "page_type": "scholarship_index",
+          "detail": "read as a funding index; 0 award links, 0 queued within the award budget",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://nu.edu.kz/sprogram/bachelor-of-science-in-computer-science",
+          "page_type": "program_detail",
+          "detail": "read as a funding index; 0 award links, 0 queued within the award budget",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://nu.edu.kz/admissions/how-to-apply/foundation-undergraduate/financial-aid-end-scholarships",
+          "page_type": "scholarship_index",
+          "detail": "read as a funding index; 0 award links, 0 queued within the award budget",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://scai.nu.edu.kz/bsc-cs",
+          "page_type": "program_detail",
+          "detail": "read as a funding index; 0 award links, 0 queued within the award budget",
+          "characters": null
+        }
+      ],
+      "error": null
+    }
+  ]
+}
