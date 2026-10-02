@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**Current holder: gpt-6-astra, 2026-10-02 UTC, `task/local-university-search` from `origin/main@4de769d`.** Owner explicitly authorizes finishing search, including the supplied 500-university local knowledge layer. Tree clean, no unpushed work, one Alembic head `c5d01b7e4f83`. Preserve curated identities, scoped official claims and all ranking/privacy invariants.
+
 **Current holder: gpt-6-astra, 2026-10-02 UTC, branch `task/unimatch-release-evidence` from merged `origin/main@5a6edc9`.** PR #37 is merged and Fly v4 runs that exact tree. This branch records the release and its remaining acceptance limit. The prior `task/unimatch-redesign` baton below is historical. No product code changes are planned without a reproduced postrelease fault.
 
 **Current holder: gpt-6-astra, 2026-10-01 UTC, branch `task/unimatch-redesign` from `origin/main@e24231e`.** Owner supplied the full 46-section Unimatch redesign brief and 18 reference images; this explicit new request supersedes the prior public-search-only task scope. PR #36 is merged and the branch tree matches main at takeover. Preserve real API/data semantics; do not import mockup facts as product data.
@@ -39,6 +41,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**Local university search and production acceptance, in progress.** Integrate the owner-supplied 500-row JSON as an idempotent, provenance-preserving catalogue; keep existing universities (19 curated, 18 overlapping) and unverified seed observations separate from official facts. Serve preliminary candidates without an external provider, connect selected candidates to bounded existing live research, display unavailable/missing data honestly, and verify provider outage, deduplication, scoped evidence precedence, tests/CI and public workflow before claiming completion.
 
 **Owner-directed Unimatch full product redesign, deployed (PR #37, main `5a6edc9`, Fly release v4).** The shared design system, public/auth flow, applicant journey, Find, comparison, detail, Plan, Documents, Sources, Community, Messages, Settings, Billing and Legal are on the existing app/worker. Both exact-head CI matrices and the actual-main four-job run passed. Public health, branded landing, authenticated profile and existing synthetic results were verified. A production-worker Exa MCP query returned three official Groningen URLs; a one-institution full canary reached programme and scholarship pages, with 3 claims/17% completeness and one malformed provider answer among six identity queries. A new authenticated browser run is still unverified because the Mac locked during the confirmation dialog; the owner has been asked to unlock it. Do not claim general search completeness or live user-journey acceptance from this bounded evidence. See `docs/process/UNIMATCH_RELEASE_2026-10-02.md`.
 
@@ -1723,6 +1727,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**2026-10-02 local-search write-ahead:** add a university catalogue model/schema/migration and deterministic importer for the supplied snapshot. Use stable name/country identity plus explicit curated aliases/domain matching; rank-based seed IDs are provenance only. Preserve raw seed observations with their actual unknown scope/date, never promote tuition/tests into Claims. Add authenticated local catalogue retrieval and UI in Find, then wire selected catalogue IDs into the existing run/discovery seam. Default research remains bounded; no 500-university crawl. Verify invalid/repeated imports, missing domains/tuition, provider-off/no-network catalogue, institution preservation, cross-tenant protection and selected live enrichment. Finish with required gates, authorized merge/deploy and live acceptance.
 
 **2026-10-02 postrelease write-ahead:** after the owner unlocks the Mac, reuse the existing authenticated Chrome Unimatch tab and synthetic `Public search smoke` case. Confirm whether the interrupted `Re-run everything` request created a fourth run before acting; the production logs through 23:56 UTC showed no new `POST /api/runs`. If no fourth run exists, confirm one new run, wait for its result, inspect Find/evidence and failures, and compare it with the deployed-worker canary. Preserve the public data honesty limits in `UNIMATCH_RELEASE_2026-10-02.md`; repair only reproduced faults. The canary's one malformed Exa response was transient on a direct replay, so do not change adapter parsing without the response shape.
 
@@ -4820,3 +4826,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 | 2026-10-01 05:37 UTC | gpt-6-astra | merged2de4d76 -> task/public-search-runtime | Owner requests working public search; prior code-only completion corrected. Zero machines/only database secret; live form defaults to demo. Explicit recovery capability and browser live proof next. |
 
 | 2026-10-02 UTC | gpt-6-astra | merged5a6edc9 -> task/unimatch-release-evidence | PR37 exact-head and actual-main gates passed; Fly v4 deployed same tree, both machines healthy. Public branded page/authenticated prior synthetic Find and bounded live Groningen worker canary verified. Fresh authenticated run remains blocked by Mac lock; release evidence and next step recorded. |
+
+| 2026-10-02 UTC | gpt-6-astra | merged4de769d -> task/local-university-search | Owner requests full search completion after supplied seed audit. Clean baseline, one migration head; importer/catalogue, local candidates, bounded live enrichment and outage/live acceptance next. |
