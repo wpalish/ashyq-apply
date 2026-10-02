@@ -6,7 +6,7 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-**Current holder: nobody; 2026-10-02 UTC, task/reference-fact-recovery, draft PR #41.** Owner asks to configure search against certified reference facts; the earlier public-flow acceptance is insufficient for fact completeness.
+**Current holder: gpt-6-astra; resumed2026-10-02 UTC at d4729eb, task/reference-fact-recovery, draft PR #41.** Owner asks to configure search against certified reference facts; the earlier public-flow acceptance is insufficient for fact completeness.
 
 **Current holder: nobody; public search release acceptance recorded, 2026-10-02 UTC, task/search-release-acceptance from main1aa188e.** PR #39 is merged after8 exact-head checks. Fly v5 runs the verified source on the original API/worker; catalogue501 and real UI-selected NTU search completed successfully (3 programmes,51 Claim records,21 pages,0 unreadable,about157s). Browser result reload, evidence and Save flow verified. Full details/limits: UNIMATCH_SEARCH_RELEASE_2026-10-02.md. Postmerge CI run36972183803 is linked there; metadata-only changes in this branch do not change the deployed application.
 
@@ -1747,6 +1747,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**Write-ahead ER-10 evidence durability:** `_stage_verify` keeps completed requirement claims in memory while awaiting costs/government, losing them on cancellation/process death. Reproduce with offline adapters and a separate DB reader, extract the existing campus/hierarchy/freshness/conflict finalization into one shared helper, checkpoint guarded partial requirements (and costs) before the next adapter await. Partial rows must remain explicitly incomplete; final results must remove that marker and avoid duplicate counts/evidence. Preserve richer prior-attempt rows until a complete replacement and the existing lease fence. No change to evidence acceptance or ranking. Add failure/cancellation, wrong-campus, retry and successful-stage equivalence tests before full gates.
 
 **Next exact step ER-09, provider access pending:** The opt-in rule and offline frozen-prefix replay are implemented; default remains False.203 focused tests, Ruff/format and mypy327 pass. Configure a supported provider through deployment/local secrets, then run equal300s/60-read Groningen off/on captures (flag --finish-exact-single-field) and held-out universities before promotion. Do not rerun throttled Exa or switch identities to evade429. Offline independent work: inspect document/award mapping gaps and requirement persistence before slow downstream reads, with write-ahead and dedicated regressions. PR41 remains draft; reference gate13/62 FAIL; no merge/deploy. GitHub workflow update also needs a connection with workflow scope; saved patch remains unapplied.
 
@@ -4918,3 +4920,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 | 2026-10-02 UTC | gpt-6-astra | merged4de769d -> task/local-university-search | Owner requests full search completion after supplied seed audit. Clean baseline, one migration head; importer/catalogue, local candidates, bounded live enrichment and outage/live acceptance next. |
 
 - 2026-10-02 gpt-6-astra: a1d4a00 -> ER-09 offline checkpoint; draft PR41 pushed, baton released pending provider configuration/live equal-budget proof. Reference13/62 FAIL; no production readiness or deployment asserted.
+
+- 2026-10-02 gpt-6-astra resumed d4729eb: previous goal turn made progress (pushed calibration/ER09 evidence). Provider429 still limits live pairs, but evidence durability and mapping work remain actionable offline.
