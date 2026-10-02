@@ -48,6 +48,7 @@ class ResearchRun(TimestampedBase):
     #: the user asked for, not whatever the server default happens to be.
     candidate_limit: Mapped[int | None] = mapped_column(Integer, nullable=True)
     verify_limit: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    university_ids: Mapped[list | None] = mapped_column(JSON, nullable=True)
     cancelled: Mapped[bool] = mapped_column(Boolean, default=False)
     #: Which tier this run was allowed to spend at. A free run really did fetch
     #: less, so paying afterwards cannot retroactively widen it — it queues a

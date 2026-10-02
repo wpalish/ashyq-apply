@@ -45,7 +45,6 @@ import tempfile
 from collections import Counter
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import ClassVar
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
@@ -58,6 +57,7 @@ from app.adapters.discovery.live_discovery import (
     registrable_domain,
 )
 from app.adapters.fetching import Fetcher
+from app.catalogue.importer import identity_key, import_catalogue, stable_id
 from app.config import Settings
 from app.domain.enums import (
     ClaimStatus,
@@ -77,7 +77,6 @@ from app.models.research import (
     ResearchRun,
 )
 from app.models.source_page import SourcePage
-from app.pipeline import runner as runner_module
 from app.pipeline.runner import ResearchRunner
 from app.pipeline.state import RunState
 from app.schemas.profile import (
@@ -173,30 +172,16 @@ class CanaryRunner(ResearchRunner):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.audit = FetchAudit()
+        self.discovery_instances: list[LiveDiscoveryAdapter] = []
 
     def _make_fetcher(self) -> Fetcher:
         return self.audit.install(super()._make_fetcher())
 
-
-class TracingAdapter(LiveDiscoveryAdapter):
-    """The real adapter, keeping every instance so its trace can be read.
-
-    The runner constructs its adapter internally and does not expose it, and
-    ``app/pipeline/runner.py`` is out of scope on this branch. Rebinding the
-    name the runner looks up is the least invasive way to see the traces:
-    behaviour is inherited unchanged, only the reference is kept.
-    """
-
-    instances: ClassVar[list[LiveDiscoveryAdapter]] = []
-    #: Set when --only narrows the run, so discovery reads the same shortened
-    #: registry the report is about rather than the whole file.
-    registry_override: ClassVar[Path | None] = None
-
-    def __init__(self, *args, **kwargs) -> None:
-        if TracingAdapter.registry_override is not None and len(args) < 2:
-            kwargs.setdefault("registry_path", TracingAdapter.registry_override)
-        super().__init__(*args, **kwargs)
-        TracingAdapter.instances.append(self)
+    def _make_discovery_adapter(self, fetcher):
+        adapter = super()._make_discovery_adapter(fetcher)
+        if isinstance(adapter, LiveDiscoveryAdapter):
+            self.discovery_instances.append(adapter)
+        return adapter
 
 
 # --- per-page extraction outcomes -----------------------------------------
@@ -397,20 +382,11 @@ async def run_canary(
     profile = canary_profile()
     workdir = Path(tempfile.mkdtemp(prefix="canary-"))
 
-    if selectors:
-        # --only used to narrow the report and nothing else: discovery still
-        # read the whole registry, so asking about one institution ran the
-        # first N in file order and then reported the one you asked about as
-        # NOT_ATTEMPTED. The adapter takes a registry path, so give it one that
-        # holds exactly the institutions being reported on.
-        narrowed = workdir / "registry.json"
-        narrowed.write_text(json.dumps(registry, indent=2), encoding="utf-8")
-        TracingAdapter.registry_override = narrowed
-
     # A throwaway database. The canary never touches the project's own data.
     engine = create_engine(f"sqlite:///{workdir / 'canary.db'}")
     Base.metadata.create_all(engine)
     session = sessionmaker(bind=engine)()
+    import_catalogue(session)
 
     settings = Settings(
         cache_dir=workdir / "cache",
@@ -444,16 +420,12 @@ async def run_canary(
         stage_state=RunState.load(None).dump(),
         candidate_limit=len(registry),
         verify_limit=len(registry),
+        university_ids=[stable_id(identity_key(e["name"], e["country"])) for e in registry],
     )
     session.add(run)
     session.flush()
 
     started = datetime.now(UTC)
-    TracingAdapter.instances.clear()
-    # The canary deliberately swaps the adapter constructor so it can retain
-    # discovery traces. The replacement subclasses the production adapter and
-    # exists only for this short-lived process.
-    runner_module.LiveDiscoveryAdapter = TracingAdapter  # type: ignore[misc]
     runner = CanaryRunner(session, run, profile, settings)
     error = ""
     try:
@@ -488,7 +460,7 @@ async def run_canary(
         for r in session.query(ProgramResultRow).filter(ProgramResultRow.run_id == run.id)
     }
 
-    traces = {t.institution: t for adapter in TracingAdapter.instances for t in adapter.traces}
+    traces = {t.institution: t for adapter in runner.discovery_instances for t in adapter.traces}
 
     # Per-page outcomes, filed by the runner next to the prose errors. Grouped
     # by domain so each institution's row explains its own pages.

@@ -432,7 +432,7 @@ export default function App() {
           {screen === 'profile' && <ProfileScreen onNext={() => setScreen('preferences')} />}
           {screen === 'preferences' && <PreferencesScreen onStarted={() => setScreen('progress')} />}
           {screen === 'progress' && <ProgressScreen onDone={() => setScreen('shortlist')} />}
-          {screen === 'shortlist' && <ShortlistScreen onStart={() => setScreen(savedProfile ? 'preferences' : 'profile')} />}
+          {screen === 'shortlist' && <ShortlistScreen onStart={() => setScreen(savedProfile ? 'preferences' : 'profile')} onProgress={() => setScreen('progress')} />}
           {screen === 'funding' && <FundingScreen />}
           {screen === 'sources' && <SourcesScreen />}
           {screen === 'approved' && <ApprovedScreen onCollect={() => setScreen('documents')} />}

@@ -26,6 +26,7 @@ from app.api import (
     routes_research,
     routes_results,
     routes_social,
+    routes_universities,
     routes_webhooks,
 )
 from app.config import get_settings
@@ -96,6 +97,7 @@ for module in (
     routes_results,
     routes_social,
     routes_webhooks,
+    routes_universities,
 ):
     app.include_router(module.router)
 

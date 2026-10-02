@@ -73,9 +73,10 @@ class TestDeadlines:
         outcome = evaluate_program(profile, [C("admission_deadline", "2026-01-15")], today=TODAY)
         assert "Admission deadline" in outcome.hard_filter_failures
 
-    def test_a_future_deadline_is_met(self, profile):
+    def test_a_future_deadline_is_met_but_does_not_establish_academic_eligibility(self, profile):
         outcome = evaluate_program(profile, [C("admission_deadline", "2027-05-01")], today=TODAY)
-        assert outcome.status is EligibilityStatus.MET
+        assert outcome.checks[0].status is EligibilityStatus.MET
+        assert outcome.status is EligibilityStatus.NEEDS_OFFICIAL_CLARIFICATION
 
     def test_an_unparseable_deadline_asks_for_clarification(self, profile):
         outcome = evaluate_program(profile, [C("admission_deadline", "rolling")], today=TODAY)
@@ -490,3 +491,26 @@ class TestTestOptionalIsNotTestIrrelevant:
             )
             == []
         )
+
+
+class TestIncompleteAdmissionEvidence:
+    def test_programme_and_deadline_are_not_academic_eligibility(self, profile):
+        from app.domain.ranking_v2 import Missing, u_academic
+
+        claims = [
+            C("program_exists", {"program": "Computing Science", "degree": "bachelor"}),
+            C("admission_deadline", "2027-05-01"),
+        ]
+        result = evaluate_program(profile, claims, today=TODAY)
+        assert result.status is EligibilityStatus.NEEDS_OFFICIAL_CLARIFICATION
+        assert (
+            next(c for c in result.checks if c.requirement == "Admission deadline").status
+            is EligibilityStatus.MET
+        )
+        assert result.hard_filter_failures == []
+        assert u_academic(result.status, None)[0] is Missing.UNKNOWN
+
+    def test_optional_test_policy_alone_does_not_confirm_entry_requirements(self, profile):
+        result = evaluate_program(profile, [C("sat_policy", "test optional")], today=TODAY)
+        assert result.status is EligibilityStatus.NEEDS_OFFICIAL_CLARIFICATION
+        assert result.hard_filter_failures == []

@@ -49,6 +49,7 @@ from app.adapters.page_classifier import (
     classify_page,
 )
 from app.adapters.search.ontology import canonical_field, load_ontology
+from app.domain.enums import FetchOutcome
 from app.domain.site_identity import hosts_share_site
 from app.domain.site_identity import registrable_domain as site_domain
 from app.schemas.profile import ApplicantProfileIn
@@ -928,7 +929,8 @@ class SitemapReader:
         pages: list[str] = []
         seen_pages: set[str] = set()
 
-        while queue and len(trace.sitemaps_read) < MAX_SITEMAP_DOCUMENTS:
+        attempted_documents = 0
+        while queue and attempted_documents < MAX_SITEMAP_DOCUMENTS:
             url, depth = queue.pop(0)
             url = canonical_url(url)
             if url in seen_documents or depth > MAX_SITEMAP_DEPTH:
@@ -939,9 +941,18 @@ class SitemapReader:
                 trace.reject(url, "sitemap is off the institution's domain")
                 continue
 
+            attempted_documents += 1
             result = await self.fetcher.get(url)
             if not result.ok:
                 trace.errors.append(f"{url}: {result.outcome.value} — {result.error}"[:300])
+                if result.outcome == FetchOutcome.TOO_LARGE:
+                    # A site-wide export exceeded the bounded page reader.
+                    # More bulk siblings can exhaust the host's time budget
+                    # before normal programme pages are tried (live Groningen).
+                    trace.errors.append(
+                        "Sitemap size budget reached; continuing with targeted discovery."
+                    )
+                    break
                 continue
             if not same_source_site(url, result.final_url or url):
                 trace.reject(url, "sitemap redirected off the institution's site")

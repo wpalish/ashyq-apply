@@ -34,6 +34,7 @@ from app.adapters.fetching import Fetcher
 from app.adapters.government.web_government import WebGovernmentAdapter
 from app.adapters.requirements.web_requirements import WebRequirementsAdapter
 from app.adapters.scholarship.web_scholarships import WebScholarshipAdapter
+from app.catalogue.discovery import CatalogueDiscoveryAdapter
 from app.config import Settings
 from app.domain import dedupe, diagnostics
 from app.domain.campus import withhold_other_campuses
@@ -179,8 +180,11 @@ class ResearchRunner:
         """Build discovery with source-page recording only on the live path."""
         if self.demo:
             return FixtureDiscoveryAdapter(fetcher)
-        return LiveDiscoveryAdapter(
+        return CatalogueDiscoveryAdapter(
             fetcher,
+            session=self.session,
+            university_ids=self.run.university_ids,
+            live_limit=self.verify_limit,
             page_recorder=lambda **fields: SourcePage.record(self.session, **fields),
         )
 
@@ -365,6 +369,7 @@ class ResearchRunner:
             "academic_year": self.settings.academic_year,
             "target_currency": self.settings.target_currency,
             "respect_robots": self.settings.respect_robots,
+            "university_ids": self.run.university_ids or [],
         }
         fetcher = self._make_fetcher()
         browser = self._make_browser(fetcher)
