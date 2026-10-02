@@ -870,6 +870,18 @@ _LATER_MAJOR_CHOICE = re.compile(
 )
 
 
+# A department name ending in 학부 does not identify a student's level.
+# 학부생 explicitly names undergraduate students; only the quoted admission
+# sentence may supply this scope, never unrelated navigation or the request.
+_ADMISSION_UNDERGRADUATE = re.compile(
+    r"\bundergraduate\s+(?:students?|applicants?)\b|(?<![가-힣])학부생(?:은|는|이|을|의|들)?(?=\s|[.,。]|$)",
+    re.I,
+)
+_ADMISSION_OTHER_DEGREE = re.compile(
+    r"\b(?:graduate|postgraduate|master|doctoral|phd)\b|대학원생|석사|박사", re.I
+)
+
+
 def extract_admission_route(text: str, builder: ClaimBuilder) -> Claim | None:
     """Undergraduates admitted without a declared major, choosing one later.
 
@@ -898,6 +910,12 @@ def extract_admission_route(text: str, builder: ClaimBuilder) -> Claim | None:
         ClaimType.ADMISSION_ROUTE,
         "undeclared_then_major_selection",
         excerpt,
+        degree=(
+            "bachelor"
+            if _ADMISSION_UNDERGRADUATE.search(excerpt)
+            and not _ADMISSION_OTHER_DEGREE.search(excerpt)
+            else None
+        ),
         confidence=0.75 if admitted is not None else 0.65,
     )
 

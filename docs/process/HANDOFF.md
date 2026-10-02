@@ -1744,6 +1744,8 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+**ER-08 measured intermediate failure:** routing reached the exact official admission-route page and extracted a verbatim fact, but scorer reports 0/10 with 1 scope mismatch: the Korean excerpt explicitly says undergraduate students (학부생), while Claim.scope.degree is empty. Add claim-local degree reading from the quoted sentence (English/Korean student wording, mixed-degree abstention), never from applicant/gold. Keep original failed arm as evidence and rerun the paired measurement.
+
 **Experiment ER-08 write-ahead:** Fresh KAIST baseline (87.6s,25 adapter reads,3 claims) loses the department's explicit undergraduate-admissions navigation before verification; admissions selection is truncated to one URL. Add an opt-in bounded admissions-obligation route in discovery, preserve up to three admissions leads in Candidate, and pass them through unchanged Fetcher/classifier/scope verification. Reuse existing multilingual route vocabulary, no signed URL/value lookup. Evaluate equal 300s/60-network-read captures and held-out cases; keep off unless correct reference recall improves without scope regressions.
 
 **Next (2026-10-02):** Run fresh Exa MCP captures for KAIST, Toronto and Aalto at fixed 300 seconds/60 network reads each, keep raw observations and failures, validate harness identity mapping and score immutable gold. Inspect production discovery/extraction only after recording baseline. Add regression coverage for reproduced general defects; compare equal-budget candidate and held-out results before promotion.
