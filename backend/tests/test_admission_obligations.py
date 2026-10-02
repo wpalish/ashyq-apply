@@ -33,6 +33,7 @@ async def test_admission_route_is_retained_without_becoming_a_programme(settings
     await adapter._add_admission_obligations(selected, trace, canary_profile())
     assert selected[PageCategory.ADMISSIONS] == [ROUTE]
     assert selected[PageCategory.PROGRAM_PAGE] == []
+    assert trace.admission_obligations == [ROUTE]
 
 
 @pytest.mark.asyncio

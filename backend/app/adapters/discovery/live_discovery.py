@@ -801,6 +801,7 @@ class DiscoveryTrace:
     #: (url, link text) for leads found by a catalogue's own wording rather
     #: than by the URL, so the report can show what the wording was.
     kept_by_link_text: list[tuple[str, str]] = field(default_factory=list)
+    admission_obligations: list[str] = field(default_factory=list)
     #: The catalogue-walker stage's report. Zeros until (and unless) the stage
     #: runs, so "inactive" and "ran and found nothing" stay distinguishable.
     walker: WalkerTrace = field(default_factory=_walker_trace)
@@ -829,6 +830,7 @@ class DiscoveryTrace:
             "search_coverage": self.search_coverage,
             "used_navigation_fallback": self.used_navigation_fallback,
             "kept_by_link_text": self.kept_by_link_text,
+            "admission_obligations": self.admission_obligations,
             "walker": dict(self.walker),
         }
 
@@ -1204,6 +1206,7 @@ class LiveDiscoveryAdapter:
                     break
                 if _names_admission_route(link.text) and link.url not in admissions:
                     admissions.append(link.url)
+                    trace.admission_obligations.append(link.url)
                     trace.kept_by_link_text.append((link.url, link.text))
 
     async def _confirm_programs(
@@ -1837,7 +1840,7 @@ class LiveDiscoveryAdapter:
         """Attach what was found. A category with nothing stays None."""
         candidate.admissions_url = _first(selected[PageCategory.ADMISSIONS])
         if ADMISSION_OBLIGATIONS:
-            candidate.admissions_urls = selected[PageCategory.ADMISSIONS][:MAX_PAGES_PER_CATEGORY]
+            candidate.admissions_urls = trace.admission_obligations[: MAX_PAGES_PER_CATEGORY - 1]
         candidate.costs_url = _first(selected[PageCategory.COSTS])
         candidate.scholarships_url = _first(selected[PageCategory.SCHOLARSHIPS])
 

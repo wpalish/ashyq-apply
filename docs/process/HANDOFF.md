@@ -1744,6 +1744,12 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+**ER-08 refinement write-ahead/result boundary:** Initial on-arm Aalto exhausted 60 reads while baseline completed with zero claims. Limit extra verification to the explicitly discovered admission-obligation links only; do not automatically enqueue other sitemap admission URLs. Add dedicated trace.admission_obligations for provenance and keep old failed arm. KAIST scoped pair before this refinement measured 0/10 off versus1/10 on, exact same-page support,0/1 wrong scope. NU paired claims unchanged (10 per result); METU still running. Rerun KAIST/Aalto with narrowed rule before promotion.
+
+**Acceptance wiring:** Run the reviewed-reference gate at the end of the existing benchmark capture job, after diagnostics and before always-upload artifacts. A successful crawl with missed signed facts must no longer leave that benchmark job green. Preserve ordinary source CI and all raw failed captures.
+
+**Reference acceptance write-ahead:** Add an offline reviewed-corpus acceptance command in evaluation/research/reference_acceptance.py. It must fail on missing cases, capture errors, missed known facts, scored scope/value/support errors; UNKNOWN labels never become targets. Store exact scorer output and explain that passing this gate certifies only this fixed corpus, not all live universities. No production imports of gold.
+
 **ER-08 measured intermediate failure:** routing reached the exact official admission-route page and extracted a verbatim fact, but scorer reports 0/10 with 1 scope mismatch: the Korean excerpt explicitly says undergraduate students (학부생), while Claim.scope.degree is empty. Add claim-local degree reading from the quoted sentence (English/Korean student wording, mixed-degree abstention), never from applicant/gold. Keep original failed arm as evidence and rerun the paired measurement.
 
 **Experiment ER-08 write-ahead:** Fresh KAIST baseline (87.6s,25 adapter reads,3 claims) loses the department's explicit undergraduate-admissions navigation before verification; admissions selection is truncated to one URL. Add an opt-in bounded admissions-obligation route in discovery, preserve up to three admissions leads in Candidate, and pass them through unchanged Fetcher/classifier/scope verification. Reuse existing multilingual route vocabulary, no signed URL/value lookup. Evaluate equal 300s/60-network-read captures and held-out cases; keep off unless correct reference recall improves without scope regressions.
