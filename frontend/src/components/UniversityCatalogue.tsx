@@ -15,6 +15,12 @@ export function UniversityCatalogue({ onStart, onProgress }: { onStart?: () => v
   const pendingRun = useRef<string | null | undefined>(undefined);
 
   useEffect(() => {
+    setOffset(0);
+    setSelected([]);
+    pendingRun.current = undefined;
+  }, [savedProfile?.id]);
+
+  useEffect(() => {
     let current = true;
     const timer = setTimeout(() => {
       setFetching(true);

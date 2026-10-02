@@ -64,3 +64,14 @@ it('lets a new applicant browse and open profile creation before selecting', asy
   expect(onStart).toHaveBeenCalledOnce();
   expect(startRun).not.toHaveBeenCalled();
 });
+
+
+it('clears the university selection when switching applicant cases', async () => {
+  const { rerender } = render(<UniversityCatalogue />);
+  fireEvent.click(await screen.findByRole('checkbox'));
+  expect(screen.getByRole('button', { name: 'Research selected (1)' })).toBeEnabled();
+  savedProfile = { id: 'another-profile' };
+  rerender(<UniversityCatalogue />);
+  expect(screen.getByRole('button', { name: 'Research selected (0)' })).toBeDisabled();
+  expect(screen.getByRole('checkbox')).not.toBeChecked();
+});

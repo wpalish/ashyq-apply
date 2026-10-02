@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import hashlib
+import re
 from urllib.parse import urlsplit
 
 from bs4 import BeautifulSoup
@@ -64,7 +65,7 @@ class CatalogueDiscoveryAdapter(LiveDiscoveryAdapter):
             if index < self.live_limit:
                 try:
                     candidate, trace = await asyncio.wait_for(
-                        self._enrich(uni, profile, candidate, trace), timeout=120
+                        self._enrich(uni, profile, candidate, trace), timeout=300
                     )
                 except TimeoutError:
                     trace.errors.append(
@@ -150,7 +151,19 @@ class CatalogueDiscoveryAdapter(LiveDiscoveryAdapter):
         headings = " ".join(h.get_text(" ", strip=True) for h in soup.find_all("h1"))
         identity_text = normalize(f"{title} {headings}")
         names = [normalize(canonical_name(n)) for n in [uni.name, *(uni.aliases or [])]]
-        if not any(len(n) >= 8 and n in identity_text for n in names):
+        long_match = any(len(n) >= 8 and n in identity_text for n in names)
+        # Some institutions are publicly named by an acronym (e.g. UCL).
+        # Require the same whole token in both the hostname and page identity,
+        # together with an institutional word; a substring such as "us" is not enough.
+        host_label = normalize((parts.hostname or "").removeprefix("www.").split(".")[0])
+        acronym_match = any(
+            3 <= len(n) < 8
+            and " " not in n
+            and n == host_label
+            and re.search(rf"\b{re.escape(n)}\b", identity_text)
+            for n in names
+        ) and any(word in identity_text.split() for word in ("university", "college", "institute"))
+        if not long_match and not acronym_match:
             return None
         domain = registrable_domain(urlsplit(final).hostname or "")
         proof = {

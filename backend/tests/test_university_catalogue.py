@@ -267,3 +267,70 @@ def test_real_postgres_catalogue_import(pg_session):
     assert import_catalogue(pg_session)["universities"] == 501
     pg_session.commit()
     assert import_catalogue(pg_session)["new_observations"] == 0
+
+
+@pytest.mark.asyncio
+async def test_offline_selected_run_finishes_with_honest_unknowns(
+    catalogue_session, profile, settings, monkeypatch
+):
+    from app.adapters.fetching import Fetcher
+    from app.models import ClaimRow, ProgramResultRow
+    from app.pipeline.runner import ResearchRunner
+    from app.pipeline.state import RunState
+    from tests.conftest import profile_row
+
+    async def unavailable(self, url, **kwargs):
+        return FetchResult(url=url, outcome=FetchOutcome.NETWORK_UNAVAILABLE)
+
+    monkeypatch.setattr(Fetcher, "get", unavailable)
+    provider = SimpleNamespace(search=AsyncMock(side_effect=SearchUnavailable("outage")))
+    monkeypatch.setattr("app.catalogue.discovery.get_search_provider", lambda: provider)
+    s = catalogue_session
+    uni = retrieve(s, query="Massachusetts Institute")[0]
+    applicant = profile_row(s, profile)
+    run = ResearchRun(
+        profile_id=applicant.id,
+        stage="queued",
+        demo_mode=False,
+        candidate_limit=1,
+        verify_limit=1,
+        university_ids=[uni.id],
+        stage_state=RunState.load(None).dump(),
+    )
+    s.add(run)
+    s.flush()
+    await ResearchRunner(s, run, profile, settings).run_to_decision()
+    assert run.stage == "awaiting_user_decision"
+    result = s.scalars(select(ProgramResultRow).where(ProgramResultRow.run_id == run.id)).one()
+    assert result.eligibility == "NEEDS_OFFICIAL_CLARIFICATION"
+    assert s.scalar(select(func.count()).select_from(ClaimRow)) == 0
+    assert run.settings_snapshot["university_ids"] == [uni.id]
+
+
+def test_every_seed_country_has_a_region(catalogue_session):
+    from app.catalogue.retrieval import REGIONS
+
+    assert {u.country for u in catalogue_session.scalars(select(University))} <= set().union(
+        *REGIONS.values()
+    )
+
+
+@pytest.mark.asyncio
+async def test_acronym_identity_needs_matching_host_and_university_heading(catalogue_session):
+    uni = next(u for u in catalogue_session.scalars(select(University)) if u.name == "UCL")
+    fetcher = SimpleNamespace(
+        get=AsyncMock(
+            return_value=FetchResult(
+                url="https://ucl.ac.uk/",
+                outcome=FetchOutcome.OK,
+                content=b"<title>UCL - London's Global University</title>",
+            )
+        )
+    )
+    adapter = CatalogueDiscoveryAdapter(
+        fetcher, session=catalogue_session, university_ids=[uni.id], live_limit=1
+    )
+    assert await adapter._probe_site(uni, "https://directory.edu/") is None
+    assert (await adapter._probe_site(uni, "https://ucl.ac.uk/"))[
+        "homepage"
+    ] == "https://ucl.ac.uk/"

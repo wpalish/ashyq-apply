@@ -11,6 +11,8 @@ from app.models import University
 
 REGIONS = {
     "europe": {
+        "Russia",
+        "Turkey",
         "United Kingdom",
         "Germany",
         "Italy",
@@ -34,6 +36,8 @@ REGIONS = {
         "Lithuania",
     },
     "asia": {
+        "Russia",
+        "Turkey",
         "China",
         "South Korea",
         "Japan",

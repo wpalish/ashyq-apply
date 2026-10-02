@@ -390,6 +390,40 @@ class TestSitemapReader:
         assert len(trace.sitemaps_read) == 3
 
     @pytest.mark.asyncio
+    async def test_failed_sitemap_reads_consume_the_document_budget(self, tmp_path):
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/index.xml\n",
+                "https://uni.edu/index.xml": sitemap_index_xml(
+                    *(f"https://uni.edu/missing-{i}.xml" for i in range(100))
+                ),
+            }
+        )
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            await SitemapReader(fetcher).collect("https://uni.edu/", "uni.edu", _trace())
+        assert len([u for u in site.requested if u.endswith(".xml")]) <= MAX_SITEMAP_DOCUMENTS
+
+    @pytest.mark.asyncio
+    async def test_oversized_map_stops_bulk_traversal_before_slow_siblings(self, tmp_path):
+        site = StubSite(
+            {
+                "https://uni.edu/robots.txt": "Sitemap: https://uni.edu/index.xml\n",
+                "https://uni.edu/index.xml": sitemap_index_xml(
+                    "https://uni.edu/large.xml", "https://uni.edu/slow.xml"
+                ),
+            },
+            missing_outcome=FetchOutcome.TOO_LARGE,
+        )
+        async with Fetcher(tmp_path / "c", offline=True) as fetcher:
+            site.install(fetcher)
+            trace = _trace()
+            assert await SitemapReader(fetcher).collect("https://uni.edu/", "uni.edu", trace) == []
+        assert "https://uni.edu/large.xml" in site.requested
+        assert "https://uni.edu/slow.xml" not in site.requested
+        assert any("too_large" in error for error in trace.errors)
+
+    @pytest.mark.asyncio
     async def test_nested_indexes_are_followed_but_bounded(self, tmp_path):
         """A sitemap index pointing at itself must not loop forever."""
         pages = {

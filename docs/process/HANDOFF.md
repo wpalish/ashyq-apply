@@ -6,7 +6,7 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-**Current holder: gpt-6-astra, 2026-10-02 UTC, `task/local-university-search` from `origin/main@4de769d`.** Owner explicitly authorizes finishing search, including the supplied 500-university local knowledge layer. Takeover `5336006`; local catalogue implementation checkpoint in progress, migration head `d8e412c6a901`. Preserve curated identities, scoped official claims and all ranking/privacy invariants.
+**Current holder: gpt-6-astra, 2026-10-02 UTC, `task/local-university-search` from `origin/main@4de769d`.** Owner explicitly authorizes finishing search, including the supplied 500-university local knowledge layer. Takeover `5336006`; catalogue checkpoint `3980a46`, final local gates green, PR #39 ready for review, migration head `d8e412c6a901`. Preserve curated identities, scoped official claims and all ranking/privacy invariants.
 
 **Current holder: gpt-6-astra, 2026-10-02 UTC, branch `task/unimatch-release-evidence` from merged `origin/main@5a6edc9`.** PR #37 is merged and Fly v4 runs that exact tree. This branch records the release and its remaining acceptance limit. The prior `task/unimatch-redesign` baton below is historical. No product code changes are planned without a reproduced postrelease fault.
 
@@ -42,7 +42,7 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 
 ## 2. Current task
 
-**Local university search and production acceptance, in progress.** Integrate the owner-supplied 500-row JSON as an idempotent, provenance-preserving catalogue; keep existing universities (19 curated, 18 overlapping) and unverified seed observations separate from official facts. Serve preliminary candidates without an external provider, connect selected candidates to bounded existing live research, display unavailable/missing data honestly, and verify provider outage, deduplication, scoped evidence precedence, tests/CI and public workflow before claiming completion.
+**Local university search, ready-for-review (PR #39); production acceptance pending.** Integrate the owner-supplied 500-row JSON as an idempotent, provenance-preserving catalogue; keep existing universities (19 curated, 18 overlapping) and unverified seed observations separate from official facts. Serve preliminary candidates without an external provider, connect selected candidates to bounded existing live research, display unavailable/missing data honestly, and verify provider outage, deduplication, scoped evidence precedence, tests/CI and public workflow before claiming completion.
 
 **Owner-directed Unimatch full product redesign, deployed (PR #37, main `5a6edc9`, Fly release v4).** The shared design system, public/auth flow, applicant journey, Find, comparison, detail, Plan, Documents, Sources, Community, Messages, Settings, Billing and Legal are on the existing app/worker. Both exact-head CI matrices and the actual-main four-job run passed. Public health, branded landing, authenticated profile and existing synthetic results were verified. A production-worker Exa MCP query returned three official Groningen URLs; a one-institution full canary reached programme and scholarship pages, with 3 claims/17% completeness and one malformed provider answer among six identity queries. A new authenticated browser run is still unverified because the Mac locked during the confirmation dialog; the owner has been asked to unlock it. Do not claim general search completeness or live user-journey acceptance from this bounded evidence. See `docs/process/UNIMATCH_RELEASE_2026-10-02.md`.
 
@@ -113,6 +113,9 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+**Local search completion (on top of `3980a46`, this commit):** bounded sitemap attempts/oversize exit, 300s institution discovery deadline, identity acronym/host checks, cross-region countries, selected-case UI reset, canary adapter routing and academic-eligibility honesty. 501 identities preserve 19 curated entries; the 500-row snapshot remains unverified, never scoring evidence.
+
 
 **Unimatch cloud E2E and responsive/accessibility repair (source in this commit):** adapted all existing desktop/mobile journey tests to the five-area navigation, staged profile and Find evidence disclosure without dropping behavioral assertions. Fixed the 320 px top bar/Explore overflow, the 768 px advanced-table overflow, low contrast accent text and faded completed-stage captions. Local Playwright **77 passed, 1 intentional desktop-only skip** across both projects; frontend typecheck/lint, 227 unit tests and build pass. The backend remains unchanged from the `4f5a67b` full 2,844/94.92% gate. `design-qa.md` records these findings. Final exact-head cloud CI, squash merge, actual-main checks and public deployment remain pending.
 
@@ -1727,6 +1730,21 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**Release next:** push this green source; update/ready PR #39, require exact-head push+PR CI, then owner-authorized squash merge and verify actual-main checks/tree. Build/deploy to existing Fly app ashyq-apply-alisher with --ha=false (one API, one worker), migration d8e412c6a901. Verify public catalogue, filters, selected live run, persisted results and truthful unknowns through authenticated API and browser. User-account sign-in pending; an isolated synthetic account via normal public registration may verify the product without changing user credentials. No purchases/new service footprint.
+
+
+**Live evidence integrity repair:** successful Groningen canary's three Claims are programme existence plus two population deadline observations. Its only RequirementCheck is a future deadline, yet overall eligibility=MET and academic utility=.75 with reason "All published requirements are met". Fix `domain/eligibility.evaluate_program`: a met deadline or test-optional policy alone must not establish academic eligibility. Keep individual deadline checks MET and expired confirmed deadline exclusions unchanged; emit overall NEEDS_OFFICIAL_CLARIFICATION plus a missing academic requirements explanation when there is no assessed academic requirement. Add red regression, retain v1/formula tests, verify demo golden unchanged and all full gates.
+
+
+**Live timing correction:** after the sitemap repair,44 ordinary page reads succeeded vs4 previously, but the new120s per-institution deadline cancelled discovery before final assembly. Increase it to300s (still bounded) and repeat the same Groningen live scenario. No readiness claim from source-only gates; preserve zero-claim/timeout reports as evidence. Final coverage gate must include the sitemap change and deadline correction.
+
+
+**Reproduced live fault, next repair:** fresh local Groningen canary `/tmp/unimatch-catalogue-live/canary-2026-10-02T052008Z.json` reads an oversized5MB sitemap then times out on its sibling; Fetcher correctly trips the host circuit and all later programme reads stop. `SitemapReader.collect` also counts only successful maps against its12-document bound. Add red regressions in `tests/test_live_discovery.py`; cap attempted documents and stop sitemap traversal on TOO_LARGE, preserving prior useful URLs and switching to the existing navigation/search flow. Do not change Fetcher/circuit/robots/network policy. Re-run bounded Groningen canary to compare actual programme access.
+
+
+**Local catalogue next substep:** finish full gates, add outage-through-run regression and region edge cases. Adapt `scripts/canary_discovery.py` to observe the actual `CatalogueDiscoveryAdapter` via runner override (the old module monkeypatch no longer selects it); seed the isolated canary catalogue and persist explicit university_ids so --only still measures the requested university. Then run bounded current-provider canary, compare evidence diagnostics, fix only demonstrated faults, and proceed to PR/CI/merge/deploy/public UI acceptance.
+
 
 **2026-10-02 local-search write-ahead:** add a university catalogue model/schema/migration and deterministic importer for the supplied snapshot. Use stable name/country identity plus explicit curated aliases/domain matching; rank-based seed IDs are provenance only. Preserve raw seed observations with their actual unknown scope/date, never promote tuition/tests into Claims. Add authenticated local catalogue retrieval and UI in Find, then wire selected catalogue IDs into the existing run/discovery seam. Default research remains bounded; no 500-university crawl. Verify invalid/repeated imports, missing domains/tuition, provider-off/no-network catalogue, institution preservation, cross-tenant protection and selected live enrichment. Finish with required gates, authorized merge/deploy and live acceptance.
 
@@ -3619,6 +3637,9 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**Final local-search gates, 2026-10-02:** Ruff check+format app/tests/evaluation pass; mypy324 pass. Full pytest **2873 passed, 94.89% coverage**, 403.21s. Frontend typecheck/lint/build pass, **232 tests**. Desktop/mobile Playwright **79 passed, 1 intentional skip**; auth **6 passed**. Demo SQL asserts Groningen first/PLAUSIBLE and UBC OUT_OF_BUDGET. Single Alembic head d8e412c6a901. Live Groningen postrepair:70 successful reads/9 failures,3 official Claims,17% completeness; MIT homepage identity verified through Fetcher. Replaying those real deadline/existence Claims now yields NEEDS_OFFICIAL_CLARIFICATION and academic UNKNOWN, not MET. Full official-data coverage is not claimed. Final-source CI and public deployment remain pending.
+
+
 **Local catalogue checkpoint, 2026-10-02:** new 22 backend regressions pass, including migrated real PostgreSQL import, idempotence, history, outage, selected-run routing and privacy guards. Ruff and mypy302 pass. Frontend typecheck/lint and231 tests pass; production build and full backend coverage gates in progress. No known failing tests; full gates not yet complete, so checkpoint is wip. Public browser session expired; user asked asynchronously to sign in, while implementation/CI work continues. No production changes yet.
 
 
@@ -4355,6 +4376,9 @@ next agent does not reopen it.
   they are; do not rewrite that history.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
+
+**2026-10-02 eligibility integrity:** a future admission window or optional-test policy alone cannot establish overall MET. Individual date/policy checks remain unchanged; missing assessable entry requirements produce NEEDS_OFFICIAL_CLARIFICATION with an explicit academic requirements unknown. Ranking formula/v1 untouched.
+
 
 - 2026-10-02 local catalogue: migration `d8e412c6a901` adds `universities`, immutable `university_observations` and nullable `research_runs.university_ids`. Authenticated `GET /api/universities` supports q/country/profile_id/limit/offset; seed fields explicitly remain unverified. `POST /api/runs` optionally accepts validated university_ids, forces live mode, preserves existing quotas/idempotency. Startup imports500 hints+19curated identities into501 institutions under an import transaction lock. Existing Claims/scoring contracts unchanged.
 
