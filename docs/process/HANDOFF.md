@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**Current holder: gpt-6-astra, 2026-10-02 UTC, task/reference-fact-recovery from origin/main b145da2.** Owner asks to configure search against certified reference facts; the earlier public-flow acceptance is insufficient for fact completeness.
+
 **Current holder: nobody; public search release acceptance recorded, 2026-10-02 UTC, task/search-release-acceptance from main1aa188e.** PR #39 is merged after8 exact-head checks. Fly v5 runs the verified source on the original API/worker; catalogue501 and real UI-selected NTU search completed successfully (3 programmes,51 Claim records,21 pages,0 unreadable,about157s). Browser result reload, evidence and Save flow verified. Full details/limits: UNIMATCH_SEARCH_RELEASE_2026-10-02.md. Postmerge CI run36972183803 is linked there; metadata-only changes in this branch do not change the deployed application.
 
 
@@ -44,6 +46,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**Certified reference fact recovery, in progress.** Measure current production capture against immutable reviewed corpus; diagnose first lost-evidence stage, implement general source-backed recovery only if equal-budget evaluation supports it. Preserve scope, abstention, Fetcher and ranking invariants. Attached expert documents are methodological reference; no new blind expert run is claimed.
 
 **Local university search: deployed and public workflow verified (PR #39, main1aa188e, Fly v5).** Complete runtime acceptance is recorded in UNIMATCH_SEARCH_RELEASE_2026-10-02.md; this does not assert complete official admission facts for501 universities.
 
@@ -1739,6 +1743,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**Next (2026-10-02):** Run fresh Exa MCP captures for KAIST, Toronto and Aalto at fixed 300 seconds/60 network reads each, keep raw observations and failures, validate harness identity mapping and score immutable gold. Inspect production discovery/extraction only after recording baseline. Add regression coverage for reproduced general defects; compare equal-budget candidate and held-out results before promotion.
 
 **After this documentation checkpoint:** inspect postmerge CI36972183803 and merge this metadata-only release record through its PR using the owner's standing merge authorization. No runtime edits are pending. Future product changes require a reproduced fault; partial official-data coverage is explicitly documented, not a completed universal knowledge base. Do not duplicate the synthetic NTU acceptance run or change production credentials.
 
@@ -4753,6 +4759,8 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 `[0.8]` → `[1.1]` → `[1.2]` → `[1.3]` → `[1.4]` → `[2.1]` → `[2.2]` → `[2.3]` → `[3.1]` → `[3.2]` → `[4.1]` → `[4.2]` → `[5]`
 
 ## 11. Session log (one line per session, newest last)
+
+2026-10-02 — gpt-6-astra takes certified-reference recovery baton from main b145da2; public runtime release remains unchanged while measuring.
 
 | 2026-10-01 UTC | gpt-6-astra | merged main e24231e → task/unimatch-redesign takeover | Owner provided 46-section Unimatch full redesign request and 18 references. Current tree matches main; source write-ahead recorded before UI edits. |
 
