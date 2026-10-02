@@ -6,7 +6,7 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-**Current holder: gpt-6-astra, 2026-10-02 UTC, task/reference-fact-recovery from origin/main b145da2.** Owner asks to configure search against certified reference facts; the earlier public-flow acceptance is insufficient for fact completeness.
+**Current holder: nobody; 2026-10-02 UTC, task/reference-fact-recovery, draft PR #41.** Owner asks to configure search against certified reference facts; the earlier public-flow acceptance is insufficient for fact completeness.
 
 **Current holder: nobody; public search release acceptance recorded, 2026-10-02 UTC, task/search-release-acceptance from main1aa188e.** PR #39 is merged after8 exact-head checks. Fly v5 runs the verified source on the original API/worker; catalogue501 and real UI-selected NTU search completed successfully (3 programmes,51 Claim records,21 pages,0 unreadable,about157s). Browser result reload, evidence and Save flow verified. Full details/limits: UNIMATCH_SEARCH_RELEASE_2026-10-02.md. Postmerge CI run36972183803 is linked there; metadata-only changes in this branch do not change the deployed application.
 
@@ -1748,7 +1748,7 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-**Next exact step ER-09:** Production `_recover_search_pages` continues reading alternatives/old PDFs after a fetched exact single-field identity is confirmed. With immutable bc84ccf baseline retained, add an opt-in early completion rule only after ontology identity YES and the requested degree are proven by page contents; preserve multi-field and ambiguous identities. Prove against frozen fetched pages and adversarial regressions, then run live paired/held-out only when the provider is available. Do not rerun throttled Exa or switch identities to evade429.
+**Next exact step ER-09, provider access pending:** The opt-in rule and offline frozen-prefix replay are implemented; default remains False.203 focused tests, Ruff/format and mypy327 pass. Configure a supported provider through deployment/local secrets, then run equal300s/60-read Groningen off/on captures (flag --finish-exact-single-field) and held-out universities before promotion. Do not rerun throttled Exa or switch identities to evade429. Offline independent work: inspect document/award mapping gaps and requirement persistence before slow downstream reads, with write-ahead and dedicated regressions. PR41 remains draft; reference gate13/62 FAIL; no merge/deploy. GitHub workflow update also needs a connection with workflow scope; saved patch remains unapplied.
 
 **Promotion write-ahead:** Refined ER-08 cold captures complete KAIST (4 predictions; admission-route exact-page reference hit) and Aalto (0 claims, no budget error). Original NU paired runs retain identical claims; METU is bounded and unavailable within the clock. Enable the narrowed admission-obligation rule, keep --no-admission-obligations for comparisons, and default live evaluation to the versioned observed identity aliases. The old reviewed gold/binding files remain byte-identical. Full 10-case baseline is11/62 with old mapping; pure NTU replay is16/62 with observed aliases (not new discovery). Repeat final gates before publishing a PR; search completeness remains FAIL.
 
@@ -3678,6 +3678,8 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**ER-09 offline checkpoint:**203 focused discovery/multifield/admission/reference tests pass; Ruff/format327 and mypy327 pass. Frozen real-response prefix:5 reads off,1 on, same first exact page, zero network. Defaultoff, no live/held-out improvement claimed. Strict reference gate still13/62 FAIL, exit2. Earlier full-suite results below remain distinct.
+
 **Latest gates:** final sourcebc84ccf backend2894passed/94.91%, Ruff/format327, mypy327. Additional reference-acceptance exact-alias test brings focused suite10passed (added after full-suite collection). Frontend232/type/lint/build passed; isolated demo Groningen top, one head d8e412c6a901. Exact-source reference13/62 FAIL; signedgold and oldreviewedbindings unchanged.
 
 **2026-10-02 reference checkpoint gates:** Initial full backend2885 passed/94.89%; Ruff325, mypy325; frontend typecheck/lint232 tests/build passed. New acceptance suite10 passed separately. Final promoted-source backend suite/mypy327 in progress. Isolated demo Groningen top; Alembic d8e412c6a901 one head. Strict ten-case reference gate exits2 at11/62, and at16/62 after separately labelled NTU identity replay. These are factual-quality failures, not failing unit tests.
@@ -4914,3 +4916,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 | 2026-10-02 UTC | gpt-6-astra | merged5a6edc9 -> task/unimatch-release-evidence | PR37 exact-head and actual-main gates passed; Fly v4 deployed same tree, both machines healthy. Public branded page/authenticated prior synthetic Find and bounded live Groningen worker canary verified. Fresh authenticated run remains blocked by Mac lock; release evidence and next step recorded. |
 
 | 2026-10-02 UTC | gpt-6-astra | merged4de769d -> task/local-university-search | Owner requests full search completion after supplied seed audit. Clean baseline, one migration head; importer/catalogue, local candidates, bounded live enrichment and outage/live acceptance next. |
+
+- 2026-10-02 gpt-6-astra: a1d4a00 -> ER-09 offline checkpoint; draft PR41 pushed, baton released pending provider configuration/live equal-budget proof. Reference13/62 FAIL; no production readiness or deployment asserted.

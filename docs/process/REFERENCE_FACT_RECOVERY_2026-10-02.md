@@ -66,8 +66,8 @@ adding no fact. It was narrowed to only the explicitly discovered obligation
 links. The narrowed Aalto repeat completed with zero claims and no budget error.
 NU's paired output retained the same claims. Both METU arms exhausted their
 300-second wall clock with zero predictions: this is an availability limit,
-not a positive held-out quality result. Further full-cohort verification is
-running on the promoted source; do not infer broad accuracy from these pilots.
+not a positive held-out quality result. The full-cohort repeat is recorded below; do not infer broad accuracy from
+these pilots.
 
 ### NTU: measurement repair, distinct from discovery improvement
 
@@ -130,3 +130,35 @@ Final local source gates at this checkpoint: Ruff/format, mypy327, **2894 backen
 passed /94.91%**; the10-test reference-acceptance suite including the subsequently
 added exact-alias check also passed. Frontend232/type/lint/build and isolated
 demo/one migration head passed. These do not override the failed reference gate.
+
+
+## ER-09 offline budget experiment — not promoted
+
+The opt-in `--finish-exact-single-field` requires the fetched page to be a
+programme, its degree to match, and existing ontology identity to return YES
+for the sole requested field. Listing titles and ambiguous/other-degree pages
+cannot end confirmation early. Multiple requested fields keep their existing
+shared exploration. The production constant remains **False**.
+
+The five completed Groningen confirmation reads from the exact-source repeat
+were replayed using their original Fetcher-cache bodies with zero network
+calls. Off: five reads, including the same programme with an English query
+parameter. On: one read, preserving the first official programme page.
+Historical read-time sums were 23.8s and 2.1s; these are **not measured live
+latency**, saved claim counts or a full frozen pipeline comparison. Search
+result titles were not recorded and are blank in both replay arms. The sixth
+read that hit the live deadline is not simulated. Body and log hashes are in
+`er09.frozen-prefix.json`; replay source and raw log are retained in ignored
+`artifacts/reference-facts-2026-10-02/er09/`.
+
+Latest focused verification: **203 tests passed** across discovery, multi-field,
+admission obligations and reference acceptance; Ruff/format and mypy327 pass.
+The earlier full-suite result remains separately dated above. The reference
+command still exits2 with **13/62**, capture errors and scored support/scope/value
+failures. PR #41 remains draft, with no merge or deployment from this branch.
+
+Next: after provider access is configured, run equal300s/60-read off/on captures
+for Groningen and independent universities using the recorded experiment flag.
+Before promotion, evaluate complete verified claims and source/scope regressions;
+a saved read alone cannot pass acceptance. The remaining document/award mappings
+and document-stage coverage also require source-backed work.

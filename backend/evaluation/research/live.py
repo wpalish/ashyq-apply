@@ -334,6 +334,7 @@ def main() -> None:
     parser.add_argument("--live", action="store_true", required=True)
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--case", choices=[*COHORT, *HELDOUT])
+    parser.add_argument("--finish-exact-single-field", action="store_true")
     parser.add_argument(
         "--admission-obligations",
         action=argparse.BooleanOptionalAction,
@@ -404,6 +405,7 @@ def main() -> None:
     search_provider = settings.search_provider
     print(f"search provider: {search_provider}", flush=True)
     if args.child:
+        live_discovery.FINISH_EXACT_SINGLE_FIELD = args.finish_exact_single_field
         live_discovery.ADMISSION_OBLIGATIONS = args.admission_obligations
         web_scholarships.SEARCH_FUNDING_FALLBACK = args.search_funding_fallback
         web_scholarships.TARGET_AWARD_SEARCH = args.target_award_search
@@ -465,6 +467,11 @@ def main() -> None:
                         "evaluation.research.live",
                         "--live",
                         "--child",
+                        *(
+                            ["--finish-exact-single-field"]
+                            if args.finish_exact_single_field
+                            else []
+                        ),
                         "--admission-obligations"
                         if args.admission_obligations
                         else "--no-admission-obligations",
@@ -533,6 +540,7 @@ def main() -> None:
                 "admission_lexicon": args.admission_lexicon,
                 "navigation_slot": args.navigation_slot,
                 "admission_obligations": args.admission_obligations,
+                "finish_exact_single_field": args.finish_exact_single_field,
                 "browser_enabled": False,
                 "cohort": list(COHORT),
                 "scope": "current production pipeline; HTTP-only bounded cold run",

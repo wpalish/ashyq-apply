@@ -157,6 +157,23 @@
       ],
       "policy_guard": "All reads remain behind Fetcher; no expected URLs/values imported into production, no gold edits, no new blind trace claimed.",
       "validation_artifact": "docs/process/REFERENCE_FACT_RECOVERY_2026-10-02.md"
+    },
+    {
+      "id": "ER-09",
+      "status": "candidate",
+      "case_ids": [
+        "groningen"
+      ],
+      "observation": "The exact-source live repeat fetched the matching bachelor programme at t257s, then spent its remaining deadline on alternative pages and old PDFs before persisting requirements. Offline replay of the five completed confirmation reads preserves the first exact page with one read versus five. This is a stage replay, not measured claim recovery.",
+      "proposed_rule": "For one requested field only, finish search confirmation after a fetched programme page proves both the requested degree and ontology identity YES. Ambiguous identities, listing titles and multiple requested fields keep existing exploration.",
+      "integration_seam": "LiveDiscoveryAdapter._recover_search_pages; FINISH_EXACT_SINGLE_FIELD remains False. Evaluation opt-in --finish-exact-single-field.",
+      "counterexample": "The first exact subject may lack useful requirements or name a different campus; alternatives might contain more complete evidence. Stage savings alone do not justify promotion.",
+      "falsification": "Require equal-budget live off/on captures and held-out source/scope review. Reject if official fact recall declines or unsupported/wrong-scope claims increase. HTTP429 currently prevents the live pair.",
+      "evidence_artifacts": [
+        "backend/evaluation/research/expert/data/runs.2026-10-02/er09.frozen-prefix.json"
+      ],
+      "policy_guard": "No gold production imports, provider retries, increased budget, or Fetcher bypass. Replay uses only prior Fetcher cache bodies and makes zero network calls.",
+      "validation_artifact": "backend/tests/test_search_identity_recovery.py"
     }
   ]
 }

@@ -112,6 +112,8 @@ SKIP_REFUSED_SEARCH_HOSTS = False
 NAVIGATION_SLOT = False
 #: ER-08: keep admission evidence separate from programme confirmation.
 ADMISSION_OBLIGATIONS = True
+#: ER-09: reserve verification time once a single exact programme is proven.
+FINISH_EXACT_SINGLE_FIELD = False
 #: Pages walked during the navigation fallback. Universities routinely nest
 #: "Degree programmes" -> "Bachelor programmes" -> a programme, so one hop is
 #: not enough; an unbounded walk would be a crawl.
@@ -1704,6 +1706,8 @@ class LiveDiscoveryAdapter:
             _LISTING_PAGE_TYPES,
             _listed_programme,
         )
+        from app.adapters.search.ontology import titles_name_same_programme
+        from app.domain.programme_identity import Verdict
 
         fields = _public_requested_fields(profile, trace)
         multi_requested = len(_distinct_fields(list(profile.context.intended_fields))) > 1
@@ -1808,6 +1812,18 @@ class LiveDiscoveryAdapter:
                 continue
             pages.append(found.url)
             added += 1
+            if (
+                FINISH_EXACT_SINGLE_FIELD
+                and not multi_requested
+                and len(fields) == 1
+                and basis == "classified_programme_page"
+                and titles_name_same_programme(matched_subject, fields[0]) is Verdict.YES
+            ):
+                trace.errors.append(
+                    "Exact single-field programme confirmed from its page; "
+                    "remaining alternative reads deferred to preserve verification budget."
+                )
+                break
             if multi_requested:
                 _remember_field_source(
                     trace,
