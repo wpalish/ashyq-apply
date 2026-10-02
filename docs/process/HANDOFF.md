@@ -6,7 +6,7 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-**Current holder: gpt-6-astra, 2026-10-02 UTC, `task/local-university-search` from `origin/main@4de769d`.** Owner explicitly authorizes finishing search, including the supplied 500-university local knowledge layer. Tree clean, no unpushed work, one Alembic head `c5d01b7e4f83`. Preserve curated identities, scoped official claims and all ranking/privacy invariants.
+**Current holder: gpt-6-astra, 2026-10-02 UTC, `task/local-university-search` from `origin/main@4de769d`.** Owner explicitly authorizes finishing search, including the supplied 500-university local knowledge layer. Takeover `5336006`; local catalogue implementation checkpoint in progress, migration head `d8e412c6a901`. Preserve curated identities, scoped official claims and all ranking/privacy invariants.
 
 **Current holder: gpt-6-astra, 2026-10-02 UTC, branch `task/unimatch-release-evidence` from merged `origin/main@5a6edc9`.** PR #37 is merged and Fly v4 runs that exact tree. This branch records the release and its remaining acceptance limit. The prior `task/unimatch-redesign` baton below is historical. No product code changes are planned without a reproduced postrelease fault.
 
@@ -3619,6 +3619,9 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**Local catalogue checkpoint, 2026-10-02:** new 22 backend regressions pass, including migrated real PostgreSQL import, idempotence, history, outage, selected-run routing and privacy guards. Ruff and mypy302 pass. Frontend typecheck/lint and231 tests pass; production build and full backend coverage gates in progress. No known failing tests; full gates not yet complete, so checkpoint is wip. Public browser session expired; user asked asynchronously to sign in, while implementation/CI work continues. No production changes yet.
+
+
 **Unimatch final local candidate, 2026-10-02:** frontend typecheck/lint pass, 227 unit tests/27 files and production build pass. Full Playwright suite: **77 passed, 1 intentional desktop-only skip** across desktop and mobile; auth Playwright **6 passed** after matching the new public/auth/profile journey. Axe serious/critical violations zero on eight reachable workflow screens, no document overflow at 320/768/1024/1440 px, console error check green. Backend source unchanged since the green `4f5a67b` Ruff/check-format/mypy and pytest 2,844/94.92% gate. `git diff --check` clean. These are local and isolated-demo results, not public provider acceptance.
 
 **Unimatch release gate and live proof, 2026-10-02:** final head `0c28884` had 8/8 checks green across push `36939543613` and PR `36939548055`; squash merge `5a6edc9` has actual-main run `36941419007` 4/4 green and the same Git tree `42406f1b6071268b50335c97743d6bf8a84187fe`. Fly v4 deployed image `sha256:62045be818803646ab91cbd50040e3db9de0ec7fa449cd532755b51f55cbb916` to the original one app/one worker, release migration completed, both started/healthy. Public `/api/health` reports status/database ok, demo false, robots/browser tier true; branded landing and authenticated synthetic Find were visible. Worker Exa MCP 3 official Groningen URLs; isolated live canary reached 1/1, programme+scholarship pages, 3 claims/17% completeness, 0 structural false positives, one malformed provider answer among six identity queries. A fresh authenticated UI run remains pending on Mac unlock.
@@ -4352,6 +4355,9 @@ next agent does not reopen it.
   they are; do not rewrite that history.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
+
+- 2026-10-02 local catalogue: migration `d8e412c6a901` adds `universities`, immutable `university_observations` and nullable `research_runs.university_ids`. Authenticated `GET /api/universities` supports q/country/profile_id/limit/offset; seed fields explicitly remain unverified. `POST /api/runs` optionally accepts validated university_ids, forces live mode, preserves existing quotas/idempotency. Startup imports500 hints+19curated identities into501 institutions under an import transaction lock. Existing Claims/scoring contracts unchanged.
+
 
 - 2026-10-02: `GET /api/social/people/{id}` PersonCard now includes viewer-specific `can_message: boolean`; it reveals only whether the current viewer can start or continue a conversation. It does not expose private applicant case fields. No migration.
 

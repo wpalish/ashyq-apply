@@ -137,6 +137,11 @@ def init_db(*, auto_migrate: bool | None = None) -> None:
         if session.query(SchemaVersion).first() is None:
             session.add(SchemaVersion(version=CURRENT_SCHEMA_VERSION))
 
+    from app.catalogue.importer import import_catalogue
+
+    with session_scope() as session:
+        import_catalogue(session)
+
 
 def create_all_for_tests(target: Engine) -> None:
     """Create the schema directly. Test setup only.

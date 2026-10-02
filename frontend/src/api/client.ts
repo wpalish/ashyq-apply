@@ -152,6 +152,8 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 export const api = {
+  universities: (params: { q?: string; country?: string; profile_id?: string; offset?: number } = {}) =>
+    request<UniversityCatalogue>(`/api/universities${query({ ...params, offset: params.offset?.toString() })}`),
   authStatus: () => request<AuthStatus>('/api/auth/status'),
   register: (payload: { email: string; password: string; display_name: string; organization_name: string }) =>
     request<AuthPrincipal>('/api/auth/register', { method: 'POST', body: JSON.stringify(payload) }),
@@ -235,10 +237,10 @@ export const api = {
 
   // The key makes a retried request replay its own run instead of starting a
   // second one; the caller keeps it stable for as long as one click lasts.
-  startRun: (profileId: string, demoMode: boolean, idempotencyKey?: string) =>
+  startRun: (profileId: string, demoMode: boolean, idempotencyKey?: string, universityIds?: string[]) =>
     request<RunView>('/api/runs', {
       method: 'POST',
-      body: JSON.stringify({ profile_id: profileId, demo_mode: demoMode }),
+      body: JSON.stringify({ profile_id: profileId, demo_mode: demoMode, ...(universityIds ? { university_ids: universityIds } : {}) }),
       headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : {},
     }),
   // Filtered server-side: switchCase used to pull fifty runs across every
@@ -423,3 +425,30 @@ export const api = {
       body: JSON.stringify({ body }),
     }),
 };
+
+export interface UniversityCandidate {
+  id: string;
+  name: string;
+  country: string;
+  city: string;
+  aliases: string[];
+  domain: string | null;
+  domain_status: string;
+  identity_status: string;
+  programme_status: string;
+  admissions_status: string;
+  tuition_status: string;
+  funding_status: string;
+  seed_tuition_usd: { min: number; max: number; quality: string } | null;
+  seed_ranking: { year: number; rank: string; status: string } | null;
+  seed_version: string | null;
+  observed_at: null;
+  sources: Record<string, string>;
+}
+export interface UniversityCatalogue {
+  items: UniversityCandidate[];
+  total: number;
+  catalogue_total: number;
+  seed_count: number;
+  countries: string[];
+}

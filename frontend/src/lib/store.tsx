@@ -65,7 +65,7 @@ export interface Store {
   loading: boolean;
   error: string | null;
   saveProfile: () => Promise<void>;
-  startRun: (demoMode: boolean) => Promise<void>;
+  startRun: (demoMode: boolean, universityIds?: string[]) => Promise<void>;
   cancelRun: () => Promise<void>;
   retryRun: (stage?: string) => Promise<void>;
   recheckNow: () => Promise<void>;
@@ -618,7 +618,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     writePointer('run', null);
   }, []);
 
-  const startRun = useCallback(async (demoMode: boolean) => {
+  const startRun = useCallback(async (demoMode: boolean, universityIds?: string[]) => {
     const gen = ++opGenRef.current;
     setLoading(true);
     setError(null);
@@ -638,7 +638,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         await api.updateProfile(profile.id, profileDraft);
         if (gen !== opGenRef.current) return;
       }
-      const started = await api.startRun(profile.id, demoMode, crypto.randomUUID());
+      const requestKey = crypto.randomUUID();
+      const started = universityIds
+        ? await api.startRun(profile.id, demoMode, requestKey, universityIds)
+        : await api.startRun(profile.id, demoMode, requestKey);
       if (gen !== opGenRef.current) return;
       setRun(started);
       setResults([]);

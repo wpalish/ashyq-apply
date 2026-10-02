@@ -11,6 +11,7 @@
 import { Fragment, useMemo, useState } from 'react';
 import { ResultDetail } from '@/components/ResultDetail';
 import { ComparePanel } from '@/components/ComparePanel';
+import { UniversityCatalogue } from '@/components/UniversityCatalogue';
 import { Chip, Empty, Field, Notice, Panel, StatusChip } from '@/components/primitives';
 import {
   FIT_DISCLAIMER, STATUS_LABEL, admissionsFitTone, bucketTone, date, eligibilityTone,
@@ -37,7 +38,7 @@ const SET_ASIDE_HINT: Record<string, string> = {
 //: stays available because these will never cover every case.
 const REJECTION_REASONS = ['cost', 'deadline passed', 'no funding', 'not a fit'];
 
-export function ShortlistScreen({ onStart }: { onStart?: () => void }) {
+export function ShortlistScreen({ onStart, onProgress }: { onStart?: () => void; onProgress?: () => void }) {
   const { results, summary, shortlist, decide, saveNotes } = useStore();
   const [expanded, setExpanded] = useState<string | null>(null);
   const [cardExpanded, setCardExpanded] = useState<string | null>(null);
@@ -97,6 +98,7 @@ export function ShortlistScreen({ onStart }: { onStart?: () => void }) {
       <div className="find-page">
         <div className="screen__head"><p className="screen__eyebrow">FIND YOUR PATH</p><h1 className="screen__title">Find your best <span className="find-yellow">matches.</span></h1><p className="screen__lede">Research begins with your profile and preferences.</p></div>
         <div className="find-empty"><Empty title="No results yet">Start research to find programmes supported by available sources.</Empty>{onStart && <button className="btn btn--primary" type="button" onClick={onStart}>Start research →</button>}</div>
+        <UniversityCatalogue onStart={onStart} onProgress={onProgress} />
       </div>
     );
   }
@@ -355,6 +357,7 @@ export function ShortlistScreen({ onStart }: { onStart?: () => void }) {
 
   return (
     <div className="find-page">
+      <details className="catalogue-expand"><summary>Explore more universities from the local catalogue</summary><UniversityCatalogue onStart={onStart} onProgress={onProgress} /></details>
       <div className="find-hero">
         <div className="screen__head">
           <p className="screen__eyebrow">GLOBAL OPPORTUNITIES. REAL MATCHES.</p>
