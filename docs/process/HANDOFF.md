@@ -6,7 +6,7 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-**Current holder: nobody; 2026-10-03 UTC, task/reference-fact-recovery, source01e44df, draft PR #41.** Owner asks to configure search against certified reference facts; the earlier public-flow acceptance is insufficient for fact completeness.
+**Current holder: gpt-6-astra; resumed2026-10-03 UTC at f2c4cfe, task/reference-fact-recovery, draft PR #41.** Owner asks to configure search against certified reference facts; the earlier public-flow acceptance is insufficient for fact completeness.
 
 **Current holder: nobody; public search release acceptance recorded, 2026-10-02 UTC, task/search-release-acceptance from main1aa188e.** PR #39 is merged after8 exact-head checks. Fly v5 runs the verified source on the original API/worker; catalogue501 and real UI-selected NTU search completed successfully (3 programmes,51 Claim records,21 pages,0 unreadable,about157s). Browser result reload, evidence and Save flow verified. Full details/limits: UNIMATCH_SEARCH_RELEASE_2026-10-02.md. Postmerge CI run36972183803 is linked there; metadata-only changes in this branch do not change the deployed application.
 
@@ -1749,6 +1749,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**Write-ahead document reference recovery:** Diagnose stored NTU award and Groningen document responses with the normal WebDocumentsAdapter. Keep original signed gold/bindings unchanged. First measure current emitted document names/values/scope and exact source identity. Add observed exact document bindings only where the fetched page proves the subject; record pure mapping effects separately. For missing condition fields, use generic structured values with complete quoted conditions and adversarial tests; do not turn conditional/optional paperwork into unconditional requirements. Keep post-approval document collection distinct from pre-decision search. All fresh source reads via Fetcher are evaluator diagnostics, not blind/equal-budget discovery evidence.
 
 **Next exact step after ER-10 gates:** Guarded requirement/cost checkpoints and real-page durability proof are pushed as01e44df. Diagnose the11 unreachable reference keys without altering signed gold:10 unbound document/award identities,1 unmapped translation condition. Exact list in expressibility output/report; first inspect source-backed document values and collect_documents lifecycle (pre-decision captures do not call it). Version observed identity additions separately from extraction changes; preserve all conditions. A direct gold-URL read is evaluator diagnosis, never blind discovery or equal-budget live improvement. ER-09 remains defaultoff until provider-backed same-budget pairs and held-out checks.
 
@@ -4928,3 +4930,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 - 2026-10-02 gpt-6-astra resumed d4729eb: previous goal turn made progress (pushed calibration/ER09 evidence). Provider429 still limits live pairs, but evidence durability and mapping work remain actionable offline.
 
 - 2026-10-03 gpt-6-astra:8f866de ->01e44df guarded evidence durability pushed in PR41;2910/94.92% full gates pass. Baton released; next11 unreachable document/award keys. Reference13/62 remains incomplete; no deployment.
+
+- 2026-10-03 gpt-6-astra resumed f2c4cfe for owner-directed document/award fact recovery; working tree clean, origin synchronized.
