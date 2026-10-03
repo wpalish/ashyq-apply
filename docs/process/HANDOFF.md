@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**Current holder: gpt-6-astra, 2026-10-04 UTC, task/top500-expert-audit from144881b.** Owner requests ten expert subagents covering all500 seed universities, evenly distributed, to identify general algorithm improvements. This supersedes the next-step order for this audit only. Three child concurrency slots; ten assignments run in waves.
+
 **Current holder: nobody; source baton released after ER15,2026-10-03.** Sourceadf2f9f is pushed in draftPR41. Main benchmark37110018701 complete6/62; PR41 full120s benchmark37111364718 complete13/62 with different observed bindings. ER15 actual-row red/green and full2969/94.95% pass; fresh run37112534809 recovers both diploma forms via direct oracle, while blind Groningen stays0/11. Task3 awaits owner normal Unimatch sign-in, email provided privately (never commit it). No existing account deletion, production configuration or deployment. General search acceptance remains failed.
 
 **Current holder: nobody; public search release acceptance recorded, 2026-10-02 UTC, task/search-release-acceptance from main1aa188e.** PR #39 is merged after8 exact-head checks. Fly v5 runs the verified source on the original API/worker; catalogue501 and real UI-selected NTU search completed successfully (3 programmes,51 Claim records,21 pages,0 unreadable,about157s). Browser result reload, evidence and Save flow verified. Full details/limits: UNIMATCH_SEARCH_RELEASE_2026-10-02.md. Postmerge CI run36972183803 is linked there; metadata-only changes in this branch do not change the deployed application.
@@ -46,6 +48,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**Top500 expert algorithm audit, in progress.** Ten disjoint50-university packets, rank-stratified by list position modulo10. Audit actual local retrieval and discovery/identity logic. Findings must include reproducible evidence, limitations and falsifiable equal-budget experiment proposals. This is a non-blind engineering audit, not a certified500-university fact corpus or live end-to-end acceptance.
 
 **Reference calibration checkpoint, in progress (not ready for production release).** Current exact-source full repeatbc84ccf scored13/62, compared with11/62 original mapping and16/62 same-raw identity replay. ProviderHTTP429 removed Warsaw search; Groningen timed out after reading a correct page. Unit gates pass but fact acceptance fails. No claim of full-cohort improvement or product completion; continue offline budget recovery while provider access is pending.
 
@@ -1760,6 +1764,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**Top500 write-ahead:** prepare docs/process/top500-expert-audit-2026-10-04/ packets and manifest; run ten expert tasks in waves of at most three, each owns only its group report/rows/reproduction script. Parent validates500 unique coverage, reproduces leading findings and writes a prioritized cross-group synthesis. No production settings, reviewed labels, existing PR41 source or provider quota are changed. Any live run must obey existing Fetcher and quota controls; lack of live proof stays explicit.
 
 **Current next step after adf2f9f and live37112534809:** owner completes normal sign-in in the prepared Unimatch Chrome tab. Then create ONLY a disposable new brief-profile record (bachelor/CS/fall2027/IELTS7/USD15000), run public research once, count institutions against registry19 and rows with official program_url, preserve errors, and delete only that new test profile. Never delete the owner's existing account. Supplied live_check.py is absent; implement a normal authenticated equivalent or use UI, no auth bypass. If provider429/402 occurs, stop instead of retry. Source work next: ER14 bounded catalogue routing, starting from frozen actual pages and red regression; current Groningen hits115s before any search. Also diagnose true remaining value_missing separately from the oracle's award-only document path and outdated identity bindings. Do not repeat NTU public acceptance or call the product complete. Final source CI may still be running; inspect PR41 exact selected head before requesting owner review.
 
@@ -4839,7 +4845,9 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 
 `[0.8]` → `[1.1]` → `[1.2]` → `[1.3]` → `[1.4]` → `[2.1]` → `[2.2]` → `[2.3]` → `[3.1]` → `[3.2]` → `[4.1]` → `[4.2]` → `[5]`
 
-## 11. Session log (one line per session, newest last)
+## 11. Session log
+
+- 2026-10-04 gpt-6-astra:144881b → top500 expert audit takeover; owner explicitly authorizes10 subagent assignments,50 universities each. (one line per session, newest last)
 
 2026-10-02 — gpt-6-astra takes certified-reference recovery baton from main b145da2; public runtime release remains unchanged while measuring.
 
