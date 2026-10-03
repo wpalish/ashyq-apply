@@ -1,0 +1,5810 @@
+{
+  "group": 8,
+  "source_sha": "144881b",
+  "seed_sha256": "5ab134e331add59884ff5bca548dc17d5a428a7a5d69fdec09c7863babe08a58",
+  "summary": {
+    "assigned": 50,
+    "import": {
+      "seed_records": 500,
+      "universities": 501,
+      "new_observations": 500
+    },
+    "route_counts": {
+      "generic_identity": 47,
+      "curated": 3
+    },
+    "domain_status_counts": {
+      "seed": 36,
+      "unknown": 11,
+      "curated": 3
+    },
+    "exact_target_found": 50,
+    "exact_ambiguous": 4,
+    "canonical_ambiguous": 5,
+    "query_tests": 266,
+    "alias_query_failures": 0,
+    "candidate_exposure_40": 7,
+    "enrichment_exposure_20": 3,
+    "identical_skip_attempt_trace": 50,
+    "duplicate_probe_hint": 0,
+    "live_checked": 0
+  },
+  "rows": [
+    {
+      "seed_id": "qs2027-008",
+      "name": "ETH Zurich",
+      "university_id": "3fe04ca46c69b1381975b9af3edd4e91",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "ETH Zurich",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "ETH Zurich",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "eth zurich",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "Zurich ETH",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "ETH Zurich",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": "ethz.ch",
+      "domain_status": "seed",
+      "official_site_hint": "http://www.ethz.ch/",
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "ETH Zurich",
+          "domain": "ethz.ch",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for ETH Zurich; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 84,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-018",
+      "name": "The Chinese University of Hong Kong (CUHK)",
+      "university_id": "e7f86ebb4476371393a174634262f5e6",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "The Chinese University of Hong Kong (CUHK)",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "The Chinese University of Hong Kong",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "the chinese university of hong kong",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "Kong Hong of University Chinese The",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "CUHK",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        {
+          "query": "The Chinese University of Hong Kong",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        {
+          "query": "The Chinese University of Hong Kong (CUHK)",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": "cuhk.edu.cn",
+      "domain_status": "seed",
+      "official_site_hint": "https://www.cuhk.edu.cn/",
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "The Chinese University of Hong Kong",
+          "domain": "cuhk.edu.cn",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for The Chinese University of Hong Kong; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 275,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-028",
+      "name": "The University of Sydney",
+      "university_id": "5ed5ddefda59da73ed44f06027f8f32d",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "The University of Sydney",
+          "target_found": true,
+          "target_position": 2,
+          "result_count": 2,
+          "other_names": [
+            "The University of New South Wales"
+          ]
+        },
+        "canonical": {
+          "query": "The University of Sydney",
+          "target_found": true,
+          "target_position": 2,
+          "result_count": 2,
+          "other_names": [
+            "The University of New South Wales"
+          ]
+        },
+        "normalized": {
+          "query": "the university of sydney",
+          "target_found": true,
+          "target_position": 2,
+          "result_count": 2,
+          "other_names": [
+            "The University of New South Wales"
+          ]
+        },
+        "reordered": {
+          "query": "Sydney of University The",
+          "target_found": true,
+          "target_position": 2,
+          "result_count": 2,
+          "other_names": [
+            "The University of New South Wales"
+          ]
+        }
+      },
+      "aliases": [
+        {
+          "query": "The University of Sydney",
+          "target_found": true,
+          "target_position": 2,
+          "result_count": 2,
+          "other_names": [
+            "The University of New South Wales"
+          ]
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": null,
+      "domain_status": "unknown",
+      "official_site_hint": null,
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "The University of Sydney",
+          "domain": "",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for The University of Sydney; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 292,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation.",
+        "No imported domain hint; this is missing metadata, not an observed failed crawl.",
+        "Exact seed query matches additional identities."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-038",
+      "name": "Seoul National University",
+      "university_id": "1cf697afc142d5d5bc8403c37cac546c",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Seoul National University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Seoul National University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "seoul national university",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "University National Seoul",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Seoul National University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": null,
+      "domain_status": "unknown",
+      "official_site_hint": null,
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "Seoul National University",
+          "domain": "",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for Seoul National University; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 235,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation.",
+        "No imported domain hint; this is missing metadata, not an observed failed crawl."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-048",
+      "name": "Delft University of Technology",
+      "university_id": "24623341ce2244aaafc2576a3b52e15f",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Delft University of Technology",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Delft University of Technology",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "delft university of technology",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "Technology of University Delft",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Delft University of Technology",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": "tudelft.nl",
+      "domain_status": "curated",
+      "official_site_hint": "http://www.tudelft.nl/",
+      "duplicate_probe_hint": false,
+      "discovery_route": "curated",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 0,
+        "discover_one_calls": 1,
+        "trace": {
+          "institution": "Delft University of Technology",
+          "domain": "tudelft.nl",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 3,
+        "candidate_in_40": true,
+        "enrichment_in_20": true
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-058",
+      "name": "New York University (NYU)",
+      "university_id": "37749f806b4e1c49cff0dc7ccfb2ae8d",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "New York University (NYU)",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "New York University",
+          "target_found": true,
+          "target_position": 2,
+          "result_count": 3,
+          "other_names": [
+            "Columbia University",
+            "Stony Brook University, State University of New York"
+          ]
+        },
+        "normalized": {
+          "query": "new york university",
+          "target_found": true,
+          "target_position": 2,
+          "result_count": 3,
+          "other_names": [
+            "Columbia University",
+            "Stony Brook University, State University of New York"
+          ]
+        },
+        "reordered": {
+          "query": "University York New",
+          "target_found": true,
+          "target_position": 2,
+          "result_count": 3,
+          "other_names": [
+            "Columbia University",
+            "Stony Brook University, State University of New York"
+          ]
+        }
+      },
+      "aliases": [
+        {
+          "query": "NYU",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        {
+          "query": "New York University",
+          "target_found": true,
+          "target_position": 2,
+          "result_count": 3,
+          "other_names": [
+            "Columbia University",
+            "Stony Brook University, State University of New York"
+          ]
+        },
+        {
+          "query": "New York University (NYU)",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": "nyu.edu",
+      "domain_status": "seed",
+      "official_site_hint": "http://www.nyu.edu/",
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "New York University",
+          "domain": "nyu.edu",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for New York University; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 194,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-068",
+      "name": "The University of Warwick",
+      "university_id": "257424770b979125723203d672d718ea",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "The University of Warwick",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "The University of Warwick",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "the university of warwick",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "Warwick of University The",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "The University of Warwick",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": null,
+      "domain_status": "unknown",
+      "official_site_hint": null,
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "The University of Warwick",
+          "domain": "",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for The University of Warwick; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 294,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation.",
+        "No imported domain hint; this is missing metadata, not an observed failed crawl."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-078",
+      "name": "University of Leeds",
+      "university_id": "a1c9a419abe5ceaa2979a6cd7b44bf9e",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "University of Leeds",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "University of Leeds",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "university of leeds",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "Leeds of University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "University of Leeds",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": "leeds.ac.uk",
+      "domain_status": "seed",
+      "official_site_hint": "http://www.leeds.ac.uk/",
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "University of Leeds",
+          "domain": "leeds.ac.uk",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for University of Leeds; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 418,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-088",
+      "name": "University of Technology Sydney",
+      "university_id": "0a5e2d39f6f0c913be2819b3cbe9ed69",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "University of Technology Sydney",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "University of Technology Sydney",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "university of technology sydney",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "Sydney Technology of University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "University of Technology Sydney",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": "uts.edu.au",
+      "domain_status": "seed",
+      "official_site_hint": "http://www.uts.edu.au/",
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "University of Technology Sydney",
+          "domain": "uts.edu.au",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for University of Technology Sydney; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 463,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-098",
+      "name": "University of Nottingham",
+      "university_id": "b1166172d978ac41382d445a45289ca1",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "University of Nottingham",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "University of Nottingham",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "university of nottingham",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "Nottingham of University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "University of Nottingham",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": "nottingham.ac.uk",
+      "domain_status": "seed",
+      "official_site_hint": "http://www.nottingham.ac.uk/",
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "University of Nottingham",
+          "domain": "nottingham.ac.uk",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for University of Nottingham; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 436,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-108",
+      "name": "King Saud University",
+      "university_id": "60e087ecca4b4266c05263cbb7323251",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "King Saud University",
+          "target_found": true,
+          "target_position": 2,
+          "result_count": 2,
+          "other_names": [
+            "King Abdulaziz University"
+          ]
+        },
+        "canonical": {
+          "query": "King Saud University",
+          "target_found": true,
+          "target_position": 2,
+          "result_count": 2,
+          "other_names": [
+            "King Abdulaziz University"
+          ]
+        },
+        "normalized": {
+          "query": "king saud university",
+          "target_found": true,
+          "target_position": 2,
+          "result_count": 2,
+          "other_names": [
+            "King Abdulaziz University"
+          ]
+        },
+        "reordered": {
+          "query": "University Saud King",
+          "target_found": true,
+          "target_position": 2,
+          "result_count": 2,
+          "other_names": [
+            "King Abdulaziz University"
+          ]
+        }
+      },
+      "aliases": [
+        {
+          "query": "King Saud University",
+          "target_found": true,
+          "target_position": 2,
+          "result_count": 2,
+          "other_names": [
+            "King Abdulaziz University"
+          ]
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": "ksu.edu.sa",
+      "domain_status": "seed",
+      "official_site_hint": "http://www.ksu.edu.sa/",
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "King Saud University",
+          "domain": "ksu.edu.sa",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for King Saud University; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 145,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation.",
+        "Exact seed query matches additional identities."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-118",
+      "name": "Indian Institute of Technology Delhi (IITD)",
+      "university_id": "cb593c614b4f80c2b9d4a7746e7a90ab",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Indian Institute of Technology Delhi (IITD)",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Indian Institute of Technology Delhi",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "indian institute of technology delhi",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "Delhi Technology of Institute Indian",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "IITD",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        {
+          "query": "Indian Institute of Technology Delhi",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        {
+          "query": "Indian Institute of Technology Delhi (IITD)",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": "ernet.in",
+      "domain_status": "seed",
+      "official_site_hint": "http://www.iitd.ernet.in/",
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "Indian Institute of Technology Delhi",
+          "domain": "ernet.in",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for Indian Institute of Technology Delhi; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 116,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-128",
+      "name": "Aarhus University",
+      "university_id": "4ce9c9d718ddb14f7ed20598e46703f5",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Aarhus University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Aarhus University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "aarhus university",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "University Aarhus",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Aarhus University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": "au.dk",
+      "domain_status": "seed",
+      "official_site_hint": "http://www.au.dk/",
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "Aarhus University",
+          "domain": "au.dk",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for Aarhus University; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 21,
+        "candidate_in_40": true,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-138",
+      "name": "Universiti Putra Malaysia (UPM)",
+      "university_id": "67a4a1b13e5b866ddf2df2bf1c7d87fe",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Universiti Putra Malaysia (UPM)",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Universiti Putra Malaysia",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "universiti putra malaysia",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "Malaysia Putra Universiti",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "UPM",
+          "target_found": true,
+          "target_position": 3,
+          "result_count": 3,
+          "other_names": [
+            "KFUPM",
+            "Universidad Politécnica de Madrid"
+          ]
+        },
+        {
+          "query": "Universiti Putra Malaysia",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        {
+          "query": "Universiti Putra Malaysia (UPM)",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": "upm.edu.my",
+      "domain_status": "seed",
+      "official_site_hint": "http://www.upm.edu.my/",
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "Universiti Putra Malaysia",
+          "domain": "upm.edu.my",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for Universiti Putra Malaysia; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 357,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-148",
+      "name": "Erasmus University Rotterdam",
+      "university_id": "748cc394beda4d5b3a4ca94244abcf82",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Erasmus University Rotterdam",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Erasmus University Rotterdam",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "erasmus university rotterdam",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "Rotterdam University Erasmus",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Erasmus University Rotterdam",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": "eur.nl",
+      "domain_status": "seed",
+      "official_site_hint": "http://www.eur.nl/",
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "Erasmus University Rotterdam",
+          "domain": "eur.nl",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for Erasmus University Rotterdam; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 82,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-158",
+      "name": "Technische Universität Berlin (TU Berlin)",
+      "university_id": "d8383697252a77e5a43c12682318322f",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Technische Universität Berlin (TU Berlin)",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Technische Universität Berlin",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "technische universitat berlin",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "Berlin Universität Technische",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "TU Berlin",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        {
+          "query": "Technische Universität Berlin",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        {
+          "query": "Technische Universität Berlin (TU Berlin)",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": "tu-berlin.de",
+      "domain_status": "seed",
+      "official_site_hint": "http://www.tu-berlin.de/",
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "Technische Universität Berlin",
+          "domain": "tu-berlin.de",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for Technische Universität Berlin; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 268,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-168",
+      "name": "University of Geneva",
+      "university_id": "3bcaf0b353a39f5498f422207827f9a8",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "University of Geneva",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "University of Geneva",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "university of geneva",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "Geneva of University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "University of Geneva",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": "unige.ch",
+      "domain_status": "seed",
+      "official_site_hint": "http://www.unige.ch/",
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "University of Geneva",
+          "domain": "unige.ch",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for University of Geneva; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 406,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-178",
+      "name": "National Yang Ming Chiao Tung University (NYCU Taiwan)",
+      "university_id": "4b3f9c3e1e1d235c8f5e6a6fe773ef63",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "National Yang Ming Chiao Tung University (NYCU Taiwan)",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "National Yang Ming Chiao Tung University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "national yang ming chiao tung university",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "University Tung Chiao Ming Yang National",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "NYCU Taiwan",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        {
+          "query": "National Yang Ming Chiao Tung University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        {
+          "query": "National Yang Ming Chiao Tung University (NYCU Taiwan)",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": null,
+      "domain_status": "unknown",
+      "official_site_hint": null,
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "National Yang Ming Chiao Tung University",
+          "domain": "",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for National Yang Ming Chiao Tung University; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 193,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation.",
+        "No imported domain hint; this is missing metadata, not an observed failed crawl."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-188",
+      "name": "Tecnológico de Monterrey",
+      "university_id": "6c314cc7eba44d410235a20809c20b1b",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Tecnológico de Monterrey",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Tecnológico de Monterrey",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "tecnologico de monterrey",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "Monterrey de Tecnológico",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Tecnológico de Monterrey",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": "tec.mx",
+      "domain_status": "seed",
+      "official_site_hint": "https://www.tec.mx/",
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "Tecnológico de Monterrey",
+          "domain": "tec.mx",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for Tecnológico de Monterrey; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 271,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-198",
+      "name": "University of Otago",
+      "university_id": "a2bb16c7d7c2209fea82e154b432d810",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "University of Otago",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "University of Otago",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "university of otago",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "Otago of University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "University of Otago",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": "otago.ac.nz",
+      "domain_status": "seed",
+      "official_site_hint": "http://www.otago.ac.nz/",
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "University of Otago",
+          "domain": "otago.ac.nz",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for University of Otago; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 438,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-208",
+      "name": "Tel Aviv University",
+      "university_id": "c8c1cd5229d725ed04f964b04c31b520",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Tel Aviv University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Tel Aviv University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "tel aviv university",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "University Aviv Tel",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Tel Aviv University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": "tau.ac.il",
+      "domain_status": "seed",
+      "official_site_hint": "http://www.tau.ac.il/",
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "Tel Aviv University",
+          "domain": "tau.ac.il",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for Tel Aviv University; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 272,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-218",
+      "name": "Friedrich-Alexander-Universität Erlangen-Nürnberg",
+      "university_id": "8307813f5dd75abb01294148adfb3564",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Friedrich-Alexander-Universität Erlangen-Nürnberg",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Friedrich-Alexander-Universität Erlangen-Nürnberg",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "friedrich alexander universitat erlangen nurnberg",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "Erlangen-Nürnberg Friedrich-Alexander-Universität",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Friedrich-Alexander-Universität Erlangen-Nürnberg",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": "fau.de",
+      "domain_status": "seed",
+      "official_site_hint": "https://www.fau.de/",
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "Friedrich-Alexander-Universität Erlangen-Nürnberg",
+          "domain": "fau.de",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for Friedrich-Alexander-Universität Erlangen-Nürnberg; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 88,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-228",
+      "name": "University of Florida",
+      "university_id": "96a3be8d93b57d4043395ab4a1492187",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "University of Florida",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "University of Florida",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "university of florida",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "Florida of University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "University of Florida",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": "ufl.edu",
+      "domain_status": "seed",
+      "official_site_hint": "http://www.ufl.edu/",
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "University of Florida",
+          "domain": "ufl.edu",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for University of Florida; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 404,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-238",
+      "name": "University of Lisbon",
+      "university_id": "a3865d96e2580e8b00c47bbc177eab71",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "University of Lisbon",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "University of Lisbon",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "university of lisbon",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "Lisbon of University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "University of Lisbon",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": null,
+      "domain_status": "unknown",
+      "official_site_hint": null,
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "University of Lisbon",
+          "domain": "",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for University of Lisbon; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 421,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation.",
+        "No imported domain hint; this is missing metadata, not an observed failed crawl."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-248",
+      "name": "Universite libre de Bruxelles",
+      "university_id": "aa6bad75d1c3ed6c96601a1c53a3b150",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Universite libre de Bruxelles",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Universite libre de Bruxelles",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "universite libre de bruxelles",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "Bruxelles de libre Universite",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Universite libre de Bruxelles",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": "ulb.be",
+      "domain_status": "seed",
+      "official_site_hint": "https://www.ulb.be/",
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "Universite libre de Bruxelles",
+          "domain": "ulb.be",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for Universite libre de Bruxelles; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 349,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-258",
+      "name": "American University of Sharjah",
+      "university_id": "54a0947de30f6266f328799d52955748",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "American University of Sharjah",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "American University of Sharjah",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "american university of sharjah",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "Sharjah of University American",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "American University of Sharjah",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": "aus.edu",
+      "domain_status": "seed",
+      "official_site_hint": "http://www.aus.edu/",
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "American University of Sharjah",
+          "domain": "aus.edu",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for American University of Sharjah; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 30,
+        "candidate_in_40": true,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-268",
+      "name": "University of Virginia",
+      "university_id": "b20b8dfd5a1c918b76bb46cba2e2aa56",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "University of Virginia",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "University of Virginia",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "university of virginia",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "Virginia of University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "University of Virginia",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": null,
+      "domain_status": "unknown",
+      "official_site_hint": null,
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "University of Virginia",
+          "domain": "",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for University of Virginia; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 473,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation.",
+        "No imported domain hint; this is missing metadata, not an observed failed crawl."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-278",
+      "name": "University of Antwerp",
+      "university_id": "abcb978ae28d61b1d51d0372612ca48f",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "University of Antwerp",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "University of Antwerp",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "university of antwerp",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "Antwerp of University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "University of Antwerp",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": null,
+      "domain_status": "unknown",
+      "official_site_hint": null,
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "University of Antwerp",
+          "domain": "",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for University of Antwerp; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 367,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation.",
+        "No imported domain hint; this is missing metadata, not an observed failed crawl."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-288",
+      "name": "University of Aberdeen",
+      "university_id": "59b48e07b4c6549c9eb7705545ad749c",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "University of Aberdeen",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "University of Aberdeen",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "university of aberdeen",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "Aberdeen of University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "University of Aberdeen",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": "abdn.ac.uk",
+      "domain_status": "seed",
+      "official_site_hint": "http://www.abdn.ac.uk/",
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "University of Aberdeen",
+          "domain": "abdn.ac.uk",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for University of Aberdeen; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 364,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-298",
+      "name": "Dalhousie University",
+      "university_id": "5fe0075d475711620cb5185e59632e16",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Dalhousie University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Dalhousie University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "dalhousie university",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "University Dalhousie",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Dalhousie University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": "dal.ca",
+      "domain_status": "seed",
+      "official_site_hint": "http://www.dal.ca/",
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "Dalhousie University",
+          "domain": "dal.ca",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for Dalhousie University; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 69,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-308",
+      "name": "Linköping University",
+      "university_id": "4a767107ab07469ede2e4d573d14e1bd",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Linköping University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Linköping University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "linkoping university",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "University Linköping",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Linköping University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": "liu.se",
+      "domain_status": "seed",
+      "official_site_hint": "http://www.liu.se/",
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "Linköping University",
+          "domain": "liu.se",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for Linköping University; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 162,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-318",
+      "name": "Bauman Moscow State Technical University",
+      "university_id": "ba67f6f7aadfeb949a3501f41cdfcd6a",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Bauman Moscow State Technical University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Bauman Moscow State Technical University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "bauman moscow state technical university",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "University Technical State Moscow Bauman",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Bauman Moscow State Technical University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": "bmstu.ru",
+      "domain_status": "seed",
+      "official_site_hint": "http://www.bmstu.ru/",
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "Bauman Moscow State Technical University",
+          "domain": "bmstu.ru",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for Bauman Moscow State Technical University; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 37,
+        "candidate_in_40": true,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-328",
+      "name": "University of Pretoria",
+      "university_id": "7b15f3e98981e70a1da1e086355479a4",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "University of Pretoria",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "University of Pretoria",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "university of pretoria",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "Pretoria of University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "University of Pretoria",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": "up.ac.za",
+      "domain_status": "seed",
+      "official_site_hint": "http://www.up.ac.za/",
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "University of Pretoria",
+          "domain": "up.ac.za",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for University of Pretoria; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 446,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-338",
+      "name": "L.N. Gumilyov Eurasian National University (ENU)",
+      "university_id": "29acfdd1839c7672b049a0c9964b42e5",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "L.N. Gumilyov Eurasian National University (ENU)",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "L.N. Gumilyov Eurasian National University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "l n gumilyov eurasian national university",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "University National Eurasian Gumilyov L.N.",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "ENU",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        {
+          "query": "L.N. Gumilyov Eurasian National University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        {
+          "query": "L.N. Gumilyov Eurasian National University (ENU)",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": "enu.kz",
+      "domain_status": "seed",
+      "official_site_hint": "http://www.enu.kz/",
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "L.N. Gumilyov Eurasian National University",
+          "domain": "enu.kz",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for L.N. Gumilyov Eurasian National University; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 155,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-348",
+      "name": "Abu Dhabi University",
+      "university_id": "3f534e6ab1be8429dee633ac1276efb7",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Abu Dhabi University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 2,
+          "other_names": [
+            "Khalifa University"
+          ]
+        },
+        "canonical": {
+          "query": "Abu Dhabi University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 2,
+          "other_names": [
+            "Khalifa University"
+          ]
+        },
+        "normalized": {
+          "query": "abu dhabi university",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 2,
+          "other_names": [
+            "Khalifa University"
+          ]
+        },
+        "reordered": {
+          "query": "University Dhabi Abu",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 2,
+          "other_names": [
+            "Khalifa University"
+          ]
+        }
+      },
+      "aliases": [
+        {
+          "query": "Abu Dhabi University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 2,
+          "other_names": [
+            "Khalifa University"
+          ]
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": "adu.ac.ae",
+      "domain_status": "seed",
+      "official_site_hint": "http://www.adu.ac.ae/",
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "Abu Dhabi University",
+          "domain": "adu.ac.ae",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for Abu Dhabi University; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 22,
+        "candidate_in_40": true,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation.",
+        "Exact seed query matches additional identities."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-358",
+      "name": "Sabanci University",
+      "university_id": "9168d783948e0afc1cee7ec5b4ace2e0",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Sabanci University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Sabanci University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "sabanci university",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "University Sabanci",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Sabanci University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": "sabanciuniv.edu",
+      "domain_status": "curated",
+      "official_site_hint": "https://www.sabanciuniv.edu/",
+      "duplicate_probe_hint": false,
+      "discovery_route": "curated",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 0,
+        "discover_one_calls": 1,
+        "trace": {
+          "institution": "Sabanci University",
+          "domain": "sabanciuniv.edu",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 10,
+        "candidate_in_40": true,
+        "enrichment_in_20": true
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-368",
+      "name": "Universidade Federal do Rio de Janeiro",
+      "university_id": "b353d2acd8877812c4d6765b6c68c155",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Universidade Federal do Rio de Janeiro",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Universidade Federal do Rio de Janeiro",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "universidade federal do rio de janeiro",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "Janeiro de Rio do Federal Universidade",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Universidade Federal do Rio de Janeiro",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": "ufrj.br",
+      "domain_status": "seed",
+      "official_site_hint": "http://www.ufrj.br/",
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "Universidade Federal do Rio de Janeiro",
+          "domain": "ufrj.br",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for Universidade Federal do Rio de Janeiro; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 321,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-378",
+      "name": "National Technical University of Athens",
+      "university_id": "821a5036a6b1690164a0a62b9233c964",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "National Technical University of Athens",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "National Technical University of Athens",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "national technical university of athens",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "Athens of University Technical National",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "National Technical University of Athens",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": "ntua.gr",
+      "domain_status": "seed",
+      "official_site_hint": "https://www.ntua.gr/",
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "National Technical University of Athens",
+          "domain": "ntua.gr",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for National Technical University of Athens; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 189,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-388",
+      "name": "Università Cattolica del Sacro Cuore",
+      "university_id": "bc3b8ee5958842b03fce7ead21d4489b",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Università Cattolica del Sacro Cuore",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Università Cattolica del Sacro Cuore",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "universita cattolica del sacro cuore",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "Cuore Sacro del Cattolica Università",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Università Cattolica del Sacro Cuore",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": null,
+      "domain_status": "unknown",
+      "official_site_hint": null,
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "Università Cattolica del Sacro Cuore",
+          "domain": "",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for Università Cattolica del Sacro Cuore; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 323,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation.",
+        "No imported domain hint; this is missing metadata, not an observed failed crawl."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-398",
+      "name": "Macau University of Science and Technology",
+      "university_id": "dcea50ecb73f50ea573195db5b20d97c",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Macau University of Science and Technology",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Macau University of Science and Technology",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "macau university of science and technology",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "Technology and Science of University Macau",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Macau University of Science and Technology",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": "must.edu.mo",
+      "domain_status": "seed",
+      "official_site_hint": "http://www.must.edu.mo/",
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "Macau University of Science and Technology",
+          "domain": "must.edu.mo",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for Macau University of Science and Technology; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 169,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-408",
+      "name": "The Education University of Hong Kong",
+      "university_id": "8365c6e24128a503fd153cb373750205",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "The Education University of Hong Kong",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "The Education University of Hong Kong",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "the education university of hong kong",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "Kong Hong of University Education The",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "The Education University of Hong Kong",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": "eduhk.hk",
+      "domain_status": "seed",
+      "official_site_hint": "https://www.eduhk.hk/",
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "The Education University of Hong Kong",
+          "domain": "eduhk.hk",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for The Education University of Hong Kong; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 276,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-418",
+      "name": "Shenzhen University",
+      "university_id": "d881fbc07f2702a717dafce5db895bd4",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Shenzhen University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 2,
+          "other_names": [
+            "Southern University of Science and Technology"
+          ]
+        },
+        "canonical": {
+          "query": "Shenzhen University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 2,
+          "other_names": [
+            "Southern University of Science and Technology"
+          ]
+        },
+        "normalized": {
+          "query": "shenzhen university",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 2,
+          "other_names": [
+            "Southern University of Science and Technology"
+          ]
+        },
+        "reordered": {
+          "query": "University Shenzhen",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 2,
+          "other_names": [
+            "Southern University of Science and Technology"
+          ]
+        }
+      },
+      "aliases": [
+        {
+          "query": "Shenzhen University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 2,
+          "other_names": [
+            "Southern University of Science and Technology"
+          ]
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": "szu.edu.cn",
+      "domain_status": "seed",
+      "official_site_hint": "http://www.szu.edu.cn/",
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "Shenzhen University",
+          "domain": "szu.edu.cn",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for Shenzhen University; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 240,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation.",
+        "Exact seed query matches additional identities."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-428",
+      "name": "Universität Mannheim",
+      "university_id": "f9e44c31fac176613c19927b5383f223",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Universität Mannheim",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Universität Mannheim",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "universitat mannheim",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "Mannheim Universität",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Universität Mannheim",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": "uni-mannheim.de",
+      "domain_status": "seed",
+      "official_site_hint": "http://www.uni-mannheim.de/",
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "Universität Mannheim",
+          "domain": "uni-mannheim.de",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for Universität Mannheim; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 337,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-438",
+      "name": "Tampere University",
+      "university_id": "60982ded8e3bfae1884d01f47df56203",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Tampere University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Tampere University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "tampere university",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "University Tampere",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Tampere University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": null,
+      "domain_status": "unknown",
+      "official_site_hint": null,
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "Tampere University",
+          "domain": "",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for Tampere University; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 262,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation.",
+        "No imported domain hint; this is missing metadata, not an observed failed crawl."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-448",
+      "name": "University of Dundee",
+      "university_id": "b55a3fc4e56a904fedd2a275bf7a2e1e",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "University of Dundee",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "University of Dundee",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "university of dundee",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "Dundee of University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "University of Dundee",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": "dundee.ac.uk",
+      "domain_status": "seed",
+      "official_site_hint": "http://www.dundee.ac.uk/",
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "University of Dundee",
+          "domain": "dundee.ac.uk",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for University of Dundee; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 399,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-458",
+      "name": "USI - Università della Svizzera italiana",
+      "university_id": "da0b24d4c29687381d3cebbf876ed2b0",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "USI - Università della Svizzera italiana",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "USI - Università della Svizzera italiana",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "usi universita della svizzera italiana",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "italiana Svizzera della Università - USI",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "USI - Università della Svizzera italiana",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": null,
+      "domain_status": "unknown",
+      "official_site_hint": null,
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "USI - Università della Svizzera italiana",
+          "domain": "",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for USI - Università della Svizzera italiana; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 483,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation.",
+        "No imported domain hint; this is missing metadata, not an observed failed crawl."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-468",
+      "name": "Vilnius University",
+      "university_id": "90b71781a1c9bd7709cb903afe7a1d60",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Vilnius University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Vilnius University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "vilnius university",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "University Vilnius",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "Vilnius University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": "vu.lt",
+      "domain_status": "curated",
+      "official_site_hint": "http://www.vu.lt/",
+      "duplicate_probe_hint": false,
+      "discovery_route": "curated",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 0,
+        "discover_one_calls": 1,
+        "trace": {
+          "institution": "Vilnius University",
+          "domain": "vu.lt",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 19,
+        "candidate_in_40": true,
+        "enrichment_in_20": true
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-478",
+      "name": "China Agricultural University",
+      "university_id": "85b325fe57d7ea14ade4fe06dc6afd3d",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "China Agricultural University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "China Agricultural University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "china agricultural university",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "University Agricultural China",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "China Agricultural University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": "cau.edu.cn",
+      "domain_status": "seed",
+      "official_site_hint": "http://www.cau.edu.cn/",
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "China Agricultural University",
+          "domain": "cau.edu.cn",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for China Agricultural University; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 56,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-488",
+      "name": "University of Bordeaux",
+      "university_id": "b63e0ce8e2bc13bca78dd3c11c33185b",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "University of Bordeaux",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "University of Bordeaux",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "university of bordeaux",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "Bordeaux of University",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "University of Bordeaux",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": null,
+      "domain_status": "unknown",
+      "official_site_hint": null,
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "University of Bordeaux",
+          "domain": "",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for University of Bordeaux; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 375,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation.",
+        "No imported domain hint; this is missing metadata, not an observed failed crawl."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    },
+    {
+      "seed_id": "qs2027-498",
+      "name": "Institut Teknologi Sepuluh Nopember (ITS Surabaya)",
+      "university_id": "9541f57841e3306db6369f06911d6337",
+      "live_checked": false,
+      "tests": {
+        "exact_seed": {
+          "query": "Institut Teknologi Sepuluh Nopember (ITS Surabaya)",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "canonical": {
+          "query": "Institut Teknologi Sepuluh Nopember",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "normalized": {
+          "query": "institut teknologi sepuluh nopember",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        "reordered": {
+          "query": "Nopember Sepuluh Teknologi Institut",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      },
+      "aliases": [
+        {
+          "query": "ITS Surabaya",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        {
+          "query": "Institut Teknologi Sepuluh Nopember",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        },
+        {
+          "query": "Institut Teknologi Sepuluh Nopember (ITS Surabaya)",
+          "target_found": true,
+          "target_position": 1,
+          "result_count": 1,
+          "other_names": []
+        }
+      ],
+      "seed_verification_status": "unverified_seed",
+      "seed_observed_at": null,
+      "domain": "its.ac.id",
+      "domain_status": "seed",
+      "official_site_hint": "http://www.its.ac.id/",
+      "duplicate_probe_hint": false,
+      "discovery_route": "generic_identity",
+      "route_test": {
+        "synthetic": true,
+        "identify_calls": 1,
+        "discover_one_calls": 0,
+        "trace": {
+          "institution": "Institut Teknologi Sepuluh Nopember",
+          "domain": "its.ac.id",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {},
+          "selected": {},
+          "rejected_sample": [],
+          "rejected_total": 0,
+          "errors": [],
+          "search_failures": [],
+          "search_limitations": [
+            "Official website identity not established for Institut Teknologi Sepuluh Nopember; candidate retained without verified programme facts."
+          ],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        }
+      },
+      "allocation": {
+        "unfiltered_position": 125,
+        "candidate_in_40": false,
+        "enrichment_in_20": false
+      },
+      "trace_state_test": {
+        "synthetic": true,
+        "skipped_and_attempted_empty_identical": true,
+        "skipped_calls": 0,
+        "attempted_calls": 1
+      },
+      "observations": [
+        "Offline catalogue retrieval completed; admissions and official domain correctness remain unverified.",
+        "Synthetic budget-skipped and attempted-empty enrichment serialize to identical traces.",
+        "Generic identity route; a synthetic unidentified site retains candidate with an explicit search limitation."
+      ],
+      "risk": "Observed missing stage status; generic identity evidence provenance needs trace linkage. No live failure inferred."
+    }
+  ],
+  "synthetic_identity_cases": [
+    {
+      "scenario": "fetch_failed",
+      "matched": false,
+      "fetch_calls": 2,
+      "provider_calls": 1,
+      "trace": {
+        "institution": "Aarhus University",
+        "domain": "au.dk",
+        "sitemaps_declared": [],
+        "sitemaps_read": [],
+        "sitemap_urls_seen": 0,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {},
+        "selected": {},
+        "rejected_sample": [],
+        "rejected_total": 0,
+        "errors": [],
+        "search_failures": [],
+        "search_limitations": [],
+        "field_sources": {},
+        "search_coverage": {},
+        "used_navigation_fallback": false,
+        "kept_by_link_text": [],
+        "admission_obligations": [],
+        "walker": {
+          "catalogs_walked": 0,
+          "candidates": [],
+          "programs_confirmed": 0,
+          "outcomes": []
+        }
+      },
+      "page_recorder_calls": 0
+    },
+    {
+      "scenario": "identity_mismatch",
+      "matched": false,
+      "fetch_calls": 2,
+      "provider_calls": 1,
+      "trace": {
+        "institution": "Aarhus University",
+        "domain": "au.dk",
+        "sitemaps_declared": [],
+        "sitemaps_read": [],
+        "sitemap_urls_seen": 0,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {},
+        "selected": {},
+        "rejected_sample": [],
+        "rejected_total": 0,
+        "errors": [],
+        "search_failures": [],
+        "search_limitations": [],
+        "field_sources": {},
+        "search_coverage": {},
+        "used_navigation_fallback": false,
+        "kept_by_link_text": [],
+        "admission_obligations": [],
+        "walker": {
+          "catalogs_walked": 0,
+          "candidates": [],
+          "programs_confirmed": 0,
+          "outcomes": []
+        }
+      },
+      "page_recorder_calls": 0
+    },
+    {
+      "scenario": "off_site_redirect",
+      "matched": false,
+      "fetch_calls": 2,
+      "provider_calls": 1,
+      "trace": {
+        "institution": "Aarhus University",
+        "domain": "au.dk",
+        "sitemaps_declared": [],
+        "sitemaps_read": [],
+        "sitemap_urls_seen": 0,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {},
+        "selected": {},
+        "rejected_sample": [],
+        "rejected_total": 0,
+        "errors": [],
+        "search_failures": [],
+        "search_limitations": [],
+        "field_sources": {},
+        "search_coverage": {},
+        "used_navigation_fallback": false,
+        "kept_by_link_text": [],
+        "admission_obligations": [],
+        "walker": {
+          "catalogs_walked": 0,
+          "candidates": [],
+          "programs_confirmed": 0,
+          "outcomes": []
+        }
+      },
+      "page_recorder_calls": 0
+    },
+    {
+      "scenario": "matched",
+      "matched": true,
+      "fetch_calls": 1,
+      "provider_calls": 0,
+      "trace": {
+        "institution": "Aarhus University",
+        "domain": "au.dk",
+        "sitemaps_declared": [],
+        "sitemaps_read": [],
+        "sitemap_urls_seen": 0,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {},
+        "selected": {},
+        "rejected_sample": [],
+        "rejected_total": 0,
+        "errors": [],
+        "search_failures": [],
+        "search_limitations": [],
+        "field_sources": {},
+        "search_coverage": {},
+        "used_navigation_fallback": false,
+        "kept_by_link_text": [],
+        "admission_obligations": [],
+        "walker": {
+          "catalogs_walked": 0,
+          "candidates": [],
+          "programs_confirmed": 0,
+          "outcomes": []
+        }
+      },
+      "page_recorder_calls": 0
+    }
+  ],
+  "synthetic_identity_target": "Aarhus University",
+  "synthetic_identity_proofs": [
+    {
+      "kind": "site_identity",
+      "source_url": "https://au.dk/",
+      "accessed_at": "2026-10-04T00:00:00+00:00",
+      "excerpt": "Aarhus University",
+      "name": "Aarhus University",
+      "domain": "au.dk",
+      "verification_status": "site_identity_checked"
+    }
+  ],
+  "synthetic_handoff": {
+    "before": {
+      "institution": "Aarhus University",
+      "domain": "au.dk",
+      "sitemaps_declared": [],
+      "sitemaps_read": [],
+      "sitemap_urls_seen": 0,
+      "sitemap_urls_kept": 0,
+      "manual_seeds": {},
+      "selected": {},
+      "rejected_sample": [],
+      "rejected_total": 0,
+      "errors": [
+        "synthetic identity diagnostic"
+      ],
+      "search_failures": [
+        "synthetic provider failure"
+      ],
+      "search_limitations": [
+        "synthetic identity limitation"
+      ],
+      "field_sources": {},
+      "search_coverage": {},
+      "used_navigation_fallback": false,
+      "kept_by_link_text": [],
+      "admission_obligations": [],
+      "walker": {
+        "catalogs_walked": 0,
+        "candidates": [],
+        "programs_confirmed": 0,
+        "outcomes": []
+      }
+    },
+    "after": {
+      "institution": "Aarhus University",
+      "domain": "au.dk",
+      "sitemaps_declared": [],
+      "sitemaps_read": [],
+      "sitemap_urls_seen": 0,
+      "sitemap_urls_kept": 0,
+      "manual_seeds": {},
+      "selected": {},
+      "rejected_sample": [],
+      "rejected_total": 0,
+      "errors": [],
+      "search_failures": [
+        "synthetic provider failure"
+      ],
+      "search_limitations": [],
+      "field_sources": {},
+      "search_coverage": {},
+      "used_navigation_fallback": false,
+      "kept_by_link_text": [],
+      "admission_obligations": [],
+      "walker": {
+        "catalogs_walked": 0,
+        "candidates": [],
+        "programs_confirmed": 0,
+        "outcomes": []
+      }
+    }
+  },
+  "historical_artifacts": [
+    {
+      "path": "backend/evaluation/research/expert/data/runs.2026-09-27/aalto.trace.json",
+      "sha256": "182f861cfb7613549e225f26ab1c7abc6672e3342e084d5ebbb91aad9a8b5324",
+      "top_level_type": "dict",
+      "top_level_keys": [
+        "schema_version",
+        "case_id",
+        "packet_sha256",
+        "baseline_pipeline_sha",
+        "max_fetcher_calls",
+        "max_elapsed_ms",
+        "initial_fetcher_calls",
+        "initial_elapsed_ms",
+        "started_at",
+        "ended_at",
+        "actions",
+        "proposals",
+        "review_status"
+      ],
+      "captured_at": null,
+      "mode": null,
+      "pipeline_sha": null,
+      "observations": []
+    },
+    {
+      "path": "backend/evaluation/research/expert/data/runs.2026-10-02/identity-replay.capture.json",
+      "sha256": "e23088b29dc8e9ae2f3620cfea6992fad9aea56f423b66f389661b6b3ba444ef",
+      "top_level_type": "dict",
+      "top_level_keys": [
+        "schema_version",
+        "pipeline_sha",
+        "captured_at",
+        "mode",
+        "config",
+        "observations"
+      ],
+      "captured_at": "2026-10-02",
+      "mode": "replay",
+      "pipeline_sha": "mixed-see-config",
+      "observations": [
+        {
+          "case_id": "aalto",
+          "prediction_count": 0,
+          "page_outcome_counts": {
+            "classifier-rejected": 2,
+            "fetch-failed": 3,
+            "no-pattern-match": 1,
+            "fetched-ok": 3
+          },
+          "error": null,
+          "telemetry": {
+            "http_fetches": 59,
+            "browser_fetches": 0,
+            "pdf_fetches": 0,
+            "search_calls": 6,
+            "model_input_tokens": 0,
+            "jev_input_tokens": 0,
+            "latency_seconds": 102.4416938329814,
+            "cost_usd": null,
+            "human_review_required": null
+          }
+        },
+        {
+          "case_id": "delft",
+          "prediction_count": 6,
+          "page_outcome_counts": {
+            "classifier-rejected": 2,
+            "fetched-ok": 8,
+            "no-pattern-match": 4
+          },
+          "error": null,
+          "telemetry": {
+            "http_fetches": 42,
+            "browser_fetches": 0,
+            "pdf_fetches": 0,
+            "search_calls": 6,
+            "model_input_tokens": 0,
+            "jev_input_tokens": 0,
+            "latency_seconds": 73.51999333297135,
+            "cost_usd": null,
+            "human_review_required": null
+          }
+        },
+        {
+          "case_id": "groningen",
+          "prediction_count": 4,
+          "page_outcome_counts": {
+            "fetch-failed": 5,
+            "fetched-ok": 2,
+            "no-pattern-match": 1
+          },
+          "error": null,
+          "telemetry": {
+            "http_fetches": 93,
+            "browser_fetches": 0,
+            "pdf_fetches": 0,
+            "search_calls": 7,
+            "model_input_tokens": 0,
+            "jev_input_tokens": 0,
+            "latency_seconds": 216.65824916696874,
+            "cost_usd": null,
+            "human_review_required": null
+          }
+        },
+        {
+          "case_id": "hku",
+          "prediction_count": 1,
+          "page_outcome_counts": {
+            "fetch-failed": 8,
+            "classifier-rejected": 1,
+            "fetched-ok": 3
+          },
+          "error": null,
+          "telemetry": {
+            "http_fetches": 26,
+            "browser_fetches": 0,
+            "pdf_fetches": 0,
+            "search_calls": 7,
+            "model_input_tokens": 0,
+            "jev_input_tokens": 0,
+            "latency_seconds": 76.34066862502368,
+            "cost_usd": null,
+            "human_review_required": null
+          }
+        },
+        {
+          "case_id": "kaist",
+          "prediction_count": 3,
+          "page_outcome_counts": {
+            "fetched-ok": 2
+          },
+          "error": null,
+          "telemetry": {
+            "http_fetches": 33,
+            "browser_fetches": 0,
+            "pdf_fetches": 0,
+            "search_calls": 6,
+            "model_input_tokens": 0,
+            "jev_input_tokens": 0,
+            "latency_seconds": 87.75064804195426,
+            "cost_usd": null,
+            "human_review_required": null
+          }
+        },
+        {
+          "case_id": "ntu",
+          "prediction_count": 72,
+          "page_outcome_counts": {
+            "fetch-failed": 4,
+            "fetched-ok": 15,
+            "no-pattern-match": 6
+          },
+          "error": null,
+          "telemetry": {
+            "http_fetches": 25,
+            "browser_fetches": 0,
+            "pdf_fetches": 0,
+            "search_calls": 7,
+            "model_input_tokens": 0,
+            "jev_input_tokens": 0,
+            "latency_seconds": 66.90002329199342,
+            "cost_usd": null,
+            "human_review_required": null
+          }
+        },
+        {
+          "case_id": "toronto",
+          "prediction_count": 16,
+          "page_outcome_counts": {
+            "classifier-rejected": 6,
+            "fetched-ok": 12,
+            "no-pattern-match": 4
+          },
+          "error": null,
+          "telemetry": {
+            "http_fetches": 57,
+            "browser_fetches": 0,
+            "pdf_fetches": 1,
+            "search_calls": 6,
+            "model_input_tokens": 0,
+            "jev_input_tokens": 0,
+            "latency_seconds": 73.36068762501236,
+            "cost_usd": null,
+            "human_review_required": null
+          }
+        },
+        {
+          "case_id": "ubc",
+          "prediction_count": 11,
+          "page_outcome_counts": {
+            "fetched-ok": 4,
+            "no-pattern-match": 6
+          },
+          "error": "RuntimeError: BENCHMARK_PAGE_BUDGET_EXHAUSTED",
+          "telemetry": {
+            "http_fetches": 64,
+            "browser_fetches": 0,
+            "pdf_fetches": 0,
+            "search_calls": 6,
+            "model_input_tokens": 0,
+            "jev_input_tokens": 0,
+            "latency_seconds": 170.96471095801098,
+            "cost_usd": null,
+            "human_review_required": null
+          }
+        },
+        {
+          "case_id": "vienna",
+          "prediction_count": 2,
+          "page_outcome_counts": {
+            "classifier-rejected": 2,
+            "fetch-failed": 3,
+            "fetched-ok": 3,
+            "no-pattern-match": 2
+          },
+          "error": null,
+          "telemetry": {
+            "http_fetches": 64,
+            "browser_fetches": 0,
+            "pdf_fetches": 0,
+            "search_calls": 7,
+            "model_input_tokens": 0,
+            "jev_input_tokens": 0,
+            "latency_seconds": 100.52754833298968,
+            "cost_usd": null,
+            "human_review_required": null
+          }
+        },
+        {
+          "case_id": "warsaw",
+          "prediction_count": 6,
+          "page_outcome_counts": {
+            "classifier-rejected": 6,
+            "fetch-failed": 2,
+            "fetched-ok": 10
+          },
+          "error": null,
+          "telemetry": {
+            "http_fetches": 88,
+            "browser_fetches": 0,
+            "pdf_fetches": 0,
+            "search_calls": 7,
+            "model_input_tokens": 0,
+            "jev_input_tokens": 0,
+            "latency_seconds": 171.39308195805643,
+            "cost_usd": null,
+            "human_review_required": null
+          }
+        }
+      ]
+    },
+    {
+      "path": "backend/evaluation/research/expert/data/runs.2026-10-03/er15.37112534809/capture.json",
+      "sha256": "ee18a6777acce0968d520cec2239d7844838f721b235dfee2c14500f354a0811",
+      "top_level_type": "dict",
+      "top_level_keys": [
+        "schema_version",
+        "pipeline_sha",
+        "captured_at",
+        "mode",
+        "config",
+        "observations"
+      ],
+      "captured_at": "20261003T091742Z",
+      "mode": "live",
+      "pipeline_sha": "adf2f9f829803b24e32a2897f9cfd6dcd7aca8af",
+      "observations": [
+        {
+          "case_id": "groningen",
+          "prediction_count": 0,
+          "page_outcome_counts": {},
+          "error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED",
+          "telemetry": {
+            "http_fetches": 77,
+            "browser_fetches": 0,
+            "pdf_fetches": 0,
+            "search_calls": 0,
+            "model_input_tokens": 0,
+            "jev_input_tokens": 0,
+            "latency_seconds": 115.00755570999999,
+            "cost_usd": null,
+            "human_review_required": null
+          }
+        }
+      ]
+    }
+  ],
+  "equal_budget_measurements": {
+    "trace_pair_institutions": 50,
+    "each_scenario_provider_calls": 0,
+    "each_scenario_fetch_calls": 0,
+    "current_trace_distinguishable_pairs": 0,
+    "explicit_attempt_sidecar_distinguishable_pairs": 50
+  }
+}

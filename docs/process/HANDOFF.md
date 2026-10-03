@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**Current holder: nobody; top500 expert audit completed2026-10-04, task/top500-expert-audit.** All10 owner-requested agents completed50 disjoint records each. Parent independently reran all10 probes successfully; coverage500/500 unique, live_checked0. Application source remains144881b. No deployment or production settings changed.
+
 **Current holder: gpt-6-astra, 2026-10-04 UTC, task/top500-expert-audit from144881b.** Owner requests ten expert subagents covering all500 seed universities, evenly distributed, to identify general algorithm improvements. This supersedes the next-step order for this audit only. Three child concurrency slots; ten assignments run in waves.
 
 **Current holder: nobody; source baton released after ER15,2026-10-03.** Sourceadf2f9f is pushed in draftPR41. Main benchmark37110018701 complete6/62; PR41 full120s benchmark37111364718 complete13/62 with different observed bindings. ER15 actual-row red/green and full2969/94.95% pass; fresh run37112534809 recovers both diploma forms via direct oracle, while blind Groningen stays0/11. Task3 awaits owner normal Unimatch sign-in, email provided privately (never commit it). No existing account deletion, production configuration or deployment. General search acceptance remains failed.
@@ -48,6 +50,8 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**Top500 expert algorithm audit complete; improvements remain candidates.** Ten reports,500 per-institution audit rows, reproducing scripts and manifest are in docs/process/top500-expert-audit-2026-10-04/. Local retrieval exact-name top-one471/500; proposed post-sort500/500 in same-input development experiment, preserving result sets. This is not a live500-university official-fact check, blind expert trace or production patch.
 
 **Top500 expert algorithm audit, in progress.** Ten disjoint50-university packets, rank-stratified by list position modulo10. Audit actual local retrieval and discovery/identity logic. Findings must include reproducible evidence, limitations and falsifiable equal-budget experiment proposals. This is a non-blind engineering audit, not a certified500-university fact corpus or live end-to-end acceptance.
 
@@ -129,6 +133,8 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+**Top500 checkpoints e8b7070/3864b6a/92918af:** ten packets and first300 individual audit rows pushed; final remaining200 rows,11 candidate hypotheses,500-coverage validator and all10 parent reproductions complete locally. See campaign README and validation.json for exact limits.
 
 **ER15 sourceadf2f9f, confirmed live37112534809:** general bounded secondary-education grouping fixes both diploma completion forms. Actual-source red/green, full2969/94.95%,frontend232 serial/type/lint/build,mypy330,demo and one head pass. Fresh oracle changes both keys value_missing→recovered. Blind Groningen remains0/11/115s; no discovery promotion. Original partial-capture full-denominator score is retained but not used as a cohort comparison.
 
@@ -1764,6 +1770,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**Next after top500 audit:** review the candidate registry and reproduction evidence. First implement a general exact-name relevance regression (29/500 top-one misses) with preserved fuzzy/alias/country behavior; separately build independently adjudicated official/negative homepage fixtures before stronger site-authority changes. Address geographical semantics, trace retention and terminal provider suppression with equal-budget controls. Do not promote synthetic findings to observed live incidence; preserve approved ranking formulas, Fetcher policy and reviewed labels. Resume prior public-profile verification only through normal owner login; no production configuration/deployment change authorized by this audit.
 
 **Top500 write-ahead:** prepare docs/process/top500-expert-audit-2026-10-04/ packets and manifest; run ten expert tasks in waves of at most three, each owns only its group report/rows/reproduction script. Parent validates500 unique coverage, reproduces leading findings and writes a prioritized cross-group synthesis. No production settings, reviewed labels, existing PR41 source or provider quota are changed. Any live run must obey existing Fetcher and quota controls; lack of live proof stays explicit.
 
@@ -3718,6 +3726,8 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**Top500 audit verification2026-10-04:** actual catalogue suite25 passed; parent reran10/10 expert probes exit0; campaign validator passed10 groups/500 unique rows/all required fields and SHA256 artifacts; exact-name candidate experiment471->500 top-one with0 regressions on those500 development queries. Source diff144881b for backend/frontend is empty. Full application gates were not rerun for this documentation-only campaign. General live search acceptance is still unproven.
+
 **ER13 final source33804d0:** full2960 passed /94.94%, frontend232/type/lint/build, Ruff/format/mypy330 (prescribed backend cwd), isolated demo and one head passed. Workflow-only e40183e: YAML+20 shell-selection checks pass; not pushed/merged, cloud gates unavailable. Catalogue-only captures are negative factual evidence, not acceptance.
 
 
@@ -5005,3 +5015,6 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 2026-10-03 gpt-6-astra resumes fromec7436a: PR42 merged by owner at08:31:09UTC asb672349; tree equals e40183e; new120s/60reads exa run37110018701 dispatched.
 
 2026-10-03 gpt-6-astra:0c40d3b→adf2f9f; main/PR41 same-budget benchmarks retained, ER15 source/live verified; source baton released pending owner public login and subsequent discovery recovery.
+
+
+- 2026-10-04 gpt-6-astra: top500-audit completed10 expert assignments/500 records; local-only algorithm diagnosis; baton released with candidate fixes and live validation still pending.

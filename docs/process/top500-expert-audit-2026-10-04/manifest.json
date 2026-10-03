@@ -415,7 +415,7 @@
         "qs2027-487",
         "qs2027-497"
       ],
-      "status": "running",
+      "status": "complete",
       "agent": "/root/top500_expert_07"
     },
     {
@@ -474,7 +474,7 @@
         "qs2027-488",
         "qs2027-498"
       ],
-      "status": "running",
+      "status": "complete",
       "agent": "/root/top500_expert_08"
     },
     {
@@ -533,7 +533,7 @@
         "qs2027-489",
         "qs2027-499"
       ],
-      "status": "running",
+      "status": "complete",
       "agent": "/root/top500_expert_09"
     },
     {
@@ -592,12 +592,17 @@
         "qs2027-490",
         "qs2027-500"
       ],
-      "status": "queued"
+      "status": "complete",
+      "agent": "/root/top500_expert_10"
     }
   ],
   "baseline_verification": {
     "command": "backend/.venv/bin/python -m pytest -q tests/test_university_catalogue.py -p no:cacheprovider",
     "passed": 25,
     "production_source_changed": false
-  }
+  },
+  "status": "complete",
+  "completed_experts": 10,
+  "production_source_changed": false,
+  "application_tree_hash": "c55ee49faa65a8bc7ce8f5b622bc5479f1b7a337"
 }
