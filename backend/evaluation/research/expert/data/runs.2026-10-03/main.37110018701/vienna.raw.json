@@ -1,0 +1,2295 @@
+{
+  "canary": {
+    "accessed_at": "2026-10-03T08:36:09.633465+00:00",
+    "duration_seconds": 89.4,
+    "run_error": "",
+    "batch": [
+      "University of Vienna"
+    ],
+    "institutions": [
+      {
+        "institution": "University of Vienna",
+        "country": "Austria",
+        "domain": "univie.ac.at",
+        "access": "REACHED",
+        "robots_disallowed_requests": 0,
+        "pages_checked": 57,
+        "pages_failed": 8,
+        "failures": [
+          [
+            "https://www.univie.ac.at/sitemap.xml",
+            "http_error: HTTP 404"
+          ],
+          [
+            "https://www.univie.ac.at/sitemap_index.xml",
+            "http_error: HTTP 404"
+          ],
+          [
+            "https://www.univie.ac.at/sitemap-index.xml",
+            "http_error: HTTP 404"
+          ],
+          [
+            "https://www.univie.ac.at/sitemap/sitemap.xml",
+            "http_error: HTTP 404"
+          ],
+          [
+            "https://self-assessment.univie.ac.at/informatik",
+            "http_error: HTTP 404"
+          ],
+          [
+            "https://studieren.univie.ac.at/en/admission/german-language-proficiency/",
+            "http_error: HTTP 404"
+          ],
+          [
+            "https://studieren.univie.ac.at/en/admission/bachelordiploma-programmes/zulassung/non-eueea-with-german",
+            "http_error: HTTP 404"
+          ],
+          [
+            "https://studieren.univie.ac.at/en/admission/bachelordiploma-programmes/zulassung-mit-verpfl-osa/non-eueea-with-little-german",
+            "http_error: HTTP 404"
+          ]
+        ],
+        "outcomes": {
+          "ok": 40,
+          "http_error": 8,
+          "cached": 9
+        },
+        "discovered": {
+          "program_catalog": [
+            "https://studieren.univie.ac.at/en/degree-programmes",
+            "https://studieren.univie.ac.at/en/find-your-degree-programme/bachelors-and-diploma-programmes/earth-sciences-bachelors-programme",
+            "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/meteorology-and-climate-science-bachelors-programme"
+          ],
+          "program_page": [
+            "https://aufnahmeverfahren.univie.ac.at/en/computer-science"
+          ],
+          "admissions": [
+            "https://studieren.univie.ac.at/en/admission-procedure",
+            "https://studieren.univie.ac.at/en/applying-for-a-programme/international-students",
+            "https://studieren.univie.ac.at/en/applying-for-a-programme/international-students/country-specific-requirements-for-admission"
+          ],
+          "costs": [
+            "https://studieren.univie.ac.at/en/tuition-fee",
+            "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/tuition-fee/students-union-fee",
+            "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/tuition-fee/students-union-fee/remission-and-reimbursement"
+          ],
+          "scholarships": [
+            "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/grants-and-scholarships"
+          ]
+        },
+        "discovery_trace": {
+          "institution": "University of Vienna",
+          "domain": "www.univie.ac.at",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {
+            "program_catalog": "https://studieren.univie.ac.at/en/degree-programmes/",
+            "admissions": "https://studieren.univie.ac.at/en/admission-procedure/",
+            "costs": "https://studieren.univie.ac.at/en/tuition-fee/"
+          },
+          "selected": {
+            "program_catalog": [
+              "https://studieren.univie.ac.at/en/degree-programmes",
+              "https://studieren.univie.ac.at/en/find-your-degree-programme/bachelors-and-diploma-programmes/earth-sciences-bachelors-programme",
+              "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/meteorology-and-climate-science-bachelors-programme"
+            ],
+            "program_page": [
+              "https://aufnahmeverfahren.univie.ac.at/en/computer-science"
+            ],
+            "admissions": [
+              "https://studieren.univie.ac.at/en/admission-procedure",
+              "https://studieren.univie.ac.at/en/applying-for-a-programme/international-students",
+              "https://studieren.univie.ac.at/en/applying-for-a-programme/international-students/country-specific-requirements-for-admission"
+            ],
+            "costs": [
+              "https://studieren.univie.ac.at/en/tuition-fee",
+              "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/tuition-fee/students-union-fee",
+              "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/tuition-fee/students-union-fee/remission-and-reimbursement"
+            ],
+            "scholarships": [
+              "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/grants-and-scholarships"
+            ]
+          },
+          "rejected_sample": [
+            [
+              "https://www.winf.univie.ac.at/en/study/courses-of-study/bachelor/bachelor-informatik",
+              "page subject 'Bachelor Informatik (Version 2022)' does not match requested fields ['computer science']"
+            ],
+            [
+              "https://informatik.univie.ac.at/en/studies/degree-programmes/recommended-path-of-study-bachelor-computer-science",
+              "reads as program_catalog, not a programme page"
+            ],
+            [
+              "https://informatik.univie.ac.at/en/studies/why-computer-science",
+              "reads as unknown, not a programme page"
+            ],
+            [
+              "https://docs.univie.ac.at/",
+              "page names degree level phd, not bachelor"
+            ],
+            [
+              "https://informatik.univie.ac.at/en/studies/student-services/stage-of-study/starting-your-studies",
+              "reads as unknown, not a programme page"
+            ],
+            [
+              "https://informatik.univie.ac.at/en/studies/student-services/studiesservicecenter-ssc",
+              "reads as unknown, not a programme page"
+            ],
+            [
+              "https://mathematik.univie.ac.at/",
+              "reads as unknown, not a programme page"
+            ],
+            [
+              "https://self-assessment.univie.ac.at/informatik",
+              "search lead unresolved (http_error)"
+            ]
+          ],
+          "rejected_total": 8,
+          "errors": [
+            "https://www.univie.ac.at/sitemap.xml: http_error — HTTP 404",
+            "https://www.univie.ac.at/sitemap_index.xml: http_error — HTTP 404",
+            "https://www.univie.ac.at/sitemap-index.xml: http_error — HTTP 404",
+            "https://www.univie.ac.at/sitemap/sitemap.xml: http_error — HTTP 404",
+            "search identity recovery: checked 8, confirmed 0",
+            "search identity recovery via exa; queries 6, failed 0, rejected {'duplicate': 22, 'wrong_degree_level': 8}"
+          ],
+          "search_failures": [],
+          "search_limitations": [],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": true,
+          "kept_by_link_text": [
+            [
+              "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+              "Computer Science"
+            ]
+          ],
+          "walker": {
+            "catalogs_walked": 2,
+            "candidates": [
+              {
+                "url": "https://studieren.univie.ac.at/en/admission-info/ba",
+                "label": "Admission to bachelor's and diploma programmes",
+                "score": 13,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/completing-the-admission-procedure/ba",
+                "label": "Bachelor’s/diploma programme: Completing the admission procedure",
+                "score": 13,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-your-degree-programme/bachelors-and-diploma-programmes",
+                "label": "Bachelor's programmes",
+                "score": 13,
+                "source": "html"
+              },
+              {
+                "url": "https://doktorat.univie.ac.at/en",
+                "label": "Doctoral programmes",
+                "score": 4,
+                "source": "html"
+              },
+              {
+                "url": "https://postgraduatecenter.univie.ac.at/en",
+                "label": "Postgraduate Center",
+                "score": 4,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/admission-info/mag",
+                "label": "Master Access Guide (MAG)",
+                "score": 4,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/news-stories",
+                "label": "News & Stories",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/degree-programmes",
+                "label": "Skip to main content",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning",
+                "label": "Studying and learning",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/completing-a-programme",
+                "label": "Completing a programme",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme",
+                "label": "Applying for a programme",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-your-degree-programme",
+                "label": "Finding a programme",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/student-spaces",
+                "label": "Student Spaces",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support",
+                "label": "Academic Support",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters",
+                "label": "Financial matters",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/the-academic-year",
+                "label": "The academic year",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/abc-of-terminology",
+                "label": "ABC of terminology",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/additional-exams",
+                "label": "Additional exams",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/managing-my-studies",
+                "label": "Managing my studies",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/student-life/together",
+                "label": "Studying and learning together",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/using-ai-in-your-studies",
+                "label": "Using AI in your Studies",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/international-students",
+                "label": "International Students",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/student-life/studying-safely",
+                "label": "Studying safely",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/student-life/healthy-studying",
+                "label": "Healthy Studying",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/international-students/ceepus",
+                "label": "CEEPUS (Central European Exchange Program for University Studies)",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/managing-my-studies/confirmations",
+                "label": "Confirmations",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/student-life/jobs-housing-and-more",
+                "label": "Jobs, Housing and more",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/managing-my-studies/co-registration",
+                "label": "Co-registration",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/managing-my-studies/leave-of-absence",
+                "label": "Leave of absence",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/international-students/legalisation",
+                "label": "Legalisation",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/managing-my-studies/resumption-of-studies",
+                "label": "Resumption of studies",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/managing-my-studies/changing-personal-data",
+                "label": "Changing personal data",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/managing-my-studies/minimum-number-of-credits",
+                "label": "Minimum number of credits",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/international-students/central-european-university",
+                "label": "Cooperation Central European University (CEU) and University of Vienna",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/international-students/information-for-asylum-seekers",
+                "label": "Information for asylum seekers",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/studying-without-secondary-school-leaving-certificate",
+                "label": "Studying without secondary-school leaving certificate",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/managing-my-studies/change-or-additional-degree-programme",
+                "label": "Change of/additional degree programme",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/student-life/welcome-to-the-university-of-vienna-communities",
+                "label": "Communities",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/academic-writing-and-research-support/writing-group",
+                "label": "Writing Group",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/international-students/country-specific-requirements-for-admission",
+                "label": "Country-specific requirements for admission",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/academic-writing-and-research-support/ask-a-librarian",
+                "label": "Ask a Librarian",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/academic-writing-and-research-support/writing-marathon",
+                "label": "Writing Marathon",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/academic-writing-and-research-support/writing-consultation-and-text-feedback",
+                "label": "Writing Consultation and Text-Feedback",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/academic-writing-and-research-support/writing-mentoring-for-writing-skills-development",
+                "label": "Writing Mentoring for writing skills development",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/about-us/legal-basis",
+                "label": "Legal basis",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/about-us/statistical-data",
+                "label": "Statistical data",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-your-degree-programme/extension-curricula",
+                "label": "Extension curricula",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/about-us/organisation-of-studying-and-teaching",
+                "label": "Organisation",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/about-us/contact-for-prospective-and-current-students",
+                "label": "Contact for prospective and current students",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-your-degree-programme/advice/information/unicheck",
+                "label": "Click here for uni:check!",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/admission-info/non-degree-programme",
+                "label": "Non-degree programme",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/first-semester-support",
+                "label": "First Semester Support",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/grants-and-scholarships",
+                "label": "Grants and scholarships",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/tuition-fee/students-union-fee",
+                "label": "Tuition fee/Students' Union fee",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/walk-in-peer-point-consultations",
+                "label": "Walk in: Peer Point consultations",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-your-degree-programme/advice/information/online-self-assessment-osa",
+                "label": "Go to the OSAs",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/language-proficiency/german-language-proficiency",
+                "label": "Knowledge of German",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/language-proficiency/english-language-proficiency",
+                "label": "English language proficiency",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/learning-and-study-planning-support",
+                "label": "Learning and study planning support",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/academic-writing-and-research-support",
+                "label": "Academic writing and research support",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/first-semester-support/steop-mentoring",
+                "label": "STEOP-Mentoring",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/fuers-studium-bewerben/zulassen/arbeitstitel-studienverwaltung/studium-schliessen",
+                "label": "Closing a degree programme",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/paying-the-tuition-fee/students-union-fee",
+                "label": "Paying the tuition fee/Students' Union fee (= re-enrolment)",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/amount-of-the-tuition-fee/students-union-fee",
+                "label": "Amount of the tuition fee/Students' Union fee",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-your-degree-programme/advice/information/education-fairs-and-on-site-consultation",
+                "label": "Upcomming dates",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/learning-and-study-planning-support/learning-group",
+                "label": "Learning Group",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/learning-and-study-planning-support/learning-marathon",
+                "label": "Learning Marathon",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/fuers-studium-bewerben/internationale-studierende/non-eu/eea-nationals-with-equivalent-status",
+                "label": "Non-EU/EEA nationals with equivalent status",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/tuition-fee/students-union-fee/remission-and-reimbursement",
+                "label": "Remission and reimbursement",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/tuition-fee/students-union-fee/equal-status-with-eu/eea-citizens",
+                "label": "Equal status with EU/EEA citizens",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/learning-and-study-planning-support/learning-and-studying-consultation",
+                "label": "Learning and Studying Consultation",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+                "label": "Computer Science",
+                "score": 26,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/meteorology-and-climate-science-bachelors-programme",
+                "label": "Meteorology and Climate Science",
+                "score": 19,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/sport-and-human-movement-science-bachelors-programme",
+                "label": "Sport and Human Movement Science",
+                "score": 19,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-your-degree-programme/bachelors-and-diploma-programmes/earth-sciences-bachelors-programme",
+                "label": "Earth Sciences",
+                "score": 17,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/admission-info/ba",
+                "label": "Admission to bachelor's and diploma programmes",
+                "score": 13,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/completing-the-admission-procedure/ba",
+                "label": "Bachelor’s/diploma programme: Completing the admission procedure",
+                "score": 13,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/egyptology-bachelors-programme",
+                "label": "Egyptology",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/musicology-bachelors-programme",
+                "label": "Musicology",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/philosophy-bachelors-programme",
+                "label": "Philosophy",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/linguistics-bachelors-programme",
+                "label": "Linguistics",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/mathematics-bachelors-programme",
+                "label": "Mathematics",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/jewish-studies-bachelors-programme",
+                "label": "Jewish Studies",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/african-studies-bachelors-programme",
+                "label": "African Studies",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/catholic-theology-diploma-programme",
+                "label": "Catholic Theology",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/chinese-studies-bachelors-programme",
+                "label": "Chinese Studies",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/romance-studies-bachelors-programme",
+                "label": "Romance Studies",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/german-philology-bachelors-programme",
+                "label": "German Philology",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/japanese-studies-bachelors-programme",
+                "label": "Japanese Studies",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/oriental-studies-bachelors-programme",
+                "label": "Oriental Studies",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/slavonic-studies-bachelors-programme",
+                "label": "Slavonic Studies",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/european-ethnology-bachelors-programme",
+                "label": "European Ethnology",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/classical-philology-bachelors-programme",
+                "label": "Classical Philology",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/protestant-theology-bachelors-programme",
+                "label": "Protestant Theology",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/religious-education-bachelors-programme",
+                "label": "Religious Education",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/scandinavian-studies-bachelors-programme",
+                "label": "Scandinavian Studies",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/classical-archaeology-bachelors-programme",
+                "label": "Classical Archaeology",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/comparative-literature-bachelors-programme",
+                "label": "Comparative Literature",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/islamic-theological-studies-bachelors-programme",
+                "label": "Islamic Theological Studies",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/statistics-and-data-analytics-bachelors-programme",
+                "label": "Statistics and Data Analytics",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/theatre-film-and-media-studies-bachelors-programme",
+                "label": "Theatre, Film and Media Studies",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/history-of-art-and-architecture-bachelors-programme",
+                "label": "History of Art and Architecture",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/byzantine-and-modern-greek-studies-bachelors-programme",
+                "label": "Byzantine and Modern Greek Studies",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/hungarian-studies-and-finnish-studies-bachelors-programme",
+                "label": "Hungarian Studies and Finnish Studies",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/prehistory-and-historical-archaeology-bachelors-programme",
+                "label": "Prehistory and Historical Archaeology",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/languages-and-cultures-of-south-asia-and-tibet-bachelors-programme",
+                "label": "Languages and Cultures of South Asia and Tibet",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/ancient-history-and-studies-in-classical-antiquity-bachelors-programme",
+                "label": "Ancient History and Studies in Classical Antiquity",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://aufnahmeverfahren.univie.ac.at/en/political-science",
+                "label": "Political Science",
+                "score": 10,
+                "source": "html"
+              },
+              {
+                "url": "https://aufnahmeverfahren.univie.ac.at/en/business-informatics",
+                "label": "Business Informatics",
+                "score": 10,
+                "source": "html"
+              },
+              {
+                "url": "https://aufnahmeverfahren.univie.ac.at/en/nutritional-sciences",
+                "label": "Nutritional Sciences",
+                "score": 10,
+                "source": "html"
+              },
+              {
+                "url": "https://aufnahmeverfahren.univie.ac.at/en/mass-media-and-communication-science",
+                "label": "Mass Media and Communication Science",
+                "score": 10,
+                "source": "html"
+              },
+              {
+                "url": "https://aufnahmeverfahren.univie.ac.at/en/mathematical-foundations-of-data-science",
+                "label": "Mathematical Foundations of Data Science",
+                "score": 10,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-your-degree-programme/bachelors-and-diploma-programmes",
+                "label": "Skip to main content",
+                "score": 9,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/admission-info/mag",
+                "label": "Master Access Guide (MAG)",
+                "score": 4,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/news-stories",
+                "label": "News & Stories",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://aufnahmeverfahren.univie.ac.at/en/psychology",
+                "label": "Psychology",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning",
+                "label": "Studying and learning",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/completing-a-programme",
+                "label": "Completing a programme",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://aufnahmeverfahren.univie.ac.at/en/korean-studies",
+                "label": "Korean Studies",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme",
+                "label": "Applying for a programme",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://aufnahmeverfahren.univie.ac.at/en/teacher-education",
+                "label": "Teacher Education",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-your-degree-programme",
+                "label": "Finding a programme",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://aufnahmeverfahren.univie.ac.at/en/business-administration",
+                "label": "Business Administration",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://aufnahmeverfahren.univie.ac.at/en/international-legal-studies",
+                "label": "International Legal Studies",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://aufnahmeverfahren.univie.ac.at/en/transcultural-communication",
+                "label": "Transcultural Communication",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/student-spaces",
+                "label": "Student Spaces",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://aufnahmeverfahren.univie.ac.at/en/english-and-american-studies",
+                "label": "English and American Studies",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support",
+                "label": "Academic Support",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters",
+                "label": "Financial matters",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/the-academic-year",
+                "label": "The academic year",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/abc-of-terminology",
+                "label": "ABC of terminology",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://aufnahmeverfahren.univie.ac.at/en/social-and-cultural-anthropology",
+                "label": "Social and Cultural Anthropology",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/additional-exams",
+                "label": "Additional exams",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/managing-my-studies",
+                "label": "Managing my studies",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/student-life/together",
+                "label": "Studying and learning together",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://aufnahmeverfahren.univie.ac.at/en/international-business-administration",
+                "label": "International Business Administration",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/using-ai-in-your-studies",
+                "label": "Using AI in your Studies",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/international-students",
+                "label": "International Students",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/student-life/studying-safely",
+                "label": "Studying safely",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/student-life/healthy-studying",
+                "label": "Healthy Studying",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/international-students/ceepus",
+                "label": "CEEPUS (Central European Exchange Program for University Studies)",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/managing-my-studies/confirmations",
+                "label": "Confirmations",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/student-life/jobs-housing-and-more",
+                "label": "Jobs, Housing and more",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/managing-my-studies/co-registration",
+                "label": "Co-registration",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/managing-my-studies/leave-of-absence",
+                "label": "Leave of absence",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/international-students/legalisation",
+                "label": "Legalisation",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/managing-my-studies/resumption-of-studies",
+                "label": "Resumption of studies",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/managing-my-studies/changing-personal-data",
+                "label": "Changing personal data",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/managing-my-studies/minimum-number-of-credits",
+                "label": "Minimum number of credits",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/international-students/central-european-university",
+                "label": "Cooperation Central European University (CEU) and University of Vienna",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/international-students/information-for-asylum-seekers",
+                "label": "Information for asylum seekers",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/studying-without-secondary-school-leaving-certificate",
+                "label": "Studying without secondary-school leaving certificate",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/managing-my-studies/change-or-additional-degree-programme",
+                "label": "Change of/additional degree programme",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/student-life/welcome-to-the-university-of-vienna-communities",
+                "label": "Communities",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/academic-writing-and-research-support/writing-group",
+                "label": "Writing Group",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/international-students/country-specific-requirements-for-admission",
+                "label": "Country-specific requirements for admission",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/academic-writing-and-research-support/ask-a-librarian",
+                "label": "Ask a Librarian",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/academic-writing-and-research-support/writing-marathon",
+                "label": "Writing Marathon",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/academic-writing-and-research-support/writing-consultation-and-text-feedback",
+                "label": "Writing Consultation and Text-Feedback",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/academic-writing-and-research-support/writing-mentoring-for-writing-skills-development",
+                "label": "Writing Mentoring for writing skills development",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/about-us/legal-basis",
+                "label": "Legal basis",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/about-us/statistical-data",
+                "label": "Statistical data",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-your-degree-programme/extension-curricula",
+                "label": "Extension curricula",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/about-us/organisation-of-studying-and-teaching",
+                "label": "Organisation",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/about-us/contact-for-prospective-and-current-students",
+                "label": "Contact for prospective and current students",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/admission-info/non-degree-programme",
+                "label": "Non-degree programme",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/first-semester-support",
+                "label": "First Semester Support",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/grants-and-scholarships",
+                "label": "Grants and scholarships",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/tuition-fee/students-union-fee",
+                "label": "Tuition fee/Students' Union fee",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/walk-in-peer-point-consultations",
+                "label": "Walk in: Peer Point consultations",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/language-proficiency/german-language-proficiency",
+                "label": "Knowledge of German",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/language-proficiency/english-language-proficiency",
+                "label": "English language proficiency",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/learning-and-study-planning-support",
+                "label": "Learning and study planning support",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/academic-writing-and-research-support",
+                "label": "Academic writing and research support",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/first-semester-support/steop-mentoring",
+                "label": "STEOP-Mentoring",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/fuers-studium-bewerben/zulassen/arbeitstitel-studienverwaltung/studium-schliessen",
+                "label": "Closing a degree programme",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/paying-the-tuition-fee/students-union-fee",
+                "label": "Paying the tuition fee/Students' Union fee (= re-enrolment)",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/amount-of-the-tuition-fee/students-union-fee",
+                "label": "Amount of the tuition fee/Students' Union fee",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/learning-and-study-planning-support/learning-group",
+                "label": "Learning Group",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/learning-and-study-planning-support/learning-marathon",
+                "label": "Learning Marathon",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/fuers-studium-bewerben/internationale-studierende/non-eu/eea-nationals-with-equivalent-status",
+                "label": "Non-EU/EEA nationals with equivalent status",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/tuition-fee/students-union-fee/remission-and-reimbursement",
+                "label": "Remission and reimbursement",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/tuition-fee/students-union-fee/equal-status-with-eu/eea-citizens",
+                "label": "Equal status with EU/EEA citizens",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/learning-and-study-planning-support/learning-and-studying-consultation",
+                "label": "Learning and Studying Consultation",
+                "score": 0,
+                "source": "html"
+              }
+            ],
+            "programs_confirmed": 1,
+            "outcomes": [
+              {
+                "url": "https://www.studierenprobieren.at/events?institutions=56",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.instagram.com/univienna?hl=en",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.linkedin.com/school/univienna?originalSubdomain=at",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.youtube.com/univienna",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.facebook.com/univienna?locale=de_DE",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.univie.ac.at/en",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/studium-finden",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-your-degree-programme/masters-programmes",
+                "outcome": "degree_level_mismatch"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/completing-the-admission-procedure/ma",
+                "outcome": "degree_level_mismatch"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/vwu",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/international-students/visiting-master",
+                "outcome": "degree_level_mismatch"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/deadlines",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://studienstartplus.univie.ac.at/en",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/first-semester-support/master-peer-mentoring",
+                "outcome": "degree_level_mismatch"
+              },
+              {
+                "url": "https://moodle.univie.ac.at/?lang=en",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://zid.univie.ac.at/en/webmail",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://uspace.univie.ac.at/en",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://ufind.univie.ac.at/en",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://wiki.univie.ac.at/",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://bibliothek.univie.ac.at/en",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.univie.ac.at/en/about-us/organisation-and-structure",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://urise.univie.ac.at/?lang=en",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://lehramt.univie.ac.at/lehramt-studieren",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/sitemap",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://dsba.univie.ac.at/en/data-protection-declaration",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.univie.ac.at/en/about-us/information-on-accessibility",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/impressum",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/using-ai-in-your-studies",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/international-students",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/student-life/studying-safely",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/student-life/healthy-studying",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/international-students/ceepus",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/managing-my-studies/confirmations",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/student-life/jobs-housing-and-more",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/managing-my-studies/co-registration",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/managing-my-studies/leave-of-absence",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/international-students/legalisation",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/managing-my-studies/resumption-of-studies",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/managing-my-studies/changing-personal-data",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/managing-my-studies/minimum-number-of-credits",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/international-students/central-european-university",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/international-students/information-for-asylum-seekers",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/studying-without-secondary-school-leaving-certificate",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/managing-my-studies/change-or-additional-degree-programme",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/student-life/welcome-to-the-university-of-vienna-communities",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/academic-writing-and-research-support/writing-group",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/international-students/country-specific-requirements-for-admission",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/academic-writing-and-research-support/ask-a-librarian",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/academic-writing-and-research-support/writing-marathon",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/academic-writing-and-research-support/writing-consultation-and-text-feedback",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/academic-writing-and-research-support/writing-mentoring-for-writing-skills-development",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/about-us/legal-basis",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/about-us/statistical-data",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-your-degree-programme/extension-curricula",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/about-us/organisation-of-studying-and-teaching",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/about-us/contact-for-prospective-and-current-students",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-your-degree-programme/advice/information/unicheck",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/admission-info/non-degree-programme",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/first-semester-support",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/grants-and-scholarships",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/tuition-fee/students-union-fee",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/walk-in-peer-point-consultations",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-your-degree-programme/advice/information/online-self-assessment-osa",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/language-proficiency/german-language-proficiency",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/language-proficiency/english-language-proficiency",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/learning-and-study-planning-support",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/academic-writing-and-research-support",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/first-semester-support/steop-mentoring",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/fuers-studium-bewerben/zulassen/arbeitstitel-studienverwaltung/studium-schliessen",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/paying-the-tuition-fee/students-union-fee",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/amount-of-the-tuition-fee/students-union-fee",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-your-degree-programme/advice/information/education-fairs-and-on-site-consultation",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/learning-and-study-planning-support/learning-group",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/learning-and-study-planning-support/learning-marathon",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/fuers-studium-bewerben/internationale-studierende/non-eu/eea-nationals-with-equivalent-status",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/tuition-fee/students-union-fee/remission-and-reimbursement",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/tuition-fee/students-union-fee/equal-status-with-eu/eea-citizens",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/learning-and-study-planning-support/learning-and-studying-consultation",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/admission-info/ba",
+                "outcome": "reads_as_program_detail"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/completing-the-admission-procedure/ba",
+                "outcome": "reads_as_program_detail"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-your-degree-programme/bachelors-and-diploma-programmes",
+                "outcome": "reads_as_program_detail"
+              },
+              {
+                "url": "https://doktorat.univie.ac.at/en",
+                "outcome": "reads_as_unknown"
+              },
+              {
+                "url": "https://postgraduatecenter.univie.ac.at/en",
+                "outcome": "reads_as_unknown"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/admission-info/mag",
+                "outcome": "degree_level_mismatch"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/news-stories",
+                "outcome": "reads_as_news"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/degree-programmes",
+                "outcome": "reads_as_program_catalog"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning",
+                "outcome": "reads_as_costs"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/completing-a-programme",
+                "outcome": "reads_as_unknown"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme",
+                "outcome": "reads_as_unknown"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-your-degree-programme",
+                "outcome": "reads_as_program_catalog"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/student-spaces",
+                "outcome": "reads_as_unknown"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support",
+                "outcome": "reads_as_unknown"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters",
+                "outcome": "reads_as_costs"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/the-academic-year",
+                "outcome": "reads_as_unknown"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/abc-of-terminology",
+                "outcome": "reads_as_unknown"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/additional-exams",
+                "outcome": "reads_as_unknown"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/managing-my-studies",
+                "outcome": "reads_as_unknown"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/student-life/together",
+                "outcome": "reads_as_navigation"
+              },
+              {
+                "url": "https://www.instagram.com/univienna?hl=en",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.linkedin.com/school/univienna?originalSubdomain=at",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.youtube.com/univienna",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.facebook.com/univienna?locale=de_DE",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.univie.ac.at/en",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/studium-finden/bachelor-und-diplomstudien",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-your-degree-programme/masters-programmes",
+                "outcome": "degree_level_mismatch"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/completing-the-admission-procedure/ma",
+                "outcome": "degree_level_mismatch"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/vwu",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/international-students/visiting-master",
+                "outcome": "degree_level_mismatch"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/deadlines",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://studienstartplus.univie.ac.at/en",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support/first-semester-support/master-peer-mentoring",
+                "outcome": "degree_level_mismatch"
+              },
+              {
+                "url": "https://moodle.univie.ac.at/?lang=en",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://zid.univie.ac.at/en/webmail",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://uspace.univie.ac.at/en",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://ufind.univie.ac.at/en",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://wiki.univie.ac.at/",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://bibliothek.univie.ac.at/en",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.univie.ac.at/en/about-us/organisation-and-structure",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://urise.univie.ac.at/?lang=en",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-your-degree-programme/bachelors-and-diploma-programmes/astronomy-bachelors-programme",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://aufnahmeverfahren.univie.ac.at/en/biology",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://aufnahmeverfahren.univie.ac.at/en/chemistry",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://aufnahmeverfahren.univie.ac.at/en/economics",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://aufnahmeverfahren.univie.ac.at/en/education",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/geography-bachelors-programme",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/history-bachelors-programme",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://aufnahmeverfahren.univie.ac.at/en/law",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://aufnahmeverfahren.univie.ac.at/en/pharmacy",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/physics-bachelors-programme",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://aufnahmeverfahren.univie.ac.at/en/sociology",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/sitemap",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://dsba.univie.ac.at/en/data-protection-declaration",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.univie.ac.at/en/about-us/information-on-accessibility",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/impressum",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/completing-the-admission-procedure/ba",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/egyptology-bachelors-programme",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/musicology-bachelors-programme",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/philosophy-bachelors-programme",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/linguistics-bachelors-programme",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/mathematics-bachelors-programme",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/jewish-studies-bachelors-programme",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/african-studies-bachelors-programme",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/catholic-theology-diploma-programme",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/chinese-studies-bachelors-programme",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/romance-studies-bachelors-programme",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/german-philology-bachelors-programme",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/japanese-studies-bachelors-programme",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/oriental-studies-bachelors-programme",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/slavonic-studies-bachelors-programme",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/european-ethnology-bachelors-programme",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/classical-philology-bachelors-programme",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/protestant-theology-bachelors-programme",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/religious-education-bachelors-programme",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/scandinavian-studies-bachelors-programme",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/classical-archaeology-bachelors-programme",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/comparative-literature-bachelors-programme",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/islamic-theological-studies-bachelors-programme",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/statistics-and-data-analytics-bachelors-programme",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/theatre-film-and-media-studies-bachelors-programme",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/history-of-art-and-architecture-bachelors-programme",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/byzantine-and-modern-greek-studies-bachelors-programme",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/hungarian-studies-and-finnish-studies-bachelors-programme",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/prehistory-and-historical-archaeology-bachelors-programme",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/languages-and-cultures-of-south-asia-and-tibet-bachelors-programme",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-you-degree-programme/bachelors-and-diploma-programmes/ancient-history-and-studies-in-classical-antiquity-bachelors-programme",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://aufnahmeverfahren.univie.ac.at/en/political-science",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://aufnahmeverfahren.univie.ac.at/en/business-informatics",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://aufnahmeverfahren.univie.ac.at/en/nutritional-sciences",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://aufnahmeverfahren.univie.ac.at/en/mass-media-and-communication-science",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://aufnahmeverfahren.univie.ac.at/en/mathematical-foundations-of-data-science",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-your-degree-programme/bachelors-and-diploma-programmes",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/admission-info/mag",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/news-stories",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://aufnahmeverfahren.univie.ac.at/en/psychology",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/completing-a-programme",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://aufnahmeverfahren.univie.ac.at/en/korean-studies",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://aufnahmeverfahren.univie.ac.at/en/teacher-education",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/find-your-degree-programme",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://aufnahmeverfahren.univie.ac.at/en/business-administration",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://aufnahmeverfahren.univie.ac.at/en/international-legal-studies",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://aufnahmeverfahren.univie.ac.at/en/transcultural-communication",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/student-spaces",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://aufnahmeverfahren.univie.ac.at/en/english-and-american-studies",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/academic-support",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/the-academic-year",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/abc-of-terminology",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://aufnahmeverfahren.univie.ac.at/en/social-and-cultural-anthropology",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/additional-exams",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/managing-my-studies",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/student-life/together",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://aufnahmeverfahren.univie.ac.at/en/international-business-administration",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/using-ai-in-your-studies",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/applying-for-a-programme/international-students",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/student-life/studying-safely",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://studieren.univie.ac.at/en/studying-and-learning/student-life/healthy-studying",
+                "outcome": "walker_budget_exhausted"
+              }
+            ]
+          }
+        },
+        "programs": [
+          "https://aufnahmeverfahren.univie.ac.at/en/computer-science"
+        ],
+        "program_page_found": true,
+        "scholarship_page_found": true,
+        "discovery_notes": "Sitemap-first discovery found: program_catalog, program_page, admissions, costs, scholarships. Not found: documents.",
+        "claims": 2,
+        "claims_verified": 2,
+        "completeness": 0.167,
+        "eligibility": "GAP",
+        "funding_fit": "UNKNOWN",
+        "scholarships_found": 0,
+        "false_positives": [],
+        "page_outcomes": {
+          "classifier-rejected": 2,
+          "fetch-failed": 3,
+          "fetched-ok": 3,
+          "no-pattern-match": 2
+        },
+        "page_types": {
+          "unknown": 1,
+          "general_admissions": 1,
+          "program_detail": 3,
+          "costs": 1,
+          "scholarship_index": 1
+        },
+        "page_diagnostics": [
+          {
+            "category": "classifier-rejected",
+            "url": "https://studieren.univie.ac.at/en/admission-procedure",
+            "page_type": "unknown",
+            "characters": "3283",
+            "detail": "classified as unknown; no requirement can be read from this kind of page. title='Application and admission at the University of Vienna' signals='no decisive signals' chars=3283 degrees=[]"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://studieren.univie.ac.at/en/admission/german-language-proficiency/",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "http_error — HTTP 404"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://studieren.univie.ac.at/en/admission/bachelordiploma-programmes/zulassung/non-eueea-with-german",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "http_error — HTTP 404"
+          },
+          {
+            "category": "classifier-rejected",
+            "url": "https://studieren.univie.ac.at/en/admission/info-third-country-students",
+            "page_type": "general_admissions",
+            "characters": null,
+            "detail": "not an award page; no scholarship recorded (0 award links, 0 below it: )"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://studieren.univie.ac.at/en/admission/bachelordiploma-programmes/zulassung-mit-verpfl-osa/non-eueea-with-little-german",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "http_error — HTTP 404"
+          },
+          {
+            "category": "fetched-ok",
+            "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+            "page_type": "program_detail",
+            "characters": "7339",
+            "detail": "2 claims read from this page"
+          },
+          {
+            "category": "no-pattern-match",
+            "url": "https://aufnahmeverfahren.univie.ac.at/en/german-language-proficiency",
+            "page_type": "program_detail",
+            "characters": "7082",
+            "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed"
+          },
+          {
+            "category": "no-pattern-match",
+            "url": "https://studieren.univie.ac.at/en/tuition-fee",
+            "page_type": "costs",
+            "characters": "1482",
+            "detail": "page was read but no cost figures could be extracted"
+          },
+          {
+            "category": "fetched-ok",
+            "url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/grants-and-scholarships",
+            "page_type": "scholarship_index",
+            "characters": null,
+            "detail": "read as a funding index; 0 award links, 0 queued within the award budget"
+          },
+          {
+            "category": "fetched-ok",
+            "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+            "page_type": "program_detail",
+            "characters": null,
+            "detail": "read as a funding index; 0 award links, 0 queued within the award budget"
+          }
+        ]
+      }
+    ],
+    "totals": {
+      "institutions": 1,
+      "reached": 1,
+      "blocked": 0,
+      "program_pages_found": 1,
+      "scholarship_pages_found": 1,
+      "claims": 2,
+      "false_positives": 0,
+      "page_outcomes": {
+        "classifier-rejected": 2,
+        "fetch-failed": 3,
+        "fetched-ok": 3,
+        "no-pattern-match": 2
+      },
+      "page_types": {
+        "unknown": 1,
+        "general_admissions": 1,
+        "program_detail": 3,
+        "costs": 1,
+        "scholarship_index": 1
+      },
+      "recall": {
+        "program": {
+          "numerator": 1,
+          "denominator": 1,
+          "target": 0.7
+        },
+        "category": {
+          "numerator": 3,
+          "denominator": 3,
+          "target": 0.8666666666666667
+        }
+      },
+      "catalogs_walked": 2,
+      "walker_programs_confirmed": 1,
+      "source_pages_recorded": 23,
+      "fetch_tiers": {
+        "fixture": 0,
+        "http": 49,
+        "browser": 0,
+        "pdf": 0
+      }
+    }
+  },
+  "claims": [
+    {
+      "claim_type": "program_exists",
+      "normalized_value": {
+        "program": "Computer Science (bachelor's programme)",
+        "degree": "bachelor",
+        "language": null,
+        "matched_because": "page subject \"Computer Science (bachelor's programme)\" covers every requested subject word"
+      },
+      "original_text_excerpt": "Entrance exam procedure © Ian Ehm University of Vienna / Entrance exam / Before the entrance exam / Degree programmes / Computer Science (bachelor's programme) Computer Science (bachelor's programme) Delve into the world of technology and innovation: in the bachelor's programme in Computer Science, you will solve",
+      "source_url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+      "page_title": "Computer Science (bachelor's programme)",
+      "relevant_section": "Programme identity",
+      "official_domain": true,
+      "program": "Computer Science",
+      "subject_key": null,
+      "intake": "fall 2027",
+      "academic_year": "2026/27",
+      "accessed_at": "2026-10-03T08:36:24.220210Z",
+      "scope": {
+        "university": null,
+        "faculty": null,
+        "programme": null,
+        "degree": "bachelor",
+        "intake": null,
+        "academic_year": null,
+        "population": null,
+        "nationality": null,
+        "residency": null,
+        "qualification": null
+      },
+      "source_specificity": "program_intake",
+      "confidence": 0.9,
+      "status": "VERIFIED_CURRENT",
+      "extraction_method": "html_rule",
+      "notes": ""
+    },
+    {
+      "claim_type": "admission_deadline",
+      "normalized_value": "2026-05-04",
+      "original_text_excerpt": "is conducted in the bachelor's programme in Computer Science. You'll find a brief overview in the right info box → The entrance exam procedure Overview Application period 2 March to 4 May 2026 Written test 13 July 2026 on site in Vienna (no alternative dates) Test details With the free test literature and sample exercises you'll be well prepare",
+      "source_url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+      "page_title": "Computer Science (bachelor's programme)",
+      "relevant_section": "",
+      "official_domain": true,
+      "program": "Computer Science",
+      "subject_key": null,
+      "intake": "fall 2027",
+      "academic_year": "2026/27",
+      "accessed_at": "2026-10-03T08:36:24.220210Z",
+      "scope": {
+        "university": null,
+        "faculty": null,
+        "programme": null,
+        "degree": "bachelor",
+        "intake": null,
+        "academic_year": null,
+        "population": null,
+        "nationality": null,
+        "residency": null,
+        "qualification": null
+      },
+      "source_specificity": "program_intake",
+      "confidence": 0.8,
+      "status": "VERIFIED_CURRENT",
+      "extraction_method": "html_rule",
+      "notes": "timezone: not stated on page"
+    }
+  ]
+}

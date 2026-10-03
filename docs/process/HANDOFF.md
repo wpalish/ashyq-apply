@@ -126,6 +126,8 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**Task2 complete, original artifact37110018701 (mainb672349):** strict6/62,11/12; programme4/10 and4/16; awards0/3; explicitexa56 calls,402HTTP. Oracle19recovered/16value_missing/35fetch_failed/2not_measured plus2text_missing. No quota error in retained child logs. Original artifact retained with checksums; see SEARCH_BENCHMARK_2026-10-03.md. Task1 owner merge confirmed, Task3 awaits normal public login; Task4 existing PR41 fixes require same-budget live confirmation. This metadata/integration commit leaves the pre-merge app tree unchanged.
+
 **Workflow task1 sourcee40183e, PR42 ready-for-review:** normal push now succeeds after owner workflow authorization. Exact-head push37107912115 and PR37107916481 all8 jobs passed, merge state CLEAN. Push logs backend2873 on both DBs / SQLite94.87%; Ruff/format/mypy324; frontend232, E2E79+auth6; security/container gates pass.20 offline selector cases pass. Only workflow changed; no production mutation or benchmark dispatch.
 
 
@@ -1755,7 +1757,7 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-**Task2 running write-ahead:** inspect Actions run37110018701 (main b672349) until completion/failure, download its own artifacts, keep captures separate from old300s diagnostics, and record six metrics plus all four oracle verdict counts. No re-scoring old captures. On actual provider402/429/quota failure, stop/cancel rather than loop or change identities. After measurement, perform brief-profile live check with user-provided email through normal auth; do not erase an existing account.
+**Task2 artifact / Task3 / Task4 write-ahead (2026-10-03):** preserve main run37110018701 capture, scores, oracle, config and per-case logs under a distinct120s directory; report6/62 recall,11/12 precision,4/10 programme recall,4/16 precision,0/3 awards,56 provider calls. Oracle19 recovered/16 value_missing/35 fetch_failed/2 not_measured/2 text_missing (74 source probes, not62 known labels). Task3 public login is open with the owner-approved address; password entry must be completed by the owner, no password reset or existing account deletion. While waiting, integrate the already-owner-merged workflow-only PR42 into this branch, verify no app tree changes, and measure existing PR41 fixes with a NEW explicit-exa120s/60reads ten-case run. Keep strict original identity binding scores primary; any observed-identity diagnostic must be separately labelled. Do not repeat prior NTU user run or retry provider quota errors. No production deployment/settings changes.
 
 
 **Latest next step:** owner squash-merges PR42 (explicit handoff requirement), then verify main workflow input and run gh workflow run benchmark-capture --ref main -f mode=benchmark -f case= -f seconds_per_case=120 -f max_pages=60 -f search_provider=exa. Record source/run/provider/query counts, six metric rows and oracle verdicts without mixing old captures. Stop on provider quota failure. No self-hosted runners registered as of this checkpoint; cloud site-access failures stay visible. Permitted test email has been supplied in chat, keep private and use normal auth; never delete an existing user account as synthetic cleanup.

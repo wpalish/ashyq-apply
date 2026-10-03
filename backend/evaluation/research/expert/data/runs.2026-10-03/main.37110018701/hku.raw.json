@@ -1,0 +1,317 @@
+{
+  "canary": {
+    "accessed_at": "2026-10-03T08:42:08.011498+00:00",
+    "duration_seconds": 64.7,
+    "run_error": "",
+    "batch": [
+      "The University of Hong Kong"
+    ],
+    "institutions": [
+      {
+        "institution": "The University of Hong Kong",
+        "country": "Hong Kong",
+        "domain": "hku.hk",
+        "access": "PARTIALLY_BLOCKED",
+        "robots_disallowed_requests": 22,
+        "pages_checked": 33,
+        "pages_failed": 22,
+        "failures": [
+          [
+            "https://admissions.hku.hk/programmes",
+            "robots_disallowed: robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed"
+          ],
+          [
+            "https://admissions.hku.hk/programmes",
+            "robots_disallowed: robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed"
+          ],
+          [
+            "https://www.cs.hku.hk/",
+            "robots_disallowed: robots.txt unreachable (ConnectTimeout); RFC 9309 treats the whole site as disallowed"
+          ],
+          [
+            "https://admissions.hku.hk/",
+            "robots_disallowed: robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed"
+          ],
+          [
+            "https://www.admissions.hku.hk/",
+            "robots_disallowed: robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed"
+          ],
+          [
+            "https://admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science",
+            "robots_disallowed: robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed"
+          ],
+          [
+            "https://admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science-delta",
+            "robots_disallowed: robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed"
+          ],
+          [
+            "https://www.admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science-delta",
+            "robots_disallowed: robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed"
+          ]
+        ],
+        "outcomes": {
+          "ok": 11,
+          "robots_disallowed": 22
+        },
+        "discovered": {
+          "program_catalog": [
+            "https://admissions.hku.hk/programmes"
+          ],
+          "program_page": [
+            "https://admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science",
+            "https://admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science-delta",
+            "https://www.admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science-delta"
+          ],
+          "admissions": [
+            "https://admissions.hku.hk/",
+            "https://www.hku.hk/en/admission-aid",
+            "https://www.hku.hk/tc/admission-aid"
+          ],
+          "costs": [
+            "https://admissions.hku.hk/fees-and-scholarships/fees",
+            "https://www.hku.hk/en/admission-aid/tuition-fee-scholarships",
+            "https://www.hku.hk/tc/admission-aid/tuition-fee-scholarships"
+          ],
+          "scholarships": [
+            "https://admissions.hku.hk/fees-and-scholarships/scholarships"
+          ]
+        },
+        "discovery_trace": {
+          "institution": "The University of Hong Kong",
+          "domain": "www.hku.hk",
+          "sitemaps_declared": [
+            "https://www.hku.hk/sitemap-index.xml"
+          ],
+          "sitemaps_read": [
+            "https://www.hku.hk/sitemap-index.xml",
+            "https://www.hku.hk/sitemap.en-sitemap.xml",
+            "https://www.hku.hk/sitemap.tc-sitemap.xml",
+            "https://www.hku.hk/sitemap.sc-sitemap.xml",
+            "https://www.hku.hk/sitemap.tc-news-events-sitemap.xml",
+            "https://www.hku.hk/sitemap.en-news-events-sitemap.xml",
+            "https://www.hku.hk/sitemap.sc-news-events-sitemap.xml",
+            "https://www.hku.hk/sitemap.xml"
+          ],
+          "sitemap_urls_seen": 379,
+          "sitemap_urls_kept": 6,
+          "manual_seeds": {
+            "program_catalog": "https://admissions.hku.hk/programmes",
+            "admissions": "https://admissions.hku.hk/",
+            "costs": "https://admissions.hku.hk/fees-and-scholarships/fees",
+            "scholarships": "https://admissions.hku.hk/fees-and-scholarships/scholarships"
+          },
+          "selected": {
+            "program_catalog": [
+              "https://admissions.hku.hk/programmes"
+            ],
+            "program_page": [
+              "https://admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science",
+              "https://admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science-delta",
+              "https://www.admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science-delta"
+            ],
+            "admissions": [
+              "https://admissions.hku.hk/",
+              "https://www.hku.hk/en/admission-aid",
+              "https://www.hku.hk/tc/admission-aid"
+            ],
+            "costs": [
+              "https://admissions.hku.hk/fees-and-scholarships/fees",
+              "https://www.hku.hk/en/admission-aid/tuition-fee-scholarships",
+              "https://www.hku.hk/tc/admission-aid/tuition-fee-scholarships"
+            ],
+            "scholarships": [
+              "https://admissions.hku.hk/fees-and-scholarships/scholarships"
+            ]
+          },
+          "rejected_sample": [
+            [
+              "https://admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science",
+              "search lead unresolved (robots_disallowed)"
+            ],
+            [
+              "https://admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science-delta",
+              "search lead unresolved (robots_disallowed)"
+            ],
+            [
+              "https://www.admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science-delta",
+              "search lead unresolved (robots_disallowed)"
+            ],
+            [
+              "https://www.cds.hku.hk/prospective-students/undergraduate",
+              "search lead unresolved (robots_disallowed)"
+            ],
+            [
+              "https://www.cds.hku.hk/prospective-students/undergraduate/6999-computing-and-data-science",
+              "search lead unresolved (robots_disallowed)"
+            ],
+            [
+              "https://www.cds.hku.hk/prospective-students/undergraduate/6200-computing-and-data-science-delta",
+              "search lead unresolved (robots_disallowed)"
+            ],
+            [
+              "https://master.cds.hku.hk/msccs",
+              "page names degree level master, not bachelor"
+            ],
+            [
+              "https://www.cs.hku.hk/programmes/beng-compsc",
+              "search lead unresolved (robots_disallowed)"
+            ]
+          ],
+          "rejected_total": 8,
+          "errors": [
+            "navigation fallback: https://admissions.hku.hk/programmes unreachable (robots_disallowed)",
+            "search identity recovery: checked 8, confirmed 0",
+            "search identity recovery via exa; queries 6, failed 0, rejected {'duplicate': 25, 'wrong_degree_level': 1, 'not_a_programme_page': 1}"
+          ],
+          "search_failures": [],
+          "search_limitations": [],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": true,
+          "kept_by_link_text": [],
+          "walker": {
+            "catalogs_walked": 1,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": [
+              {
+                "url": "https://admissions.hku.hk/programmes",
+                "outcome": "robots_disallowed"
+              },
+              {
+                "url": "https://admissions.hku.hk/programmes",
+                "outcome": "js_no_program_list"
+              }
+            ]
+          }
+        },
+        "programs": [
+          "https://admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science",
+          "https://admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science-delta",
+          "https://www.admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science-delta"
+        ],
+        "program_page_found": true,
+        "scholarship_page_found": true,
+        "discovery_notes": "Sitemap-first discovery found: program_catalog, program_page, admissions, costs, scholarships. Not found: documents.",
+        "claims": 0,
+        "claims_verified": 0,
+        "completeness": 0.0,
+        "eligibility": "NEEDS_OFFICIAL_CLARIFICATION",
+        "funding_fit": "UNKNOWN",
+        "scholarships_found": 0,
+        "false_positives": [],
+        "page_outcomes": {
+          "fetch-failed": 10
+        },
+        "page_types": {},
+        "page_diagnostics": [
+          {
+            "category": "fetch-failed",
+            "url": "https://admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "robots_disallowed — robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://admissions.hku.hk/",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "robots_disallowed — robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://admissions.hku.hk/fees-and-scholarships/fees",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "robots_disallowed — robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science-delta",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "robots_disallowed — robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://admissions.hku.hk/",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "robots_disallowed — robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://admissions.hku.hk/fees-and-scholarships/fees",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "robots_disallowed — robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://admissions.hku.hk/fees-and-scholarships/scholarships",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "robots_disallowed — robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science-delta",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "robots_disallowed — robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://admissions.hku.hk/fees-and-scholarships/scholarships",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "robots_disallowed — robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "robots_disallowed — robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed"
+          }
+        ]
+      }
+    ],
+    "totals": {
+      "institutions": 1,
+      "reached": 0,
+      "blocked": 1,
+      "program_pages_found": 1,
+      "scholarship_pages_found": 1,
+      "claims": 0,
+      "false_positives": 0,
+      "page_outcomes": {
+        "fetch-failed": 10
+      },
+      "page_types": {},
+      "recall": {
+        "program": {
+          "numerator": 1,
+          "denominator": 1,
+          "target": 0.7
+        },
+        "category": {
+          "numerator": 3,
+          "denominator": 3,
+          "target": 0.8666666666666667
+        }
+      },
+      "catalogs_walked": 1,
+      "walker_programs_confirmed": 0,
+      "source_pages_recorded": 0,
+      "fetch_tiers": {
+        "fixture": 0,
+        "http": 11,
+        "browser": 0,
+        "pdf": 0
+      }
+    }
+  },
+  "claims": []
+}

@@ -54,6 +54,16 @@ on:
         description: 'Experiment: search before the navigation fallback (false matches the measured default)'
         required: false
         default: 'false'
+      search_provider:
+        description: 'Search layer: auto preserves historic secret precedence; explicit exa requires its API key'
+        type: choice
+        required: false
+        default: 'auto'
+        options:
+          - auto
+          - exa
+          - exa_mcp
+          - none
 
 permissions:
   contents: read
@@ -76,7 +86,6 @@ jobs:
       # query in run 48, and a spent balance must not silently remove search.
       # Serper, then Brave, then Tavily, then Exa: Tavily's free plan answered
       # 432 on every query in runs 68-69.
-      UNIMATCH_SEARCH_PROVIDER: ${{ secrets.UNIMATCH_SERPER_API_KEY != '' && 'serper' || (secrets.UNIMATCH_BRAVE_API_KEY != '' && 'brave' || (secrets.UNIMATCH_TAVILY_API_KEY != '' && 'tavily' || (secrets.UNIMATCH_EXA_API_KEY != '' && 'exa' || 'none'))) }}
       UNIMATCH_EXA_API_KEY: ${{ secrets.UNIMATCH_EXA_API_KEY }}
       UNIMATCH_TAVILY_API_KEY: ${{ secrets.UNIMATCH_TAVILY_API_KEY }}
       UNIMATCH_BRAVE_API_KEY: ${{ secrets.UNIMATCH_BRAVE_API_KEY }}
@@ -94,21 +103,47 @@ jobs:
       - run: python -m venv .venv
       - run: .venv/bin/pip install -r requirements-dev.txt
 
+      - name: Select the search layer
+        env:
+          REQUESTED_SEARCH_PROVIDER: ${{ inputs.search_provider || 'auto' }}
+        run: |
+          set -euo pipefail
+          requested="$REQUESTED_SEARCH_PROVIDER"
+          decided_by="explicit input"
+          case "$requested" in
+            auto)
+              if [ -n "$UNIMATCH_SERPER_API_KEY" ]; then
+                provider=serper; decided_by=UNIMATCH_SERPER_API_KEY
+              elif [ -n "$UNIMATCH_BRAVE_API_KEY" ]; then
+                provider=brave; decided_by=UNIMATCH_BRAVE_API_KEY
+              elif [ -n "$UNIMATCH_TAVILY_API_KEY" ]; then
+                provider=tavily; decided_by=UNIMATCH_TAVILY_API_KEY
+              elif [ -n "$UNIMATCH_EXA_API_KEY" ]; then
+                provider=exa; decided_by=UNIMATCH_EXA_API_KEY
+              else
+                provider=none; decided_by="no configured search key"
+              fi
+              ;;
+            exa)
+              if [ -z "$UNIMATCH_EXA_API_KEY" ]; then
+                echo "::error::exa requires UNIMATCH_EXA_API_KEY; no capture started"
+                exit 1
+              fi
+              provider=exa; decided_by="explicit input and UNIMATCH_EXA_API_KEY"
+              ;;
+            exa_mcp|none) provider="$requested" ;;
+            *) echo "::error::unknown search_provider; no capture started"; exit 1 ;;
+          esac
+          echo "UNIMATCH_SEARCH_PROVIDER=$provider" >> "$GITHUB_ENV"
+          echo "search provider: $provider (decided by $decided_by)"
+          mkdir -p out
+          echo "provider=$provider" > out/config.txt
+          echo "decided_by=$decided_by" >> out/config.txt
+
       - name: Say which pipeline is being measured
         run: |
           echo "runner=${{ runner.name }} os=${{ runner.os }} environment=${{ runner.environment }}"
-          if [ -n "${{ secrets.UNIMATCH_SERPER_API_KEY }}" ]; then
-            echo "search provider: serper"
-          elif [ -n "${{ secrets.UNIMATCH_BRAVE_API_KEY }}" ]; then
-            echo "search provider: brave"
-          elif [ -n "${{ secrets.UNIMATCH_TAVILY_API_KEY }}" ]; then
-            echo "search provider: tavily"
-          elif [ -n "${{ secrets.UNIMATCH_EXA_API_KEY }}" ]; then
-            echo "search provider: exa (the shipped Phase 1 path)"
-          else
-            echo "search provider: none — no UNIMATCH_EXA_API_KEY secret is set."
-            echo "The capture still runs, but it measures discovery without web search."
-          fi
+          echo "search provider: $UNIMATCH_SEARCH_PROVIDER"
 
       - name: Capture
         # The bounds are printed, not assumed: a capture taken under different
@@ -128,6 +163,7 @@ jobs:
             --max-pages ${{ inputs.max_pages }} \
             ${{ inputs.search_first == 'true' && '--search-first' || '' }} \
             ${{ inputs.case && format('--case {0}', inputs.case) || '' }} \
+            --search-provider "$UNIMATCH_SEARCH_PROVIDER" \
             | tee capture.log
           # The capture writes into a timestamped subdirectory and prints that
           # path as its last line. Reading it back is the only way to name the
@@ -371,6 +407,7 @@ jobs:
             backend/evaluation/research/baseline/metrics.${{ github.run_id }}.json
             backend/capture-metrics.txt
             backend/capture.log
+            backend/out/config.txt
             backend/scope-mismatches.json
             backend/scope-mismatches.txt
             backend/support-shapes.txt
@@ -389,7 +426,6 @@ jobs:
       run:
         working-directory: backend
     env:
-      UNIMATCH_SEARCH_PROVIDER: ${{ secrets.UNIMATCH_SERPER_API_KEY != '' && 'serper' || (secrets.UNIMATCH_BRAVE_API_KEY != '' && 'brave' || (secrets.UNIMATCH_TAVILY_API_KEY != '' && 'tavily' || (secrets.UNIMATCH_EXA_API_KEY != '' && 'exa' || 'none'))) }}
       UNIMATCH_EXA_API_KEY: ${{ secrets.UNIMATCH_EXA_API_KEY }}
       UNIMATCH_TAVILY_API_KEY: ${{ secrets.UNIMATCH_TAVILY_API_KEY }}
       UNIMATCH_BRAVE_API_KEY: ${{ secrets.UNIMATCH_BRAVE_API_KEY }}
@@ -407,6 +443,43 @@ jobs:
           cache-dependency-path: backend/requirements*.txt
       - run: python -m venv .venv
       - run: .venv/bin/pip install -q -r requirements-dev.txt
+      - name: Select the search layer
+        env:
+          REQUESTED_SEARCH_PROVIDER: ${{ inputs.search_provider || 'auto' }}
+        run: |
+          set -euo pipefail
+          requested="$REQUESTED_SEARCH_PROVIDER"
+          decided_by="explicit input"
+          case "$requested" in
+            auto)
+              if [ -n "$UNIMATCH_SERPER_API_KEY" ]; then
+                provider=serper; decided_by=UNIMATCH_SERPER_API_KEY
+              elif [ -n "$UNIMATCH_BRAVE_API_KEY" ]; then
+                provider=brave; decided_by=UNIMATCH_BRAVE_API_KEY
+              elif [ -n "$UNIMATCH_TAVILY_API_KEY" ]; then
+                provider=tavily; decided_by=UNIMATCH_TAVILY_API_KEY
+              elif [ -n "$UNIMATCH_EXA_API_KEY" ]; then
+                provider=exa; decided_by=UNIMATCH_EXA_API_KEY
+              else
+                provider=none; decided_by="no configured search key"
+              fi
+              ;;
+            exa)
+              if [ -z "$UNIMATCH_EXA_API_KEY" ]; then
+                echo "::error::exa requires UNIMATCH_EXA_API_KEY; no capture started"
+                exit 1
+              fi
+              provider=exa; decided_by="explicit input and UNIMATCH_EXA_API_KEY"
+              ;;
+            exa_mcp|none) provider="$requested" ;;
+            *) echo "::error::unknown search_provider; no capture started"; exit 1 ;;
+          esac
+          echo "UNIMATCH_SEARCH_PROVIDER=$provider" >> "$GITHUB_ENV"
+          echo "search provider: $provider (decided by $decided_by)"
+          mkdir -p out
+          echo "provider=$provider" > out/config.txt
+          echo "decided_by=$decided_by" >> out/config.txt
+
       - name: Provider
         # Which machine read the sites is part of the measurement: a cloud
         # runner and a home connection get different answers (Aalto's
@@ -423,14 +496,14 @@ jobs:
           .venv/bin/python -m evaluation.research.live --live --out out/capture \
             --case "${{ inputs.case }}" \
             --seconds-per-case "${{ inputs.seconds_per_case }}" \
-            --max-pages "${{ inputs.max_pages }}" ${{ inputs.extra_args }} | tee out/capture.log
+            --max-pages "${{ inputs.max_pages }}" ${{ inputs.extra_args }} \
+            --search-provider "$UNIMATCH_SEARCH_PROVIDER" | tee out/capture.log
           CAPTURE="$(tail -n 1 out/capture.log)"
           test -f "$CAPTURE"
           .venv/bin/python -m evaluation.research.expert prepare \
             --dataset evaluation/research/data/ground_truth.reviewed.json \
             --capture "$CAPTURE" --case "${{ inputs.case }}" \
             --out out/packet.json
-          echo "provider=$UNIMATCH_SEARCH_PROVIDER" > out/config.txt
           echo "extra_args=${{ inputs.extra_args }}" >> out/config.txt
 
       - name: Paired rule experiment (same runner, ABBA order)
@@ -446,10 +519,11 @@ jobs:
               flags="${{ inputs.base_args }}"; [ "$arm" = on ] && flags="$flags ${{ inputs.extra_args }}"
               .venv/bin/python -m evaluation.research.live --live --out "out/$c-$arm" \
                 --case "$c" --seconds-per-case "${{ inputs.seconds_per_case }}" \
-                --max-pages "${{ inputs.max_pages }}" $flags | tail -n 2
+                --max-pages "${{ inputs.max_pages }}" $flags \
+                --search-provider "$UNIMATCH_SEARCH_PROVIDER" | tail -n 2
             done
           done
-          echo "extra_args=${{ inputs.extra_args }} base_args=${{ inputs.base_args }}" > out/config.txt
+          echo "extra_args=${{ inputs.extra_args }} base_args=${{ inputs.base_args }}" >> out/config.txt
 
       - name: Execute an expert plan
         if: inputs.mode == 'expert_actions'
