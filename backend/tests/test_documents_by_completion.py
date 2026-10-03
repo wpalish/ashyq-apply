@@ -1,6 +1,7 @@
 """A document's form by completion state, read from one line (Groningen, 2026-09-28)."""
 
 from datetime import UTC, datetime
+from pathlib import Path
 
 import pytest
 
@@ -139,6 +140,49 @@ def test_a_completion_form_is_not_claimed_after_its_evidence_would_be_clipped():
         + "if not yet completed: school-issued list of your courses</p>"
     )
     assert _read_html(html) == []
+
+
+def test_actual_diploma_cell_keeps_secondary_and_higher_education_separate():
+    html = (Path(__file__).parent / "fixtures/live_shapes/groningen_diploma_row.html").read_text()
+    claims = _read_html(html)
+    assert [(c.normalized_value["status"], c.normalized_value["form"]) for c in claims] == [
+        ("completed", "diploma"),
+        ("not_completed", "school_enrolment_statement"),
+    ]
+    for claim in claims:
+        assert "from your school" in claim.original_text_excerpt
+        assert "Higher education" not in claim.original_text_excerpt
+        assert "educational institution" not in claim.original_text_excerpt
+        assert "expected date of graduation" in claim.original_text_excerpt
+
+
+@pytest.mark.parametrize(
+    ("old", "new"),
+    [
+        ("<strong>Diploma</strong>", "<strong>Transcript</strong>"),
+        ("Secondary education", "Secondary education (if applicable)"),
+        ("or<br/>if not yet completed:", "or<br/>if requested:"),
+        ("Statement of enrolment", "Alternative documents"),
+        ("Statement of enrolment", "Statement of enrolment if requested"),
+        ("Statement of enrolment", "Statement of enrolment (not required)"),
+        ("Higher education (if applicable)", "Unrelated information"),
+        ("expected date of graduation", "expected date of graduation " + "context " * 500),
+    ],
+    ids=[
+        "wrong-document",
+        "conditional-group",
+        "different-condition",
+        "unknown-form",
+        "extra-condition",
+        "not-required",
+        "no-group-boundary",
+        "oversized-group",
+    ],
+)
+def test_compound_cell_requires_a_complete_unambiguous_secondary_group(old, new):
+    html = (Path(__file__).parent / "fixtures/live_shapes/groningen_diploma_row.html").read_text()
+    assert old in html
+    assert _read_html(html.replace(old, new)) == []
 
 
 @pytest.mark.asyncio

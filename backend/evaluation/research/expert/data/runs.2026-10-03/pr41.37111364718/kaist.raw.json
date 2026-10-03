@@ -1,0 +1,993 @@
+{
+  "canary": {
+    "accessed_at": "2026-10-03T09:08:26.840201+00:00",
+    "duration_seconds": 55.6,
+    "run_error": "",
+    "batch": [
+      "KAIST"
+    ],
+    "institutions": [
+      {
+        "institution": "KAIST",
+        "country": "South Korea",
+        "domain": "kaist.ac.kr",
+        "access": "REACHED",
+        "robots_disallowed_requests": 0,
+        "pages_checked": 27,
+        "pages_failed": 3,
+        "failures": [
+          [
+            "https://www.kaist.ac.kr/sitemap_index.xml",
+            "http_error: HTTP 404"
+          ],
+          [
+            "https://www.kaist.ac.kr/sitemap-index.xml",
+            "http_error: HTTP 404"
+          ],
+          [
+            "https://www.kaist.ac.kr/sitemap/sitemap.xml",
+            "http_error: HTTP 404"
+          ]
+        ],
+        "outcomes": {
+          "ok": 22,
+          "http_error": 3,
+          "cached": 2
+        },
+        "discovered": {
+          "program_catalog": [
+            "https://cs.kaist.ac.kr/content?menu=188"
+          ],
+          "admissions": [
+            "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+            "http://www.kaist.ac.kr/kr/html/admission/02.html",
+            "https://cs.kaist.ac.kr/content?menu=40"
+          ],
+          "scholarships": [
+            "https://cs.kaist.ac.kr/content?menu=42"
+          ]
+        },
+        "discovery_trace": {
+          "institution": "KAIST",
+          "domain": "www.kaist.ac.kr",
+          "sitemaps_declared": [],
+          "sitemaps_read": [
+            "https://www.kaist.ac.kr/sitemap.xml"
+          ],
+          "sitemap_urls_seen": 11,
+          "sitemap_urls_kept": 1,
+          "manual_seeds": {
+            "program_catalog": "https://cs.kaist.ac.kr/content?menu=188",
+            "program_page": "https://cs.kaist.ac.kr/content?menu=318",
+            "admissions": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+            "scholarships": "https://cs.kaist.ac.kr/content?menu=42"
+          },
+          "selected": {
+            "program_catalog": [
+              "https://cs.kaist.ac.kr/content?menu=188"
+            ],
+            "admissions": [
+              "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+              "http://www.kaist.ac.kr/kr/html/admission/02.html",
+              "https://cs.kaist.ac.kr/content?menu=40"
+            ],
+            "scholarships": [
+              "https://cs.kaist.ac.kr/content?menu=42"
+            ]
+          },
+          "rejected_sample": [
+            [
+              "https://cs.kaist.ac.kr/content?menu=318",
+              "reads as unknown, not a programme page"
+            ],
+            [
+              "https://cs.kaist.ac.kr/",
+              "reads as unknown, not a programme page"
+            ],
+            [
+              "https://pure.kaist.ac.kr/en/organisations/school-of-computing",
+              "reads as irrelevant, not a programme page"
+            ],
+            [
+              "https://soc.kaist.ac.kr/content?menu=320",
+              "reads as unknown, not a programme page"
+            ],
+            [
+              "https://nmsl.kaist.ac.kr/courses.html",
+              "reads as unknown, not a programme page"
+            ],
+            [
+              "https://sociology.kaist.ac.kr/",
+              "reads as unknown, not a programme page"
+            ],
+            [
+              "https://www.vclab.kaist.ac.kr/courses.html",
+              "reads as unknown, not a programme page"
+            ],
+            [
+              "https://admission.kaist.ac.kr/intl-undergraduate/about/why",
+              "page subject '(23)KAIST admissions' does not match requested fields ['computer science']"
+            ],
+            [
+              "https://pure.kaist.ac.kr/en/clippings/1200-free-computer-science-courses-from-the-worlds-top-universiti",
+              "reads as unknown, not a programme page"
+            ]
+          ],
+          "rejected_total": 9,
+          "errors": [
+            "https://www.kaist.ac.kr/sitemap_index.xml: http_error — HTTP 404",
+            "https://www.kaist.ac.kr/sitemap-index.xml: http_error — HTTP 404",
+            "https://www.kaist.ac.kr/sitemap/sitemap.xml: http_error — HTTP 404",
+            "search identity recovery: checked 8, confirmed 0",
+            "search identity recovery via exa; queries 6, failed 0, rejected {'not_a_programme_page': 6, 'duplicate': 12}",
+            "no programme page was found; only a catalogue, which cannot confirm a programme"
+          ],
+          "search_failures": [],
+          "search_limitations": [],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [
+            [
+              "https://cs.kaist.ac.kr/content?menu=40",
+              "학부 입학"
+            ]
+          ],
+          "admission_obligations": [
+            "https://cs.kaist.ac.kr/content?menu=40"
+          ],
+          "walker": {
+            "catalogs_walked": 1,
+            "candidates": [
+              {
+                "url": "https://cs.kaist.ac.kr/aiiscs/undergraduate",
+                "label": "AI 교과목 리스트",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/bbs/ainews",
+                "label": "AI 소식 하이라이트",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/aiiscs/infoservice",
+                "label": "인공지능-정보서비스",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/research/infoservice",
+                "label": "인공지능·정보서비스",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/people/facultyInformationService",
+                "label": "인공지능·정보서비스",
+                "score": 2,
+                "source": "html"
+              }
+            ],
+            "programs_confirmed": 0,
+            "outcomes": [
+              {
+                "url": "https://forms.gle/7SRKcqmHwFTpcNVn8",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.facebook.com/groups/kaistcomputerscience",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.youtube.com/c/KAISTSchoolofComputing",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://forms.gle/7SRKcqmHwFTpcNVn8",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.facebook.com/groups/kaistcomputerscience",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.youtube.com/c/KAISTSchoolofComputing",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=188",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/search/search",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=133",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=134",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=226",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/cstimeline",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=50",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/bbs/stgallery",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/research/promotionalvideo",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/bbs/annualreport",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=9",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=132",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=138",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=4",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=309",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=296",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=304",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=305",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=306",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=298",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/bbs/news",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/bbs/news/news",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/bbs/news/awards",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/bbs/news/research",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/spotlights/education",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/bbs/news/soc",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/bbs/notice",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://kaist.ac.kr/kr/html/footer/0801.html",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://kaist.ac.kr/kr/html/footer/0802.html",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/bbs/etcnotice",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/spotlights/people",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/spotlights/faculty",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/spotlights/student",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/spotlights/alumni",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/news/calendar",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/bbs/events",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/bbs/events/seminars",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/bbs/events/colloquiums",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/bbs/events/ph_d_defenses",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/bbs/events/etc",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/bbs/event2",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=57",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/bbs/research",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/research/foundation",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/research/systems",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/research/design",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/research/securecom",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/research/visualcom",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/research/socialcom",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/research/interaccom",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/research/labs",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/research/rndCenter",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=75",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/research/paper",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/research/techReport",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=284",
+                "outcome": "short_label"
+              },
+              {
+                "url": "http://cs.kaist.ac.kr/content?menu=216",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=216",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/research/membercompany",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=200",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=41",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=40",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=42",
+                "outcome": "short_label"
+              },
+              {
+                "url": "http://cs.kaist.ac.kr/content?menu=188",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=246",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=243",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=247",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=244",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=240",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=236",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=249",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=248",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=260",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=311",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=217",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=145",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=222",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/education/undergraduate",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=320",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/education/graduate",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=318",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=156",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=192",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=174",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=183",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/research/internship",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/bbs/assign",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/education/academiccalendar",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cscareer.kaist.ac.kr/",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=267",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/bbs/airesearch",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/aiiscs/foundation",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/aiiscs/systems",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/aiiscs/design",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/aiiscs/securecom",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/aiiscs/visualcom",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/aiiscs/socialcom",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/aiiscs/interaccom",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=279",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "http://aix.kaist.ac.kr/",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/people/faculty",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/people/facultyFoundations",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/people/facultySystemsNetworks",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/people/facultyDesign",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/people/facultySecureComputing",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/people/facultyVisualComputing",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/people/facultySocialComputing",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/people/facultyInteractiveComputing",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/people/staff",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/people/staffresearch",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/people/administration",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/people/academic",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/people/admission",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/people/facilities",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/people/funding",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/people/researchers",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=108",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://kcloud.kaist.ac.kr/",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://kcloud.kaist.ac.kr/index.php/tutorial",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://kcloud1.kaist.ac.kr/",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://kcloud2.kaist.ac.kr/",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=95",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/resources/seminarroom",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/resources/lectureroom",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/resources/meeting",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/resources/multipurpose",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/resources/welfarefacility",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/content?menu=110",
+                "outcome": "short_label"
+              },
+              {
+                "url": "http://form.kaist.ac.kr/",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/bbs/materials",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/bbs/related",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://kraftonxsoc.kaist.ac.kr/",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "http://gsis.kaist.ac.kr/",
+                "outcome": "short_label"
+              },
+              {
+                "url": "http://software.kaist.ac.kr/",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "http://kcamp.kaist.ac.kr/",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://software.kaist.ac.kr/introduce/course-intro/course-software3",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "http://kaist.ac.kr/",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://engineering.kaist.ac.kr/",
+                "outcome": "short_label"
+              },
+              {
+                "url": "http://cs.kaist.ac.kr/colloquium",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.kaist.ac.kr/kr/html/footer/0812.html",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/aiiscs/undergraduate",
+                "outcome": "reads_as_unknown"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/bbs/ainews",
+                "outcome": "reads_as_unknown"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/aiiscs/infoservice",
+                "outcome": "reads_as_unknown"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/research/infoservice",
+                "outcome": "reads_as_unknown"
+              },
+              {
+                "url": "https://cs.kaist.ac.kr/people/facultyInformationService",
+                "outcome": "reads_as_unknown"
+              }
+            ]
+          }
+        },
+        "programs": [],
+        "program_page_found": false,
+        "scholarship_page_found": true,
+        "discovery_notes": "Sitemap-first discovery found: program_catalog, admissions, scholarships. Not found: program_page, costs, documents.",
+        "claims": 4,
+        "claims_verified": 4,
+        "completeness": 0.0,
+        "eligibility": "PENDING",
+        "funding_fit": "UNKNOWN",
+        "scholarships_found": 0,
+        "false_positives": [],
+        "page_outcomes": {
+          "fetched-ok": 3
+        },
+        "page_types": {
+          "program_detail": 1,
+          "unknown": 2
+        },
+        "page_diagnostics": [
+          {
+            "category": "fetched-ok",
+            "url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+            "page_type": "program_detail",
+            "characters": "2448",
+            "detail": "3 claims read from this page"
+          },
+          {
+            "category": "fetched-ok",
+            "url": "https://cs.kaist.ac.kr/content?menu=40",
+            "page_type": "unknown",
+            "characters": "2461",
+            "detail": "only the undergraduate admission route was read"
+          },
+          {
+            "category": "fetched-ok",
+            "url": "https://cs.kaist.ac.kr/content?menu=42",
+            "page_type": "unknown",
+            "characters": null,
+            "detail": "read as a funding index; 0 award links, 0 queued within the award budget"
+          }
+        ]
+      }
+    ],
+    "totals": {
+      "institutions": 1,
+      "reached": 1,
+      "blocked": 0,
+      "program_pages_found": 0,
+      "scholarship_pages_found": 1,
+      "claims": 4,
+      "false_positives": 0,
+      "page_outcomes": {
+        "fetched-ok": 3
+      },
+      "page_types": {
+        "program_detail": 1,
+        "unknown": 2
+      },
+      "recall": {
+        "program": {
+          "numerator": 0,
+          "denominator": 1,
+          "target": 0.7
+        },
+        "category": {
+          "numerator": 2,
+          "denominator": 3,
+          "target": 0.8666666666666667
+        }
+      },
+      "catalogs_walked": 1,
+      "walker_programs_confirmed": 0,
+      "source_pages_recorded": 5,
+      "fetch_tiers": {
+        "fixture": 0,
+        "http": 24,
+        "browser": 0,
+        "pdf": 0
+      }
+    }
+  },
+  "claims": [
+    {
+      "claim_type": "interview_required",
+      "normalized_value": true,
+      "original_text_excerpt": "(KST) November 10, 2026 ~ January 14, 2027, 6:00 PM (KST) Recommendation Letter Submission October 29, 2026, 6:00 PM (KST) January 21, 2027, 6:00 PM (KST) Interview (Online, if required)* December 22, 2026 March 3, 2027 Admission Announcement January 7, 2027, 10:00 AM (KST) March 25, 2027, 10:00 AM (KST) Reply your Admission Acceptance Be",
+      "source_url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+      "page_title": "(23)KAIST admissions",
+      "relevant_section": "",
+      "official_domain": true,
+      "program": "computer science (bachelor)",
+      "subject_key": null,
+      "intake": "fall 2027",
+      "academic_year": "2026/27",
+      "accessed_at": "2026-10-03T09:09:19.483520Z",
+      "scope": {
+        "university": null,
+        "faculty": null,
+        "programme": null,
+        "degree": null,
+        "intake": null,
+        "academic_year": null,
+        "population": null,
+        "nationality": null,
+        "residency": null,
+        "qualification": null
+      },
+      "source_specificity": "university_admissions",
+      "confidence": 0.7,
+      "status": "VERIFIED_CURRENT",
+      "extraction_method": "html_rule",
+      "notes": ""
+    },
+    {
+      "claim_type": "credential_evaluation_required",
+      "normalized_value": true,
+      "original_text_excerpt": "26 ~ January 14, 2027, 6:00 PM (KST) Recommendation Letter Submission October 29, 2026, 6:00 PM (KST) January 21, 2027, 6:00 PM (KST) Interview (Online, if required)* December 22, 2026 March 3, 2027 Admission Announcement January 7, 2027, 10:00 AM (KST) March 25, 2027, 10:00 AM (KST) Reply your Admission Acceptance Before Fe",
+      "source_url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+      "page_title": "(23)KAIST admissions",
+      "relevant_section": "",
+      "official_domain": true,
+      "program": "computer science (bachelor)",
+      "subject_key": null,
+      "intake": "fall 2027",
+      "academic_year": "2026/27",
+      "accessed_at": "2026-10-03T09:09:19.483520Z",
+      "scope": {
+        "university": null,
+        "faculty": null,
+        "programme": null,
+        "degree": null,
+        "intake": null,
+        "academic_year": null,
+        "population": null,
+        "nationality": null,
+        "residency": null,
+        "qualification": null
+      },
+      "source_specificity": "university_admissions",
+      "confidence": 0.7,
+      "status": "VERIFIED_CURRENT",
+      "extraction_method": "html_rule",
+      "notes": ""
+    },
+    {
+      "claim_type": "intake_term",
+      "normalized_value": "spring 2027",
+      "original_text_excerpt": "Admission Announcement  January 7, 2027, 10:00 AM (KST)",
+      "source_url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+      "page_title": "(23)KAIST admissions",
+      "relevant_section": "",
+      "official_domain": true,
+      "program": "computer science (bachelor)",
+      "subject_key": null,
+      "intake": "fall 2027",
+      "academic_year": "2026/27",
+      "accessed_at": "2026-10-03T09:09:19.483520Z",
+      "scope": {
+        "university": null,
+        "faculty": null,
+        "programme": null,
+        "degree": null,
+        "intake": null,
+        "academic_year": null,
+        "population": null,
+        "nationality": null,
+        "residency": null,
+        "qualification": null
+      },
+      "source_specificity": "university_admissions",
+      "confidence": 0.7,
+      "status": "VERIFIED_CURRENT",
+      "extraction_method": "html_rule",
+      "notes": ""
+    },
+    {
+      "claim_type": "admission_route",
+      "normalized_value": "undeclared_then_major_selection",
+      "original_text_excerpt": "KAIST 학부생은 전공선택 없이 무학과로 입학을 하고 있습니다. 무학과 입학 후 2학기 때 전산을 포함한 전공을 선택하고 있습니다.",
+      "source_url": "https://cs.kaist.ac.kr/content?menu=40",
+      "page_title": "KAIST School of Computing, 카이스트 전산학부 - 컴퓨터공학과 컴퓨터과학(Computer Science & Engineering)을 교육하고 연구하는 국내 최대 규모의 전산학부",
+      "relevant_section": "",
+      "official_domain": true,
+      "program": "computer science (bachelor)",
+      "subject_key": null,
+      "intake": "fall 2027",
+      "academic_year": "2026/27",
+      "accessed_at": "2026-10-03T09:09:20.678633Z",
+      "scope": {
+        "university": null,
+        "faculty": null,
+        "programme": null,
+        "degree": "bachelor",
+        "intake": null,
+        "academic_year": null,
+        "population": null,
+        "nationality": null,
+        "residency": null,
+        "qualification": null
+      },
+      "source_specificity": "university_admissions",
+      "confidence": 0.75,
+      "status": "VERIFIED_CURRENT",
+      "extraction_method": "html_rule",
+      "notes": ""
+    }
+  ]
+}

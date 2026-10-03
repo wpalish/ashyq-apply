@@ -1,0 +1,132 @@
+{
+  "case_id": "hku",
+  "programme_urls": [
+    "https://www.cds.hku.hk/prospective-students/undergraduate/6999-computing-and-data-science",
+    "https://www.cds.hku.hk/prospective-students/undergraduate/6200-computing-and-data-science-delta"
+  ],
+  "ranked_urls": [],
+  "predictions": [
+    {
+      "key": "programme.exists",
+      "value": true,
+      "evidence": {
+        "url": "https://www.cds.hku.hk/prospective-students/undergraduate-old-2026/6999-computing-and-data-science/",
+        "excerpt": "res Computing and Data Science (programme code: 6999) offers the choices of three professional degree programmes, namely: (1) Bachelor of Engineering in Computer Science [BEng(CompSc)] , (2) Bachelor of Engineering in Artificial Intelligence and Data Science [BEng(AI&DataSc)] , and (3) Bachelor",
+        "scope": {
+          "university": "The University of Hong Kong",
+          "programme": "Bachelor of Engineering in Computer Science",
+          "degree": "bachelor",
+          "field": null,
+          "intake": null,
+          "population": null,
+          "qualification": "A-levels",
+          "academic_year": null
+        },
+        "accessed_on": "2026-10-03",
+        "source_type": "official",
+        "excerpt_truncated": false
+      },
+      "supported": null,
+      "current": null,
+      "conflict_visible": null
+    }
+  ],
+  "telemetry": {
+    "http_fetches": 26,
+    "browser_fetches": 0,
+    "pdf_fetches": 0,
+    "search_calls": 7,
+    "model_input_tokens": 0,
+    "jev_input_tokens": 0,
+    "latency_seconds": 47.532917227999974,
+    "cost_usd": null,
+    "human_review_required": null
+  },
+  "page_outcomes": [
+    {
+      "category": "fetch-failed",
+      "url": "https://admissions.hku.hk/",
+      "page_type": "unclassified",
+      "detail": "robots_disallowed — robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed",
+      "characters": null
+    },
+    {
+      "category": "fetch-failed",
+      "url": "https://admissions.hku.hk/fees-and-scholarships/fees",
+      "page_type": "unclassified",
+      "detail": "robots_disallowed — robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed",
+      "characters": null
+    },
+    {
+      "category": "classifier-rejected",
+      "url": "https://www.cds.hku.hk/prospective-students/undergraduate/6200-computing-and-data-science-delta",
+      "page_type": "unknown",
+      "detail": "classified as unknown; no requirement can be read from this kind of page. title='6200 Computing and Data Science (Delta+) - HKU School of Computing and Data Scie' signals='funding page with 0 substantive signals and no clear award name' chars=388 degrees=[]",
+      "characters": 388
+    },
+    {
+      "category": "fetch-failed",
+      "url": "https://admissions.hku.hk/",
+      "page_type": "unclassified",
+      "detail": "robots_disallowed — robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed",
+      "characters": null
+    },
+    {
+      "category": "fetch-failed",
+      "url": "https://admissions.hku.hk/fees-and-scholarships/fees",
+      "page_type": "unclassified",
+      "detail": "robots_disallowed — robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed",
+      "characters": null
+    },
+    {
+      "category": "fetch-failed",
+      "url": "https://admissions.hku.hk/fees-and-scholarships/scholarships",
+      "page_type": "unclassified",
+      "detail": "robots_disallowed — robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed",
+      "characters": null
+    },
+    {
+      "category": "fetch-failed",
+      "url": "https://admissions.hku.hk/fees-and-scholarships/scholarships",
+      "page_type": "unclassified",
+      "detail": "robots_disallowed — robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed",
+      "characters": null
+    },
+    {
+      "category": "fetch-failed",
+      "url": "https://admissions.hku.hk/fees-and-scholarships/scholarships/academy-young-global-arts-leaders-scholarship",
+      "page_type": "unclassified",
+      "detail": "robots_disallowed — robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed",
+      "characters": null
+    },
+    {
+      "category": "fetch-failed",
+      "url": "https://admissions.hku.hk/fees-and-scholarships/scholarships/hon-ping-entrance-scholarship-for-nigerian-students",
+      "page_type": "unclassified",
+      "detail": "robots_disallowed — robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed",
+      "characters": null
+    },
+    {
+      "category": "fetched-ok",
+      "url": "https://www.cds.hku.hk/prospective-students/undergraduate/6999-computing-and-data-science",
+      "page_type": "unknown",
+      "detail": "listing page: only the programme's existence was read",
+      "characters": 25964
+    },
+    {
+      "category": "fetched-ok",
+      "url": "https://www.cds.hku.hk/prospective-students/undergraduate/6200-computing-and-data-science-delta",
+      "page_type": "unknown",
+      "detail": "read as a funding index; 0 award links, 0 queued within the award budget",
+      "characters": null
+    },
+    {
+      "category": "fetched-ok",
+      "url": "https://www.cds.hku.hk/prospective-students/undergraduate/6999-computing-and-data-science",
+      "page_type": "unknown",
+      "detail": "read as a funding index; 0 award links, 0 queued within the award budget",
+      "characters": null
+    }
+  ],
+  "error": null
+}

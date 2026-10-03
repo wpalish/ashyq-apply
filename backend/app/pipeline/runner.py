@@ -562,6 +562,15 @@ class ResearchRunner:
                     career_notes="",
                 )
 
+                # Keep any prior attempt's richer row intact until this attempt
+                # has a complete replacement. New rows can checkpoint each
+                # completed adapter before the next potentially slow read.
+                checkpoint_new = (
+                    self.session.query(ProgramResultRow)
+                    .filter_by(run_id=self.run.id, dedupe_key=key)
+                    .first()
+                    is None
+                )
                 ar = await req.verify(cand, prog, self.intake)
                 errors.extend(ar.errors)
                 retry.extend(ar.retry_urls)
@@ -575,6 +584,15 @@ class ResearchRunner:
                 self.run.pages_checked += ar.pages_checked
                 self.run.pages_failed += ar.pages_failed
 
+                if checkpoint_new:
+                    self._persist_verification_evidence(
+                        result, cand, prog, ar.claims, incomplete=True
+                    )
+                    self._record_diagnostics(errors)
+                    errors.clear()
+                    self.run.retry_urls = sorted(set(list(self.run.retry_urls or []) + retry))[:200]
+                    self._save()
+                self._check_cancelled()
                 cb, cr = await cost.fetch(cand)
                 errors.extend(cr.errors)
                 retry.extend(cr.retry_urls)
@@ -583,6 +601,15 @@ class ResearchRunner:
                 self.run.pages_failed += cr.pages_failed
                 result.costs = cb
 
+                if checkpoint_new:
+                    self._persist_verification_evidence(
+                        result, cand, prog, ar.claims + cr.claims, incomplete=True
+                    )
+                    self._record_diagnostics(errors)
+                    errors.clear()
+                    self.run.retry_urls = sorted(set(list(self.run.retry_urls or []) + retry))[:200]
+                    self._save()
+                self._check_cancelled()
                 if cand.country not in gov_cache:
                     gr = await gov.post_study_work(cand.country)
                     errors.extend(gr.errors)
@@ -600,76 +627,18 @@ class ResearchRunner:
                 result.post_study_work = government_value
 
                 all_claims = ar.claims + cr.claims
-                # ER-02 (owner 2026-09-28): the applicant named no campus, so a
-                # page that belongs to one campus answers another question.
-                campuses = registry_campuses(cand.domain) if cand.domain else {}
-                if campuses:
-                    all_claims, withheld = withhold_other_campuses(all_claims, campuses)
-                    if withheld:
-                        result.unresolved.append(
-                            UnresolvedQuestion(
-                                topic="campus",
-                                question=(
-                                    f"{cand.name} offers {prog.name} on more than one campus, "
-                                    "each a separate application. Which campus do you want?"
-                                ),
-                                why_it_matters=(
-                                    "Requirements, fees and deadlines can differ by campus. "
-                                    "What was read on the "
-                                    + ", ".join(withheld)
-                                    + " pages is not shown as this programme's."
-                                ),
-                                university=cand.name,
-                                program=prog.name,
-                                suggested_contact="admissions office",
-                                blocking=False,
-                            )
-                        )
-                all_claims, demotion_qs = enforce_source_hierarchy(all_claims)
-                all_claims = [
-                    c.model_copy(
-                        update={"status": apply_freshness(c.status, c.claim_type, c.accessed_at)}
-                    )
-                    for c in all_claims
-                ]
-                conflicts, all_claims = find_conflicts(
-                    all_claims, context=f"{prog.name} at {cand.name}"
-                )
-                result.conflicts = conflicts
-                result.unresolved.extend(demotion_qs)
-
-                if not cand.verifiable:
-                    result.unresolved.append(
-                        UnresolvedQuestion(
-                            topic="official source",
-                            question=f"Which official page publishes entry requirements for {prog.name}?",
-                            why_it_matters=(
-                                "This university was found through a catalogue only. Nothing about "
-                                "it has been verified against an official source."
-                            ),
-                            university=cand.name,
-                            program=prog.name,
-                            blocking=True,
-                        )
-                    )
-
-                result.claims = [_to_out(c, f"{result.id}-c{j}") for j, c in enumerate(all_claims)]
-                result.source_urls = sorted({c.source_url for c in all_claims})
-                result.last_verified = max((c.accessed_at for c in all_claims), default=None)
-                self._persist_result(result, all_claims, conflicts)
+                self._persist_verification_evidence(result, cand, prog, all_claims)
                 self.run.programs_verified = len(seen_keys)
-                self.run.claims_recorded += len(all_claims)
                 # Programmes done and programmes expected, so the ratio on
                 # screen counts the same thing on both sides. The total grows
                 # as candidates reveal how many programmes they carry.
                 st.items_done = len(seen_keys)
                 st.items_total = max(st.items_total, len(seen_keys), len(targets))
-
-            # Once per candidate, not once per four: in live mode four page
-            # fetches with their retries can outlast the lease, and a healthy
-            # run would then be reported as abandoned. The counters and the
-            # stage state ride on the same commit as the heartbeat.
-            self._save()
+                # Do not lose this completed programme if the next one stalls.
+                self._record_diagnostics(errors)
+                errors.clear()
+                self.run.retry_urls = sorted(set(list(self.run.retry_urls or []) + retry))[:200]
+                self._save()
 
         self._record_diagnostics(errors)
         self.run.retry_urls = sorted(set(list(self.run.retry_urls or []) + retry))[:200]
@@ -678,6 +647,103 @@ class ResearchRunner:
             f"{self.run.pages_checked} pages ({self.run.pages_failed} unreadable)."
         )
         self._save()
+
+    def _persist_verification_evidence(
+        self,
+        result: ProgramResult,
+        cand: Candidate,
+        prog: CandidateProgram,
+        all_claims: list[Claim],
+        *,
+        incomplete: bool = False,
+    ) -> None:
+        """Apply the same guards to partial and final evidence before storing it.
+
+        Work on a copy: repeated checkpoints must not accumulate questions or
+        reuse demoted/conflicting statuses when more evidence arrives.
+        """
+        result = result.model_copy(deep=True)
+        key = dedupe.program_key(cand.name, prog.name, prog.degree, self.intake, cand.country)
+        existing = (
+            self.session.query(ProgramResultRow)
+            .filter_by(run_id=self.run.id, dedupe_key=key)
+            .one_or_none()
+        )
+        previous_count = (
+            self.session.query(ClaimRow)
+            .filter(
+                ClaimRow.result_id == existing.id,
+                ClaimRow.status != ClaimStatus.SUPERSEDED.value,
+            )
+            .count()
+            if existing is not None
+            else 0
+        )
+        # ER-02 (owner 2026-09-28): the applicant named no campus, so a
+        # page that belongs to one campus answers another question.
+        campuses = registry_campuses(cand.domain) if cand.domain else {}
+        if campuses:
+            all_claims, withheld = withhold_other_campuses(all_claims, campuses)
+            if withheld:
+                result.unresolved.append(
+                    UnresolvedQuestion(
+                        topic="campus",
+                        question=(
+                            f"{cand.name} offers {prog.name} on more than one campus, "
+                            "each a separate application. Which campus do you want?"
+                        ),
+                        why_it_matters=(
+                            "Requirements, fees and deadlines can differ by campus. "
+                            "What was read on the "
+                            + ", ".join(withheld)
+                            + " pages is not shown as this programme's."
+                        ),
+                        university=cand.name,
+                        program=prog.name,
+                        suggested_contact="admissions office",
+                        blocking=False,
+                    )
+                )
+        all_claims, demotion_qs = enforce_source_hierarchy(all_claims)
+        all_claims = [
+            c.model_copy(update={"status": apply_freshness(c.status, c.claim_type, c.accessed_at)})
+            for c in all_claims
+        ]
+        conflicts, all_claims = find_conflicts(all_claims, context=f"{prog.name} at {cand.name}")
+        result.conflicts = conflicts
+        result.unresolved.extend(demotion_qs)
+
+        if not cand.verifiable:
+            result.unresolved.append(
+                UnresolvedQuestion(
+                    topic="official source",
+                    question=f"Which official page publishes entry requirements for {prog.name}?",
+                    why_it_matters=(
+                        "This university was found through a catalogue only. Nothing about "
+                        "it has been verified against an official source."
+                    ),
+                    university=cand.name,
+                    program=prog.name,
+                    blocking=True,
+                )
+            )
+
+        result.claims = [_to_out(c, f"{result.id}-c{j}") for j, c in enumerate(all_claims)]
+        result.source_urls = sorted({c.source_url for c in all_claims})
+        result.last_verified = max((c.accessed_at for c in all_claims), default=None)
+        if incomplete:
+            result.unresolved.append(
+                UnresolvedQuestion(
+                    topic="research incomplete",
+                    question="What remains to be verified for this programme?",
+                    why_it_matters="Requirements were saved, but costs or government-source checks are still incomplete.",
+                    university=cand.name,
+                    program=prog.name,
+                    blocking=True,
+                )
+            )
+        self._persist_result(result, all_claims, conflicts)
+        self.run.claims_recorded += len(all_claims) - previous_count
 
     # --- stage 4: funding --------------------------------------------------
 

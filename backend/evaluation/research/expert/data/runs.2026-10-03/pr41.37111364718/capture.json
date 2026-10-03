@@ -1,0 +1,3701 @@
+{
+  "schema_version": "1",
+  "pipeline_sha": "1d8a4ea1e7d9c7ea16c3d74e1e598633db2d84d9",
+  "captured_at": "20261003T085657Z",
+  "mode": "live",
+  "config": {
+    "search_provider": "exa",
+    "seconds_per_case": 120,
+    "max_fetcher_calls_per_case": 60,
+    "page_budget_counts": "network reads; cache hits are free (since 2026-09-23)",
+    "search_before_navigation": false,
+    "recover_search_candidates": true,
+    "search_funding_fallback": true,
+    "target_award_search": true,
+    "skip_refused_search_hosts": false,
+    "reject_archive_hosts": false,
+    "admission_lexicon": false,
+    "navigation_slot": false,
+    "admission_obligations": true,
+    "finish_exact_single_field": false,
+    "browser_enabled": false,
+    "cohort": [
+      "groningen",
+      "delft",
+      "aalto",
+      "vienna",
+      "warsaw",
+      "ubc",
+      "toronto",
+      "hku",
+      "ntu",
+      "kaist"
+    ],
+    "scope": "current production pipeline; HTTP-only bounded cold run",
+    "rank_stage": "programme confirmation queue before catalogue walking",
+    "identity_bindings_file": "identity_bindings.2026-10-03.supplemental.json",
+    "identity_bindings_sha256": "af48e733a7d4d30786c58667cd724402f233ae129003faa5902e3fc5de0572e5",
+    "harness_sha256": "c28fe51159c8003c7e9f09754468d86ec887914689822f76ac449d1d0829accd",
+    "mapping_sha256": "6410472d8eea4477162d864b096b27e102446f09f72399484142db5d02262085"
+  },
+  "observations": [
+    {
+      "case_id": "groningen",
+      "programme_urls": [],
+      "ranked_urls": [
+        "https://www.rug.nl/education/bachelor/brochures",
+        "https://www.rug.nl/education/bachelor/international-students/study-in-the-netherlands-groningen/accommodation",
+        "https://www.rug.nl/education/bachelor/nederlandse-studenten"
+      ],
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": 76,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 0,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 115.00958428999999,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"
+    },
+    {
+      "case_id": "delft",
+      "programme_urls": [
+        "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+        "https://www.tudelft.nl/onderwijs/opleidingen/bachelors/cse/bsc-computer-science-and-engineering"
+      ],
+      "ranked_urls": [
+        "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/mst/bsc-molecular-science-and-technology",
+        "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/lst/bsc-life-science-and-technology",
+        "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering"
+      ],
+      "predictions": [
+        {
+          "key": "programme.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+            "excerpt": "Bachelor of Computer Science and Engineering Bachelor of Computer Science and Engineering Self-driving cars, smartphone navigation, personalised offers based on your surfing behaviour and robots used",
+            "scope": {
+              "university": "Delft University of Technology",
+              "programme": "Bachelor of Computer Science and Engineering",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "programme.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://www.tudelft.nl/onderwijs/opleidingen/bachelors/cse/bsc-computer-science-and-engineering",
+            "excerpt": "BSc Computer Science and Engineering BSc Computer Science and Engineering Zelfrijdende auto’s, real-time navigatie op je telefoon, persoonlijke aanbiedingen op basis van je surfgedrag en robo",
+            "scope": {
+              "university": "Delft University of Technology",
+              "programme": "BSc Computer Science and Engineering",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_exists",
+          "value": "Costas Lemos Innovation Programme Scholarship",
+          "evidence": {
+            "url": "https://www.tudelft.nl/en/delft-university-fund/we-support/support-innovative-education/clip-scholarship",
+            "excerpt": "Delft University Fund We support Support innovative Education CLIP Scholarship Open menu Support pioneering research Support innovative Education Delft Global Scholarship Fund CLIP Scholarship Online Education Entrepreneurship Talent Costas Lemos Innovation Programme Scholarship Call for applications is closed The Costas Lemos Innovation Programme (CLIP) Scholarships have been established to equip",
+            "scope": {
+              "university": "Delft University of Technology",
+              "programme": "Bsc Computer Science And Engineering",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_program_restriction",
+          "value": {
+            "degree": "bachelor",
+            "applies": "no"
+          },
+          "evidence": {
+            "url": "https://www.tudelft.nl/en/delft-university-fund/we-support/support-innovative-education/clip-scholarship",
+            "excerpt": "The scholarships are available to students entering the academic year 2026 for one of the following specific TU Delft Master of Science Programmes: MSc Earth, Climate and Technology; MSc Environmental Eng",
+            "scope": {
+              "university": "Delft University of Technology",
+              "programme": "Bsc Computer Science And Engineering",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_exists",
+          "value": "Costas Lemos Innovation Programme Scholarship",
+          "evidence": {
+            "url": "https://www.tudelft.nl/en/delft-university-fund/we-support/support-innovative-education/clip-scholarship",
+            "excerpt": "Delft University Fund We support Support innovative Education CLIP Scholarship Open menu Support pioneering research Support innovative Education Delft Global Scholarship Fund CLIP Scholarship Online Education Entrepreneurship Talent Costas Lemos Innovation Programme Scholarship Call for applications is closed The Costas Lemos Innovation Programme (CLIP) Scholarships have been established to equip",
+            "scope": {
+              "university": "Delft University of Technology",
+              "programme": "Bachelor Of Computer Science And Engineering",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_program_restriction",
+          "value": {
+            "degree": "bachelor",
+            "applies": "no"
+          },
+          "evidence": {
+            "url": "https://www.tudelft.nl/en/delft-university-fund/we-support/support-innovative-education/clip-scholarship",
+            "excerpt": "The scholarships are available to students entering the academic year 2026 for one of the following specific TU Delft Master of Science Programmes: MSc Earth, Climate and Technology; MSc Environmental Eng",
+            "scope": {
+              "university": "Delft University of Technology",
+              "programme": "Bachelor Of Computer Science And Engineering",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        }
+      ],
+      "telemetry": {
+        "http_fetches": 42,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 6,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 73.77458782400001,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [
+        {
+          "category": "classifier-rejected",
+          "url": "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/scholarships/faq",
+          "page_type": "scholarship_faq",
+          "detail": "not an award page; no scholarship recorded (1 award links, 0 below it: /en/education/study-programme-orientation/practical-matters/scholarships/scholarships-from-other-providers)",
+          "characters": null
+        },
+        {
+          "category": "classifier-rejected",
+          "url": "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/scholarships/faq",
+          "page_type": "scholarship_faq",
+          "detail": "not an award page; no scholarship recorded (1 award links, 0 below it: /en/education/study-programme-orientation/practical-matters/scholarships/scholarships-from-other-providers)",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+          "page_type": "program_detail",
+          "detail": "1 claims read from this page",
+          "characters": 2302
+        },
+        {
+          "category": "no-pattern-match",
+          "url": "https://www.tudelft.nl/en/education/admission-and-application",
+          "page_type": "general_admissions",
+          "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed",
+          "characters": 1454
+        },
+        {
+          "category": "no-pattern-match",
+          "url": "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/tuition-fee-finances",
+          "page_type": "costs",
+          "detail": "page was read but no cost figures could be extracted",
+          "characters": 11558
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.tudelft.nl/onderwijs/opleidingen/bachelors/cse/bsc-computer-science-and-engineering",
+          "page_type": "program_detail",
+          "detail": "1 claims read from this page",
+          "characters": 2212
+        },
+        {
+          "category": "no-pattern-match",
+          "url": "https://www.tudelft.nl/en/education/admission-and-application",
+          "page_type": "general_admissions",
+          "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed",
+          "characters": 1454
+        },
+        {
+          "category": "no-pattern-match",
+          "url": "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/tuition-fee-finances",
+          "page_type": "costs",
+          "detail": "page was read but no cost figures could be extracted",
+          "characters": 11558
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/scholarships",
+          "page_type": "scholarship_index",
+          "detail": "read as a funding index; 2 award links, 2 queued within the award budget",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/scholarships/scholarships-from-other-providers",
+          "page_type": "scholarship_index",
+          "detail": "read as a funding index; 1 award links, 1 queued within the award budget",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.tudelft.nl/en/delft-university-fund/we-support/support-innovative-education/clip-scholarship",
+          "page_type": "scholarship_award",
+          "detail": "award page; 2 claims read",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/scholarships",
+          "page_type": "scholarship_index",
+          "detail": "read as a funding index; 2 award links, 2 queued within the award budget",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/scholarships/scholarships-from-other-providers",
+          "page_type": "scholarship_index",
+          "detail": "read as a funding index; 1 award links, 1 queued within the award budget",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.tudelft.nl/en/delft-university-fund/we-support/support-innovative-education/clip-scholarship",
+          "page_type": "scholarship_award",
+          "detail": "award page; 2 claims read",
+          "characters": null
+        }
+      ],
+      "error": null
+    },
+    {
+      "case_id": "aalto",
+      "programme_urls": [
+        "https://www.aalto.fi/en/programmes/curriculum-2026-2028-0",
+        "https://www.aalto.fi/en/minors/computer-science-l-minor",
+        "https://www.aalto.fi/en/programmes/aalto-bachelors-programme-in-science-and-technology/curriculum-2026-2028"
+      ],
+      "ranked_urls": [],
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": 4,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 6,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 26.122269754,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [
+        {
+          "category": "fetch-failed",
+          "url": "https://www.aalto.fi/en/programmes/curriculum-2026-2028-0",
+          "page_type": "unclassified",
+          "detail": "robots_disallowed — robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed",
+          "characters": null
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://www.aalto.fi/en/admission-services",
+          "page_type": "unclassified",
+          "detail": "robots_disallowed — robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed",
+          "characters": null
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees",
+          "page_type": "unclassified",
+          "detail": "robots_disallowed — robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed",
+          "characters": null
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://www.aalto.fi/en/minors/computer-science-l-minor",
+          "page_type": "unclassified",
+          "detail": "robots_disallowed — robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed",
+          "characters": null
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://www.aalto.fi/en/admission-services",
+          "page_type": "unclassified",
+          "detail": "robots_disallowed — robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed",
+          "characters": null
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees",
+          "page_type": "unclassified",
+          "detail": "robots_disallowed — robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed",
+          "characters": null
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees",
+          "page_type": "unclassified",
+          "detail": "robots_disallowed — robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed",
+          "characters": null
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://www.aalto.fi/en/minors/computer-science-l-minor",
+          "page_type": "unclassified",
+          "detail": "robots_disallowed — robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed",
+          "characters": null
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees",
+          "page_type": "unclassified",
+          "detail": "robots_disallowed — robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed",
+          "characters": null
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://www.aalto.fi/en/programmes/curriculum-2026-2028-0",
+          "page_type": "unclassified",
+          "detail": "robots_disallowed — robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed",
+          "characters": null
+        }
+      ],
+      "error": null
+    },
+    {
+      "case_id": "vienna",
+      "programme_urls": [
+        "https://aufnahmeverfahren.univie.ac.at/en/computer-science"
+      ],
+      "ranked_urls": [
+        "https://aufnahmeverfahren.univie.ac.at/en/computer-science"
+      ],
+      "predictions": [
+        {
+          "key": "programme.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+            "excerpt": "Entrance exam procedure © Ian Ehm University of Vienna / Entrance exam / Before the entrance exam / Degree programmes / Computer Science (bachelor's programme) Computer Science (bachelor's programme) Delve into the world of technology and innovation: in the bachelor's programme in Computer Science, you will solve",
+            "scope": {
+              "university": "University of Vienna",
+              "programme": "Computer Science (bachelor's programme)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "deadline",
+          "value": "2026-05-04",
+          "evidence": {
+            "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+            "excerpt": "is conducted in the bachelor's programme in Computer Science. You'll find a brief overview in the right info box → The entrance exam procedure Overview Application period 2 March to 4 May 2026 Written test 13 July 2026 on site in Vienna (no alternative dates) Test details With the free test literature and sample exercises you'll be well prepare",
+            "scope": {
+              "university": "University of Vienna",
+              "programme": "Computer Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        }
+      ],
+      "telemetry": {
+        "http_fetches": 64,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 7,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 90.44558073800005,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [
+        {
+          "category": "classifier-rejected",
+          "url": "https://studieren.univie.ac.at/en/admission-procedure",
+          "page_type": "unknown",
+          "detail": "classified as unknown; no requirement can be read from this kind of page. title='Application and admission at the University of Vienna' signals='no decisive signals' chars=3283 degrees=[]",
+          "characters": 3283
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://studieren.univie.ac.at/en/admission/german-language-proficiency/",
+          "page_type": "unclassified",
+          "detail": "http_error — HTTP 404",
+          "characters": null
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://studieren.univie.ac.at/en/admission/bachelordiploma-programmes/zulassung/non-eueea-with-german",
+          "page_type": "unclassified",
+          "detail": "http_error — HTTP 404",
+          "characters": null
+        },
+        {
+          "category": "classifier-rejected",
+          "url": "https://studieren.univie.ac.at/en/admission/info-third-country-students",
+          "page_type": "general_admissions",
+          "detail": "not an award page; no scholarship recorded (0 award links, 0 below it: )",
+          "characters": null
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://studieren.univie.ac.at/en/admission/bachelordiploma-programmes/zulassung-mit-verpfl-osa/non-eueea-with-little-german",
+          "page_type": "unclassified",
+          "detail": "http_error — HTTP 404",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+          "page_type": "program_detail",
+          "detail": "2 claims read from this page",
+          "characters": 7339
+        },
+        {
+          "category": "no-pattern-match",
+          "url": "https://aufnahmeverfahren.univie.ac.at/en/german-language-proficiency",
+          "page_type": "program_detail",
+          "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed",
+          "characters": 7082
+        },
+        {
+          "category": "no-pattern-match",
+          "url": "https://studieren.univie.ac.at/en/tuition-fee",
+          "page_type": "costs",
+          "detail": "page was read but no cost figures could be extracted",
+          "characters": 1482
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/grants-and-scholarships",
+          "page_type": "scholarship_index",
+          "detail": "read as a funding index; 0 award links, 0 queued within the award budget",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+          "page_type": "program_detail",
+          "detail": "read as a funding index; 0 award links, 0 queued within the award budget",
+          "characters": null
+        }
+      ],
+      "error": null
+    },
+    {
+      "case_id": "warsaw",
+      "programme_urls": [],
+      "ranked_urls": [],
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": 75,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 6,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 115.00382772900002,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [],
+      "error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"
+    },
+    {
+      "case_id": "ubc",
+      "programme_urls": [],
+      "ranked_urls": [],
+      "predictions": [
+        {
+          "key": "programme.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://you.ubc.ca/programs/computer-science-vancouver-bsc",
+            "excerpt": "Browse: Home / Programs / Computer Science (BSc) Vancouver Computer Science (BSc) On this page Program information What you'll learn Outcomes Take action & plan Program information What you'll l",
+            "scope": {
+              "university": "University of British Columbia",
+              "programme": "Computer Science (BSc)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": "IB",
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "programme.faculty",
+          "value": "Faculty of Science",
+          "evidence": {
+            "url": "https://you.ubc.ca/programs/computer-science-vancouver-bsc",
+            "excerpt": "Faculty of Science",
+            "scope": {
+              "university": "University of British Columbia",
+              "programme": "Computer Science (BSc)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": "IB",
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "ielts.overall",
+          "value": 6.5,
+          "evidence": {
+            "url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/",
+            "excerpt": "6.5, with no part less than 6.0",
+            "scope": {
+              "university": "University of British Columbia",
+              "programme": "Computer Science Vancouver Bsc",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": "IB",
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "ielts.subscores",
+          "value": {
+            "listening": 6.0,
+            "reading": 6.0,
+            "speaking": 6.0,
+            "writing": 6.0
+          },
+          "evidence": {
+            "url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/",
+            "excerpt": "6.5, with no part less than 6.0",
+            "scope": {
+              "university": "University of British Columbia",
+              "programme": "Computer Science Vancouver Bsc",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": "IB",
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.duolingo_min",
+          "value": 125,
+          "evidence": {
+            "url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/",
+            "excerpt": "ding: 22 Listening: 22 Writing: 21 Speaking: 21 Internet based test (1-6): Overall score: 4.5 Reading: 4.5 Listening: 5 Writing: 4.5 Speaking: 4 DET Duolingo English Test Overall: 125 Reading: 115 Listening: 115 Writing: 120 Speaking: 120 If you have completed an online English language proficiency test that is not listed in the tabl",
+            "scope": {
+              "university": "University of British Columbia",
+              "programme": "Computer Science Vancouver Bsc",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": "transfer",
+              "qualification": "IB",
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.ielts_accepted_types",
+          "value": [
+            "academic"
+          ],
+          "evidence": {
+            "url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/",
+            "excerpt": "Test  Minimum score  CAEL  or  CAEL Online  Canadian Academic English Language assessment  Overall 70  Cambridge English Qualifications  B2 First  C1 Advanced  C2 Proficiency  180  CEL  UBC Certificate in English  600  IELTS  *IELTS General, IELTS Indicator, and IELTS One Skill Retake are not accepted  International English Language Testing System (Academic)  6.",
+            "scope": {
+              "university": "University of British Columbia",
+              "programme": "Computer Science Vancouver Bsc",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": "transfer",
+              "qualification": "IB",
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "programme.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://you.ubc.ca/programs/computer-science-okanagan-bsc",
+            "excerpt": "Browse: Home / Programs / Computer Science (BSc) Okanagan Computer Science (BSc) On this page Program information What you'll learn Outcomes Take action & plan Program information What you'll le",
+            "scope": {
+              "university": "University of British Columbia",
+              "programme": "Computer Science (BSc)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": "IB",
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "ielts.overall",
+          "value": 6.5,
+          "evidence": {
+            "url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/",
+            "excerpt": "6.5, with no part less than 6.0",
+            "scope": {
+              "university": "University of British Columbia",
+              "programme": "Computer Science Okanagan Bsc",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": "IB",
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "ielts.subscores",
+          "value": {
+            "listening": 6.0,
+            "reading": 6.0,
+            "speaking": 6.0,
+            "writing": 6.0
+          },
+          "evidence": {
+            "url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/",
+            "excerpt": "6.5, with no part less than 6.0",
+            "scope": {
+              "university": "University of British Columbia",
+              "programme": "Computer Science Okanagan Bsc",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": "IB",
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.duolingo_min",
+          "value": 125,
+          "evidence": {
+            "url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/",
+            "excerpt": "ding: 22 Listening: 22 Writing: 21 Speaking: 21 Internet based test (1-6): Overall score: 4.5 Reading: 4.5 Listening: 5 Writing: 4.5 Speaking: 4 DET Duolingo English Test Overall: 125 Reading: 115 Listening: 115 Writing: 120 Speaking: 120 If you have completed an online English language proficiency test that is not listed in the tabl",
+            "scope": {
+              "university": "University of British Columbia",
+              "programme": "Computer Science Okanagan Bsc",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": "transfer",
+              "qualification": "IB",
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.ielts_accepted_types",
+          "value": [
+            "academic"
+          ],
+          "evidence": {
+            "url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/",
+            "excerpt": "Test  Minimum score  CAEL  or  CAEL Online  Canadian Academic English Language assessment  Overall 70  Cambridge English Qualifications  B2 First  C1 Advanced  C2 Proficiency  180  CEL  UBC Certificate in English  600  IELTS  *IELTS General, IELTS Indicator, and IELTS One Skill Retake are not accepted  International English Language Testing System (Academic)  6.",
+            "scope": {
+              "university": "University of British Columbia",
+              "programme": "Computer Science Okanagan Bsc",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": "transfer",
+              "qualification": "IB",
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        }
+      ],
+      "telemetry": {
+        "http_fetches": 59,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 6,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 115.00549474100006,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [
+        {
+          "category": "fetched-ok",
+          "url": "https://you.ubc.ca/programs/computer-science-vancouver-bsc",
+          "page_type": "program_detail",
+          "detail": "2 claims read from this page",
+          "characters": 9742
+        },
+        {
+          "category": "no-pattern-match",
+          "url": "https://you.ubc.ca/applying-ubc",
+          "page_type": "general_admissions",
+          "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed",
+          "characters": 4377
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/",
+          "page_type": "intake_specific_program",
+          "detail": "4 claims read from this page",
+          "characters": 11127
+        },
+        {
+          "category": "no-pattern-match",
+          "url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/development-programs/",
+          "page_type": "general_admissions",
+          "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed",
+          "characters": 4377
+        },
+        {
+          "category": "no-pattern-match",
+          "url": "https://you.ubc.ca/financial-planning/tuition-fees",
+          "page_type": "costs",
+          "detail": "page was read but no cost figures could be extracted",
+          "characters": 2185
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://you.ubc.ca/ubc_programs/computer-science-okanagan-bsc",
+          "page_type": "program_detail",
+          "detail": "1 claims read from this page",
+          "characters": 9829
+        },
+        {
+          "category": "no-pattern-match",
+          "url": "https://you.ubc.ca/applying-ubc",
+          "page_type": "general_admissions",
+          "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed",
+          "characters": 4377
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/",
+          "page_type": "intake_specific_program",
+          "detail": "4 claims read from this page",
+          "characters": 11127
+        },
+        {
+          "category": "no-pattern-match",
+          "url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/development-programs/",
+          "page_type": "general_admissions",
+          "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed",
+          "characters": 4377
+        },
+        {
+          "category": "no-pattern-match",
+          "url": "https://you.ubc.ca/financial-planning/tuition-fees",
+          "page_type": "costs",
+          "detail": "page was read but no cost figures could be extracted",
+          "characters": 2185
+        }
+      ],
+      "error": "BENCHMARK_WALL_CLOCK_BUDGET_EXHAUSTED"
+    },
+    {
+      "case_id": "toronto",
+      "programme_urls": [
+        "https://www.utm.utoronto.ca/future-students/programs/undergraduate/computer-science",
+        "https://www.utm.utoronto.ca/math-cs-stats/undergraduate-students/programs/computer-science"
+      ],
+      "ranked_urls": [],
+      "predictions": [],
+      "telemetry": {
+        "http_fetches": 31,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 6,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 36.84444947999998,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [
+        {
+          "category": "fetch-failed",
+          "url": "https://future.utoronto.ca/apply",
+          "page_type": "unclassified",
+          "detail": "http_error — HTTP 403",
+          "characters": null
+        },
+        {
+          "category": "classifier-rejected",
+          "url": "https://www.utm.utoronto.ca/future-students/admissions/english-language-requirements",
+          "page_type": "unknown",
+          "detail": "classified as unknown; no requirement can be read from this kind of page. title='English Language Requirements | Future Students' signals='no decisive signals' chars=10724 degrees=[]",
+          "characters": 10724
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://future.utoronto.ca/finances/fees",
+          "page_type": "unclassified",
+          "detail": "http_error — HTTP 403",
+          "characters": null
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://future.utoronto.ca/finances/scholarships",
+          "page_type": "unclassified",
+          "detail": "http_error — HTTP 403",
+          "characters": null
+        },
+        {
+          "category": "classifier-rejected",
+          "url": "https://www.utm.utoronto.ca/math-cs-stats/news/florian-shkurti-honoured-ai2050-early-career-fellowship-2024",
+          "page_type": "news",
+          "detail": "not an award page; no scholarship recorded (1 award links, 0 below it: /math-cs-stats/news/continuum-robotics-lab-have-secured-stage-one-funding-through-eva-and-allen-lau)",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.utm.utoronto.ca/future-students/programs/undergraduate/computer-science",
+          "page_type": "program_detail",
+          "detail": "1 claims read from this page",
+          "characters": 6131
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.utm.utoronto.ca/future-students/programs/undergraduate/computer-science",
+          "page_type": "program_detail",
+          "detail": "read as a funding index; 2 award links, 2 queued within the award budget",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.utm.utoronto.ca/future-students/finances/financial-aid",
+          "page_type": "scholarship_index",
+          "detail": "read as a funding index; 0 award links, 0 queued within the award budget",
+          "characters": null
+        }
+      ],
+      "error": null
+    },
+    {
+      "case_id": "hku",
+      "programme_urls": [
+        "https://www.cds.hku.hk/prospective-students/undergraduate/6999-computing-and-data-science",
+        "https://www.cds.hku.hk/prospective-students/undergraduate/6200-computing-and-data-science-delta"
+      ],
+      "ranked_urls": [],
+      "predictions": [
+        {
+          "key": "programme.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://www.cds.hku.hk/prospective-students/undergraduate-old-2026/6999-computing-and-data-science/",
+            "excerpt": "res Computing and Data Science (programme code: 6999) offers the choices of three professional degree programmes, namely: (1) Bachelor of Engineering in Computer Science [BEng(CompSc)] , (2) Bachelor of Engineering in Artificial Intelligence and Data Science [BEng(AI&DataSc)] , and (3) Bachelor",
+            "scope": {
+              "university": "The University of Hong Kong",
+              "programme": "Bachelor of Engineering in Computer Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": "A-levels",
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        }
+      ],
+      "telemetry": {
+        "http_fetches": 26,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 7,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 47.532917227999974,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [
+        {
+          "category": "fetch-failed",
+          "url": "https://admissions.hku.hk/",
+          "page_type": "unclassified",
+          "detail": "robots_disallowed — robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed",
+          "characters": null
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://admissions.hku.hk/fees-and-scholarships/fees",
+          "page_type": "unclassified",
+          "detail": "robots_disallowed — robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed",
+          "characters": null
+        },
+        {
+          "category": "classifier-rejected",
+          "url": "https://www.cds.hku.hk/prospective-students/undergraduate/6200-computing-and-data-science-delta",
+          "page_type": "unknown",
+          "detail": "classified as unknown; no requirement can be read from this kind of page. title='6200 Computing and Data Science (Delta+) - HKU School of Computing and Data Scie' signals='funding page with 0 substantive signals and no clear award name' chars=388 degrees=[]",
+          "characters": 388
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://admissions.hku.hk/",
+          "page_type": "unclassified",
+          "detail": "robots_disallowed — robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed",
+          "characters": null
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://admissions.hku.hk/fees-and-scholarships/fees",
+          "page_type": "unclassified",
+          "detail": "robots_disallowed — robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed",
+          "characters": null
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://admissions.hku.hk/fees-and-scholarships/scholarships",
+          "page_type": "unclassified",
+          "detail": "robots_disallowed — robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed",
+          "characters": null
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://admissions.hku.hk/fees-and-scholarships/scholarships",
+          "page_type": "unclassified",
+          "detail": "robots_disallowed — robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed",
+          "characters": null
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://admissions.hku.hk/fees-and-scholarships/scholarships/academy-young-global-arts-leaders-scholarship",
+          "page_type": "unclassified",
+          "detail": "robots_disallowed — robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed",
+          "characters": null
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://admissions.hku.hk/fees-and-scholarships/scholarships/hon-ping-entrance-scholarship-for-nigerian-students",
+          "page_type": "unclassified",
+          "detail": "robots_disallowed — robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.cds.hku.hk/prospective-students/undergraduate/6999-computing-and-data-science",
+          "page_type": "unknown",
+          "detail": "listing page: only the programme's existence was read",
+          "characters": 25964
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.cds.hku.hk/prospective-students/undergraduate/6200-computing-and-data-science-delta",
+          "page_type": "unknown",
+          "detail": "read as a funding index; 0 award links, 0 queued within the award budget",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.cds.hku.hk/prospective-students/undergraduate/6999-computing-and-data-science",
+          "page_type": "unknown",
+          "detail": "read as a funding index; 0 award links, 0 queued within the award budget",
+          "characters": null
+        }
+      ],
+      "error": null
+    },
+    {
+      "case_id": "ntu",
+      "programme_urls": [
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-and-computer-sciences",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science-with-second-major-in-business-(international-trading)"
+      ],
+      "ranked_urls": [
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/double-degree-in-computer-science-and-business",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/double-degree-in-computer-science-and-economics",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/double-degree-in-business-(with-specialisation-in-business-analytics)-computer-engineering-computer-science",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-and-computer-sciences",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science-with-second-major-in-business-(international-trading)",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science-with-second-major-in-business",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-(hons)-in-data-science-and-artificial-intelligence-with-a-second-major-in-sustainability",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-(hons)-in-computer-science-with-a-second-major-in-sustainability",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-(hons)-in-computer-science-with-a-second-major-in-entrepreneurship",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/double-degree-in-electrical-and-electronic-engineering-and-social-sciences-(economics)",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/double-degree-in-bachelor-of-engineering-(chemical-and-biomolecular-engineering)-and-bachelor-of-social-science-(economics)",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/double-degree-in-bachelor-of-engineering-(bioengineering)-and-bachelor-of-social-science-(economics)",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-social-sciences-in-psychology-with-second-major-in-biological-sciences",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-social-sciences-in-psychology-(honours)",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-social-sciences-(hons)-in-double-major---psychology-and-media-analytics",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-social-sciences-(hons)-in-double-major---economics-and-psychology",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-social-science-in-philosophy-politics-and-economics",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-physics-energy-studies-and-education",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-physics-applied-physics-with-second-major-in-data-analytics",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-physics-applied-physics-with-second-major-in-astrophysics",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-physics-and-mathematical-sciences",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-physics---applied-physics-with-second-major-in-material-physics-and-technologies",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-sciences-with-second-major-in-sustainability",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-sciences",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-maritime-studies-with-second-major-in-data-analytics",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-maritime-studies-with-second-major-in-business",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-environmental-earth-systems-science-with-second-major-in-entrepreneurship",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-environmental-earth-systems-science-and-public-policy-and-global-affairs",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-data-science-artificial-intelligence",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-chemistry-and-biological-chemistry-with-second-major-in-data-analytics",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-chemistry-and-biological-chemistry-with-second-major-in-business-(international-trading)",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-chemistry-and-biological-chemistry",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-biological-sciences-with-second-major-in-sustainability",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-biological-sciences-with-second-major-in-food-science-and-technology",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-biological-sciences-with-second-major-in-entrepreneurship",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-biological-sciences-with-second-major-in-data-analytics",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-biological-sciences-with-second-major-in-biomedical-structural-biology",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-applied-physics-with-second-major-in-quantum-technologies",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-applied-physics-with-second-major-in-microelectronics-engineering"
+      ],
+      "predictions": [
+        {
+          "key": "programme.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+            "excerpt": "The Bachelor of Computing (Hons) in Computer Science at NTU’s College of Computing and Data Science (CCDS) is a 4-year direct honours degree that provides rigorous training in computing fundamentals, algori",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor of Computing (Hons) in Computer Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "programme.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-and-computer-sciences",
+            "excerpt": "Bachelor of Science in Mathematical and Computer Sciences | NTU Singapore",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor of Science in Mathematical and Computer Sciences",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": "international",
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "programme.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science-with-second-major-in-business-(international-trading)",
+            "excerpt": "Bachelor of Computing in Computer Science with Second Major in Business (International Trading) | NTU Singapore",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor of Computing in Computer Science with Second Major in Business (International Trading)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": "IB",
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "scholarships.nanyang_global.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "excerpt": "Nanyang Global Scholarship Apply Now The Nanyang Global Scholarship is awarded to outstanding freshmen pursuing undergraduate programmes and recognizes students with outstanding academic results, demonstrate strong leadership abilities, and very good co-curricular records.",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "scholarships.nanyang_global.coverage.living",
+          "value": {
+            "currency": "SGD",
+            "amount": 6500,
+            "period": "academic_year"
+          },
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "excerpt": "Living allowance of S$6,500 per academic year",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "scholarships.nanyang_global.duration",
+          "value": "normal_programme_duration",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "excerpt": "fications. Excellent co-curricular records. Strong leadership qualities and potential. Back to top Benefits of award The scholarship covers up to the normal programme duration on condition that the scholarship holder maintain a record of good academic performance and exemplary conduct. Full coverage",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_coverage",
+          "value": {
+            "conditions": [
+              "The scholarship covers up to the normal programme duration on condition that the scholarship holder maintain a record of good academic performance and exemplary conduct."
+            ],
+            "tuition": {
+              "fraction": 1.0,
+              "basis": "subsidised_after_tuition_grant"
+            },
+            "living": {
+              "currency": "SGD",
+              "fixed_amount": 6500,
+              "period": "academic_year"
+            },
+            "housing": {
+              "currency": "SGD",
+              "maximum": 2000,
+              "period": "academic_year",
+              "requires": "scholarship holders who reside in NTU hostels only"
+            },
+            "travel": {
+              "currency": "SGD",
+              "maximum": 8000,
+              "requires": "an overseas programme",
+              "terms": "Travel Grant Form",
+              "cohorts_from": "AY2025"
+            }
+          },
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "excerpt": "The scholarship covers up to the normal programme duration on condition that the scholarship holder maintain a record of good academic performance and exemplary conduct.\nFull coverage of subsidised tuition fees (after Tuition Grant).\nLiving allowance of S$6,500 per academic year.\nAccommodation allowance of up to S$2,000 per academic year.\n(Applicable to scholarship holders who reside in NTU hostels only.)\nTravel grant of up to S$8,000 for an overseas programme subject to terms and conditions in the Travel Grant Form (for new cohorts from AY2025).",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "scholarships.nanyang_global.applicability.nationality",
+          "value": "all",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "excerpt": "very good co-curricular records.  Eligibility Benefits of award Terms & Conditions Application Procedures Selection Interview Contact us Eligibility Open to all nationalities. Successful awardees should read a full-time undergraduate degree programme. The scholarship will cover the years of study a",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "scholarships.nanyang_global.applicability.international",
+          "value": true,
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "excerpt": "Eligibility Benefits of award Terms & Conditions Application Procedures Selection Interview Contact us Eligibility Open to all nationalities.",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "scholarships.nanyang_global.applicability.degree",
+          "value": {
+            "degree": "bachelor",
+            "applies": "yes"
+          },
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "excerpt": "Successful awardees should read a full-time undergraduate degree programme.",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "scholarships.nanyang_global.applicability.application_mode",
+          "value": "separate",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "excerpt": "Applicants are required to submit their application for admission before submitting their application for scholarship.",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "scholarships.nanyang_global.bond",
+          "value": {
+            "years": 3,
+            "basis": "MOE_Tuition_Grant",
+            "population": [
+              "Singapore_PR",
+              "international"
+            ]
+          },
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "excerpt": "No bond is attached to the Nanyang Global Scholarship apart from the three-year bond applicable to all Singapore PRs and international students under the MOE Tuition Grant Scheme.",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": "Singapore PRs and international students",
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "scholarships.nanyang_global.renewal",
+          "value": {
+            "cgpa_gte": 3.5,
+            "scale": 5.0,
+            "review": "each_semester"
+          },
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "excerpt": "val of the University, hold concurrently any other scholarships, bursaries, university loans or awards.  Scholarship holder is required to maintain a minimum Cumulative Grade Point Average (CGPA) of 3.5 over 5.0. Academic performance will be reviewed every semester. Scholarship holder is required to",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_exists",
+          "value": "NTU President Award",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/ntu-president-award",
+            "excerpt": "NTU President Award Apply Now The NTU President Award is a prestigious award given to students with exceptional leadership qualities, excellent co-curricular records and outstanding academic results.",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_duration",
+          "value": "normal_programme_duration",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/ntu-president-award",
+            "excerpt": "s. Excellent co-curricular records. Strong leadership qualities and potential. Back to top Benefits of award The NTU President Award covers up to the normal programme duration on condition that the scholarship holder maintain a record of good academic performance and exemplary conduct. Study Allowan",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_citizenship_restriction",
+          "value": "all",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/ntu-president-award",
+            "excerpt": "given exclusively for this award. Eligibility Benefits of award Terms & Conditions Application Procedures Selection Interview Contact us Eligibility Open to all nationalities. Successful awardees should read a full-time undergraduate degree programme.  Possess outstanding Singapore-Cambridge GCE 'A",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_international_eligible",
+          "value": true,
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/ntu-president-award",
+            "excerpt": "Eligibility Benefits of award Terms & Conditions Application Procedures Selection Interview Contact us Eligibility Open to all nationalities.",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_application_mode",
+          "value": "separate",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/ntu-president-award",
+            "excerpt": "Applicants are required to submit their application for admission before submitting their application for scholarship.",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_renewal_requirement",
+          "value": {
+            "cgpa_gte": 3.5,
+            "scale": 5.0,
+            "review": "each_semester"
+          },
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/ntu-president-award",
+            "excerpt": "without the approval of the University, hold concurrently any other scholarships, university loans or awards.  Award holder is required to maintain a minimum Cumulative Grade Point Average (CGPA) of 3.5 over 5.0. Academic performance will be reviewed every semester. Award holder is required to take",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_need_based",
+          "value": "yes",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/ntu-president-award",
+            "excerpt": "submit a referee's appraisal online. The appraisal is to be completed by your school teacher, who must not be your family or relative. After you have submitted your scholarship application, you will be provided with a URL to be forwarded to your school teacher. When you are passing the link to your",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_exists",
+          "value": "Nanyang Merit Scholarship",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/college-scholarship",
+            "excerpt": "Nanyang Merit Scholarship Apply Now ​The Nanyang Merit Scholarship is awarded to outstanding freshmen pursuing full-time undergraduate programmes in NTU.",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_living_allowance",
+          "value": {
+            "currency": "SGD",
+            "amount": 5000,
+            "period": "academic_year"
+          },
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/college-scholarship",
+            "excerpt": "Living allowance of S$5,000 per academic year",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_duration",
+          "value": "normal_programme_duration",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/college-scholarship",
+            "excerpt": "qualifications. Good co-curricular records. Good leadership qualities and potential. Back to top Benefits of award   The scholarship covers up to the normal programme duration on condition that the scholarship holder maintain a record of good academic performance and exemplary conduct. Full coverage",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_citizenship_restriction",
+          "value": "all",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/college-scholarship",
+            "excerpt": "nerous overseas travel allowance.  Eligibility Benefits of award Terms & Conditions Application Procedures Selection Interview Contact us Eligibility Open to all nationalities. Successful awardees should read a full-time undergraduate degree programme. The scholarship will cover the years of study a",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_international_eligible",
+          "value": true,
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/college-scholarship",
+            "excerpt": "Eligibility Benefits of award Terms & Conditions Application Procedures Selection Interview Contact us Eligibility Open to all nationalities.",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_program_restriction",
+          "value": {
+            "degree": "bachelor",
+            "applies": "yes"
+          },
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/college-scholarship",
+            "excerpt": "Successful awardees should read a full-time undergraduate degree programme.",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_application_mode",
+          "value": "separate",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/college-scholarship",
+            "excerpt": "Applicants are required to submit their application for admission before submitting their application for scholarship.",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_bond",
+          "value": {
+            "years": 3,
+            "basis": "MOE_Tuition_Grant",
+            "population": [
+              "Singapore_PR",
+              "international"
+            ]
+          },
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/college-scholarship",
+            "excerpt": "No bond is attached to the Nanyang Merit Scholarship apart from the three-year bond applicable to all Singapore PRs and international students under the MOE Tuition Grant Scheme.",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": "Singapore PRs and international students",
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_renewal_requirement",
+          "value": {
+            "cgpa_gte": 3.5,
+            "scale": 5.0,
+            "review": "each_semester"
+          },
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/college-scholarship",
+            "excerpt": "val of the University, hold concurrently any other scholarships, bursaries, university loans or awards.  Scholarship holder is required to maintain a minimum Cumulative Grade Point Average (CGPA) of 3.5 over 5.0. Academic performance will be reviewed every semester. Scholarship holder is required to",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "scholarships.nanyang_global.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "excerpt": "Nanyang Global Scholarship Apply Now The Nanyang Global Scholarship is awarded to outstanding freshmen pursuing undergraduate programmes and recognizes students with outstanding academic results, demonstrate strong leadership abilities, and very good co-curricular records.",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Science In Mathematical And Computer Sciences",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "scholarships.nanyang_global.coverage.living",
+          "value": {
+            "currency": "SGD",
+            "amount": 6500,
+            "period": "academic_year"
+          },
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "excerpt": "Living allowance of S$6,500 per academic year",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Science In Mathematical And Computer Sciences",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "scholarships.nanyang_global.duration",
+          "value": "normal_programme_duration",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "excerpt": "fications. Excellent co-curricular records. Strong leadership qualities and potential. Back to top Benefits of award The scholarship covers up to the normal programme duration on condition that the scholarship holder maintain a record of good academic performance and exemplary conduct. Full coverage",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Science In Mathematical And Computer Sciences",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_coverage",
+          "value": {
+            "conditions": [
+              "The scholarship covers up to the normal programme duration on condition that the scholarship holder maintain a record of good academic performance and exemplary conduct."
+            ],
+            "tuition": {
+              "fraction": 1.0,
+              "basis": "subsidised_after_tuition_grant"
+            },
+            "living": {
+              "currency": "SGD",
+              "fixed_amount": 6500,
+              "period": "academic_year"
+            },
+            "housing": {
+              "currency": "SGD",
+              "maximum": 2000,
+              "period": "academic_year",
+              "requires": "scholarship holders who reside in NTU hostels only"
+            },
+            "travel": {
+              "currency": "SGD",
+              "maximum": 8000,
+              "requires": "an overseas programme",
+              "terms": "Travel Grant Form",
+              "cohorts_from": "AY2025"
+            }
+          },
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "excerpt": "The scholarship covers up to the normal programme duration on condition that the scholarship holder maintain a record of good academic performance and exemplary conduct.\nFull coverage of subsidised tuition fees (after Tuition Grant).\nLiving allowance of S$6,500 per academic year.\nAccommodation allowance of up to S$2,000 per academic year.\n(Applicable to scholarship holders who reside in NTU hostels only.)\nTravel grant of up to S$8,000 for an overseas programme subject to terms and conditions in the Travel Grant Form (for new cohorts from AY2025).",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Science In Mathematical And Computer Sciences",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "scholarships.nanyang_global.applicability.nationality",
+          "value": "all",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "excerpt": "very good co-curricular records.  Eligibility Benefits of award Terms & Conditions Application Procedures Selection Interview Contact us Eligibility Open to all nationalities. Successful awardees should read a full-time undergraduate degree programme. The scholarship will cover the years of study a",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Science In Mathematical And Computer Sciences",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "scholarships.nanyang_global.applicability.international",
+          "value": true,
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "excerpt": "Eligibility Benefits of award Terms & Conditions Application Procedures Selection Interview Contact us Eligibility Open to all nationalities.",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Science In Mathematical And Computer Sciences",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "scholarships.nanyang_global.applicability.degree",
+          "value": {
+            "degree": "bachelor",
+            "applies": "yes"
+          },
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "excerpt": "Successful awardees should read a full-time undergraduate degree programme.",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Science In Mathematical And Computer Sciences",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "scholarships.nanyang_global.applicability.application_mode",
+          "value": "separate",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "excerpt": "Applicants are required to submit their application for admission before submitting their application for scholarship.",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Science In Mathematical And Computer Sciences",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "scholarships.nanyang_global.bond",
+          "value": {
+            "years": 3,
+            "basis": "MOE_Tuition_Grant",
+            "population": [
+              "Singapore_PR",
+              "international"
+            ]
+          },
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "excerpt": "No bond is attached to the Nanyang Global Scholarship apart from the three-year bond applicable to all Singapore PRs and international students under the MOE Tuition Grant Scheme.",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Science In Mathematical And Computer Sciences",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": "Singapore PRs and international students",
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "scholarships.nanyang_global.renewal",
+          "value": {
+            "cgpa_gte": 3.5,
+            "scale": 5.0,
+            "review": "each_semester"
+          },
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "excerpt": "val of the University, hold concurrently any other scholarships, bursaries, university loans or awards.  Scholarship holder is required to maintain a minimum Cumulative Grade Point Average (CGPA) of 3.5 over 5.0. Academic performance will be reviewed every semester. Scholarship holder is required to",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Science In Mathematical And Computer Sciences",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_exists",
+          "value": "NTU President Award",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/ntu-president-award",
+            "excerpt": "NTU President Award Apply Now The NTU President Award is a prestigious award given to students with exceptional leadership qualities, excellent co-curricular records and outstanding academic results.",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Science In Mathematical And Computer Sciences",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_duration",
+          "value": "normal_programme_duration",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/ntu-president-award",
+            "excerpt": "s. Excellent co-curricular records. Strong leadership qualities and potential. Back to top Benefits of award The NTU President Award covers up to the normal programme duration on condition that the scholarship holder maintain a record of good academic performance and exemplary conduct. Study Allowan",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Science In Mathematical And Computer Sciences",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_citizenship_restriction",
+          "value": "all",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/ntu-president-award",
+            "excerpt": "given exclusively for this award. Eligibility Benefits of award Terms & Conditions Application Procedures Selection Interview Contact us Eligibility Open to all nationalities. Successful awardees should read a full-time undergraduate degree programme.  Possess outstanding Singapore-Cambridge GCE 'A",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Science In Mathematical And Computer Sciences",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_international_eligible",
+          "value": true,
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/ntu-president-award",
+            "excerpt": "Eligibility Benefits of award Terms & Conditions Application Procedures Selection Interview Contact us Eligibility Open to all nationalities.",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Science In Mathematical And Computer Sciences",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_application_mode",
+          "value": "separate",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/ntu-president-award",
+            "excerpt": "Applicants are required to submit their application for admission before submitting their application for scholarship.",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Science In Mathematical And Computer Sciences",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_renewal_requirement",
+          "value": {
+            "cgpa_gte": 3.5,
+            "scale": 5.0,
+            "review": "each_semester"
+          },
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/ntu-president-award",
+            "excerpt": "without the approval of the University, hold concurrently any other scholarships, university loans or awards.  Award holder is required to maintain a minimum Cumulative Grade Point Average (CGPA) of 3.5 over 5.0. Academic performance will be reviewed every semester. Award holder is required to take",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Science In Mathematical And Computer Sciences",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_need_based",
+          "value": "yes",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/ntu-president-award",
+            "excerpt": "submit a referee's appraisal online. The appraisal is to be completed by your school teacher, who must not be your family or relative. After you have submitted your scholarship application, you will be provided with a URL to be forwarded to your school teacher. When you are passing the link to your",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Science In Mathematical And Computer Sciences",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_exists",
+          "value": "Nanyang Merit Scholarship",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/college-scholarship",
+            "excerpt": "Nanyang Merit Scholarship Apply Now ​The Nanyang Merit Scholarship is awarded to outstanding freshmen pursuing full-time undergraduate programmes in NTU.",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Science In Mathematical And Computer Sciences",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_living_allowance",
+          "value": {
+            "currency": "SGD",
+            "amount": 5000,
+            "period": "academic_year"
+          },
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/college-scholarship",
+            "excerpt": "Living allowance of S$5,000 per academic year",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Science In Mathematical And Computer Sciences",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_duration",
+          "value": "normal_programme_duration",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/college-scholarship",
+            "excerpt": "qualifications. Good co-curricular records. Good leadership qualities and potential. Back to top Benefits of award   The scholarship covers up to the normal programme duration on condition that the scholarship holder maintain a record of good academic performance and exemplary conduct. Full coverage",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Science In Mathematical And Computer Sciences",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_citizenship_restriction",
+          "value": "all",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/college-scholarship",
+            "excerpt": "nerous overseas travel allowance.  Eligibility Benefits of award Terms & Conditions Application Procedures Selection Interview Contact us Eligibility Open to all nationalities. Successful awardees should read a full-time undergraduate degree programme. The scholarship will cover the years of study a",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Science In Mathematical And Computer Sciences",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_international_eligible",
+          "value": true,
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/college-scholarship",
+            "excerpt": "Eligibility Benefits of award Terms & Conditions Application Procedures Selection Interview Contact us Eligibility Open to all nationalities.",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Science In Mathematical And Computer Sciences",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_program_restriction",
+          "value": {
+            "degree": "bachelor",
+            "applies": "yes"
+          },
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/college-scholarship",
+            "excerpt": "Successful awardees should read a full-time undergraduate degree programme.",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Science In Mathematical And Computer Sciences",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_application_mode",
+          "value": "separate",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/college-scholarship",
+            "excerpt": "Applicants are required to submit their application for admission before submitting their application for scholarship.",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Science In Mathematical And Computer Sciences",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_bond",
+          "value": {
+            "years": 3,
+            "basis": "MOE_Tuition_Grant",
+            "population": [
+              "Singapore_PR",
+              "international"
+            ]
+          },
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/college-scholarship",
+            "excerpt": "No bond is attached to the Nanyang Merit Scholarship apart from the three-year bond applicable to all Singapore PRs and international students under the MOE Tuition Grant Scheme.",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Science In Mathematical And Computer Sciences",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": "Singapore PRs and international students",
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_renewal_requirement",
+          "value": {
+            "cgpa_gte": 3.5,
+            "scale": 5.0,
+            "review": "each_semester"
+          },
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/college-scholarship",
+            "excerpt": "val of the University, hold concurrently any other scholarships, bursaries, university loans or awards.  Scholarship holder is required to maintain a minimum Cumulative Grade Point Average (CGPA) of 3.5 over 5.0. Academic performance will be reviewed every semester. Scholarship holder is required to",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Science In Mathematical And Computer Sciences",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "scholarships.nanyang_global.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "excerpt": "Nanyang Global Scholarship Apply Now The Nanyang Global Scholarship is awarded to outstanding freshmen pursuing undergraduate programmes and recognizes students with outstanding academic results, demonstrate strong leadership abilities, and very good co-curricular records.",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science With Second Major In Business (International Trading)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "scholarships.nanyang_global.coverage.living",
+          "value": {
+            "currency": "SGD",
+            "amount": 6500,
+            "period": "academic_year"
+          },
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "excerpt": "Living allowance of S$6,500 per academic year",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science With Second Major In Business (International Trading)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "scholarships.nanyang_global.duration",
+          "value": "normal_programme_duration",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "excerpt": "fications. Excellent co-curricular records. Strong leadership qualities and potential. Back to top Benefits of award The scholarship covers up to the normal programme duration on condition that the scholarship holder maintain a record of good academic performance and exemplary conduct. Full coverage",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science With Second Major In Business (International Trading)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_coverage",
+          "value": {
+            "conditions": [
+              "The scholarship covers up to the normal programme duration on condition that the scholarship holder maintain a record of good academic performance and exemplary conduct."
+            ],
+            "tuition": {
+              "fraction": 1.0,
+              "basis": "subsidised_after_tuition_grant"
+            },
+            "living": {
+              "currency": "SGD",
+              "fixed_amount": 6500,
+              "period": "academic_year"
+            },
+            "housing": {
+              "currency": "SGD",
+              "maximum": 2000,
+              "period": "academic_year",
+              "requires": "scholarship holders who reside in NTU hostels only"
+            },
+            "travel": {
+              "currency": "SGD",
+              "maximum": 8000,
+              "requires": "an overseas programme",
+              "terms": "Travel Grant Form",
+              "cohorts_from": "AY2025"
+            }
+          },
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "excerpt": "The scholarship covers up to the normal programme duration on condition that the scholarship holder maintain a record of good academic performance and exemplary conduct.\nFull coverage of subsidised tuition fees (after Tuition Grant).\nLiving allowance of S$6,500 per academic year.\nAccommodation allowance of up to S$2,000 per academic year.\n(Applicable to scholarship holders who reside in NTU hostels only.)\nTravel grant of up to S$8,000 for an overseas programme subject to terms and conditions in the Travel Grant Form (for new cohorts from AY2025).",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science With Second Major In Business (International Trading)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "scholarships.nanyang_global.applicability.nationality",
+          "value": "all",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "excerpt": "very good co-curricular records.  Eligibility Benefits of award Terms & Conditions Application Procedures Selection Interview Contact us Eligibility Open to all nationalities. Successful awardees should read a full-time undergraduate degree programme. The scholarship will cover the years of study a",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science With Second Major In Business (International Trading)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "scholarships.nanyang_global.applicability.international",
+          "value": true,
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "excerpt": "Eligibility Benefits of award Terms & Conditions Application Procedures Selection Interview Contact us Eligibility Open to all nationalities.",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science With Second Major In Business (International Trading)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "scholarships.nanyang_global.applicability.degree",
+          "value": {
+            "degree": "bachelor",
+            "applies": "yes"
+          },
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "excerpt": "Successful awardees should read a full-time undergraduate degree programme.",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science With Second Major In Business (International Trading)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "scholarships.nanyang_global.applicability.application_mode",
+          "value": "separate",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "excerpt": "Applicants are required to submit their application for admission before submitting their application for scholarship.",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science With Second Major In Business (International Trading)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "scholarships.nanyang_global.bond",
+          "value": {
+            "years": 3,
+            "basis": "MOE_Tuition_Grant",
+            "population": [
+              "Singapore_PR",
+              "international"
+            ]
+          },
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "excerpt": "No bond is attached to the Nanyang Global Scholarship apart from the three-year bond applicable to all Singapore PRs and international students under the MOE Tuition Grant Scheme.",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science With Second Major In Business (International Trading)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": "Singapore PRs and international students",
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "scholarships.nanyang_global.renewal",
+          "value": {
+            "cgpa_gte": 3.5,
+            "scale": 5.0,
+            "review": "each_semester"
+          },
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "excerpt": "val of the University, hold concurrently any other scholarships, bursaries, university loans or awards.  Scholarship holder is required to maintain a minimum Cumulative Grade Point Average (CGPA) of 3.5 over 5.0. Academic performance will be reviewed every semester. Scholarship holder is required to",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science With Second Major In Business (International Trading)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_exists",
+          "value": "NTU President Award",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/ntu-president-award",
+            "excerpt": "NTU President Award Apply Now The NTU President Award is a prestigious award given to students with exceptional leadership qualities, excellent co-curricular records and outstanding academic results.",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science With Second Major In Business (International Trading)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_duration",
+          "value": "normal_programme_duration",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/ntu-president-award",
+            "excerpt": "s. Excellent co-curricular records. Strong leadership qualities and potential. Back to top Benefits of award The NTU President Award covers up to the normal programme duration on condition that the scholarship holder maintain a record of good academic performance and exemplary conduct. Study Allowan",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science With Second Major In Business (International Trading)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_citizenship_restriction",
+          "value": "all",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/ntu-president-award",
+            "excerpt": "given exclusively for this award. Eligibility Benefits of award Terms & Conditions Application Procedures Selection Interview Contact us Eligibility Open to all nationalities. Successful awardees should read a full-time undergraduate degree programme.  Possess outstanding Singapore-Cambridge GCE 'A",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science With Second Major In Business (International Trading)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_international_eligible",
+          "value": true,
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/ntu-president-award",
+            "excerpt": "Eligibility Benefits of award Terms & Conditions Application Procedures Selection Interview Contact us Eligibility Open to all nationalities.",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science With Second Major In Business (International Trading)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_application_mode",
+          "value": "separate",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/ntu-president-award",
+            "excerpt": "Applicants are required to submit their application for admission before submitting their application for scholarship.",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science With Second Major In Business (International Trading)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_renewal_requirement",
+          "value": {
+            "cgpa_gte": 3.5,
+            "scale": 5.0,
+            "review": "each_semester"
+          },
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/ntu-president-award",
+            "excerpt": "without the approval of the University, hold concurrently any other scholarships, university loans or awards.  Award holder is required to maintain a minimum Cumulative Grade Point Average (CGPA) of 3.5 over 5.0. Academic performance will be reviewed every semester. Award holder is required to take",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science With Second Major In Business (International Trading)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_need_based",
+          "value": "yes",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/ntu-president-award",
+            "excerpt": "submit a referee's appraisal online. The appraisal is to be completed by your school teacher, who must not be your family or relative. After you have submitted your scholarship application, you will be provided with a URL to be forwarded to your school teacher. When you are passing the link to your",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science With Second Major In Business (International Trading)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_exists",
+          "value": "Nanyang Merit Scholarship",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/college-scholarship",
+            "excerpt": "Nanyang Merit Scholarship Apply Now ​The Nanyang Merit Scholarship is awarded to outstanding freshmen pursuing full-time undergraduate programmes in NTU.",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science With Second Major In Business (International Trading)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_living_allowance",
+          "value": {
+            "currency": "SGD",
+            "amount": 5000,
+            "period": "academic_year"
+          },
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/college-scholarship",
+            "excerpt": "Living allowance of S$5,000 per academic year",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science With Second Major In Business (International Trading)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_duration",
+          "value": "normal_programme_duration",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/college-scholarship",
+            "excerpt": "qualifications. Good co-curricular records. Good leadership qualities and potential. Back to top Benefits of award   The scholarship covers up to the normal programme duration on condition that the scholarship holder maintain a record of good academic performance and exemplary conduct. Full coverage",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science With Second Major In Business (International Trading)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_citizenship_restriction",
+          "value": "all",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/college-scholarship",
+            "excerpt": "nerous overseas travel allowance.  Eligibility Benefits of award Terms & Conditions Application Procedures Selection Interview Contact us Eligibility Open to all nationalities. Successful awardees should read a full-time undergraduate degree programme. The scholarship will cover the years of study a",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science With Second Major In Business (International Trading)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_international_eligible",
+          "value": true,
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/college-scholarship",
+            "excerpt": "Eligibility Benefits of award Terms & Conditions Application Procedures Selection Interview Contact us Eligibility Open to all nationalities.",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science With Second Major In Business (International Trading)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_program_restriction",
+          "value": {
+            "degree": "bachelor",
+            "applies": "yes"
+          },
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/college-scholarship",
+            "excerpt": "Successful awardees should read a full-time undergraduate degree programme.",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science With Second Major In Business (International Trading)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_application_mode",
+          "value": "separate",
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/college-scholarship",
+            "excerpt": "Applicants are required to submit their application for admission before submitting their application for scholarship.",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science With Second Major In Business (International Trading)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_bond",
+          "value": {
+            "years": 3,
+            "basis": "MOE_Tuition_Grant",
+            "population": [
+              "Singapore_PR",
+              "international"
+            ]
+          },
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/college-scholarship",
+            "excerpt": "No bond is attached to the Nanyang Merit Scholarship apart from the three-year bond applicable to all Singapore PRs and international students under the MOE Tuition Grant Scheme.",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science With Second Major In Business (International Trading)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": "Singapore PRs and international students",
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_renewal_requirement",
+          "value": {
+            "cgpa_gte": 3.5,
+            "scale": 5.0,
+            "review": "each_semester"
+          },
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/college-scholarship",
+            "excerpt": "val of the University, hold concurrently any other scholarships, bursaries, university loans or awards.  Scholarship holder is required to maintain a minimum Cumulative Grade Point Average (CGPA) of 3.5 over 5.0. Academic performance will be reviewed every semester. Scholarship holder is required to",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor Of Computing In Computer Science With Second Major In Business (International Trading)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        }
+      ],
+      "telemetry": {
+        "http_fetches": 26,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 7,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 57.92819074200008,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [
+        {
+          "category": "fetch-failed",
+          "url": "https://www.ntu.edu.sg/admissions/ug/financial-matters/financial-aid/bursaries",
+          "page_type": "unclassified",
+          "detail": "http_error — HTTP 404",
+          "characters": null
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://www.ntu.edu.sg/admissions/ug/financial-matters/financial-aid/bursaries",
+          "page_type": "unclassified",
+          "detail": "http_error — HTTP 404",
+          "characters": null
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://www.ntu.edu.sg/admissions/ug/financial-matters/financial-aid/bursaries",
+          "page_type": "unclassified",
+          "detail": "http_error — HTTP 404",
+          "characters": null
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://www.ntu.edu.sg/admissions/ug/admission-guide/diploma-awarded-by-a-polytechnic-or-equivalent-institution-in-singapore",
+          "page_type": "unclassified",
+          "detail": "http_error — HTTP 404",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+          "page_type": "program_detail",
+          "detail": "1 claims read from this page",
+          "characters": 3705
+        },
+        {
+          "category": "no-pattern-match",
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate",
+          "page_type": "program_detail",
+          "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed",
+          "characters": 444
+        },
+        {
+          "category": "no-pattern-match",
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/financial-matters",
+          "page_type": "costs",
+          "detail": "page was read but no cost figures could be extracted",
+          "characters": 1787
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-and-computer-sciences",
+          "page_type": "program_detail",
+          "detail": "1 claims read from this page",
+          "characters": 3776
+        },
+        {
+          "category": "no-pattern-match",
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate",
+          "page_type": "program_detail",
+          "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed",
+          "characters": 444
+        },
+        {
+          "category": "no-pattern-match",
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/financial-matters",
+          "page_type": "costs",
+          "detail": "page was read but no cost figures could be extracted",
+          "characters": 1787
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science-with-second-major-in-business-(international-trading)",
+          "page_type": "program_detail",
+          "detail": "1 claims read from this page",
+          "characters": 4171
+        },
+        {
+          "category": "no-pattern-match",
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate",
+          "page_type": "program_detail",
+          "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed",
+          "characters": 444
+        },
+        {
+          "category": "no-pattern-match",
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/financial-matters",
+          "page_type": "costs",
+          "detail": "page was read but no cost figures could be extracted",
+          "characters": 1787
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+          "page_type": "program_detail",
+          "detail": "read as a funding index; 0 award links, 0 queued within the award budget",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+          "page_type": "scholarship_award",
+          "detail": "award page; 10 claims read",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/ntu-president-award",
+          "page_type": "scholarship_award",
+          "detail": "award page; 7 claims read",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/college-scholarship",
+          "page_type": "scholarship_award",
+          "detail": "award page; 9 claims read",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-and-computer-sciences",
+          "page_type": "program_detail",
+          "detail": "read as a funding index; 0 award links, 0 queued within the award budget",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+          "page_type": "scholarship_award",
+          "detail": "award page; 10 claims read",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/ntu-president-award",
+          "page_type": "scholarship_award",
+          "detail": "award page; 7 claims read",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/college-scholarship",
+          "page_type": "scholarship_award",
+          "detail": "award page; 9 claims read",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science-with-second-major-in-business-(international-trading)",
+          "page_type": "program_detail",
+          "detail": "read as a funding index; 1 award links, 1 queued within the award budget",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+          "page_type": "scholarship_award",
+          "detail": "award page; 10 claims read",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/ntu-president-award",
+          "page_type": "scholarship_award",
+          "detail": "award page; 7 claims read",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/college-scholarship",
+          "page_type": "scholarship_award",
+          "detail": "award page; 9 claims read",
+          "characters": null
+        }
+      ],
+      "error": null
+    },
+    {
+      "case_id": "kaist",
+      "programme_urls": [],
+      "ranked_urls": [
+        "https://cs.kaist.ac.kr/content?menu=318"
+      ],
+      "predictions": [
+        {
+          "key": "unmapped.interview_required",
+          "value": true,
+          "evidence": {
+            "url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+            "excerpt": "(KST) November 10, 2026 ~ January 14, 2027, 6:00 PM (KST) Recommendation Letter Submission October 29, 2026, 6:00 PM (KST) January 21, 2027, 6:00 PM (KST) Interview (Online, if required)* December 22, 2026 March 3, 2027 Admission Announcement January 7, 2027, 10:00 AM (KST) March 25, 2027, 10:00 AM (KST) Reply your Admission Acceptance Be",
+            "scope": {
+              "university": "KAIST",
+              "programme": "computer science (bachelor)",
+              "degree": null,
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.credential_evaluation_required",
+          "value": true,
+          "evidence": {
+            "url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+            "excerpt": "26 ~ January 14, 2027, 6:00 PM (KST) Recommendation Letter Submission October 29, 2026, 6:00 PM (KST) January 21, 2027, 6:00 PM (KST) Interview (Online, if required)* December 22, 2026 March 3, 2027 Admission Announcement January 7, 2027, 10:00 AM (KST) March 25, 2027, 10:00 AM (KST) Reply your Admission Acceptance Before Fe",
+            "scope": {
+              "university": "KAIST",
+              "programme": "computer science (bachelor)",
+              "degree": null,
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "intake",
+          "value": "spring 2027",
+          "evidence": {
+            "url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+            "excerpt": "Admission Announcement  January 7, 2027, 10:00 AM (KST)",
+            "scope": {
+              "university": "KAIST",
+              "programme": "computer science (bachelor)",
+              "degree": null,
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "programme.admission_route",
+          "value": "undeclared_then_major_selection",
+          "evidence": {
+            "url": "https://cs.kaist.ac.kr/content?menu=40",
+            "excerpt": "KAIST 학부생은 전공선택 없이 무학과로 입학을 하고 있습니다. 무학과 입학 후 2학기 때 전산을 포함한 전공을 선택하고 있습니다.",
+            "scope": {
+              "university": "KAIST",
+              "programme": "computer science (bachelor)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        }
+      ],
+      "telemetry": {
+        "http_fetches": 35,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 6,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 56.09038994100001,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [
+        {
+          "category": "fetched-ok",
+          "url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+          "page_type": "program_detail",
+          "detail": "3 claims read from this page",
+          "characters": 2448
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://cs.kaist.ac.kr/content?menu=40",
+          "page_type": "unknown",
+          "detail": "only the undergraduate admission route was read",
+          "characters": 2461
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://cs.kaist.ac.kr/content?menu=42",
+          "page_type": "unknown",
+          "detail": "read as a funding index; 0 award links, 0 queued within the award budget",
+          "characters": null
+        }
+      ],
+      "error": null
+    }
+  ]
+}

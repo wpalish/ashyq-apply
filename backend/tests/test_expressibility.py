@@ -62,7 +62,8 @@ def test_the_reviewed_corpus_counts_the_same_population_as_claim_recall():
     # faculty, route, bond, offer, document by completion). The 13 left need
     # an identity binding, which is the owner's decision. + 2 with the Groningen
     # diploma and translation bindings added under delegation on 2026-09-26.
-    assert sum(r.verdict == REACHABLE for r in rows) == 51
+    # ER-12 adds the explicitly stated translation language exception.
+    assert sum(r.verdict == REACHABLE for r in rows) == 52
 
 
 def test_without_any_bindings_the_ceiling_is_what_live_had_before_2026_09_23():

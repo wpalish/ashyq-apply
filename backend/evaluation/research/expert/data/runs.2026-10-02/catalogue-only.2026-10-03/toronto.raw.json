@@ -1,0 +1,1628 @@
+{
+  "canary": {
+    "accessed_at": "2026-10-03T06:54:12.343674+00:00",
+    "duration_seconds": 50.6,
+    "run_error": "",
+    "batch": [
+      "University of Toronto"
+    ],
+    "institutions": [
+      {
+        "institution": "University of Toronto",
+        "country": "Canada",
+        "domain": "utoronto.ca",
+        "access": "REACHED",
+        "robots_disallowed_requests": 0,
+        "pages_checked": 51,
+        "pages_failed": 5,
+        "failures": [
+          [
+            "https://www.utoronto.ca/robots.txt",
+            "http_error: HTTP 403"
+          ],
+          [
+            "https://www.utoronto.ca/sitemap.xml",
+            "http_error: HTTP 403"
+          ],
+          [
+            "https://www.utoronto.ca/sitemap_index.xml",
+            "http_error: HTTP 403"
+          ],
+          [
+            "https://www.utoronto.ca/sitemap-index.xml",
+            "http_error: HTTP 403"
+          ],
+          [
+            "https://www.utoronto.ca/sitemap/sitemap.xml",
+            "http_error: HTTP 403"
+          ]
+        ],
+        "outcomes": {
+          "http_error": 5,
+          "ok": 27,
+          "cached": 19
+        },
+        "discovered": {
+          "program_catalog": [
+            "https://future.utoronto.ca/undergraduate-programs",
+            "https://future.utoronto.ca/design-visual-studies",
+            "https://future.utoronto.ca/build-your-degree"
+          ],
+          "admissions": [
+            "https://future.utoronto.ca/apply",
+            "https://future.utoronto.ca/applying",
+            "https://future.utoronto.ca/how-to-apply"
+          ],
+          "costs": [
+            "https://future.utoronto.ca/finances/fees",
+            "https://future.utoronto.ca/fees"
+          ],
+          "scholarships": [
+            "https://future.utoronto.ca/finances/scholarships",
+            "https://future.utoronto.ca/scholarships",
+            "https://future.utoronto.ca/financial-aid"
+          ],
+          "documents": [
+            "https://future.utoronto.ca/required-documents"
+          ]
+        },
+        "discovery_trace": {
+          "institution": "University of Toronto",
+          "domain": "www.utoronto.ca",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {
+            "program_catalog": "https://future.utoronto.ca/undergraduate-programs/",
+            "admissions": "https://future.utoronto.ca/apply/",
+            "costs": "https://future.utoronto.ca/finances/fees/",
+            "scholarships": "https://future.utoronto.ca/finances/scholarships/"
+          },
+          "selected": {
+            "program_catalog": [
+              "https://future.utoronto.ca/undergraduate-programs",
+              "https://future.utoronto.ca/design-visual-studies",
+              "https://future.utoronto.ca/build-your-degree"
+            ],
+            "admissions": [
+              "https://future.utoronto.ca/apply",
+              "https://future.utoronto.ca/applying",
+              "https://future.utoronto.ca/how-to-apply"
+            ],
+            "costs": [
+              "https://future.utoronto.ca/finances/fees",
+              "https://future.utoronto.ca/fees"
+            ],
+            "scholarships": [
+              "https://future.utoronto.ca/finances/scholarships",
+              "https://future.utoronto.ca/scholarships",
+              "https://future.utoronto.ca/financial-aid"
+            ],
+            "documents": [
+              "https://future.utoronto.ca/required-documents"
+            ]
+          },
+          "rejected_sample": [
+            [
+              "https://future.utoronto.ca/data-computer-science",
+              "reads as unknown, not a programme page"
+            ]
+          ],
+          "rejected_total": 1,
+          "errors": [
+            "robots.txt unavailable: http_error",
+            "https://www.utoronto.ca/sitemap.xml: http_error — HTTP 403",
+            "https://www.utoronto.ca/sitemap_index.xml: http_error — HTTP 403",
+            "https://www.utoronto.ca/sitemap-index.xml: http_error — HTTP 403",
+            "https://www.utoronto.ca/sitemap/sitemap.xml: http_error — HTTP 403",
+            "no programme page was found; only a catalogue, which cannot confirm a programme"
+          ],
+          "search_failures": [],
+          "search_limitations": [],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": true,
+          "kept_by_link_text": [
+            [
+              "https://future.utoronto.ca/data-computer-science",
+              "Data, Information & Computer Science"
+            ]
+          ],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 5,
+            "candidates": [
+              {
+                "url": "https://future.utoronto.ca/data-computer-science",
+                "label": "Data, Information & Computer Science",
+                "score": 24,
+                "source": "html"
+              },
+              {
+                "url": "https://future.utoronto.ca/undergraduate-programs",
+                "label": "Skip to main content",
+                "score": 9,
+                "source": "html"
+              },
+              {
+                "url": "https://future.utoronto.ca/social-sciences",
+                "label": "Social Sciences",
+                "score": 8,
+                "source": "html"
+              },
+              {
+                "url": "https://future.utoronto.ca/health-life-sciences",
+                "label": "Health & Life Sciences",
+                "score": 8,
+                "source": "html"
+              },
+              {
+                "url": "https://future.utoronto.ca/arts-and-science-colleges",
+                "label": "Arts & Science Colleges",
+                "score": 8,
+                "source": "html"
+              },
+              {
+                "url": "https://future.utoronto.ca/mathematics-physical-sciences",
+                "label": "Mathematics & Physical Sciences",
+                "score": 8,
+                "source": "html"
+              },
+              {
+                "url": "https://future.utoronto.ca/data-computer-science",
+                "label": "Data, Information & Computer Science",
+                "score": 24,
+                "source": "html"
+              },
+              {
+                "url": "https://www.utm.utoronto.ca/future-students/programs/undergraduate/social-sciences-hba",
+                "label": "Learn more",
+                "score": 17,
+                "source": "html"
+              },
+              {
+                "url": "https://future.utoronto.ca/undergraduate-programs",
+                "label": "Undergraduate Programs",
+                "score": 13,
+                "source": "html"
+              },
+              {
+                "url": "https://future.utoronto.ca/social-sciences",
+                "label": "Skip to main content",
+                "score": 8,
+                "source": "html"
+              },
+              {
+                "url": "https://future.utoronto.ca/health-life-sciences",
+                "label": "Health & Life Sciences",
+                "score": 8,
+                "source": "html"
+              },
+              {
+                "url": "https://future.utoronto.ca/arts-and-science-colleges",
+                "label": "Arts & Science Colleges",
+                "score": 8,
+                "source": "html"
+              },
+              {
+                "url": "https://future.utoronto.ca/mathematics-physical-sciences",
+                "label": "Mathematics & Physical Sciences",
+                "score": 8,
+                "source": "html"
+              },
+              {
+                "url": "https://www.artsci.utoronto.ca/future/ready-apply/admission-categories/social-sciences",
+                "label": "Learn more",
+                "score": 8,
+                "source": "html"
+              },
+              {
+                "url": "https://www.utsc.utoronto.ca/artscicoop/arts-science-co-op-experience-discover-your-path-success",
+                "label": "Arts & Science Co-op",
+                "score": 8,
+                "source": "html"
+              },
+              {
+                "url": "https://future.utoronto.ca/profile/pranav",
+                "label": "Read the story",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://future.utoronto.ca/profile/ananya",
+                "label": "Read the story",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://future.utoronto.ca/profile/chelsea",
+                "label": "Read the story",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://future.utoronto.ca/data-computer-science",
+                "label": "Data, Information & Computer Science",
+                "score": 24,
+                "source": "html"
+              },
+              {
+                "url": "https://www.utm.utoronto.ca/future-students/programs/undergraduate/life-sciences",
+                "label": "U of T Mississauga",
+                "score": 17,
+                "source": "html"
+              },
+              {
+                "url": "https://healthsciences.utsc.utoronto.ca/health-sciences-programs/undergraduate-programs",
+                "label": "Learn more",
+                "score": 17,
+                "source": "html"
+              },
+              {
+                "url": "https://future.utoronto.ca/undergraduate-programs",
+                "label": "Undergraduate Programs",
+                "score": 13,
+                "source": "html"
+              },
+              {
+                "url": "https://kpe.utoronto.ca/academics-researchfuture-students/bachelor-kinesiology-bkin",
+                "label": "Learn more",
+                "score": 9,
+                "source": "html"
+              },
+              {
+                "url": "https://future.utoronto.ca/social-sciences",
+                "label": "Social Sciences",
+                "score": 8,
+                "source": "html"
+              },
+              {
+                "url": "https://future.utoronto.ca/health-life-sciences",
+                "label": "Skip to main content",
+                "score": 8,
+                "source": "html"
+              },
+              {
+                "url": "https://future.utoronto.ca/arts-and-science-colleges",
+                "label": "Arts & Science Colleges",
+                "score": 8,
+                "source": "html"
+              },
+              {
+                "url": "https://www.utm.utoronto.ca/new-students/life-sciences",
+                "label": "Learn more",
+                "score": 8,
+                "source": "html"
+              },
+              {
+                "url": "https://future.utoronto.ca/mathematics-physical-sciences",
+                "label": "Mathematics & Physical Sciences",
+                "score": 8,
+                "source": "html"
+              },
+              {
+                "url": "https://www.artsci.utoronto.ca/future/ready-apply/admission-categories/life-sciences",
+                "label": "Learn more",
+                "score": 8,
+                "source": "html"
+              },
+              {
+                "url": "https://www.utsc.utoronto.ca/artscicoop/arts-science-co-op-experience-discover-your-path-success",
+                "label": "Arts & Science Co-op at U of T Scarborough",
+                "score": 8,
+                "source": "html"
+              },
+              {
+                "url": "https://healthsciences.utsc.utoronto.ca/health-sciences-programs/professional-certificate-programs",
+                "label": "Learn more",
+                "score": 8,
+                "source": "html"
+              },
+              {
+                "url": "https://future.utoronto.ca/profile/nora",
+                "label": "Read the story",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://future.utoronto.ca/profile/maryem",
+                "label": "Read the story",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://future.utoronto.ca/profile/comfort",
+                "label": "Read the story",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://future.utoronto.ca/program/psycholinguistics",
+                "label": "Psycholinguistics",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://future.utoronto.ca/data-computer-science",
+                "label": "Data, Information & Computer Science",
+                "score": 24,
+                "source": "html"
+              },
+              {
+                "url": "https://future.utoronto.ca/undergraduate-programs",
+                "label": "Undergraduate Programs",
+                "score": 13,
+                "source": "html"
+              },
+              {
+                "url": "https://www.daniels.utoronto.ca/programs/undergraduate/bachelor-arts-visual-studies",
+                "label": "Learn more about Visual Studies",
+                "score": 9,
+                "source": "html"
+              },
+              {
+                "url": "https://future.utoronto.ca/social-sciences",
+                "label": "Social Sciences",
+                "score": 8,
+                "source": "html"
+              },
+              {
+                "url": "https://future.utoronto.ca/health-life-sciences",
+                "label": "Health & Life Sciences",
+                "score": 8,
+                "source": "html"
+              },
+              {
+                "url": "https://future.utoronto.ca/arts-and-science-colleges",
+                "label": "Arts & Science Colleges",
+                "score": 8,
+                "source": "html"
+              },
+              {
+                "url": "https://future.utoronto.ca/mathematics-physical-sciences",
+                "label": "Mathematics & Physical Sciences",
+                "score": 8,
+                "source": "html"
+              },
+              {
+                "url": "https://future.utoronto.ca/profile/riya",
+                "label": "Read the story",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://future.utoronto.ca/profile/raya",
+                "label": "Read the story",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.daniels.utoronto.ca/admissions/undergraduate",
+                "label": "Admissions",
+                "score": 9,
+                "source": "html"
+              },
+              {
+                "url": "https://www.daniels.utoronto.ca/programs/undergraduate/bachelor-arts-visual-studies",
+                "label": "Skip to main content",
+                "score": 9,
+                "source": "html"
+              },
+              {
+                "url": "https://www.daniels.utoronto.ca/people/core-faculty/katie-lyle",
+                "label": "Katie Lyle",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.daniels.utoronto.ca/diversity-inclusion/equity-diversity-and-inclusion-daniels-faculty",
+                "label": "Diversity & Inclusion",
+                "score": 0,
+                "source": "html"
+              }
+            ],
+            "programs_confirmed": 0,
+            "outcomes": [
+              {
+                "url": "https://www.instagram.com/futureuoft",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.youtube.com/futureuoft",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.tiktok.com/@futureuoft",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://weibo.com/u/7481349146?is_all=1&ssl_rnd=1607964953.64",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://future.utoronto.ca/",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://future.utoronto.ca/areas-study",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/business-commerce-management",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/design-visual-studies",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/engineering",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/literature-language-culture",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/music-performing-arts",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/sustainability-environment",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/build-your-degree",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/experiential-learning",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/first-year-learning",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/learning-beyond-classes",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/student-research",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/work-integrated-learning",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/professional-and-graduate-programs",
+                "outcome": "degree_level_mismatch"
+              },
+              {
+                "url": "https://future.utoronto.ca/high-school-enrichment-programs",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/campus-tours",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/mississauga-campus-tours",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/scarborough-campus-tours",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/st-george-campus-tours",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/virtual-campus-tour",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/online-sessions",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/upcoming-events",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/connect",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/requirements",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/requirements-canadian-students",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/requirements-international-students",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/requirements-other-pathways",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/english-language-requirements",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/applying",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://future.utoronto.ca/how-to-apply",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/applications",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/deadlines",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/admissions-timelines",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/after-you-apply",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/required-documents",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/supplemental-applications",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/how-your-application-considered",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/admission-decisions",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/transfer-credits",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/fees",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/scholarships",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/admission-awards",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/awards-profile",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/financial-aid",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/ontario-financial-aid",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/canada-financial-aid",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/us-financial-aid",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/international-student-financial-aid",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/our-three-campuses",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/toronto-area",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/housing",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://future.utoronto.ca/campus-life",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/athletics",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/inclusive-community",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/student-clubs",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/student-support",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/international-students",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/parents-supporters",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/school-counsellors",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/equity-outreach",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/viewbooks",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://future.utoronto.ca/contact-us",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/search",
+                "outcome": "excluded_url"
+              },
+              {
+                "url": "https://future.utoronto.ca/accessibility",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.utoronto.ca/",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/requirements-canadian-high-schools",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/requirements-canadian-university-or-college",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/requirements-canadians-living-abroad",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/requirements-international-high-schools",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/international-high-school-requirements-country",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/u-s-high-school-students",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/u-s-patterned-high-school-students",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/caribbean-advanced-proficiency-examination-cape-students",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/requirements-international-university-or-college",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/non-degree-students",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/pathway-programs",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/visiting-students",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/mature-students",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/english-language-transition-programs",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/protect-yourself-from-fraud",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/timeline-canadian-living-in-ontario",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/timeline-canadian-living-outside-ontario",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/timeline-international-student",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/waitlist",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://future.utoronto.ca/transfer-credits-high-school-students",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/university-college-transfer-credits",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/presidents-scholars-excellence-program",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/university-of-toronto-scholars-program",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/data-computer-science",
+                "outcome": "reads_as_unknown"
+              },
+              {
+                "url": "https://future.utoronto.ca/undergraduate-programs",
+                "outcome": "reads_as_program_catalog"
+              },
+              {
+                "url": "https://future.utoronto.ca/social-sciences",
+                "outcome": "reads_as_program_catalog"
+              },
+              {
+                "url": "https://future.utoronto.ca/health-life-sciences",
+                "outcome": "reads_as_program_catalog"
+              },
+              {
+                "url": "https://future.utoronto.ca/arts-and-science-colleges",
+                "outcome": "reads_as_unknown"
+              },
+              {
+                "url": "https://future.utoronto.ca/mathematics-physical-sciences",
+                "outcome": "reads_as_program_catalog"
+              },
+              {
+                "url": "https://www.instagram.com/futureuoft",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.youtube.com/futureuoft",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.tiktok.com/@futureuoft",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://weibo.com/u/7481349146?is_all=1&ssl_rnd=1607964953.64",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://future.utoronto.ca/",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://future.utoronto.ca/areas-study",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/business-commerce-management",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/design-visual-studies",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/engineering",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/literature-language-culture",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/music-performing-arts",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/sustainability-environment",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/build-your-degree",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/experiential-learning",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/first-year-learning",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/learning-beyond-classes",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/student-research",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/work-integrated-learning",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/professional-and-graduate-programs",
+                "outcome": "degree_level_mismatch"
+              },
+              {
+                "url": "https://future.utoronto.ca/high-school-enrichment-programs",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/campus-tours",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/mississauga-campus-tours",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/scarborough-campus-tours",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/st-george-campus-tours",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/virtual-campus-tour",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/online-sessions",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/upcoming-events",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/connect",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/requirements",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/requirements-canadian-students",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/requirements-international-students",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/requirements-other-pathways",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/english-language-requirements",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/applying",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://future.utoronto.ca/how-to-apply",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/applications",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/deadlines",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/admissions-timelines",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/after-you-apply",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/required-documents",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/supplemental-applications",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/how-your-application-considered",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/admission-decisions",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/transfer-credits",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/fees",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/scholarships",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/admission-awards",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/awards-profile",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/financial-aid",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/ontario-financial-aid",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/canada-financial-aid",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/us-financial-aid",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/international-student-financial-aid",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/our-three-campuses",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/toronto-area",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/housing",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://future.utoronto.ca/campus-life",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/athletics",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/inclusive-community",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/student-clubs",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/student-support",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/international-students",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/parents-supporters",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/school-counsellors",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/equity-outreach",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/viewbooks",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://future.utoronto.ca/contact-us",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/search",
+                "outcome": "excluded_url"
+              },
+              {
+                "url": "https://www.utsc.utoronto.ca/admissions/explore-programs?f%5B0%5D=area_of_study%3Asocial_sciences",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://munkschool.utoronto.ca/pcj/why-study-peace-conflict-justice",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.artsci.utoronto.ca/current/experiential-learning/internships/asip/programs-eligibility",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.utm.utoronto.ca/experience/students/community-engaged-learning",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.utm.utoronto.ca/experience/students/field-courses",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.utsc.utoronto.ca/sociology/global-field-school-indigenous-costa-rica",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://learningabroad.utoronto.ca/",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.artsci.utoronto.ca/current/experiential-learning/research-opportunities/research-opportunities-program",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://summerabroad.utoronto.ca/",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/accessibility",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.utoronto.ca/",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/requirements-canadian-high-schools",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/requirements-canadian-university-or-college",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/requirements-canadians-living-abroad",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/requirements-international-high-schools",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/international-high-school-requirements-country",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/u-s-high-school-students",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/u-s-patterned-high-school-students",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/caribbean-advanced-proficiency-examination-cape-students",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/requirements-international-university-or-college",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/non-degree-students",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/pathway-programs",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/visiting-students",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/mature-students",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/english-language-transition-programs",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/protect-yourself-from-fraud",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/timeline-canadian-living-in-ontario",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/timeline-canadian-living-outside-ontario",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/timeline-international-student",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/waitlist",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://future.utoronto.ca/transfer-credits-high-school-students",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/university-college-transfer-credits",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://future.utoronto.ca/presidents-scholars-excellence-program",
+                "outcome": "walker_no_signal"
+              }
+            ]
+          }
+        },
+        "programs": [],
+        "program_page_found": false,
+        "scholarship_page_found": true,
+        "discovery_notes": "Sitemap-first discovery found: program_catalog, admissions, costs, scholarships, documents. Not found: program_page.",
+        "claims": 8,
+        "claims_verified": 8,
+        "completeness": 0.167,
+        "eligibility": "NEEDS_OFFICIAL_CLARIFICATION",
+        "funding_fit": "UNKNOWN",
+        "scholarships_found": 3,
+        "false_positives": [],
+        "page_outcomes": {
+          "classifier-rejected": 3,
+          "no-pattern-match": 2,
+          "fetched-ok": 5
+        },
+        "page_types": {
+          "unknown": 1,
+          "program_catalog": 1,
+          "scholarship_faq": 2,
+          "general_admissions": 1,
+          "scholarship_index": 2,
+          "scholarship_award": 3
+        },
+        "page_diagnostics": [
+          {
+            "category": "classifier-rejected",
+            "url": "https://future.utoronto.ca/english-language-requirements",
+            "page_type": "unknown",
+            "characters": "12935",
+            "detail": "classified as unknown; no requirement can be read from this kind of page. title='English Language Requirements | Future Students. University of Toronto' signals='no decisive signals' chars=12935 degrees=[]"
+          },
+          {
+            "category": "classifier-rejected",
+            "url": "https://future.utoronto.ca/english-language-transition-programs",
+            "page_type": "program_catalog",
+            "characters": "4352",
+            "detail": "classified as program_catalog; no requirement can be read from this kind of page. title='English Language Transition Programs | Future Students. University of Toronto' signals='0 programme links; plural catalogue heading' chars=4352 degrees=[]"
+          },
+          {
+            "category": "classifier-rejected",
+            "url": "https://future.utoronto.ca/admission-awards",
+            "page_type": "scholarship_faq",
+            "characters": null,
+            "detail": "not an award page; no scholarship recorded (1 award links, 0 below it: /awards-profile)"
+          },
+          {
+            "category": "no-pattern-match",
+            "url": "https://future.utoronto.ca/apply",
+            "page_type": "general_admissions",
+            "characters": "976",
+            "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed"
+          },
+          {
+            "category": "no-pattern-match",
+            "url": "https://future.utoronto.ca/finances/fees",
+            "page_type": "scholarship_faq",
+            "characters": "4989",
+            "detail": "page was read but no cost figures could be extracted"
+          },
+          {
+            "category": "fetched-ok",
+            "url": "https://future.utoronto.ca/finances/scholarships",
+            "page_type": "scholarship_index",
+            "characters": null,
+            "detail": "read as a funding index; 5 award links, 5 queued within the award budget"
+          },
+          {
+            "category": "fetched-ok",
+            "url": "https://future.utoronto.ca/national-scholarships",
+            "page_type": "scholarship_award",
+            "characters": null,
+            "detail": "award page; 2 claims read"
+          },
+          {
+            "category": "fetched-ok",
+            "url": "https://future.utoronto.ca/pearson-scholarships",
+            "page_type": "scholarship_award",
+            "characters": null,
+            "detail": "award page; 2 claims read"
+          },
+          {
+            "category": "fetched-ok",
+            "url": "https://future.utoronto.ca/scholarships-international-students",
+            "page_type": "scholarship_index",
+            "characters": null,
+            "detail": "read as a funding index; 0 award links, 0 queued within the award budget"
+          },
+          {
+            "category": "fetched-ok",
+            "url": "https://future.utoronto.ca/awards-profile",
+            "page_type": "scholarship_award",
+            "characters": null,
+            "detail": "award page; 4 claims read"
+          }
+        ]
+      }
+    ],
+    "totals": {
+      "institutions": 1,
+      "reached": 1,
+      "blocked": 0,
+      "program_pages_found": 0,
+      "scholarship_pages_found": 1,
+      "claims": 8,
+      "false_positives": 0,
+      "page_outcomes": {
+        "classifier-rejected": 3,
+        "no-pattern-match": 2,
+        "fetched-ok": 5
+      },
+      "page_types": {
+        "unknown": 1,
+        "program_catalog": 1,
+        "scholarship_faq": 2,
+        "general_admissions": 1,
+        "scholarship_index": 2,
+        "scholarship_award": 3
+      },
+      "recall": {
+        "program": {
+          "numerator": 0,
+          "denominator": 1,
+          "target": 0.7
+        },
+        "category": {
+          "numerator": 3,
+          "denominator": 3,
+          "target": 0.8666666666666667
+        }
+      },
+      "catalogs_walked": 5,
+      "walker_programs_confirmed": 0,
+      "source_pages_recorded": 16,
+      "fetch_tiers": {
+        "fixture": 0,
+        "http": 46,
+        "browser": 0,
+        "pdf": 0
+      }
+    }
+  },
+  "claims": [
+    {
+      "claim_type": "scholarship_exists",
+      "normalized_value": "The National Scholarship Program",
+      "original_text_excerpt": "Breadcrumbs Home / Finances / Scholarships / The National Scholarship Program The National Scholarship Program The National Scholarship Program recognizes original and creative thinkers, community leaders and high academic achievers.",
+      "source_url": "https://future.utoronto.ca/national-scholarships",
+      "page_title": "National Scholarships | Future Students. University of Toronto",
+      "relevant_section": "",
+      "official_domain": true,
+      "program": "computer science (bachelor)",
+      "subject_key": "The National Scholarship Program",
+      "intake": null,
+      "academic_year": "2026/27",
+      "accessed_at": "2026-10-03T06:54:56.858682Z",
+      "scope": {
+        "university": null,
+        "faculty": null,
+        "programme": null,
+        "degree": "bachelor",
+        "intake": null,
+        "academic_year": null,
+        "population": null,
+        "nationality": null,
+        "residency": null,
+        "qualification": null
+      },
+      "source_specificity": "scholarship_administrator",
+      "confidence": 0.95,
+      "status": "VERIFIED_CURRENT",
+      "extraction_method": "html_rule",
+      "notes": "page classified as scholarship_award"
+    },
+    {
+      "claim_type": "scholarship_program_restriction",
+      "normalized_value": {
+        "degree": "bachelor",
+        "applies": "yes"
+      },
+      "original_text_excerpt": "Sep - Oct Apply for admission to U of T In order to submit your National Scholarship Program application, you must first apply to at least one undergraduate program at the University of Toronto",
+      "source_url": "https://future.utoronto.ca/national-scholarships",
+      "page_title": "National Scholarships | Future Students. University of Toronto",
+      "relevant_section": "",
+      "official_domain": true,
+      "program": "computer science (bachelor)",
+      "subject_key": "The National Scholarship Program",
+      "intake": null,
+      "academic_year": "2026/27",
+      "accessed_at": "2026-10-03T06:54:56.858682Z",
+      "scope": {
+        "university": null,
+        "faculty": null,
+        "programme": null,
+        "degree": "bachelor",
+        "intake": null,
+        "academic_year": null,
+        "population": null,
+        "nationality": null,
+        "residency": null,
+        "qualification": null
+      },
+      "source_specificity": "scholarship_administrator",
+      "confidence": 0.85,
+      "status": "VERIFIED_CURRENT",
+      "extraction_method": "html_rule",
+      "notes": "the page states the award is for bachelor applicants"
+    },
+    {
+      "claim_type": "scholarship_exists",
+      "normalized_value": "Lester B. Pearson International Student Scholarships",
+      "original_text_excerpt": "Breadcrumbs Home / Finances / Scholarships / International Students / Pearson International Student Scholarships Lester B. Pearson International Student Scholarships Join a global community of exceptional changemakers.",
+      "source_url": "https://future.utoronto.ca/pearson-scholarships",
+      "page_title": "Lester B Pearson International Student Scholarships | Future Students. University of Toronto",
+      "relevant_section": "",
+      "official_domain": true,
+      "program": "computer science (bachelor)",
+      "subject_key": "Lester B. Pearson International Student Scholarships",
+      "intake": null,
+      "academic_year": "2026/27",
+      "accessed_at": "2026-10-03T06:54:58.217575Z",
+      "scope": {
+        "university": null,
+        "faculty": null,
+        "programme": null,
+        "degree": "bachelor",
+        "intake": null,
+        "academic_year": null,
+        "population": "international",
+        "nationality": null,
+        "residency": null,
+        "qualification": null
+      },
+      "source_specificity": "scholarship_administrator",
+      "confidence": 0.95,
+      "status": "VERIFIED_CURRENT",
+      "extraction_method": "html_rule",
+      "notes": "page classified as scholarship_award"
+    },
+    {
+      "claim_type": "scholarship_program_restriction",
+      "normalized_value": {
+        "degree": "bachelor",
+        "applies": "yes"
+      },
+      "original_text_excerpt": "Sep - Oct Apply to study at U of T To be considered for the Pearson Scholarship, you must apply to at least one undergraduate program at the University of Toronto",
+      "source_url": "https://future.utoronto.ca/pearson-scholarships",
+      "page_title": "Lester B Pearson International Student Scholarships | Future Students. University of Toronto",
+      "relevant_section": "",
+      "official_domain": true,
+      "program": "computer science (bachelor)",
+      "subject_key": "Lester B. Pearson International Student Scholarships",
+      "intake": null,
+      "academic_year": "2026/27",
+      "accessed_at": "2026-10-03T06:54:58.217575Z",
+      "scope": {
+        "university": null,
+        "faculty": null,
+        "programme": null,
+        "degree": "bachelor",
+        "intake": null,
+        "academic_year": null,
+        "population": "international",
+        "nationality": null,
+        "residency": null,
+        "qualification": null
+      },
+      "source_specificity": "scholarship_administrator",
+      "confidence": 0.85,
+      "status": "VERIFIED_CURRENT",
+      "extraction_method": "html_rule",
+      "notes": "the page states the award is for bachelor applicants"
+    },
+    {
+      "claim_type": "scholarship_exists",
+      "normalized_value": "Scholarships Awards Profile",
+      "original_text_excerpt": "Breadcrumbs Home / Finances / Scholarships / Awards Profile Scholarships Awards Profile The Awards Profile makes it possible for applicants to be considered for admission awards beyond their academic success.",
+      "source_url": "https://future.utoronto.ca/awards-profile",
+      "page_title": "Awards Profile | Future Students. University of Toronto",
+      "relevant_section": "",
+      "official_domain": true,
+      "program": "computer science (bachelor)",
+      "subject_key": "Scholarships Awards Profile",
+      "intake": null,
+      "academic_year": "2026/27",
+      "accessed_at": "2026-10-03T06:55:01.336899Z",
+      "scope": {
+        "university": null,
+        "faculty": null,
+        "programme": null,
+        "degree": "bachelor",
+        "intake": null,
+        "academic_year": null,
+        "population": "domestic",
+        "nationality": null,
+        "residency": null,
+        "qualification": null
+      },
+      "source_specificity": "scholarship_administrator",
+      "confidence": 0.95,
+      "status": "VERIFIED_CURRENT",
+      "extraction_method": "html_rule",
+      "notes": "page classified as scholarship_award"
+    },
+    {
+      "claim_type": "scholarship_duration_years",
+      "normalized_value": 4.0,
+      "original_text_excerpt": "ricular activities to domestic students coming from Canadian secondary school. Up to 3 award recipients are selected annually. Value: $6,000/year for up to 4 years of study (renewable).      Florence Evelyn and William Leonard Prideaux Award    Awarded to a student, who is a member of Scouts Canada,",
+      "source_url": "https://future.utoronto.ca/awards-profile",
+      "page_title": "Awards Profile | Future Students. University of Toronto",
+      "relevant_section": "",
+      "official_domain": true,
+      "program": "computer science (bachelor)",
+      "subject_key": "Scholarships Awards Profile",
+      "intake": null,
+      "academic_year": "2026/27",
+      "accessed_at": "2026-10-03T06:55:01.336899Z",
+      "scope": {
+        "university": null,
+        "faculty": null,
+        "programme": null,
+        "degree": "bachelor",
+        "intake": null,
+        "academic_year": null,
+        "population": "domestic",
+        "nationality": null,
+        "residency": null,
+        "qualification": null
+      },
+      "source_specificity": "scholarship_administrator",
+      "confidence": 0.8,
+      "status": "VERIFIED_CURRENT",
+      "extraction_method": "html_rule",
+      "notes": ""
+    },
+    {
+      "claim_type": "scholarship_renewable",
+      "normalized_value": true,
+      "original_text_excerpt": "Value: $20,000 (non-renewable)",
+      "source_url": "https://future.utoronto.ca/awards-profile",
+      "page_title": "Awards Profile | Future Students. University of Toronto",
+      "relevant_section": "",
+      "official_domain": true,
+      "program": "computer science (bachelor)",
+      "subject_key": "Scholarships Awards Profile",
+      "intake": null,
+      "academic_year": "2026/27",
+      "accessed_at": "2026-10-03T06:55:01.336899Z",
+      "scope": {
+        "university": null,
+        "faculty": null,
+        "programme": null,
+        "degree": "bachelor",
+        "intake": null,
+        "academic_year": null,
+        "population": "domestic",
+        "nationality": null,
+        "residency": null,
+        "qualification": null
+      },
+      "source_specificity": "scholarship_administrator",
+      "confidence": 0.8,
+      "status": "VERIFIED_CURRENT",
+      "extraction_method": "html_rule",
+      "notes": ""
+    },
+    {
+      "claim_type": "scholarship_need_based",
+      "normalized_value": "yes",
+      "original_text_excerpt": "If you're a Canadian high school student applying to U of T, the Awards Profile is your opportunity to be considered for additional awards based on financial need, leadership, school and community involvement, extracurricular activities, athletic achievement and more. Some awards also support Black",
+      "source_url": "https://future.utoronto.ca/awards-profile",
+      "page_title": "Awards Profile | Future Students. University of Toronto",
+      "relevant_section": "",
+      "official_domain": true,
+      "program": "computer science (bachelor)",
+      "subject_key": "Scholarships Awards Profile",
+      "intake": null,
+      "academic_year": "2026/27",
+      "accessed_at": "2026-10-03T06:55:01.336899Z",
+      "scope": {
+        "university": null,
+        "faculty": null,
+        "programme": null,
+        "degree": "bachelor",
+        "intake": null,
+        "academic_year": null,
+        "population": "domestic",
+        "nationality": null,
+        "residency": null,
+        "qualification": null
+      },
+      "source_specificity": "scholarship_administrator",
+      "confidence": 0.8,
+      "status": "VERIFIED_CURRENT",
+      "extraction_method": "html_rule",
+      "notes": ""
+    }
+  ]
+}

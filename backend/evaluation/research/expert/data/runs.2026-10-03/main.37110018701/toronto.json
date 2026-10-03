@@ -1,0 +1,78 @@
+{
+  "case_id": "toronto",
+  "programme_urls": [
+    "https://www.utm.utoronto.ca/future-students/programs/undergraduate/computer-science"
+  ],
+  "ranked_urls": [],
+  "predictions": [],
+  "telemetry": {
+    "http_fetches": 30,
+    "browser_fetches": 0,
+    "pdf_fetches": 0,
+    "search_calls": 6,
+    "model_input_tokens": 0,
+    "jev_input_tokens": 0,
+    "latency_seconds": 34.07153467499995,
+    "cost_usd": null,
+    "human_review_required": null
+  },
+  "page_outcomes": [
+    {
+      "category": "fetch-failed",
+      "url": "https://future.utoronto.ca/apply",
+      "page_type": "unclassified",
+      "detail": "http_error — HTTP 403",
+      "characters": null
+    },
+    {
+      "category": "classifier-rejected",
+      "url": "https://www.utm.utoronto.ca/future-students/admissions/english-language-requirements",
+      "page_type": "unknown",
+      "detail": "classified as unknown; no requirement can be read from this kind of page. title='English Language Requirements | Future Students' signals='no decisive signals' chars=10724 degrees=[]",
+      "characters": 10724
+    },
+    {
+      "category": "fetch-failed",
+      "url": "https://future.utoronto.ca/finances/fees",
+      "page_type": "unclassified",
+      "detail": "http_error — HTTP 403",
+      "characters": null
+    },
+    {
+      "category": "fetch-failed",
+      "url": "https://future.utoronto.ca/finances/scholarships",
+      "page_type": "unclassified",
+      "detail": "http_error — HTTP 403",
+      "characters": null
+    },
+    {
+      "category": "classifier-rejected",
+      "url": "https://www.utm.utoronto.ca/math-cs-stats/news/florian-shkurti-honoured-ai2050-early-career-fellowship-2024",
+      "page_type": "news",
+      "detail": "not an award page; no scholarship recorded (1 award links, 0 below it: /math-cs-stats/news/continuum-robotics-lab-have-secured-stage-one-funding-through-eva-and-allen-lau)",
+      "characters": null
+    },
+    {
+      "category": "fetched-ok",
+      "url": "https://www.utm.utoronto.ca/future-students/programs/undergraduate/computer-science",
+      "page_type": "program_detail",
+      "detail": "1 claims read from this page",
+      "characters": 6131
+    },
+    {
+      "category": "fetched-ok",
+      "url": "https://www.utm.utoronto.ca/future-students/programs/undergraduate/computer-science",
+      "page_type": "program_detail",
+      "detail": "read as a funding index; 2 award links, 2 queued within the award budget",
+      "characters": null
+    },
+    {
+      "category": "fetched-ok",
+      "url": "https://www.utm.utoronto.ca/future-students/finances/financial-aid",
+      "page_type": "scholarship_index",
+      "detail": "read as a funding index; 0 award links, 0 queued within the award budget",
+      "characters": null
+    }
+  ],
+  "error": null
+}

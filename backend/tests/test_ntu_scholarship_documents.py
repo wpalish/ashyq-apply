@@ -248,7 +248,11 @@ def test_a_long_appraisal_paragraph_keeps_the_school_teacher_and_non_relative_pr
         if claim.claim_type is ClaimType.RECOMMENDATION_REQUIREMENT
     ]
     assert len(recommendations) == 1
-    assert recommendations[0].normalized_value == appraisal.name
+    assert recommendations[0].normalized_value == {
+        "document": appraisal.name,
+        "role": "school_teacher",
+        "family_or_relative_allowed": False,
+    }
     assert _APPRAISAL in normalize_text(recommendations[0].original_text_excerpt)
 
 
@@ -272,3 +276,91 @@ def test_the_source_shaped_scholarship_has_only_its_three_actual_submission_item
     assert all("identity page" not in item.name.casefold() for item in items)
     for item in items:
         _required_claim_for(builder, item)
+
+
+def test_another_section_cannot_scope_the_document_population():
+    items, builder, _ = _read(
+        "<h2>Tuition grant</h2><p>International students have a service bond.</p>"
+        f"<h2>Application Procedures</h2><p>{_ESSAY}</p>"
+    )
+    assert items and builder.claims
+    assert all(item.scope.population is None for item in items)
+    assert all(claim.scope.population is None for claim in builder.claims)
+    assert builder.meta["scope"].population == "international"
+
+
+def test_document_heading_retains_its_explicit_population():
+    items, builder, _ = _read(f"<h2>International applicants</h2><p>{_ESSAY}</p>")
+    assert all(item.scope.population == "international" for item in items)
+    assert all(claim.scope.population == "international" for claim in builder.claims)
+
+
+@pytest.mark.parametrize(
+    "statement",
+    [
+        "submit a referee's appraisal online. The appraisal may be completed by your school teacher.",
+        "submit a referee's appraisal online. If shortlisted, the appraisal must be completed by your school teacher.",
+        "submit a referee's appraisal online. The appraisal is to be completed by your school teacher unless exempted.",
+        "submit a referee's appraisal online. Your school teacher can provide advice.",
+    ],
+)
+def test_referee_roles_are_not_guessed_or_stripped_of_conditions(statement):
+    _, builder, _ = _read(f"<p>{statement}</p>")
+    assert all(
+        not isinstance(c.normalized_value, dict)
+        for c in builder.claims
+        if c.claim_type is ClaimType.RECOMMENDATION_REQUIREMENT
+    )
+
+
+def test_a_referee_role_does_not_imply_a_family_exclusion():
+    _, builder, _ = _read(
+        "<p>submit a referee's appraisal online. "
+        "The appraisal must be completed by a university lecturer.</p>"
+    )
+    values = [
+        c.normalized_value
+        for c in builder.claims
+        if c.claim_type is ClaimType.RECOMMENDATION_REQUIREMENT
+    ]
+    assert values == [{"document": "Referee appraisal", "role": "university_lecturer"}]
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("foreign", [False, True])
+async def test_document_redirect_uses_final_source_or_rejects_foreign_site(tmp_path, foreign):
+    from unittest.mock import AsyncMock
+
+    from app.adapters.base import AdapterResult, Candidate, CandidateProgram
+    from app.adapters.documents.web_documents import WebDocumentsAdapter
+    from app.adapters.fetching import Fetcher, FetchResult
+    from app.domain.enums import DegreeLevel, FetchOutcome
+
+    final = (
+        "https://foreign.example/scholarship"
+        if foreign
+        else "https://www.ntu.edu.sg/admissions/scholarships/current"
+    )
+    html = f"<h1>{_TITLE}</h1><p>{_ESSAY}</p>"
+    async with Fetcher(tmp_path) as fetcher:
+        fetcher.get = AsyncMock(  # type: ignore[method-assign]
+            return_value=FetchResult(_URL, FetchOutcome.OK, text=html, final_url=final)
+        )
+        out = AdapterResult()
+        items = await WebDocumentsAdapter(fetcher, "2026/27")._from_page(
+            Candidate("NTU", "Singapore", "Singapore", "ntu.edu.sg"),
+            CandidateProgram("Computer Science", "computer science", DegreeLevel.BACHELOR),
+            _URL,
+            DocumentPurpose.SCHOLARSHIP,
+            out,
+        )
+    if foreign:
+        assert items == []
+        assert out.claims == []
+        assert out.pages_failed == 1
+        assert out.page_outcomes[0].detail == "cross-site redirect"
+    else:
+        assert items and out.claims
+        assert all(item.source_url == final and item.claim_ids == [final] for item in items)
+        assert all(claim.source_url == final for claim in out.claims)
+        assert out.pages_failed == 0

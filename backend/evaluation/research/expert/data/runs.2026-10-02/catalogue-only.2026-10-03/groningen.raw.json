@@ -1,0 +1,1946 @@
+{
+  "canary": {
+    "accessed_at": "2026-10-03T06:54:12.341367+00:00",
+    "duration_seconds": 139.8,
+    "run_error": "",
+    "batch": [
+      "University of Groningen"
+    ],
+    "institutions": [
+      {
+        "institution": "University of Groningen",
+        "country": "Netherlands",
+        "domain": "rug.nl",
+        "access": "REACHED",
+        "robots_disallowed_requests": 0,
+        "pages_checked": 64,
+        "pages_failed": 1,
+        "failures": [
+          [
+            "https://www.rug.nl/sitemaps/publicSitemap-00001.xml",
+            "too_large: body exceeded the 5,000,000 byte limit while streaming"
+          ]
+        ],
+        "outcomes": {
+          "ok": 43,
+          "too_large": 1,
+          "cached": 20
+        },
+        "discovered": {
+          "program_catalog": [
+            "https://www.rug.nl/education/bachelor",
+            "https://www.rug.nl/bachelors",
+            "https://www.rug.nl/education/bachelor?lang=nl"
+          ],
+          "admissions": [
+            "https://www.rug.nl/education/bachelor/international-students",
+            "https://www.rug.nl/education/application-enrolment-tuition-fees",
+            "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/non-dutch-qualification/early-bird-applications"
+          ],
+          "costs": [
+            "https://www.rug.nl/education/application-enrolment-tuition-fees"
+          ],
+          "scholarships": [
+            "https://www.rug.nl/education/scholarships"
+          ]
+        },
+        "discovery_trace": {
+          "institution": "University of Groningen",
+          "domain": "www.rug.nl",
+          "sitemaps_declared": [
+            "https://www.rug.nl/sitemaps/publicSitemapIndex.xml"
+          ],
+          "sitemaps_read": [
+            "https://www.rug.nl/sitemaps/publicSitemapIndex.xml"
+          ],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {
+            "program_catalog": "https://www.rug.nl/education/bachelor/",
+            "admissions": "https://www.rug.nl/education/bachelor/international-students/",
+            "costs": "https://www.rug.nl/education/application-enrolment-tuition-fees/",
+            "scholarships": "https://www.rug.nl/education/scholarships/"
+          },
+          "selected": {
+            "program_catalog": [
+              "https://www.rug.nl/education/bachelor",
+              "https://www.rug.nl/bachelors",
+              "https://www.rug.nl/education/bachelor?lang=nl"
+            ],
+            "admissions": [
+              "https://www.rug.nl/education/bachelor/international-students",
+              "https://www.rug.nl/education/application-enrolment-tuition-fees",
+              "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/non-dutch-qualification/early-bird-applications"
+            ],
+            "costs": [
+              "https://www.rug.nl/education/application-enrolment-tuition-fees"
+            ],
+            "scholarships": [
+              "https://www.rug.nl/education/scholarships"
+            ]
+          },
+          "rejected_sample": [
+            [
+              "https://www.rug.nl/education/bachelor/brochures",
+              "page subject 'Brochures' does not match requested fields ['computer science']"
+            ],
+            [
+              "https://www.rug.nl/education/bachelor/international-students/study-in-the-netherlands-groningen/accommodation",
+              "page subject 'Accommodation' does not match requested fields ['computer science']"
+            ],
+            [
+              "https://www.rug.nl/education/bachelor/nederlandse-studenten",
+              "reads as navigation, not a programme page"
+            ]
+          ],
+          "rejected_total": 3,
+          "errors": [
+            "https://www.rug.nl/sitemaps/publicSitemap-00001.xml: too_large — body exceeded the 5,000,000 byte limit while streaming",
+            "Sitemap size budget reached; continuing with targeted discovery.",
+            "no programme page was found; only a catalogue, which cannot confirm a programme"
+          ],
+          "search_failures": [],
+          "search_limitations": [],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": true,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 4,
+            "candidates": [
+              {
+                "url": "https://www.rug.nl/education/bachelor/bachelor-open-day",
+                "label": "Bachelor's Open Day",
+                "score": 15,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/onlinebachelorweek",
+                "label": "Online Bachelor's Week",
+                "score": 15,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/bachelors",
+                "label": "Bachelor's degrees",
+                "score": 13,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor",
+                "label": "Skip to Content",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor?lang=nl",
+                "label": "Nederlands",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/webklassen",
+                "label": "Web classes",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/campus-tour",
+                "label": "University Tour",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/student-for-a-day",
+                "label": "Student for a Day",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/nederlandse-studenten",
+                "label": "For Dutch prospectives",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/online-university-tour",
+                "label": "Online University Tour",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/international-students",
+                "label": "For international prospectives",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/nederlandse-studenten/studeren-in-groningen",
+                "label": "Studeren in Groningen",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/nederlandse-studenten/begeleiding-en-advies",
+                "label": "Study guidance",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/nederlandse-studenten/verbreden-en-verdiepen",
+                "label": "Verbreden en verdiepen",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/nederlandse-studenten/studiekeuze-en-voorlichting",
+                "label": "Studiekeuze en voorlichting",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/research/openscience",
+                "label": "Open Science",
+                "score": 10,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/society-business/schools-for-science-society",
+                "label": "Schools for Science & Society",
+                "score": 10,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/international-students/financial-matters",
+                "label": "Financial matters",
+                "score": 9,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/international-students/broadening-and-expanding",
+                "label": "Broadening and expanding",
+                "score": 9,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/international-students/study-choice-and-information",
+                "label": "Study choice and information",
+                "score": 9,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/international-students/study-in-the-netherlands-groningen",
+                "label": "Study in Groningen",
+                "score": 9,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/faq",
+                "label": "Frequently asked questions",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/latest-news",
+                "label": "Latest news",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/research/video-slider",
+                "label": "Research videos",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/organization",
+                "label": "Organization",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/work-with-us",
+                "label": "Working at the University of Groningen",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/student-blog",
+                "label": "International Student Blog",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/research/researchthemes",
+                "label": "Research themes",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/research/research-portal",
+                "label": "Find research and researchers",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/honours-college",
+                "label": "Honours College",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/policy-and-strategy",
+                "label": "Policy and strategy",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/society-business/young-talent",
+                "label": "Young talent",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/summer-winter-schools",
+                "label": "Summer / Winter schools",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/research/research-support-portal",
+                "label": "Research Support Portal",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/chat-with-our-students",
+                "label": "Chat with our students",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/society-business/scholierenacademie",
+                "label": "Scholierenacademie",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/society-business/knowledge-and-learning",
+                "label": "Knowledge and learning",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/research/onderzoekscentra-en-instituten",
+                "label": "Research centres and institutes",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/application-enrolment-tuition-fees",
+                "label": "Application, registration and tuition fees",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/society-business/center-for-information-technology",
+                "label": "Center for Information Technology",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/society-business/collaborating-with-the-university-of-groningen",
+                "label": "Collaborating with the UG",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/info/disclaimer-copyright",
+                "label": "Disclaimer & Copyright",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/practical-matters/how-to-find-us",
+                "label": "How to find us",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/organization/university-services",
+                "label": "University Services",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/latest-news/press-information/rss-feeds",
+                "label": "RSS-feed University of Groningen",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission",
+                "label": "Admission and application",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/organization/university-services/communication",
+                "label": "Corporate Communication",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/organization/service-departments/facilitaire-organisatie",
+                "label": "Facility Management",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/bachelor-open-day",
+                "label": "Bachelor's Open Day",
+                "score": 15,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/onlinebachelorweek",
+                "label": "Online Bachelor's Week",
+                "score": 15,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/bachelors",
+                "label": "Bachelor's degree programmes",
+                "score": 13,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/webklassen",
+                "label": "Web classes",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/student-for-a-day",
+                "label": "Student for a Day",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/nederlandse-studenten",
+                "label": "Nederlandse studenten",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/nederlandse-studenten/studiekeuze-en-voorlichting/schooldecanen",
+                "label": "Schooldecanen",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/nederlandse-studenten/studiekeuze-en-voorlichting/studiekeuzetests",
+                "label": "Studiekeuzetests",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/nederlandse-studenten/studiekeuze-en-voorlichting/informatie-ouders",
+                "label": "Voor ouders",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/nederlandse-studenten/studiekeuze-en-voorlichting/verschillen-hbo-wo",
+                "label": "Kies ik voor hbo of wo?",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/nederlandse-studenten/studiekeuze-en-voorlichting/meer-studiekeuzehulp",
+                "label": "Meer studiekeuzehulp",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/nederlandse-studenten/studiekeuze-en-voorlichting/studiekeuzerondjerug",
+                "label": "Studiekeuzerondje RUG",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/nederlandse-studenten/studiekeuze-en-voorlichting/wat-kan-ik-doen-met-welk-profiel",
+                "label": "Wat kan ik doen met welk profiel?",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/research/openscience",
+                "label": "Open Science",
+                "score": 10,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/society-business/schools-for-science-society",
+                "label": "Schools for Science & Society",
+                "score": 10,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/bachelors/in-english",
+                "label": "English-language degrees available in our 11 faculties",
+                "score": 9,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/nederlandse-studenten/studiekeuze-en-voorlichting",
+                "label": "Skip to Content",
+                "score": 9,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/nederlandse-studenten/studiekeuze-en-voorlichting?lang=nl",
+                "label": "Nederlands",
+                "score": 9,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/international-students/study-choice-and-information/online-webinars",
+                "label": "Virtual UG",
+                "score": 9,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/international-students/study-choice-and-information/bachelors-programme-set-up",
+                "label": "teaching styles",
+                "score": 9,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/faq",
+                "label": "Frequently asked questions",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/latest-news",
+                "label": "Latest news",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/research/video-slider",
+                "label": "Research videos",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/organization",
+                "label": "Organization",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/work-with-us",
+                "label": "Working at the University of Groningen",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/research/researchthemes",
+                "label": "Research themes",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/research/research-portal",
+                "label": "Find research and researchers",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/honours-college",
+                "label": "Honours College",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/policy-and-strategy",
+                "label": "Policy and strategy",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/society-business/young-talent",
+                "label": "Young talent",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/summer-winter-schools",
+                "label": "Summer / Winter schools",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/research/research-support-portal",
+                "label": "Research Support Portal",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/chat-with-our-students",
+                "label": "Chat with our students",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/society-business/scholierenacademie",
+                "label": "Scholierenacademie",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/society-business/knowledge-and-learning",
+                "label": "Knowledge and learning",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/research/onderzoekscentra-en-instituten",
+                "label": "Research centres and institutes",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/application-enrolment-tuition-fees",
+                "label": "Application, registration and tuition fees",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/society-business/center-for-information-technology",
+                "label": "Center for Information Technology",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/society-business/collaborating-with-the-university-of-groningen",
+                "label": "Collaborating with the UG",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/info/disclaimer-copyright",
+                "label": "Disclaimer & Copyright",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/practical-matters/how-to-find-us",
+                "label": "How to find us",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/organization/university-services",
+                "label": "University Services",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/latest-news/press-information/rss-feeds",
+                "label": "RSS-feed University of Groningen",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/organization/university-services/communication",
+                "label": "Corporate Communication",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures",
+                "label": "application process",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/organization/service-departments/facilitaire-organisatie",
+                "label": "Facility Management",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/student-blog/blog-06-12-2017-how-to-make-the-most-of-a-university-fair",
+                "label": "make the most of them",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/bachelors/alphabet",
+                "label": "Bachelor's degree programmes in alphabetical order",
+                "score": 15,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/bachelors/in-english",
+                "label": "Bachelor's degree programmes in English",
+                "score": 15,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/bachelors/by-subject",
+                "label": "By subject",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/bachelors/by-faculty",
+                "label": "By faculty",
+                "score": 11,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/research/openscience",
+                "label": "Open Science",
+                "score": 10,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/society-business/schools-for-science-society",
+                "label": "Schools for Science & Society",
+                "score": 10,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/bachelors",
+                "label": "Skip to Content",
+                "score": 9,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/bachelors?lang=nl",
+                "label": "Nederlands",
+                "score": 9,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/faq",
+                "label": "Frequently asked questions",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/latest-news",
+                "label": "Latest news",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/research/video-slider",
+                "label": "Research videos",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/organization",
+                "label": "Organization",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/work-with-us",
+                "label": "Working at the University of Groningen",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/research/researchthemes",
+                "label": "Research themes",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/research/research-portal",
+                "label": "Find research and researchers",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/honours-college",
+                "label": "Honours College",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/programme-search",
+                "label": "Search for a programme",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/policy-and-strategy",
+                "label": "Policy and strategy",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/society-business/young-talent",
+                "label": "Young talent",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/summer-winter-schools",
+                "label": "Summer / Winter schools",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/research/research-support-portal",
+                "label": "Research Support Portal",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/society-business/scholierenacademie",
+                "label": "Scholierenacademie",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/society-business/knowledge-and-learning",
+                "label": "Knowledge and learning",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/research/onderzoekscentra-en-instituten",
+                "label": "Research centres and institutes",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/application-enrolment-tuition-fees",
+                "label": "Application, registration and tuition fees",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/society-business/center-for-information-technology",
+                "label": "Center for Information Technology",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/society-business/collaborating-with-the-university-of-groningen",
+                "label": "Collaborating with the UG",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/courses/minor",
+                "label": "Minor Programmes",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/info/disclaimer-copyright",
+                "label": "Disclaimer & Copyright",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/practical-matters/how-to-find-us",
+                "label": "How to find us",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/organization/university-services",
+                "label": "University Services",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/latest-news/press-information/rss-feeds",
+                "label": "RSS-feed University of Groningen",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/organization/university-services/communication",
+                "label": "Corporate Communication",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/organization/service-departments/facilitaire-organisatie",
+                "label": "Facility Management",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/bachelors",
+                "label": "Bachelor's degree programmes",
+                "score": 13,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/research/openscience",
+                "label": "Open Science",
+                "score": 10,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/society-business/schools-for-science-society",
+                "label": "Schools for Science & Society",
+                "score": 10,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/faq",
+                "label": "Frequently asked questions",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/latest-news",
+                "label": "Latest news",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/research/video-slider",
+                "label": "Research videos",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/organization",
+                "label": "Organization",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/work-with-us",
+                "label": "Working at the University of Groningen",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/research/researchthemes",
+                "label": "Research themes",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/research/research-portal",
+                "label": "Find research and researchers",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/honours-college",
+                "label": "Honours College",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/programme-search",
+                "label": "Skip to Content",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/policy-and-strategy",
+                "label": "Policy and strategy",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/society-business/young-talent",
+                "label": "Young talent",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/summer-winter-schools",
+                "label": "Summer / Winter schools",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/research/research-support-portal",
+                "label": "Research Support Portal",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/society-business/scholierenacademie",
+                "label": "Scholierenacademie",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/society-business/knowledge-and-learning",
+                "label": "Knowledge and learning",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/research/onderzoekscentra-en-instituten",
+                "label": "Research centres and institutes",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/education/application-enrolment-tuition-fees",
+                "label": "Application, registration and tuition fees",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/society-business/center-for-information-technology",
+                "label": "Center for Information Technology",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/society-business/collaborating-with-the-university-of-groningen",
+                "label": "Collaborating with the UG",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/info/disclaimer-copyright",
+                "label": "Disclaimer & Copyright",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/practical-matters/how-to-find-us",
+                "label": "How to find us",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/organization/university-services",
+                "label": "University Services",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/latest-news/press-information/rss-feeds",
+                "label": "RSS-feed University of Groningen",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/organization/university-services/communication",
+                "label": "Corporate Communication",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/organization/service-departments/facilitaire-organisatie",
+                "label": "Facility Management",
+                "score": 0,
+                "source": "html"
+              }
+            ],
+            "programs_confirmed": 0,
+            "outcomes": [
+              {
+                "url": "https://www.facebook.com/universityofgroningen",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.linkedin.com/school/rijksuniversiteit-groningen",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.instagram.com/universityofgroningen",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.youtube.com/universityGroningen",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://sggroningen.nl/",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.rug.nl/",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/contact",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://myuniversity.rug.nl/infonet/medewerkers/dashboard",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://brightspace.rug.nl/",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.rug.nl/search",
+                "outcome": "excluded_url"
+              },
+              {
+                "url": "https://www.rug.nl/education",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.rug.nl/education/master",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.rug.nl/education/master/nederlandse-studenten/studiekeuze-en-voorlichting/pre-master",
+                "outcome": "degree_level_mismatch"
+              },
+              {
+                "url": "https://www.rug.nl/education/phd-programmes",
+                "outcome": "degree_level_mismatch"
+              },
+              {
+                "url": "https://www.rug.nl/education/exchange",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.rug.nl/research",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.rug.nl/research/podcasts/university-of-groningen-podcasts",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.rug.nl/library",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.rug.nl/society-business",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.rug.nl/alumni",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.rug.nl/alumni/for-alumni",
+                "outcome": "excluded_url"
+              },
+              {
+                "url": "https://www.rug.nl/alumni/about-alumni",
+                "outcome": "excluded_url"
+              },
+              {
+                "url": "https://www.rug.nl/alumni/magazines-and-newsletters",
+                "outcome": "excluded_url"
+              },
+              {
+                "url": "https://www.rug.nl/alumni/support-research-and-education",
+                "outcome": "excluded_url"
+              },
+              {
+                "url": "https://www.rug.nl/alumni/magazines-and-newsletters/broerstraat-5/wijzigingen-doorgeven-registratie-en-abonnementen",
+                "outcome": "excluded_url"
+              },
+              {
+                "url": "https://www.rug.nl/alumni/contact",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.rug.nl/magazine",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.rug.nl/news",
+                "outcome": "excluded_url"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/profile",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/contact",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://myuniversity.rug.nl/infonet/!navigate?loc=VA6Y7Vr0f90OOyBRDLOrLVQOw%2BlQ2PZ71v9iuLA86XY%3D",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/non-dutch-qualification/early-bird-applications",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/brochures",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/international-students/study-in-the-netherlands-groningen/accommodation",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/nederlandse-studenten/financien",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.rug.nl/education/student-blog/12-essentials-in-my-uni-bag",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.rug.nl/education/student-blog/een-kamer-vinden-in-groningen-begin-hier",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.rug.nl/education/events",
+                "outcome": "excluded_url"
+              },
+              {
+                "url": "https://research.rug.nl/en/persons",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.rug.nl/language-centre",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.rug.nl/museum",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.rug.nl/careerservices",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.rug.nl/alumni/news-events/events",
+                "outcome": "excluded_url"
+              },
+              {
+                "url": "https://www.rug.nl/alumni/update-your-information",
+                "outcome": "excluded_url"
+              },
+              {
+                "url": "https://werkenbij.rug.nl/en/all-vacancies",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.rug.nl/feb",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.rug.nl/gmw",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.rug.nl/rcs",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.rug.nl/let",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.rug.nl/umcg",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.rug.nl/rechten",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.rug.nl/frw",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.rug.nl/filosofie",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.rug.nl/fse",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.rug.nl/ucg",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.rug.nl/cf",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/latest-news/events/calendar",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.rug.nl/info/privacy",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.rug.nl/info/cookies",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/!sso",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/international-students/study-in-the-netherlands-groningen",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/education/faq",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/latest-news",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/research/video-slider",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/organization",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/work-with-us",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/education/student-blog",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/research/researchthemes",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/research/research-portal",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/education/honours-college",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/policy-and-strategy",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/society-business/young-talent",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/education/summer-winter-schools",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/research/research-support-portal",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/education/chat-with-our-students",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/society-business/scholierenacademie",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/society-business/knowledge-and-learning",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/research/onderzoekscentra-en-instituten",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/education/application-enrolment-tuition-fees",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/society-business/center-for-information-technology",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/society-business/collaborating-with-the-university-of-groningen",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/info/disclaimer-copyright",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/practical-matters/how-to-find-us",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/organization/university-services",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/latest-news/press-information/rss-feeds",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/organization/university-services/communication",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/organization/service-departments/facilitaire-organisatie",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/bachelor-open-day",
+                "outcome": "reads_as_unknown"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/onlinebachelorweek",
+                "outcome": "reads_as_program_detail"
+              },
+              {
+                "url": "https://www.rug.nl/bachelors",
+                "outcome": "reads_as_program_catalog"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor",
+                "outcome": "reads_as_program_detail"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor?lang=nl",
+                "outcome": "reads_as_program_detail"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/webklassen",
+                "outcome": "reads_as_program_detail"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/campus-tour",
+                "outcome": "reads_as_program_detail"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/student-for-a-day",
+                "outcome": "reads_as_program_detail"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/nederlandse-studenten",
+                "outcome": "reads_as_navigation"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/online-university-tour",
+                "outcome": "reads_as_program_detail"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/international-students",
+                "outcome": "reads_as_navigation"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/nederlandse-studenten/studeren-in-groningen",
+                "outcome": "reads_as_program_detail"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/nederlandse-studenten/begeleiding-en-advies",
+                "outcome": "reads_as_program_detail"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/nederlandse-studenten/verbreden-en-verdiepen",
+                "outcome": "reads_as_program_detail"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/nederlandse-studenten/studiekeuze-en-voorlichting",
+                "outcome": "reads_as_program_catalog"
+              },
+              {
+                "url": "https://www.rug.nl/research/openscience",
+                "outcome": "reads_as_unknown"
+              },
+              {
+                "url": "https://www.rug.nl/society-business/schools-for-science-society",
+                "outcome": "reads_as_unknown"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/international-students/financial-matters",
+                "outcome": "reads_as_costs"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/international-students/broadening-and-expanding",
+                "outcome": "reads_as_program_detail"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/international-students/study-choice-and-information",
+                "outcome": "reads_as_unknown"
+              },
+              {
+                "url": "https://web.intractive.app/ZoZaXbo",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://student.sl-cloud.nl/",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.facebook.com/universityofgroningen",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.linkedin.com/school/rijksuniversiteit-groningen",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.instagram.com/universityofgroningen",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.youtube.com/universityGroningen",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://sggroningen.nl/",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.rug.nl/",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/contact",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://myuniversity.rug.nl/infonet/medewerkers/dashboard",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://brightspace.rug.nl/",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.rug.nl/search",
+                "outcome": "excluded_url"
+              },
+              {
+                "url": "https://www.rug.nl/education",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.rug.nl/education/master",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.rug.nl/education/master/nederlandse-studenten/studiekeuze-en-voorlichting/pre-master",
+                "outcome": "degree_level_mismatch"
+              },
+              {
+                "url": "https://www.rug.nl/education/phd-programmes",
+                "outcome": "degree_level_mismatch"
+              },
+              {
+                "url": "https://www.rug.nl/education/exchange",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.rug.nl/research",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.rug.nl/research/podcasts/university-of-groningen-podcasts",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.rug.nl/library",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.rug.nl/society-business",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.rug.nl/alumni",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.rug.nl/alumni/for-alumni",
+                "outcome": "excluded_url"
+              },
+              {
+                "url": "https://www.rug.nl/alumni/about-alumni",
+                "outcome": "excluded_url"
+              },
+              {
+                "url": "https://www.rug.nl/alumni/magazines-and-newsletters",
+                "outcome": "excluded_url"
+              },
+              {
+                "url": "https://www.rug.nl/alumni/support-research-and-education",
+                "outcome": "excluded_url"
+              },
+              {
+                "url": "https://www.rug.nl/alumni/magazines-and-newsletters/broerstraat-5/wijzigingen-doorgeven-registratie-en-abonnementen",
+                "outcome": "excluded_url"
+              },
+              {
+                "url": "https://www.rug.nl/alumni/contact",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.rug.nl/magazine",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.rug.nl/news",
+                "outcome": "excluded_url"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/profile",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.rug.nl/education/events/opnames-open-dagen",
+                "outcome": "excluded_url"
+              },
+              {
+                "url": "https://myuniversity.rug.nl/infonet/!navigate?loc=VA6Y7Vr0f90OOyBRDLOrLVQOw%2BlQ2PZ71v9iuLA86XY%3D",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://ocasys.rug.nl/current",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.rug.nl/alumni/about-alumni/ambassadors/2018-2019/international-alumni-ambassadors-2018-2019",
+                "outcome": "excluded_url"
+              },
+              {
+                "url": "https://www.rug.nl/careerservices",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.rug.nl/education/events",
+                "outcome": "excluded_url"
+              },
+              {
+                "url": "https://research.rug.nl/en/persons",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.rug.nl/language-centre",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.rug.nl/museum",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.rug.nl/alumni/news-events/events",
+                "outcome": "excluded_url"
+              },
+              {
+                "url": "https://www.rug.nl/alumni/update-your-information",
+                "outcome": "excluded_url"
+              },
+              {
+                "url": "https://werkenbij.rug.nl/en/all-vacancies",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.rug.nl/feb",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.rug.nl/gmw",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.rug.nl/rcs",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.rug.nl/let",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.rug.nl/umcg",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.rug.nl/rechten",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.rug.nl/frw",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.rug.nl/filosofie",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.rug.nl/fse",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.rug.nl/ucg",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.rug.nl/cf",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/latest-news/events/calendar",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.rug.nl/info/privacy",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.rug.nl/info/cookies",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/nederlandse-studenten/studiekeuze-en-voorlichting/!sso",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/nederlandse-studenten",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/nederlandse-studenten/studiekeuze-en-voorlichting/schooldecanen",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/nederlandse-studenten/studiekeuze-en-voorlichting/studiekeuzetests",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/nederlandse-studenten/studiekeuze-en-voorlichting/informatie-ouders",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/nederlandse-studenten/studiekeuze-en-voorlichting/verschillen-hbo-wo",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/nederlandse-studenten/studiekeuze-en-voorlichting/meer-studiekeuzehulp",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/nederlandse-studenten/studiekeuze-en-voorlichting/studiekeuzerondjerug",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/nederlandse-studenten/studiekeuze-en-voorlichting/wat-kan-ik-doen-met-welk-profiel",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/research/openscience",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/society-business/schools-for-science-society",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/bachelors/in-english",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/nederlandse-studenten/studiekeuze-en-voorlichting",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/nederlandse-studenten/studiekeuze-en-voorlichting?lang=nl",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/international-students/study-choice-and-information/online-webinars",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/education/bachelor/international-students/study-choice-and-information/bachelors-programme-set-up",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/education/faq",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/latest-news",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/research/video-slider",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/organization",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/work-with-us",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/research/researchthemes",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/research/research-portal",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/education/honours-college",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/about-ug/policy-and-strategy",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/society-business/young-talent",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/education/summer-winter-schools",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/research/research-support-portal",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/education/chat-with-our-students",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/society-business/scholierenacademie",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/society-business/knowledge-and-learning",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.rug.nl/research/onderzoekscentra-en-instituten",
+                "outcome": "walker_budget_exhausted"
+              }
+            ]
+          }
+        },
+        "programs": [],
+        "program_page_found": false,
+        "scholarship_page_found": true,
+        "discovery_notes": "Sitemap-first discovery found: program_catalog, admissions, costs, scholarships. Not found: program_page, documents.",
+        "claims": 0,
+        "claims_verified": 0,
+        "completeness": 0.0,
+        "eligibility": "NEEDS_OFFICIAL_CLARIFICATION",
+        "funding_fit": "UNKNOWN",
+        "scholarships_found": 0,
+        "false_positives": [],
+        "page_outcomes": {
+          "no-pattern-match": 2,
+          "fetched-ok": 1
+        },
+        "page_types": {
+          "program_detail": 1,
+          "costs": 1,
+          "unknown": 1
+        },
+        "page_diagnostics": [
+          {
+            "category": "no-pattern-match",
+            "url": "https://www.rug.nl/education/bachelor/international-students",
+            "page_type": "program_detail",
+            "characters": "1256",
+            "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed"
+          },
+          {
+            "category": "no-pattern-match",
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees",
+            "page_type": "costs",
+            "characters": "1377",
+            "detail": "page was read but no cost figures could be extracted"
+          },
+          {
+            "category": "fetched-ok",
+            "url": "https://www.rug.nl/education/scholarships",
+            "page_type": "unknown",
+            "characters": null,
+            "detail": "read as a funding index; 0 award links, 0 queued within the award budget"
+          }
+        ]
+      }
+    ],
+    "totals": {
+      "institutions": 1,
+      "reached": 1,
+      "blocked": 0,
+      "program_pages_found": 0,
+      "scholarship_pages_found": 1,
+      "claims": 0,
+      "false_positives": 0,
+      "page_outcomes": {
+        "no-pattern-match": 2,
+        "fetched-ok": 1
+      },
+      "page_types": {
+        "program_detail": 1,
+        "costs": 1,
+        "unknown": 1
+      },
+      "recall": {
+        "program": {
+          "numerator": 0,
+          "denominator": 1,
+          "target": 0.7
+        },
+        "category": {
+          "numerator": 3,
+          "denominator": 3,
+          "target": 0.8666666666666667
+        }
+      },
+      "catalogs_walked": 4,
+      "walker_programs_confirmed": 0,
+      "source_pages_recorded": 35,
+      "fetch_tiers": {
+        "fixture": 0,
+        "http": 63,
+        "browser": 0,
+        "pdf": 0
+      }
+    }
+  },
+  "claims": []
+}

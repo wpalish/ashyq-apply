@@ -1,0 +1,465 @@
+{
+  "experiment": "ER-15",
+  "mode": "offline actual-source oracle replay, not live discovery",
+  "before_source": "1d8a4ea",
+  "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+  "fetched_at": "2026-10-03T05:26:36.231503+00:00",
+  "html_sha256": "247c6a30c7bf7ef434901134b087f1f3ed4fa03608da759cb66559d9bd624faa",
+  "reviewed_bindings_sha256": "5751675d540df1be3c621bd91e049158de05065bf847ac307e14ce7d1dece597",
+  "before": [
+    [
+      "documents.admission.secondary_diploma.required",
+      true
+    ]
+  ],
+  "after": [
+    [
+      "documents.admission.secondary_diploma.completed",
+      "diploma"
+    ],
+    [
+      "documents.admission.secondary_diploma.not_completed",
+      "school_enrolment_statement"
+    ],
+    [
+      "documents.admission.secondary_diploma.required",
+      true
+    ]
+  ],
+  "raw_claim_counts": {
+    "before": 25,
+    "after": 37
+  },
+  "limitations": [
+    "Only source extraction is measured; no network or discovery.",
+    "Repeated faculty rows do not increase unique fact count.",
+    "No gold/identity-binding/schema/ranking change.",
+    "General search recall and profile coverage remain unverified."
+  ],
+  "production_adapter": {
+    "pages_checked": 1,
+    "pages_failed": 0,
+    "claims": [
+      {
+        "claim_type": "document_by_completion",
+        "normalized_value": {
+          "document": "Secondary school diploma (certified copy)",
+          "status": "completed",
+          "form": "diploma"
+        },
+        "original_text_excerpt": "Diploma of completed upper secondary education or if not yet completed: Statement of enrolment from your school confirming your enrolment, the qualification(s) to be obtained and your expected date of graduation",
+        "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+        "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+        "relevant_section": "Bachelor's application documents / Required documents / Overview application documents / Diploma",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": null,
+        "academic_year": "2026/27",
+        "accessed_at": "2026-10-03T05:26:36.231503Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "program_intake",
+        "confidence": 0.75,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      },
+      {
+        "claim_type": "document_by_completion",
+        "normalized_value": {
+          "document": "Secondary school diploma (certified copy)",
+          "status": "not_completed",
+          "form": "school_enrolment_statement"
+        },
+        "original_text_excerpt": "Diploma of completed upper secondary education or if not yet completed: Statement of enrolment from your school confirming your enrolment, the qualification(s) to be obtained and your expected date of graduation",
+        "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+        "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+        "relevant_section": "Bachelor's application documents / Required documents / Overview application documents / Diploma",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": null,
+        "academic_year": "2026/27",
+        "accessed_at": "2026-10-03T05:26:36.231503Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "program_intake",
+        "confidence": 0.75,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      },
+      {
+        "claim_type": "document_by_completion",
+        "normalized_value": {
+          "document": "Secondary school diploma (certified copy)",
+          "status": "completed",
+          "form": "diploma"
+        },
+        "original_text_excerpt": "Diploma of completed upper secondary education or if not yet completed: Statement of enrolment from your school confirming your enrolment, the qualification(s) to be obtained and your expected date of graduation",
+        "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+        "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+        "relevant_section": "Bachelor's application documents / Required documents / Overview application documents / Diploma",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": null,
+        "academic_year": "2026/27",
+        "accessed_at": "2026-10-03T05:26:36.231503Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "program_intake",
+        "confidence": 0.75,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      },
+      {
+        "claim_type": "document_by_completion",
+        "normalized_value": {
+          "document": "Secondary school diploma (certified copy)",
+          "status": "not_completed",
+          "form": "school_enrolment_statement"
+        },
+        "original_text_excerpt": "Diploma of completed upper secondary education or if not yet completed: Statement of enrolment from your school confirming your enrolment, the qualification(s) to be obtained and your expected date of graduation",
+        "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+        "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+        "relevant_section": "Bachelor's application documents / Required documents / Overview application documents / Diploma",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": null,
+        "academic_year": "2026/27",
+        "accessed_at": "2026-10-03T05:26:36.231503Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "program_intake",
+        "confidence": 0.75,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      },
+      {
+        "claim_type": "document_by_completion",
+        "normalized_value": {
+          "document": "Secondary school diploma (certified copy)",
+          "status": "completed",
+          "form": "diploma"
+        },
+        "original_text_excerpt": "Diploma of completed upper secondary education or if not yet completed: Statement of enrolment from your school confirming your enrolment, the qualifications(s) to be obtained and your expected date of graduation.",
+        "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+        "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+        "relevant_section": "Bachelor's application documents / Required documents / Overview application documents / Diploma",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": null,
+        "academic_year": "2026/27",
+        "accessed_at": "2026-10-03T05:26:36.231503Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "program_intake",
+        "confidence": 0.75,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      },
+      {
+        "claim_type": "document_by_completion",
+        "normalized_value": {
+          "document": "Secondary school diploma (certified copy)",
+          "status": "not_completed",
+          "form": "school_enrolment_statement"
+        },
+        "original_text_excerpt": "Diploma of completed upper secondary education or if not yet completed: Statement of enrolment from your school confirming your enrolment, the qualifications(s) to be obtained and your expected date of graduation.",
+        "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+        "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+        "relevant_section": "Bachelor's application documents / Required documents / Overview application documents / Diploma",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": null,
+        "academic_year": "2026/27",
+        "accessed_at": "2026-10-03T05:26:36.231503Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "program_intake",
+        "confidence": 0.75,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      },
+      {
+        "claim_type": "document_by_completion",
+        "normalized_value": {
+          "document": "Secondary school diploma (certified copy)",
+          "status": "completed",
+          "form": "diploma"
+        },
+        "original_text_excerpt": "Diploma of completed upper secondary education or if not yet completed: Statement of enrolment from your school confirming your enrolment, the qualification(s) to be obtained and your expected date of graduation",
+        "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+        "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+        "relevant_section": "Bachelor's application documents / Required documents / Overview application documents / Diploma",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": null,
+        "academic_year": "2026/27",
+        "accessed_at": "2026-10-03T05:26:36.231503Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "program_intake",
+        "confidence": 0.75,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      },
+      {
+        "claim_type": "document_by_completion",
+        "normalized_value": {
+          "document": "Secondary school diploma (certified copy)",
+          "status": "not_completed",
+          "form": "school_enrolment_statement"
+        },
+        "original_text_excerpt": "Diploma of completed upper secondary education or if not yet completed: Statement of enrolment from your school confirming your enrolment, the qualification(s) to be obtained and your expected date of graduation",
+        "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+        "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+        "relevant_section": "Bachelor's application documents / Required documents / Overview application documents / Diploma",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": null,
+        "academic_year": "2026/27",
+        "accessed_at": "2026-10-03T05:26:36.231503Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "program_intake",
+        "confidence": 0.75,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      },
+      {
+        "claim_type": "document_by_completion",
+        "normalized_value": {
+          "document": "Secondary school diploma (certified copy)",
+          "status": "completed",
+          "form": "diploma"
+        },
+        "original_text_excerpt": "Diploma of completed upper secondary education or if not yet completed: Statement of enrolment from your school confirming your enrolment, the qualification(s) to be obtained and your expected date of graduation.",
+        "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+        "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+        "relevant_section": "Bachelor's application documents / Required documents / Overview application documents / Diploma",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": null,
+        "academic_year": "2026/27",
+        "accessed_at": "2026-10-03T05:26:36.231503Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "program_intake",
+        "confidence": 0.75,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      },
+      {
+        "claim_type": "document_by_completion",
+        "normalized_value": {
+          "document": "Secondary school diploma (certified copy)",
+          "status": "not_completed",
+          "form": "school_enrolment_statement"
+        },
+        "original_text_excerpt": "Diploma of completed upper secondary education or if not yet completed: Statement of enrolment from your school confirming your enrolment, the qualification(s) to be obtained and your expected date of graduation.",
+        "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+        "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+        "relevant_section": "Bachelor's application documents / Required documents / Overview application documents / Diploma",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": null,
+        "academic_year": "2026/27",
+        "accessed_at": "2026-10-03T05:26:36.231503Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "program_intake",
+        "confidence": 0.75,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      },
+      {
+        "claim_type": "document_by_completion",
+        "normalized_value": {
+          "document": "Secondary school diploma (certified copy)",
+          "status": "completed",
+          "form": "diploma"
+        },
+        "original_text_excerpt": "Diploma of completed upper secondary education or if not yet completed: Statement of enrolment from your school confirming your enrolment, the qualification(s) to be obtained and your expected date of graduation",
+        "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+        "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+        "relevant_section": "Bachelor's application documents / Required documents / Overview application documents / Diploma",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": null,
+        "academic_year": "2026/27",
+        "accessed_at": "2026-10-03T05:26:36.231503Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "program_intake",
+        "confidence": 0.75,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      },
+      {
+        "claim_type": "document_by_completion",
+        "normalized_value": {
+          "document": "Secondary school diploma (certified copy)",
+          "status": "not_completed",
+          "form": "school_enrolment_statement"
+        },
+        "original_text_excerpt": "Diploma of completed upper secondary education or if not yet completed: Statement of enrolment from your school confirming your enrolment, the qualification(s) to be obtained and your expected date of graduation",
+        "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+        "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+        "relevant_section": "Bachelor's application documents / Required documents / Overview application documents / Diploma",
+        "official_domain": true,
+        "program": "Computer Science",
+        "subject_key": null,
+        "intake": null,
+        "academic_year": "2026/27",
+        "accessed_at": "2026-10-03T05:26:36.231503Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": null
+        },
+        "source_specificity": "program_intake",
+        "confidence": 0.75,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      }
+    ]
+  }
+}

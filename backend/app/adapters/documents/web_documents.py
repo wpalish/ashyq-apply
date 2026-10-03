@@ -15,6 +15,7 @@ from datetime import UTC, datetime
 
 from app.adapters.base import AdapterResult, Candidate, CandidateProgram, PageOutcome
 from app.adapters.document_ir import DocumentIR, build_document_ir
+from app.adapters.documents.structured_documents import read_supplemental_tables
 from app.adapters.extraction import (
     ClaimBuilder,
     html_title,
@@ -22,7 +23,7 @@ from app.adapters.extraction import (
     is_official_domain,
     verification_domains,
 )
-from app.adapters.fetching import Fetcher
+from app.adapters.fetching import Fetcher, same_source_site
 from app.adapters.scope_reader import read_scope
 from app.domain.claim_scope import ClaimScope
 from app.domain.enums import ClaimType, DocumentOwner, DocumentPurpose, SourceSpecificity
@@ -130,7 +131,7 @@ _REQUIRED_WORD = re.compile(r"\b(?:required|mandatory|compulsory)\b", re.I)
 _QUALIFICATION_WORD = re.compile(r"\b(?:possess|hold|qualifications?|achievements?)\b", re.I)
 
 
-def _document_statements(text: str, document: DocumentIR | None) -> Iterator[tuple[str, bool]]:
+def _document_statements(text: str, document: DocumentIR | None) -> Iterator[tuple[str, bool, str]]:
     """Local complete clauses, with an explicit document-list context only.
 
     A long application paragraph can contain a short required essay or
@@ -141,7 +142,7 @@ def _document_statements(text: str, document: DocumentIR | None) -> Iterator[tup
         # Plain-text responses retain their explicit one-line reader.
         for line in text.splitlines():
             if line.strip() and len(line) <= 300:
-                yield line.strip(), True
+                yield line.strip(), True, line.strip()
         return
     for block in document.blocks:
         if block.kind not in {"paragraph", "list_item", "key_value", "table_cell"}:
@@ -156,7 +157,7 @@ def _document_statements(text: str, document: DocumentIR | None) -> Iterator[tup
                 if following.casefold().startswith("the appraisal"):
                     clause += " " + following
             if clause and len(clause) <= MAX_EXCERPT_CHARS:
-                yield clause, listed
+                yield clause, listed, " ".join([*block.section_path, *block.row_headers, clause])
 
 
 def _required_document_statement(line: str, listed: bool) -> bool:
@@ -272,6 +273,15 @@ class WebDocumentsAdapter:
             out.page_outcomes.append(PageOutcome(url, "fetch-failed"))
             return []
 
+        source_url = res.final_url or url
+        if not same_source_site(url, source_url):
+            out.pages_failed += 1
+            out.errors.append(f"{url}: document source redirected outside the institution")
+            out.page_outcomes.append(
+                PageOutcome(url, "classifier-rejected", detail="cross-site redirect")
+            )
+            return []
+
         text = html_to_text(res.text)
         if not text.strip():
             out.pages_failed += 1
@@ -279,27 +289,31 @@ class WebDocumentsAdapter:
             out.retry_urls.append(url)
             out.page_outcomes.append(PageOutcome(url, "unreadable"))
             return []
-        # Read once and given to both: the claims and the checklist rows from
-        # this page describe the same population, and §9 asks the checklist to
-        # store it too.
+        # Read page scope once; the reader narrows population to each document
+        # statement and gives claims and checklist rows the same local scope.
         page_scope = read_scope(text, title=html_title(res.text))
         builder = ClaimBuilder(
-            source_url=url,
+            source_url=source_url,
             page_title=html_title(res.text),
             specificity=SourceSpecificity.PROGRAM_INTAKE,
             program=program.name,
             academic_year=self.academic_year,
-            official_domain=url.startswith("fixture://")
-            or is_official_domain(url, [candidate.domain]),
-            extraction_method="fixture" if url.startswith("fixture://") else "html_rule",
+            official_domain=source_url.startswith("fixture://")
+            or is_official_domain(source_url, [candidate.domain]),
+            extraction_method="fixture" if source_url.startswith("fixture://") else "html_rule",
             accessed_at=res.fetched_at,
             scope=page_scope,
             page_text=text,
-            allowed_domains=verification_domains(url, candidate.domain),
+            allowed_domains=verification_domains(source_url, candidate.domain),
         )
 
         items = read_documents(
-            text, url, purpose, page_scope, builder, document=build_document_ir(res.text, url)
+            text,
+            source_url,
+            purpose,
+            page_scope,
+            builder,
+            document=build_document_ir(res.text, source_url),
         )
         out.claims.extend(builder.claims)
         out.page_outcomes.append(
@@ -326,6 +340,16 @@ _LABEL_DOCUMENT = (
     (re.compile(r"diploma", re.I), "Secondary school diploma (certified copy)"),
 )
 _COMPLETION_LABEL = re.compile(r"transcripts?|(?:secondary\s+school\s+)?diplomas?", re.I)
+# A cell may contain separate, explicitly named education groups. Keep the
+# complete secondary-school statement, stopping before the higher-education
+# group; the latter's conditional requirement cannot be applied to everyone.
+_SECONDARY_COMPLETION_GROUP = re.compile(
+    r"^Secondary education\s+"
+    r"(?P<body>Diploma of completed (?:upper )?secondary education\s+or\s+"
+    r"if not yet completed:\s+Statement of enrol?ment\b.*?)"
+    r"\s+Higher education(?:\s+\(if applicable\))?\s+Diploma(?:/Degree)? certificate\b",
+    re.I,
+)
 #: The forms a document takes, in the page's words, to one vocabulary.
 _FORMS = (
     (
@@ -384,7 +408,22 @@ def _structured_completion_forms(document: DocumentIR, builder: ClaimBuilder) ->
         for block in document.blocks:
             if block.kind not in {"table_cell", "key_value", "paragraph", "list_item"}:
                 continue
-            if len(block.text) > MAX_EXCERPT_CHARS:
+            statement = block.text
+            if (
+                block.kind == "table_cell"
+                and len(block.row_headers) == 1
+                and re.fullmatch(r"(?:secondary school )?diploma", block.row_headers[0], re.I)
+            ):
+                group = _SECONDARY_COMPLETION_GROUP.match(statement)
+                if group is not None:
+                    body = group.group("body")
+                    remaining = re.sub(r"if not yet completed", "", body, flags=re.I)
+                    if re.search(r"\b(?:if|unless|when|may|might|optional)\b", remaining, re.I):
+                        continue
+                    if _OPTIONAL_DOCUMENT.search(body):
+                        continue
+                    statement = body
+            if len(statement) > MAX_EXCERPT_CHARS:
                 continue
             context = (
                 block.row_headers
@@ -396,7 +435,10 @@ def _structured_completion_forms(document: DocumentIR, builder: ClaimBuilder) ->
             labels = {label for label in context if _COMPLETION_LABEL.fullmatch(label)}
             if len(labels) > 1:
                 continue
-            match = _BY_COMPLETION.match(block.text)
+            # When the row names the document and the statement itself starts
+            # with its form, retain both: "Diploma" (row) + "Diploma of ...".
+            grouped = statement != block.text
+            match = None if grouped else _BY_COMPLETION.match(statement)
             if match is not None and labels:
                 labelled = next(iter(labels))
                 labelled_name = next(n for p, n in _LABEL_DOCUMENT if p.search(labelled))
@@ -405,7 +447,7 @@ def _structured_completion_forms(document: DocumentIR, builder: ClaimBuilder) ->
                     continue
             if match is None and labels:
                 # The label is structural context, not part of the quoted body.
-                match = _BY_COMPLETION.match(f"{next(iter(labels))} {block.text}")
+                match = _BY_COMPLETION.match(f"{next(iter(labels))} {statement}")
             if match is None:
                 continue
             if isinstance(page_scope, ClaimScope):
@@ -416,11 +458,75 @@ def _structured_completion_forms(document: DocumentIR, builder: ClaimBuilder) ->
             _add_completion_forms(
                 match,
                 builder,
-                block.text,
+                statement,
                 " / ".join([*block.section_path, *context]),
             )
     finally:
         builder.meta["scope"] = page_scope
+
+
+def _referee_conditions(name: str, statement: str) -> str | dict[str, object]:
+    """Keep explicit recommender constraints with the document they describe.
+
+    A conditional instruction or a mention in a neighbouring clause cannot
+    establish an unconditional role or family exclusion.
+    """
+    if re.search(r"\b(?:if|unless|when|except|may|might|optional)\b", statement, re.I):
+        return name
+    role = re.search(
+        r"\b(?:appraisal|reference|recommendation) (?:is to|must) be completed by "
+        r"(?:your |a |an )?(school teacher|university lecturer|professor)\b",
+        statement,
+        re.I,
+    )
+    if role is None:
+        return name
+    value: dict[str, object] = {"document": name, "role": role.group(1).lower().replace(" ", "_")}
+    # The exclusion must qualify the same person, immediately after their role.
+    if re.match(
+        r",?\s+who must not be (?:your |a |any )?(?:family or relative|relative or family)\b",
+        statement[role.end() :],
+        re.I,
+    ):
+        value["family_or_relative_allowed"] = False
+    return value
+
+
+_TRANSLATION_EXCEPTION = re.compile(
+    r"^(?:Note\s*:\s*|NB:\s*)?If (?:your|the) documents are not in "
+    r"(?P<languages>[A-Za-z, ]+), (?:you (?:will )?need to upload the original documents "
+    r"and translations|please also provide a translation(?: in [A-Za-z, ]+)?)\.$",
+    re.I,
+)
+_LANGUAGE_NAMES = frozenset(
+    {
+        "English",
+        "Dutch",
+        "French",
+        "German",
+        "Spanish",
+        "Italian",
+        "Portuguese",
+        "Chinese",
+        "Japanese",
+        "Korean",
+    }
+)
+
+
+def _translation_exception(statement: str) -> list[str] | None:
+    """Only a complete exception clause establishes the exempt languages."""
+    match = _TRANSLATION_EXCEPTION.fullmatch(statement)
+    if match is None:
+        return None
+    languages = [
+        part.strip().title() for part in re.split(r",|\bor\b", match["languages"], flags=re.I)
+    ]
+    if not languages or any(language not in _LANGUAGE_NAMES for language in languages):
+        return None
+    if len(set(languages)) != len(languages):
+        return None
+    return languages
 
 
 def read_documents(
@@ -438,54 +544,101 @@ def read_documents(
     """
     items: list[DocumentItem] = []
     seen: set[str] = set()
-    for line, listed in _document_statements(text, document):
-        low = line.lower().strip()
-        if not _required_document_statement(line, listed):
-            continue
-        for needle, name, owner, flags in _DOC_RULES:
-            if needle not in low:
-                continue
-            if name in seen:
-                # A repeated specific document must not fall through into a
-                # broader overlapping rule (photo -> passport identity copy).
-                break
-            words = _WORDS.search(line)
-            pages = _PAGES.search(line)
-            size = _SIZE.search(line)
-            item = DocumentItem(
-                name=name,
-                purpose=purpose,
-                owner=owner,
-                format_notes=", ".join(sorted(set(_FORMAT.findall(line)))) or "",
-                max_pages=int(pages.group(1)) if pages else None,
-                max_file_size_mb=float(size.group(1)) if size else None,
-                word_limit=int(words.group(1) or words.group(2)) if words else None,
-                prompt_text=line.strip()[:280] if purpose == DocumentPurpose.SCHOLARSHIP else None,
-                source_url=url,
-                claim_ids=[url],
-                scope=page_scope,
-                **flags,
+    original_scope = builder.meta.get("scope")
+    try:
+        for line, listed, context in _document_statements(text, document):
+            local_scope = (
+                replace(page_scope, population=read_scope(context).population)
+                if isinstance(page_scope, ClaimScope)
+                else page_scope
             )
-            claim = builder.add(ClaimType.REQUIRED_DOCUMENT, name, line, confidence=0.75)
-            if claim is None:
+            builder.meta["scope"] = local_scope
+            low = line.lower().strip()
+            languages = _translation_exception(line)
+            if languages is not None:
+                name = "Translation of application documents"
+                identity = name + ":" + ",".join(languages)
+                if identity not in seen:
+                    claim = builder.add(
+                        ClaimType.REQUIRED_DOCUMENT,
+                        {"document": name, "required_unless_language_in": languages},
+                        line,
+                        confidence=0.8,
+                    )
+                    if claim is not None:
+                        seen.add(identity)
+                        items.append(
+                            DocumentItem(
+                                name=f"Translation (if originals are not in {', '.join(languages)})",
+                                purpose=purpose,
+                                owner=DocumentOwner.APPLICANT,
+                                needs_translation=True,
+                                format_notes=line,
+                                source_url=url,
+                                claim_ids=[url],
+                                scope=local_scope,
+                            )
+                        )
                 continue
-            seen.add(name)
-            items.append(item)
-            if item.word_limit:
-                builder.add(
-                    ClaimType.ESSAY_PROMPT,
-                    {"document": name, "word_limit": item.word_limit},
-                    line,
-                    confidence=0.8,
+            # An unparsed condition must not become the generic, unconditional
+            # certified-English-translation rule below.
+            if "translation" in low and (
+                re.search(r"\b(?:if|unless|when|except)\b", low)
+                or not (_DOCUMENT_ACTION.search(line) or _REQUIRED_WORD.search(line))
+            ):
+                continue
+            if not _required_document_statement(line, listed):
+                continue
+            for needle, name, owner, flags in _DOC_RULES:
+                if needle not in low:
+                    continue
+                if name in seen:
+                    # A repeated specific document must not fall through into a
+                    # broader overlapping rule (photo -> passport identity copy).
+                    break
+                words = _WORDS.search(line)
+                pages = _PAGES.search(line)
+                size = _SIZE.search(line)
+                item = DocumentItem(
+                    name=name,
+                    purpose=purpose,
+                    owner=owner,
+                    format_notes=", ".join(sorted(set(_FORMAT.findall(line)))) or "",
+                    max_pages=int(pages.group(1)) if pages else None,
+                    max_file_size_mb=float(size.group(1)) if size else None,
+                    word_limit=int(words.group(1) or words.group(2)) if words else None,
+                    prompt_text=line.strip()[:280]
+                    if purpose == DocumentPurpose.SCHOLARSHIP
+                    else None,
+                    source_url=url,
+                    claim_ids=[url],
+                    scope=local_scope,
+                    **flags,
                 )
-            if owner == DocumentOwner.RECOMMENDER:
-                builder.add(
-                    ClaimType.RECOMMENDATION_REQUIREMENT,
-                    name,
-                    line,
-                    confidence=0.75,
-                )
-            break
+                claim = builder.add(ClaimType.REQUIRED_DOCUMENT, name, line, confidence=0.75)
+                if claim is None:
+                    continue
+                seen.add(name)
+                items.append(item)
+                if item.word_limit:
+                    builder.add(
+                        ClaimType.ESSAY_PROMPT,
+                        {"document": name, "word_limit": item.word_limit},
+                        line,
+                        confidence=0.8,
+                    )
+                if owner == DocumentOwner.RECOMMENDER:
+                    builder.add(
+                        ClaimType.RECOMMENDATION_REQUIREMENT,
+                        _referee_conditions(name, line),
+                        line,
+                        confidence=0.75,
+                    )
+                break
+    finally:
+        builder.meta["scope"] = original_scope
+    if document is not None:
+        items.extend(read_supplemental_tables(document, builder, purpose))
     before_forms = len(builder.claims)
     if document is None or not document.blocks:
         # Fetcher also accepts plain text. With no structural blocks, preserve

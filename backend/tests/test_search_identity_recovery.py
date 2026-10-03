@@ -4,14 +4,15 @@ from pathlib import Path
 
 import pytest
 
+from app.adapters.discovery import live_discovery
 from app.adapters.discovery.live_discovery import DiscoveryTrace, LiveDiscoveryAdapter
 from app.adapters.fetching import Fetcher
 from app.adapters.search.retrieval import RankedCandidate
 from tests.test_live_discovery import StubSite, program_html
 
 
-async def recover(tmp_path, profile, urls, bodies, existing=()):
-    profile.context.intended_fields = ["computer science"]
+async def recover(tmp_path, profile, urls, bodies, existing=(), fields=None):
+    profile.context.intended_fields = fields or ["computer science"]
     site = StubSite(dict(zip(urls, bodies, strict=True)))
     pages = list(existing)
     trace = DiscoveryTrace(institution="U", domain="uni.edu")
@@ -130,3 +131,53 @@ async def test_a_subject_page_without_a_degree_is_not_confirmed(tmp_path, profil
         tmp_path, profile, ["https://uni.edu/cs"], ["<h1>Computer Science</h1><p>Courses.</p>"]
     )
     assert pages == []
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("enabled", [False, True])
+async def test_exact_page_can_reserve_remaining_reads_for_verification(
+    tmp_path, profile, monkeypatch, enabled
+):
+    monkeypatch.setattr(live_discovery, "FINISH_EXACT_SINGLE_FIELD", enabled)
+    urls = ["https://uni.edu/bsc/cs", "https://uni.edu/archive.pdf"]
+    pages, _, requested = await recover(
+        tmp_path, profile, urls, [program_html(), "<h1>Old regulations</h1>"]
+    )
+    assert pages == [urls[0]]
+    assert requested == (urls[:1] if enabled else urls)
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "first_body",
+    [
+        None,
+        "<h1>Computer Science</h1><p>Courses.</p>",
+        program_html("MSc Computer Science"),
+        program_html("BSc Mathematical and Computer Sciences"),
+        "<h1>Degree programmes</h1><p>Bachelor of Science in Computer Science.</p>",
+    ],
+)
+async def test_unresolved_or_listing_identity_keeps_searching(
+    tmp_path, profile, monkeypatch, first_body
+):
+    monkeypatch.setattr(live_discovery, "FINISH_EXACT_SINGLE_FIELD", True)
+    urls = ["https://uni.edu/lead", "https://uni.edu/bsc/cs"]
+    pages, _, requested = await recover(tmp_path, profile, urls, [first_body, program_html()])
+    assert urls[1] in pages
+    assert requested == urls
+
+
+@pytest.mark.asyncio
+async def test_early_completion_cannot_drop_another_requested_field(tmp_path, profile, monkeypatch):
+    monkeypatch.setattr(live_discovery, "FINISH_EXACT_SINGLE_FIELD", True)
+    urls = ["https://uni.edu/bsc/cs", "https://uni.edu/bsc/physics"]
+    pages, _, requested = await recover(
+        tmp_path,
+        profile,
+        urls,
+        [program_html(), program_html("BSc Physics")],
+        fields=["computer science", "physics"],
+    )
+    assert requested == urls
+    assert pages == urls

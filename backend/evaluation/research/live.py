@@ -58,6 +58,7 @@ HELDOUT = {
 #: live with them is what lets a scholarship or document claim land on its
 #: certified key; without them every such claim stays ``unmapped.*``.
 REVIEWED_BINDINGS = Path(__file__).parent / "data" / "identity_bindings.reviewed.json"
+CURRENT_BINDINGS = Path(__file__).parent / "data" / "identity_bindings.2026-10-03.supplemental.json"
 
 
 async def _jev_shadow(case_id: str, queued: list[str], profile: Any) -> None:
@@ -112,7 +113,7 @@ async def capture_one(
 
     predictions: list[Prediction] = []
     raw_claims: list[dict[str, Any]] = []
-    identities = IdentityMap.model_validate_json(REVIEWED_BINDINGS.read_text(encoding="utf-8"))
+    identities = IdentityMap.model_validate_json(CURRENT_BINDINGS.read_text(encoding="utf-8"))
     started = time.monotonic()
     observation = Observation(
         case_id=case_id,
@@ -333,6 +334,12 @@ def main() -> None:
     parser.add_argument("--live", action="store_true", required=True)
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--case", choices=[*COHORT, *HELDOUT])
+    parser.add_argument("--finish-exact-single-field", action="store_true")
+    parser.add_argument(
+        "--admission-obligations",
+        action=argparse.BooleanOptionalAction,
+        default=live_discovery.ADMISSION_OBLIGATIONS,
+    )
     parser.add_argument("--seconds-per-case", type=int, default=120)
     parser.add_argument("--max-pages", type=int, default=40)
     parser.add_argument(
@@ -398,6 +405,8 @@ def main() -> None:
     search_provider = settings.search_provider
     print(f"search provider: {search_provider}", flush=True)
     if args.child:
+        live_discovery.FINISH_EXACT_SINGLE_FIELD = args.finish_exact_single_field
+        live_discovery.ADMISSION_OBLIGATIONS = args.admission_obligations
         web_scholarships.SEARCH_FUNDING_FALLBACK = args.search_funding_fallback
         web_scholarships.TARGET_AWARD_SEARCH = args.target_award_search
         live_discovery.RECOVER_SEARCH_CANDIDATES = args.recover_search_candidates
@@ -458,6 +467,14 @@ def main() -> None:
                         "evaluation.research.live",
                         "--live",
                         "--child",
+                        *(
+                            ["--finish-exact-single-field"]
+                            if args.finish_exact_single_field
+                            else []
+                        ),
+                        "--admission-obligations"
+                        if args.admission_obligations
+                        else "--no-admission-obligations",
                         "--case",
                         case_id,
                         "--out",
@@ -522,10 +539,16 @@ def main() -> None:
                 "reject_archive_hosts": args.reject_archive_hosts,
                 "admission_lexicon": args.admission_lexicon,
                 "navigation_slot": args.navigation_slot,
+                "admission_obligations": args.admission_obligations,
+                "finish_exact_single_field": args.finish_exact_single_field,
                 "browser_enabled": False,
                 "cohort": list(COHORT),
                 "scope": "current production pipeline; HTTP-only bounded cold run",
                 "rank_stage": "programme confirmation queue before catalogue walking",
+                "identity_bindings_file": CURRENT_BINDINGS.name,
+                "identity_bindings_sha256": hashlib.sha256(
+                    CURRENT_BINDINGS.read_bytes()
+                ).hexdigest(),
                 "harness_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
                 "mapping_sha256": hashlib.sha256(
                     Path(__file__).with_name("mapping.py").read_bytes()

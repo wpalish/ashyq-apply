@@ -1,0 +1,150 @@
+{
+  "experiment": "ER-10 real-source offline durability",
+  "baseline_commit": "8f866de",
+  "candidate_base_commit": "8f866de8f7c74f7a3701618ca99e3c0fc3d5c301",
+  "candidate_diff_sha256": "372a72de872d63e8036186b2599ef5da65e51d4a64af95a53b4142173f1e9fe2",
+  "network_calls": 0,
+  "limitations": [
+    "Injected cost failure, not a new live benchmark.",
+    "Programme URL comes from the recorded discovery run, not gold.",
+    "No full-corpus recall improvement measured."
+  ],
+  "before": {
+    "reads": [
+      {
+        "url": "https://www.rug.nl/bachelors/computing-science",
+        "outcome": "cached",
+        "body_sha256": "d1b583923fb598a32d015c209dcc5f24e19be55592ce770244b75ed4c780ef85"
+      }
+    ],
+    "rows": 0,
+    "claims": [],
+    "claims_recorded": 0,
+    "programs_verified": 0,
+    "unresolved": []
+  },
+  "after": {
+    "reads": [
+      {
+        "url": "https://www.rug.nl/bachelors/computing-science",
+        "outcome": "cached",
+        "body_sha256": "d1b583923fb598a32d015c209dcc5f24e19be55592ce770244b75ed4c780ef85"
+      }
+    ],
+    "rows": 1,
+    "claims": [
+      {
+        "claim_type": "program_exists",
+        "normalized_value": {
+          "program": "Computing Science",
+          "degree": "bachelor",
+          "language": "english",
+          "matched_because": "page subject 'Computing Science' is a narrower name for the same subject"
+        },
+        "original_text_excerpt": "Computing Science\n\nCourse type\n\nBachelor\n\nDuration\n\n36 months (180 EC)\n\nCroho code\n\n56978\n\nLanguage of instruction\n\nEnglish",
+        "source_url": "https://www.rug.nl/bachelors/computing-science/",
+        "page_title": "Computing Science | Bachelor's degree programmes | University of Groningen",
+        "relevant_section": "Programme identity",
+        "official_domain": true,
+        "program": "Computing Science",
+        "subject_key": null,
+        "intake": "fall 2027",
+        "academic_year": "2026/27",
+        "accessed_at": "2026-10-02T16:04:26.195708Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": null,
+          "academic_year": null,
+          "population": null,
+          "nationality": null,
+          "residency": null,
+          "qualification": "VWO"
+        },
+        "source_specificity": "program_intake",
+        "confidence": 0.9,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": ""
+      },
+      {
+        "claim_type": "admission_deadline",
+        "normalized_value": "2027-05-01",
+        "original_text_excerpt": "Please go to this website for more information. Application deadlines Type of student Deadline Start course Dutch students 01 May 2027 01 September 2027 EU/EEA students 01 May 2027 01 September 2027 non-EU/EEA students 01 May 2027 01 September 2027 Please note: for your application in Studielink, please choose the option without the 'Numerus fixus progra",
+        "source_url": "https://www.rug.nl/bachelors/computing-science/",
+        "page_title": "Computing Science | Bachelor's degree programmes | University of Groningen",
+        "relevant_section": "",
+        "official_domain": true,
+        "program": "Computing Science",
+        "subject_key": "EU/EEA",
+        "intake": "fall 2027",
+        "academic_year": "2026/27",
+        "accessed_at": "2026-10-02T16:04:26.195708Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": "Fall 2027",
+          "academic_year": null,
+          "population": "EU/EEA",
+          "nationality": null,
+          "residency": null,
+          "qualification": "VWO"
+        },
+        "source_specificity": "program_intake",
+        "confidence": 0.8,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": "timezone: not stated on page"
+      },
+      {
+        "claim_type": "admission_deadline",
+        "normalized_value": "2027-05-01",
+        "original_text_excerpt": "on. Application deadlines Type of student Deadline Start course Dutch students 01 May 2027 01 September 2027 EU/EEA students 01 May 2027 01 September 2027 non-EU/EEA students 01 May 2027 01 September 2027 Please note: for your application in Studielink, please choose the option without the 'Numerus fixus programme' label. Admission requirements Specific requi",
+        "source_url": "https://www.rug.nl/bachelors/computing-science/",
+        "page_title": "Computing Science | Bachelor's degree programmes | University of Groningen",
+        "relevant_section": "",
+        "official_domain": true,
+        "program": "Computing Science",
+        "subject_key": "non-EU/EEA",
+        "intake": "fall 2027",
+        "academic_year": "2026/27",
+        "accessed_at": "2026-10-02T16:04:26.195708Z",
+        "scope": {
+          "university": null,
+          "faculty": null,
+          "programme": null,
+          "degree": "bachelor",
+          "intake": "Fall 2027",
+          "academic_year": null,
+          "population": "non-EU/EEA",
+          "nationality": null,
+          "residency": null,
+          "qualification": "VWO"
+        },
+        "source_specificity": "program_intake",
+        "confidence": 0.8,
+        "status": "VERIFIED_CURRENT",
+        "extraction_method": "html_rule",
+        "notes": "timezone: not stated on page"
+      }
+    ],
+    "claims_recorded": 3,
+    "programs_verified": 0,
+    "unresolved": [
+      {
+        "topic": "research incomplete",
+        "question": "What remains to be verified for this programme?",
+        "why_it_matters": "Requirements were saved, but costs or government-source checks are still incomplete.",
+        "university": "University of Groningen",
+        "program": "Computing Science",
+        "suggested_contact": null,
+        "blocking": true
+      }
+    ]
+  },
+  "script_sha256": "186681411536ee2d43bd2f59072d603da05e6ca66cf7df7c17a1fe5289746ee9"
+}

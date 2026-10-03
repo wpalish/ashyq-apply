@@ -1,0 +1,594 @@
+[
+  {
+    "case_id": "groningen",
+    "key": "deadline",
+    "url": "https://www.rug.nl/bachelors/computing-science/?lang=en",
+    "verdict": "recovered",
+    "detail": "[intake_specific_program]",
+    "context": ""
+  },
+  {
+    "case_id": "groningen",
+    "key": "tuition",
+    "url": "https://www.rug.nl/bachelors/computing-science/?lang=en",
+    "verdict": "value_missing",
+    "detail": "[intake_specific_program] the quoted words are in our text; 4 claims came out, none this one: deadline=2027-05-01, deadline=2027-05-01, programme.exists=True, programme.language=English (the certified value is null)",
+    "context": "the Admission Board Bachelor programmes. Please go to this website for more information. Application deadlines Type of student Deadline Start course Dutch students 01 May 2027 01 September 2027 EU/EEA students 01 May 2027 01 September 2027 non-EU/EEA students 01 May 2027 01 September 2027 Please note: for your application in Studielink, please choose the option without the 'Numerus fixus programme' label. Admission requirements Specific requirements More information previous "
+  },
+  {
+    "case_id": "groningen",
+    "key": "programme.exists",
+    "url": "https://www.rug.nl/bachelors/computing-science/?lang=en",
+    "verdict": "recovered",
+    "detail": "[intake_specific_program]",
+    "context": ""
+  },
+  {
+    "case_id": "groningen",
+    "key": "documents.admission.secondary_diploma.completed",
+    "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+    "verdict": "recovered",
+    "detail": "[documents]",
+    "context": ""
+  },
+  {
+    "case_id": "groningen",
+    "key": "documents.admission.secondary_diploma.not_completed",
+    "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+    "verdict": "recovered",
+    "detail": "[documents]",
+    "context": ""
+  },
+  {
+    "case_id": "groningen",
+    "key": "documents.admission.transcript.completed",
+    "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+    "verdict": "recovered",
+    "detail": "[documents]",
+    "context": ""
+  },
+  {
+    "case_id": "groningen",
+    "key": "documents.admission.transcript.not_completed",
+    "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+    "verdict": "recovered",
+    "detail": "[documents]",
+    "context": ""
+  },
+  {
+    "case_id": "groningen",
+    "key": "documents.admission.translation.required_unless_language_in",
+    "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+    "verdict": "value_missing",
+    "detail": "[documents] the quoted words are in our text; 37 claims came out, none this one: unmapped.required_document={'document': 'Translation of application documents', 'requir, unmapped.required_document=Academic reference, unmapped.recommendation_requirement=Academic reference, documents.admission.secondary_diploma.required=True, documents.admission.transcript.required=True, documents.admission.secondary_diploma.completed=diploma",
+    "context": "uments should include, please check the Explanation application documents page. Faculty of Arts Required documents Important: If your documents are not in English, Dutch, French or German, you will need to upload the original documents and translations. Self-made translations are accepted for assessment purposes. If you have already started a programme of higher education, also provide the requested documents for this programme. Motivation and reference letters are not consid"
+  },
+  {
+    "case_id": "groningen",
+    "key": "documents.programme.course_descriptions.initial_upload",
+    "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+    "verdict": "text_missing",
+    "detail": "[documents] the quoted words are not in our text at all (25333 chars read)",
+    "context": ""
+  },
+  {
+    "case_id": "groningen",
+    "key": "documents.programme.course_descriptions.board_may_request",
+    "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+    "verdict": "text_missing",
+    "detail": "[documents] the quoted words are not in our text at all (25333 chars read)",
+    "context": ""
+  },
+  {
+    "case_id": "groningen",
+    "key": "country_credential.nis_grade12.level_equivalence",
+    "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-entry-requirements/bachelorlinkscountry/kazakhstan?lang=en",
+    "verdict": "not_measured",
+    "detail": "[program_detail] outside the requirements path this oracle runs (scholarship, document or unmapped key)",
+    "context": ""
+  },
+  {
+    "case_id": "groningen",
+    "key": "subjects.mathematics.required",
+    "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-entry-requirements/bachelorlinkscountry/kazakhstan?lang=en",
+    "verdict": "not_measured",
+    "detail": "[program_detail] outside the requirements path this oracle runs (scholarship, document or unmapped key)",
+    "context": ""
+  },
+  {
+    "case_id": "delft",
+    "key": "programme.exists",
+    "url": "https://ocw.tudelft.nl/programs/bachelor/computer-science-engineering/",
+    "verdict": "value_missing",
+    "detail": "[program_catalog] the quoted words are in our text; 0 claims came out, none this one: ",
+    "context": "Using social media to localise disasters, making friendly care-robots and recognising objects in images. In the Computer Science and Engineering (CSE) degree programme at TU Delft, you will learn the theory and practice of developing software and processing data for the intelligent systems of today and the future. The programme consists of a mixture "
+  },
+  {
+    "case_id": "aalto",
+    "key": "tuition",
+    "url": "https://www.aalto.fi/en/study-options/data-science-bachelor-of-science-and-master-of-science-technology",
+    "verdict": "fetch_failed",
+    "detail": "robots_disallowed \u2014 robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed",
+    "context": ""
+  },
+  {
+    "case_id": "aalto",
+    "key": "programme.exists",
+    "url": "https://www.aalto.fi/en/study-options/computer-engineering-bachelor-of-science-and-master-of-science-technology",
+    "verdict": "fetch_failed",
+    "detail": "robots_disallowed \u2014 robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed",
+    "context": ""
+  },
+  {
+    "case_id": "aalto",
+    "key": "programme.exists",
+    "url": "https://www.aalto.fi/fi/koulutustarjonta/tietotekniikka-tekniikan-kandidaatti-ja-diplomi-insinoori",
+    "verdict": "fetch_failed",
+    "detail": "robots_disallowed \u2014 robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed",
+    "context": ""
+  },
+  {
+    "case_id": "aalto",
+    "key": "programme.language",
+    "url": "https://www.aalto.fi/en/study-options/computer-engineering-bachelor-of-science-and-master-of-science-technology",
+    "verdict": "fetch_failed",
+    "detail": "robots_disallowed \u2014 robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed",
+    "context": ""
+  },
+  {
+    "case_id": "vienna",
+    "key": "deadline",
+    "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+    "verdict": "value_missing",
+    "detail": "[program_detail] the quoted words are in our text; 3 claims came out, none this one: deadline=2026-05-04, programme.exists=True, programme.language=German (the certified value is null)",
+    "context": "ents' Union fee (per semester) An entrance exam procedure is conducted in the bachelor's programme in Computer Science. You'll find a brief overview in the right info box \u2192 The entrance exam procedure Overview Application period 2 March to 4 May 2026 Written test 13 July 2026 on site in Vienna (no alternative dates) Test details With the free test literature and sample exercises you'll be well prepared for the test! Online-Self-Assessment (OSA) To the Online-Self-Assessment A"
+  },
+  {
+    "case_id": "vienna",
+    "key": "programme.exists",
+    "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+    "verdict": "recovered",
+    "detail": "[program_detail]",
+    "context": ""
+  },
+  {
+    "case_id": "vienna",
+    "key": "programme.language",
+    "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+    "verdict": "recovered",
+    "detail": "[program_detail]",
+    "context": ""
+  },
+  {
+    "case_id": "vienna",
+    "key": "german.application_minimum",
+    "url": "https://studieren.univie.ac.at/en/admission/german-language-proficiency/",
+    "verdict": "fetch_failed",
+    "detail": "http_error \u2014 HTTP 404",
+    "context": ""
+  },
+  {
+    "case_id": "vienna",
+    "key": "german.enrolment_minimum",
+    "url": "https://studieren.univie.ac.at/en/admission/german-language-proficiency/",
+    "verdict": "fetch_failed",
+    "detail": "http_error \u2014 HTTP 404",
+    "context": ""
+  },
+  {
+    "case_id": "warsaw",
+    "key": "programme.exists",
+    "url": "https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF/",
+    "verdict": "recovered",
+    "detail": "[intake_specific_program]",
+    "context": ""
+  },
+  {
+    "case_id": "warsaw",
+    "key": "programme.language",
+    "url": "https://informatorects.uw.edu.pl/en/programmes-all/IN/S1-INF/",
+    "verdict": "recovered",
+    "detail": "[intake_specific_program]",
+    "context": ""
+  },
+  {
+    "case_id": "ubc",
+    "key": "ielts.overall",
+    "url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/",
+    "verdict": "recovered",
+    "detail": "[intake_specific_program]",
+    "context": ""
+  },
+  {
+    "case_id": "ubc",
+    "key": "ielts.subscores",
+    "url": "https://you.ubc.ca/applying-ubc/requirements/english-language-competency/",
+    "verdict": "recovered",
+    "detail": "[intake_specific_program]",
+    "context": ""
+  },
+  {
+    "case_id": "ubc",
+    "key": "programme.exists",
+    "url": "https://you.ubc.ca/programs/computer-science-vancouver-bsc/",
+    "verdict": "recovered",
+    "detail": "[program_detail]",
+    "context": ""
+  },
+  {
+    "case_id": "toronto",
+    "key": "country_credential",
+    "url": "https://future.utoronto.ca/high-school-requirements-country?page=3",
+    "verdict": "fetch_failed",
+    "detail": "http_error \u2014 HTTP 403",
+    "context": ""
+  },
+  {
+    "case_id": "toronto",
+    "key": "intake",
+    "url": "https://web.cs.toronto.edu/bachelor-of-computer-science",
+    "verdict": "recovered",
+    "detail": "[intake_specific_program]",
+    "context": ""
+  },
+  {
+    "case_id": "toronto",
+    "key": "programme.exists",
+    "url": "https://future.utoronto.ca/program/computer-science",
+    "verdict": "fetch_failed",
+    "detail": "http_error \u2014 HTTP 403",
+    "context": ""
+  },
+  {
+    "case_id": "toronto",
+    "key": "documents.programme.supplemental_application.required",
+    "url": "https://future.utoronto.ca/program/computer-science",
+    "verdict": "fetch_failed",
+    "detail": "http_error \u2014 HTTP 403",
+    "context": ""
+  },
+  {
+    "case_id": "hku",
+    "key": "programme.exists",
+    "url": "https://admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science",
+    "verdict": "fetch_failed",
+    "detail": "robots_disallowed \u2014 robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed",
+    "context": ""
+  },
+  {
+    "case_id": "hku",
+    "key": "programme.faculty",
+    "url": "https://admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science",
+    "verdict": "fetch_failed",
+    "detail": "robots_disallowed \u2014 robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed",
+    "context": ""
+  },
+  {
+    "case_id": "hku",
+    "key": "scholarships.entrance.exists",
+    "url": "https://www.admissions.hku.hk/node/891",
+    "verdict": "fetch_failed",
+    "detail": "robots_disallowed \u2014 robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed",
+    "context": ""
+  },
+  {
+    "case_id": "hku",
+    "key": "scholarships.entrance.applicability.application_mode",
+    "url": "https://www.admissions.hku.hk/node/891",
+    "verdict": "fetch_failed",
+    "detail": "robots_disallowed \u2014 robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed",
+    "context": ""
+  },
+  {
+    "case_id": "hku",
+    "key": "scholarships.computing_data_science.exists",
+    "url": "https://www.admissions.hku.hk/fees-and-scholarships/scholarships/computing-and-data-science-entrance-scholarship",
+    "verdict": "fetch_failed",
+    "detail": "robots_disallowed \u2014 robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed",
+    "context": ""
+  },
+  {
+    "case_id": "hku",
+    "key": "scholarships.computing_data_science.amount",
+    "url": "https://www.admissions.hku.hk/fees-and-scholarships/scholarships/computing-and-data-science-entrance-scholarship",
+    "verdict": "fetch_failed",
+    "detail": "robots_disallowed \u2014 robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed",
+    "context": ""
+  },
+  {
+    "case_id": "hku",
+    "key": "scholarships.computing_data_science.applicability.international",
+    "url": "https://www.admissions.hku.hk/fees-and-scholarships/scholarships/computing-and-data-science-entrance-scholarship",
+    "verdict": "fetch_failed",
+    "detail": "robots_disallowed \u2014 robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed",
+    "context": ""
+  },
+  {
+    "case_id": "hku",
+    "key": "scholarships.computing_data_science.coverage.tuition",
+    "url": "https://www.admissions.hku.hk/fees-and-scholarships/scholarships/computing-and-data-science-entrance-scholarship",
+    "verdict": "fetch_failed",
+    "detail": "robots_disallowed \u2014 robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed",
+    "context": ""
+  },
+  {
+    "case_id": "ntu",
+    "key": "programme.exists",
+    "url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+    "verdict": "recovered",
+    "detail": "[program_detail]",
+    "context": ""
+  },
+  {
+    "case_id": "ntu",
+    "key": "scholarships.nanyang_global.exists",
+    "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+    "verdict": "recovered",
+    "detail": "[scholarship_award]",
+    "context": ""
+  },
+  {
+    "case_id": "ntu",
+    "key": "scholarships.nanyang_global.applicability.nationality",
+    "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+    "verdict": "recovered",
+    "detail": "[scholarship_award]",
+    "context": ""
+  },
+  {
+    "case_id": "ntu",
+    "key": "scholarships.nanyang_global.applicability.degree",
+    "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+    "verdict": "value_missing",
+    "detail": "[scholarship_award] the quoted words are in our text; 10 claims came out, none this one: scholarships.nanyang_global.exists=True, scholarships.nanyang_global.coverage.living={'currency': 'SGD', 'amount': 6500, 'period': 'academic_year, scholarships.nanyang_global.duration=normal_programme_duration, unmapped.scholarship_coverage={'conditions': ['The scholarship covers up to the normal pro, scholarships.nanyang_global.applicability.nationality=all, scholarships.nanyang_global.applicability.international=True",
+    "context": "Nanyang Global Scholarship Apply Now The Nanyang Global Scholarship is awarded to outstanding freshmen pursuing undergraduate programmes and recognizes students with outstanding academic results, demonstrate strong leadership abilities, and very good co-curricular records. Eligibility Benefits of award Terms & Conditions Application Procedures Select"
+  },
+  {
+    "case_id": "ntu",
+    "key": "scholarships.nanyang_global.applicability.application_mode",
+    "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+    "verdict": "value_missing",
+    "detail": "[scholarship_award] the quoted words are in our text; 10 claims came out, none this one: scholarships.nanyang_global.exists=True, scholarships.nanyang_global.coverage.living={'currency': 'SGD', 'amount': 6500, 'period': 'academic_year, scholarships.nanyang_global.duration=normal_programme_duration, unmapped.scholarship_coverage={'conditions': ['The scholarship covers up to the normal pro, scholarships.nanyang_global.applicability.nationality=all, scholarships.nanyang_global.applicability.international=True",
+    "context": "sfactory. If the scholarship holder decides to terminate the scholarship prematurely, a repayment will be imposed. Back to top Application Procedures Applicants are required to submit their application for admission before submitting their application for scholarship. Applicants with the following qualifications: Singapore-Cambridge GCE 'A' level Diploma awarded by a polytechnic in Singapore NUS High School Diploma IB Diploma The scholarship application form can be found at t"
+  },
+  {
+    "case_id": "ntu",
+    "key": "scholarships.nanyang_global.coverage.tuition",
+    "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+    "verdict": "value_missing",
+    "detail": "[scholarship_award] the quoted words are in our text; 10 claims came out, none this one: scholarships.nanyang_global.exists=True, scholarships.nanyang_global.coverage.living={'currency': 'SGD', 'amount': 6500, 'period': 'academic_year, scholarships.nanyang_global.duration=normal_programme_duration, unmapped.scholarship_coverage={'conditions': ['The scholarship covers up to the normal pro, scholarships.nanyang_global.applicability.nationality=all, scholarships.nanyang_global.applicability.international=True",
+    "context": "alities and potential. Back to top Benefits of award The scholarship covers up to the normal programme duration on condition that the scholarship holder maintain a record of good academic performance and exemplary conduct. Full coverage of subsidised tuition fees (after Tuition Grant). Living allowance of S$6,500 per academic year. Accommodation allowance of up to S$2,000 per academic year. (Applicable to scholarship holders who reside in NTU hostels only.) Travel grant of up"
+  },
+  {
+    "case_id": "ntu",
+    "key": "scholarships.nanyang_global.coverage.living",
+    "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+    "verdict": "recovered",
+    "detail": "[scholarship_award]",
+    "context": ""
+  },
+  {
+    "case_id": "ntu",
+    "key": "scholarships.nanyang_global.coverage.housing",
+    "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+    "verdict": "value_missing",
+    "detail": "[scholarship_award] the quoted words are in our text; 10 claims came out, none this one: scholarships.nanyang_global.exists=True, scholarships.nanyang_global.coverage.living={'currency': 'SGD', 'amount': 6500, 'period': 'academic_year, scholarships.nanyang_global.duration=normal_programme_duration, unmapped.scholarship_coverage={'conditions': ['The scholarship covers up to the normal pro, scholarships.nanyang_global.applicability.nationality=all, scholarships.nanyang_global.applicability.international=True",
+    "context": "Nanyang Global Scholarship Apply Now The Nanyang Global Scholarship is awarded to outstanding freshmen pursuing undergraduate programmes and recognizes students with outstanding academic results, demonstrate strong leadership abilities, and very good co-c"
+  },
+  {
+    "case_id": "ntu",
+    "key": "scholarships.nanyang_global.coverage.travel",
+    "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+    "verdict": "value_missing",
+    "detail": "[scholarship_award] the quoted words are in our text; 10 claims came out, none this one: scholarships.nanyang_global.exists=True, scholarships.nanyang_global.coverage.living={'currency': 'SGD', 'amount': 6500, 'period': 'academic_year, scholarships.nanyang_global.duration=normal_programme_duration, unmapped.scholarship_coverage={'conditions': ['The scholarship covers up to the normal pro, scholarships.nanyang_global.applicability.nationality=all, scholarships.nanyang_global.applicability.international=True",
+    "context": "Nanyang Global Scholarship Apply Now The Nanyang Global Scholarship is awarded to outstanding freshmen pursuing undergraduate programmes and recognizes students with outstanding academic results, demonstrate strong leadership abilities, and very good co-c"
+  },
+  {
+    "case_id": "ntu",
+    "key": "scholarships.nanyang_global.duration",
+    "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+    "verdict": "recovered",
+    "detail": "[scholarship_award]",
+    "context": ""
+  },
+  {
+    "case_id": "ntu",
+    "key": "scholarships.nanyang_global.renewal",
+    "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+    "verdict": "recovered",
+    "detail": "[scholarship_award]",
+    "context": ""
+  },
+  {
+    "case_id": "ntu",
+    "key": "scholarships.nanyang_global.bond",
+    "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+    "verdict": "recovered",
+    "detail": "[scholarship_award]",
+    "context": ""
+  },
+  {
+    "case_id": "ntu",
+    "key": "documents.scholarship.nanyang_global.essay.required",
+    "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+    "verdict": "value_missing",
+    "detail": "[scholarship_award] the quoted words are in our text; 10 claims came out, none this one: scholarships.nanyang_global.exists=True, scholarships.nanyang_global.coverage.living={'currency': 'SGD', 'amount': 6500, 'period': 'academic_year, scholarships.nanyang_global.duration=normal_programme_duration, unmapped.scholarship_coverage={'conditions': ['The scholarship covers up to the normal pro, scholarships.nanyang_global.applicability.nationality=all, scholarships.nanyang_global.applicability.international=True",
+    "context": "in with the application number assigned to you. If you have reserved an undergraduate degree programme in NTU, please login here to access the scholarship application form . As part of completing the form, a Personal Essay of not more than 250 words is required. The scholarship application form includes 1 compulsory topic for you to write on. Applicants are required to submit the following after completing your application form: upload a recent passport-size photo (digital im"
+  },
+  {
+    "case_id": "ntu",
+    "key": "documents.scholarship.nanyang_global.essay.maximum_words",
+    "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+    "verdict": "value_missing",
+    "detail": "[scholarship_award] the quoted words are in our text; 10 claims came out, none this one: scholarships.nanyang_global.exists=True, scholarships.nanyang_global.coverage.living={'currency': 'SGD', 'amount': 6500, 'period': 'academic_year, scholarships.nanyang_global.duration=normal_programme_duration, unmapped.scholarship_coverage={'conditions': ['The scholarship covers up to the normal pro, scholarships.nanyang_global.applicability.nationality=all, scholarships.nanyang_global.applicability.international=True",
+    "context": "in with the application number assigned to you. If you have reserved an undergraduate degree programme in NTU, please login here to access the scholarship application form . As part of completing the form, a Personal Essay of not more than 250 words is required. The scholarship application form includes 1 compulsory topic for you to write on. Applicants are required to submit the following after completing your application form: upload a recent passport-size photo (digital im"
+  },
+  {
+    "case_id": "ntu",
+    "key": "documents.scholarship.nanyang_global.referee.required",
+    "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+    "verdict": "value_missing",
+    "detail": "[scholarship_award] the quoted words are in our text; 10 claims came out, none this one: scholarships.nanyang_global.exists=True, scholarships.nanyang_global.coverage.living={'currency': 'SGD', 'amount': 6500, 'period': 'academic_year, scholarships.nanyang_global.duration=normal_programme_duration, unmapped.scholarship_coverage={'conditions': ['The scholarship covers up to the normal pro, scholarships.nanyang_global.applicability.nationality=all, scholarships.nanyang_global.applicability.international=True",
+    "context": "for you to write on. Applicants are required to submit the following after completing your application form: upload a recent passport-size photo (digital image). submit a referee's appraisal online. The appraisal is to be completed by your school teacher, who must not be your family or relative. After you have submitted your scholarship application, you will be provided with a URL to be forwarded to your school teacher. When you are passing the link to your teacher, please in"
+  },
+  {
+    "case_id": "ntu",
+    "key": "documents.scholarship.nanyang_global.referee.role",
+    "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+    "verdict": "value_missing",
+    "detail": "[scholarship_award] the quoted words are in our text; 10 claims came out, none this one: scholarships.nanyang_global.exists=True, scholarships.nanyang_global.coverage.living={'currency': 'SGD', 'amount': 6500, 'period': 'academic_year, scholarships.nanyang_global.duration=normal_programme_duration, unmapped.scholarship_coverage={'conditions': ['The scholarship covers up to the normal pro, scholarships.nanyang_global.applicability.nationality=all, scholarships.nanyang_global.applicability.international=True",
+    "context": "for you to write on. Applicants are required to submit the following after completing your application form: upload a recent passport-size photo (digital image). submit a referee's appraisal online. The appraisal is to be completed by your school teacher, who must not be your family or relative. After you have submitted your scholarship application, you will be provided with a URL to be forwarded to your school teacher. When you are passing the link to your teacher, please in"
+  },
+  {
+    "case_id": "ntu",
+    "key": "documents.scholarship.nanyang_global.referee.family_or_relative_allowed",
+    "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+    "verdict": "value_missing",
+    "detail": "[scholarship_award] the quoted words are in our text; 10 claims came out, none this one: scholarships.nanyang_global.exists=True, scholarships.nanyang_global.coverage.living={'currency': 'SGD', 'amount': 6500, 'period': 'academic_year, scholarships.nanyang_global.duration=normal_programme_duration, unmapped.scholarship_coverage={'conditions': ['The scholarship covers up to the normal pro, scholarships.nanyang_global.applicability.nationality=all, scholarships.nanyang_global.applicability.international=True",
+    "context": "for you to write on. Applicants are required to submit the following after completing your application form: upload a recent passport-size photo (digital image). submit a referee's appraisal online. The appraisal is to be completed by your school teacher, who must not be your family or relative. After you have submitted your scholarship application, you will be provided with a URL to be forwarded to your school teacher. When you are passing the link to your teacher, please in"
+  },
+  {
+    "case_id": "ntu",
+    "key": "country_credential.nis_grade12.minimum_grades",
+    "url": "https://www.ntu.edu.sg/admissions/undergraduate/admission-guide/international-qualifications/other-international-qualifications",
+    "verdict": "fetch_failed",
+    "detail": "http_error \u2014 HTTP 404",
+    "context": ""
+  },
+  {
+    "case_id": "ntu",
+    "key": "country_credential.high_school_certificate.additional_qualification_required",
+    "url": "https://www.ntu.edu.sg/admissions/undergraduate/admission-guide/international-qualifications/other-international-qualifications",
+    "verdict": "fetch_failed",
+    "detail": "http_error \u2014 HTTP 404",
+    "context": ""
+  },
+  {
+    "case_id": "ntu",
+    "key": "english_evidence.sat.minimum",
+    "url": "https://www.ntu.edu.sg/admissions/undergraduate/admission-guide/international-qualifications/other-international-qualifications",
+    "verdict": "fetch_failed",
+    "detail": "http_error \u2014 HTTP 404",
+    "context": ""
+  },
+  {
+    "case_id": "ntu",
+    "key": "english_evidence.ielts.minimum",
+    "url": "https://www.ntu.edu.sg/admissions/undergraduate/admission-guide/international-qualifications/other-international-qualifications",
+    "verdict": "fetch_failed",
+    "detail": "http_error \u2014 HTTP 404",
+    "context": ""
+  },
+  {
+    "case_id": "kaist",
+    "key": "programme.exists",
+    "url": "https://cs.kaist.ac.kr/content?menu=188",
+    "verdict": "value_missing",
+    "detail": "[unknown] the quoted words are in our text; 0 claims came out, none this one: ",
+    "context": "\ucef4\ud4e8\ud305 \u318d\uc5f0\uad6c\uc2e4/\uc13c\ud130 \u318d\u318d \uc804\uccb4 \uc5f0\uad6c\uc2e4 \u318d\u318d \uc804\uccb4 \uc5f0\uad6c\uc13c\ud130 \u318d\uc5f0\uad6c\ub17c\ubb38 \u318d\u318d \ud559\uc220\ub17c\ubb38 \u318d\u318d \ud14c\ud06c\ub2c8\uceec\ub9ac\ud3ec\ud2b8 \u318d\u318d \ud559\ubd80 \uc6b0\uc218\ub17c\ubb38\uc0c1 \u318d\uc0b0\ud559\ud611\ub825\ud504\ub85c\uadf8\ub7a8 \u318d\u318d \ud68c\uc6d0\uc0ac \uac00\uc785 \uc548\ub0b4 \u318d\u318d \ud68c\uc6d0\uc0ac \uc18c\uac1c \uad50\uc721 \u318d\uc785\ud559 \u318d\u318d \ub300\ud559\uc6d0 \uc785\ud559 \u318d\u318d \ud559\ubd80 \uc785\ud559 \u318d\u318d \uc7a5\ud559\uae08 \u318d\uad50\uc721\ubd84\uc57c \u318d\u318d \uc804\uc0b0\uc774\ub860 \u318d\u318d \uc2dc\uc2a4\ud15c-\ub124\ud2b8\uc6cc\ud06c \u318d\u318d \uc18c\ud504\ud2b8\uc6e8\uc5b4\ub514\uc790\uc778 \u318d\u318d \uc2dc\ud050\uc5b4\ucef4\ud4e8\ud305 \u318d\u318d \ube44\uc8fc\uc5bc\ucef4\ud4e8\ud305 \u318d\u318d \uc778\uacf5\uc9c0\ub2a5\u00b7\uc815\ubcf4\uc11c\ube44\uc2a4 \u318d\u318d \uc18c\uc15c\ucef4\ud4e8\ud305 \u318d\u318d \uc778\ud130\ub799\ud2f0\ube0c\ucef4\ud4e8\ud305 \u318d\uad50\uc721\ud504\ub85c\uadf8\ub7a8 \u318d\u318d \ud559\ubd80\ud504\ub85c\uadf8\ub7a8 \u318d\u318d\u318d AI\ubd84\uc57c \uc911\uc810\uc774\uc218 \u318d\u318d\u318d \uc815\ubcf4\ubcf4\ud638 \uc911\uc810\uc774\uc218 \u318d\u318d\u318d \uc778\ud134\uc2ed\ud504\ub85c\uadf8\ub7a8 \u318d\u318d \uad6d\uc81c\ud611\ub825\ud504\ub85c\uadf8\ub7a8 \u318d\u318d\u318d DTU/TUB\ud504\ub85c\uadf8\ub7a8 \u318d\uad50\uacfc\uacfc\uc815 \u318d\u318d \ud559\ubd80\uacfc\uc815 \u318d\u318d\u318d \ud559\ubd80 \ub85c\ub4dc\ub9f5 \u318d\u318d \ub300\ud559\uc6d0\uacfc\uc815 \u318d\u318d \ud559\uc0ac\uc774\uc218\uc694\uac74 \u318d\u318d \ub300\ud559\uc6d0\uc774\uc218\uc694\uac74 \u318d\u318d\u318d \ubc15\uc0ac\uc790\uaca9\uc2dc\ud5d8 \u318d\ubd80\uac00\uc815\ubcf4 \u318d\u318d \ud559\ubd80\uc0dd\ud65c \u318d\u318d \ud559\ubd80\ub3d9\uc544\ub9ac \u318d\u318d \uc5f0\uad6c\uc2e4\uc778\ud134\uc2ed \u318d\u318d \uc5f0\uad6c\uc2e4 \ubc30\uc815 \u318d\u318d \ud559\uc0ac \uce98\ub9b0\ub354 \u318d\u318d \uc778\ud134\uc2ed \u00b7 \ucc44\uc6a9\uc815\ubcf4 AI is CS \u318dAI \ud558\uc774\ub77c\uc774\ud2b8 \u318d\u318d AI \ub9ac\uc11c\uce58 \ud558\uc774\ub77c"
+  },
+  {
+    "case_id": "kaist",
+    "key": "programme.admission_route",
+    "url": "https://cs.kaist.ac.kr/content?menu=40",
+    "verdict": "recovered",
+    "detail": "[unknown]",
+    "context": ""
+  },
+  {
+    "case_id": "kaist",
+    "key": "scholarships.kaist.exists",
+    "url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/",
+    "verdict": "fetch_failed",
+    "detail": "robots_disallowed \u2014 robots.txt unreachable (ConnectTimeout); RFC 9309 treats the whole site as disallowed",
+    "context": ""
+  },
+  {
+    "case_id": "kaist",
+    "key": "scholarships.kaist.applicability.international",
+    "url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/",
+    "verdict": "fetch_failed",
+    "detail": "robots_disallowed \u2014 robots.txt unreachable (ConnectTimeout); RFC 9309 treats the whole site as disallowed",
+    "context": ""
+  },
+  {
+    "case_id": "kaist",
+    "key": "scholarships.kaist.applicability.offer",
+    "url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/",
+    "verdict": "fetch_failed",
+    "detail": "robots_disallowed \u2014 robots.txt unreachable (ConnectTimeout); RFC 9309 treats the whole site as disallowed",
+    "context": ""
+  },
+  {
+    "case_id": "kaist",
+    "key": "scholarships.kaist.applicability.application_mode",
+    "url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/",
+    "verdict": "fetch_failed",
+    "detail": "robots_disallowed \u2014 robots.txt unreachable (ConnectTimeout); RFC 9309 treats the whole site as disallowed",
+    "context": ""
+  },
+  {
+    "case_id": "kaist",
+    "key": "scholarships.kaist.coverage.tuition",
+    "url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/",
+    "verdict": "fetch_failed",
+    "detail": "robots_disallowed \u2014 robots.txt unreachable (ConnectTimeout); RFC 9309 treats the whole site as disallowed",
+    "context": ""
+  },
+  {
+    "case_id": "kaist",
+    "key": "scholarships.kaist.coverage.living",
+    "url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/",
+    "verdict": "fetch_failed",
+    "detail": "robots_disallowed \u2014 robots.txt unreachable (ConnectTimeout); RFC 9309 treats the whole site as disallowed",
+    "context": ""
+  },
+  {
+    "case_id": "kaist",
+    "key": "scholarships.kaist.coverage.insurance",
+    "url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/",
+    "verdict": "fetch_failed",
+    "detail": "robots_disallowed \u2014 robots.txt unreachable (ConnectTimeout); RFC 9309 treats the whole site as disallowed",
+    "context": ""
+  },
+  {
+    "case_id": "kaist",
+    "key": "scholarships.kaist.renewal",
+    "url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/",
+    "verdict": "fetch_failed",
+    "detail": "robots_disallowed \u2014 robots.txt unreachable (ConnectTimeout); RFC 9309 treats the whole site as disallowed",
+    "context": ""
+  },
+  {
+    "case_id": "kaist",
+    "key": "scholarships.kaist.applicability.intake",
+    "url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/",
+    "verdict": "fetch_failed",
+    "detail": "robots_disallowed \u2014 robots.txt unreachable (ConnectTimeout); RFC 9309 treats the whole site as disallowed",
+    "context": ""
+  },
+  {
+    "case_id": "kaist",
+    "key": "scholarships.kaist.coverage.housing",
+    "url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/",
+    "verdict": "fetch_failed",
+    "detail": "robots_disallowed \u2014 robots.txt unreachable (ConnectTimeout); RFC 9309 treats the whole site as disallowed",
+    "context": ""
+  },
+  {
+    "case_id": "kaist",
+    "key": "scholarships.kaist.coverage.travel",
+    "url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/",
+    "verdict": "fetch_failed",
+    "detail": "robots_disallowed \u2014 robots.txt unreachable (ConnectTimeout); RFC 9309 treats the whole site as disallowed",
+    "context": ""
+  },
+  {
+    "case_id": "kaist",
+    "key": "scholarships.kaist.coverage.fees",
+    "url": "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist/",
+    "verdict": "fetch_failed",
+    "detail": "robots_disallowed \u2014 robots.txt unreachable (ConnectTimeout); RFC 9309 treats the whole site as disallowed",
+    "context": ""
+  }
+]

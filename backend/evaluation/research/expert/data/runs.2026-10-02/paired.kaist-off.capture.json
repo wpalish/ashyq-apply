@@ -1,0 +1,149 @@
+{
+  "schema_version": "1",
+  "pipeline_sha": "a64492ff72fdb4f57713aeec6202978b9b610621",
+  "captured_at": "20261002T154010Z",
+  "mode": "live",
+  "config": {
+    "search_provider": "exa_mcp",
+    "seconds_per_case": 300,
+    "max_fetcher_calls_per_case": 60,
+    "page_budget_counts": "network reads; cache hits are free (since 2026-09-23)",
+    "search_before_navigation": false,
+    "recover_search_candidates": true,
+    "search_funding_fallback": true,
+    "target_award_search": true,
+    "skip_refused_search_hosts": false,
+    "reject_archive_hosts": false,
+    "admission_lexicon": false,
+    "navigation_slot": false,
+    "admission_obligations": false,
+    "browser_enabled": false,
+    "cohort": [
+      "groningen",
+      "delft",
+      "aalto",
+      "vienna",
+      "warsaw",
+      "ubc",
+      "toronto",
+      "hku",
+      "ntu",
+      "kaist"
+    ],
+    "scope": "current production pipeline; HTTP-only bounded cold run",
+    "rank_stage": "programme confirmation queue before catalogue walking",
+    "harness_sha256": "20713b664ef23b7324823ce39dc0f504fdab03a216cacc25354ec4f88f436e00",
+    "mapping_sha256": "06e9d005d7f9093ca9f33c05bcb8fe1582b14e349adbb3720785b0fd239b082a"
+  },
+  "observations": [
+    {
+      "case_id": "kaist",
+      "programme_urls": [],
+      "ranked_urls": [
+        "https://cs.kaist.ac.kr/content?menu=318"
+      ],
+      "predictions": [
+        {
+          "key": "unmapped.interview_required",
+          "value": true,
+          "evidence": {
+            "url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+            "excerpt": "(KST) November 10, 2026 ~ January 14, 2027, 6:00 PM (KST) Recommendation Letter Submission October 29, 2026, 6:00 PM (KST) January 21, 2027, 6:00 PM (KST) Interview (Online, if required)* December 22, 2026 March 3, 2027 Admission Announcement January 7, 2027, 10:00 AM (KST) March 25, 2027, 10:00 AM (KST) Reply your Admission Acceptance Be",
+            "scope": {
+              "university": "KAIST",
+              "programme": "computer science (bachelor)",
+              "degree": null,
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-02",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.credential_evaluation_required",
+          "value": true,
+          "evidence": {
+            "url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+            "excerpt": "26 ~ January 14, 2027, 6:00 PM (KST) Recommendation Letter Submission October 29, 2026, 6:00 PM (KST) January 21, 2027, 6:00 PM (KST) Interview (Online, if required)* December 22, 2026 March 3, 2027 Admission Announcement January 7, 2027, 10:00 AM (KST) March 25, 2027, 10:00 AM (KST) Reply your Admission Acceptance Before Fe",
+            "scope": {
+              "university": "KAIST",
+              "programme": "computer science (bachelor)",
+              "degree": null,
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-02",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "intake",
+          "value": "spring 2027",
+          "evidence": {
+            "url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+            "excerpt": "Admission Announcement  January 7, 2027, 10:00 AM (KST)",
+            "scope": {
+              "university": "KAIST",
+              "programme": "computer science (bachelor)",
+              "degree": null,
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-02",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        }
+      ],
+      "telemetry": {
+        "http_fetches": 33,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 6,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 67.61399262497434,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [
+        {
+          "category": "fetched-ok",
+          "url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+          "page_type": "program_detail",
+          "detail": "3 claims read from this page",
+          "characters": 2448
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://cs.kaist.ac.kr/content?menu=42",
+          "page_type": "unknown",
+          "detail": "read as a funding index; 0 award links, 0 queued within the award budget",
+          "characters": null
+        }
+      ],
+      "error": null
+    }
+  ]
+}

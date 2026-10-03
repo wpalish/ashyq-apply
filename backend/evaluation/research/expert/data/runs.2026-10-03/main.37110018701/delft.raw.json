@@ -1,0 +1,1067 @@
+{
+  "canary": {
+    "accessed_at": "2026-10-03T08:34:24.838129+00:00",
+    "duration_seconds": 73.4,
+    "run_error": "",
+    "batch": [
+      "Delft University of Technology"
+    ],
+    "institutions": [
+      {
+        "institution": "Delft University of Technology",
+        "country": "Netherlands",
+        "domain": "tudelft.nl",
+        "access": "REACHED",
+        "robots_disallowed_requests": 0,
+        "pages_checked": 47,
+        "pages_failed": 0,
+        "failures": [],
+        "outcomes": {
+          "ok": 38,
+          "cached": 9
+        },
+        "discovered": {
+          "program_catalog": [
+            "https://www.tudelft.nl/en/education/programmes/bachelors",
+            "https://www.tudelft.nl/en/education/programmes",
+            "https://www.tudelft.nl/onderwijs/opleidingen/bachelors"
+          ],
+          "program_page": [
+            "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+            "https://www.tudelft.nl/onderwijs/opleidingen/bachelors/cse/bsc-computer-science-and-engineering"
+          ],
+          "admissions": [
+            "https://www.tudelft.nl/en/education/admission-and-application"
+          ],
+          "costs": [
+            "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/tuition-fee-finances"
+          ],
+          "scholarships": [
+            "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/scholarships"
+          ]
+        },
+        "discovery_trace": {
+          "institution": "Delft University of Technology",
+          "domain": "www.tudelft.nl",
+          "sitemaps_declared": [
+            "https://www.tudelft.nl/sitemap.xml"
+          ],
+          "sitemaps_read": [
+            "https://www.tudelft.nl/sitemap.xml"
+          ],
+          "sitemap_urls_seen": 217,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {
+            "program_catalog": "https://www.tudelft.nl/en/education/programmes/bachelors",
+            "admissions": "https://www.tudelft.nl/en/education/admission-and-application",
+            "costs": "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/tuition-fee-finances",
+            "scholarships": "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/scholarships"
+          },
+          "selected": {
+            "program_catalog": [
+              "https://www.tudelft.nl/en/education/programmes/bachelors",
+              "https://www.tudelft.nl/en/education/programmes",
+              "https://www.tudelft.nl/onderwijs/opleidingen/bachelors"
+            ],
+            "program_page": [
+              "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+              "https://www.tudelft.nl/onderwijs/opleidingen/bachelors/cse/bsc-computer-science-and-engineering"
+            ],
+            "admissions": [
+              "https://www.tudelft.nl/en/education/admission-and-application"
+            ],
+            "costs": [
+              "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/tuition-fee-finances"
+            ],
+            "scholarships": [
+              "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/scholarships"
+            ]
+          },
+          "rejected_sample": [
+            [
+              "https://360promotion.nl/TU-360/vr-tour-tu-new.html",
+              "off the institution's domain"
+            ],
+            [
+              "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/mst/bsc-molecular-science-and-technology",
+              "page subject 'BSc Molecular Science and Technology' does not match requested fields ['computer science']"
+            ],
+            [
+              "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/lst/bsc-life-science-and-technology",
+              "page subject 'BSc Life Science and Technology' does not match requested fields ['computer science']"
+            ],
+            [
+              "https://ocw.tudelft.nl/programs/bachelor/computer-science-engineering",
+              "reads as program_catalog, not a programme page"
+            ],
+            [
+              "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering/about-the-programme",
+              "reads as program_catalog, not a programme page"
+            ],
+            [
+              "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering/from-application-to-enrollment",
+              "reads as program_catalog, not a programme page"
+            ],
+            [
+              "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering/from-application-to-enrollment/admission-requirements",
+              "page subject 'Admission requirements' does not match requested fields ['computer science']"
+            ],
+            [
+              "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering/from-application-to-enrollment/application-procedure",
+              "reads as program_catalog, not a programme page"
+            ],
+            [
+              "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering/faq",
+              "page subject 'FAQ' does not match requested fields ['computer science']"
+            ],
+            [
+              "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering/after-your-studies/relevant-masters-programmes",
+              "page names degree level master, not bachelor"
+            ]
+          ],
+          "rejected_total": 10,
+          "errors": [
+            "search identity recovery: checked 8, confirmed 1",
+            "search identity recovery via exa; queries 6, failed 0, rejected {'duplicate': 25, 'wrong_degree_level': 7}"
+          ],
+          "search_failures": [],
+          "search_limitations": [],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": true,
+          "kept_by_link_text": [],
+          "walker": {
+            "catalogs_walked": 1,
+            "candidates": [
+              {
+                "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+                "label": "Computer Science & Engineering - English",
+                "score": 33,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/lst/bsc-life-science-and-technology",
+                "label": "Life Science and Technology",
+                "score": 17,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/mst/bsc-molecular-science-and-technology",
+                "label": "Molecular Science and Technology",
+                "score": 17,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/bk/bachelor-of-architecture-urbanism-and-building-sciences",
+                "label": "Architecture, Urbanism and Building Sciences",
+                "score": 17,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/tu-delft-science-centre",
+                "label": "Science Centre",
+                "score": 10,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/education/programmes/bachelors",
+                "label": "To main content",
+                "score": 9,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/education/programmes/bachelors/nb/bsc-nanobiology",
+                "label": "Nanobiology - English",
+                "score": 9,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/ae/bsc-aerospace-engineering",
+                "label": "Aerospace Engineering - English",
+                "score": 9,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/education/study-programme-orientation/preparing-for-a-bachelor",
+                "label": "information activities",
+                "score": 9,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/tw/bachelor-of-applied-mathematics",
+                "label": "Applied Mathematics",
+                "score": 9,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/ect/bsc-earth-climate-and-technology",
+                "label": "Earth, Climate and Technology - English",
+                "score": 9,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/civiele-techniek/bsc-civil-engineering",
+                "label": "Civil Engineering",
+                "score": 9,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/maritieme-techniek/bsc-marine-technology",
+                "label": "Marine Technology",
+                "score": 9,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/werktuigbouwkunde/bsc-mechanical-engineering",
+                "label": "Mechanical Engineering",
+                "score": 9,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/education/programmes/bachelors/health-and-technology/bsc-health-and-technology",
+                "label": "Health and Technology Location: Erasmus MC (accreditation pending)",
+                "score": 9,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/electrical-engineering/bsc-electrical-engineering",
+                "label": "Electrical Engineering",
+                "score": 9,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/technische-natuurkunde/bachelor-of-applied-physics",
+                "label": "Applied Physics",
+                "score": 9,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/klinische-technologie/bachelor-of-clinical-technology",
+                "label": "Clinical Technology",
+                "score": 9,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/industrieel-ontwerpen/bsc-industrial-design-engineering",
+                "label": "Industrial Design Engineering",
+                "score": 9,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/education/programmes/bachelors/technische-bestuurskunde/bsc-systems-engineering-policy-analysis-and-management",
+                "label": "Systems Engineering, Policy Analysis & Management",
+                "score": 9,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/student",
+                "label": "Student portal",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/education",
+                "label": "Students & Education",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/disclaimer",
+                "label": "Disclaimer",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/about-tu-delft",
+                "label": "About TU Delft",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/learningforlife",
+                "label": "Lifelong Learning",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/innovation-impact",
+                "label": "Innovation & Impact",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/privacy-and-security",
+                "label": "Privacy & Security",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/delft-university-fund",
+                "label": "University Fund",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/about-tu-delft/press-room",
+                "label": "Press room",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/about-tu-delft/browsealoud",
+                "label": "Reading assistant BrowseAloud",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/about-tu-delft/organisation",
+                "label": "Organisation",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/about-tu-delft/find-employees",
+                "label": "Find employees",
+                "score": 2,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/education/programmes",
+                "label": "Programmes",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/community/campus-life",
+                "label": "Campus Life",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/community/social-safety",
+                "label": "Social safety",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/research/societal-challenges",
+                "label": "Societal challenges",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/research/research-facilities",
+                "label": "Research facilities",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/innovation-impact/project-cases",
+                "label": "Project Cases",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/research/faculties-and-institutes",
+                "label": "Faculties and institutes",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/innovation-impact/pioneering-tech",
+                "label": "Pioneering Tech",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/innovation-impact/entrepreneurship",
+                "label": "Entrepreneurship",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/education/admission-and-application",
+                "label": "Admission and Application",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/education/study-programme-orientation",
+                "label": "Study Programme Orientation",
+                "score": 0,
+                "source": "html"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/innovation-impact/business-collaboration",
+                "label": "Business collaboration",
+                "score": 0,
+                "source": "html"
+              }
+            ],
+            "programs_confirmed": 1,
+            "outcomes": [
+              {
+                "url": "https://www.facebook.com/tudelft",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.instagram.com/tudelft?hl=en",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.youtube.com/user/tudelft",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.linkedin.com/edu/delft-university-of-technology-15445",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://api.whatsapp.com/send?phone=3197010256278",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://wa.me/+3197010256278",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.facebook.com/tudelft",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.instagram.com/tudelft?hl=en",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.youtube.com/user/tudelft",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.linkedin.com/edu/delft-university-of-technology-15445",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://api.whatsapp.com/send?phone=3197010256278",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://wa.me/+3197010256278",
+                "outcome": "off_domain"
+              },
+              {
+                "url": "https://www.tudelft.nl/en",
+                "outcome": "walker_no_signal"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/research",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/stories",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/community",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/community/alumni",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/about-tu-delft/calendar",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/about-tu-delft/contact",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/about-tu-delft/locations",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/about-tu-delft/current",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/library",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/about-tu-delft/working-at-tu-delft",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/about-tu-delft/strategy",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.tudelft.nl/onderwijs/opleidingen/bachelors",
+                "outcome": "short_label"
+              },
+              {
+                "url": "http://intranet.tudelft.nl/",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/delft-university-fund/support-us",
+                "outcome": "short_label"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/student",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/education",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/disclaimer",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/about-tu-delft",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/learningforlife",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/innovation-impact",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/privacy-and-security",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/delft-university-fund",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/about-tu-delft/press-room",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/about-tu-delft/browsealoud",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/about-tu-delft/organisation",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/about-tu-delft/find-employees",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/education/programmes",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/community/campus-life",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/community/social-safety",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/research/societal-challenges",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/research/research-facilities",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/innovation-impact/project-cases",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/research/faculties-and-institutes",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/innovation-impact/pioneering-tech",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/innovation-impact/entrepreneurship",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/education/admission-and-application",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/education/study-programme-orientation",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/innovation-impact/business-collaboration",
+                "outcome": "walker_budget_exhausted"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+                "outcome": "program_detail"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/lst/bsc-life-science-and-technology",
+                "outcome": "reads_as_program_detail"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/mst/bsc-molecular-science-and-technology",
+                "outcome": "reads_as_program_detail"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/bk/bachelor-of-architecture-urbanism-and-building-sciences",
+                "outcome": "reads_as_program_detail"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/tu-delft-science-centre",
+                "outcome": "reads_as_unknown"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/education/programmes/bachelors",
+                "outcome": "reads_as_program_detail"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/education/programmes/bachelors/nb/bsc-nanobiology",
+                "outcome": "reads_as_program_detail"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/ae/bsc-aerospace-engineering",
+                "outcome": "reads_as_program_detail"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/education/study-programme-orientation/preparing-for-a-bachelor",
+                "outcome": "reads_as_unknown"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/tw/bachelor-of-applied-mathematics",
+                "outcome": "reads_as_program_detail"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/ect/bsc-earth-climate-and-technology",
+                "outcome": "reads_as_program_detail"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/civiele-techniek/bsc-civil-engineering",
+                "outcome": "reads_as_program_detail"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/maritieme-techniek/bsc-marine-technology",
+                "outcome": "reads_as_program_detail"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/werktuigbouwkunde/bsc-mechanical-engineering",
+                "outcome": "reads_as_program_detail"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/education/programmes/bachelors/health-and-technology/bsc-health-and-technology",
+                "outcome": "reads_as_program_detail"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/electrical-engineering/bsc-electrical-engineering",
+                "outcome": "reads_as_program_detail"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/technische-natuurkunde/bachelor-of-applied-physics",
+                "outcome": "reads_as_program_detail"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/klinische-technologie/bachelor-of-clinical-technology",
+                "outcome": "reads_as_program_detail"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/industrieel-ontwerpen/bsc-industrial-design-engineering",
+                "outcome": "reads_as_program_detail"
+              },
+              {
+                "url": "https://www.tudelft.nl/en/education/programmes/bachelors/technische-bestuurskunde/bsc-systems-engineering-policy-analysis-and-management",
+                "outcome": "reads_as_program_detail"
+              }
+            ]
+          }
+        },
+        "programs": [
+          "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+          "https://www.tudelft.nl/onderwijs/opleidingen/bachelors/cse/bsc-computer-science-and-engineering"
+        ],
+        "program_page_found": true,
+        "scholarship_page_found": true,
+        "discovery_notes": "Sitemap-first discovery found: program_catalog, program_page, admissions, costs, scholarships. Not found: documents.",
+        "claims": 3,
+        "claims_verified": 3,
+        "completeness": 0.167,
+        "eligibility": "NEEDS_OFFICIAL_CLARIFICATION",
+        "funding_fit": "NOT_ELIGIBLE",
+        "scholarships_found": 1,
+        "false_positives": [],
+        "page_outcomes": {
+          "classifier-rejected": 2,
+          "fetched-ok": 8,
+          "no-pattern-match": 4
+        },
+        "page_types": {
+          "scholarship_faq": 2,
+          "program_detail": 2,
+          "general_admissions": 2,
+          "costs": 2,
+          "scholarship_index": 4,
+          "scholarship_award": 2
+        },
+        "page_diagnostics": [
+          {
+            "category": "classifier-rejected",
+            "url": "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/scholarships/faq",
+            "page_type": "scholarship_faq",
+            "characters": null,
+            "detail": "not an award page; no scholarship recorded (1 award links, 0 below it: /en/education/study-programme-orientation/practical-matters/scholarships/scholarships-from-other-providers)"
+          },
+          {
+            "category": "classifier-rejected",
+            "url": "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/scholarships/faq",
+            "page_type": "scholarship_faq",
+            "characters": null,
+            "detail": "not an award page; no scholarship recorded (1 award links, 0 below it: /en/education/study-programme-orientation/practical-matters/scholarships/scholarships-from-other-providers)"
+          },
+          {
+            "category": "fetched-ok",
+            "url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+            "page_type": "program_detail",
+            "characters": "2302",
+            "detail": "1 claims read from this page"
+          },
+          {
+            "category": "no-pattern-match",
+            "url": "https://www.tudelft.nl/en/education/admission-and-application",
+            "page_type": "general_admissions",
+            "characters": "1454",
+            "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed"
+          },
+          {
+            "category": "no-pattern-match",
+            "url": "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/tuition-fee-finances",
+            "page_type": "costs",
+            "characters": "11558",
+            "detail": "page was read but no cost figures could be extracted"
+          },
+          {
+            "category": "fetched-ok",
+            "url": "https://www.tudelft.nl/onderwijs/opleidingen/bachelors/cse/bsc-computer-science-and-engineering",
+            "page_type": "program_detail",
+            "characters": "2212",
+            "detail": "1 claims read from this page"
+          },
+          {
+            "category": "no-pattern-match",
+            "url": "https://www.tudelft.nl/en/education/admission-and-application",
+            "page_type": "general_admissions",
+            "characters": "1454",
+            "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed"
+          },
+          {
+            "category": "no-pattern-match",
+            "url": "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/tuition-fee-finances",
+            "page_type": "costs",
+            "characters": "11558",
+            "detail": "page was read but no cost figures could be extracted"
+          },
+          {
+            "category": "fetched-ok",
+            "url": "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/scholarships",
+            "page_type": "scholarship_index",
+            "characters": null,
+            "detail": "read as a funding index; 2 award links, 2 queued within the award budget"
+          },
+          {
+            "category": "fetched-ok",
+            "url": "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/scholarships/scholarships-from-other-providers",
+            "page_type": "scholarship_index",
+            "characters": null,
+            "detail": "read as a funding index; 1 award links, 1 queued within the award budget"
+          },
+          {
+            "category": "fetched-ok",
+            "url": "https://www.tudelft.nl/en/delft-university-fund/we-support/support-innovative-education/clip-scholarship",
+            "page_type": "scholarship_award",
+            "characters": null,
+            "detail": "award page; 2 claims read"
+          },
+          {
+            "category": "fetched-ok",
+            "url": "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/scholarships",
+            "page_type": "scholarship_index",
+            "characters": null,
+            "detail": "read as a funding index; 2 award links, 2 queued within the award budget"
+          },
+          {
+            "category": "fetched-ok",
+            "url": "https://www.tudelft.nl/en/education/study-programme-orientation/practical-matters/scholarships/scholarships-from-other-providers",
+            "page_type": "scholarship_index",
+            "characters": null,
+            "detail": "read as a funding index; 1 award links, 1 queued within the award budget"
+          },
+          {
+            "category": "fetched-ok",
+            "url": "https://www.tudelft.nl/en/delft-university-fund/we-support/support-innovative-education/clip-scholarship",
+            "page_type": "scholarship_award",
+            "characters": null,
+            "detail": "award page; 2 claims read"
+          }
+        ]
+      }
+    ],
+    "totals": {
+      "institutions": 1,
+      "reached": 1,
+      "blocked": 0,
+      "program_pages_found": 1,
+      "scholarship_pages_found": 1,
+      "claims": 3,
+      "false_positives": 0,
+      "page_outcomes": {
+        "classifier-rejected": 2,
+        "fetched-ok": 8,
+        "no-pattern-match": 4
+      },
+      "page_types": {
+        "scholarship_faq": 2,
+        "program_detail": 2,
+        "general_admissions": 2,
+        "costs": 2,
+        "scholarship_index": 4,
+        "scholarship_award": 2
+      },
+      "recall": {
+        "program": {
+          "numerator": 1,
+          "denominator": 1,
+          "target": 0.7
+        },
+        "category": {
+          "numerator": 3,
+          "denominator": 3,
+          "target": 0.8666666666666667
+        }
+      },
+      "catalogs_walked": 1,
+      "walker_programs_confirmed": 1,
+      "source_pages_recorded": 20,
+      "fetch_tiers": {
+        "fixture": 0,
+        "http": 47,
+        "browser": 0,
+        "pdf": 0
+      }
+    }
+  },
+  "claims": [
+    {
+      "claim_type": "program_exists",
+      "normalized_value": {
+        "program": "Bachelor of Computer Science and Engineering",
+        "degree": "bachelor",
+        "language": null,
+        "matched_because": "page subject 'Bachelor of Computer Science and Engineering' covers every requested subject word"
+      },
+      "original_text_excerpt": "Bachelor of Computer Science and Engineering Bachelor of Computer Science and Engineering Self-driving cars, smartphone navigation, personalised offers based on your surfing behaviour and robots used",
+      "source_url": "https://www.tudelft.nl/en/onderwijs/opleidingen/bachelors/computer-science-and-engineering/bachelor-of-computer-science-and-engineering",
+      "page_title": "Bachelor of Computer Science and Engineering",
+      "relevant_section": "Programme identity",
+      "official_domain": true,
+      "program": "Bachelor Of Computer Science And Engineering",
+      "subject_key": null,
+      "intake": "fall 2027",
+      "academic_year": "2026/27",
+      "accessed_at": "2026-10-03T08:34:34.527692Z",
+      "scope": {
+        "university": null,
+        "faculty": null,
+        "programme": null,
+        "degree": "bachelor",
+        "intake": null,
+        "academic_year": null,
+        "population": null,
+        "nationality": null,
+        "residency": null,
+        "qualification": null
+      },
+      "source_specificity": "program_intake",
+      "confidence": 0.9,
+      "status": "VERIFIED_CURRENT",
+      "extraction_method": "html_rule",
+      "notes": ""
+    },
+    {
+      "claim_type": "program_exists",
+      "normalized_value": {
+        "program": "BSc Computer Science and Engineering",
+        "degree": "bachelor",
+        "language": null,
+        "matched_because": "page subject 'BSc Computer Science and Engineering' covers every requested subject word"
+      },
+      "original_text_excerpt": "BSc Computer Science and Engineering BSc Computer Science and Engineering Zelfrijdende auto’s, real-time navigatie op je telefoon, persoonlijke aanbiedingen op basis van je surfgedrag en robo",
+      "source_url": "https://www.tudelft.nl/onderwijs/opleidingen/bachelors/cse/bsc-computer-science-and-engineering",
+      "page_title": "BSc Computer Science and Engineering",
+      "relevant_section": "Programme identity",
+      "official_domain": true,
+      "program": "Bsc Computer Science And Engineering",
+      "subject_key": null,
+      "intake": "fall 2027",
+      "academic_year": "2026/27",
+      "accessed_at": "2026-10-03T08:35:15.748525Z",
+      "scope": {
+        "university": null,
+        "faculty": null,
+        "programme": null,
+        "degree": "bachelor",
+        "intake": null,
+        "academic_year": null,
+        "population": null,
+        "nationality": null,
+        "residency": null,
+        "qualification": null
+      },
+      "source_specificity": "program_intake",
+      "confidence": 0.9,
+      "status": "VERIFIED_CURRENT",
+      "extraction_method": "html_rule",
+      "notes": ""
+    },
+    {
+      "claim_type": "scholarship_exists",
+      "normalized_value": "Costas Lemos Innovation Programme Scholarship",
+      "original_text_excerpt": "Delft University Fund We support Support innovative Education CLIP Scholarship Open menu Support pioneering research Support innovative Education Delft Global Scholarship Fund CLIP Scholarship Online Education Entrepreneurship Talent Costas Lemos Innovation Programme Scholarship Call for applications is closed The Costas Lemos Innovation Programme (CLIP) Scholarships have been established to equip",
+      "source_url": "https://www.tudelft.nl/en/delft-university-fund/we-support/support-innovative-education/clip-scholarship",
+      "page_title": "Costas Lemos Innovation Programme Scholarship",
+      "relevant_section": "",
+      "official_domain": true,
+      "program": "Bachelor Of Computer Science And Engineering",
+      "subject_key": "Costas Lemos Innovation Programme Scholarship",
+      "intake": null,
+      "academic_year": "2026/27",
+      "accessed_at": "2026-10-03T08:35:36.587320Z",
+      "scope": {
+        "university": null,
+        "faculty": null,
+        "programme": null,
+        "degree": "bachelor",
+        "intake": null,
+        "academic_year": null,
+        "population": null,
+        "nationality": null,
+        "residency": null,
+        "qualification": null
+      },
+      "source_specificity": "scholarship_administrator",
+      "confidence": 0.95,
+      "status": "VERIFIED_CURRENT",
+      "extraction_method": "html_rule",
+      "notes": "page classified as scholarship_award"
+    },
+    {
+      "claim_type": "scholarship_program_restriction",
+      "normalized_value": {
+        "degree": "bachelor",
+        "applies": "no"
+      },
+      "original_text_excerpt": "The scholarships are available to students entering the academic year 2026 for one of the following specific TU Delft Master of Science Programmes: MSc Earth, Climate and Technology; MSc Environmental Eng",
+      "source_url": "https://www.tudelft.nl/en/delft-university-fund/we-support/support-innovative-education/clip-scholarship",
+      "page_title": "Costas Lemos Innovation Programme Scholarship",
+      "relevant_section": "",
+      "official_domain": true,
+      "program": "Bachelor Of Computer Science And Engineering",
+      "subject_key": "Costas Lemos Innovation Programme Scholarship",
+      "intake": null,
+      "academic_year": "2026/27",
+      "accessed_at": "2026-10-03T08:35:36.587320Z",
+      "scope": {
+        "university": null,
+        "faculty": null,
+        "programme": null,
+        "degree": "bachelor",
+        "intake": null,
+        "academic_year": null,
+        "population": null,
+        "nationality": null,
+        "residency": null,
+        "qualification": null
+      },
+      "source_specificity": "scholarship_administrator",
+      "confidence": 0.85,
+      "status": "VERIFIED_CURRENT",
+      "extraction_method": "html_rule",
+      "notes": "the page states the award is for master applicants, not bachelor"
+    },
+    {
+      "claim_type": "scholarship_exists",
+      "normalized_value": "Costas Lemos Innovation Programme Scholarship",
+      "original_text_excerpt": "Delft University Fund We support Support innovative Education CLIP Scholarship Open menu Support pioneering research Support innovative Education Delft Global Scholarship Fund CLIP Scholarship Online Education Entrepreneurship Talent Costas Lemos Innovation Programme Scholarship Call for applications is closed The Costas Lemos Innovation Programme (CLIP) Scholarships have been established to equip",
+      "source_url": "https://www.tudelft.nl/en/delft-university-fund/we-support/support-innovative-education/clip-scholarship",
+      "page_title": "Costas Lemos Innovation Programme Scholarship",
+      "relevant_section": "",
+      "official_domain": true,
+      "program": "Bsc Computer Science And Engineering",
+      "subject_key": "Costas Lemos Innovation Programme Scholarship",
+      "intake": null,
+      "academic_year": "2026/27",
+      "accessed_at": "2026-10-03T08:35:36.587320Z",
+      "scope": {
+        "university": null,
+        "faculty": null,
+        "programme": null,
+        "degree": "bachelor",
+        "intake": null,
+        "academic_year": null,
+        "population": null,
+        "nationality": null,
+        "residency": null,
+        "qualification": null
+      },
+      "source_specificity": "scholarship_administrator",
+      "confidence": 0.95,
+      "status": "VERIFIED_CURRENT",
+      "extraction_method": "html_rule",
+      "notes": "page classified as scholarship_award"
+    },
+    {
+      "claim_type": "scholarship_program_restriction",
+      "normalized_value": {
+        "degree": "bachelor",
+        "applies": "no"
+      },
+      "original_text_excerpt": "The scholarships are available to students entering the academic year 2026 for one of the following specific TU Delft Master of Science Programmes: MSc Earth, Climate and Technology; MSc Environmental Eng",
+      "source_url": "https://www.tudelft.nl/en/delft-university-fund/we-support/support-innovative-education/clip-scholarship",
+      "page_title": "Costas Lemos Innovation Programme Scholarship",
+      "relevant_section": "",
+      "official_domain": true,
+      "program": "Bsc Computer Science And Engineering",
+      "subject_key": "Costas Lemos Innovation Programme Scholarship",
+      "intake": null,
+      "academic_year": "2026/27",
+      "accessed_at": "2026-10-03T08:35:36.587320Z",
+      "scope": {
+        "university": null,
+        "faculty": null,
+        "programme": null,
+        "degree": "bachelor",
+        "intake": null,
+        "academic_year": null,
+        "population": null,
+        "nationality": null,
+        "residency": null,
+        "qualification": null
+      },
+      "source_specificity": "scholarship_administrator",
+      "confidence": 0.85,
+      "status": "VERIFIED_CURRENT",
+      "extraction_method": "html_rule",
+      "notes": "the page states the award is for master applicants, not bachelor"
+    }
+  ]
+}

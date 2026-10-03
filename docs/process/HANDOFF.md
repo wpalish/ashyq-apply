@@ -6,6 +6,8 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
+**Current holder: nobody; source baton released after ER15,2026-10-03.** Sourceadf2f9f is pushed in draftPR41. Main benchmark37110018701 complete6/62; PR41 full120s benchmark37111364718 complete13/62 with different observed bindings. ER15 actual-row red/green and full2969/94.95% pass; fresh run37112534809 recovers both diploma forms via direct oracle, while blind Groningen stays0/11. Task3 awaits owner normal Unimatch sign-in, email provided privately (never commit it). No existing account deletion, production configuration or deployment. General search acceptance remains failed.
+
 **Current holder: nobody; public search release acceptance recorded, 2026-10-02 UTC, task/search-release-acceptance from main1aa188e.** PR #39 is merged after8 exact-head checks. Fly v5 runs the verified source on the original API/worker; catalogue501 and real UI-selected NTU search completed successfully (3 programmes,51 Claim records,21 pages,0 unreadable,about157s). Browser result reload, evidence and Save flow verified. Full details/limits: UNIMATCH_SEARCH_RELEASE_2026-10-02.md. Postmerge CI run36972183803 is linked there; metadata-only changes in this branch do not change the deployed application.
 
 
@@ -44,6 +46,10 @@ Current holder: **claude-opus-5**, 2026-09-20 UTC. Branch: `claude/greeting-16wj
 | Sections 3 and 4 below | Historical: they describe the `[0.8]` recovery and are kept as a record, not as current dirty state. Read §2 and §5 for where things actually stand. |
 
 ## 2. Current task
+
+**Reference calibration checkpoint, in progress (not ready for production release).** Current exact-source full repeatbc84ccf scored13/62, compared with11/62 original mapping and16/62 same-raw identity replay. ProviderHTTP429 removed Warsaw search; Groningen timed out after reading a correct page. Unit gates pass but fact acceptance fails. No claim of full-cohort improvement or product completion; continue offline budget recovery while provider access is pending.
+
+**Certified reference fact recovery, in progress.** Measure current production capture against immutable reviewed corpus; diagnose first lost-evidence stage, implement general source-backed recovery only if equal-budget evaluation supports it. Preserve scope, abstention, Fetcher and ranking invariants. Attached expert documents are methodological reference; no new blind expert run is claimed.
 
 **Local university search: deployed and public workflow verified (PR #39, main1aa188e, Fly v5).** Complete runtime acceptance is recorded in UNIMATCH_SEARCH_RELEASE_2026-10-02.md; this does not assert complete official admission facts for501 universities.
 
@@ -119,6 +125,21 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+**ER15 sourceadf2f9f, confirmed live37112534809:** general bounded secondary-education grouping fixes both diploma completion forms. Actual-source red/green, full2969/94.95%,frontend232 serial/type/lint/build,mypy330,demo and one head pass. Fresh oracle changes both keys value_missing→recovered. Blind Groningen remains0/11/115s; no discovery promotion. Original partial-capture full-denominator score is retained but not used as a cohort comparison.
+
+**PR41 same-budget capture37111364718, source1d8a4ea:** explicitexa120s/60reads yields13/62,28/38; programme3/10 and3/13; awards1/3,57calls. Not isolated improvement over main6/62: observed bindings/new mapper and variable source access differ. Exact config/raw/metrics/oracle retained separately. Acceptance remains red. ER15 follows the concrete Groningen diploma value_missing with actual-row red test and source replay; full2969/94.95%, focused51, mypy330, frontend232 serial/type/lint/build and isolated demo pass. First frontend parallel run had a5000ms timeout; unchanged serial repeat passed. Fresh bounded source confirmation next.
+
+**Task2 complete, original artifact37110018701 (mainb672349):** strict6/62,11/12; programme4/10 and4/16; awards0/3; explicitexa56 calls,402HTTP. Oracle19recovered/16value_missing/35fetch_failed/2not_measured plus2text_missing. No quota error in retained child logs. Original artifact retained with checksums; see SEARCH_BENCHMARK_2026-10-03.md. Task1 owner merge confirmed, Task3 awaits normal public login; Task4 existing PR41 fixes require same-budget live confirmation. This metadata/integration commit leaves the pre-merge app tree unchanged.
+
+**Workflow task1 sourcee40183e, PR42 ready-for-review:** normal push now succeeds after owner workflow authorization. Exact-head push37107912115 and PR37107916481 all8 jobs passed, merge state CLEAN. Push logs backend2873 on both DBs / SQLite94.87%; Ruff/format/mypy324; frontend232, E2E79+auth6; security/container gates pass.20 offline selector cases pass. Only workflow changed; no production mutation or benchmark dispatch.
+
+
+**ER-13 source33804d0 verified:** full2960/94.94%, focused77, Ruff/format/mypy330, frontend232/type/lint/build, isolated demo Groningen first/UBC OUT_OF_BUDGET and one Alembic head. Toronto scoped table document now retained, but exact-source recall remains0/4. Independent catalogue-only cold captures on33804d0: Groningen0/11, Toronto0/4, NTU1/21; search_calls0. Preserved capture/raw/log/score under runs.2026-10-02/catalogue-only.2026-10-03. Original Exa13/62 remains separate and FAIL.
+
+**ER-10 completed source01e44df, 2026-10-03 continuation:** Reproduced requirement-loss on downstream cost interruption (independent DB reader NoResultFound); new guarded checkpoints retain claims before costs/government. Real recorded Groningen response replay: same1read,0storedclaims before versus3 after, incomplete marker and0completedprogrammes. Seven regressions plus pipeline/government/jobs78 pass, Ruff/format327/mypy327 pass; full backend2910/94.92%, frontend232/type/lint/build and isolateddemo Groningen#1/UBC OUT_OF_BUDGET pass; one Alembic head d8e412c6a901. No new live reference score or release asserted; see reference recovery report.
+
+**Reference recovery checkpoints:** bc78824 baton; a31adb6 bounded experimental routing; a64492f claim-local undergraduate scope and regression tests; d09697f strict reference acceptance CLI and narrowed extra reads; bc84ccf promoted admission obligations and versioned observed NTU aliases. Full baseline11/62; unchanged-raw identity replay16/62; KAIST same-budget0/10→1/10. See REFERENCE_FACT_RECOVERY_2026-10-02.md. Full final capture and source gates are still running; no deployment or complete-reference acceptance is claimed.
 
 **Search release evidence:** tested dbbf396 → merged1aa188e, identical tree6534f52;8 exact-head CI jobs passed. Fly v5/ce0acb2a image verified on both existing machines. Public catalogue filters and UI-selected run9307186a completed; results/evidence survive reload and Save works in the isolated synthetic case.
 
@@ -1739,6 +1760,45 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**Current next step after adf2f9f and live37112534809:** owner completes normal sign-in in the prepared Unimatch Chrome tab. Then create ONLY a disposable new brief-profile record (bachelor/CS/fall2027/IELTS7/USD15000), run public research once, count institutions against registry19 and rows with official program_url, preserve errors, and delete only that new test profile. Never delete the owner's existing account. Supplied live_check.py is absent; implement a normal authenticated equivalent or use UI, no auth bypass. If provider429/402 occurs, stop instead of retry. Source work next: ER14 bounded catalogue routing, starting from frozen actual pages and red regression; current Groningen hits115s before any search. Also diagnose true remaining value_missing separately from the oracle's award-only document path and outdated identity bindings. Do not repeat NTU public acceptance or call the product complete. Final source CI may still be running; inspect PR41 exact selected head before requesting owner review.
+
+**ER15 write-ahead:** reproduce Groningen secondary-diploma value_missing from the actual saved HTML table cell (2026-10-03T05:26:36, body proof in remaining-documents). Add offline actual-row regression in test_documents_by_completion.py before editing web_documents._structured_completion_forms. Read only an explicit bounded Secondary education group inside a Diploma cell; Higher education stays separate. Do not join unrelated cells/paragraphs or invent requiredness, certification, degree or faculty. Validate negative boundaries and full gates. Current benchmark37111364718 stays pinned to1d8a4ea; any new source must receive its own120s/60reads live confirmation.
+
+**Task2 artifact / Task3 / Task4 write-ahead (2026-10-03):** preserve main run37110018701 capture, scores, oracle, config and per-case logs under a distinct120s directory; report6/62 recall,11/12 precision,4/10 programme recall,4/16 precision,0/3 awards,56 provider calls. Oracle19 recovered/16 value_missing/35 fetch_failed/2 not_measured/2 text_missing (74 source probes, not62 known labels). Task3 public login is open with the owner-approved address; password entry must be completed by the owner, no password reset or existing account deletion. While waiting, integrate the already-owner-merged workflow-only PR42 into this branch, verify no app tree changes, and measure existing PR41 fixes with a NEW explicit-exa120s/60reads ten-case run. Keep strict original identity binding scores primary; any observed-identity diagnostic must be separately labelled. Do not repeat prior NTU user run or retry provider quota errors. No production deployment/settings changes.
+
+
+**Latest next step:** owner squash-merges PR42 (explicit handoff requirement), then verify main workflow input and run gh workflow run benchmark-capture --ref main -f mode=benchmark -f case= -f seconds_per_case=120 -f max_pages=60 -f search_provider=exa. Record source/run/provider/query counts, six metric rows and oracle verdicts without mixing old captures. Stop on provider quota failure. No self-hosted runners registered as of this checkpoint; cloud site-access failures stay visible. Permitted test email has been supplied in chat, keep private and use normal auth; never delete an existing user account as synthetic cleanup.
+
+
+**Task1 next executable:** After owner completes gh auth refresh -h github.com -s workflow, run git -C ../benchmark-provider-choice push -u origin task/benchmark-provider-choice; create PR with saved PR_BODY.md, attach it and review CI. Wait for owner merge. Then dispatch benchmark on main with120s/60reads and an available allowed provider; never auto/Serper. Owner input is still needed for test email/domain and keyed Exa configuration. While blocked, next code task is ER14 failing cached-catalogue regression, not another full-suite rerun or provider probe.
+
+**Task1 write-ahead (owner ordered brief):** Reconstruct missing workflow-only patch in isolated worktree/branch from origin/main. Add auto/exa/exa_mcp/none input, resolve provider once per job via environment secrets into GITHUB_ENV, validate explicit exa, use same selection in logs/config/capture arguments. Keep auto precedence unchanged but never run auto/Serper in this task. Test selection cases offline including missing-key/unknown failure and no secret output. Normal Git push once; permission rejection means preserve patch and request workflow scope, no API workaround.
+
+
+**ER-14 write-ahead:** Diagnose catalogue descent using the preserved33804d0 catalogue-only traces and actual cached official responses. Toronto field index is reads_as_unknown and is skipped as a descent; self/menu links consume catalogue slots. Reproduce before changing generic bounded routing in catalog_walker, add adversarial tests, retain existing field/degree confirmation and no new hardcoded gold URLs. Compare same cached pages and equal live budgets, record separate provider-none metrics. No Fetcher/gold changes or ER09 promotion.
+
+**Write-ahead document reference recovery:** Diagnose stored NTU award and Groningen document responses with the normal WebDocumentsAdapter. Keep original signed gold/bindings unchanged. First measure current emitted document names/values/scope and exact source identity. Add observed exact document bindings only where the fetched page proves the subject; record pure mapping effects separately. For missing condition fields, use generic structured values with complete quoted conditions and adversarial tests; do not turn conditional/optional paperwork into unconditional requirements. Keep post-approval document collection distinct from pre-decision search. All fresh source reads via Fetcher are evaluator diagnostics, not blind/equal-budget discovery evidence.
+
+**ER-13 write-ahead:** Toronto actual programme HTML has St.George/Ontario h2/h3, then hidden school-system picker h2 headings. DocumentIR's flat outline lets those controls overwrite campus/qualification context for the following requirement table. Repair hidden/control-only heading handling in document_ir without removing visible evidence. Add a conservative supplemental-application table reader bound to explicit programme heading, campus choice and local qualification context; do not use requested degree as published degree. Preserve recorded qualification in evaluation.mapping.evidence_scope (currently silently lost). Tests: actual markup shape, multiple campuses, foreign programme, optional/conditional row, disconnected rows, missing degree and typed scope roundtrip. Only source-backed exact identities in a new binding version; original gold untouched. Two linked-source probes are diagnostic: generic supplemental page readable, Arts&Science page returns a human-verification challenge; do not treat challenge HTTP200 as evidence or bypass.
+
+**Next exact step ER-09, provider access pending:** The opt-in rule and offline frozen-prefix replay are implemented; default remains False.203 focused tests, Ruff/format and mypy327 pass. Configure a supported provider through deployment/local secrets, then run equal300s/60-read Groningen off/on captures (flag --finish-exact-single-field) and held-out universities before promotion. Do not rerun throttled Exa or switch identities to evade429. Offline independent work: inspect document/award mapping gaps and requirement persistence before slow downstream reads, with write-ahead and dedicated regressions. PR41 remains draft; reference gate13/62 FAIL; no merge/deploy. GitHub workflow update also needs a connection with workflow scope; saved patch remains unapplied.
+
+**Promotion write-ahead:** Refined ER-08 cold captures complete KAIST (4 predictions; admission-route exact-page reference hit) and Aalto (0 claims, no budget error). Original NU paired runs retain identical claims; METU is bounded and unavailable within the clock. Enable the narrowed admission-obligation rule, keep --no-admission-obligations for comparisons, and default live evaluation to the versioned observed identity aliases. The old reviewed gold/binding files remain byte-identical. Full 10-case baseline is11/62 with old mapping; pure NTU replay is16/62 with observed aliases (not new discovery). Repeat final gates before publishing a PR; search completeness remains FAIL.
+
+**NTU evaluation identity write-ahead:** Current cold capture emitted Nanyang Global facts from /admissions/ug/scholarships/.../nanyang-scholarship; the old exact source/name map leaves them unmapped. Fetcher diagnostic of the approved old URL now redirects to /admissions/undergraduate/scholarships-and-awards/.../nanyang-scholarship; both pages explicitly name Nanyang Global Scholarship. Retain original reviewed bindings and signed gold unchanged, prepare an additive observed-alias version limited to these two exact URLs and exact subject. Preserve separate raw-vs-remapped scores and disclose that this changes measurement, not discovery. No human signoff is asserted.
+
+**ER-08 refinement write-ahead/result boundary:** Initial on-arm Aalto exhausted 60 reads while baseline completed with zero claims. Limit extra verification to the explicitly discovered admission-obligation links only; do not automatically enqueue other sitemap admission URLs. Add dedicated trace.admission_obligations for provenance and keep old failed arm. KAIST scoped pair before this refinement measured 0/10 off versus1/10 on, exact same-page support,0/1 wrong scope. NU paired claims unchanged (10 per result); METU still running. Rerun KAIST/Aalto with narrowed rule before promotion.
+
+**Acceptance wiring:** Run the reviewed-reference gate at the end of the existing benchmark capture job, after diagnostics and before always-upload artifacts. A successful crawl with missed signed facts must no longer leave that benchmark job green. Preserve ordinary source CI and all raw failed captures.
+
+**Reference acceptance write-ahead:** Add an offline reviewed-corpus acceptance command in evaluation/research/reference_acceptance.py. It must fail on missing cases, capture errors, missed known facts, scored scope/value/support errors; UNKNOWN labels never become targets. Store exact scorer output and explain that passing this gate certifies only this fixed corpus, not all live universities. No production imports of gold.
+
+**ER-08 measured intermediate failure:** routing reached the exact official admission-route page and extracted a verbatim fact, but scorer reports 0/10 with 1 scope mismatch: the Korean excerpt explicitly says undergraduate students (학부생), while Claim.scope.degree is empty. Add claim-local degree reading from the quoted sentence (English/Korean student wording, mixed-degree abstention), never from applicant/gold. Keep original failed arm as evidence and rerun the paired measurement.
+
+**Experiment ER-08 write-ahead:** Fresh KAIST baseline (87.6s,25 adapter reads,3 claims) loses the department's explicit undergraduate-admissions navigation before verification; admissions selection is truncated to one URL. Add an opt-in bounded admissions-obligation route in discovery, preserve up to three admissions leads in Candidate, and pass them through unchanged Fetcher/classifier/scope verification. Reuse existing multilingual route vocabulary, no signed URL/value lookup. Evaluate equal 300s/60-network-read captures and held-out cases; keep off unless correct reference recall improves without scope regressions.
+
+**Next (2026-10-02):** Run fresh Exa MCP captures for KAIST, Toronto and Aalto at fixed 300 seconds/60 network reads each, keep raw observations and failures, validate harness identity mapping and score immutable gold. Inspect production discovery/extraction only after recording baseline. Add regression coverage for reproduced general defects; compare equal-budget candidate and held-out results before promotion.
 
 **After this documentation checkpoint:** inspect postmerge CI36972183803 and merge this metadata-only release record through its PR using the owner's standing merge authorization. No runtime edits are pending. Future product changes require a reproduced fault; partial official-data coverage is explicitly documented, not a completed universal knowledge base. Do not duplicate the synthetic NTU acceptance run or change production credentials.
 
@@ -3652,6 +3712,17 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**ER13 final source33804d0:** full2960 passed /94.94%, frontend232/type/lint/build, Ruff/format/mypy330 (prescribed backend cwd), isolated demo and one head passed. Workflow-only e40183e: YAML+20 shell-selection checks pass; not pushed/merged, cloud gates unavailable. Catalogue-only captures are negative factual evidence, not acceptance.
+
+
+**ER-10 final local gates, 2026-10-03:**2910 backend passed/94.92% in459.21s; focused78; Ruff/format327/mypy327; frontend232/type/lint/build; isolateddemo Groningen#1 and UBC OUT_OF_BUDGET; one Alembic head d8e412c6a901. No new live score: latest reference13/62 remains FAIL. Raw logs /tmp/unimatch-er10-*.log and committed frozen-durability proof.
+
+**ER-09 offline checkpoint:**203 focused discovery/multifield/admission/reference tests pass; Ruff/format327 and mypy327 pass. Frozen real-response prefix:5 reads off,1 on, same first exact page, zero network. Defaultoff, no live/held-out improvement claimed. Strict reference gate still13/62 FAIL, exit2. Earlier full-suite results below remain distinct.
+
+**Latest gates:** final sourcebc84ccf backend2894passed/94.91%, Ruff/format327, mypy327. Additional reference-acceptance exact-alias test brings focused suite10passed (added after full-suite collection). Frontend232/type/lint/build passed; isolated demo Groningen top, one head d8e412c6a901. Exact-source reference13/62 FAIL; signedgold and oldreviewedbindings unchanged.
+
+**2026-10-02 reference checkpoint gates:** Initial full backend2885 passed/94.89%; Ruff325, mypy325; frontend typecheck/lint232 tests/build passed. New acceptance suite10 passed separately. Final promoted-source backend suite/mypy327 in progress. Isolated demo Groningen top; Alembic d8e412c6a901 one head. Strict ten-case reference gate exits2 at11/62, and at16/62 after separately labelled NTU identity replay. These are factual-quality failures, not failing unit tests.
+
 **Public release acceptance:** PR39 source exact-head CI8/8; Fly v5 complete/health ok/demo false; local catalogue501 and country/name/empty queries pass; real UI run completed inabout157s,3 programmes,51 Claim records,21 page checks,0 unreadable. Result/evidence persistence and Saved filtering verified. Full source gates remain2873/94.89%,frontend232,E2E79+6 with1 intentional skip. Postmerge run36972183803 provides the main check status.
 
 
@@ -4110,6 +4181,18 @@ CI runs both on the PR.
 
 ## 7. Blockers / questions for the owner
 
+**Task3 current blocker (2026-10-03):** public Unimatch password entry remains with owner; the prepared browser is still at sign-in. No task3 run/coverage/cleanup proof exists yet. Requested email received privately. Do not use synthetic-account deletion instructions on this real user account.
+
+**Task1 confirmed blocker:** ordinary Git push of workflow-only e40183e (task/benchmark-provider-choice, local worktree ../benchmark-provider-choice) rejected: OAuth App lacks workflow scope.20 offline shell selection cases and YAML passed. Patch and PR body preserved in ai-team/outputs/c2-40-search-provider; no API/browser alternate write attempted. Owner asked to run gh auth refresh -h github.com -s workflow. New benchmark cannot start until workflow PR is merged; Exa key presence and permitted test email/domain also asked, no answer yet.
+
+
+**2026-10-03 owner handoff reconciliation:** Local current branch is task/reference-fact-recovery@d190d04; fetched arena/01a0f379-ashyq-apply stops at6af6a4a. Object62dac4c and ai-team/outputs/c2-40-search-provider patch/PR_BODY/live_check.py are absent from both trees. docs/SEARCH_DIAGNOSIS_2026-10-02.md is absent. This Mac has working official-site access and persistent temp caches; cloud sandbox limitations/Python3.11 in the pasted brief do not apply here. Current backend gate2960/94.94% supersedes historical2873 count only on this branch, not main. User now explicitly requires120s/60reads comparative captures; existing300s captures remain separate diagnostics. Reconstruct reviewable workflow-only selection change on a separate branch from main, attempt normal push once, never bypass workflow permission. Exa MCP429 remains blocked; task2 waits task1 merge and working provider. Ask owner for permitted test email/domain before task3; no production settings changes. ER14 routing diagnosis is parked while task1 proceeds.
+
+
+**Current external constraints:** Exa MCP returnedHTTP429 in finalVienna/Warsaw. All alternative local provider keys absent (boolean presence checked only). No more live probes started; owner async question asks provider configuration through app secrets versus offline continuation. GitHubworkflow-scope restriction remains; proposed patch saved, gate not automatically enforced. Neither condition is a reason to alter validated queries or fabricate facts.
+
+**Reference task limits:** GitHub OAuth rejected workflow edit (missing workflow scope). Proposed patch retained; automatic reference enforcement NOT installed. The CLI gate works. METU both bounded arms time out, no positive quality claim. Signed corpus and reviewed binding file are unchanged. Document-phase facts are outside the current pre-decision canary; current mapping ceiling51/62 and remaining mismatches are recorded, not silently waived.
+
 **Current public runtime follow-up (2026-10-01):** Source fixes are prepared for the actual live-mode UI bug and explicit recovery capability. Recovery-off is the stated launch assumption after the optional owner preference question. Existing authenticated Exa account shows free-tier balance $13.17 and no payment method; no credits purchased. Existing API-key transfer to encrypted Fly secret `UNIMATCH_EXA_API_KEY` awaits the required browser confirmation. Until then use the already-configured keyless Exa only for a bounded deployment canary, not a claim of sustained public capacity. Prior SMTP-only blocking status is superseded by the explicit capability once this patch is deployed; public search is still not verified.
 
 **Current PR #35 search release status (2026-09-30 19:49UTC):** final source `09ebed70630f2860f0cdbb8c1a72679c63e1af00` is pushed, PR #35 is open and all local gates are green. Fresh Exa MCP pilot search was available: Groningen six successful queries but host stall/no confirmed pages; NTU six successful queries, both fields confirmed from official pages in the full pipeline and in an isolated search stage. Exact selected-head CI, squash merge and actual-main CI remain. No signed two-field recall percentage or public-site deployment is claimed. The Fly app still has no API/worker machines and only staged `UNIMATCH_DATABASE_URL`; production runtime needs real SMTP host, authorized From and secure credentials. No paid provider purchase or Vercel cleanup is in scope.
@@ -4394,6 +4477,10 @@ next agent does not reopen it.
   they are; do not rewrite that history.
 
 ## 8. Contract changes since the brief (append-only; the other agent reads this before coding)
+
+**2026-10-03 document conditions write-ahead:** RECOMMENDATION_REQUIREMENT.normalized_value keeps legacy string fallback; explicit role statements can emit {document, role, family_or_relative_allowed?}. No enum/migration. Evaluation splits typed fields only behind exact source/name identity; unknown/conditional shapes remain unmapped. Align document final-source guard with requirements adapter: reject cross-site redirects and retain same-site final URLs.
+
+**Reference recovery contracts:** Candidate.admissions_urls carries up to two explicitly discovered extra admission obligations; DiscoveryTrace.admission_obligations records provenance. Live capture adds --[no-]admission-obligations and identity_bindings_file/hash metadata; its default identity map is versioned observed-aliases, while old reviewed bindings remain available. New offline reference_acceptance CLI returns2 when the unchanged reviewed-fact target is unmet. No API/schema/migration/ranking change.
 
 **2026-10-02 eligibility integrity:** a future admission window or optional-test policy alone cannot establish overall MET. Individual date/policy checks remain unchanged; missing assessable entry requirements produce NEEDS_OFFICIAL_CLARIFICATION with an explicit academic requirements unknown. Ranking formula/v1 untouched.
 
@@ -4754,6 +4841,8 @@ Owner-prioritized workstream: finish V2-01 labels, human review and baseline acc
 
 ## 11. Session log (one line per session, newest last)
 
+2026-10-02 — gpt-6-astra takes certified-reference recovery baton from main b145da2; public runtime release remains unchanged while measuring.
+
 | 2026-10-01 UTC | gpt-6-astra | merged main e24231e → task/unimatch-redesign takeover | Owner provided 46-section Unimatch full redesign request and 18 references. Current tree matches main; source write-ahead recorded before UI edits. |
 
 | Session (UTC) | Agent | From → to | Summary |
@@ -4876,3 +4965,35 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 | 2026-10-02 UTC | gpt-6-astra | merged5a6edc9 -> task/unimatch-release-evidence | PR37 exact-head and actual-main gates passed; Fly v4 deployed same tree, both machines healthy. Public branded page/authenticated prior synthetic Find and bounded live Groningen worker canary verified. Fresh authenticated run remains blocked by Mac lock; release evidence and next step recorded. |
 
 | 2026-10-02 UTC | gpt-6-astra | merged4de769d -> task/local-university-search | Owner requests full search completion after supplied seed audit. Clean baseline, one migration head; importer/catalogue, local candidates, bounded live enrichment and outage/live acceptance next. |
+
+- 2026-10-02 gpt-6-astra: a1d4a00 -> ER-09 offline checkpoint; draft PR41 pushed, baton released pending provider configuration/live equal-budget proof. Reference13/62 FAIL; no production readiness or deployment asserted.
+
+- 2026-10-02 gpt-6-astra resumed d4729eb: previous goal turn made progress (pushed calibration/ER09 evidence). Provider429 still limits live pairs, but evidence durability and mapping work remain actionable offline.
+
+- 2026-10-03 gpt-6-astra:8f866de ->01e44df guarded evidence durability pushed in PR41;2910/94.92% full gates pass. Baton released; next11 unreachable document/award keys. Reference13/62 remains incomplete; no deployment.
+
+- 2026-10-03 gpt-6-astra resumed f2c4cfe for owner-directed document/award fact recovery; working tree clean, origin synchronized.
+
+- 2026-10-03 ER11 local gates complete:2927/94.94%, focused98, Ruff/format/mypy327, frontend232/type/lint/build, isolated migrated demo/checklists3 with Groningen#1 and UBC OUT_OF_BUDGET. NTU two-source replay recovers5 document facts; full live13/62 unchanged. Fresh diagnostic reads: Groningen and Toronto OK; HKU robots unreachable. No production release.
+
+**ER-12 contract write-ahead:** REQUIRED_DOCUMENT may carry {document, required_unless_language_in:[language names]} for an explicit translation exception. Legacy strings stay supported; evaluator maps only the exception field behind exact identity. Checklist keeps condition in its visible name and source clause in format_notes; no unconditional required=true prediction.
+
+- 2026-10-03 ER12 complete local gates:2942passed/94.95%, focused113, registry5, Ruff/format/mypy328, frontend232/type/lint/build, isolated migrated demo/checklists3 and single Alembic head d8e412c6a901. Frozen official Groningen replay2/11→3/11 with25 raw claims each. Exact conditional translation replaces unsupported unconditional certified English requirement; mapping ceiling57/62 is not live recall. No production release; next structural table context and provider access.
+
+- 2026-10-03 gpt-6-astra:bcacf39→1c3db3e→a139995 pushed in draft PR41; ER11 and ER12 source repairs independently replayed. Full2942/94.95%, no gold changes, no release. Baton released; next qualified Toronto table/source gaps and provider-backed full verification.
+
+- 2026-10-03 gpt-6-astra resumed c5daee4 under owner instruction; tree clean/origin synchronized; reviewing actual Toronto table/campus/qualification context before production edits.
+
+**ER-13 validation plan:** source frozen for full backend gate (first run deliberately interrupted to narrow form-only heading exclusion; retained /tmp/unimatch-er13-interrupted.log). Focused77, Ruff/format/mypy330, frontend232/type/lint/build and isolated demo pass. Checkpoint wip while full gate runs, then bounded cold catalogue/sitemap-only live captures with explicit search_provider=none on Groningen/Toronto/NTU,300s/60reads each. No Exa retry, no provider identity switch, no seeds copied from gold. This measures an explicitly degraded configuration separately, not an ER13 gain against prior Exa13/62.
+
+**ER-13 contract:** evaluation evidence_scope now retains the already-recorded qualification field. New supplemental table reader uses explicit programme/campus and local qualification; missing source degree is NEEDS_OFFICIAL_CLARIFICATION. Exact new identity version does not assert source applicability or human approval. No migration/API enum change.
+
+2026-10-03 gpt-6-astra: c5daee4 → ER13 source33804d0 / evidence d190d04 / handoff8fcb9e6;2960/94.94%; workflow e40183e normal push denied (workflow scope); patch preserved, baton released pending owner inputs.
+
+2026-10-03 gpt-6-astra resumes at34f716d: owner refreshed workflow scope; e40183e push succeeds; PR42 created, CI37107912115/37107916481 pending.
+
+2026-10-03 gpt-6-astra:34f716d→17ee5e2→PR42 readiness; workflowe40183e8/8CI; owner merge pending, baton released with executable120s/60reads command.
+
+2026-10-03 gpt-6-astra resumes fromec7436a: PR42 merged by owner at08:31:09UTC asb672349; tree equals e40183e; new120s/60reads exa run37110018701 dispatched.
+
+2026-10-03 gpt-6-astra:0c40d3b→adf2f9f; main/PR41 same-budget benchmarks retained, ER15 source/live verified; source baton released pending owner public login and subsequent discovery recovery.

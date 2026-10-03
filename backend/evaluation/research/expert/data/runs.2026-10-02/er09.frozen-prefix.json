@@ -1,0 +1,144 @@
+{
+  "experiment": "ER-09 frozen confirmation prefix",
+  "source_commit": "a1d4a001a852258d8a58535017eff1a366f902e7",
+  "source_diff_sha256": "7de38e8a8bb5443acd9af1b62826578fdc55f63102033d8b49aaceb447fb9060",
+  "raw_log_sha256": "639bb011586a50f153e989a2a0846e8f0a744b5ea33a444fe99dd98ee601c290",
+  "limitations": [
+    "Not a complete candidate set or end-to-end run.",
+    "Search provider titles not recorded; blank in both arms.",
+    "Read-time sum uses historical observations, not measured live latency.",
+    "No claim recall, completeness, or held-out benefit established."
+  ],
+  "responses": [
+    {
+      "url": "https://www.rug.nl/bachelors/computing-science",
+      "fetched_at": "2026-10-02T16:04:26.195708+00:00",
+      "body_sha256": "d1b583923fb598a32d015c209dcc5f24e19be55592ce770244b75ed4c780ef85",
+      "final_url": "https://www.rug.nl/bachelors/computing-science/"
+    },
+    {
+      "url": "https://www.rug.nl/fse/education/welcome-packages/bsc/bsc-computing-science/welcome/welcome-to-your-programme?lang=en",
+      "fetched_at": "2026-10-02T16:04:27.852909+00:00",
+      "body_sha256": "189700d0ad822c9b1d9321b35cbb60164f713756d33217bf06ad88062e240685",
+      "final_url": "https://www.rug.nl/fse/education/welcome-packages/bsc/bsc-computing-science/welcome/welcome-to-your-programme?lang=en"
+    },
+    {
+      "url": "https://www.rug.nl/bachelors/computing-science?lang=en",
+      "fetched_at": "2026-10-02T16:04:34.411856+00:00",
+      "body_sha256": "d1b583923fb598a32d015c209dcc5f24e19be55592ce770244b75ed4c780ef85",
+      "final_url": "https://www.rug.nl/bachelors/computing-science/?lang=en"
+    },
+    {
+      "url": "https://www.rug.nl/fse/education/ter/ter-23-24-bsc/ter-bsc-computing-science-23-24.pdf",
+      "fetched_at": "2026-10-02T16:04:46.577644+00:00",
+      "body_sha256": "8f5956a1961fac9180bd03c08050d929c148fa74c0ff549313ab76e3c298af57",
+      "final_url": "https://www.rug.nl/fse/education/ter/ter-23-24-bsc/ter-bsc-computing-science-23-24.pdf"
+    },
+    {
+      "url": "https://ocasys.rug.nl/2026-2027/catalog/programme/PRE-FAST-09",
+      "fetched_at": "2026-10-02T16:04:48.178907+00:00",
+      "body_sha256": "119491a4544b46d162f600c063e8a9863fad225a78ff49192dd41c3461dc4520",
+      "final_url": "https://ocasys.rug.nl/2026-2027/catalog/programme/PRE-FAST-09"
+    }
+  ],
+  "arms": [
+    {
+      "enabled": false,
+      "reads": [
+        "https://www.rug.nl/bachelors/computing-science",
+        "https://www.rug.nl/fse/education/welcome-packages/bsc/bsc-computing-science/welcome/welcome-to-your-programme?lang=en",
+        "https://www.rug.nl/bachelors/computing-science?lang=en",
+        "https://www.rug.nl/fse/education/ter/ter-23-24-bsc/ter-bsc-computing-science-23-24.pdf",
+        "https://ocasys.rug.nl/2026-2027/catalog/programme/PRE-FAST-09"
+      ],
+      "pages": [
+        "https://www.rug.nl/bachelors/computing-science",
+        "https://www.rug.nl/bachelors/computing-science?lang=en"
+      ],
+      "trace": {
+        "institution": "Groningen",
+        "domain": "rug.nl",
+        "sitemaps_declared": [],
+        "sitemaps_read": [],
+        "sitemap_urls_seen": 0,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {},
+        "selected": {},
+        "rejected_sample": [
+          [
+            "https://www.rug.nl/fse/education/welcome-packages/bsc/bsc-computing-science/welcome/welcome-to-your-programme?lang=en",
+            "page subject 'Welcome to your Programme' does not match requested fields ['computer science']"
+          ],
+          [
+            "https://www.rug.nl/fse/education/ter/ter-23-24-bsc/ter-bsc-computing-science-23-24.pdf",
+            "reads as unknown, not a programme page"
+          ],
+          [
+            "https://ocasys.rug.nl/2026-2027/catalog/programme/PRE-FAST-09",
+            "reads as unknown, not a programme page"
+          ]
+        ],
+        "rejected_total": 3,
+        "errors": [
+          "search identity recovery: checked 5, confirmed 2"
+        ],
+        "search_failures": [],
+        "search_limitations": [],
+        "field_sources": {},
+        "search_coverage": {},
+        "used_navigation_fallback": false,
+        "kept_by_link_text": [],
+        "admission_obligations": [],
+        "walker": {
+          "catalogs_walked": 0,
+          "candidates": [],
+          "programs_confirmed": 0,
+          "outcomes": []
+        }
+      },
+      "network_calls": 0,
+      "recorded_read_seconds_sum": 23.8
+    },
+    {
+      "enabled": true,
+      "reads": [
+        "https://www.rug.nl/bachelors/computing-science"
+      ],
+      "pages": [
+        "https://www.rug.nl/bachelors/computing-science"
+      ],
+      "trace": {
+        "institution": "Groningen",
+        "domain": "rug.nl",
+        "sitemaps_declared": [],
+        "sitemaps_read": [],
+        "sitemap_urls_seen": 0,
+        "sitemap_urls_kept": 0,
+        "manual_seeds": {},
+        "selected": {},
+        "rejected_sample": [],
+        "rejected_total": 0,
+        "errors": [
+          "Exact single-field programme confirmed from its page; remaining alternative reads deferred to preserve verification budget.",
+          "search identity recovery: checked 1, confirmed 1"
+        ],
+        "search_failures": [],
+        "search_limitations": [],
+        "field_sources": {},
+        "search_coverage": {},
+        "used_navigation_fallback": false,
+        "kept_by_link_text": [],
+        "admission_obligations": [],
+        "walker": {
+          "catalogs_walked": 0,
+          "candidates": [],
+          "programs_confirmed": 0,
+          "outcomes": []
+        }
+      },
+      "network_calls": 0,
+      "recorded_read_seconds_sum": 2.1
+    }
+  ],
+  "replay_script_sha256": "5de6f02b31f9881b363a434dafefc4a4f8e71ae6fe2ad040578f6a514714f252"
+}

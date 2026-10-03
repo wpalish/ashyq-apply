@@ -110,6 +110,10 @@ SKIP_REFUSED_SEARCH_HOSTS = False
 #: search and never reach a slot, so KAIST's undergraduate-admission page,
 #: linked from the department's own navigation, was never opened.
 NAVIGATION_SLOT = False
+#: ER-08: keep admission evidence separate from programme confirmation.
+ADMISSION_OBLIGATIONS = True
+#: ER-09: reserve verification time once a single exact programme is proven.
+FINISH_EXACT_SINGLE_FIELD = False
 #: Pages walked during the navigation fallback. Universities routinely nest
 #: "Degree programmes" -> "Bachelor programmes" -> a programme, so one hop is
 #: not enough; an unbounded walk would be a crawl.
@@ -799,6 +803,7 @@ class DiscoveryTrace:
     #: (url, link text) for leads found by a catalogue's own wording rather
     #: than by the URL, so the report can show what the wording was.
     kept_by_link_text: list[tuple[str, str]] = field(default_factory=list)
+    admission_obligations: list[str] = field(default_factory=list)
     #: The catalogue-walker stage's report. Zeros until (and unless) the stage
     #: runs, so "inactive" and "ran and found nothing" stay distinguishable.
     walker: WalkerTrace = field(default_factory=_walker_trace)
@@ -827,6 +832,7 @@ class DiscoveryTrace:
             "search_coverage": self.search_coverage,
             "used_navigation_fallback": self.used_navigation_fallback,
             "kept_by_link_text": self.kept_by_link_text,
+            "admission_obligations": self.admission_obligations,
             "walker": dict(self.walker),
         }
 
@@ -1167,9 +1173,43 @@ class LiveDiscoveryAdapter:
         if CONFIRM_SEARCH_PROGRAMMES:
             await self._confirm_added_programs(selected, confirmed_so_far, trace, profile)
 
+        if ADMISSION_OBLIGATIONS:
+            await self._add_admission_obligations(selected, trace, profile)
+
         trace.selected = {k: list(v) for k, v in selected.items() if v}
         self._apply(candidate, selected, profile, trace)
         return candidate, trace
+
+    async def _add_admission_obligations(
+        self,
+        selected: dict[str, list[str]],
+        trace: DiscoveryTrace,
+        profile: ApplicantProfileIn,
+    ) -> None:
+        """Route explicit undergraduate-admission links to requirements.
+
+        Department catalogue navigation can name an admission route without
+        describing a programme. Such evidence must not compete for programme
+        slots or depend on passing the programme identity classifier.
+        """
+        from app.adapters.search.navigation import _names_admission_route, links_from
+
+        if str(profile.context.level) != "bachelor":
+            return
+        admissions = selected[PageCategory.ADMISSIONS]
+        for url in selected[PageCategory.PROGRAM_CATALOG][:2]:
+            if len(admissions) >= MAX_PAGES_PER_CATEGORY:
+                break
+            result = await self.fetcher.get(url)
+            if not result.ok or result.is_pdf or not same_source_site(url, result.final_url or url):
+                continue
+            for link in links_from(result.text, result.final_url or url):
+                if len(admissions) >= MAX_PAGES_PER_CATEGORY:
+                    break
+                if _names_admission_route(link.text) and link.url not in admissions:
+                    admissions.append(link.url)
+                    trace.admission_obligations.append(link.url)
+                    trace.kept_by_link_text.append((link.url, link.text))
 
     async def _confirm_programs(
         self,
@@ -1666,6 +1706,8 @@ class LiveDiscoveryAdapter:
             _LISTING_PAGE_TYPES,
             _listed_programme,
         )
+        from app.adapters.search.ontology import titles_name_same_programme
+        from app.domain.programme_identity import Verdict
 
         fields = _public_requested_fields(profile, trace)
         multi_requested = len(_distinct_fields(list(profile.context.intended_fields))) > 1
@@ -1770,6 +1812,18 @@ class LiveDiscoveryAdapter:
                 continue
             pages.append(found.url)
             added += 1
+            if (
+                FINISH_EXACT_SINGLE_FIELD
+                and not multi_requested
+                and len(fields) == 1
+                and basis == "classified_programme_page"
+                and titles_name_same_programme(matched_subject, fields[0]) is Verdict.YES
+            ):
+                trace.errors.append(
+                    "Exact single-field programme confirmed from its page; "
+                    "remaining alternative reads deferred to preserve verification budget."
+                )
+                break
             if multi_requested:
                 _remember_field_source(
                     trace,
@@ -1801,6 +1855,8 @@ class LiveDiscoveryAdapter:
     ) -> None:
         """Attach what was found. A category with nothing stays None."""
         candidate.admissions_url = _first(selected[PageCategory.ADMISSIONS])
+        if ADMISSION_OBLIGATIONS:
+            candidate.admissions_urls = trace.admission_obligations[: MAX_PAGES_PER_CATEGORY - 1]
         candidate.costs_url = _first(selected[PageCategory.COSTS])
         candidate.scholarships_url = _first(selected[PageCategory.SCHOLARSHIPS])
 

@@ -1,0 +1,66 @@
+search provider: exa
+get #1 start t=1s https://www.kaist.ac.kr/robots.txt
+/home/runner/work/ashyq-apply/ashyq-apply/backend/app/adapters/html_parse.py:20: MarkupResemblesLocatorWarning: The input looks more like a filename than markup. You may want to open this file and pass the filehandle into Beautiful Soup.
+  return BeautifulSoup(markup, parser)
+get #1 took 2.6s ok
+get #2 start t=3s https://www.kaist.ac.kr/sitemap.xml
+/home/runner/work/ashyq-apply/ashyq-apply/backend/app/adapters/html_parse.py:20: XMLParsedAsHTMLWarning: It looks like you're parsing an XML document using an HTML parser. If this really is an HTML document (maybe it's XHTML?), you can ignore or filter this warning. If it's XML, you should know that using an XML parser will be more reliable. To parse this document as XML, make sure you have the lxml package installed, and pass the keyword argument `features="xml"` into the BeautifulSoup constructor.
+  return BeautifulSoup(markup, parser)
+get #2 took 1.5s ok
+get #3 start t=5s https://www.kaist.ac.kr/sitemap_index.xml
+get #3 took 1.6s http_error
+get #4 start t=6s https://www.kaist.ac.kr/sitemap-index.xml
+get #4 took 1.5s http_error
+get #5 start t=8s https://www.kaist.ac.kr/sitemap/sitemap.xml
+get #5 took 1.5s http_error
+jev shadow: gold programme rank heuristic=None model=None of 1 (jev-1.13.0)
+get #6 start t=9s https://cs.kaist.ac.kr/content?menu=318
+get #6 took 1.5s ok
+get #7 start t=11s https://cs.kaist.ac.kr/content?menu=188
+get #7 took 1.3s ok
+get #8 start t=12s https://cs.kaist.ac.kr/aiiscs/undergraduate
+get #8 took 1.4s ok
+get #9 start t=14s https://cs.kaist.ac.kr/bbs/ainews
+get #9 took 1.4s ok
+get #10 start t=16s https://cs.kaist.ac.kr/aiiscs/infoservice
+get #10 took 2.1s ok
+get #11 start t=18s https://cs.kaist.ac.kr/research/infoservice
+get #11 took 0.9s ok
+get #12 start t=19s https://cs.kaist.ac.kr/people/facultyInformationService
+get #12 took 1.5s ok
+search #1 took 2.1s (t=23s)
+search #2 took 1.3s (t=24s)
+search #3 took 1.3s (t=25s)
+search #4 took 1.5s (t=27s)
+search #5 took 1.3s (t=28s)
+search #6 took 1.0s (t=29s)
+get #13 start t=29s https://cs.kaist.ac.kr/
+get #13 took 1.3s ok
+get #14 start t=30s https://admission.kaist.ac.kr/
+get #14 took 2.0s ok
+get #15 start t=33s https://soc.kaist.ac.kr/
+get #15 took 1.4s ok
+get #16 start t=34s https://cs.kaist.ac.kr/
+get #16 took 0.0s cached
+get #17 start t=34s https://pure.kaist.ac.kr/en/organisations/school-of-computing
+get #17 took 6.7s ok
+get #18 start t=41s https://soc.kaist.ac.kr/content?menu=320
+get #18 took 0.8s ok
+get #19 start t=42s https://nmsl.kaist.ac.kr/courses.html
+get #19 took 1.2s ok
+get #20 start t=43s https://sociology.kaist.ac.kr/
+get #20 took 0.9s ok
+get #21 start t=44s https://www.vclab.kaist.ac.kr/courses.html
+get #21 took 0.7s ok
+get #22 start t=45s https://admission.kaist.ac.kr/intl-undergraduate/about/why
+get #22 took 1.0s ok
+get #23 start t=46s https://pure.kaist.ac.kr/en/clippings/1200-free-computer-science-courses-from-the-worlds-top-universiti
+get #23 took 5.6s ok
+get #24 start t=52s https://cs.kaist.ac.kr/content?menu=188
+get #24 took 0.0s cached
+get #25 start t=52s https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline
+get #25 took 1.2s ok
+get #26 start t=54s https://cs.kaist.ac.kr/content?menu=40
+get #26 took 0.8s ok
+get #27 start t=55s https://cs.kaist.ac.kr/content?menu=42
+get #27 took 1.2s ok

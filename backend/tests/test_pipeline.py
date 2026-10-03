@@ -627,3 +627,211 @@ class TestAScopeRefusalIsSaidOutLoud:
         assert question.blocking is True
         # And the refused claim is still there as evidence, not deleted.
         assert any(c.claim_type.value == "admission_deadline" for c in result.claims)
+
+
+class TestVerificationDurability:
+    @pytest.mark.asyncio
+    @pytest.mark.parametrize("failure_stage", ["cost", "government"])
+    @pytest.mark.parametrize("cancelled", [False, True])
+    async def test_completed_requirements_survive_the_next_adapter_failure(
+        self, session, settings, profile, monkeypatch, failure_stage, cancelled
+    ):
+        import asyncio
+        from unittest.mock import AsyncMock
+
+        from sqlalchemy.orm import Session
+
+        from app.adapters.cost.web_costs import WebCostAdapter
+        from app.adapters.discovery.fixture_discovery import FixtureDiscoveryAdapter
+        from app.adapters.government.web_government import WebGovernmentAdapter
+        from app.domain.enums import ClaimType
+
+        row = profile_row(session, profile)
+        run = ResearchRun(
+            profile_id=row.id,
+            stage=PipelineStage.QUEUED.value,
+            demo_mode=True,
+            stage_state=RunState.load(None).dump(),
+        )
+        session.add(run)
+        session.commit()
+        runner = ResearchRunner(session, run, profile, settings)
+        failure = asyncio.CancelledError if cancelled else RuntimeError
+        adapter, method = (
+            (WebCostAdapter, "fetch")
+            if failure_stage == "cost"
+            else (WebGovernmentAdapter, "post_study_work")
+        )
+        monkeypatch.setattr(adapter, method, AsyncMock(side_effect=failure("interrupted")))
+        async with runner._make_fetcher() as fetcher:
+            candidates = await FixtureDiscoveryAdapter(fetcher).discover(profile)
+            runner._candidates = [
+                next(c for c in candidates if c.name == "University of Groningen")
+            ]
+            with pytest.raises(failure):
+                await runner._stage_verify(fetcher)
+
+        # Independent transaction proves durability even if the worker is killed.
+        with Session(session.get_bind()) as observer:
+            stored = observer.query(ProgramResultRow).filter_by(run_id=run.id).one()
+            result = ProgramResult.model_validate(stored.payload)
+            claims = observer.query(ClaimRow).filter_by(result_id=stored.id).all()
+            assert any(c.claim_type == ClaimType.PROGRAM_EXISTS.value for c in claims)
+            assert any(q.topic == "research incomplete" and q.blocking for q in result.unresolved)
+            assert result.eligibility is EligibilityStatus.NEEDS_OFFICIAL_CLARIFICATION
+            persisted_run = observer.get(ResearchRun, run.id)
+            assert persisted_run is not None
+            assert persisted_run.claims_recorded == len(claims)
+            assert persisted_run.programs_verified == 0
+            assert (
+                RunState.load(persisted_run.stage_state)[PipelineStage.PROGRAM_VERIFICATION].status
+                == "running"
+            )
+
+    @pytest.mark.asyncio
+    async def test_retry_completes_partial_rows_without_duplicate_counts_or_questions(
+        self, session, settings, profile, monkeypatch
+    ):
+        from unittest.mock import AsyncMock
+
+        from app.adapters.cost.web_costs import WebCostAdapter
+        from app.adapters.discovery.fixture_discovery import FixtureDiscoveryAdapter
+
+        row = profile_row(session, profile)
+        run = ResearchRun(
+            profile_id=row.id,
+            stage=PipelineStage.QUEUED.value,
+            demo_mode=True,
+            stage_state=RunState.load(None).dump(),
+        )
+        session.add(run)
+        session.commit()
+        runner = ResearchRunner(session, run, profile, settings)
+        real_fetch = WebCostAdapter.fetch
+        async with runner._make_fetcher() as fetcher:
+            candidates = await FixtureDiscoveryAdapter(fetcher).discover(profile)
+            runner._candidates = [
+                next(c for c in candidates if c.name == "University of Groningen")
+            ]
+            monkeypatch.setattr(
+                WebCostAdapter, "fetch", AsyncMock(side_effect=RuntimeError("stop"))
+            )
+            with pytest.raises(RuntimeError):
+                await runner._stage_verify(fetcher)
+            partial = runner._rows()[0]
+            partial.user_notes = "Keep my note"
+            session.commit()
+            partial_id = partial.id
+            monkeypatch.setattr(WebCostAdapter, "fetch", real_fetch)
+            await runner._stage_verify(fetcher)
+            first_count = run.claims_recorded
+            first_claims = len(ProgramResult.model_validate(runner._rows()[0].payload).claims)
+            # A further successful retry replaces, rather than accumulates evidence.
+            await runner._stage_verify(fetcher)
+        session.expire_all()
+        rows = runner._rows()
+        assert len(rows) == 1 and rows[0].id == partial_id
+        result = ProgramResult.model_validate(rows[0].payload)
+        assert not any(q.topic == "research incomplete" for q in result.unresolved)
+        assert result.post_study_work
+        assert result.user_notes == "Keep my note"
+        assert run.programs_verified == 1
+        assert run.claims_recorded == first_count == first_claims == len(result.claims)
+        assert session.query(ClaimRow).filter_by(result_id=partial_id).count() == len(result.claims)
+
+    @pytest.mark.asyncio
+    async def test_failed_retry_preserves_existing_complete_results(
+        self, session, completed_run, monkeypatch
+    ):
+        from unittest.mock import AsyncMock
+
+        from app.adapters.cost.web_costs import WebCostAdapter
+
+        runner, run = completed_run
+        before = {r.id: r.payload for r in runner._rows()}
+        old_count = run.claims_recorded
+        monkeypatch.setattr(WebCostAdapter, "fetch", AsyncMock(side_effect=RuntimeError("stop")))
+        async with runner._make_fetcher() as fetcher:
+            with pytest.raises(RuntimeError):
+                await runner._stage_verify(fetcher)
+        session.rollback()
+        assert {r.id: r.payload for r in runner._rows()} == before
+        assert run.claims_recorded == old_count
+
+    @pytest.mark.asyncio
+    async def test_partial_evidence_keeps_campus_freshness_hierarchy_and_conflict_guards(
+        self, session, settings, profile, monkeypatch, claim_factory
+    ):
+        from datetime import UTC, datetime, timedelta
+        from unittest.mock import AsyncMock
+
+        from app.adapters.base import AdapterResult, Candidate, CandidateProgram
+        from app.adapters.cost.web_costs import WebCostAdapter
+        from app.adapters.requirements.web_requirements import WebRequirementsAdapter
+        from app.domain.enums import ClaimStatus, DegreeLevel
+
+        claims = [
+            claim_factory("ielts_min_overall", value, url=f"https://future.utoronto.ca/{value}")
+            for value in (6.5, 7.0)
+        ]
+        claims += [
+            claim_factory("program_exists", True, url="https://utsc.utoronto.ca/programme"),
+            claim_factory(
+                "tuition", 10000, specificity="aggregator", url="https://directory.example/fees"
+            ),
+            claim_factory(
+                "admission_deadline",
+                "2020-01-01",
+                accessed_at=datetime.now(UTC) - timedelta(days=800),
+            ),
+        ]
+        monkeypatch.setattr(
+            WebRequirementsAdapter, "verify", AsyncMock(return_value=AdapterResult(claims=claims))
+        )
+        monkeypatch.setattr(WebCostAdapter, "fetch", AsyncMock(side_effect=RuntimeError("stop")))
+        row = profile_row(session, profile)
+        run = ResearchRun(
+            profile_id=row.id,
+            stage="queued",
+            demo_mode=True,
+            stage_state=RunState.load(None).dump(),
+        )
+        session.add(run)
+        session.commit()
+        runner = ResearchRunner(session, run, profile, settings)
+        runner._candidates = [
+            Candidate(
+                name="University of Toronto",
+                country="Canada",
+                city="Toronto",
+                domain="utoronto.ca",
+                programs=[
+                    CandidateProgram(
+                        name="Computer Science",
+                        field="computer science",
+                        degree=DegreeLevel.BACHELOR,
+                        url="https://future.utoronto.ca/cs",
+                    )
+                ],
+            )
+        ]
+        async with runner._make_fetcher() as fetcher:
+            with pytest.raises(RuntimeError):
+                await runner._stage_verify(fetcher)
+        stored = ProgramResult.model_validate(runner._rows()[0].payload)
+        assert not any("utsc.utoronto.ca" in c.source_url for c in stored.claims)
+        assert any(q.topic == "campus" for q in stored.unresolved)
+        assert len(stored.conflicts) == 1
+        assert all(
+            c.status is ClaimStatus.CONFLICTING
+            for c in stored.claims
+            if c.normalized_value in (6.5, 7.0)
+        )
+        assert (
+            next(c for c in stored.claims if c.normalized_value == 10000).status
+            is ClaimStatus.NEEDS_OFFICIAL_CLARIFICATION
+        )
+        assert (
+            next(c for c in stored.claims if c.normalized_value == "2020-01-01").status
+            is ClaimStatus.POSSIBLY_STALE
+        )

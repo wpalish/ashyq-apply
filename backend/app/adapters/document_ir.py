@@ -203,11 +203,43 @@ def _table_blocks(
     return blocks
 
 
+def _form_only_container(node: Tag) -> bool:
+    if not node.find("form"):
+        return False
+    return not any(
+        text.strip()
+        and not text.find_parent((*_HEADINGS, "form", "button", "script", "style", "svg"))
+        for text in node.find_all(string=True)
+    )
+
+
 def build_document_ir(html: str, url: str) -> DocumentIR:
     """Parse ``html`` into ordered evidence blocks and links. Never raises."""
     soup = parse_html(html)
     title_tag = soup.find("title")
     doc = DocumentIR(url=url, title=_text(title_tag) if title_tag else "")
+    # Capture form relationships before forms themselves are removed. Hidden
+    # headings outside a form picker can be genuine accessible evidence headings.
+    form_headings: set[int] = set()
+    for heading in soup.find_all(_HEADINGS):
+        classes = set(heading.get("class", []))
+        hidden_form_label = bool(
+            classes & {"u-visually--hidden", "visually-hidden", "sr-only"}
+            and heading.parent
+            and _form_only_container(heading.parent)
+        )
+        buttons = heading.find_all("button")
+        control_only = bool(
+            buttons
+            and _text(heading) == " ".join(_text(button) for button in buttons)
+            and all(
+                button.has_attr("aria-expanded") and not button.get("aria-controls")
+                for button in buttons
+            )
+            and any(_form_only_container(parent) for parent in list(heading.parents)[:3])
+        )
+        if hidden_form_label or control_only:
+            form_headings.add(id(heading))
     for tag in soup(_DROP):
         tag.decompose()
     body = soup.body or soup
@@ -234,6 +266,11 @@ def build_document_ir(html: str, url: str) -> DocumentIR:
             continue
         name = node.name
         if name in _HEADINGS:
+            # Screen-reader labels for a form are not headings for the
+            # surrounding admissions evidence. In particular, a hidden picker
+            # must not replace the campus/qualification heading of the next table.
+            if id(node) in form_headings:
+                continue
             level = int(name[1])
             while section and section[-1][0] >= level:
                 section.pop()

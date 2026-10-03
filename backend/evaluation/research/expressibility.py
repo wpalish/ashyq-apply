@@ -54,7 +54,16 @@ _COVERAGE = (
 _AWARD_FIELDS = frozenset(
     {"exists", *AWARD_KEYS.values(), *(f"coverage.{COVERAGE_KEYS.get(c, c)}" for c in _COVERAGE)}
 )
-_DOCUMENT_FIELDS = frozenset({"required", "maximum_words", *COMPLETION_STATES})
+_DOCUMENT_FIELDS = frozenset(
+    {
+        "required",
+        "maximum_words",
+        "role",
+        "family_or_relative_allowed",
+        "required_unless_language_in",
+        *COMPLETION_STATES,
+    }
+)
 
 
 @dataclass(frozen=True, slots=True)

@@ -1,0 +1,293 @@
+{
+  "schema_version": "1",
+  "pipeline_sha": "33804d0a25305f5fdfb6d27e609748e07f145b84",
+  "captured_at": "20261003T065411Z",
+  "mode": "live",
+  "config": {
+    "search_provider": "none",
+    "seconds_per_case": 300,
+    "max_fetcher_calls_per_case": 60,
+    "page_budget_counts": "network reads; cache hits are free (since 2026-09-23)",
+    "search_before_navigation": false,
+    "recover_search_candidates": true,
+    "search_funding_fallback": true,
+    "target_award_search": true,
+    "skip_refused_search_hosts": false,
+    "reject_archive_hosts": false,
+    "admission_lexicon": false,
+    "navigation_slot": false,
+    "admission_obligations": true,
+    "finish_exact_single_field": false,
+    "browser_enabled": false,
+    "cohort": [
+      "groningen",
+      "delft",
+      "aalto",
+      "vienna",
+      "warsaw",
+      "ubc",
+      "toronto",
+      "hku",
+      "ntu",
+      "kaist"
+    ],
+    "scope": "current production pipeline; HTTP-only bounded cold run",
+    "rank_stage": "programme confirmation queue before catalogue walking",
+    "identity_bindings_file": "identity_bindings.2026-10-03.supplemental.json",
+    "identity_bindings_sha256": "af48e733a7d4d30786c58667cd724402f233ae129003faa5902e3fc5de0572e5",
+    "harness_sha256": "c28fe51159c8003c7e9f09754468d86ec887914689822f76ac449d1d0829accd",
+    "mapping_sha256": "6410472d8eea4477162d864b096b27e102446f09f72399484142db5d02262085"
+  },
+  "observations": [
+    {
+      "case_id": "ntu",
+      "programme_urls": [
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-and-computer-sciences",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science-with-second-major-in-business-(international-trading)"
+      ],
+      "ranked_urls": [
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/double-degree-in-computer-science-and-business",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/double-degree-in-computer-science-and-economics",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/double-degree-in-business-(with-specialisation-in-business-analytics)-computer-engineering-computer-science",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-and-computer-sciences",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science-with-second-major-in-business-(international-trading)",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science-with-second-major-in-business",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-(hons)-in-data-science-and-artificial-intelligence-with-a-second-major-in-sustainability",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-(hons)-in-computer-science-with-a-second-major-in-sustainability",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-(hons)-in-computer-science-with-a-second-major-in-entrepreneurship",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/double-degree-in-electrical-and-electronic-engineering-and-social-sciences-(economics)",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/double-degree-in-bachelor-of-engineering-(chemical-and-biomolecular-engineering)-and-bachelor-of-social-science-(economics)",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/double-degree-in-bachelor-of-engineering-(bioengineering)-and-bachelor-of-social-science-(economics)",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-social-sciences-in-psychology-with-second-major-in-biological-sciences",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-social-sciences-in-psychology-(honours)",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-social-sciences-(hons)-in-double-major---psychology-and-media-analytics",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-social-sciences-(hons)-in-double-major---economics-and-psychology",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-social-science-in-philosophy-politics-and-economics",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-physics-energy-studies-and-education",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-physics-applied-physics-with-second-major-in-data-analytics",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-physics-applied-physics-with-second-major-in-astrophysics",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-physics-and-mathematical-sciences",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-physics---applied-physics-with-second-major-in-material-physics-and-technologies",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-sciences-with-second-major-in-sustainability",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-sciences",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-maritime-studies-with-second-major-in-data-analytics",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-maritime-studies-with-second-major-in-business",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-environmental-earth-systems-science-with-second-major-in-entrepreneurship",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-environmental-earth-systems-science-and-public-policy-and-global-affairs",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-data-science-artificial-intelligence",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-chemistry-and-biological-chemistry-with-second-major-in-data-analytics",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-chemistry-and-biological-chemistry-with-second-major-in-business-(international-trading)",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-chemistry-and-biological-chemistry",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-biological-sciences-with-second-major-in-sustainability",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-biological-sciences-with-second-major-in-food-science-and-technology",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-biological-sciences-with-second-major-in-entrepreneurship",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-biological-sciences-with-second-major-in-data-analytics",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-biological-sciences-with-second-major-in-biomedical-structural-biology",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-applied-physics-with-second-major-in-quantum-technologies",
+        "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-applied-physics-with-second-major-in-microelectronics-engineering"
+      ],
+      "predictions": [
+        {
+          "key": "programme.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+            "excerpt": "The Bachelor of Computing (Hons) in Computer Science at NTU’s College of Computing and Data Science (CCDS) is a 4-year direct honours degree that provides rigorous training in computing fundamentals, algori",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor of Computing (Hons) in Computer Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "programme.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-and-computer-sciences",
+            "excerpt": "Bachelor of Science in Mathematical and Computer Sciences | NTU Singapore",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor of Science in Mathematical and Computer Sciences",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": "international",
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "programme.exists",
+          "value": true,
+          "evidence": {
+            "url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science-with-second-major-in-business-(international-trading)",
+            "excerpt": "Bachelor of Computing in Computer Science with Second Major in Business (International Trading) | NTU Singapore",
+            "scope": {
+              "university": "Nanyang Technological University",
+              "programme": "Bachelor of Computing in Computer Science with Second Major in Business (International Trading)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": "IB",
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        }
+      ],
+      "telemetry": {
+        "http_fetches": 19,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 0,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 28.24037099996349,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [
+        {
+          "category": "fetch-failed",
+          "url": "https://www.ntu.edu.sg/admissions/ug/financial-matters/financial-aid/bursaries",
+          "page_type": "unclassified",
+          "detail": "http_error — HTTP 404",
+          "characters": null
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://www.ntu.edu.sg/admissions/ug/admission-guide/diploma-awarded-by-a-polytechnic-or-equivalent-institution-in-singapore",
+          "page_type": "unclassified",
+          "detail": "http_error — HTTP 404",
+          "characters": null
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://www.ntu.edu.sg/admissions/ug/financial-matters/financial-aid/bursaries",
+          "page_type": "unclassified",
+          "detail": "http_error — HTTP 404",
+          "characters": null
+        },
+        {
+          "category": "fetch-failed",
+          "url": "https://www.ntu.edu.sg/admissions/ug/financial-matters/financial-aid/bursaries",
+          "page_type": "unclassified",
+          "detail": "http_error — HTTP 404",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+          "page_type": "program_detail",
+          "detail": "1 claims read from this page",
+          "characters": 3705
+        },
+        {
+          "category": "no-pattern-match",
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate",
+          "page_type": "program_detail",
+          "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed",
+          "characters": 444
+        },
+        {
+          "category": "no-pattern-match",
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/financial-matters",
+          "page_type": "costs",
+          "detail": "page was read but no cost figures could be extracted",
+          "characters": 1787
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-and-computer-sciences",
+          "page_type": "program_detail",
+          "detail": "1 claims read from this page",
+          "characters": 3776
+        },
+        {
+          "category": "no-pattern-match",
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate",
+          "page_type": "program_detail",
+          "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed",
+          "characters": 444
+        },
+        {
+          "category": "no-pattern-match",
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/financial-matters",
+          "page_type": "costs",
+          "detail": "page was read but no cost figures could be extracted",
+          "characters": 1787
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science-with-second-major-in-business-(international-trading)",
+          "page_type": "program_detail",
+          "detail": "1 claims read from this page",
+          "characters": 4171
+        },
+        {
+          "category": "no-pattern-match",
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate",
+          "page_type": "program_detail",
+          "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed",
+          "characters": 444
+        },
+        {
+          "category": "no-pattern-match",
+          "url": "https://www.ntu.edu.sg/admissions/undergraduate/financial-matters",
+          "page_type": "costs",
+          "detail": "page was read but no cost figures could be extracted",
+          "characters": 1787
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science-with-second-major-in-business-(international-trading)",
+          "page_type": "program_detail",
+          "detail": "read as a funding index; 1 award links, 1 queued within the award budget",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-and-computer-sciences",
+          "page_type": "program_detail",
+          "detail": "read as a funding index; 0 award links, 0 queued within the award budget",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+          "page_type": "program_detail",
+          "detail": "read as a funding index; 0 award links, 0 queued within the award budget",
+          "characters": null
+        }
+      ],
+      "error": null
+    }
+  ]
+}

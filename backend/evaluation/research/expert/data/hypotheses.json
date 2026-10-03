@@ -88,7 +88,7 @@
       "case_ids": [
         "kaist"
       ],
-      "observation": "Blind KAIST trace: the '학부 입학' (undergraduate admission) navigation link on every cs.kaist.ac.kr page read by the baseline was never opened; opening it recovered the signed programme.admission_route fact at 13/60 calls. Tested 2026-09-27 (3962468, cloud runners, ABBA, 60 calls/120 s, 3 dev + 9 held-out): the process metric failed - no arm opened cs.kaist.ac.kr/content?menu=40, because hop candidates are appended after search results and the three programme slots fill first. Claim differences are not the rule's: Vilnius on 3/off 0 follows Serper ranking the Bioinformatics page 2nd vs 3rd, and those 3 'verified' claims are for Bioinformatics, not the requested computer science (wrong programme); NU completed in one arm only (network). Also: no extractor emits ADMISSION_ROUTE, so even reaching the page could not add a claim. Rejected in this form; a retry needs a slot for navigation evidence and an extractor.",
+      "observation": "Blind KAIST trace: the '\ud559\ubd80 \uc785\ud559' (undergraduate admission) navigation link on every cs.kaist.ac.kr page read by the baseline was never opened; opening it recovered the signed programme.admission_route fact at 13/60 calls. Tested 2026-09-27 (3962468, cloud runners, ABBA, 60 calls/120 s, 3 dev + 9 held-out): the process metric failed - no arm opened cs.kaist.ac.kr/content?menu=40, because hop candidates are appended after search results and the three programme slots fill first. Claim differences are not the rule's: Vilnius on 3/off 0 follows Serper ranking the Bioinformatics page 2nd vs 3rd, and those 3 'verified' claims are for Bioinformatics, not the requested computer science (wrong programme); NU completed in one arm only (network). Also: no extractor emits ADMISSION_ROUTE, so even reaching the page could not add a claim. Rejected in this form; a retry needs a slot for navigation evidence and an extractor.",
       "proposed_rule": "Before score-based ranking, promote same-site navigation links whose anchor text matches an admissions/degree-level lexicon in the site's language.",
       "integration_seam": "backend/app/adapters/discovery/live_discovery.py navigation fallback and catalog walker lead scoring",
       "counterexample": "Admission menus are often generic institution pages that consume slots without programme evidence; lexicons per language can overfit.",
@@ -124,7 +124,7 @@
         "kaist",
         "toronto"
       ],
-      "observation": "ER-05 showed navigation-hop candidates never reach a programme slot, so KAIST's '학부 입학' page (where the new ADMISSION_ROUTE reader works: oracle 8 -> 9 facts) is never opened end to end. Tested 2026-09-27 (8b68958): claims equal in every pair on all 12 universities. KAIST produced no hop candidate at all (cloud runner read 7-9 pages instead of ~25), so the slot never applied there. Elsewhere the slot went to web.cs.utoronto.ca/bachelor-of-computer-science (plausible, no claims), iro.sabanciuniv.edu application requirements, but also to a Vilnius journal article, TUM research/Pure person pages and Tartu master-thesis pages. Rejected.",
+      "observation": "ER-05 showed navigation-hop candidates never reach a programme slot, so KAIST's '\ud559\ubd80 \uc785\ud559' page (where the new ADMISSION_ROUTE reader works: oracle 8 -> 9 facts) is never opened end to end. Tested 2026-09-27 (8b68958): claims equal in every pair on all 12 universities. KAIST produced no hop candidate at all (cloud runner read 7-9 pages instead of ~25), so the slot never applied there. Elsewhere the slot went to web.cs.utoronto.ca/bachelor-of-computer-science (plausible, no claims), iro.sabanciuniv.edu application requirements, but also to a Vilnius journal article, TUM research/Pure person pages and Tartu master-thesis pages. Rejected.",
       "proposed_rule": "Keep one of the three programme-page slots for the best navigation-hop candidate; search fills the other two.",
       "integration_seam": "backend/app/adapters/discovery/live_discovery.py NAVIGATION_SLOT (default False)",
       "counterexample": "The best hop candidate is often a research, thesis or journal page; giving it a slot displaces a search result that may be the programme.",
@@ -135,6 +135,152 @@
       ],
       "policy_guard": "Reads via Fetcher only; slot changes discovery order, never evidence rules.",
       "validation_artifact": "backend/evaluation/research/expert/data/runs.2026-09-27/er07.paired.txt"
+    },
+    {
+      "id": "ER-08",
+      "status": "tested",
+      "case_ids": [
+        "kaist",
+        "aalto",
+        "toronto"
+      ],
+      "observation": "2026-10-02 fresh Exa MCP baseline: explicit undergraduate admission links in catalogue navigation never reached requirement verification. Routing-only arm recovered the quote but omitted Korean undergraduate scope (0/10,1 wrong scope); claim-local scope repair yielded paired 0/10 off to1/10 on with exact-page support and no wrong scope. NU paired claims unchanged; METU both timeouts. Initial all-admissions-list arm exhausted Aalto budget; narrowed explicit-obligation-only repeat completed with no extra claims. See retained failed and refined captures.",
+      "proposed_rule": "Route a bounded number of explicit undergraduate admission links from selected catalogue roots into requirement verification independently of programme identity; derive undergraduate scope only from the quoted admission sentence.",
+      "integration_seam": "Candidate.admissions_urls; LiveDiscoveryAdapter._add_admission_obligations; WebRequirementsAdapter.verify; extract_admission_route. Branch default on; public release pending final exact-source gates and capture.",
+      "counterexample": "Generic extra admission pages consume budget without useful facts; mixed-degree prose and department names do not establish bachelor scope.",
+      "falsification": "Compare equal300s/60-network-read off/on captures and held-out claims, retaining all failed trials. Reject a source/scope regression or budget expansion. Repeated KAIST recovery proves one fact only, not full-corpus readiness.",
+      "evidence_artifacts": [
+        "backend/evaluation/research/expert/data/runs.2026-10-02/paired.kaist-off.capture.json",
+        "backend/evaluation/research/expert/data/runs.2026-10-02/paired.kaist-on.capture.json",
+        "backend/evaluation/research/expert/data/runs.2026-10-02/refined.kaist.capture.json",
+        "backend/evaluation/research/expert/data/runs.2026-10-02/refined.aalto.capture.json"
+      ],
+      "policy_guard": "All reads remain behind Fetcher; no expected URLs/values imported into production, no gold edits, no new blind trace claimed.",
+      "validation_artifact": "docs/process/REFERENCE_FACT_RECOVERY_2026-10-02.md"
+    },
+    {
+      "id": "ER-09",
+      "status": "candidate",
+      "case_ids": [
+        "groningen"
+      ],
+      "observation": "The exact-source live repeat fetched the matching bachelor programme at t257s, then spent its remaining deadline on alternative pages and old PDFs before persisting requirements. Offline replay of the five completed confirmation reads preserves the first exact page with one read versus five. This is a stage replay, not measured claim recovery.",
+      "proposed_rule": "For one requested field only, finish search confirmation after a fetched programme page proves both the requested degree and ontology identity YES. Ambiguous identities, listing titles and multiple requested fields keep existing exploration.",
+      "integration_seam": "LiveDiscoveryAdapter._recover_search_pages; FINISH_EXACT_SINGLE_FIELD remains False. Evaluation opt-in --finish-exact-single-field.",
+      "counterexample": "The first exact subject may lack useful requirements or name a different campus; alternatives might contain more complete evidence. Stage savings alone do not justify promotion.",
+      "falsification": "Require equal-budget live off/on captures and held-out source/scope review. Reject if official fact recall declines or unsupported/wrong-scope claims increase. HTTP429 currently prevents the live pair.",
+      "evidence_artifacts": [
+        "backend/evaluation/research/expert/data/runs.2026-10-02/er09.frozen-prefix.json"
+      ],
+      "policy_guard": "No gold production imports, provider retries, increased budget, or Fetcher bypass. Replay uses only prior Fetcher cache bodies and makes zero network calls.",
+      "validation_artifact": "backend/tests/test_search_identity_recovery.py"
+    },
+    {
+      "id": "ER-10",
+      "status": "candidate",
+      "case_ids": [
+        "groningen"
+      ],
+      "observation": "Requirements were only persisted after awaited cost/government adapters. A downstream failure lost already extracted evidence. Independent-connection regression failed before the fix; same cached official Groningen response and injected cost failure stores0claims before versus3 after, with0 completed programmes. Full2910 tests pass. Live recall remains unmeasured.",
+      "proposed_rule": "Checkpoint guarded evidence after each completed adapter and complete programme, retaining explicit incomplete status and richer prior-attempt rows until a complete replacement.",
+      "integration_seam": "ResearchRunner._stage_verify and shared _persist_verification_evidence, behind existing transactional lease fence.",
+      "counterexample": "Prematurely persisted claims can bypass campus/freshness/conflict checks, duplicate counts on retry, or overwrite richer prior evidence. All are covered by regressions; complete live capture remains required.",
+      "falsification": "A partial checkpoint must survive an independent DB reader but not count as a completed programme; preserve guards, retry notes and counts. Compare complete live claims on fresh same-budget runs when provider access is restored.",
+      "evidence_artifacts": [
+        "backend/evaluation/research/expert/data/runs.2026-10-02/er10.frozen-durability.json"
+      ],
+      "policy_guard": "Normal evidence guards and Fetcher unchanged. Frozen offline diagnostic has zero network calls and does not claim a new reference score.",
+      "validation_artifact": "backend/tests/test_pipeline.py::TestVerificationDurability"
+    },
+    {
+      "id": "ER-11",
+      "status": "tested",
+      "case_ids": [
+        "ntu"
+      ],
+      "observation": "Two saved official Nanyang scholarship responses yielded essay and referee claims, but unrelated Tuition Grant prose imposed international population on every document. Explicit teacher and family exclusion were retained only in free text; document identities were unbound. Frozen replay after repair scores five document labels on each page, versus zero before, with full NTU denominator21 retained. Exact reviewed-page recall remains0 because official URLs changed. This is not new discovery or live recall.",
+      "proposed_rule": "Derive document population from its own clause and structural headings; retain explicit unconditional recommender role and immediately qualifying family exclusion; keep final same-site source URL.",
+      "integration_seam": "WebDocumentsAdapter._from_page; read_documents; exact observed document identity bindings and typed evaluation mapping.",
+      "counterexample": "Optional or conditional appraisals, adjacent unrelated restrictions, mixed populations, wrong awards and foreign redirects must not establish unconditional document facts.",
+      "falsification": "Offline unchanged-source before/after with frozen raw outputs and original gold; negative conditional/source/identity tests; full regression. Live recovery remains unproven because pre-decision captures do not collect documents.",
+      "evidence_artifacts": [
+        "backend/evaluation/research/expert/data/runs.2026-10-02/er11.frozen-documents.json"
+      ],
+      "policy_guard": "Fetcher and signed gold unchanged; identity mapping does not invent values or reviewer approval; supported/current adjudication left unset.",
+      "validation_artifact": "docs/process/REFERENCE_FACT_RECOVERY_2026-10-02.md"
+    },
+    {
+      "id": "ER-12",
+      "status": "tested",
+      "case_ids": [
+        "groningen"
+      ],
+      "observation": "Fresh official Groningen document page repeats an explicit translation exception for English, Dutch, French and German and allows self-made translations for assessment. Previous reader emitted unconditional certified English translation. Same saved response and new identities on both arms score2/11 before and3/11 after; total25 claims unchanged.",
+      "proposed_rule": "Preserve a complete explicit translation language exception as a structured conditional document claim; display the condition on the checklist and do not infer certification or translator ownership. Unparsed conditional clauses and translation permission alone do not establish unconditional requirements.",
+      "integration_seam": "web_documents._translation_exception/read_documents, required_document typed mapping, separately versioned observed-conditions identity file.",
+      "counterexample": "May-submit wording, a positive language condition, unspecified other accepted languages, repeated/invalid language names, an unrelated note or conditional board request must not become this exception.",
+      "falsification": "Replay exact Fetcher response with old1c3db3e and repaired adapter, same mapper and identities; require exact stated language list and absence of unconditional translation claim. Run focused negatives and full regression; no live recall assertion.",
+      "evidence_artifacts": [
+        "backend/evaluation/research/expert/data/runs.2026-10-02/er12.frozen-translation.json"
+      ],
+      "policy_guard": "Signed gold, prior identity versions and Fetcher unchanged. No new human evidence/currentness adjudication, no forced expected values, no live capture upgrade.",
+      "validation_artifact": "docs/process/REFERENCE_FACT_RECOVERY_2026-10-02.md"
+    },
+    {
+      "id": "ER-13",
+      "status": "tested",
+      "case_ids": [
+        "toronto"
+      ],
+      "observation": "School-system picker hidden h2/control headings erase published St.George/Ontario context. Exact saved-page replay produces0 to1 scoped supplemental document, but reviewed recall remains0/4 because degree is unstated. Mapping previously omitted the recorded qualification.",
+      "proposed_rule": "Ignore only form-only helper headings, retain normal accessible headings; read explicit required supplemental table row only under matching programme/campus; preserve qualification and missing degree.",
+      "integration_seam": "document_ir form heading handling; documents.structured_documents; evaluation.mapping.evidence_scope; exact observed-supplemental bindings.",
+      "counterexample": "A real accessible heading, another campus, an optional/conditional row or another qualification must not be silently replaced by request context.",
+      "falsification": "Same-source old/new reader and adversarial shape tests; reject if it invents degree or loses qualification. Full regression and catalogue-only live diagnostics reported separately.",
+      "evidence_artifacts": [
+        "backend/evaluation/research/expert/data/runs.2026-10-02/er13.frozen-supplemental.json"
+      ],
+      "policy_guard": "Original gold and prior bindings untouched; no CAPTCHA/robots bypass, no requested degree as published evidence.",
+      "validation_artifact": "docs/process/REFERENCE_FACT_RECOVERY_2026-10-02.md"
+    },
+    {
+      "id": "ER-14",
+      "status": "observed",
+      "case_ids": [
+        "groningen",
+        "toronto"
+      ],
+      "observation": "Source33804d0 catalogue-only cold runs return Groningen0/11 and Toronto0/4. Frozen cached-page walk repeats the miss: Toronto field index reads_as_unknown is never descended into; Groningen alphabet list reads_as_program_detail and less relevant catalogue-shaped links take descent priority. No routing change implemented.",
+      "proposed_rule": "Use source-proven programme-list structure and requested-field relevance for bounded descent, preserving existing programme and degree confirmation. First create a failing offline regression from the cached official pages.",
+      "integration_seam": "app.adapters.discovery.catalog_walker._descent_lead and CatalogWalker.walk",
+      "counterexample": "A field-related news page, a real single programme or unrelated faculty menu must not become a confirmed programme; budgets and domain guards must remain unchanged.",
+      "falsification": "Frozen same-response replay plus independent negative examples, then equal120s/60-read fresh paired captures after workflow/provider access is available. Existing300s diagnostic runs cannot establish that comparison.",
+      "evidence_artifacts": [
+        "backend/evaluation/research/expert/data/runs.2026-10-02/catalogue-only.2026-10-03/groningen.raw.json",
+        "backend/evaluation/research/expert/data/runs.2026-10-02/catalogue-only.2026-10-03/toronto.raw.json"
+      ],
+      "policy_guard": "No source modification or promotion yet; signed gold, Fetcher and ER09 default-off unchanged. Do not inject expected URLs.",
+      "validation_artifact": "docs/process/REFERENCE_FACT_RECOVERY_2026-10-02.md"
+    },
+    {
+      "id": "ER-15",
+      "status": "tested",
+      "case_ids": [
+        "groningen"
+      ],
+      "observation": "Main37110018701 oracle misses both secondary diploma completion forms. Actual saved HTML combines secondary and conditional higher-education groups in one oversized Diploma cell. Existing reader drops it; unchanged-source offline replay recovers the two distinct completion forms after bounded grouping. Red regression retained; live confirmation pending. Sourceadf2f9f fresh run37112534809 confirms both diploma facts recovered in the live direct-source oracle. Blind Groningen remains0/11 with115s child deadline,0 search calls and77 HTTP requests. No full-search gain claimed.",
+      "proposed_rule": "In an explicitly labelled diploma table cell, read a complete secondary-education completion statement bounded by the next explicit higher-education group. Preserve the source excerpt; additional conditions, unknown forms, wrong labels, absent boundaries and oversized groups abstain.",
+      "integration_seam": "documents.web_documents._structured_completion_forms; no IR, Fetcher, schema or ranking change.",
+      "counterexample": "A higher-education-only requirement, ambiguous document label, optional secondary group or unrelated prose mentioning higher education cannot become a school-diploma obligation.",
+      "falsification": "Actual-row red/green regression and full saved-source replay, negative scope/boundary cases, full gates, followed by fresh120s/60reads explicit-exa Groningen capture and direct-source oracle. Any unchanged blind recall must remain reported separately.",
+      "evidence_artifacts": [
+        "backend/tests/fixtures/live_shapes/groningen_diploma_row.html",
+        "backend/evaluation/research/expert/data/runs.2026-10-03/er15.frozen-diploma.json",
+        "backend/evaluation/research/expert/data/runs.2026-10-03/main.37110018701/oracle.json",
+        "backend/evaluation/research/expert/data/runs.2026-10-03/er15.37112534809/oracle.json"
+      ],
+      "policy_guard": "No network in regression, no expected URL injection into discovery, no signed labels or identity changes; claim forms do not assert acceptance or applicant funding.",
+      "validation_artifact": "backend/tests/test_documents_by_completion.py"
     }
   ]
 }
