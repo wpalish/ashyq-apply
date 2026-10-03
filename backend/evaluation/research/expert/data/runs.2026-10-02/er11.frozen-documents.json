@@ -1,0 +1,5079 @@
+{
+  "experiment": "ER-11",
+  "mode": "offline reached-source evaluator diagnosis",
+  "limitations": [
+    "Explicit source URLs, not blind discovery or a live search capture.",
+    "Full NTU case denominator retained; only document extraction is exercised.",
+    "No manual evidence adjudication, no gold edits; same-page recall remains separately reported.",
+    "Pre-decision research does not collect documents; this result must not be added to latest live 13/62."
+  ],
+  "gold_sha256": "f72e5cf3dfdf23a1ee0a7d7ec1c00803c4161adcd467e4d9cc6895ea9bba0de8",
+  "binding_sha256": {
+    "identity_bindings.2026-10-02.observed.json": "86efde894512787a3b25cd94c1f6c06dca2877678eb809357d59fd422a92b763",
+    "identity_bindings.2026-10-03.observed.json": "b3f843c35b09321806f36ffb02b31c715bf597011bf08078f29bae694661a9f7"
+  },
+  "cases": [
+    {
+      "requested_url": "https://www.ntu.edu.sg/admissions/ug/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+      "raw_before": {
+        "url": "https://www.ntu.edu.sg/admissions/ug/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+        "docs": [
+          "Personal Essay",
+          "Passport-size photograph (digital image)",
+          "Referee appraisal"
+        ],
+        "claims": [
+          {
+            "claim_type": "required_document",
+            "normalized_value": "Personal Essay",
+            "original_text_excerpt": "As part of completing the form, a Personal Essay of not more than 250 words is required.",
+            "source_url": "https://www.ntu.edu.sg/admissions/ug/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "page_title": "Nanyang Global Scholarship | NTU Singapore",
+            "relevant_section": "",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": null,
+            "academic_year": "2026/27",
+            "accessed_at": "2026-10-02T15:55:11.261483Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": "international",
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.75,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          },
+          {
+            "claim_type": "essay_prompt",
+            "normalized_value": {
+              "document": "Personal Essay",
+              "word_limit": 250
+            },
+            "original_text_excerpt": "As part of completing the form, a Personal Essay of not more than 250 words is required.",
+            "source_url": "https://www.ntu.edu.sg/admissions/ug/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "page_title": "Nanyang Global Scholarship | NTU Singapore",
+            "relevant_section": "",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": null,
+            "academic_year": "2026/27",
+            "accessed_at": "2026-10-02T15:55:11.261483Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": "international",
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.8,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          },
+          {
+            "claim_type": "required_document",
+            "normalized_value": "Passport-size photograph (digital image)",
+            "original_text_excerpt": "Applicants are required to submit the following after completing your application form: upload a recent passport-size photo (digital image).",
+            "source_url": "https://www.ntu.edu.sg/admissions/ug/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "page_title": "Nanyang Global Scholarship | NTU Singapore",
+            "relevant_section": "",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": null,
+            "academic_year": "2026/27",
+            "accessed_at": "2026-10-02T15:55:11.261483Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": "international",
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.75,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          },
+          {
+            "claim_type": "required_document",
+            "normalized_value": "Referee appraisal",
+            "original_text_excerpt": "submit a referee's appraisal online. The appraisal is to be completed by your school teacher, who must not be your family or relative.",
+            "source_url": "https://www.ntu.edu.sg/admissions/ug/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "page_title": "Nanyang Global Scholarship | NTU Singapore",
+            "relevant_section": "",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": null,
+            "academic_year": "2026/27",
+            "accessed_at": "2026-10-02T15:55:11.261483Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": "international",
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.75,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          },
+          {
+            "claim_type": "recommendation_requirement",
+            "normalized_value": "Referee appraisal",
+            "original_text_excerpt": "submit a referee's appraisal online. The appraisal is to be completed by your school teacher, who must not be your family or relative.",
+            "source_url": "https://www.ntu.edu.sg/admissions/ug/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "page_title": "Nanyang Global Scholarship | NTU Singapore",
+            "relevant_section": "",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": null,
+            "academic_year": "2026/27",
+            "accessed_at": "2026-10-02T15:55:11.261483Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": "international",
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.75,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          }
+        ]
+      },
+      "raw_after": {
+        "url": "https://www.ntu.edu.sg/admissions/ug/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+        "docs": [
+          "Personal Essay",
+          "Passport-size photograph (digital image)",
+          "Referee appraisal"
+        ],
+        "claims": [
+          {
+            "claim_type": "required_document",
+            "normalized_value": "Personal Essay",
+            "original_text_excerpt": "As part of completing the form, a Personal Essay of not more than 250 words is required.",
+            "source_url": "https://www.ntu.edu.sg/admissions/ug/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "page_title": "Nanyang Global Scholarship | NTU Singapore",
+            "relevant_section": "",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": null,
+            "academic_year": "2026/27",
+            "accessed_at": "2026-10-02T15:55:11.261483Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": null,
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.75,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          },
+          {
+            "claim_type": "essay_prompt",
+            "normalized_value": {
+              "document": "Personal Essay",
+              "word_limit": 250
+            },
+            "original_text_excerpt": "As part of completing the form, a Personal Essay of not more than 250 words is required.",
+            "source_url": "https://www.ntu.edu.sg/admissions/ug/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "page_title": "Nanyang Global Scholarship | NTU Singapore",
+            "relevant_section": "",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": null,
+            "academic_year": "2026/27",
+            "accessed_at": "2026-10-02T15:55:11.261483Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": null,
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.8,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          },
+          {
+            "claim_type": "required_document",
+            "normalized_value": "Passport-size photograph (digital image)",
+            "original_text_excerpt": "Applicants are required to submit the following after completing your application form: upload a recent passport-size photo (digital image).",
+            "source_url": "https://www.ntu.edu.sg/admissions/ug/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "page_title": "Nanyang Global Scholarship | NTU Singapore",
+            "relevant_section": "",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": null,
+            "academic_year": "2026/27",
+            "accessed_at": "2026-10-02T15:55:11.261483Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": null,
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.75,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          },
+          {
+            "claim_type": "required_document",
+            "normalized_value": "Referee appraisal",
+            "original_text_excerpt": "submit a referee's appraisal online. The appraisal is to be completed by your school teacher, who must not be your family or relative.",
+            "source_url": "https://www.ntu.edu.sg/admissions/ug/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "page_title": "Nanyang Global Scholarship | NTU Singapore",
+            "relevant_section": "",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": null,
+            "academic_year": "2026/27",
+            "accessed_at": "2026-10-02T15:55:11.261483Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": null,
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.75,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          },
+          {
+            "claim_type": "recommendation_requirement",
+            "normalized_value": {
+              "document": "Referee appraisal",
+              "role": "school_teacher",
+              "family_or_relative_allowed": false
+            },
+            "original_text_excerpt": "submit a referee's appraisal online. The appraisal is to be completed by your school teacher, who must not be your family or relative.",
+            "source_url": "https://www.ntu.edu.sg/admissions/ug/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "page_title": "Nanyang Global Scholarship | NTU Singapore",
+            "relevant_section": "",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": null,
+            "academic_year": "2026/27",
+            "accessed_at": "2026-10-02T15:55:11.261483Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": null,
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.75,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          }
+        ]
+      },
+      "variants": {
+        "before_old_identities": {
+          "predictions": [
+            {
+              "key": "unmapped.required_document",
+              "value": "Personal Essay",
+              "evidence": {
+                "url": "https://www.ntu.edu.sg/admissions/ug/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+                "excerpt": "As part of completing the form, a Personal Essay of not more than 250 words is required.",
+                "scope": {
+                  "university": "Nanyang Technological University",
+                  "programme": "Computer Science",
+                  "degree": "bachelor",
+                  "field": null,
+                  "intake": null,
+                  "population": "international",
+                  "qualification": null,
+                  "academic_year": null
+                },
+                "accessed_on": "2026-10-02",
+                "source_type": "official",
+                "excerpt_truncated": false
+              },
+              "supported": null,
+              "current": null,
+              "conflict_visible": null
+            },
+            {
+              "key": "unmapped.essay_prompt",
+              "value": {
+                "document": "Personal Essay",
+                "word_limit": 250
+              },
+              "evidence": {
+                "url": "https://www.ntu.edu.sg/admissions/ug/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+                "excerpt": "As part of completing the form, a Personal Essay of not more than 250 words is required.",
+                "scope": {
+                  "university": "Nanyang Technological University",
+                  "programme": "Computer Science",
+                  "degree": "bachelor",
+                  "field": null,
+                  "intake": null,
+                  "population": "international",
+                  "qualification": null,
+                  "academic_year": null
+                },
+                "accessed_on": "2026-10-02",
+                "source_type": "official",
+                "excerpt_truncated": false
+              },
+              "supported": null,
+              "current": null,
+              "conflict_visible": null
+            },
+            {
+              "key": "unmapped.required_document",
+              "value": "Passport-size photograph (digital image)",
+              "evidence": {
+                "url": "https://www.ntu.edu.sg/admissions/ug/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+                "excerpt": "Applicants are required to submit the following after completing your application form: upload a recent passport-size photo (digital image).",
+                "scope": {
+                  "university": "Nanyang Technological University",
+                  "programme": "Computer Science",
+                  "degree": "bachelor",
+                  "field": null,
+                  "intake": null,
+                  "population": "international",
+                  "qualification": null,
+                  "academic_year": null
+                },
+                "accessed_on": "2026-10-02",
+                "source_type": "official",
+                "excerpt_truncated": false
+              },
+              "supported": null,
+              "current": null,
+              "conflict_visible": null
+            },
+            {
+              "key": "unmapped.required_document",
+              "value": "Referee appraisal",
+              "evidence": {
+                "url": "https://www.ntu.edu.sg/admissions/ug/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+                "excerpt": "submit a referee's appraisal online. The appraisal is to be completed by your school teacher, who must not be your family or relative.",
+                "scope": {
+                  "university": "Nanyang Technological University",
+                  "programme": "Computer Science",
+                  "degree": "bachelor",
+                  "field": null,
+                  "intake": null,
+                  "population": "international",
+                  "qualification": null,
+                  "academic_year": null
+                },
+                "accessed_on": "2026-10-02",
+                "source_type": "official",
+                "excerpt_truncated": false
+              },
+              "supported": null,
+              "current": null,
+              "conflict_visible": null
+            },
+            {
+              "key": "unmapped.recommendation_requirement",
+              "value": "Referee appraisal",
+              "evidence": {
+                "url": "https://www.ntu.edu.sg/admissions/ug/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+                "excerpt": "submit a referee's appraisal online. The appraisal is to be completed by your school teacher, who must not be your family or relative.",
+                "scope": {
+                  "university": "Nanyang Technological University",
+                  "programme": "Computer Science",
+                  "degree": "bachelor",
+                  "field": null,
+                  "intake": null,
+                  "population": "international",
+                  "qualification": null,
+                  "academic_year": null
+                },
+                "accessed_on": "2026-10-02",
+                "source_type": "official",
+                "excerpt_truncated": false
+              },
+              "supported": null,
+              "current": null,
+              "conflict_visible": null
+            }
+          ],
+          "score": {
+            "dataset_version": "2026-09-23.reviewed",
+            "dataset_sha256": "c0f55080039a7ea9a3bff291f39b2668f1987963cd4a8f6f82abe201b821c57e",
+            "pipeline_sha": "ER-11-working-tree",
+            "provisional": false,
+            "mode": "replay",
+            "captured_at": "2026-10-03",
+            "config": {
+              "diagnosis": "documents only"
+            },
+            "metrics": {
+              "programme_page_recall": {
+                "numerator": 0,
+                "denominator": 1,
+                "value": 0.0
+              },
+              "programme_page_precision": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "recall_at_5": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "recall_at_10": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "recall_at_20": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "claim_precision": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "claim_recall": {
+                "numerator": 0,
+                "denominator": 21,
+                "value": 0.0
+              },
+              "claim_recall_same_page": {
+                "numerator": 0,
+                "denominator": 21,
+                "value": 0.0
+              },
+              "unsupported_claim_rate": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "wrong_scope_claim_rate": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "critical_field_coverage": {
+                "numerator": 0,
+                "denominator": 39,
+                "value": 0.0
+              },
+              "scholarship_discovery_recall": {
+                "numerator": 0,
+                "denominator": 1,
+                "value": 0.0
+              },
+              "scholarship_applicability_precision": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "scholarship_applicability_recall": {
+                "numerator": 0,
+                "denominator": 3,
+                "value": 0.0
+              },
+              "scholarship_coverage_precision": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "primary_source_rate": {
+                "numerator": 5,
+                "denominator": 5,
+                "value": 1.0
+              },
+              "verbatim_evidence_rate": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "current_evidence_rate": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "conflict_visibility_rate": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "support_adjudication_rate": {
+                "numerator": 0,
+                "denominator": 5,
+                "value": 0.0
+              },
+              "claim_adjudication_rate": {
+                "numerator": 0,
+                "denominator": 5,
+                "value": 0.0
+              },
+              "human_review_rate": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              }
+            },
+            "fields": {
+              "country_credential": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "country_credential.high_school_certificate.additional_qualification_required": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "country_credential.nis_grade12.minimum_grades": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "deadline": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "documents.admission": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "documents.programme": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "documents.scholarship": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "documents.scholarship.nanyang_global.essay.maximum_words": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "documents.scholarship.nanyang_global.essay.required": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "documents.scholarship.nanyang_global.referee.family_or_relative_allowed": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "documents.scholarship.nanyang_global.referee.required": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "documents.scholarship.nanyang_global.referee.role": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "english_evidence.ielts.minimum": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "english_evidence.sat.minimum": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "ielts.overall": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "ielts.subscores": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "intake": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "mandatory_fees": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "programme.exists": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "sat.minimum": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "sat.policy": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarship_applicability": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarship_coverage": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.applicability.application_mode": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.applicability.degree": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.applicability.intake": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.applicability.nationality": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.applicability.programme": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.bond": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.coverage.fees": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.coverage.housing": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.coverage.insurance": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.coverage.living": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.coverage.travel": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.coverage.tuition": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.duration": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.exists": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.renewal": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "tuition": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              }
+            },
+            "operations": {
+              "http_fetches": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "browser_fetches": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "pdf_fetches": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "search_calls": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "model_input_tokens": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "jev_input_tokens": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "latency_seconds": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "cost_usd": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "human_review_required": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "latency_percentiles": {
+                "p50": null,
+                "p95": null
+              }
+            },
+            "cases": [
+              {
+                "case_id": "ntu",
+                "country": "Singapore",
+                "site_types": [
+                  "large_navigation"
+                ],
+                "programme_hit": false,
+                "correct_claims": 0,
+                "answerable_claims": 21,
+                "error": null
+              }
+            ],
+            "notes": [
+              "Exact value and evidence-scope matching; unlabelled predictions are unadjudicated, not correct.",
+              "Missing rank lists/telemetry yield null; per-case failures stay in recall denominators.",
+              "No overall accuracy score. Programme URLs measure identity, not intake confirmation."
+            ]
+          }
+        },
+        "before_new_identities": {
+          "predictions": [
+            {
+              "key": "documents.scholarship.nanyang_global.essay.required",
+              "value": true,
+              "evidence": {
+                "url": "https://www.ntu.edu.sg/admissions/ug/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+                "excerpt": "As part of completing the form, a Personal Essay of not more than 250 words is required.",
+                "scope": {
+                  "university": "Nanyang Technological University",
+                  "programme": "Computer Science",
+                  "degree": "bachelor",
+                  "field": null,
+                  "intake": null,
+                  "population": "international",
+                  "qualification": null,
+                  "academic_year": null
+                },
+                "accessed_on": "2026-10-02",
+                "source_type": "official",
+                "excerpt_truncated": false
+              },
+              "supported": null,
+              "current": null,
+              "conflict_visible": null
+            },
+            {
+              "key": "documents.scholarship.nanyang_global.essay.maximum_words",
+              "value": 250,
+              "evidence": {
+                "url": "https://www.ntu.edu.sg/admissions/ug/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+                "excerpt": "As part of completing the form, a Personal Essay of not more than 250 words is required.",
+                "scope": {
+                  "university": "Nanyang Technological University",
+                  "programme": "Computer Science",
+                  "degree": "bachelor",
+                  "field": null,
+                  "intake": null,
+                  "population": "international",
+                  "qualification": null,
+                  "academic_year": null
+                },
+                "accessed_on": "2026-10-02",
+                "source_type": "official",
+                "excerpt_truncated": false
+              },
+              "supported": null,
+              "current": null,
+              "conflict_visible": null
+            },
+            {
+              "key": "unmapped.required_document",
+              "value": "Passport-size photograph (digital image)",
+              "evidence": {
+                "url": "https://www.ntu.edu.sg/admissions/ug/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+                "excerpt": "Applicants are required to submit the following after completing your application form: upload a recent passport-size photo (digital image).",
+                "scope": {
+                  "university": "Nanyang Technological University",
+                  "programme": "Computer Science",
+                  "degree": "bachelor",
+                  "field": null,
+                  "intake": null,
+                  "population": "international",
+                  "qualification": null,
+                  "academic_year": null
+                },
+                "accessed_on": "2026-10-02",
+                "source_type": "official",
+                "excerpt_truncated": false
+              },
+              "supported": null,
+              "current": null,
+              "conflict_visible": null
+            },
+            {
+              "key": "documents.scholarship.nanyang_global.referee.required",
+              "value": true,
+              "evidence": {
+                "url": "https://www.ntu.edu.sg/admissions/ug/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+                "excerpt": "submit a referee's appraisal online. The appraisal is to be completed by your school teacher, who must not be your family or relative.",
+                "scope": {
+                  "university": "Nanyang Technological University",
+                  "programme": "Computer Science",
+                  "degree": "bachelor",
+                  "field": null,
+                  "intake": null,
+                  "population": "international",
+                  "qualification": null,
+                  "academic_year": null
+                },
+                "accessed_on": "2026-10-02",
+                "source_type": "official",
+                "excerpt_truncated": false
+              },
+              "supported": null,
+              "current": null,
+              "conflict_visible": null
+            },
+            {
+              "key": "documents.scholarship.nanyang_global.referee.required",
+              "value": true,
+              "evidence": {
+                "url": "https://www.ntu.edu.sg/admissions/ug/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+                "excerpt": "submit a referee's appraisal online. The appraisal is to be completed by your school teacher, who must not be your family or relative.",
+                "scope": {
+                  "university": "Nanyang Technological University",
+                  "programme": "Computer Science",
+                  "degree": "bachelor",
+                  "field": null,
+                  "intake": null,
+                  "population": "international",
+                  "qualification": null,
+                  "academic_year": null
+                },
+                "accessed_on": "2026-10-02",
+                "source_type": "official",
+                "excerpt_truncated": false
+              },
+              "supported": null,
+              "current": null,
+              "conflict_visible": null
+            }
+          ],
+          "score": {
+            "dataset_version": "2026-09-23.reviewed",
+            "dataset_sha256": "c0f55080039a7ea9a3bff291f39b2668f1987963cd4a8f6f82abe201b821c57e",
+            "pipeline_sha": "ER-11-working-tree",
+            "provisional": false,
+            "mode": "replay",
+            "captured_at": "2026-10-03",
+            "config": {
+              "diagnosis": "documents only"
+            },
+            "metrics": {
+              "programme_page_recall": {
+                "numerator": 0,
+                "denominator": 1,
+                "value": 0.0
+              },
+              "programme_page_precision": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "recall_at_5": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "recall_at_10": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "recall_at_20": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "claim_precision": {
+                "numerator": 0,
+                "denominator": 3,
+                "value": 0.0
+              },
+              "claim_recall": {
+                "numerator": 0,
+                "denominator": 21,
+                "value": 0.0
+              },
+              "claim_recall_same_page": {
+                "numerator": 0,
+                "denominator": 21,
+                "value": 0.0
+              },
+              "unsupported_claim_rate": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "wrong_scope_claim_rate": {
+                "numerator": 3,
+                "denominator": 3,
+                "value": 1.0
+              },
+              "critical_field_coverage": {
+                "numerator": 3,
+                "denominator": 39,
+                "value": 0.07692307692307693
+              },
+              "scholarship_discovery_recall": {
+                "numerator": 0,
+                "denominator": 1,
+                "value": 0.0
+              },
+              "scholarship_applicability_precision": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "scholarship_applicability_recall": {
+                "numerator": 0,
+                "denominator": 3,
+                "value": 0.0
+              },
+              "scholarship_coverage_precision": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "primary_source_rate": {
+                "numerator": 4,
+                "denominator": 4,
+                "value": 1.0
+              },
+              "verbatim_evidence_rate": {
+                "numerator": 0,
+                "denominator": 3,
+                "value": 0.0
+              },
+              "current_evidence_rate": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "conflict_visibility_rate": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "support_adjudication_rate": {
+                "numerator": 0,
+                "denominator": 4,
+                "value": 0.0
+              },
+              "claim_adjudication_rate": {
+                "numerator": 3,
+                "denominator": 4,
+                "value": 0.75
+              },
+              "human_review_rate": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              }
+            },
+            "fields": {
+              "country_credential": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "country_credential.high_school_certificate.additional_qualification_required": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "country_credential.nis_grade12.minimum_grades": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "deadline": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "documents.admission": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "documents.programme": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "documents.scholarship": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "documents.scholarship.nanyang_global.essay.maximum_words": {
+                "precision": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "coverage": {
+                  "numerator": 1,
+                  "denominator": 1,
+                  "value": 1.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "documents.scholarship.nanyang_global.essay.required": {
+                "precision": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "coverage": {
+                  "numerator": 1,
+                  "denominator": 1,
+                  "value": 1.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "documents.scholarship.nanyang_global.referee.family_or_relative_allowed": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "documents.scholarship.nanyang_global.referee.required": {
+                "precision": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "coverage": {
+                  "numerator": 1,
+                  "denominator": 1,
+                  "value": 1.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "documents.scholarship.nanyang_global.referee.role": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "english_evidence.ielts.minimum": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "english_evidence.sat.minimum": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "ielts.overall": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "ielts.subscores": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "intake": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "mandatory_fees": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "programme.exists": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "sat.minimum": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "sat.policy": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarship_applicability": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarship_coverage": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.applicability.application_mode": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.applicability.degree": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.applicability.intake": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.applicability.nationality": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.applicability.programme": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.bond": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.coverage.fees": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.coverage.housing": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.coverage.insurance": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.coverage.living": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.coverage.travel": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.coverage.tuition": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.duration": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.exists": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.renewal": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "tuition": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              }
+            },
+            "operations": {
+              "http_fetches": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "browser_fetches": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "pdf_fetches": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "search_calls": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "model_input_tokens": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "jev_input_tokens": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "latency_seconds": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "cost_usd": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "human_review_required": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "latency_percentiles": {
+                "p50": null,
+                "p95": null
+              }
+            },
+            "cases": [
+              {
+                "case_id": "ntu",
+                "country": "Singapore",
+                "site_types": [
+                  "large_navigation"
+                ],
+                "programme_hit": false,
+                "correct_claims": 0,
+                "answerable_claims": 21,
+                "error": null
+              }
+            ],
+            "notes": [
+              "Exact value and evidence-scope matching; unlabelled predictions are unadjudicated, not correct.",
+              "Missing rank lists/telemetry yield null; per-case failures stay in recall denominators.",
+              "No overall accuracy score. Programme URLs measure identity, not intake confirmation."
+            ]
+          }
+        },
+        "after_new_identities": {
+          "predictions": [
+            {
+              "key": "documents.scholarship.nanyang_global.essay.required",
+              "value": true,
+              "evidence": {
+                "url": "https://www.ntu.edu.sg/admissions/ug/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+                "excerpt": "As part of completing the form, a Personal Essay of not more than 250 words is required.",
+                "scope": {
+                  "university": "Nanyang Technological University",
+                  "programme": "Computer Science",
+                  "degree": "bachelor",
+                  "field": null,
+                  "intake": null,
+                  "population": null,
+                  "qualification": null,
+                  "academic_year": null
+                },
+                "accessed_on": "2026-10-02",
+                "source_type": "official",
+                "excerpt_truncated": false
+              },
+              "supported": null,
+              "current": null,
+              "conflict_visible": null
+            },
+            {
+              "key": "documents.scholarship.nanyang_global.essay.maximum_words",
+              "value": 250,
+              "evidence": {
+                "url": "https://www.ntu.edu.sg/admissions/ug/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+                "excerpt": "As part of completing the form, a Personal Essay of not more than 250 words is required.",
+                "scope": {
+                  "university": "Nanyang Technological University",
+                  "programme": "Computer Science",
+                  "degree": "bachelor",
+                  "field": null,
+                  "intake": null,
+                  "population": null,
+                  "qualification": null,
+                  "academic_year": null
+                },
+                "accessed_on": "2026-10-02",
+                "source_type": "official",
+                "excerpt_truncated": false
+              },
+              "supported": null,
+              "current": null,
+              "conflict_visible": null
+            },
+            {
+              "key": "unmapped.required_document",
+              "value": "Passport-size photograph (digital image)",
+              "evidence": {
+                "url": "https://www.ntu.edu.sg/admissions/ug/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+                "excerpt": "Applicants are required to submit the following after completing your application form: upload a recent passport-size photo (digital image).",
+                "scope": {
+                  "university": "Nanyang Technological University",
+                  "programme": "Computer Science",
+                  "degree": "bachelor",
+                  "field": null,
+                  "intake": null,
+                  "population": null,
+                  "qualification": null,
+                  "academic_year": null
+                },
+                "accessed_on": "2026-10-02",
+                "source_type": "official",
+                "excerpt_truncated": false
+              },
+              "supported": null,
+              "current": null,
+              "conflict_visible": null
+            },
+            {
+              "key": "documents.scholarship.nanyang_global.referee.required",
+              "value": true,
+              "evidence": {
+                "url": "https://www.ntu.edu.sg/admissions/ug/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+                "excerpt": "submit a referee's appraisal online. The appraisal is to be completed by your school teacher, who must not be your family or relative.",
+                "scope": {
+                  "university": "Nanyang Technological University",
+                  "programme": "Computer Science",
+                  "degree": "bachelor",
+                  "field": null,
+                  "intake": null,
+                  "population": null,
+                  "qualification": null,
+                  "academic_year": null
+                },
+                "accessed_on": "2026-10-02",
+                "source_type": "official",
+                "excerpt_truncated": false
+              },
+              "supported": null,
+              "current": null,
+              "conflict_visible": null
+            },
+            {
+              "key": "documents.scholarship.nanyang_global.referee.role",
+              "value": "school_teacher",
+              "evidence": {
+                "url": "https://www.ntu.edu.sg/admissions/ug/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+                "excerpt": "submit a referee's appraisal online. The appraisal is to be completed by your school teacher, who must not be your family or relative.",
+                "scope": {
+                  "university": "Nanyang Technological University",
+                  "programme": "Computer Science",
+                  "degree": "bachelor",
+                  "field": null,
+                  "intake": null,
+                  "population": null,
+                  "qualification": null,
+                  "academic_year": null
+                },
+                "accessed_on": "2026-10-02",
+                "source_type": "official",
+                "excerpt_truncated": false
+              },
+              "supported": null,
+              "current": null,
+              "conflict_visible": null
+            },
+            {
+              "key": "documents.scholarship.nanyang_global.referee.family_or_relative_allowed",
+              "value": false,
+              "evidence": {
+                "url": "https://www.ntu.edu.sg/admissions/ug/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+                "excerpt": "submit a referee's appraisal online. The appraisal is to be completed by your school teacher, who must not be your family or relative.",
+                "scope": {
+                  "university": "Nanyang Technological University",
+                  "programme": "Computer Science",
+                  "degree": "bachelor",
+                  "field": null,
+                  "intake": null,
+                  "population": null,
+                  "qualification": null,
+                  "academic_year": null
+                },
+                "accessed_on": "2026-10-02",
+                "source_type": "official",
+                "excerpt_truncated": false
+              },
+              "supported": null,
+              "current": null,
+              "conflict_visible": null
+            }
+          ],
+          "score": {
+            "dataset_version": "2026-09-23.reviewed",
+            "dataset_sha256": "c0f55080039a7ea9a3bff291f39b2668f1987963cd4a8f6f82abe201b821c57e",
+            "pipeline_sha": "ER-11-working-tree",
+            "provisional": false,
+            "mode": "replay",
+            "captured_at": "2026-10-03",
+            "config": {
+              "diagnosis": "documents only"
+            },
+            "metrics": {
+              "programme_page_recall": {
+                "numerator": 0,
+                "denominator": 1,
+                "value": 0.0
+              },
+              "programme_page_precision": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "recall_at_5": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "recall_at_10": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "recall_at_20": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "claim_precision": {
+                "numerator": 5,
+                "denominator": 5,
+                "value": 1.0
+              },
+              "claim_recall": {
+                "numerator": 5,
+                "denominator": 21,
+                "value": 0.23809523809523808
+              },
+              "claim_recall_same_page": {
+                "numerator": 0,
+                "denominator": 21,
+                "value": 0.0
+              },
+              "unsupported_claim_rate": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "wrong_scope_claim_rate": {
+                "numerator": 0,
+                "denominator": 5,
+                "value": 0.0
+              },
+              "critical_field_coverage": {
+                "numerator": 5,
+                "denominator": 39,
+                "value": 0.1282051282051282
+              },
+              "scholarship_discovery_recall": {
+                "numerator": 0,
+                "denominator": 1,
+                "value": 0.0
+              },
+              "scholarship_applicability_precision": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "scholarship_applicability_recall": {
+                "numerator": 0,
+                "denominator": 3,
+                "value": 0.0
+              },
+              "scholarship_coverage_precision": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "primary_source_rate": {
+                "numerator": 6,
+                "denominator": 6,
+                "value": 1.0
+              },
+              "verbatim_evidence_rate": {
+                "numerator": 0,
+                "denominator": 5,
+                "value": 0.0
+              },
+              "current_evidence_rate": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "conflict_visibility_rate": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "support_adjudication_rate": {
+                "numerator": 0,
+                "denominator": 6,
+                "value": 0.0
+              },
+              "claim_adjudication_rate": {
+                "numerator": 5,
+                "denominator": 6,
+                "value": 0.8333333333333334
+              },
+              "human_review_rate": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              }
+            },
+            "fields": {
+              "country_credential": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "country_credential.high_school_certificate.additional_qualification_required": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "country_credential.nis_grade12.minimum_grades": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "deadline": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "documents.admission": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "documents.programme": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "documents.scholarship": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "documents.scholarship.nanyang_global.essay.maximum_words": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1,
+                  "value": 1.0
+                },
+                "coverage": {
+                  "numerator": 1,
+                  "denominator": 1,
+                  "value": 1.0
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1,
+                  "value": 1.0
+                }
+              },
+              "documents.scholarship.nanyang_global.essay.required": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1,
+                  "value": 1.0
+                },
+                "coverage": {
+                  "numerator": 1,
+                  "denominator": 1,
+                  "value": 1.0
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1,
+                  "value": 1.0
+                }
+              },
+              "documents.scholarship.nanyang_global.referee.family_or_relative_allowed": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1,
+                  "value": 1.0
+                },
+                "coverage": {
+                  "numerator": 1,
+                  "denominator": 1,
+                  "value": 1.0
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1,
+                  "value": 1.0
+                }
+              },
+              "documents.scholarship.nanyang_global.referee.required": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1,
+                  "value": 1.0
+                },
+                "coverage": {
+                  "numerator": 1,
+                  "denominator": 1,
+                  "value": 1.0
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1,
+                  "value": 1.0
+                }
+              },
+              "documents.scholarship.nanyang_global.referee.role": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1,
+                  "value": 1.0
+                },
+                "coverage": {
+                  "numerator": 1,
+                  "denominator": 1,
+                  "value": 1.0
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1,
+                  "value": 1.0
+                }
+              },
+              "english_evidence.ielts.minimum": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "english_evidence.sat.minimum": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "ielts.overall": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "ielts.subscores": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "intake": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "mandatory_fees": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "programme.exists": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "sat.minimum": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "sat.policy": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarship_applicability": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarship_coverage": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.applicability.application_mode": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.applicability.degree": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.applicability.intake": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.applicability.nationality": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.applicability.programme": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.bond": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.coverage.fees": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.coverage.housing": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.coverage.insurance": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.coverage.living": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.coverage.travel": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.coverage.tuition": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.duration": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.exists": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.renewal": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "tuition": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              }
+            },
+            "operations": {
+              "http_fetches": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "browser_fetches": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "pdf_fetches": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "search_calls": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "model_input_tokens": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "jev_input_tokens": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "latency_seconds": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "cost_usd": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "human_review_required": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "latency_percentiles": {
+                "p50": null,
+                "p95": null
+              }
+            },
+            "cases": [
+              {
+                "case_id": "ntu",
+                "country": "Singapore",
+                "site_types": [
+                  "large_navigation"
+                ],
+                "programme_hit": false,
+                "correct_claims": 5,
+                "answerable_claims": 21,
+                "error": null
+              }
+            ],
+            "notes": [
+              "Exact value and evidence-scope matching; unlabelled predictions are unadjudicated, not correct.",
+              "Missing rank lists/telemetry yield null; per-case failures stay in recall denominators.",
+              "No overall accuracy score. Programme URLs measure identity, not intake confirmation."
+            ]
+          }
+        }
+      }
+    },
+    {
+      "requested_url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+      "raw_before": {
+        "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+        "docs": [
+          "Personal Essay",
+          "Passport-size photograph (digital image)",
+          "Referee appraisal"
+        ],
+        "claims": [
+          {
+            "claim_type": "required_document",
+            "normalized_value": "Personal Essay",
+            "original_text_excerpt": "As part of completing the form, a Personal Essay of not more than 250 words is required.",
+            "source_url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "page_title": "Nanyang Global Scholarship | Undergraduate Admissions | NTU Singapore",
+            "relevant_section": "",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": null,
+            "academic_year": "2026/27",
+            "accessed_at": "2026-10-02T15:54:33.562618Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": "international",
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.75,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          },
+          {
+            "claim_type": "essay_prompt",
+            "normalized_value": {
+              "document": "Personal Essay",
+              "word_limit": 250
+            },
+            "original_text_excerpt": "As part of completing the form, a Personal Essay of not more than 250 words is required.",
+            "source_url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "page_title": "Nanyang Global Scholarship | Undergraduate Admissions | NTU Singapore",
+            "relevant_section": "",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": null,
+            "academic_year": "2026/27",
+            "accessed_at": "2026-10-02T15:54:33.562618Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": "international",
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.8,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          },
+          {
+            "claim_type": "required_document",
+            "normalized_value": "Passport-size photograph (digital image)",
+            "original_text_excerpt": "Applicants are required to submit the following after completing your application form: upload a recent passport-size photo (digital image).",
+            "source_url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "page_title": "Nanyang Global Scholarship | Undergraduate Admissions | NTU Singapore",
+            "relevant_section": "",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": null,
+            "academic_year": "2026/27",
+            "accessed_at": "2026-10-02T15:54:33.562618Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": "international",
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.75,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          },
+          {
+            "claim_type": "required_document",
+            "normalized_value": "Referee appraisal",
+            "original_text_excerpt": "submit a referee's appraisal online. The appraisal is to be completed by your school teacher, who must not be your family or relative.",
+            "source_url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "page_title": "Nanyang Global Scholarship | Undergraduate Admissions | NTU Singapore",
+            "relevant_section": "",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": null,
+            "academic_year": "2026/27",
+            "accessed_at": "2026-10-02T15:54:33.562618Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": "international",
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.75,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          },
+          {
+            "claim_type": "recommendation_requirement",
+            "normalized_value": "Referee appraisal",
+            "original_text_excerpt": "submit a referee's appraisal online. The appraisal is to be completed by your school teacher, who must not be your family or relative.",
+            "source_url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+            "page_title": "Nanyang Global Scholarship | Undergraduate Admissions | NTU Singapore",
+            "relevant_section": "",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": null,
+            "academic_year": "2026/27",
+            "accessed_at": "2026-10-02T15:54:33.562618Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": "international",
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.75,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          }
+        ]
+      },
+      "raw_after": {
+        "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+        "docs": [
+          "Personal Essay",
+          "Passport-size photograph (digital image)",
+          "Referee appraisal"
+        ],
+        "claims": [
+          {
+            "claim_type": "required_document",
+            "normalized_value": "Personal Essay",
+            "original_text_excerpt": "As part of completing the form, a Personal Essay of not more than 250 words is required.",
+            "source_url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships-and-awards/scholarship-opportunities/detail/nanyang-scholarship",
+            "page_title": "Nanyang Global Scholarship | Undergraduate Admissions | NTU Singapore",
+            "relevant_section": "",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": null,
+            "academic_year": "2026/27",
+            "accessed_at": "2026-10-02T15:54:33.562618Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": null,
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.75,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          },
+          {
+            "claim_type": "essay_prompt",
+            "normalized_value": {
+              "document": "Personal Essay",
+              "word_limit": 250
+            },
+            "original_text_excerpt": "As part of completing the form, a Personal Essay of not more than 250 words is required.",
+            "source_url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships-and-awards/scholarship-opportunities/detail/nanyang-scholarship",
+            "page_title": "Nanyang Global Scholarship | Undergraduate Admissions | NTU Singapore",
+            "relevant_section": "",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": null,
+            "academic_year": "2026/27",
+            "accessed_at": "2026-10-02T15:54:33.562618Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": null,
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.8,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          },
+          {
+            "claim_type": "required_document",
+            "normalized_value": "Passport-size photograph (digital image)",
+            "original_text_excerpt": "Applicants are required to submit the following after completing your application form: upload a recent passport-size photo (digital image).",
+            "source_url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships-and-awards/scholarship-opportunities/detail/nanyang-scholarship",
+            "page_title": "Nanyang Global Scholarship | Undergraduate Admissions | NTU Singapore",
+            "relevant_section": "",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": null,
+            "academic_year": "2026/27",
+            "accessed_at": "2026-10-02T15:54:33.562618Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": null,
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.75,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          },
+          {
+            "claim_type": "required_document",
+            "normalized_value": "Referee appraisal",
+            "original_text_excerpt": "submit a referee's appraisal online. The appraisal is to be completed by your school teacher, who must not be your family or relative.",
+            "source_url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships-and-awards/scholarship-opportunities/detail/nanyang-scholarship",
+            "page_title": "Nanyang Global Scholarship | Undergraduate Admissions | NTU Singapore",
+            "relevant_section": "",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": null,
+            "academic_year": "2026/27",
+            "accessed_at": "2026-10-02T15:54:33.562618Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": null,
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.75,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          },
+          {
+            "claim_type": "recommendation_requirement",
+            "normalized_value": {
+              "document": "Referee appraisal",
+              "role": "school_teacher",
+              "family_or_relative_allowed": false
+            },
+            "original_text_excerpt": "submit a referee's appraisal online. The appraisal is to be completed by your school teacher, who must not be your family or relative.",
+            "source_url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships-and-awards/scholarship-opportunities/detail/nanyang-scholarship",
+            "page_title": "Nanyang Global Scholarship | Undergraduate Admissions | NTU Singapore",
+            "relevant_section": "",
+            "official_domain": true,
+            "program": "Computer Science",
+            "subject_key": null,
+            "intake": null,
+            "academic_year": "2026/27",
+            "accessed_at": "2026-10-02T15:54:33.562618Z",
+            "scope": {
+              "university": null,
+              "faculty": null,
+              "programme": null,
+              "degree": "bachelor",
+              "intake": null,
+              "academic_year": null,
+              "population": null,
+              "nationality": null,
+              "residency": null,
+              "qualification": null
+            },
+            "source_specificity": "program_intake",
+            "confidence": 0.75,
+            "status": "VERIFIED_CURRENT",
+            "extraction_method": "html_rule",
+            "notes": ""
+          }
+        ]
+      },
+      "variants": {
+        "before_old_identities": {
+          "predictions": [
+            {
+              "key": "unmapped.required_document",
+              "value": "Personal Essay",
+              "evidence": {
+                "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+                "excerpt": "As part of completing the form, a Personal Essay of not more than 250 words is required.",
+                "scope": {
+                  "university": "Nanyang Technological University",
+                  "programme": "Computer Science",
+                  "degree": "bachelor",
+                  "field": null,
+                  "intake": null,
+                  "population": "international",
+                  "qualification": null,
+                  "academic_year": null
+                },
+                "accessed_on": "2026-10-02",
+                "source_type": "official",
+                "excerpt_truncated": false
+              },
+              "supported": null,
+              "current": null,
+              "conflict_visible": null
+            },
+            {
+              "key": "unmapped.essay_prompt",
+              "value": {
+                "document": "Personal Essay",
+                "word_limit": 250
+              },
+              "evidence": {
+                "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+                "excerpt": "As part of completing the form, a Personal Essay of not more than 250 words is required.",
+                "scope": {
+                  "university": "Nanyang Technological University",
+                  "programme": "Computer Science",
+                  "degree": "bachelor",
+                  "field": null,
+                  "intake": null,
+                  "population": "international",
+                  "qualification": null,
+                  "academic_year": null
+                },
+                "accessed_on": "2026-10-02",
+                "source_type": "official",
+                "excerpt_truncated": false
+              },
+              "supported": null,
+              "current": null,
+              "conflict_visible": null
+            },
+            {
+              "key": "unmapped.required_document",
+              "value": "Passport-size photograph (digital image)",
+              "evidence": {
+                "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+                "excerpt": "Applicants are required to submit the following after completing your application form: upload a recent passport-size photo (digital image).",
+                "scope": {
+                  "university": "Nanyang Technological University",
+                  "programme": "Computer Science",
+                  "degree": "bachelor",
+                  "field": null,
+                  "intake": null,
+                  "population": "international",
+                  "qualification": null,
+                  "academic_year": null
+                },
+                "accessed_on": "2026-10-02",
+                "source_type": "official",
+                "excerpt_truncated": false
+              },
+              "supported": null,
+              "current": null,
+              "conflict_visible": null
+            },
+            {
+              "key": "unmapped.required_document",
+              "value": "Referee appraisal",
+              "evidence": {
+                "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+                "excerpt": "submit a referee's appraisal online. The appraisal is to be completed by your school teacher, who must not be your family or relative.",
+                "scope": {
+                  "university": "Nanyang Technological University",
+                  "programme": "Computer Science",
+                  "degree": "bachelor",
+                  "field": null,
+                  "intake": null,
+                  "population": "international",
+                  "qualification": null,
+                  "academic_year": null
+                },
+                "accessed_on": "2026-10-02",
+                "source_type": "official",
+                "excerpt_truncated": false
+              },
+              "supported": null,
+              "current": null,
+              "conflict_visible": null
+            },
+            {
+              "key": "unmapped.recommendation_requirement",
+              "value": "Referee appraisal",
+              "evidence": {
+                "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+                "excerpt": "submit a referee's appraisal online. The appraisal is to be completed by your school teacher, who must not be your family or relative.",
+                "scope": {
+                  "university": "Nanyang Technological University",
+                  "programme": "Computer Science",
+                  "degree": "bachelor",
+                  "field": null,
+                  "intake": null,
+                  "population": "international",
+                  "qualification": null,
+                  "academic_year": null
+                },
+                "accessed_on": "2026-10-02",
+                "source_type": "official",
+                "excerpt_truncated": false
+              },
+              "supported": null,
+              "current": null,
+              "conflict_visible": null
+            }
+          ],
+          "score": {
+            "dataset_version": "2026-09-23.reviewed",
+            "dataset_sha256": "c0f55080039a7ea9a3bff291f39b2668f1987963cd4a8f6f82abe201b821c57e",
+            "pipeline_sha": "ER-11-working-tree",
+            "provisional": false,
+            "mode": "replay",
+            "captured_at": "2026-10-03",
+            "config": {
+              "diagnosis": "documents only"
+            },
+            "metrics": {
+              "programme_page_recall": {
+                "numerator": 0,
+                "denominator": 1,
+                "value": 0.0
+              },
+              "programme_page_precision": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "recall_at_5": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "recall_at_10": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "recall_at_20": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "claim_precision": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "claim_recall": {
+                "numerator": 0,
+                "denominator": 21,
+                "value": 0.0
+              },
+              "claim_recall_same_page": {
+                "numerator": 0,
+                "denominator": 21,
+                "value": 0.0
+              },
+              "unsupported_claim_rate": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "wrong_scope_claim_rate": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "critical_field_coverage": {
+                "numerator": 0,
+                "denominator": 39,
+                "value": 0.0
+              },
+              "scholarship_discovery_recall": {
+                "numerator": 0,
+                "denominator": 1,
+                "value": 0.0
+              },
+              "scholarship_applicability_precision": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "scholarship_applicability_recall": {
+                "numerator": 0,
+                "denominator": 3,
+                "value": 0.0
+              },
+              "scholarship_coverage_precision": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "primary_source_rate": {
+                "numerator": 5,
+                "denominator": 5,
+                "value": 1.0
+              },
+              "verbatim_evidence_rate": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "current_evidence_rate": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "conflict_visibility_rate": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "support_adjudication_rate": {
+                "numerator": 0,
+                "denominator": 5,
+                "value": 0.0
+              },
+              "claim_adjudication_rate": {
+                "numerator": 0,
+                "denominator": 5,
+                "value": 0.0
+              },
+              "human_review_rate": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              }
+            },
+            "fields": {
+              "country_credential": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "country_credential.high_school_certificate.additional_qualification_required": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "country_credential.nis_grade12.minimum_grades": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "deadline": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "documents.admission": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "documents.programme": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "documents.scholarship": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "documents.scholarship.nanyang_global.essay.maximum_words": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "documents.scholarship.nanyang_global.essay.required": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "documents.scholarship.nanyang_global.referee.family_or_relative_allowed": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "documents.scholarship.nanyang_global.referee.required": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "documents.scholarship.nanyang_global.referee.role": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "english_evidence.ielts.minimum": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "english_evidence.sat.minimum": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "ielts.overall": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "ielts.subscores": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "intake": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "mandatory_fees": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "programme.exists": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "sat.minimum": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "sat.policy": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarship_applicability": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarship_coverage": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.applicability.application_mode": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.applicability.degree": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.applicability.intake": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.applicability.nationality": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.applicability.programme": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.bond": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.coverage.fees": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.coverage.housing": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.coverage.insurance": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.coverage.living": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.coverage.travel": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.coverage.tuition": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.duration": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.exists": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.renewal": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "tuition": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              }
+            },
+            "operations": {
+              "http_fetches": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "browser_fetches": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "pdf_fetches": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "search_calls": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "model_input_tokens": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "jev_input_tokens": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "latency_seconds": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "cost_usd": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "human_review_required": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "latency_percentiles": {
+                "p50": null,
+                "p95": null
+              }
+            },
+            "cases": [
+              {
+                "case_id": "ntu",
+                "country": "Singapore",
+                "site_types": [
+                  "large_navigation"
+                ],
+                "programme_hit": false,
+                "correct_claims": 0,
+                "answerable_claims": 21,
+                "error": null
+              }
+            ],
+            "notes": [
+              "Exact value and evidence-scope matching; unlabelled predictions are unadjudicated, not correct.",
+              "Missing rank lists/telemetry yield null; per-case failures stay in recall denominators.",
+              "No overall accuracy score. Programme URLs measure identity, not intake confirmation."
+            ]
+          }
+        },
+        "before_new_identities": {
+          "predictions": [
+            {
+              "key": "unmapped.required_document",
+              "value": "Personal Essay",
+              "evidence": {
+                "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+                "excerpt": "As part of completing the form, a Personal Essay of not more than 250 words is required.",
+                "scope": {
+                  "university": "Nanyang Technological University",
+                  "programme": "Computer Science",
+                  "degree": "bachelor",
+                  "field": null,
+                  "intake": null,
+                  "population": "international",
+                  "qualification": null,
+                  "academic_year": null
+                },
+                "accessed_on": "2026-10-02",
+                "source_type": "official",
+                "excerpt_truncated": false
+              },
+              "supported": null,
+              "current": null,
+              "conflict_visible": null
+            },
+            {
+              "key": "unmapped.essay_prompt",
+              "value": {
+                "document": "Personal Essay",
+                "word_limit": 250
+              },
+              "evidence": {
+                "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+                "excerpt": "As part of completing the form, a Personal Essay of not more than 250 words is required.",
+                "scope": {
+                  "university": "Nanyang Technological University",
+                  "programme": "Computer Science",
+                  "degree": "bachelor",
+                  "field": null,
+                  "intake": null,
+                  "population": "international",
+                  "qualification": null,
+                  "academic_year": null
+                },
+                "accessed_on": "2026-10-02",
+                "source_type": "official",
+                "excerpt_truncated": false
+              },
+              "supported": null,
+              "current": null,
+              "conflict_visible": null
+            },
+            {
+              "key": "unmapped.required_document",
+              "value": "Passport-size photograph (digital image)",
+              "evidence": {
+                "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+                "excerpt": "Applicants are required to submit the following after completing your application form: upload a recent passport-size photo (digital image).",
+                "scope": {
+                  "university": "Nanyang Technological University",
+                  "programme": "Computer Science",
+                  "degree": "bachelor",
+                  "field": null,
+                  "intake": null,
+                  "population": "international",
+                  "qualification": null,
+                  "academic_year": null
+                },
+                "accessed_on": "2026-10-02",
+                "source_type": "official",
+                "excerpt_truncated": false
+              },
+              "supported": null,
+              "current": null,
+              "conflict_visible": null
+            },
+            {
+              "key": "unmapped.required_document",
+              "value": "Referee appraisal",
+              "evidence": {
+                "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+                "excerpt": "submit a referee's appraisal online. The appraisal is to be completed by your school teacher, who must not be your family or relative.",
+                "scope": {
+                  "university": "Nanyang Technological University",
+                  "programme": "Computer Science",
+                  "degree": "bachelor",
+                  "field": null,
+                  "intake": null,
+                  "population": "international",
+                  "qualification": null,
+                  "academic_year": null
+                },
+                "accessed_on": "2026-10-02",
+                "source_type": "official",
+                "excerpt_truncated": false
+              },
+              "supported": null,
+              "current": null,
+              "conflict_visible": null
+            },
+            {
+              "key": "unmapped.recommendation_requirement",
+              "value": "Referee appraisal",
+              "evidence": {
+                "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+                "excerpt": "submit a referee's appraisal online. The appraisal is to be completed by your school teacher, who must not be your family or relative.",
+                "scope": {
+                  "university": "Nanyang Technological University",
+                  "programme": "Computer Science",
+                  "degree": "bachelor",
+                  "field": null,
+                  "intake": null,
+                  "population": "international",
+                  "qualification": null,
+                  "academic_year": null
+                },
+                "accessed_on": "2026-10-02",
+                "source_type": "official",
+                "excerpt_truncated": false
+              },
+              "supported": null,
+              "current": null,
+              "conflict_visible": null
+            }
+          ],
+          "score": {
+            "dataset_version": "2026-09-23.reviewed",
+            "dataset_sha256": "c0f55080039a7ea9a3bff291f39b2668f1987963cd4a8f6f82abe201b821c57e",
+            "pipeline_sha": "ER-11-working-tree",
+            "provisional": false,
+            "mode": "replay",
+            "captured_at": "2026-10-03",
+            "config": {
+              "diagnosis": "documents only"
+            },
+            "metrics": {
+              "programme_page_recall": {
+                "numerator": 0,
+                "denominator": 1,
+                "value": 0.0
+              },
+              "programme_page_precision": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "recall_at_5": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "recall_at_10": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "recall_at_20": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "claim_precision": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "claim_recall": {
+                "numerator": 0,
+                "denominator": 21,
+                "value": 0.0
+              },
+              "claim_recall_same_page": {
+                "numerator": 0,
+                "denominator": 21,
+                "value": 0.0
+              },
+              "unsupported_claim_rate": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "wrong_scope_claim_rate": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "critical_field_coverage": {
+                "numerator": 0,
+                "denominator": 39,
+                "value": 0.0
+              },
+              "scholarship_discovery_recall": {
+                "numerator": 0,
+                "denominator": 1,
+                "value": 0.0
+              },
+              "scholarship_applicability_precision": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "scholarship_applicability_recall": {
+                "numerator": 0,
+                "denominator": 3,
+                "value": 0.0
+              },
+              "scholarship_coverage_precision": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "primary_source_rate": {
+                "numerator": 5,
+                "denominator": 5,
+                "value": 1.0
+              },
+              "verbatim_evidence_rate": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "current_evidence_rate": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "conflict_visibility_rate": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "support_adjudication_rate": {
+                "numerator": 0,
+                "denominator": 5,
+                "value": 0.0
+              },
+              "claim_adjudication_rate": {
+                "numerator": 0,
+                "denominator": 5,
+                "value": 0.0
+              },
+              "human_review_rate": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              }
+            },
+            "fields": {
+              "country_credential": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "country_credential.high_school_certificate.additional_qualification_required": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "country_credential.nis_grade12.minimum_grades": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "deadline": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "documents.admission": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "documents.programme": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "documents.scholarship": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "documents.scholarship.nanyang_global.essay.maximum_words": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "documents.scholarship.nanyang_global.essay.required": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "documents.scholarship.nanyang_global.referee.family_or_relative_allowed": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "documents.scholarship.nanyang_global.referee.required": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "documents.scholarship.nanyang_global.referee.role": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "english_evidence.ielts.minimum": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "english_evidence.sat.minimum": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "ielts.overall": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "ielts.subscores": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "intake": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "mandatory_fees": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "programme.exists": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "sat.minimum": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "sat.policy": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarship_applicability": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarship_coverage": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.applicability.application_mode": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.applicability.degree": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.applicability.intake": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.applicability.nationality": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.applicability.programme": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.bond": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.coverage.fees": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.coverage.housing": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.coverage.insurance": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.coverage.living": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.coverage.travel": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.coverage.tuition": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.duration": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.exists": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.renewal": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "tuition": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              }
+            },
+            "operations": {
+              "http_fetches": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "browser_fetches": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "pdf_fetches": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "search_calls": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "model_input_tokens": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "jev_input_tokens": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "latency_seconds": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "cost_usd": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "human_review_required": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "latency_percentiles": {
+                "p50": null,
+                "p95": null
+              }
+            },
+            "cases": [
+              {
+                "case_id": "ntu",
+                "country": "Singapore",
+                "site_types": [
+                  "large_navigation"
+                ],
+                "programme_hit": false,
+                "correct_claims": 0,
+                "answerable_claims": 21,
+                "error": null
+              }
+            ],
+            "notes": [
+              "Exact value and evidence-scope matching; unlabelled predictions are unadjudicated, not correct.",
+              "Missing rank lists/telemetry yield null; per-case failures stay in recall denominators.",
+              "No overall accuracy score. Programme URLs measure identity, not intake confirmation."
+            ]
+          }
+        },
+        "after_new_identities": {
+          "predictions": [
+            {
+              "key": "documents.scholarship.nanyang_global.essay.required",
+              "value": true,
+              "evidence": {
+                "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships-and-awards/scholarship-opportunities/detail/nanyang-scholarship",
+                "excerpt": "As part of completing the form, a Personal Essay of not more than 250 words is required.",
+                "scope": {
+                  "university": "Nanyang Technological University",
+                  "programme": "Computer Science",
+                  "degree": "bachelor",
+                  "field": null,
+                  "intake": null,
+                  "population": null,
+                  "qualification": null,
+                  "academic_year": null
+                },
+                "accessed_on": "2026-10-02",
+                "source_type": "official",
+                "excerpt_truncated": false
+              },
+              "supported": null,
+              "current": null,
+              "conflict_visible": null
+            },
+            {
+              "key": "documents.scholarship.nanyang_global.essay.maximum_words",
+              "value": 250,
+              "evidence": {
+                "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships-and-awards/scholarship-opportunities/detail/nanyang-scholarship",
+                "excerpt": "As part of completing the form, a Personal Essay of not more than 250 words is required.",
+                "scope": {
+                  "university": "Nanyang Technological University",
+                  "programme": "Computer Science",
+                  "degree": "bachelor",
+                  "field": null,
+                  "intake": null,
+                  "population": null,
+                  "qualification": null,
+                  "academic_year": null
+                },
+                "accessed_on": "2026-10-02",
+                "source_type": "official",
+                "excerpt_truncated": false
+              },
+              "supported": null,
+              "current": null,
+              "conflict_visible": null
+            },
+            {
+              "key": "unmapped.required_document",
+              "value": "Passport-size photograph (digital image)",
+              "evidence": {
+                "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships-and-awards/scholarship-opportunities/detail/nanyang-scholarship",
+                "excerpt": "Applicants are required to submit the following after completing your application form: upload a recent passport-size photo (digital image).",
+                "scope": {
+                  "university": "Nanyang Technological University",
+                  "programme": "Computer Science",
+                  "degree": "bachelor",
+                  "field": null,
+                  "intake": null,
+                  "population": null,
+                  "qualification": null,
+                  "academic_year": null
+                },
+                "accessed_on": "2026-10-02",
+                "source_type": "official",
+                "excerpt_truncated": false
+              },
+              "supported": null,
+              "current": null,
+              "conflict_visible": null
+            },
+            {
+              "key": "documents.scholarship.nanyang_global.referee.required",
+              "value": true,
+              "evidence": {
+                "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships-and-awards/scholarship-opportunities/detail/nanyang-scholarship",
+                "excerpt": "submit a referee's appraisal online. The appraisal is to be completed by your school teacher, who must not be your family or relative.",
+                "scope": {
+                  "university": "Nanyang Technological University",
+                  "programme": "Computer Science",
+                  "degree": "bachelor",
+                  "field": null,
+                  "intake": null,
+                  "population": null,
+                  "qualification": null,
+                  "academic_year": null
+                },
+                "accessed_on": "2026-10-02",
+                "source_type": "official",
+                "excerpt_truncated": false
+              },
+              "supported": null,
+              "current": null,
+              "conflict_visible": null
+            },
+            {
+              "key": "documents.scholarship.nanyang_global.referee.role",
+              "value": "school_teacher",
+              "evidence": {
+                "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships-and-awards/scholarship-opportunities/detail/nanyang-scholarship",
+                "excerpt": "submit a referee's appraisal online. The appraisal is to be completed by your school teacher, who must not be your family or relative.",
+                "scope": {
+                  "university": "Nanyang Technological University",
+                  "programme": "Computer Science",
+                  "degree": "bachelor",
+                  "field": null,
+                  "intake": null,
+                  "population": null,
+                  "qualification": null,
+                  "academic_year": null
+                },
+                "accessed_on": "2026-10-02",
+                "source_type": "official",
+                "excerpt_truncated": false
+              },
+              "supported": null,
+              "current": null,
+              "conflict_visible": null
+            },
+            {
+              "key": "documents.scholarship.nanyang_global.referee.family_or_relative_allowed",
+              "value": false,
+              "evidence": {
+                "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships-and-awards/scholarship-opportunities/detail/nanyang-scholarship",
+                "excerpt": "submit a referee's appraisal online. The appraisal is to be completed by your school teacher, who must not be your family or relative.",
+                "scope": {
+                  "university": "Nanyang Technological University",
+                  "programme": "Computer Science",
+                  "degree": "bachelor",
+                  "field": null,
+                  "intake": null,
+                  "population": null,
+                  "qualification": null,
+                  "academic_year": null
+                },
+                "accessed_on": "2026-10-02",
+                "source_type": "official",
+                "excerpt_truncated": false
+              },
+              "supported": null,
+              "current": null,
+              "conflict_visible": null
+            }
+          ],
+          "score": {
+            "dataset_version": "2026-09-23.reviewed",
+            "dataset_sha256": "c0f55080039a7ea9a3bff291f39b2668f1987963cd4a8f6f82abe201b821c57e",
+            "pipeline_sha": "ER-11-working-tree",
+            "provisional": false,
+            "mode": "replay",
+            "captured_at": "2026-10-03",
+            "config": {
+              "diagnosis": "documents only"
+            },
+            "metrics": {
+              "programme_page_recall": {
+                "numerator": 0,
+                "denominator": 1,
+                "value": 0.0
+              },
+              "programme_page_precision": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "recall_at_5": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "recall_at_10": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "recall_at_20": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "claim_precision": {
+                "numerator": 5,
+                "denominator": 5,
+                "value": 1.0
+              },
+              "claim_recall": {
+                "numerator": 5,
+                "denominator": 21,
+                "value": 0.23809523809523808
+              },
+              "claim_recall_same_page": {
+                "numerator": 0,
+                "denominator": 21,
+                "value": 0.0
+              },
+              "unsupported_claim_rate": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "wrong_scope_claim_rate": {
+                "numerator": 0,
+                "denominator": 5,
+                "value": 0.0
+              },
+              "critical_field_coverage": {
+                "numerator": 5,
+                "denominator": 39,
+                "value": 0.1282051282051282
+              },
+              "scholarship_discovery_recall": {
+                "numerator": 0,
+                "denominator": 1,
+                "value": 0.0
+              },
+              "scholarship_applicability_precision": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "scholarship_applicability_recall": {
+                "numerator": 0,
+                "denominator": 3,
+                "value": 0.0
+              },
+              "scholarship_coverage_precision": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "primary_source_rate": {
+                "numerator": 6,
+                "denominator": 6,
+                "value": 1.0
+              },
+              "verbatim_evidence_rate": {
+                "numerator": 0,
+                "denominator": 5,
+                "value": 0.0
+              },
+              "current_evidence_rate": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "conflict_visibility_rate": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "support_adjudication_rate": {
+                "numerator": 0,
+                "denominator": 6,
+                "value": 0.0
+              },
+              "claim_adjudication_rate": {
+                "numerator": 5,
+                "denominator": 6,
+                "value": 0.8333333333333334
+              },
+              "human_review_rate": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              }
+            },
+            "fields": {
+              "country_credential": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "country_credential.high_school_certificate.additional_qualification_required": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "country_credential.nis_grade12.minimum_grades": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "deadline": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "documents.admission": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "documents.programme": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "documents.scholarship": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "documents.scholarship.nanyang_global.essay.maximum_words": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1,
+                  "value": 1.0
+                },
+                "coverage": {
+                  "numerator": 1,
+                  "denominator": 1,
+                  "value": 1.0
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1,
+                  "value": 1.0
+                }
+              },
+              "documents.scholarship.nanyang_global.essay.required": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1,
+                  "value": 1.0
+                },
+                "coverage": {
+                  "numerator": 1,
+                  "denominator": 1,
+                  "value": 1.0
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1,
+                  "value": 1.0
+                }
+              },
+              "documents.scholarship.nanyang_global.referee.family_or_relative_allowed": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1,
+                  "value": 1.0
+                },
+                "coverage": {
+                  "numerator": 1,
+                  "denominator": 1,
+                  "value": 1.0
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1,
+                  "value": 1.0
+                }
+              },
+              "documents.scholarship.nanyang_global.referee.required": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1,
+                  "value": 1.0
+                },
+                "coverage": {
+                  "numerator": 1,
+                  "denominator": 1,
+                  "value": 1.0
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1,
+                  "value": 1.0
+                }
+              },
+              "documents.scholarship.nanyang_global.referee.role": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1,
+                  "value": 1.0
+                },
+                "coverage": {
+                  "numerator": 1,
+                  "denominator": 1,
+                  "value": 1.0
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1,
+                  "value": 1.0
+                }
+              },
+              "english_evidence.ielts.minimum": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "english_evidence.sat.minimum": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "ielts.overall": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "ielts.subscores": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "intake": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "mandatory_fees": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "programme.exists": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "sat.minimum": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "sat.policy": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarship_applicability": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarship_coverage": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.applicability.application_mode": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.applicability.degree": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.applicability.intake": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.applicability.nationality": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.applicability.programme": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.bond": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.coverage.fees": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.coverage.housing": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.coverage.insurance": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.coverage.living": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.coverage.travel": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.coverage.tuition": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.duration": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.exists": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "scholarships.nanyang_global.renewal": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              },
+              "tuition": {
+                "coverage": {
+                  "numerator": 0,
+                  "denominator": 1,
+                  "value": 0.0
+                }
+              }
+            },
+            "operations": {
+              "http_fetches": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "browser_fetches": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "pdf_fetches": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "search_calls": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "model_input_tokens": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "jev_input_tokens": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "latency_seconds": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "cost_usd": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "human_review_required": {
+                "sum": null,
+                "measured_cases": 0,
+                "cases": 1
+              },
+              "latency_percentiles": {
+                "p50": null,
+                "p95": null
+              }
+            },
+            "cases": [
+              {
+                "case_id": "ntu",
+                "country": "Singapore",
+                "site_types": [
+                  "large_navigation"
+                ],
+                "programme_hit": false,
+                "correct_claims": 5,
+                "answerable_claims": 21,
+                "error": null
+              }
+            ],
+            "notes": [
+              "Exact value and evidence-scope matching; unlabelled predictions are unadjudicated, not correct.",
+              "Missing rank lists/telemetry yield null; per-case failures stay in recall denominators.",
+              "No overall accuracy score. Programme URLs measure identity, not intake confirmation."
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "sources": [
+    {
+      "metadata": {
+        "url": "https://www.ntu.edu.sg/admissions/ug/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+        "final_url": "https://www.ntu.edu.sg/admissions/ug/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+        "status_code": 200,
+        "content_type": "text/html; charset=utf-8",
+        "fetched_at": "2026-10-02T15:55:11.261483+00:00",
+        "stored_at": 1790956511.261927,
+        "encoding": "utf-8",
+        "etag": "\"b37d02d6-5c35-44c2-b1b4-a43896e6cc58\"",
+        "last_modified": "Fri, 02 Oct 2026 10:15:54 GMT",
+        "content_hash": "f912ee029fdbb54db5b6788876a43ee597879a32ae1a6f2736a2e8dcc6c4c35e"
+      },
+      "body_sha256": "f60886b94a88983d20f75493cafac5da622a48d480e45a2fbb8e6fe5c9b3c7f3"
+    },
+    {
+      "metadata": {
+        "url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship-opportunities/detail/nanyang-scholarship",
+        "final_url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships-and-awards/scholarship-opportunities/detail/nanyang-scholarship",
+        "status_code": 200,
+        "content_type": "text/html; charset=utf-8",
+        "fetched_at": "2026-10-02T15:54:33.562618+00:00",
+        "stored_at": 1790956473.56303,
+        "encoding": "utf-8",
+        "etag": "\"372abd2b-a000-40f3-8d33-63f69b0a1b9e\"",
+        "last_modified": "Fri, 02 Oct 2026 09:46:17 GMT",
+        "content_hash": "0840c7874b57f45f0a1abefa4c49cb68f3f1727b98694053f6535685abc9d4b4"
+      },
+      "body_sha256": "39d2a32d7f56198390f34eab89ffdf1184faeb200905957f38bda60c3685572d"
+    }
+  ]
+}

@@ -191,6 +191,23 @@
       ],
       "policy_guard": "Normal evidence guards and Fetcher unchanged. Frozen offline diagnostic has zero network calls and does not claim a new reference score.",
       "validation_artifact": "backend/tests/test_pipeline.py::TestVerificationDurability"
+    },
+    {
+      "id": "ER-11",
+      "status": "tested",
+      "case_ids": [
+        "ntu"
+      ],
+      "observation": "Two saved official Nanyang scholarship responses yielded essay and referee claims, but unrelated Tuition Grant prose imposed international population on every document. Explicit teacher and family exclusion were retained only in free text; document identities were unbound. Frozen replay after repair scores five document labels on each page, versus zero before, with full NTU denominator21 retained. Exact reviewed-page recall remains0 because official URLs changed. This is not new discovery or live recall.",
+      "proposed_rule": "Derive document population from its own clause and structural headings; retain explicit unconditional recommender role and immediately qualifying family exclusion; keep final same-site source URL.",
+      "integration_seam": "WebDocumentsAdapter._from_page; read_documents; exact observed document identity bindings and typed evaluation mapping.",
+      "counterexample": "Optional or conditional appraisals, adjacent unrelated restrictions, mixed populations, wrong awards and foreign redirects must not establish unconditional document facts.",
+      "falsification": "Offline unchanged-source before/after with frozen raw outputs and original gold; negative conditional/source/identity tests; full regression. Live recovery remains unproven because pre-decision captures do not collect documents.",
+      "evidence_artifacts": [
+        "backend/evaluation/research/expert/data/runs.2026-10-02/er11.frozen-documents.json"
+      ],
+      "policy_guard": "Fetcher and signed gold unchanged; identity mapping does not invent values or reviewer approval; supported/current adjudication left unset.",
+      "validation_artifact": "docs/process/REFERENCE_FACT_RECOVERY_2026-10-02.md"
     }
   ]
 }

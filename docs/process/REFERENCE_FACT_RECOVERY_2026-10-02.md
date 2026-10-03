@@ -200,3 +200,45 @@ passed /94.92% coverage** (459.21s). Frontend232/type/lint/build pass. Isolated
 demo preserves Groningen first and UBC OUT_OF_BUDGET; Alembic has one head
 (d8e412c6a901).
 Last full live acceptance remains13/62 onbc84ccf; no ER-10 live score is claimed.
+
+
+## ER-11 document scope and explicit referee constraints — 2026-10-03
+
+The normal document adapter was replayed offline on the two retained NTU HTML
+responses from 2026-10-02. It previously copied `international` from a Tuition
+Grant/bond paragraph into every document claim. Each submission clause now takes
+its population from its own text and structural section headings. Other page scope
+and the builder state are preserved. The role/exclusion are extracted only from
+explicit unconditional appraisal instructions, with legacy string fallback.
+
+Same-site redirects now retain the final URL in both claims and checklist rows;
+cross-site redirects produce no document evidence. Four exact document identities
+(two document names on two current NTU URLs) are in a new versioned binding file.
+The reviewed bindings, prior observed bindings and signed gold are untouched.
+
+| Offline variant | UG URL | Redirected old URL |
+| --- | --- | --- |
+| Old raw claims, old identities | 0/21 | 0/21 |
+| Old raw claims, new identities | 0/21 (three wrong-scope fields) | 0/21 (old URL retained) |
+| Repaired reader, new identities | 5/21 | 5/21 |
+
+All five known document labels match in the repaired output: essay required,
+maximum250words, referee required, school_teacher, relatives disallowed. The
+unchanged NTU denominator includes16 other known facts not exercised by this
+reader. Same-reviewed-page recall is0/21 because the official page URLs differ
+from the old reviewed URL; the unchanged scorer's same-institution rule supplies
+credit. There is no new human support/currentness adjudication. Exact source
+quotes, metadata, body hashes, before/after claims and all three score reports
+are in `er11.frozen-documents.json`.
+
+Expressible known keys rise51→56/62; that is mapping capacity, not live recall.
+Six remain unreachable: Groningen translation exception and course-description
+conditions, Toronto supplemental application, and HKU entrance award identity/
+application mode. Document collection occurs after shortlist approval; these five
+matches must not be added to the latest pre-decision live score13/62. No new blind
+capture or public release is claimed.
+
+Focused98 tests, Ruff/format327, mypy327 and frontend232/typecheck/lint/build pass.
+Full backend:2927 passed,94.94% coverage in414.05s. Isolated migrated demo
+(with approved checklists) keeps Groningen first and UBC OUT_OF_BUDGET;
+one Alembic head d8e412c6a901. Logs: /tmp/unimatch-er11-*.log.

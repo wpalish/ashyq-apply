@@ -418,3 +418,31 @@ def test_a_programme_pages_stated_language_is_mapped_to_the_one_key():
     assert [k for k, *_ in normalize_subject_claims("program_exists", silent, identities)] == [
         "programme.exists"
     ]
+
+
+def test_referee_conditions_map_only_their_stated_fields():
+    value = {"document": "Essay", "role": "school_teacher", "family_or_relative_allowed": False}
+    result = map_predictions([claim("recommendation_requirement", value)], identities(), "Example")
+    assert {p.key: p.value for p in result} == {
+        "documents.scholarship.example.essay.role": "school_teacher",
+        "documents.scholarship.example.essay.family_or_relative_allowed": False,
+    }
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        {"document": "Another referee"},
+        {"role": []},
+        {"role": "mentor"},
+        {"family_or_relative_allowed": "false"},
+        {"family_or_relative_allowed": 0},
+        {"condition": "if invited"},
+    ],
+)
+def test_unknown_or_unbound_referee_conditions_remain_lossless(change):
+    value = {"document": "Essay", "role": "school_teacher", **change}
+    result = map_predictions([claim("recommendation_requirement", value)], identities(), "Example")
+    assert len(result) == 1
+    assert result[0].key == "unmapped.recommendation_requirement"
+    assert result[0].value == value

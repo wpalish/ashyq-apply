@@ -22,7 +22,7 @@ from app.adapters.extraction import (
     is_official_domain,
     verification_domains,
 )
-from app.adapters.fetching import Fetcher
+from app.adapters.fetching import Fetcher, same_source_site
 from app.adapters.scope_reader import read_scope
 from app.domain.claim_scope import ClaimScope
 from app.domain.enums import ClaimType, DocumentOwner, DocumentPurpose, SourceSpecificity
@@ -130,7 +130,7 @@ _REQUIRED_WORD = re.compile(r"\b(?:required|mandatory|compulsory)\b", re.I)
 _QUALIFICATION_WORD = re.compile(r"\b(?:possess|hold|qualifications?|achievements?)\b", re.I)
 
 
-def _document_statements(text: str, document: DocumentIR | None) -> Iterator[tuple[str, bool]]:
+def _document_statements(text: str, document: DocumentIR | None) -> Iterator[tuple[str, bool, str]]:
     """Local complete clauses, with an explicit document-list context only.
 
     A long application paragraph can contain a short required essay or
@@ -141,7 +141,7 @@ def _document_statements(text: str, document: DocumentIR | None) -> Iterator[tup
         # Plain-text responses retain their explicit one-line reader.
         for line in text.splitlines():
             if line.strip() and len(line) <= 300:
-                yield line.strip(), True
+                yield line.strip(), True, line.strip()
         return
     for block in document.blocks:
         if block.kind not in {"paragraph", "list_item", "key_value", "table_cell"}:
@@ -156,7 +156,7 @@ def _document_statements(text: str, document: DocumentIR | None) -> Iterator[tup
                 if following.casefold().startswith("the appraisal"):
                     clause += " " + following
             if clause and len(clause) <= MAX_EXCERPT_CHARS:
-                yield clause, listed
+                yield clause, listed, " ".join([*block.section_path, *block.row_headers, clause])
 
 
 def _required_document_statement(line: str, listed: bool) -> bool:
@@ -272,6 +272,15 @@ class WebDocumentsAdapter:
             out.page_outcomes.append(PageOutcome(url, "fetch-failed"))
             return []
 
+        source_url = res.final_url or url
+        if not same_source_site(url, source_url):
+            out.pages_failed += 1
+            out.errors.append(f"{url}: document source redirected outside the institution")
+            out.page_outcomes.append(
+                PageOutcome(url, "classifier-rejected", detail="cross-site redirect")
+            )
+            return []
+
         text = html_to_text(res.text)
         if not text.strip():
             out.pages_failed += 1
@@ -279,27 +288,31 @@ class WebDocumentsAdapter:
             out.retry_urls.append(url)
             out.page_outcomes.append(PageOutcome(url, "unreadable"))
             return []
-        # Read once and given to both: the claims and the checklist rows from
-        # this page describe the same population, and §9 asks the checklist to
-        # store it too.
+        # Read page scope once; the reader narrows population to each document
+        # statement and gives claims and checklist rows the same local scope.
         page_scope = read_scope(text, title=html_title(res.text))
         builder = ClaimBuilder(
-            source_url=url,
+            source_url=source_url,
             page_title=html_title(res.text),
             specificity=SourceSpecificity.PROGRAM_INTAKE,
             program=program.name,
             academic_year=self.academic_year,
-            official_domain=url.startswith("fixture://")
-            or is_official_domain(url, [candidate.domain]),
-            extraction_method="fixture" if url.startswith("fixture://") else "html_rule",
+            official_domain=source_url.startswith("fixture://")
+            or is_official_domain(source_url, [candidate.domain]),
+            extraction_method="fixture" if source_url.startswith("fixture://") else "html_rule",
             accessed_at=res.fetched_at,
             scope=page_scope,
             page_text=text,
-            allowed_domains=verification_domains(url, candidate.domain),
+            allowed_domains=verification_domains(source_url, candidate.domain),
         )
 
         items = read_documents(
-            text, url, purpose, page_scope, builder, document=build_document_ir(res.text, url)
+            text,
+            source_url,
+            purpose,
+            page_scope,
+            builder,
+            document=build_document_ir(res.text, source_url),
         )
         out.claims.extend(builder.claims)
         out.page_outcomes.append(
@@ -423,6 +436,33 @@ def _structured_completion_forms(document: DocumentIR, builder: ClaimBuilder) ->
         builder.meta["scope"] = page_scope
 
 
+def _referee_conditions(name: str, statement: str) -> str | dict[str, object]:
+    """Keep explicit recommender constraints with the document they describe.
+
+    A conditional instruction or a mention in a neighbouring clause cannot
+    establish an unconditional role or family exclusion.
+    """
+    if re.search(r"\b(?:if|unless|when|except|may|might|optional)\b", statement, re.I):
+        return name
+    role = re.search(
+        r"\b(?:appraisal|reference|recommendation) (?:is to|must) be completed by "
+        r"(?:your |a |an )?(school teacher|university lecturer|professor)\b",
+        statement,
+        re.I,
+    )
+    if role is None:
+        return name
+    value: dict[str, object] = {"document": name, "role": role.group(1).lower().replace(" ", "_")}
+    # The exclusion must qualify the same person, immediately after their role.
+    if re.match(
+        r",?\s+who must not be (?:your |a |any )?(?:family or relative|relative or family)\b",
+        statement[role.end() :],
+        re.I,
+    ):
+        value["family_or_relative_allowed"] = False
+    return value
+
+
 def read_documents(
     text: str,
     url: str,
@@ -438,54 +478,66 @@ def read_documents(
     """
     items: list[DocumentItem] = []
     seen: set[str] = set()
-    for line, listed in _document_statements(text, document):
-        low = line.lower().strip()
-        if not _required_document_statement(line, listed):
-            continue
-        for needle, name, owner, flags in _DOC_RULES:
-            if needle not in low:
-                continue
-            if name in seen:
-                # A repeated specific document must not fall through into a
-                # broader overlapping rule (photo -> passport identity copy).
-                break
-            words = _WORDS.search(line)
-            pages = _PAGES.search(line)
-            size = _SIZE.search(line)
-            item = DocumentItem(
-                name=name,
-                purpose=purpose,
-                owner=owner,
-                format_notes=", ".join(sorted(set(_FORMAT.findall(line)))) or "",
-                max_pages=int(pages.group(1)) if pages else None,
-                max_file_size_mb=float(size.group(1)) if size else None,
-                word_limit=int(words.group(1) or words.group(2)) if words else None,
-                prompt_text=line.strip()[:280] if purpose == DocumentPurpose.SCHOLARSHIP else None,
-                source_url=url,
-                claim_ids=[url],
-                scope=page_scope,
-                **flags,
+    original_scope = builder.meta.get("scope")
+    try:
+        for line, listed, context in _document_statements(text, document):
+            local_scope = (
+                replace(page_scope, population=read_scope(context).population)
+                if isinstance(page_scope, ClaimScope)
+                else page_scope
             )
-            claim = builder.add(ClaimType.REQUIRED_DOCUMENT, name, line, confidence=0.75)
-            if claim is None:
+            builder.meta["scope"] = local_scope
+            low = line.lower().strip()
+            if not _required_document_statement(line, listed):
                 continue
-            seen.add(name)
-            items.append(item)
-            if item.word_limit:
-                builder.add(
-                    ClaimType.ESSAY_PROMPT,
-                    {"document": name, "word_limit": item.word_limit},
-                    line,
-                    confidence=0.8,
+            for needle, name, owner, flags in _DOC_RULES:
+                if needle not in low:
+                    continue
+                if name in seen:
+                    # A repeated specific document must not fall through into a
+                    # broader overlapping rule (photo -> passport identity copy).
+                    break
+                words = _WORDS.search(line)
+                pages = _PAGES.search(line)
+                size = _SIZE.search(line)
+                item = DocumentItem(
+                    name=name,
+                    purpose=purpose,
+                    owner=owner,
+                    format_notes=", ".join(sorted(set(_FORMAT.findall(line)))) or "",
+                    max_pages=int(pages.group(1)) if pages else None,
+                    max_file_size_mb=float(size.group(1)) if size else None,
+                    word_limit=int(words.group(1) or words.group(2)) if words else None,
+                    prompt_text=line.strip()[:280]
+                    if purpose == DocumentPurpose.SCHOLARSHIP
+                    else None,
+                    source_url=url,
+                    claim_ids=[url],
+                    scope=local_scope,
+                    **flags,
                 )
-            if owner == DocumentOwner.RECOMMENDER:
-                builder.add(
-                    ClaimType.RECOMMENDATION_REQUIREMENT,
-                    name,
-                    line,
-                    confidence=0.75,
-                )
-            break
+                claim = builder.add(ClaimType.REQUIRED_DOCUMENT, name, line, confidence=0.75)
+                if claim is None:
+                    continue
+                seen.add(name)
+                items.append(item)
+                if item.word_limit:
+                    builder.add(
+                        ClaimType.ESSAY_PROMPT,
+                        {"document": name, "word_limit": item.word_limit},
+                        line,
+                        confidence=0.8,
+                    )
+                if owner == DocumentOwner.RECOMMENDER:
+                    builder.add(
+                        ClaimType.RECOMMENDATION_REQUIREMENT,
+                        _referee_conditions(name, line),
+                        line,
+                        confidence=0.75,
+                    )
+                break
+    finally:
+        builder.meta["scope"] = original_scope
     before_forms = len(builder.claims)
     if document is None or not document.blocks:
         # Fetcher also accepts plain text. With no structural blocks, preserve

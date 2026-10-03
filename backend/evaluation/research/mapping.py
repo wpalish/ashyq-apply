@@ -239,6 +239,28 @@ def normalize_subject_claims(
                 value = None
             return [(prefix + "." + AWARD_KEYS[claim_type], value, programme, degree)]
     elif claim_type in DOCUMENT_TYPES:
+        if claim_type == "recommendation_requirement" and isinstance(value, dict):
+            # Exact document binding first; retain unknown/conditional fields
+            # as one unmapped value rather than silently discarding them.
+            allowed = {"document", "role", "family_or_relative_allowed"}
+            if (
+                not {"document", "role"} <= set(value) <= allowed
+                or not isinstance(value["role"], str)
+                or value["role"] not in {"school_teacher", "university_lecturer", "professor"}
+                or (
+                    "family_or_relative_allowed" in value
+                    and type(value["family_or_relative_allowed"]) is not bool
+                )
+            ):
+                return [fallback]
+            prefix = identities.resolve("document", source, value["document"])
+            if prefix is None:
+                return [fallback]
+            return [
+                (prefix + "." + key, val, programme, degree)
+                for key, val in value.items()
+                if key != "document"
+            ]
         if claim_type == "document_by_completion":
             # {"document": subject, "status": completed|not_completed, "form": ...}
             if (

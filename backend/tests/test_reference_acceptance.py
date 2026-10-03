@@ -99,3 +99,23 @@ def test_current_award_aliases_preserve_exact_identity_and_do_not_bind_faqs():
         )
         is None
     )
+
+
+def test_observed_document_identities_are_exact_and_preserve_previous_bindings():
+    from evaluation.research.identities import IdentityMap
+    from evaluation.research.live import CURRENT_BINDINGS
+
+    previous = IdentityMap.model_validate_json(
+        CURRENT_BINDINGS.with_name("identity_bindings.2026-10-02.observed.json").read_text()
+    )
+    current = IdentityMap.model_validate_json(CURRENT_BINDINGS.read_text())
+    assert current.bindings[: len(previous.bindings)] == previous.bindings
+    for binding in current.bindings[len(previous.bindings) :]:
+        url = str(binding.source_url)
+        assert current.resolve("document", url, binding.subject) == binding.key
+        assert current.resolve("document", url + "?award=other", binding.subject) is None
+        assert (
+            current.resolve("document", url.replace("nanyang-", "asean-"), binding.subject) is None
+        )
+        assert current.resolve("document", url.rsplit("/", 1)[0] + "/faq", binding.subject) is None
+        assert current.resolve("document", url, "Another document") is None
