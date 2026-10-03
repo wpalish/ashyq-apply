@@ -33,6 +33,7 @@ async def _merge(monkeypatch, profile, tmp_path, *, slot: bool) -> tuple[list[st
             failed_queries=(),
             failure_diagnostics=(),
             rejection_counts={},
+            throttled=False,
         )
 
     monkeypatch.setattr(search_pkg, "get_search_provider", lambda: object())
