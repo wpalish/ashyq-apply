@@ -1,0 +1,4127 @@
+{
+  "experiment": "ER-12",
+  "mode": "explicit-source offline reader replay, not blind/live discovery",
+  "baseline_sha": "1c3db3e",
+  "source": {
+    "requested_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+    "final_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+    "outcome": "ok",
+    "error": "",
+    "fetched_at": "2026-10-03T05:26:36.231503+00:00",
+    "title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+    "body_sha256": "247c6a30c7bf7ef434901134b087f1f3ed4fa03608da759cb66559d9bd624faa",
+    "characters": 26184,
+    "mode": "explicit-source diagnosis, not blind discovery"
+  },
+  "variants": {
+    "before": {
+      "documents": [
+        {
+          "name": "Certified English translation of non-English documents",
+          "purpose": "admission",
+          "owner": "third_party",
+          "required": true,
+          "format_notes": "",
+          "max_pages": null,
+          "max_file_size_mb": null,
+          "naming_convention": null,
+          "needs_translation": true,
+          "needs_notarization": false,
+          "needs_apostille": false,
+          "needs_credential_evaluation": false,
+          "word_limit": null,
+          "character_limit": null,
+          "prompt_text": null,
+          "deadline": null,
+          "deadline_timezone": null,
+          "depends_on": [],
+          "lead_time_days": 14,
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "claim_ids": [
+            "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en"
+          ],
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          }
+        },
+        {
+          "name": "Academic reference",
+          "purpose": "admission",
+          "owner": "recommender",
+          "required": true,
+          "format_notes": "",
+          "max_pages": null,
+          "max_file_size_mb": null,
+          "naming_convention": null,
+          "needs_translation": false,
+          "needs_notarization": false,
+          "needs_apostille": false,
+          "needs_credential_evaluation": false,
+          "word_limit": null,
+          "character_limit": null,
+          "prompt_text": null,
+          "deadline": null,
+          "deadline_timezone": null,
+          "depends_on": [],
+          "lead_time_days": 30,
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "claim_ids": [
+            "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en"
+          ],
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          }
+        },
+        {
+          "name": "Secondary school diploma (certified copy)",
+          "purpose": "admission",
+          "owner": "school",
+          "required": true,
+          "format_notes": "",
+          "max_pages": null,
+          "max_file_size_mb": null,
+          "naming_convention": null,
+          "needs_translation": true,
+          "needs_notarization": true,
+          "needs_apostille": false,
+          "needs_credential_evaluation": false,
+          "word_limit": null,
+          "character_limit": null,
+          "prompt_text": null,
+          "deadline": null,
+          "deadline_timezone": null,
+          "depends_on": [],
+          "lead_time_days": 21,
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "claim_ids": [
+            "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en"
+          ],
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          }
+        },
+        {
+          "name": "Full academic transcript",
+          "purpose": "admission",
+          "owner": "school",
+          "required": true,
+          "format_notes": "",
+          "max_pages": null,
+          "max_file_size_mb": null,
+          "naming_convention": null,
+          "needs_translation": true,
+          "needs_notarization": false,
+          "needs_apostille": false,
+          "needs_credential_evaluation": false,
+          "word_limit": null,
+          "character_limit": null,
+          "prompt_text": null,
+          "deadline": null,
+          "deadline_timezone": null,
+          "depends_on": [],
+          "lead_time_days": 21,
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "claim_ids": [
+            "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en"
+          ],
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          }
+        }
+      ],
+      "claims": [
+        {
+          "claim_type": "required_document",
+          "normalized_value": "Certified English translation of non-English documents",
+          "original_text_excerpt": "If your documents are not in English, Dutch, French or German, you will need to upload the original documents and translations.",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "required_document",
+          "normalized_value": "Academic reference",
+          "original_text_excerpt": "Motivation and reference letters are not considered in our admissions procedure.",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "recommendation_requirement",
+          "normalized_value": "Academic reference",
+          "original_text_excerpt": "Motivation and reference letters are not considered in our admissions procedure.",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "required_document",
+          "normalized_value": "Secondary school diploma (certified copy)",
+          "original_text_excerpt": "Diploma",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "required_document",
+          "normalized_value": "Full academic transcript",
+          "original_text_excerpt": "Transcript",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "document_by_completion",
+          "normalized_value": {
+            "document": "Full academic transcript",
+            "status": "completed",
+            "form": "academic_record"
+          },
+          "original_text_excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "Bachelor's application documents / Required documents / Overview application documents / Transcript",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "document_by_completion",
+          "normalized_value": {
+            "document": "Full academic transcript",
+            "status": "not_completed",
+            "form": "school_course_list"
+          },
+          "original_text_excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "Bachelor's application documents / Required documents / Overview application documents / Transcript",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "document_by_completion",
+          "normalized_value": {
+            "document": "Full academic transcript",
+            "status": "completed",
+            "form": "academic_record"
+          },
+          "original_text_excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "Bachelor's application documents / Required documents / Overview application documents / Transcript",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "document_by_completion",
+          "normalized_value": {
+            "document": "Full academic transcript",
+            "status": "not_completed",
+            "form": "school_course_list"
+          },
+          "original_text_excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "Bachelor's application documents / Required documents / Overview application documents / Transcript",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "document_by_completion",
+          "normalized_value": {
+            "document": "Full academic transcript",
+            "status": "completed",
+            "form": "academic_record"
+          },
+          "original_text_excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units) Note: If your chosen programme has a mathematics requirement, your transcript(s) will be used to assess whether you have the required knowledge in this subject. The Admissions Board may ask you to submit additional information about the topics covered in your mathematics courses.",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "Bachelor's application documents / Required documents / Overview application documents / Transcript",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "document_by_completion",
+          "normalized_value": {
+            "document": "Full academic transcript",
+            "status": "not_completed",
+            "form": "school_course_list"
+          },
+          "original_text_excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units) Note: If your chosen programme has a mathematics requirement, your transcript(s) will be used to assess whether you have the required knowledge in this subject. The Admissions Board may ask you to submit additional information about the topics covered in your mathematics courses.",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "Bachelor's application documents / Required documents / Overview application documents / Transcript",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "document_by_completion",
+          "normalized_value": {
+            "document": "Full academic transcript",
+            "status": "completed",
+            "form": "academic_record"
+          },
+          "original_text_excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "Bachelor's application documents / Required documents / Overview application documents / Transcript",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "document_by_completion",
+          "normalized_value": {
+            "document": "Full academic transcript",
+            "status": "not_completed",
+            "form": "school_course_list"
+          },
+          "original_text_excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "Bachelor's application documents / Required documents / Overview application documents / Transcript",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "document_by_completion",
+          "normalized_value": {
+            "document": "Full academic transcript",
+            "status": "completed",
+            "form": "academic_record"
+          },
+          "original_text_excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units) Note: Your transcript(s) will be used to assess whether you meet your chosen programme’s subject-specific requirements. The Admissions Board may ask you to submit additional information about the topics covered in your courses.",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "Bachelor's application documents / Required documents / Overview application documents / Transcript",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "document_by_completion",
+          "normalized_value": {
+            "document": "Full academic transcript",
+            "status": "not_completed",
+            "form": "school_course_list"
+          },
+          "original_text_excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units) Note: Your transcript(s) will be used to assess whether you meet your chosen programme’s subject-specific requirements. The Admissions Board may ask you to submit additional information about the topics covered in your courses.",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "Bachelor's application documents / Required documents / Overview application documents / Transcript",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "document_by_completion",
+          "normalized_value": {
+            "document": "Full academic transcript",
+            "status": "completed",
+            "form": "academic_record"
+          },
+          "original_text_excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "Bachelor's application documents / Required documents / Transcript",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "document_by_completion",
+          "normalized_value": {
+            "document": "Full academic transcript",
+            "status": "not_completed",
+            "form": "school_course_list"
+          },
+          "original_text_excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "Bachelor's application documents / Required documents / Transcript",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "document_by_completion",
+          "normalized_value": {
+            "document": "Full academic transcript",
+            "status": "completed",
+            "form": "academic_record"
+          },
+          "original_text_excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units) Note: Your transcript(s) will be used to assess whether you meet your chosen programme’s subject-specific requirements. The Admissions Board may ask you to submit additional information about the topics covered in your courses.",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "Bachelor's application documents / Overview required documents / Transcript",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "document_by_completion",
+          "normalized_value": {
+            "document": "Full academic transcript",
+            "status": "not_completed",
+            "form": "school_course_list"
+          },
+          "original_text_excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units) Note: Your transcript(s) will be used to assess whether you meet your chosen programme’s subject-specific requirements. The Admissions Board may ask you to submit additional information about the topics covered in your courses.",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "Bachelor's application documents / Overview required documents / Transcript",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "document_by_completion",
+          "normalized_value": {
+            "document": "Full academic transcript",
+            "status": "completed",
+            "form": "academic_record"
+          },
+          "original_text_excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units) Note: If your chosen programme has a mathematics requirement, your transcript(s) will be used to assess whether you have the required knowledge in this subject. The Admissions Board may ask you to submit additional information about the topics covered in your mathematics courses.",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "Bachelor's application documents / Required documents / Transcript",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "document_by_completion",
+          "normalized_value": {
+            "document": "Full academic transcript",
+            "status": "not_completed",
+            "form": "school_course_list"
+          },
+          "original_text_excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units) Note: If your chosen programme has a mathematics requirement, your transcript(s) will be used to assess whether you have the required knowledge in this subject. The Admissions Board may ask you to submit additional information about the topics covered in your mathematics courses.",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "Bachelor's application documents / Required documents / Transcript",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "document_by_completion",
+          "normalized_value": {
+            "document": "Full academic transcript",
+            "status": "completed",
+            "form": "academic_record"
+          },
+          "original_text_excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "Bachelor's application documents / Required documents / Overview application documents / Transcript",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "document_by_completion",
+          "normalized_value": {
+            "document": "Full academic transcript",
+            "status": "not_completed",
+            "form": "school_course_list"
+          },
+          "original_text_excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "Bachelor's application documents / Required documents / Overview application documents / Transcript",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "document_by_completion",
+          "normalized_value": {
+            "document": "Full academic transcript",
+            "status": "completed",
+            "form": "academic_record"
+          },
+          "original_text_excerpt": "Transcripts:* Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "Bachelor's application documents / Required documents",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "document_by_completion",
+          "normalized_value": {
+            "document": "Full academic transcript",
+            "status": "not_completed",
+            "form": "school_course_list"
+          },
+          "original_text_excerpt": "Transcripts:* Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "Bachelor's application documents / Required documents",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        }
+      ],
+      "predictions": [
+        {
+          "key": "documents.admission.translation.required",
+          "value": true,
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "If your documents are not in English, Dutch, French or German, you will need to upload the original documents and translations.",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.required_document",
+          "value": "Academic reference",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Motivation and reference letters are not considered in our admissions procedure.",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.recommendation_requirement",
+          "value": "Academic reference",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Motivation and reference letters are not considered in our admissions procedure.",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.secondary_diploma.required",
+          "value": true,
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Diploma",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.required",
+          "value": true,
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Transcript",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.completed",
+          "value": "academic_record",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.not_completed",
+          "value": "school_course_list",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.completed",
+          "value": "academic_record",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.not_completed",
+          "value": "school_course_list",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.completed",
+          "value": "academic_record",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units) Note: If your chosen programme has a mathematics requirement, your transcript(s) will be used to assess whether you have the required knowledge in this subject. The Admissions Board may ask you to submit additional information about the topics covered in your mathematics courses.",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.not_completed",
+          "value": "school_course_list",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units) Note: If your chosen programme has a mathematics requirement, your transcript(s) will be used to assess whether you have the required knowledge in this subject. The Admissions Board may ask you to submit additional information about the topics covered in your mathematics courses.",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.completed",
+          "value": "academic_record",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.not_completed",
+          "value": "school_course_list",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.completed",
+          "value": "academic_record",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units) Note: Your transcript(s) will be used to assess whether you meet your chosen programme’s subject-specific requirements. The Admissions Board may ask you to submit additional information about the topics covered in your courses.",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.not_completed",
+          "value": "school_course_list",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units) Note: Your transcript(s) will be used to assess whether you meet your chosen programme’s subject-specific requirements. The Admissions Board may ask you to submit additional information about the topics covered in your courses.",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.completed",
+          "value": "academic_record",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.not_completed",
+          "value": "school_course_list",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.completed",
+          "value": "academic_record",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units) Note: Your transcript(s) will be used to assess whether you meet your chosen programme’s subject-specific requirements. The Admissions Board may ask you to submit additional information about the topics covered in your courses.",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.not_completed",
+          "value": "school_course_list",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units) Note: Your transcript(s) will be used to assess whether you meet your chosen programme’s subject-specific requirements. The Admissions Board may ask you to submit additional information about the topics covered in your courses.",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.completed",
+          "value": "academic_record",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units) Note: If your chosen programme has a mathematics requirement, your transcript(s) will be used to assess whether you have the required knowledge in this subject. The Admissions Board may ask you to submit additional information about the topics covered in your mathematics courses.",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.not_completed",
+          "value": "school_course_list",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units) Note: If your chosen programme has a mathematics requirement, your transcript(s) will be used to assess whether you have the required knowledge in this subject. The Admissions Board may ask you to submit additional information about the topics covered in your mathematics courses.",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.completed",
+          "value": "academic_record",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.not_completed",
+          "value": "school_course_list",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.completed",
+          "value": "academic_record",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Transcripts:* Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.not_completed",
+          "value": "school_course_list",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Transcripts:* Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        }
+      ],
+      "score": {
+        "dataset_version": "2026-09-23.reviewed",
+        "dataset_sha256": "5491a7e5c3ad4a51987b8250ad23fa351e7e2b4de7d5408f264d8c6e40b34bdb",
+        "pipeline_sha": "1c3db3e",
+        "provisional": false,
+        "mode": "replay",
+        "captured_at": "2026-10-03",
+        "config": {},
+        "metrics": {
+          "programme_page_recall": {
+            "numerator": 0,
+            "denominator": 1,
+            "value": 0.0
+          },
+          "programme_page_precision": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "recall_at_5": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "recall_at_10": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "recall_at_20": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "claim_precision": {
+            "numerator": 12,
+            "denominator": 12,
+            "value": 1.0
+          },
+          "claim_recall": {
+            "numerator": 2,
+            "denominator": 11,
+            "value": 0.18181818181818182
+          },
+          "claim_recall_same_page": {
+            "numerator": 2,
+            "denominator": 11,
+            "value": 0.18181818181818182
+          },
+          "unsupported_claim_rate": {
+            "numerator": 0,
+            "denominator": 2,
+            "value": 0.0
+          },
+          "wrong_scope_claim_rate": {
+            "numerator": 0,
+            "denominator": 12,
+            "value": 0.0
+          },
+          "critical_field_coverage": {
+            "numerator": 2,
+            "denominator": 24,
+            "value": 0.08333333333333333
+          },
+          "scholarship_discovery_recall": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "scholarship_applicability_precision": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "scholarship_applicability_recall": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "scholarship_coverage_precision": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "primary_source_rate": {
+            "numerator": 17,
+            "denominator": 17,
+            "value": 1.0
+          },
+          "verbatim_evidence_rate": {
+            "numerator": 2,
+            "denominator": 12,
+            "value": 0.16666666666666666
+          },
+          "current_evidence_rate": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "conflict_visibility_rate": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "support_adjudication_rate": {
+            "numerator": 2,
+            "denominator": 17,
+            "value": 0.11764705882352941
+          },
+          "claim_adjudication_rate": {
+            "numerator": 12,
+            "denominator": 17,
+            "value": 0.7058823529411765
+          },
+          "human_review_rate": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          }
+        },
+        "fields": {
+          "country_credential": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "country_credential.nis_grade12.level_equivalence": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "deadline": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.admission": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.admission.secondary_diploma.completed": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.admission.secondary_diploma.not_completed": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.admission.transcript.completed": {
+            "precision": {
+              "numerator": 6,
+              "denominator": 6,
+              "value": 1.0
+            },
+            "coverage": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            }
+          },
+          "documents.admission.transcript.not_completed": {
+            "precision": {
+              "numerator": 6,
+              "denominator": 6,
+              "value": 1.0
+            },
+            "coverage": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            }
+          },
+          "documents.admission.translation.required_unless_language_in": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.programme": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.programme.course_descriptions.board_may_request": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.programme.course_descriptions.initial_upload": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.scholarship": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "ielts.overall": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "ielts.subscores": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "intake": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "mandatory_fees": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "programme.exists": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "sat.minimum": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "sat.policy": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarship_applicability": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarship_coverage": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "subjects.mathematics.required": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "tuition": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          }
+        },
+        "operations": {
+          "http_fetches": {
+            "sum": null,
+            "measured_cases": 0,
+            "cases": 1
+          },
+          "browser_fetches": {
+            "sum": null,
+            "measured_cases": 0,
+            "cases": 1
+          },
+          "pdf_fetches": {
+            "sum": null,
+            "measured_cases": 0,
+            "cases": 1
+          },
+          "search_calls": {
+            "sum": null,
+            "measured_cases": 0,
+            "cases": 1
+          },
+          "model_input_tokens": {
+            "sum": null,
+            "measured_cases": 0,
+            "cases": 1
+          },
+          "jev_input_tokens": {
+            "sum": null,
+            "measured_cases": 0,
+            "cases": 1
+          },
+          "latency_seconds": {
+            "sum": null,
+            "measured_cases": 0,
+            "cases": 1
+          },
+          "cost_usd": {
+            "sum": null,
+            "measured_cases": 0,
+            "cases": 1
+          },
+          "human_review_required": {
+            "sum": null,
+            "measured_cases": 0,
+            "cases": 1
+          },
+          "latency_percentiles": {
+            "p50": null,
+            "p95": null
+          }
+        },
+        "cases": [
+          {
+            "case_id": "groningen",
+            "country": "Netherlands",
+            "site_types": [
+              "large_sitemap"
+            ],
+            "programme_hit": false,
+            "correct_claims": 2,
+            "answerable_claims": 11,
+            "error": null
+          }
+        ],
+        "notes": [
+          "Exact value and evidence-scope matching; unlabelled predictions are unadjudicated, not correct.",
+          "Missing rank lists/telemetry yield null; per-case failures stay in recall denominators.",
+          "No overall accuracy score. Programme URLs measure identity, not intake confirmation."
+        ]
+      }
+    },
+    "after": {
+      "documents": [
+        {
+          "name": "Translation (if originals are not in English, Dutch, French, German)",
+          "purpose": "admission",
+          "owner": "applicant",
+          "required": true,
+          "format_notes": "If your documents are not in English, Dutch, French or German, you will need to upload the original documents and translations.",
+          "max_pages": null,
+          "max_file_size_mb": null,
+          "naming_convention": null,
+          "needs_translation": true,
+          "needs_notarization": false,
+          "needs_apostille": false,
+          "needs_credential_evaluation": false,
+          "word_limit": null,
+          "character_limit": null,
+          "prompt_text": null,
+          "deadline": null,
+          "deadline_timezone": null,
+          "depends_on": [],
+          "lead_time_days": null,
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "claim_ids": [
+            "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en"
+          ],
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          }
+        },
+        {
+          "name": "Academic reference",
+          "purpose": "admission",
+          "owner": "recommender",
+          "required": true,
+          "format_notes": "",
+          "max_pages": null,
+          "max_file_size_mb": null,
+          "naming_convention": null,
+          "needs_translation": false,
+          "needs_notarization": false,
+          "needs_apostille": false,
+          "needs_credential_evaluation": false,
+          "word_limit": null,
+          "character_limit": null,
+          "prompt_text": null,
+          "deadline": null,
+          "deadline_timezone": null,
+          "depends_on": [],
+          "lead_time_days": 30,
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "claim_ids": [
+            "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en"
+          ],
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          }
+        },
+        {
+          "name": "Secondary school diploma (certified copy)",
+          "purpose": "admission",
+          "owner": "school",
+          "required": true,
+          "format_notes": "",
+          "max_pages": null,
+          "max_file_size_mb": null,
+          "naming_convention": null,
+          "needs_translation": true,
+          "needs_notarization": true,
+          "needs_apostille": false,
+          "needs_credential_evaluation": false,
+          "word_limit": null,
+          "character_limit": null,
+          "prompt_text": null,
+          "deadline": null,
+          "deadline_timezone": null,
+          "depends_on": [],
+          "lead_time_days": 21,
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "claim_ids": [
+            "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en"
+          ],
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          }
+        },
+        {
+          "name": "Full academic transcript",
+          "purpose": "admission",
+          "owner": "school",
+          "required": true,
+          "format_notes": "",
+          "max_pages": null,
+          "max_file_size_mb": null,
+          "naming_convention": null,
+          "needs_translation": true,
+          "needs_notarization": false,
+          "needs_apostille": false,
+          "needs_credential_evaluation": false,
+          "word_limit": null,
+          "character_limit": null,
+          "prompt_text": null,
+          "deadline": null,
+          "deadline_timezone": null,
+          "depends_on": [],
+          "lead_time_days": 21,
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "claim_ids": [
+            "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en"
+          ],
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          }
+        }
+      ],
+      "claims": [
+        {
+          "claim_type": "required_document",
+          "normalized_value": {
+            "document": "Translation of application documents",
+            "required_unless_language_in": [
+              "English",
+              "Dutch",
+              "French",
+              "German"
+            ]
+          },
+          "original_text_excerpt": "If your documents are not in English, Dutch, French or German, you will need to upload the original documents and translations.",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.8,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "required_document",
+          "normalized_value": "Academic reference",
+          "original_text_excerpt": "Motivation and reference letters are not considered in our admissions procedure.",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "recommendation_requirement",
+          "normalized_value": "Academic reference",
+          "original_text_excerpt": "Motivation and reference letters are not considered in our admissions procedure.",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "required_document",
+          "normalized_value": "Secondary school diploma (certified copy)",
+          "original_text_excerpt": "Diploma",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "required_document",
+          "normalized_value": "Full academic transcript",
+          "original_text_excerpt": "Transcript",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "document_by_completion",
+          "normalized_value": {
+            "document": "Full academic transcript",
+            "status": "completed",
+            "form": "academic_record"
+          },
+          "original_text_excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "Bachelor's application documents / Required documents / Overview application documents / Transcript",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "document_by_completion",
+          "normalized_value": {
+            "document": "Full academic transcript",
+            "status": "not_completed",
+            "form": "school_course_list"
+          },
+          "original_text_excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "Bachelor's application documents / Required documents / Overview application documents / Transcript",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "document_by_completion",
+          "normalized_value": {
+            "document": "Full academic transcript",
+            "status": "completed",
+            "form": "academic_record"
+          },
+          "original_text_excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "Bachelor's application documents / Required documents / Overview application documents / Transcript",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "document_by_completion",
+          "normalized_value": {
+            "document": "Full academic transcript",
+            "status": "not_completed",
+            "form": "school_course_list"
+          },
+          "original_text_excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "Bachelor's application documents / Required documents / Overview application documents / Transcript",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "document_by_completion",
+          "normalized_value": {
+            "document": "Full academic transcript",
+            "status": "completed",
+            "form": "academic_record"
+          },
+          "original_text_excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units) Note: If your chosen programme has a mathematics requirement, your transcript(s) will be used to assess whether you have the required knowledge in this subject. The Admissions Board may ask you to submit additional information about the topics covered in your mathematics courses.",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "Bachelor's application documents / Required documents / Overview application documents / Transcript",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "document_by_completion",
+          "normalized_value": {
+            "document": "Full academic transcript",
+            "status": "not_completed",
+            "form": "school_course_list"
+          },
+          "original_text_excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units) Note: If your chosen programme has a mathematics requirement, your transcript(s) will be used to assess whether you have the required knowledge in this subject. The Admissions Board may ask you to submit additional information about the topics covered in your mathematics courses.",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "Bachelor's application documents / Required documents / Overview application documents / Transcript",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "document_by_completion",
+          "normalized_value": {
+            "document": "Full academic transcript",
+            "status": "completed",
+            "form": "academic_record"
+          },
+          "original_text_excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "Bachelor's application documents / Required documents / Overview application documents / Transcript",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "document_by_completion",
+          "normalized_value": {
+            "document": "Full academic transcript",
+            "status": "not_completed",
+            "form": "school_course_list"
+          },
+          "original_text_excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "Bachelor's application documents / Required documents / Overview application documents / Transcript",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "document_by_completion",
+          "normalized_value": {
+            "document": "Full academic transcript",
+            "status": "completed",
+            "form": "academic_record"
+          },
+          "original_text_excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units) Note: Your transcript(s) will be used to assess whether you meet your chosen programme’s subject-specific requirements. The Admissions Board may ask you to submit additional information about the topics covered in your courses.",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "Bachelor's application documents / Required documents / Overview application documents / Transcript",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "document_by_completion",
+          "normalized_value": {
+            "document": "Full academic transcript",
+            "status": "not_completed",
+            "form": "school_course_list"
+          },
+          "original_text_excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units) Note: Your transcript(s) will be used to assess whether you meet your chosen programme’s subject-specific requirements. The Admissions Board may ask you to submit additional information about the topics covered in your courses.",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "Bachelor's application documents / Required documents / Overview application documents / Transcript",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "document_by_completion",
+          "normalized_value": {
+            "document": "Full academic transcript",
+            "status": "completed",
+            "form": "academic_record"
+          },
+          "original_text_excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "Bachelor's application documents / Required documents / Transcript",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "document_by_completion",
+          "normalized_value": {
+            "document": "Full academic transcript",
+            "status": "not_completed",
+            "form": "school_course_list"
+          },
+          "original_text_excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "Bachelor's application documents / Required documents / Transcript",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "document_by_completion",
+          "normalized_value": {
+            "document": "Full academic transcript",
+            "status": "completed",
+            "form": "academic_record"
+          },
+          "original_text_excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units) Note: Your transcript(s) will be used to assess whether you meet your chosen programme’s subject-specific requirements. The Admissions Board may ask you to submit additional information about the topics covered in your courses.",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "Bachelor's application documents / Overview required documents / Transcript",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "document_by_completion",
+          "normalized_value": {
+            "document": "Full academic transcript",
+            "status": "not_completed",
+            "form": "school_course_list"
+          },
+          "original_text_excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units) Note: Your transcript(s) will be used to assess whether you meet your chosen programme’s subject-specific requirements. The Admissions Board may ask you to submit additional information about the topics covered in your courses.",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "Bachelor's application documents / Overview required documents / Transcript",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "document_by_completion",
+          "normalized_value": {
+            "document": "Full academic transcript",
+            "status": "completed",
+            "form": "academic_record"
+          },
+          "original_text_excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units) Note: If your chosen programme has a mathematics requirement, your transcript(s) will be used to assess whether you have the required knowledge in this subject. The Admissions Board may ask you to submit additional information about the topics covered in your mathematics courses.",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "Bachelor's application documents / Required documents / Transcript",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "document_by_completion",
+          "normalized_value": {
+            "document": "Full academic transcript",
+            "status": "not_completed",
+            "form": "school_course_list"
+          },
+          "original_text_excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units) Note: If your chosen programme has a mathematics requirement, your transcript(s) will be used to assess whether you have the required knowledge in this subject. The Admissions Board may ask you to submit additional information about the topics covered in your mathematics courses.",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "Bachelor's application documents / Required documents / Transcript",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "document_by_completion",
+          "normalized_value": {
+            "document": "Full academic transcript",
+            "status": "completed",
+            "form": "academic_record"
+          },
+          "original_text_excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "Bachelor's application documents / Required documents / Overview application documents / Transcript",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "document_by_completion",
+          "normalized_value": {
+            "document": "Full academic transcript",
+            "status": "not_completed",
+            "form": "school_course_list"
+          },
+          "original_text_excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "Bachelor's application documents / Required documents / Overview application documents / Transcript",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "document_by_completion",
+          "normalized_value": {
+            "document": "Full academic transcript",
+            "status": "completed",
+            "form": "academic_record"
+          },
+          "original_text_excerpt": "Transcripts:* Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "Bachelor's application documents / Required documents",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        },
+        {
+          "claim_type": "document_by_completion",
+          "normalized_value": {
+            "document": "Full academic transcript",
+            "status": "not_completed",
+            "form": "school_course_list"
+          },
+          "original_text_excerpt": "Transcripts:* Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+          "source_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+          "page_title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+          "relevant_section": "Bachelor's application documents / Required documents",
+          "official_domain": true,
+          "program": "Computing Science",
+          "subject_key": null,
+          "intake": null,
+          "academic_year": "2026/27",
+          "accessed_at": "2026-10-03T05:26:36.231503Z",
+          "scope": {
+            "university": null,
+            "faculty": null,
+            "programme": null,
+            "degree": "bachelor",
+            "intake": null,
+            "academic_year": null,
+            "population": null,
+            "nationality": null,
+            "residency": null,
+            "qualification": null
+          },
+          "source_specificity": "program_intake",
+          "confidence": 0.75,
+          "status": "VERIFIED_CURRENT",
+          "extraction_method": "html_rule",
+          "notes": ""
+        }
+      ],
+      "predictions": [
+        {
+          "key": "documents.admission.translation.required_unless_language_in",
+          "value": [
+            "English",
+            "Dutch",
+            "French",
+            "German"
+          ],
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "If your documents are not in English, Dutch, French or German, you will need to upload the original documents and translations.",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.required_document",
+          "value": "Academic reference",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Motivation and reference letters are not considered in our admissions procedure.",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.recommendation_requirement",
+          "value": "Academic reference",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Motivation and reference letters are not considered in our admissions procedure.",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.secondary_diploma.required",
+          "value": true,
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Diploma",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.required",
+          "value": true,
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Transcript",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.completed",
+          "value": "academic_record",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.not_completed",
+          "value": "school_course_list",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.completed",
+          "value": "academic_record",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.not_completed",
+          "value": "school_course_list",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.completed",
+          "value": "academic_record",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units) Note: If your chosen programme has a mathematics requirement, your transcript(s) will be used to assess whether you have the required knowledge in this subject. The Admissions Board may ask you to submit additional information about the topics covered in your mathematics courses.",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.not_completed",
+          "value": "school_course_list",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units) Note: If your chosen programme has a mathematics requirement, your transcript(s) will be used to assess whether you have the required knowledge in this subject. The Admissions Board may ask you to submit additional information about the topics covered in your mathematics courses.",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.completed",
+          "value": "academic_record",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.not_completed",
+          "value": "school_course_list",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.completed",
+          "value": "academic_record",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units) Note: Your transcript(s) will be used to assess whether you meet your chosen programme’s subject-specific requirements. The Admissions Board may ask you to submit additional information about the topics covered in your courses.",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.not_completed",
+          "value": "school_course_list",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units) Note: Your transcript(s) will be used to assess whether you meet your chosen programme’s subject-specific requirements. The Admissions Board may ask you to submit additional information about the topics covered in your courses.",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.completed",
+          "value": "academic_record",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.not_completed",
+          "value": "school_course_list",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.completed",
+          "value": "academic_record",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units) Note: Your transcript(s) will be used to assess whether you meet your chosen programme’s subject-specific requirements. The Admissions Board may ask you to submit additional information about the topics covered in your courses.",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.not_completed",
+          "value": "school_course_list",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units) Note: Your transcript(s) will be used to assess whether you meet your chosen programme’s subject-specific requirements. The Admissions Board may ask you to submit additional information about the topics covered in your courses.",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.completed",
+          "value": "academic_record",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units) Note: If your chosen programme has a mathematics requirement, your transcript(s) will be used to assess whether you have the required knowledge in this subject. The Admissions Board may ask you to submit additional information about the topics covered in your mathematics courses.",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.not_completed",
+          "value": "school_course_list",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units) Note: If your chosen programme has a mathematics requirement, your transcript(s) will be used to assess whether you have the required knowledge in this subject. The Admissions Board may ask you to submit additional information about the topics covered in your mathematics courses.",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.completed",
+          "value": "academic_record",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.not_completed",
+          "value": "school_course_list",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Scan(s) of your academic record (i.e. final grade list/report card) or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.completed",
+          "value": "academic_record",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Transcripts:* Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "documents.admission.transcript.not_completed",
+          "value": "school_course_list",
+          "evidence": {
+            "url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+            "excerpt": "Transcripts:* Scan(s) of your academic record (i.e. final grade list/report card) and/or if not yet completed: school-issued list of your courses still to be completed (if applicable, including level/credits/units)",
+            "scope": {
+              "university": "University of Groningen",
+              "programme": "Computing Science",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        }
+      ],
+      "score": {
+        "dataset_version": "2026-09-23.reviewed",
+        "dataset_sha256": "5491a7e5c3ad4a51987b8250ad23fa351e7e2b4de7d5408f264d8c6e40b34bdb",
+        "pipeline_sha": "ER-12-working-tree",
+        "provisional": false,
+        "mode": "replay",
+        "captured_at": "2026-10-03",
+        "config": {},
+        "metrics": {
+          "programme_page_recall": {
+            "numerator": 0,
+            "denominator": 1,
+            "value": 0.0
+          },
+          "programme_page_precision": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "recall_at_5": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "recall_at_10": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "recall_at_20": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "claim_precision": {
+            "numerator": 13,
+            "denominator": 13,
+            "value": 1.0
+          },
+          "claim_recall": {
+            "numerator": 3,
+            "denominator": 11,
+            "value": 0.2727272727272727
+          },
+          "claim_recall_same_page": {
+            "numerator": 3,
+            "denominator": 11,
+            "value": 0.2727272727272727
+          },
+          "unsupported_claim_rate": {
+            "numerator": 0,
+            "denominator": 3,
+            "value": 0.0
+          },
+          "wrong_scope_claim_rate": {
+            "numerator": 0,
+            "denominator": 13,
+            "value": 0.0
+          },
+          "critical_field_coverage": {
+            "numerator": 3,
+            "denominator": 24,
+            "value": 0.125
+          },
+          "scholarship_discovery_recall": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "scholarship_applicability_precision": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "scholarship_applicability_recall": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "scholarship_coverage_precision": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "primary_source_rate": {
+            "numerator": 17,
+            "denominator": 17,
+            "value": 1.0
+          },
+          "verbatim_evidence_rate": {
+            "numerator": 3,
+            "denominator": 13,
+            "value": 0.23076923076923078
+          },
+          "current_evidence_rate": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "conflict_visibility_rate": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          },
+          "support_adjudication_rate": {
+            "numerator": 3,
+            "denominator": 17,
+            "value": 0.17647058823529413
+          },
+          "claim_adjudication_rate": {
+            "numerator": 13,
+            "denominator": 17,
+            "value": 0.7647058823529411
+          },
+          "human_review_rate": {
+            "numerator": 0,
+            "denominator": 0,
+            "value": null
+          }
+        },
+        "fields": {
+          "country_credential": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "country_credential.nis_grade12.level_equivalence": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "deadline": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.admission": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.admission.secondary_diploma.completed": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.admission.secondary_diploma.not_completed": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.admission.transcript.completed": {
+            "precision": {
+              "numerator": 6,
+              "denominator": 6,
+              "value": 1.0
+            },
+            "coverage": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            }
+          },
+          "documents.admission.transcript.not_completed": {
+            "precision": {
+              "numerator": 6,
+              "denominator": 6,
+              "value": 1.0
+            },
+            "coverage": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            }
+          },
+          "documents.admission.translation.required_unless_language_in": {
+            "precision": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "coverage": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            }
+          },
+          "documents.programme": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.programme.course_descriptions.board_may_request": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.programme.course_descriptions.initial_upload": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "documents.scholarship": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "ielts.overall": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "ielts.subscores": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "intake": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "mandatory_fees": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "programme.exists": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "sat.minimum": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "sat.policy": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarship_applicability": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarship_coverage": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "scholarships": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "subjects.mathematics.required": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "recall": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          },
+          "tuition": {
+            "coverage": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            }
+          }
+        },
+        "operations": {
+          "http_fetches": {
+            "sum": null,
+            "measured_cases": 0,
+            "cases": 1
+          },
+          "browser_fetches": {
+            "sum": null,
+            "measured_cases": 0,
+            "cases": 1
+          },
+          "pdf_fetches": {
+            "sum": null,
+            "measured_cases": 0,
+            "cases": 1
+          },
+          "search_calls": {
+            "sum": null,
+            "measured_cases": 0,
+            "cases": 1
+          },
+          "model_input_tokens": {
+            "sum": null,
+            "measured_cases": 0,
+            "cases": 1
+          },
+          "jev_input_tokens": {
+            "sum": null,
+            "measured_cases": 0,
+            "cases": 1
+          },
+          "latency_seconds": {
+            "sum": null,
+            "measured_cases": 0,
+            "cases": 1
+          },
+          "cost_usd": {
+            "sum": null,
+            "measured_cases": 0,
+            "cases": 1
+          },
+          "human_review_required": {
+            "sum": null,
+            "measured_cases": 0,
+            "cases": 1
+          },
+          "latency_percentiles": {
+            "p50": null,
+            "p95": null
+          }
+        },
+        "cases": [
+          {
+            "case_id": "groningen",
+            "country": "Netherlands",
+            "site_types": [
+              "large_sitemap"
+            ],
+            "programme_hit": false,
+            "correct_claims": 3,
+            "answerable_claims": 11,
+            "error": null
+          }
+        ],
+        "notes": [
+          "Exact value and evidence-scope matching; unlabelled predictions are unadjudicated, not correct.",
+          "Missing rank lists/telemetry yield null; per-case failures stay in recall denominators.",
+          "No overall accuracy score. Programme URLs measure identity, not intake confirmation."
+        ]
+      }
+    }
+  },
+  "limitations": [
+    "Original gold and full Groningen known-fact denominator retained.",
+    "Translation only; no new human evidence/currentness adjudication.",
+    "No change to latest full live13/62."
+  ]
+}

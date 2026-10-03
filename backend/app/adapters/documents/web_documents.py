@@ -463,6 +463,43 @@ def _referee_conditions(name: str, statement: str) -> str | dict[str, object]:
     return value
 
 
+_TRANSLATION_EXCEPTION = re.compile(
+    r"^(?:Note\s*:\s*|NB:\s*)?If (?:your|the) documents are not in "
+    r"(?P<languages>[A-Za-z, ]+), (?:you (?:will )?need to upload the original documents "
+    r"and translations|please also provide a translation(?: in [A-Za-z, ]+)?)\.$",
+    re.I,
+)
+_LANGUAGE_NAMES = frozenset(
+    {
+        "English",
+        "Dutch",
+        "French",
+        "German",
+        "Spanish",
+        "Italian",
+        "Portuguese",
+        "Chinese",
+        "Japanese",
+        "Korean",
+    }
+)
+
+
+def _translation_exception(statement: str) -> list[str] | None:
+    """Only a complete exception clause establishes the exempt languages."""
+    match = _TRANSLATION_EXCEPTION.fullmatch(statement)
+    if match is None:
+        return None
+    languages = [
+        part.strip().title() for part in re.split(r",|\bor\b", match["languages"], flags=re.I)
+    ]
+    if not languages or any(language not in _LANGUAGE_NAMES for language in languages):
+        return None
+    if len(set(languages)) != len(languages):
+        return None
+    return languages
+
+
 def read_documents(
     text: str,
     url: str,
@@ -488,6 +525,39 @@ def read_documents(
             )
             builder.meta["scope"] = local_scope
             low = line.lower().strip()
+            languages = _translation_exception(line)
+            if languages is not None:
+                name = "Translation of application documents"
+                identity = name + ":" + ",".join(languages)
+                if identity not in seen:
+                    claim = builder.add(
+                        ClaimType.REQUIRED_DOCUMENT,
+                        {"document": name, "required_unless_language_in": languages},
+                        line,
+                        confidence=0.8,
+                    )
+                    if claim is not None:
+                        seen.add(identity)
+                        items.append(
+                            DocumentItem(
+                                name=f"Translation (if originals are not in {', '.join(languages)})",
+                                purpose=purpose,
+                                owner=DocumentOwner.APPLICANT,
+                                needs_translation=True,
+                                format_notes=line,
+                                source_url=url,
+                                claim_ids=[url],
+                                scope=local_scope,
+                            )
+                        )
+                continue
+            # An unparsed condition must not become the generic, unconditional
+            # certified-English-translation rule below.
+            if "translation" in low and (
+                re.search(r"\b(?:if|unless|when|except)\b", low)
+                or not (_DOCUMENT_ACTION.search(line) or _REQUIRED_WORD.search(line))
+            ):
+                continue
             if not _required_document_statement(line, listed):
                 continue
             for needle, name, owner, flags in _DOC_RULES:

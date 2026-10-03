@@ -261,6 +261,21 @@ def normalize_subject_claims(
                 for key, val in value.items()
                 if key != "document"
             ]
+        if claim_type == "required_document" and isinstance(value, dict):
+            if set(value) != {"document", "required_unless_language_in"}:
+                return [fallback]
+            languages = value["required_unless_language_in"]
+            if (
+                not isinstance(languages, list)
+                or not languages
+                or any(not isinstance(item, str) or not item.strip() for item in languages)
+                or len(set(languages)) != len(languages)
+            ):
+                return [fallback]
+            prefix = identities.resolve("document", source, value["document"])
+            if prefix is None:
+                return [fallback]
+            return [(prefix + ".required_unless_language_in", languages, programme, degree)]
         if claim_type == "document_by_completion":
             # {"document": subject, "status": completed|not_completed, "form": ...}
             if (

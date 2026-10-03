@@ -242,3 +242,52 @@ Focused98 tests, Ruff/format327, mypy327 and frontend232/typecheck/lint/build pa
 Full backend:2927 passed,94.94% coverage in414.05s. Isolated migrated demo
 (with approved checklists) keeps Groningen first and UBC OUT_OF_BUDGET;
 one Alembic head d8e412c6a901. Logs: /tmp/unimatch-er11-*.log.
+
+
+## ER-12 explicit translation exception — 2026-10-03
+
+A fresh normal-Fetcher read of Groningen's document page returned200. Its complete
+clause exempts originals in English, Dutch, French or German and requires original
+plus translation otherwise. The existing reader converted this into an
+unconditional `Certified English translation of non-English documents`, which
+inferred both English-only and certification. The page also explicitly permits
+self-made translations for assessment.
+
+The repaired reader preserves `required_unless_language_in` as a structured claim
+and puts the condition in the visible checklist name, with the source clause in
+format notes. It does not add certification or require a third-party translator.
+Unparsed conditional translation text and mere permission to use translations
+cannot fall through to the unconditional generic rule. Different stated language
+lists stay separate; exact repeats are deduplicated. New identities are in
+`identity_bindings.2026-10-03.conditions.json`; both older observed files remain
+unchanged. Invalid lists/unknown identities/shapes remain unmapped.
+
+`er12.frozen-translation.json` compares the old1c3db3e reader with the repaired
+reader using the same saved page, same mapping and same new identity file:
+**2/11→3/11**,25 raw claims on each arm. The translation exception is the one new
+known fact matched, with source URL, quote and scope retained. Full Groningen
+known-fact denominator11 is unchanged. This is explicit-source evaluator
+replay; it is not a live discovery result. New expressibility ceiling57/62 is
+mapping capacity; last full live result remains13/62.
+
+Focused113 tests, Ruff/format/mypy328, frontend232/typecheck/lint/build and isolated
+approved-checklist demo passed. Full backend:2942 passed,94.95% coverage
+in460.51s; one Alembic head d8e412c6a901. Groningen remains first and UBC
+OUT_OF_BUDGET in the isolated migrated demo. Logs: /tmp/unimatch-er12-*.log.
+
+### Remaining source diagnosis
+
+- Groningen's current document page is readable, but its extracted text/IR has no
+  course-description or Kazakhstan NIS Grade12 clause. The two original known
+  course-description labels stay unmet; absence is not a contrary answer.
+- Toronto's current programme page is readable. `Supplemental Application / Required`
+  is an HTML table row. The surrounding academic requirements picker includes
+  Ontario/OSSD and multiple campuses; a future rule must preserve the applicable
+  programme/qualification context and must not flatten it into every applicant.
+- HKU `/node/891`: normal Fetcher could not read robots.txt (ConnectError), so it
+  returned `robots_disallowed` under its fail-closed policy. No claim extracted,
+  no retry/bypass or alternate identity used.
+
+The three diagnostic provenance records are retained in
+`remaining-documents.sources.json`; raw caches are under ignored
+`artifacts/reference-facts-2026-10-03/remaining-documents/`.

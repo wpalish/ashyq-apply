@@ -1,0 +1,38 @@
+{
+  "mode": "explicit-source evaluator diagnosis, not live capture",
+  "sources": [
+    {
+      "requested_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+      "final_url": "https://www.rug.nl/education/application-enrolment-tuition-fees/admission/procedures/application-informatie/with-non-dutch-diploma/bachelor/bachelor-application-documents?lang=en",
+      "outcome": "ok",
+      "error": "",
+      "fetched_at": "2026-10-03T05:26:36.231503+00:00",
+      "title": "Bachelor's application documents | Bachelor's degree programmes | University of Groningen",
+      "body_sha256": "247c6a30c7bf7ef434901134b087f1f3ed4fa03608da759cb66559d9bd624faa",
+      "characters": 26184,
+      "mode": "explicit-source diagnosis, not blind discovery"
+    },
+    {
+      "requested_url": "https://future.utoronto.ca/program/computer-science",
+      "final_url": "https://future.utoronto.ca/program/computer-science",
+      "outcome": "ok",
+      "error": "",
+      "fetched_at": "2026-10-03T05:26:37.169098+00:00",
+      "title": "Computer Science | Future Students. University of Toronto",
+      "body_sha256": "ca0c9ab741a9fab1c8ff879468e9b8aa81b493df3bf83a5e15cef476e53583e4",
+      "characters": 5569,
+      "mode": "explicit-source diagnosis, not blind discovery"
+    },
+    {
+      "requested_url": "https://www.admissions.hku.hk/node/891",
+      "final_url": "https://www.admissions.hku.hk/node/891",
+      "outcome": "robots_disallowed",
+      "error": "robots.txt unreachable (ConnectError); RFC 9309 treats the whole site as disallowed",
+      "fetched_at": "2026-10-03T05:26:38.317281+00:00",
+      "title": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "characters": 0,
+      "mode": "explicit-source diagnosis, not blind discovery"
+    }
+  ]
+}

@@ -114,8 +114,6 @@ def test_observed_document_identities_are_exact_and_preserve_previous_bindings()
         url = str(binding.source_url)
         assert current.resolve("document", url, binding.subject) == binding.key
         assert current.resolve("document", url + "?award=other", binding.subject) is None
-        assert (
-            current.resolve("document", url.replace("nanyang-", "asean-"), binding.subject) is None
-        )
+        assert current.resolve("document", url + "/other-award", binding.subject) is None
         assert current.resolve("document", url.rsplit("/", 1)[0] + "/faq", binding.subject) is None
         assert current.resolve("document", url, "Another document") is None

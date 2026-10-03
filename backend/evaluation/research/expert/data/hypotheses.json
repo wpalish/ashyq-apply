@@ -208,6 +208,23 @@
       ],
       "policy_guard": "Fetcher and signed gold unchanged; identity mapping does not invent values or reviewer approval; supported/current adjudication left unset.",
       "validation_artifact": "docs/process/REFERENCE_FACT_RECOVERY_2026-10-02.md"
+    },
+    {
+      "id": "ER-12",
+      "status": "tested",
+      "case_ids": [
+        "groningen"
+      ],
+      "observation": "Fresh official Groningen document page repeats an explicit translation exception for English, Dutch, French and German and allows self-made translations for assessment. Previous reader emitted unconditional certified English translation. Same saved response and new identities on both arms score2/11 before and3/11 after; total25 claims unchanged.",
+      "proposed_rule": "Preserve a complete explicit translation language exception as a structured conditional document claim; display the condition on the checklist and do not infer certification or translator ownership. Unparsed conditional clauses and translation permission alone do not establish unconditional requirements.",
+      "integration_seam": "web_documents._translation_exception/read_documents, required_document typed mapping, separately versioned observed-conditions identity file.",
+      "counterexample": "May-submit wording, a positive language condition, unspecified other accepted languages, repeated/invalid language names, an unrelated note or conditional board request must not become this exception.",
+      "falsification": "Replay exact Fetcher response with old1c3db3e and repaired adapter, same mapper and identities; require exact stated language list and absence of unconditional translation claim. Run focused negatives and full regression; no live recall assertion.",
+      "evidence_artifacts": [
+        "backend/evaluation/research/expert/data/runs.2026-10-02/er12.frozen-translation.json"
+      ],
+      "policy_guard": "Signed gold, prior identity versions and Fetcher unchanged. No new human evidence/currentness adjudication, no forced expected values, no live capture upgrade.",
+      "validation_artifact": "docs/process/REFERENCE_FACT_RECOVERY_2026-10-02.md"
     }
   ]
 }
