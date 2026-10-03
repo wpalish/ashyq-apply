@@ -6,7 +6,7 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-**Current holder: nobody; checkpoint2026-10-03 UTC, task/reference-fact-recovery, draft PR #41.** ER13 source33804d0 passed2960/94.94%; evidence checkpointd190d04 and owner reconciliation8fcb9e6 pushed. Workflow task1 local e40183e rejected for missing OAuth workflow scope; patch preserved. Await owner authorization refresh before normal push; task2 waits merge/provider and task3 waits permitted test email. Old full live13/62 remains FAIL.
+**Current holder: gpt-6-astra; resumed2026-10-03 after owner authorization refresh, task/reference-fact-recovery@34f716d.** Workflow task1 branch task/benchmark-provider-choice@e40183e now pushed; PR42 open, eight exact-head CI checks running. OAuth workflow scope and GitHub Exa secret NAME confirmed; no key read. Task2 waits owner's PR42 merge,120s/60reads keyed Exa; task3 still needs permitted synthetic email/domain.
 
 **Current holder: nobody; public search release acceptance recorded, 2026-10-02 UTC, task/search-release-acceptance from main1aa188e.** PR #39 is merged after8 exact-head checks. Fly v5 runs the verified source on the original API/worker; catalogue501 and real UI-selected NTU search completed successfully (3 programmes,51 Claim records,21 pages,0 unreadable,about157s). Browser result reload, evidence and Save flow verified. Full details/limits: UNIMATCH_SEARCH_RELEASE_2026-10-02.md. Postmerge CI run36972183803 is linked there; metadata-only changes in this branch do not change the deployed application.
 
@@ -4968,3 +4968,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 **ER-13 contract:** evaluation evidence_scope now retains the already-recorded qualification field. New supplemental table reader uses explicit programme/campus and local qualification; missing source degree is NEEDS_OFFICIAL_CLARIFICATION. Exact new identity version does not assert source applicability or human approval. No migration/API enum change.
 
 2026-10-03 gpt-6-astra: c5daee4 → ER13 source33804d0 / evidence d190d04 / handoff8fcb9e6;2960/94.94%; workflow e40183e normal push denied (workflow scope); patch preserved, baton released pending owner inputs.
+
+2026-10-03 gpt-6-astra resumes at34f716d: owner refreshed workflow scope; e40183e push succeeds; PR42 created, CI37107912115/37107916481 pending.
