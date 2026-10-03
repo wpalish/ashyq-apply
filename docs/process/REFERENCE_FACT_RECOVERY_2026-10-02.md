@@ -162,3 +162,41 @@ for Groningen and independent universities using the recorded experiment flag.
 Before promotion, evaluate complete verified claims and source/scope regressions;
 a saved read alone cannot pass acceptance. The remaining document/award mappings
 and document-stage coverage also require source-backed work.
+
+
+## ER-10 evidence durability — 2026-10-03 continuation
+
+A completed requirement adapter result was held in memory while cost and
+government adapters ran. A downstream interruption therefore erased already
+extracted claims. The regression first failed with `NoResultFound` from an
+independent database connection: no result had been committed.
+
+The runner now checkpoints new rows after completed requirements and costs,
+and commits each completed programme before reading the next. Partial and
+final checkpoints share the existing campus, source hierarchy, freshness and
+conflict checks. Partial results carry a blocking `research incomplete`
+question and keep their default unknown/clarification verdicts. They do not
+increment completed-programme counts. A successful final checkpoint replaces
+partial evidence and removes the marker. Claim counters use replacement deltas.
+A retry keeps a prior attempt's existing row intact until a full replacement
+is ready, preserving earlier richer evidence and applicant notes. The existing
+transactional worker-lease fence still controls every commit.
+
+A paired offline replay used the same recorded Groningen programme response,
+normal requirements extraction, an injected cost failure and two isolated
+SQLite databases. Before: **1 read, 0 stored rows, 0 claims**. After: **1 read,
+1 incomplete row, 3 stored claims, 0 completed programmes**. An independent
+connection confirmed the committed state. No network calls, extra source URLs
+or reviewed labels were used. This proves durability at that interruption,
+not a new end-to-end reference-recall score. Raw page, script, failure log and
+hashes are retained under `artifacts/reference-facts-2026-10-02/er10/`; structured
+proof is `runs.2026-10-02/er10.frozen-durability.json`.
+
+Seven dedicated regressions cover cost/government exceptions and cancellation,
+retry deduplication and notes, preservation of existing full results, and
+campus/freshness/hierarchy/conflict guards. The focused pipeline/government/job
+suite passes78 tests; Ruff/format and mypy327 pass. Full backend **2910 tests
+passed /94.92% coverage** (459.21s). Frontend232/type/lint/build pass. Isolated
+demo preserves Groningen first and UBC OUT_OF_BUDGET; Alembic has one head
+(d8e412c6a901).
+Last full live acceptance remains13/62 onbc84ccf; no ER-10 live score is claimed.

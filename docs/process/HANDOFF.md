@@ -126,6 +126,8 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**ER-10 working tree, 2026-10-03 continuation:** Reproduced requirement-loss on downstream cost interruption (independent DB reader NoResultFound); new guarded checkpoints retain claims before costs/government. Real recorded Groningen response replay: same1read,0storedclaims before versus3 after, incomplete marker and0completedprogrammes. Seven regressions plus pipeline/government/jobs78 pass, Ruff/format327/mypy327 pass; full backend2910/94.92%, frontend232/type/lint/build and isolateddemo Groningen#1/UBC OUT_OF_BUDGET pass; one Alembic head d8e412c6a901. No new live reference score or release asserted; see reference recovery report.
+
 **Reference recovery checkpoints:** bc78824 baton; a31adb6 bounded experimental routing; a64492f claim-local undergraduate scope and regression tests; d09697f strict reference acceptance CLI and narrowed extra reads; bc84ccf promoted admission obligations and versioned observed NTU aliases. Full baseline11/62; unchanged-raw identity replay16/62; KAIST same-budget0/10→1/10. See REFERENCE_FACT_RECOVERY_2026-10-02.md. Full final capture and source gates are still running; no deployment or complete-reference acceptance is claimed.
 
 **Search release evidence:** tested dbbf396 → merged1aa188e, identical tree6534f52;8 exact-head CI jobs passed. Fly v5/ce0acb2a image verified on both existing machines. Public catalogue filters and UI-selected run9307186a completed; results/evidence survive reload and Save works in the isolated synthetic case.
@@ -1748,7 +1750,7 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-**Write-ahead ER-10 evidence durability:** `_stage_verify` keeps completed requirement claims in memory while awaiting costs/government, losing them on cancellation/process death. Reproduce with offline adapters and a separate DB reader, extract the existing campus/hierarchy/freshness/conflict finalization into one shared helper, checkpoint guarded partial requirements (and costs) before the next adapter await. Partial rows must remain explicitly incomplete; final results must remove that marker and avoid duplicate counts/evidence. Preserve richer prior-attempt rows until a complete replacement and the existing lease fence. No change to evidence acceptance or ranking. Add failure/cancellation, wrong-campus, retry and successful-stage equivalence tests before full gates.
+**Next exact step after ER-10 gates:** Commit/push the guarded requirement/cost checkpoints with the real-page before/after durability proof. Then diagnose the11 unreachable reference keys without altering signed gold:10 unbound document/award identities,1 unmapped translation condition. Exact list in expressibility output/report; first inspect source-backed document values and collect_documents lifecycle (pre-decision captures do not call it). Version observed identity additions separately from extraction changes; preserve all conditions. A direct gold-URL read is evaluator diagnosis, never blind discovery or equal-budget live improvement. ER-09 remains defaultoff until provider-backed same-budget pairs and held-out checks.
 
 **Next exact step ER-09, provider access pending:** The opt-in rule and offline frozen-prefix replay are implemented; default remains False.203 focused tests, Ruff/format and mypy327 pass. Configure a supported provider through deployment/local secrets, then run equal300s/60-read Groningen off/on captures (flag --finish-exact-single-field) and held-out universities before promotion. Do not rerun throttled Exa or switch identities to evade429. Offline independent work: inspect document/award mapping gaps and requirement persistence before slow downstream reads, with write-ahead and dedicated regressions. PR41 remains draft; reference gate13/62 FAIL; no merge/deploy. GitHub workflow update also needs a connection with workflow scope; saved patch remains unapplied.
 
@@ -3679,6 +3681,8 @@ The steps codex left, unchanged and still next after this review:
    the compatibility shim. Do not buy a provider or deploy application infrastructure implicitly.
 
 ## 6. Gate status at last run
+
+**ER-10 final local gates, 2026-10-03:**2910 backend passed/94.92% in459.21s; focused78; Ruff/format327/mypy327; frontend232/type/lint/build; isolateddemo Groningen#1 and UBC OUT_OF_BUDGET; one Alembic head d8e412c6a901. No new live score: latest reference13/62 remains FAIL. Raw logs /tmp/unimatch-er10-*.log and committed frozen-durability proof.
 
 **ER-09 offline checkpoint:**203 focused discovery/multifield/admission/reference tests pass; Ruff/format327 and mypy327 pass. Frozen real-response prefix:5 reads off,1 on, same first exact page, zero network. Defaultoff, no live/held-out improvement claimed. Strict reference gate still13/62 FAIL, exit2. Earlier full-suite results below remain distinct.
 
