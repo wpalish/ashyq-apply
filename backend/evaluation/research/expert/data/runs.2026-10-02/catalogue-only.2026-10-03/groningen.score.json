@@ -1,0 +1,456 @@
+{
+  "dataset_version": "2026-09-23.reviewed",
+  "dataset_sha256": "5491a7e5c3ad4a51987b8250ad23fa351e7e2b4de7d5408f264d8c6e40b34bdb",
+  "pipeline_sha": "33804d0a25305f5fdfb6d27e609748e07f145b84",
+  "provisional": false,
+  "mode": "live",
+  "captured_at": "20261003T065411Z",
+  "config": {
+    "search_provider": "none",
+    "seconds_per_case": 300,
+    "max_fetcher_calls_per_case": 60,
+    "page_budget_counts": "network reads; cache hits are free (since 2026-09-23)",
+    "search_before_navigation": false,
+    "recover_search_candidates": true,
+    "search_funding_fallback": true,
+    "target_award_search": true,
+    "skip_refused_search_hosts": false,
+    "reject_archive_hosts": false,
+    "admission_lexicon": false,
+    "navigation_slot": false,
+    "admission_obligations": true,
+    "finish_exact_single_field": false,
+    "browser_enabled": false,
+    "cohort": [
+      "groningen",
+      "delft",
+      "aalto",
+      "vienna",
+      "warsaw",
+      "ubc",
+      "toronto",
+      "hku",
+      "ntu",
+      "kaist"
+    ],
+    "scope": "current production pipeline; HTTP-only bounded cold run",
+    "rank_stage": "programme confirmation queue before catalogue walking",
+    "identity_bindings_file": "identity_bindings.2026-10-03.supplemental.json",
+    "identity_bindings_sha256": "af48e733a7d4d30786c58667cd724402f233ae129003faa5902e3fc5de0572e5",
+    "harness_sha256": "c28fe51159c8003c7e9f09754468d86ec887914689822f76ac449d1d0829accd",
+    "mapping_sha256": "6410472d8eea4477162d864b096b27e102446f09f72399484142db5d02262085"
+  },
+  "metrics": {
+    "programme_page_recall": {
+      "numerator": 0,
+      "denominator": 1,
+      "value": 0.0
+    },
+    "programme_page_precision": {
+      "numerator": 0,
+      "denominator": 0,
+      "value": null
+    },
+    "recall_at_5": {
+      "numerator": 0,
+      "denominator": 1,
+      "value": 0.0
+    },
+    "recall_at_10": {
+      "numerator": 0,
+      "denominator": 1,
+      "value": 0.0
+    },
+    "recall_at_20": {
+      "numerator": 0,
+      "denominator": 1,
+      "value": 0.0
+    },
+    "claim_precision": {
+      "numerator": 0,
+      "denominator": 0,
+      "value": null
+    },
+    "claim_recall": {
+      "numerator": 0,
+      "denominator": 11,
+      "value": 0.0
+    },
+    "claim_recall_same_page": {
+      "numerator": 0,
+      "denominator": 11,
+      "value": 0.0
+    },
+    "unsupported_claim_rate": {
+      "numerator": 0,
+      "denominator": 0,
+      "value": null
+    },
+    "wrong_scope_claim_rate": {
+      "numerator": 0,
+      "denominator": 0,
+      "value": null
+    },
+    "critical_field_coverage": {
+      "numerator": 0,
+      "denominator": 24,
+      "value": 0.0
+    },
+    "scholarship_discovery_recall": {
+      "numerator": 0,
+      "denominator": 0,
+      "value": null
+    },
+    "scholarship_applicability_precision": {
+      "numerator": 0,
+      "denominator": 0,
+      "value": null
+    },
+    "scholarship_applicability_recall": {
+      "numerator": 0,
+      "denominator": 0,
+      "value": null
+    },
+    "scholarship_coverage_precision": {
+      "numerator": 0,
+      "denominator": 0,
+      "value": null
+    },
+    "primary_source_rate": {
+      "numerator": 0,
+      "denominator": 0,
+      "value": null
+    },
+    "verbatim_evidence_rate": {
+      "numerator": 0,
+      "denominator": 0,
+      "value": null
+    },
+    "current_evidence_rate": {
+      "numerator": 0,
+      "denominator": 0,
+      "value": null
+    },
+    "conflict_visibility_rate": {
+      "numerator": 0,
+      "denominator": 0,
+      "value": null
+    },
+    "support_adjudication_rate": {
+      "numerator": 0,
+      "denominator": 0,
+      "value": null
+    },
+    "claim_adjudication_rate": {
+      "numerator": 0,
+      "denominator": 0,
+      "value": null
+    },
+    "human_review_rate": {
+      "numerator": 0,
+      "denominator": 0,
+      "value": null
+    }
+  },
+  "fields": {
+    "country_credential": {
+      "coverage": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0
+      }
+    },
+    "country_credential.nis_grade12.level_equivalence": {
+      "coverage": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0
+      },
+      "recall": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0
+      }
+    },
+    "deadline": {
+      "coverage": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0
+      },
+      "recall": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0
+      }
+    },
+    "documents.admission": {
+      "coverage": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0
+      }
+    },
+    "documents.admission.secondary_diploma.completed": {
+      "coverage": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0
+      },
+      "recall": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0
+      }
+    },
+    "documents.admission.secondary_diploma.not_completed": {
+      "coverage": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0
+      },
+      "recall": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0
+      }
+    },
+    "documents.admission.transcript.completed": {
+      "coverage": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0
+      },
+      "recall": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0
+      }
+    },
+    "documents.admission.transcript.not_completed": {
+      "coverage": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0
+      },
+      "recall": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0
+      }
+    },
+    "documents.admission.translation.required_unless_language_in": {
+      "coverage": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0
+      },
+      "recall": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0
+      }
+    },
+    "documents.programme": {
+      "coverage": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0
+      }
+    },
+    "documents.programme.course_descriptions.board_may_request": {
+      "coverage": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0
+      },
+      "recall": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0
+      }
+    },
+    "documents.programme.course_descriptions.initial_upload": {
+      "coverage": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0
+      },
+      "recall": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0
+      }
+    },
+    "documents.scholarship": {
+      "coverage": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0
+      }
+    },
+    "ielts.overall": {
+      "coverage": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0
+      }
+    },
+    "ielts.subscores": {
+      "coverage": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0
+      }
+    },
+    "intake": {
+      "coverage": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0
+      }
+    },
+    "mandatory_fees": {
+      "coverage": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0
+      }
+    },
+    "programme.exists": {
+      "coverage": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0
+      },
+      "recall": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0
+      }
+    },
+    "sat.minimum": {
+      "coverage": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0
+      }
+    },
+    "sat.policy": {
+      "coverage": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0
+      }
+    },
+    "scholarship_applicability": {
+      "coverage": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0
+      }
+    },
+    "scholarship_coverage": {
+      "coverage": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0
+      }
+    },
+    "scholarships": {
+      "coverage": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0
+      }
+    },
+    "subjects.mathematics.required": {
+      "coverage": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0
+      },
+      "recall": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0
+      }
+    },
+    "tuition": {
+      "coverage": {
+        "numerator": 0,
+        "denominator": 1,
+        "value": 0.0
+      }
+    }
+  },
+  "operations": {
+    "http_fetches": {
+      "sum": 88,
+      "measured_cases": 1,
+      "cases": 1
+    },
+    "browser_fetches": {
+      "sum": 0,
+      "measured_cases": 1,
+      "cases": 1
+    },
+    "pdf_fetches": {
+      "sum": 0,
+      "measured_cases": 1,
+      "cases": 1
+    },
+    "search_calls": {
+      "sum": 0,
+      "measured_cases": 1,
+      "cases": 1
+    },
+    "model_input_tokens": {
+      "sum": 0,
+      "measured_cases": 1,
+      "cases": 1
+    },
+    "jev_input_tokens": {
+      "sum": 0,
+      "measured_cases": 1,
+      "cases": 1
+    },
+    "latency_seconds": {
+      "sum": 140.01362195797265,
+      "measured_cases": 1,
+      "cases": 1
+    },
+    "cost_usd": {
+      "sum": null,
+      "measured_cases": 0,
+      "cases": 1
+    },
+    "human_review_required": {
+      "sum": null,
+      "measured_cases": 0,
+      "cases": 1
+    },
+    "latency_percentiles": {
+      "p50": 140.01362195797265,
+      "p95": 140.01362195797265
+    }
+  },
+  "cases": [
+    {
+      "case_id": "groningen",
+      "country": "Netherlands",
+      "site_types": [
+        "large_sitemap"
+      ],
+      "programme_hit": false,
+      "correct_claims": 0,
+      "answerable_claims": 11,
+      "error": null
+    }
+  ],
+  "notes": [
+    "Exact value and evidence-scope matching; unlabelled predictions are unadjudicated, not correct.",
+    "Missing rank lists/telemetry yield null; per-case failures stay in recall denominators.",
+    "No overall accuracy score. Programme URLs measure identity, not intake confirmation."
+  ]
+}

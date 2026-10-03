@@ -126,6 +126,8 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
+**ER-13 source33804d0 verified:** full2960/94.94%, focused77, Ruff/format/mypy330, frontend232/type/lint/build, isolated demo Groningen first/UBC OUT_OF_BUDGET and one Alembic head. Toronto scoped table document now retained, but exact-source recall remains0/4. Independent catalogue-only cold captures on33804d0: Groningen0/11, Toronto0/4, NTU1/21; search_calls0. Preserved capture/raw/log/score under runs.2026-10-02/catalogue-only.2026-10-03. Original Exa13/62 remains separate and FAIL.
+
 **ER-10 completed source01e44df, 2026-10-03 continuation:** Reproduced requirement-loss on downstream cost interruption (independent DB reader NoResultFound); new guarded checkpoints retain claims before costs/government. Real recorded Groningen response replay: same1read,0storedclaims before versus3 after, incomplete marker and0completedprogrammes. Seven regressions plus pipeline/government/jobs78 pass, Ruff/format327/mypy327 pass; full backend2910/94.92%, frontend232/type/lint/build and isolateddemo Groningen#1/UBC OUT_OF_BUDGET pass; one Alembic head d8e412c6a901. No new live reference score or release asserted; see reference recovery report.
 
 **Reference recovery checkpoints:** bc78824 baton; a31adb6 bounded experimental routing; a64492f claim-local undergraduate scope and regression tests; d09697f strict reference acceptance CLI and narrowed extra reads; bc84ccf promoted admission obligations and versioned observed NTU aliases. Full baseline11/62; unchanged-raw identity replay16/62; KAIST same-budget0/10→1/10. See REFERENCE_FACT_RECOVERY_2026-10-02.md. Full final capture and source gates are still running; no deployment or complete-reference acceptance is claimed.
@@ -1749,6 +1751,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**ER-14 write-ahead:** Diagnose catalogue descent using the preserved33804d0 catalogue-only traces and actual cached official responses. Toronto field index is reads_as_unknown and is skipped as a descent; self/menu links consume catalogue slots. Reproduce before changing generic bounded routing in catalog_walker, add adversarial tests, retain existing field/degree confirmation and no new hardcoded gold URLs. Compare same cached pages and equal live budgets, record separate provider-none metrics. No Fetcher/gold changes or ER09 promotion.
 
 **Write-ahead document reference recovery:** Diagnose stored NTU award and Groningen document responses with the normal WebDocumentsAdapter. Keep original signed gold/bindings unchanged. First measure current emitted document names/values/scope and exact source identity. Add observed exact document bindings only where the fetched page proves the subject; record pure mapping effects separately. For missing condition fields, use generic structured values with complete quoted conditions and adversarial tests; do not turn conditional/optional paperwork into unconditional requirements. Keep post-approval document collection distinct from pre-decision search. All fresh source reads via Fetcher are evaluator diagnostics, not blind/equal-budget discovery evidence.
 

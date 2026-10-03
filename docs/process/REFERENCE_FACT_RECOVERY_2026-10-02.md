@@ -324,3 +324,7 @@ accessible heading beside unrelated evidence/form. It is not a completed gate.
 Next bounded live diagnosis explicitly selects provider=none (catalogue/sitemap
 walk only),300seconds/60reads per case for Groningen/Toronto/NTU. It does not retry
 Exa429 and will not be mixed with the former provider-backed13/62 score.
+
+### ER-13 completed gates and separate catalogue-only diagnosis
+
+Source33804d0: backend2960 passed /94.94%; frontend232/type/lint/build, Ruff/format/mypy330 and isolated demo pass. Three cold runs independently used provider=none,300s/60 noncached Fetcher.get responses; no gold URLs injected. Groningen0/11 (140.0s), Toronto0/4 (50.8s), NTU1/21 (28.2s, one wrong-scope prediction). Captures, raw sidecars, logs and per-case immutable-gold scores are in `runs.2026-10-02/catalogue-only.2026-10-03`. This is not a paired improvement over Exa13/62. HTTP telemetry counts individual pinned requests, including redirects/robots, whereas the60 cap counts noncached get responses; Groningen88 HTTP requests does not mean88 budgeted pages. Toronto reads the relevant field index but descends elsewhere; investigate generic routing next.

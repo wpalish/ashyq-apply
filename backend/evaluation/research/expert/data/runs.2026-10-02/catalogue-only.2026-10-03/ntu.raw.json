@@ -1,0 +1,593 @@
+{
+  "canary": {
+    "accessed_at": "2026-10-03T06:54:12.349670+00:00",
+    "duration_seconds": 28.0,
+    "run_error": "",
+    "batch": [
+      "Nanyang Technological University"
+    ],
+    "institutions": [
+      {
+        "institution": "Nanyang Technological University",
+        "country": "Singapore",
+        "domain": "ntu.edu.sg",
+        "access": "REACHED",
+        "robots_disallowed_requests": 0,
+        "pages_checked": 27,
+        "pages_failed": 7,
+        "failures": [
+          [
+            "https://www.ntu.edu.sg/sitemap.xml",
+            "http_error: HTTP 404"
+          ],
+          [
+            "https://www.ntu.edu.sg/sitemap_index.xml",
+            "http_error: HTTP 404"
+          ],
+          [
+            "https://www.ntu.edu.sg/sitemap-index.xml",
+            "http_error: HTTP 404"
+          ],
+          [
+            "https://www.ntu.edu.sg/admissions/ug/financial-matters/financial-aid/bursaries",
+            "http_error: HTTP 404"
+          ],
+          [
+            "https://www.ntu.edu.sg/admissions/ug/admission-guide/diploma-awarded-by-a-polytechnic-or-equivalent-institution-in-singapore",
+            "http_error: HTTP 404"
+          ],
+          [
+            "https://www.ntu.edu.sg/admissions/ug/financial-matters/financial-aid/bursaries",
+            "http_error: HTTP 404"
+          ],
+          [
+            "https://www.ntu.edu.sg/admissions/ug/financial-matters/financial-aid/bursaries",
+            "http_error: HTTP 404"
+          ]
+        ],
+        "outcomes": {
+          "ok": 10,
+          "http_error": 7,
+          "cached": 10
+        },
+        "discovered": {
+          "program_catalog": [
+            "https://www.ntu.edu.sg/education/degree-programmes",
+            "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-maritime-studies",
+            "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-maritime-studies-with-work-study-programme"
+          ],
+          "program_page": [
+            "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+            "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-and-computer-sciences",
+            "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science-with-second-major-in-business-(international-trading)"
+          ],
+          "admissions": [
+            "https://www.ntu.edu.sg/admissions/undergraduate",
+            "https://www.ntu.edu.sg/about-us/global/global-connect-fellowship/how-to-apply",
+            "https://www.ntu.edu.sg/admissions/graduate"
+          ],
+          "costs": [
+            "https://www.ntu.edu.sg/admissions/undergraduate/financial-matters",
+            "https://www.ntu.edu.sg/admissions/ug/financial-matters/tuition-fees",
+            "https://www.ntu.edu.sg/admissions/ug/financial-matters/financial-aid/tuition-fee-loans"
+          ],
+          "scholarships": [
+            "https://www.ntu.edu.sg/admissions/ug/financial-matters/financial-aid/bursaries",
+            "https://www.ntu.edu.sg/admissions/ug/financial-matters/financial-aid/faq/bursaries",
+            "https://www.ntu.edu.sg/admissions/ug/financial-matters/financial-aid/bursaries/government-bursaries"
+          ]
+        },
+        "discovery_trace": {
+          "institution": "Nanyang Technological University",
+          "domain": "www.ntu.edu.sg",
+          "sitemaps_declared": [],
+          "sitemaps_read": [
+            "https://www.ntu.edu.sg/sitemap/sitemap.xml"
+          ],
+          "sitemap_urls_seen": 13890,
+          "sitemap_urls_kept": 226,
+          "manual_seeds": {
+            "program_catalog": "https://www.ntu.edu.sg/education/degree-programmes",
+            "admissions": "https://www.ntu.edu.sg/admissions/undergraduate",
+            "costs": "https://www.ntu.edu.sg/admissions/undergraduate/financial-matters"
+          },
+          "selected": {
+            "program_catalog": [
+              "https://www.ntu.edu.sg/education/degree-programmes",
+              "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-maritime-studies",
+              "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-maritime-studies-with-work-study-programme"
+            ],
+            "program_page": [
+              "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+              "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-and-computer-sciences",
+              "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science-with-second-major-in-business-(international-trading)"
+            ],
+            "admissions": [
+              "https://www.ntu.edu.sg/admissions/undergraduate",
+              "https://www.ntu.edu.sg/about-us/global/global-connect-fellowship/how-to-apply",
+              "https://www.ntu.edu.sg/admissions/graduate"
+            ],
+            "costs": [
+              "https://www.ntu.edu.sg/admissions/undergraduate/financial-matters",
+              "https://www.ntu.edu.sg/admissions/ug/financial-matters/tuition-fees",
+              "https://www.ntu.edu.sg/admissions/ug/financial-matters/financial-aid/tuition-fee-loans"
+            ],
+            "scholarships": [
+              "https://www.ntu.edu.sg/admissions/ug/financial-matters/financial-aid/bursaries",
+              "https://www.ntu.edu.sg/admissions/ug/financial-matters/financial-aid/faq/bursaries",
+              "https://www.ntu.edu.sg/admissions/ug/financial-matters/financial-aid/bursaries/government-bursaries"
+            ]
+          },
+          "rejected_sample": [
+            [
+              "https://www.ntu.edu.sg/admissions/graduate/joint-graduate-programmes",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.ntu.edu.sg/about-us/facts-figures/total-graduate-output---first-degree-higher-degree",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.ntu.edu.sg/about-us/sustainability/sustainability-education/postgraduate-programmes",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.ntu.edu.sg/life-at-ntu/student-life/student-services/onestop/bond-management/graduate-studies",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.ntu.edu.sg/education/graduate-programme",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.ntu.edu.sg/admissions/graduate/programme-listing",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.ntu.edu.sg/education/graduate-programme/master-of-education-(malay-language)",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.ntu.edu.sg/education/graduate-programme/master-of-science-in-project-management",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.ntu.edu.sg/education/graduate-programme/doctor-of-philosophy-(ph.d)-and-master-of-engineering-(m.eng)-programme",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.ntu.edu.sg/education/graduate-programme/scbe-doctor-of-philosophy-(phd)-(by-research)",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.ntu.edu.sg/education/graduate-programme/master-of-science-in-engineering-management",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.ntu.edu.sg/education/graduate-programme/master-of-science-in-cybersecurity-(applied-cybersecurity",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.ntu.edu.sg/education/graduate-programme/master-of-science-in-holistic-palliative-care-(hope)",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.ntu.edu.sg/education/graduate-programme/master-of-science-in-modelling-and-simulation",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.ntu.edu.sg/education/graduate-programme/joint-master-of-science-in-green-electronics",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.ntu.edu.sg/education/graduate-programme/postgraduate-diploma-in-education-(pgde)",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.ntu.edu.sg/education/graduate-programme/master-of-science-in-enterprise-artificial-intelligence",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.ntu.edu.sg/education/graduate-programme/master-of-arts-in-global-cultural-and-creative-leadership",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.ntu.edu.sg/education/graduate-programme/master-of-arts-in-translation-and-interpretation",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.ntu.edu.sg/education/graduate-programme/master-of-science-in-biobusiness-and-bioentrepreneurship-msbbb",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.ntu.edu.sg/education/graduate-programme/master-of-science-in-information-studies",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.ntu.edu.sg/education/graduate-programme/master-of-science-in-supply-chain-logistics",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.ntu.edu.sg/education/graduate-programme/graduate-diploma-in-sports-medicine-2",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.ntu.edu.sg/education/graduate-programme/master-of-science-in-aviation",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.ntu.edu.sg/education/graduate-programme/master-of-science-in-actuarial-and-risk-analytics",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.ntu.edu.sg/education/graduate-programme/master-of-science-in-chemistry-and-biological-chemistry",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.ntu.edu.sg/education/graduate-programme/master-of-media-and-communication",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.ntu.edu.sg/education/graduate-programme/master-of-science-in-analytics",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.ntu.edu.sg/education/graduate-programme/master-of-science-technopreneurship-and-innovation-programme-cn",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.ntu.edu.sg/education/graduate-programme/master-of-arts-(instructional-design-and-technology)",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.ntu.edu.sg/education/graduate-programme/master-of-arts-in-ai-ethics-and-society",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.ntu.edu.sg/education/graduate-programme/doctor-of-philosophy-(phd)-in-chemistry",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.ntu.edu.sg/education/graduate-programme/master-of-science-in-power-engineering",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.ntu.edu.sg/education/graduate-programme/master-of-arts-in-humanities-education",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.ntu.edu.sg/education/graduate-programme/master-of-computing-in-applied-ai-mcaai",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.ntu.edu.sg/education/graduate-programme/master-of-science-in-environmental-sustainability-science",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.ntu.edu.sg/education/graduate-programme/master-of-science-in-master-of-science-in-cybersecurity-applied-cryptography",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.ntu.edu.sg/education/graduate-programme/master-of-science-in-maritime-studies",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.ntu.edu.sg/education/graduate-programme/master-of-arts-(research)",
+              "names a degree level other than bachelor"
+            ],
+            [
+              "https://www.ntu.edu.sg/education/graduate-programme/master-of-education-(art)",
+              "names a degree level other than bachelor"
+            ]
+          ],
+          "rejected_total": 160,
+          "errors": [
+            "https://www.ntu.edu.sg/sitemap.xml: http_error — HTTP 404",
+            "https://www.ntu.edu.sg/sitemap_index.xml: http_error — HTTP 404",
+            "https://www.ntu.edu.sg/sitemap-index.xml: http_error — HTTP 404"
+          ],
+          "search_failures": [],
+          "search_limitations": [],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": false,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 0,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": []
+          }
+        },
+        "programs": [
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-and-computer-sciences",
+          "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science-with-second-major-in-business-(international-trading)"
+        ],
+        "program_page_found": true,
+        "scholarship_page_found": true,
+        "discovery_notes": "Sitemap-first discovery found: program_catalog, program_page, admissions, costs, scholarships. Not found: documents.",
+        "claims": 1,
+        "claims_verified": 1,
+        "completeness": 0.0,
+        "eligibility": "NEEDS_OFFICIAL_CLARIFICATION",
+        "funding_fit": "UNKNOWN",
+        "scholarships_found": 0,
+        "false_positives": [],
+        "page_outcomes": {
+          "fetch-failed": 4,
+          "fetched-ok": 6,
+          "no-pattern-match": 6
+        },
+        "page_types": {
+          "program_detail": 9,
+          "costs": 3
+        },
+        "page_diagnostics": [
+          {
+            "category": "fetch-failed",
+            "url": "https://www.ntu.edu.sg/admissions/ug/financial-matters/financial-aid/bursaries",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "http_error — HTTP 404"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://www.ntu.edu.sg/admissions/ug/admission-guide/diploma-awarded-by-a-polytechnic-or-equivalent-institution-in-singapore",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "http_error — HTTP 404"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://www.ntu.edu.sg/admissions/ug/financial-matters/financial-aid/bursaries",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "http_error — HTTP 404"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://www.ntu.edu.sg/admissions/ug/financial-matters/financial-aid/bursaries",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "http_error — HTTP 404"
+          },
+          {
+            "category": "fetched-ok",
+            "url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+            "page_type": "program_detail",
+            "characters": "3705",
+            "detail": "1 claims read from this page"
+          },
+          {
+            "category": "no-pattern-match",
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate",
+            "page_type": "program_detail",
+            "characters": "444",
+            "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed"
+          },
+          {
+            "category": "no-pattern-match",
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/financial-matters",
+            "page_type": "costs",
+            "characters": "1787",
+            "detail": "page was read but no cost figures could be extracted"
+          },
+          {
+            "category": "fetched-ok",
+            "url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-and-computer-sciences",
+            "page_type": "program_detail",
+            "characters": "3776",
+            "detail": "1 claims read from this page"
+          },
+          {
+            "category": "no-pattern-match",
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate",
+            "page_type": "program_detail",
+            "characters": "444",
+            "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed"
+          },
+          {
+            "category": "no-pattern-match",
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/financial-matters",
+            "page_type": "costs",
+            "characters": "1787",
+            "detail": "page was read but no cost figures could be extracted"
+          },
+          {
+            "category": "fetched-ok",
+            "url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science-with-second-major-in-business-(international-trading)",
+            "page_type": "program_detail",
+            "characters": "4171",
+            "detail": "1 claims read from this page"
+          },
+          {
+            "category": "no-pattern-match",
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate",
+            "page_type": "program_detail",
+            "characters": "444",
+            "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed"
+          },
+          {
+            "category": "no-pattern-match",
+            "url": "https://www.ntu.edu.sg/admissions/undergraduate/financial-matters",
+            "page_type": "costs",
+            "characters": "1787",
+            "detail": "page was read but no cost figures could be extracted"
+          },
+          {
+            "category": "fetched-ok",
+            "url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science-with-second-major-in-business-(international-trading)",
+            "page_type": "program_detail",
+            "characters": null,
+            "detail": "read as a funding index; 1 award links, 1 queued within the award budget"
+          },
+          {
+            "category": "fetched-ok",
+            "url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-and-computer-sciences",
+            "page_type": "program_detail",
+            "characters": null,
+            "detail": "read as a funding index; 0 award links, 0 queued within the award budget"
+          },
+          {
+            "category": "fetched-ok",
+            "url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+            "page_type": "program_detail",
+            "characters": null,
+            "detail": "read as a funding index; 0 award links, 0 queued within the award budget"
+          }
+        ]
+      }
+    ],
+    "totals": {
+      "institutions": 1,
+      "reached": 1,
+      "blocked": 0,
+      "program_pages_found": 1,
+      "scholarship_pages_found": 1,
+      "claims": 1,
+      "false_positives": 0,
+      "page_outcomes": {
+        "fetch-failed": 4,
+        "fetched-ok": 6,
+        "no-pattern-match": 6
+      },
+      "page_types": {
+        "program_detail": 9,
+        "costs": 3
+      },
+      "recall": {
+        "program": {
+          "numerator": 1,
+          "denominator": 1,
+          "target": 0.7
+        },
+        "category": {
+          "numerator": 3,
+          "denominator": 3,
+          "target": 0.8666666666666667
+        }
+      },
+      "catalogs_walked": 0,
+      "walker_programs_confirmed": 0,
+      "source_pages_recorded": 0,
+      "fetch_tiers": {
+        "fixture": 0,
+        "http": 20,
+        "browser": 0,
+        "pdf": 0
+      }
+    }
+  },
+  "claims": [
+    {
+      "claim_type": "program_exists",
+      "normalized_value": {
+        "program": "Bachelor of Computing (Hons) in Computer Science",
+        "degree": "bachelor",
+        "language": null,
+        "matched_because": "page subject 'Bachelor of Computing (Hons) in Computer Science' covers every requested subject word"
+      },
+      "original_text_excerpt": "The Bachelor of Computing (Hons) in Computer Science at NTU’s College of Computing and Data Science (CCDS) is a 4-year direct honours degree that provides rigorous training in computing fundamentals, algori",
+      "source_url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science",
+      "page_title": "Bachelor of Computing (Hons) in Computer Science | NTU Singapore",
+      "relevant_section": "Programme identity",
+      "official_domain": true,
+      "program": "Bachelor Of Computing In Computer Science",
+      "subject_key": null,
+      "intake": "fall 2027",
+      "academic_year": "2026/27",
+      "accessed_at": "2026-10-03T06:54:23.217352Z",
+      "scope": {
+        "university": null,
+        "faculty": null,
+        "programme": null,
+        "degree": "bachelor",
+        "intake": null,
+        "academic_year": null,
+        "population": null,
+        "nationality": null,
+        "residency": null,
+        "qualification": null
+      },
+      "source_specificity": "program_intake",
+      "confidence": 0.9,
+      "status": "VERIFIED_CURRENT",
+      "extraction_method": "html_rule",
+      "notes": ""
+    },
+    {
+      "claim_type": "program_exists",
+      "normalized_value": {
+        "program": "Bachelor of Science in Mathematical and Computer Sciences",
+        "degree": "bachelor",
+        "language": null,
+        "matched_because": "page subject 'Bachelor of Science in Mathematical and Computer Sciences' covers every requested subject word"
+      },
+      "original_text_excerpt": "Bachelor of Science in Mathematical and Computer Sciences | NTU Singapore",
+      "source_url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-science-in-mathematical-and-computer-sciences",
+      "page_title": "Bachelor of Science in Mathematical and Computer Sciences | NTU Singapore",
+      "relevant_section": "Programme identity",
+      "official_domain": true,
+      "program": "Bachelor Of Science In Mathematical And Computer Sciences",
+      "subject_key": null,
+      "intake": "fall 2027",
+      "academic_year": "2026/27",
+      "accessed_at": "2026-10-03T06:54:28.369138Z",
+      "scope": {
+        "university": null,
+        "faculty": null,
+        "programme": null,
+        "degree": "bachelor",
+        "intake": null,
+        "academic_year": null,
+        "population": "international",
+        "nationality": null,
+        "residency": null,
+        "qualification": null
+      },
+      "source_specificity": "program_intake",
+      "confidence": 0.9,
+      "status": "VERIFIED_CURRENT",
+      "extraction_method": "html_rule",
+      "notes": ""
+    },
+    {
+      "claim_type": "program_exists",
+      "normalized_value": {
+        "program": "Bachelor of Computing in Computer Science with Second Major in Business (International Trading)",
+        "degree": "bachelor",
+        "language": null,
+        "matched_because": "page subject 'Bachelor of Computing in Computer Science with Second Major in Business (International Trading)' covers every requested subject word"
+      },
+      "original_text_excerpt": "Bachelor of Computing in Computer Science with Second Major in Business (International Trading) | NTU Singapore",
+      "source_url": "https://www.ntu.edu.sg/education/undergraduate-programme/bachelor-of-computing-in-computer-science-with-second-major-in-business-(international-trading)",
+      "page_title": "Bachelor of Computing in Computer Science with Second Major in Business (International Trading) | NTU Singapore",
+      "relevant_section": "Programme identity",
+      "official_domain": true,
+      "program": "Bachelor Of Computing In Computer Science With Second Major In Business (International Trading)",
+      "subject_key": null,
+      "intake": "fall 2027",
+      "academic_year": "2026/27",
+      "accessed_at": "2026-10-03T06:54:29.840064Z",
+      "scope": {
+        "university": null,
+        "faculty": null,
+        "programme": null,
+        "degree": "bachelor",
+        "intake": null,
+        "academic_year": null,
+        "population": null,
+        "nationality": null,
+        "residency": null,
+        "qualification": "IB"
+      },
+      "source_specificity": "program_intake",
+      "confidence": 0.9,
+      "status": "VERIFIED_CURRENT",
+      "extraction_method": "html_rule",
+      "notes": ""
+    }
+  ]
+}

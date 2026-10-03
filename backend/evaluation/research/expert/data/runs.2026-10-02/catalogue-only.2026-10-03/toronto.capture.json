@@ -1,0 +1,334 @@
+{
+  "schema_version": "1",
+  "pipeline_sha": "33804d0a25305f5fdfb6d27e609748e07f145b84",
+  "captured_at": "20261003T065411Z",
+  "mode": "live",
+  "config": {
+    "search_provider": "none",
+    "seconds_per_case": 300,
+    "max_fetcher_calls_per_case": 60,
+    "page_budget_counts": "network reads; cache hits are free (since 2026-09-23)",
+    "search_before_navigation": false,
+    "recover_search_candidates": true,
+    "search_funding_fallback": true,
+    "target_award_search": true,
+    "skip_refused_search_hosts": false,
+    "reject_archive_hosts": false,
+    "admission_lexicon": false,
+    "navigation_slot": false,
+    "admission_obligations": true,
+    "finish_exact_single_field": false,
+    "browser_enabled": false,
+    "cohort": [
+      "groningen",
+      "delft",
+      "aalto",
+      "vienna",
+      "warsaw",
+      "ubc",
+      "toronto",
+      "hku",
+      "ntu",
+      "kaist"
+    ],
+    "scope": "current production pipeline; HTTP-only bounded cold run",
+    "rank_stage": "programme confirmation queue before catalogue walking",
+    "identity_bindings_file": "identity_bindings.2026-10-03.supplemental.json",
+    "identity_bindings_sha256": "af48e733a7d4d30786c58667cd724402f233ae129003faa5902e3fc5de0572e5",
+    "harness_sha256": "c28fe51159c8003c7e9f09754468d86ec887914689822f76ac449d1d0829accd",
+    "mapping_sha256": "6410472d8eea4477162d864b096b27e102446f09f72399484142db5d02262085"
+  },
+  "observations": [
+    {
+      "case_id": "toronto",
+      "programme_urls": [],
+      "ranked_urls": [
+        "https://future.utoronto.ca/data-computer-science"
+      ],
+      "predictions": [
+        {
+          "key": "unmapped.scholarship_exists",
+          "value": "The National Scholarship Program",
+          "evidence": {
+            "url": "https://future.utoronto.ca/national-scholarships",
+            "excerpt": "Breadcrumbs Home / Finances / Scholarships / The National Scholarship Program The National Scholarship Program The National Scholarship Program recognizes original and creative thinkers, community leaders and high academic achievers.",
+            "scope": {
+              "university": "University of Toronto",
+              "programme": "computer science (bachelor)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_program_restriction",
+          "value": {
+            "degree": "bachelor",
+            "applies": "yes"
+          },
+          "evidence": {
+            "url": "https://future.utoronto.ca/national-scholarships",
+            "excerpt": "Sep - Oct Apply for admission to U of T In order to submit your National Scholarship Program application, you must first apply to at least one undergraduate program at the University of Toronto",
+            "scope": {
+              "university": "University of Toronto",
+              "programme": "computer science (bachelor)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": null,
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_exists",
+          "value": "Lester B. Pearson International Student Scholarships",
+          "evidence": {
+            "url": "https://future.utoronto.ca/pearson-scholarships",
+            "excerpt": "Breadcrumbs Home / Finances / Scholarships / International Students / Pearson International Student Scholarships Lester B. Pearson International Student Scholarships Join a global community of exceptional changemakers.",
+            "scope": {
+              "university": "University of Toronto",
+              "programme": "computer science (bachelor)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": "international",
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_program_restriction",
+          "value": {
+            "degree": "bachelor",
+            "applies": "yes"
+          },
+          "evidence": {
+            "url": "https://future.utoronto.ca/pearson-scholarships",
+            "excerpt": "Sep - Oct Apply to study at U of T To be considered for the Pearson Scholarship, you must apply to at least one undergraduate program at the University of Toronto",
+            "scope": {
+              "university": "University of Toronto",
+              "programme": "computer science (bachelor)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": "international",
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_exists",
+          "value": "Scholarships Awards Profile",
+          "evidence": {
+            "url": "https://future.utoronto.ca/awards-profile",
+            "excerpt": "Breadcrumbs Home / Finances / Scholarships / Awards Profile Scholarships Awards Profile The Awards Profile makes it possible for applicants to be considered for admission awards beyond their academic success.",
+            "scope": {
+              "university": "University of Toronto",
+              "programme": "computer science (bachelor)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": "domestic",
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_duration_years",
+          "value": 4.0,
+          "evidence": {
+            "url": "https://future.utoronto.ca/awards-profile",
+            "excerpt": "ricular activities to domestic students coming from Canadian secondary school. Up to 3 award recipients are selected annually. Value: $6,000/year for up to 4 years of study (renewable).      Florence Evelyn and William Leonard Prideaux Award    Awarded to a student, who is a member of Scouts Canada,",
+            "scope": {
+              "university": "University of Toronto",
+              "programme": "computer science (bachelor)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": "domestic",
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_renewable",
+          "value": true,
+          "evidence": {
+            "url": "https://future.utoronto.ca/awards-profile",
+            "excerpt": "Value: $20,000 (non-renewable)",
+            "scope": {
+              "university": "University of Toronto",
+              "programme": "computer science (bachelor)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": "domestic",
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        },
+        {
+          "key": "unmapped.scholarship_need_based",
+          "value": "yes",
+          "evidence": {
+            "url": "https://future.utoronto.ca/awards-profile",
+            "excerpt": "If you're a Canadian high school student applying to U of T, the Awards Profile is your opportunity to be considered for additional awards based on financial need, leadership, school and community involvement, extracurricular activities, athletic achievement and more. Some awards also support Black",
+            "scope": {
+              "university": "University of Toronto",
+              "programme": "computer science (bachelor)",
+              "degree": "bachelor",
+              "field": null,
+              "intake": null,
+              "population": "domestic",
+              "qualification": null,
+              "academic_year": null
+            },
+            "accessed_on": "2026-10-03",
+            "source_type": "official",
+            "excerpt_truncated": false
+          },
+          "supported": null,
+          "current": null,
+          "conflict_visible": null
+        }
+      ],
+      "telemetry": {
+        "http_fetches": 44,
+        "browser_fetches": 0,
+        "pdf_fetches": 0,
+        "search_calls": 0,
+        "model_input_tokens": 0,
+        "jev_input_tokens": 0,
+        "latency_seconds": 50.8421751249698,
+        "cost_usd": null,
+        "human_review_required": null
+      },
+      "page_outcomes": [
+        {
+          "category": "classifier-rejected",
+          "url": "https://future.utoronto.ca/english-language-requirements",
+          "page_type": "unknown",
+          "detail": "classified as unknown; no requirement can be read from this kind of page. title='English Language Requirements | Future Students. University of Toronto' signals='no decisive signals' chars=12935 degrees=[]",
+          "characters": 12935
+        },
+        {
+          "category": "classifier-rejected",
+          "url": "https://future.utoronto.ca/english-language-transition-programs",
+          "page_type": "program_catalog",
+          "detail": "classified as program_catalog; no requirement can be read from this kind of page. title='English Language Transition Programs | Future Students. University of Toronto' signals='0 programme links; plural catalogue heading' chars=4352 degrees=[]",
+          "characters": 4352
+        },
+        {
+          "category": "classifier-rejected",
+          "url": "https://future.utoronto.ca/admission-awards",
+          "page_type": "scholarship_faq",
+          "detail": "not an award page; no scholarship recorded (1 award links, 0 below it: /awards-profile)",
+          "characters": null
+        },
+        {
+          "category": "no-pattern-match",
+          "url": "https://future.utoronto.ca/apply",
+          "page_type": "general_admissions",
+          "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed",
+          "characters": 976
+        },
+        {
+          "category": "no-pattern-match",
+          "url": "https://future.utoronto.ca/finances/fees",
+          "page_type": "scholarship_faq",
+          "detail": "page was read but no cost figures could be extracted",
+          "characters": 4989
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://future.utoronto.ca/finances/scholarships",
+          "page_type": "scholarship_index",
+          "detail": "read as a funding index; 5 award links, 5 queued within the award budget",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://future.utoronto.ca/national-scholarships",
+          "page_type": "scholarship_award",
+          "detail": "award page; 2 claims read",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://future.utoronto.ca/pearson-scholarships",
+          "page_type": "scholarship_award",
+          "detail": "award page; 2 claims read",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://future.utoronto.ca/scholarships-international-students",
+          "page_type": "scholarship_index",
+          "detail": "read as a funding index; 0 award links, 0 queued within the award budget",
+          "characters": null
+        },
+        {
+          "category": "fetched-ok",
+          "url": "https://future.utoronto.ca/awards-profile",
+          "page_type": "scholarship_award",
+          "detail": "award page; 4 claims read",
+          "characters": null
+        }
+      ],
+      "error": null
+    }
+  ]
+}
