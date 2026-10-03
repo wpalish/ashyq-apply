@@ -6,7 +6,7 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-**Current holder: gpt-6-astra; resumed2026-10-02 UTC at d4729eb, task/reference-fact-recovery, draft PR #41.** Owner asks to configure search against certified reference facts; the earlier public-flow acceptance is insufficient for fact completeness.
+**Current holder: nobody; 2026-10-03 UTC, task/reference-fact-recovery, source01e44df, draft PR #41.** Owner asks to configure search against certified reference facts; the earlier public-flow acceptance is insufficient for fact completeness.
 
 **Current holder: nobody; public search release acceptance recorded, 2026-10-02 UTC, task/search-release-acceptance from main1aa188e.** PR #39 is merged after8 exact-head checks. Fly v5 runs the verified source on the original API/worker; catalogue501 and real UI-selected NTU search completed successfully (3 programmes,51 Claim records,21 pages,0 unreadable,about157s). Browser result reload, evidence and Save flow verified. Full details/limits: UNIMATCH_SEARCH_RELEASE_2026-10-02.md. Postmerge CI run36972183803 is linked there; metadata-only changes in this branch do not change the deployed application.
 
@@ -126,7 +126,7 @@ Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-rev
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
 
-**ER-10 working tree, 2026-10-03 continuation:** Reproduced requirement-loss on downstream cost interruption (independent DB reader NoResultFound); new guarded checkpoints retain claims before costs/government. Real recorded Groningen response replay: same1read,0storedclaims before versus3 after, incomplete marker and0completedprogrammes. Seven regressions plus pipeline/government/jobs78 pass, Ruff/format327/mypy327 pass; full backend2910/94.92%, frontend232/type/lint/build and isolateddemo Groningen#1/UBC OUT_OF_BUDGET pass; one Alembic head d8e412c6a901. No new live reference score or release asserted; see reference recovery report.
+**ER-10 completed source01e44df, 2026-10-03 continuation:** Reproduced requirement-loss on downstream cost interruption (independent DB reader NoResultFound); new guarded checkpoints retain claims before costs/government. Real recorded Groningen response replay: same1read,0storedclaims before versus3 after, incomplete marker and0completedprogrammes. Seven regressions plus pipeline/government/jobs78 pass, Ruff/format327/mypy327 pass; full backend2910/94.92%, frontend232/type/lint/build and isolateddemo Groningen#1/UBC OUT_OF_BUDGET pass; one Alembic head d8e412c6a901. No new live reference score or release asserted; see reference recovery report.
 
 **Reference recovery checkpoints:** bc78824 baton; a31adb6 bounded experimental routing; a64492f claim-local undergraduate scope and regression tests; d09697f strict reference acceptance CLI and narrowed extra reads; bc84ccf promoted admission obligations and versioned observed NTU aliases. Full baseline11/62; unchanged-raw identity replay16/62; KAIST same-budget0/10→1/10. See REFERENCE_FACT_RECOVERY_2026-10-02.md. Full final capture and source gates are still running; no deployment or complete-reference acceptance is claimed.
 
@@ -1750,7 +1750,7 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
-**Next exact step after ER-10 gates:** Commit/push the guarded requirement/cost checkpoints with the real-page before/after durability proof. Then diagnose the11 unreachable reference keys without altering signed gold:10 unbound document/award identities,1 unmapped translation condition. Exact list in expressibility output/report; first inspect source-backed document values and collect_documents lifecycle (pre-decision captures do not call it). Version observed identity additions separately from extraction changes; preserve all conditions. A direct gold-URL read is evaluator diagnosis, never blind discovery or equal-budget live improvement. ER-09 remains defaultoff until provider-backed same-budget pairs and held-out checks.
+**Next exact step after ER-10 gates:** Guarded requirement/cost checkpoints and real-page durability proof are pushed as01e44df. Diagnose the11 unreachable reference keys without altering signed gold:10 unbound document/award identities,1 unmapped translation condition. Exact list in expressibility output/report; first inspect source-backed document values and collect_documents lifecycle (pre-decision captures do not call it). Version observed identity additions separately from extraction changes; preserve all conditions. A direct gold-URL read is evaluator diagnosis, never blind discovery or equal-budget live improvement. ER-09 remains defaultoff until provider-backed same-budget pairs and held-out checks.
 
 **Next exact step ER-09, provider access pending:** The opt-in rule and offline frozen-prefix replay are implemented; default remains False.203 focused tests, Ruff/format and mypy327 pass. Configure a supported provider through deployment/local secrets, then run equal300s/60-read Groningen off/on captures (flag --finish-exact-single-field) and held-out universities before promotion. Do not rerun throttled Exa or switch identities to evade429. Offline independent work: inspect document/award mapping gaps and requirement persistence before slow downstream reads, with write-ahead and dedicated regressions. PR41 remains draft; reference gate13/62 FAIL; no merge/deploy. GitHub workflow update also needs a connection with workflow scope; saved patch remains unapplied.
 
@@ -4926,3 +4926,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 - 2026-10-02 gpt-6-astra: a1d4a00 -> ER-09 offline checkpoint; draft PR41 pushed, baton released pending provider configuration/live equal-budget proof. Reference13/62 FAIL; no production readiness or deployment asserted.
 
 - 2026-10-02 gpt-6-astra resumed d4729eb: previous goal turn made progress (pushed calibration/ER09 evidence). Provider429 still limits live pairs, but evidence durability and mapping work remain actionable offline.
+
+- 2026-10-03 gpt-6-astra:8f866de ->01e44df guarded evidence durability pushed in PR41;2910/94.92% full gates pass. Baton released; next11 unreachable document/award keys. Reference13/62 remains incomplete; no deployment.
