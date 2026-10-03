@@ -6,7 +6,7 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-**Current holder: gpt-6-astra; resumed2026-10-03 after owner authorization refresh, task/reference-fact-recovery@34f716d.** Workflow task1 branch task/benchmark-provider-choice@e40183e now pushed; PR42 open, eight exact-head CI checks running. OAuth workflow scope and GitHub Exa secret NAME confirmed; no key read. Task2 waits owner's PR42 merge,120s/60reads keyed Exa; task3 still needs permitted synthetic email/domain.
+**Current holder: nobody; workflow checkpoint2026-10-03, task/reference-fact-recovery.** PR42 workflow sourcee40183e pushed; exact-head CI8/8 passed (37107912115 and37107916481), merge state CLEAN. Owner handoff explicitly reserves merge to owner; ready for owner squash merge. Exa secret NAME confirmed, value not read. User supplied permitted test email privately; do not put it in Git or delete an existing account. Next task2: after main merge, dispatch explicit exa120s/60reads benchmark and collect metrics/oracle; provider health not yet measured. Draft PR41 remains undeployed with full reviewed acceptance FAIL.
 
 **Current holder: nobody; public search release acceptance recorded, 2026-10-02 UTC, task/search-release-acceptance from main1aa188e.** PR #39 is merged after8 exact-head checks. Fly v5 runs the verified source on the original API/worker; catalogue501 and real UI-selected NTU search completed successfully (3 programmes,51 Claim records,21 pages,0 unreadable,about157s). Browser result reload, evidence and Save flow verified. Full details/limits: UNIMATCH_SEARCH_RELEASE_2026-10-02.md. Postmerge CI run36972183803 is linked there; metadata-only changes in this branch do not change the deployed application.
 
@@ -125,6 +125,9 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+**Workflow task1 sourcee40183e, PR42 ready-for-review:** normal push now succeeds after owner workflow authorization. Exact-head push37107912115 and PR37107916481 all8 jobs passed, merge state CLEAN. Push logs backend2873 on both DBs / SQLite94.87%; Ruff/format/mypy324; frontend232, E2E79+auth6; security/container gates pass.20 offline selector cases pass. Only workflow changed; no production mutation or benchmark dispatch.
+
 
 **ER-13 source33804d0 verified:** full2960/94.94%, focused77, Ruff/format/mypy330, frontend232/type/lint/build, isolated demo Groningen first/UBC OUT_OF_BUDGET and one Alembic head. Toronto scoped table document now retained, but exact-source recall remains0/4. Independent catalogue-only cold captures on33804d0: Groningen0/11, Toronto0/4, NTU1/21; search_calls0. Preserved capture/raw/log/score under runs.2026-10-02/catalogue-only.2026-10-03. Original Exa13/62 remains separate and FAIL.
 
@@ -1751,6 +1754,9 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**Latest next step:** owner squash-merges PR42 (explicit handoff requirement), then verify main workflow input and run gh workflow run benchmark-capture --ref main -f mode=benchmark -f case= -f seconds_per_case=120 -f max_pages=60 -f search_provider=exa. Record source/run/provider/query counts, six metric rows and oracle verdicts without mixing old captures. Stop on provider quota failure. No self-hosted runners registered as of this checkpoint; cloud site-access failures stay visible. Permitted test email has been supplied in chat, keep private and use normal auth; never delete an existing user account as synthetic cleanup.
+
 
 **Task1 next executable:** After owner completes gh auth refresh -h github.com -s workflow, run git -C ../benchmark-provider-choice push -u origin task/benchmark-provider-choice; create PR with saved PR_BODY.md, attach it and review CI. Wait for owner merge. Then dispatch benchmark on main with120s/60reads and an available allowed provider; never auto/Serper. Owner input is still needed for test email/domain and keyed Exa configuration. While blocked, next code task is ER14 failing cached-catalogue regression, not another full-suite rerun or provider probe.
 
@@ -4970,3 +4976,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 2026-10-03 gpt-6-astra: c5daee4 → ER13 source33804d0 / evidence d190d04 / handoff8fcb9e6;2960/94.94%; workflow e40183e normal push denied (workflow scope); patch preserved, baton released pending owner inputs.
 
 2026-10-03 gpt-6-astra resumes at34f716d: owner refreshed workflow scope; e40183e push succeeds; PR42 created, CI37107912115/37107916481 pending.
+
+2026-10-03 gpt-6-astra:34f716d→17ee5e2→PR42 readiness; workflowe40183e8/8CI; owner merge pending, baton released with executable120s/60reads command.
