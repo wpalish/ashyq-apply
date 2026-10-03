@@ -328,3 +328,13 @@ Exa429 and will not be mixed with the former provider-backed13/62 score.
 ### ER-13 completed gates and separate catalogue-only diagnosis
 
 Source33804d0: backend2960 passed /94.94%; frontend232/type/lint/build, Ruff/format/mypy330 and isolated demo pass. Three cold runs independently used provider=none,300s/60 noncached Fetcher.get responses; no gold URLs injected. Groningen0/11 (140.0s), Toronto0/4 (50.8s), NTU1/21 (28.2s, one wrong-scope prediction). Captures, raw sidecars, logs and per-case immutable-gold scores are in `runs.2026-10-02/catalogue-only.2026-10-03`. This is not a paired improvement over Exa13/62. HTTP telemetry counts individual pinned requests, including redirects/robots, whereas the60 cap counts noncached get responses; Groningen88 HTTP requests does not mean88 budgeted pages. Toronto reads the relevant field index but descends elsewhere; investigate generic routing next.
+
+## Owner's ordered handoff and workflow gate —2026-10-03
+
+Task1 reconstructed as workflow-only local commit e40183e on task/benchmark-provider-choice from main b145da2. Normal Git push was rejected by GitHub: OAuth App lacks workflow scope. The patch and review body are retained under ai-team/outputs/c2-40-search-provider. YAML and20 offline selector cases pass; no alternative write path attempted. App source remains33804d0, full2960/94.94%; expanded commands from backend (app/tests/evaluation) Ruff/format/mypy330 pass. An initial mypy invocation from repository root missed backend configuration and produced51 errors; rerunning the prescribed command from backend passed. This is not a source fix.
+
+Task2: blocked before dispatch by task1 merge and search capacity. Use120s/60reads, provider exa only with a configured usable key; do not retry exhausted keyless Exa. No fresh120s ten-case metrics or oracle verdicts exist in this session. The owner's prior0f5b99d figures remain supplied history, not remeasured values.
+
+Task3: permitted synthetic test email/domain requested; do not invent it or repeat the prior NTU UI acceptance. Supplied live_check.py is absent on both available branches, so prepare an equivalent validated client only after recovering/inspecting the current API and owner input. No public test account or production setting changed in this session.
+
+Task4: ER13 scoped extraction is complete in source with tests, but live reference recovery remains unproven. ER14 catalogue descent is observed, not implemented/promoted: same cached pages reproduce the choice of unrelated catalogues before the field index/alphabet list. It is recorded in hypotheses.json for the next bounded regression.

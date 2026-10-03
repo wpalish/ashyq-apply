@@ -6,7 +6,7 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-**Current holder: gpt-6-astra; resumed2026-10-03 UTC at c5daee4, task/reference-fact-recovery, draft PR #41.** Continue source-qualified Toronto supplemental-document recovery; old full live13/62 remains FAIL.
+**Current holder: nobody; checkpoint2026-10-03 UTC, task/reference-fact-recovery, draft PR #41.** ER13 source33804d0 passed2960/94.94%; evidence checkpointd190d04 and owner reconciliation8fcb9e6 pushed. Workflow task1 local e40183e rejected for missing OAuth workflow scope; patch preserved. Await owner authorization refresh before normal push; task2 waits merge/provider and task3 waits permitted test email. Old full live13/62 remains FAIL.
 
 **Current holder: nobody; public search release acceptance recorded, 2026-10-02 UTC, task/search-release-acceptance from main1aa188e.** PR #39 is merged after8 exact-head checks. Fly v5 runs the verified source on the original API/worker; catalogue501 and real UI-selected NTU search completed successfully (3 programmes,51 Claim records,21 pages,0 unreadable,about157s). Browser result reload, evidence and Save flow verified. Full details/limits: UNIMATCH_SEARCH_RELEASE_2026-10-02.md. Postmerge CI run36972183803 is linked there; metadata-only changes in this branch do not change the deployed application.
 
@@ -1751,6 +1751,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**Task1 next executable:** After owner completes gh auth refresh -h github.com -s workflow, run git -C ../benchmark-provider-choice push -u origin task/benchmark-provider-choice; create PR with saved PR_BODY.md, attach it and review CI. Wait for owner merge. Then dispatch benchmark on main with120s/60reads and an available allowed provider; never auto/Serper. Owner input is still needed for test email/domain and keyed Exa configuration. While blocked, next code task is ER14 failing cached-catalogue regression, not another full-suite rerun or provider probe.
 
 **Task1 write-ahead (owner ordered brief):** Reconstruct missing workflow-only patch in isolated worktree/branch from origin/main. Add auto/exa/exa_mcp/none input, resolve provider once per job via environment secrets into GITHUB_ENV, validate explicit exa, use same selection in logs/config/capture arguments. Keep auto precedence unchanged but never run auto/Serper in this task. Test selection cases offline including missing-key/unknown failure and no secret output. Normal Git push once; permission rejection means preserve patch and request workflow scope, no API workaround.
 
@@ -3691,6 +3693,9 @@ The steps codex left, unchanged and still next after this review:
 
 ## 6. Gate status at last run
 
+**ER13 final source33804d0:** full2960 passed /94.94%, frontend232/type/lint/build, Ruff/format/mypy330 (prescribed backend cwd), isolated demo and one head passed. Workflow-only e40183e: YAML+20 shell-selection checks pass; not pushed/merged, cloud gates unavailable. Catalogue-only captures are negative factual evidence, not acceptance.
+
+
 **ER-10 final local gates, 2026-10-03:**2910 backend passed/94.92% in459.21s; focused78; Ruff/format327/mypy327; frontend232/type/lint/build; isolateddemo Groningen#1 and UBC OUT_OF_BUDGET; one Alembic head d8e412c6a901. No new live score: latest reference13/62 remains FAIL. Raw logs /tmp/unimatch-er10-*.log and committed frozen-durability proof.
 
 **ER-09 offline checkpoint:**203 focused discovery/multifield/admission/reference tests pass; Ruff/format327 and mypy327 pass. Frozen real-response prefix:5 reads off,1 on, same first exact page, zero network. Defaultoff, no live/held-out improvement claimed. Strict reference gate still13/62 FAIL, exit2. Earlier full-suite results below remain distinct.
@@ -4156,6 +4161,9 @@ E2E (`npm run e2e`, `npm run e2e:auth`) was **not** run locally — ports 5173/8
 CI runs both on the PR.
 
 ## 7. Blockers / questions for the owner
+
+**Task1 confirmed blocker:** ordinary Git push of workflow-only e40183e (task/benchmark-provider-choice, local worktree ../benchmark-provider-choice) rejected: OAuth App lacks workflow scope.20 offline shell selection cases and YAML passed. Patch and PR body preserved in ai-team/outputs/c2-40-search-provider; no API/browser alternate write attempted. Owner asked to run gh auth refresh -h github.com -s workflow. New benchmark cannot start until workflow PR is merged; Exa key presence and permitted test email/domain also asked, no answer yet.
+
 
 **2026-10-03 owner handoff reconciliation:** Local current branch is task/reference-fact-recovery@d190d04; fetched arena/01a0f379-ashyq-apply stops at6af6a4a. Object62dac4c and ai-team/outputs/c2-40-search-provider patch/PR_BODY/live_check.py are absent from both trees. docs/SEARCH_DIAGNOSIS_2026-10-02.md is absent. This Mac has working official-site access and persistent temp caches; cloud sandbox limitations/Python3.11 in the pasted brief do not apply here. Current backend gate2960/94.94% supersedes historical2873 count only on this branch, not main. User now explicitly requires120s/60reads comparative captures; existing300s captures remain separate diagnostics. Reconstruct reviewable workflow-only selection change on a separate branch from main, attempt normal push once, never bypass workflow permission. Exa MCP429 remains blocked; task2 waits task1 merge and working provider. Ask owner for permitted test email/domain before task3; no production settings changes. ER14 routing diagnosis is parked while task1 proceeds.
 
@@ -4958,3 +4966,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 **ER-13 validation plan:** source frozen for full backend gate (first run deliberately interrupted to narrow form-only heading exclusion; retained /tmp/unimatch-er13-interrupted.log). Focused77, Ruff/format/mypy330, frontend232/type/lint/build and isolated demo pass. Checkpoint wip while full gate runs, then bounded cold catalogue/sitemap-only live captures with explicit search_provider=none on Groningen/Toronto/NTU,300s/60reads each. No Exa retry, no provider identity switch, no seeds copied from gold. This measures an explicitly degraded configuration separately, not an ER13 gain against prior Exa13/62.
 
 **ER-13 contract:** evaluation evidence_scope now retains the already-recorded qualification field. New supplemental table reader uses explicit programme/campus and local qualification; missing source degree is NEEDS_OFFICIAL_CLARIFICATION. Exact new identity version does not assert source applicability or human approval. No migration/API enum change.
+
+2026-10-03 gpt-6-astra: c5daee4 → ER13 source33804d0 / evidence d190d04 / handoff8fcb9e6;2960/94.94%; workflow e40183e normal push denied (workflow scope); patch preserved, baton released pending owner inputs.

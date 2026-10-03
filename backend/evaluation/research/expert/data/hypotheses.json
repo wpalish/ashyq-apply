@@ -242,6 +242,25 @@
       ],
       "policy_guard": "Original gold and prior bindings untouched; no CAPTCHA/robots bypass, no requested degree as published evidence.",
       "validation_artifact": "docs/process/REFERENCE_FACT_RECOVERY_2026-10-02.md"
+    },
+    {
+      "id": "ER-14",
+      "status": "observed",
+      "case_ids": [
+        "groningen",
+        "toronto"
+      ],
+      "observation": "Source33804d0 catalogue-only cold runs return Groningen0/11 and Toronto0/4. Frozen cached-page walk repeats the miss: Toronto field index reads_as_unknown is never descended into; Groningen alphabet list reads_as_program_detail and less relevant catalogue-shaped links take descent priority. No routing change implemented.",
+      "proposed_rule": "Use source-proven programme-list structure and requested-field relevance for bounded descent, preserving existing programme and degree confirmation. First create a failing offline regression from the cached official pages.",
+      "integration_seam": "app.adapters.discovery.catalog_walker._descent_lead and CatalogWalker.walk",
+      "counterexample": "A field-related news page, a real single programme or unrelated faculty menu must not become a confirmed programme; budgets and domain guards must remain unchanged.",
+      "falsification": "Frozen same-response replay plus independent negative examples, then equal120s/60-read fresh paired captures after workflow/provider access is available. Existing300s diagnostic runs cannot establish that comparison.",
+      "evidence_artifacts": [
+        "backend/evaluation/research/expert/data/runs.2026-10-02/catalogue-only.2026-10-03/groningen.raw.json",
+        "backend/evaluation/research/expert/data/runs.2026-10-02/catalogue-only.2026-10-03/toronto.raw.json"
+      ],
+      "policy_guard": "No source modification or promotion yet; signed gold, Fetcher and ER09 default-off unchanged. Do not inject expected URLs.",
+      "validation_artifact": "docs/process/REFERENCE_FACT_RECOVERY_2026-10-02.md"
     }
   ]
 }
