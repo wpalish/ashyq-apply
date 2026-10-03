@@ -1752,6 +1752,9 @@ No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
 
+**Task1 write-ahead (owner ordered brief):** Reconstruct missing workflow-only patch in isolated worktree/branch from origin/main. Add auto/exa/exa_mcp/none input, resolve provider once per job via environment secrets into GITHUB_ENV, validate explicit exa, use same selection in logs/config/capture arguments. Keep auto precedence unchanged but never run auto/Serper in this task. Test selection cases offline including missing-key/unknown failure and no secret output. Normal Git push once; permission rejection means preserve patch and request workflow scope, no API workaround.
+
+
 **ER-14 write-ahead:** Diagnose catalogue descent using the preserved33804d0 catalogue-only traces and actual cached official responses. Toronto field index is reads_as_unknown and is skipped as a descent; self/menu links consume catalogue slots. Reproduce before changing generic bounded routing in catalog_walker, add adversarial tests, retain existing field/degree confirmation and no new hardcoded gold URLs. Compare same cached pages and equal live budgets, record separate provider-none metrics. No Fetcher/gold changes or ER09 promotion.
 
 **Write-ahead document reference recovery:** Diagnose stored NTU award and Groningen document responses with the normal WebDocumentsAdapter. Keep original signed gold/bindings unchanged. First measure current emitted document names/values/scope and exact source identity. Add observed exact document bindings only where the fetched page proves the subject; record pure mapping effects separately. For missing condition fields, use generic structured values with complete quoted conditions and adversarial tests; do not turn conditional/optional paperwork into unconditional requirements. Keep post-approval document collection distinct from pre-decision search. All fresh source reads via Fetcher are evaluator diagnostics, not blind/equal-budget discovery evidence.
@@ -4153,6 +4156,9 @@ E2E (`npm run e2e`, `npm run e2e:auth`) was **not** run locally — ports 5173/8
 CI runs both on the PR.
 
 ## 7. Blockers / questions for the owner
+
+**2026-10-03 owner handoff reconciliation:** Local current branch is task/reference-fact-recovery@d190d04; fetched arena/01a0f379-ashyq-apply stops at6af6a4a. Object62dac4c and ai-team/outputs/c2-40-search-provider patch/PR_BODY/live_check.py are absent from both trees. docs/SEARCH_DIAGNOSIS_2026-10-02.md is absent. This Mac has working official-site access and persistent temp caches; cloud sandbox limitations/Python3.11 in the pasted brief do not apply here. Current backend gate2960/94.94% supersedes historical2873 count only on this branch, not main. User now explicitly requires120s/60reads comparative captures; existing300s captures remain separate diagnostics. Reconstruct reviewable workflow-only selection change on a separate branch from main, attempt normal push once, never bypass workflow permission. Exa MCP429 remains blocked; task2 waits task1 merge and working provider. Ask owner for permitted test email/domain before task3; no production settings changes. ER14 routing diagnosis is parked while task1 proceeds.
+
 
 **Current external constraints:** Exa MCP returnedHTTP429 in finalVienna/Warsaw. All alternative local provider keys absent (boolean presence checked only). No more live probes started; owner async question asks provider configuration through app secrets versus offline continuation. GitHubworkflow-scope restriction remains; proposed patch saved, gate not automatically enforced. Neither condition is a reason to alter validated queries or fabricate facts.
 
