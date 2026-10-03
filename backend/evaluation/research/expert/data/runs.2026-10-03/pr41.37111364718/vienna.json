@@ -1,0 +1,143 @@
+{
+  "case_id": "vienna",
+  "programme_urls": [
+    "https://aufnahmeverfahren.univie.ac.at/en/computer-science"
+  ],
+  "ranked_urls": [
+    "https://aufnahmeverfahren.univie.ac.at/en/computer-science"
+  ],
+  "predictions": [
+    {
+      "key": "programme.exists",
+      "value": true,
+      "evidence": {
+        "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+        "excerpt": "Entrance exam procedure © Ian Ehm University of Vienna / Entrance exam / Before the entrance exam / Degree programmes / Computer Science (bachelor's programme) Computer Science (bachelor's programme) Delve into the world of technology and innovation: in the bachelor's programme in Computer Science, you will solve",
+        "scope": {
+          "university": "University of Vienna",
+          "programme": "Computer Science (bachelor's programme)",
+          "degree": "bachelor",
+          "field": null,
+          "intake": null,
+          "population": null,
+          "qualification": null,
+          "academic_year": null
+        },
+        "accessed_on": "2026-10-03",
+        "source_type": "official",
+        "excerpt_truncated": false
+      },
+      "supported": null,
+      "current": null,
+      "conflict_visible": null
+    },
+    {
+      "key": "deadline",
+      "value": "2026-05-04",
+      "evidence": {
+        "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+        "excerpt": "is conducted in the bachelor's programme in Computer Science. You'll find a brief overview in the right info box → The entrance exam procedure Overview Application period 2 March to 4 May 2026 Written test 13 July 2026 on site in Vienna (no alternative dates) Test details With the free test literature and sample exercises you'll be well prepare",
+        "scope": {
+          "university": "University of Vienna",
+          "programme": "Computer Science",
+          "degree": "bachelor",
+          "field": null,
+          "intake": null,
+          "population": null,
+          "qualification": null,
+          "academic_year": null
+        },
+        "accessed_on": "2026-10-03",
+        "source_type": "official",
+        "excerpt_truncated": false
+      },
+      "supported": null,
+      "current": null,
+      "conflict_visible": null
+    }
+  ],
+  "telemetry": {
+    "http_fetches": 64,
+    "browser_fetches": 0,
+    "pdf_fetches": 0,
+    "search_calls": 7,
+    "model_input_tokens": 0,
+    "jev_input_tokens": 0,
+    "latency_seconds": 90.44558073800005,
+    "cost_usd": null,
+    "human_review_required": null
+  },
+  "page_outcomes": [
+    {
+      "category": "classifier-rejected",
+      "url": "https://studieren.univie.ac.at/en/admission-procedure",
+      "page_type": "unknown",
+      "detail": "classified as unknown; no requirement can be read from this kind of page. title='Application and admission at the University of Vienna' signals='no decisive signals' chars=3283 degrees=[]",
+      "characters": 3283
+    },
+    {
+      "category": "fetch-failed",
+      "url": "https://studieren.univie.ac.at/en/admission/german-language-proficiency/",
+      "page_type": "unclassified",
+      "detail": "http_error — HTTP 404",
+      "characters": null
+    },
+    {
+      "category": "fetch-failed",
+      "url": "https://studieren.univie.ac.at/en/admission/bachelordiploma-programmes/zulassung/non-eueea-with-german",
+      "page_type": "unclassified",
+      "detail": "http_error — HTTP 404",
+      "characters": null
+    },
+    {
+      "category": "classifier-rejected",
+      "url": "https://studieren.univie.ac.at/en/admission/info-third-country-students",
+      "page_type": "general_admissions",
+      "detail": "not an award page; no scholarship recorded (0 award links, 0 below it: )",
+      "characters": null
+    },
+    {
+      "category": "fetch-failed",
+      "url": "https://studieren.univie.ac.at/en/admission/bachelordiploma-programmes/zulassung-mit-verpfl-osa/non-eueea-with-little-german",
+      "page_type": "unclassified",
+      "detail": "http_error — HTTP 404",
+      "characters": null
+    },
+    {
+      "category": "fetched-ok",
+      "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+      "page_type": "program_detail",
+      "detail": "2 claims read from this page",
+      "characters": 7339
+    },
+    {
+      "category": "no-pattern-match",
+      "url": "https://aufnahmeverfahren.univie.ac.at/en/german-language-proficiency",
+      "page_type": "program_detail",
+      "detail": "page was read and accepted, but no requirement pattern matched; nothing on it is claimed",
+      "characters": 7082
+    },
+    {
+      "category": "no-pattern-match",
+      "url": "https://studieren.univie.ac.at/en/tuition-fee",
+      "page_type": "costs",
+      "detail": "page was read but no cost figures could be extracted",
+      "characters": 1482
+    },
+    {
+      "category": "fetched-ok",
+      "url": "https://studieren.univie.ac.at/en/studying-and-learning/financial-matters/grants-and-scholarships",
+      "page_type": "scholarship_index",
+      "detail": "read as a funding index; 0 award links, 0 queued within the award budget",
+      "characters": null
+    },
+    {
+      "category": "fetched-ok",
+      "url": "https://aufnahmeverfahren.univie.ac.at/en/computer-science",
+      "page_type": "program_detail",
+      "detail": "read as a funding index; 0 award links, 0 queued within the award budget",
+      "characters": null
+    }
+  ],
+  "error": null
+}

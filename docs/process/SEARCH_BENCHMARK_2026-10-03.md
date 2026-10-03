@@ -62,3 +62,24 @@ Groningen translation is already addressed in ER12. Validate those existing chan
 Original JSON and case logs: `backend/evaluation/research/expert/data/runs.2026-10-03/main.37110018701`; SHA256 manifest alongside them.
 No older300s capture rescored or relabelled. PR41 stays draft; no production deployment.
 Next: owner completes public login for brief-profile acceptance; meanwhile verify existing PR41 recovery at the same120s/60read budget with explicit Exa.
+
+## Same-budget PR41 capture (before ER15)
+
+Run: https://github.com/wpalish/ashyq-apply/actions/runs/37111364718
+Source: `1d8a4ea1e7d9c7ea16c3d74e1e598633db2d84d9`; explicitexa120s/60reads.
+Claim recall13/62; precision28/38; programme recall3/10, precision3/13; awards1/3.
+57 instrumented provider calls; no search errors in retained child logs.
+Oracle:20 recovered,29 value_missing,21 fetch_failed,2 not_measured,2 text_missing.
+
+This is NOT an isolated before/after effect estimate. Unlike main, this capture uses
+`identity_bindings.2026-10-03.supplemental.json` (hash af48e733a7d4d30786c58667cd724402f233ae129003faa5902e3fc5de0572e5),
+new mapping and admission-obligation code. The underlying signed gold remains unchanged.
+Website accessibility also changed (KAIST source reads succeeded in this run).
+Do not label all seven additional recall hits as newly extracted evidence.
+No old capture was rescored. Both raw sets/configurations/checksums are retained independently.
+
+Groningen, Warsaw and UBC again hit the child deadline. Groningen issued zero search calls
+before its budget expired. Documents are collected after a programme decision; neither
+this pre-decision capture nor its award-only oracle path exercises ER11 scholarship documents.
+Five NTU document value_missing rows therefore cannot diagnose a broken document reader.
+Overall acceptance still fails; PR41 stays draft.

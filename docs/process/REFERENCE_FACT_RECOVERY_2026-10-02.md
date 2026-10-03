@@ -338,3 +338,26 @@ Task2: blocked before dispatch by task1 merge and search capacity. Use120s/60rea
 Task3: permitted synthetic test email/domain requested; do not invent it or repeat the prior NTU UI acceptance. Supplied live_check.py is absent on both available branches, so prepare an equivalent validated client only after recovering/inspecting the current API and owner input. No public test account or production setting changed in this session.
 
 Task4: ER13 scoped extraction is complete in source with tests, but live reference recovery remains unproven. ER14 catalogue descent is observed, not implemented/promoted: same cached pages reproduce the choice of unrelated catalogues before the field index/alphabet list. It is recorded in hypotheses.json for the next bounded regression.
+
+## ER-15 explicit education groups in diploma cells — 2026-10-03
+
+Main120s oracle37110018701 reports two missing secondary-diploma completion forms.
+The actual cell includes both secondary and conditional higher education, so its combined
+length exceeded the excerpt bound. A red regression on the retained actual HTML row
+failed before the change. The reader now takes only a complete secondary-education
+statement bounded by an explicit next education group. Different document labels,
+optional/additional conditions, unknown forms, missing boundaries and oversized groups abstain.
+No expected URL, university name, signed label or identity-map change enters the rule.
+
+Frozen full-response replay:0→2 unique completion forms; production adapter emits
+12 verified records across six repeated faculty sections (not12 unique facts).
+This preserves original source quotes and does not claim an improvement in blind recall.
+Proof: runs.2026-10-03/er15.frozen-diploma.json and actual-row fixture.
+
+Local full backend2969 tests /94.95% coverage; focused51; Ruff/format/mypy330 pass.
+Frontend type/lint pass; first parallel test run231/232 timed out at ProfileLists.runtime
+(5000ms), unchanged source repeated with one worker passes232/232; production build passes.
+Isolated migrated demo: Groningen first, UBC OUT_OF_BUDGET,3 approved checklists;
+single Alembic head d8e412c6a901. Golden unchanged.
+Next: commit/push and a new explicit-exa120s/60reads Groningen capture with live oracle.
+General search acceptance remains failed; owner public login pending for brief-profile task3.

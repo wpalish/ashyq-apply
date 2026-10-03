@@ -88,7 +88,7 @@
       "case_ids": [
         "kaist"
       ],
-      "observation": "Blind KAIST trace: the '학부 입학' (undergraduate admission) navigation link on every cs.kaist.ac.kr page read by the baseline was never opened; opening it recovered the signed programme.admission_route fact at 13/60 calls. Tested 2026-09-27 (3962468, cloud runners, ABBA, 60 calls/120 s, 3 dev + 9 held-out): the process metric failed - no arm opened cs.kaist.ac.kr/content?menu=40, because hop candidates are appended after search results and the three programme slots fill first. Claim differences are not the rule's: Vilnius on 3/off 0 follows Serper ranking the Bioinformatics page 2nd vs 3rd, and those 3 'verified' claims are for Bioinformatics, not the requested computer science (wrong programme); NU completed in one arm only (network). Also: no extractor emits ADMISSION_ROUTE, so even reaching the page could not add a claim. Rejected in this form; a retry needs a slot for navigation evidence and an extractor.",
+      "observation": "Blind KAIST trace: the '\ud559\ubd80 \uc785\ud559' (undergraduate admission) navigation link on every cs.kaist.ac.kr page read by the baseline was never opened; opening it recovered the signed programme.admission_route fact at 13/60 calls. Tested 2026-09-27 (3962468, cloud runners, ABBA, 60 calls/120 s, 3 dev + 9 held-out): the process metric failed - no arm opened cs.kaist.ac.kr/content?menu=40, because hop candidates are appended after search results and the three programme slots fill first. Claim differences are not the rule's: Vilnius on 3/off 0 follows Serper ranking the Bioinformatics page 2nd vs 3rd, and those 3 'verified' claims are for Bioinformatics, not the requested computer science (wrong programme); NU completed in one arm only (network). Also: no extractor emits ADMISSION_ROUTE, so even reaching the page could not add a claim. Rejected in this form; a retry needs a slot for navigation evidence and an extractor.",
       "proposed_rule": "Before score-based ranking, promote same-site navigation links whose anchor text matches an admissions/degree-level lexicon in the site's language.",
       "integration_seam": "backend/app/adapters/discovery/live_discovery.py navigation fallback and catalog walker lead scoring",
       "counterexample": "Admission menus are often generic institution pages that consume slots without programme evidence; lexicons per language can overfit.",
@@ -124,7 +124,7 @@
         "kaist",
         "toronto"
       ],
-      "observation": "ER-05 showed navigation-hop candidates never reach a programme slot, so KAIST's '학부 입학' page (where the new ADMISSION_ROUTE reader works: oracle 8 -> 9 facts) is never opened end to end. Tested 2026-09-27 (8b68958): claims equal in every pair on all 12 universities. KAIST produced no hop candidate at all (cloud runner read 7-9 pages instead of ~25), so the slot never applied there. Elsewhere the slot went to web.cs.utoronto.ca/bachelor-of-computer-science (plausible, no claims), iro.sabanciuniv.edu application requirements, but also to a Vilnius journal article, TUM research/Pure person pages and Tartu master-thesis pages. Rejected.",
+      "observation": "ER-05 showed navigation-hop candidates never reach a programme slot, so KAIST's '\ud559\ubd80 \uc785\ud559' page (where the new ADMISSION_ROUTE reader works: oracle 8 -> 9 facts) is never opened end to end. Tested 2026-09-27 (8b68958): claims equal in every pair on all 12 universities. KAIST produced no hop candidate at all (cloud runner read 7-9 pages instead of ~25), so the slot never applied there. Elsewhere the slot went to web.cs.utoronto.ca/bachelor-of-computer-science (plausible, no claims), iro.sabanciuniv.edu application requirements, but also to a Vilnius journal article, TUM research/Pure person pages and Tartu master-thesis pages. Rejected.",
       "proposed_rule": "Keep one of the three programme-page slots for the best navigation-hop candidate; search fills the other two.",
       "integration_seam": "backend/app/adapters/discovery/live_discovery.py NAVIGATION_SLOT (default False)",
       "counterexample": "The best hop candidate is often a research, thesis or journal page; giving it a slot displaces a search result that may be the programme.",
@@ -261,6 +261,25 @@
       ],
       "policy_guard": "No source modification or promotion yet; signed gold, Fetcher and ER09 default-off unchanged. Do not inject expected URLs.",
       "validation_artifact": "docs/process/REFERENCE_FACT_RECOVERY_2026-10-02.md"
+    },
+    {
+      "id": "ER-15",
+      "status": "candidate",
+      "case_ids": [
+        "groningen"
+      ],
+      "observation": "Main37110018701 oracle misses both secondary diploma completion forms. Actual saved HTML combines secondary and conditional higher-education groups in one oversized Diploma cell. Existing reader drops it; unchanged-source offline replay recovers the two distinct completion forms after bounded grouping. Red regression retained; live confirmation pending.",
+      "proposed_rule": "In an explicitly labelled diploma table cell, read a complete secondary-education completion statement bounded by the next explicit higher-education group. Preserve the source excerpt; additional conditions, unknown forms, wrong labels, absent boundaries and oversized groups abstain.",
+      "integration_seam": "documents.web_documents._structured_completion_forms; no IR, Fetcher, schema or ranking change.",
+      "counterexample": "A higher-education-only requirement, ambiguous document label, optional secondary group or unrelated prose mentioning higher education cannot become a school-diploma obligation.",
+      "falsification": "Actual-row red/green regression and full saved-source replay, negative scope/boundary cases, full gates, followed by fresh120s/60reads explicit-exa Groningen capture and direct-source oracle. Any unchanged blind recall must remain reported separately.",
+      "evidence_artifacts": [
+        "backend/tests/fixtures/live_shapes/groningen_diploma_row.html",
+        "backend/evaluation/research/expert/data/runs.2026-10-03/er15.frozen-diploma.json",
+        "backend/evaluation/research/expert/data/runs.2026-10-03/main.37110018701/oracle.json"
+      ],
+      "policy_guard": "No network in regression, no expected URL injection into discovery, no signed labels or identity changes; claim forms do not assert acceptance or applicant funding.",
+      "validation_artifact": "backend/tests/test_documents_by_completion.py"
     }
   ]
 }

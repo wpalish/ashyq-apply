@@ -1,0 +1,305 @@
+{
+  "canary": {
+    "accessed_at": "2026-10-03T09:00:10.134059+00:00",
+    "duration_seconds": 25.6,
+    "run_error": "",
+    "batch": [
+      "Aalto University"
+    ],
+    "institutions": [
+      {
+        "institution": "Aalto University",
+        "country": "Finland",
+        "domain": "aalto.fi",
+        "access": "PARTIALLY_BLOCKED",
+        "robots_disallowed_requests": 27,
+        "pages_checked": 28,
+        "pages_failed": 27,
+        "failures": [
+          [
+            "https://www.aalto.fi/robots.txt",
+            "robots_disallowed: robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed"
+          ],
+          [
+            "https://www.aalto.fi/sitemap.xml",
+            "robots_disallowed: robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed"
+          ],
+          [
+            "https://www.aalto.fi/sitemap_index.xml",
+            "robots_disallowed: robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed"
+          ],
+          [
+            "https://www.aalto.fi/sitemap-index.xml",
+            "robots_disallowed: robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed"
+          ],
+          [
+            "https://www.aalto.fi/sitemap/sitemap.xml",
+            "robots_disallowed: robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed"
+          ],
+          [
+            "https://www.aalto.fi/en/study-options",
+            "robots_disallowed: robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed"
+          ],
+          [
+            "https://www.aalto.fi/",
+            "robots_disallowed: robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed"
+          ],
+          [
+            "https://www.aalto.fi/en/study-options",
+            "robots_disallowed: robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed"
+          ]
+        ],
+        "outcomes": {
+          "robots_disallowed": 27,
+          "ok": 1
+        },
+        "discovered": {
+          "program_catalog": [
+            "https://www.aalto.fi/en/study-options"
+          ],
+          "program_page": [
+            "https://www.aalto.fi/en/programmes/curriculum-2026-2028-0",
+            "https://www.aalto.fi/en/minors/computer-science-l-minor",
+            "https://www.aalto.fi/en/programmes/aalto-bachelors-programme-in-science-and-technology/curriculum-2026-2028"
+          ],
+          "admissions": [
+            "https://www.aalto.fi/en/admission-services"
+          ],
+          "costs": [
+            "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees"
+          ],
+          "scholarships": [
+            "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees"
+          ]
+        },
+        "discovery_trace": {
+          "institution": "Aalto University",
+          "domain": "www.aalto.fi",
+          "sitemaps_declared": [],
+          "sitemaps_read": [],
+          "sitemap_urls_seen": 0,
+          "sitemap_urls_kept": 0,
+          "manual_seeds": {
+            "program_catalog": "https://www.aalto.fi/en/study-options",
+            "admissions": "https://www.aalto.fi/en/admission-services",
+            "costs": "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees",
+            "scholarships": "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees"
+          },
+          "selected": {
+            "program_catalog": [
+              "https://www.aalto.fi/en/study-options"
+            ],
+            "program_page": [
+              "https://www.aalto.fi/en/programmes/curriculum-2026-2028-0",
+              "https://www.aalto.fi/en/minors/computer-science-l-minor",
+              "https://www.aalto.fi/en/programmes/aalto-bachelors-programme-in-science-and-technology/curriculum-2026-2028"
+            ],
+            "admissions": [
+              "https://www.aalto.fi/en/admission-services"
+            ],
+            "costs": [
+              "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees"
+            ],
+            "scholarships": [
+              "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees"
+            ]
+          },
+          "rejected_sample": [
+            [
+              "https://www.aalto.fi/en/programmes/curriculum-2026-2028-0",
+              "search lead unresolved (robots_disallowed)"
+            ],
+            [
+              "https://research.aalto.fi/en/publications/arguments-for-and-approaches-to-computing-education-in-undergradu",
+              "reads as irrelevant, not a programme page"
+            ],
+            [
+              "https://www.aalto.fi/en/minors/computer-science-l-minor",
+              "search lead unresolved (robots_disallowed)"
+            ],
+            [
+              "https://www.aalto.fi/en/programmes/aalto-bachelors-programme-in-science-and-technology/curriculum-2026-2028",
+              "search lead unresolved (robots_disallowed)"
+            ],
+            [
+              "https://www.aalto.fi/en/programmes/aalto-bachelors-programme-in-science-and-technology/curriculum-2024-2026",
+              "search lead unresolved (robots_disallowed)"
+            ],
+            [
+              "https://www.aalto.fi/en/programmes/curriculum-2024-2026-34",
+              "search lead unresolved (robots_disallowed)"
+            ],
+            [
+              "https://www.aalto.fi/en/study-at-aalto/study-computer-science",
+              "search lead unresolved (robots_disallowed)"
+            ],
+            [
+              "https://www.aalto.fi/en/study-at-aalto/get-to-know-the-school-of-science",
+              "search lead unresolved (robots_disallowed)"
+            ]
+          ],
+          "rejected_total": 8,
+          "errors": [
+            "robots.txt unavailable: robots_disallowed",
+            "https://www.aalto.fi/sitemap.xml: robots_disallowed — robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed",
+            "https://www.aalto.fi/sitemap_index.xml: robots_disallowed — robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed",
+            "https://www.aalto.fi/sitemap-index.xml: robots_disallowed — robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed",
+            "https://www.aalto.fi/sitemap/sitemap.xml: robots_disallowed — robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed",
+            "navigation fallback: https://www.aalto.fi/en/study-options unreachable (robots_disallowed)",
+            "navigation fallback: https://www.aalto.fi/ unreachable (robots_disallowed)",
+            "search identity recovery: checked 8, confirmed 0",
+            "search identity recovery via exa; queries 6, failed 0, rejected {'duplicate': 17, 'wrong_degree_level': 7}"
+          ],
+          "search_failures": [],
+          "search_limitations": [],
+          "field_sources": {},
+          "search_coverage": {},
+          "used_navigation_fallback": true,
+          "kept_by_link_text": [],
+          "admission_obligations": [],
+          "walker": {
+            "catalogs_walked": 1,
+            "candidates": [],
+            "programs_confirmed": 0,
+            "outcomes": [
+              {
+                "url": "https://www.aalto.fi/en/study-options",
+                "outcome": "robots_disallowed"
+              },
+              {
+                "url": "https://www.aalto.fi/en/study-options",
+                "outcome": "js_no_program_list"
+              }
+            ]
+          }
+        },
+        "programs": [
+          "https://www.aalto.fi/en/programmes/curriculum-2026-2028-0",
+          "https://www.aalto.fi/en/minors/computer-science-l-minor",
+          "https://www.aalto.fi/en/programmes/aalto-bachelors-programme-in-science-and-technology/curriculum-2026-2028"
+        ],
+        "program_page_found": true,
+        "scholarship_page_found": true,
+        "discovery_notes": "Sitemap-first discovery found: program_catalog, program_page, admissions, costs, scholarships. Not found: documents.",
+        "claims": 0,
+        "claims_verified": 0,
+        "completeness": 0.0,
+        "eligibility": "NEEDS_OFFICIAL_CLARIFICATION",
+        "funding_fit": "UNKNOWN",
+        "scholarships_found": 0,
+        "false_positives": [],
+        "page_outcomes": {
+          "fetch-failed": 10
+        },
+        "page_types": {},
+        "page_diagnostics": [
+          {
+            "category": "fetch-failed",
+            "url": "https://www.aalto.fi/en/programmes/curriculum-2026-2028-0",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "robots_disallowed — robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://www.aalto.fi/en/admission-services",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "robots_disallowed — robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "robots_disallowed — robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://www.aalto.fi/en/minors/computer-science-l-minor",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "robots_disallowed — robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://www.aalto.fi/en/admission-services",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "robots_disallowed — robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "robots_disallowed — robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "robots_disallowed — robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://www.aalto.fi/en/minors/computer-science-l-minor",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "robots_disallowed — robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://www.aalto.fi/en/admission-services/scholarships-and-tuition-fees",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "robots_disallowed — robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed"
+          },
+          {
+            "category": "fetch-failed",
+            "url": "https://www.aalto.fi/en/programmes/curriculum-2026-2028-0",
+            "page_type": "unclassified",
+            "characters": null,
+            "detail": "robots_disallowed — robots.txt unreachable (ReadTimeout); RFC 9309 treats the whole site as disallowed"
+          }
+        ]
+      }
+    ],
+    "totals": {
+      "institutions": 1,
+      "reached": 0,
+      "blocked": 1,
+      "program_pages_found": 1,
+      "scholarship_pages_found": 1,
+      "claims": 0,
+      "false_positives": 0,
+      "page_outcomes": {
+        "fetch-failed": 10
+      },
+      "page_types": {},
+      "recall": {
+        "program": {
+          "numerator": 1,
+          "denominator": 1,
+          "target": 0.7
+        },
+        "category": {
+          "numerator": 3,
+          "denominator": 3,
+          "target": 0.8666666666666667
+        }
+      },
+      "catalogs_walked": 1,
+      "walker_programs_confirmed": 0,
+      "source_pages_recorded": 0,
+      "fetch_tiers": {
+        "fixture": 0,
+        "http": 1,
+        "browser": 0,
+        "pdf": 0
+      }
+    }
+  },
+  "claims": []
+}

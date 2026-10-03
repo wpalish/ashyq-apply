@@ -1,0 +1,140 @@
+{
+  "case_id": "kaist",
+  "programme_urls": [],
+  "ranked_urls": [
+    "https://cs.kaist.ac.kr/content?menu=318"
+  ],
+  "predictions": [
+    {
+      "key": "unmapped.interview_required",
+      "value": true,
+      "evidence": {
+        "url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+        "excerpt": "(KST) November 10, 2026 ~ January 14, 2027, 6:00 PM (KST) Recommendation Letter Submission October 29, 2026, 6:00 PM (KST) January 21, 2027, 6:00 PM (KST) Interview (Online, if required)* December 22, 2026 March 3, 2027 Admission Announcement January 7, 2027, 10:00 AM (KST) March 25, 2027, 10:00 AM (KST) Reply your Admission Acceptance Be",
+        "scope": {
+          "university": "KAIST",
+          "programme": "computer science (bachelor)",
+          "degree": null,
+          "field": null,
+          "intake": null,
+          "population": null,
+          "qualification": null,
+          "academic_year": null
+        },
+        "accessed_on": "2026-10-03",
+        "source_type": "official",
+        "excerpt_truncated": false
+      },
+      "supported": null,
+      "current": null,
+      "conflict_visible": null
+    },
+    {
+      "key": "unmapped.credential_evaluation_required",
+      "value": true,
+      "evidence": {
+        "url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+        "excerpt": "26 ~ January 14, 2027, 6:00 PM (KST) Recommendation Letter Submission October 29, 2026, 6:00 PM (KST) January 21, 2027, 6:00 PM (KST) Interview (Online, if required)* December 22, 2026 March 3, 2027 Admission Announcement January 7, 2027, 10:00 AM (KST) March 25, 2027, 10:00 AM (KST) Reply your Admission Acceptance Before Fe",
+        "scope": {
+          "university": "KAIST",
+          "programme": "computer science (bachelor)",
+          "degree": null,
+          "field": null,
+          "intake": null,
+          "population": null,
+          "qualification": null,
+          "academic_year": null
+        },
+        "accessed_on": "2026-10-03",
+        "source_type": "official",
+        "excerpt_truncated": false
+      },
+      "supported": null,
+      "current": null,
+      "conflict_visible": null
+    },
+    {
+      "key": "intake",
+      "value": "spring 2027",
+      "evidence": {
+        "url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+        "excerpt": "Admission Announcement  January 7, 2027, 10:00 AM (KST)",
+        "scope": {
+          "university": "KAIST",
+          "programme": "computer science (bachelor)",
+          "degree": null,
+          "field": null,
+          "intake": null,
+          "population": null,
+          "qualification": null,
+          "academic_year": null
+        },
+        "accessed_on": "2026-10-03",
+        "source_type": "official",
+        "excerpt_truncated": false
+      },
+      "supported": null,
+      "current": null,
+      "conflict_visible": null
+    },
+    {
+      "key": "programme.admission_route",
+      "value": "undeclared_then_major_selection",
+      "evidence": {
+        "url": "https://cs.kaist.ac.kr/content?menu=40",
+        "excerpt": "KAIST 학부생은 전공선택 없이 무학과로 입학을 하고 있습니다. 무학과 입학 후 2학기 때 전산을 포함한 전공을 선택하고 있습니다.",
+        "scope": {
+          "university": "KAIST",
+          "programme": "computer science (bachelor)",
+          "degree": "bachelor",
+          "field": null,
+          "intake": null,
+          "population": null,
+          "qualification": null,
+          "academic_year": null
+        },
+        "accessed_on": "2026-10-03",
+        "source_type": "official",
+        "excerpt_truncated": false
+      },
+      "supported": null,
+      "current": null,
+      "conflict_visible": null
+    }
+  ],
+  "telemetry": {
+    "http_fetches": 35,
+    "browser_fetches": 0,
+    "pdf_fetches": 0,
+    "search_calls": 6,
+    "model_input_tokens": 0,
+    "jev_input_tokens": 0,
+    "latency_seconds": 56.09038994100001,
+    "cost_usd": null,
+    "human_review_required": null
+  },
+  "page_outcomes": [
+    {
+      "category": "fetched-ok",
+      "url": "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+      "page_type": "program_detail",
+      "detail": "3 claims read from this page",
+      "characters": 2448
+    },
+    {
+      "category": "fetched-ok",
+      "url": "https://cs.kaist.ac.kr/content?menu=40",
+      "page_type": "unknown",
+      "detail": "only the undergraduate admission route was read",
+      "characters": 2461
+    },
+    {
+      "category": "fetched-ok",
+      "url": "https://cs.kaist.ac.kr/content?menu=42",
+      "page_type": "unknown",
+      "detail": "read as a funding index; 0 award links, 0 queued within the award budget",
+      "characters": null
+    }
+  ],
+  "error": null
+}

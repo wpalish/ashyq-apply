@@ -340,6 +340,16 @@ _LABEL_DOCUMENT = (
     (re.compile(r"diploma", re.I), "Secondary school diploma (certified copy)"),
 )
 _COMPLETION_LABEL = re.compile(r"transcripts?|(?:secondary\s+school\s+)?diplomas?", re.I)
+# A cell may contain separate, explicitly named education groups. Keep the
+# complete secondary-school statement, stopping before the higher-education
+# group; the latter's conditional requirement cannot be applied to everyone.
+_SECONDARY_COMPLETION_GROUP = re.compile(
+    r"^Secondary education\s+"
+    r"(?P<body>Diploma of completed (?:upper )?secondary education\s+or\s+"
+    r"if not yet completed:\s+Statement of enrol?ment\b.*?)"
+    r"\s+Higher education(?:\s+\(if applicable\))?\s+Diploma(?:/Degree)? certificate\b",
+    re.I,
+)
 #: The forms a document takes, in the page's words, to one vocabulary.
 _FORMS = (
     (
@@ -398,7 +408,22 @@ def _structured_completion_forms(document: DocumentIR, builder: ClaimBuilder) ->
         for block in document.blocks:
             if block.kind not in {"table_cell", "key_value", "paragraph", "list_item"}:
                 continue
-            if len(block.text) > MAX_EXCERPT_CHARS:
+            statement = block.text
+            if (
+                block.kind == "table_cell"
+                and len(block.row_headers) == 1
+                and re.fullmatch(r"(?:secondary school )?diploma", block.row_headers[0], re.I)
+            ):
+                group = _SECONDARY_COMPLETION_GROUP.match(statement)
+                if group is not None:
+                    body = group.group("body")
+                    remaining = re.sub(r"if not yet completed", "", body, flags=re.I)
+                    if re.search(r"\b(?:if|unless|when|may|might|optional)\b", remaining, re.I):
+                        continue
+                    if _OPTIONAL_DOCUMENT.search(body):
+                        continue
+                    statement = body
+            if len(statement) > MAX_EXCERPT_CHARS:
                 continue
             context = (
                 block.row_headers
@@ -410,7 +435,10 @@ def _structured_completion_forms(document: DocumentIR, builder: ClaimBuilder) ->
             labels = {label for label in context if _COMPLETION_LABEL.fullmatch(label)}
             if len(labels) > 1:
                 continue
-            match = _BY_COMPLETION.match(block.text)
+            # When the row names the document and the statement itself starts
+            # with its form, retain both: "Diploma" (row) + "Diploma of ...".
+            grouped = statement != block.text
+            match = None if grouped else _BY_COMPLETION.match(statement)
             if match is not None and labels:
                 labelled = next(iter(labels))
                 labelled_name = next(n for p, n in _LABEL_DOCUMENT if p.search(labelled))
@@ -419,7 +447,7 @@ def _structured_completion_forms(document: DocumentIR, builder: ClaimBuilder) ->
                     continue
             if match is None and labels:
                 # The label is structural context, not part of the quoted body.
-                match = _BY_COMPLETION.match(f"{next(iter(labels))} {block.text}")
+                match = _BY_COMPLETION.match(f"{next(iter(labels))} {statement}")
             if match is None:
                 continue
             if isinstance(page_scope, ClaimScope):
@@ -430,7 +458,7 @@ def _structured_completion_forms(document: DocumentIR, builder: ClaimBuilder) ->
             _add_completion_forms(
                 match,
                 builder,
-                block.text,
+                statement,
                 " / ".join([*block.section_path, *context]),
             )
     finally:
