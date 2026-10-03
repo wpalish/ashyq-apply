@@ -1,0 +1,21 @@
+{
+  "method": "Parent independently executed completed expert probe scripts against the unchanged baseline application source",
+  "source_sha": "144881b",
+  "groups": [
+    {
+      "group": 1,
+      "command": "backend/.venv/bin/python docs/process/top500-expert-audit-2026-10-04/group-01.probe.py",
+      "exit_code": 0
+    },
+    {
+      "group": 2,
+      "command": "backend/.venv/bin/python docs/process/top500-expert-audit-2026-10-04/group-02.probe.py",
+      "exit_code": 0
+    },
+    {
+      "group": 3,
+      "command": "backend/.venv/bin/python docs/process/top500-expert-audit-2026-10-04/group-03.probe.py",
+      "exit_code": 0
+    }
+  ]
+}
