@@ -361,3 +361,16 @@ Isolated migrated demo: Groningen first, UBC OUT_OF_BUDGET,3 approved checklists
 single Alembic head d8e412c6a901. Golden unchanged.
 Next: commit/push and a new explicit-exa120s/60reads Groningen capture with live oracle.
 General search acceptance remains failed; owner public login pending for brief-profile task3.
+
+### ER15 fresh source confirmation
+
+Sourceadf2f9f, run37112534809: explicitexa120s/60reads, Groningen-only discovery.
+Both secondary diploma keys changed from value_missing to recovered in a fresh
+direct-source oracle read. Blind Groningen remains0/11, timed out at115.0s,
+77 HTTP attempts,0 provider calls. This confirms the extraction repair only.
+The workflow scores against all62 labels even for a selected case: its0/62 report
+contains nine unrun cases and MUST NOT be compared to the full-cohort13/62.
+The configuration's static ten-case cohort list also does not mean ten observations;
+the artifact contains one. Original files/checksums: runs.2026-10-03/er15.37112534809.
+ER15 is tested, not a promoted discovery improvement. Remaining blocked acceptance:
+owner public login for task3; remaining discovery/extraction gaps and PR41 release review.

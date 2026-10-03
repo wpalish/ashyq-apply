@@ -6,7 +6,7 @@ Write for a reader who has **zero** chat history — because that is exactly who
 
 ## 1. Baton
 
-**Current holder: gpt-6-astra; resumed2026-10-03 after owner merged PR42.** Source main b672349e5bba2bd3cbfe8d8f155db74da11a492c is tree-identical to selected e40183e. Task2 benchmark37110018701 dispatched on main with explicit exa,120s/60reads, all ten cases. Do not duplicate this run. Collect exact provider decision, query counts, strict metrics and oracle verdicts; stop on observed quota failure. PR41 remains separate draft; no runtime deployment authorized by this workflow change.
+**Current holder: nobody; source baton released after ER15,2026-10-03.** Sourceadf2f9f is pushed in draftPR41. Main benchmark37110018701 complete6/62; PR41 full120s benchmark37111364718 complete13/62 with different observed bindings. ER15 actual-row red/green and full2969/94.95% pass; fresh run37112534809 recovers both diploma forms via direct oracle, while blind Groningen stays0/11. Task3 awaits owner normal Unimatch sign-in, email provided privately (never commit it). No existing account deletion, production configuration or deployment. General search acceptance remains failed.
 
 **Current holder: nobody; public search release acceptance recorded, 2026-10-02 UTC, task/search-release-acceptance from main1aa188e.** PR #39 is merged after8 exact-head checks. Fly v5 runs the verified source on the original API/worker; catalogue501 and real UI-selected NTU search completed successfully (3 programmes,51 Claim records,21 pages,0 unreadable,about157s). Browser result reload, evidence and Save flow verified. Full details/limits: UNIMATCH_SEARCH_RELEASE_2026-10-02.md. Postmerge CI run36972183803 is linked there; metadata-only changes in this branch do not change the deployed application.
 
@@ -125,6 +125,8 @@ outside Git, and the required data-policy acknowledgement. PR #8 merged the veri
 Status vocabulary: `not-started` · `in-progress` · `blocked` · `ready-for-review (PR #)` · `merged`.
 
 ## 3. Done in this task (commit hash per item — a claim without a hash is not done)
+
+**ER15 sourceadf2f9f, confirmed live37112534809:** general bounded secondary-education grouping fixes both diploma completion forms. Actual-source red/green, full2969/94.95%,frontend232 serial/type/lint/build,mypy330,demo and one head pass. Fresh oracle changes both keys value_missing→recovered. Blind Groningen remains0/11/115s; no discovery promotion. Original partial-capture full-denominator score is retained but not used as a cohort comparison.
 
 **PR41 same-budget capture37111364718, source1d8a4ea:** explicitexa120s/60reads yields13/62,28/38; programme3/10 and3/13; awards1/3,57calls. Not isolated improvement over main6/62: observed bindings/new mapper and variable source access differ. Exact config/raw/metrics/oracle retained separately. Acceptance remains red. ER15 follows the concrete Groningen diploma value_missing with actual-row red test and source replay; full2969/94.95%, focused51, mypy330, frontend232 serial/type/lint/build and isolated demo pass. First frontend parallel run had a5000ms timeout; unchanged serial repeat passed. Fresh bounded source confirmation next.
 
@@ -1758,6 +1760,8 @@ This writer changes only `docs/process/HANDOFF.md`; no optional long audit file 
 No branch, commit, push or stash has been performed by this writer.
 
 ## 5. NEXT STEP — exact and executable
+
+**Current next step after adf2f9f and live37112534809:** owner completes normal sign-in in the prepared Unimatch Chrome tab. Then create ONLY a disposable new brief-profile record (bachelor/CS/fall2027/IELTS7/USD15000), run public research once, count institutions against registry19 and rows with official program_url, preserve errors, and delete only that new test profile. Never delete the owner's existing account. Supplied live_check.py is absent; implement a normal authenticated equivalent or use UI, no auth bypass. If provider429/402 occurs, stop instead of retry. Source work next: ER14 bounded catalogue routing, starting from frozen actual pages and red regression; current Groningen hits115s before any search. Also diagnose true remaining value_missing separately from the oracle's award-only document path and outdated identity bindings. Do not repeat NTU public acceptance or call the product complete. Final source CI may still be running; inspect PR41 exact selected head before requesting owner review.
 
 **ER15 write-ahead:** reproduce Groningen secondary-diploma value_missing from the actual saved HTML table cell (2026-10-03T05:26:36, body proof in remaining-documents). Add offline actual-row regression in test_documents_by_completion.py before editing web_documents._structured_completion_forms. Read only an explicit bounded Secondary education group inside a Diploma cell; Higher education stays separate. Do not join unrelated cells/paragraphs or invent requiredness, certification, degree or faculty. Validate negative boundaries and full gates. Current benchmark37111364718 stays pinned to1d8a4ea; any new source must receive its own120s/60reads live confirmation.
 
@@ -4177,6 +4181,8 @@ CI runs both on the PR.
 
 ## 7. Blockers / questions for the owner
 
+**Task3 current blocker (2026-10-03):** public Unimatch password entry remains with owner; the prepared browser is still at sign-in. No task3 run/coverage/cleanup proof exists yet. Requested email received privately. Do not use synthetic-account deletion instructions on this real user account.
+
 **Task1 confirmed blocker:** ordinary Git push of workflow-only e40183e (task/benchmark-provider-choice, local worktree ../benchmark-provider-choice) rejected: OAuth App lacks workflow scope.20 offline shell selection cases and YAML passed. Patch and PR body preserved in ai-team/outputs/c2-40-search-provider; no API/browser alternate write attempted. Owner asked to run gh auth refresh -h github.com -s workflow. New benchmark cannot start until workflow PR is merged; Exa key presence and permitted test email/domain also asked, no answer yet.
 
 
@@ -4989,3 +4995,5 @@ V2-01 provisional baseline: programme recall 1/6, precision 1/7; candidate recal
 2026-10-03 gpt-6-astra:34f716d→17ee5e2→PR42 readiness; workflowe40183e8/8CI; owner merge pending, baton released with executable120s/60reads command.
 
 2026-10-03 gpt-6-astra resumes fromec7436a: PR42 merged by owner at08:31:09UTC asb672349; tree equals e40183e; new120s/60reads exa run37110018701 dispatched.
+
+2026-10-03 gpt-6-astra:0c40d3b→adf2f9f; main/PR41 same-budget benchmarks retained, ER15 source/live verified; source baton released pending owner public login and subsequent discovery recovery.

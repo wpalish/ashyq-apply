@@ -264,11 +264,11 @@
     },
     {
       "id": "ER-15",
-      "status": "candidate",
+      "status": "tested",
       "case_ids": [
         "groningen"
       ],
-      "observation": "Main37110018701 oracle misses both secondary diploma completion forms. Actual saved HTML combines secondary and conditional higher-education groups in one oversized Diploma cell. Existing reader drops it; unchanged-source offline replay recovers the two distinct completion forms after bounded grouping. Red regression retained; live confirmation pending.",
+      "observation": "Main37110018701 oracle misses both secondary diploma completion forms. Actual saved HTML combines secondary and conditional higher-education groups in one oversized Diploma cell. Existing reader drops it; unchanged-source offline replay recovers the two distinct completion forms after bounded grouping. Red regression retained; live confirmation pending. Sourceadf2f9f fresh run37112534809 confirms both diploma facts recovered in the live direct-source oracle. Blind Groningen remains0/11 with115s child deadline,0 search calls and77 HTTP requests. No full-search gain claimed.",
       "proposed_rule": "In an explicitly labelled diploma table cell, read a complete secondary-education completion statement bounded by the next explicit higher-education group. Preserve the source excerpt; additional conditions, unknown forms, wrong labels, absent boundaries and oversized groups abstain.",
       "integration_seam": "documents.web_documents._structured_completion_forms; no IR, Fetcher, schema or ranking change.",
       "counterexample": "A higher-education-only requirement, ambiguous document label, optional secondary group or unrelated prose mentioning higher education cannot become a school-diploma obligation.",
@@ -276,7 +276,8 @@
       "evidence_artifacts": [
         "backend/tests/fixtures/live_shapes/groningen_diploma_row.html",
         "backend/evaluation/research/expert/data/runs.2026-10-03/er15.frozen-diploma.json",
-        "backend/evaluation/research/expert/data/runs.2026-10-03/main.37110018701/oracle.json"
+        "backend/evaluation/research/expert/data/runs.2026-10-03/main.37110018701/oracle.json",
+        "backend/evaluation/research/expert/data/runs.2026-10-03/er15.37112534809/oracle.json"
       ],
       "policy_guard": "No network in regression, no expected URL injection into discovery, no signed labels or identity changes; claim forms do not assert acceptance or applicant funding.",
       "validation_artifact": "backend/tests/test_documents_by_completion.py"

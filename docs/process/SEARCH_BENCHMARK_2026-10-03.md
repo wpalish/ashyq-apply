@@ -83,3 +83,15 @@ before its budget expired. Documents are collected after a programme decision; n
 this pre-decision capture nor its award-only oracle path exercises ER11 scholarship documents.
 Five NTU document value_missing rows therefore cannot diagnose a broken document reader.
 Overall acceptance still fails; PR41 stays draft.
+
+## ER15 confirmation on fresh source
+
+[Run37112534809](https://github.com/wpalish/ashyq-apply/actions/runs/37112534809),
+sourceadf2f9f, explicitexa120s/60reads. Both Groningen secondary diploma completion
+keys are now recovered by the live oracle. Blind search is still0/11 for Groningen,
+115s child cutoff,77HTTP,0search calls. No search-quota failure.
+This is a selected-case capture; the workflow's automatic0/62 score includes nine
+unrun cases, so it is not a new ten-case result. The last full PR41 result remains13/62.
+Only38 of105 predictions in that full PR41 run were adjudicable for precision.
+Task3 still needs normal public sign-in; no profile run or19-institution coverage
+measurement has been claimed, and no existing user/account data was deleted.
